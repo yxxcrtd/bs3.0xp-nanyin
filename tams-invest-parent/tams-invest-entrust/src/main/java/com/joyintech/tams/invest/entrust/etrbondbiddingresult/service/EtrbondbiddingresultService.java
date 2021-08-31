@@ -38,10 +38,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class EtrbondbiddingresultService extends CommonExportService<Etrbondbiddingresult001Dto> implements BaseProcessService<Etrbondbiddingresult001Dto> {
@@ -210,7 +209,7 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 		ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
 		ptlCashPositionFlowDto.setAcctId(acctId);
 		ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
-		ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());//冻结的现金
+		ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());//冻结的现金
 		//根据ptlCashPositionFlowDto查询出冻结的持仓，用于后面指令持仓反增
 		List<String> acctTypeList2 = new ArrayList<String>();
 		acctTypeList2.add(DictCodeListExt2.资金账户类型_托管户.getValue());
@@ -220,7 +219,7 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 		return isFrozenPosition;
 	}
 
-	public void doManualRelease(Map<String, Object> map){
+	public void doManualRelease(Map<String, Object> map) throws ParseException {
 		//1.组合可用现金
 		//释放组合可用现金开始（删除记录）
 		EntrustCommonDto entrustCommonDto = etrCommonCashPositionDealService.findEntrust((String)map.get("entrustId"));
@@ -233,44 +232,47 @@ public class EtrbondbiddingresultService extends CommonExportService<Etrbondbidd
 		ptlCashPositionFlowDto.setCdate(entrustCommonDto.getEtrEntrust().getVdate());
 		ptlCashPositionFlowDto.setAcctId(acctId);
 		ptlCashPositionFlowDto.setOrderId(entrustCommonDto.getEtrEntrust().getEntrustId());
-		ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());//冻结的现金
+		ptlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());//冻结的现金
 		//根据ptlCashPositionFlowDto查询出冻结的持仓，用于后面指令持仓反增
 		List<String> acctTypeList2 = new ArrayList<String>();
 		acctTypeList2.add(DictCodeListExt2.资金账户类型_托管户.getValue());
 		ptlCashPositionFlowDto.setAcctType(acctTypeList2);
 		ptlCashPositionFlowDto.setIsFrozenPositionFlag(BussinessDictCodeList.是否_是.getValue());
-		BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
-		BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
+//		BigDecimal isFrozenPosition = basePtlCashPositionInfoMapper.selectCashPositionFlow(ptlCashPositionFlowDto);
+//		BigDecimal amount = basePtlCashPositionInfoMapper.selectPtlCashPositionFlowAmount(ptlCashPositionFlowDto);
 		basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
-		if(amount!=null){
-			Map<String,Object> positionMap = new HashMap<>();
-			positionMap.put("minDate", DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
-			positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
-			positionMap.put("amount",amount.negate());
-			positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
-			positionMap.put("portfolioId",entrustCommonDto.getEtrEntrust().getPortfolioId());
-			positionMap.put("acctId",acctId);
-			positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
-			positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
-			basePtlCashPositionInfoMapper.updatePosition(positionMap);
-		}
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		ptlCashPositionFlowDto.setCdate(new Date((Long)map.get("payDate")));
+		basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto);
+//		if(amount!=null){
+//			Map<String,Object> positionMap = new HashMap<>();
+//			positionMap.put("minDate", DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+//			positionMap.put("maxDate",DateUtil.format(entrustCommonDto.getEtrEntrust().getVdate()));
+//			positionMap.put("amount",amount.negate());
+//			positionMap.put("hodingType",DictCodeList.持仓类型_实际.getValue());
+//			positionMap.put("portfolioId",entrustCommonDto.getEtrEntrust().getPortfolioId());
+//			positionMap.put("acctId",acctId);
+//			positionMap.put("ccy",entrustCommonDto.getEtrEntrust().getCcy());
+//			positionMap.put("orderId",entrustCommonDto.getEtrEntrust().getEntrustId());
+//			basePtlCashPositionInfoMapper.updatePosition(positionMap);
+//		}
 		//释放组合可用现金结束
 		//2.指令可用现金
 		//释放指令可用现金开始（反塞入）
-		if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
-			EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
-			BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
-			dto.setSeqno(IDGenerator.generate());
-			dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
-			dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-			dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
-			EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
-			List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
-			etrCashPositionFlows.add(dto);
-			etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
-			EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
-//			etrCashPositionFlowMapper.insertSelective(dto);
-		}
+//		if(isFrozenPosition != null && isFrozenPosition.compareTo(BigDecimal.ZERO) != 0){
+//			EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+//			BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
+//			dto.setSeqno(IDGenerator.generate());
+//			dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+//			dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//			dto.setAmount(ArithmeticUtil.multiply(isFrozenPosition,new BigDecimal("-1")));
+//			EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+//			List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+//			etrCashPositionFlows.add(dto);
+//			etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+//			EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+////			etrCashPositionFlowMapper.insertSelective(dto);
+//		}
 		//释放指令可用现金结束
 	}
 }
