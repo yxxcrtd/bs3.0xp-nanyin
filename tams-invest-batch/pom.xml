@@ -12,6 +12,7 @@
     <version>2.0</version>
     <properties>
         <jackson.version>2.9.2</jackson.version>
+        <framework.version>0.0.4-MergeAndAddContents</framework.version>
     </properties>
     <dependencies>
         <dependency>
@@ -26,11 +27,6 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>joyintech-system</artifactId>
-            <version>0.0.4-MergeAndAddContents</version>
-        </dependency>
-        <dependency>
-            <groupId>com.joyintech</groupId>
-            <artifactId>framework-core</artifactId>
             <version>0.0.4-MergeAndAddContents</version>
         </dependency>
         <dependency>

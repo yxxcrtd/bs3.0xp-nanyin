@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>joyintech-workflow</artifactId>
-            <version>0.0.3</version>
+            <version>0.0.4-MergeAndAddContents</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

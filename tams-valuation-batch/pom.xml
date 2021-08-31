@@ -12,6 +12,7 @@
     <properties>
         <hibernate.version>5.3.6.Final</hibernate.version>
         <jackson.version>2.9.2</jackson.version>
+        <framework.version>0.0.4-MergeAndAddContents</framework.version>
     </properties>
 
     <dependencies>

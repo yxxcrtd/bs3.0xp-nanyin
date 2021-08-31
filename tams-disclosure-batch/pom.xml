@@ -10,6 +10,10 @@
 	<version>3.0.0</version>
 	<packaging>jar</packaging>
 
+	<properties>
+		<framework.version>0.0.4-MergeAndAddContents</framework.version>
+	</properties>
+
     <dependencies>
    		 <dependency>
 			<groupId>com.joyintech</groupId>

@@ -13,7 +13,7 @@
     <version>3.0.1</version>
 
     <properties>
-        <framework.version>2.1.11.3</framework.version>
+        <framework.version>0.0.4-MergeAndAddContents</framework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>batch-framework</artifactId>
-            <version>2.1.6.2</version>
+            <version>2.1.6.3</version>
             <exclusions>
                 <exclusion>
                     <artifactId>framework-data</artifactId>
@@ -47,6 +47,10 @@
                 <exclusion>
                     <artifactId>joyintech-tools</artifactId>
                     <groupId>com.joyintech</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.joyintech</groupId>
+                    <artifactId>framework-core</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

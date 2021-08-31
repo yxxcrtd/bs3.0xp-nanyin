@@ -15,6 +15,7 @@
 
     <properties>
         <jackson.version>2.9.2</jackson.version>
+        <framework.version>0.0.4-MergeAndAddContents</framework.version>
     </properties>
 
     <dependencies>
