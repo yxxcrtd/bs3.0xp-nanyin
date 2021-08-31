@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -29,10 +30,11 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.basicdata.asset.common.service.ValAssetCommonService;
-import com.joyintech.tams.valuation.basicdata.asset.plan.plancur.dto.FinPlanAssetCDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.dto.ValProfitprojectDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.service.ValProfitprojectService;
 import com.joyintech.tams.valuation.basicdata.business.service.BaseGetBussinessIdService;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -74,6 +76,9 @@ public class ValProfitproject002Controller extends BaseController{
 
     @Autowired
     private ValAssetCommonService assetCommonService;
+    @Autowired
+    MstWorkflowCommonService mstWorkflowCommonService;
+
     /**
      * 平台日期组件接口
      */
@@ -255,13 +260,31 @@ public class ValProfitproject002Controller extends BaseController{
         // 判断是否存在资产代码一致的数据
         if (valProfitprojectService.selectFinprodMarketId(dto.getFinprodMarketId()) > 0 && !StringUtil.equals("1",dto.getPageModel())){
             errorList.add(new ValidMessage("已经存在资产代码为："+dto.getFinprodMarketId()+"的数据！"));
-            resulterr.setErrorList(errorList);
-            return resulterr;
+//            resulterr.setErrorList(errorList);
+//            return resulterr;
+        }
+        WflValidInputParameter parameter = new WflValidInputParameter();
+        parameter.setPageId("ValProfitproject002");
+        parameter.setBusinessDataPk1(dto.getFinprodMarketId());
+        boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+        if(isInWfl){
+            errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", dto.getFinprodMarketId())));
         }
         //	起息日必须小于终止日
         if (dto.getMdate()!=null&&dto.getVdate()!=null&&dto.getMdate().compareTo(dto.getVdate()) <= 0){
             errorList.add(new ValidMessage("起息日必须小于到期日"));
+//            resulterr.setErrorList(errorList);
+//            return resulterr;
+        }
+        if(!StringUtil.isEmptyList(errorList)) {
             resulterr.setErrorList(errorList);
+            return resulterr;
+        }
+        String finprodId = dto.getFinprodId()!=null?dto.getFinprodId():dto.getFinprodMarketId();
+        if(commonBusinessService.isTransInAsset(finprodId)>0){
+            resulterr = new AjaxResult();
+            resulterr.setMessageType(MessageType.确认消息);
+            resulterr.setData(getMessage("FIN_ASSET_STOCK_1"));
             return resulterr;
         }
         return commonCheck(result, dto.getOperateType());
