@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Repository(value="valComModValBatchParamsMapper")
 public interface ModValBatchParamsMapper {
     int countByExample(ModValBatchParamsExample example);
 
