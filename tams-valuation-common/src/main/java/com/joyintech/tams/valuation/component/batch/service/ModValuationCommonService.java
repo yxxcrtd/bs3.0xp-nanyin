@@ -61,7 +61,7 @@ public class ModValuationCommonService extends BaseService {
 				logger.info("查询日不能为空！");
 				throw new Exception("查询日不能为空!");
 			}
-			return modAssetInfoMapper.selectAssetInfo(paraMap);
+			return modAssetInfoMapper.selectIncomeMethodAssetInfo(paraMap);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

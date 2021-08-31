@@ -123,7 +123,7 @@ public class ProductAssetsIncomeMethodReaderService {
      * @return:
      */
     public List<ModAssetInfoDto>  selectIncomeMethodDtoList(ModAssetInfoParamsDto dto){
-        List<ModAssetInfoDto> modAssetInfoDtoList = modValuationCommonService.selectAssetInfo(dto);
+        List<ModAssetInfoDto> modAssetInfoDtoList = modValuationCommonService.selectIncomeMethodAssetInfo(dto);
         return modAssetInfoDtoList;
     }
 
