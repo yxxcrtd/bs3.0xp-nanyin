@@ -643,9 +643,6 @@
     };
 
     $(function () {
-        //将组合分配相关按钮置灰
-        $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
-        $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
         if (dialogueRecord) {
             $("#CfetsBondDealQuotedPrice002_dialogueRecord").html(dialogueRecord);
         }
@@ -689,11 +686,20 @@
          * 交易方向
          */
         $('#CfetsRepoDealQuotedPrice002_ps').change(function () {
-            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
+            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val();
             if (ps) {
                 $('#CfetsRepoDealQuotedPrice002_repoInfo_' + ps).toggle(true);
             }
             setBussRepoSecInput();
+            if(ps == '03'){
+                //将组合分配相关按钮置灰
+                $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
+                $("#distribution").attr('disabled',true);
+            }else if(ps == '04'){
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
+                $("#distribution").attr('disabled',false);
+            }
         });
         /**
          * 对话按钮点击事件
@@ -866,6 +872,12 @@
          * 组合分配 添加
          */
         $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').click(function () {
+            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
+            if(ps == '03'){
+                return;
+            }else if(ps == '04'){
+                return;
+            }
             //添加后列表 初始化页面 排除已经存在的分配
             var entrustIds = "";
             var tableResult = dzhTable.getAllRows();
@@ -891,7 +903,13 @@
          * 计算
          */
         $('#CfetsRepoDealQuotedPrice003_btn_cal').click(function () {
-            refreshFpriceAmt();
+            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
+            if(ps == '03'){
+                //将组合分配相关按钮置灰
+                return;
+            }else if(ps == '04'){
+                refreshFpriceAmt();
+            }
         })
         setTimeout(function () {
             isshowColumns(showAmtOrg);
