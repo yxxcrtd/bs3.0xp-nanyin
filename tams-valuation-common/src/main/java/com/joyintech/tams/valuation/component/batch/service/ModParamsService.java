@@ -2,7 +2,7 @@ package com.joyintech.tams.valuation.component.batch.service;
 
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParamsExample;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchParamsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class ModParamsService {
 
     @Autowired
-    private ModBatchParamsMapper modValBatchParamsMapper;
+    private ModBatchParams2Mapper modValBatchParamsMapper;
 
     /**
      * 查询参数列表

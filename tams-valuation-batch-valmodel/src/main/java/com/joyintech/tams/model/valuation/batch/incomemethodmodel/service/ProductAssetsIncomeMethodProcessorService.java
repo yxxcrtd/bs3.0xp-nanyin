@@ -23,7 +23,7 @@ import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMeth
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.*;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
-import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
@@ -52,61 +52,51 @@ public class ProductAssetsIncomeMethodProcessorService {
     @Autowired
     private ModValuationCommonService modValuationCommonService;
     @Autowired
-    private ModParamsService modParamsService;
+    private ModLogsService modLogsService;
 
     /**
-     * @Description:返回处理后的结果DTO
-     * @auther: yuzj
-     * @date: 2021/7/5
-     * @param:
-     * @return:
+     * 执行收益法计算过程，最终产物为资产定价数据和估值行情数据
+     * 核心计算公式：FV = D0 (1 + g)/(r - g)
+     * FV - 资产价格；
+     * D0 - 年化股息，指当期股息；取票面利率计算的利息；
+     * g  - 预期股息增长率；通过手工维护；
+     * r  - 折现率：折现率=估值日国债最大期限即期收益率+(（D0*（1+g）/PV+g）-基准日国债最大期限即期收益率），其中PV为发行价格；
+     * @param item
+     * @param mapParam
+     * @param stepExecution
+     * @return
      */
     public ProductAssetsIncomeMethodResultDto convertResultFromReader(ProductAssetsIncomeMethodReaderDto item, Map<String, Object> mapParam,StepExecution stepExecution){
         ProductAssetsIncomeMethodResultDto resultDto = new ProductAssetsIncomeMethodResultDto();//从reader 返回结果result
+        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
+
         Date plateDate = (Date)mapParam.get("PLATE_DATE");//平台日
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get("BATCH_INFO");
         String taskId =(String)mapParam.get("TASK_ID");
 
-
         ModAssetInfoDto modAssetInfoDto = item.getModAssetInfoDto();
         String finprodId=modAssetInfoDto.getFinprodId();
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
-        //待计算变量初始化值
-//        AssetsVariableDto varDto = new AssetsVariableDto(new BigDecimal("0"),new BigDecimal("0"),
-//                new BigDecimal("0"),new BigDecimal("100"),new BigDecimal("0"),new BigDecimal("0"),
-//                new BigDecimal("0"), GlobalConstant.NO,new BigDecimal("0"),new BigDecimal("0"),
-//                new BigDecimal("0"),new BigDecimal("0"),new BigDecimal("0"),new BigDecimal("0"));
-//        AssetsVariableDto varDto = new AssetsVariableDto();
 
         //计算变量-股息预期股息增长率
-        BigDecimal stockIntrate = item.getModStockdivitrateConfig().getStockIntrate();
-        //计算变量-票面利率
-        BigDecimal paperRate = BigDecimal.ZERO;
+        BigDecimal g = item.getModStockdivitrateConfig().getStockIntrate();
+
+        //计算变量-发行时票面利率
+        BigDecimal issuePaperRate = BigDecimal.ZERO;
         if(item!=null && item.getFinCashCalcRuleDtoList()!=null && item.getFinCashCalcRuleDtoList().size()>0){
-            paperRate = item.getFinCashCalcRuleDtoList().get(0).getYield();
+            issuePaperRate = item.getFinCashCalcRuleDtoList().get(0).getYield();
         }else{
-            //TODO
+            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在票面利率，无法进行收益法估值.");
+            return resultDto;
         }
 
-        BigDecimal targetPrice = BigDecimal.ZERO;
-        Date baseDate = null;
-        ModRiskPremium makePriceDto =
-                incomeMethodMapper.selectAssetsMakePriceByFinprodId(modAssetInfoDto.getFinprodId(),
-                        DateUtil.format(plateDate,DateUtil.DEFAULT_OTHER_FORMAT ),
-                        ModelDictCodeList.模型_估值模型名称_收益率法.getValue());
-        if(makePriceDto!=null){
-            targetPrice = makePriceDto.getbFullprice();
-            baseDate = makePriceDto.getBasedate();
-        }else{
-            //设置全价为发行价
-            targetPrice = modAssetInfoDto.getIssuePrice();
-            //设置基准日为起息日
-            baseDate = modAssetInfoDto.getVdate();
-        }
-
+        //设置全价为发行价
+        BigDecimal targetPrice = modAssetInfoDto.getIssuePrice();
+        //设置基准日为起息日
+        Date baseDate = modAssetInfoDto.getVdate();
+        //债券面值
         BigDecimal faceValue = new BigDecimal(100);
-        BigDecimal yearDividend = new BigDecimal(100);
 
+        BigDecimal D0 = new BigDecimal(100);
         //1.计算年股息
         if(CollectionUtils.isNotEmpty(item.getFinCashPlanDtoList())){
             BigDecimal paidPrice = BigDecimal.ZERO;
@@ -118,82 +108,37 @@ public class ProductAssetsIncomeMethodProcessorService {
                 }
             }
             faceValue = ArithmeticUtil.subtract(faceValue,paidPrice);//贴现债不考虑还本
-            yearDividend = ArithmeticUtil.multiply(faceValue,paperRate);
-        }else{
-            //TODO
-
         }
+        //年化股息D0
+        D0 = ArithmeticUtil.multiply(faceValue,issuePaperRate);
+
 
         //2计算折现率
-        //2.1取中债国债收益率曲线的最大年限点的利率
-        ModYeildCurveParamsDto modYeildCurveParamsVDto = new ModYeildCurveParamsDto();
-        List<String> yeildIdVList = new ArrayList<>();
-        yeildIdVList.add(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());//数据字典.曲线代码.1231
-        modYeildCurveParamsVDto.setYeildIdList(yeildIdVList);
-        modYeildCurveParamsVDto.setSearchDate(plateDate);
-
-
-
-        List<ModYieldCurveInfoDto> modYieldCurveInfoVList =  new ArrayList<>();
-        BigDecimal valuationGovernmentDebtYield = null;
-        Map<String,List<ModYieldCurveInfoDto>> mapVList = modValuationCommonService.getCurveInfo(modYeildCurveParamsVDto);
-        if(mapVList!=null){//数据字典.曲线代码.1231
-            modYieldCurveInfoVList =(List<ModYieldCurveInfoDto>)mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());
-        }else{
-            //=====记录警告日志=====start=====
-            ModValBatchLogResult batchParam = new ModValBatchLogResult();
-            batchParam.setFinprodId(finprodId);
-            batchParam.setTaskId(taskId);
-            batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-            batchParam.setType(ModelDictCodeList.批处理执行结果_警告.getValue());//警告
-            batchParam.setMsg("【收益法模型批处理】：当天无收益率曲线行情");
-            bBatchLogResultList.add(batchParam);
-            sendlogResults(bBatchLogResultList,stepExecution);
-            //=====记录警告日志=====end=====
+        //2.1取估值日中债国债收益率曲线的最大年限点的利率
+        BigDecimal valuationGovernmentDebtYield = queryYieldByDate(plateDate, batchExecuteInfo, taskId, finprodId);
+        if(valuationGovernmentDebtYield==null){
+            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在估值日国债曲线收益率行情，无法进行收益法估值.");
+            return resultDto;
         }
 
-//        varDto.setModYieldCurveInfoVList(modYieldCurveInfoVList);//估值日曲线收益率列表
-        if(modYieldCurveInfoVList !=null && modYieldCurveInfoVList.size()>0){
-            valuationGovernmentDebtYield = modYieldCurveInfoVList.get(modYieldCurveInfoVList.size()-1).getYield();
+        //2.2取基准日中债国债收益率曲线的最大年限点的利率
+        BigDecimal baseDateGovernmentDebtYield = queryYieldByDate(baseDate, batchExecuteInfo, taskId, finprodId);
+        if(baseDateGovernmentDebtYield==null){
+            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在基准日国债曲线收益率行情，无法进行收益法估值.");
+            return resultDto;
         }
 
-        //2.2基准日
-        ModYeildCurveParamsDto modYeildCurveParamsBDto = new ModYeildCurveParamsDto();
-
-        BigDecimal baseDateGovernmentDebtYield = null;
-
-        List<String> yeildIdBList = new ArrayList<>();
-        yeildIdBList.add(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());//数据字典.曲线代码.1231
-        modYeildCurveParamsBDto.setYeildIdList(yeildIdBList);
-        modYeildCurveParamsBDto.setSearchDate(baseDate);
-        List<ModYieldCurveInfoDto> modYieldCurveInfoBList =  new ArrayList<ModYieldCurveInfoDto>();
-        Map<String,List<ModYieldCurveInfoDto>> mapBList = modValuationCommonService.getCurveInfo(modYeildCurveParamsBDto);
-        if(mapBList!=null){//数据字典.曲线代码.1231
-            modYieldCurveInfoBList =(List<ModYieldCurveInfoDto>)mapBList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());
-        }else{
-            //=====记录警告日志=====start=====
-            ModValBatchLogResult batchParam = new ModValBatchLogResult();
-            batchParam.setFinprodId(finprodId);
-            batchParam.setTaskId(taskId);
-            batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-            batchParam.setType(ModelDictCodeList.批处理执行结果_警告.getValue());//警告
-            batchParam.setMsg("【收益法模型批处理】：当天无收益率曲线行情!");
-            bBatchLogResultList.add(batchParam);
-            sendlogResults(bBatchLogResultList,stepExecution);
-            //=====记录警告日志=====end=====
-        }
-        if(modYieldCurveInfoBList !=null && modYieldCurveInfoBList.size()>0){
-            baseDateGovernmentDebtYield = modYieldCurveInfoBList.get(modYieldCurveInfoBList.size()-1).getYield();
-        }
         //2.3折算率
         //算法==> 变量.折现率 = 变量.估值日国债收益率  + （（变量.当前面值*（1+ 变量.股息预期股息增长率）/ 变量.买入全价 + 变量.股息预期股息增长率）- 变量.基准日国债收益率 ）
         //拆分算法，方便检查阅读
+        //估值日国债最大期限即期收益率+(（D0*（1+g）/PV+g）-基准日国债最大期限即期收益率）
+
         //deci1=（1+ 变量.股息预期股息增长率）
-        BigDecimal deciRate1= ArithmeticUtil.doAdd(new BigDecimal("1"),stockIntrate);
+        BigDecimal deciRate1= ArithmeticUtil.doAdd(BigDecimal.ONE,g);
         //deci2=（变量.年股息*deci1/ 变量.买入全价 + 变量.股息预期股息增长率）
-        BigDecimal deciRate2 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(ArithmeticUtil.multiply(yearDividend,deciRate1),targetPrice,12),stockIntrate);
+        BigDecimal deciRate2 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(ArithmeticUtil.multiply(D0,deciRate1),targetPrice,12),g);
         //deci3=变量.估值日国债收益率  +（deci2- 变量.基准日国债收益率 ）
-        BigDecimal yearDiscountRate= ArithmeticUtil.doAdd(valuationGovernmentDebtYield,ArithmeticUtil.subtract(deciRate2,baseDateGovernmentDebtYield));
+        BigDecimal r= ArithmeticUtil.doAdd(valuationGovernmentDebtYield,ArithmeticUtil.subtract(deciRate2,baseDateGovernmentDebtYield));
 //        varDto.setYearDiscountRate(deciRate3);
 
         /**
@@ -201,19 +146,16 @@ public class ProductAssetsIncomeMethodProcessorService {
          * 变量.估值净价 = 变量.年股息*（1 + 变量.股息预期股息增长率）/ (变量.折现率 - 变量.股息预期股息增长率)
          */
         // deciPrice1 = 变量.年股息*（1 + 变量.股息预期股息增长率）
-        BigDecimal deciPrice1 = ArithmeticUtil.multiply(
-                yearDividend,
-                ArithmeticUtil.doAdd(new BigDecimal("1"), stockIntrate)
+        BigDecimal deciPrice1 = ArithmeticUtil.multiply(D0, ArithmeticUtil.doAdd(BigDecimal.ONE, g)
         );
         // deciPrice1 / (变量.折现率 - 变量.股息预期股息增长率)
-        BigDecimal analNetCnbd = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(yearDiscountRate, stockIntrate), 14);
+        BigDecimal netPrice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
 
         // 变量.单位应计利息 = 返回值.单位应计利息
         BigDecimal interest = getCalculate(item, plateDate).getInterest();
-//        varDto.setInterest(interest);
 
         // 变量.估值全价 = 变量.估值净价 + 变量.单位应计利息
-        BigDecimal fullprice = ArithmeticUtil.doAdd(analNetCnbd, interest);
+        BigDecimal fullprice = ArithmeticUtil.doAdd(netPrice, interest);
 
         //封装结果
         //1封装债券估值行情DTO
@@ -223,25 +165,25 @@ public class ProductAssetsIncomeMethodProcessorService {
         vResultDto.setCdate(plateDate);
         vResultDto.setValModel(ModelDictCodeList.模型_估值模型名称_收益率法.getValue());//数据字典.估值来源.模型
         vResultDto.setFullPrice(fullprice);
-        vResultDto.setNetPrice(analNetCnbd);
+        vResultDto.setNetPrice(netPrice);
 
         //2封装资产定价DTO
-        ModRiskPremium mResultDto = new ModRiskPremium();
-        mResultDto.setSeqno(IDGenerator.generate());
-        mResultDto.setSecTypeModel(DictCodeListExt1.证券品种_债券.getValue());
-        mResultDto.setSecDetailTypeModel(modAssetInfoDto.getSecTypeDetail());
-        mResultDto.setFinprodId(modAssetInfoDto.getFinprodId());
-        mResultDto.setFinprodName(modAssetInfoDto.getFinprodAbbr());
-        mResultDto.setBasedate(baseDate);
-        mResultDto.setbFullprice(targetPrice);
-        mResultDto.setModMethod(ModelDictCodeList.模型_估值模型名称_收益率法.getValue());
+//        ModRiskPremium mResultDto = new ModRiskPremium();
+//        mResultDto.setSeqno(IDGenerator.generate());
+//        mResultDto.setSecTypeModel(DictCodeListExt1.证券品种_债券.getValue());
+//        mResultDto.setSecDetailTypeModel(modAssetInfoDto.getSecTypeDetail());
+//        mResultDto.setFinprodId(modAssetInfoDto.getFinprodId());
+//        mResultDto.setFinprodName(modAssetInfoDto.getFinprodAbbr());
+//        mResultDto.setBasedate(baseDate);
+//        mResultDto.setbFullprice(targetPrice);
+//        mResultDto.setModMethod(ModelDictCodeList.模型_估值模型名称_收益率法.getValue());
 
         MstBondValuationInfo mstBondValuationInfo = new MstBondValuationInfo();
         mstBondValuationInfo.setSecId(modAssetInfoDto.getFinprodMarketId()); //市场代码
         mstBondValuationInfo.setValueDate(plateDate);//估值日
         mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
         mstBondValuationInfo.setPrice(fullprice); //估值全价
-        mstBondValuationInfo.setNetprice(analNetCnbd);//估值净价
+        mstBondValuationInfo.setNetprice(netPrice);//估值净价
         mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
         mstBondValuationInfo.setCreateUser("batch"); //
         mstBondValuationInfo.setUpdateUser("batch");
@@ -250,10 +192,34 @@ public class ProductAssetsIncomeMethodProcessorService {
 
         resultDto.setMstBondValuationInfo(mstBondValuationInfo);
         resultDto.setModCurveResult(vResultDto);
-        resultDto.setModRiskPremium(mResultDto);
+//        resultDto.setModRiskPremium(mResultDto);
 
 
         return resultDto;
+    }
+
+    /**
+     * 查询指定日期国债曲线最大期限收益率
+     * @param plateDate
+     * @param batchExecuteInfo
+     * @param taskId
+     * @param finprodId
+     * @return
+     */
+    private BigDecimal queryYieldByDate(Date plateDate, SysBatchExecInfo batchExecuteInfo, String taskId, String finprodId) {
+        BigDecimal valuationGovernmentDebtYield = null;
+        ModYeildCurveParamsDto modYeildCurveParamsVDto = new ModYeildCurveParamsDto();
+        List<String> yeildIdVList = new ArrayList<>();
+        yeildIdVList.add(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());//数据字典.曲线代码.1231
+        modYeildCurveParamsVDto.setYeildIdList(yeildIdVList);
+        modYeildCurveParamsVDto.setSearchDate(plateDate);
+        List<ModYieldCurveInfoDto> modYieldCurveInfoVList =  new ArrayList<>();
+        Map<String,List<ModYieldCurveInfoDto>> mapVList = modValuationCommonService.getCurveInfo(modYeildCurveParamsVDto);
+        if(mapVList!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue())!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue()).size()>0){//数据字典.曲线代码.1231
+            modYieldCurveInfoVList =(List<ModYieldCurveInfoDto>)mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());
+            valuationGovernmentDebtYield = modYieldCurveInfoVList.get(modYieldCurveInfoVList.size()-1).getYield();
+        }
+        return valuationGovernmentDebtYield;
     }
 
     private AccurIntCalOutParameter getCalculate(ProductAssetsIncomeMethodReaderDto entity, Date platDate) {

@@ -14,10 +14,10 @@ import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
  */
 public class ProductAssetsIncomeMethodResultDto extends NeedToWriteEntity {
     private static final long serialVersionUID = 1L;
-    /**
-     * 资产定价dto
-     */
-    private ModRiskPremium modRiskPremium;
+//    /**
+//     * 资产定价dto
+//     */
+//    private ModRiskPremium modRiskPremium;
 
     /**
      * 估值模型结果数据
@@ -29,13 +29,13 @@ public class ProductAssetsIncomeMethodResultDto extends NeedToWriteEntity {
      */
     private MstBondValuationInfo mstBondValuationInfo;
 
-    public ModRiskPremium getModRiskPremium() {
-        return modRiskPremium;
-    }
-
-    public void setModRiskPremium(ModRiskPremium modRiskPremium) {
-        this.modRiskPremium = modRiskPremium;
-    }
+//    public ModRiskPremium getModRiskPremium() {
+//        return modRiskPremium;
+//    }
+//
+//    public void setModRiskPremium(ModRiskPremium modRiskPremium) {
+//        this.modRiskPremium = modRiskPremium;
+//    }
 
     public ModCurveResult getModCurveResult() {
         return modCurveResult;

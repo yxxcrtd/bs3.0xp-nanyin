@@ -62,7 +62,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    ModRiskPremium selectAssetsMakePriceByFinprodId(@Param("finprodId")String finprodId,@Param("baseDateStr")String baseDateStr,@Param("valueModelMethod")String valueModelMethod);
+    ModRiskPremium selectModRiskPremiumByFinprodId(@Param("finprodId")String finprodId, @Param("baseDateStr")String baseDateStr, @Param("valueModelMethod")String valueModelMethod);
 
     /**
      * @Description:根据条件删除债券估值行情表

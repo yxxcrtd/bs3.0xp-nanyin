@@ -63,7 +63,7 @@
 
 
 	<!--资产定价查询-->
-	<select id="selectAssetsMakePriceByFinprodId" resultType="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto">
+	<select id="selectModRiskPremiumByFinprodId" resultType="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto">
 		SELECT A.SEQNO as seqNo,
 			A.SEC_TYPE_MODEL as secType,
 			A.SEC_DETAIL_TYPE_MODEL as secDetailType,
@@ -289,44 +289,44 @@
 	</delete>
 
 	<!-- 根据条件批量插入资产定价表 -->
-	<insert id="insertMakePriceResultPremium">
-		INSERT INTO MOD_RISK_PREMIUM (
-		SEQNO, SEC_TYPE_MODEL,
-		SEC_DETAIL_TYPE_MODEL,FINPROD_ID,
-		FINPROD_NAME,GRADE_SOURCE,
-		GRADE_RESULT, BASEDATE,
-		SPREAD, SPREAD_ADJ,
-		B_FULLPRICE, B_QTY,
-		MOD_METHOD,
-		CREATE_USER, CREATE_DEPT,
-		CREATE_TIME, UPDATE_USER,
-		UPDATE_TIME
-		)
-		<foreach collection="makePriceResultList" item="item" separator="from dual union all select" open="select * from (select "
-				 close="from dual)">
-			#{item.seqNo,jdbcType=VARCHAR}, #{item.secType,jdbcType=VARCHAR} ,
-			#{item.secDetailType,jdbcType=VARCHAR},#{item.finprodId,jdbcType=VARCHAR},
-			#{item.finprodName,jdbcType=VARCHAR}, #{item.gradeSource,jdbcType=VARCHAR},
-			#{item.gradeResult,jdbcType=VARCHAR},#{item.benchDate,jdbcType=DATE},
-			#{item.spread,jdbcType=DECIMAL},#{item.spreadAdj,jdbcType=DECIMAL},
-			#{item.bFullprice,jdbcType=DECIMAL},#{item.bQty,jdbcType=DECIMAL},
-			#{item.valueModelMethod,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
-			#{item.updateTime,jdbcType=TIMESTAMP}
-		</foreach>
-	</insert>
+<!--	<insert id="insertMakePriceResultPremium">-->
+<!--		INSERT INTO MOD_RISK_PREMIUM (-->
+<!--		SEQNO, SEC_TYPE_MODEL,-->
+<!--		SEC_DETAIL_TYPE_MODEL,FINPROD_ID,-->
+<!--		FINPROD_NAME,GRADE_SOURCE,-->
+<!--		GRADE_RESULT, BASEDATE,-->
+<!--		SPREAD, SPREAD_ADJ,-->
+<!--		B_FULLPRICE, B_QTY,-->
+<!--		MOD_METHOD,-->
+<!--		CREATE_USER, CREATE_DEPT,-->
+<!--		CREATE_TIME, UPDATE_USER,-->
+<!--		UPDATE_TIME-->
+<!--		)-->
+<!--		<foreach collection="makePriceResultList" item="item" separator="from dual union all select" open="select * from (select "-->
+<!--				 close="from dual)">-->
+<!--			#{item.seqNo,jdbcType=VARCHAR}, #{item.secType,jdbcType=VARCHAR} ,-->
+<!--			#{item.secDetailType,jdbcType=VARCHAR},#{item.finprodId,jdbcType=VARCHAR},-->
+<!--			#{item.finprodName,jdbcType=VARCHAR}, #{item.gradeSource,jdbcType=VARCHAR},-->
+<!--			#{item.gradeResult,jdbcType=VARCHAR},#{item.benchDate,jdbcType=DATE},-->
+<!--			#{item.spread,jdbcType=DECIMAL},#{item.spreadAdj,jdbcType=DECIMAL},-->
+<!--			#{item.bFullprice,jdbcType=DECIMAL},#{item.bQty,jdbcType=DECIMAL},-->
+<!--			#{item.valueModelMethod,jdbcType=VARCHAR},-->
+<!--			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},-->
+<!--			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},-->
+<!--			#{item.updateTime,jdbcType=TIMESTAMP}-->
+<!--		</foreach>-->
+<!--	</insert>-->
 
 
 	<!-- 根据条件批量删除资产定价表 -->
-	<delete id="deleteMakePriceResultPremium">
-		DELETE FROM MOD_RISK_PREMIUM where
-		<foreach collection="makePriceResultList" item="item" separator=" or " index="index">
-			(FINPROD_ID = #{item.finprodId,jdbcType = VARCHAR}
-			and to_char(BASEDATE,'yyyyMMdd') = to_char(#{item.benchDate,jdbcType = VARCHAR},'yyyyMMdd')
-			and MOD_METHOD=#{item.valueModelMethod,jdbcType = VARCHAR})
-		</foreach>
-	</delete>
+<!--	<delete id="deleteMakePriceResultPremium">-->
+<!--		DELETE FROM MOD_RISK_PREMIUM where-->
+<!--		<foreach collection="makePriceResultList" item="item" separator=" or " index="index">-->
+<!--			(FINPROD_ID = #{item.finprodId,jdbcType = VARCHAR}-->
+<!--			and to_char(BASEDATE,'yyyyMMdd') = to_char(#{item.benchDate,jdbcType = VARCHAR},'yyyyMMdd')-->
+<!--			and MOD_METHOD=#{item.valueModelMethod,jdbcType = VARCHAR})-->
+<!--		</foreach>-->
+<!--	</delete>-->
 
 
 
