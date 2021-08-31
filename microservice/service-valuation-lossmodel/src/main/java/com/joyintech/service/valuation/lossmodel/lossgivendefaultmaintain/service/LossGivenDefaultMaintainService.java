@@ -10,10 +10,12 @@
 
 package com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dao.ModLgdConfigDtoMapper;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +57,19 @@ public class LossGivenDefaultMaintainService extends BaseService<ModLgdConfigDto
     		if(item.getIsContainPledge()==null||"".equals(item.getIsContainPledge())){
     			item.setIsContainPledge("-");
     		}
+            //处理前瞻前年度边际PD%字段   *100
+            item.setLgd(ArithmeticUtil.multiply(item.getLgd(), new BigDecimal("100")));
     	});
         return pageR;
     }
     public List<ModLgdConfigDto> selectForExport(Map<String, Object> param)
             throws Exception {
-        return modLgdConfigDtoMapper.selectForPage(param);
+        List<ModLgdConfigDto> dtoList =modLgdConfigDtoMapper.selectForPage(param);
+        for(ModLgdConfigDto dto:dtoList){
+            //处理前瞻前年度边际PD%字段   *100
+            dto.setLgd(ArithmeticUtil.multiply(dto.getLgd(), new BigDecimal("100")));
+        }
+        return dtoList;
     }
     public ModLgdConfigDto queryDtoBySeqno(String seqno){
     	return modLgdConfigDtoMapper.selectByPrimaryKey(seqno);
@@ -73,10 +82,14 @@ public class LossGivenDefaultMaintainService extends BaseService<ModLgdConfigDto
     	return "N";
     }
     public void insert(ModLgdConfigDto dto){
+        //处理前瞻前年度边际PD%字段   /100
+        dto.setLgd(ArithmeticUtil.divide(dto.getLgd(), new BigDecimal("100"),6));
     	modLgdConfigDtoMapper.insert(dto);
     }
     public void update(ModLgdConfigDto dto){
-    	modLgdConfigDtoMapper.updateByPrimaryKey(dto);
+        //处理前瞻前年度边际PD%字段   /100
+        dto.setLgd(ArithmeticUtil.divide(dto.getLgd(), new BigDecimal("100"),6));
+        modLgdConfigDtoMapper.updateByPrimaryKey(dto);
     }
     public int delete(ModLgdConfigDto dto){
     	return modLgdConfigDtoMapper.deleteByPrimaryKey(dto.getSeqno());

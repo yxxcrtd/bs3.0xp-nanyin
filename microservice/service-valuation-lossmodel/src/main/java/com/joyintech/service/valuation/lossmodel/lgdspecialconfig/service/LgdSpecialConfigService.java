@@ -2,11 +2,13 @@
 package com.joyintech.service.valuation.lossmodel.lgdspecialconfig.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dao.LgdSpecialConfigMapper;
 import com.joyintech.service.valuation.lossmodel.lgdspecialconfig.dto.LgdSpecialConfigDto;
@@ -35,7 +37,12 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
 
 
     public Page<LgdSpecialConfigDto> selectForPage(Map<String, Object> pageParam, int page, int length) throws Exception {
-        return super.queryForPage(page, length, () -> lgdSpecialConfigMapper.selectAll(pageParam));
+        Page<LgdSpecialConfigDto> pageList = super.queryForPage(page, length, () -> lgdSpecialConfigMapper.selectAll(pageParam));
+        for(LgdSpecialConfigDto dto:pageList.getRoot()){
+            //处理前瞻前年度边际PD%字段   *100
+            dto.setLgd(ArithmeticUtil.multiply(dto.getLgd(), new BigDecimal("100")));
+        }
+        return pageList;
     }
 
 
@@ -48,6 +55,10 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      */
     public List<LgdSpecialConfigDto> selectExportList(LgdSpecialConfigDto dto) throws IllegalAccessException, InvocationTargetException {
         List<LgdSpecialConfigDto> entityList = lgdSpecialConfigMapper.selectExportList(dto);
+        for(LgdSpecialConfigDto lgdDto:entityList){
+            //处理前瞻前年度边际PD%字段   *100
+            lgdDto.setLgd(ArithmeticUtil.multiply(lgdDto.getLgd(), new BigDecimal("100")));
+        }
         return entityList;
     }
 
@@ -64,6 +75,10 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      */
     public List<LgdSpecialConfigDto> selectByMap(Map<String,Object> params) throws IllegalAccessException, InvocationTargetException {
         List<LgdSpecialConfigDto> entityList = lgdSpecialConfigMapper.selectByMap(params);
+        for(LgdSpecialConfigDto lgdDto:entityList){
+            //处理前瞻前年度边际PD%字段   *100
+            lgdDto.setLgd(ArithmeticUtil.multiply(lgdDto.getLgd(), new BigDecimal("100")));
+        }
         return entityList;
     }
 
@@ -82,6 +97,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
         if(entity != null){
             LgdSpecialConfigDto d = new LgdSpecialConfigDto();
             BeanUtil.copyProperties(d,entity);
+            //处理LPD%字段   *100
+            d.setLgd(ArithmeticUtil.multiply(d.getLgd(), new BigDecimal("100")));
             return d;
         }
         return null;
@@ -97,6 +114,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      * @return:
      */
     public void doComplete(LgdSpecialConfigDto entity, String type) {
+        //处理LGD%字段   /100
+        entity.setLgd(ArithmeticUtil.divide(entity.getLgd(), new BigDecimal("100"),6));
         //删除操作
         if (StringUtil.equals(entity.getOperateType(), "DELETE")) {
             lgdSpecialConfigMapper.deleteByPrimaryKey(entity.getSeqNo());
@@ -131,6 +150,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      * @return:
      */
     public LgdSpecialConfigDto selectByPrimaryKey(LgdSpecialConfigDto entity){
+        //处理LPD%字段   *100
+        entity.setLgd(ArithmeticUtil.multiply(entity.getLgd(), new BigDecimal("100")));
         return lgdSpecialConfigMapper.selectByPrimaryKey(entity);
     }
 
@@ -146,6 +167,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
         for(LgdSpecialConfigDto dto:dtoList){
             //判断是否有重复数据，重复更新
             List<LgdSpecialConfigDto> repetList = lgdSpecialConfigMapper.selectRepetList(dto);
+            //处理LPD%字段   *100
+            dto.setLgd(ArithmeticUtil.multiply(dto.getLgd(), new BigDecimal("100")));
             if(repetList.size()>0){
                 if("1".equals(type)){//覆盖数据
                     lgdSpecialConfigMapper.updateRepetDto(dto);
@@ -163,6 +186,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      * @return
      */
     public int insert(LgdSpecialConfigDto dto) {
+        //处理LGD%字段   /100
+        dto.setLgd(ArithmeticUtil.divide(dto.getLgd(), new BigDecimal("100"),6));
         return lgdSpecialConfigMapper.insert(dto);
     }
     /**
@@ -171,6 +196,8 @@ public class LgdSpecialConfigService extends BaseService<LgdSpecialConfigDto> {
      * @return
      */
     public int update(LgdSpecialConfigDto dto) {
+        //处理LGD%字段   /100
+        dto.setLgd(ArithmeticUtil.divide(dto.getLgd(), new BigDecimal("100"),6));
         return lgdSpecialConfigMapper.updateByPrimaryKey(dto);
     }
     /**
