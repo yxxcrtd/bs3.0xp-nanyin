@@ -171,8 +171,8 @@ public class NPrdBaseInfoRecWriter extends InterfBaseWriter<BaseEntity> {
     private AssetmanageRecvCommonService assetmanageRecvCommonService;
     //add by liupengfei for 多级法人改造 E
     
-	@Autowired
-    private ValFinBaseRuleInfoBatchMapper valFinBaseRuleInfoBatchMapper;
+//	@Autowired
+//    private ValFinBaseRuleInfoBatchMapper valFinBaseRuleInfoBatchMapper;
     
     /**
      * 多级法人数据权限接口 add by tanxuan on 20210310 多级法人权限控制改造
