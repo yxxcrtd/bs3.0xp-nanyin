@@ -99,16 +99,16 @@
             }
         }
         
-        //证券账户
-        if (query("#chlFinprodId").val() != null && query("#chlFinprodId").val() != '') {
-            query("#secManageAcctId").val('');
-        } else {
-            query("#secManageAcctId").val('999999');
-        }
-        if (!query("#secManageAcctId").val() && !query("#chlFinprodId").val()) {
-            Joyin.warn("证券账户和通道不能同时为空！");
-            return false;
-        }
+        // //证券账户
+        // if (query("#chlFinprodId").val() != null && query("#chlFinprodId").val() != '') {
+        //     query("#secManageAcctId").val('');
+        // } else {
+        //     query("#secManageAcctId").val('999999');
+        // }
+        // if (!query("#secManageAcctId").val() && !query("#chlFinprodId").val()) {
+        //     Joyin.warn("证券账户和通道不能同时为空！");
+        //     return false;
+        // }
         var object = $.serializeToObject("#searchForm");
         if ($("#select2-finprodId-container").attr("title")) {
             object.finprodName = $("#select2-finprodId-container").attr("title");
@@ -1033,12 +1033,12 @@
          */
         query("#chlFinprodId").change(function () {
 
-            //证券账户
-            if (query("#chlFinprodId").val() != null && query("#chlFinprodId").val() != '') {
-                query("#secManageAcctId").val('');
-            } else {
-                query("#secManageAcctId").val('999999');
-            }
+            // //证券账户
+            // if (query("#chlFinprodId").val() != null && query("#chlFinprodId").val() != '') {
+            //     query("#secManageAcctId").val('');
+            // } else {
+            //     query("#secManageAcctId").val('999999');
+            // }
 
             //左下行情信息联动
             getLeftMarketInfo();
