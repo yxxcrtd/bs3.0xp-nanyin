@@ -2,17 +2,17 @@
 
 DELETE FROM bok_batch_task_grp where TASK_GRP_ID = 'ValMstCounterParty';
 insert into bok_batch_task_grp (TASK_GRP_ID, TASK_GRP_NAME, TASK_GRP_TYPE, P_TASK_GRP_ID, TASK_ID, ORDER_NO, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
-values ('ValMstCounterParty', '交易对手', 'InterfData', '1111', 'ValMstCounterParty', 100084, 'admin', '17-9月 -18 12.00.00.000000 上午', 'admin', '17-9月 -18 12.00.00.000000 上午', null);
+values ('ValMstCounterParty', '交易对手', 'InterfData', '1111', 'ValMstCounterParty', 100084, 'admin', sysdate, 'admin', sysdate, null);
 
 
 DELETE FROM val_interf_define where INTERF_ID = '100087';
 insert into val_interf_define (INTERF_ID, INTERF_C_NAME, INTERF_E_NAME, ORDERNO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('100087', '交易对手', 'ValMstCounterParty', 1111, 'system', null, '26-8月 -21 01.59.49.000000 下午', 'system', '26-8月 -21 01.59.49.000000 下午');
+values ('100087', '交易对手', 'ValMstCounterParty', 1111, 'system', null, sysdate, 'system', sysdate);
 
 
 DELETE FROM VAL_INTERF_TEMPLATE where TMP_E_NAME = 'ValMstCounterParty';
 insert into VAL_INTERF_TEMPLATE (TMP_C_NAME, TMP_E_NAME, DTO_NAME, INTERF_ID, TMP_TYPE, SYSTEMID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('交易对手', 'ValMstCounterParty', 'MstCounterParty', '100087', '01', 'ZG', 'system', null, '26-8月 -21 02.35.23.000000 下午', 'system', '26-8月 -21 02.35.23.000000 下午');
+values ('交易对手', 'ValMstCounterParty', 'MstCounterParty', '100087', '01', 'ZG', 'system', null, sysdate, 'system', sysdate);
 
 
 DELETE FROM val_temp_col_check_info where TMP_E_NAME = 'ValMstCounterParty';

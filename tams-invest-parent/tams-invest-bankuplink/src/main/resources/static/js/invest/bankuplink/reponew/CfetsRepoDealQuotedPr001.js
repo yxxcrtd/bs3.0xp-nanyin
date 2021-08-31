@@ -372,7 +372,7 @@
             , {
                 field: 'fpriceAmt',
                 width: 160,
-                title: '交易金额(万元)',
+                title: '交易金额',
                 type: "money"
             }
             , {field: 'term', width: 90, title: '回购期限'}
@@ -393,7 +393,7 @@
             , {
                 field: 'prin',
                 width: 135,
-                title: '券面总计(万元)',
+                title: '券面总计(万)',
                 type: "money"
             }
             , {

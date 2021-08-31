@@ -227,7 +227,7 @@ create table MOD_CONFIG_USEAGE
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
-   UPDATE_USER          VARCHAR2(20)         not null,
+   UPDATE_USER          VARCHAR2(20)         not null
 );
 
 comment on table MOD_CONFIG_USEAGE is
@@ -248,8 +248,6 @@ comment on column MOD_CONFIG_USEAGE.CREATE_TIME is
 '创建时间';
 comment on column MOD_CONFIG_USEAGE.UPDATE_USER is
 '更新人';
-comment on column MOD_CONFIG_USEAGE.UPDATE_TIME is
-'更新时间';
 commit;
 
 --标的类金融产品附属表添加是否含有利率调整权字段
@@ -1155,8 +1153,7 @@ create table MOD_ASEET_MAPPING
    CREATE_DEPT          varchar(32)                    null,
    CREATE_TIME          timestamp                      not null,
    UPDATE_USER          varchar(20)                    not null,
-   UPDATE_TIME          timestamp                      not null,
-   constraint PK_TRD_ASSET_LOSS primary key (SEQ_NO)
+   UPDATE_TIME          timestamp                      not null
 );
 
 comment on table MOD_ASEET_MAPPING is
@@ -1588,9 +1585,9 @@ alter table MOD_STOCKDIVITRATE_CONFIG modify finprod_id not null;
 alter table MOD_STOCKDIVITRATE_CONFIG modify stock_intrate not null;
 
 --MOD_STOCKDIVITRATE_CONFIG字段必填项修改
-drop index MOD_STOCKDIVITRATE_CONFIG_INDEX;
+drop index STOCKDIVITRATE_INDEX;
 --MOD_STOCKDIVITRATE_CONFIG创建索引
-create index MOD_STOCKDIVITRATE_CONFIG_INDEX on MOD_STOCKDIVITRATE_CONFIG (FINPROD_ID);
+create index STOCKDIVITRATE_INDEX on MOD_STOCKDIVITRATE_CONFIG (FINPROD_ID);
 
 --MOD_CURVE_RESULT_DETAIL创建索引
 drop index MOD_CURVE_RESULT_DETAIL_INDEX;

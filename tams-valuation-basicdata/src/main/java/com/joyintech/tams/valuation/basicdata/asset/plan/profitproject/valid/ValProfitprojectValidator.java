@@ -89,9 +89,9 @@ public class ValProfitprojectValidator implements BeanValidator {
 //                }
                 /*增加资产代码重复校验 add by zhuyongkang 20191021 start*/
                 if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-                    if (valProfitprojectService.selectFinprodMarketId(dto.getFinprodMarketId()) > 0) {
+//                    if (valProfitprojectService.selectFinprodMarketId(dto.getFinprodMarketId()) > 0) {
 //                        errorList.add(new ValidMessage("finprodMarketId", getMessage("FIN_ASSET_E_0007", dto.getFinprodMarketId())));
-                    }
+//                    }
                 }
                 if (dto.getMdate() != null && DateUtil.compareDate(dto.getMdate(), DateUtil.platDateFromCache()) < 0) {
                     errorList.add(new ValidMessage("mdate",

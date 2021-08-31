@@ -37,6 +37,8 @@
                 if ($('#assetType1').val() && $('#assetType1').val() != '') {
                     obj.assetSecType = $('#assetType1').val();
                 }
+                obj.counterId = item.counterId;
+                list.push(obj);
             }
                 return object;
             }

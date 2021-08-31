@@ -274,6 +274,10 @@
                 mTradeAmt = shareCtAmt.plus(priceAmt);
             }
         }
+        /*券面总额单位为万元*/
+        pledgePrinTotal = JoyinMath.doDiv(pledgePrinTotal, 10000);
+        zzTotalAmt = JoyinMath.doDiv(zzTotalAmt, 10000);
+        sqTotalAmt = JoyinMath.doDiv(sqTotalAmt, 10000);
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").val(zzTotalAmt).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").val(sqTotalAmt).trigger('blur');
@@ -626,6 +630,26 @@
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
             }
+            /*添加限制*/
+            $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_ps").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_settleSpreed").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_term").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_termType").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_vSettleDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mSettleDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_actDays").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_cbDealAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_scDealAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mIntAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mTradeAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_cbShareCtAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_scShareCtAmt").attr("disabled",true);
+            /*添加限制*/
         }
     };
     /**
