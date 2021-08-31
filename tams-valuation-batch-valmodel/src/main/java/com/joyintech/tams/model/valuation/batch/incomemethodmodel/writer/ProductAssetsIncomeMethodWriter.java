@@ -76,7 +76,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         String taskId =(String)mapParam.get("TASK_ID");
         List<ProductAssetsIncomeMethodResultDto> resultList = (List<ProductAssetsIncomeMethodResultDto>)items;
         List<ModCurveResult>   valuationResultList = new ArrayList<ModCurveResult>();
-        List<ModRiskPremium>   makePriceResultList = new ArrayList<ModRiskPremium>();
+//        List<ModRiskPremium>   makePriceResultList = new ArrayList<ModRiskPremium>();
         List<MstBondValuationInfo> mstBondValuationInfos = new ArrayList<MstBondValuationInfo>();
 
 
@@ -85,9 +85,9 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
                 if(incomeMethodResultDto.getModCurveResult() !=null){
                     valuationResultList.add(incomeMethodResultDto.getModCurveResult());
                 }
-                if(incomeMethodResultDto.getModRiskPremium() !=null){
-                    makePriceResultList.add(incomeMethodResultDto.getModRiskPremium());
-                }
+//                if(incomeMethodResultDto.getModRiskPremium() !=null){
+//                    makePriceResultList.add(incomeMethodResultDto.getModRiskPremium());
+//                }
                 if(incomeMethodResultDto.getMstBondValuationInfo() !=null){
                     mstBondValuationInfos.add(incomeMethodResultDto.getMstBondValuationInfo());
                 }
@@ -100,10 +100,10 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
             insertValuationResultPremium(valuationResultList);
         }
         //资产定价批操作
-        if (makePriceResultList != null && makePriceResultList.size() > 0) {
-            deleteMakePriceResultPremium(makePriceResultList);
-            insertMakePriceResultPremium(makePriceResultList);
-        }
+//        if (makePriceResultList != null && makePriceResultList.size() > 0) {
+//            deleteMakePriceResultPremium(makePriceResultList);
+//            insertMakePriceResultPremium(makePriceResultList);
+//        }
         //债券估值行情数据
         if (mstBondValuationInfos != null && mstBondValuationInfos.size() > 0) {
             deleteMstBondQuotationInfo(mstBondValuationInfos);
@@ -183,41 +183,41 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
     }
 
 
-    /**
-     * 插入资产定价结果集
-     * @param makePriceResultList
-     */
-    private void insertMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
+//    /**
+//     * 插入资产定价结果集
+//     * @param makePriceResultList
+//     */
+//    private void insertMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
+//
+//        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
+//            return;
+//        }
+//        //日志list
+//        List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
+//        // 定义一个固定大小插入存放集合
+//        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
+//        for (List<ModRiskPremium> listInsert : list) {
+//            if (CollectionUtils.isNotEmpty(listInsert)) {
+//                incomeMethodMapper.insertMakePriceResultPremium(listInsert);
+//            }
+//        }
+//
+//    }
 
-        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
-            return;
-        }
-        //日志list
-        List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
-        // 定义一个固定大小插入存放集合
-        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
-        for (List<ModRiskPremium> listInsert : list) {
-            if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.insertMakePriceResultPremium(listInsert);
-            }
-        }
-
-    }
-
-    /**
-     * 删除资产定价结果集
-     * @param makePriceResultList
-     */
-    private void deleteMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
-        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
-            return;
-        }
-        // 定义一个固定大小插入存放集合
-        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
-        for (List<ModRiskPremium> listInsert : list) {
-            if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.deleteMakePriceResultPremium(listInsert);
-            }
-        }
-    }
+//    /**
+//     * 删除资产定价结果集
+//     * @param makePriceResultList
+//     */
+//    private void deleteMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
+//        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
+//            return;
+//        }
+//        // 定义一个固定大小插入存放集合
+//        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
+//        for (List<ModRiskPremium> listInsert : list) {
+//            if (CollectionUtils.isNotEmpty(listInsert)) {
+//                incomeMethodMapper.deleteMakePriceResultPremium(listInsert);
+//            }
+//        }
+//    }
 }
