@@ -114,17 +114,17 @@ public interface ReportDataBackupMapper {
 
 	/**
 	 * 创建check的备份表
-	 * @param tableName
+	 * @param newTableName
 	 */
-	void createChbInvestHoldInfoCheck(String tableName);
+	void createChbInvestHoldInfoCheck(@Param("newTableName")String newTableName);
 
 	/**
 	 * 插入chb_investhold_info_check备份表
-	 * @param tableName
+	 * @param newTableName
 	 * @param startDate
 	 * @param endDate
 	 */
-	void insertChbInvestHoldInfoCheckData(String tableName, String startDate, String endDate);
+	void insertChbInvestHoldInfoCheckData(@Param("newTableName")String newTableName, @Param("startDate")String startDate, @Param("endDate")String endDate);
 
 	/**
 	 * 表分析
