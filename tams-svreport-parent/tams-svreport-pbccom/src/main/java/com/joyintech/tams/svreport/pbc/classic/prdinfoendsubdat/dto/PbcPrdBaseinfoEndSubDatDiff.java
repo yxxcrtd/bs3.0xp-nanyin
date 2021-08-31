@@ -5,7 +5,6 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
-import com.joyintech.tams.report.common.base.annotate.TableName;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
 import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
@@ -209,7 +208,7 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
 
     private String pbcProdIdPrd;
     private Date mdatePrd;
-    private String cusYearYieldPrd;
+    private BigDecimal cusYearYieldPrd;
     private String ccyPrd;
     private BigDecimal customProfitPrd;
     private BigDecimal customProfitCnyPrd;
@@ -793,11 +792,11 @@ public class PbcPrdBaseinfoEndSubDatDiff extends BaseEntity {
         this.mdatePrd = mdatePrd;
     }
 
-    public String getCusYearYieldPrd() {
+    public BigDecimal getCusYearYieldPrd() {
         return cusYearYieldPrd;
     }
 
-    public void setCusYearYieldPrd(String cusYearYieldPrd) {
+    public void setCusYearYieldPrd(BigDecimal cusYearYieldPrd) {
         this.cusYearYieldPrd = cusYearYieldPrd;
     }
 
