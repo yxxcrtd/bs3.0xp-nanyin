@@ -1,7 +1,7 @@
 -- 减值模型-批处理画面
-DELETE FROM SYS_MENU where PAGE_ID = 'ModImpaireBatchTask001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_008', 'VAL', null, 'VALUATION_001_011', 'ModImpaireBatchTask001', 7, '2', '减值批处理任务', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- DELETE FROM SYS_MENU where PAGE_ID = 'ModImpaireBatchTask001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_008', 'VAL', null, 'VALUATION_001_011', 'ModImpaireBatchTask001', 7, '2', '减值批处理任务', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 delete from sys_page where PAGE_ID = 'ModImpaireBatchTask001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -349,9 +349,9 @@ insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,
 
 
 -- PD违约概率管理页面
-delete from sys_menu t where t.PAGE_ID='PdDefaultManager001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_004', 'VAL', null, 'VALUATION_001_011', 'PdDefaultManager001', 3, '2', 'PD违约概率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from sys_menu t where t.PAGE_ID='PdDefaultManager001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_004', 'VAL', null, 'VALUATION_001_011', 'PdDefaultManager001', 3, '2', 'PD违约概率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 --前瞻因子配置页面
 delete from sys_page t where t.PAGE_ID='PdFactorConfig001';
@@ -432,9 +432,9 @@ Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TAS
 
 --估值模型-二叉树模型系统参数配置
 ----菜单脚本----
-delete from SYS_MENU where PAGE_ID='ModBintreeConfig001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_010_003', 'VAL', null, 'VALUATION_001_010', 'ModBintreeConfig001', 3, '2', '二叉树模型配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from SYS_MENU where PAGE_ID='ModBintreeConfig001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_010_003', 'VAL', null, 'VALUATION_001_010', 'ModBintreeConfig001', 3, '2', '二叉树模型配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 ----页面脚本----
 delete from SYS_PAGE where PAGE_ID in('ModBintreeConfig001','ModBintreeConfig002');
@@ -474,13 +474,13 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('MODEL_GRADE_TYPE','03','系统计算','3','2','system','',SYSDATE, 'system',SYSDATE);
 
 /*页面*/
-DELETE FROM SYS_MENU WHERE MENU_ID = 'VALUATION_ACCOUNTING_001_008';
-insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_ACCOUNTING_001_008', 'VAL', null, 'VALUATION_ACCOUNTING_001', '', 8, '02', '普通固定收益资产估值', 'system', null, SYSDATE, 'system', SYSDATE);
+-- DELETE FROM SYS_MENU WHERE MENU_ID = 'VALUATION_ACCOUNTING_001_008';
+-- insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_ACCOUNTING_001_008', 'VAL', null, 'VALUATION_ACCOUNTING_001', '', 8, '02', '普通固定收益资产估值', 'system', null, SYSDATE, 'system', SYSDATE);
 
-DELETE FROM SYS_MENU WHERE MENU_ID = 'VALUATION_ACCOUNTING_001_008_002' AND PAGE_ID = 'RiskPremiumAdjConf001';
-insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_ACCOUNTING_001_008_002', 'VAL', null, 'VALUATION_ACCOUNTING_001_008', 'RiskPremiumAdjConf001', 2, '02', '风险溢价调整配置', 'system', null, SYSDATE, 'system', SYSDATE);
+-- DELETE FROM SYS_MENU WHERE MENU_ID = 'VALUATION_ACCOUNTING_001_008_002' AND PAGE_ID = 'RiskPremiumAdjConf001';
+-- insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_ACCOUNTING_001_008_002', 'VAL', null, 'VALUATION_ACCOUNTING_001_008', 'RiskPremiumAdjConf001', 2, '02', '风险溢价调整配置', 'system', null, SYSDATE, 'system', SYSDATE);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'RiskPremiumAdjConf001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -496,9 +496,9 @@ values ('RiskPremiumAdjConf002', 'RiskPremiumAdjConf002_btn_submit', 'oneApprova
 
 
 --估值模型-批处理页面
-DELETE FROM SYS_MENU where PAGE_ID = 'ModValBatchTask001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_010_005', 'VAL', null, 'VALUATION_001_010', 'ModValBatchTask001', 5, '2', '估值模型批处理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- DELETE FROM SYS_MENU where PAGE_ID = 'ModValBatchTask001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_010_005', 'VAL', null, 'VALUATION_001_010', 'ModValBatchTask001', 5, '2', '估值模型批处理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 delete from sys_page where PAGE_ID = 'ModValBatchTask001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -506,7 +506,7 @@ values ('ModValBatchTask001', 'VAL', '/modelvaluation/batch/batchtask/ModValBatc
 
 delete from sys_page where PAGE_ID = 'ModValBatchTask002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask002', 'valmodel/batch/batchtask/ModValBatchTask002', null, null, null, '02', '01', '估值模型批处理任务-详情', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
+values ('ModValBatchTask002', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask002', 'valmodel/batch/batchtask/ModValBatchTask002', null, null, null, '02', '01', '估值模型批处理任务-详情', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
 
 --估值模型-现金流折现模型曲线界面上下拉框配置
 delete from SYS_PAGE_DICTLIST where page_id in ('CashFlowDiscount002');
@@ -517,9 +517,9 @@ insert into sys_page_dictlist values('CashFlowDiscount002','999999','CURVE_TYPE'
 
 
 --估值模型-股息增长率配置系统参数配置
-delete from sys_menu t where t.PAGE_ID='ModStockDivitrateConfig001' ;
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_010_004', 'VAL', null, 'VALUATION_001_010', 'ModStockDivitrateConfig001', 4, '2', '股息增长率配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from sys_menu t where t.PAGE_ID='ModStockDivitrateConfig001' ;
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_010_004', 'VAL', null, 'VALUATION_001_010', 'ModStockDivitrateConfig001', 4, '2', '股息增长率配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 delete from sys_page t where t.PAGE_ID='ModStockDivitrateConfig001' ;
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -527,7 +527,7 @@ values ('ModStockDivitrateConfig001', 'VAL', '/valmodel/modstockdivitrateconfig/
 
 delete from sys_page t where t.PAGE_ID='ModStockDivitrateConfig002' ;
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig002', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', null, null, null, '02', '01', '预期股息增长率配置查询', 'system', null, '05-AUG-21 06.42.39.000000 PM', 'system', '05-AUG-21 06.42.39.000000 PM');
+values ('ModStockDivitrateConfig002', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', null, null, null, '02', '01', '预期股息增长率配置查询', 'system', null, '05-AUG-21 06.42.39.000000 PM', 'system', '05-AUG-21 06.42.39.000000 PM');
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig002' and t.ELEMENT_ID='ModStockDivitrateConfig002_btn_submit';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -563,15 +563,15 @@ insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('COMMON_BUSINESS_TYPE', 'STCOKDIVITRATE', '预期股息增长率配置', 1225, '0', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
 
 --减值模型-资产评级配置管理菜单
-delete from SYS_MENU where PAGE_ID='AssetRatingAllocation001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from SYS_MENU where PAGE_ID='AssetRatingAllocation001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 --减值模型- LGD违约损失率
-delete from SYS_MENU where PAGE_ID='LossGivenDefaultManage001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_005', 'VAL', null, 'VALUATION_001_011', 'LossGivenDefaultManage001', 4, '2', 'LGD违约损失率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
-commit;
+-- delete from SYS_MENU where PAGE_ID='LossGivenDefaultManage001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_005', 'VAL', null, 'VALUATION_001_011', 'LossGivenDefaultManage001', 4, '2', 'LGD违约损失率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- commit;
 
 --减值阶段参数表初始化
 delete from MOD_STAGE_PARA;
@@ -660,9 +660,9 @@ delete from sys_page t where t.PAGE_ID='ModStagePara002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('ModStagePara002', 'RSK', '/model/impairment/phaseparameter/ModStagePara002', 'lossmodel/phaseparameter/ModStagePara002', null, null, null, '02', '01', '减值阶段参数修改', 'system', null, '05-AUG-21 03.10.42.000000 PM', 'system', '05-AUG-21 03.10.42.000000 PM');
 
-delete from sys_menu t where t.PAGE_ID='ModStagePara001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_006', 'VAL', null, 'VALUATION_001_011', 'ModStagePara001', 5, '2', '减值阶段参数管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from sys_menu t where t.PAGE_ID='ModStagePara001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_006', 'VAL', null, 'VALUATION_001_011', 'ModStagePara001', 5, '2', '减值阶段参数管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 
 --减值模型-数据加载批处理任务  + 减值模型-ECL计算批处理任务
@@ -703,9 +703,9 @@ values ('2024', 'MODEL', '数据推送批处理', null, 'dataPushValuatIoninfoTa
 
 
 --减值情况计提画面
-DELETE FROM SYS_MENU WHERE PAGE_ID = 'ImpairmentProvision001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_007', 'VAL', null, 'VALUATION_001_011', 'ImpairmentProvision001', 6, '2', '减值情况计提表', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- DELETE FROM SYS_MENU WHERE PAGE_ID = 'ImpairmentProvision001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_007', 'VAL', null, 'VALUATION_001_011', 'ImpairmentProvision001', 6, '2', '减值情况计提表', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'ImpairmentProvision001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -761,9 +761,9 @@ insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAU
 values ('MODEL_DATA_SOURCE', '01', '模型', 2, '0', 'system', null, SYSDATE, 'system', SYSDATE);
 
 --资产减值管理页面
-DELETE FROM SYS_MENU WHERE MENU_ID = 'RISK_MANAGEMENT_001_013_012' AND PAGE_ID = 'AssetImpairmentManagement001';
-insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_013_012', 'RSK', null, 'RISK_MANAGEMENT_001_013', 'AssetImpairmentManagement001', 12, '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
+-- DELETE FROM SYS_MENU WHERE MENU_ID = 'RISK_MANAGEMENT_001_013_012' AND PAGE_ID = 'AssetImpairmentManagement001';
+-- insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('RISK_MANAGEMENT_001_013_012', 'RSK', null, 'RISK_MANAGEMENT_001_013', 'AssetImpairmentManagement001', 12, '02', '资产减值管理', 'system', null, SYSDATE, 'system', SYSDATE);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -848,10 +848,10 @@ insert into sys_page_dictlist values('InsideOutsideGrade001','999999','GRADE_PAR
 insert into sys_page_dictlist values('InsideOutsideGrade001','999999','GRADE_PARTY','32','','','system',null,sysdate,'system',sysdate,'');
 insert into sys_page_dictlist values('InsideOutsideGrade001','999999','GRADE_PARTY','99','','','system',null,sysdate,'system',sysdate,'');
 
---内外部评级映射管理
-DELETE FROM sys_menu WHERE PAGE_ID = 'InsideOutsideGrade001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_011_011', 'VAL', null, 'VALUATION_001_011', 'InsideOutsideGrade001', 11, '2', '评级关系映射管理', 'system', null, sysdate, 'system',sysdate);
+-- --内外部评级映射管理
+-- DELETE FROM sys_menu WHERE PAGE_ID = 'InsideOutsideGrade001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_011_011', 'VAL', null, 'VALUATION_001_011', 'InsideOutsideGrade001', 11, '2', '评级关系映射管理', 'system', null, sysdate, 'system',sysdate);
 
 DELETE FROM sys_page WHERE PAGE_ID = 'InsideOutsideGrade001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -884,14 +884,14 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 -- 流程按钮添加begin
 delete from  sys_wfl_business_module where  PAGE_ID='InsideOutsideGrade002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('InsideOutsideGrade002', 'ValInsideOutsideGrade002_btn_submit', 'noneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('InsideOutsideGrade002', 'ValInsideOutsideGrade002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('InsideOutsideGrade002', 'ValInsideOutsideGrade001_btn_delete', 'noneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('InsideOutsideGrade002', 'ValInsideOutsideGrade001_btn_delete', 'noneApproval', 'system', null,sysdate, 'system', sysdate);
 
 -- 流程按钮添加end
 -- 内外部评级映射管理配置的业务类型begin
-insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD03','内外部评级映射管理',1225,0,'system','',sysdate,'system',sysdate);
+insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD03','内外部评级映射管理',1225,0,'system','',sysdate,'system',sysdate,null);
 
 --评级PD维护页面
 delete from sys_page t where t.PAGE_ID='ModGradePdConfig001';
@@ -983,15 +983,15 @@ values ('LgdSpecialConfig002', 'RSK', '/model/impairment/lgddefultmanager/lgdspe
 -- 流程按钮添加begin
 delete from sys_wfl_business_module t where t.ELEMENT_ID='LgdSpecialConfig001_btn_delete';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LgdSpecialConfig002', 'LgdSpecialConfig001_btn_delete', 'oneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('LgdSpecialConfig002', 'LgdSpecialConfig001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_wfl_business_module t where t.ELEMENT_ID='LgdSpecialConfig002_btn_save';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LgdSpecialConfig002', 'LgdSpecialConfig002_btn_save', 'oneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('LgdSpecialConfig002', 'LgdSpecialConfig002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_wfl_business_module t where t.ELEMENT_ID='LgdSpecialConfig002_btn_submit';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LgdSpecialConfig002', 'LgdSpecialConfig002_btn_submit', 'oneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('LgdSpecialConfig002', 'LgdSpecialConfig002_btn_submit', 'oneApproval', 'system', null,sysdate, 'system', sysdate);
 
 -- 流程按钮添加end
 
@@ -1003,9 +1003,9 @@ values ('COMMON_BUSINESS_TYPE', 'MOD08', '特殊资产LGD维护', 1300, '0', 'sy
 
 
 --现金流折现模型曲线配置菜单和页面
-delete from sys_menu where PAGE_ID = 'CashFlowDiscount001';
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_010_001', 'VAL', null, 'VALUATION_001_010', 'CashFlowDiscount001', 1, '2', '贴现法曲线配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from sys_menu where PAGE_ID = 'CashFlowDiscount001';
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_010_001', 'VAL', null, 'VALUATION_001_010', 'CashFlowDiscount001', 1, '2', '贴现法曲线配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 delete from sys_page where PAGE_ID = 'CashFlowDiscount001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -1098,9 +1098,9 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 --资产分类评级配置end
 
 --资产评级来源配置页面
-delete from sys_menu where PAGE_ID in('AssetRatingAllocation001','Specialassets001','Specialassets002');
-insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- delete from sys_menu where PAGE_ID in('AssetRatingAllocation001','Specialassets001','Specialassets002');
+-- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+-- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
 
 
 delete from SYS_PAGE where PAGE_ID in('AssetRatingAllocation001','Specialassets001','Specialassets002');
@@ -1159,12 +1159,12 @@ Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CR
 Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('LossGivenDefaultMaintain002','LossGivenDefaultMaintain002_btn_submit','noneApproval','system',null,sysdate,'system',sysdate);
 
 --利润表、资产负债表、理财产品净值变动表界面菜单地址改为新落地后的三表对应界面地址
-delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_001';
-delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_002';
-delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_003';
-Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_001','VAL',null,'ACCOUTING_001_004_002','OwnerEquityChangeNew001',6,'03','理财产品净值变动表','system',null,sysdate,'system',sysdate);
-Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_002','VAL',null,'ACCOUTING_001_004_002','ValProfitNewQuery001',7,'02','利润表','system',null,sysdate,'system',sysdate);
-Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_003','VAL',null,'ACCOUTING_001_004_002','AssetLiabilityStatementNewQuery001',5,'02','资产负债表','system',null,sysdate,'system',sysdate);
+-- delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_001';
+-- delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_002';
+-- delete from sys_menu where MENU_ID ='ACCOUTING_001_004_002_003';
+-- Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_001','VAL',null,'ACCOUTING_001_004_002','OwnerEquityChangeNew001',6,'03','理财产品净值变动表','system',null,sysdate,'system',sysdate);
+-- Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_002','VAL',null,'ACCOUTING_001_004_002','ValProfitNewQuery001',7,'02','利润表','system',null,sysdate,'system',sysdate);
+-- Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('ACCOUTING_001_004_002_003','VAL',null,'ACCOUTING_001_004_002','AssetLiabilityStatementNewQuery001',5,'02','资产负债表','system',null,sysdate,'system',sysdate);
 
 
 --weipeng: 资产减值升级时删除了手工凭证-计提后得批处理，需要给恢复回来

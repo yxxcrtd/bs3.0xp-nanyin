@@ -35,4 +35,7 @@ public interface ModBatchTaskMapper {
 
     List<BatchAssetInfoDto> getAssetInfoImpairment(Map<String, Object> param);
 
+    List<BatchAssetInfoDto> getLossAssetInfo(Map<String, Object> param);
+
+
 }
