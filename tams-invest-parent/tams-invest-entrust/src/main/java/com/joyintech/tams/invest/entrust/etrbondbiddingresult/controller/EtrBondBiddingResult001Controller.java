@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +127,7 @@ public class EtrBondBiddingResult001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("doManualRelease")
-    public AjaxResult doManualRelease(@RequestBody Map<String,Object> map){
+    public AjaxResult doManualRelease(@RequestBody Map<String,Object> map) throws ParseException {
         etrbondbiddingresultService.doManualRelease(map);
         return new AjaxResult("头寸释放成功！",MessageType.提示消息);
     }
