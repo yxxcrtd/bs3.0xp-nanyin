@@ -347,7 +347,7 @@ public class PbcClassicsDataFileService {
     	
     	// 【dat文件生成留痕】文件和数据的主键集合map（key="pathfilenameDatakeylist"，value=文件全名和文件内数据主键list）
     	Map<String,Object> fileDataMap = new HashMap<String,Object>();
-    	
+
     	//记录序列号
     	Map<String,List<String>> seqMap = new HashMap<String,List<String>>();
     	//生成dat文件
@@ -2309,6 +2309,17 @@ public class PbcClassicsDataFileService {
     		fileInfo.setHeadOrgcode(dataInfo.get(1));
     		fileInfo.setCdate(genDate);
     		fileInfo.setFileseqno(fileseqno);
+    		//根据机构编号获取对应的数据
+			for(Map.Entry<String,Object> dto : fileDataMap.entrySet()){
+				if(!"pathfilenameDatakeylist".equals(dto.getKey())){
+					List<String> fileList = (List<String>)dto.getValue();
+					if(fileList.contains(flieName)){
+						fileInfo.setOrgCode(dto.getKey());
+						break;
+					}
+				}
+			}
+
     		fileInfo.setFilepath(folderPath.replace("_", "")+".zip");
     		fileInfo.setStatus(DictCodeListExt2.数据状态_有效.getValue());
     		fileInfo.setCreateUser("system");
