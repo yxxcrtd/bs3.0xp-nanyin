@@ -159,6 +159,12 @@
                 $("#CfetsRepoDealQuotedPrice002_scDealAmt").attr("disabled",true);
                 $("#CfetsRepoDealQuotedPrice002_mIntAmt").attr("disabled",true);
                 $("#CfetsRepoDealQuotedPrice002_mTradeAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_shareCtAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_cbShareCtAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_scShareCtAmt").attr("disabled",true);
                 /*添加限制*/
             }
         }
@@ -264,6 +270,8 @@
         }
         /*券面总额单位为万元*/
         pledgePrinTotal = JoyinMath.doDiv(pledgePrinTotal, 10000);
+        zzTotalAmt = JoyinMath.doDiv(zzTotalAmt, 10000);
+        sqTotalAmt = JoyinMath.doDiv(sqTotalAmt, 10000);
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").val(zzTotalAmt).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").val(sqTotalAmt).trigger('blur');
