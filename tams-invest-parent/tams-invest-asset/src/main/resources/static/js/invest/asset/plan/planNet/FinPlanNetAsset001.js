@@ -84,6 +84,7 @@ $(function() {
             ,{field:'capiIncomeFeature',visible :false}
 //            ,{field:'trusteeId',visible :false}
             ,{field:'issueAmt',visible :false}
+            ,{field:'investmentAttributes',visible :false}
             ,{field:'finprodMarketId',title: 'FinPlanNetAsset001.finProdMarketId',width:180}
             ,{field:'finprodType2',visible :false}
             ,{field:'finprodName',title: 'FinPlanNetAsset001.finProdName',width:150}
