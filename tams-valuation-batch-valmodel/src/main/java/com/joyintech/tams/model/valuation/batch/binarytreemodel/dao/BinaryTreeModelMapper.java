@@ -3,8 +3,7 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.dao;
 import com.joyintech.tams.common.base.entity.ModBintreeConfig;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
-import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
@@ -26,12 +25,6 @@ public interface BinaryTreeModelMapper {
      */
     List<ModBintreeConfig> findModBintreeConfig(@Param("finprodIds") List<String> finprodIds);
 
-    /**
-     * 查询映射
-     * @param params
-     * @return
-     */
-    List<String> findOutPut5(Map<String, Object> params);
 
     /**
      * 资产定价数据查询
@@ -68,13 +61,7 @@ public interface BinaryTreeModelMapper {
      */
     int insertModRiskPremium(List<ModRiskPremium> listInsert);
 
-    //获取资产信息集合
-    List<ModAssetInfoDto> selectAssetInfo(ModAssetInfoParamsDto paraMap);
+    void deleteMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
 
-    //获取资产现金流计划集合
-    List<ModCashFlowDto> getCashFlowPlanInfoByFinprodId(String finprodId);
-
-    void deleteMstBondQuotationInfo(List<MstBondQuotationInfoDto> listInsert);
-
-    void insertMstBondQuotationInfo(List<MstBondQuotationInfoDto> listInsert);
+    void insertMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
 }

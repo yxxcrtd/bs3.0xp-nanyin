@@ -3,9 +3,9 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelResultDto;
-import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +27,12 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
         List<BinaryTreeModelResultDto> resultList = (List<BinaryTreeModelResultDto>)items;
         List<ModCurveResult> listModCurveResult = new ArrayList<ModCurveResult>();
         List<ModRiskPremium> listModRiskPremium = new ArrayList<ModRiskPremium>();
-        List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto = new ArrayList<MstBondQuotationInfoDto>();
+        List<MstBondValuationInfo> listMstBondValuationInfo = new ArrayList<MstBondValuationInfo>();
         if (resultList != null && resultList.size() > 0) {
             for (BinaryTreeModelResultDto dto : resultList) {
                 listModCurveResult.add(dto.getModCurveResult());
                 listModRiskPremium.add(dto.getModRiskPremium());
-                listMstBondQuotationInfoDto.add(dto.getMstBondQuoTation());
+                listMstBondValuationInfo.add(dto.getMstBondValuationInfo());
             }
         }
 
@@ -45,9 +45,9 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
             deleteModRiskPremium(listModRiskPremium);
             insertModRiskPremium(listModRiskPremium);
         }
-        if (listMstBondQuotationInfoDto != null && listMstBondQuotationInfoDto.size() > 0) {
-            deleteMstBondQuotationInfo(listMstBondQuotationInfoDto);
-            insertMstBondQuotationInfo(listMstBondQuotationInfoDto);
+        if (listMstBondValuationInfo != null && listMstBondValuationInfo.size() > 0) {
+            deleteMstBondQuotationInfo(listMstBondValuationInfo);
+            insertMstBondQuotationInfo(listMstBondValuationInfo);
         }
 
 
@@ -55,34 +55,34 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
 
     /**
      * 插入债券估值行情
-     * @param listMstBondQuotationInfoDto
+     * @param listMstBondValuationInfo
      */
-    private void insertMstBondQuotationInfo(List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto) {
-        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+    private void insertMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondValuationInfo) {
+        if (listMstBondValuationInfo == null || listMstBondValuationInfo.isEmpty()) {
             return;
         }
         // 定义一个固定大小插入存放集合
-        List<List<MstBondQuotationInfoDto>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
-        for (List<MstBondQuotationInfoDto> listInsert : list) {
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondValuationInfo);
+        for (List<MstBondValuationInfo> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                binaryTreeModelMapper.insertMstBondQuotationInfo(listInsert);
+                binaryTreeModelMapper.insertMstBondValuationInfo(listInsert);
             }
         }
     }
 
     /**
      * 删除债券估值行情
-     * @param listMstBondQuotationInfoDto
+     * @param listMstBondValuationInfo
      */
-    private void deleteMstBondQuotationInfo(List<MstBondQuotationInfoDto> listMstBondQuotationInfoDto) {
-        if (listMstBondQuotationInfoDto == null || listMstBondQuotationInfoDto.isEmpty()) {
+    private void deleteMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondValuationInfo) {
+        if (listMstBondValuationInfo == null || listMstBondValuationInfo.isEmpty()) {
             return;
         }
         // 定义一个固定大小插入存放集合
-        List<List<MstBondQuotationInfoDto>> list = DataHandleUtil.splitList(listMstBondQuotationInfoDto);
-        for (List<MstBondQuotationInfoDto> listInsert : list) {
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondValuationInfo);
+        for (List<MstBondValuationInfo> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                binaryTreeModelMapper.deleteMstBondQuotationInfo(listInsert);
+                binaryTreeModelMapper.deleteMstBondValuationInfo(listInsert);
             }
         }
     }

@@ -3,7 +3,7 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.dto;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
-import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 public class BinaryTreeModelResultDto extends NeedToWriteEntity {
 
@@ -18,7 +18,7 @@ public class BinaryTreeModelResultDto extends NeedToWriteEntity {
     /**
      * 最终的债券估值行情数据
      */
-    private MstBondQuotationInfoDto mstBondQuoTation;
+    private MstBondValuationInfo mstBondValuationInfo;
 
     public ModCurveResult getModCurveResult() {
         return modCurveResult;
@@ -36,11 +36,11 @@ public class BinaryTreeModelResultDto extends NeedToWriteEntity {
         this.modRiskPremium = modRiskPremium;
     }
 
-    public MstBondQuotationInfoDto getMstBondQuoTation() {
-        return mstBondQuoTation;
+    public MstBondValuationInfo getMstBondValuationInfo() {
+        return mstBondValuationInfo;
     }
 
-    public void setMstBondQuoTation(MstBondQuotationInfoDto mstBondQuoTation) {
-        this.mstBondQuoTation = mstBondQuoTation;
+    public void setMstBondValuationInfo(MstBondValuationInfo mstBondValuationInfo) {
+        this.mstBondValuationInfo = mstBondValuationInfo;
     }
 }

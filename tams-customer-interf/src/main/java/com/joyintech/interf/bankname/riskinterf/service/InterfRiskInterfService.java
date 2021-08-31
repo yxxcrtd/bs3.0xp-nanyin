@@ -197,7 +197,8 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         ClientData data = new ClientData();
         data.setHead(header);
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put(RSK_SZ_LIST,requstjson);
+//        body.put(RSK_SZ_LIST,requstjson);
+        body.put(RSK_SZ_LIST, requestList);
         body.put("orderID",dataMap.get("orderID"));
         data.setBody(body);
 
