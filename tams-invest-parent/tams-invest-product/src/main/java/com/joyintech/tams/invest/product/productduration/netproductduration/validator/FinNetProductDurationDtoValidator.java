@@ -902,6 +902,10 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
 	                            purDealNum = purDealNum.add(tdyBuyShareAmt);
 	                        }
 	                    }
+	                    // ZGZGST-1759:过滤撤回和取消状态数据 fuyongsheng 20210831 add start
+                        map.put("isCancel", DictCodeList.是否_否.getValue());
+                        map.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
+                        // ZGZGST-1759:过滤撤回和取消状态数据 fuyongsheng 20210831 add end
 	                    BigDecimal afterTdySellShareAmt = finNetProductDurationService.getAfterTdySellShareAmt(map);
 	                    if(afterTdySellShareAmt!=null){
 	                        purDealNum = purDealNum.subtract(afterTdySellShareAmt);
