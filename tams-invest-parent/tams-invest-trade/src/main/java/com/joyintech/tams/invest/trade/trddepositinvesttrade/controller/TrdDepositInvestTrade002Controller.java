@@ -509,6 +509,8 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
             paramMap.put("finprodId", dto.getFinprodId());
             //考虑流程中被占用,是的情况
             paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
+            //针对，流程中数据退回，然后又重新提交时，流程中占有应不包含该数据
+            paramMap.put("isnotContainTrds",dto.getTradeId());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
 
