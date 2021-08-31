@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.interf;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import com.joyintech.framework.JoyinApplication;
@@ -26,6 +27,7 @@ import java.util.Locale;
  * @see InterfApplication
  * @since 1.0
  */
+@ComponentScan(basePackages = "com.jixu")
 @Import({InterfTaskConfiguration.class})
 public class InterfApplication extends WebApplication {
 

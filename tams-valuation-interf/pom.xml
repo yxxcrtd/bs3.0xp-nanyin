@@ -46,7 +46,7 @@
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-valuation-common</artifactId>
             <version>3.0.1</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>tams-calculation</artifactId>
@@ -101,11 +101,25 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.jixu</groupId>
-             <artifactId>JixuApi</artifactId>
-             <version>0.0.1</version>
-        </dependency>
-        <dependency>
+			<groupId>com.jixu</groupId>
+			<artifactId>JixuApi</artifactId>
+			<version>0.0.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hibernate.common</groupId>
+					<artifactId>hibernate-commons-annotations</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate</groupId>
+					<artifactId>hibernate-ehcache</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
 			<groupId>com.joyintech</groupId>
 			<artifactId>connector</artifactId>
 			<version>1.0</version>
