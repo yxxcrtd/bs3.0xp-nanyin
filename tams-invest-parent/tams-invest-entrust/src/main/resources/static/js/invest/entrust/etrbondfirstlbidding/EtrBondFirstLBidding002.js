@@ -337,12 +337,15 @@
     
     window.componentLoadCallback = function(isDone, pagePath, params){
     	$('#etrInvestPersonInfo_trader').attr('multiple',true);
-
-        var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
-            function(result) {
-                $('#proAvailableCash1').val(result.cashT1).trigger('blur');
-            });
+    	// ZGZGST-1721 组合代码不为空时再调查询可用现金接口 fuyongsheng 202108311130 eidt start
+        if($('#portfolioId').val() != ""){
+            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
+                function(result) {
+                    $('#proAvailableCash1').val(result.cashT1).trigger('blur');
+                });
+        }
+        // ZGZGST-1721 组合代码不为空时再调查询可用现金接口 fuyongsheng 202108311130 eidt end
 //    	$('#etrInvestPersonInfo_counterId').val('').prop('disabled',false).prop('required',true).trigger('change');
     }
 
