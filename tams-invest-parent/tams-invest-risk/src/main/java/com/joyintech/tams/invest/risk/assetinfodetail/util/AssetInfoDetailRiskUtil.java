@@ -11,6 +11,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.common.util.SysDataUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.asset.DtoChangeUtil;
@@ -45,13 +46,9 @@ public class AssetInfoDetailRiskUtil {
 
     static Map<String,String> rule = new HashMap<>();
 
-//    TODO
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
-//
-//    @Autowired
-//    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
-    
+    @Autowired
+    private ChbDataCheckService chbDataCheckService;
+
     /**
 	 * 资产要素service
 	 */
@@ -142,14 +139,7 @@ public class AssetInfoDetailRiskUtil {
         pbcAssetType2ListLink.forEach(sysDatadictListLink -> {
             dict.put("pbcAssetType2" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
         });
-        rule = new HashMap<>();
-//        TODO
-//        List<ChbCheckRule> listRules = chbDataCheckCommonMapper.queryChbCheckRule("AssetInfoRegist002","1");
-//        if (!StringUtil.isEmptyList(listRules)){
-//            listRules.forEach(chbCheckRule -> {
-//                rule.put(chbCheckRule.getSrcproperty() + GlobalConstant.UNDER_LINE + chbCheckRule.getCheckmethod(),chbCheckRule.getRemark());
-//            });
-//        }
+        rule = chbDataCheckService.getCheckRule("AssetInfoRegist002","1");
         for (int i = 0; i < dataList.size(); i++ ) {
             if ( i < 2 ){
                 continue;
@@ -328,8 +318,7 @@ public class AssetInfoDetailRiskUtil {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "第"+(i+1)+"行资产代码与第"+(j+1)+"行资产代码重复"));
                 }
             }
-//            TODO
-//            messages.addAll(chbDataCheckCommonUtil.chbCheckCommon(resultList, entity, "AssetInfoRegist002", entity.getAssetType2(), ValidMessage.class));
+            messages.addAll(chbDataCheckService.chbCheckCommon(null, entity, "AssetInfoRegist002", entity.getAssetType2()));
             if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
                     if (StringUtil.isNotEmpty(validMessage.getMessage())){

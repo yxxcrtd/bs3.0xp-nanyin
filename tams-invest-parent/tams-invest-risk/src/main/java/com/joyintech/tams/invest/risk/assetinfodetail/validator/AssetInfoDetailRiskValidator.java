@@ -31,12 +31,6 @@ import java.util.List;
  */
 @Component
 public class AssetInfoDetailRiskValidator implements BeanValidator{
-
-
-//    TODO
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
-
     /**
      * 资产要素service
      */

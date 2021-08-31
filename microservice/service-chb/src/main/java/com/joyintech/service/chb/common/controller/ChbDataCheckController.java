@@ -2,7 +2,8 @@ package com.joyintech.service.chb.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.dao.ChbDataCheckCommonMapper;
+import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.ChbCheckRule;
 import com.joyintech.framework.validation.ValidMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/openapi")
 public class ChbDataCheckController {
+    @Autowired
+    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
 
     @Autowired
     private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
@@ -31,5 +34,10 @@ public class ChbDataCheckController {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    @GetMapping("queryChbCheckRule")
+    public List<ChbCheckRule> queryChbCheckRule(@RequestParam(value = "pageId") String pageId, @RequestParam(value = "pageFlag") String pageFlag) {
+        return chbDataCheckCommonMapper.queryChbCheckRule(pageId, pageFlag);
     }
 }

@@ -78,10 +78,6 @@ public class FinProductBuild002Validator implements BeanValidator {
 
     @Autowired
     private ChbDataCheckService chbDataCheckService;
-//    TODO
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
-
 
     /**
      * {@linkplain}
@@ -1144,8 +1140,7 @@ public class FinProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-//      TODO
-//      validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinProductBuild002", null, ValidMessage.class);
+      validList = chbDataCheckService.chbCheckCommon(validList, entity, "FinProductBuild002", null);
 
         //同一数据行：开放开始日小于等于开放结束日，开放结束日小于等于开放确认日
         if (entity.getBussFinProductOpenPlanDto() != null) {
