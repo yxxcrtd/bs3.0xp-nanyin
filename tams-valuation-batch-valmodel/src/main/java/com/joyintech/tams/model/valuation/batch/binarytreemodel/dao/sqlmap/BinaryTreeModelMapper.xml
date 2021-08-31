@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper">
 
-    <select id="findModBintreeConfig" resultType="com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModBintreeConfig">
+    <select id="findModBintreeConfig" resultType="com.joyintech.tams.common.base.entity.ModBintreeConfig">
         select
             SEQNO,
             FINPROD_ID,
@@ -45,7 +45,7 @@ where
     INPUT2 in (#{MODEL_SEC_DETAIL_TYPE_011}, #{MODEL_SEC_DETAIL_TYPE_013})
     </select>
 
-    <select id="findModRiskPremium" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium">
+    <select id="findModRiskPremium" resultType="com.joyintech.tams.common.base.entity.ModRiskPremium">
     WITH TMP AS
     (
     SELECT

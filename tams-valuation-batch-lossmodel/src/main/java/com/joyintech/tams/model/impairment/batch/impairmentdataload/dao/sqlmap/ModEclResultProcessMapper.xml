@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper" >
+<mapper namespace="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess" >
         <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
         <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
@@ -84,17 +84,17 @@
     </sql>
     <sql id="Sql_All_Data" >
         select 
-        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper.Base_Column_List" />
+        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper.Base_Column_List" />
         from MOD_ECL_RESULT_PROCESS
     </sql>
     <sql id="Sql_All_Effective_Data" >
         select 
-        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper.Base_Column_List" />
+        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper.Base_Column_List" />
         from MOD_ECL_RESULT_PROCESS
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select 
-        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper.Base_Column_List" />
+        <include refid="com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper.Base_Column_List" />
         from MOD_ECL_RESULT_PROCESS
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </select>

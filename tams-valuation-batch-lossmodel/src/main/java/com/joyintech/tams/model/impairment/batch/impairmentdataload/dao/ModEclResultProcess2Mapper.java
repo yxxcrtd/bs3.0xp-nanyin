@@ -4,7 +4,7 @@ import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ModEclResultProcessMapper {
+public interface ModEclResultProcess2Mapper {
     int deleteByPrimaryKey(String seqno);
 
     int insert(ModEclResultProcess record);
