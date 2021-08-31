@@ -2307,19 +2307,9 @@ public class PbcClassicsDataFileService {
     		fileInfo.setFileid(fileid);
     		fileInfo.setFilecode(dataInfo.get(0));
     		fileInfo.setHeadOrgcode(dataInfo.get(1));
+			fileInfo.setOrgCode(dataInfo.get(1));
     		fileInfo.setCdate(genDate);
     		fileInfo.setFileseqno(fileseqno);
-    		//根据机构编号获取对应的数据
-			for(Map.Entry<String,Object> dto : fileDataMap.entrySet()){
-				if(!"pathfilenameDatakeylist".equals(dto.getKey())){
-					List<String> fileList = (List<String>)dto.getValue();
-					if(fileList.contains(flieName)){
-						fileInfo.setOrgCode(dto.getKey());
-						break;
-					}
-				}
-			}
-
     		fileInfo.setFilepath(folderPath.replace("_", "")+".zip");
     		fileInfo.setStatus(DictCodeListExt2.数据状态_有效.getValue());
     		fileInfo.setCreateUser("system");

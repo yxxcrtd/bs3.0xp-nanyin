@@ -207,13 +207,6 @@ public class PbcClassicsDataFileHelper {
 				logger.error(e.getMessage(),e);
             }
         }
-        //联社模式多法人隔离
-		List<String> orgList = new ArrayList<>();
-        if(null!=fileDataMap&&null!=fileDataMap.get(orgCode)){
-        	orgList = (List<String>)fileDataMap.get(orgCode);
-		}
-		orgList.addAll(result);
-		fileDataMap.put(orgCode,orgList);
 
         return result;
     }
