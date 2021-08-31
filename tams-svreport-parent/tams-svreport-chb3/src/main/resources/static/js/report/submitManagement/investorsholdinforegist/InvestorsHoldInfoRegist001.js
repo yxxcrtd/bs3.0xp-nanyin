@@ -78,14 +78,10 @@ $(function() {
         },
         cols:[
             { title: "数据状态", field: 'status',width:100},
-            {title: '持有日期',field:'holdDate', width:100, visible:false},/*界面查询性能优化*/
             {title: '持有日期',field:'holdDateStr', width:100,sortField:'holdDate'},
-            { title: "数据日期", field: 'updateTime', visible:false},/*界面查询性能优化*/
             { title: "数据日期", field: 'updateTimeStr',sortField:'updateTime'},
             { title: "报送状态", field: 'sendStatus',width:100 },
-            { title: "报送日期", field: 'submitTime', visible:false},/*界面查询性能优化*/
             { title: "报送日期", field: 'submitTimeStr',sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadline', visible:false},/*界面查询性能优化*/
             { title: "报送截止日", field: 'chbSubmitDeadlineStr',sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
