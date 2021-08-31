@@ -131,7 +131,7 @@ public class PbcPrdBaseInfoEndSubDatService extends PbcDatPriviewService {
         if (compareDate(result.getMdate(),result.getMdatePrd())){
             result.setMdateDiff(1);
         }
-        if (!StringUtil.equals(result.getCusYearYield(),result.getCusYearYieldPrd())){
+        if (compareBigDecimal(result.getCusYearYield(),result.getCusYearYieldPrd())){
             result.setCusYearYieldDiff(1);
         }
         if (!StringUtil.equals(result.getCcy(),result.getCcyPrd())){
