@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,8 +103,17 @@ public class Rsk101Service extends Rsk001Service {
                     resultList.addAll((List<Map<String, Object>>)obj);
                 }
                 // 如果失败，或者异常。弹堆
+
+                // modify by etliu 20210831 start
+                // 增加软控硬控开关
+                String institutionCode = "";
+                if(MultilevelDataAuthorityUtil.isEnabled()){
+                    institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+                }
+                String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
                 if (BussinessDictCodeListRds.指标状态_禁止.getValue().equals(
-                    rsp.getBodyField(RSKSTATUS))) {
+                    rsp.getBodyField(RSKSTATUS)) && "02".equals(isSoft)) {
+                    // modify by etliu 20210831 end
                     rollbackStackToRedis(rlsData, rlsList);
                     response.setBodyField(RSKSTATUS, rsp.getBodyField(RSKSTATUS));
                     doException(response, res.getBodyField(EVENT_ID) + "委托超限，所有委托回滚", null);

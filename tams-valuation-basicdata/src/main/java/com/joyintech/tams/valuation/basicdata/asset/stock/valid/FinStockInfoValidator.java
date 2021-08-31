@@ -119,30 +119,30 @@ public class FinStockInfoValidator implements BeanValidator {
                //通过资产代码查询数据，验证资产代码的唯一性
                Map<String,Object> map = new HashMap<String,Object>();
                if(dto.getFinprodMarketId() != null && !"".equals(dto.getFinprodMarketId())) {
-                   map.put("finprodMarketId",dto.getFinprodMarketId());
-                   FinStockInfoDto param = finStockInfoService.findEntity(map);
-                   if (param != null) {
-                       if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+                   map.put("finprodMarketId", dto.getFinprodMarketId());
+                   if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+                       FinStockInfoDto param = finStockInfoService.findEntity(map);
+                       if (param != null) {
                            errorList.add(
                                    new ValidMessage(this.getMessage("BUSS_COM_I_0017", getMessage("FinStockInfo001.finprodMarketId")
                                            + "(" + dto.getFinprodMarketId() + ")")));
                        }
-                       if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
-                    	   WflValidInputParameter parameter = new WflValidInputParameter();
+                   }
+                   //if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+                       WflValidInputParameter parameter = new WflValidInputParameter();
 //	                   		dto.setFinprodMarketId(dto.getFinprodMarketId().substring(0,dto.getFinprodMarketId().indexOf(".")));
-	                   	    parameter.setPageId("FinStockInfo002");
-	                   	    parameter.setBusinessDataPk1(dto.getFinprodMarketId());
-	                   	    boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
-                            if(isInWfl){
-                                errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", dto.getFinprodMarketId())));
+                       parameter.setPageId("FinStockInfo002");
+                       parameter.setBusinessDataPk1(dto.getFinprodMarketId());
+                       boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+                       if(isInWfl){
+                           errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", dto.getFinprodMarketId())));
 //	                           	Map<String, Object> parammap= new HashMap<String, Object>();
 //	                           	parammap.put("pageId", "FinStockInfo002");
 //	                           	parammap.put("pk1", dto.getFinprodIdStr());
 //	                           	String username =finStockInfoService.getIsInWorkFlowReturnUser(parammap);
 //	                           	errorList.add(new ValidMessage(getMessage("FIN_ASSET_STOCK_2", username)));
-	                        }
                        }
-                   }
+                   //}
                    FinStockInfoDto finStockInfoDto = finStockInfoService.getShares(map);
                    if(StringUtil.isNotEmpty(finStockInfoDto)){
 	                   if (StringUtil.isNotEmpty(finStockInfoDto.getcShares()) && StringUtil.isNotEmpty(finStockInfoDto.getsShares())) {

@@ -207,7 +207,14 @@ public static final BigDecimal getBigDecimal(Map<String, Object> map, String key
         }
         if (isType(type, BussinessDictCodeListRds.操作符_乘)) {
             int scale = val1.scale();
-            return ArithmeticUtil.multiply(val1, val2).setScale(scale, RoundingMode.HALF_UP);
+            // modify by etliu 20210831 start
+//            return ArithmeticUtil.multiply(val1, val2).setScale(scale, RoundingMode.HALF_UP);
+            BigDecimal tempNum = ArithmeticUtil.multiply(val1, val2);
+            if (tempNum != null) {
+                tempNum = tempNum.setScale(scale, RoundingMode.HALF_UP);
+            }
+            return tempNum;
+            // modify by etliu 20210831 end
         }
         if (isType(type, BussinessDictCodeListRds.操作符_除)) {
             int scale = val1.scale();
