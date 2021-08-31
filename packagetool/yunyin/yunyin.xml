@@ -28,6 +28,7 @@
         <module>../../tams-disclosure-busicommon</module>
         <module>../../tams-disclosure-common</module>
         <module>../../tams-disclosure-interf</module>
+        <module>../../background-component/component-common</module>
         <module>../../background-component/component-check</module>
         <module>../../background-component/msg-generate</module>
         <module>../../tams-svreport-common</module>
