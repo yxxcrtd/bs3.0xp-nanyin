@@ -311,7 +311,7 @@
     <select id="getLossAssetInfo"  parameterType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
         SELECT
         A.FINPROD_ID as finprodId,/**金融产品代码**/
-        A.FINPROD_ABBR as finprodName,/**金融产品简称**/
+        A.FINPROD_ABBR as finprodName/**金融产品简称**/
         FROM
         FIN_PRODUCT A /**标的类金融产品表**/
         INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
