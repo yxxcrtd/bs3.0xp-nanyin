@@ -117,7 +117,7 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
     /**
      * 计息基础
      */
-    @NotEmpty(fieldName = "TrdRepoTrade002.basis", groups = ValidateGroupEdit.class)
+//    @NotEmpty(fieldName = "TrdRepoTrade002.basis", groups = ValidateGroupEdit.class)
     private String basis;
 
     /**
