@@ -35,7 +35,7 @@ package com.joyintech.tams.invest.product.productelement.build.validator;
  import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild001Service;
  import com.joyintech.tams.invest.product.productelement.build.service.FinProductBuild002Service;
  import com.joyintech.tams.invest.product.productelement.scheduling.service.FinProductScheduling002Service;
- import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+ import com.joyintech.tams.invest.common.service.InvDataCheckService;
  import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
  import com.joyintech.tams.systemtools.util.PageElementUtil;
  import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +77,7 @@ public class FinProductBuild002Validator implements BeanValidator {
     private FinProductBuild001Service finProductBuild001Service;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * {@linkplain}
@@ -1140,7 +1140,7 @@ public class FinProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-      validList = chbDataCheckService.chbCheckCommon(validList, entity, "FinProductBuild002", null);
+      validList = chbInvDataCheckService.chbCheckCommon(validList, entity, "FinProductBuild002", null);
 
         //同一数据行：开放开始日小于等于开放结束日，开放结束日小于等于开放确认日
         if (entity.getBussFinProductOpenPlanDto() != null) {

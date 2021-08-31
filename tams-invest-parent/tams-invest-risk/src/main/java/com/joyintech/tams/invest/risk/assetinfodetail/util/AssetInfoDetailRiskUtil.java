@@ -11,7 +11,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.common.util.SysDataUtil;
 import com.joyintech.tams.invest.risk.assetinfodetail.asset.DtoChangeUtil;
@@ -47,7 +47,7 @@ public class AssetInfoDetailRiskUtil {
     static Map<String,String> rule = new HashMap<>();
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
 	 * 资产要素service
@@ -139,7 +139,7 @@ public class AssetInfoDetailRiskUtil {
         pbcAssetType2ListLink.forEach(sysDatadictListLink -> {
             dict.put("pbcAssetType2" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
         });
-        rule = chbDataCheckService.getCheckRule("AssetInfoRegist002","1");
+        rule = chbInvDataCheckService.getCheckRule("AssetInfoRegist002","1");
         for (int i = 0; i < dataList.size(); i++ ) {
             if ( i < 2 ){
                 continue;
@@ -318,7 +318,7 @@ public class AssetInfoDetailRiskUtil {
                     resultList.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i+1), "第"+(i+1)+"行资产代码与第"+(j+1)+"行资产代码重复"));
                 }
             }
-            messages.addAll(chbDataCheckService.chbCheckCommon(null, entity, "AssetInfoRegist002", entity.getAssetType2()));
+            messages.addAll(chbInvDataCheckService.chbCheckCommon(null, entity, "AssetInfoRegist002", entity.getAssetType2()));
             if (!StringUtil.isEmptyList(messages)){
                 messages.forEach(validMessage -> {
                     if (StringUtil.isNotEmpty(validMessage.getMessage())){

@@ -101,9 +101,11 @@
         <module>microservice/service-common-basicdata</module>
 
         <!-- 组件  -->
+        <module>background-component/component-check</module>
         <module>background-component/component-common</module>
         <module>background-component/inter-bank-uplink</module>
         <module>background-component/exchange-order</module>
+        <module>background-component/msg-generate</module>
         <module>microservice/service-valuation-valmodel</module>
         <module>microservice/service-valuation-lossmodel</module>
         <module>tams-valuation-batch-valmodel</module>

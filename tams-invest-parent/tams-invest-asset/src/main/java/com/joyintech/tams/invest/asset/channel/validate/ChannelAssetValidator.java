@@ -19,7 +19,7 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.channel.dto.ChannelAssetDto;
 import com.joyintech.tams.invest.asset.channel.service.ChannelAssetService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class ChannelAssetValidator implements BeanValidator{
     private ChannelAssetService channelAssetService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
     
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -161,7 +161,7 @@ public class ChannelAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, "ChannelAsset002", null);
+            resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, "ChannelAsset002", null);
         }
         return resultList;
     }

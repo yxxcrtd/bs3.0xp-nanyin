@@ -22,7 +22,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.asset.fund.service.FinFundTargetService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +51,7 @@ public class FinFundTargetValidator implements BeanValidator {
     private FinFundTargetService finFundTargetService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * 校验
@@ -215,7 +215,7 @@ public class FinFundTargetValidator implements BeanValidator {
             }
             //add by zhangnian 20191105 end
             if (StringUtil.isNotEmpty(dto.getBussRepFundInfoDto())){
-                resultList = chbDataCheckService.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType());
+                resultList = chbInvDataCheckService.chbCheckCommon(resultList, value, null, dto.getBussRepFundInfoDto().getRepAssetType());
             }
         }
         // 是否展示资产四五级分类

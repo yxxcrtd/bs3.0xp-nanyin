@@ -12,7 +12,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.planProfit.dto.FinPlanProfitAssetDto;
 import com.joyintech.tams.invest.asset.plan.planProfit.service.FinPlanProfitAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	private FinProductMapper finProductMapper;
 
 	@Autowired
-	private ChbDataCheckService chbDataCheckService;
+	private InvDataCheckService chbInvDataCheckService;
 	@Autowired
 	private IPlatformDate iPlatformDate;
 
@@ -167,7 +167,7 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 		}
 
 		if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-			errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
+			errorList = chbInvDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
 		}
 
 		return errorList;

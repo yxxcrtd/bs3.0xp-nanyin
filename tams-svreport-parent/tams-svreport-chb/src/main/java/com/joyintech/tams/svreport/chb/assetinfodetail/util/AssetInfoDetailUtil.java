@@ -1,8 +1,8 @@
 package com.joyintech.tams.svreport.chb.assetinfodetail.util;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dao.ChbDataCheckCommonMapper;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.ChbCheckRule;
+import com.joyintech.background.component.common.check.DataCheckCommonUtil;
+import com.joyintech.background.component.common.check.dao.DataCheckCommonMapper;
+import com.joyintech.background.component.common.check.dto.CheckRule;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -48,10 +48,10 @@ public class AssetInfoDetailUtil {
     private AssetInfoDetailMapper assetInfoDetailMapper;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private DataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Autowired
-    private ChbDataCheckCommonMapper chbDataCheckCommonMapper;
+    private DataCheckCommonMapper chbDataCheckCommonMapper;
 
     private static String ISNUMBER2 = "isNumber2";
 
@@ -164,7 +164,7 @@ public class AssetInfoDetailUtil {
             dict.put("pbcAssetType2" + sysDatadictListLink.getItemCode(),sysDatadictListLink.getLinkedItemCode());
         });
         rule = new HashMap<>();
-        List<ChbCheckRule> listRules = chbDataCheckCommonMapper.queryChbCheckRule("AssetInfoRegist002","01");
+        List<CheckRule> listRules = chbDataCheckCommonMapper.queryChbCheckRule("AssetInfoRegist002","01");
         if (!StringUtil.isEmptyList(listRules)){
             listRules.forEach(chbCheckRule -> {
                 rule.put(chbCheckRule.getSrcproperty() + GlobalConstant.UNDER_LINE + chbCheckRule.getCheckmethod(),chbCheckRule.getRemark());

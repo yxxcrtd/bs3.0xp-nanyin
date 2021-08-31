@@ -9,7 +9,7 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.planNet.dto.FinPlanNetAssetDto;
 import com.joyintech.tams.invest.asset.plan.planNet.service.FinPlanNetAssetService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
     private CommonBusinessService commonBusinessService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -132,7 +132,7 @@ public class FinPlanNetAssetValidator implements BeanValidator {
 		//注释掉多余的check by 赵东东 2019.10.15 end
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
+            errorList = chbInvDataCheckService.chbCheckCommon(errorList, value, null, dto.getRepAssetType());
         }
 
         return errorList;

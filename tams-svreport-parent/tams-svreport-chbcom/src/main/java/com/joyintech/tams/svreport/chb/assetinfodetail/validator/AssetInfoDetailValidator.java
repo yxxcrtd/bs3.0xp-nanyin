@@ -10,11 +10,10 @@
  
 package com.joyintech.tams.svreport.chb.assetinfodetail.validator;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.background.component.common.check.DataCheckCommonUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -29,7 +28,7 @@ import java.util.List;
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2018年10月30日
- * @see FinDepositTargetValidator
+ * @see AssetInfoDetailValidator
  * @since 1.0
  */
 @Component
@@ -37,7 +36,7 @@ public class AssetInfoDetailValidator implements BeanValidator{
 
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private DataCheckCommonUtil chbDataCheckCommonUtil;
 
     @Autowired
     private AssetInfoDetailMapper assetInfoDetailMapper;

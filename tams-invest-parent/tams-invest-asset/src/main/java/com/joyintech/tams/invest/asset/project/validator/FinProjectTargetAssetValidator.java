@@ -22,7 +22,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.project.dto.FinProjectTargetAssetDto;
 import com.joyintech.tams.invest.asset.project.service.FinProjectTargetAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
     private FinProjectTargetAssetService finProjectTargetAssetService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -222,7 +222,7 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
             //信贷及非标资产报送信息
             dto.getBussRepAssetCreditNonstdInfoDto().setRepPartRedemFlag(coverNo(dto.getBussRepAssetCreditNonstdInfoDto().getRepPartRedemFlag()));
-            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
+            resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
         }
 
         //校验融资人

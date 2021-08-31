@@ -18,7 +18,7 @@ import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.basicdata.mstmarketinstitutions.dto.MstMarketInstitutionsDto;
 import com.joyintech.tams.invest.basicdata.mstmarketinstitutions.service.MstMarketInstitutionsService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,7 +44,7 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
     private MstMarketInstitutionsService mstMarketInstitutionsService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -269,7 +269,7 @@ public class MstMarketInstitutionsValidator implements BeanValidator {
         }
 
         if (!StringUtil.equals(dto.getOperateType(), "delete")) {
-            errorList = chbDataCheckService.chbCheckCommon(errorList, dto, "MstMarketInstitutions002", null);
+            errorList = chbInvDataCheckService.chbCheckCommon(errorList, dto, "MstMarketInstitutions002", null);
         }
 
         return errorList;

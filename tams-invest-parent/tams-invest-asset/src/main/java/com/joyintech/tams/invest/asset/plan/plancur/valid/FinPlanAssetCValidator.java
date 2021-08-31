@@ -20,7 +20,7 @@ import com.joyintech.tams.component.business.common.service.CommonBusinessServic
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.plancur.dto.FinPlanAssetCDto;
 import com.joyintech.tams.invest.asset.plan.plancur.service.FinPlanAssetCService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,7 +50,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
     private FinPlanAssetCService finPlanAssetCService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -137,7 +137,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete") && StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo())) {
-            errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getBussRepAssetMngProdInfo().getRepAssetType());
+            errorList = chbInvDataCheckService.chbCheckCommon(errorList, value, null, dto.getBussRepAssetMngProdInfo().getRepAssetType());
         }
 
         return errorList;

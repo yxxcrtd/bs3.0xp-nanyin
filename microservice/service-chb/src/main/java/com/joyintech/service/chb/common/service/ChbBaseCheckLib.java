@@ -10,7 +10,7 @@
 
 package com.joyintech.service.chb.common.service;
 
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckElement;
+import com.joyintech.background.component.common.check.dto.CheckElement;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
@@ -24,12 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

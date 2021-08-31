@@ -17,7 +17,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
-import com.joyintech.tams.common.base.entity.MstBondCreditRating;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -26,7 +25,7 @@ import com.joyintech.tams.component.business.report.asset.bond.dto.BussFinBondRe
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +55,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
     private MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     @Override
     public List<ValidMessage> valid(Object value) {
@@ -269,7 +268,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
+            resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
         }
         //ZGBSSE-588  【中债直连】债券标的新建提交时，具体类别选择99其他债券，备注check重复
 //        if((StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW) || StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT))&&dto.getBussFinBondRepInfoDto().getRepSectype().equals("99")){

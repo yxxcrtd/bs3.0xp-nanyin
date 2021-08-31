@@ -37,7 +37,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationInputParaDto;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,7 +76,7 @@ public class CommonAutoCouponService extends BaseService{
     private AssetCommonMapper assetCommonMapper;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * 付息计划，开放计划，利率重置，申购计划，赎回计划计算用和日期关联的Service
@@ -1831,7 +1831,7 @@ public class CommonAutoCouponService extends BaseService{
                 bondTargetDto.setMdate(baseInfoDto1.getFinProduct().getMdate());
                 bondTargetDto.setRegistOrg(baseInfoDto1.getRepAssetBond().getRepRegistOrg());
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckService.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType());
+                resultList = chbInvDataCheckService.chbCheckCommon(resultList, bondTargetDto, "FinBondTargetAsset002Interf", bondTargetDto.getRepAssetType());
                 //中债校验通过
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);
@@ -1900,7 +1900,7 @@ public class CommonAutoCouponService extends BaseService{
                 finFundTargetDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
                 finFundTargetDto.setBussRepFundInfoDto(bussRepFundInfoDto);
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckService.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null);
+                resultList = chbInvDataCheckService.chbCheckCommon(resultList, finFundTargetDto, "FinFundTarget002Interf", null);
                 //中债校验通过
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);
@@ -1945,7 +1945,7 @@ public class CommonAutoCouponService extends BaseService{
                 finStockInfoDto.setFinprodMarketId(baseInfoDto1.getFinProduct().getFinprodMarketId());
                 finStockInfoDto.setFinprodName(baseInfoDto1.getFinProduct().getFinprodName());
                 List<ValidMessage> resultList = new ArrayList<ValidMessage>();
-                resultList = chbDataCheckService.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null);
+                resultList = chbInvDataCheckService.chbCheckCommon(resultList, finStockInfoDto, "FinStockInfo002Interf", null);
                 //中债校验通过
                 if(StringUtil.isEmptyList(resultList)){
                     baseFinProductBaseInfoList.add(baseInfoDto1);

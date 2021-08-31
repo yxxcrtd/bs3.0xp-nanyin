@@ -21,7 +21,7 @@ import com.joyintech.tams.component.business.core.service.MstWorkflowCommonServi
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
 import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -56,7 +56,7 @@ public class FinStockInfoValidator implements BeanValidator {
     MstWorkflowCommonService mstWorkflowCommonService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -212,7 +212,7 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
-                errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, "1302");
+                errorList = chbInvDataCheckService.chbCheckCommon(errorList, value, null, "1302");
             }
 
             if(StringUtil.equals(dto.getTradeMarket(),"12") && StringUtil.isEmpty(dto.getShOrZh())) {

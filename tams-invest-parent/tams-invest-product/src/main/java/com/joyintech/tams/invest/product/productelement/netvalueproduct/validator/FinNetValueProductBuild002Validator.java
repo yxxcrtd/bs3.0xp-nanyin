@@ -10,18 +10,6 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -40,14 +28,22 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import com.joyintech.tams.invest.product.productelement.anaplerotic.dto.FinProductAnapleroticInfoDto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinNetValueProductBuild002Dto;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild001Service;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild002Service;
 import com.joyintech.tams.invest.product.productelement.scheduling.service.FinProductScheduling002Service;
-import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * 产品新建管理验证类
@@ -85,7 +81,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     @Autowired
-    private ChbDataCheckService chbDataCheckService;
+    private InvDataCheckService chbInvDataCheckService;
 
     /**
      * {@linkplain}
@@ -1441,7 +1437,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-         validList = chbDataCheckService.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null);
+         validList = chbInvDataCheckService.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null);
 
          //同一数据行：开放开始日小于等于开放结束日，开放结束日小于等于开放确认日
         if (entity.getBussFinProductOpenPlanDto() != null) {

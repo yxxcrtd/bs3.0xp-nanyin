@@ -10,9 +10,9 @@
 
 package com.joyintech.tams.common.svreport.datacheck.service;
 
+import com.joyintech.background.component.common.check.dto.CheckElement;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.dto.CheckElement;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
