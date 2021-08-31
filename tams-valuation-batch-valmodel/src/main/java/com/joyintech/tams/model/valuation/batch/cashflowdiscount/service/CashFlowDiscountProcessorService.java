@@ -76,13 +76,8 @@ public class CashFlowDiscountProcessorService {
 	 */
 	public CashFlowDiscountResult execute(Map<String, Object> param1) {
 		// 获取reader返回值
-		CashFlowDiscountReaderResult entity = (CashFlowDiscountReaderResult) param1
-				.get("READER_RESULT");
+		CashFlowDiscountReaderResult entity = (CashFlowDiscountReaderResult) param1.get("READER_RESULT");
 
-		// 若reader传递的参数或计提基础信息列表为空，不进行后续处理
-		if (entity == null) {
-			return null;
-		}
 		// 定义返回值list
 		CashFlowDiscountResult result = new CashFlowDiscountResult();
 		//贴现估值结果
@@ -91,8 +86,10 @@ public class CashFlowDiscountProcessorService {
 		List<ModCurveResultDetail> modCurveResultDetails = new ArrayList<>();
 		//定价数据
 		ModRiskPremium modRiskPremium = new ModRiskPremium();
+		//待处理资产信息
+		ModAssetInfoDto modAssetInfoDto = entity.getModAssetInfoDto();
 		//资产代码
-		String finprodId = entity.getFinprodId();
+		String finprodId = modAssetInfoDto.getFinprodId();
 		Date happenDate = (Date) param1.get("HAPPEN_DATE"); // 发生日：批处理任务执行信息.处理日（发生日）
 		SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)param1.get("BATCH_INFO");
 		//处理业务数据
@@ -127,9 +124,9 @@ public class CashFlowDiscountProcessorService {
 			}
 			//资产定价基准价格
 			BigDecimal assetPriceBasePrice = null;
-			if(DateUtil.compareDate(entity.getLastTradeInDate(),happenDate)==0){
+			if(DateUtil.compareDate(modAssetInfoDto.getLastTradeInDate(),happenDate)==0){
 				isAssetPrice = true;
-				assetPriceBaseDate = entity.getLastTradeInDate();
+				assetPriceBaseDate = modAssetInfoDto.getLastTradeInDate();
 			}
 			for (ModCashFlowCalRuleDto item : entity.getModCashFlowCalRules()) {
 				if(DateUtil.compareDate(item.getEffDate(),happenDate)==0){
@@ -139,7 +136,7 @@ public class CashFlowDiscountProcessorService {
 				}
 			}
 			if(isAssetPrice){
-				assetPriceBasePrice = entity.getLastTradeAvgPrice();
+				assetPriceBasePrice = modAssetInfoDto.getLastTradeAvgPrice();
 			}else{
 				Map<String,Object> param = new HashMap<>();
 				param.put("finprodId", finprodId);
@@ -147,7 +144,7 @@ public class CashFlowDiscountProcessorService {
 				ModRiskPremium modRiskPremium2 = cashFlowDiscountMapper.getModRiskPremium(param);
 				if(null==modRiskPremium2){
 					isAssetPrice = true;
-					assetPriceBasePrice = entity.getLastTradeAvgPrice();
+					assetPriceBasePrice = modAssetInfoDto.getLastTradeAvgPrice();
 				}else{
 					BeanUtil.copyPropertiesIgnoreNull(modRiskPremium,modRiskPremium2);
 				}
@@ -207,7 +204,7 @@ public class CashFlowDiscountProcessorService {
 			result.setModRiskPremium(modRiskPremium);
 		}catch (Exception e){
 			e.printStackTrace();
-			logger.error("现金流贴现批处理processor相关业务处理异常:资产代码="+entity.getFinprodId()+"===="+e.getMessage());
+			logger.error("现金流贴现批处理processor相关业务处理异常:资产代码="+modAssetInfoDto.getFinprodId()+"===="+e.getMessage());
 			modLogsService.warn(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
 					"【现金流折现模型批处理】：计算错误");
 		}
@@ -308,8 +305,8 @@ public class CashFlowDiscountProcessorService {
 		//处理定价其他属性值
 		modRiskPremium.setSecTypeModel(entity.getModCurveConfig().getSecTypeModel());
 		modRiskPremium.setSecDetailTypeModel(entity.getModCurveConfig().getSecDetailTypeModel());
-		modRiskPremium.setFinprodId(entity.getFinprodId());
-		modRiskPremium.setFinprodName(entity.getFinprodAbbr());
+		modRiskPremium.setFinprodId(entity.getModAssetInfoDto().getFinprodId());
+		modRiskPremium.setFinprodName(entity.getModAssetInfoDto().getFinprodAbbr());
 		if(null!=caldisCountInputParameter){
 			modRiskPremium.setBasedate(BasicUtil.localToDate(caldisCountInputParameter.getCalDate()));
 		}
@@ -407,11 +404,11 @@ public class CashFlowDiscountProcessorService {
 				disCountInputParameter.setCalMethod(SecIntSchCalMethod.起息日向后);
 			}
 			//息票品种
-			if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_零息.getValue())){
+			if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(),DictCodeList.息票品种_零息.getValue())){
 				disCountInputParameter.setVariety(Variety.零息);
-			}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
+			}else if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
 				disCountInputParameter.setVariety(Variety.贴现);
-			}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
+			}else if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
 				disCountInputParameter.setVariety(Variety.利随本清);
 			}else{
 				disCountInputParameter.setVariety(Variety.附息);
@@ -530,14 +527,14 @@ public class CashFlowDiscountProcessorService {
 		AccurIntCalInParameter accurIntCalInParameter = new AccurIntCalInParameter();
 		accurIntCalInParameter.setCalDate(DateUtil.dateToLocal(happenDate));
 		SecInfoModel secInfoModel = new SecInfoModel();
-		secInfoModel.setStartDate(DateUtil.dateToLocal(entity.getVdate()));
-		secInfoModel.setEndDate(DateUtil.dateToLocal(entity.getMdate()));
-		secInfoModel.setIssuePrice(entity.getIssuePrice());
-		 if(StringUtil.equals(entity.getCouponSpecies(), DictCodeList.息票品种_零息.getValue())){
+		secInfoModel.setStartDate(DateUtil.dateToLocal(entity.getModAssetInfoDto().getVdate()));
+		secInfoModel.setEndDate(DateUtil.dateToLocal(entity.getModAssetInfoDto().getMdate()));
+		secInfoModel.setIssuePrice(entity.getModAssetInfoDto().getIssuePrice());
+		 if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(), DictCodeList.息票品种_零息.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.零息);
-		}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
+		}else if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(),DictCodeList.息票品种_贴现.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.贴现);
-		}else if(StringUtil.equals(entity.getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
+		}else if(StringUtil.equals(entity.getModAssetInfoDto().getCouponSpecies(),DictCodeList.息票品种_利随本清.getValue())){
 			 secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.利随本清);
 		}else {
 			secInfoModel.setBondsType(com.joyintech.calculation.bonds.constant.Variety.附息);

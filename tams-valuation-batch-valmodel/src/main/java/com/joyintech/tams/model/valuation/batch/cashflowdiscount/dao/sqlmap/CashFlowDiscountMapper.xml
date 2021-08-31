@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper">
-	<select id="getAllModCurve" parameterType="java.util.Map" resultType="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto">
+	<select id="getAllModCurve" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto">
 	SELECT
-		T1.SEC_TYPE_MODEL,
-		T1.SEC_DETAIL_TYPE_MODEL,
-		T1.FINPROD_ID,
-		T1.FINPROD_NAME,
-		T1.CURVE_GROUP_CODE,
-		T1.CURVE_TYPE,
-		T1.ISSMOOTH,
-		T1.SMOOTHSECTION,
-		T2.OUTPUT1 ASSET_ONE,
-		T2.OUTPUT2 ASSET_TWO,
-		T2.OUTPUT3 ASSET_THREE,
-		T2.OUTPUT4 ASSET_FOUR,
-		T2.OUTPUT5 ASSET_FIVE
+		SEQNO,
+		SEC_TYPE_MODEL,
+		SEC_DETAIL_TYPE_MODEL,
+		FINPROD_ID,
+		FINPROD_NAME,
+		CURVE_GROUP_CODE,
+		CURVE_TYPE,
+		ISSMOOTH,
+		SMOOTHSECTION,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		IS_BOTTOM_GRADE,
+		BOTTOM_GRADE,
+		EFF_DATE,
+		INVALID_DATE
 	FROM
 		MOD_CURVE_CONFIG T1
-		INNER JOIN MOD_ASEET_MAPPING T2 ON T1.SEC_TYPE_MODEL = T2.INPUT1  AND T1.SEC_DETAIL_TYPE_MODEL = T2.INPUT2
 	<where>
-		<if test="MODEL_MAPPING_TYPE_01 != null and MODEL_MAPPING_TYPE_01 != ''">
-			and T2.MAPPING_TYPE  = #{MODEL_MAPPING_TYPE_01}
-		</if>
-		<if test="finprodId != null and finprodId != ''">
-			and T1.FINPROD_ID  = #{finprodId}
-		</if>
-		<if test="finprodIdList != null and finprodIdList.size()>0 ">
-			AND T1.FINPROD_ID IN(
-			<foreach item="item" index="index" collection="finprodIdList" separator=",">
-				#{item}
-			</foreach>
-			)
+	    1=1
+		<if test="searchDate != null">
+			AND T1.EFF_DATE <![CDATA[<=]]> #{searchDate}
+			AND T1.INVALID_DATE <![CDATA[>=]]> #{searchDate}
 		</if>
 	</where>
 	</select>

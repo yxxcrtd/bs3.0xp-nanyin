@@ -14,6 +14,7 @@ import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveResultDetail;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +34,7 @@ public interface CashFlowDiscountMapper {
      * @param param
      * @return
      */
-    List<ModCurveDto> getAllModCurve(Map<String,Object> param);
+    List<ModCurveDto> getAllModCurve(ModAssetInfoParamsDto param);
 
     /**
      * 查找曲线代码
