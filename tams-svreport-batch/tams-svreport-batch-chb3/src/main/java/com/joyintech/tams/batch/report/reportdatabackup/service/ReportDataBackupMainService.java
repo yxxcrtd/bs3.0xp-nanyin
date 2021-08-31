@@ -217,7 +217,8 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 		//索引分析
 		List<String> indexNms = mapper.queryIndexName(tableName_ori);
 		indexNms.forEach(x ->{
-			mapper.gatherindexStatistics(tableOwner.toUpperCase(), x);
+//			mapper.gatherindexStatistics(tableOwner.toUpperCase(), x);
+			mapper.rebuildIndex(x);
 		});
 		logger.info(tableName_ori + " 表索引分析结束.");
     }

@@ -143,6 +143,11 @@ public interface ReportDataBackupMapper {
 							   @Param("indexName") String indexName);
 
 	/**
+	 * 重建索引
+	 * @param indexName
+	 */
+	void rebuildIndex(@Param("indexName") String indexName);
+	/**
 	 * 查询某张表下的分区快
 	 * @param tableName
 	 * @return
