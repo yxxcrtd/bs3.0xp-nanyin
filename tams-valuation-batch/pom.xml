@@ -89,7 +89,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>tams-valuation-api</artifactId>
             <version>3.0.1</version>
@@ -123,7 +123,7 @@
                     <artifactId>joyintech-workflow</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>framework-core</artifactId>
