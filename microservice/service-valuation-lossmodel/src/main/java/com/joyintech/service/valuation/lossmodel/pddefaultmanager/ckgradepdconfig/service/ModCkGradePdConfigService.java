@@ -1,9 +1,11 @@
 package com.joyintech.service.valuation.lossmodel.pddefaultmanager.ckgradepdconfig.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.service.valuation.lossmodel.pddefaultmanager.ckgradepdconfig.dao.ModCkGradePdConfigMapper;
@@ -32,8 +34,12 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
 
 
     public Page<ModGradePdConfigDto> selectForPage(Map<String, Object> pageParam,int page,int length) throws Exception {
-//        return super.queryForPageForSelectReturn(page, length, () -> modGradePdConfigMapper.selectAll(pageParam));
-        return super.queryForPage(page, length, () -> modCkGradePdConfigMapper.selectAll(pageParam));
+        Page<ModGradePdConfigDto> pageList = super.queryForPage(page, length, () -> modCkGradePdConfigMapper.selectAll(pageParam));
+        for(ModGradePdConfigDto dto:pageList.getRoot()){
+            //处理前瞻前年度边际PD%字段   *100
+            dto.setForwardYearPd(ArithmeticUtil.multiply(dto.getForwardYearPd(), new BigDecimal("100")));
+        }
+        return pageList;
     }
 
 
@@ -49,6 +55,10 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      */
     public List<ModGradePdConfigDto> selectExportList(ModGradePdConfigDto dto) throws IllegalAccessException, InvocationTargetException {
         List<ModGradePdConfigDto> entityList = modCkGradePdConfigMapper.selectExportList(dto);
+        for(ModGradePdConfigDto pdDto:entityList){
+            //处理前瞻前年度边际PD%字段   *100
+            pdDto.setForwardYearPd(ArithmeticUtil.multiply(pdDto.getForwardYearPd(), new BigDecimal("100")));
+        }
         return entityList;
     }
 
@@ -65,6 +75,10 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      */
     public List<ModGradePdConfigDto> selectByMap(Map<String,Object> params) throws IllegalAccessException, InvocationTargetException {
         List<ModGradePdConfigDto> entityList = modCkGradePdConfigMapper.selectByMap(params);
+        for(ModGradePdConfigDto dto:entityList){
+            //处理前瞻前年度边际PD%字段   *100
+            dto.setForwardYearPd(ArithmeticUtil.multiply(dto.getForwardYearPd(), new BigDecimal("100")));
+        }
         return entityList;
     }
 
@@ -80,6 +94,8 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
         if(entity != null){
             ModGradePdConfigDto d = new ModGradePdConfigDto();
             BeanUtil.copyProperties(d,entity);
+            //处理前瞻前年度边际PD%字段   *100
+            d.setForwardYearPd(ArithmeticUtil.multiply(d.getForwardYearPd(), new BigDecimal("100")));
             return d;
         }
         return null;
@@ -94,7 +110,8 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      * @return:
      */
     public void doComplete(ModGradePdConfigDto entity, String type) {
-
+        //处理前瞻前年度边际PD%字段   /100
+        entity.setForwardYearPd(ArithmeticUtil.divide(entity.getForwardYearPd(), new BigDecimal("100"),6));
         if (StringUtil.equals(entity.getOperateType(), "DELETE")) {//删除操作
             modCkGradePdConfigMapper.deleteByPrimaryKey(entity.getSeqNo());
         }
@@ -126,7 +143,10 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      * @return:
      */
     public ModGradePdConfigDto selectByPrimaryKey(ModGradePdConfigDto entity){
-        return modCkGradePdConfigMapper.selectByPrimaryKey(entity);
+        ModGradePdConfigDto dto= modCkGradePdConfigMapper.selectByPrimaryKey(entity);
+        //处理前瞻前年度边际PD%字段   *100
+        dto.setForwardYearPd(ArithmeticUtil.multiply(dto.getForwardYearPd(), new BigDecimal("100")));
+        return dto;
     }
 
 
@@ -142,6 +162,8 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
         for(ModGradePdConfigDto dto:dtoList){
             //判断是否有重复数据，重复更新
             List<ModGradePdConfigDto> repetList = modCkGradePdConfigMapper.selectRepetList(dto);
+            //处理前瞻前年度边际PD%字段   /100
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
             if(repetList.size()>0){
                 if("1".equals(type)){//覆盖数据
                     modCkGradePdConfigMapper.updateRepetDto(dto);
@@ -160,6 +182,8 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      * @return
      */
     public int insert(ModGradePdConfigDto dto) {
+        //处理前瞻前年度边际PD%字段   /100
+        dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
         return modCkGradePdConfigMapper.insert(dto);
     }
     /**
@@ -168,6 +192,10 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      * @return
      */
     public int update(ModGradePdConfigDto dto) {
+        if(dto.getForwardYearPd() !=null){
+            //处理前瞻前年度边际PD%字段   /100
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+        }
         return modCkGradePdConfigMapper.updateByPrimaryKey(dto);
     }
     /**
