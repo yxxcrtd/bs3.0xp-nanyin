@@ -35,5 +35,5 @@ public interface TrdAvailableCashQueryMapper {
      * @return: java.math.BigDecimal
      * @date: 2021/8/25
      */
-    BigDecimal getFinAvaPositionFlow(PtlSecPositionFlowDto positionQueryDto);
+    BigDecimal getFinAvaPositionFlow(Map<String, Object> map);
 }
