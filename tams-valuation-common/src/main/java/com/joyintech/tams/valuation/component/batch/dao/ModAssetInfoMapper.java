@@ -44,4 +44,7 @@ public interface ModAssetInfoMapper {
 
 	//二叉树模型批处理待处理资产查询
     List<ModAssetInfoDto> selectBinaryTreeAssetInfo(ModAssetInfoParamsDto paraMap);
+
+    //收益法模型批处理待处理资产查询
+    List<ModAssetInfoDto> selectIncomeMethodAssetInfo(ModAssetInfoParamsDto paraMap);
 }

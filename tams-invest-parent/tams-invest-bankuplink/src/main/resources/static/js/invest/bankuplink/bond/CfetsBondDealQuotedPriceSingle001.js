@@ -3,15 +3,172 @@
     var riskResultdata;
     var cluflag;
 
+    /**
+     * 控制显示行权收益率
+     */
+    var exerYieldDivContrl = function() {
+        // 是否含权债为是，且未来有行权计划时，行权收益率显示，其余情况不显示；
+        var param = {};
+        param.finprodId = $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val();
+        param.tradeDate = $('#CfetsBondDealQuotedPriceSingle001_settleDate').val();
+        if(param.finprodId&&param.tradeDate){
+            Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/isExerYieldDivShow', param, function (data) {
+                if (data == yesNoFlag_yes) {
+                    $("#CfetsBondDealQuotedPriceSingle001_div_exerYield").show();
+                } else {
+                    $("#CfetsBondDealQuotedPriceSingle001_div_exerYield").hide();
+                }
+            });
+        }
+    };
 
+
+    $(function () {
+        // 初始话隐藏行权收益率
+        $("#CfetsBondDealQuotedPriceSingle001_div_exerYield").hide();
+        // 委托代码
+        var entrustId = $('#CfetsBondDealQuotedPriceSingle001_hidden_entrustId').val();
+        if (entrustId && entrustId != ''){
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId').textSelect('setValue',entrustId);
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_portfolioName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_ps').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleSpreed').attr('disabled', true);
+            //add by lijie2
+            if(PRICE_MODEL && PRICE_MODEL == PRICE_MODEL_PRM01){
+                $('#CfetsBondDealQuotedPriceSingle001_unitCprice').attr('disabled', true);
+                $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', true);
+                $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', true);
+                $("input[name='calculateField']").attr('disabled', true);
+                $("input[name=calculateField][value=01]").prop("checked","true");
+                layui.form.render();
+            }else if(assetTypeOne == assetTypeOne_abs){
+                $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', true);
+                $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', true);
+                $("input[name='calculateField']").attr('disabled', true);
+                $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val("01");
+                $("input[name=calculateField][value=01]").prop("checked","true");
+                layui.form.render();
+            }
+            editFlag = false;
+        }
+        // 画面操作模式
+        var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
+        // 做市报价回复
+        if (quotaPageModel && quotaPageModel == 'marketResponse'){
+            $('#CfetsBondDealQuotedPriceSingle001_div_responseAmt').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').toggle(false);
+            if (ibuFlag_startDialogueQuoteWithNoEntrust != '02'){
+                $('#CfetsBondDealQuotedPriceSingle001_portfolioName').attr('disabled', true);
+            }
+            $('#CfetsBondDealQuotedPriceSingle001_ps').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_mySide').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterTrader').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_finprodMarketId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleSpreed').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleDate').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_avaNum').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleMethod').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleType').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
+        }
+        // 对话报价回复(除委托代码外置灰)
+        else if (quotaPageModel && quotaPageModel == 'dialogueResponse'){
+            $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            if (ibuFlag_startDialogueQuoteWithNoEntrust != '02'){
+                $('#CfetsBondDealQuotedPriceSingle001_portfolioName').attr('disabled', true);
+            }
+            $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_ps').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_mySide').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterTrader').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleSpreed').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_unitCprice').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_avaNum').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleMethod').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleType').attr('disabled', true);
+            //无指令时，组合可改
+            if (ibuFlag_startDialogueQuoteWithNoEntrust == '02'){
+                var mySideTemp = $('#CfetsBondDealQuotedPriceSingle001_mySide').val();
+                if(mySideTemp){
+                    $('#CfetsBondDealQuotedPriceSingle001_responseMySide').val(mySideTemp);
+                }
+            }
+        }
+        // 对话报价发起和保存后双击
+        else if (quotaPageModel && quotaPageModel == 'new'){
+            $('#CfetsBondDealQuotedPriceSingle001_div_responseAmt').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').toggle(true);
+            if (mySideTrader && mySideTrader != ''){
+                $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').textSelect('setValue',mySideTrader);
+            }
+            if (counterTrader && counterTrader != ''){
+                $('#CfetsBondDealQuotedPriceSingle001_counterTrader').textSelect('setValue',counterTrader);
+            }
+            if (ouTraderIdCanEditFlag === 'N'){
+                $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').attr('disabled', true);
+            }
+            $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+        }// 对话报价发起和保存后双击
+        else if (quotaPageModel && quotaPageModel == 'edit'){
+            $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_mySide').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_counterTrader').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_settleType').attr('disabled', false);
+            $('#CfetsBondDealQuotedPriceSingle001_remark').attr('disabled', true);
+            //修改无委托初始化增加不可修改项 add by yzg 20210123 start
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_portfolioName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_ps').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle001_finprodName').attr('disabled', true);
+            //修改无委托初始化增加不可修改项 add by yzg 20210123 end
+            $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
+        }
+        exerYieldDivContrl();
+        // 含权、资产一级类型
+        var isRight = $('#CfetsBondDealQuotedPriceSingle001_hidden_isRight').val();
+
+        var assetType1 = $('#CfetsBondDealQuotedPriceSingle001_hidden_assetTypeOne').val();
+        if (assetType1 == assetTypeOne_abs){
+            $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(true);
+            $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(true);
+        }else{
+            $('#CfetsBondDealQuotedPriceSingle001_div_abs1').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle001_div_abs2').toggle(false);
+        }
+
+    });
+    
     var setDhDiv = function(selArr){
         $("#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel").val('new');
         if(selArr&&selArr[0]){
             $("#CfetsBondDealQuotedPriceSingle001_entrustId").val(selArr[0].entrustId).trigger('change');
-            // $("#CfetsBondDealQuotedPriceSingle001_finprodId").textSelect('setValue',selArr[0].finprodMarketId);
-            // $("#CfetsBondDealQuotedPriceSingle001_portfolioId").textSelect('setValue',selArr[0].portfolioId);
-            // $("#CfetsBondDealQuotedPriceSingle001_ps").val(selArr[0].ps).trigger('change');
-            // $("#CfetsBondDealQuotedPriceSingle001_avaNum").val(selArr[0].entrustNum).trigger('change');
         }
     }
 
@@ -68,50 +225,11 @@
                         $('#CfetsBondDealQuotedPriceSingle001_fpriceAmt').val(result.data.fpriceAmt).trigger('blur');
                         $('#CfetsBondDealQuotedPriceSingle001_parValueAmt').val(result.data.parValueAmt).trigger('blur');
                         $('#CfetsBondDealQuotedPriceSingle001_secManageAcctId').textSelect('setValue',result.data.secManageAcctId);
-
-                        // $('#CfetsBondDealQuotedPriceSingle001_portfolioId').attr('disabled', true);
-                        // $('#CfetsBondDealQuotedPriceSingle001_ps').attr('disabled', true);
-                        // $('#CfetsBondDealQuotedPriceSingle001_finprodId').attr('disabled', true);
                     }
+                    exerYieldDivContrl();
                 }
             });
         }
-        // else {
-        //     $('#CfetsBondDealQuotedPriceSingle001_remark').val("");
-        //     var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
-        //     //add by yzg 20210116 委托代码清空联动清空 start
-        //     if(!quotaPageModel || (quotaPageModel != 'dialogueResponse')){
-        //         $('#CfetsBondDealQuotedPriceSingle001_hidden_entrustAmt').val('');
-        //         $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val('');
-        //         $('#CfetsBondDealQuotedPriceSingle001_mySide').val('').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_counterId').val('').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_counterTrader').textSelect('setValue','');
-        //         $('#CfetsBondDealQuotedPriceSingle001_finprodId').attr('disabled', false).val('').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_ps').val('').trigger('change').attr('disabled', false);
-        //         $('#CfetsBondDealQuotedPriceSingle001_settleSpreed').val('01').trigger('change').attr('disabled', false);
-        //         $('#CfetsBondDealQuotedPriceSingle001_settleDate').val('');
-        //         $('#CfetsBondDealQuotedPriceSingle001_avaNum').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_responseAmt').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_portfolioName').attr('disabled', true).val('').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').val('');
-        //         $('#CfetsBondDealQuotedPriceSingle001_settleMethod').val('03').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_settleType').val('01').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').val('CNY').trigger('change');
-        //         $('#CfetsBondDealQuotedPriceSingle001_unitCprice').val('').trigger('blur').attr('disabled', false);;
-        //         $('#CfetsBondDealQuotedPriceSingle001_matureYield').val('').trigger('blur').attr('disabled', false);;
-        //         $('#CfetsBondDealQuotedPriceSingle001_exerYield').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_unitInt').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_unitFprice').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_cpriceAmt').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_parValue').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_intAmt').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_fpriceAmt').val('').trigger('blur');
-        //         $('#CfetsBondDealQuotedPriceSingle001_parValueAmt').val('').trigger('blur');
-        //     }else if(quotaPageModel == 'dialogueResponse'){
-        //         $('#CfetsBondDealQuotedPriceSingle001_portfolioName').val('').trigger('change');
-        //     }
-        //     $('#CfetsBondDealQuotedPriceSingle001_settleDate').val(platDate);
-        // }
     });
 
 
@@ -173,7 +291,20 @@
 
 
     $('#CfetsBondDealQuotedPriceSingle001_avaNum').on('change',function(){
-        calcAmt('01');
+        calcAmt();
+    });
+
+    /**
+     * 到期收益率
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_matureYield').on('change',function(){
+        calcAmt('02');
+    });
+    /**
+     * 行权收益率
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_exerYield').on('change',function(){
+        calcAmt('03');
     });
 
     /**
@@ -224,11 +355,16 @@
      */
     var calcAmt = function(calculateField){
         var finprodId;
+        var calcField = $("[name=calculateField]:checked").val();
         finprodId = $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val();
         if(!finprodId){
             return;
         }
-
+        if (calculateField && calculateField != ''){
+            if (calculateField != calcField){
+                return;
+            }
+        }
         if (calculateField){
             if (calculateField === calcTypeUnitCprice && !$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val()){
                 return;
@@ -293,6 +429,88 @@
     $('#CfetsBondDealQuotedPriceSingle001_counterId').change(function(){
         $('#CfetsBondDealQuotedPriceSingle001_counterTrader').val('').trigger('change');
     });
+
+    /**
+     * 保存按钮按下处理
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_btn_save').click(function(){
+        saveOrSubmitAction('save');
+    });
+
+    /**
+     * 提交按钮按下处理
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_btn_submit').click(function(){
+        saveOrSubmitAction('submit');
+    });
+
+    /**
+     * 成交
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_btn_done').click(function(){
+        saveOrSubmitAction('done');
+    });
+
+    /**
+     * 拒绝
+     */
+    $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').click(function(){
+        saveOrSubmitAction('refuse');
+    });
+
+    /**
+     * 保存
+     */
+    var saveOrSubmitAction = function(operatorType) {
+        var object = $.serializeToObject('#submitForm', true);
+        if(!object.calculateField){
+            object.calculateField = $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val();
+        }
+        if(!object.finprodId){
+            object.finprodId = $("#CfetsBondDealQuotedPriceSingle001_hidden_finprodId").val();
+        }
+        object.operatorType = operatorType;
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/check', object,
+            function(result) {
+                if (result.data) {
+                    Joyin.confirm(result.data,
+                        function() {
+                            //保存 走流程
+                            if (operatorType === 'save') {
+                                WorkFlow.doSaveList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/save', object, "CfetsBondDealQuotedPriceSingle001_btn_save", null,
+                                    function() {
+                                        var index = window.parent.layer.getFrameIndex(window.name);
+                                        window.parent.layer.close(index);
+                                    })
+                            }
+                            //成交 走流程
+                            else if (operatorType === 'done') {
+                                WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/save', object, "CfetsBondDealQuotedPriceSingle001_btn_done", null,
+                                    function() {
+                                        var index = window.parent.layer.getFrameIndex(window.name);
+                                        window.parent.layer.close(index);
+                                    })
+                            }
+                            //提交 走流程
+                            else if (operatorType === 'submit') {
+                                WorkFlow.doSubmitList(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/save', object, "CfetsBondDealQuotedPriceSingle001_btn_submit", null,
+                                    function() {
+                                        var index = window.parent.layer.getFrameIndex(window.name);
+                                        window.parent.layer.close(index);
+                                    })
+                            }
+                            //拒绝 不走流程
+                            else if (operatorType === 'refuse'){
+                                Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/saveData', object, function(result){
+                                    var index = window.parent.layer.getFrameIndex(window.name);
+                                    window.parent.layer.close(index);
+                                })
+                            }
+                        })
+                }
+            });
+    };
+
 
     var reset = function () {
         $("#CfetsBondDealQuotedPriceSingle001_entrustId").val("").trigger("change");

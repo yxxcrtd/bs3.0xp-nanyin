@@ -41,13 +41,6 @@
             <version>3.1.0</version>
         </dependency>
 
-        <!-- 共通服务 -->
-        <dependency>
-            <groupId>com.joyintech</groupId>
-            <artifactId>service-common</artifactId>
-            <version>2.1.1</version>
-        </dependency>
-
         <!-- 信批服务 -->
         <dependency>
             <groupId>com.joyintech</groupId>
