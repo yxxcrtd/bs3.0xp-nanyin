@@ -620,6 +620,8 @@
     then nvl(ASSETINFO.PRO_INDUSTRY,ASSETINFO.INDUSTRY_PBC)
     when POSITION.ASSETTYPE2 in ('2101')
     then ASSETINFO.INDUSTRY
+    when POSITION.ASSETTYPE2 in ('DRC1107')
+    then '10'
     else null
     end INDUSTRY1,
     /*行业分类改造*/
