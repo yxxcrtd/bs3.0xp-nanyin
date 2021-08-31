@@ -127,8 +127,6 @@
 		</foreach>
 	</insert>
 
-
-
 	<!--批量登录模型估值结果明细-->
 	<insert id="insertBatchCurveResultDetail">
 		insert into MOD_CURVE_RESULT_DETAIL (SEQNO, RESULT_SEQNO, FINPROD_ID,
@@ -145,4 +143,75 @@
 			#{item.updateTime,jdbcType=TIMESTAMP}
 		</foreach>
 	</insert>
+
+	<delete id="deleteMstBondValuationInfo">
+		delete from MST_BOND_VALUATION_INFO where
+		<foreach collection="list" item="item" separator=" or " index="index">
+			(
+			SEC_ID = #{secId,jdbcType=VARCHAR}
+			and VALUE_DATE = #{valueDate,jdbcType=DATE}
+			and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</delete>
+
+	<insert id="insertMstBondValuationInfo">
+		insert into MST_BOND_VALUATION_INFO
+		(
+		SEC_ID, VALUE_DATE, VALUE_SOURCE,
+		LAST_PERIOD, PRICE, NETPRICE,
+		M_DURATION, M_CONVEXITY, BPVALUE,
+		SDURATION, SCNVXTY, INTEREST_DURATION,
+		INTEREST_CNVXTY, BPYIELD, INPUT_TYPE,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME, MBPVALUE,
+		VAR, CVAR, MDURATION,
+		IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE,
+		NETVALUATION_RECOMMENDED
+		)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR},
+			#{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL},
+			#{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL},
+			#{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL},
+			#{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+			#{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL},
+			#{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL},
+			#{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL},
+			#{netvaluationRecommended,jdbcType=DECIMAL}
+		</foreach>
+	</insert>
+
+	<delete id="deleteFinProductValuation">
+		delete from fin_product_valuation where
+		<foreach collection="list" item="item" separator=" or " index="index">
+			(
+				FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+				and VAL_DATE = #{valueDate,jdbcType=DATE}
+			)
+		</foreach>
+	</delete>
+
+	<insert id="insertFinProductValuation">
+		insert into FIN_PRODUCT_VALUATION (FINPROD_ID, VAL_DATE, FINPROD_TYPE,
+		FINPROD_TYPE2, PUBLISH_DATE, VALUATION,
+		DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE,
+		INPUT_TYPE, REMARK, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, REST_NET_VALUE, C_SHARES,
+		FULL_VALUATION, VALUE_SOURCE)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			(#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{finprodType,jdbcType=VARCHAR},
+			#{finprodType2,jdbcType=VARCHAR}, #{publishDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL},
+			#{day7YearYield,jdbcType=DECIMAL}, #{yearYield,jdbcType=DECIMAL}, #{totalValue,jdbcType=DECIMAL},
+			#{inputType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+			#{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL},
+			#{fullValuation,jdbcType=DECIMAL}, #{valueSource,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
 </mapper>

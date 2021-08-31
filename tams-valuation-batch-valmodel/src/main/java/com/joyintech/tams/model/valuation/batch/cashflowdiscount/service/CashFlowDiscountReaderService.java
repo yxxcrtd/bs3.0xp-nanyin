@@ -134,7 +134,8 @@ public class CashFlowDiscountReaderService {
                             if (StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
                                 modRateParamsDto.setRateId(item.getFinprodMarketId());
                             } else if (StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_其他债权类.getValue())) {
-                                modRateParamsDto.setRateId(item.getActualCreaditProvid());
+                                //TODO 其他债权评级主体待定
+                                modRateParamsDto.setRateId(item.getIssueId());
                             }
                         }
                         modRateParamsDto.setSearchDate(happenDate);
