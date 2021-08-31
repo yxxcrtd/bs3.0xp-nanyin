@@ -144,6 +144,22 @@
                 if (param[0].price) {
                     $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
                 }
+                /*添加限制*/
+                $("#CfetsRepoDealQuotedPrice002_entrustId").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_portfolioName").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_ps").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_settleSpreed").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_term").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_termType").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_vSettleDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mSettleDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_actDays").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_cbDealAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_scDealAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mIntAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mTradeAmt").attr("disabled",true);
+                /*添加限制*/
             }
         }
     };
