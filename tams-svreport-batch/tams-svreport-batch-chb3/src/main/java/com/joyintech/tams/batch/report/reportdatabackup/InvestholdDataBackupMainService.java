@@ -194,8 +194,8 @@ public class InvestholdDataBackupMainService extends AutoSendCBBaseService {
 		}
 	}
 	
-	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
-	public  void callBackUp(Map<String,Object> callMap){
-	     mapper.callChbInvesthold(callMap);
-	}
+//	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+//	public  void callBackUp(Map<String,Object> callMap){
+//	     mapper.callChbInvesthold(callMap);
+//	}
 }
