@@ -85,13 +85,10 @@ $(function() {
         cols:[
             { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
             { field: 'status',visible:false},
-            { title: "数据日期", field: 'statusDate', width:100,  visible: false},/*界面查询性能优化*/
             { title: "数据日期", field: 'statusDateStr', width:100,sortField:'statusDate'},
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},
             { field: 'submitStatus',visible:false},
-            { title: "报送日期", field: 'submitTime', width:100,  visible: false},/*界面查询性能优化*/
             { title: "报送日期", field: 'submitTimeStr', width:100,sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadline', width:100,  visible: false},/*界面查询性能优化*/
             { title: "报送截止日", field: 'chbSubmitDeadlineStr', width:100,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus' /*界面查询性能优化,
