@@ -101,7 +101,7 @@
                         if (result.data){
                             //添加组合分配列表
                             // 将选中的委托信息返还给报价页面
-                            window.parent.CfetsRepoDealQuotedPrice003.reloadPtlAllocation(selArr);
+                            window.parent.CfetsRepoDealQuotedPr003.reloadPtlAllocation(selArr);
                             var index = window.parent.layer.getFrameIndex(window.name);
                             window.parent.layer.close(index);
                         }
@@ -117,7 +117,7 @@
                 Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function(result) {
                     if (result.data){
                         // 将选中的委托信息返还给报价页面
-                        window.parent.CfetsRepoDealQuotedPrice002.saveEntrustSelectData(selArr[0]);
+                        window.parent.CfetsRepoDealQuotedPr002.saveEntrustSelectData(selArr[0]);
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     }

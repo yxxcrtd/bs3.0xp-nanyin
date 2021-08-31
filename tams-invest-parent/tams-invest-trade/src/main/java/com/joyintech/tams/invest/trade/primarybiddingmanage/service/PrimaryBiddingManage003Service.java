@@ -142,20 +142,20 @@ public class PrimaryBiddingManage003Service extends BaseService<TrdBiddingManage
                         basePtlCashPositionInfoMapper.deletePtlCashPositionFlow(ptlCashPositionFlowDto1);
                     }
                     /**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，取消冻结组合可用现金   end**/
-                        //2.撤销删除指令可用现金冻结--生成反向流水
-                        EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
+                    //2.撤销删除指令可用现金冻结--生成反向流水
+                    EtrCashPositionFlowDto dto = new EtrCashPositionFlowDto();
 
-                        BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
-                        dto.setSeqno(IDGenerator.generate());
-                        dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
-                        dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                        dto.setAmount(ArithmeticUtil.subtract(bidOrderBidPriceDto.getWinPrinAmt(), bidOrderBidPriceDto.getBidPrinAmt()));
-                        // 处理结果
-                        EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
-                        List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
-                        etrCashPositionFlows.add(dto);
-                        etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
-                        EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
+                    BeanUtil.copyPropertiesIgnoreNull(dto, ptlCashPositionFlowDto);
+                    dto.setSeqno(IDGenerator.generate());
+                    dto.setOffsetFlag(DictCodeList.冲正标识_正常交易.getValue());
+                    dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                    dto.setAmount(ArithmeticUtil.subtract(bidOrderBidPriceDto.getWinPrinAmt(), bidOrderBidPriceDto.getBidPrinAmt()));
+                    // 处理结果
+                    EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                    List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+                    etrCashPositionFlows.add(dto);
+                    etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+                    EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
                 }
             }
             return;

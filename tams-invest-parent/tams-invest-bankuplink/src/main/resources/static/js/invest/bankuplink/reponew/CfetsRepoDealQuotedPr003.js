@@ -697,6 +697,7 @@
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',true);
             }else if(ps == '04'){
+                $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',false);
             }
@@ -872,12 +873,6 @@
          * 组合分配 添加
          */
         $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').click(function () {
-            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
-            if(ps == '03'){
-                return;
-            }else if(ps == '04'){
-                return;
-            }
             //添加后列表 初始化页面 排除已经存在的分配
             var entrustIds = "";
             var tableResult = dzhTable.getAllRows();
