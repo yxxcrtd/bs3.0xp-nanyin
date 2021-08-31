@@ -10,10 +10,6 @@
     <version>3.0.1</version>
     <name>service-valuation-basicdata</name>
     <description>估值核算资产管理</description>
-    <properties>
-        <start-class>com.joyintech.service.valuation.basicdata.ValuationBasicdataApplication</start-class>
-        <hibernate.version>5.3.6.Final</hibernate.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -35,7 +31,7 @@
         </dependency>
     </dependencies>
     <build>
-        <!--<finalName>service-valuation-basicdata</finalName>-->
+        <finalName>service-valuation-basicdata</finalName>
         <plugins>
             <!-- 打包源代码插件 -->
             <plugin>
