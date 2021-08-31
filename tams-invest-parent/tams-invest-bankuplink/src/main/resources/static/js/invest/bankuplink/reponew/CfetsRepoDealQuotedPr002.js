@@ -221,6 +221,7 @@
                     showAmtOrg = true;
                 }
                 // 本次质押券面
+                row.pledgePrin = JoyinMath.doMul(row.pledgePrin, 10000);
                 var pledgePrin = new BigNumber(row.pledgePrin?row.pledgePrin:0);
                 /*pledgePrinTotal = pledgePrinTotal.plus(pledgePrin);*/
                 // 折算比例
@@ -245,6 +246,8 @@
                 mTradeAmt = shareCtAmt.plus(priceAmt);
             }
         }
+        /*券面总额单位为万元*/
+        pledgePrinTotal = JoyinMath.doDiv(pledgePrinTotal, 10000);
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").val(zzTotalAmt).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").val(sqTotalAmt).trigger('blur');
