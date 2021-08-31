@@ -15,6 +15,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.asset.annotation.DictList;
 import com.joyintech.tams.invest.common.asset.annotation.Number;
 
 import java.math.BigDecimal;
@@ -113,6 +114,7 @@ public class EtrExchangeTradeGsImportDto extends EtrExchangeTrade001Dto {
      * @param invAim 投资目的
      */
     @Number(13)
+    @DictList(link=DictCode.投资目的)
     public void setInvAim(String invAim) { super.setInvAim(invAim); }
 
     /**
