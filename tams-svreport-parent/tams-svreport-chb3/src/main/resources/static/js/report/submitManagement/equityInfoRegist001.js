@@ -706,17 +706,17 @@ $(function(){
         param.keyList = JSON.stringify(expArr);
         param.expKeys = keyList.join(',')
         Joyin.exportExcel('export', param);
-        if(flag){
-	        Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
-	              Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
-                      layui.layer.open({type:3});
-                    Joyin.ajax('doManual', {flag : '02',keyList: JSON.stringify(expArr)}, function() {
-                        table.load();
-                        layui.layer.closeAll();
-                    });
-                  });
-	          });
-        }
+//        if(flag){
+//	        Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
+//	              Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+//                      layui.layer.open({type:3});
+//                    Joyin.ajax('doManual', {flag : '02',keyList: JSON.stringify(expArr)}, function() {
+//                        table.load();
+//                        layui.layer.closeAll();
+//                    });
+//                  });
+//	          });
+//        }
     }
     
     function exportAndDoManual(param){
