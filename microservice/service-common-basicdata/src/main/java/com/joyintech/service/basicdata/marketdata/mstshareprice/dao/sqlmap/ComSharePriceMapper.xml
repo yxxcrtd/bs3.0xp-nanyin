@@ -112,7 +112,7 @@
         a.CREATE_TIME 			CREATE_TIME, 
         a.UPDATE_USER 			UPDATE_USER, 
         a.UPDATE_TIME 			UPDATE_TIME,
-        b.finprod_abbr 			finprod_abbr
+        b.finprod_abbr 			finprodAbbr
         from mst_share_price a 
         left join fin_product b on a.shares_id=b.finprod_market_id
         <where> 
