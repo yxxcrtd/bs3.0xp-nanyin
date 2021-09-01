@@ -226,6 +226,9 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
             else if(StringUtil.equals(dto.getCalculateField(),"matureYield")){
                 model.addAttribute("calculateField","yield");
             }
+            else if(StringUtil.equals(dto.getCalculateField(),"exerYield")){
+                model.addAttribute("calculateField","exerYield");
+            }
             else{
                 model.addAttribute("calculateField",dto.getCalculateField());
             }

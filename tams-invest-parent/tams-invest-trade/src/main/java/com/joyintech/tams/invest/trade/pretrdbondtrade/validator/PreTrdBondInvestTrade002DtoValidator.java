@@ -64,8 +64,11 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 				if (!StringUtil.isNotEmpty(etrInvestInfoDto)) {
 					return errorList;
 				}
+				if( !StringUtil.isNotEmpty(inputDto.getCalculateField())){
+					inputDto.setCalculateField("unitCprice");
+				}
 				// 净价超过委托时的净价;
-				if (StringUtil.equals(inputDto.getCalculateField(),"price") && inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
+				if (StringUtil.equals(inputDto.getCalculateField(),"unitCprice") && inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
 						&& inputDto.getUnitCprice().compareTo(etrInvestInfoDto.getEtrEntrust().getPrice()) > 0) {
 					ValidMessage validMessage = new ValidMessage("unitCprice",
 							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
