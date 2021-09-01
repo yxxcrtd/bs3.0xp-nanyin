@@ -263,6 +263,10 @@ public class ValProfitproject002Controller extends BaseController{
 //            resulterr.setErrorList(errorList);
 //            return resulterr;
         }
+        if(dto.getFinPayInterestStdInfoDto() != null
+                && StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getFinPayInterestStdInfoDto().getIsNoIssueAmtFlag())) {
+            dto.setIssueAmt(null);
+        }
         WflValidInputParameter parameter = new WflValidInputParameter();
         parameter.setPageId("ValProfitproject002");
         parameter.setBusinessDataPk1(dto.getFinprodMarketId());
