@@ -1,8 +1,12 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetGroupPdCalculateReaderDto;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetImpairmentPdCalculateResultDto;
+import com.joyintech.tams.model.impairment.batch.pdcalculate.service.BMWPdCalculateProcessService;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.service.PdCalculateProcessService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -24,6 +28,11 @@ public class PdCalculateProcessor extends BaseProcessor<AssetGroupPdCalculateRea
      */
     @Autowired
     private PdCalculateProcessService pdCalculateProcessService;
+    /**
+     *  PD计算批处理Service
+     */
+    @Autowired
+    private BMWPdCalculateProcessService bMWPdCalculateProcessService;
 
     private StepExecution stepExecution;
 
@@ -45,7 +54,16 @@ public class PdCalculateProcessor extends BaseProcessor<AssetGroupPdCalculateRea
      */
     @Override
     public AssetImpairmentPdCalculateResultDto process(AssetGroupPdCalculateReaderDto readerDto) throws Exception {
-        return pdCalculateProcessService.execute(readerDto,getParams(),stepExecution);
+        // 减值方案系统参数
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        // 普华方案处理逻辑
+        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
+            return pdCalculateProcessService.execute(readerDto,getParams(),stepExecution);
+        }
+        // 毕马威方案PD计算逻辑
+        else{
+            return bMWPdCalculateProcessService.execute(readerDto,getParams(),stepExecution);
+        }
     }
 
 

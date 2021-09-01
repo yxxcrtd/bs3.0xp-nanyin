@@ -1,6 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.impairmentdataload.dao;
 
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.springframework.stereotype.Repository;
 
 @Repository

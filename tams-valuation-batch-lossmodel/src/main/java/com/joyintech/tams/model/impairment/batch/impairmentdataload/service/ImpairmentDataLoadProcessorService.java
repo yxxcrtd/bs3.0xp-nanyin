@@ -18,7 +18,7 @@ import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.Impairme
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModAssetGradeConfig;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModImpairRateParamsDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
 import org.slf4j.Logger;
@@ -421,6 +421,8 @@ public class ImpairmentDataLoadProcessorService {
         modEclResultProcess.setIssuePrice(entity.getIssuePrice());
         //a.起息日
         modEclResultProcess.setVdate(entity.getVdate());
+        // a.投资目的
+        modEclResultProcess.setInvAim(entity.getInvAim());
     }
 
     /**

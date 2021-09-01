@@ -1,27 +1,32 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-@Service
-public class EclCalculationReaderService {
+@Service public class EclCalculationReaderService {
 
-    @Autowired
-    private EclCalculationMapper eclCalculationMapper;
-    @Autowired
-    private ModParamsService modParamsService;
+    @Autowired private EclCalculationMapper eclCalculationMapper;
+
+    @Autowired private ModParamsService modParamsService;
+
     /**
      * 二叉树模型-reader
+     *
      * @param params
      * @return
      */
@@ -33,17 +38,20 @@ public class EclCalculationReaderService {
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_PD计算.getValue());
-        para.put("ps", DictCodeList.交易方向_买入.getValue());
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         //1.获取理需要处理的每一笔交易数据（计划做在数据加载批处理中）
-        List<ModEclResultProcess> list = eclCalculationMapper.selectModEclResultProcessForDeal(para);
+        // 减值方案系统参数
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        para.put("lossType", lossType);
+        List<ModEclResultProcess> list = eclCalculationMapper.selectModEclResultProcessForDeal(
+            para);
         List<EclCalculationReaderDto> rstList = new ArrayList<>();
         // 定义 变量.减值结果过程Map集合
         Map<String, List<ModEclResultProcess>> modEclResultProcessMap = new HashMap<>();
         if (list != null && list.size() > 0) {
             for (ModEclResultProcess dto : list) {
-                // 定义 变量.key = 资产代码 + 账套代码
-                String key = dto.getAssetId() + "|" + dto.getProdId();
+                // 定义 变量.key =  账套代码 + 资产代码 + 投资目的
+                String key = dto.getProdId() + "," + dto.getAssetId()+","+dto.getInvAim();
                 // map集合无key对应value值
                 if (modEclResultProcessMap.get(key) == null) {
                     // 放入map集合中
@@ -60,12 +68,55 @@ public class EclCalculationReaderService {
             }
             for (String key : modEclResultProcessMap.keySet()) {
                 EclCalculationReaderDto rstDto = new EclCalculationReaderDto();
-                rstDto.setAssetId(key.split("|")[0]);
-                rstDto.setProdId(key.split("|")[1]);
+                String[] keyArr = key.split(",");
+                rstDto.setProdId(keyArr[0]);
+                rstDto.setAssetId(keyArr[1]);
+                // 当投资目的为空时，keyArr长度为2
+                if(keyArr.length>2){
+                    rstDto.setInvAim(keyArr[2]);
+                }
                 rstDto.setModEclResultProcessList(modEclResultProcessMap.get(key));
                 rstList.add(rstDto);
             }
         }
+
+        // 查询LGD违约损失率配置并放入缓存
+        //清除缓存中LGD配置相关数据
+        CacheUtil.clearAppCache(GlobalConstant.OTHER_LGD_CONFIG);
+        CacheUtil.clearAppCache(GlobalConstant.DELT_RIGHT_LGD_CONFIG);
+        CacheUtil.clearAppCache(GlobalConstant.SPECIAL_LGD_CONFIG);
+        // 债券类、存款类、回购类资产LGD违约损失率配置
+        Map<String, ModLgdConfigDto> otherLgdConfigMap = new HashMap<>();
+        // 其他债权类资产LGD违约损失率配置
+        Map<String, ModLgdConfigDto> deltRightLgdConfigMap = new HashMap<>();
+        // 特殊资产LGD违约损失率配置
+        Map<String, ModLgdConfigDto> specialLgdConfigMap = new HashMap<>();
+        // 查询所有LGD配置
+        Map<String, Object> searchPara = new HashMap<>();
+        para.put("MODEL_DEC_CONFIG_TYPE_06", ModelDictCodeList.模型_减值配置类型_特殊资产LGD配置.getValue());
+        para.put("MODEL_DEC_CONFIG_TYPE_05", ModelDictCodeList.模型_减值配置类型_资产大类LGD配置.getValue());
+        List<ModLgdConfigDto> lgdConfigList = eclCalculationMapper.selectModLgdConfigAll(searchPara);
+        if(!CollectionUtils.isEmpty(lgdConfigList)){
+            for(ModLgdConfigDto item : lgdConfigList){
+                // 若金融产品代码 != null
+                if(item.getFinprodId() != null){
+                    // key = 金融产品代码
+                    specialLgdConfigMap.put(item.getFinprodId(), item);
+                }
+                else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(item.getAssetType())){
+                    // key = 资产类型 + 是否含有抵质押物
+                    deltRightLgdConfigMap.put( item.getAssetType() + GlobalConstant.UNDER_LINE  + item.getIsContainPledge(), item);
+                }
+                else {
+                    // key = 资产类型 + 资产细分类
+                    otherLgdConfigMap.put(item.getAssetType() + GlobalConstant.UNDER_LINE  + item.getAssetDetailType(), item);
+                }
+            }
+        }
+        // 指定评级机构信息Map放入缓存
+        CacheUtil.putAppCache(GlobalConstant.OTHER_LGD_CONFIG, otherLgdConfigMap);
+        CacheUtil.putAppCache(GlobalConstant.DELT_RIGHT_LGD_CONFIG, deltRightLgdConfigMap);
+        CacheUtil.putAppCache(GlobalConstant.SPECIAL_LGD_CONFIG, specialLgdConfigMap);
         return rstList;
     }
 

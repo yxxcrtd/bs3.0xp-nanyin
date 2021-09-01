@@ -131,4 +131,94 @@
 		WHERE TEMP.rn=1
 	</select>
 
+	<select id="getCountAnalysis" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.BokStatDetPosiiton">
+		SELECT
+		TMP.*
+		FROM (
+		SELECT
+		A.*,
+		ROW_NUMBER() OVER(PARTITION BY BOOKSET_ID,BOK_DETAIL_ID,HAPPEN_DATE ORDER BY BOOK_SUMMARY_ORDER DESC) AS rn
+		FROM BOK_STAT_DET_POSIITON A
+		WHERE 1=1
+		<if test="endDate != null"> AND A.HAPPEN_DATE <![CDATA[<=]]> #{endDate} </if>
+		<if test="beginDate != null"> AND A.HAPPEN_DATE <![CDATA[>=]]> #{beginDate} </if>
+		<if test="searchDateList != null">
+			AND A.HAPPEN_DATE IN
+			<foreach item="datenow" index="index" collection="searchDateList" open="(" separator="," close=")">
+				#{datenow}
+			</foreach>
+		</if>
+		AND A.BOOKSET_ID = #{booksetId}
+		<if test="bokDetailId != null and bokDetailId != ''">
+			AND A.BOK_DETAIL_ID = #{bokDetailId}
+		</if>
+		<if test="busiId != null and busiId != ''">
+			AND A.BUSI_ID = #{busiId}
+		</if>
+		AND A.BOOK_DATE <![CDATA[<=]]> #{bookDate}
+		<if test="isPosZero != null and isPosZero != ''">
+			AND A.POS_AMT = 0
+		</if>
+
+		) TMP WHERE TMP.rn = 1
+	</select>
+
+	<select id="getBookLatestInfo" parameterType="java.util.Map" resultType="com.joyintech.tams.common.base.entity.BokBookdetailCurrent">
+		WITH voucher AS (
+		SELECT
+		TEMP.happenDate, /**发生日期**/
+		TEMP.booksetDate, /**账套日期**/
+		TEMP.bookDate, /**入账日期**/
+		TEMP.bookId, /**凭证编号**/
+		TEMP.booksetId /**账套代码**/
+		FROM (
+		SELECT
+		cur.HAPPEN_DATE as happenDate, /**发生日期**/
+		cur.BOOKSET_DATE as booksetDate, /**账套日期**/
+		cur.BOOK_DATE as bookDate,/**入账日期**/
+		cur.BOOK_ID as bookId,/**凭证编号**/
+		cur.BOOKSET_ID as booksetId, /**账套代码**/
+		cur.OFFSET_FLAG as offsetFlag, /**冲正标识**/
+		ROW_NUMBER() OVER(PARTITION BY cur.BOOKSET_ID, cur.BOOK_ID  ORDER BY cur.BOOK_ORDER desc) as rn
+		FROM BOK_BOOKDETAIL_CURRENT cur
+		WHERE 1=1
+		AND cur.BOOKSET_ID = #{booksetId} /**账套代码**/
+		AND cur.BOOK_DATE <![CDATA[<=]]> #{bookDate} /**入账日**/
+		<if test="tableId != null and tableId != ''"> AND cur.TABLE_ID = #{tableId} /**场景代码**/ </if>
+		<if test="tradeId != null and tradeId != ''"> AND cur.TRADE_ID = #{tradeId} /**交易编号**/ </if>
+		<if test="happenDate != null"> AND cur.HAPPEN_DATE = #{happenDate}	/**发生日**/ </if>
+		<if test="beginHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[>=]]> #{beginHappenCycDate} </if>
+		<if test="endHappenCycDate != null"> AND cur.HAPPEN_DATE <![CDATA[<=]]> #{endHappenCycDate} </if>
+		<if test="isadd != null and isadd.equals('Y')"> AND decode(cur.cd_flag,'D',1,'C',-1,0)*cur.HAPPEN_NUMBER > 0 </if>
+		) TEMP
+		WHERE TEMP.rn = 1
+		AND TEMP.offsetFlag = #{offsetFlag} /**冲正标识**/
+		)
+
+		SELECT
+		crt.*,/**账务明细表（当前表）.全部项目**/
+		book.BOOKSET_DATE booksetDateNew /**账套日期表.账套日期**/
+		FROM BOK_BOOKDETAIL_CURRENT crt
+		INNER JOIN voucher vr on crt.happen_date = vr.happenDate
+		and crt.BOOKSET_DATE = vr.booksetDate
+		and crt.BOOK_DATE = vr.bookDate
+		and crt.BOOK_ID =  vr.bookId
+		and crt.bookset_id = vr.booksetId
+		INNER JOIN BOK_BOOKSET_DATE book ON book.BOOKSET_ID = crt.BOOKSET_ID
+		WHERE 1 =1
+		<if test="baseSubjectNatureList != null and baseSubjectNatureList.size > 0">
+			/**科目性质**/
+			AND crt.BASE_SUBJECT_NATURE IN
+			<foreach collection="baseSubjectNatureList" item="baseSubjectNature" open="( " close=" )" separator=",">
+				#{baseSubjectNature}
+			</foreach>
+		</if>
+		<if test="bokDetailId != null and bokDetailId != ''">
+			AND crt.BOK_DETAIL_ID = #{bokDetailId}	/**账务明细代码**/
+		</if>
+		<if test="onwayDate != null">
+			AND ( crt.HAPPEN_DATE <![CDATA[<=]]> #{onwayDate} AND crt.ONWAY_DATE <![CDATA[>]]> #{onwayDate})
+		</if>
+		ORDER BY crt.HAPPEN_DATE ASC
+	</select>
 </mapper>

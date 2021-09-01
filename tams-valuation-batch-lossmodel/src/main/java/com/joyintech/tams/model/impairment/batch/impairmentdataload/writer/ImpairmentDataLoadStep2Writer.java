@@ -5,7 +5,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

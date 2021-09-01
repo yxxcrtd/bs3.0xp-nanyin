@@ -7,7 +7,8 @@ import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.A
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelResultDto;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -23,7 +24,7 @@ public class AssetImpairmentStageJudgeModelWriter extends BaseWriter<AssetImpair
      * Mapper
      */
     @Autowired
-    private AssetImpairmentStageJudgeModelMapper assetImpairmentStageJudgeModelMapper;
+    private LossCommonMapper lossCommonMapper;
     // 日志key
     private final String LOG_KEY = "logkey";
 
@@ -44,7 +45,7 @@ public class AssetImpairmentStageJudgeModelWriter extends BaseWriter<AssetImpair
         try {
             for (List<ModEclResultProcess> listInsert : list) {
                 if (CollectionUtils.isNotEmpty(listInsert)) {
-                    assetImpairmentStageJudgeModelMapper.insertResult(listInsert);
+                    lossCommonMapper.insertModEclResultProcessBatch(listInsert);
                 }
             }
 

@@ -7,8 +7,9 @@ import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
+import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,12 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
      */
     @Autowired
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
+
+    /**
+     * Mapper
+     */
+    @Autowired
+    private LossCommonMapper lossCommonMapper;
 
     @Override
     public void write(List<? extends ImpairmentDataLoadStep1ResultDto> items) throws Exception {
@@ -78,7 +85,7 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
         List<List<ModEclResultProcess>> list = DataHandleUtil.splitList(listModEclResultProcess);
         for (List<ModEclResultProcess> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                impairmentDataLoadMapper.insertModEclResultProcess(listInsert);
+                lossCommonMapper.insertModEclResultProcessBatch(listInsert);
             }
         }
     }
