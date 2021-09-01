@@ -31,6 +31,7 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ECL_RATIO" property="eclRatio" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, PROD_ID PROD_ID, PROD_NAME PROD_NAME, ASSET_ID ASSET_ID, ASSET_NAME ASSET_NAME, 
@@ -40,7 +41,7 @@
         PROSPECTIVE_PD PROSPECTIVE_PD, STAGE STAGE, LGD LGD, EAD EAD, PRE_PROSPECTIVE_ECL PRE_PROSPECTIVE_ECL, 
         PROSPECTIVE_ECL PROSPECTIVE_ECL, ALLOW_MODEL_COVER ALLOW_MODEL_COVER, DATA_SOURCE DATA_SOURCE, 
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
-        UPDATE_TIME UPDATE_TIME
+        UPDATE_TIME UPDATE_TIME, ECL_RATIO ECL_RATIO
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -72,7 +73,8 @@
             LGD, EAD, PRE_PROSPECTIVE_ECL, 
             PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME, ECL_RATIO
+            )
         values (#{seqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
             #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
             #{portfolioId,jdbcType=VARCHAR}, #{bussNo,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
@@ -82,7 +84,8 @@
             #{lgd,jdbcType=DECIMAL}, #{ead,jdbcType=DECIMAL}, #{preProspectiveEcl,jdbcType=DECIMAL}, 
             #{prospectiveEcl,jdbcType=DECIMAL}, #{allowModelCover,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{eclRatio,jdbcType=DECIMAL}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
         insert into MOD_ECL_RESULT
@@ -174,6 +177,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -263,6 +269,9 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="eclRatio != null" >
+                #{eclRatio,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
@@ -270,12 +279,12 @@
         PORTFOLIO_ID, BUSS_NO, PS, TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, 
         PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE, 
         LGD, EAD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, CREATE_USER, 
-        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ECL_RATIO)
         select SEQNO, PROD_ID, PROD_NAME, ASSET_ID, ASSET_NAME, ASSET_TYPE, 
             PORTFOLIO_ID, BUSS_NO, PS, TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, 
             PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE, 
             LGD, EAD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ECL_RATIO
              from MOD_ECL_RESULT
              where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -357,6 +366,9 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO = #{eclRatio,jdbcType=DECIMAL},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -386,7 +398,8 @@
             ALLOW_MODEL_COVER = #{allowModelCover,jdbcType=VARCHAR},
             DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ECL_RATIO = #{eclRatio,jdbcType=DECIMAL}
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
 </mapper>

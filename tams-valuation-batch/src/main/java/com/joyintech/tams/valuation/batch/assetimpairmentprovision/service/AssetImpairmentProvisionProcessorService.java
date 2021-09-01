@@ -34,6 +34,7 @@ import com.joyintech.tams.valuation.batch.common.finproduct.service.FinProductCo
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
+import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,9 @@ public class AssetImpairmentProvisionProcessorService {
 	
 	@Autowired
 	private LossCommonBatchService lossCommonBatchService;
+
+	@Autowired
+	private AccountingCommonBatchService	accountingCommonBatchService;
 	
 
 	/**
@@ -285,8 +289,7 @@ public class AssetImpairmentProvisionProcessorService {
 		List<String> subjectNatureList = accountingCommonService
             .getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
-		
-		BigDecimal ecl = lossCommonBatchService.trdAssetLossCalculate(acctEntity.getTrdAssetLossList(),  targetFinProduct,
+		BigDecimal ecl = accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
 		    acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
 		    acctEntity.getBookDate(), subjectNatureList);
 		// 变量.减值余额 = 上述返回值*-1

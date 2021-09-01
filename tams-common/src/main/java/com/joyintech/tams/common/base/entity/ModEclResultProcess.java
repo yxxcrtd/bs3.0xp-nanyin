@@ -45,31 +45,6 @@ public class ModEclResultProcess extends BaseEntity {
     private String marketId;
 
     /**
-     * TYPE_8
-     */
-    private String type8;
-
-    /**
-     * TYPE_9
-     */
-    private String type9;
-
-    /**
-     * TYPE_10
-     */
-    private String type10;
-
-    /**
-     * TYPE_11
-     */
-    private String type11;
-
-    /**
-     * TYPE_12
-     */
-    private String type12;
-
-    /**
      * 模型资产类型
      */
     private String modelAssetType;
@@ -305,6 +280,45 @@ public class ModEclResultProcess extends BaseEntity {
     private String gradeOrgType;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
+     * 发行规模
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal issueAmt;
+
+    /**
+     * 起息日
+     */
+    private Date vdate;
+
+    /**
+     * 息票品种
+     */
+    private String couponSpecies;
+
+    /**
+     * 发行价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal issuePrice;
+
+    /**
+     * 交易金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal tradeAmt;
+
+    /**
+     * ECL信用损失比例
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal eclRatio;
+
+    /**
      * 取得 序列号
      * @return 序列号
      */
@@ -414,86 +428,6 @@ public class ModEclResultProcess extends BaseEntity {
      */
     public void setMarketId(String marketId) {
         this.marketId = marketId == null ? null : marketId.trim();
-    }
-
-    /**
-     * 取得 TYPE_8
-     * @return TYPE_8
-     */
-    public String getType8() {
-        return type8;
-    }
-
-    /**
-     * 设置 TYPE_8
-     * @param type8 TYPE_8
-     */
-    public void setType8(String type8) {
-        this.type8 = type8 == null ? null : type8.trim();
-    }
-
-    /**
-     * 取得 TYPE_9
-     * @return TYPE_9
-     */
-    public String getType9() {
-        return type9;
-    }
-
-    /**
-     * 设置 TYPE_9
-     * @param type9 TYPE_9
-     */
-    public void setType9(String type9) {
-        this.type9 = type9 == null ? null : type9.trim();
-    }
-
-    /**
-     * 取得 TYPE_10
-     * @return TYPE_10
-     */
-    public String getType10() {
-        return type10;
-    }
-
-    /**
-     * 设置 TYPE_10
-     * @param type10 TYPE_10
-     */
-    public void setType10(String type10) {
-        this.type10 = type10 == null ? null : type10.trim();
-    }
-
-    /**
-     * 取得 TYPE_11
-     * @return TYPE_11
-     */
-    public String getType11() {
-        return type11;
-    }
-
-    /**
-     * 设置 TYPE_11
-     * @param type11 TYPE_11
-     */
-    public void setType11(String type11) {
-        this.type11 = type11 == null ? null : type11.trim();
-    }
-
-    /**
-     * 取得 TYPE_12
-     * @return TYPE_12
-     */
-    public String getType12() {
-        return type12;
-    }
-
-    /**
-     * 设置 TYPE_12
-     * @param type12 TYPE_12
-     */
-    public void setType12(String type12) {
-        this.type12 = type12 == null ? null : type12.trim();
     }
 
     /**
@@ -1218,5 +1152,118 @@ public class ModEclResultProcess extends BaseEntity {
      */
     public void setGradeOrgType(String gradeOrgType) {
         this.gradeOrgType = gradeOrgType == null ? null : gradeOrgType.trim();
+    }
+
+    /**
+     * 取得 投资目的
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim == null ? null : invAim.trim();
+    }
+
+    /**
+     * 取得 发行规模
+     * @return 发行规模
+     */
+    public BigDecimal getIssueAmt() {
+        return issueAmt;
+    }
+
+    /**
+     * 设置 发行规模
+     * @param issueAmt 发行规模
+     */
+    public void setIssueAmt(BigDecimal issueAmt) {
+        this.issueAmt = issueAmt;
+    }
+
+    /**
+     * 取得 起息日
+     * @return 起息日
+     */
+    public Date getVdate() {
+        return vdate;
+    }
+
+    /**
+     * 设置 起息日
+     * @param vdate 起息日
+     */
+    @JsonDeserialize(using = CustomDateDeserialize.class)
+    public void setVdate(Date vdate) {
+        this.vdate = vdate;
+    }
+
+    /**
+     * 取得 息票品种
+     * @return 息票品种
+     */
+    public String getCouponSpecies() {
+        return couponSpecies;
+    }
+
+    /**
+     * 设置 息票品种
+     * @param couponSpecies 息票品种
+     */
+    public void setCouponSpecies(String couponSpecies) {
+        this.couponSpecies = couponSpecies == null ? null : couponSpecies.trim();
+    }
+
+    /**
+     * 取得 发行价格
+     * @return 发行价格
+     */
+    public BigDecimal getIssuePrice() {
+        return issuePrice;
+    }
+
+    /**
+     * 设置 发行价格
+     * @param issuePrice 发行价格
+     */
+    public void setIssuePrice(BigDecimal issuePrice) {
+        this.issuePrice = issuePrice;
+    }
+
+    /**
+     * 取得 交易金额
+     * @return 交易金额
+     */
+    public BigDecimal getTradeAmt() {
+        return tradeAmt;
+    }
+
+    /**
+     * 设置 交易金额
+     * @param tradeAmt 交易金额
+     */
+    public void setTradeAmt(BigDecimal tradeAmt) {
+        this.tradeAmt = tradeAmt;
+    }
+
+    /**
+     * 取得 ECL信用损失比例
+     * @return ECL信用损失比例
+     */
+    public BigDecimal getEclRatio() {
+        return eclRatio;
+    }
+
+    /**
+     * 设置 ECL信用损失比例
+     * @param eclRatio ECL信用损失比例
+     */
+    public void setEclRatio(BigDecimal eclRatio) {
+        this.eclRatio = eclRatio;
     }
 }

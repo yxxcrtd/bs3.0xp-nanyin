@@ -1,12 +1,14 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.springframework.batch.core.StepExecution;
@@ -30,6 +32,9 @@ public class PdCalculateProcessService {
     @Autowired
     private PdCalculateMapper pdCalculateMapper;
 
+    @Autowired
+    private ImpairmentCommonService impairmentCommonService;
+
     private final String BATCH_PARAMS_KEY = "params";
 
     private final String BATCH_LOG_RESULTS = "logResults";
@@ -47,6 +52,7 @@ public class PdCalculateProcessService {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParams.get("BATCH_INFO");
         List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
         String taskId =(String)mapParams.get("TASK_ID");
+        String logMsg = "";
 
         AssetImpairmentPdCalculateResultDto resultDto = new AssetImpairmentPdCalculateResultDto();
         //1.1=====初始化变量Dto=====start=====
@@ -98,16 +104,10 @@ public class PdCalculateProcessService {
             if(variablePdCalculateDto.getGradeResult() ==null){
                 //生成错误日志  --【批处理名称】：【机构名称/资产代码】无评级信息
                 //=====记录计算错误日志=====start=====
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(readerDto.getAssetId());
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-
                 String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, variablePdCalculateDto.getGradeOrgId());
-                batchParam.setMsg("【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息");
-                bBatchLogResultList.add(batchParam);
-                sendlogResults(bBatchLogResultList,stepExecution);
+                logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
+                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                    readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
                 //=====记录计算错误日志=====end=====
                 return null;
             }
@@ -119,14 +119,9 @@ public class PdCalculateProcessService {
             if(modPdWeightConfigDto==null){
                 //生成错误日志
                 //=====记录计算错误日志=====start=====
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(readerDto.getAssetId());
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());//EXP 失败
-                batchParam.setMsg("【PD计算批处理】：Z值权重未维护");
-                bBatchLogResultList.add(batchParam);
-                sendlogResults(bBatchLogResultList,stepExecution);
+                logMsg ="【PD计算批处理】：Z值权重未维护";
+                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                    readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
                 //=====记录计算错误日志=====end=====
                 return null;
             }
@@ -142,22 +137,23 @@ public class PdCalculateProcessService {
 
             //2.2查询每一年的PD值 列表
             List<ModGradePdConfigDto> modGradePdConfigList = new ArrayList<>();
+            // 定义 评级PD查询参数
+            Map<String, Object> params = new HashMap<>();
+            params.put("gradeResult", variablePdCalculateDto.getGradeResult());
+            params.put("pdConfigType", DictCodeListExt3.评级PD类型_债券_其他债权.getValue());
+            params.put("configType_03", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());
             if(variablePdCalculateDto.getYearList() !=null){
                 for(String yearStr:variablePdCalculateDto.getYearList()){
+                    params.put("yearNum", new BigDecimal(yearStr));
                     //获取年份的评级PD配置列表
-                    if(pdCalculateMapper.selectModGradePdConfigList(variablePdCalculateDto.getGradeResult(),new BigDecimal(yearStr)) !=null){
-                        modGradePdConfigList.add(pdCalculateMapper.selectModGradePdConfigList(variablePdCalculateDto.getGradeResult(),new BigDecimal(yearStr)));
+                    if(pdCalculateMapper.selectModGradePdConfigList(params) !=null){
+                        modGradePdConfigList.add(pdCalculateMapper.selectModGradePdConfigList(params));
                     }else{
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
-                        ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                        batchParam.setFinprodId(readerDto.getAssetId());
-                        batchParam.setTaskId(taskId);
-                        batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                        batchParam.setType(ModelDictCodeList.批处理执行结果_警告.getValue());
-                        batchParam.setMsg("【PD计算批处理】：【"+yearStr+"】年PD未维护");
-                        bBatchLogResultList.add(batchParam);
-                        sendlogResults(bBatchLogResultList,stepExecution);
+                        logMsg ="【PD计算批处理】：【"+yearStr+"】年PD未维护";
+                        impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                            readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
                         //=====记录计算错误日志=====end=====
                     }
                 }
@@ -188,14 +184,9 @@ public class PdCalculateProcessService {
                 BigDecimal deciR8 =ArithmeticUtil.multiply(new BigDecimal("0.24"),ArithmeticUtil.subtract(BigDecimal.ONE,deciR6));
                 if(variablePdCalculateDto.getIsFinLicence() ==null){
                     //=====记录计算错误日志=====start=====
-                    ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                    batchParam.setFinprodId(readerDto.getAssetId());
-                    batchParam.setTaskId(taskId);
-                    batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                    batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-                    batchParam.setMsg("【PD计算批处理】：无法判断【机构名称】是否金融机构");
-                    bBatchLogResultList.add(batchParam);
-                    sendlogResults(bBatchLogResultList,stepExecution);
+                    logMsg ="【PD计算批处理】：无法判断【机构名称】是否金融机构";
+                    impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                        readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
                     //=====记录计算错误日志=====end=====
                     return null;
                 }
@@ -211,7 +202,6 @@ public class PdCalculateProcessService {
 
                 //3.2 遍历当年的每个季度，计算每个季度的ZtStress、PDStress
                 //遍历季度列表
-
                 for(String quarterStr :variablePdCalculateDto.getQuarterList()){
                     ModPdFactorConfigDto modPdFactorConfigDto =
                             pdCalculateMapper.selectModPdFactorConfig(pdConfigDto.getYearStr(),quarterStr);
@@ -269,15 +259,10 @@ public class PdCalculateProcessService {
                     }else{
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
-                        ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                        batchParam.setFinprodId(readerDto.getAssetId());
-                        batchParam.setTaskId(taskId);
-                        batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                        batchParam.setType(ModelDictCodeList.批处理执行结果_警告.getValue());
-                        batchParam.setMsg("【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度Z值未维护");
-                        bBatchLogResultList.add(batchParam);
-                        sendlogResults(bBatchLogResultList,stepExecution);
-                        //=====记录计算错误日志=====end=====
+                        logMsg ="【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度Z值未维护";
+                        impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                            readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+                         //=====记录计算错误日志=====end=====
                     }
                 }
             }
@@ -421,14 +406,9 @@ public class PdCalculateProcessService {
             resultDto.setModEclResultProcessResultList(eclResultProcessResultList);
         } catch (Exception e) {
             //=====记录计算错误日志=====start=====
-            ModValBatchLogResult batchParam = new ModValBatchLogResult();
-            batchParam.setFinprodId(readerDto.getAssetId());
-            batchParam.setTaskId(taskId);
-            batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-            batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-            batchParam.setMsg("【PD计算批处理】：计算错误");
-            bBatchLogResultList.add(batchParam);
-            sendlogResults(bBatchLogResultList,stepExecution);
+            logMsg ="【PD计算批处理】：计算异常";
+            impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
             //=====记录计算错误日志=====end=====
             return null;
         }
@@ -554,25 +534,6 @@ public class PdCalculateProcessService {
     }
 
     /**
-     * @Description:保存上下文日志信息
-     * @auther: yuzj
-     * @date: 2021/7/27
-     * @param:
-     * @return:
-     */
-    public  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
-        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
-            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
-                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
-                oldLogResultList.addAll(bBatchLogResultList);
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
-            }else{
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
-            }
-        }
-    }
-    
-    /**
      * @auther: 根据季度编码获取季度名称
      * @date: 2021/7/27 22:54
      * @param:
@@ -593,6 +554,23 @@ public class PdCalculateProcessService {
         return quarterName;
     }
 
-
+    /**
+     * @Description:保存上下文日志信息
+     * @auther: yuzj
+     * @date: 2021/7/27
+     * @param:
+     * @return:
+     */
+    public  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
+        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
+            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
+                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
+                oldLogResultList.addAll(bBatchLogResultList);
+                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
+            }else{
+                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
+            }
+        }
+    }
 
 }

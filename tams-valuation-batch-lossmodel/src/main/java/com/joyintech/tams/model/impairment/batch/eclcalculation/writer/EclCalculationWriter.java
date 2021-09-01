@@ -6,9 +6,10 @@ import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModEclResult;
+import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class EclCalculationWriter extends BaseWriter<EclCalculationResultDto> {
     private EclCalculationMapper eclCalculationMapper;
     @Autowired
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
+    @Autowired
+    private LossCommonMapper lossCommonMapper;
 
     @Override
     public void write(List<? extends EclCalculationResultDto> items) throws Exception {
@@ -99,7 +102,7 @@ public class EclCalculationWriter extends BaseWriter<EclCalculationResultDto> {
         List<List<ModEclResultProcess>> list = DataHandleUtil.splitList(listModEclResultProcess);
         for (List<ModEclResultProcess> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                impairmentDataLoadMapper.insertModEclResultProcess(listInsert);
+                lossCommonMapper.insertModEclResultProcessBatch(listInsert);
             }
         }
     }

@@ -12,7 +12,7 @@ import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUse
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.*;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModImpairRateParamsDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
 import org.slf4j.Logger;
@@ -102,52 +102,48 @@ public class ImpairmentDataLoadProcessorStep2Service {
                     entity.getSponsor(), ModelDictCodeList.模型_评级类型_主体评级.getValue());
                 resultSponsor = ratingInfoDto3.getMstratingresult01();
             }
-            // 默认评级类型 = 主体评级
-            entity.setoTypeFinal(ModelDictCodeList.模型_评级类型_主体评级.getValue());
             //资产类型 = 债券
             if (DictCodeListExt1.证券品种_债券.getValue().equals(entity.getModelAssetType())) {
                 if (ModelDictCodeList.模型_评级类型_债项评级.getValue().equals(entity.getoType())) {
                     entity.setoTypeFinal(ModelDictCodeList.模型_评级类型_债项评级.getValue());
                     //交易数据.最新评级结果 = 交易数据.债项评级
-                    entity.setResultCurrent(result01);
+                    modEclResultProcess.setResultCurrent(result01);
                 }
                 else if (ModelDictCodeList.模型_评级类型_主体评级.getValue().equals(entity.getoType())) {
                     //交易数据.最新评级结果 = 交易数据.主体评级
-                    entity.setResultCurrent(result02);
+                    modEclResultProcess.setResultCurrent(result02);
                 }
                 else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(entity.getoType())) {
                     if (impairmentCalculationCommonService.getPoorRating(result01,result02) >= 0) {
                         //交易数据.最新评级结果 = 交易数据.债项评级
-                        entity.setResultCurrent(result01);
+                        modEclResultProcess.setResultCurrent(result01);
                     } else {
                         //交易数据.最新评级结果 = 交易数据.主体评级
-                        entity.setResultCurrent(result02);
+                        modEclResultProcess.setResultCurrent(result02);
                     }
                 }
                 else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(entity.getoType())) {
                     if (impairmentCalculationCommonService.getPoorRating(entity.getResult01(), entity.getResult02()) <= 0) {
                         //交易数据.最新评级结果 = 交易数据.发行人评级结果
-                        entity.setResultCurrent(entity.getResult01());
+                        modEclResultProcess.setResultCurrent(entity.getResult01());
                     } else {
-                        //交易数据.最新评级结果 = 交易数据.担保人评级结果
-                        entity.setResultCurrent(entity.getResultSponsor());
                         // 交易数据.买入时点评级结果 = 融资人外部评级结果
-                        entity.setResultDeal(resultFinancier);
+                        modEclResultProcess.setResultDeal(resultFinancier);
                     }
                 }
             }
             else if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(entity.getModelAssetType())) {
                 if (ModelDictCodeList.模型_评级类型_发行人.getValue().equals(entity.getoType())) {
                     // 交易数据.买入时点评级结果 = 发行人外部评级结果
-                    entity.setResultDeal(resultIssuer);
+                    modEclResultProcess.setResultDeal(resultIssuer);
                 }
                 else if (ModelDictCodeList.模型_评级类型_融资人.getValue().equals(entity.getoType())) {
                     // 交易数据.买入时点评级结果 = 融资人外部评级结果
-                    entity.setResultDeal(resultFinancier);
+                    modEclResultProcess.setResultDeal(resultFinancier);
                 }
                 else if (ModelDictCodeList.模型_评级类型_担保人.getValue().equals(entity.getoType())) {
                     // 交易数据.买入时点评级结果 = 担保人外部评级结果
-                    entity.setResultDeal(resultSponsor);
+                    modEclResultProcess.setResultDeal(resultSponsor);
                 }
                 else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(entity.getoType())) {
                     //定义 最新评级结果 = 发行人评级结果
@@ -161,7 +157,7 @@ public class ImpairmentDataLoadProcessorStep2Service {
                         resultCurrent = entity.getResultSponsor();
                     }
                     // 交易数据.买入时点评级结果 = 最终结果
-                    entity.setResultDeal(resultCurrent);
+                    modEclResultProcess.setResultDeal(resultCurrent);
                 } else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(entity.getoType())) {
                     //定义 最新评级结果 = 发行人评级结果
                     String resultCurrent = entity.getResultIssuer();
@@ -174,13 +170,13 @@ public class ImpairmentDataLoadProcessorStep2Service {
                         resultCurrent = entity.getResultSponsor();
                     }
                     // 交易数据.买入时点评级结果 = 最终结果
-                    entity.setResultDeal(resultCurrent);
+                    modEclResultProcess.setResultDeal(resultCurrent);
                 }
             }
             else if (DictCodeListExt1.证券品种_存款.getValue().equals(entity.getModelAssetType())
                      || DictCodeListExt1.证券品种_回购.getValue().equals(entity.getModelAssetType())) {
                 // 交易数据.买入时点评级结果 = 发行人评级结果
-                entity.setResultDeal(resultIssuer);
+                modEclResultProcess.setResultDeal(resultIssuer);
             }
 
         }

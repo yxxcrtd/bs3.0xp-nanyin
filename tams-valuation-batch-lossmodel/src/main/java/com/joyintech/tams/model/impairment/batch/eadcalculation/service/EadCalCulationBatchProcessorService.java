@@ -21,7 +21,7 @@ import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.*;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowCalRuleDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowPayRulesDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;

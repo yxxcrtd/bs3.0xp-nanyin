@@ -88,55 +88,6 @@ where
 		</foreach>
 	</insert>
 
-	<insert id="insertModEclResultProcess">
-		insert into MOD_ECL_RESULT_PROCESS (SEQNO, PROD_ID, PROD_NAME,
-		PORTFOLIO_ID, ASSET_ID, ASSET_NAME,
-		MARKET_ID,
-		MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE,
-		MDATE, UPDATE_TIME, FINANCIER,
-		GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT,
-		SPONSOR, RISK_LEVEL_FIVE, TRADE_ID,
-		TRADE_DATE, PS, SHARE_AMT,
-		TRADE_AMT, YIELD, PAPER_RATE,
-		PLAN_END_DATE, IS_CLEAN, DEC_DATE,
-		O_TYPE, RESULT_01, RESULT_02,
-		RESULT_ISSUER, RESULT_FINANCIER, RESULT_SPONSOR,
-		RESULT_ACTUAL_CREDIT, O_TYPE_FINAL, ORG_ID_FINAL,
-		IS_FIN_LICENCE, RESULT_DEAL, RESULT_CURRENT,
-		PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, FIN_STAGE,
-		EMA_SHARE_AMT, EAD, PRE_PROSPECTIVE_PD,
-		PROSPECTIVE_PD, LGD, PRE_PROSPECTIVE_ECL,
-		PROSPECTIVE_ECL, ISSUE_AMT, VDATE,
-		COUPON_SPECIES, ISSUE_PRICE, PROCESS,
-		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE)
-		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
-				 close="from dual)">
-			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
-			#{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-			#{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-			#{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
-			#{item.modelAssetType,jdbcType=VARCHAR}, #{item.modelAssetDetailType,jdbcType=VARCHAR},
-			#{item.mdate,jdbcType=DATE}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.financier,jdbcType=VARCHAR},
-			#{item.gradeOrgId,jdbcType=VARCHAR}, #{item.issuer,jdbcType=VARCHAR}, #{item.actualCredit,jdbcType=VARCHAR},
-			#{item.sponsor,jdbcType=VARCHAR}, #{item.riskLevelFive,jdbcType=VARCHAR}, #{item.tradeId,jdbcType=VARCHAR},
-			#{item.tradeDate,jdbcType=DATE}, #{item.ps,jdbcType=VARCHAR}, #{item.shareAmt,jdbcType=DECIMAL},
-			#{item.tradeAmt,jdbcType=DECIMAL}, #{item.yield,jdbcType=DECIMAL}, #{item.paperRate,jdbcType=DECIMAL},
-			#{item.planEndDate,jdbcType=DATE}, #{item.isClean,jdbcType=VARCHAR}, #{item.decDate,jdbcType=DATE},
-			#{item.oType,jdbcType=VARCHAR}, #{item.result01,jdbcType=VARCHAR}, #{item.result02,jdbcType=VARCHAR},
-			#{item.resultIssuer,jdbcType=VARCHAR}, #{item.resultFinancier,jdbcType=VARCHAR}, #{item.resultSponsor,jdbcType=VARCHAR},
-			#{item.resultActualCredit,jdbcType=VARCHAR}, #{item.oTypeFinal,jdbcType=VARCHAR}, #{item.orgIdFinal,jdbcType=VARCHAR},
-			#{item.isFinLicence,jdbcType=VARCHAR}, #{item.resultDeal,jdbcType=VARCHAR}, #{item.resultCurrent,jdbcType=VARCHAR},
-			#{item.prinOverdueDay,jdbcType=DECIMAL}, #{item.intOverdueDay,jdbcType=DECIMAL}, #{item.finStage,jdbcType=VARCHAR},
-			#{item.emaShareAmt,jdbcType=DECIMAL}, #{item.ead,jdbcType=DECIMAL}, #{item.preProspectivePd,jdbcType=DECIMAL},
-			#{item.prospectivePd,jdbcType=DECIMAL}, #{item.lgd,jdbcType=DECIMAL}, #{item.preProspectiveEcl,jdbcType=DECIMAL},
-			#{item.prospectiveEcl,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, #{item.vdate,jdbcType=DATE},
-			#{item.couponSpecies,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.process,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-			#{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR}, #{item.gradeOrgType,jdbcType=VARCHAR}
-		</foreach>
-	</insert>
-
 	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto">
 select
 	a.SEQNO, a.PROD_ID, a.PROD_NAME,
@@ -156,7 +107,7 @@ select
 	a.INT_OVERDUE_DAY, a.FIN_STAGE, a.EMA_SHARE_AMT,
 	a.EAD, a.PRE_PROSPECTIVE_PD, a.PROSPECTIVE_PD,
 	a.LGD, a.PRE_PROSPECTIVE_ECL, a.PROSPECTIVE_ECL,
-	a.PROCESS, a.IS_CONTAIN_PLEDGE, a.GRADE_ORG_TYPE
+	a.PROCESS, a.IS_CONTAIN_PLEDGE, a.GRADE_ORG_TYPE,a.INV_AIM
 from
 	MOD_ECL_RESULT_PROCESS a
 	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
