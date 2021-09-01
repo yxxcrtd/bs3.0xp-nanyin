@@ -89,10 +89,10 @@ public class ModBatchTaskService extends BaseService {
         params.put("length", length);
 
         Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
-        Boolean isImpairment = (Boolean)params.get("isImpairment");
-        if (isImpairment != null && isImpairment) {
+        String isImpairment = (String)params.get("isImpairment");
+        if (isImpairment != null && "true".equals(isImpairment)) {
 //            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
-            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getLossAssetInfo(params));
+            assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossAssetInfo(params));
         } else {
             List<String> finprodTypes = new ArrayList<>(2);
             finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
