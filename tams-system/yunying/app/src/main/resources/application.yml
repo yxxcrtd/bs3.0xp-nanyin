@@ -164,6 +164,7 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
+  runOptimize: Y
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
