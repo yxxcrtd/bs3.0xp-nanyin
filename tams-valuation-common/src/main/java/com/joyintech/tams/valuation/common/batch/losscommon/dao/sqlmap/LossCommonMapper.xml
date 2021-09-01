@@ -80,7 +80,7 @@
 			finProduct.FINPROD_ID = #{finprodId}	 
     </select>
 
-    <insert id="insertModEclResultProcessBatch" parameterMap="java.utl.List">
+    <insert id="insertModEclResultProcessBatch">
         insert into MOD_ECL_RESULT_PROCESS (SEQNO, PROD_ID, PROD_NAME,
         PORTFOLIO_ID, ASSET_ID, ASSET_NAME,
         MARKET_ID,
