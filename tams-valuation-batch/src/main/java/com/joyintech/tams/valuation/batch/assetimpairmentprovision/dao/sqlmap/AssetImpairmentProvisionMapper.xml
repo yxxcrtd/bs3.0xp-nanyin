@@ -324,4 +324,16 @@
           and BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR}
     </update>
 
+	<select id="getModelEclResult" resultType="com.joyintech.tams.common.base.entity.ModEclResult">
+		SELECT
+			A.*
+		FROM MOD_ECL_RESULT A
+		WHERE A.BOOKSET_ID = #{booksetId}
+			AND A.DEC_DATE = #{happenDate}
+		  	AND AASSET_ID = #{assetId}
+		  	<if test="invAim != null and invAim != ''">
+		  		AND A.INV_AIM = invAim
+		  	</if>
+
+	</select>
 </mapper>
