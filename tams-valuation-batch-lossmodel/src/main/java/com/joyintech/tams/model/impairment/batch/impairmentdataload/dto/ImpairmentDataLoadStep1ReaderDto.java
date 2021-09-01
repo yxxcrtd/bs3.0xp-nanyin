@@ -205,6 +205,11 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      */
     private BigDecimal issuePrice;
 
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
     public String getFinprodId() {
         return finprodId;
     }
@@ -575,5 +580,21 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      */
     public void setGradeOrgType(String gradeOrgType) {
         this.gradeOrgType = gradeOrgType;
+    }
+
+    /**
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     *
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }

@@ -285,6 +285,11 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
     private String gradeOrgType;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 取得 序列号
      * @return 序列号
      */
@@ -1118,5 +1123,21 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
      */
     public void setGradeOrgType(String gradeOrgType) {
         this.gradeOrgType = gradeOrgType;
+    }
+
+    /**
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     *
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }

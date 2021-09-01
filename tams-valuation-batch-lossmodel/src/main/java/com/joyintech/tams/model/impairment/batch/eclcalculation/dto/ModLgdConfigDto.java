@@ -6,7 +6,8 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 
 import java.math.BigDecimal;
 
-public class ModLgdConfig extends BaseEntity {
+public class ModLgdConfigDto extends BaseEntity {
+
     /**
      * 序列号
      */
@@ -28,13 +29,23 @@ public class ModLgdConfig extends BaseEntity {
     private String isContainPledge;
 
     /**
+     * 金融产品代码
+     */
+    private String finprodId;
+
+    /**
      * LGD(%)
      */
-    @JsonSerialize(using= BigDecimalSerializer.class)
-    private BigDecimal lgd;
+    @JsonSerialize(using = BigDecimalSerializer.class) private BigDecimal lgd;
+
+    /**
+     * LGD配置类型
+     */
+    private String configType;
 
     /**
      * 取得 序列号
+     *
      * @return 序列号
      */
     public String getSeqno() {
@@ -43,6 +54,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 设置 序列号
+     *
      * @param seqno 序列号
      */
     public void setSeqno(String seqno) {
@@ -51,6 +63,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 取得 资产类型(数据字典 证券品种_模型)
+     *
      * @return 资产类型(数据字典 证券品种_模型)
      */
     public String getAssetType() {
@@ -59,6 +72,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 设置 资产类型(数据字典 证券品种_模型)
+     *
      * @param assetType 资产类型(数据字典 证券品种_模型)
      */
     public void setAssetType(String assetType) {
@@ -67,6 +81,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 取得 资产细分类(数据字典 证券细分类_模型)
+     *
      * @return 资产细分类(数据字典 证券细分类_模型)
      */
     public String getAssetDetailType() {
@@ -75,6 +90,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 设置 资产细分类(数据字典 证券细分类_模型)
+     *
      * @param assetDetailType 资产细分类(数据字典 证券细分类_模型)
      */
     public void setAssetDetailType(String assetDetailType) {
@@ -83,6 +99,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 取得 是否含有抵质押物
+     *
      * @return 是否含有抵质押物
      */
     public String getIsContainPledge() {
@@ -91,6 +108,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 设置 是否含有抵质押物
+     *
      * @param isContainPledge 是否含有抵质押物
      */
     public void setIsContainPledge(String isContainPledge) {
@@ -99,6 +117,7 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 取得 LGD(%)
+     *
      * @return LGD(%)
      */
     public BigDecimal getLgd() {
@@ -107,9 +126,42 @@ public class ModLgdConfig extends BaseEntity {
 
     /**
      * 设置 LGD(%)
+     *
      * @param lgd LGD(%)
      */
     public void setLgd(BigDecimal lgd) {
         this.lgd = lgd;
+    }
+
+    /**
+     * @return LGD配置类型
+     */
+    public String getConfigType() {
+        return configType;
+    }
+
+    /**
+     * 设置 LGD配置类型
+     *
+     * @param configType LGD配置类型
+     */
+    public void setConfigType(String configType) {
+        this.configType = configType;
+    }
+
+    /**
+     * @return 金融产品代码
+     */
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    /**
+     * 设置 金融产品代码
+     *
+     * @param finprodId 金融产品代码
+     */
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 }

@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.eadcalculation.dao;
 
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadModEclResultProcess;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,7 +26,4 @@ public interface EadCalculationBatchMapper {
     //  查询存续期交易列表
     List<ModEclResultProcess> selectDurationTradeByAssetId(Map<String, Object> param);
 
-    int insertSelective(ModEclResultProcess entity);
-
-    int insertBatchResult(List<EadModEclResultProcess> list);
 }
