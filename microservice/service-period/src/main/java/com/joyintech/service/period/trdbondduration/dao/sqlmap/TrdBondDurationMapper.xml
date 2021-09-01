@@ -281,7 +281,7 @@
                 and t2.mdate = (select min(tt.mdate) from FIN_CASH_PLAN tt where tt.finprod_id =t1.finprod_id
                     and Tt.FINPROD_TYPE2 = 'F01'
                     AND tt.MDATE > t1.CDATE
-                    AND Tt.PAY_DATE >= to_date('2021-03-26','yyyy-MM-dd')
+                    AND Tt.PAY_DATE >= #{PLATEFORM_DATE}
                     and Tt.CASH_TYPE IN ('01', '02', '03', '04')
                     and (tt.INT_AMT > 0 or t2.PRIN_AMT > 0)
                 )
