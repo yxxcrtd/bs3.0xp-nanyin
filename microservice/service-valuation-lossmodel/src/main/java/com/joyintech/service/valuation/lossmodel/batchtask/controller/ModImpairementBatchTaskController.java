@@ -52,12 +52,20 @@ public class ModImpairementBatchTaskController {
         String endDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
         String batchGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE;
         String prodGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_GROUP;
-        if (!modImpairementBatchTaskService.checkIsRunning(finprodIds)) {
+        /** modify by yanya on 20210901 检验是否有跑批的数据，单独检验 **/
+        //if (!modImpairementBatchTaskService.checkIsRunning(finprodIds)) {
             modImpairementBatchTaskService.cleanBatchParams();
             return modImpairementBatchTaskService.executeBatch(realName, selectedBatchGroup,
                     selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType, finprodIds);
-        }
-        return false;
+        //}
+        //return false;
+    }
+
+    @PostMapping("checkIsRunning")
+    public boolean checkIsRunning(@RequestBody Map<String, Object> params) {
+        // 资产代码集合
+        String finprodIds = (String)params.get("finprodId");
+        return modImpairementBatchTaskService.checkIsRunning(finprodIds);
     }
 
     @PostMapping("findBatchExeTask/{page}/{length}")

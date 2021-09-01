@@ -338,9 +338,28 @@ public class ModBatchTaskService extends BaseService {
             Map<String, Object> requestMap = new HashMap<>();
             requestMap.put("finProdIdList", finProdIdList);
             requestMap.put("isImpairment", true);
-            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-                    , requestMap, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+//                    , requestMap, BatchAssetInfoDto.class);
+            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+            Boolean isImpairment = false;
+            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+            }
+            if(isImpairment) {
+                params.put("execDate",params.get("execDate"));
+                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+            }
+            else {
+                List<String> finprodTypes = new ArrayList<>(2);
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("finprodTypes", finprodTypes);
+                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+                    params.put("finprodIdList", finProdIdList);
+                }
+                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+            }
             if (CollectionUtils.isNotEmpty(assetInfos)) {
                 Map<String, BatchAssetInfoDto> map = assetInfos.stream()
                         .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
@@ -382,9 +401,29 @@ public class ModBatchTaskService extends BaseService {
             }
             Map<String, Object> requestMaps = new HashMap<>();
             requestMaps.put("finProdIdList", finProdIdList);
-            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-                    , requestMaps, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+//                    , requestMaps, BatchAssetInfoDto.class);
+            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+            Boolean isImpairment = false;
+            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+            }
+            if(isImpairment) {
+                params.put("execDate",params.get("execDate"));
+                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+            }
+            else {
+                List<String> finprodTypes = new ArrayList<>(2);
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("finprodTypes", finprodTypes);
+                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+                    params.put("finprodIdList", finProdIdList);
+                }
+                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+            }
+
             if (CollectionUtils.isNotEmpty(assetInfos)) {
                 Map<String, BatchAssetInfoDto> map = assetInfos.stream()
                         .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
