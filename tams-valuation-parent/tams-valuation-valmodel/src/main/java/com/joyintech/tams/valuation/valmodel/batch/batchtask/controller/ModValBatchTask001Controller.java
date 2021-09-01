@@ -71,11 +71,11 @@ public class ModValBatchTask001Controller extends BaseController {
         return modBatchTask001Service.execute(pageParam);
     }
 
-    @RequestMapping("getAssetInfo")
+    @RequestMapping("getValBatchAssetInfo")
     @ResponseBody
-    public Page<SelectOptionDto> getAssetInfo() {
+    public Page<SelectOptionDto> getValBatchAssetInfo() {
         Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
-        return modBatchTask001Service.getAssetInfo(pageParam);
+        return modBatchTask001Service.getValBatchAssetInfo(pageParam);
     }
 
     @RequestMapping("findLogPage")

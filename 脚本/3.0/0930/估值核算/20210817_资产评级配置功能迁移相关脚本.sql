@@ -8,182 +8,182 @@ comment on column MOD_ASSET_GRADE_CONFIG.GRADE_ORG_TYPE is '评级机构类型';
 
 --资产评级配置菜单
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('RISK_MANAGEMENT_001_013_001', 'VAL', null, 'RISK_MANAGEMENT_001_013', 'AssetRatingAllocation001', 1, '02', '资产评级配置', 'system', null, '23-JUN-21 10.57.20.000000 AM', 'system', '23-JUN-21 10.57.20.000000 AM');
+-- values ('RISK_MANAGEMENT_001_013_001', 'VAL', null, 'RISK_MANAGEMENT_001_013', 'AssetRatingAllocation001', 1, '02', '资产评级配置', 'system', null, sysdate, 'system', sysdate);
 
 --资产评级配置页面
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetCategories001', 'VAL', '/model/impairment/assetratingallocation/assetcategories/AssetCategories001', 'lossmodel/assetratingallocation/assetcategories/AssetCategories001', null, null, null, '02', '01', '资产大类评级配置', 'system', null, '22-JUL-21 02.04.18.000000 PM', 'system', '22-JUL-21 02.04.18.000000 PM');
+values ('AssetCategories001', 'VAL', '/model/impairment/assetratingallocation/assetcategories/AssetCategories001', 'lossmodel/assetratingallocation/assetcategories/AssetCategories001', null, null, null, '02', '01', '资产大类评级配置', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetCategories002', 'VAL', '/model/impairment/assetratingallocation/assetcategories/AssetCategories002', 'lossmodel/assetratingallocation/assetcategories/AssetCategories002', null, null, null, '02', '01', '资产大类评级配置新建', 'system', null, '22-JUL-21 02.04.18.000000 PM', 'system', '22-JUL-21 02.04.18.000000 PM');
+values ('AssetCategories002', 'VAL', '/model/impairment/assetratingallocation/assetcategories/AssetCategories002', 'lossmodel/assetratingallocation/assetcategories/AssetCategories002', null, null, null, '02', '01', '资产大类评级配置新建', 'system', null, sysdate, 'system', sysdate);
 
 --工作流配置
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetCategories002', 'ValAssetCategories001_btn_delete', 'noneApproval', 'system', null, '22-JUL-21 02.04.19.000000 PM', 'system', '22-JUL-21 02.04.19.000000 PM');
+values ('AssetCategories002', 'ValAssetCategories001_btn_delete', 'noneApproval', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetCategories002', 'ValAssetCategories002_btn_save', 'noneApproval', 'system', null, '22-JUL-21 02.04.19.000000 PM', 'system', '22-JUL-21 02.04.19.000000 PM');
+values ('AssetCategories002', 'ValAssetCategories002_btn_save', 'noneApproval', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetCategories002', 'ValAssetCategories002_btn_submit', 'noneApproval', 'system', null, '22-JUL-21 02.04.19.000000 PM', 'system', '22-JUL-21 02.04.19.000000 PM');
+values ('AssetCategories002', 'ValAssetCategories002_btn_submit', 'noneApproval', 'system', null, sysdate, 'system', sysdate);
 
 --资产大类评级配置查询页，资产类型下拉框配置
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories001', '999999', 'SEC_TYPE', '01', '债券', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories001', '999999', 'SEC_TYPE', '01', '债券', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories001', '999999', 'SEC_TYPE', '07', '存款', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories001', '999999', 'SEC_TYPE', '07', '存款', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories001', '999999', 'SEC_TYPE', '09', '回购', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories001', '999999', 'SEC_TYPE', '09', '回购', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories001', '999999', 'SEC_TYPE', '13', '其他债权类', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories001', '999999', 'SEC_TYPE', '13', '其他债权类', null, 'system', null, sysdate, 'system', sysdate, null);
 
 --证券品种联动资产分类配置
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '001', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '001', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '002', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '002', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '003', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '003', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '004', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '004', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '005', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '005', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '006', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '006', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '007', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '007', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '008', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '008', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '009', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '009', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '010', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '010', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '011', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '011', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '012', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '012', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '013', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '013', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '014', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '014', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '015', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '015', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '016', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '016', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '017', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '017', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '018', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '018', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '019', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '019', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '020', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '020', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '021', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '021', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '022', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '022', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '023', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '023', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '024', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '024', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '025', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '025', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '026', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '026', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '027', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '027', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '028', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '028', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '029', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '029', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '030', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '030', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '031', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '031', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '032', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '032', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '033', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '033', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '034', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '034', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '035', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '035', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BOND_TYPE', '036', 'SEC_TYPE', '01', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('BOND_TYPE', '036', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BONDREP_TYPE', '02', 'SEC_TYPE', '09', 'system', null, '07-SEP-18 12.00.00.000000 AM', 'system', '07-SEP-18 12.00.00.000000 AM');
+values ('BONDREP_TYPE', '02', 'SEC_TYPE', '09', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('BONDREP_TYPE', '04', 'SEC_TYPE', '09', 'system', null, '07-SEP-18 12.00.00.000000 AM', 'system', '07-SEP-18 12.00.00.000000 AM');
+values ('BONDREP_TYPE', '04', 'SEC_TYPE', '09', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DEPOSIT_TYPE', '01', 'SEC_TYPE', '07', 'system', null, '07-SEP-18 12.00.00.000000 AM', 'system', '07-SEP-18 12.00.00.000000 AM');
+values ('DEPOSIT_TYPE', '01', 'SEC_TYPE', '07', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DEPOSIT_TYPE', '03', 'SEC_TYPE', '07', 'system', null, '07-SEP-18 12.00.00.000000 AM', 'system', '07-SEP-18 12.00.00.000000 AM');
+values ('DEPOSIT_TYPE', '03', 'SEC_TYPE', '07', 'system', null, sysdate, 'system', sysdate);
 
 --资产大类评级配置新建页，资产类型下拉框配置
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories002', '999999', 'SEC_TYPE', '01', '债券', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories002', '999999', 'SEC_TYPE', '01', '债券', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories002', '999999', 'SEC_TYPE', '07', '存款', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories002', '999999', 'SEC_TYPE', '07', '存款', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories002', '999999', 'SEC_TYPE', '09', '回购', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories002', '999999', 'SEC_TYPE', '09', '回购', null, 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('AssetCategories002', '999999', 'SEC_TYPE', '13', '其他债权类', null, 'system', null, '24-MAY-19 12.00.00.000000 AM', 'system', '24-MAY-19 12.00.00.000000 AM', null);
+values ('AssetCategories002', '999999', 'SEC_TYPE', '13', '其他债权类', null, 'system', null, sysdate, 'system', sysdate, null);
 
 --数据字典表新增 评级机构类型
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('GRADE_PARTY_TYPE', 'MOD', '评级机构类型', null, '02', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM');
+values ('GRADE_PARTY_TYPE', 'MOD', '评级机构类型', null, '02', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('GRADE_PARTY_TYPE', '01', '最新', 1, '0', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM', null);
+values ('GRADE_PARTY_TYPE', '01', '最新', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('GRADE_PARTY_TYPE', '02', '指定', 2, '0', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM', null);
+values ('GRADE_PARTY_TYPE', '02', '指定', 2, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 --数据字典评级类型添加存借款机构、交易对手
 insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('MODEL_MAIN_GRADE_TYPE','07','存借款机构','7','0','system','',to_date('2021/6/15', 'yyyy/mm/dd'), 'system',to_date('2021/6/15', 'yyyy/mm/dd'));
@@ -191,31 +191,31 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 
 --证券品种联动评级类型配置
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '01', 'SEC_TYPE', '01', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '01', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '03', 'SEC_TYPE', '13', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '03', 'SEC_TYPE', '13', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '04', 'SEC_TYPE', '01', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '04', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '04', 'SEC_TYPE', '13', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '04', 'SEC_TYPE', '13', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '05', 'SEC_TYPE', '01', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '05', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '05', 'SEC_TYPE', '13', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '05', 'SEC_TYPE', '13', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '01', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '13', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '13', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '07', 'SEC_TYPE', '07', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '07', 'SEC_TYPE', '07', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '08', 'SEC_TYPE', '09', 'system', null, '21-OCT-19 12.00.00.000000 AM', 'system', '21-OCT-19 12.00.00.000000 AM');
+values ('MODEL_MAIN_GRADE_TYPE', '08', 'SEC_TYPE', '09', 'system', null, sysdate, 'system', sysdate);

@@ -331,8 +331,38 @@
     </select>
 
 
-    <!-- 获取资产信息集合  -->
-    <select id="getLossAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+    <!-- 获取普华资产信息集合  -->
+    <select id="getLossPwcAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+        SELECT
+        distinct A.FINPROD_ID as finprodId,
+        NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as finprodName,
+        A.FINPROD_ID as id,
+        NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as text
+        from FIN_PRODUCT_TYPE A
+        LEFT JOIN FIN_PRODUCT B  ON A.FINPROD_ID = B.FINPROD_ID
+        WHERE
+        A.type_18 in ('01', '13')
+    </select>
+
+    <!-- 获取毕马威资产信息集合  -->
+    <select id="getLossKpmgAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+        SELECT
+        distinct A.FINPROD_ID as finprodId,
+        NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as finprodName,
+        A.FINPROD_ID as id,
+        NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as text
+        from FIN_PRODUCT_TYPE A
+        LEFT JOIN FIN_PRODUCT B ON A.FINPROD_ID = B.FINPROD_ID
+        WHERE
+        (A.type_18 in ('01', '13')
+          or(A.type_18 = '07' and A.type_1 in ('01', '03'))
+          or (A.type_18 = '09' and A.type_1 in ('02', '04'))
+        )
+    </select>
+
+
+    <!-- 获取资产代码集合  -->
+    <select id="getValAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
         SELECT
         A.FINPROD_ID as finprodId,/**金融产品代码**/
         A.FINPROD_ABBR as finprodName,/**金融产品简称**/
@@ -343,7 +373,7 @@
         INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
         WHERE
         1 = 1
-         AND D.TYPE_18 = '01' AND (D.TYPE_1 = '033' OR (A.IS_SUS = '01' AND A.IS_RIGHT = '02'))/**优先股、不含权的永续债**/
+        AND (D.TYPE_18 = '01' or D.TYPE_18 = '13')
         AND (
         EXISTS (
         SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
@@ -354,6 +384,9 @@
         )
         )
     </select>
+
+
+
 
 
 

@@ -18,6 +18,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
@@ -90,15 +91,15 @@ public class ModBatchTaskService extends BaseService {
 
         Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
         String isImpairment = (String)params.get("isImpairment");
+        String lossType =(String)params.get("lossType");
         if (isImpairment != null && "true".equals(isImpairment)) {
-//            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
-            assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossAssetInfo(params));
+              if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossKpmgAssetInfo(params));
+              }else{
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossPwcAssetInfo(params));
+              }
         } else {
-            List<String> finprodTypes = new ArrayList<>(2);
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            params.put("finprodTypes", finprodTypes);
-            assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfo(params));
+              assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getValAssetInfo(params));
         }
 
         Page<SelectOptionDto> res = new Page<>();
