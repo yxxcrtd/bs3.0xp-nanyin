@@ -82,7 +82,7 @@ public class ImpairmentDataLoadReaderService {
                 list.addAll(listTdyAsset);
             }
         }
-        if (CollectionUtils.isNotEmpty(list)) {
+        if (!CollectionUtils.isNotEmpty(list)) {
             return list;
         }
 

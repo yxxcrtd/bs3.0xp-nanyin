@@ -397,7 +397,7 @@
 						SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
 						WHERE B.DSC_COST_AMT = 0
 							AND B.FINPROD_ID=#{finprodId}
-						  	AND B.PORTFOLIO_ID=#{portfolioId})
+						  	AND B.PORTFOLIO_ID=#{portfolioId}
 				),A.TRADE_DATE
 			)
 			AND ACC.BOOKSET_ID = #{prodId}
