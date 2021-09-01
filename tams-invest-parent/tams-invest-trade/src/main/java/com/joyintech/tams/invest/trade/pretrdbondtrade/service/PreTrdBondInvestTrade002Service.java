@@ -1052,6 +1052,8 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
         preTrdBondInvestTrade002Dto.setPs(etrInvestInfoDtoList.get(0).getEtrEntrust().getPs());
         preTrdBondInvestTrade002Dto.setFinprodId(etrInvestInfoDtoList.get(0).getEtrEntrust().getFinprodId());
         preTrdBondInvestTrade002Dto.setType9(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getAssetType1());
+        preTrdBondInvestTrade002Dto.setCalculateField(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getCalculateField());
+
         //清算速度
         if (Long.compare(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getSettleSpreed(), new Long(0)) == 0){
         	preTrdBondInvestTrade002Dto.setSettleSpeedText(DictCodeList.清算速度_T_0.getValue());
@@ -1059,7 +1061,20 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
         	preTrdBondInvestTrade002Dto.setSettleSpeedText(DictCodeList.清算速度_T_1.getValue());
         }
 
-        preTrdBondInvestTrade002Dto.setUnitCprice(etrInvestInfoDtoList.get(0).getEtrEntrust().getPrice());
+        if(StringUtil.isNotEmpty(preTrdBondInvestTrade002Dto.getCalculateField())){
+            if(StringUtil.equals(preTrdBondInvestTrade002Dto.getCalculateField(),"price")){
+                preTrdBondInvestTrade002Dto.setUnitCprice(etrInvestInfoDtoList.get(0).getEtrEntrust().getPrice());
+            }
+            else if(StringUtil.equals(preTrdBondInvestTrade002Dto.getCalculateField(),"yield")){
+                preTrdBondInvestTrade002Dto.setYield(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getMatureYield().multiply(new BigDecimal("100")));
+            }
+            else if(StringUtil.equals(preTrdBondInvestTrade002Dto.getCalculateField(),"exerYield")){
+        	    preTrdBondInvestTrade002Dto.setExerYield(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getExerYield().multiply(new BigDecimal("100")));
+            }
+        }else{
+            preTrdBondInvestTrade002Dto.setUnitCprice(etrInvestInfoDtoList.get(0).getEtrEntrust().getPrice());
+        }
+//        preTrdBondInvestTrade002Dto.setUnitCprice(etrInvestInfoDtoList.get(0).getEtrEntrust().getPrice());
         preTrdBondInvestTrade002Dto.setCounterId(etrInvestInfoDtoList.get(0).getEtrEntrust().getCounterId());
         preTrdBondInvestTrade002Dto.setCounterTrader(etrInvestInfoDtoList.get(0).getEtrEntrust().getCounterTrader());
 //        preTrdBondInvestTrade002Dto.setYield(etrInvestInfoDtoList.get(0).getEtrEntrustAdd().getMatureYield());
