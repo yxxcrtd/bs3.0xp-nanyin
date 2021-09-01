@@ -163,7 +163,11 @@ public class EtrProjectCashPositionDealService extends EtrCashPositionBaseServic
                     deal(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
                 }
                 // 交易提交
-                if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                if (
+                        // ZGZGST-1735:中间收息还本交易流程中数据不减少还本金额,生效数据才会减少 fuyongsheng 20210901 edit start
+                        //DictCodeList.持仓类型_可用.equals(持仓类型) ||
+                        // ZGZGST-1735:中间收息还本交易流程中数据不减少还本金额,生效数据才会减少 fuyongsheng 20210901 edit end
+                        etrPositionHoldDto.isNeedNegative()) {
                     if (StringUtil.isEmpty(entrustId)) { // 无委托
                         // 资金到账日增加到账金额
                         预增现金处理(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId);
