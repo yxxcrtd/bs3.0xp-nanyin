@@ -76,7 +76,7 @@
 	</insert>
 
 	<update id="createChbInvestHoldInfoCheck">
-		CREATE TABLE ${newTableName} AS SELECT * FROM  CHB_INVESTHOLD_INFO_CHECK sub where 1=0
+		CREATE TABLE ${newTableName} AS SELECT * FROM  CHB_INVESTHOLD_INFO_CHECK where 1=0
 	</update>
 
 	<!-- 插入 ChbInvestHoldInfoSub数据-->

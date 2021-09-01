@@ -59,7 +59,12 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
     /**
      *需要归档的表
      */
-    private static final String[] DATA_BACKUP_TABLENAME = new String[] {"CHB_INFO_REPORT_", "CHB_SUBMIT_STATUS_","CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_INVESTHOLD_INFO_CHECK_"};
+//    private static final String[] DATA_BACKUP_TABLENAME = new String[] {"CHB_INFO_REPORT_", "CHB_SUBMIT_STATUS_","CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_INVESTHOLD_INFO_CHECK_"};
+	private static final String[] ORIGINAL_DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT", "CHB_SUBMIT_STATUS","CHB_INVESTHOLD_INFO","CHB_INVESTHOLD_INFO_SUB","CHB_INVESTHOLD_INFO_CHECK"};
+	/**
+	 * 归档的表
+	 */
+	private static final String[] DATA_BACKUP_TABLE_NAME = new String[] {"CHB_INFO_REPORT_", "CHB_SUBMIT_STATUS_","CHB_INVESTHOLD_INFO_","CHB_INVESTHOLD_INFO_SUB_","CHB_HOLD_INFO_CHECK_"};
 
     /**
      * 自动检查报送
@@ -128,8 +133,10 @@ public class ReportDataBackupMainService  extends AutoSendCBBaseService{
 	 * @param map
 	 */
 	private void doDataBackupDB2(int year, int month, int flag, Map<String,Date> map){
-		String tableName_ori = StringUtil.substring(DATA_BACKUP_TABLENAME[flag],0,DATA_BACKUP_TABLENAME[flag].length()-1);
-		String tableName = DATA_BACKUP_TABLENAME[flag]+year+month;
+//		String tableName_ori = StringUtil.substring(DATA_BACKUP_TABLENAME[flag],0,DATA_BACKUP_TABLENAME[flag].length()-1);
+//		String tableName = DATA_BACKUP_TABLENAME[flag]+year+month;
+		String tableName_ori = ORIGINAL_DATA_BACKUP_TABLE_NAME[flag];
+		String tableName = DATA_BACKUP_TABLE_NAME[flag]+year+month;
     	String reportDataBackup = mapper.queryTableIsExist(tableName);
     	//备份开始日
 		String startDate = DateUtil.format(map.get("MINDATE"),"yyyy-MM-dd");
