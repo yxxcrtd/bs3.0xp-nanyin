@@ -1679,15 +1679,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			//add by chenjiaixng 添加指令价格非空校验 20210827 end
 			//add by chenjiaxing 校验投资目的不能为空 start
 			if (!StringUtil.isNotEmpty(dzImportDto.getInvAim()) && StringUtils.isNotEmpty(dzImportDto.getFinprodType2())
-					&&  !dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-					&& StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())) {
-				checkElement(dzImportDto,promptMsg,null,obj-> {
-					return etrCommonService.checkIsBlank(dzImportDto.getInvAim() == null ? "" :dzImportDto.getInvAim().toString(),
-							"EtrExchangeTrade001.invAim", lineNo);
-				});
-			}
-			if (!StringUtil.isNotEmpty(dzImportDto.getInvAim())
-					&&StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_固定收益平台.getValue())) {
+					&&  (!dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) ||
+					!dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) )) {
 				checkElement(dzImportDto,promptMsg,null,obj-> {
 					return etrCommonService.checkIsBlank(dzImportDto.getInvAim() == null ? "" :dzImportDto.getInvAim().toString(),
 							"EtrExchangeTrade001.invAim", lineNo);
