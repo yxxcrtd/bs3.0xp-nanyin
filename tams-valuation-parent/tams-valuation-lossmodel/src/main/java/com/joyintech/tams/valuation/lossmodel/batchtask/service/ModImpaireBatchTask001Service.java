@@ -30,11 +30,18 @@ import java.util.Map;
 public class ModImpaireBatchTask001Service extends CommonExportService {
 
     /**
+     * 定义常量 估值减值任务组组号
+     * add by yanya on 20210901
+     */
+    private final static String BATCH_GROUP_SEQNO = "valloss0000000000000000000000001";
+    /**
      * 获取批处理列表
      * @param pageParam
      * @return
      */
     public List<String> getBatchList(Map<String, Object> pageParam) {
+        //add by yanya on 20210901 添加估值模型任务组组号
+        pageParam.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
         List<BatchTaskDto> batchTaskDtos = restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME
                 + "/modBatchTask/getAllBatchTask", pageParam, BatchTaskDto.class);
         if (!CollectionUtils.isEmpty(batchTaskDtos)) {
@@ -69,14 +76,22 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
         // 用户名
         String realName = SecurityUtil.getLoginUser().getRealName();
         pageParam.put("realName", realName);
-        boolean res = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
-                + "/modBatchTask/insertBatch", pageParam, Boolean.class);
-        if (res) {
-            isCheck = 0;
-            checkMsg = "执行成功!";
-        } else {
-            isCheck = 1;
-            checkMsg = "执行失败, 请联系管理员!";
+        boolean checkFlag = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
+                + "/modBatchTask/checkIsRunning", pageParam, Boolean.class);
+        if(!checkFlag) {
+            boolean res = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
+                    + "/modBatchTask/insertBatch", pageParam, Boolean.class);
+            if (res) {
+                isCheck = 0;
+                checkMsg = "执行成功!";
+            } else {
+                isCheck = 1;
+                checkMsg = "执行失败, 请联系管理员!";
+            }
+        }
+        else {
+            isCheck = 2;
+            checkMsg = "当前有产品正在跑批，请稍后!";
         }
         json.addProperty("isCheck", isCheck);
         json.addProperty("checkMsg", checkMsg);
@@ -103,6 +118,8 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
     public Page<BatchExecutingStatusDto> findBatchExeDetail(String sysDate) {
         Map<String, Object> params = RequestUtil.getPageParam();
         params.put("sysDate", sysDate);
+        //add by yanya on 20210901 添加估值模型任务组组号
+        params.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
         Page<BatchExecutingStatusDto> page = restTemplate.postForPage(ServiceApplication.LOSS_MODEL_SERVICE_NAME
                 + "/modBatchTask/findBatchExeDetail", params, BatchExecutingStatusDto.class);
 

@@ -10,12 +10,15 @@
 
 package com.joyintech.tams.valuation.common.batch.finproduct.dao;
 
+import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
+import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalance;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanceSearchDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -48,4 +51,24 @@ public interface AccountingCommonBatchMapper {
      * @since 1.0
      */
     List<SubjectBalance> queryCurrentLatestBalance(SubjectBalanceSearchDto searchDto);
+
+    /**
+     *
+     * 账务类共通方法设计 - 统计分析账务明细汇总查询
+     * @param paMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BokStatDetPosiiton> getCountAnalysis(Map<String, Object> paMap);
+
+    /**
+     *
+     * 凭证最新账务查询
+     * @param paMap
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<BokBookdetailCurrent> getBookLatestInfo(Map<String, Object> paMap);
 }

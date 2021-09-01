@@ -1,12 +1,16 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetGroupPdCalculateReaderDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +58,21 @@ public class PdCalculateReaderService {
                 finprodIdList.add(params1.getFinprodId());
             }
         }
+        Map<String, Object> param = new HashMap<>();
+        param.put("plateDate", plateDate);
+        param.put("finprodIdList",finprodIdList);
+        // 减值方案系统参数
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        param.put("lossType", lossType);
+        // 普华方案只查询买入交易的数据
+        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
+            param.put("process", ModelDictCodeList.模型_减值过程_EAD计算.getValue());
+        }
+        else{
+            param.put("process", ModelDictCodeList.模型_减值过程_减值阶段判断.getValue());
+        }
         //1.根基跑批日查询出需要PD计算的交易信息列表(资产代码不可能为空)
-        List<ModEclResultProcess> AssetImpairmentPdCalculateList = pdCalculateMapper.selectWaitPdCalculateList(plateDate,finprodIdList);
+        List<ModEclResultProcess> AssetImpairmentPdCalculateList = pdCalculateMapper.selectWaitPdCalculateList(param);
         try {
 
 
@@ -102,8 +119,6 @@ public class PdCalculateReaderService {
             //=====记录计算错误日志=====end=====
             return null;
         }
-
-
         return assetGroupPdCalculateResultList;
     }
 

@@ -138,6 +138,12 @@ public class ModEclResult extends BaseEntity {
     private String dataSource;
 
     /**
+     * ECL信用损失比例
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal eclRatio;
+
+    /**
      * 取得 序列号
      * @return 序列号
      */
@@ -521,5 +527,21 @@ public class ModEclResult extends BaseEntity {
      */
     public void setDataSource(String dataSource) {
         this.dataSource = dataSource == null ? null : dataSource.trim();
+    }
+
+    /**
+     * 取得 ECL信用损失比例
+     * @return ECL信用损失比例
+     */
+    public BigDecimal getEclRatio() {
+        return eclRatio;
+    }
+
+    /**
+     * 设置 ECL信用损失比例
+     * @param eclRatio ECL信用损失比例
+     */
+    public void setEclRatio(BigDecimal eclRatio) {
+        this.eclRatio = eclRatio;
     }
 }

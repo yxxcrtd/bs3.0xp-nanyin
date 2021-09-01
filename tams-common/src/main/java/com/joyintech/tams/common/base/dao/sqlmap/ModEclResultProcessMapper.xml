@@ -9,11 +9,6 @@
         <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
         <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
         <result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
-        <result column="TYPE_8" property="type8" jdbcType="VARCHAR" />
-        <result column="TYPE_9" property="type9" jdbcType="VARCHAR" />
-        <result column="TYPE_10" property="type10" jdbcType="VARCHAR" />
-        <result column="TYPE_11" property="type11" jdbcType="VARCHAR" />
-        <result column="TYPE_12" property="type12" jdbcType="VARCHAR" />
         <result column="MODEL_ASSET_TYPE" property="modelAssetType" jdbcType="VARCHAR" />
         <result column="MODEL_ASSET_DETAIL_TYPE" property="modelAssetDetailType" jdbcType="VARCHAR" />
         <result column="MDATE" property="mdate" jdbcType="DATE" />
@@ -62,13 +57,18 @@
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="IS_CONTAIN_PLEDGE" property="isContainPledge" jdbcType="VARCHAR" />
         <result column="GRADE_ORG_TYPE" property="gradeOrgType" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="ECL_RATIO" property="eclRatio" jdbcType="DECIMAL" />
     </resultMap>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
         insert into MOD_ECL_RESULT_PROCESS (SEQNO, PROD_ID, PROD_NAME, 
             PORTFOLIO_ID, ASSET_ID, ASSET_NAME, 
-            MARKET_ID, TYPE_8, TYPE_9, 
-            TYPE_10, TYPE_11, TYPE_12, 
-            MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, 
+            MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, 
             MDATE, UPDATE_TIME, FINANCIER, 
             GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, 
             SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
@@ -84,12 +84,12 @@
             LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, 
             PROCESS, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, IS_CONTAIN_PLEDGE, 
-            GRADE_ORG_TYPE)
+            GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, 
+            VDATE, COUPON_SPECIES, ISSUE_PRICE, 
+            TRADE_AMT, ECL_RATIO)
         values (#{seqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
             #{portfolioId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR}, 
-            #{marketId,jdbcType=VARCHAR}, #{type8,jdbcType=VARCHAR}, #{type9,jdbcType=VARCHAR}, 
-            #{type10,jdbcType=VARCHAR}, #{type11,jdbcType=VARCHAR}, #{type12,jdbcType=VARCHAR}, 
-            #{modelAssetType,jdbcType=VARCHAR}, #{modelAssetDetailType,jdbcType=VARCHAR}, 
+            #{marketId,jdbcType=VARCHAR}, #{modelAssetType,jdbcType=VARCHAR}, #{modelAssetDetailType,jdbcType=VARCHAR}, 
             #{mdate,jdbcType=DATE}, #{updateTime,jdbcType=TIMESTAMP}, #{financier,jdbcType=VARCHAR}, 
             #{gradeOrgId,jdbcType=VARCHAR}, #{issuer,jdbcType=VARCHAR}, #{actualCredit,jdbcType=VARCHAR}, 
             #{sponsor,jdbcType=VARCHAR}, #{riskLevelFive,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
@@ -105,7 +105,9 @@
             #{lgd,jdbcType=DECIMAL}, #{preProspectiveEcl,jdbcType=DECIMAL}, #{prospectiveEcl,jdbcType=DECIMAL}, 
             #{process,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{isContainPledge,jdbcType=VARCHAR}, 
-            #{gradeOrgType,jdbcType=VARCHAR})
+            #{gradeOrgType,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{issueAmt,jdbcType=DECIMAL}, 
+            #{vdate,jdbcType=DATE}, #{couponSpecies,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL}, 
+            #{tradeAmt,jdbcType=DECIMAL}, #{eclRatio,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
         insert into MOD_ECL_RESULT_PROCESS
@@ -130,21 +132,6 @@
             </if>
             <if test="marketId != null" >
                 MARKET_ID,
-            </if>
-            <if test="type8 != null" >
-                TYPE_8,
-            </if>
-            <if test="type9 != null" >
-                TYPE_9,
-            </if>
-            <if test="type10 != null" >
-                TYPE_10,
-            </if>
-            <if test="type11 != null" >
-                TYPE_11,
-            </if>
-            <if test="type12 != null" >
-                TYPE_12,
             </if>
             <if test="modelAssetType != null" >
                 MODEL_ASSET_TYPE,
@@ -290,6 +277,27 @@
             <if test="gradeOrgType != null" >
                 GRADE_ORG_TYPE,
             </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES,
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -312,21 +320,6 @@
             </if>
             <if test="marketId != null" >
                 #{marketId,jdbcType=VARCHAR},
-            </if>
-            <if test="type8 != null" >
-                #{type8,jdbcType=VARCHAR},
-            </if>
-            <if test="type9 != null" >
-                #{type9,jdbcType=VARCHAR},
-            </if>
-            <if test="type10 != null" >
-                #{type10,jdbcType=VARCHAR},
-            </if>
-            <if test="type11 != null" >
-                #{type11,jdbcType=VARCHAR},
-            </if>
-            <if test="type12 != null" >
-                #{type12,jdbcType=VARCHAR},
             </if>
             <if test="modelAssetType != null" >
                 #{modelAssetType,jdbcType=VARCHAR},
@@ -472,29 +465,50 @@
             <if test="gradeOrgType != null" >
                 #{gradeOrgType,jdbcType=VARCHAR},
             </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="couponSpecies != null" >
+                #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="eclRatio != null" >
+                #{eclRatio,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
         insert into MOD_ECL_RESULT_PROCESS(SEQNO, PROD_ID, PROD_NAME, PORTFOLIO_ID, ASSET_ID, 
-        ASSET_NAME, MARKET_ID, TYPE_8, TYPE_9, TYPE_10, TYPE_11, TYPE_12, MODEL_ASSET_TYPE, 
-        MODEL_ASSET_DETAIL_TYPE, MDATE, UPDATE_TIME, FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, 
-        SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, 
-        PLAN_END_DATE, IS_CLEAN, DEC_DATE, O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, 
-        RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, 
-        RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, 
-        EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, 
-        PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE
-        )
+        ASSET_NAME, MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, MDATE, UPDATE_TIME, 
+        FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
+        TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, PLAN_END_DATE, IS_CLEAN, DEC_DATE, 
+        O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, 
+        O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, 
+        INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, 
+        LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, VDATE, COUPON_SPECIES, 
+        ISSUE_PRICE, TRADE_AMT, ECL_RATIO)
         select SEQNO, PROD_ID, PROD_NAME, PORTFOLIO_ID, ASSET_ID, 
-            ASSET_NAME, MARKET_ID, TYPE_8, TYPE_9, TYPE_10, TYPE_11, TYPE_12, MODEL_ASSET_TYPE, 
-            MODEL_ASSET_DETAIL_TYPE, MDATE, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, 
-            SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, 
-            PLAN_END_DATE, IS_CLEAN, DEC_DATE, O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, 
-            RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, 
-            RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, 
-            EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, 
-            PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE
-            
+            ASSET_NAME, MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, MDATE, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
+            TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, PLAN_END_DATE, IS_CLEAN, DEC_DATE, 
+            O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, 
+            O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, 
+            INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, 
+            LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, VDATE, COUPON_SPECIES, 
+            ISSUE_PRICE, TRADE_AMT, ECL_RATIO
              from MOD_ECL_RESULT_PROCESS
              where 1 = 1
     </insert>

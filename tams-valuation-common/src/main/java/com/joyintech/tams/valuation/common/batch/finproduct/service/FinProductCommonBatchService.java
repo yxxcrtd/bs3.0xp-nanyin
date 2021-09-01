@@ -17,7 +17,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.TrdAssetLoss;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -1253,4 +1258,5 @@ public class FinProductCommonBatchService {
         return rstBaseinfo;
 
     }
+
 }

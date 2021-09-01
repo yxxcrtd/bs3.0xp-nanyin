@@ -94,10 +94,9 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				errorList.add(new ValidMessage("acctNo", this.getMessage("ETR_ERROR_0020")));
 			}
 			if(!StringUtil.isNotEmpty(dto.getInvAim())){
-				if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
-					if(dto.getTradePlat().equals(DictCodeList.交易平台_固定收益平台.getValue())){
-						errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
-					}
+				if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())
+						|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
+
 				}else{
 					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
 				}
@@ -122,7 +121,10 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			if (null == dto.getEntrustNum() || dto.getEntrustNum().compareTo(BigDecimal.ZERO) == 0) {
 				errorList.add(new ValidMessage("entrustNum", this.getMessage("ETR_ERROR_0027")));
 			}
-			if (StringUtil.isNotEmpty(dto.getPs()) && !dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue()) && !dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue()) && (null == dto.getEntrustAmt() || dto.getEntrustAmt().compareTo(BigDecimal.ZERO) == 0)) {
+			if (StringUtil.isNotEmpty(dto.getPs()) && !dto.getPs().equals(DictCodeListExt3.交易方向_质押券入库.getValue())
+					&& !dto.getPs().equals(DictCodeListExt3.交易方向_质押券出库.getValue())
+					&& (null == dto.getEntrustAmt() || dto.getEntrustAmt().compareTo(BigDecimal.ZERO) == 0)
+					&& !StringUtil.equals(DictCodeListExt2.价格模式_市价指令.getValue(), dto.getPriceModel())) {
 				errorList.add(new ValidMessage("entrustAmt", this.getMessage("ETR_ERROR_0032")));
 			}
 			// 大宗交易增加涨跌幅限制 add by 代志伟 20201015 start
@@ -231,14 +233,16 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 							&& !StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())
 							&& !StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券入库.getValue())
 							&& !StringUtils.equals(dto.getPs(), DictCodeListExt3.交易方向_质押券出库.getValue()))) {
-				if (null == dto.getPrice()) {
-					errorList.add(new ValidMessage("price", this.getMessage("ETR_ERROR_0028")));
-				}
-				if (null == dto.getFprice()) {
-					errorList.add(new ValidMessage("fprice", this.getMessage("ETR_ERROR_0029")));
-				}
-				if (null == dto.getYield()) {
-					errorList.add(new ValidMessage("yield", this.getMessage("ETR_ERROR_0030")));
+				if (!StringUtil.equals(DictCodeListExt2.价格模式_市价指令.getValue(), dto.getPriceModel())) {
+					if (null == dto.getPrice()) {
+						errorList.add(new ValidMessage("price", this.getMessage("ETR_ERROR_0028")));
+					}
+					if (null == dto.getFprice()) {
+						errorList.add(new ValidMessage("fprice", this.getMessage("ETR_ERROR_0029")));
+					}
+					if (null == dto.getYield()) {
+						errorList.add(new ValidMessage("yield", this.getMessage("ETR_ERROR_0030")));
+					}
 				}
 			}
 			// 如果是债券 质押券入库 质押券数量要>0

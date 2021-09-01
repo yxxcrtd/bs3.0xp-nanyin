@@ -2251,6 +2251,12 @@ public class IbuComponentCommonService extends BaseService {
         ibuQuoteCrepDto.setShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getShareCtAmt());// 折算券面金额
         ibuQuoteCrepDto.setCbShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt());// 中债折算券面金额
         ibuQuoteCrepDto.setScShareCtAmt(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt());// 上清折算券面金额
+        //ADD BY CHENJIAIXNG 质押式回购新加字段入库 20210901 start
+        //中债登券面总额合计（万元） zzTotalAmt
+        ibuQuoteCrepDto.setZzTotalAmt(cfetsRepoDealQuotedPrice001Dto.getZzTotalAmt());
+        //上清所券面总额合计（万元） sqTotalAmt
+        ibuQuoteCrepDto.setSqTotalAmt(cfetsRepoDealQuotedPrice001Dto.getSqTotalAmt());
+        //ADD BY CHENJIAIXNG 质押式回购新加字段入库 20210901 end
         ibuQuoteCrepDto.setFpriceAmt(cfetsRepoDealQuotedPrice001Dto.getDealAmt());// 全价总额
         ibuQuoteCrepDto.setCbFpriceAmt(cfetsRepoDealQuotedPrice001Dto.getCbDealAmt());// 中债全价总额
         ibuQuoteCrepDto.setScFpriceAmt(cfetsRepoDealQuotedPrice001Dto.getScDealAmt());// 上清全价总额

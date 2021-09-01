@@ -140,6 +140,8 @@ public class FinPayInterestStdInfoController extends BaseController {
         model.addAttribute("INTPAY_CYCLE_03", DictCodeList.频率_月.getValue());
         model.addAttribute("INTPAY_CYCLE_04", DictCodeList.频率_季.getValue());
         model.addAttribute("INTPAY_CYCLE_05", DictCodeList.频率_年.getValue());
+        /** add by yanya on 20210901 增加是否无明确融资金额**/
+        model.addAttribute("YES", DictCodeList.是否_是.getValue());
         return "valuation/component/asset/FinPayInterestStdInfo";
     }
 

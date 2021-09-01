@@ -733,7 +733,16 @@
         //获取还本列表信息
         //存款类、计划类、项目类(主画面存款本金、融资金额)--issueAmt
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F17 || INT_ASSET_TYPE==FINPROD_TYPE_F21){
-            param.issueAmt = $('#issueAmt').val();
+            var isNoIssueAmtFlag = getElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
+            if(isNoIssueAmtFlag){
+                //是否还本不带息
+                param.isNoIssueAmtFlag='Y';
+                param.issueAmt = 100;
+            }else{
+                param.isNoIssueAmtFlag='N';
+                param.issueAmt = $('#issueAmt').val();
+            }
+
         }else if(INT_ASSET_TYPE == FINPROD_TYPE_F01){
             param.issueAmt = 100;
         }
@@ -1211,6 +1220,17 @@
             $("#finPayInterestStdInfoDto_payMonth").textSelect()
         }
     }
+    /** add by yanya on 20210901 增加是否无明确融资金额**/
+
+    var isNoIssueAmtFlagChange = function(){
+        var isNoIssueAmtFlagVal = getElementById("isNoIssueAmtFlag")[0].checked;
+        if (isNoIssueAmtFlagVal) {
+            $('#issueAmt').val('').trigger("change");
+        }
+    };
+    layui.form.on('switch(isNoIssueAmtFlag)',function(){
+        isNoIssueAmtFlagChange();
+    });
     $(function(){
         init();
         //推算方式change

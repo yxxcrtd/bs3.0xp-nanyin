@@ -71,6 +71,9 @@
         };
         if(object.priceModel == PRICE_MODEL_PRM03){
             object.entrustPrice = $("#factPrice_" + currentTab).val();
+            if (!object.entrustPrice) {
+                object.entrustPrice = 0;
+            }
         }
         //设置涨跌停参数
         parent.EtrExchangeTradeHq.setLimitUpAndDown(object);
@@ -899,6 +902,20 @@
         // 此处联动委托方向会带动价格模式和委托价格显示隐藏
         linkPs();
         linkEntrustNumUnit();
+        //add by chenjiaxing 股票与基金时投资目的字段不显示 start
+        var finprodType2 = $("#finprodType2_" + currentTab).val();
+        if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
+            $("#invAim_div_" + currentTab).hide();
+        }else if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)
+            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)
+            ||(currentTab == 'gd' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F10)){
+            $("#invAim_div_" + currentTab).hide();
+        }else{
+            $("#invAim_div_" + currentTab).show();
+        }
+        //add by chenjiaxing 股票与基金时投资目的字段不显示 end
     };
     /**
      * 资金账户选择之后的联动事件
@@ -1310,14 +1327,6 @@
             $("#ps_" + currentTab).val('').trigger('change');
         }
         //add by chenjiaxing 资产代码清除是投资方向联动为空 end 20210826
-        //add by chenjiaxing 投资目的去除*号
-        if((currentTab == 'jj' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)
-            ||(currentTab == 'dz' && finprodType2 && finprodType2 == FINPROD_TYPE_TG_F06)){
-            $("#invAim_"+currentTab).removeAttr("required");
-        }else{
-            $("#invAim_"+currentTab).attr("required", true);
-        }
-        //add by chenjiaxing 投资目的去除*号
         // if  交易平台 = 数据字典.交易平台.大宗交易平台
         if(currentTab == 'dz') {
             // if 画面.金融产品类型（投管）= 数据字典.金融产品类型（投管）.债券质押式回购(不属于数据字典范围，仅仅判断用)
@@ -2162,7 +2171,13 @@
                 result.entrustNum = JoyinMath.doDiv(result.entrustNum, 10, 0, JoyinMath.ROUND_DOWN);//转成手配置
             }
             //债券交易数量单位 add by yeming 20210729 end
-            $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+            // modify by etliu 20210901 start
+            if (result.entrustAmt) {
+                $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+            } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
+                $("#entrustAmt_" + currentTab).val(0).trigger('blur');
+            }
+            // modify by etliu 20210901 end
             $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
         }, false);
     }

@@ -31,12 +31,23 @@
     <select id="getBatchTask" resultMap="BaseResultMap" >
         select
         <include refid="com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper.Base_Column_List" />
-        from SYS_BATCH_TASK
+        from SYS_BATCH_TASK t
        where
             SYSTEM_CODE = 'MODEL'
            <if test="taskName != null" >
              AND TASK_NAME = #{taskName,jdbcType=VARCHAR},
            </if>
+            <!-- add by yanya on 20210901 增加按照批处理任务组查询任务-->
+            <if test="BATCH_GROUP_SEQNO != null and BATCH_GROUP_SEQNO != ''">
+                and exists
+                (
+                select 1
+                from SYS_BATCH_GRP t1, SYS_BATCH_JOB t2
+                where t1.seq_no = t2.batch_seq_no
+                and t2.task_id = t.task_id
+                and t1.seq_no = #{BATCH_GROUP_SEQNO, jdbcType=VARCHAR}
+                )
+            </if>
              ORDER BY TASK_PRI, TASK_ID
     </select>
 
@@ -156,6 +167,19 @@
                                      BATCH_EXEDETAIL_SEQ_NO) allNumber
                              ON
                                  A.SEQ_NO = allNumber.exeSeqNo
+                        <!-- add by yanya on 20210901 增加按照批处理任务组查询任务 start-->
+                        where 1 = 1
+                        <if test="BATCH_GROUP_SEQNO != null and BATCH_GROUP_SEQNO != ''">
+                            and exists
+                            (
+                                select 1
+                                from SYS_BATCH_GRP t1, SYS_BATCH_JOB t2
+                                where t1.seq_no = t2.batch_seq_no
+                                and t2.task_id = B.task_id
+                                and t1.seq_no = #{BATCH_GROUP_SEQNO, jdbcType=VARCHAR}
+                            )
+                        </if>
+                        <!-- add by yanya on 20210901 增加按照批处理任务组查询任务 end-->
                          GROUP BY
                              A.SEQ_NO,
                              A.BATCH_SEQ_NO,
@@ -308,16 +332,18 @@
 
 
     <!-- 获取资产信息集合  -->
-    <select id="getLossAssetInfo"  parameterType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+    <select id="getLossAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
         SELECT
         A.FINPROD_ID as finprodId,/**金融产品代码**/
-        A.FINPROD_ABBR as finprodName/**金融产品简称**/
+        A.FINPROD_ABBR as finprodName,/**金融产品简称**/
+        A.FINPROD_ID id,
+        A.FINPROD_ABBR  text
         FROM
         FIN_PRODUCT A /**标的类金融产品表**/
         INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
         WHERE
         1 = 1
-        AND D.TYPE_18 = '01' AND (D.TYPE_1 = '033' OR (A.IS_SUS = '01' AND A.IS_RIGHT = '02'))/**优先股、不含权的永续债**/
+         AND D.TYPE_18 = '01' AND (D.TYPE_1 = '033' OR (A.IS_SUS = '01' AND A.IS_RIGHT = '02'))/**优先股、不含权的永续债**/
         AND (
         EXISTS (
         SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID

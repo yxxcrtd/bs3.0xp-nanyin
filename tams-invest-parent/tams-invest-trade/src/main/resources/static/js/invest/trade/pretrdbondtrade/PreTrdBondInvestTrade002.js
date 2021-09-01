@@ -189,6 +189,7 @@
         if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
             object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;;
         }
+        object.calculateField = calculateField;
         Joyin.ajaxJson(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
@@ -1150,6 +1151,9 @@
 
             // 设置默认选中净价
             $("#calculateField_unitCprice").attr("checked", true);
+            if(calculateField){
+                $("#calculateField_" + calculateField).attr("checked", true);
+            }
             layui.form.render('radio');
         }
     };

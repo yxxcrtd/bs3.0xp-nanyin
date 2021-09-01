@@ -1,5 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.common.searchinfo.service;
 
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -35,9 +37,6 @@ public class ImpairmentCommonService extends BaseService{
 
 	@Autowired
 	private ImpairmentCalculationCommonService impairmentCalculationCommonService;
-
-	// 日志key
-	private final String LOG_KEY = "logkey";
 
 	/**
 	 * 获取资产交易列表
@@ -101,7 +100,7 @@ public class ImpairmentCommonService extends BaseService{
 	}
 
 	/**
-	 * 获取评级类型为最新时，对应的评级机构信息Map
+	 * 获取评级类型为指定时，对应的评级机构信息Map
 	 * @param list
 	 * @return
 	 */
@@ -188,23 +187,46 @@ public class ImpairmentCommonService extends BaseService{
 	 * @param logType 日志类型
 	 */
 	// 组装日志上下文信息
-	public void editLogContextInfo(StepExecution stepExecution, SysBatchExecInfo execInfo,
-								   String finprodId, String msg, String logType) {
+	public void sendLogContextInfo(StepExecution stepExecution, SysBatchExecInfo execInfo,
+								   String finprodId, String msg, String logType, String logKey) {
 		ModValBatchLogResult logrst = new ModValBatchLogResult();
 		logrst.setFinprodId(finprodId);
 		logrst.setBatchExecSeqno(execInfo.getBatchExedetailSeqNo());
 		logrst.setTaskId(execInfo.getTaskId());
 		logrst.setMsg("【资产减值阶段判断批处理】：资产无风险五级分类");
 		logrst.setType(ModelDictCodeList.批处理执行结果_警告.getValue());
-		if(stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY) != null){
-			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY);
+		if (stepExecution.getJobExecution().getExecutionContext().get(logKey) != null) {
+			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution()
+				.getExecutionContext().get(logKey);
 			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
-		}else{
+			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
+		}
+		else {
 			List<ModValBatchLogResult> mvbLogRst = new ArrayList<>();// 异常信息定义
 			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
+			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
 		}
+	}
+
+	/**
+	 * 剩余期限(年)
+	 * @param cdate   计算日
+	 * @param assetMdate 资产到期日
+	 * @return
+	 */
+	public int getRemainingTerm(Date cdate,Date assetMdate){
+		int remainingTerm = 0;
+		Date startDate =  cdate;
+		if(startDate.compareTo(assetMdate) >= 0){
+			return 1;
+		}
+		while(DateUtil.addYear(startDate, 1).compareTo(assetMdate)<= 0){
+			remainingTerm += 1;
+			startDate = DateUtil.addYear(startDate, 1);
+		}
+		remainingTerm += Math.ceil(ArithmeticUtil.divide(
+			BigDecimal.valueOf(DateUtil.getBetweenDayNumber(startDate,assetMdate)),new BigDecimal("365")).doubleValue());
+		return remainingTerm;
 	}
 
 }

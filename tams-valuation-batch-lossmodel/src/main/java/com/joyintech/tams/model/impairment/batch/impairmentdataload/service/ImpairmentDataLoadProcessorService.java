@@ -6,6 +6,7 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -15,10 +16,9 @@ import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUse
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModAssetGradeConfig;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModImpairRateParamsDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class ImpairmentDataLoadProcessorService {
             //交易信息.评级机构 = 评级参数Dto.评级机构
             entity.setGradeOrgId(configDto.getGradeOrgId());
             // 交易信息.评级机构类型 = 评级参数Dto.评级机构类型
-            entity.setGradeOrgType(configDto.getPdConfigType());
+            entity.setGradeOrgType(configDto.getGradeOrgType());
         } else {
             CommonErrorParams commonErrorParams = new CommonErrorParams();
             commonErrorParams.setFinprodId(entity.getFinprodId());
@@ -421,16 +421,17 @@ public class ImpairmentDataLoadProcessorService {
         modEclResultProcess.setIssuePrice(entity.getIssuePrice());
         //a.起息日
         modEclResultProcess.setVdate(entity.getVdate());
+        // a.投资目的
+        modEclResultProcess.setInvAim(entity.getInvAim());
     }
 
     /**
      * 查询评级信息
      * @param mapRating 指定评级机构评级信息
      * @param mapRatingLatest 最新评级机构评级信息
-     * @param gradeOrgType 评级机构类型：01最新；02指定
+     * @param entity
      * @param ocode  评级主体
      * @param otype 评级类型
-     * @param  gradeorgid 评级机构代码
      * @return
      */
     public ViewRatingInfoDto getRatingInfo(Map<String, ViewRatingInfoDto> mapRating,
