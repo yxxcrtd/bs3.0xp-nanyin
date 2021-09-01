@@ -78,7 +78,8 @@
             WHERE
             MST_CFETS_CUSTOMER_RELA.SPARTY_ID = nvl(G.PARTY_ID, GG.PARTY_ID))
             )                                                       mySideTraderName,
-               C.TERM_TYPE
+               C.TERM_TYPE,
+               A.VDATE vdate
         FROM
             ETR_ENTRUST A
         INNER JOIN

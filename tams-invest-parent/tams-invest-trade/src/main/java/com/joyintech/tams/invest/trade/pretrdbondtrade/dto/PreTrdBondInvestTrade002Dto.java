@@ -237,6 +237,16 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
      */
     private String distribution;
 
+    private String calculateField;
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
+
     public String getDistribution() {
         return distribution;
     }
