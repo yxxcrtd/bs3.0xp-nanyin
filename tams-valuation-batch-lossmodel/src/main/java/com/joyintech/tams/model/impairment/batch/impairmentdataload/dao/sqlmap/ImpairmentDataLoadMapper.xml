@@ -21,7 +21,7 @@ where
 	MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01}
 	</select>
 
-	<select id="selectModAssetGradeConfig" resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModAssetGradeConfig">
+	<select id="selectModAssetGradeConfig" resultType="com.joyintech.tams.common.base.entity.ModAssetGradeConfig">
 select
 	para.GRADE_ORG_ID,
 	para.O_TYPE,

@@ -157,9 +157,6 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
             if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
             	cfetsRepoDealQuotedPrice001Dto.setQuotaPageModel(this.getParam("quotaPageModel"));
             }
-            //add by chenjiaixing 设置交易日期 start
-            cfetsRepoDealQuotedPrice001Dto.setTradeDate(iPlatformDate.getSysDate());
-            //add by chenjiaixng 设置交易日期 end
            model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
         }
         else if (StringUtil.isNotEmpty(entrustId)) {
@@ -275,6 +272,9 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
             CfetsRepoDealQuotedPrice001Dto dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(
                 cfetsRepoDealQuotedPrice001Dto.getEntrustId(), null);
             cfetsRepoDealQuotedPrice001Dto.setSecAcctId(dto.getSecAcctId());
+            //add by chenjiaixing 设置交易日期 start
+            cfetsRepoDealQuotedPrice001Dto.setTradeDate(dto.getVdate());
+            //add by chenjiaixng 设置交易日期 end
         }
         // 处理质押品信息
         this.handlePledgeList(cfetsRepoDealQuotedPrice001Dto);

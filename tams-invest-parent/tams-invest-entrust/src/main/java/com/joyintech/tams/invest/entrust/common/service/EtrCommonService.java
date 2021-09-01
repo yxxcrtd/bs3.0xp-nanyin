@@ -714,7 +714,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 num++;
                 generateInputDtoList(obj,status,method,inputDtoList,num);
             }
-        }else if (object instanceof String && method.equals("close") || method.equals("doBack")){
+        }else if (object instanceof String && (method.equals("close") || method.equals("doBack"))){
             // 指令关闭
             CreditLinesInputDto creditLinesInputDto = new CreditLinesInputDto();
             creditLinesInputDto.setTradeId(String.valueOf(object));

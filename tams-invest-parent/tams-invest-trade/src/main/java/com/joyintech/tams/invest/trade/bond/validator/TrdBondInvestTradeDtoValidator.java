@@ -342,10 +342,13 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
             //根据价格模式验证委托
             //限价模式
             if(StringUtil.equals(DictCodeListExt2.价格模式_限价指令.getValue(), resultDto.getEtrEntrust().getPriceModel())){
+                if( !StringUtil.isNotEmpty(inputDto.getCalculateField())){
+                    inputDto.setCalculateField("price");
+                }
             	// 委托场合时且交易方向为买入
                 if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), inputDto.getPs())) {
                     // 净价超过委托时的净价;
-                    if (inputDto.getUnitCprice() != null && inputDto.getEntrustPrice() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"price") && inputDto.getUnitCprice() != null && inputDto.getEntrustPrice() != null
                         && inputDto.getUnitCprice().compareTo(inputDto.getEntrustPrice()) > 0) {
                         ValidMessage validMessage = new ValidMessage("unitCprice",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
@@ -355,7 +358,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     }
 
                     // 到期收益率低于委托时的到期收益率;
-                    if (inputDto.getYield() != null && inputDto.getEntrustYield() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"yield") && inputDto.getYield() != null && inputDto.getEntrustYield() != null
                         && inputDto.getYield().compareTo(inputDto.getEntrustYield()) < 0) {
                         ValidMessage validMessage = new ValidMessage("yield",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.yield"),
@@ -365,7 +368,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     }
 
                     // 行权收益率低于委托时的行权收益率
-                    if (inputDto.getExerYield() != null && inputDto.getEntrustExerYield() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"exerYield") && inputDto.getExerYield() != null && inputDto.getEntrustExerYield() != null
                         && inputDto.getExerYield().compareTo(inputDto.getEntrustExerYield()) < 0) {
                         ValidMessage validMessage = new ValidMessage("exerYield",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.exerYield"),
@@ -377,7 +380,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                 // 委托场合时且交易方向为卖出：
                 else {
                     // 净价低于委托时的净价;
-                    if (inputDto.getUnitCprice() != null && inputDto.getEntrustPrice() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"price") && inputDto.getUnitCprice() != null && inputDto.getEntrustPrice() != null
                         && inputDto.getUnitCprice().compareTo(inputDto.getEntrustPrice()) < 0) {
                         ValidMessage validMessage = new ValidMessage("unitCprice",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
@@ -387,7 +390,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     }
                     
                     // 到期收益率超过委托时的到期收益率;
-                    if (inputDto.getYield() != null && inputDto.getEntrustYield() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"yield") && inputDto.getYield() != null && inputDto.getEntrustYield() != null
                         && inputDto.getYield().compareTo(inputDto.getEntrustYield()) > 0) {
                         ValidMessage validMessage = new ValidMessage("yield",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.yield"),
@@ -397,7 +400,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     }
 
                     // 行权收益率超过委托时的行权收益率
-                    if (inputDto.getExerYield() != null && inputDto.getEntrustExerYield() != null
+                    if (StringUtil.equals(inputDto.getCalculateField(),"exerYield") && inputDto.getExerYield() != null && inputDto.getEntrustExerYield() != null
                         && inputDto.getExerYield().compareTo(inputDto.getEntrustExerYield()) > 0) {
                         ValidMessage validMessage = new ValidMessage("exerYield",
                             getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.exerYield"),
