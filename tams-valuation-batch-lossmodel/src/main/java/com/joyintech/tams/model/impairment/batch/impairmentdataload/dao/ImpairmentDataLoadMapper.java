@@ -1,5 +1,6 @@
 package com.joyintech.tams.model.impairment.batch.impairmentdataload.dao;
 
+import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.*;
