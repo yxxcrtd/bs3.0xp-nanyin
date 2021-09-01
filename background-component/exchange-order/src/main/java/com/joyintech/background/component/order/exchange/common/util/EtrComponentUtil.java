@@ -99,7 +99,7 @@ public class EtrComponentUtil {
      * @return true:结果为整数
      */
     public static final boolean isNumberExactDivission(BigDecimal num1, BigDecimal num2) {
-        if (isAmtEmpty(num1, false) || isAmtEmpty(num2, false)) {
+        if (isAmtEmpty(num1, true) || isAmtEmpty(num2, false)) {
             return false;
         }
         try {

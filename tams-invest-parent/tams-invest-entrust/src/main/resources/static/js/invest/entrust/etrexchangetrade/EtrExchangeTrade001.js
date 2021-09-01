@@ -71,6 +71,9 @@
         };
         if(object.priceModel == PRICE_MODEL_PRM03){
             object.entrustPrice = $("#factPrice_" + currentTab).val();
+            if (!object.entrustPrice) {
+                object.entrustPrice = 0;
+            }
         }
         //设置涨跌停参数
         parent.EtrExchangeTradeHq.setLimitUpAndDown(object);
@@ -2168,7 +2171,13 @@
                 result.entrustNum = JoyinMath.doDiv(result.entrustNum, 10, 0, JoyinMath.ROUND_DOWN);//转成手配置
             }
             //债券交易数量单位 add by yeming 20210729 end
-            $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+            // modify by etliu 20210901 start
+            if (result.entrustAmt) {
+                $("#entrustAmt_" + currentTab).val(result.entrustAmt).trigger('blur');
+            } else if ($("#priceModel_" + currentTab).val() == PRICE_MODEL_PRM03) {
+                $("#entrustAmt_" + currentTab).val(0).trigger('blur');
+            }
+            // modify by etliu 20210901 end
             $("#entrustNum_" + currentTab).val(result.entrustNum).trigger('blur');
         }, false);
     }
