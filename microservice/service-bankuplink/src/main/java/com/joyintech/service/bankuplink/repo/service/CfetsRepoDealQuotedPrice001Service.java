@@ -282,6 +282,9 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
     public boolean sendNewRepoDealQuote(CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto) {
         // 调用银行间上行组件处理
         ibuComponentCommonService.sendNewRepoDealQuote(cfetsRepoDealQuotedPrice001Dto);
+        //add by chenjiaxing 证券账户入库 20210901 start
+
+        //add by chenjiaxing 证券账户入库 20210901 end
 
         return true;
     }
