@@ -472,7 +472,17 @@
         //获取还本列表信息
         //存款类(主画面存款本金)、项目类资产(主画面融资金额)--issueAmt
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07 || INT_ASSET_TYPE==FINPROD_TYPE_F21 ||INT_ASSET_TYPE==FINPROD_TYPE_F17){
-            param.issueAmt = $('#issueAmt').val();
+            /** add by yanya on 20210901 增加是否无明确融资金额**/
+            var isNoIssueAmtFlag = getFinPayInterestStdInfoElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
+            if(isNoIssueAmtFlag){
+                //是否还本不带息
+                param.isNoIssueAmtFlag='Y';
+                param.issueAmt = 100;
+            }else{
+                param.isNoIssueAmtFlag='N';
+                param.issueAmt = $('#issueAmt').val();
+            }
+            //param.issueAmt = $('#issueAmt').val();
         }else if(INT_ASSET_TYPE == FINPROD_TYPE_F01){
             param.issueAmt = 100;
         }

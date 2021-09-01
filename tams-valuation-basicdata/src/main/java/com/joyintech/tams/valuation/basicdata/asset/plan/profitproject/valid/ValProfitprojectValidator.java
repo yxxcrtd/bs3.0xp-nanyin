@@ -15,6 +15,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.dto.ValProfitprojectDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.service.ValProfitprojectService;
@@ -102,11 +103,11 @@ public class ValProfitprojectValidator implements BeanValidator {
                         || dto.getBussFinRepaymentDto().getFinCashPlanList().size() == 0))) {
                     errorList.add(new ValidMessage(getMessage("还本计划不能为空!")));
                 }
-                if(StringUtil.equals(DictCodeListExt1.证券品种_计划类资产_收益型.getValue(), dto.getType18())) {
-                    if (StringUtil.isEmpty(dto.getTransMode())) {
-                        errorList.add(new ValidMessage(getMessage("清算速度不能为空!")));
-                    }
+                //if(StringUtil.equals(DictCodeListExt1.证券品种_计划类资产_收益型.getValue(), dto.getType18())) {
+                if (StringUtil.isEmpty(dto.getTransMode())) {
+                    errorList.add(new ValidMessage(getMessage("清算速度不能为空!")));
                 }
+                //}
                 if(StringUtil.isEmpty(dto.getIsEffPledge())){
                     errorList.add(new ValidMessage(getMessage("是否包含有效抵质押物不能为空!")));
                 }
@@ -121,6 +122,12 @@ public class ValProfitprojectValidator implements BeanValidator {
                 else if(StringUtil.equals(DictCodeListExt1.证券品种_计划类资产_收益型.getValue(), dto.getType18())) {
                     if (StringUtil.isEmpty(dto.getIssuer())) {
                         errorList.add(new ValidMessage(getMessage("发行人不能为空!")));
+                    }
+                }
+                if(dto.getFinPayInterestStdInfoDto() == null
+                        || !StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getFinPayInterestStdInfoDto().getIsNoIssueAmtFlag())) {
+                    if (dto.getIssueAmt() == null) {
+                        errorList.add(new ValidMessage(getMessage("发行规模不能为空!")));
                     }
                 }
 
