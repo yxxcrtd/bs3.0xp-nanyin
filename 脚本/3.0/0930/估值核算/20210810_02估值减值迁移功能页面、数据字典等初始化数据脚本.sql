@@ -1,245 +1,245 @@
 -- 减值模型-批处理画面
 -- DELETE FROM SYS_MENU where PAGE_ID = 'ModImpaireBatchTask001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_011_008', 'VAL', null, 'VALUATION_001_011', 'ModImpaireBatchTask001', 7, '2', '减值批处理任务', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_011_008', 'VAL', null, 'VALUATION_001_011', 'ModImpaireBatchTask001', 7, '2', '减值批处理任务', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'ModImpaireBatchTask001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModImpaireBatchTask001', 'VAL', '/model/impairment/batch/batchtask/ModImpaireBatchTask001', 'lossmodel/batch/batchtask/ModImpaireBatchTask001', 'VALUATION_001_011_008', null, null, '02', '01', '减值批处理任务', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
+values ('ModImpaireBatchTask001', 'VAL', '/model/impairment/batch/batchtask/ModImpaireBatchTask001', 'lossmodel/batch/batchtask/ModImpaireBatchTask001', 'VALUATION_001_011_008', null, null, '02', '01', '减值批处理任务', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'ModImpaireBatchTask002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModImpaireBatchTask002', 'VAL', '/model/impairment/batch/batchtask/ModImpaireBatchTask002', 'lossmodel/impairment/batch/batchtask/ModImpaireBatchTask002', null, null, null, '02', '01', '减值批处理任务-详情', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
+values ('ModImpaireBatchTask002', 'VAL', '/model/impairment/batch/batchtask/ModImpaireBatchTask002', 'lossmodel/impairment/batch/batchtask/ModImpaireBatchTask002', null, null, null, '02', '01', '减值批处理任务-详情', 'system', null, sysdate, 'system',sysdate);
 
 -- LGD违约损失率管理初始化数据
 delete from MOD_LGD_CONFIG;
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT001', '01', '001', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT001', '01', '001', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT002', '01', '002', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT002', '01', '002', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT003', '01', '003', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT003', '01', '003', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT004', '01', '004', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT004', '01', '004', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT005', '01', '005', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT005', '01', '005', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT006', '01', '006', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT006', '01', '006', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT007', '01', '007', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT007', '01', '007', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT008', '01', '008', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT008', '01', '008', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT009', '01', '009', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT009', '01', '009', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT010', '01', '010', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT010', '01', '010', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT011', '01', '011', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT011', '01', '011', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT012', '01', '012', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT012', '01', '012', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT013', '01', '013', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT013', '01', '013', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT014', '01', '014', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT014', '01', '014', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT015', '01', '015', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT015', '01', '015', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT016', '01', '016', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT016', '01', '016', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT017', '01', '017', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT017', '01', '017', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT018', '01', '018', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT018', '01', '018', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT019', '01', '019', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT019', '01', '019', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT020', '01', '020', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT020', '01', '020', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT021', '01', '021', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT021', '01', '021', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT022', '01', '022', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT022', '01', '022', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT023', '01', '023', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT023', '01', '023', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT024', '01', '024', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT024', '01', '024', null, null, 'system', null,sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT025', '01', '025', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT025', '01', '025', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT026', '01', '026', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT026', '01', '026', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT027', '01', '027', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT027', '01', '027', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT028', '01', '028', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT028', '01', '028', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT029', '01', '029', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT029', '01', '029', null, null, 'system', null, sysdate, 'system',sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT030', '01', '030', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT030', '01', '030', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT031', '01', '031', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT031', '01', '031', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT032', '01', '032', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT032', '01', '032', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT033', '01', '033', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT033', '01', '033', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT034', '01', '034', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT034', '01', '034', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT035', '01', '035', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT035', '01', '035', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT036', '01', '036', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT036', '01', '036', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT037', '13', null, 'Y', null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT037', '13', null, 'Y', null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT038', '13', null, 'N', null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT038', '13', null, 'N', null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT039', '09', '001', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT039', '09', '001', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT040', '09', '002', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT040', '09', '002', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT041', '09', '003', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT041', '09', '003', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT042', '09', '004', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT042', '09', '004', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT043', '09', '005', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT043', '09', '005', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT044', '09', '006', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT044', '09', '006', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT045', '09', '007', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT045', '09', '007', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT046', '09', '008', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT046', '09', '008', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT047', '09', '009', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT047', '09', '009', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT048', '09', '010', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT048', '09', '010', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT049', '09', '011', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT049', '09', '011', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT050', '09', '012', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT050', '09', '012', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT051', '09', '013', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT051', '09', '013', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT052', '09', '014', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT052', '09', '014', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT053', '09', '015', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT053', '09', '015', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT054', '09', '016', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT054', '09', '016', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT055', '09', '017', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT055', '09', '017', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT056', '09', '018', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT056', '09', '018', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT057', '09', '019', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT057', '09', '019', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT058', '09', '020', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT058', '09', '020', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT059', '09', '021', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT059', '09', '021', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT060', '09', '022', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT060', '09', '022', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT061', '09', '023', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT061', '09', '023', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT062', '09', '024', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT062', '09', '024', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT063', '09', '025', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT063', '09', '025', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT064', '09', '026', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT064', '09', '026', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT065', '09', '027', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT065', '09', '027', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT066', '09', '028', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT066', '09', '028', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT067', '09', '029', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT067', '09', '029', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT068', '09', '030', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT068', '09', '030', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT069', '09', '031', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT069', '09', '031', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT070', '09', '032', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT070', '09', '032', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT071', '09', '033', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT071', '09', '033', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT072', '09', '034', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT072', '09', '034', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT073', '09', '035', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT073', '09', '035', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT074', '09', '036', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT074', '09', '036', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT075', '07', '01', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT075', '07', '01', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into MOD_LGD_CONFIG (SEQNO, ASSET_TYPE, ASSET_DETAIL_TYPE, IS_CONTAIN_PLEDGE, LGD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ASSETGRADECONFIGINIT076', '07', '03', null, null, 'system', null, '16-AUG-21 02.18.42.000000 PM', 'system', '16-AUG-21 02.18.42.000000 PM');
+values ('ASSETGRADECONFIGINIT076', '07', '03', null, null, 'system', null, sysdate, 'system', sysdate);
 commit;
 
 --MOD_ASSET_MAPPING数据初始化脚本
@@ -351,20 +351,20 @@ insert into MOD_ASEET_MAPPING(SEQ_NO,MAPPING_TYPE,input1,input2,output1,output2,
 -- PD违约概率管理页面
 -- delete from sys_menu t where t.PAGE_ID='PdDefaultManager001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_011_004', 'VAL', null, 'VALUATION_001_011', 'PdDefaultManager001', 3, '2', 'PD违约概率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_011_004', 'VAL', null, 'VALUATION_001_011', 'PdDefaultManager001', 3, '2', 'PD违约概率管理', 'system', null, sysdate, 'system', sysdate);
 
 --前瞻因子配置页面
 delete from sys_page t where t.PAGE_ID='PdFactorConfig001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PdFactorConfig001', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig001', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorConfig001', null, null, null, '02', '01', '前瞻因子维护', 'system', null, '05-AUG-21 03.09.00.000000 PM', 'system', '05-AUG-21 03.09.00.000000 PM');
+values ('PdFactorConfig001', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig001', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorConfig001', null, null, null, '02', '01', '前瞻因子维护', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='PdFactorConfig002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PdFactorConfig002', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorConfig002', null, null, null, '02', '01', '前瞻因子维护新建', 'system', null, '05-AUG-21 03.09.00.000000 PM', 'system', '05-AUG-21 03.09.00.000000 PM');
+values ('PdFactorConfig002', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorConfig002', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorConfig002', null, null, null, '02', '01', '前瞻因子维护新建', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='PdFactorWeightConfig003';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PdFactorWeightConfig003', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorWeightConfig003', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorWeightConfig003', null, null, null, '02', '01', '前瞻因子权重配置', 'system', null, '05-AUG-21 03.09.00.000000 PM', 'system', '05-AUG-21 03.09.00.000000 PM');
+values ('PdFactorWeightConfig003', 'RSK', '/model/impairment/pddefaultmanager/pdfactorconfig/PdFactorWeightConfig003', 'lossmodel/pddefaultmanager/pdfactorconfig/PdFactorWeightConfig003', null, null, null, '02', '01', '前瞻因子权重配置', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='PdFactorConfig002' and t.ELEMENT_ID='PdFactorConfig002_btn_save';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -434,22 +434,22 @@ Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TAS
 ----菜单脚本----
 -- delete from SYS_MENU where PAGE_ID='ModBintreeConfig001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_010_003', 'VAL', null, 'VALUATION_001_010', 'ModBintreeConfig001', 3, '2', '二叉树模型配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_010_003', 'VAL', null, 'VALUATION_001_010', 'ModBintreeConfig001', 3, '2', '二叉树模型配置', 'system', null, sysdate, 'system', sysdate);
 
 ----页面脚本----
 delete from SYS_PAGE where PAGE_ID in('ModBintreeConfig001','ModBintreeConfig002');
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModBintreeConfig001', 'VAL', '/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001', 'valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001', 'VALUATION_001_010_003', null, null, '02', '01', '二叉树模型参数配置', 'system', null, '05-AUG-21 10.50.26.000000 AM', 'system', '05-AUG-21 10.50.26.000000 AM');
+values ('ModBintreeConfig001', 'VAL', '/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001', 'valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001', 'VALUATION_001_010_003', null, null, '02', '01', '二叉树模型参数配置', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModBintreeConfig002', 'VAL', '/modelvaluation/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002', 'valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002', null, null, null, '02', '01', '二叉树模型参数配置新建', 'system', null, '01-JUL-21 04.29.38.000000 PM', 'system', '01-JUL-21 04.29.38.000000 PM');
+values ('ModBintreeConfig002', 'VAL', '/modelvaluation/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002', 'valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002', null, null, null, '02', '01', '二叉树模型参数配置新建', 'system', null, sysdate, 'system', sysdate);
 ----流程配置----
 delete from SYS_WFL_BUSINESS_MODULE where PAGE_ID in('ModBintreeConfig002');
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModBintreeConfig002', 'ModBintreeConfig002_btn_save', 'oneApproval', 'system', null, '05-AUG-21 03.26.19.000000 PM', 'system', '05-AUG-21 03.26.19.000000 PM', 'ALL', '02');
+values ('ModBintreeConfig002', 'ModBintreeConfig002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModBintreeConfig002', 'ModBintreeConfig002_btn_submit', 'oneApproval', 'system', null, '05-AUG-21 03.26.19.000000 PM', 'system', '05-AUG-21 03.26.19.000000 PM', 'ALL', '02');
+values ('ModBintreeConfig002', 'ModBintreeConfig002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 ----数据字典配置----
 delete from SYS_DATADICT where DICT_CODE='MODEL_MARKET_MULTI';
 Insert into SYS_DATADICT (DICT_CODE,SYSTEM_CODE,DICT_CNNAME,DICT_ENNAME,UPDATE_FLG,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('MODEL_MARKET_MULTI','MOD','市场乘数方法','BOARD_STATUS','02','system',null,sysdate,'system',sysdate);
@@ -484,29 +484,29 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'RiskPremiumAdjConf001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RiskPremiumAdjConf001', 'VAL', '/valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf001', 'valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf001', 'VALUATION_001_010_002', null, null, '02', '01', '风险溢价调整配置', 'system', null, '05-AUG-21 02.46.27.000000 PM', 'system', '05-AUG-21 02.46.27.000000 PM');
+values ('RiskPremiumAdjConf001', 'VAL', '/valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf001', 'valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf001', 'VALUATION_001_010_002', null, null, '02', '01', '风险溢价调整配置', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'RiskPremiumAdjConf002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RiskPremiumAdjConf002', 'VAL', '/valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf002', 'valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf002', null, null, null, '02', '01', '风险溢价调整修改', 'system', null, '29-JUL-21 04.17.52.000000 PM', 'system', '29-JUL-21 04.17.52.000000 PM');
+values ('RiskPremiumAdjConf002', 'VAL', '/valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf002', 'valmodel/valgeneralfixedincomeassets/riskpremiumadjconf/RiskPremiumAdjConf002', null, null, null, '02', '01', '风险溢价调整修改', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'RiskPremiumAdjConf002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RiskPremiumAdjConf002', 'RiskPremiumAdjConf002_btn_submit', 'oneApproval', 'system', null, '29-JUL-21 04.17.53.000000 PM', 'system', '29-JUL-21 04.17.53.000000 PM');
+values ('RiskPremiumAdjConf002', 'RiskPremiumAdjConf002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate);
 
 
 --估值模型-批处理页面
 -- DELETE FROM SYS_MENU where PAGE_ID = 'ModValBatchTask001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_010_005', 'VAL', null, 'VALUATION_001_010', 'ModValBatchTask001', 5, '2', '估值模型批处理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_010_005', 'VAL', null, 'VALUATION_001_010', 'ModValBatchTask001', 5, '2', '估值模型批处理', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'ModValBatchTask001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModValBatchTask001', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask001', 'valmodel/batch/batchtask/ModValBatchTask001', 'VALUATION_001_010_005', null, null, '02', '01', '估值模型批处理任务', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
+values ('ModValBatchTask001', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask001', 'valmodel/batch/batchtask/ModValBatchTask001', 'VALUATION_001_010_005', null, null, '02', '01', '估值模型批处理任务', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'ModValBatchTask002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModValBatchTask002', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask002', 'valmodel/batch/batchtask/ModValBatchTask002', null, null, null, '02', '01', '估值模型批处理任务-详情', 'system', null, '05-AUG-21 03.49.51.000000 PM', 'system', '05-AUG-21 03.49.51.000000 PM');
+values ('ModValBatchTask002', 'VAL', '/modelvaluation/batch/batchtask/ModValBatchTask002', 'valmodel/batch/batchtask/ModValBatchTask002', null, null, null, '02', '01', '估值模型批处理任务-详情', 'system', null, sysdate, 'system', sysdate);
 
 --估值模型-现金流折现模型曲线界面上下拉框配置
 delete from SYS_PAGE_DICTLIST where page_id in ('CashFlowDiscount002');
@@ -519,58 +519,58 @@ insert into sys_page_dictlist values('CashFlowDiscount002','999999','CURVE_TYPE'
 --估值模型-股息增长率配置系统参数配置
 -- delete from sys_menu t where t.PAGE_ID='ModStockDivitrateConfig001' ;
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_010_004', 'VAL', null, 'VALUATION_001_010', 'ModStockDivitrateConfig001', 4, '2', '股息增长率配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_010_004', 'VAL', null, 'VALUATION_001_010', 'ModStockDivitrateConfig001', 4, '2', '股息增长率配置', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='ModStockDivitrateConfig001' ;
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig001', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig001', 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig001', 'VALUATION_001_010_004', null, null, '02', '01', '预期股息增长率配置查询', 'system', null, '05-AUG-21 02.56.41.000000 PM', 'system', '05-AUG-21 02.56.41.000000 PM');
+values ('ModStockDivitrateConfig001', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig001', 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig001', 'VALUATION_001_010_004', null, null, '02', '01', '预期股息增长率配置查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='ModStockDivitrateConfig002' ;
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig002', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', null, null, null, '02', '01', '预期股息增长率配置查询', 'system', null, '05-AUG-21 06.42.39.000000 PM', 'system', '05-AUG-21 06.42.39.000000 PM');
+values ('ModStockDivitrateConfig002', 'VAL', '/valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002', null, null, null, '02', '01', '预期股息增长率配置查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig002' and t.ELEMENT_ID='ModStockDivitrateConfig002_btn_submit';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig002_btn_submit', '01', '02', null, '提交', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig002_btn_submit', '01', '02', null, '提交', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig001' and t.ELEMENT_ID='ModStockDivitrateConfig001_btn_clear';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_clear', '01', '02', null, '重置', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_clear', '01', '02', null, '重置', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig001' and t.ELEMENT_ID='ModStockDivitrateConfig001_btn_add';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_add', '01', '01', null, '新建', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_add', '01', '01', null, '新建', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig001' and t.ELEMENT_ID='ModStockDivitrateConfig001_btn_search';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_search', '01', '01', null, '查询', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStockDivitrateConfig001' and t.ELEMENT_ID='ModStockDivitrateConfig001_btn_delete';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_delete', '01', '01', null, '删除', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStockDivitrateConfig001', 'ModStockDivitrateConfig001_btn_delete', '01', '01', null, '删除', 'system', null, sysdate, 'system', sysdate);
 
 
 
 delete from sys_wfl_business_module t where t.PAGE_ID='ModStockDivitrateConfig002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig001_btn_delete', 'oneApproval', 'system', null, '05-AUG-21 03.25.41.000000 PM', 'system', '05-AUG-21 03.25.41.000000 PM', 'ALL', '02');
+values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig002_btn_submit', 'oneApproval', 'system', null, '05-AUG-21 03.25.41.000000 PM', 'system', '05-AUG-21 03.25.41.000000 PM', 'ALL', '02');
+values ('ModStockDivitrateConfig002', 'ModStockDivitrateConfig002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 delete from sys_datadict_list t where t.DICT_CODE='COMMON_BUSINESS_TYPE' and t.ITEM_CODE='STCOKDIVITRATE';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('COMMON_BUSINESS_TYPE', 'STCOKDIVITRATE', '预期股息增长率配置', 1225, '0', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('COMMON_BUSINESS_TYPE', 'STCOKDIVITRATE', '预期股息增长率配置', 1225, '0', 'system', null, sysdate, 'system', sysdate);
 
 --减值模型-资产评级配置管理菜单
 -- delete from SYS_MENU where PAGE_ID='AssetRatingAllocation001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, sysdate, 'system', sysdate);
 
 --减值模型- LGD违约损失率
 -- delete from SYS_MENU where PAGE_ID='LossGivenDefaultManage001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_011_005', 'VAL', null, 'VALUATION_001_011', 'LossGivenDefaultManage001', 4, '2', 'LGD违约损失率管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_011_005', 'VAL', null, 'VALUATION_001_011', 'LossGivenDefaultManage001', 4, '2', 'LGD违约损失率管理', 'system', null, sysdate, 'system', sysdate);
 -- commit;
 
 --减值阶段参数表初始化
@@ -607,62 +607,62 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 --减值阶段参数配置页面
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStagePara001' and t.ELEMENT_ID='ModStagePara001_btn_clear';
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', 'ModStagePara001_btn_clear', '01', '02', null, '重置', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara001', 'ModStagePara001_btn_clear', '01', '02', null, '重置', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStagePara001' and t.ELEMENT_ID='ModStagePara001_btn_export';
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', 'ModStagePara001_btn_export', '01', '01', null, '导出', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara001', 'ModStagePara001_btn_export', '01', '01', null, '导出', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStagePara001' and t.ELEMENT_ID='ModStagePara001_btn_search';
 insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', 'ModStagePara001_btn_search', '01', '01', null, '查询', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara001', 'ModStagePara001_btn_search', '01', '01', null, '查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from SYS_PAGE_ELEMENT t where t.PAGE_ID='ModStagePara002' and t.ELEMENT_ID='ModStagePara002_btn_submit';
 insert into SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', 'ModStagePara002_btn_submit', '01', '02', null, '提交', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', 'ModStagePara002_btn_submit', '01', '02', null, '提交', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_wfl_business_module t where t.PAGE_ID='ModStagePara002' and t.ELEMENT_ID='ModStagePara002_btn_submit';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', 'ModStagePara002_btn_submit', 'oneApproval', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', 'ModStagePara002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page_dictlist t where t.PAGE_ID='ModStagePara001' and t.DICT_ID='FIN_STAGE';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', '999999', 'FIN_STAGE', 'P2', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara001', '999999', 'FIN_STAGE', 'P2', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', '999999', 'FIN_STAGE', 'P3', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara001', '999999', 'FIN_STAGE', 'P3', null, null, 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page_dictlist t where t.PAGE_ID='ModStagePara002' and t.DICT_ID='FIVE_CLASS_CLASSIFICATION';
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '02', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '02', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '03', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '03', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '04', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '04', null, null, 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '05', null, null, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('ModStagePara002', '999999', 'FIVE_CLASS_CLASSIFICATION', '05', null, null, 'system', null, sysdate, 'system', sysdate);
 
 --配置流程BusinessType
 delete from SYS_DATADICT_LIST t where t.DICT_CODE='COMMON_BUSINESS_TYPE' and t.ITEM_CODE='STAGEPARA';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('COMMON_BUSINESS_TYPE', 'STAGEPARA', '减值阶段参数管理', 1224, '0', 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'));
+values ('COMMON_BUSINESS_TYPE', 'STAGEPARA', '减值阶段参数管理', 1224, '0', 'system', null, sysdate, 'system', sysdate);
 
 
 --减值阶段参数管理
 delete from sys_page t where t.PAGE_ID='ModStagePara001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara001', 'RSK', '/model/impairment/phaseparameter/ModStagePara001', 'lossmodel/phaseparameter/ModStagePara001', 'VALUATION_001_011_006', null, null, '02', '01', '减值阶段参数管理', 'system', null, '05-AUG-21 03.10.42.000000 PM', 'system', '05-AUG-21 03.10.42.000000 PM');
+values ('ModStagePara001', 'RSK', '/model/impairment/phaseparameter/ModStagePara001', 'lossmodel/phaseparameter/ModStagePara001', 'VALUATION_001_011_006', null, null, '02', '01', '减值阶段参数管理', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='ModStagePara002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModStagePara002', 'RSK', '/model/impairment/phaseparameter/ModStagePara002', 'lossmodel/phaseparameter/ModStagePara002', null, null, null, '02', '01', '减值阶段参数修改', 'system', null, '05-AUG-21 03.10.42.000000 PM', 'system', '05-AUG-21 03.10.42.000000 PM');
+values ('ModStagePara002', 'RSK', '/model/impairment/phaseparameter/ModStagePara002', 'lossmodel/phaseparameter/ModStagePara002', null, null, null, '02', '01', '减值阶段参数修改', 'system', null, sysdate, 'system', sysdate);
 
 -- delete from sys_menu t where t.PAGE_ID='ModStagePara001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_011_006', 'VAL', null, 'VALUATION_001_011', 'ModStagePara001', 5, '2', '减值阶段参数管理', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_011_006', 'VAL', null, 'VALUATION_001_011', 'ModStagePara001', 5, '2', '减值阶段参数管理', 'system', null, sysdate, 'system', sysdate);
 
 
 --减值模型-数据加载批处理任务  + 减值模型-ECL计算批处理任务
@@ -681,35 +681,35 @@ Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TAS
 --减值模型-EAD计算批处理任务
 delete from SYS_BATCH_TASK t where t.BEAN_NAME='eadCalCulationBatchTask';
 insert into SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('2043', 'MODEL', '减值模型-EAD计算批处理', null, 'eadCalCulationBatchTask', 30, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), '02');
+values ('2043', 'MODEL', '减值模型-EAD计算批处理', null, 'eadCalCulationBatchTask', 30, 'system', null, sysdate, 'system', sysdate, '02');
 
 --减值模型-PD计算批处理任务
 delete from SYS_BATCH_TASK where BEAN_NAME = 'pdCalculateTask';
-Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) values ('2044','MODEL','减值模型-PD计算批处理',null,'pdCalculateTask',40,'system',null,to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),'system',to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),'02');
+Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) values ('2044','MODEL','减值模型-PD计算批处理',null,'pdCalculateTask',40,'system',null,sysdate,'system',sysdate,'02');
 
 --减值模型-数据推送批处理
 delete from SYS_BATCH_TASK where BEAN_NAME = 'dataPushEclResultTask';
-Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) values ('2026','MODEL','减值模型-数据推送批处理',null,'dataPushEclResultTask',60,'system',null,to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),'system',to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'),'02');
+Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,IS_BATCH_START_TARGET) values ('2026','MODEL','减值模型-数据推送批处理',null,'dataPushEclResultTask',60,'system',null,sysdate,'system',sysdate,'02');
 
 --估值模型-收益法模型批处理任务
 delete from SYS_BATCH_TASK where TASK_ID = '2023' and BEAN_NAME='productAssetsIncomeMethodTask';
 insert into sys_batch_task (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('2023', 'MODEL', '收益法模型批处理', null, 'productAssetsIncomeMethodTask', 60, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), '02');
+values ('2023', 'MODEL', '收益法模型批处理', null, 'productAssetsIncomeMethodTask', 60, 'system', null, sysdate, 'system', sysdate, '02');
 
 --估值模型-数据推送批处理任务
 delete from SYS_BATCH_TASK where TASK_ID = '2024';
 insert into sys_batch_task (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, IS_BATCH_START_TARGET)
-values ('2024', 'MODEL', '数据推送批处理', null, 'dataPushValuatIoninfoTask', 70, 'system', null, to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), 'system', to_timestamp(to_char(sysdate,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS'), '02');
+values ('2024', 'MODEL', '数据推送批处理', null, 'dataPushValuatIoninfoTask', 70, 'system', null, sysdate, 'system', sysdate, '02');
 
 
 --减值情况计提画面
 -- DELETE FROM SYS_MENU WHERE PAGE_ID = 'ImpairmentProvision001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_011_007', 'VAL', null, 'VALUATION_001_011', 'ImpairmentProvision001', 6, '2', '减值情况计提表', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_011_007', 'VAL', null, 'VALUATION_001_011', 'ImpairmentProvision001', 6, '2', '减值情况计提表', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'ImpairmentProvision001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ImpairmentProvision001', 'RSK', '/model/impairment/impairmentprovision/ImpairmentProvision001', 'lossmodel/impairmentprovision/ImpairmentProvision001', 'VALUATION_001_011_007', null, null, '02', '02', '减值情况计提表', 'system', null, '05-AUG-21 03.50.40.000000 PM', 'system', '05-AUG-21 03.50.40.000000 PM');
+values ('ImpairmentProvision001', 'RSK', '/model/impairment/impairmentprovision/ImpairmentProvision001', 'lossmodel/impairmentprovision/ImpairmentProvision001', 'VALUATION_001_011_007', null, null, '02', '02', '减值情况计提表', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID = 'ImpairmentProvision001' AND DICT_ID = 'CUSTOM_ASSET_TYPE_TWO';
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -767,11 +767,11 @@ values ('MODEL_DATA_SOURCE', '01', '模型', 2, '0', 'system', null, SYSDATE, 's
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement001', null, null, null, '02', '02', '资产减值管理', 'system', null, '25-AUG-21 06.51.23.000000 PM', 'system', '25-AUG-21 06.51.23.000000 PM');
+values ('AssetImpairmentManagement001', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement001', null, null, null, '02', '02', '资产减值管理', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'AssetImpairmentManagement002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, '25-AUG-21 06.51.33.000000 PM', 'system', '25-AUG-21 06.51.33.000000 PM');
+values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement002', 'lossmodel/assetimpairmentmanagement/AssetImpairmentManagement002', null, null, null, '02', '01', '资产减值新建', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'AssetImpairmentManagement002';
 Insert into SYS_WFL_BUSINESS_MODULE (PAGE_ID,ELEMENT_ID,MODULE_ID,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('AssetImpairmentManagement002','AssetImpairmentManagement002_btn_save','oneApproval','system',null,SYSDATE,'system',SYSDATE);
@@ -855,10 +855,10 @@ insert into sys_page_dictlist values('InsideOutsideGrade001','999999','GRADE_PAR
 
 DELETE FROM sys_page WHERE PAGE_ID = 'InsideOutsideGrade001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('InsideOutsideGrade001', 'VAL', '/model/impairment/insideoutsidegrademanagement/InsideOutsideGrade001', 'lossmodel/insideoutsidegrademanagement/InsideOutsideGrade001', 'ASSET_MANAGEMENT_001_003_020', null, null, '02', '01', '内外部评级映射管理', 'system', null, '05-AUG-21 03.29.20.000000 PM', 'system', '05-AUG-21 03.29.20.000000 PM');
+values ('InsideOutsideGrade001', 'VAL', '/model/impairment/insideoutsidegrademanagement/InsideOutsideGrade001', 'lossmodel/insideoutsidegrademanagement/InsideOutsideGrade001', 'ASSET_MANAGEMENT_001_003_020', null, null, '02', '01', '内外部评级映射管理', 'system', null, sysdate, 'system', sysdate);
 DELETE FROM sys_page WHERE PAGE_ID = 'InsideOutsideGrade002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('InsideOutsideGrade002', 'VAL', '/model/impairment/insideoutsidegrademanagement/InsideOutsideGrade002', 'lossmodel/insideoutsidegrademanagement/InsideOutsideGrade002', null, null, null, '02', '01', '内外部评级映射管理新建', 'system', null, '05-AUG-21 03.29.20.000000 PM', 'system', '05-AUG-21 03.29.20.000000 PM');
+values ('InsideOutsideGrade002', 'VAL', '/model/impairment/insideoutsidegrademanagement/InsideOutsideGrade002', 'lossmodel/insideoutsidegrademanagement/InsideOutsideGrade002', null, null, null, '02', '01', '内外部评级映射管理新建', 'system', null, sysdate, 'system', sysdate);
 
 -- 内部评级枚举值初始化
 insert into SYS_DATADICT values ('MODEL_STANDARD_GRADE_RESULT','MOD','模型_标准评级结果','STANDARD_GRADE_RESULT','02','system','',to_date('2019/06/24', 'yyyy/mm/dd'), 'system',to_date('2019/06/24', 'yyyy/mm/dd'));
@@ -896,34 +896,34 @@ insert into sys_datadict_list values('COMMON_BUSINESS_TYPE','MOD03','内外部�
 --评级PD维护页面
 delete from sys_page t where t.PAGE_ID='ModGradePdConfig001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModGradePdConfig001', 'RSK', '/model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig001', 'lossmodel/pddefaultmanager/gradepdconfig/ModGradePdConfigQuery001', 'VALUATION_001_011_004', null, null, '02', '01', '评级PD表查询', 'system', null, '04-AUG-21 06.44.23.000000 PM', 'system', '04-AUG-21 06.44.23.000000 PM');
+values ('ModGradePdConfig001', 'RSK', '/model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig001', 'lossmodel/pddefaultmanager/gradepdconfig/ModGradePdConfigQuery001', 'VALUATION_001_011_004', null, null, '02', '01', '评级PD表查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='ModGradePdConfig002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ModGradePdConfig002', 'RSK', '/model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002', 'lossmodel/pddefaultmanager/gradepdconfig/ModGradePdConfigInfo002', null, null, null, '02', '01', '评级PD维护新建', 'system', null, '03-AUG-21 07.37.38.000000 PM', 'system', '03-AUG-21 07.37.38.000000 PM');
+values ('ModGradePdConfig002', 'RSK', '/model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002', 'lossmodel/pddefaultmanager/gradepdconfig/ModGradePdConfigInfo002', null, null, null, '02', '01', '评级PD维护新建', 'system', null, sysdate, 'system', sysdate);
 
 -- 流程按钮添加begin
 delete from sys_wfl_business_module t where t.ELEMENT_ID='ModGradePdConfig001_btn_delete';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModGradePdConfig002', 'ModGradePdConfig001_btn_delete', 'oneApproval', 'system', null, '25-JUN-21 02.31.30.000000 PM', 'system', '25-JUN-21 02.31.30.000000 PM', 'ALL', '02');
+values ('ModGradePdConfig002', 'ModGradePdConfig001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 delete from sys_wfl_business_module t where t.ELEMENT_ID='ModGradePdConfig001_btn_import';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModGradePdConfig002', 'ModGradePdConfig001_btn_import', 'oneApproval', 'system', null, '25-JUN-21 04.54.32.000000 PM', 'system', '25-JUN-21 04.54.32.000000 PM', 'ALL', '02');
+values ('ModGradePdConfig002', 'ModGradePdConfig001_btn_import', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 delete from sys_wfl_business_module t where t.ELEMENT_ID='ModGradePdConfig002_btn_save';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModGradePdConfig002', 'ModGradePdConfig002_btn_save', 'oneApproval', 'system', null, '25-JUN-21 02.31.30.000000 PM', 'system', '25-JUN-21 02.31.30.000000 PM', 'ALL', '02');
+values ('ModGradePdConfig002', 'ModGradePdConfig002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 delete from sys_wfl_business_module t where t.ELEMENT_ID='ModGradePdConfig002_btn_submit';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('ModGradePdConfig002', 'ModGradePdConfig002_btn_submit', 'oneApproval', 'system', null, '25-JUN-21 02.31.30.000000 PM', 'system', '25-JUN-21 02.31.30.000000 PM', 'ALL', '02');
+values ('ModGradePdConfig002', 'ModGradePdConfig002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 -- 流程按钮添加end
 
 --配置代办事项业务类型begin--
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('COMMON_BUSINESS_TYPE', 'MOD07', '评级PD维护', 1224, '0', 'system', null, '01-JUL-21 03.24.24.000000 PM', 'system', '01-JUL-21 03.24.24.000000 PM');
+values ('COMMON_BUSINESS_TYPE', 'MOD07', '评级PD维护', 1224, '0', 'system', null, sysdate, 'system', sysdate);
 --配置代办事项业务类型end--
 
 --MOD_CURVE_MAPPING初始化脚本
@@ -974,11 +974,11 @@ insert into MOD_CURVE_MAPPING(SEQ_NO,CURVE_GROUP_CODE,CURVE_GROUP_NAME,CURVE_TYP
 --特殊资产LGD维护页面
 delete from sys_page t where t.PAGE_ID='LgdSpecialConfig001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LgdSpecialConfig001', 'RSK', '/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig001', 'lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfigQuery001', null, null, null, '02', '01', '特殊资产LGD维护查询', 'system', null, '05-AUG-21 02.37.06.000000 PM', 'system', '05-AUG-21 02.37.06.000000 PM');
+values ('LgdSpecialConfig001', 'RSK', '/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig001', 'lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfigQuery001', null, null, null, '02', '01', '特殊资产LGD维护查询', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page t where t.PAGE_ID='LgdSpecialConfig002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LgdSpecialConfig002', 'RSK', '/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002', 'lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfigInfo002', null, null, null, '02', '01', '特殊资产LGD维护新建', 'system', null, '05-AUG-21 02.37.06.000000 PM', 'system', '05-AUG-21 02.37.06.000000 PM');
+values ('LgdSpecialConfig002', 'RSK', '/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002', 'lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfigInfo002', null, null, null, '02', '01', '特殊资产LGD维护新建', 'system', null, sysdate, 'system', sysdate);
 
 -- 流程按钮添加begin
 delete from sys_wfl_business_module t where t.ELEMENT_ID='LgdSpecialConfig001_btn_delete';
@@ -998,40 +998,40 @@ values ('LgdSpecialConfig002', 'LgdSpecialConfig002_btn_submit', 'oneApproval', 
 --配置代办事项业务类型begin--
 delete from sys_datadict_list t where t.DICT_CODE='COMMON_BUSINESS_TYPE' and t.ITEM_CODE='MOD08';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('COMMON_BUSINESS_TYPE', 'MOD08', '特殊资产LGD维护', 1300, '0', 'system', null, '05-JUL-21 03.36.53.000000 PM', 'system', '05-JUL-21 03.36.53.000000 PM');
+values ('COMMON_BUSINESS_TYPE', 'MOD08', '特殊资产LGD维护', 1300, '0', 'system', null, sysdate, 'system', sysdate);
 --配置代办事项业务类型end--
 
 
 --现金流折现模型曲线配置菜单和页面
 -- delete from sys_menu where PAGE_ID = 'CashFlowDiscount001';
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_010_001', 'VAL', null, 'VALUATION_001_010', 'CashFlowDiscount001', 1, '2', '贴现法曲线配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_010_001', 'VAL', null, 'VALUATION_001_010', 'CashFlowDiscount001', 1, '2', '贴现法曲线配置', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'CashFlowDiscount001';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('CashFlowDiscount001', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'VALUATION_001_009_004', null, null, '02', '01', '现金流折现模型曲线配置', 'system', null, '05-AUG-21 04.20.44.000000 PM', 'system', '05-AUG-21 04.20.44.000000 PM');
+values ('CashFlowDiscount001', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001', 'VALUATION_001_009_004', null, null, '02', '01', '现金流折现模型曲线配置', 'system', null, sysdate, 'system', sysdate);
 
 delete from sys_page where PAGE_ID = 'CashFlowDiscount002';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('CashFlowDiscount002', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', null, null, null, '02', '01', '现金流折现模型曲线配置新建', 'system', null, '05-AUG-21 06.37.18.000000 PM', 'system', '05-AUG-21 06.37.18.000000 PM');
+values ('CashFlowDiscount002', 'VAL', '/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002', null, null, null, '02', '01', '现金流折现模型曲线配置新建', 'system', null, sysdate, 'system', sysdate);
 
 
 -- 配置工作流按钮
 delete from sys_wfl_business_module where PAGE_ID = 'CashFlowDiscount002';
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('CashFlowDiscount002', 'ValCashFlowDiscount001_btn_delete', 'oneApproval', 'system', null, '05-AUG-21 03.43.43.000000 PM', 'system', '05-AUG-21 03.43.43.000000 PM', 'ALL', '02');
+values ('CashFlowDiscount002', 'ValCashFlowDiscount001_btn_delete', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('CashFlowDiscount002', 'ValCashFlowDiscount002_btn_save', 'oneApproval', 'system', null, '05-AUG-21 03.43.49.000000 PM', 'system', '05-AUG-21 03.43.49.000000 PM', 'ALL', '02');
+values ('CashFlowDiscount002', 'ValCashFlowDiscount002_btn_save', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 insert into sys_wfl_business_module (PAGE_ID, ELEMENT_ID, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, IS_SEND_UORG)
-values ('CashFlowDiscount002', 'ValCashFlowDiscount002_btn_submit', 'oneApproval', 'system', null, '05-AUG-21 03.43.37.000000 PM', 'system', '05-AUG-21 03.43.37.000000 PM', 'ALL', '02');
+values ('CashFlowDiscount002', 'ValCashFlowDiscount002_btn_submit', 'oneApproval', 'system', null, sysdate, 'system', sysdate, 'ALL', '02');
 
 
 -- 现金流折现模型曲线配置的业务类型begin
 delete from sys_datadict_list where dict_code='COMMON_BUSINESS_TYPE' and item_code='MOD06';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('COMMON_BUSINESS_TYPE', 'MOD06', '现金流折现模型曲线配置', 1224, '0', 'system', null, '05-AUG-21 03.43.56.000000 PM', 'system', '05-AUG-21 03.43.56.000000 PM', null);
+values ('COMMON_BUSINESS_TYPE', 'MOD06', '现金流折现模型曲线配置', 1224, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- end
 
 -- 曲线族枚举begin
@@ -1058,7 +1058,7 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 -- 资产大类评级配置的业务类型begin
 delete from sys_datadict_list where dict_code='COMMON_BUSINESS_TYPE' and item_code = 'MOD01';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('COMMON_BUSINESS_TYPE', 'MOD01', '资产大类评级配置', 32, '0', 'system', null, '10-JUN-20 08.05.26.000000 PM', 'system', '10-JUN-20 08.05.26.000000 PM', null);
+values ('COMMON_BUSINESS_TYPE', 'MOD01', '资产大类评级配置', 32, '0', 'system', null, sysdate, 'system', sysdate, null);
 -- end
 
 -- 资产分类评级配置枚举begin
@@ -1100,29 +1100,29 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 --资产评级来源配置页面
 -- delete from sys_menu where PAGE_ID in('AssetRatingAllocation001','Specialassets001','Specialassets002');
 -- insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
--- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, '01-FEB-18 12.00.00.000000 AM', 'system', '01-FEB-18 12.00.00.000000 AM');
+-- values ('VALUATION_001_008_015', 'VAL', null, 'VALUATION_001_008', 'AssetRatingAllocation001', 15, '2', '资产评级来源配置', 'system', null, sysdate, 'system', sysdate);
 
 
 delete from SYS_PAGE where PAGE_ID in('AssetRatingAllocation001','Specialassets001','Specialassets002');
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AssetRatingAllocation001', 'RSK', '/model/impairment/assetratingallocation/AssetRatingAllocation001', 'lossmodel/assetratingallocation/AssetRatingAllocation001', 'VALUATION_001_011_001', null, null, '02', '01', '资产评级配置', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('AssetRatingAllocation001', 'RSK', '/model/impairment/assetratingallocation/AssetRatingAllocation001', 'lossmodel/assetratingallocation/AssetRatingAllocation001', 'VALUATION_001_011_001', null, null, '02', '01', '资产评级配置', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('Specialassets001', 'RSK', '/model/impairment/assetratingallocation/specialassets/Specialassets001', 'lossmodel/assetratingallocation/specialassets/Specialassets001', null, null, null, '02', '01', '特殊资产评级配置查询', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('Specialassets001', 'RSK', '/model/impairment/assetratingallocation/specialassets/Specialassets001', 'lossmodel/assetratingallocation/specialassets/Specialassets001', null, null, null, '02', '01', '特殊资产评级配置查询', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('Specialassets002', 'RSK', '/model/impairment/assetratingallocation/specialassets/Specialassets002', 'lossmodel/assetratingallocation/specialassets/Specialassets002', null, null, null, '02', '01', '特殊资产评级配置新建', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('Specialassets002', 'RSK', '/model/impairment/assetratingallocation/specialassets/Specialassets002', 'lossmodel/assetratingallocation/specialassets/Specialassets002', null, null, null, '02', '01', '特殊资产评级配置新建', 'system', null, sysdate, 'system', sysdate);
 
 
 delete from SYS_PAGE where PAGE_ID in('LossGivenDefaultManage001','LossGivenDefaultMaintain001','LossGivenDefaultMaintain002');
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LossGivenDefaultManage001', 'RSK', '/model/impairment/lossgivendefaultmanage/LossGivenDefaultManage001', 'lossmodel/lossgivendefaultmanage/LossGivenDefaultManage001', 'VALUATION_001_011_005', null, null, '02', '01', '资产评级配置', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('LossGivenDefaultManage001', 'RSK', '/model/impairment/lossgivendefaultmanage/LossGivenDefaultManage001', 'lossmodel/lossgivendefaultmanage/LossGivenDefaultManage001', 'VALUATION_001_011_005', null, null, '02', '01', '资产评级配置', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LossGivenDefaultMaintain001', 'RSK', '/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001', 'lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001', null, null, null, '02', '01', '特殊资产评级配置查询', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('LossGivenDefaultMaintain001', 'RSK', '/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001', 'lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001', null, null, null, '02', '01', '特殊资产评级配置查询', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('LossGivenDefaultMaintain002', 'RSK', '/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002', 'lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002', null, null, null, '02', '01', '特殊资产评级配置新建', 'system', null, '05-AUG-21 03.07.29.000000 PM', 'system', '05-AUG-21 03.07.29.000000 PM');
+values ('LossGivenDefaultMaintain002', 'RSK', '/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002', 'lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002', null, null, null, '02', '01', '特殊资产评级配置新建', 'system', null, sysdate, 'system', sysdate);
 
 --数据字典-评级类型-减值模型
 delete from SYS_DATADICT where DICT_CODE='MODEL_MAIN_GRADE_TYPE';
@@ -1187,20 +1187,20 @@ DELETE FROM bok_match_rlat t WHERE t.source = '203' AND TARGET= '23';
 --数据字典-五级分类 数据
 DELETE FROM sys_datadict t WHERE t.DICT_CODE = 'FIVE_CLASS_CLASSIFICATION';
 insert into sys_datadict (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', 'RSK', '五级分类', 'FIVE_CLASS_CLASSIFICATION', '02', 'system', null, '23-SEP-20 09.01.33.000000 PM', 'system', '23-SEP-20 09.01.33.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', 'RSK', '五级分类', 'FIVE_CLASS_CLASSIFICATION', '02', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM sys_datadict_list t WHERE t.DICT_CODE = 'FIVE_CLASS_CLASSIFICATION';
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', '01', '正常', 1, '0', 'system', null, '23-SEP-20 09.01.33.000000 PM', 'system', '23-SEP-20 09.01.33.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', '01', '正常', 1, '0', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', '02', '关注', 2, '0', 'system', null, '23-SEP-20 09.01.34.000000 PM', 'system', '23-SEP-20 09.01.34.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', '02', '关注', 2, '0', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', '03', '次级', 3, '0', 'system', null, '23-SEP-20 09.01.34.000000 PM', 'system', '23-SEP-20 09.01.34.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', '03', '次级', 3, '0', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', '04', '可疑', 4, '0', 'system', null, '23-SEP-20 09.01.34.000000 PM', 'system', '23-SEP-20 09.01.34.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', '04', '可疑', 4, '0', 'system', null, sysdate, 'system', sysdate);
 
 insert into sys_datadict_list (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('FIVE_CLASS_CLASSIFICATION', '05', '损失', 5, '0', 'system', null, '23-SEP-20 09.01.34.000000 PM', 'system', '23-SEP-20 09.01.34.000000 PM');
+values ('FIVE_CLASS_CLASSIFICATION', '05', '损失', 5, '0', 'system', null, sysdate, 'system', sysdate);
