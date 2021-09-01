@@ -90,15 +90,15 @@ public class ModBatchTaskService extends BaseService {
 
         Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
         String isImpairment = (String)params.get("isImpairment");
+        String lossType =(String)params.get("lossType");
         if (isImpairment != null && "true".equals(isImpairment)) {
-//            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
-            assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossAssetInfo(params));
+              if("01".equals(lossType)){
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossKpmgAssetInfo(params));
+              }else{
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossPwcAssetInfo(params));
+              }
         } else {
-            List<String> finprodTypes = new ArrayList<>(2);
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            params.put("finprodTypes", finprodTypes);
-            assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfo(params));
+              assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getValAssetInfo(params));
         }
 
         Page<SelectOptionDto> res = new Page<>();

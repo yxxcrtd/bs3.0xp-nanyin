@@ -111,16 +111,9 @@ public class ModValBatchTask001Service  extends CommonExportService {
      * @param pageParam
      * @return
      */
-    public Page<SelectOptionDto> getAssetInfo(Map<String, Object> pageParam) {
-//        MultiValueMap<String, Object> params = new LinkedMultiValueMap<String, Object>();
-//        if(!CollectionUtils.isEmpty(pageParam)) {
-//            for (Map.Entry<String, Object> entry : pageParam.entrySet()) {
-//                params.add(entry.getKey(), entry.getValue());
-//            }
-//        }
+    public Page<SelectOptionDto> getValBatchAssetInfo(Map<String, Object> pageParam) {
         Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
                 + "/modValBatchTask/getAssetInfo", pageParam, SelectOptionDto.class);
-
         return page;
     }
 
