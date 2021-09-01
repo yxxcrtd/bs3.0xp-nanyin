@@ -51,7 +51,7 @@
   (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,
 	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
 	DESC) AS myrank
-	FROM pbc_prd_baseinfo_sub) a
+	FROM pbc_prd_baseinfo_sub_NEW) a
 	WHERE a.myrank=1)
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -394,7 +394,7 @@
 	    t2.PBC_CODE pbcCode,
 	    a.PBC_PROD_ID pbcProdIdShow
   	from PBC_PRD_BASEINFO_END_SUB_DAT a 
-  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
+  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.Prod_Id = b.Prod_Id
   	<!-- and a.ORG_CODE = b.ORG_CODE -->
   	LEFT JOIN(
         SELECT
@@ -743,7 +743,7 @@
 	    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS, a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT, 
 	    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE,t2.pbc_code
 	  	from PBC_PRD_BASEINFO_END_SUB_DAT a left join <include refid="PBC_PRD_BASEINFO_SUB" /> b
-	  	on a.PBC_PROD_ID = b.PBC_PROD_ID 
+	  	on a.prod_id = b.prod_id
 	  	<!-- and a.ORG_CODE = b.ORG_CODE  -->
 	  	LEFT JOIN(
 	        SELECT
@@ -856,7 +856,7 @@ select sub.REGIST_SEQNO, sub.PBC_PROD_ID, sub.MDATE, sub.CCY, sub.PROFIT, sub.PR
     sub.CUS_YEAR_YIELD, sub.SEND_STATUS, sub.SUBMIT_TIME, sub.SUBMIT_FEEDBACK_STATUS, sub.SUMIT_SEQ, sub.STATUS_DATE, 
     sub.PBC_SUBMIT_DEADLINE, sub.SUBMIT_DEADLINE, sub.STATUS,info.prod_id
     from PBC_PRD_BASEINFO_END_SUB_DAT sub left join <include refid="PBC_PRD_BASEINFO_SUB" /> info
-	on sub.PBC_PROD_ID = info.PBC_PROD_ID
+	on sub.prod_id = info.prod_id
 	where sub.send_status in ('02','03')
 	and info.prod_id = #{dto.prodId,jdbcType=VARCHAR}
 </select>
