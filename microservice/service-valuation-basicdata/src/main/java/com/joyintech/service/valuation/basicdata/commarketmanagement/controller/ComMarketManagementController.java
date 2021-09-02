@@ -80,4 +80,37 @@ public class ComMarketManagementController {
                                                   @PathVariable("length") int length) {
              return mstMarketManagementService.getGradeResult(page, length, param);
          }*/
+
+
+    /**
+     * 根据资产代码获取债券
+     * @param param
+     * @return
+     */
+    @PostMapping("/getFinprodLists")
+    public List<ComMarketManageDto> getFinprodLists(@RequestBody Map<String, Object> param) {
+        return comMarketManagementService.getFinprodLists(param);
+    }
+
+    /**
+     * 根据评级结构获取机构
+     * @param param
+     * @return
+     */
+    @PostMapping("/getCustomerLists")
+    public List<ComMarketManageDto> getCustomerLists(@RequestBody Map<String, Object> param) {
+        return comMarketManagementService.getCustomerLists(param);
+    }
+
+    /**
+     * 导入数据
+     * @param list
+     * @return
+     */
+    @PostMapping("/importDatas")
+    public Integer importDatas(@RequestBody List<ComMarketManageDto> list) {
+        return comMarketManagementService.importDatas(list);
+    }
+
+
 }
