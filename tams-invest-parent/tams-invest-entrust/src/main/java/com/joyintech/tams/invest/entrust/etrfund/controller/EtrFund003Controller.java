@@ -173,7 +173,7 @@ public class EtrFund003Controller extends BaseController {
                     }
                     confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
                     confirmMessage.append("<br />");
-                    confirmMessage.append(getMessage("ETR_BOND_002"));
+                    confirmMessage.append(getMessage("ETR_BOND_008"));
                 }
             }
             // 可用现金软check by 赵东东 start 20200121
