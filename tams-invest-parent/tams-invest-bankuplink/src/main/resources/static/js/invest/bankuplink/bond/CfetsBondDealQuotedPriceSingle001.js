@@ -127,6 +127,7 @@
                         }
                     }
                     entrustIdChangeFlag = false;
+                    calcAmt("01");
                 }
             });
         }
@@ -335,20 +336,20 @@
                 return;
             }
         }
-        if (calculateField){
-            if (calculateField === calcTypeUnitCprice && !$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val()){
+        if (calcField){
+            if (calcField === calcTypeUnitCprice && !$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val()){
                 return;
             }
-            if (calculateField === calcTypeYield && !$('#CfetsBondDealQuotedPriceSingle001_matureYield').val()){
+            if (calcField === calcTypeYield && !$('#CfetsBondDealQuotedPriceSingle001_matureYield').val()){
                 return;
             }
-            if (calculateField === calcTypeExecYield && !$('#CfetsBondDealQuotedPriceSingle001_exerYield').val()){
+            if (calcField === calcTypeExecYield && !$('#CfetsBondDealQuotedPriceSingle001_exerYield').val()){
                 return;
             }
 
 
             var object = $.serializeToObject('#submitForm', true);
-            object.calculateField = calculateField;
+            object.calculateField = calcField;
             object.finprodId = finprodId;
             // 区分画面打开模式
             var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
@@ -364,7 +365,7 @@
                 }
                 object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000))
             }
-            object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000));
+            // object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000));
 
             Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/calcAmt', object, function(result){
                 if (result.data){
