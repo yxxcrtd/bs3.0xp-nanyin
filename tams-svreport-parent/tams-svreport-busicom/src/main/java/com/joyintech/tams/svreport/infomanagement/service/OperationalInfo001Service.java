@@ -1991,7 +1991,7 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     					if(StringUtil.isNotEmpty(outDepCity)){
 							List<String> outDepCitys = Arrays.asList(outDepCity.split(","));
 							String investArae=strList.get(18) ;//资金投向地区
-							if(StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
+							if(outDepCitys.size()>1 && StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
 								if(outDepCitys.contains("CHN")){
 									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
 											+ "[OUT_DEP_CTRY="+"CHN"+"] ",
