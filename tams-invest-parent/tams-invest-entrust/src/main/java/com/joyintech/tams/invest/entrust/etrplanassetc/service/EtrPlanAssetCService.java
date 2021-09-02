@@ -606,10 +606,11 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 List<String> rowData = objects.get(i);
                 String lineNo = String.valueOf(i + 1);
                 String indexId = rowData.get(0).toString();
-//                if (StringUtil.isBlank(indexId)) {
-//                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
-//                    break;
-//                }
+                // ZGZGST-1845:序号为空时提示错误 fuyongsheng 20210902 edit start
+                if (StringUtil.isBlank(indexId)) {
+                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
+                }
+                // ZGZGST-1845:序号为空时提示错误 fuyongsheng 20210902 edit end
                 // 委托开始日check非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(1).toString(),
