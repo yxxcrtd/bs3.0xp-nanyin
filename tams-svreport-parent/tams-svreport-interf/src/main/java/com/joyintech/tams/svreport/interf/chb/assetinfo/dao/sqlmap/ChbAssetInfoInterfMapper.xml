@@ -2335,11 +2335,17 @@
         detail.REP_ISSUE_MODE ISSUE_MODE,
         null PARTY_GRADE,
         <!--         decode(NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1),'99','01',NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1))  INSTIT_SIZE, -->
-        case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+       <!-- case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
         when detail.rep_party_type1='02' then '02'
         when detail.rep_party_type1='99' then '99'
+        end as instit_size,-->
+        case when addq.party_type1='01' then '01'
+        when addq.party_type1='02' then '03'
+        when addq.party_type1='03' then '04'
+        when addq.party_type1='04' then '02'
+        when addq.party_type1='05' then '99'
         end as instit_size,
         detail.REP_PARTY_TYPE1 PARTY_TYPE1,
         detail.REP_PARTY_TYPE3 PARTY_TYPE3,
@@ -3711,12 +3717,18 @@
         null CHB_SECTYPE,
         null ISSUE_MODE,
         null PARTY_GRADE,
-      　case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+      <!--　case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
      　　　　 when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
      　　　　 when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
     　　　　  when detail.rep_party_type1='02' then '02'
      　　　　 when detail.rep_party_type1='99' then '99'
-     　 end as INSTIT_SIZE,
+     　 end as INSTIT_SIZE,-->
+       case when addq.party_type1='01' then '01'
+          when addq.party_type1='02' then '03'
+          when addq.party_type1='03' then '04'
+          when addq.party_type1='04' then '02'
+          when addq.party_type1='05' then '99'
+          end as instit_size,
         null PARTY_TYPE1,
         null PARTY_TYPE3,
         null PARTY_TYPE2,
@@ -8540,11 +8552,17 @@
         detail.REP_ISSUE_MODE ISSUE_MODE,
         null PARTY_GRADE,
         <!--         decode(NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1),'99','01',NVL(assetother.REP_INSTIT_SIZE,detail.REP_PARTY_TYPE1))  INSTIT_SIZE, -->
-        case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+       <!-- case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
         when detail.rep_party_type1='02' then '02'
         when detail.rep_party_type1='99' then '99'
+        end as instit_size,-->
+        case when addq.party_type1='01' then '01'
+        when addq.party_type1='02' then '03'
+        when addq.party_type1='03' then '04'
+        when addq.party_type1='04' then '02'
+        when addq.party_type1='05' then '99'
         end as instit_size,
         detail.REP_PARTY_TYPE1 PARTY_TYPE1,
         detail.REP_PARTY_TYPE3 PARTY_TYPE3,
@@ -9559,12 +9577,18 @@
         null CHB_SECTYPE,
         null ISSUE_MODE,
         null PARTY_GRADE,
-        case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
+       <!-- case when detail.rep_party_type1='01' and assetother.rep_instit_size='01' then '01'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='02' then '03'
         when detail.rep_party_type1='01' and assetother.rep_instit_size='03' then '04'
         when detail.rep_party_type1='02' then '02'
         when detail.rep_party_type1='99' then '99'
-        end as INSTIT_SIZE,
+        end as INSTIT_SIZE,-->
+        case when addq.party_type1='01' then '01'
+        when addq.party_type1='02' then '03'
+        when addq.party_type1='03' then '04'
+        when addq.party_type1='04' then '02'
+        when addq.party_type1='05' then '99'
+        end as instit_size,
         null PARTY_TYPE1,
         null PARTY_TYPE3,
         null PARTY_TYPE2,
