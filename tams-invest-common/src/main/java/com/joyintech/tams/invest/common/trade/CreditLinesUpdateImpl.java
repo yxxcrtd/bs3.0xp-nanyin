@@ -1753,6 +1753,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
                     BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
                     inputDto.setShareAmt(objShareAmt.abs());
+                    inputDto.setTradeAmt(BigDecimal.ZERO);
                     occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
                 }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
                     inputDto.setTradeAmt(BigDecimal.ZERO);

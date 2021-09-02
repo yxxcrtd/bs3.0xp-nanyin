@@ -11,10 +11,11 @@ values ('ModStockDivitrateConfig002', '999999', 'SEC_TYPE', '01', null, null, 's
 insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('ModStockDivitrateConfig002', '999999', 'SEC_TYPE', '13', null, null, 'system', null, sysDate, 'system', sysDate, null);
 
-update sys_menu set remark = '∂˛≤Ê ˜ƒ£–Õ≤Œ ˝≈‰÷√' where menu_id = 'VALUATION_001_010_003';
+update sys_menu set remark = '‰∫åÂèâÊ†ëÊ®°ÂûãÂèÇÊï∞ÈÖçÁΩÆ' where menu_id = 'VALUATION_001_010_003';
 
 
 update sys_page set page_url = '/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002' where page_id = 'ModBintreeConfig002';
+
 
 delete from sys_wfl_business_module where page_id ='ModBintreeConfig002' and ELEMENT_ID in ('ModBintreeConfig001_btn_delete');
 
