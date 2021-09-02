@@ -587,6 +587,26 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 }
             }
           }//add by yujiaping 2020-11-18 TISHKBS-734“分档”产品，浮动管理费增加计提结束日不能大于产品到期日的校验 end
+            boolean isCycleInv=false;
+            HashMap<String, String> investmentCycles=new HashMap<String, String>();
+            if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
+                    && (StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode()))
+                    && StringUtil.equals(DictCodeListExt2.期限类型_多固定期限.getValue(), entity.getPeriod())
+            ){
+              for(BussFinProductFloatFeeDto bussFinProductFloatFeeDto :entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList()){
+                  if(StringUtil.isNotEmpty(bussFinProductFloatFeeDto.getFeeId())
+                  ){
+                      if(investmentCycles.containsKey(bussFinProductFloatFeeDto.getInvestmentCycle())){
+                          isCycleInv=true;
+                          break;
+                      }
+                      investmentCycles.put(bussFinProductFloatFeeDto.getInvestmentCycle(),bussFinProductFloatFeeDto.getFeeId());
+                  }
+              }
+          }
+          if(isCycleInv){
+              validList.add(new ValidMessage("净值型周期型多固定期限产品同一期限不允许设置多条浮动管理费规则。"));
+          }
             
             
             if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
