@@ -10,8 +10,6 @@ import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
-import com.joyintech.tams.model.impairment.batch.common.calculation.ImpairmentCalculationCommonService;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
@@ -19,15 +17,13 @@ import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.Impairme
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModImpairRateParamsDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
+import com.joyintech.tams.valuation.model.common.rateinfo.service.ImpairmentCalculationCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -227,28 +223,28 @@ public class ImpairmentDataLoadProcessorService {
         //交易数据.债项评级结果 = 新评级结果Map.get(交易数据.市场代码 + "_" + "02" + "_" + 交易数据.评级机构);
         ViewRatingInfoDto ratingInfoDto1 = getRatingInfo(mapRating, mapRatingLatest, entity,
             entity.getFinprodMarketId(), ModelDictCodeList.模型_评级类型_债项评级.getValue());
-        entity.setResult01(ratingInfoDto1.getMstratingresult01());
+        entity.setResult01(ratingInfoDto1.getRating());
         //交易数据.债券主体评级结果 = 新评级结果Map.get(交易数据.市场代码 + "_" + "01" + "_" + 交易数据.评级机构);
         ViewRatingInfoDto ratingInfoDto2 = getRatingInfo(mapRating, mapRatingLatest, entity,
             entity.getFinprodMarketId(), ModelDictCodeList.模型_评级类型_主体评级.getValue());
-        entity.setResult02(ratingInfoDto2.getMstratingresult01());
+        entity.setResult02(ratingInfoDto2.getRating());
         //交易数据.发行人评级结果 = 最新评级结果Map.get(交易数据.发行人 + "_" + "01" + "_" + 交易数据.评级机构);
         if (StringUtil.isNotEmpty(entity.getIssuer())) {
             ViewRatingInfoDto ratingInfoDto3 = getRatingInfo(mapRating, mapRatingLatest, entity,
                 entity.getIssuer(), ModelDictCodeList.模型_评级类型_主体评级.getValue());
-            entity.setResultIssuer(ratingInfoDto3.getMstratingresult01());
+            entity.setResultIssuer(ratingInfoDto3.getRating());
         }
         //交易数据.融资人评级结果 = 最新评级结果Map.get(交易数据.融资人 + "_" + "01" + "_" + 交易数据.评级机构);
         if (StringUtil.isNotEmpty(entity.getFinancier())) {
             ViewRatingInfoDto ratingInfoDto3 = getRatingInfo(mapRating, mapRatingLatest, entity,
                 entity.getFinancier(), ModelDictCodeList.模型_评级类型_主体评级.getValue());
-            entity.setResultFinancier(ratingInfoDto3.getMstratingresult01());
+            entity.setResultFinancier(ratingInfoDto3.getRating());
         }
         //交易数据.担保人评级结果 = 最新评级结果Map.get(交易数据.担保人 + "_" + "01" + "_" + 交易数据.评级机构);
         if (StringUtil.isNotEmpty(entity.getSponsor())) {
             ViewRatingInfoDto ratingInfoDto3 = getRatingInfo(mapRating, mapRatingLatest, entity,
                 entity.getSponsor(), ModelDictCodeList.模型_评级类型_主体评级.getValue());
-            entity.setResultSponsor(ratingInfoDto3.getMstratingresult01());
+            entity.setResultSponsor(ratingInfoDto3.getRating());
         }
 
         // 默认评级类型 = 主体评级

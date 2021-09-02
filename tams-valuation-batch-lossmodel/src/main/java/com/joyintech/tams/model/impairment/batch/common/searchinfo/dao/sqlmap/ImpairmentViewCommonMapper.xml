@@ -93,7 +93,7 @@
     </select>
 
     <select id="selectViewRatingInfo"
-            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
+            resultType="com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto">
         select
         OCODE,
         OTYPE,
@@ -161,8 +161,7 @@
     </select>
 
     <select id="selectViewRatingInfoByList"
-            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
-
+            resultType="com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto">
         select
         OCODE,
         OTYPE,

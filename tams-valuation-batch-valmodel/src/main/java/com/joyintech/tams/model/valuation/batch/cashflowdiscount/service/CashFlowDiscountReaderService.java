@@ -110,6 +110,9 @@ public class CashFlowDiscountReaderService {
                 });
                 return result;
             }else{
+
+
+
                 //处理result
                 pendingModAssetInfo.stream().forEach(item -> {
                     CashFlowDiscountReaderResult cashFlowDiscountReaderResult = new CashFlowDiscountReaderResult();
