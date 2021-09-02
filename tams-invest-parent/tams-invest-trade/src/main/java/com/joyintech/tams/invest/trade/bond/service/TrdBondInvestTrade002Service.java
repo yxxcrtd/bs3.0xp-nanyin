@@ -324,7 +324,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private PtlCashPositionFlowMapper ptlCashPositionFlowMapper;
-	
+
+    @Autowired
     private FileAttachmentProcess fileAttachmentProcess;
 
     // 交易份额小数保留位数

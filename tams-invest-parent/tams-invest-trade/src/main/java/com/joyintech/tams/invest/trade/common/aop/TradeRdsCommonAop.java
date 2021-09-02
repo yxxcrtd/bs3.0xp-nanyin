@@ -158,8 +158,7 @@ public class TradeRdsCommonAop {
         // 接口组件Service
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
-        AjaxResult ar = null;
-        service.checkRiskRds(new InterfRiskRdsDto(),
+        AjaxResult ar = service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资交易.getValue(),
             BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue(), busiType,
             en -> service.sendRiskRdsListData(en, dtoList, map -> {
@@ -695,8 +694,7 @@ public class TradeRdsCommonAop {
             busiType = DictCodeListExt2.平安资产类型_一级市场债.getValue();
         }
         // 执行预占
-        AjaxResult ar = null;
-        service.checkRiskRds(rdsDto,
+        AjaxResult ar = service.checkRiskRds(rdsDto,
             BussinessDictCodeListRds.事件类型_投资委托.getValue(), infCode,
             busiType, en -> service.sendRiskRdsListData(en, dtoList, map -> {
                 // 个别处理
