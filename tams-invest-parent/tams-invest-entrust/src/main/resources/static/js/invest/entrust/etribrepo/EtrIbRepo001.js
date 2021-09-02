@@ -207,6 +207,11 @@
         $('#EtrIbRepo001_btn_import').click(function() {
         	window.parent.importEtr();
         });
+        //优化查询
+        // 指令管理tab-->委托单选按钮查询
+        $("input[name=entrustStatus]").click(function(){
+            zlglTable.table ? zlglTable.reload() : zlglTable.load();
+        });
         /**
          * 关闭委托
          */
