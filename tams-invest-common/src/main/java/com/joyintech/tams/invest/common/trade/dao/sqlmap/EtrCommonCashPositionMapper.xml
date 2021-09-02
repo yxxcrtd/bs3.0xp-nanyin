@@ -894,7 +894,7 @@
 			   and deal.trade_status = #{TRADE_STATUS_01}
 			   and deal.is_cancel = #{YES_OR_NO_N}
             <!--update by  zznn 20210831 交易录单 买入已经冲销了委托现金流水 所以不用查有效交易数据-->
-        <if test="ps != null and ps != '' and ps == 'T02'">
+        <if test="sumTradeFlag != null and sumTradeFlag != '' and sumTradeFlag == '01'">
 			 union all
 
              select nvl(sum(decode(deal.ps,#{PS_T01},deal.trade_amt,deal.share_amt)),0) as finishAmt
