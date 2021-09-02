@@ -659,7 +659,8 @@ public class TradeCommonService extends BaseService {
                     creditLinesInputDto.setTradeId(inputDto.getTradeId());
                 }
             }
-            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())
+                    ||StringUtil.equals(DictCodeList.交易方向_认购确认.getValue(),inputDto.getPs())) {
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
@@ -708,7 +709,8 @@ public class TradeCommonService extends BaseService {
                 //净值
                 creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
             }
-            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())
+                    ||StringUtil.equals(DictCodeList.交易方向_认购确认.getValue(),inputDto.getPs())) {
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
