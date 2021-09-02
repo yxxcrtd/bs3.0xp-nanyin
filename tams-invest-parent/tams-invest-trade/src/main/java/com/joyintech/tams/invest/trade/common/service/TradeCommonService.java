@@ -659,6 +659,18 @@ public class TradeCommonService extends BaseService {
                     creditLinesInputDto.setTradeId(inputDto.getTradeId());
                 }
             }
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                creditLinesInputDto.setTradeStatus(status);
+                //净值
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                creditLinesInputDto.setIsSpecial("true");
+            }
             if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回确认.getValue())
                     || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())) {
                 creditLinesInputDto = new CreditLinesInputDto();
