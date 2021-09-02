@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.ResultBean;
+import com.joyintech.tams.exchange.common.cache.impl.QuoteTickServiceImpl;
 import com.joyintech.tams.exchange.common.constant.CacheClassMappingEnum;
 import com.joyintech.tams.exchange.common.constant.ErrorCode;
 import com.joyintech.tams.exchange.common.constant.ExchangeConstant;
@@ -14,6 +15,7 @@ import com.joyintech.tams.exchange.common.utils.SpringContextUtils;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +24,9 @@ import java.util.Objects;
 @Component
 public class MemoryCacheManagement {
     private static final Logger logger = LoggerFactory.getLogger(MemoryCacheManagement.class);
+
+    @Autowired
+    private QuoteTickServiceImpl quoteTickService;
 
     public ResultBean getData(String serviceName, int page, int perPage) {
         return getPageData(serviceName, page, perPage);
@@ -148,5 +153,12 @@ public class MemoryCacheManagement {
             logger.info("deleteData memoryCache fail {}", e.getMessage(), e);
             return new ResultBean(ErrorCode.REQ_PARAMETER_ERROR, e.getMessage());
         }
+    }
+
+    public ResultBean recoverQuoteData() {
+        logger.info("重新写入行情信息...");
+        quoteTickService.coverCache();
+        logger.info("行情信息写入成功");
+        return new ResultBean(ErrorCode.SUCCESS);
     }
 }

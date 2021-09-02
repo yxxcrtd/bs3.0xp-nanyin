@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class IntegratedEntrust extends BaseEntity implements Serializable, EntrustInterface, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -7278292640597594312L;
     @NotNull
     @Size(max = 32)
     @Id

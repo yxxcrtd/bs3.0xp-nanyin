@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @Date: Created in 13:47 2020/10/20
  */
 public class TradeTimeBean implements Serializable {
+    private static final long serialVersionUID = 5418986306213523517L;
     private String market;//交易市场
     private String tradeMarket;//交易场所
     private String tradePlat;//交易平台

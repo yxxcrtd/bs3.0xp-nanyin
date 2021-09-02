@@ -6,6 +6,7 @@ import java.io.Serializable;
  * create By MAXX on 2020/4/28
  */
 public class EntrustOpeBean implements Serializable {
+    private static final long serialVersionUID = -7955113659323809773L;
     private String entrustId;
     private String recStatus;
     private String trader;

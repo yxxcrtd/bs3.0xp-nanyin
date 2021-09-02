@@ -1,11 +1,13 @@
 package com.joyintech.tams.exchange.quoteterminal.sse.file.helper;
 
+import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.quoteterminal.service.QuoteService;
 import com.joyintech.tams.exchange.quoteterminal.sse.file.cache.LimitPrice;
 import com.joyintech.tams.exchange.quoteterminal.sse.file.config.SSEFileConfig;
+import com.joyintech.tams.exchange.quoteterminal.sse.file.enums.LimitType;
 import com.joyintech.tams.exchange.quoteterminal.sse.file.enums.MDStreamID;
 import com.joyintech.tams.exchange.quoteterminal.sse.file.utils.SSEFileConverter;
 import com.joyintech.tams.exchange.quoteterminal.sse.file.utils.TxtParser;
@@ -55,8 +57,11 @@ public class FileHandleHelper {
                     logger.warn("记录格式错误，请检查该数据是否合法！！ record [{}]", Arrays.toString(contents));
                     return;
                 }
-                LimitPrice.addUpperLimitPrice(stockCode, Double.parseDouble(contents[22].trim()));
-                LimitPrice.addLowerLimitPrice(stockCode, Double.parseDouble(contents[23].trim()));
+                // 无涨跌停价格
+                if (!LimitType.isNotLimitPrice(contents[21].trim())) {
+                    LimitPrice.addUpperLimitPrice(stockCode, Double.parseDouble(contents[22].trim()));
+                    LimitPrice.addLowerLimitPrice(stockCode, Double.parseDouble(contents[23].trim()));
+                }
             });
             txtParser.close();
             logger.info("解析[{}]文件获取涨跌停价格成功", cpxxPath);
@@ -97,7 +102,7 @@ public class FileHandleHelper {
                 }
                 QuoteProto.TickBean.Builder builder = threadLocalBuilder.get();
                 SSEFileConverter.convertToTick(split, builder);
-                quoteService.addTick(builder.build());
+                quoteService.addSSETick(builder.build());
             });
             txtParser.close();
         } catch (Exception e) {
@@ -173,7 +178,12 @@ public class FileHandleHelper {
                 return;
             String stockCode = StockCodeUtils.formatStockCode(splits[1].trim(), Market.SHSE.value);
             double updateTimeDb = quoteService.getUpdateTime(stockCode);
-            double updateTimeNow = SSEFileConverter.calTimeStamp(LocalTime.parse(splits[splits.length - 1].trim()));
+            String timeFile = splits[splits.length - 1].trim();
+            if (Strings.isNullOrEmpty(timeFile)) {
+                logger.info("该记录丢失时间戳信息， {}", Arrays.toString(splits));
+                return;
+            }
+            double updateTimeNow = SSEFileConverter.calTimeStamp(LocalTime.parse(timeFile));
             // 当时间戳发生变更后， 更新该条记录
             if (updateTimeNow > updateTimeDb) {
                 cacheUpdateQuoteByWatch(splits);
@@ -186,6 +196,6 @@ public class FileHandleHelper {
     private void cacheUpdateQuoteByWatch(String[] records) {
         QuoteProto.TickBean.Builder builder = threadLocalBuilder.get();
         SSEFileConverter.convertToTick(records, builder);
-        quoteService.addUpdateTick(builder.build());
+        quoteService.updateTick(builder.build());
     }
 }

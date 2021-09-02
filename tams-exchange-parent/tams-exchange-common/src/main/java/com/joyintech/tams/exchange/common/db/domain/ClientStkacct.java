@@ -6,6 +6,7 @@ import java.io.Serializable;
  * create By MAXX on 2020/3/18
  */
 public class ClientStkacct implements Serializable {
+    private static final long serialVersionUID = 4396289865939216894L;
     private String positionStr;//定位串
     private String exchangeType;//交易类别
     private String stockAccount;//证券账号

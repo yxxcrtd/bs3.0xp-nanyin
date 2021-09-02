@@ -30,6 +30,11 @@ public class MemoryCacheController {
         return memoryCacheManagement.recoverData(serviceName, id, coverType);
     }
 
+    @RequestMapping(value = "/cache/quote", method = RequestMethod.POST)
+    public ResultBean recoverCacheQuoteFromRedis(@RequestParam(value = "user_id") String userId) {
+        return memoryCacheManagement.recoverQuoteData();
+    }
+
     @RequestMapping(value = "/cache/clear", method = RequestMethod.POST)
     public ResultBean clearCache(@RequestParam(value = "user_id") String userId,
                                  @RequestParam(value = "service_name") String serviceName) {

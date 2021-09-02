@@ -400,7 +400,7 @@ public class UfxTradeClientImpl implements ITradeRequest {
         try {
             ufxTradeApi.queryIntegratedQuotes(requestId, quoteQryBean, loginInfo, account.getPwd());
         } catch (Exception e) {
-            logger.error("queryIntegratedQuotes failed. reason:{}", e.getMessage());
+            logger.error("queryIntegratedQuotes failed. reason:{}", e);
             ufxTradeResponse.resQueryIntegratedQuotes(null, requestId);
         }
     }
@@ -673,7 +673,7 @@ public class UfxTradeClientImpl implements ITradeRequest {
                                 ufxTradeApi.queryIntegratedOrder(loginInfo, account.getPwd(), account.getId());//大宗固收委托查询
                             }
                         } catch (Exception e) {
-                            logger.error("queryNextTrade failed. reason:{}", e.getMessage());
+                            logger.error("queryNextTrade failed. reason:{}", e);
                         }
                     });
                 }
@@ -713,7 +713,7 @@ public class UfxTradeClientImpl implements ITradeRequest {
             ufxTradeApi.queryIntegratedBulkCloseQuote(requestId, integratedBulkCloseQuoteQryBean);
         } catch (Exception e) {
             ufxTradeResponse.resQueryIntegratedBulkCloseQuote((List<IntegratedBulkCloseQuoteBean>) null, requestId);
-            logger.error("queryIntegratedBulkCloseQuote failed. reason:{}", e.getMessage());
+            logger.error("queryIntegratedBulkCloseQuote failed. reason:{}", e);
         }
     }
 

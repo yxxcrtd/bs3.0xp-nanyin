@@ -6,6 +6,7 @@ import java.io.Serializable;
  * create By MAXX on 2020/5/12
  */
 public class ExpireIncomeRateError implements Serializable {
+    private static final long serialVersionUID = 6806681530836120685L;
     private String field;
     private String message;
     private String order;

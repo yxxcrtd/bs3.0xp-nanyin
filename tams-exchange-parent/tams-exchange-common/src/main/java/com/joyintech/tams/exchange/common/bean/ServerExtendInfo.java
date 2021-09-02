@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class ServerExtendInfo implements Serializable {
 
+    private static final long serialVersionUID = 5026121323673513280L;
     private String brockerId;
     private String brockerName;
     private String szAddress;

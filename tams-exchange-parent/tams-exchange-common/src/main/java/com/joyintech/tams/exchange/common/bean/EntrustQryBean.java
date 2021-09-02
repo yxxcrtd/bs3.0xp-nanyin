@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class EntrustQryBean implements Serializable {
+    private static final long serialVersionUID = 5158423585698903620L;
     public String userId;
     public String startDay;
     public String endDay;
@@ -14,12 +15,13 @@ public class EntrustQryBean implements Serializable {
     public String stockCode;
     public String entrustProp;
     public int entrustStatus;
+    public String entrustType;
     public List<String> portfolioList;
 
     public EntrustQryBean() {
     }
 
-    public EntrustQryBean(String userId, String startDay, String endDay, String accountId, String financeAccount, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> portfolioList) {
+    public EntrustQryBean(String userId, String startDay, String endDay, String accountId, String financeAccount, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, String entrustType, List<String> portfolioList) {
         this.userId = userId;
         this.startDay = startDay;
         this.endDay = endDay;
@@ -30,10 +32,11 @@ public class EntrustQryBean implements Serializable {
         this.stockCode = stockCode;
         this.entrustProp = entrustProp;
         this.entrustStatus = entrustStatus;
+        this.entrustType = entrustType;
         this.portfolioList = portfolioList;
     }
 
-    public EntrustQryBean(String userId, String accountId, String financeAccount, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> portfolioList) {
+    public EntrustQryBean(String userId, String accountId, String financeAccount, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, String entrustType, List<String> portfolioList) {
         this.userId = userId;
         this.accountId = accountId;
         this.financeAccount = financeAccount;
@@ -42,6 +45,7 @@ public class EntrustQryBean implements Serializable {
         this.stockCode = stockCode;
         this.entrustProp = entrustProp;
         this.entrustStatus = entrustStatus;
+        this.entrustType = entrustType;
         this.portfolioList = portfolioList;
     }
 
@@ -131,5 +135,13 @@ public class EntrustQryBean implements Serializable {
 
     public void setPortfolioList(List<String> portfolioList) {
         this.portfolioList = portfolioList;
+    }
+
+    public String getEntrustType() {
+        return entrustType;
+    }
+
+    public void setEntrustType(String entrustType) {
+        this.entrustType = entrustType;
     }
 }

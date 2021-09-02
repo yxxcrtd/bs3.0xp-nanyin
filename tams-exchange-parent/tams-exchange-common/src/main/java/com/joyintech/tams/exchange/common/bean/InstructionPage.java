@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class InstructionPage<T, V> implements Serializable {
+    private static final long serialVersionUID = 3325317592745725894L;
     private int AMOUNT;
     private int pageCount;
     private List<T> etr_entrust_list;

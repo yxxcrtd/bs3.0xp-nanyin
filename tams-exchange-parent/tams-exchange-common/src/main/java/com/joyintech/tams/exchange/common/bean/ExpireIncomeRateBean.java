@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class ExpireIncomeRateBean implements Serializable {
 
+    private static final long serialVersionUID = -1027162939930687815L;
     private String status;          // 状态
     private String createUser;      // 创建人
     private String createTime;      // 创建时间

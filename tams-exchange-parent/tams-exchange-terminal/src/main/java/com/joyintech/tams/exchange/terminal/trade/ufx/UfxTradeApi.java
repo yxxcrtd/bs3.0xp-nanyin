@@ -48,6 +48,9 @@ public class UfxTradeApi {
     private AtomicBoolean isQueryNextTrade = new AtomicBoolean(false);
 
     private Map<String, Integer> status = Maps.newConcurrentMap();
+    private Map<String, Integer> entrustIdAndStatusMap = Maps.newConcurrentMap();
+    private final String entrustPrefix = "e";
+    private final String integratedEntrustPrefix = "i";
 
 
     public void setStatus(String accountId, AccountLoginStatus status) {
@@ -219,7 +222,7 @@ public class UfxTradeApi {
             }
             if (Objects.isNull(rsp) || rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
                 logger.warn("account:{} ReqQueryTrade failed ErrorNo:{}，reason:{}", account, rsp.getErrorNo(), rsp.getErrorInfo());
-                return null;
+                return new ArrayList<>();
             }
             List<Trade> list = UfxConverter.parseQueryTradeMsg(rsp, accountId);
             pageSize = list == null ? 0 : list.size();
@@ -248,7 +251,7 @@ public class UfxTradeApi {
             }
             if (Objects.isNull(rsp) || rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
                 logger.warn("account:{} ReqQueryOrder failed ErrorNo:{}，reason:{}", accountId, rsp.getErrorNo(), rsp.getErrorInfo());
-                return null;
+                return new ArrayList<>();
             }
             List<Entrust> list = UfxConverter.queryOrderReBack(rsp, accountId);
             pageSize = list == null ? 0 : list.size();
@@ -275,9 +278,11 @@ public class UfxTradeApi {
             } catch (Exception e) {
                 logger.warn("account:{}, ReqQueryIntegrateOrder error, {}", accountId, e);
             }
-            if (Objects.isNull(rsp) || rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            if (Objects.isNull(rsp)) return new ArrayList<>();
+
+            if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
                 logger.warn("account:{} ReqQueryIntegrateOrder failed ErrorNo:{}，reason:{}", accountId, rsp.getErrorNo(), rsp.getErrorInfo());
-                return null;
+                return new ArrayList<>();
             }
             List<IntegratedEntrust> list = UfxConverter.queryIntegratedOrder(rsp, accountId);
             pageSize = list == null ? 0 : list.size();
@@ -306,7 +311,7 @@ public class UfxTradeApi {
             }
             if (Objects.isNull(rsp) || rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
                 logger.warn("account:{} ReqQueryIntegrateTrade failed ErrorNo:{}，reason:{}", accountId, rsp.getErrorNo(), rsp.getErrorInfo());
-                return null;
+                return new ArrayList<>();
             }
             List<Trade> list = UfxConverter.qryProtocolBack_Trade_Back(rsp, accountId);
             pageSize = list == null ? 0 : list.size();
@@ -346,8 +351,12 @@ public class UfxTradeApi {
         dataset.updateInt("request_num", pageSize);
         dataset.updateString("position_str", positionStr);
         IEvent event = builder.genSyncEvent("333101", dataset);
-        unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
-        return client.sendReceive(event);//发送包
+        IEvent rsp = client.sendReceive(event);//发送包
+        if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
+            logger.warn("getOrderReBack failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+        }
+        return rsp;
     }
 
     private IEvent getIntegrateOrderReback(LoginInfo loginInfo, String password, int pageSize, String positionStr) throws Exception {
@@ -381,13 +390,17 @@ public class UfxTradeApi {
         dataset.updateString("request_num", String.valueOf(pageSize));
         String funcCode = "332704";
         IEvent event = builder.genSyncEvent(funcCode, dataset);
-        unPack(event, funcCode); //入参解包，同时打印发送包参数信息
+        IEvent rsp = client.sendReceive(event);//发送包
+        if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
+            unPack(event, event.getServiceId()); //入参解包，同时打印发送包参数信息
+            logger.warn("getIntegrateOrderReback failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+        }
         return client.sendReceive(event);//发送包
     }
 
     private IEvent getQueryTradeReback(String user_token, String branch_no, String client_id, String account, String password, int requestNum, String positionStr) throws Exception {
         IDataset dataset = DatasetService.getDefaultInstance().getDataset();
-        dataset.addColumn("user_token");//用户口令
+//        dataset.addColumn("user_token");//用户口令
         dataset.addColumn("op_branch_no");//操作分支机构
         dataset.addColumn("op_entrust_way");//委托方式
         dataset.addColumn("op_station");//站点地址
@@ -398,17 +411,20 @@ public class UfxTradeApi {
         dataset.addColumn("position_str");//定位串
         dataset.addColumn("request_num");//请求行数
         dataset.addColumn("query_direction");//查询方向
+        dataset.addColumn("password_type");//查询方向
         dataset.appendRow();
-        dataset.updateString("user_token", user_token);
+//        dataset.updateString("user_token", user_token);
         dataset.updateString("op_branch_no", "");
         dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
         dataset.updateString("op_station", op_station);
         dataset.updateString("branch_no", branch_no);
         dataset.updateString("client_id", client_id);
         dataset.updateString("fund_account", account);
-        byte[] out = new byte[7];
-        CryptUtil.HsPwdEncode(password.getBytes(), out);
-        dataset.updateByteArray("password", out);
+//        byte[] out = new byte[7];
+//        CryptUtil.HsPwdEncode(password.getBytes(), out);
+//        dataset.updateByteArray("password", out);
+        dataset.updateString("password", password);
+        dataset.updateString("password_type", "2");
         dataset.updateString("position_str", positionStr);
         dataset.updateInt("request_num", requestNum);
         dataset.updateString("query_direction", "0");// '1'-逆序　'0'-正序
@@ -454,8 +470,8 @@ public class UfxTradeApi {
     public void reqReissueEntrust(LoginInfo loginInfo, String password, String accountId, Long requestId) {
         Map<String, EntrustInterface> entrustInterfaceMap = new HashMap<>();
         try {
-            List<Entrust> entrustList = qryOrder(loginInfo, password, accountId, true);
-            List<IntegratedEntrust> integratedEntrustList = queryIntegratedOrder(loginInfo, password, accountId, true);
+            List<Entrust> entrustList = getOrder(loginInfo, password, accountId);
+            List<IntegratedEntrust> integratedEntrustList = getIntegratedOrder(loginInfo, password, accountId);
             entrustList.forEach(res -> {
                 if (!Strings.isNullOrEmpty(res.getId())) {
                     entrustInterfaceMap.put(res.getId(), res);
@@ -477,8 +493,8 @@ public class UfxTradeApi {
     public void reqReissueTrade(Account account, LoginInfo loginInfo, Long requestId) {
         List<Trade> tradeList = new ArrayList<>();
         try {
-            List<Trade> trades = qryTrade(loginInfo, account.getPwd(), account.getId(), true);
-            List<Trade> protocolBackTradeList = qryProtocolBackTrade(loginInfo, account.getPwd(), account.getId(), true);
+            List<Trade> trades = getTrade(account.getId(), loginInfo.getBranchNo().toString(), loginInfo.getClientId(), loginInfo.getUserToken(), account.getFinanceAccount(), account.getPwd());
+            List<Trade> protocolBackTradeList = getProtocolBackTrade(loginInfo, account.getPwd(), account.getId());
             tradeList.addAll(trades);
             tradeList.addAll(protocolBackTradeList);
             ufxTradeResponse.resQueryReissueTrade(account.getId(), tradeList, requestId);
@@ -978,15 +994,19 @@ public class UfxTradeApi {
             dataset.updateString("cbpconfer_id", quoteQryBean.getContractId());
         }
         if ("398".equals(functionId) || "361".equals(functionId)) {
-            String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(quoteQryBean.getStockCode());
-            dataset.updateString("stock_code", marketAndStockCode[0]);
+            if (Objects.nonNull(quoteQryBean.getStockCode())) {
+                String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(quoteQryBean.getStockCode());
+                dataset.updateString("stock_code", marketAndStockCode[0]);
+            } else {
+                dataset.updateString("stock_code", "");
+            }
         }
         event.setServiceId(functionId);//打入功能号
         event.putEventData(dataset); //入参打包
         unPack(event, functionId);
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
-            logger.warn("queryIntegratedQuotes failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+            logger.warn("queryIntegratedQuotes failed ErrorNo:{}，reason:{} error_msg {}", rsp.getErrorNo(), rsp.getErrorInfo(), UfxTradeCallBack.getResult(rsp).toString());
             ufxTradeResponse.resQueryIntegratedQuotes(null, requestId);
             return;
         }
@@ -1048,7 +1068,20 @@ public class UfxTradeApi {
      * businessFlag:3固收 2大宗
      */
     public void queryIntegratedOrder(LoginInfo loginInfo, String password, String accountId) throws Exception {
-        queryIntegratedOrder(loginInfo, password, accountId, false);
+//        queryIntegratedOrder(loginInfo, password, accountId, false);
+        //每次都查询全量委托进行比对，如果委托没有处于终态。则通知委托
+        List<IntegratedEntrust> entrustList = getIntegratedOrder(loginInfo, password, accountId);
+        entrustList.forEach(entrust -> {
+            //可能不存在id，用前缀区分普通和综合
+            String key = integratedEntrustPrefix + "_" + entrust.getId() + "_" + entrust.getBrokerEntrustId() + "_" + entrust.getAccountId();
+            Integer entrustStatus = entrustIdAndStatusMap.get(key);
+            if (Objects.isNull(entrustStatus) || entrustStatus != entrust.getEntrustStatus()) {
+                logger.info("委托[{}]新增或状态发生变更，推送委托。oldEntrustStatus [{}]  newEntrustStatus [{}]", key, entrustStatus, entrust.getEntrustStatus());
+                logger.info("onIntegratedEntrust {}", JsonUtils.getJsonFromObject(entrust));
+                ufxTradeClient.onIntegratedEntrust(entrust);
+                entrustIdAndStatusMap.put(key, entrust.getEntrustStatus());
+            }
+        });
     }
 
     public List<IntegratedEntrust> queryIntegratedOrder(LoginInfo loginInfo, String password, String accountId, boolean reissueFlag) throws Exception {
@@ -1093,13 +1126,13 @@ public class UfxTradeApi {
             return new ArrayList<>();
         }
         List<IntegratedEntrust> list = UfxConverter.queryIntegratedOrder(rsp, accountId);
-        logger.debug("queryIntegratedOrder reback : {}", JSONArray.toJSONString(list));
         if (list.size() == 0) {
             return list;
         }
         String position_str = list.get(list.size() - 1).getPositionStr();
         positionStr.setFixedPositionStr(position_str);
         positionStrMap.put(loginInfo.getFundAccount(), positionStr);
+        logger.info("queryIntegratedOrder position_str : {}", position_str);
         if (!reissueFlag) {
             list.forEach(entrust -> {
                 ufxTradeClient.onIntegratedEntrust(entrust);
@@ -1200,7 +1233,6 @@ public class UfxTradeApi {
             return new ArrayList<>();
         }
         List<Trade> list = UfxConverter.qryProtocolBack_Trade_Back(rsp, accountId);
-        logger.debug("qryProtocolBack_Trade reback : {}", JSONArray.toJSONString(list));
         if (list.size() == 0) {
             return list;
         }
@@ -1209,10 +1241,21 @@ public class UfxTradeApi {
             positionStr = new PositionStr();
         }
         positionStr.setProtocolBackPositionStr(position_str);
+        logger.debug("qryProtocolBack_Trade position_str : {}", position_str);
         positionStrMap.put(loginInfo.getFundAccount(), positionStr);
         if (!reissueFlag) {
             list.forEach(trade -> {
-                ufxTradeClient.onTrade(trade);
+                // 废单成交将成交转换为委托推送 -- 返回废单原因
+                if (TradeType.isInvalid(trade.getTradeType())) {
+                    IntegratedEntrust entrust = new IntegratedEntrust();
+                    BeanUtils.copyProperties(trade, entrust);
+                    entrust.setId(trade.getEntrustId());
+                    entrust.setEntrustStatus(EntrustStatus.INVALID.value);
+                    logger.info("废单成交转换为委托通知  trade：[{}]  IntegratedEntrust: [{}]", JsonUtils.getJsonFromObject(trade), JsonUtils.getJsonFromObject(entrust));
+                    ufxTradeClient.onIntegratedEntrust(entrust);
+                } else {
+                    ufxTradeClient.onTrade(trade);
+                }
             });
         }
         return list;
@@ -1278,7 +1321,6 @@ public class UfxTradeApi {
             return new ArrayList<>();
         }
         List<Trade> list = UfxConverter.parseQueryTradeMsg(rsp, accountId);
-        logger.debug("qryTrade reback : {}", JSONArray.toJSONString(list));
         if (list.size() == 0) {
             return list;
         }
@@ -1287,6 +1329,7 @@ public class UfxTradeApi {
             positionStr = new PositionStr();
         }
         positionStr.setTradePositionStr(position_str);
+        logger.debug("qryTrade position_str : {}", position_str);
         positionStrMap.put(loginInfo.getFundAccount(), positionStr);
         if (!reissueFlag) {
             Set<String> businessIdSet = positionStr.getBusinessIdSet();
@@ -1302,6 +1345,7 @@ public class UfxTradeApi {
                     entrust.setId(trade.getEntrustId());
                     entrust.setEntrustStatus(EntrustStatus.INVALID.value);
                     logger.info("废单成交转换为委托通知  trade：[{}]  entrust: [{}]", JsonUtils.getJsonFromObject(trade), JsonUtils.getJsonFromObject(entrust));
+                    ufxTradeClient.onEntrust(entrust);
                 } else {
                     ufxTradeClient.onTrade(trade);
                 }
@@ -1318,7 +1362,20 @@ public class UfxTradeApi {
      * @Date: 2020/4/16
      */
     public void qryOrder(LoginInfo loginInfo, String password, String accountId) throws Exception {
-        qryOrder(loginInfo, password, accountId, false);
+//        qryOrder(loginInfo, password, accountId, false);
+        //每次都查询全量委托进行比对，如果委托没有处于终态。则通知委托
+        List<Entrust> entrustList = getOrder(loginInfo, password, accountId);
+        entrustList.forEach(entrust -> {
+            //可能不存在id，用前缀区分普通和综合
+            String key = entrustPrefix + "_" + entrust.getId() + "_" + entrust.getBrokerEntrustId() + "_" + entrust.getAccountId();
+            Integer entrustStatus = entrustIdAndStatusMap.get(key);
+            if (Objects.isNull(entrustStatus) || entrustStatus != entrust.getEntrustStatus()) {
+                logger.info("委托[{}]新增或状态发生变更，推送委托。oldEntrustStatus [{}]  newEntrustStatus [{}]", key, entrustStatus, entrust.getEntrustStatus());
+                logger.info("onEntrust {}", JsonUtils.getJsonFromObject(entrust));
+                ufxTradeClient.onEntrust(entrust);
+                entrustIdAndStatusMap.put(key, entrust.getEntrustStatus());
+            }
+        });
     }
 
     public List<Entrust> qryOrder(LoginInfo loginInfo, String password, String accountId, boolean reissueFlag) throws Exception {
@@ -1360,7 +1417,6 @@ public class UfxTradeApi {
             return new ArrayList<>();
         }
         List<Entrust> list = UfxConverter.queryOrderReBack(rsp, accountId);
-        logger.debug("qryOrder reback : {}", JSONArray.toJSONString(list));
         if (list.size() == 0) {
             return list;
         }
@@ -1369,6 +1425,7 @@ public class UfxTradeApi {
             positionStr = new PositionStr();
         }
         positionStr.setOrderPositionStr(position_str);
+        logger.debug("qryOrder positionStr : {}", position_str);
         positionStrMap.put(loginInfo.getFundAccount(), positionStr);
         if (!reissueFlag) {
             Set<String> entrustNoSet = positionStr.getEntrustNoSet();
@@ -1587,7 +1644,7 @@ public class UfxTradeApi {
         dataset.addColumn("position_str");//定位串
         dataset.appendRow();
         dataset.updateString("op_branch_no", "");
-        dataset.updateString("op_entrust_way", "D");
+        dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
         dataset.updateString("op_station", op_station);
         dataset.updateInt("branch_no", loginInfo.getBranchNo());
         dataset.updateString("password", password);
@@ -1666,7 +1723,7 @@ public class UfxTradeApi {
         dataset.addColumn("position_str");//定位串
         dataset.appendRow();
         dataset.updateString("op_branch_no", "");
-        dataset.updateString("op_entrust_way", "D");
+        dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
         dataset.updateString("op_station", op_station);
         if (!Strings.isNullOrEmpty(integratedBulkQuoteQryBean.getStockCode())) {
             String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(integratedBulkQuoteQryBean.getStockCode());
@@ -1709,16 +1766,22 @@ public class UfxTradeApi {
         }
         // 往event中添加dataset
         IDataset dataset = DatasetService.getDefaultInstance().getDataset();
-        dataset.addColumn("exchange_type");//站点地址
+        dataset.addColumn("op_branch_no");//操作分支机构
+        dataset.addColumn("op_entrust_way");//委托方式
+        dataset.addColumn("op_station");//站点地址
+        dataset.addColumn("exchange_type");//交易类别
         dataset.addColumn("stock_code");//证券代码
         dataset.appendRow();
+        dataset.updateString("op_branch_no", "");
+        dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
+        dataset.updateString("op_station", op_station);
         dataset.updateString("exchange_type", integratedBulkCloseQuoteQryBean.getExchangeType());
         dataset.updateString("stock_code", marketAndStockCode[0]);
         IEvent event = builder.genSyncEvent(functionId, dataset);
         unPack(event, functionId);
         IEvent rsp = client.sendReceive(event);//发送包
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
-            logger.warn("queryIntegratedBulkCloseQuote failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+            logger.warn("queryIntegratedBulkCloseQuote failed ErrorNo:{}，reason:{} error {}", rsp.getErrorNo(), rsp.getErrorInfo(), UfxTradeCallBack.getResult(rsp).toString());
             ufxTradeResponse.resQueryIntegratedBulkCloseQuote(null, requestId);
             return;
         }
@@ -1739,18 +1802,23 @@ public class UfxTradeApi {
         String functionId = "361";
         // 往event中添加dataset
         IDataset dataset = DatasetService.getDefaultInstance().getDataset();
-        dataset.addColumn("exchange_type");//站点地址
+        dataset.addColumn("op_branch_no");//操作分支机构
+        dataset.addColumn("op_entrust_way");//委托方式
+        dataset.addColumn("op_station");//站点地址
+        dataset.addColumn("exchange_type");//交易类别
         dataset.addColumn("stock_code");//证券代码
         dataset.appendRow();
+        dataset.updateString("op_branch_no", "");
+        dataset.updateString("op_entrust_way", builder.getOp_entrust_way());
+        dataset.updateString("op_station", op_station);
         String[] marketAndStockCode = StockCodeUtils.getMarketAndStockCode(integratedFixedIncomeQuoteQryBean.getStockCode());
         dataset.updateString("exchange_type", integratedFixedIncomeQuoteQryBean.getExchangeType());
         dataset.updateString("stock_code", marketAndStockCode[0]);
         IEvent event = builder.genSyncEvent(functionId, dataset);
         unPack(event, functionId);
         IEvent rsp = client.sendReceive(event);//发送包
-        unPack(rsp, functionId);
         if (rsp.getReturnCode() != ErrorCode.SUCCESS.value) {
-            logger.warn("queryIntegratedFixedIncomeQuote failed ErrorNo:{}，reason:{}", rsp.getErrorNo(), rsp.getErrorInfo());
+            logger.warn("queryIntegratedFixedIncomeQuote failed ErrorNo:{}，reason:{} error {}", rsp.getErrorNo(), rsp.getErrorInfo(), UfxTradeCallBack.getResult(rsp).toString());
             ufxTradeResponse.resQueryIntegratedFixedIncomeQuote(null, requestId);
             return;
         }

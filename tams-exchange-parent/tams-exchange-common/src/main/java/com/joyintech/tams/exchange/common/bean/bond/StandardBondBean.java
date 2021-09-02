@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean.bond;
 import java.io.Serializable;
 
 public class StandardBondBean implements Serializable {
+    private static final long serialVersionUID = 5125496055165648793L;
     private int szStandardBondTotal;//深证标准券可用总数量
     private int shStandardBondTotal;//上海标准券可用总数量
 

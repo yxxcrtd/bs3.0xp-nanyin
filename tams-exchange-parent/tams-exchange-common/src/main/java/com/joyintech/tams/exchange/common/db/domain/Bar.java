@@ -1,9 +1,11 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class Bar {
+public class Bar implements Serializable {
+    private static final long serialVersionUID = 219773291936720550L;
     private String instrumentId;
 
     private Integer barType;

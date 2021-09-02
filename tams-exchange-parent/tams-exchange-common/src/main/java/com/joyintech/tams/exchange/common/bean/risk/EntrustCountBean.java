@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean.risk;
 import java.io.Serializable;
 
 public class EntrustCountBean implements Serializable {
+    private static final long serialVersionUID = 8760478394677003779L;
     private long cancelCount = 0;
     private int totalCount = 0;
 

@@ -134,6 +134,7 @@ public class UfxConverter {
             trade.setStockName(ds.getString("stock_name"));
             trade.setEntrustProp(ds.getString("entrust_prop"));
             trade.setReportNo(ds.getString("report_no"));
+            trade.setEntrustType(ds.getString("entrust_type"));
             list.add(trade);
         }
         return list;
@@ -394,7 +395,7 @@ public class UfxConverter {
             integratedQuoteBt.setSellConfirmId(ds.getString("sell_confirm_id"));
             String entrust_amount = ds.getString("entrust_amount", null);
             if (!Strings.isNullOrEmpty(entrust_amount)) {
-                int entrustAmount = Integer.parseInt(entrust_amount.substring(0, entrust_amount.lastIndexOf(".")));
+                int entrustAmount = (int) Double.parseDouble(entrust_amount);
                 integratedQuoteBt.setEntrustVolume(entrustAmount);
             }
             integratedQuoteBt.setLiaisonName(ds.getString("relation_name"));
@@ -578,6 +579,12 @@ public class UfxConverter {
         return entrust;
     }
 
+    public static IntegratedEntrust integratedEntrustWriteBack(IDataset ds, UfxTradeApi ufxTradeApi) {
+        String fundAccount = ds.getString("fund_account");
+        String accountId = ufxTradeApi.getUfxTradeClient().getAccountIdByFinanceAccount(fundAccount);
+        return createIntegratedEntrust(accountId, ds);
+    }
+
     /*** 
      * @Description: 证券成交回报解析
      * @Param: [obj]
@@ -628,6 +635,13 @@ public class UfxConverter {
         trade.setEntrustProp(ds.getString("entrust_prop"));
         trade.setReportNo(ds.getString("report_no"));
         return trade;
+    }
+
+
+    public static Trade dealIntegratedTrade(IDataset ds, int realStatus, UfxTradeApi ufxTradeApi) {
+        String fundAccount = ds.getString("fund_account");
+        String accountId = ufxTradeApi.getUfxTradeClient().getAccountIdByFinanceAccount(fundAccount);
+        return createTrade(accountId, ds, realStatus);
     }
 
     /***
@@ -735,50 +749,55 @@ public class UfxConverter {
             int real_status = ds.getInt("real_status");//处理标志
             logger.info("real_status:{} ,brokerEntrustId:{},real_type:{},entrust_no:{},business_id:{})",
                     real_status, ds.getString("entrust_no"), ds.getString("real_type"), ds.getString("entrust_no"), ds.getString("business_id"));
-            Trade trade = new Trade();
-            trade.setAccountId(accountId);
-            trade.setPositionStr(ds.getString("position_str"));
-            trade.setTradingDay(ds.getString("init_date"));
-            trade.setBrokerEntrustId(ds.getString("entrust_no"));
-            trade.setFinanceAccount(ds.getString("fund_account"));
-            String exchangeType = ds.getString("exchange_type");
-            if (ExchangeType.SH.value.equals(exchangeType)) {
-                trade.setMarket(Market.SHSE.value);
-            } else if (ExchangeType.SZ.value.equals(exchangeType)) {
-                trade.setMarket(Market.SZSE.value);
-            }
-            trade.setStockCode(ds.getString("stock_code"));
-            trade.setStockName(ds.getString("stock_name"));
-            trade.setEntrustBs(ds.getString("entrust_bs"));
-            trade.setEntrustProp(ds.getString("entrust_prop"));
-            String businessAmount = ds.getString("business_amount");
-            double business_amount = Double.parseDouble(businessAmount);
-            trade.setTradedVolume((long) business_amount);
-            trade.setPropSeatNo(ds.getString("prop_seat_no"));
-            if (real_status != 0 && real_status != 4) {
-                trade.setBrokerTradeId(ds.getString("entrust_no"));
-                if (2 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.CANCEL_INVALID.value);
-                } else if (0 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.INVALID.value);
-                }
-            } else {
-                trade.setBrokerTradeId(ds.getString("business_id"));
-                if (2 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.CANCEL.value);
-                } else if (0 == ds.getInt("real_type")) {
-                    trade.setTradeType(TradeType.NORMAL.value);
-                }
-            }
-            trade.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
-            trade.setTradedBalance(BigDecimal.valueOf(ds.getDouble("business_balance")));
-            String business_time = ds.getString("business_time", null);
-            if (!Strings.isNullOrEmpty(business_time)) {
-                trade.setTradeTime(business_time);
-            }
+            Trade trade = createTrade(accountId, ds, real_status);
             list.add(trade);
         }
         return list;
+    }
+
+    private static Trade createTrade(String accountId, IDataset ds, int real_status) {
+        Trade trade = new Trade();
+        trade.setAccountId(accountId);
+        trade.setPositionStr(ds.getString("position_str"));
+        trade.setTradingDay(ds.getString("init_date"));
+        trade.setBrokerEntrustId(ds.getString("entrust_no"));
+        trade.setFinanceAccount(ds.getString("fund_account"));
+        String exchangeType = ds.getString("exchange_type");
+        if (ExchangeType.SH.value.equals(exchangeType)) {
+            trade.setMarket(Market.SHSE.value);
+        } else if (ExchangeType.SZ.value.equals(exchangeType)) {
+            trade.setMarket(Market.SZSE.value);
+        }
+        trade.setStockCode(ds.getString("stock_code"));
+        trade.setStockName(ds.getString("stock_name"));
+        trade.setEntrustBs(ds.getString("entrust_bs"));
+        trade.setEntrustProp(ds.getString("entrust_prop"));
+        String businessAmount = ds.getString("business_amount");
+        double business_amount = Double.parseDouble(businessAmount);
+        trade.setTradedVolume((long) business_amount);
+        trade.setPropSeatNo(ds.getString("prop_seat_no"));
+        if (real_status != 0 && real_status != 4) {
+            trade.setBrokerTradeId(ds.getString("entrust_no"));
+            if (2 == ds.getInt("real_type")) {
+                trade.setTradeType(TradeType.CANCEL_INVALID.value);
+            } else if (0 == ds.getInt("real_type")) {
+                trade.setTradeType(TradeType.INVALID.value);
+            }
+        } else {
+            trade.setBrokerTradeId(ds.getString("business_id"));
+            if (2 == ds.getInt("real_type")) {
+                trade.setTradeType(TradeType.CANCEL.value);
+            } else if (0 == ds.getInt("real_type")) {
+                trade.setTradeType(TradeType.NORMAL.value);
+            }
+        }
+        trade.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
+        trade.setTradedBalance(BigDecimal.valueOf(ds.getDouble("business_balance")));
+        String business_time = ds.getString("business_time", null);
+        if (!Strings.isNullOrEmpty(business_time)) {
+            trade.setTradeTime(business_time);
+        }
+        return trade;
     }
     /***
      * @Description: 返回值转json字符串
@@ -934,75 +953,86 @@ public class UfxConverter {
         ds.beforeFirst();
         while (ds.hasNext()) {
             ds.next();
-            IntegratedEntrust entrust = new IntegratedEntrust();
-            entrust.setAccountId(accountId);
-            entrust.setPositionStr(ds.getString("position_str", null));
-            entrust.setTradingDay(ds.getString("init_date"));
-            entrust.setBrokerEntrustId(ds.getString("entrust_no"));
-            entrust.setTradingDay(ds.getString("entrust_date"));
-            entrust.setReportTime(ds.getString("entrust_time", null));
-            entrust.setFinanceAccount(ds.getString("fund_account"));
-            String exchangeType = ds.getString("exchange_type");
-            if (ExchangeType.SH.value.equals(exchangeType)) {
-                entrust.setMarket(Market.SHSE.value);
-            } else if (ExchangeType.SZ.value.equals(exchangeType)) {
-                entrust.setMarket(Market.SZSE.value);
-            }
-            entrust.setReportNo(ds.getString("report_no"));
-            entrust.setStockCode(ds.getString("stock_code"));
-            entrust.setStockName(ds.getString("stock_name"));
-            entrust.setEntrustBs(ds.getString("entrust_bs"));
-            entrust.setEntrustType(ds.getString("entrust_type"));
-            entrust.setEntrustProp(ds.getString("entrust_prop"));
-            if (FullPriceConst.FULL_PRICE.value.equals(entrust.getIsFullPrice()) || (Strings.isNullOrEmpty(entrust.getIsFullPrice()) && EntrustUtils.isFullPriceTerminal(entrust.getMarket(), entrust.getStockCode(), entrust.getAssetType(), entrust.getEntrustProp()))) {
-                entrust.setFullPrice(BigDecimal.valueOf(ds.getDouble("entrust_price")));
-                entrust.setIsFullPrice(FullPriceConst.FULL_PRICE.value);
-            } else {
-                entrust.setEntrustPrice(BigDecimal.valueOf(ds.getDouble("entrust_price")));
-                entrust.setIsFullPrice(FullPriceConst.NET_PRICE.value);
-            }
-            String entrustAmount = ds.getString("entrust_amount", null);
-            if (!Strings.isNullOrEmpty(entrustAmount)) {
-                double entrust_amount = Double.parseDouble(entrustAmount);
-                entrust.setEntrustVolume((int) entrust_amount);
-            }
-            String businessAmount = ds.getString("business_amount", null);
-            if (!Strings.isNullOrEmpty(businessAmount)) {
-                try {
-                    if (businessAmount.lastIndexOf(".") != -1) {
-                        double business_amount = Double.parseDouble(businessAmount);
-                        entrust.setTradedVolume((long) business_amount);
-                    } else {
-                        logger.error("businessAmount:{}", businessAmount);
-                    }
-                } catch (Exception e) {
-                    logger.error("businessAmount:{}", e.getMessage());
-                }
-            }
-            entrust.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
-            entrust.setReportTime(ds.getString("report_time", null));
-            try {
-                String entrustStatus = ds.getString("entrust_status");
-                if (entrustStatus.lastIndexOf(".") == -1) {
-                    getEntrustStatusByUfx(entrustStatus, entrust);
-                } else {
-                    logger.error("entrustStatus:{}", entrustStatus);
-                }
-            } catch (Exception e) {
-                logger.error("entrustStatus:{}", e.getMessage());
-            }
-            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(ds.getString("cancel_info")));
-            String withdrawAmount = ds.getString("withdraw_amount", null);
-            if (!Strings.isNullOrEmpty(withdrawAmount)) {
-                double withdraw_amount = Double.parseDouble(withdrawAmount);
-                entrust.setCancelVolume((long) withdraw_amount);
-            }
-
-            //TODO:: 确认国金的协议回购和固收委托是否是这个字段
-            entrust.setId(ds.getString("entrust_reference"));
+            IntegratedEntrust entrust = createIntegratedEntrust(accountId, ds);
             list.add(entrust);
         }
         return list;
+    }
+
+    private static IntegratedEntrust createIntegratedEntrust(String accountId, IDataset ds) {
+        IntegratedEntrust entrust = new IntegratedEntrust();
+        entrust.setAccountId(accountId);
+        entrust.setPositionStr(ds.getString("position_str", null));
+        entrust.setTradingDay(ds.getString("init_date"));
+        entrust.setBrokerEntrustId(ds.getString("entrust_no"));
+        entrust.setTradingDay(ds.getString("entrust_date"));
+        entrust.setReportTime(ds.getString("entrust_time", null));
+        entrust.setFinanceAccount(ds.getString("fund_account"));
+        String exchangeType = ds.getString("exchange_type");
+        if (ExchangeType.SH.value.equals(exchangeType)) {
+            entrust.setMarket(Market.SHSE.value);
+        } else if (ExchangeType.SZ.value.equals(exchangeType)) {
+            entrust.setMarket(Market.SZSE.value);
+        }
+        entrust.setReportNo(ds.getString("report_no"));
+        entrust.setStockCode(ds.getString("stock_code"));
+        entrust.setStockName(ds.getString("stock_name"));
+        entrust.setEntrustBs(ds.getString("entrust_bs"));
+        entrust.setEntrustType(ds.getString("entrust_type"));
+        entrust.setEntrustProp(ds.getString("entrust_prop"));
+        if (FullPriceConst.FULL_PRICE.value.equals(entrust.getIsFullPrice()) || (Strings.isNullOrEmpty(entrust.getIsFullPrice()) && EntrustUtils.isFullPriceTerminal(entrust.getMarket(), entrust.getStockCode(), entrust.getAssetType(), entrust.getEntrustProp()))) {
+            entrust.setFullPrice(BigDecimal.valueOf(ds.getDouble("entrust_price")));
+            entrust.setIsFullPrice(FullPriceConst.FULL_PRICE.value);
+        } else {
+            entrust.setEntrustPrice(BigDecimal.valueOf(ds.getDouble("entrust_price")));
+            entrust.setIsFullPrice(FullPriceConst.NET_PRICE.value);
+        }
+        String entrustAmount = ds.getString("entrust_amount", null);
+        if (!Strings.isNullOrEmpty(entrustAmount)) {
+            double entrust_amount = Double.parseDouble(entrustAmount);
+            entrust.setEntrustVolume((int) entrust_amount);
+        }
+        String businessAmount = ds.getString("business_amount", null);
+        if (!Strings.isNullOrEmpty(businessAmount)) {
+            try {
+                if (businessAmount.lastIndexOf(".") != -1) {
+                    double business_amount = Double.parseDouble(businessAmount);
+                    entrust.setTradedVolume((long) business_amount);
+                } else {
+                    logger.error("businessAmount:{}", businessAmount);
+                }
+            } catch (Exception e) {
+                logger.error("businessAmount:{}", e.getMessage());
+            }
+        }
+        entrust.setTradedPrice(BigDecimal.valueOf(ds.getDouble("business_price")));
+        entrust.setReportTime(ds.getString("report_time", null));
+        try {
+            String entrustStatus = ds.getString("entrust_status");
+            if (entrustStatus.lastIndexOf(".") == -1) {
+                getEntrustStatusByUfx(entrustStatus, entrust);
+            } else {
+                logger.error("entrustStatus:{}", entrustStatus);
+            }
+        } catch (Exception e) {
+            logger.error("entrustStatus:{}", e.getMessage());
+        }
+        String cancel_info = ds.getString("cancel_info");
+        String remark = ds.getString("remark");
+        if (!Strings.isNullOrEmpty(cancel_info)) {
+            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(cancel_info));
+        } else if (!Strings.isNullOrEmpty(remark)) {
+            entrust.setErrorMsg(ErrorMsgUtils.subErrorMsg(remark));
+        }
+        String withdrawAmount = ds.getString("withdraw_amount", null);
+        if (!Strings.isNullOrEmpty(withdrawAmount)) {
+            double withdraw_amount = Double.parseDouble(withdrawAmount);
+            entrust.setCancelVolume((long) withdraw_amount);
+        }
+
+        //TODO:: 确认国金的协议回购和固收委托是否是这个字段
+        entrust.setId(ds.getString("entrust_reference"));
+        return entrust;
     }
 
     public static void getEntrustStatusByUfx(String entrustStatus, EntrustInterface entrust) {
