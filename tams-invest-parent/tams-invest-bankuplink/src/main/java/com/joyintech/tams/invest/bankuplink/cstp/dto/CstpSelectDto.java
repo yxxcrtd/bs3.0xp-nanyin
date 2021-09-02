@@ -82,6 +82,9 @@ public class CstpSelectDto extends InterfCstpTrade{
             return SysDataUtil.getNameFromDataDict(BussinessDictCode.回购拆借方向, super.getSide());
         }
     }
+    public String getPs(){
+        return super.getSide();
+    }
     /**
      * 获取匹配状态字符串
      * @return 匹配状态
