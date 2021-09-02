@@ -39,6 +39,7 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -137,14 +138,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     private String assetType;
 
-    @NotEmpty(fieldName = "FinBondTargetAsset002.riskType", groups = {ValidateGroupEdit.class})
-    public String getRiskType() {
-        return riskType;
-    }
 
-    public void setRiskType(String riskType) {
-        this.riskType = riskType;
-    }
 
     /**
      * 风险五级分类
@@ -163,6 +157,16 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     private String industry;
 
     private String industry2;
+
+
+    @NotEmpty(fieldName = "FinBondTargetAsset002.riskType", groups = {ValidateGroupEdit.class})
+    public String getRiskType() {
+        return riskType;
+    }
+
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
+    }
 
     public String getRepAssetType() {
         return repAssetType;
@@ -236,7 +240,8 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      * 票面利率
      */
     private BigDecimal rate;
-    
+
+
     /**
      * 计息基础
      */
@@ -1805,6 +1810,16 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
         }
     }
 
+    public String getRiskTypeStr() {
+        if(StringUtil.isNotEmpty(this.getRiskType())
+                && StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, this.getRiskType()))) {
+            return SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, this.getRiskType());
+        }
+        else {
+            return this.getRiskType();
+        }
+    }
+
     public String getBatchDelFlag() {
         return batchDelFlag;
     }
@@ -1812,4 +1827,16 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
     public void setBatchDelFlag(String batchDelFlag) {
         this.batchDelFlag = batchDelFlag;
     }
+
+    public String getRateStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return decimalFormat.format(this.getRate().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+    public String getIssuePriceStr() {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00#");
+        return decimalFormat.format(this.getIssuePrice().setScale(2,BigDecimal.ROUND_HALF_UP));
+    }
+
+
 }

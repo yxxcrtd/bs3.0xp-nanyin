@@ -4,7 +4,7 @@
 <head>
     <style type="text/css">
      .delaytime-inline-wrap .select2-container{
-        width: 150px!important;
+        width: 143px!important;
     } 
     .rate-inline-label .select2-container{
         width: 55%!important;
@@ -129,7 +129,7 @@
                         <div class="layui-input-inline input-inline delaytime-inline-wrap">
                             <input type="text" th:id="|${entityName}_observeBefDay|" th:name="|${entityName}.observeBefDay|" th:value="${entity?.observeBefDay}" data-textrange="0" style="width: 75px;display:inline-block;" class="layui-input form-input text-number"/>
                             <span class="rate-text" style="margin-left: 10px"></span>
-                            <select th:id="|${entityName}_observeBefUnit|" th:name="|${entityName}.observeBefUnit|" th:initValue="${entity?.observeBefUnit}"    style="width: 49%"
+                            <select th:id="|${entityName}_observeBefUnit|" th:name="|${entityName}.observeBefUnit|" th:initValue="${entity?.observeBefUnit}"    style="width:20px;"
                                         class="layui-input form-input input-select" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-result="${ADVANCE_OBSERV_UNIT}">
                             </select>
                         </div>
@@ -146,7 +146,7 @@
                             </select>
                            <label class="layui-form-label form-label-wrap rate-text" data-th-text="#{FinInterestFactor.coefficient}" style="float: left;display: inline-block;width: 6%;">*系数</label>
                                 <input type="text" th:id="|${entityName}_coefficient|" th:name="|${entityName}.coefficient|"  th:value="${entity?.coefficient}" class="layui-input form-input" style="float: left;display: inline-block; width: 12%;"/>
-                            <label class="layui-form-label form-label-wrap rate-text" data-th-text="#{FinInterestFactor.spreadRate}" style="float: left;display: inline-block;width: 6%;">+利差(%)</label>
+                            <label class="layui-form-label form-label-wrap rate-text" data-th-text="#{FinInterestFactor.spreadRate}" style="float: left;display: inline-block;width: 80px;">+利差(%)</label>
                             <input type="text" th:id="|${entityName}_spreadRate|" th:name="|${entityName}.spreadRate|"  th:value="${entity?.spreadRate}" class="layui-input form-input" style="float: left;display: inline-block; width: 12%;"/>
                             <!-- <div class='layui-input-inline input-inline'>
                                 <label class="layui-form-label form-label-wrap rate-text" data-th-text="#{FinInterestFactor.coefficient}">*系数</label>
