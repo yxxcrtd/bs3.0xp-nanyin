@@ -391,18 +391,18 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
             }
             // 多组合和单组合的金额信息和交易编号取值不同
-            if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
+//            if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
                 creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
                 creditLinesInputDto.setTradeAmt(inputDto.getTotalFaceValue());
-            }else {
-                creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
-                BigDecimal tradeAmt = BigDecimal.ZERO;
-                for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
-                    tradeAmt = tradeAmt.add(item.getTradeAmt());
-                }
-                creditLinesInputDto.setTradeAmt(tradeAmt);
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(tradeAmt,100,2));
-            }
+//            }else {
+//                creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
+//                BigDecimal tradeAmt = BigDecimal.ZERO;
+//                for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
+//                    tradeAmt = tradeAmt.add(item.getTradeAmt());
+//                }
+//                creditLinesInputDto.setTradeAmt(tradeAmt);
+//                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(tradeAmt,100,2));
+//            }
             //最新面值
             BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
             if (newFaceValue == null){
