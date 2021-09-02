@@ -702,6 +702,20 @@ public class EtrExchangeTradeService extends BaseService{
         }
         return super.queryForPage(page, length, () -> etrExchangeTradeMapper.selectEtrExchange(param));
     }
+    //add by chenjiaxing 导出全部数据 202100902 start
+    public List<EtrExchangeTrade003Dto> selectEtrExchange2(Map<String,Object> param){
+        param.put("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        param.put("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
+        param.put("PS_T68", DictCodeListExt3.交易方向_质押券入库.getValue());
+        param.put("PS_T69", DictCodeListExt3.交易方向_质押券出库.getValue());
+        String portfolioId = (String)param.get("portfolioId");
+        if (StringUtil.isNotEmpty(portfolioId)) {
+            param.put("portfolioIdList",
+                    StringUtil.splitToList(GlobalConstant.COMMA, portfolioId));
+        }
+        return etrExchangeTradeMapper.selectEtrExchange(param);
+    }
+    //add by chenjiaxing 导出全部数据 202100902 end
 
     /**
      * 平台日期

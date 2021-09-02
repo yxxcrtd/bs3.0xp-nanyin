@@ -354,6 +354,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 				param, EtrExchangeTrade003Dto.class);
 	}
+	//add by chenjiaxing 导出全部数据 202100902 start
+	public List<EtrExchangeTrade003Dto> selectEtrExchange2(Map<String, Object> param) {
+		param.put("userId", LoginUserUtil.getUserName());
+		param.put("sysDate",iPlatformDate.getSysDateStr());
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange2",
+				param, EtrExchangeTrade003Dto.class);
+	}
+	//add by chenjiaxing 导出全部数据 202100902 end
 
     /**
      * 对手方交易商联想文本框初始化。
