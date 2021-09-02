@@ -387,7 +387,7 @@ public class MstCommissionSetDto extends TrdFeeConfig implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.授信资产二级分类, this.getAssetClassify1());
     }
     public String getAssetClassify2Str() {
-        return SysDataUtil.getNameFromDataDict(DictCode.授信资产三级分类, this.getAssetClassify2());
+        return SysDataUtil.getNameFromDataDict(DictCode.交易所费用资产分类二, this.getAssetClassify2());
     }
     public String getCommCalMethodStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.佣金计算方式, this.getCommCalMethod());

@@ -137,7 +137,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     private String assetType;
 
-
+    @NotEmpty(fieldName = "FinBondTargetAsset002.riskType", groups = {ValidateGroupEdit.class})
     public String getRiskType() {
         return riskType;
     }
