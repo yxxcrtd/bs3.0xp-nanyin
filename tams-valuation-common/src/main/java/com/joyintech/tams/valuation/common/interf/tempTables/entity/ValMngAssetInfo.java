@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -42,7 +43,7 @@ public class ValMngAssetInfo extends BaseEntity {
     /**
      * 发行规律
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal issueAmt;
 
     /**
@@ -93,31 +94,31 @@ public class ValMngAssetInfo extends BaseEntity {
     /**
      * 初始利率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal intRate;
 
     /**
      * 利率上限
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal rateMax;
 
     /**
      * 挂钩利率
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal linkRate;
 
     /**
      * 系数
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal ratio;
 
     /**
      * 利率下限
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal rateMin;
 
     /**
@@ -128,7 +129,7 @@ public class ValMngAssetInfo extends BaseEntity {
     /**
      * 利差
      */
-    @JsonSerialize(using=BigDecimalSerializer.class)
+    @JsonSerialize(using = BigDecimalSerializer.class)
     private BigDecimal spreadRate;
 
     /**
@@ -138,7 +139,28 @@ public class ValMngAssetInfo extends BaseEntity {
     private String isQtzq;
 
     /**
+     * 发行人
+     */
+    private String issuer;
+
+    /**
+     * 融资人
+     */
+    private String financier;
+
+    /**
+     * 担保人
+     */
+    private String sponsor;
+
+    /**
+     * 是否包含有效抵质押物
+     */
+    private String isEffPledge;
+
+    /**
      * 取得 资产代码
+     *
      * @return 资产代码
      */
     public String getAssetId() {
@@ -147,6 +169,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 资产代码
+     *
      * @param assetId 资产代码
      */
     public void setAssetId(String assetId) {
@@ -155,6 +178,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 数据动作标志
+     *
      * @return 数据动作标志
      */
     public String getDataActionSign() {
@@ -163,6 +187,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 数据动作标志
+     *
      * @param dataActionSign 数据动作标志
      */
     public void setDataActionSign(String dataActionSign) {
@@ -171,6 +196,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 资产名称
+     *
      * @return 资产名称
      */
     public String getAssetName() {
@@ -179,6 +205,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 资产名称
+     *
      * @param assetName 资产名称
      */
     public void setAssetName(String assetName) {
@@ -187,6 +214,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 起息日
+     *
      * @return 起息日
      */
     public Date getVdate() {
@@ -195,6 +223,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 起息日
+     *
      * @param vdate 起息日
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
@@ -204,6 +233,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 到期日
+     *
      * @return 到期日
      */
     public Date getMdate() {
@@ -212,6 +242,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 到期日
+     *
      * @param mdate 到期日
      */
     @JsonDeserialize(using = CustomDateDeserialize.class)
@@ -221,6 +252,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 计息天数
+     *
      * @return 计息天数
      */
     public String getIntDays() {
@@ -229,6 +261,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 计息天数
+     *
      * @param intDays 计息天数
      */
     public void setIntDays(String intDays) {
@@ -237,6 +270,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 发行规律
+     *
      * @return 发行规律
      */
     public BigDecimal getIssueAmt() {
@@ -245,6 +279,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 发行规律
+     *
      * @param issueAmt 发行规律
      */
     public void setIssueAmt(BigDecimal issueAmt) {
@@ -253,6 +288,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 境内外
+     *
      * @return 境内外
      */
     public String getBlnArea() {
@@ -261,6 +297,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 境内外
+     *
      * @param blnArea 境内外
      */
     public void setBlnArea(String blnArea) {
@@ -269,6 +306,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 币种
+     *
      * @return 币种
      */
     public String getCcy() {
@@ -277,6 +315,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 币种
+     *
      * @param ccy 币种
      */
     public void setCcy(String ccy) {
@@ -285,6 +324,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 本金收益特征
+     *
      * @return 本金收益特征
      */
     public String getCapiProfFeature() {
@@ -293,6 +333,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 本金收益特征
+     *
      * @param capiProfFeature 本金收益特征
      */
     public void setCapiProfFeature(String capiProfFeature) {
@@ -301,6 +342,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 交易场所
+     *
      * @return 交易场所
      */
     public String getTradeMarket() {
@@ -309,6 +351,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 交易场所
+     *
      * @param tradeMarket 交易场所
      */
     public void setTradeMarket(String tradeMarket) {
@@ -317,6 +360,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 资产分类
+     *
      * @return 资产分类
      */
     public String getAssetClass() {
@@ -325,6 +369,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 资产分类
+     *
      * @param assetClass 资产分类
      */
     public void setAssetClass(String assetClass) {
@@ -333,6 +378,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 是否通道
+     *
      * @return 是否通道
      */
     public String getIsChl() {
@@ -341,6 +387,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 是否通道
+     *
      * @param isChl 是否通道
      */
     public void setIsChl(String isChl) {
@@ -349,6 +396,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 通道代码
+     *
      * @return 通道代码
      */
     public String getChlId() {
@@ -357,6 +405,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 通道代码
+     *
      * @param chlId 通道代码
      */
     public void setChlId(String chlId) {
@@ -365,6 +414,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 计息基础
+     *
      * @return 计息基础
      */
     public String getBasis() {
@@ -373,6 +423,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 计息基础
+     *
      * @param basis 计息基础
      */
     public void setBasis(String basis) {
@@ -381,6 +432,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 利率类型
+     *
      * @return 利率类型
      */
     public String getRateType() {
@@ -389,6 +441,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 利率类型
+     *
      * @param rateType 利率类型
      */
     public void setRateType(String rateType) {
@@ -397,6 +450,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 初始利率
+     *
      * @return 初始利率
      */
     public BigDecimal getIntRate() {
@@ -405,6 +459,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 初始利率
+     *
      * @param intRate 初始利率
      */
     public void setIntRate(BigDecimal intRate) {
@@ -413,6 +468,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 利率上限
+     *
      * @return 利率上限
      */
     public BigDecimal getRateMax() {
@@ -421,6 +477,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 利率上限
+     *
      * @param rateMax 利率上限
      */
     public void setRateMax(BigDecimal rateMax) {
@@ -429,6 +486,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 挂钩利率
+     *
      * @return 挂钩利率
      */
     public BigDecimal getLinkRate() {
@@ -437,6 +495,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 挂钩利率
+     *
      * @param linkRate 挂钩利率
      */
     public void setLinkRate(BigDecimal linkRate) {
@@ -445,6 +504,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 系数
+     *
      * @return 系数
      */
     public BigDecimal getRatio() {
@@ -453,6 +513,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 系数
+     *
      * @param ratio 系数
      */
     public void setRatio(BigDecimal ratio) {
@@ -461,6 +522,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 利率下限
+     *
      * @return 利率下限
      */
     public BigDecimal getRateMin() {
@@ -469,6 +531,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 利率下限
+     *
      * @param rateMin 利率下限
      */
     public void setRateMin(BigDecimal rateMin) {
@@ -477,6 +540,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 浮动利率编号
+     *
      * @return 浮动利率编号
      */
     public String getIntRateId() {
@@ -485,6 +549,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 浮动利率编号
+     *
      * @param intRateId 浮动利率编号
      */
     public void setIntRateId(String intRateId) {
@@ -493,6 +558,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 利差
+     *
      * @return 利差
      */
     public BigDecimal getSpreadRate() {
@@ -501,6 +567,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 利差
+     *
      * @param spreadRate 利差
      */
     public void setSpreadRate(BigDecimal spreadRate) {
@@ -509,6 +576,7 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 取得 是否其他债权类资产
+     *
      * @return isQtzq 是否其他债权类资产
      */
     public String getIsQtzq() {
@@ -517,12 +585,13 @@ public class ValMngAssetInfo extends BaseEntity {
 
     /**
      * 设置 是否其他债权类资产
+     *
      * @param isQtzq 是否其他债权类资产
      */
     public void setIsQtzq(String isQtzq) {
         this.isQtzq = isQtzq;
     }
-    
+
     private String belongInstitutionCode;
 
     public String getBelongInstitutionCode() {
@@ -533,4 +602,67 @@ public class ValMngAssetInfo extends BaseEntity {
         this.belongInstitutionCode = belongInstitutionCode;
     }
 
+    /**
+     * @return 发行人
+     */
+    public String getIssuer() {
+        return issuer;
+    }
+
+    /**
+     * 设置 发行人
+     *
+     * @param issuer 发行人
+     */
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
+
+    /**
+     * @return 融资人
+     */
+    public String getFinancier() {
+        return financier;
+    }
+
+    /**
+     * 设置 融资人
+     *
+     * @param financier 融资人
+     */
+    public void setFinancier(String financier) {
+        this.financier = financier;
+    }
+
+    /**
+     * @return 担保人
+     */
+    public String getSponsor() {
+        return sponsor;
+    }
+
+    /**
+     * 设置 担保人
+     *
+     * @param sponsor 担保人
+     */
+    public void setSponsor(String sponsor) {
+        this.sponsor = sponsor;
+    }
+
+    /**
+     * @return 是否包含有效抵质押物
+     */
+    public String getIsEffPledge() {
+        return isEffPledge;
+    }
+
+    /**
+     * 设置 是否包含有效抵质押物
+     *
+     * @param isEffPledge 是否包含有效抵质押物
+     */
+    public void setIsEffPledge(String isEffPledge) {
+        this.isEffPledge = isEffPledge;
+    }
 }

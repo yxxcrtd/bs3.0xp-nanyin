@@ -618,10 +618,12 @@
             , {field: 'acctNo', title: 'CSTPSelect001.secAccount', width: '150',visible: false}
             , {field: 'businesstypeStr', title: 'CSTPSelect001.finprodType', sortField: 'businesstype', width: '120',visible: false}
             , {field: 'securityid', title: '期限类型', width: '120',visible: false}
-            , {field: 'entrustId', width: '120',visible: false}
-            , {field: 'tradeId', width: '120',visible: false}
-            , {field: 'fTradeId', width: '120',visible: false}
-            , {field: 'rTradeId', width: '120',visible: false}
+            , {field: 'entrustId', width: '120',visible: true}
+            , {field: 'tradeId', width: '120',visible: true}
+            , {field: 'fTradeId', width: '120',visible: true}
+            , {field: 'rTradeId', width: '120',visible: true}
+            , {field: 'ps', sortField: 'side', visible: true}
+            , {field: 'settleSpeed', title: '清算速度', width: '100'}
             , {
                 field: 'settleDate',
                 title: 'CSTPSelect001.settleDate',
@@ -629,16 +631,6 @@
                 width: '110',
                 type: 'date',
                 visible: false
-            }
-            , {
-                field: 'operation',
-                title: '操作',
-                width: '100',
-                sortable: false,
-                fixed: 'right',
-                render: function (data, type, row, meta) {
-                    return "<a class='viewRepoDetai' >质押券明细</a>";
-                }
             }
         ]
     });
