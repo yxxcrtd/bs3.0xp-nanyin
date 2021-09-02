@@ -41,20 +41,20 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
         if (entrustCommonDto != null) {
             EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
             String ps = etrEntrust.getPs();
-            if(DictCodeList.交易方向_申购.getValue().equals(ps)){
-                BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), entrustCommonDto.getEtrEntrust().getEntrustDate());
-                // 委托生成的现金流水
-                EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
-                        entrustCommonDto);
-                String acctId = gen账号(etrEntrust.getChlId(), etrEntrust.getCcy(),
-                        entrustCommonDto.getEtrEntrustAdd().getSecAcctId(),etrEntrust.getPortfolioId(), entrustCommonDto.getEtrEntrustAdd().getPurchModle(), etrCashPositionFlowDto);
-                // 减少委托券面总额*委托全价/100
-                etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustNum().negate().multiply(债券面值));
-                etrCashPositionFlowDto.setAcctId(acctId);
-                etrCashPositionFlowDto.setOffsetId(entrustCommonDto.getEtrEntrust().getEntrustId());
-                etrCashPositionFlowDto.setCdate(etrEntrust.getEntrustDate());
-                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
-            }
+//            if(DictCodeList.交易方向_申购.getValue().equals(ps)){
+//                BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), entrustCommonDto.getEtrEntrust().getEntrustDate());
+//                // 委托生成的现金流水
+//                EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDtoFromEtr(
+//                        entrustCommonDto);
+//                String acctId = gen账号(etrEntrust.getChlId(), etrEntrust.getCcy(),
+//                        entrustCommonDto.getEtrEntrustAdd().getSecAcctId(),etrEntrust.getPortfolioId(), entrustCommonDto.getEtrEntrustAdd().getPurchModle(), etrCashPositionFlowDto);
+//                // 减少委托券面总额*委托全价/100
+//                etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustNum().negate().multiply(债券面值));
+//                etrCashPositionFlowDto.setAcctId(acctId);
+//                etrCashPositionFlowDto.setOffsetId(entrustCommonDto.getEtrEntrust().getEntrustId());
+//                etrCashPositionFlowDto.setCdate(etrEntrust.getEntrustDate());
+//                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+//            }
            if (DictCodeListExt1.交易方向_债转股.getValue().equals(ps)) {
                 // 减少委托券面总额/100
                 EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(

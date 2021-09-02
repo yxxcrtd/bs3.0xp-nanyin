@@ -1,4 +1,4 @@
-delete FROM sys_page where page_id in ('CfetsBondDealQuotedPriceMain','CfetsBondDealQuotedPriceSingle','CfetsBondDealQuotedPriceSingle001','CfetsBondDealQuotedPriceSingle002','CfetsBondDealQuotedPriceMuti');
+delete FROM sys_page where page_id in ('CfetsBondDealQuotedPriceMain','CfetsBondDealQuotedPriceSingle','CfetsBondDealQuotedPriceSingle001','CfetsBondDealQuotedPriceSingle002','CfetsBondDealQuotedPriceMuti','CfetsBondDealQuotedPriceMuti001','CfetsBondDealQuotedPriceMuti002');
 
 
 insert into sys_page values ('CfetsBondDealQuotedPriceMain','TRD','/invest/bankuplink/bond/CfetsBondDealQuotedPriceMain',
