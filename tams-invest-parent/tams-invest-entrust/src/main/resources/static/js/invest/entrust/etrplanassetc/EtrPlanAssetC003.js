@@ -155,11 +155,11 @@
 											result.data,
 											function() {
 												if (operateType === 'submit') {
-                                                    // ZGZGST-1852: 合并投资交易风险代码 fuyongsheng 20210902 edit start
+                                                    // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit start
 													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/save',allDto,"EtrPlanAssetC002_btn_save");
                                                 }else {
                                                     WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetC003/save', allDto, "EtrPlanAssetC002_btn_submit", "EtrPlanAssetR002");
-                                                    // ZGZGST-1852: 合并投资交易风险代码 fuyongsheng 20210902 edit end
+                                                    // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit end
 												}
 											});
 						});
