@@ -1986,6 +1986,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     								+ "[CREDIT_TYPE="+creditType+"] ",
     								"产品增信机构类型"));
     					}
+    					//境外托管机构国别多选校验
+						String outDepCity=strList.get(45) ;
+    					if(StringUtil.isNotEmpty(outDepCity)){
+							List<String> outDepCitys = Arrays.asList(outDepCity.split(","));
+							String investArae=strList.get(18) ;//资金投向地区
+							if(StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
+								if(outDepCitys.contains("CHN")){
+									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
+											+ "[OUT_DEP_CTRY="+"CHN"+"] ",
+											"境外托管机构国别"));
+								}
+							}
+						}
     				}else if (StringUtil.equals(CHB_EMPLOYEE_INFO, tableName)){
     					String FinProfessionalCrtf = strList.get(16) ;
     					//理财专业证书
