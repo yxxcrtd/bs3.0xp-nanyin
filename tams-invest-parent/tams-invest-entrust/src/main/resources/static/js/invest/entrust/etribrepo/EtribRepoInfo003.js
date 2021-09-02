@@ -464,23 +464,23 @@
                 // 委托代码
                /* {field: 'entrustId',title: 'BussRepoSecPtl.entrustId',type: 'text',align: 'left',sortable: false,edit: false},*/
                 // 债券代码
-                {field: 'bondCode',title: 'BussRepoSecPtl.secId',type: 'text',align: 'left',sortable: false,edit: false}
+                {field: 'bondCode',title: 'BussRepoSecPtl.secId',type: 'text',align: 'left',sortable: false,edit: false,width: 240}
                 // 债券简称
-                ,{field: 'bondAbbrName',title: '债券简称',type: 'text',align: 'left',sortable: true,edit: false}
+                ,{field: 'bondAbbrName',title: '债券简称',type: 'text',align: 'left',sortable: true,edit: false,width: 240}
                 // 债券类型
                 /*,{field: 'secTypeStr',title: 'BussRepoSecPtl.secType',type: 'text',align: 'left',edit: false,sortable: false}*/
                 // 组合代码
-                ,{field: 'portfolioId',title: 'BussRepoSecPtl.portfolioId',type: 'text',sortable: false,edit: false}
+                ,{field: 'portfolioId',title: 'BussRepoSecPtl.portfolioId',type: 'text',sortable: false,edit: false,width: 240}
                 // 组合名称
-                ,{field: 'portfolioName',title: 'BussRepoSecPtl.portfolioName',type: 'text',edit: false,sortable: false}
+                ,{field: 'portfolioName',title: 'BussRepoSecPtl.portfolioName',type: 'text',edit: false,sortable: false,width: 240}
                 // 质押本方券券面总额
 //                , {field: 'pledgeBfPrin',title: '质押本方券券面总额',type: 'number',edit: true,sortable: false}
                 // 质押融入券券面总额
 //                , {field: 'pledgeRrPrin',title: '质押融入券券面总额',type: 'number',edit: true,sortable: false}
                 // 可质押券面总额
-                , {field: 'avaPledgePrin',title: '可质押券面总额',type: 'number',edit: false,sortable: false}
+                , {field: 'avaPledgePrin',title: '可质押券面总额',type: 'number',edit: false,sortable: false,width: 240}
                 //质押券汇总券面总额
-                , {field: 'pledgePrin',title: '质押券券面总额',type: 'number',edit: true,sortable: false}
+                , {field: 'pledgePrin',title: '质押券券面总额',type: 'number',edit: true,sortable: false,width: 240}
              // 首次净价
                 , {
                     field: 'firstNetPrice',
@@ -489,10 +489,10 @@
                     sortable: false
                 }
                 //折算比例%
-                ,{field: 'pledgeRatio',title: '折算比例%',type: 'number',edit: false,sortable: false}
+                ,{field: 'pledgeRatio',title: '折算比例%',type: 'number',edit: false,sortable: false,width: 100}
              
                 // 登记托管机构
-                ,{field: 'repRegistOrgStr',title: 'BussRepoSecPtl.repRegistOrg',type: 'text',align: 'left',edit:false,sortable:false}
+                ,{field: 'repRegistOrgStr',title: 'BussRepoSecPtl.repRegistOrg',type: 'text',align: 'left',edit:false,sortable:false,width: 200}
                 //可质押本方券券面总额
 //                ,{field: 'avaPledgeBfPrin',title: '可质押本方券券面总额',type: 'number',edit: false,sortable: false}
                 //可质押融入券券面总额
@@ -531,11 +531,15 @@
          * 保存按钮按下，添加子画面传回的质押券信息
          */
         var addPledgeBond = function (pledgeRows) {
+
             // 列表中未勾选
             if (!pledgeRows || pledgeRows.length == 0) {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             } else {
+                //add by chenjiaxing 解决质押券覆盖问题 start
+                var tempbefore = pledgeBondTotalTblDetailed.getAllRows();
+                //add by chenjiaxing 解决质押券覆盖问题 end
             	pledgeBondTotalTblDetailed.clear(function () {
                     var totalPrinAmt = Number(0);
                     var zzdPrinAmt = Number(0);
@@ -569,6 +573,16 @@
                     //更新CFETS质押式回购报价要素信息
 //                    refreshParentFace({totalPrinAmt:totalPrinAmtSum,shareCtAmt:zzdPrinAmt+sqsPrinAmt});
                 });
+                //add by chenjiaxing 解决质押券覆盖问题 start
+                var temp = pledgeBondTotalTblDetailed.getAllRows();
+                for(var i in tempbefore){
+                    if(tempbefore[i].portfolioId == temp[0].portfolioId){
+
+                    }else{
+                        pledgeBondTotalTblDetailed.addRow(tempbefore[i]);
+                    }
+                }
+                //add by chenjiaxing 解决质押券覆盖问题 end
             }
         };
         
