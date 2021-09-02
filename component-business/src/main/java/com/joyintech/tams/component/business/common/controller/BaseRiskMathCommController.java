@@ -169,6 +169,13 @@ public class BaseRiskMathCommController extends BaseController {
         //---add by 裴家俊  2019/03/30-------start------
         model.addAttribute("workflowBaskRiskId", workflowId);
         //---add by 裴家俊  2019/03/30-------end------
+        //上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27 start
+        if(StringUtil.isNotEmpty(map.get("IS_ETR"))){
+            model.addAttribute("IS_ETR", DictCodeListExt1.是否_是.getValue());
+        }else{
+            model.addAttribute("IS_ETR", DictCodeListExt1.是否_否.getValue());
+        }
+        //上农商个性化_指令环节风险试算改造需求 add by libaisong 2020-11-27 end
         return "component/common/BaseRiskMathComm";
     }
 
