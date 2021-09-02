@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class IntegratedEntrustHistory implements Serializable {
+    private static final long serialVersionUID = -3425394576402676784L;
     private String id;
 
     private String parentOrderId;

@@ -1,8 +1,10 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AlgorithmHistory {
+public class AlgorithmHistory implements Serializable {
+    private static final long serialVersionUID = -1546997309845173744L;
     private String id;
 
     private String algorithmId;

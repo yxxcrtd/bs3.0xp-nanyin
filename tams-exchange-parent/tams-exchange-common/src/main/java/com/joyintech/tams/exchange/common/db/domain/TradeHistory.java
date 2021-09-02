@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class TradeHistory implements Serializable {
+    private static final long serialVersionUID = 8867771423212338029L;
     private String id;
 
     private String instructionId;

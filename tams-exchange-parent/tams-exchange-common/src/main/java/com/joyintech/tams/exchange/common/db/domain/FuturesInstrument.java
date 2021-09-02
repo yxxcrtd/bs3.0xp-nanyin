@@ -1,7 +1,6 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.joyintech.tams.exchange.common.constant.AssetType;
 import com.joyintech.tams.exchange.common.utils.DoubleSerializerUtils;
 import org.springframework.data.annotation.Id;
 
@@ -13,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class FuturesInstrument implements Serializable, KeyMethodInterface<String>, InstrumentInterface {
+    private static final long serialVersionUID = 9022995628556797389L;
     @NotNull
     @Size(max = 32)
     @Id

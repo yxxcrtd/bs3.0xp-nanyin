@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BatchInfoHistory implements Serializable {
+    private static final long serialVersionUID = 2261176369167008510L;
     private String id;
 
     private String batchinfoId;

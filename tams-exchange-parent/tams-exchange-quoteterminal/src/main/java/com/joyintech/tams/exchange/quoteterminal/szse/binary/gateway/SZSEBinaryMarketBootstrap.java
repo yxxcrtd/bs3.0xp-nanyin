@@ -3,28 +3,26 @@ package com.joyintech.tams.exchange.quoteterminal.szse.binary.gateway;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.config.SZExchangeConfigure;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.gateway.pipline.SZSEBinaryMarketHandler;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.Message;
+import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.SZSEBinaryHeartbeat;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.SZSEBinaryLogon;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.SZSEBinaryLogout;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 
-@Component
 public class SZSEBinaryMarketBootstrap {
 
     private static final Logger logger = LoggerFactory.getLogger(SZSEBinaryMarketBootstrap.class);
 
     private static volatile SZSEBinaryMarketBootstrap INSTANCE;
-
-    private volatile boolean running;
 
     private Bootstrap bootstrap;
 
@@ -34,15 +32,21 @@ public class SZSEBinaryMarketBootstrap {
 
     private SZSEBinaryMessageFacade facade;
 
+    private InetSocketAddress inetSocketAddress;
+
+    private ConnectionListener connectionListener;
+
+    private SZSEBinaryHeartbeat heartbeat = new SZSEBinaryHeartbeat();
+
     /**
      * 本次重连的数量累计
      */
     private int reconnectCount = 1;
 
     public static SZSEBinaryMarketBootstrap getInstance(SZExchangeConfigure config, SZSEBinaryMessageFacade SZSEBinaryMessageFacade) {
-        if(INSTANCE == null) {
+        if (INSTANCE == null) {
             synchronized (SZSEBinaryMarketBootstrap.class) {
-                if(INSTANCE == null) {
+                if (INSTANCE == null) {
                     INSTANCE = new SZSEBinaryMarketBootstrap(config, SZSEBinaryMessageFacade);
                 }
             }
@@ -55,29 +59,26 @@ public class SZSEBinaryMarketBootstrap {
         this.facade = SZSEBinaryMessageFacade;
     }
 
-    public boolean connect() {
-        if(!running) {
-            NioEventLoopGroup workerGroup = new NioEventLoopGroup(5);
-            this.bootstrap = new Bootstrap();
-            this.bootstrap.group(workerGroup)
-                    .channel(NioSocketChannel.class)
-                    .handler(new SZSEBinaryMarketChannelInitializer(new SZSEBinaryMarketHandler(facade), config));
-            try {
-                ChannelFuture future = bootstrap.connect(config.getIp(), config.getPort()).sync();
-                if(future.isSuccess()) {
-                    channel = future.channel();
-                    running = true;
-                    logger.info("connect to server success -> {}:{}", config.getIp(), config.getPort());
-                } else {
-                    logger.info("connect to server failure -> {}:{}", config.getIp(), config.getPort());
-                    reconnect(true, true);
-                }
-            } catch (InterruptedException e) {
-                logger.error("connect to server error: ", e);
-                reconnect(true, true);
-            }
-        }
-        return running;
+    public void init() {
+        NioEventLoopGroup workerGroup = new NioEventLoopGroup(5);
+        this.bootstrap = new Bootstrap();
+        this.bootstrap.group(workerGroup)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, config.getTimeout())
+                .option(ChannelOption.SO_RCVBUF, config.getNettyRecvBufferSize())
+                .option(ChannelOption.SO_SNDBUF, config.getNettySendBufferSize())
+                .option(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK, config.getNettyWriteBufferHighKB() * 1024)
+                .option(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK, config.getNettyWriteBufferLowKB() * 1024)
+                .handler(new SZSEBinaryMarketChannelInitializer(new SZSEBinaryMarketHandler(facade), config));
+        this.inetSocketAddress = new InetSocketAddress(config.getIp(), config.getPort());
+        this.connectionListener = new ConnectionListener(config, this);
+    }
+
+
+    public void connect() {
+        bootstrap.connect(inetSocketAddress).addListener(connectionListener);
     }
 
     /**
@@ -99,7 +100,6 @@ public class SZSEBinaryMarketBootstrap {
                 ChannelFuture sync = bootstrap.connect(config.getIp(), config.getPort()).sync();
                 if(sync.isSuccess()) {
                     channel = sync.channel();
-                    this.running = true;
                     this.reconnectCount = 1;
                     logger.info("connect to server success -> {}:{}", config.getIp(), config.getPort());
                     return;
@@ -133,16 +133,21 @@ public class SZSEBinaryMarketBootstrap {
         logger.info("send login to server {}:{}", config.getIp(), config.getPort());
     }
 
-    public void logout() {
+    /**
+     * 此处为客户端主动退出行情终端。 故做此操作时，不必进行断线重连操作
+     */
+
+    public void logout() throws Exception {
         SZSEBinaryLogout logout = new SZSEBinaryLogout();
         sendMessage(logout);
         logger.info("send logout to server {}:{}", config.getIp(), config.getPort());
-        channel.close();
+        channel.closeFuture().sync();
+        bootstrap.group().shutdownGracefully();
     }
 
     public void sendMessage(Message message) {
-        logger.debug("send message: [{}]", message.toString());
-        if(isConnect()) {
+        logger.info("send message: [{}]", message.toString());
+        if (isConnect()) {
             channel.writeAndFlush(message);
         }
     }
@@ -162,12 +167,26 @@ public class SZSEBinaryMarketBootstrap {
     }
 
     public synchronized void disconnect() {
-        if(channel != null && channel.isActive()) {
+        if (channel != null && channel.isActive()) {
             channel.close();
         }
     }
 
     private boolean isConnect() {
-        return running && channel != null && channel.isOpen() && channel.isActive();
+        return channel != null && channel.isOpen() && channel.isActive();
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
+
+    public void sendHeartbeat() {
+        if (!isConnect()) {
+            keepReconnect();
+        } else {
+            sendMessage(heartbeat);
+            this.channel.eventLoop().schedule(this::sendHeartbeat,
+                    config.getHeartbeatInterval(), TimeUnit.SECONDS);
+        }
     }
 }

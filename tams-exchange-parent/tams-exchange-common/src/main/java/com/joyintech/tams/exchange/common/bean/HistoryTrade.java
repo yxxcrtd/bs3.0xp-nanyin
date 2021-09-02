@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 
 public class HistoryTrade implements Serializable {
+    private static final long serialVersionUID = 7037506087690811868L;
     /**
      * 定位串
      */

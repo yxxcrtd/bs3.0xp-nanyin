@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Instrument implements Serializable, KeyMethodInterface<String>, InstrumentInterface {
+    private static final long serialVersionUID = 1387055817436821859L;
     @NotNull
     @Size(max = 32)
     @Id

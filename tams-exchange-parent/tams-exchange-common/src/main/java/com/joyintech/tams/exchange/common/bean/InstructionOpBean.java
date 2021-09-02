@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 
 public class InstructionOpBean implements Serializable {
+    private static final long serialVersionUID = -2975132243241914898L;
     private String instructionId;
     private String recStatus;
     private String trader;

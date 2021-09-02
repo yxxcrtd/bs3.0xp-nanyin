@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 
 public class IntegratedQuote implements Serializable {
+    private static final long serialVersionUID = -8963982621496824107L;
     private int quoteType;
 
     private int errorCode;

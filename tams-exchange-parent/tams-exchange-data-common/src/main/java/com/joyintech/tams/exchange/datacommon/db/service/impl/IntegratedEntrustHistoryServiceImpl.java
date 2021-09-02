@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.bean.EntrustQryBean;
+import com.joyintech.tams.exchange.common.constant.EntrustType;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistory;
 import com.joyintech.tams.exchange.common.db.domain.IntegratedEntrustHistoryExample;
@@ -56,6 +57,8 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
             criteria.andEntrustPropEqualTo(entrustProp);
         if (entrustStatus > -100)
             criteria.andEntrustStatusEqualTo(entrustStatus);
+        // 过滤撤单委托
+        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
         PageHelper.startPage(pageNum, pageSize);
         List<IntegratedEntrustHistory> integratedEntrustHistoryList = integratedEntrustHistoryMapper.selectByExample(integratedEntrustHistoryExample);
         return new PageInfo<>(integratedEntrustHistoryList);
@@ -64,7 +67,8 @@ public class IntegratedEntrustHistoryServiceImpl implements IntegratedEntrustHis
     @Override
     public PageInfo<IntegratedEntrustHistory> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String startDay, String endDay, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList) {
         PageHelper.startPage(pageNum, pageSize);
-        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, startDay, endDay, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, ptlAuthList);
+        //过滤撤单委托
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, startDay, endDay, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
         List<IntegratedEntrustHistory> integratedEntrustHistoryList = integratedEntrustHistoryMapper.selectEntrustsPageInfo(entrustQryBean);
         integratedEntrustHistoryList.forEach(integratedEntrustHistory -> {
             if (InvestmentAssetType.isFutures(integratedEntrustHistory.getAssetType())) {

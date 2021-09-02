@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class OrderPlaceBean implements Serializable {
+    private static final long serialVersionUID = 5892155368791512437L;
     private String instructionId;
     private String portfolioId;
     private String userId;

@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.db.domain.KeyMethodInterface;
 import java.io.Serializable;
 
 public class TickByte implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -3606317429116870814L;
     private byte[] bytes;
 
     public TickByte() {

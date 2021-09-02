@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import java.io.Serializable;
 
 public class QuoteServiceNode implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 8746162803409799734L;
     private String nodeName;
 
     private int nodeWeight;

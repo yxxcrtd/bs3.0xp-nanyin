@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Broker implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -1477804941896080669L;
     private String id;
 
     private String brokerId;

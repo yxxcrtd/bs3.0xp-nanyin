@@ -5,7 +5,6 @@ import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.Messa
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class SZSEBinaryMessageSerializer implements Serializer {
@@ -27,14 +26,14 @@ public class SZSEBinaryMessageSerializer implements Serializer {
     public <T> T deserialize(Class<T> objClass, byte[] data) {
         try {
             T t = objClass.newInstance();
-            if(t instanceof Message) {
-                if(resumeMethod == null) {
+            if (t instanceof Message) {
+                if (resumeMethod == null) {
                     resumeMethod = objClass.getMethod("resumeMessageFrom", byte[].class);
                 }
-                resumeMethod.invoke(t, (Object) data);
+                resumeMethod.invoke(t, data);
                 return t;
             }
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (Exception e) {
             logger.error("deserialize error: ", e);
         }
         return null;

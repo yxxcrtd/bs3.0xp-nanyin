@@ -1,6 +1,5 @@
 package com.joyintech.tams.exchange.common.db.domain;
 
-import org.apache.ibatis.annotations.Options;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
@@ -14,6 +13,7 @@ import java.io.Serializable;
  **/
 
 public class FuturesInstrumentMarginRateBean implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -689643154737815313L;
     private String id;
 
     private String accountId;

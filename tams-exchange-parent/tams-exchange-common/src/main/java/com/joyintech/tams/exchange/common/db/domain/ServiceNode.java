@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.db.domain;
 import java.io.Serializable;
 
 public class ServiceNode implements Serializable {
+    private static final long serialVersionUID = -3838835139835245630L;
     private String nodeName;
 
     private String nodeAddress;

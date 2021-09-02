@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 
 public class TradeMessage implements Cloneable, Serializable {
+    private static final long serialVersionUID = -7909494233501258978L;
     private String entrustId;       // 委托代码
     private String orderId;         // 订单代码
     private String entrustNo;       // 委托编号
@@ -251,7 +252,7 @@ public class TradeMessage implements Cloneable, Serializable {
         try {
             tradeMessage = (TradeMessage) templateMessage.clone();
             tradeMessage.setEntrustId(trade.getInstructionId());
-            tradeMessage.setOrderId(trade.getParentOrderId());
+            tradeMessage.setOrderId(trade.getEntrustId());
             tradeMessage.setEntrustNo(trade.getBrokerEntrustId());
             tradeMessage.setDealNo(trade.getBrokerTradeId());
             tradeMessage.setAcctNo(trade.getFinanceAccount());

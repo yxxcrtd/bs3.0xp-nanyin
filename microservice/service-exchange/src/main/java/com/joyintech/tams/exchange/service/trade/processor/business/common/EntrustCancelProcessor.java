@@ -493,6 +493,11 @@ public class EntrustCancelProcessor {
             tradeHelper.rollbackCancelStatus(origEntrust);
             return;
         }
+        if (EntrustStatus.isFinished(origEntrust.getEntrustStatus())) {
+            //订单已经处于终态，不在处理撤单成交
+            logger.info("已处理过该笔撤单成交信息：brokerEntrustId {}  tradeType {} origEntrustId {}  cancelEntrustId {}", tradeRecord.getBrokerEntrustId(), tradeRecord.getTradeType(), origEntrust.getId(), cancelEntrust.getId());
+            return;
+        }
         tradeRecord.setLocalEntrustId(origEntrust.getLocalEntrustId());
         tradeRecord.setTradingDay(origEntrust.getTradingDay());
         tradeRecord.setStockCode(origEntrust.getStockCode());

@@ -12,7 +12,7 @@ public enum CbptransType {
     public final String value;
     public final String name;
 
-    private CbptransType(String name, String value) {
+    private CbptransType(String value, String name) {
         this.name = name;
         this.value = value;
     }

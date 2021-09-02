@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 
 public class QuoteQryBean implements Serializable {
+    private static final long serialVersionUID = 1217047236263920265L;
     private int quoteType;
     private String accountId;
     // 大宗行情查询

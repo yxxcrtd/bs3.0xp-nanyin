@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 
 public class BatchInfo implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -3384458329856922196L;
     @Id
     private String id;
     private String orderId;

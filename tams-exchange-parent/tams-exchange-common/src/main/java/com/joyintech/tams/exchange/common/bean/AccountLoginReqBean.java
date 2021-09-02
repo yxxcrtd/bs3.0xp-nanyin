@@ -5,6 +5,7 @@ import com.joyintech.tams.exchange.common.db.domain.Account;
 import java.io.Serializable;
 
 public class AccountLoginReqBean implements Serializable {
+    private static final long serialVersionUID = 428635110893316994L;
     private ServerExtendInfo serverExtendInfo;
     private Account account;
 

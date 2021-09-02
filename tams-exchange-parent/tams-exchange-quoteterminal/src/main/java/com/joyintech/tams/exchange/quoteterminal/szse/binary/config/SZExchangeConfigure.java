@@ -1,5 +1,6 @@
 package com.joyintech.tams.exchange.quoteterminal.szse.binary.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +43,21 @@ public class SZExchangeConfigure {
      * 重连间隔
      */
     private int reconnectInterval;
+
+    @Value("${szse.binary.timeout:10000}")
+    private int timeout;
+
+    @Value("${szse.binary.buffer.recv:4194304}")
+    private int nettyRecvBufferSize;
+
+    @Value("${szse.binary.buffer.send:4194304}")
+    private int nettySendBufferSize;
+
+    @Value("${szse.binary.buffer.write.high:524288}")
+    private int nettyWriteBufferHighKB;
+
+    @Value("${szse.binary.buffer.write.low:32768}")
+    private int nettyWriteBufferLowKB;
 
     public String getIp() {
         return ip;
@@ -114,6 +130,47 @@ public class SZExchangeConfigure {
     public void setReconnectInterval(int reconnectInterval) {
         this.reconnectInterval = reconnectInterval;
     }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public int getNettyRecvBufferSize() {
+        return nettyRecvBufferSize;
+    }
+
+    public void setNettyRecvBufferSize(int nettyRecvBufferSize) {
+        this.nettyRecvBufferSize = nettyRecvBufferSize;
+    }
+
+    public int getNettySendBufferSize() {
+        return nettySendBufferSize;
+    }
+
+    public void setNettySendBufferSize(int nettySendBufferSize) {
+        this.nettySendBufferSize = nettySendBufferSize;
+    }
+
+    public int getNettyWriteBufferHighKB() {
+        return nettyWriteBufferHighKB;
+    }
+
+    public void setNettyWriteBufferHighKB(int nettyWriteBufferHighKB) {
+        this.nettyWriteBufferHighKB = nettyWriteBufferHighKB;
+    }
+
+    public int getNettyWriteBufferLowKB() {
+        return nettyWriteBufferLowKB;
+    }
+
+    public void setNettyWriteBufferLowKB(int nettyWriteBufferLowKB) {
+        this.nettyWriteBufferLowKB = nettyWriteBufferLowKB;
+    }
+
 
     @Override
     public String toString() {

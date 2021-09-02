@@ -134,6 +134,8 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
             criteria.andEntrustPropEqualTo(entrustProp);
         if (entrustStatus > -100)
             criteria.andEntrustStatusEqualTo(entrustStatus);
+        // 过滤撤单委托
+        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
         PageHelper.startPage(pageNum, pageSize);
         List<IntegratedEntrust> integratedEntrustList = integratedEntrustMapper.selectByExample(integratedEntrustExample);
         return new PageInfo<>(integratedEntrustList);
@@ -142,7 +144,8 @@ public class IntegratedEntrustServiceImpl extends AsyncServiceImpl<String, Integ
     @Override
     public PageInfo<IntegratedEntrust> queryAllEntrustForPage(int pageNum, int pageSize, String userId, String accountId, String portfolioId, String market, String stockCode, String entrustProp, int entrustStatus, List<String> ptlAuthList) {
         PageHelper.startPage(pageNum, pageSize);
-        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, ptlAuthList);
+        //过滤撤单委托
+        EntrustQryBean entrustQryBean = new EntrustQryBean(userId, accountId, "", portfolioId, market, stockCode, entrustProp, entrustStatus, EntrustType.CANCEL.value, ptlAuthList);
         List<IntegratedEntrust> integratedEntrustList = integratedEntrustMapper.selectEntrustsPageInfo(entrustQryBean);
         integratedEntrustList.forEach(integratedEntrust -> {
             if (InvestmentAssetType.isFutures(integratedEntrust.getAssetType())) {

@@ -85,7 +85,7 @@ public class SSEBinaryMessageFacade implements SSEBinaryGateway {
 
         QuoteProto.TickBean.Builder builder = threadLocalBuilder.get();
         SSEBinaryConverter.convertToTick(level1MarketSnapshot, builder);
-        quoteService.addTick(builder.build());
+        quoteService.addSSETick(builder.build());
 
         if (securityId.equals("100303") || securityId.equals("100504")) {
             logger.info("level1 -> {}", level1MarketSnapshot);

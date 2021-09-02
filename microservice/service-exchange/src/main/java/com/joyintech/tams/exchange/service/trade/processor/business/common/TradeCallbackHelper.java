@@ -55,7 +55,11 @@ public class TradeCallbackHelper {
 
     public void onTrade(Trade tradeRecord) {
         logger.info("成交回报信息 {}", JsonUtils.getJsonFromObject(tradeRecord));
-        Trade tradeDb = tradeService.queryTradeByAccountIdAndBrokerTradeId(tradeRecord.getAccountId(), tradeRecord.getBrokerTradeId());
+        //撤单、废单成交无需去重。 支持重复处理
+        Trade tradeDb = null;
+        if (!TradeType.probablyNoBrokerTradeId(tradeRecord.getTradeType())) {
+            tradeDb = tradeService.queryTradeByAccountIdAndBrokerTradeId(tradeRecord.getAccountId(), tradeRecord.getBrokerTradeId());
+        }
         Date now = new Date(System.currentTimeMillis());
         if (Objects.isNull(tradeDb)) {
             EntrustInterface entrust = null;
@@ -240,7 +244,12 @@ public class TradeCallbackHelper {
         //确保成交记录的成交金额、数量、价格在terminal端已经处理
         if (tradeRecord.getTradeType() == TradeType.NORMAL.value) {
             transactionHelper.setTradeRecord(tradeRecord);
-            processNormalTrade(entrust, tradeRecord, order, instruction);
+            //质押出入库，返回的标准券代码不用再次处理，只需要处理原始合约代码成交
+            if (entrust.getStockCode().equals(tradeRecord.getStockCode())) {
+                processNormalTrade(entrust, tradeRecord, order, instruction);
+            } else {
+                logger.info("成交 [{}] 中合约代码  [{}] 和委托 [{}] 中合约代码 [{}] 不一致 entrustProp [{}], 无需处理该笔成交", tradeRecord.getBrokerTradeId(), tradeRecord.getStockCode(), entrust.getId(), entrust.getStockCode(), entrust.getEntrustProp());
+            }
             // 若指令全部完成，则更新指令状态为已完成
             updateInstructionStatus(instruction);
             // 是否需要手工交手

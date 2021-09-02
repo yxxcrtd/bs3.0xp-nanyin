@@ -6,6 +6,7 @@ import java.io.Serializable;
  * create By MAXX on 2020/9/30
  */
 public class CounterTraderInfo implements Serializable {
+    private static final long serialVersionUID = -1953299111965915898L;
     private String counterId;//交易对手代码
     private String linkId;//关联代码
     private String counterType;//交易对手类型

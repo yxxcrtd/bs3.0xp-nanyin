@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PositionBean implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 3951699438162028861L;
     @NotNull
     @Size(max = 32)
     private String id;
