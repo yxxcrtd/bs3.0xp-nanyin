@@ -573,6 +573,14 @@ public class EntrustRdsCommonAop {
             logger.info(BATCH_INFO_LOG, infCode);
             infCode = BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue();
         }
+
+        // add by etliu 20210902 start
+        // 债券多组合指令，走预占释放批量接口
+        if (mapTrd.containsKey("etrInvestBondInfoDtos")) {
+            infCode = BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue();
+        }
+        // add by etliu 20210902 end
+
         revokeBackRiskCommon(mapTrd, infCode, joinPoint);
     }
 
