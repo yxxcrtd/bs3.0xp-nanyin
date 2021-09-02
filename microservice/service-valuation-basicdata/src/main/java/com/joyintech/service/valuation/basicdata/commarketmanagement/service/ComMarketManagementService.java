@@ -37,6 +37,35 @@ public class ComMarketManagementService extends BaseService<ComMarketManageDto>{
  		  return queryForPageForSelectReturn(page, length, () -> mstMarketManagementMapper.getGradeResult(param));
 
 			}*/
-	 
+
+
+	/**
+	 * 根据资产代码获取债券
+	 * @param param
+	 * @return
+	 */
+	public List<ComMarketManageDto> getFinprodLists(Map<String, Object> param) {
+		return comMarketManagementMapper.getFinprodLists(param);
+	}
+
+	/**
+	 * 根据评级结构获取机构
+	 * @param param
+	 * @return
+	 */
+	public List<ComMarketManageDto> getCustomerLists(Map<String, Object> param) {
+		return comMarketManagementMapper.getCustomerLists(param);
+	}
+
+	/**
+	 * 导入数据
+	 * @param list
+	 * @return
+	 */
+	public int importDatas(List<ComMarketManageDto> list) {
+		comMarketManagementMapper.deleteBatch(list);
+		return comMarketManagementMapper.insertBatch(list);
+	}
+
  
 }
