@@ -146,7 +146,7 @@ public class EtrPlanAssetC003Controller extends BaseController {
                     DictCodeListExt1.是或否_是.getValue())
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()))
-                    && dto.getProAvailableCash() != null
+                    && dto.getProAvailableCash() != null && dto.getEntrustAmt() != null
                     && dto.getEntrustAmt().compareTo(dto.getProAvailableCash()) == 1) {
                 if (StringUtil.isNotBlank(confirmMessage)) {
                     confirmMessage.append("<br />");
@@ -161,7 +161,7 @@ public class EtrPlanAssetC003Controller extends BaseController {
                     DictCodeListExt1.是或否_是.getValue())
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue()))
-                    && dto.getAssetAvailablePosition() != null
+                    && dto.getAssetAvailablePosition() != null && dto.getEntrustNum() != null
                     && dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0) {
                 if (StringUtil.isNotBlank(confirmMessage)) {
                     confirmMessage.append("<br />");
