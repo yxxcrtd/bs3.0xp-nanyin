@@ -10,7 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 public final class RestUrlUtil {
     public static String apiUrl(String path) {
-        return UriComponentsBuilder.fromHttpUrl(ServiceApplication.ADAPTER_SERVICE_NAME)
+        return UriComponentsBuilder.fromHttpUrl(ServiceApplication.JIXU_SERVICE_NAME)
                 .pathSegment(ApiPathConst.API_PATH, path).build().toString();
     }
 }

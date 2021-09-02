@@ -25,11 +25,12 @@ import javax.annotation.PostConstruct;
  * @see ServiceApplication
  * @since 1.0
  */
-@Configuration("AdapterServiceApplication")
+@Configuration("jixuServiceApplication")
 public class ServiceApplication {
 
+    
     //适配器服务
-    public static String ADAPTER_SERVICE_NAME = "http://adapterService";
+    public static String JIXU_SERVICE_NAME = "http://jixuService";
     
     //接口服务
     public static String CUSTOMER_INTERF_NAME = "http://customerInterfService";
@@ -48,12 +49,12 @@ public class ServiceApplication {
         @PostConstruct
         private void setConfig() {
             if(!config.isSingle()) {
-                ADAPTER_SERVICE_NAME = ADAPTER_SERVICE_NAME + config.getAdapterService();
+                JIXU_SERVICE_NAME = JIXU_SERVICE_NAME + config.getjixuService();
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = ASSET_SERVICE_NAME + config.getAssetService();
             }
             else {
-                ADAPTER_SERVICE_NAME = config.getAdapterService();
+                JIXU_SERVICE_NAME = config.getjixuService();
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
 				ASSET_SERVICE_NAME = config.getAssetService();
             }
@@ -64,7 +65,7 @@ public class ServiceApplication {
 
             private boolean single;
 
-            private String adapterService;
+            private String jixuService;
             
             private String customerInterfService;
 
@@ -89,20 +90,20 @@ public class ServiceApplication {
 
             
             /**
-             * 获取 adapterService
-             * @return adapterService.
+             * 获取 jixuService
+             * @return jixuService.
              */
-            public String getAdapterService() {
-                return adapterService;
+            public String getjixuService() {
+                return jixuService;
             }
 
             
             /**
-             * 设置 adapterService
-             * @param adapterService adapterService
+             * 设置 jixuService
+             * @param jixuService jixuService
              */
-            public void setAdapterService(String adapterService) {
-                this.adapterService = adapterService;
+            public void setjixuService(String jixuService) {
+                this.jixuService = jixuService;
             }
 
 

@@ -53,7 +53,7 @@ public class SearchFilePath {
 					}
 				}
 			}
-			File files[] = new SafelyFile[result.size()];// 声明文件数组，长度为集合的长度
+			File files[] = new File[result.size()];// 声明文件数组，长度为集合的长度
 			result.toArray(files);// 集合数组化
 			return files;
 		} else {

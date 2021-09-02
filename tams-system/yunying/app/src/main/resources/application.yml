@@ -25,8 +25,8 @@ spring:
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -56,6 +56,9 @@ base:
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 interf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -236,6 +239,7 @@ application:
       valuationBasicdataService: http://127.0.0.1:${server.port}/tamsyy
       lossModelService: http://127.0.0.1:${server.port}/tamsyy
       valModelService: http://127.0.0.1:${server.port}/tamsyy
+      jixuService: http://127.0.0.1:28080/interf
 
 # 使用服务注册中心的方式
 #  loadbalance: true
@@ -415,13 +419,13 @@ spring:
     timeout: 20000
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: CVR30INIT_DEV
-  sqldirpassword: CVR30INIT_DEV
+  sqldiruserName: CVR30INIT_TEST_MERGE
+  sqldirpassword: CVR30INIT_TEST_MERGE
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -437,23 +441,23 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
 log:
   path: /home/tams/logs/yy
   level: debug

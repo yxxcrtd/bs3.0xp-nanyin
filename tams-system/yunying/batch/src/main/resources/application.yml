@@ -149,29 +149,29 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams/service
-      basicDataService: http://127.0.0.1:8080/tams/service
-      documentService: http://127.0.0.1:8080/tams/service
-      entrustService: http://127.0.0.1:8080/tams/service
-      periodService: http://127.0.0.1:8080/tams/service
-      assetService: http://127.0.0.1:8080/tams/service
-      portfolioService: http://127.0.0.1:8080/tams/service
-      productService: http://127.0.0.1:8080/tams/service
-      quotaService: http://127.0.0.1:8080/tams/service
-      reportService: http://127.0.0.1:8080/tams/service
-      riskService: http://127.0.0.1:8080/tams/service
-      riskRdsService: http://127.0.0.1:8080/tams/service
-      riskInfService: http://127.0.0.1:8080/tams/service
-      settleService: http://127.0.0.1:8080/tams/service
-      tradeService: http://127.0.0.1:8080/tams/service
-      disclosureService: http://127.0.0.1:8080/tams/service
-      valuationService: http://127.0.0.1:8080/tams/service
-      chbService: http://127.0.0.1:8080/tams/service
-      chb3Service: http://127.0.0.1:8080/tams/service
-      svrcomService: http://127.0.0.1:8080/tams/service
-      pbcService: http://127.0.0.1:8080/tams/service
-      investInterfService: http://127.0.0.1:8080/tams/service
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy/service
+      basicDataService: http://127.0.0.1:8081/tamsyy/service
+      documentService: http://127.0.0.1:8081/tamsyy/service
+      entrustService: http://127.0.0.1:8081/tamsyy/service
+      periodService: http://127.0.0.1:8081/tamsyy/service
+      assetService: http://127.0.0.1:8081/tamsyy/service
+      portfolioService: http://127.0.0.1:8081/tamsyy/service
+      productService: http://127.0.0.1:8081/tamsyy/service
+      quotaService: http://127.0.0.1:8081/tamsyy/service
+      reportService: http://127.0.0.1:8081/tamsyy/service
+      riskService: http://127.0.0.1:8081/tamsyy/service
+      riskRdsService: http://127.0.0.1:8081/tamsyy/service
+      riskInfService: http://127.0.0.1:8081/tamsyy/service
+      settleService: http://127.0.0.1:8081/tamsyy/service
+      tradeService: http://127.0.0.1:8081/tamsyy/service
+      disclosureService: http://127.0.0.1:8081/tamsyy/service
+      valuationService: http://127.0.0.1:8081/tamsyy/service
+      chbService: http://127.0.0.1:8081/tamsyy/service
+      chb3Service: http://127.0.0.1:8081/tamsyy/service
+      svrcomService: http://127.0.0.1:8081/tamsyy/service
+      pbcService: http://127.0.0.1:8081/tamsyy/service
+      investInterfService: http://127.0.0.1:8081/tamsyy/service
+      tamsServer: http://127.0.0.1:8081/tamsyy
 #base数据库配置
 base:
   datasource:
@@ -217,29 +217,30 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy
+      basicDataService: http://127.0.0.1:8081/tamsyy
+      documentService: http://127.0.0.1:8081/tamsyy
+      entrustService: http://127.0.0.1:8081/tamsyy
+      periodService: http://127.0.0.1:8081/tamsyy
+      assetService: http://127.0.0.1:8081/tamsyy
+      portfolioService: http://127.0.0.1:8081/tamsyy
+      productService: http://127.0.0.1:8081/tamsyy
+      quotaService: http://127.0.0.1:8081/tamsyy
+      reportService: http://127.0.0.1:8081/tamsyy
+      riskService: http://127.0.0.1:8081/tamsyy
+      riskRdsService: http://127.0.0.1:8081/tamsyy
+      riskInfService: http://127.0.0.1:8081/tamsyy
+      settleService: http://127.0.0.1:8081/tamsyy
+      tradeService: http://127.0.0.1:8081/tamsyy
+      disclosureService: http://127.0.0.1:8081/tamsyy
+      valuationService: http://127.0.0.1:8081/tamsyy
+      chbService: http://127.0.0.1:8081/tamsyy
+      chb3Service: http://127.0.0.1:8081/tamsyy
+      svrcomService: http://127.0.0.1:8081/tamsyy
+      pbcService: http://127.0.0.1:8081/tamsyy
+      investInterfService: http://127.0.0.1:8081/tamsyy
+      tamsServer: http://127.0.0.1:8081/tamsyy
+      jixuService: http://127.0.0.1:28080/interf
 #base数据库配置
 base:
   datasource:
@@ -303,29 +304,29 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy
+      basicDataService: http://127.0.0.1:8081/tamsyy
+      documentService: http://127.0.0.1:8081/tamsyy
+      entrustService: http://127.0.0.1:8081/tamsyy
+      periodService: http://127.0.0.1:8081/tamsyy
+      assetService: http://127.0.0.1:8081/tamsyy
+      portfolioService: http://127.0.0.1:8081/tamsyy
+      productService: http://127.0.0.1:8081/tamsyy
+      quotaService: http://127.0.0.1:8081/tamsyy
+      reportService: http://127.0.0.1:8081/tamsyy
+      riskService: http://127.0.0.1:8081/tamsyy
+      riskRdsService: http://127.0.0.1:8081/tamsyy
+      riskInfService: http://127.0.0.1:8081/tamsyy
+      settleService: http://127.0.0.1:8081/tamsyy
+      tradeService: http://127.0.0.1:8081/tamsyy
+      disclosureService: http://127.0.0.1:8081/tamsyy
+      valuationService: http://127.0.0.1:8081/tamsyy
+      chbService: http://127.0.0.1:8081/tamsyy
+      chb3Service: http://127.0.0.1:8081/tamsyy
+      svrcomService: http://127.0.0.1:8081/tamsyy
+      pbcService: http://127.0.0.1:8081/tamsyy
+      investInterfService: http://127.0.0.1:8081/tamsyy
+      tamsServer: http://127.0.0.1:8081/tamsyy
 #base数据库配置
 base:
   datasource:
@@ -390,29 +391,30 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy
+      basicDataService: http://127.0.0.1:8081/tamsyy
+      documentService: http://127.0.0.1:8081/tamsyy
+      entrustService: http://127.0.0.1:8081/tamsyy
+      periodService: http://127.0.0.1:8081/tamsyy
+      assetService: http://127.0.0.1:8081/tamsyy
+      portfolioService: http://127.0.0.1:8081/tamsyy
+      productService: http://127.0.0.1:8081/tamsyy
+      quotaService: http://127.0.0.1:8081/tamsyy
+      reportService: http://127.0.0.1:8081/tamsyy
+      riskService: http://127.0.0.1:8081/tamsyy
+      riskRdsService: http://127.0.0.1:8081/tamsyy
+      riskInfService: http://127.0.0.1:8081/tamsyy
+      settleService: http://127.0.0.1:8081/tamsyy
+      tradeService: http://127.0.0.1:8081/tamsyy
+      disclosureService: http://127.0.0.1:8081/tamsyy
+      valuationService: http://127.0.0.1:8081/tamsyy
+      chbService: http://127.0.0.1:8081/tamsyy
+      chb3Service: http://127.0.0.1:8081/tamsyy
+      svrcomService: http://127.0.0.1:8081/tamsyy
+      pbcService: http://127.0.0.1:8081/tamsyy
+      investInterfService: http://127.0.0.1:8081/tamsyy
+      tamsServer: http://127.0.0.1:8081/tamsyy
+      jixuService: http://127.0.0.1:28080/interf
 #base数据库配置
 base:
   datasource:
@@ -475,29 +477,29 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy
+      basicDataService: http://127.0.0.1:8081/tamsyy
+      documentService: http://127.0.0.1:8081/tamsyy
+      entrustService: http://127.0.0.1:8081/tamsyy
+      periodService: http://127.0.0.1:8081/tamsyy
+      assetService: http://127.0.0.1:8081/tamsyy
+      portfolioService: http://127.0.0.1:8081/tamsyy
+      productService: http://127.0.0.1:8081/tamsyy
+      quotaService: http://127.0.0.1:8081/tamsyy
+      reportService: http://127.0.0.1:8081/tamsyy
+      riskService: http://127.0.0.1:8081/tamsyy
+      riskRdsService: http://127.0.0.1:8081/tamsyy
+      riskInfService: http://127.0.0.1:8081/tamsyy
+      settleService: http://127.0.0.1:8081/tamsyy
+      tradeService: http://127.0.0.1:8081/tamsyy
+      disclosureService: http://127.0.0.1:8081/tamsyy
+      valuationService: http://127.0.0.1:8081/tamsyy
+      chbService: http://127.0.0.1:8081/tamsyy
+      chb3Service: http://127.0.0.1:8081/tamsyy
+      svrcomService: http://127.0.0.1:8081/tamsyy
+      pbcService: http://127.0.0.1:8081/tamsyy
+      investInterfService: http://127.0.0.1:8081/tamsyy
+      tamsServer: http://127.0.0.1:8081/tamsyy
 #base数据库配置
 base:
   datasource:
@@ -562,29 +564,29 @@ application:
   micorservice:
     contextPath:
       single: true
-      commonService: http://127.0.0.1:8080/tams
-      basicDataService: http://127.0.0.1:8080/tams
-      documentService: http://127.0.0.1:8080/tams
-      entrustService: http://127.0.0.1:8080/tams
-      periodService: http://127.0.0.1:8080/tams
-      assetService: http://127.0.0.1:8080/tams
-      portfolioService: http://127.0.0.1:8080/tams
-      productService: http://127.0.0.1:8080/tams
-      quotaService: http://127.0.0.1:8080/tams
-      reportService: http://127.0.0.1:8080/tams
-      riskService: http://127.0.0.1:8080/tams
-      riskRdsService: http://127.0.0.1:8080/tams
-      riskInfService: http://127.0.0.1:8080/tams
-      settleService: http://127.0.0.1:8080/tams
-      tradeService: http://127.0.0.1:8080/tams
-      disclosureService: http://127.0.0.1:8080/tams
-      valuationService: http://127.0.0.1:8080/tams
-      chbService: http://127.0.0.1:8080/tams
-      chb3Service: http://127.0.0.1:8080/tams
-      svrcomService: http://127.0.0.1:8080/tams
-      pbcService: http://127.0.0.1:8080/tams
-      investInterfService: http://127.0.0.1:8080/tams
-      tamsServer: http://127.0.0.1:8080/tams
+      commonService: http://127.0.0.1:8081/tamsyy
+      basicDataService: http://127.0.0.1:8081/tamsyy
+      documentService: http://127.0.0.1:8081/tamsyy
+      entrustService: http://127.0.0.1:8081/tamsyy
+      periodService: http://127.0.0.1:8081/tamsyy
+      assetService: http://127.0.0.1:8081/tamsyy
+      portfolioService: http://127.0.0.1:8081/tamsyy
+      productService: http://127.0.0.1:8081/tamsyy
+      quotaService: http://127.0.0.1:8081/tamsyy
+      reportService: http://127.0.0.1:8081/tamsyy
+      riskService: http://127.0.0.1:8081/tamsyy
+      riskRdsService: http://127.0.0.1:8081/tamsyy
+      riskInfService: http://127.0.0.1:8081/tamsyy
+      settleService: http://127.0.0.1:8081/tamsyy
+      tradeService: http://127.0.0.1:8081/tamsyy
+      disclosureService: http://127.0.0.1:8081/tamsyy
+      valuationService: http://127.0.0.1:8081/tamsyy
+      chbService: http://127.0.0.1:8081/tamsyy
+      chb3Service: http://127.0.0.1:8081/tamsyy
+      svrcomService: http://127.0.0.1:8081/tamsyy
+      pbcService: http://127.0.0.1:8081/tamsyy
+      investInterfService: http://127.0.0.1:8081/tamsyy
+      tamsServer: http://127.0.0.1:8081/tamsyy
 #base数据库配置
 base:
   datasource:

@@ -102,6 +102,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jixu</groupId>
+			<artifactId>jixu</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jixu</groupId>
 			<artifactId>JixuApi</artifactId>
 			<version>0.0.1</version>
 			<exclusions>
