@@ -692,7 +692,7 @@
             T3.THEORY_PRIN prinAmtTheory/*理论还本金额*/,
             T1.INT_AMT intAmt/*实收利息总额*/,
             DEAL.CANCEL_REMARK revokeReason,
-            to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE/*资金到账日*/,
+            to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') TRADE_DATE/*资金到账日*/,
             T1.TRADE_MARKET_MODE tradeMarket,
             T1.SHARE_AMT*100 qty,
             T3.THEORY_AMT fpriceAmt/*理论本息总额*/,
