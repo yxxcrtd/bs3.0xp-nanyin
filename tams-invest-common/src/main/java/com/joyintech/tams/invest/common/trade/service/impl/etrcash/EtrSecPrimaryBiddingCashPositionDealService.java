@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.common.trade.service.impl.etrcash;
 
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.PtlCashPositionFlowMapper;
 import com.joyintech.tams.common.base.entity.BidOrderBidPrice;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
@@ -16,8 +13,6 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -96,18 +91,26 @@ public class EtrSecPrimaryBiddingCashPositionDealService extends EtrCashPosition
 			BeanUtil.copyPropertiesIgnoreNull(PtlCashPositionFlowDto,etrCashPositionFlowDtoFrozen);
 			PtlCashPositionFlowDto.setSeqno(IDGenerator.generate());
 			PtlCashPositionFlowDto.setHodingType(DictCodeList.持仓类型_实际.getValue());
-			basePtlCashPositionInfoServiceImpl.insertCashPositionFlow(PtlCashPositionFlowDto);
+			getBasePtlCashPositionInfoServiceImpl().insertCashPositionFlow(PtlCashPositionFlowDto);
 		}
 		/**add by sunhui 20210719 重庆银行：中标结果维护，【是否头寸冻结】为是时，冻结组合可用现金   end**/
 	}
 
-	@Autowired(required = false)
-	public void setPtlCashPositionFlowMapper(PtlCashPositionFlowMapper ptlCashPositionFlowMapper) {
+	public void getPtlCashPositionFlowMapper(PtlCashPositionFlowMapper ptlCashPositionFlowMapper) {
 		EtrSecPrimaryBiddingCashPositionDealService.ptlCashPositionFlowMapper = ptlCashPositionFlowMapper;
 	}
 
-	@Autowired(required = false)
-	public void setBasePtlCashPositionInfoServiceImpl(BasePtlCashPositionInfoService basePtlCashPositionInfoServiceImpl) {
-		EtrSecPrimaryBiddingCashPositionDealService.basePtlCashPositionInfoServiceImpl = basePtlCashPositionInfoServiceImpl;
+	private static synchronized PtlCashPositionFlowMapper getPtlCashPositionFlowMapper() {
+		if(null == ptlCashPositionFlowMapper) {
+			ptlCashPositionFlowMapper = SpringContextUtil.getBean(PtlCashPositionFlowMapper.class);
+		}
+		return ptlCashPositionFlowMapper;
+	}
+
+	private static synchronized BasePtlCashPositionInfoService getBasePtlCashPositionInfoServiceImpl() {
+		if(null == basePtlCashPositionInfoServiceImpl) {
+			basePtlCashPositionInfoServiceImpl = SpringContextUtil.getBean(BasePtlCashPositionInfoService.class);
+		}
+		return basePtlCashPositionInfoServiceImpl;
 	}
 }
