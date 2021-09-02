@@ -126,7 +126,8 @@ public class EtrIbBondinfo003Service {
             dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             dto.setRecStatus(DictCodeList.委托状态_待接收.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
-            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+//            由于dto.getEtrInvestPersonInfo()中InvManagerId为null，因此审批后的业务表中无项目经理，故隐藏掉这行代码
+//            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
@@ -204,7 +205,8 @@ public class EtrIbBondinfo003Service {
             dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             dto.setRecStatus(DictCodeList.委托状态_待接收.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
-            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+//            由于dto.getEtrInvestPersonInfo()中InvManagerId为null，因此审批后的业务表中无项目经理，故隐藏掉这行代码
+//            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
