@@ -364,6 +364,7 @@ $(function () {
          *    币种、交易份额、净值日期、转出基金单位净值、转入基金单位净值、赎回费、申购费、转入基金确认份额=（交易份额*转出基金单位净值-赎回费-申购费）/转入基金单位净值。
          */
         $('#ps').on('change', function () {
+            $(".unitCprice_in_div").hide();
             var ps = $('#ps').val();
             var finprodId = $('#finprodId').select2('data')[0].object.finprodId;
             var portfolioId = $('#portfolioId').val();
