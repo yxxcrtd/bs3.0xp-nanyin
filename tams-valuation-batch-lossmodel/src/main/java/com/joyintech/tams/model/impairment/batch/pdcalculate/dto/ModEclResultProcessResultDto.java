@@ -1,7 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.dto;
 
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 
 /**
  * @Description:处理过的交易信息Dto

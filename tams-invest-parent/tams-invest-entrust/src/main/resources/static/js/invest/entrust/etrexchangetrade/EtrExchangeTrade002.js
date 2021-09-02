@@ -85,6 +85,7 @@
                 },sortField:'dealPercent', width : 150}//证券账户名称
 
             ,{field:'portfolioName', title: 'EtrExchangeTrade003.portfolioName', sortField:'PORTFOLIO_NAME',width : 150}//资产代码
+            ,{field:'dealCurAcctName', title: 'EtrExchangeTrade003.dealCurAcctName', sortField:'dealCurAcctName',width : 200}//资金账号名称
             ,{field:'secAcctId', title: 'EtrExchangeTrade003.secAcctId', sortField:'SEC_ACCT_ID',width : 200}//证券账户代码
             ,{field:'secAcctName', title: 'EtrExchangeTrade003.secAcctName', sortField:'SEC_ACCT_NAME',width : 200}//证券账户名称
             ,{field:'finprodAbbr', title: 'EtrExchangeTrade003.finpordName',sortField:'FINPROD_ABBR', width : 150}//资产名称
@@ -347,14 +348,32 @@
 		}
 		refreshZqzyPositionsTable();// 加载表格
 		
-	}
+	};
+    //add by chenjiaxing 指令管理添加导出功能 start
+    /**
+     * 导出
+     */
+    var exportExcel = function () {
+        if (dateTable != null && dateTable != '') {
+            var selArr = dateTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas: datas,
+            });
+        }
+    };
+    //add by chenjiaxing 指令管理添加导出功能 end
     /**
 	 * 画面加载完成
 	 */
     $(function() {
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_filter').hide();
         $('.zlgl-transfer-form #EtrExchangeTrade002_btn_export').hide();
-        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').hide();
     	// 切换到质押持仓，查询页面
         layui.use(['element', 'form'], function() {
             // 绑定交易平台TAB切换事件
@@ -378,7 +397,11 @@
         $('#EtrExchangeTrade002_zqzy_search_btn').click(function() {
         	refreshZqzyPositionsTable();// 加载表格
         });
-
+        //add by chenjiaxing 指令管理导出 start
+        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_export').click(function() {
+            exportExcel();
+        });
+        //add by chenjiaxing 指令管理导出 end
         /**
          * radio事件
          */
@@ -408,6 +431,26 @@
         // 绑定查询按钮
         $('.zhiling-transfer-form #EtrExchangeTrade002_btn_search').click(function() {
             myRefresh();
+        });
+        //重置按钮点击事件
+        $('.zhiling-transfer-form #EtrExchangeTrade002_btn_reset').click(function() {
+            $("#portfolioId_zhiling").val("");
+            $("#finprodType2_zhiling").val("");
+            $("#ps_zhiling").val("");
+            $("#secId_zhiling").val("");
+            var selects = document.getElementsByName("entrustStatus");
+            for (var i=0; i<selects.length; i++){
+                if (selects[i].value=="") {
+                    selects[i].checked= true;
+                    break;
+                }
+            }
+        });
+        $('.zlgl-transfer-form #EtrExchangeTrade002_btn_reset').click(function() {
+            $("#portfolioId").val("");
+            $("#tradeMarket_cc").val("");
+            $("#secId").val("");
+            $("#finprodType2").val("");
         });
 
         init();

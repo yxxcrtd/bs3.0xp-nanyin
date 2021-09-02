@@ -406,6 +406,24 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
      * @param infContractDetailfile
      */
     public void trdStaSec(InfContractDetailfile infContractDetailfile) {
+        // add by etliu 20210825 start
+        // 标准券入出库的成交数据有两笔，一笔是质押券的，一笔是标准券的，需要把标准券的那条过滤掉
+        // 根据指令编号查投资指令，
+        EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(infContractDetailfile.getEntrustId());
+        // 查询申报信息
+        Map<String, Object> map = new HashMap<>();
+        map.put("finprodId", etrEntrust.getFinprodId());
+        map.put("othCodeType", DictCodeListExt3.金融产品其他代码类型_质押代码.getValue());
+        FinProductOthCode finProductOthCode = entrustMsgbyMQMapper.selectFinProductOthCode(map);
+        String othCode = "";
+        if (finProductOthCode != null) {
+            othCode = finProductOthCode.getOthCode();
+        }
+        if (etrEntrust != null && !StringUtil.equals(othCode, StringUtil.substringBefore(infContractDetailfile.getFinprodMarketId(), "."))) {
+            return;
+        }
+        // add by etliu 20210825 end
+
         //标准券入出库DTO封装
         TrdTempStasecFlow trdTempStasecFlow =new TrdTempStasecFlow();
         //入出库编号--自动生成
@@ -1219,6 +1237,20 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         finTradeProduct.setVdate(infContractDetailfile.getVdate());
         // 到期日
         finTradeProduct.setMdate(infContractDetailfile.getMdate());
+
+        // add by etliu 20210827 start
+        String assetType1 = entrustMsgbyMQMapper.queryAssetType1(infContractDetailfile.getEntrustId());
+        if(DictCodeList.回购类型_质押式竞价回购.getValue().equals(assetType1)) {
+            finTradeProduct.setVdate(infContractDetailfile.getTradeDate());
+            if(StringUtil.isNotEmpty(infContractDetailfile.getFinprodMarketId())) {
+                finTradeProduct.setTermType(infContractDetailfile.getFinprodMarketId());
+                long term = this.getTerm(infContractDetailfile.getTradeMarket(),infContractDetailfile.getFinprodMarketId());
+                finTradeProduct.setTerm(term);
+                finTradeProduct.setMdate(DateUtil.addDay(finTradeProduct.getVdate(), Long.valueOf(term).intValue()));
+            }
+        }
+        // add by etliu 20210827 end
+
         // 名义本金
         finTradeProduct.setPrin(infContractDetailfile.getTradeAmt());
         // 利率类型
@@ -1241,7 +1273,7 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         }else if(DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(infContractDetailfile.getTradeMarket())){
             finTradeProduct.setCalendarId("05");
         }
-        String assetType1 = entrustMsgbyMQMapper.queryAssetType1(infContractDetailfile.getEntrustId());
+
         dto.setAssetType(assetType1);
         if(finTradeProduct.getVdate() != null && finTradeProduct.getMdate() != null){
             if(DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType1)){
@@ -1262,11 +1294,11 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             // 期限品种(暂由起息日和到期日推出)
             if(DictCodeList.回购类型_质押式竞价回购.getValue().equals(assetType1)){
 //            	String termType = this.getTermType(finTradeProduct.getVdate(),finTradeProduct.getMdate(),finTradeProduct.getTradeMarket());
-                if(StringUtil.isNotEmpty(infContractDetailfile.getFinprodMarketId())) {
-                    finTradeProduct.setTermType(infContractDetailfile.getFinprodMarketId());
-                    long term = this.getTerm(finTradeProduct.getTradeMarket(),infContractDetailfile.getFinprodMarketId());
-                    finTradeProduct.setTerm(term);
-                }
+//                if(StringUtil.isNotEmpty(infContractDetailfile.getFinprodMarketId())) {
+//                    finTradeProduct.setTermType(infContractDetailfile.getFinprodMarketId());
+//                    long term = this.getTerm(finTradeProduct.getTradeMarket(),infContractDetailfile.getFinprodMarketId());
+//                    finTradeProduct.setTerm(term);
+//                }
             }
             else {
                 // 期限

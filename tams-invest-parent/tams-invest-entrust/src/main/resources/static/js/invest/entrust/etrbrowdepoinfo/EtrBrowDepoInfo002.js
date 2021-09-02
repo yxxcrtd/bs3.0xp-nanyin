@@ -113,9 +113,10 @@
 		if ($("#getChannelId").val() && $("#portfolioId").val() && $('#ccy').val()) {
 			var data = {};
 			var portfolioId = $("#portfolioId").val();
-			var chlFinprodId = $("#getChannelId").val();
+			if($("#getChannelId").val() !=null && $("#getChannelId").val() !=''){
+				data.chlFinprodId =  $("#getChannelId").val();
+			}
 			data.portfolioId = portfolioId;
-			data.chlFinprodId = chlFinprodId;
 			data.ccy = $('#ccy').val();
 			Joyin.ajaxJson(basePath + 'invest/entrust/etrbrowdepoinfo/EtrBrowDepoInfo002/getChannelAvailableCash', data,
 				function (result) {

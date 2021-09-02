@@ -4,8 +4,10 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.lossmodel.batchtask.model.dto.BatchExecutingStatusDto;
 import com.joyintech.tams.valuation.lossmodel.batchtask.service.ModImpaireBatchTask001Service;
@@ -61,6 +63,8 @@ public class ModImpaireBatchTask001Controller extends BaseController {
     @ResponseBody
     public Page<SelectOptionDto> getAssetInfo() {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
+        //带入系统参数 01毕马威 02普华
+        pageParam.put("lossType",CacheUtil.getSysParam(DictCode.减值方案类型.getValue()));
         return modImpaireBatchTask001Service.getAssetInfo(pageParam);
     }
 

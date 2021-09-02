@@ -124,6 +124,9 @@ public class EtrPlanAssetC002Controller extends BaseController {
             entity.setProfitType(DictCodeList.收益类型_货币型.getValue());
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
+        // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 add start
+        model.addAttribute("single", "1");
+        // ZGZGST-1428 交易对手必填 fuyongsheng 202108271501 add end
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");

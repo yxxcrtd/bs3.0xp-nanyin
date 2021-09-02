@@ -10,11 +10,12 @@
 
 package com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dao.ModBintreeConfigDtoMapper;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
@@ -24,11 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 二叉树模型参数配置
@@ -65,6 +65,9 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
     public ModBintreeConfigDto queryDtoBySeqno(String seqno){
     	return modBintreeConfigDtoMapper.selectByPrimaryKey(seqno);
     }
+	public ModBintreeConfigDto selectByFinprodId(ModBintreeConfigDto dto){
+		return modBintreeConfigDtoMapper.selectByFinprodId(dto.getFinprodId());
+	}
     public void insert(ModBintreeConfigDto dto){
     	modBintreeConfigDtoMapper.insert(dto);
     }
@@ -124,6 +127,23 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
 	public List<StockQuotationDto> getStockQuotation(StockQuotationDto assetInfoDto){
 		return modBintreeConfigDtoMapper.getStockQuotation(assetInfoDto);
 	}
-    		
+
+	/**
+	 * 市场机构
+	 * @param page
+	 * @param length
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	public Page<SelectOptionDto> getMarketId(int page, int length, Map<String, Object> param)
+			throws Exception {
+		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getMarketId(param));
+	}
+
+	public Page<SelectOptionDto> getCurveCode(int page, int length, Map<String, Object> param)
+			throws Exception {
+		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getCurveCode(param));
+	}
    
 }

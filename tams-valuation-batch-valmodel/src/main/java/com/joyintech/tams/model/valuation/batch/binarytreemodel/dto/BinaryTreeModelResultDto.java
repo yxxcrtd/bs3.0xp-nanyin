@@ -1,7 +1,9 @@
 package com.joyintech.tams.model.valuation.batch.binarytreemodel.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 public class BinaryTreeModelResultDto extends NeedToWriteEntity {
 
@@ -13,6 +15,10 @@ public class BinaryTreeModelResultDto extends NeedToWriteEntity {
      * 估值模型风险溢价数据
      */
     private ModRiskPremium modRiskPremium;
+    /**
+     * 最终的债券估值行情数据
+     */
+    private MstBondValuationInfo mstBondValuationInfo;
 
     public ModCurveResult getModCurveResult() {
         return modCurveResult;
@@ -28,5 +34,13 @@ public class BinaryTreeModelResultDto extends NeedToWriteEntity {
 
     public void setModRiskPremium(ModRiskPremium modRiskPremium) {
         this.modRiskPremium = modRiskPremium;
+    }
+
+    public MstBondValuationInfo getMstBondValuationInfo() {
+        return mstBondValuationInfo;
+    }
+
+    public void setMstBondValuationInfo(MstBondValuationInfo mstBondValuationInfo) {
+        this.mstBondValuationInfo = mstBondValuationInfo;
     }
 }

@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='DYFXRB12QMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYFXRB12QMZE','单一发行人发行的ABN、ABS持仓券面总额','N','','system','',sysdate,'system',sysdate,'','','Y','', 'String','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('DYFXRB12QMZE','单一发行人发行的ABN、ABS持仓券面总额','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='DYFXRB12QMZE';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','01', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','01', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','02', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','02', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','03', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','03', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','04', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','04', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','05', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','system','',sysdate,'system',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('DYFXRB12QMZE','05', 'SQL','SELECT 1 FROM DUAL', 'issuerCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占

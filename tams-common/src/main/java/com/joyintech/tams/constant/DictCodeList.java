@@ -385,7 +385,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	共通业务类型_风险试算(DictCode.共通业务类型,"RSK01","风险试算"),
 	共通业务类型_授权管理(DictCode.共通业务类型,"RSK02","授权管理"),
 	共通业务类型_主体授信额度管理(DictCode.共通业务类型,"RSK03","主体授信额度管理"),
-	共通业务类型_额度标签管理(DictCode.共通业务类型,"RSK04","额度标签管理"),
+	共通业务类型_额度标签管理(DictCode.共通业务类型,"RSK52","额度标签管理"),
 	共通业务类型_授信额度调整(DictCode.共通业务类型,"RSK04","授信额度调整"),
 	共通业务类型_额度扣减规则管理(DictCode.共通业务类型,"RSK05","额度扣减规则管理"),
 	共通业务类型_限额指标参数管理(DictCode.共通业务类型,"RSK06","限额指标参数管理"),
@@ -2020,10 +2020,6 @@ public enum DictCodeList implements BaseDictCodeList {
 	产品数据来源_三方分销TA(DictCode.产品数据来源, "02", "三方分销TA"),
     释放状态_未释放(DictCode.释放状态,"0","未释放"),
     释放状态_已释放(DictCode.释放状态,"1","已释放"),
-    共通业务类型_手动释放头寸(DictCode.共通业务类型,"MR1","手动释放头寸"),
-    共通业务类型_规划策略池维护(DictCode.共通业务类型, "PRDPLAN06", "规划策略池维护"),
-	交易市场_一级市场(DictCode.交易市场, "01", "一级市场"),
-	交易市场_二级市场(DictCode.交易市场, "02", "二级市场"),
 	;
 	/*字典值已经满了 ，不要添加了*/
     private String value;

@@ -108,5 +108,6 @@
         <module>tams-valuation-batch-valmodel</module>
         <module>tams-valuation-batch-lossmodel</module>
         <module>microservice/tams-service-container-touguan</module>
+        <module>microservice/tams-service-container-yunying</module>
     </modules>
 </project>

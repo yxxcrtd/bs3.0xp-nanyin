@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.component.batch.dao;
 
+import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ public interface ModAssetInfoMapper {
 	List<ModCashFlowPayRulesDto> getCashFlowPayRulesByFinprodId(String finprodId);
 		
 	//股票行情查询/区间查询
-	List<ModStockMarketInfoDto> getStockMarketInfo(ModStockMarketParamsDto paraMap);
+	List<MstSharePrice> getStockMarketInfo(ModStockMarketParamsDto paraMap);
 	
 	//曲线行情查询 /区间查询
 	List<ModYieldCurveInfoDto> selectYieldCurveInfo(ModYeildCurveParamsDto dto);
@@ -41,4 +42,9 @@ public interface ModAssetInfoMapper {
 	//非标外部评级查询-减值模型
 	ModRateDataDto selectOutRateData(Map<String, Object> paraMap);
 
+	//二叉树模型批处理待处理资产查询
+    List<ModAssetInfoDto> selectBinaryTreeAssetInfo(ModAssetInfoParamsDto paraMap);
+
+    //收益法模型批处理待处理资产查询
+    List<ModAssetInfoDto> selectIncomeMethodAssetInfo(ModAssetInfoParamsDto paraMap);
 }

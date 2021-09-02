@@ -197,7 +197,8 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         ClientData data = new ClientData();
         data.setHead(header);
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put(RSK_SZ_LIST,requstjson);
+//        body.put(RSK_SZ_LIST,requstjson);
+        body.put(RSK_SZ_LIST, requestList);
         body.put("orderID",dataMap.get("orderID"));
         data.setBody(body);
 
@@ -779,9 +780,15 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     }
                     //add by zhangnian  平安资产类型_质押式回购  start
                     //质押券为利率债(国债、政策型银行债)不占额度
-                    if(DictCodeList.平安资产类型_质押式回购.getValue().equals(assetType)&&!riskCreditListCommonValidatorService.checkCallCredit(assetType + "_" + finDto.getAssetCode())) {
-                       continue;
-                    }
+                    if(DictCodeList.平安资产类型_质押式回购.getValue().equals(assetType)&&temp.containsKey("pledgeAssetCodeList")){
+                        List<String> pledgeAssetCodeList = (List<String>) temp.get("pledgeAssetCodeList");
+                        if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
+                            String assetcode = pledgeAssetCodeList.get(0);
+                            if (StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode)) {
+                                continue;
+                            }
+                        }
+                     }
                     //add by zhangnian  20210823 end
                     CreditLinesInputDto creditLinesInputDto =new CreditLinesInputDto();
                     creditLinesInputDto.setTradeStatus(tradeStatu);

@@ -295,7 +295,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 				// add by caozhenming 20210730 start
 				String finprodType2 = dto.getFinprodType2();
 				// 交易价格
-				if (DictCodeList.交易市场_二级市场.getValue().equals(dto.getTradeMarketMode()) && DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)){
+				if (DictCodeListExt1.交易市场_二级市场.getValue().equals(dto.getTradeMarketMode()) && DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)){
 					// 债券二级交易取净价
 					dto.setTradePrice(dto.getUnitCprice());
 				} else if (DictCodeListExt2.平安资产类型_股票.getValue().equals(dto.getFinprodType2())){

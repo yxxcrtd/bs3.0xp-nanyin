@@ -114,8 +114,8 @@
     		Joyin.error(JoyinUtil.getMessage("自主专户没有组合持有!"));
     		return ;
     	}
-    	if(!$("#entrustAmt").val()){
-    	    Joyin.error(JoyinUtil.getMessage("指令金额不可为空!"))
+        if(!$("#entrustAmt").val()){
+            Joyin.error(JoyinUtil.getMessage("指令金额不可为空!"))
         }
         var objectRisk=table.getAllRows();
         var objectRiskForm = $.serializeToObject('#searchForm');
@@ -182,11 +182,7 @@
         if(entrustId)object.entrustId=entrustId;//update zhangweiqi 2021-1-11 列表展示重复问题
         Joyin.ajaxJson(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
-                if(operateType === 'save'){
-                    WorkFlow.doSaveList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_save")
-                }else{
-                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_submit");
-                }
+                WorkFlow.doSubmitList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_submit");
             });
         });
     };
@@ -290,26 +286,9 @@
     $(function() {
         init();
         // 提交按钮执行事件
-        /**
-         * 保存
-         */
-        $('#EtrAutoManagementAccount002_btn_save').click(function() {
-            onSaveOrSubmitAction('save');
-        });
-        /**
-         * 提交
-         */
-        $('#EtrAutoManagementAccount002_btn_submit').click(function() {
+        $('#EtrAutoManagementAccount002_btn_submit').click(function(){
             onSaveOrSubmitAction('submit');
         });
-        /**
-         * 风险试算
-         */
-        $('#EtrAutoManagementAccount002_btn_riskcal').click(function(){
-            var object = $.serializeToObject('#searchForm',true);
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
-        });
-
         $("#entrustAmt").change(function(){
             var entrustAmt = $('#entrustAmt').val();
 

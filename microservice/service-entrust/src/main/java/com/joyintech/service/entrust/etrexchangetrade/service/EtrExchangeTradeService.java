@@ -653,7 +653,7 @@ public class EtrExchangeTradeService extends BaseService{
         etrSinglePortfolioDto.setPrice(dto.getEntrustPrice() != null ? dto.getEntrustPrice() : dto.getPrice());// 指令价格
         etrSinglePortfolioDto.setEntrustNum(dto.getEntrustNum());// 指令数量
         etrSinglePortfolioDto.setEntrustAmt(dto.getEntrustAmt());// 指令金额
-        etrSinglePortfolioDto.setInvAim(null);// 投资目的
+        etrSinglePortfolioDto.setInvAim(dto.getInvAim());// 投资目的
         etrSinglePortfolioDto.setTradeMarket(dto.getTradeMarket());// 交易场所
         etrSinglePortfolioDto.setTradePlat(dto.getTradePlat());// 交易平台
         /*

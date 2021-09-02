@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModGradePdConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModGradePdConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="VOUCH_YEAR" property="vouchYear" jdbcType="DECIMAL" />
+        <result column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <result column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="FORWARD_YEAR_PD" property="forwardYearPd" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PD_CONFIG_TYPE" property="pdConfigType" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModGradePdConfig" >
+        insert into MOD_GRADE_PD_CONFIG (SEQNO, VOUCH_YEAR, GRADE_ORG_ID, 
+            O_TYPE, GRADE_RESULT, FORWARD_YEAR_PD, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, PD_CONFIG_TYPE
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{vouchYear,jdbcType=DECIMAL}, #{gradeOrgId,jdbcType=VARCHAR}, 
+            #{oType,jdbcType=VARCHAR}, #{gradeResult,jdbcType=VARCHAR}, #{forwardYearPd,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{pdConfigType,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModGradePdConfig" >
+        insert into MOD_GRADE_PD_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="vouchYear != null" >
+                VOUCH_YEAR,
+            </if>
+            <if test="gradeOrgId != null" >
+                GRADE_ORG_ID,
+            </if>
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="forwardYearPd != null" >
+                FORWARD_YEAR_PD,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="pdConfigType != null" >
+                PD_CONFIG_TYPE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="vouchYear != null" >
+                #{vouchYear,jdbcType=DECIMAL},
+            </if>
+            <if test="gradeOrgId != null" >
+                #{gradeOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="forwardYearPd != null" >
+                #{forwardYearPd,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pdConfigType != null" >
+                #{pdConfigType,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModGradePdConfig" >
+        insert into MOD_GRADE_PD_CONFIG(SEQNO, VOUCH_YEAR, GRADE_ORG_ID, O_TYPE, GRADE_RESULT, 
+        FORWARD_YEAR_PD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        PD_CONFIG_TYPE)
+        select SEQNO, VOUCH_YEAR, GRADE_ORG_ID, O_TYPE, GRADE_RESULT, 
+            FORWARD_YEAR_PD, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            PD_CONFIG_TYPE
+             from MOD_GRADE_PD_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

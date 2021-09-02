@@ -2,10 +2,10 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='FV202001010003';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FV202001010003','交易净价对应的到期收益率固定值','N','','w1','C001',sysdate,'w1',sysdate,'','','','', 'FIX','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('FV202001010003','交易净价对应的到期收益率固定值','N','','cdj','C001',sysdate,'cdj',sysdate,'','','','', 'FIX','', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_FIX_RECODE WHERE PARA_CODE = 'FV202001010003';
-INSERT INTO RSK_ISUP_FIX_RECODE VALUES('FV202001010003','0',to_date('2020-01-01','yyyy-mm-dd'),to_date('2021-07-09','yyyy-mm-dd'),'w1','C001',SYSDATE,'w1',SYSDATE,'FIX');
+INSERT INTO RSK_ISUP_FIX_RECODE VALUES('FV202001010003','0',to_date('2020-01-01','yyyy-mm-dd'),to_date('2021-07-09','yyyy-mm-dd'),'cdj','C001',SYSDATE,'cdj',SYSDATE,'FIX');
 
 
 

@@ -21,12 +21,19 @@
         <result column="TYPE_10" property="type10" jdbcType="VARCHAR" />
         <result column="TYPE_11" property="type11" jdbcType="VARCHAR" />
         <result column="TYPE_12" property="type12" jdbcType="VARCHAR" />
+        <result column="TYPE_13" property="type13" jdbcType="VARCHAR" />
+        <result column="TYPE_14" property="type14" jdbcType="VARCHAR" />
+        <result column="TYPE_15" property="type15" jdbcType="VARCHAR" />
+        <result column="TYPE_16" property="type16" jdbcType="VARCHAR" />
+        <result column="TYPE_17" property="type17" jdbcType="VARCHAR" />
+        <result column="TYPE_18" property="type18" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         FINPROD_ID FINPROD_ID, BRANCH BRANCH, TYPE_1 TYPE_1, TYPE_2 TYPE_2, TYPE_3 TYPE_3, 
         TYPE_4 TYPE_4, TYPE_5 TYPE_5, TYPE_6 TYPE_6, TYPE_7 TYPE_7, TYPE_8 TYPE_8, CREATE_USER CREATE_USER, 
         CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, 
-        TYPE_9 TYPE_9, TYPE_10 TYPE_10, TYPE_11 TYPE_11, TYPE_12 TYPE_12
+        TYPE_9 TYPE_9, TYPE_10 TYPE_10, TYPE_11 TYPE_11, TYPE_12 TYPE_12, TYPE_13 TYPE_13, 
+        TYPE_14 TYPE_14, TYPE_15 TYPE_15, TYPE_16 TYPE_16, TYPE_17 TYPE_17, TYPE_18 TYPE_18
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -57,14 +64,18 @@
             TYPE_8, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
             TYPE_9, TYPE_10, TYPE_11, 
-            TYPE_12)
+            TYPE_12, TYPE_13, TYPE_14, 
+            TYPE_15, TYPE_16, TYPE_17, 
+            TYPE_18)
         values (#{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, #{type1,jdbcType=VARCHAR}, 
             #{type2,jdbcType=VARCHAR}, #{type3,jdbcType=VARCHAR}, #{type4,jdbcType=VARCHAR}, 
             #{type5,jdbcType=VARCHAR}, #{type6,jdbcType=VARCHAR}, #{type7,jdbcType=VARCHAR}, 
             #{type8,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{type9,jdbcType=VARCHAR}, #{type10,jdbcType=VARCHAR}, #{type11,jdbcType=VARCHAR}, 
-            #{type12,jdbcType=VARCHAR})
+            #{type12,jdbcType=VARCHAR}, #{type13,jdbcType=VARCHAR}, #{type14,jdbcType=VARCHAR}, 
+            #{type15,jdbcType=VARCHAR}, #{type16,jdbcType=VARCHAR}, #{type17,jdbcType=VARCHAR}, 
+            #{type18,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinProductType" >
         insert into FIN_PRODUCT_TYPE
@@ -126,6 +137,24 @@
             <if test="type12 != null" >
                 TYPE_12,
             </if>
+            <if test="type13 != null" >
+                TYPE_13,
+            </if>
+            <if test="type14 != null" >
+                TYPE_14,
+            </if>
+            <if test="type15 != null" >
+                TYPE_15,
+            </if>
+            <if test="type16 != null" >
+                TYPE_16,
+            </if>
+            <if test="type17 != null" >
+                TYPE_17,
+            </if>
+            <if test="type18 != null" >
+                TYPE_18,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="finprodId != null" >
@@ -185,15 +214,35 @@
             <if test="type12 != null" >
                 #{type12,jdbcType=VARCHAR},
             </if>
+            <if test="type13 != null" >
+                #{type13,jdbcType=VARCHAR},
+            </if>
+            <if test="type14 != null" >
+                #{type14,jdbcType=VARCHAR},
+            </if>
+            <if test="type15 != null" >
+                #{type15,jdbcType=VARCHAR},
+            </if>
+            <if test="type16 != null" >
+                #{type16,jdbcType=VARCHAR},
+            </if>
+            <if test="type17 != null" >
+                #{type17,jdbcType=VARCHAR},
+            </if>
+            <if test="type18 != null" >
+                #{type18,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinProductType" >
         insert into FIN_PRODUCT_TYPE(FINPROD_ID, BRANCH, TYPE_1, TYPE_2, TYPE_3, TYPE_4, 
         TYPE_5, TYPE_6, TYPE_7, TYPE_8, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-        UPDATE_TIME, TYPE_9, TYPE_10, TYPE_11, TYPE_12)
+        UPDATE_TIME, TYPE_9, TYPE_10, TYPE_11, TYPE_12, TYPE_13, TYPE_14, TYPE_15, TYPE_16, 
+        TYPE_17, TYPE_18)
         select FINPROD_ID, BRANCH, TYPE_1, TYPE_2, TYPE_3, TYPE_4, 
             TYPE_5, TYPE_6, TYPE_7, TYPE_8, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TYPE_9, TYPE_10, TYPE_11, TYPE_12
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TYPE_9, TYPE_10, TYPE_11, TYPE_12, TYPE_13, TYPE_14, TYPE_15, TYPE_16, 
+            TYPE_17, TYPE_18
              from FIN_PRODUCT_TYPE
              where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL}
     </insert>
@@ -242,6 +291,24 @@
             <if test="type12 != null" >
                 TYPE_12 = #{type12,jdbcType=VARCHAR},
             </if>
+            <if test="type13 != null" >
+                TYPE_13 = #{type13,jdbcType=VARCHAR},
+            </if>
+            <if test="type14 != null" >
+                TYPE_14 = #{type14,jdbcType=VARCHAR},
+            </if>
+            <if test="type15 != null" >
+                TYPE_15 = #{type15,jdbcType=VARCHAR},
+            </if>
+            <if test="type16 != null" >
+                TYPE_16 = #{type16,jdbcType=VARCHAR},
+            </if>
+            <if test="type17 != null" >
+                TYPE_17 = #{type17,jdbcType=VARCHAR},
+            </if>
+            <if test="type18 != null" >
+                TYPE_18 = #{type18,jdbcType=VARCHAR},
+            </if>
         </set>
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
@@ -261,7 +328,13 @@
             TYPE_9 = #{type9,jdbcType=VARCHAR},
             TYPE_10 = #{type10,jdbcType=VARCHAR},
             TYPE_11 = #{type11,jdbcType=VARCHAR},
-            TYPE_12 = #{type12,jdbcType=VARCHAR}
+            TYPE_12 = #{type12,jdbcType=VARCHAR},
+            TYPE_13 = #{type13,jdbcType=VARCHAR},
+            TYPE_14 = #{type14,jdbcType=VARCHAR},
+            TYPE_15 = #{type15,jdbcType=VARCHAR},
+            TYPE_16 = #{type16,jdbcType=VARCHAR},
+            TYPE_17 = #{type17,jdbcType=VARCHAR},
+            TYPE_18 = #{type18,jdbcType=VARCHAR}
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and BRANCH = #{branch,jdbcType=DECIMAL}
     </update>

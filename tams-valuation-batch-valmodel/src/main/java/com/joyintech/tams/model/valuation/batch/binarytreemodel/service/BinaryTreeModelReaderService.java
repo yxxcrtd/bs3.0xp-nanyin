@@ -3,11 +3,10 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.common.base.entity.ModBintreeConfig;
+import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -19,7 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * 二叉树模型批处理Reader核心业务组件
+ */
 @Service
 public class BinaryTreeModelReaderService {
     /**
@@ -47,86 +50,92 @@ public class BinaryTreeModelReaderService {
     public List<BinaryTreeModelReaderEntity> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         List<BinaryTreeModelReaderEntity> list = new ArrayList<BinaryTreeModelReaderEntity>();
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-        //1.读取需要进行处理的资产
+        List<ModValBatchParams> listBatchParam = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+
+
+        //参数收集
+        //1.读取批处理画面选择的资产代码列表
         //资产代码集合
-        List<String> finprodIdList = new ArrayList<String>();
-        if (listBatch != null && listBatch.size() > 0) {
-            stepExecution.getJobExecution().getExecutionContext().put(BATCH_PARAMS_KEY, params);
-            for (ModValBatchParams params1 : listBatch) {
-                finprodIdList.add(params1.getFinprodId());
-            }
-        }
-        //1.2查询映射
-        Map<String, Object> paraType = new HashMap<String, Object>();
-        paraType.put("MODEL_MAPPING_TYPE_01", ModelDictCodeList.模型_映射类型_资产分类映射.getValue());
-        paraType.put("MODEL_SEC_TYPE_F01", ModelDictCodeList.模型_证券品种_债券.getValue());
-        paraType.put("MODEL_SEC_DETAIL_TYPE_011", ModelDictCodeList.模型_证券细分类_可交换债券.getValue());
-        paraType.put("MODEL_SEC_DETAIL_TYPE_013", ModelDictCodeList.模型_证券细分类_可转债.getValue());
-        List<String> output5List = binaryTreeModelMapper.findOutPut5(paraType);
+        List<String> finprodIdList = CollectionUtils.isNotEmpty(listBatchParam)?listBatchParam.stream().map((x)->x.getFinprodId()).collect(Collectors.toList()):new ArrayList<String>();
 
         //2.调用方法【资产基本信息查询-估值模型】取配置了模型法的并且有持仓的可转可交换债
         //跑批日
         Date platDate = (Date)params.get("PLATE_DATE");
+
+        //3.查询配置了需要跑模型的资产
         //资产基本信息查询-估值模型
         ModAssetInfoParamsDto modAssetInfoParamsDto = new ModAssetInfoParamsDto();
-
+        //3.1设置参数：finprodIdList，跑批画面选了哪些资产就跑哪些资产，如果没选，就会跑估值方案配置了模型法估值的资产
         modAssetInfoParamsDto.setFinprodIdList(finprodIdList);
-        //资产五级分类集合
-        modAssetInfoParamsDto.setAssetFiveList(output5List);
+        //3.2设置参数：platDate，跑批画面选什么日期；主要约束着资产的起息日和到期日，起息日要小于等于查询日，到期日要大于等于查询日
         modAssetInfoParamsDto.setSearchDate(platDate);
-        List<ModAssetInfoDto> listAsset = modValuationCommonService.selectAssetInfo(modAssetInfoParamsDto);
-        //封装日志信息
-        if (CollectionUtils.isNotEmpty(listAsset)) {
-            List<ModBatchLogs> listLog = new ArrayList<>(params.size());
-            for (ModAssetInfoDto param : listAsset) {
-                ModBatchLogs log = new ModBatchLogs();
-                log.setSeqno(IDGenerator.generate());
-                log.setFinprodId(param.getFinprodId());
-                log.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                log.setTaskId(batchExecuteInfo.getTaskId());
-                listLog.add(log);
-            }
-            modLogsService.saveBatch(listLog);
+
+        //4.查询符合条件的资产
+        //4.1.可转债、可交换债
+        //4.2.估值方案配置了使用模型法进行估值的
+        //4.3.起息日在查询日之前且到期日在查询日之后
+        List<ModAssetInfoDto> listAsset = modValuationCommonService.selectBinaryTreeAssetInfo(modAssetInfoParamsDto);
+
+
+        //4'.设置job上下文参数，在监听中使用
+        List<ModValBatchParams> paralist = new ArrayList<ModValBatchParams>();
+        if(CollectionUtils.isNotEmpty(listAsset)){
+            listAsset.stream().forEach(x->{
+                ModValBatchParams modValBatchParams = new ModValBatchParams();
+                modValBatchParams.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+                modValBatchParams.setFinprodId(x.getFinprodId());
+                paralist.add(modValBatchParams);
+            });
         }
-        //1.1查询配置了资产代码
+        stepExecution.getJobExecution().getExecutionContext().put(BATCH_PARAMS_KEY, paralist);
+
+
+        //5.封装日志信息
+        modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),CollectionUtils.isNotEmpty(listAsset)?listAsset.stream().map((x)->x.getFinprodId()).collect(Collectors.toList()):null);
+
+        //6.查询二叉树模型配置
         List<ModBintreeConfig> listFin = binaryTreeModelMapper.findModBintreeConfig(finprodIdList);
-        if (listFin == null || listFin.size() == 0) {
-            if (listAsset != null && listAsset.size() > 0) {
-                for (ModAssetInfoDto para : listAsset) {
-                    modLogsService.error(para.getFinprodId(), batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                            "【二叉树模型批处理】：未配置二叉树模型参数");
-                }
-            }
+
+        //7.如果待处理资产找不到对应的配置，则设置错误日志信息
+        if(CollectionUtils.isEmpty(listFin)&&CollectionUtils.isNotEmpty(listFin)){
+            listAsset.stream().forEach((x)->{
+                modLogsService.error(x.getFinprodId(), batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：未配置二叉树模型参数");
+            });
             return list;
         }
 
-        //3. 设定资产其他相关信息
+        //8.将配置信息构间为数据字典，方便后续使用
+        Map<String,ModBintreeConfig> configMap = listFin.stream().collect(Collectors.toMap(ModBintreeConfig::getFinprodId,x->x));
+
+        //9.遍历待处理资产，构间reader返回结果
         for (ModAssetInfoDto modAssetInfoDto : listAsset) {
             BinaryTreeModelReaderEntity model = new BinaryTreeModelReaderEntity();
             BeanUtil.copyPropertiesIgnoreNull(model, modAssetInfoDto);
+            String finProdId = model.getFinprodId();
 
-            //资产配置信息
-            for(ModBintreeConfig config : listFin) {
-                if (config.getFinprodId().equals(model.getFinprodId())) {
-                    model.setModBintreeConfig(config);
-                    break;
-                }
+            //9.1待处理资产设置二叉树配置信息，如无配置，则出警告信息
+            if(configMap.containsKey(finProdId)){
+                model.setModBintreeConfig(configMap.get(finProdId));
+            }else{
+                modLogsService.error(finProdId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：未配置二叉树模型参数");
+                continue;
             }
 
-            //3.2 现金流信息查询
-            List<ModCashFlowDto> modCashFlowDtoList = modValuationCommonService.getCashFlowPlanInfoByFinprodId(modAssetInfoDto.getFinprodId());
+            //9.2 现金流信息查询
+            List<ModCashFlowDto> modCashFlowDtoList = modValuationCommonService.getCashFlowPlanInfoByFinprodId(finProdId);
             model.setModCashFlowList(modCashFlowDtoList);
 
-            //3.3 现金流计算规则查询
-            List<ModCashFlowCalRuleDto> modCashFlowCalRuleDtoList = modValuationCommonService.getCashFlowCalRulesByFinprodId(modAssetInfoDto.getFinprodId());
+            //9.3 现金流计算规则查询
+            List<ModCashFlowCalRuleDto> modCashFlowCalRuleDtoList = modValuationCommonService.getCashFlowCalRulesByFinprodId(finProdId);
             model.setModCashFlowCalRuleList(modCashFlowCalRuleDtoList);
 
-            //3.4 现金流支付规则查询
-            List<ModCashFlowPayRulesDto> modCashFlowPayRulesList = modValuationCommonService.getCashFlowPayRulesByFinprodId(modAssetInfoDto.getFinprodId());
+            //9.4 现金流支付规则查询
+            List<ModCashFlowPayRulesDto> modCashFlowPayRulesList = modValuationCommonService.getCashFlowPayRulesByFinprodId(finProdId);
             model.setModCashFlowPayRulesList(modCashFlowPayRulesList);
 
-            //3.5 股票行情查询
+            //9.5 股票行情查询
+            //todo
+            // 此处逻辑存在问题，没有考虑标的公司、可比公司配置
             ModStockMarketParamsDto modStockMarketParamsDto = new ModStockMarketParamsDto();
             List<String> listStockId = new ArrayList<>();
             listStockId.add(modAssetInfoDto.getConFinprodId());
@@ -137,10 +146,10 @@ public class BinaryTreeModelReaderService {
             modStockMarketParamsDto.setStartDate(startDate);
             //查询结束日 = 跑批日
             modStockMarketParamsDto.setSearchDate(platDate);
-            List<ModStockMarketInfoDto> listStock = modValuationCommonService.getStockMarketIntervalInfo(modStockMarketParamsDto);
+            List<MstSharePrice> listStock = modValuationCommonService.getStockMarketIntervalInfo(modStockMarketParamsDto);
             model.setModStockMarketInfoList(listStock);
 
-            //3.6 曲线行情查询
+            //9.6 曲线行情查询
             ModYeildCurveParamsDto modYeildCurveParamsDto = new ModYeildCurveParamsDto();
             List<String> listYeildId = new ArrayList<>();
             listYeildId.add(model.getModBintreeConfig().getCurveCode().toString());
@@ -156,9 +165,4 @@ public class BinaryTreeModelReaderService {
 
         return list;
     }
-
-
-
-
-
 }

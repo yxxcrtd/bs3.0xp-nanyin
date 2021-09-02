@@ -14,19 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterParty;
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
-import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstHoliday;
-import com.joyintech.tams.common.base.entity.MstTradeCalendar;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
-import com.joyintech.tams.common.base.entity.StlFinProductAcct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMstBondCreditRating;
 
 public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 
@@ -38,7 +30,17 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
      * 市场机构信息
      */
     private List<MstCustomerInfo> valCustomerInfoList = new ArrayList<MstCustomerInfo>();
-    
+
+    /**
+     * 交易对手
+     */
+    private List<MstCounterParty> valCounterPartyList = new ArrayList<MstCounterParty>();
+
+    /**
+     * 评级信息
+     */
+    private List<ValMstBondCreditRating> valBondCreditRatingList = new ArrayList<ValMstBondCreditRating>();
+
     /**
      * 清算账户信息
      */
@@ -80,6 +82,8 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
      */
     public OtherBaseInfoForAssetProcessorResult(OtherBaseInfoCommonResult result) {
         this.setValCustomerInfoList(result.getValCustomerInfoList());
+        this.setValCounterPartyList(result.getValCounterPartyList());
+        this.setValBondCreditRatingList(result.getValBondCreditRatingList());
         this.setValMstCapacctInfoList(result.getValMstCapacctInfoList());
         this.setValFinProductAcctList(result.getValFinProductAcctList());
         this.setValCalendarInfoList(result.getValCalendarInfoList());
@@ -92,6 +96,9 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 		this.setFinProductTypeList(result.getFinProductTypeList());
 		this.setParamMap(result.getParamMap());
 		/**add by wujie on 20180814 end**/
+        /** add by yanya on 20210831 增加客户信息附属表 start**/
+        this.setValCustomerInfoAddList(result.getValCustomerInfoAddList());
+        /** add by yanya on 20210831 增加客户信息附属表 end**/
     }
     
     /**
@@ -108,6 +115,22 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
      */
     public void setValCustomerInfoList(List<MstCustomerInfo> valCustomerInfoList) {
         this.valCustomerInfoList = valCustomerInfoList;
+    }
+
+    public List<MstCounterParty> getValCounterPartyList() {
+        return valCounterPartyList;
+    }
+
+    public void setValCounterPartyList(List<MstCounterParty> valCounterPartyList) {
+        this.valCounterPartyList = valCounterPartyList;
+    }
+
+    public List<ValMstBondCreditRating> getValBondCreditRatingList() {
+        return valBondCreditRatingList;
+    }
+
+    public void setValBondCreditRatingList(List<ValMstBondCreditRating> valBondCreditRatingList) {
+        this.valBondCreditRatingList = valBondCreditRatingList;
     }
 
     /**
@@ -262,4 +285,19 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 	}
 	
 	/**add by wujie on 20180814 end**/
+
+    /**add by wujie on 20180814 end**/
+
+    /** add by yanya on 20210831 增加客户信息附属表 start**/
+    List<MstCustomerInfoAddWithBLOBs> valCustomerInfoAddList = new ArrayList<MstCustomerInfoAddWithBLOBs>();
+
+    public List<MstCustomerInfoAddWithBLOBs> getValCustomerInfoAddList() {
+        return valCustomerInfoAddList;
+    }
+
+    public void setValCustomerInfoAddList(List<MstCustomerInfoAddWithBLOBs> valCustomerInfoAddList) {
+        this.valCustomerInfoAddList = valCustomerInfoAddList;
+    }
+
+    /** add by yanya on 20210831 增加客户信息附属表 end**/
 }

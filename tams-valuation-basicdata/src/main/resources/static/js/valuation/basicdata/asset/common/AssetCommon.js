@@ -43,16 +43,20 @@ $(function(){
                     return;
                 }
                 var channelFee = 0;var investRate = 0; var referRate = 0;
-                if(BussParticipantInfo){
-                     var buyOutRate = $('#buyOutRate').val();
-                     var bussParticipantInfoList = BussParticipantInfo.getAllRows();
+                    /** modify by yanya on 20210826 去除资产推荐方**/
+                    //if(BussParticipantInfo){
+                    /** modify by yanya on 20210826 去除资产推荐方**/
+                    var buyOutRate = 0;//$('#buyOutRate').val();
+
+                    //var bussParticipantInfoList = BussParticipantInfo.getAllRows();
+                    var bussParticipantInfoList = [];
                      $.each(bussParticipantInfoList,function(index,obj){
                          channelFee = JoyinMath.doAdd(channelFee,JoyinMath.doAdd(obj.otherYield,JoyinMath.doAdd(obj.clientYield,obj.managerYield)));
                      });
                     //查看页面净投资收益率不进行计算 yjm start 20190830
-                    if ( pageModel == PAGE_MODEL_REFERENCE ){
-                         investRate  = $('#finInterestFactorDto_investRate').val();                         
-                    }else {
+                    // if ( pageModel == PAGE_MODEL_REFERENCE ){
+                    //      investRate  = $('#finInterestFactorDto_investRate').val();
+                    // }else {
                         // 通道增加“增值税税率，附加税率字段” add by renping 20191019 start
                     	var vatTaxRate = 0;
                     	var adtTaxRate = 0;
@@ -80,10 +84,10 @@ $(function(){
                         investRate  = JoyinMath.doMinus(loadRate, taxRate, 4);
                         investRate  = JoyinMath.doMinus(investRate,channelFee,4);
                         // 通道增加“增值税税率，附加税率字段” add by renping 20191019 end
-                    }
+                    //}
                     //查看页面净投资收益率不进行计算 yjm end 20190830
                     referRate = JoyinMath.doMinus(investRate,buyOutRate,4);
-                }
+                //}
                 $('#finInterestFactorDto_referRate').val(referRate).trigger('change');
                 $('#finInterestFactorDto_investRate').val(investRate).trigger('change');
             },

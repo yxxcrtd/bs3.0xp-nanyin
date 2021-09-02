@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModRiskPremiumMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModRiskPremium" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="SEC_TYPE_MODEL" property="secTypeModel" jdbcType="VARCHAR" />
+        <result column="SEC_DETAIL_TYPE_MODEL" property="secDetailTypeModel" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="GRADE_SOURCE" property="gradeSource" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="BASEDATE" property="basedate" jdbcType="DATE" />
+        <result column="SPREAD" property="spread" jdbcType="DECIMAL" />
+        <result column="SPREAD_ADJ" property="spreadAdj" jdbcType="DECIMAL" />
+        <result column="B_FULLPRICE" property="bFullprice" jdbcType="DECIMAL" />
+        <result column="B_QTY" property="bQty" jdbcType="DECIMAL" />
+        <result column="MOD_METHOD" property="modMethod" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="B_NETPICE" property="bNetpice" jdbcType="DECIMAL" />
+        <result column="CURVE_CODE" property="curveCode" jdbcType="VARCHAR" />
+        <result column="CURVE_DATE" property="curveDate" jdbcType="DATE" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModRiskPremium" >
+        insert into MOD_RISK_PREMIUM (SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, 
+            FINPROD_ID, FINPROD_NAME, GRADE_SOURCE, 
+            GRADE_RESULT, BASEDATE, SPREAD, 
+            SPREAD_ADJ, B_FULLPRICE, B_QTY, 
+            MOD_METHOD, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+            B_NETPICE, CURVE_CODE, CURVE_DATE
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{secTypeModel,jdbcType=VARCHAR}, #{secDetailTypeModel,jdbcType=VARCHAR}, 
+            #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, #{gradeSource,jdbcType=VARCHAR}, 
+            #{gradeResult,jdbcType=VARCHAR}, #{basedate,jdbcType=DATE}, #{spread,jdbcType=DECIMAL}, 
+            #{spreadAdj,jdbcType=DECIMAL}, #{bFullprice,jdbcType=DECIMAL}, #{bQty,jdbcType=DECIMAL}, 
+            #{modMethod,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+            #{bNetpice,jdbcType=DECIMAL}, #{curveCode,jdbcType=VARCHAR}, #{curveDate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModRiskPremium" >
+        insert into MOD_RISK_PREMIUM
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="secTypeModel != null" >
+                SEC_TYPE_MODEL,
+            </if>
+            <if test="secDetailTypeModel != null" >
+                SEC_DETAIL_TYPE_MODEL,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="gradeSource != null" >
+                GRADE_SOURCE,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="basedate != null" >
+                BASEDATE,
+            </if>
+            <if test="spread != null" >
+                SPREAD,
+            </if>
+            <if test="spreadAdj != null" >
+                SPREAD_ADJ,
+            </if>
+            <if test="bFullprice != null" >
+                B_FULLPRICE,
+            </if>
+            <if test="bQty != null" >
+                B_QTY,
+            </if>
+            <if test="modMethod != null" >
+                MOD_METHOD,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="bNetpice != null" >
+                B_NETPICE,
+            </if>
+            <if test="curveCode != null" >
+                CURVE_CODE,
+            </if>
+            <if test="curveDate != null" >
+                CURVE_DATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="secTypeModel != null" >
+                #{secTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="secDetailTypeModel != null" >
+                #{secDetailTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeSource != null" >
+                #{gradeSource,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="basedate != null" >
+                #{basedate,jdbcType=DATE},
+            </if>
+            <if test="spread != null" >
+                #{spread,jdbcType=DECIMAL},
+            </if>
+            <if test="spreadAdj != null" >
+                #{spreadAdj,jdbcType=DECIMAL},
+            </if>
+            <if test="bFullprice != null" >
+                #{bFullprice,jdbcType=DECIMAL},
+            </if>
+            <if test="bQty != null" >
+                #{bQty,jdbcType=DECIMAL},
+            </if>
+            <if test="modMethod != null" >
+                #{modMethod,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="bNetpice != null" >
+                #{bNetpice,jdbcType=DECIMAL},
+            </if>
+            <if test="curveCode != null" >
+                #{curveCode,jdbcType=VARCHAR},
+            </if>
+            <if test="curveDate != null" >
+                #{curveDate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModRiskPremium" >
+        insert into MOD_RISK_PREMIUM(SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, FINPROD_ID, 
+        FINPROD_NAME, GRADE_SOURCE, GRADE_RESULT, BASEDATE, SPREAD, SPREAD_ADJ, B_FULLPRICE, 
+        B_QTY, MOD_METHOD, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        B_NETPICE, CURVE_CODE, CURVE_DATE)
+        select SEQNO, SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, FINPROD_ID, 
+            FINPROD_NAME, GRADE_SOURCE, GRADE_RESULT, BASEDATE, SPREAD, SPREAD_ADJ, B_FULLPRICE, 
+            B_QTY, MOD_METHOD, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            B_NETPICE, CURVE_CODE, CURVE_DATE
+             from MOD_RISK_PREMIUM
+             where 1 = 1
+    </insert>
+</mapper>

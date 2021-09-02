@@ -52,6 +52,14 @@
                             <input type="text" th:id="|${entityName}_firstPayDate|" th:name="|${entityName}.firstPayDate|" data-th-value='${#dates.format(entity?.firstPayDate,"yyyy-MM-dd")}' class="layui-input form-input input-dateSelect"/>
                         </div>
                     </div>
+                    <div class="form-inline-wrap" th:id="|${entityName}_isNoIssueAmtFlag_div|" style="display: none;">
+                        <label class="layui-form-label form-label-wrap">无明确融资金额</label>
+                        <div class="layui-input-inline input-inline">
+                            <input type="checkbox" th:id="|${entityName}_isNoIssueAmtFlag|" th:name="|${entityName}.isNoIssueAmtFlag|"
+                                   lay-filter="isNoIssueAmtFlag" lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                                   data-th-checked="${YES} ==${entity?.isNoIssueAmtFlag}">
+                        </div>
+                    </div>
                     <div class="form-inline-wrap" th:id="|${entityName}_remark_div|">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{FinPayInterestStdInfo.remark}">自定义说明</label>
                         <div class="layui-input-inline input-inline">

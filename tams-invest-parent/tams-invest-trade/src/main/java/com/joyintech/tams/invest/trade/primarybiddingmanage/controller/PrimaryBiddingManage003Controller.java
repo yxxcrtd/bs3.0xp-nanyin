@@ -74,7 +74,9 @@ public class PrimaryBiddingManage003Controller extends BaseController {
          if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
              model.addAttribute("workflowId", workflowId);
              entity= primaryBiddingManage003.getBussinessEntityByWorkflowId(workflowId);
-
+             if(entity.getAllBidPrinAmt() != null) {
+                 entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().multiply(new BigDecimal(10000)));//转成元
+             }
          } else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(bidId)){
         	 entity=primaryBiddingManage003.getBussinessEntityByBidId(bidId);
              entity.setAllBidPrinAmt(ArithmeticUtil.multiply(new BigDecimal(map.get("allBidPrinAmt").toString()),new BigDecimal(10000)));
@@ -288,8 +290,8 @@ public class PrimaryBiddingManage003Controller extends BaseController {
                         :inputDto.getWinPrinAmt().doubleValue() - totalPLATPrice.doubleValue();
                 }
                 //该标位最终结果
-//                BigDecimal resultPrinAmt = new BigDecimal(theWinPrinAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
-                BigDecimal resultPrinAmt = BigDecimal.valueOf(Math.round(theWinPrinAmt / 100.0) * 100.0);
+                BigDecimal resultPrinAmt = new BigDecimal(theWinPrinAmt).setScale(2,BigDecimal.ROUND_HALF_UP);
+//                BigDecimal resultPrinAmt = BigDecimal.valueOf(Math.round(theWinPrinAmt / 100.0) * 100.0);
 
                 dto.setTheWinPrinAmt(resultPrinAmt);
                 dto.setWinPrice(dto.getBidPrice());

@@ -109,4 +109,15 @@ public class ValAssetCommonService extends BaseService{
         return valclas;
     }
 
+    /**
+     * 获取市场机构
+     * @param page
+     * @param length
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> getCustomerName(int page, int length, Map<String, Object> param) {
+        return this.queryForPageForSelectReturn(page, length,
+                () -> assetCommonMapper.getCustomer(param));
+    }
 }

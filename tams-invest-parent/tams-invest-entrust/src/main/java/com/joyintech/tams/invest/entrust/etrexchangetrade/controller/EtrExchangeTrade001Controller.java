@@ -136,6 +136,12 @@ public class EtrExchangeTrade001Controller extends BaseController{
         	 //流程代办checkImportData
             entity = etrExchangeTrade001Service.getBussinessEntityByWorkflowId(
                 workflowId);
+            //add by chenjiaxing 流程中不显示资产名称 start
+            String[] secIds = StringUtil.split(entity.getFinprodId(),"_");
+            if(secIds.length == 2 && StringUtil.isEmpty(entity.getStockId())){
+                entity.setStockId(secIds[1]);
+            }
+            //add by chenjiaxing 流程中不显示资产名称 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("workflowId", workflowId);
         }

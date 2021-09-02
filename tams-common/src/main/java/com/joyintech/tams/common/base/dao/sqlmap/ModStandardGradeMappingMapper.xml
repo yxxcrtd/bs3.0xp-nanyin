@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModStandardGradeMappingMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModStandardGradeMapping" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="GRADE_INST" property="gradeInst" jdbcType="VARCHAR" />
+        <result column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <result column="GRADE_RESULT" property="gradeResult" jdbcType="VARCHAR" />
+        <result column="GRADE_STANDARD_RESULT" property="gradeStandardResult" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModStandardGradeMapping" >
+        insert into MOD_STANDARD_GRADE_MAPPING (SEQ_NO, GRADE_INST, O_TYPE, 
+            GRADE_RESULT, GRADE_STANDARD_RESULT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{gradeInst,jdbcType=VARCHAR}, #{oType,jdbcType=VARCHAR}, 
+            #{gradeResult,jdbcType=VARCHAR}, #{gradeStandardResult,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModStandardGradeMapping" >
+        insert into MOD_STANDARD_GRADE_MAPPING
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="gradeInst != null" >
+                GRADE_INST,
+            </if>
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="gradeResult != null" >
+                GRADE_RESULT,
+            </if>
+            <if test="gradeStandardResult != null" >
+                GRADE_STANDARD_RESULT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeInst != null" >
+                #{gradeInst,jdbcType=VARCHAR},
+            </if>
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResult != null" >
+                #{gradeResult,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeStandardResult != null" >
+                #{gradeStandardResult,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModStandardGradeMapping" >
+        insert into MOD_STANDARD_GRADE_MAPPING(SEQ_NO, GRADE_INST, O_TYPE, GRADE_RESULT, 
+        GRADE_STANDARD_RESULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        select SEQ_NO, GRADE_INST, O_TYPE, GRADE_RESULT, 
+            GRADE_STANDARD_RESULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            
+             from MOD_STANDARD_GRADE_MAPPING
+             where 1 = 1
+    </insert>
+</mapper>

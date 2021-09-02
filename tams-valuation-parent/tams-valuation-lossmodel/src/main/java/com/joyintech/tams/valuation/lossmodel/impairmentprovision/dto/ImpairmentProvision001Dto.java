@@ -17,6 +17,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.math.BigDecimal;
@@ -96,8 +97,17 @@ public class ImpairmentProvision001Dto extends BaseEntity implements ProcessEnti
     }
 
     public String getType9Fmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, type9))?
-                SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, type9):type9;
+        String strName="";
+        if(StringUtil.isNotEmpty(this.getType9())){
+            if(this.getType9().length()==2){
+                strName=SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, this.getType9());
+            }else if(this.getType9().length()==3){
+                strName=SysDataUtil.getNameFromDataDict(DictCode.债券类型, this.getType9());
+            }
+        }
+        return StringUtil.isNotEmpty(strName)?strName:getType9();
+       /* return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, type9))?
+                SysDataUtil.getNameFromDataDict(DictCode.行内资产二级分类, type9):type9;*/
     }
 
     public void setType9(String type9) {

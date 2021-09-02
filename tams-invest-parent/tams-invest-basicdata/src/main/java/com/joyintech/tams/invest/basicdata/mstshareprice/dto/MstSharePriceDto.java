@@ -47,8 +47,11 @@ public class MstSharePriceDto extends MstSharePrice implements ITableRow,Process
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 5143537191208289654L;
-    
-    /**
+	/**
+	 *
+	 */
+	private String finprodAbbr;
+	/**
      * 选中的数据
      */
     private transient List<MstSharePriceDto> selectedItem;
@@ -322,11 +325,11 @@ public class MstSharePriceDto extends MstSharePrice implements ITableRow,Process
 		return super.getTradeStatus();
 	}
 
-	@Override
-	@NotEmpty(fieldName = "MstSharePrice001.finprodAbbr", groups = {ValidateGroupEdit.class})
 	public String getFinprodAbbr() {
-		return super.getFinprodAbbr();
+		return finprodAbbr;
 	}
-   
 
+	public void setFinprodAbbr(String finprodAbbr) {
+		this.finprodAbbr = finprodAbbr;
+	}
 }

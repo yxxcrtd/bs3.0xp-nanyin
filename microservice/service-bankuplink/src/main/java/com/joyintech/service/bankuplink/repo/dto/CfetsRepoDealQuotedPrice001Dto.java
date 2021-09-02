@@ -1259,4 +1259,52 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust {
     public void setIsKtg(String isKtg) {
         this.isKtg = isKtg;
     }
+
+    private Date tradeDate;
+
+    public Date getTradeDate() {
+        return tradeDate;
+    }
+
+    public void setTradeDate(Date tradeDate) {
+        this.tradeDate = tradeDate;
+    }
+    /**
+     * 组合系列
+     */
+    private String portfolioSeries;
+
+    public String getPortfolioSeries() {
+        return portfolioSeries;
+    }
+
+    public void setPortfolioSeries(String portfolioSeries) {
+        this.portfolioSeries = portfolioSeries;
+    }
+
+    /**
+     * 中债登券面总额合计（万元）
+     */
+    private BigDecimal zzTotalAmt;
+
+    /**
+     * 上清所券面总额合计（万元）
+     */
+    private BigDecimal sqTotalAmt;
+
+    public BigDecimal getZzTotalAmt() {
+        return zzTotalAmt;
+    }
+
+    public void setZzTotalAmt(BigDecimal zzTotalAmt) {
+        this.zzTotalAmt = zzTotalAmt;
+    }
+
+    public BigDecimal getSqTotalAmt() {
+        return sqTotalAmt;
+    }
+
+    public void setSqTotalAmt(BigDecimal sqTotalAmt) {
+        this.sqTotalAmt = sqTotalAmt;
+    }
 }

@@ -144,6 +144,28 @@
                 if (param[0].price) {
                     $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
                 }
+                /*添加限制*/
+                $("#CfetsRepoDealQuotedPrice002_entrustId").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_portfolioName").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_ps").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_settleSpreed").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_term").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_termType").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_vSettleDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mSettleDate").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_actDays").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_cbDealAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_scDealAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mIntAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_mTradeAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_shareCtAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_cbShareCtAmt").attr("disabled",true);
+                $("#CfetsRepoDealQuotedPrice002_scShareCtAmt").attr("disabled",true);
+                /*添加限制*/
             }
         }
     };
@@ -221,6 +243,7 @@
                     showAmtOrg = true;
                 }
                 // 本次质押券面
+                row.pledgePrin = JoyinMath.doMul(row.pledgePrin, 10000);
                 var pledgePrin = new BigNumber(row.pledgePrin?row.pledgePrin:0);
                 /*pledgePrinTotal = pledgePrinTotal.plus(pledgePrin);*/
                 // 折算比例
@@ -245,6 +268,10 @@
                 mTradeAmt = shareCtAmt.plus(priceAmt);
             }
         }
+        /*券面总额单位为万元*/
+        pledgePrinTotal = JoyinMath.doDiv(pledgePrinTotal, 10000);
+        zzTotalAmt = JoyinMath.doDiv(zzTotalAmt, 10000);
+        sqTotalAmt = JoyinMath.doDiv(sqTotalAmt, 10000);
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").val(zzTotalAmt).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").val(sqTotalAmt).trigger('blur');
@@ -875,7 +902,7 @@
      * 成交发送
      */
     var sendDeal = function (object){
-    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
+    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
             var index = window.parent.layer.getFrameIndex(window.name);
             window.parent.layer.close(index);
         })
@@ -891,7 +918,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/checkEdit', object, function(result) {
             if (result.data){
                 Joyin.confirm(JoyinUtil.getMessage("CFETS_COMMON_E_033"), function() {
-                    Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/reject', object, function(result){
+                    Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/reject', object, function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })
@@ -913,7 +940,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
             if (result.data){
                 Joyin.confirm(result.data, function() {
-                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
+                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })

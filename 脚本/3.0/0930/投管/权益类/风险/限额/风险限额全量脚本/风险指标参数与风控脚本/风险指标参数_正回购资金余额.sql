@@ -46,7 +46,7 @@ union ALL
   from TRD_PRODUCT_DEAL_ADD m
   inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID
   INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=n.FINPROD_ID and t2.FINPROD_TYPE2 in (''F02'',''F04'') AND t2.BRANCH=0
-  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T95'',''T96'',''T54'',''T55'',''T56'')
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
    AND n.TRADE_STATUS = ''01''
    AND n.IS_CANCEL = ''N''
 
@@ -58,7 +58,7 @@ union ALL
  from TRD_PRODUCT_TEMP_DEAL_ADD m
   inner join TRD_PRODUCT_TEMP_DEAL n on m.TRADE_ID=n.TRADE_ID
   INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=n.FINPROD_ID and t2.FINPROD_TYPE2 in (''F02'',''F04'') AND t2.BRANCH=0
-  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and  n.PS in (''T01'',''T07'',''T95'',''T96'',''T54'',''T55'',''T56'')
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and  n.PS in (''T01'',''03'',''T07'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
    AND n.TRADE_STATUS = ''01''
    AND n.IS_CANCEL = ''N''
 
@@ -69,7 +69,7 @@ union ALL
      END ) TRADE_AMT from WFL_TRD_PRODUCT_DEAL_ADD m
   inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
   INNER JOIN WFL_PA_TRD_PRODUCT_DEAL t2 on t2.TRADE_ID=n.TRADE_ID and t2.PA_BUSS_TYPE in (''20'',''74'')
-  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'')
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''03'')
     AND n.TRADE_STATUS = ''01''
    AND n.IS_CANCEL = ''N''
 )';

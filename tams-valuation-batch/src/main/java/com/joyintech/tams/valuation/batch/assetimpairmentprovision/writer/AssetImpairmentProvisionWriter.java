@@ -14,6 +14,8 @@ package com.joyintech.tams.valuation.batch.assetimpairmentprovision.writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.common.base.dao.ModEclResultMapper;
+import com.joyintech.tams.common.base.entity.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +25,6 @@ import org.springframework.stereotype.Service;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo;
-import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
-import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
 import com.joyintech.tams.valuation.batch.assetimpairmentprovision.dao.AssetImpairmentProvisionMapper;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookAccountGenLogic;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.dao.AccountingMethodMapper;
@@ -85,6 +83,8 @@ public class AssetImpairmentProvisionWriter extends BaseWriter<NeedToWriteEntity
     private LossCommonService lossCommonService;
     @Autowired
     private AssetImpairmentProvisionMapper assetImpairmentProvisionMapper;
+    @Autowired
+    private ModEclResultMapper modEclResultMapper;
      
     /**
      * 记账凭证数据写入数据库(针对账务明细当前表) {@inheritDoc}
@@ -97,12 +97,14 @@ public class AssetImpairmentProvisionWriter extends BaseWriter<NeedToWriteEntity
         
         // 第一步：此处和【BookGenerateResultForCurrentCommonWriter】逻辑一致
         List<ValBokBookdetailBatch> valBokBookdetailBatchList = new ArrayList<>();
+        List<ModEclResult> listEclResult = new ArrayList<ModEclResult>();
         // 循环记账凭证list，对每个记账凭证进行操作，
         for (BookGenerateResultWithBokSummary bookGenerateResult : resultList) {
             // 插入记账凭证主表信息 和 插入记账凭证明细表信息
             bookAccountGenLogic.insertKeepAccount(bookGenerateResult);  
             if (bookGenerateResult.getValBokBookdetailBatch() != null) {
                 valBokBookdetailBatchList.addAll(bookGenerateResult.getValBokBookdetailBatch());
+                listEclResult.add(bookGenerateResult.getModEclResult());
             }
         }
         //第二步：循环数据，插入【账务汇总表（账套）】表
@@ -129,6 +131,10 @@ public class AssetImpairmentProvisionWriter extends BaseWriter<NeedToWriteEntity
 	         assetImpairmentProvisionMapper.updateBokStatDetPosiiton(bokStatLossPosiiton);
 	     }
      }
+	 // 循环数据更新ECL减值结果
+       for(ModEclResult item : listEclResult){
+           modEclResultMapper.updateByPrimaryKey(item);
+       }
     }
     
     /**

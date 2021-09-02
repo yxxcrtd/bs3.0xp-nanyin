@@ -16,12 +16,12 @@ public class DynamicConfigController {
     @Autowired
     private DynamicConfigService dynamicConfigService;
 
-    @RequestMapping("selectByDynId")
+    @RequestMapping(value="selectByDynId")
     @ResponseBody
-    public String selectByDynId(@RequestBody String dynId) {
-        return dynamicConfigService.selectByDynId(dynId);
+    public String selectByDynId(@RequestBody Map<String,Object> map) {
+        return dynamicConfigService.selectByMap(map);
     }
-
+    
     @RequestMapping("updateByParam")
     public Integer updateByParam(@RequestBody Map<String, Object> param){
         return dynamicConfigService.updateByParam(param);

@@ -2,24 +2,6 @@
  * 债券多对多委托新建
  */
 (function () {
-	
-	var getriskdatas = function () {
-        var mun=null;
-        var object = $.serializeToObject('#searchForm'); 
-        var bussCombDistribtList=null;
-        if(object!=null&&object!=""){
-        	bussCombDistribtList=object.selectedItem;
-        }
-        var list=[];
-        for(var i in bussCombDistribtList){
-            	var item = bussCombDistribtList[i];
-	    		var obj = {tradeDirection:item.ps,timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:item.portfolioId,tradeAmount:item.entrustNum, assetType:fintype,assetSecType:item.assetType1,isEnabled:'01',assetCode:item.finprodId}
-	            list[i]=obj;
-        } 
-        var object = {tradeDirection:['ps','EtrInvestBondInfo002.ps'],portfolioCode:['portfolioId','EtrInvestBondInfo002.portfolioId'],tradeAmount:['entrustNum','EtrInvestBondInfo002.entrustAmt'],assetType:['assetType1','EtrInvestBondInfo002.bondType'],data:list}
-        return object;
-    }
- 
     var getriskdata = function () {
         var selectedItem = $.serializeToObject('#searchForm').selectedItem;
         if (selectedItem.length > 0) {
@@ -153,6 +135,20 @@
             Joyin.alert("委托列表至少有一条数据！", 2);
             return false;
         }
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if(BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if(!s && s != ''){
+                    return;
+                }
+            /* del by zhangrui1 批量导入数据不会变更不需要检验变化 start
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+                return;
+            }
+               del by zhangrui1 批量导入数据不会变更不需要检验变化 end */
+            }
+        }
         /**
          * 获取列表参数
          */
@@ -170,16 +166,24 @@
                 temp.elementId = 'EtrInvestBondInfo002_btn_submit';
             }
         }
+        var allDto = {};
+        allDto.importFlow = true;
+        allDto.selectedItem = objects;
+        // add by zhangrui1 start
+        allDto.operateType = operateType;
+        allDto.pageModel = pageModel;
+        // add by zhangrui1 start
+        allDto.riskTrialRetDto = object.riskTrialRetDto;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/check', objects,
             function (result) {
                 Joyin.confirm(result.data, function () {
                     if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_save", "EtrInvestBondInfo002", function () {
+                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', object, "EtrInvestBondInfo002_btn_save", "EtrInvestBondInfo002", function () {
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
                     } else {
-                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', objects, "EtrInvestBondInfo002_btn_submit", "EtrInvestBondInfo002", function () {
+                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo004/save', object, "EtrInvestBondInfo002_btn_submit", "EtrInvestBondInfo002", function () {
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         });
@@ -204,10 +208,13 @@
          */
         $('#EtrInvestBondInfo004_btn_riskcal').click(function () {
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
+            // 批量风险试算  modify by zhangrui1 start
 //            $("#riskMathFlag").val("02");
-        	var object = $.serializeToObject('#searchForm');
-        	object.bussCombDistribtList = object.selectedItem;
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F01', object,getriskdatas());
+            var object = $.serializeToObject('#searchForm', true);
+            var checkParam = {};
+            checkParam.data = getriskdata();
+            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', object.selectedItem, checkParam);
+            // 批量风险试算  modify by zhangrui1 end
         });
     })
 }());

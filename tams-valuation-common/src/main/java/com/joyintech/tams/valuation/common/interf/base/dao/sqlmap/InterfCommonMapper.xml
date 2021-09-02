@@ -1075,4 +1075,36 @@
 			</foreach>
 			)
 	</delete>
+
+	<select id="getFinanceProductSecType" parameterType="com.joyintech.tams.common.base.entity.FinProductClass" resultType="String">
+		SELECT
+			T.SEC_TYPE
+		FROM (
+			SELECT
+				A.SEC_TYPE
+			FROM
+			FIN_PRODUCT_CLASS A
+			WHERE
+				A.FINPROD_TYPE =  #{finprodType,jdbcType=VARCHAR}
+				AND A.ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+				<if test="tradeMarket != null and tradeMarket !='' ">
+					AND A.TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR}
+				</if>
+				<if test="blnArea != null and blnArea !='' ">
+					AND A.BLN_AREA = #{blnArea,jdbcType=VARCHAR}
+				</if>
+				<if test="orgClass != null and orgClass !='' ">
+					AND A.ORG_CLASS = #{orgClass,jdbcType=VARCHAR}
+				</if>
+				<if test="finprodType == 'F17' ">
+					AND A.PROFIT_TYPE = #{profitType,jdbcType=VARCHAR}
+				</if>
+				<if test="finprodType == 'F06' ">
+					<if test="trmFundType != null and trmFundType != '' ">
+						AND A.TRM_FUND_TYPE = #{trmFundType,jdbcType=VARCHAR}
+					</if>
+				</if>
+			GROUP BY A.SEC_TYPE
+		) T WHERE ROWNUM = 1
+	</select>
 </mapper>

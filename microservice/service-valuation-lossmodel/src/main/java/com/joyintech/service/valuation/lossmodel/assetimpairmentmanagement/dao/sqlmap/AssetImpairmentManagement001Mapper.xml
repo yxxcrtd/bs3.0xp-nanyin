@@ -327,8 +327,11 @@
             and A.IS_CANCEL ='N'
             and A.TRADE_STATUS !='03'
             and A.INV_AIM='AC'
-            <if test="finprodId != null and finprodId != ''">
-                and A.FINPROD_ID =#{finprodId}
+			<if test="prodId != null and prodId != ''">
+				and E.BOOKSET_ID =#{prodId}
+			</if>
+            <if test="assetId != null and assetId != ''">
+                and A.FINPROD_ID =#{assetId}
             </if>
             <if test="tradeDateStr != null and tradeDateStr != ''">
                 and and  to_char(A.TRADE_DATE,'yyyy-MM-dd')=#{tradeDateStr}

@@ -2,334 +2,414 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.model.impairment.batch.common.searchinfo.dao.ImpairmentViewCommonMapper">
     <!-- 获取资产交易列表  -->
-    <select id="selectAssetTradeList" resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto">
-select
-	a.FINPROD_ID,
-	a.FINPROD_ABBR,
-	a.FINPROD_MARKET_ID,
-	a.ISSUER,
-	a.ISSUER_FIN_LICENCE,
-	a.FINANCIER,
-	a.FINANCIER_FIN_LICENCE,
-	a.SPONSOR,
-	a.SPONSOR_FIN_LICENCE,
-	a.ACTUAL_CREDIT_PROVID,
-	a.ACTUAL_CREDIT_FIN_LICENCE,
-	a.MDATE,
-	a.IS_LIMITS,
-	a.ASSET_ONE,
-	a.ASSET_TWO,
-	a.ASSET_THREE,
-	a.ASSET_FOUR,
-	a.ASSET_FIVE,
-	d.SEC_RESULT FIRST_RESULT,
-	b.TOTLE_TRADE_ID TRADE_ID,
-	b.TRADE_AMT,
-	b.SETTLE_DATE,
-	b.PS,
-	b.SHARE_AMT,
-	b.YIELD,
-	b.MDATE PLAN_END_DATE,
-	b.IS_CLEAN,
-	b.PORTFOLIO_ID,
-	b.PROD_ID,
-	b.PROD_NAME,
-	a.ISSUE_AMT,
-	a.COUPON_SPECIES,
-	a.ISSUE_PRICE,
-	a.VDATE
-from
-	<!--VW_MOD_ASSET_INFO -->
-		(SELECT
-		A.FINPROD_ID                                        as FINPROD_ID,
-		A.FINPROD_ABBR                                      as FINPROD_ABBR,
-		A.TRADE_MARKET                                      as TRADE_MARKET,
-		A.FINPROD_MARKET_ID                                 as FINPROD_MARKET_ID,
-		A.VDATE                                             as VDATE,
-		A.MDATE                                             as MDATE,
-		A.ISSUER                                            as ISSUER,
-		A.FINANCIER                                         as FINANCIER,
-		A.SPONSOR                                           as SPONSOR,
-		A.IS_SUS                                            as IS_SUS,
-		A.IS_RIGHT                                          as IS_RIGHT,
-		F.CON_FINPROD_ID                                    as CON_FINPROD_ID,
-		F.CON_SHARE_ID                                      as CON_SHARE_ID,
-		F.CON_VDATE                                         as CON_VDATE,
-		F.CON_PRICE                                         as CON_PRICE,
-		G.ACTUAL_CREDIT_PROVID                              as ACTUAL_CREDIT_PROVID,
-		H.TYPE_8                                            as ASSET_ONE,
-		H.TYPE_9                                            as ASSET_TWO,
-		H.TYPE_10                                           as ASSET_THREE,
-		H.TYPE_11                                           as ASSET_FOUR,
-		H.TYPE_12                                           as ASSET_FIVE,
-		B.IS_FIN_LICENCE                                    as ISSUER_FIN_LICENCE,
-		C.IS_FIN_LICENCE                                    as FINANCIER_FIN_LICENCE,
-		D.IS_FIN_LICENCE                                    as SPONSOR_FIN_LICENCE,
-		E.IS_FIN_LICENCE                                    as ACTUAL_CREDIT_FIN_LICENCE,
-		A.COUPON_SPECIES                                    as COUPON_SPECIES,
-		A.ISSUE_PRICE                                       as ISSUE_PRICE,
-		M.IS_LIMITS                                         as IS_LIMITS,
-		A.ISSUE_AMT                                         AS ISSUE_AMT,
-		CASE WHEN (M.IS_RATE_ADJUST = 'Y' AND A8.CT > 0 )
-		THEN 'Y'
-		ELSE 'N'
-		END IS_AUTHORITY,
-		CASE WHEN (A1.FINPROD_ID IS NOT NULL OR A2.SEC_DETAIL_TYPE IS NOT NULL OR A4.SEC_TYPE IS NOT NULL)
-		THEN 'Y'
-		ELSE 'N'
-		END MODYORN
-		FROM FIN_PRODUCT A
-		INNER JOIN  FIN_PRODUCT_TYPE H
-		ON A.FINPROD_ID = H.FINPROD_ID
-		AND H.BRANCH = 0
-		LEFT JOIN FIN_PRODUCT_ADD  M
-		ON A.FINPROD_ID = M.FINPROD_ID
-		LEFT JOIN FIN_PRODUCT_CONVERTIBLE F
-		ON A.FINPROD_ID = F.FINPROD_ID
-		LEFT JOIN PA_FIN_PRODUCT G
-		ON A.FINPROD_ID = G.FINPROD_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD B
-		ON A.ISSUER = B.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD C
-		ON A.FINANCIER = C.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD D
-		ON A.SPONSOR = D.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD E
-		ON G.ACTUAL_CREDIT_PROVID = E.CUSTOMER_ID
-		LEFT JOIN (
-		SELECT DISTINCT FINPROD_ID
-		FROM BOK_VAL_SCHEME_DETAIL_SPECIAL
-		WHERE VALUATION_PRICE = 'MOD' ) A1
-		ON A.FINPROD_ID = A1.FINPROD_ID
-		LEFT JOIN  (
-		SELECT DISTINCT SEC_DETAIL_TYPE
-		FROM BOK_VAL_SCHEME_DETAIL
-		WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NOT NULL) A2
-		ON  H.TYPE_1 = A2.SEC_DETAIL_TYPE
-		LEFT JOIN  (
-		SELECT DISTINCT (CASE WHEN SEC_TYPE = '01' THEN 'F01' ELSE 'F06'END ) SEC_TYPE
-		FROM BOK_VAL_SCHEME_DETAIL
-		WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NULL) A4
-		ON  H.TYPE_8 = A4.SEC_TYPE
-		LEFT JOIN (
-		SELECT FINPROD_ID,COUNT(1) AS CT FROM FIN_EXERCISE_PLAN PLAN
-		WHERE
-		EXERCISE_TYPE = '01'
-		GROUP BY FINPROD_ID
-		) A8 ON H.FINPROD_ID = A8.FINPROD_ID
-		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
-		)a
-	inner join <!--VW_MOD_TRADE_INFO--> (SELECT NVL(A.TOTLE_TRADE_ID,A.TRADE_ID)  AS TOTLE_TRADE_ID,
-		A.FINPROD_ID                      AS FINPROD_ID,
-		A.FINPROD_TYPE2                   AS FINPROD_TYPE2,
-		A.PS                              AS PS,
-		abs(A.FPRICE_AMT)                 AS FPRICE_AMT,
-		abs(A.UNIT_FPRICE)                AS UNIT_FPRICE,
-		abs(A.CPRICE_AMT)                 AS CPRICE_AMT,
-		abs(A.UNIT_CPRICE)                AS UNIT_CPRICE,
-		abs(A.TRADE_AMT)                  AS TRADE_AMT,
-		abs(A.PRIN_AMT)                   AS PRIN_AMT,
-		abs(A.SHARE_AMT)                  AS SHARE_AMT,
-		A.INV_AIM                         AS INV_AIM,
-		A.YIELD                           AS YIELD,
-		A.SETTLE_DATE                     AS SETTLE_DATE,
-		A.TRADE_DATE                      AS TRADE_DATE,
-		A.MDATE                           AS MDATE,
-		A.IS_CLEAN                        AS IS_CLEAN,
-		P.PORTFOLIO_ID                    AS PORTFOLIO_ID,
-		C.FINPROD_ID                      AS PROD_ID,
-		C.FINPROD_ABBR                    AS PROD_NAME
+    <select id="selectAssetTradeList"
+            resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto">
+        SELECT
+        <!--产品信息 -->
+        bok.BOOKSET_ID AS PROD_ID,
+        NVL(bok.BOOKSET_NAME,bok.BOOKSET_FULLNAME) AS PROD_NAME,
+        NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
+        <!--资产信息 -->
+        fin.FINPROD_ID AS FINPROD_ID,
+        fin.FINPROD_ABBR AS FINPROD_ABBR,
+        fin.TRADE_MARKET AS TRADE_MARKET,
+        fin.FINPROD_MARKET_ID AS FINPROD_MARKET_ID,
+        fin.ISSUER AS ISSUER,
+        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        fin.FINANCIER AS FINANCIER,
+        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        fin.SPONSOR AS SPONSOR,
+        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        fin.VDATE AS VDATE,
+        fin.MDATE AS MDATE,
+        finAdd.IS_EFF_PLEDGE AS IS_LIMITS,
+        finadd.BOND_RISK_TYPE AS FIRST_RESULT,
+        fin.COUPON_SPECIES AS COUPON_SPECIES,
+        fin.ISSUE_PRICE AS ISSUE_PRICE,
+        fin.ISSUE_AMT AS ISSUE_AMT,
+        typ.TYPE_1 AS SEC_DETAIL_TYPE_MODEL,
+        typ.TYPE_18 AS SEC_TYPE_MODEL,
+        <!--交易信息 -->
+        deal.TRADE_ID AS TRADE_ID,
+        deal.TRADE_DATE AS TRADE_DATE,
+        deal.PS AS PS,
+        ABS(deal.TRADE_AMT) AS TRADE_AMT,
+        ABS(deal.SHARE_AMT) AS SHARE_AMT,
+        deal.YIELD AS YIELD,
+        deal.SETTLE_DATE AS SETTLE_DATE,
+        deal.TRADE_DATE AS TRADE_DATE,
+        deal.MDATE AS PLAN_END_DATE,
+        deal.IS_CLEAN AS IS_CLEAN
+        FROM FIN_PRODUCT fin
+        INNER JOIN FIN_PRODUCT_TYPE typ
+        ON fin.FINPROD_ID = typ.FINPROD_ID
+        AND typ.BRANCH = 0
+        LEFT JOIN FIN_PRODUCT_ADD finadd
+        ON fin.FINPROD_ID = finadd.FINPROD_ID
+        INNER JOIN TRD_PRODUCT_DEAL deal
+        ON deal.FINPROD_ID = fin.FINPROD_ID
+        INNER JOIN BOK_DEAL_ACCOUNTING ACC
+        ON deal.TRADE_ID = ACC.BUSI_NO
+        INNER JOIN BOK_BOOKSET bok
+        ON bok.BOOKSET_ID = ACC.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT_ADD prodAdd
+        ON prodAdd.FINPROD_ID = bok.ACCT_SUBJECT_ID
+        LEFT JOIN PTL_SEC_VALUTION VAL
+        ON VAL.PORTFOLIO_ID = NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID)
+        AND VAL.FINPROD_ID = deal.FINPROD_ID
+        AND VAL.DSC_COST_AMT != 0
+        AND VAL.CDATE = #{searchDate} -1
+        AND VAL.INV_AIM = ACC.INV_AIM
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust1
+        ON fin.ISSUER = cust1.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust2
+        ON fin.FINANCIER = cust2.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
+        ON fin.SPONSOR = cust3.CUSTOMER_ID
+        WHERE 1=1
+        AND deal.IS_CANCEL = 'N'
+        AND deal.TRADE_STATUS = '01'
+        AND typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13})
+        AND fin.VDATE <![CDATA[<=]]> #{searchDate}
+        AND NVL(fin.MDATE, #{searchDate}+1)<![CDATA[>]]> #{searchDate}
+        AND (
+        <!-- 取当前持仓资产的买入、卖出、收息、还本、重分类交易 -->
+        (deal.PS IN ('T01','T02','T03','T39','T22','T23','T07','T08','T09','T35') AND val. PORTFOLIO_ID IS NOT NULL)
+        <!--  第一次买入/资产重分类交易时，还未跑批，组合资产持仓还未生成 -->
+        OR (deal.PS IN ('T01','T35') AND val. PORTFOLIO_ID IS NULL AND deal.trade_date = #{searchDate})
+        )
+        AND ACC.INV_AIM IN ('AC','FVOCI')
+        <if test="finprodIdList != null and finprodIdList.size > 0">
+            AND (a.FINPROD_ID IN
+            <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR a.FINPROD_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+
+    </select>
+
+    <select id="selectViewRatingInfo"
+            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
+        select
+        OCODE,
+        OTYPE,
+        GRADEORGID,
+        MSTRATINGRESULT01
+        from (
+        select
+        OCODE,
+        OTYPE,
+        GRADEORGID,
+        MSTRATINGRESULT01,
+        rank() over (partition by OCODE, OTYPE, GRADEORGID order by GRADEDATE desc) rk
+        from
+        <!--VW_MOD_RATING_INFO -->
+        (SELECT A.OCODE AS OCODE,
+        A.OTYPE AS OTYPE,
+        A.INNEROUTER AS INNEROUTER,
+        A.GRADEORGID AS GRADEORGID,
+        A.GRADEDATE AS GRADEDATE,
+        A.NOTICEDATE AS NOTICEDATE,
+        A.SHORTLONGTERM AS SHORTLONGTERM,
+        A.MSTRATINGRESULT01 AS MSTRATINGRESULT01,
+        A.MSTRATINGRESULT02 AS MSTRATINGRESULT02,
+        A.INPUTTYPE AS INPUTTYPE,
+        A.GRADEEXPECTATION AS GRADEEXPECTATION,
+        A.DIRECTIONCHANGE AS DIRECTIONCHANGE,
+        A.ISSUERRATETYPE AS ISSUERRATETYPE
+        FROM (
+        SELECT MBCR.O_CODE AS OCODE,
+        MBCR.O_TYPE AS OTYPE,
+        '01' AS INNEROUTER,
+        MBCR.GRADE_ORG_ID AS GRADEORGID,
+        MBCR.GRADE_DATE AS GRADEDATE,
+        MBCR.NOTICE_DATE AS NOTICEDATE,
+        MBCR.SHORT_LONG_TERM AS SHORTLONGTERM,
+        MBCR.GRADE_RESULT AS MSTRATINGRESULT01,
+        MRM.GRADE_RESULT_ST AS MSTRATINGRESULT02,
+        MBCR.INPUT_TYPE AS INPUTTYPE,
+        MBCR.GRADE_EXPECTATION AS GRADEEXPECTATION,
+        MBCR.DIRECTION_CHANGE AS DIRECTIONCHANGE,
+        MBCR.ISSUER_RATE_TYPE AS ISSUERRATETYPE
+        FROM MST_BOND_CREDIT_RATING MBCR
+        LEFT JOIN MST_RATING_MATCH MRM
+        ON MBCR.GRADE_RESULT = MRM.GRADE_RESULT_OR
+        UNION ALL
+        SELECT MICR.O_CODE AS OCODE,
+        MICR.O_TYPE AS OTYPE,
+        '02' AS INNEROUTER,
+        MICR.GRADE_ORG_ID AS GRADEORGID,
+        MICR.GRADE_DATE AS GRADEDATE,
+        NULL AS NOTICEDATE,
+        NULL AS SHORTLONGTERM,
+        MICR.GRADE_RESULT AS MSTRATINGRESULT01,
+        MRM1.GRADE_RESULT_ST AS MSTRATINGRESULT02,
+        MICR.INPUT_TYPE AS INPUTTYPE,
+        NULL AS GRADEEXPECTATION,
+        NULL AS DIRECTIONCHANGE,
+        NULL AS ISSUERRATETYPE
+        FROM MST_INNER_CREDIT_RATING MICR
+        LEFT JOIN MST_RATING_MATCH MRM1
+        ON MICR.GRADE_RESULT = MRM1.GRADE_RESULT_OR) A)
+        where GRADEDATE &lt;= #{searchDate, jdbcType=DATE})
+        where
+        rk = 1
+    </select>
+
+    <select id="selectViewRatingInfoByList"
+            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
+
+        select
+        OCODE,
+        OTYPE,
+        GRADEORGID,
+        MSTRATINGRESULT01
+        #{searchDate, jdbcType=DATE} searchDate
+        from (
+        select
+        OCODE,
+        OTYPE,
+        GRADEORGID,
+        MSTRATINGRESULT01,
+        rank() over (partition by OCODE, OTYPE, GRADEORGID order by GRADEDATE desc) rk
+        from
+        <!--VW_MOD_RATING_INFO-->
+        (SELECT A.OCODE AS OCODE,
+        A.OTYPE AS OTYPE,
+        A.INNEROUTER AS INNEROUTER,
+        A.GRADEORGID AS GRADEORGID,
+        A.GRADEDATE AS GRADEDATE,
+        A.NOTICEDATE AS NOTICEDATE,
+        A.SHORTLONGTERM AS SHORTLONGTERM,
+        A.MSTRATINGRESULT01 AS MSTRATINGRESULT01,
+        A.INPUTTYPE AS INPUTTYPE,
+        A.GRADEEXPECTATION AS GRADEEXPECTATION,
+        A.DIRECTIONCHANGE AS DIRECTIONCHANGE,
+        A.ISSUERRATETYPE AS ISSUERRATETYPE
+        FROM (
+        SELECT MBCR.O_CODE AS OCODE,
+        MBCR.O_TYPE AS OTYPE,
+        '01' AS INNEROUTER,
+        MBCR.GRADE_ORG_ID AS GRADEORGID,
+        MBCR.GRADE_DATE AS GRADEDATE,
+        MBCR.NOTICE_DATE AS NOTICEDATE,
+        MBCR.SHORT_LONG_TERM AS SHORTLONGTERM,
+        MBCR.GRADE_RESULT AS MSTRATINGRESULT01,
+        MBCR.INPUT_TYPE AS INPUTTYPE,
+        MBCR.GRADE_EXPECTATION AS GRADEEXPECTATION,
+        MBCR.DIRECTION_CHANGE AS DIRECTIONCHANGE,
+        MBCR.ISSUER_RATE_TYPE AS ISSUERRATETYPE
+        FROM MST_BOND_CREDIT_RATING MBCR
+        UNION ALL
+        SELECT MICR.O_CODE AS OCODE,
+        MICR.O_TYPE AS OTYPE,
+        '02' AS INNEROUTER,
+        MICR.GRADE_ORG_ID AS GRADEORGID,
+        MICR.GRADE_DATE AS GRADEDATE,
+        NULL AS NOTICEDATE,
+        NULL AS SHORTLONGTERM,
+        MICR.GRADE_RESULT AS MSTRATINGRESULT01,
+        MICR.INPUT_TYPE AS INPUTTYPE,
+        NULL AS GRADEEXPECTATION,
+        NULL AS DIRECTIONCHANGE,
+        NULL AS ISSUERRATETYPE
+        FROM MST_INNER_CREDIT_RATING MICR) A)
+        where 1=1
+        <if test="list !=null and list.size > 0">
+            AND (
+            <foreach collection="list" item="item" separator=" or " index="index">
+                (OCODE = #{item.ocode,jdbcType=VARCHAR} and OTYPE = #{item.otype,jdbcType=VARCHAR}
+                and GRADEORGID = #{item.gradeorgid,jdbcType=VARCHAR})
+            </foreach>
+            )
+        </if>
+        and GRADEDATE &lt;= #{searchDate, jdbcType=DATE})
+        where
+        rk = 1
+    </select>
+
+    <!-- 查询资产信息 -->
+    <select id="selectAssetInfo"
+            resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto">
+        SELECT
+        distinct
+        <!--产品信息 -->
+        bok.BOOKSET_ID AS PROD_ID, /** 账套代码 **/
+        NVL(bok.BOOKSET_NAME,bok.BOOKSET_FULLNAME) AS PROD_NAME, /** 产品名称 **/
+        VAL.PORTFOLIO_ID AS PORTFOLIO_ID, /** 组合代码 **/
+        <!--资产信息 -->
+        NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID, /** 金融产品代码 **/
+        NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type, /** 金融产品类型 **/
+        NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,/** 市场代码 **/
+        NVL(fin.VDATE,trdfin.VDATE) AS VDATE, /** 起息日 **/
+        NVL(fin.MDATE,trdfin.MDATE) AS MDATE, /** 到期日 **/
+        finAdd.IS_EFF_PLEDGE AS IS_LIMITS, /** 是否含有抵质押物 **/
+        finadd.BOND_RISK_TYPE AS FIRST_RESULT, /** 风险五级分类 **/
+        fin.COUPON_SPECIES AS COUPON_SPECIES, /** 息票品种 **/
+        fin.ISSUE_PRICE AS ISSUE_PRICE, /** 发行价 **/
+        fin.ISSUE_AMT AS ISSUE_AMT, /** 发行数量 **/
+        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        fin.FINANCIER AS FINANCIER,
+        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        fin.SPONSOR AS SPONSOR,
+        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        typ.TYPE_1 AS SEC_DETAIL_TYPE_MODEL, /** 模型证券细分类 **/
+        typ.TYPE_18 AS SEC_TYPE_MODEL, /** 模型资产类型 **/
+        DECODE(VAL.INV_AIM,'999999',NULL,VAL.INV_AIM) AS INV_AIM
+        FROM PTL_SEC_VALUTION VAL
+        INNER JOIN BOK_BOOKSET bok
+        ON (bok.BOOKSET_ID = VAL.PORTFOLIO_ID OR bok.BOOKSET_ID = 'F16_'||VAL.PORTFOLIO_ID)
+        LEFT JOIN FIN_PRODUCT fin
+        ON fin.FINPROD_ID = VAL.FINPROD_ID
+        LEFT JOIN FIN_TRADE_PRODUCT trdfin
+        ON trdfin.FINPROD_ID = VAL.FINPROD_ID
+        AND trdfin.BRANCH = 0
+        LEFT JOIN FIN_PRODUCT_ADD finadd
+        ON VAL.FINPROD_ID = finadd.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE typ
+        ON VAL.FINPROD_ID = typ.FINPROD_ID
+        AND typ.BRANCH = 0
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust1
+        ON fin.ISSUER = cust1.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust2
+        ON fin.FINANCIER = cust2.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
+        ON fin.SPONSOR = cust3.CUSTOMER_ID
+        WHERE 1=1
+        AND VAL.DSC_COST_AMT != 0
+        AND VAL.CDATE = #{searchDate} -1
+        AND VAL.INV_AIM IN ('AC','FVOCI','999999')
+        AND (
+        typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
+        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
+        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
+        )
+        AND NVL(fin.VDATE,trdfin.VDATE) <![CDATA[<=]]> #{searchDate}
+        AND NVL(NVL(fin.MDATE,trdfin.MDATE) , #{searchDate}+1)<![CDATA[>]]> #{searchDate}
+        <if test="finprodIdList != null and finprodIdList.size > 0">
+            AND (a.FINPROD_ID IN
+            <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR a.FINPROD_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <!--查询今日资产信息：无历史持仓，当日买入的资产 -->
+    <select id="selectTdyAssetInfo"
+            resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto">
+        SELECT
+        distinct
+        --产品信息 -->
+        bok.BOOKSET_ID AS PROD_ID,
+        NVL(bok.BOOKSET_NAME,bok.BOOKSET_FULLNAME) AS PROD_NAME,
+        NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
+        --资产信息 -->
+        NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID,
+        NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type,
+        NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,
+        NVL(fin.VDATE,trdfin.VDATE) AS VDATE,
+        NVL(fin.MDATE,trdfin.MDATE) AS MDATE,
+        finAdd.IS_EFF_PLEDGE AS IS_LIMITS,
+        finadd.BOND_RISK_TYPE AS FIRST_RESULT,
+        fin.COUPON_SPECIES AS COUPON_SPECIES,
+        fin.ISSUE_PRICE AS ISSUE_PRICE,
+        fin.ISSUE_AMT AS ISSUE_AMT,
+        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
+        fin.FINANCIER AS FINANCIER,
+        cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
+        fin.SPONSOR AS SPONSOR,
+        cust3.IS_FIN_LICENCE AS SPONSOR_FIN_LICENCE,
+        typ.TYPE_1 AS SEC_DETAIL_TYPE_MODEL,
+        typ.TYPE_18 AS SEC_TYPE_MODEL,
+        deal.SETTLE_DATE AS SETTLE_DATE,
+        ACC.INV_AIM AS INV_AIM
+        FROM TRD_PRODUCT_DEAL DEAL
+        INNER JOIN BOK_DEAL_ACCOUNTING ACC
+        ON ACC.BUSI_NO = DEAL.TRADE_ID
+        INNER JOIN BOK_BOOKSET bok
+        ON BOK.BOOKSET_ID = ACC.BOOKSET_ID
+        LEFT JOIN FIN_PRODUCT_ADD prodAdd
+        ON prodAdd.FINPROD_ID = bok.ACCT_SUBJECT_ID
+        LEFT JOIN PTL_SEC_VALUTION VAL
+        ON VAL.PORTFOLIO_ID = NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID)
+        AND VAL.FINPROD_ID = deal.FINPROD_ID
+        AND VAL.DSC_COST_AMT != 0
+        AND VAL.CDATE = #{searchDate} -1
+        AND DECODE(VAL.INV_AIM,'999999',NULL,VAL.INV_AIM) = ACC.INV_AIM
+        LEFT JOIN FIN_PRODUCT fin
+        ON fin.finprod_id = DEAL.Finprod_Id
+        LEFT JOIN FIN_TRADE_PRODUCT trdfin
+        ON trdfin.finprod_id = DEAL.FINPROD_ID
+        AND trdfin.branch = 0
+        LEFT JOIN FIN_PRODUCT_ADD finadd
+        ON DEAL.FINPROD_ID = finadd.FINPROD_ID
+        LEFT JOIN FIN_PRODUCT_TYPE typ
+        ON DEAL.FINPROD_ID = typ.FINPROD_ID
+        AND typ.BRANCH = 0
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust1
+        ON fin.ISSUER = cust1.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust2
+        ON fin.FINANCIER = cust2.CUSTOMER_ID
+        LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
+        ON fin.SPONSOR = cust3.CUSTOMER_ID
+        WHERE 1=1
+        AND VAL.Portfolio_Id IS NULL
+        AND DEAL.PS IN ('T01','T35')
+        AND ACC.INV_AIM != 'FVTPL'
+        AND DEAL.TRADE_DATE = #{searchDate}
+        AND (
+        typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
+        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
+        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
+        )
+        <if test="finprodIdList != null and finprodIdList.size > 0">
+            AND (a.FINPROD_ID IN
+            <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR a.FINPROD_ID in (
+                </if>
+                #{item}
+            </foreach>
+            )
+        </if>
+    </select>
+
+    <!-- 查询资产首次买入日期 -->
+    <select id="queryFirstBuyDate" resultType="java.util.Date">
+		SELECT MIN(A.TRADE_DATE)
 		FROM TRD_PRODUCT_DEAL A
-		INNER JOIN PTL_TRADE B
-		ON A.TRADE_ID = B.BUSI_NO
-		INNER JOIN PTL_PORTFOLIO P
-		ON B.PORTFOLIO_ID = P.PORTFOLIO_ID
-		AND P.INVEST_YESORNO = 'Y'
-		LEFT JOIN FIN_PRODUCT C
-		ON (c.FINPROD_MARKET_ID = P.PORTFOLIO_ID or
-		c.FINPROD_MARKET_ID = P.PARENT_PORTFOLIO_ID)
-		AND C.FINPROD_TYPE2 = 'F16'
-		where A.PS IN
-		('T01', 'T02', 'T03', 'T39', 'T22', 'T23', 'T07', 'T08', 'T09')
-		AND A.IS_CANCEL = 'N'
-		AND A.TRADE_STATUS = '01'
-		AND A.FINPROD_TYPE2 IN ('F01', 'F18' )) b on a.FINPROD_ID = b.FINPROD_ID
-	inner join <!--VW_MOD_POSITION_INFO--> (select A.FINPROD_ID, A.CDATE, A.INV_AIM, SUM(A.AMOUNT) AMOUNT
-		from PTL_SEC_POSITION A
-		INNER JOIN PTL_PORTFOLIO C
-		ON A.PORTFOLIO_ID = C.PORTFOLIO_ID
-		AND C.INVEST_YESORNO = 'Y'
-		INNER JOIN FIN_PRODUCT B
-		ON A.FINPROD_ID = B.FINPROD_ID
-		AND B.FINPROD_TYPE2 IN ('F01', 'F18')
-		where A.HODING_TYPE = '03'
-		GROUP BY A.FINPROD_ID, A.CDATE, A.INV_AIM)c on a.FINPROD_ID = c.FINPROD_ID and c.AMOUNT != 0
-		and c.CDATE = #{searchDate, jdbcType=DATE} and c.INV_AIM = #{INV_AIM_AC}
-	left join (
-		select ASSET_CODE,SEC_RESULT from
-			(select  ASSET_CODE,SEC_RESULT,rank() over (partition by ASSET_CODE order by EFFECT_DATE desc) rk from VW_MOD_RISK_FIVE_LEEVEL)
-		where rk = 1
-	) d on d.ASSET_CODE = a.FINPROD_MARKET_ID
-where
-	1=1
-	<if test="finprodIdList != null and finprodIdList.size > 0">
-		AND (a.FINPROD_ID IN
-		<foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
-			<if test="(index % 998) == 0">
-				null) OR a.FINPROD_ID in (
-			</if>
-			#{item}
-		</foreach>
-		)
-	</if>
-	and a.VDATE &lt;= #{searchDate, jdbcType=DATE}
-	and a.MDATE > #{searchDate, jdbcType=DATE}
-	and (a.ASSET_ONE = #{MODEL_SEC_TYPE_F01} or (a.ASSET_ONE = #{MODEL_SEC_TYPE_F06} and a.ASSET_TWO in (#{TYPE_08}, #{TYPE_09})))
+		INNER JOIN BOK_DEAL_ACCOUNTING ACC
+		 ON ACC.BUSI_NO = A.TRADE_ID
+		WHERE A.PS='T01'
+			AND A.FINPROD_ID=#{finprodId}
+		  	AND A.TRADE_DATE <![CDATA[>=]]> NVL(
+				(
+						SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
+						WHERE B.DSC_COST_AMT = 0
+							AND B.FINPROD_ID=#{finprodId}
+						  	AND B.PORTFOLIO_ID=#{portfolioId}
+				),A.TRADE_DATE
+			)
+			AND ACC.BOOKSET_ID = #{prodId}
 	</select>
 
-	<select id="selectViewRatingInfo" resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
-select
-	OCODE,
-	OTYPE,
-	GRADEORGID,
-	MSTRATINGRESULT01
-from (
-	select
-		OCODE,
-		OTYPE,
-		GRADEORGID,
-		MSTRATINGRESULT01,
-		rank() over (partition by OCODE, OTYPE, GRADEORGID order by GRADEDATE desc) rk
-	from
-		<!--VW_MOD_RATING_INFO -->
-		(SELECT A.OCODE                            AS OCODE,
-		A.OTYPE                            AS OTYPE,
-		A.INNEROUTER                       AS INNEROUTER,
-		A.GRADEORGID                       AS GRADEORGID,
-		A.GRADEDATE                        AS GRADEDATE,
-		A.NOTICEDATE                       AS NOTICEDATE,
-		A.SHORTLONGTERM                    AS SHORTLONGTERM,
-		A.MSTRATINGRESULT01                AS MSTRATINGRESULT01,
-		A.MSTRATINGRESULT02                AS MSTRATINGRESULT02,
-		A.INPUTTYPE                        AS INPUTTYPE,
-		A.GRADEEXPECTATION                 AS GRADEEXPECTATION,
-		A.DIRECTIONCHANGE                  AS DIRECTIONCHANGE,
-		A.ISSUERRATETYPE                   AS ISSUERRATETYPE
-		FROM (
-		SELECT MBCR.O_CODE                        AS OCODE,
-		MBCR.O_TYPE                        AS OTYPE,
-		'01'                               AS INNEROUTER,
-		MBCR.GRADE_ORG_ID                  AS GRADEORGID,
-		MBCR.GRADE_DATE                    AS GRADEDATE,
-		MBCR.NOTICE_DATE                   AS NOTICEDATE,
-		MBCR.SHORT_LONG_TERM               AS SHORTLONGTERM,
-		MBCR.GRADE_RESULT                  AS MSTRATINGRESULT01,
-		MRM.GRADE_RESULT_ST                AS MSTRATINGRESULT02,
-		MBCR.INPUT_TYPE                    AS INPUTTYPE,
-		MBCR.GRADE_EXPECTATION             AS GRADEEXPECTATION,
-		MBCR.DIRECTION_CHANGE              AS DIRECTIONCHANGE,
-		MBCR.ISSUER_RATE_TYPE              AS ISSUERRATETYPE
-		FROM MST_BOND_CREDIT_RATING MBCR
-		LEFT JOIN MST_RATING_MATCH MRM
-		ON MBCR.GRADE_RESULT = MRM.GRADE_RESULT_OR
-		UNION ALL
-		SELECT MICR.O_CODE AS OCODE,
-		MICR.O_TYPE AS OTYPE,
-		'02' AS INNEROUTER,
-		MICR.GRADE_ORG_ID AS GRADEORGID,
-		MICR.GRADE_DATE AS GRADEDATE,
-		NULL AS NOTICEDATE,
-		NULL AS SHORTLONGTERM,
-		MICR.GRADE_RESULT AS MSTRATINGRESULT01,
-		MRM1.GRADE_RESULT_ST AS MSTRATINGRESULT02,
-		MICR.INPUT_TYPE AS INPUTTYPE,
-		NULL AS GRADEEXPECTATION,
-		NULL AS DIRECTIONCHANGE,
-		NULL AS ISSUERRATETYPE
-		FROM MST_INNER_CREDIT_RATING MICR
-		LEFT JOIN MST_RATING_MATCH MRM1
-		ON MICR.GRADE_RESULT = MRM1.GRADE_RESULT_OR) A)
-	where GRADEDATE &lt;= #{searchDate, jdbcType=DATE})
-where
-	rk = 1
-	</select>
-
-	<select id="selectViewRatingInfoByList" resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
-select
-		OCODE,
-		OTYPE,
-		GRADEORGID,
-		MSTRATINGRESULT01,
-		#{searchDate, jdbcType=DATE} searchDate
-from(
-	select
-		OCODE,
-		OTYPE,
-		GRADEORGID,
-		MSTRATINGRESULT01
-	from (
+    <select id="selectViewRatingInfoMapping"
+            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ModStandardGradeMapping">
 		select
-			OCODE,
-			OTYPE,
-			GRADEORGID,
-			MSTRATINGRESULT01,
-			rank() over (partition by OCODE, OTYPE, GRADEORGID order by GRADEDATE desc) rk
-		from
-			<!--VW_MOD_RATING_INFO-->
-		(SELECT A.OCODE                            AS OCODE,
-		A.OTYPE                            AS OTYPE,
-		A.INNEROUTER                       AS INNEROUTER,
-		A.GRADEORGID                       AS GRADEORGID,
-		A.GRADEDATE                        AS GRADEDATE,
-		A.NOTICEDATE                       AS NOTICEDATE,
-		A.SHORTLONGTERM                    AS SHORTLONGTERM,
-		A.MSTRATINGRESULT01                AS MSTRATINGRESULT01,
-		A.MSTRATINGRESULT02                AS MSTRATINGRESULT02,
-		A.INPUTTYPE                        AS INPUTTYPE,
-		A.GRADEEXPECTATION                 AS GRADEEXPECTATION,
-		A.DIRECTIONCHANGE                  AS DIRECTIONCHANGE,
-		A.ISSUERRATETYPE                   AS ISSUERRATETYPE
-		FROM (
-		SELECT MBCR.O_CODE                        AS OCODE,
-		MBCR.O_TYPE                        AS OTYPE,
-		'01'                               AS INNEROUTER,
-		MBCR.GRADE_ORG_ID                  AS GRADEORGID,
-		MBCR.GRADE_DATE                    AS GRADEDATE,
-		MBCR.NOTICE_DATE                   AS NOTICEDATE,
-		MBCR.SHORT_LONG_TERM               AS SHORTLONGTERM,
-		MBCR.GRADE_RESULT                  AS MSTRATINGRESULT01,
-		MRM.GRADE_RESULT_ST                AS MSTRATINGRESULT02,
-		MBCR.INPUT_TYPE                    AS INPUTTYPE,
-		MBCR.GRADE_EXPECTATION             AS GRADEEXPECTATION,
-		MBCR.DIRECTION_CHANGE              AS DIRECTIONCHANGE,
-		MBCR.ISSUER_RATE_TYPE              AS ISSUERRATETYPE
-		FROM MST_BOND_CREDIT_RATING MBCR
-		LEFT JOIN MST_RATING_MATCH MRM
-		ON MBCR.GRADE_RESULT = MRM.GRADE_RESULT_OR
-		UNION ALL
-		SELECT MICR.O_CODE AS OCODE,
-		MICR.O_TYPE AS OTYPE,
-		'02' AS INNEROUTER,
-		MICR.GRADE_ORG_ID AS GRADEORGID,
-		MICR.GRADE_DATE AS GRADEDATE,
-		NULL AS NOTICEDATE,
-		NULL AS SHORTLONGTERM,
-		MICR.GRADE_RESULT AS MSTRATINGRESULT01,
-		MRM1.GRADE_RESULT_ST AS MSTRATINGRESULT02,
-		MICR.INPUT_TYPE AS INPUTTYPE,
-		NULL AS GRADEEXPECTATION,
-		NULL AS DIRECTIONCHANGE,
-		NULL AS ISSUERRATETYPE
-		FROM MST_INNER_CREDIT_RATING MICR
-		LEFT JOIN MST_RATING_MATCH MRM1
-		ON MICR.GRADE_RESULT = MRM1.GRADE_RESULT_OR) A)
-		where
-		<foreach collection="list" item="item" separator=" or " index="index">
-			(OCODE = #{item.ocode,jdbcType=VARCHAR} and OTYPE = #{item.otype,jdbcType=VARCHAR} and GRADEORGID = #{item.gradeorgid,jdbcType=VARCHAR})
-		</foreach>
-		and GRADEDATE &lt;= #{searchDate, jdbcType=DATE})
-	where
-		rk = 1
-)
+			GRADE_INST,
+			O_TYPE,
+			GRADE_RESULT,
+			GRADE_STANDARD_RESULT
+		from MOD_STANDARD_GRADE_MAPPING
 	</select>
 </mapper>

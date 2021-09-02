@@ -9,6 +9,7 @@ import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -16,12 +17,15 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.asset.dto.AssetGenerateEntry;
 import com.joyintech.tams.invest.common.asset.util.AssetCommonUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.invest.entrust.common.controller.EtrCommonController;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrastconfigtransfer.dto.EtrAssetConfigDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade001Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeDzImportDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTradeGsImportDto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -41,6 +45,17 @@ import java.util.*;
 
 @Service
 public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfigDto> {
+    /**
+     * 日期相关
+     */
+    @Autowired
+    private DateCalService dateCalService;
+
+    /**
+     *
+     */
+    @Autowired
+    private EtrCommonService etrCommonService;
 
     @Autowired
     private EtrExchangeTrade001Service etrExchangeTrade001Service;
@@ -114,6 +129,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
                 desDto.setEntrustNum(ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getTdyAssetNetvalue(), new BigDecimal(9)), retDto.getPrice(), 6));
                 desDto.setRadio(new BigDecimal(0.09));
             }
+            desDto.setTdyAssetNetvalue(item.getTdyAssetNetvalue());
             retList.add(desDto);
         });
         return retList;
@@ -139,6 +155,7 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             desItem.setIndexId(String.valueOf(序号*2));
             desItem.setPs(DictCodeList.交易方向_卖出.getValue());
             desItem.setPortfolioId(paramDto.getPortfolioId());
+            desItem.setSecAcctId(paramDto.getSecAcctId());
             jsonArrays.add(assembleCommonDataByTMK(desItem));
         });
         Map<String,Object> retMap=new HashMap<>();
@@ -209,9 +226,97 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
         item.setEntrustNum(ArithmeticUtil.divide(item.getEntrustNum(),new BigDecimal(100),4));
         item.setVdate(DateUtil.platDateFromCache());
         item.setMdate(DateUtil.platDateFromCache());
+
+        param = new HashMap<>();
+        param.put("portfolioId", item.getPortfolioId());
+        param.put("ccy", StringUtil.isNotEmpty(item.getCcy())?item.getCcy():DictCodeList.币种_人民币_CNY.getValue());
+        param.put("vdate", DateUtil.format(item.getVdate()));
+        param.put("calId", item.getCalendarId());
+        param.put("manageId", item.getSecAcctId());
+        Map<String, Object> cashMap = this.getProAvailableCash(param);
+        // 指令可用现金
+        if (cashMap != null) {
+            item.setProAvailableCash(
+                    cashMap.get("cashT") == null ? BigDecimal.ZERO : new BigDecimal(
+                            cashMap.get("cashT").toString()));
+        }
+        param = new HashMap<>();
+        param.put("finprodId", item.getFinprodId());
+        param.put("portfolioId", item.getPortfolioId());
+        param.put("calId", item.getCalendarId());
+        param.put("ccy", item.getCcy());
+        param.put("secAcctId", item.getSecAcctId());
+        param.put("chlId", item.getChlId());
+        param.put("invAim", item.getInvAim());
+        // 指令可用持仓
+        Map<String, Object> posMap = this.getAssetAvailablePosition(param);
+        if (posMap != null) {
+            item.setAccAvailablePos(
+                    posMap.get("position") == null ? BigDecimal.ZERO : new BigDecimal(100).multiply(new BigDecimal(
+                            posMap.get("position").toString())));
+        }
+
+//        item.setProAvailableCash();
+//        item.setAccAvailablePos();
+//        item.setCounterId();
+//        item.setSeatId();
         etrExchangeTrade001Service.calEntrustNumOrPrice(item,null);//指令金额
         //todo 组合券商与席位号
         return Arrays.asList(item).toArray(new Object[Arrays.asList(item).size()]);
+    }
+
+    /**
+     * 组合可用持仓查询
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Map<String, Object> getAssetAvailablePosition(Map<String, Object> param) {
+        Date sysDate = DateUtil.platDateFromCache();
+        Date sysDate_1 = null;
+        param.put("sysDate",DateUtil.format(sysDate));
+        String calId = (String)param.get("calId");
+        if(StringUtil.isNotEmpty(calId)){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(sysDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(sysDate)), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate)), 1, holidayList, "1");
+            sysDate_1 = tradeDay;
+        }
+        EtrSecPositionDto dto1= new EtrSecPositionDto();
+        dto1.setCdate(sysDate);
+        dto1.setPortfolioId((String)param.get("portfolioId"));
+        dto1.setFinprodId((String)param.get("finprodId"));
+        dto1.setCcy((String)param.get("ccy"));
+        dto1.setSecAcctId((String)param.get("secAcctId"));
+        dto1.setInvAim((String)param.get("invAim"));
+        dto1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+//        var data = {portfolioId:portfolioId1,calId:$('#calendarId').val(),finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), secAcctId: $("#secManageAcctId").val(), chlId: $('#chlFinprodId').val()}
+//        // 一体化对应etliu start
+//        data.invAim = $('#invAim').val();
+        Map<String,Object>ret = new HashMap<>();
+        ret.put("position",etrCommonService.getAssetAvailablePosition(dto1));
+        if(StringUtil.isNotEmpty(calId)&&sysDate_1!=null){
+            dto1.setCdate(sysDate_1);
+            ret.put("positionT1",etrCommonService.getAssetAvailablePosition(dto1));
+        }
+        return ret;
+//        return restTemplate.postForObject(
+//            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getAssetAvailablePosition",param,
+//            Map.class);
+    }
+
+    public Map<String, Object> getProAvailableCash(Map<String, Object> param) {
+        Date sysDate = DateUtil.platDateFromCache();
+        param.put("sysDate",DateUtil.format(sysDate));
+        String calId = (String)param.get("calId");
+        if(StringUtil.isNotEmpty(calId)){
+            List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(sysDate)),DateUtil.addDay(DateUtil.parse(DateUtil.format(sysDate)), 15),calId);
+            Date tradeDay = dateCalService.calculationTradingDay(DateUtil.parse(DateUtil.format(sysDate)), 1, holidayList, "1");
+            param.put("sysDateT1",DateUtil.format(tradeDay));
+        }
+        Map<String, Object> cash = etrCommonService.getProAvailableCash(param);
+        return cash;
     }
 
     /**

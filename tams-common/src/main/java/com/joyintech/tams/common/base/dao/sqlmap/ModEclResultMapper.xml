@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModEclResultMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModEclResult" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="ASSET_TYPE" property="assetType" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="BUSS_NO" property="bussNo" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="DEC_DATE" property="decDate" jdbcType="DATE" />
+        <result column="PRIN_OVERDUE_DAY" property="prinOverdueDay" jdbcType="DECIMAL" />
+        <result column="INT_OVERDUE_DAY" property="intOverdueDay" jdbcType="DECIMAL" />
+        <result column="PURCHASE_TIME_GRADE" property="purchaseTimeGrade" jdbcType="VARCHAR" />
+        <result column="CURRENT_TIME_GRADE" property="currentTimeGrade" jdbcType="VARCHAR" />
+        <result column="PRE_PROSPECTIVE_PD" property="preProspectivePd" jdbcType="DECIMAL" />
+        <result column="PROSPECTIVE_PD" property="prospectivePd" jdbcType="DECIMAL" />
+        <result column="STAGE" property="stage" jdbcType="VARCHAR" />
+        <result column="LGD" property="lgd" jdbcType="DECIMAL" />
+        <result column="EAD" property="ead" jdbcType="DECIMAL" />
+        <result column="PRE_PROSPECTIVE_ECL" property="preProspectiveEcl" jdbcType="DECIMAL" />
+        <result column="PROSPECTIVE_ECL" property="prospectiveEcl" jdbcType="DECIMAL" />
+        <result column="ALLOW_MODEL_COVER" property="allowModelCover" jdbcType="VARCHAR" />
+        <result column="DATA_SOURCE" property="dataSource" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="ECL_RATIO" property="eclRatio" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, PROD_ID PROD_ID, PROD_NAME PROD_NAME, ASSET_ID ASSET_ID, ASSET_NAME ASSET_NAME, 
+        ASSET_TYPE ASSET_TYPE, PORTFOLIO_ID PORTFOLIO_ID, BUSS_NO BUSS_NO, PS PS, TRADE_DATE TRADE_DATE, 
+        DEC_DATE DEC_DATE, PRIN_OVERDUE_DAY PRIN_OVERDUE_DAY, INT_OVERDUE_DAY INT_OVERDUE_DAY, 
+        PURCHASE_TIME_GRADE PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE CURRENT_TIME_GRADE, PRE_PROSPECTIVE_PD PRE_PROSPECTIVE_PD, 
+        PROSPECTIVE_PD PROSPECTIVE_PD, STAGE STAGE, LGD LGD, EAD EAD, PRE_PROSPECTIVE_ECL PRE_PROSPECTIVE_ECL, 
+        PROSPECTIVE_ECL PROSPECTIVE_ECL, ALLOW_MODEL_COVER ALLOW_MODEL_COVER, DATA_SOURCE DATA_SOURCE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME, ECL_RATIO ECL_RATIO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModEclResultMapper.Base_Column_List" />
+        from MOD_ECL_RESULT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModEclResultMapper.Base_Column_List" />
+        from MOD_ECL_RESULT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ModEclResultMapper.Base_Column_List" />
+        from MOD_ECL_RESULT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MOD_ECL_RESULT
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
+        insert into MOD_ECL_RESULT (SEQNO, PROD_ID, PROD_NAME, 
+            ASSET_ID, ASSET_NAME, ASSET_TYPE, 
+            PORTFOLIO_ID, BUSS_NO, PS, 
+            TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY, 
+            INT_OVERDUE_DAY, PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE, 
+            PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE, 
+            LGD, EAD, PRE_PROSPECTIVE_ECL, 
+            PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, ECL_RATIO
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
+            #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR}, #{assetType,jdbcType=VARCHAR}, 
+            #{portfolioId,jdbcType=VARCHAR}, #{bussNo,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{tradeDate,jdbcType=DATE}, #{decDate,jdbcType=DATE}, #{prinOverdueDay,jdbcType=DECIMAL}, 
+            #{intOverdueDay,jdbcType=DECIMAL}, #{purchaseTimeGrade,jdbcType=VARCHAR}, #{currentTimeGrade,jdbcType=VARCHAR}, 
+            #{preProspectivePd,jdbcType=DECIMAL}, #{prospectivePd,jdbcType=DECIMAL}, #{stage,jdbcType=VARCHAR}, 
+            #{lgd,jdbcType=DECIMAL}, #{ead,jdbcType=DECIMAL}, #{preProspectiveEcl,jdbcType=DECIMAL}, 
+            #{prospectiveEcl,jdbcType=DECIMAL}, #{allowModelCover,jdbcType=VARCHAR}, #{dataSource,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{eclRatio,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
+        insert into MOD_ECL_RESULT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME,
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="bussNo != null" >
+                BUSS_NO,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="decDate != null" >
+                DEC_DATE,
+            </if>
+            <if test="prinOverdueDay != null" >
+                PRIN_OVERDUE_DAY,
+            </if>
+            <if test="intOverdueDay != null" >
+                INT_OVERDUE_DAY,
+            </if>
+            <if test="purchaseTimeGrade != null" >
+                PURCHASE_TIME_GRADE,
+            </if>
+            <if test="currentTimeGrade != null" >
+                CURRENT_TIME_GRADE,
+            </if>
+            <if test="preProspectivePd != null" >
+                PRE_PROSPECTIVE_PD,
+            </if>
+            <if test="prospectivePd != null" >
+                PROSPECTIVE_PD,
+            </if>
+            <if test="stage != null" >
+                STAGE,
+            </if>
+            <if test="lgd != null" >
+                LGD,
+            </if>
+            <if test="ead != null" >
+                EAD,
+            </if>
+            <if test="preProspectiveEcl != null" >
+                PRE_PROSPECTIVE_ECL,
+            </if>
+            <if test="prospectiveEcl != null" >
+                PROSPECTIVE_ECL,
+            </if>
+            <if test="allowModelCover != null" >
+                ALLOW_MODEL_COVER,
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="bussNo != null" >
+                #{bussNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="decDate != null" >
+                #{decDate,jdbcType=DATE},
+            </if>
+            <if test="prinOverdueDay != null" >
+                #{prinOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="intOverdueDay != null" >
+                #{intOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="purchaseTimeGrade != null" >
+                #{purchaseTimeGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="currentTimeGrade != null" >
+                #{currentTimeGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="preProspectivePd != null" >
+                #{preProspectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectivePd != null" >
+                #{prospectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="stage != null" >
+                #{stage,jdbcType=VARCHAR},
+            </if>
+            <if test="lgd != null" >
+                #{lgd,jdbcType=DECIMAL},
+            </if>
+            <if test="ead != null" >
+                #{ead,jdbcType=DECIMAL},
+            </if>
+            <if test="preProspectiveEcl != null" >
+                #{preProspectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectiveEcl != null" >
+                #{prospectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="allowModelCover != null" >
+                #{allowModelCover,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eclRatio != null" >
+                #{eclRatio,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
+        insert into MOD_ECL_RESULT(SEQNO, PROD_ID, PROD_NAME, ASSET_ID, ASSET_NAME, ASSET_TYPE, 
+        PORTFOLIO_ID, BUSS_NO, PS, TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, 
+        PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE, 
+        LGD, EAD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ECL_RATIO)
+        select SEQNO, PROD_ID, PROD_NAME, ASSET_ID, ASSET_NAME, ASSET_TYPE, 
+            PORTFOLIO_ID, BUSS_NO, PS, TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY, 
+            PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE, 
+            LGD, EAD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, ECL_RATIO
+             from MOD_ECL_RESULT
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
+        update MOD_ECL_RESULT
+        <set >
+            <if test="prodId != null" >
+                PROD_ID = #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="assetType != null" >
+                ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="bussNo != null" >
+                BUSS_NO = #{bussNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="decDate != null" >
+                DEC_DATE = #{decDate,jdbcType=DATE},
+            </if>
+            <if test="prinOverdueDay != null" >
+                PRIN_OVERDUE_DAY = #{prinOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="intOverdueDay != null" >
+                INT_OVERDUE_DAY = #{intOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="purchaseTimeGrade != null" >
+                PURCHASE_TIME_GRADE = #{purchaseTimeGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="currentTimeGrade != null" >
+                CURRENT_TIME_GRADE = #{currentTimeGrade,jdbcType=VARCHAR},
+            </if>
+            <if test="preProspectivePd != null" >
+                PRE_PROSPECTIVE_PD = #{preProspectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectivePd != null" >
+                PROSPECTIVE_PD = #{prospectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="stage != null" >
+                STAGE = #{stage,jdbcType=VARCHAR},
+            </if>
+            <if test="lgd != null" >
+                LGD = #{lgd,jdbcType=DECIMAL},
+            </if>
+            <if test="ead != null" >
+                EAD = #{ead,jdbcType=DECIMAL},
+            </if>
+            <if test="preProspectiveEcl != null" >
+                PRE_PROSPECTIVE_ECL = #{preProspectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectiveEcl != null" >
+                PROSPECTIVE_ECL = #{prospectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="allowModelCover != null" >
+                ALLOW_MODEL_COVER = #{allowModelCover,jdbcType=VARCHAR},
+            </if>
+            <if test="dataSource != null" >
+                DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO = #{eclRatio,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ModEclResult" >
+        update MOD_ECL_RESULT
+        set PROD_ID = #{prodId,jdbcType=VARCHAR},
+            PROD_NAME = #{prodName,jdbcType=VARCHAR},
+            ASSET_ID = #{assetId,jdbcType=VARCHAR},
+            ASSET_NAME = #{assetName,jdbcType=VARCHAR},
+            ASSET_TYPE = #{assetType,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            BUSS_NO = #{bussNo,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            TRADE_DATE = #{tradeDate,jdbcType=DATE},
+            DEC_DATE = #{decDate,jdbcType=DATE},
+            PRIN_OVERDUE_DAY = #{prinOverdueDay,jdbcType=DECIMAL},
+            INT_OVERDUE_DAY = #{intOverdueDay,jdbcType=DECIMAL},
+            PURCHASE_TIME_GRADE = #{purchaseTimeGrade,jdbcType=VARCHAR},
+            CURRENT_TIME_GRADE = #{currentTimeGrade,jdbcType=VARCHAR},
+            PRE_PROSPECTIVE_PD = #{preProspectivePd,jdbcType=DECIMAL},
+            PROSPECTIVE_PD = #{prospectivePd,jdbcType=DECIMAL},
+            STAGE = #{stage,jdbcType=VARCHAR},
+            LGD = #{lgd,jdbcType=DECIMAL},
+            EAD = #{ead,jdbcType=DECIMAL},
+            PRE_PROSPECTIVE_ECL = #{preProspectiveEcl,jdbcType=DECIMAL},
+            PROSPECTIVE_ECL = #{prospectiveEcl,jdbcType=DECIMAL},
+            ALLOW_MODEL_COVER = #{allowModelCover,jdbcType=VARCHAR},
+            DATA_SOURCE = #{dataSource,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ECL_RATIO = #{eclRatio,jdbcType=DECIMAL}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

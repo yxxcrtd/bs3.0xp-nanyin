@@ -2,12 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper">
 
-	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess">
+	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.common.base.entity.ModEclResultProcess">
 select
 	a.SEQNO, a.PROD_ID, a.PROD_NAME,
 	a.PORTFOLIO_ID, a.ASSET_ID, a.ASSET_NAME,
-	a.MARKET_ID, a.TYPE_8, a.TYPE_9,
-	a.TYPE_10, a.TYPE_11, a.TYPE_12,
+	a.MARKET_ID,
 	a.MODEL_ASSET_TYPE, a.MODEL_ASSET_DETAIL_TYPE,
 	a.MDATE, a.UPDATE_TIME, a.FINANCIER,
 	a.GRADE_ORG_ID, a.ISSUER, a.ACTUAL_CREDIT,
@@ -25,14 +24,20 @@ select
 	a.PROSPECTIVE_ECL, a.ISSUE_AMT, a.VDATE,
 	a.COUPON_SPECIES, a.ISSUE_PRICE, a.PROCESS,
 	a.CREATE_USER, a.CREATE_DEPT, a.CREATE_TIME,
-	a.UPDATE_USER, a.IS_CONTAIN_PLEDGE
+	a.UPDATE_USER, a.IS_CONTAIN_PLEDGE,a.GRADE_ORG_TYPE,
+    a.INV_AIM
 from
 	MOD_ECL_RESULT_PROCESS a
-	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
+	inner join MOD_VAL_BATCH_PARAMS b
+	    on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo}
+	    and b.FINPROD_ID = a.ASSET_ID
 where
-	a.DEC_DATE = #{searchDate, jdbcType=DATE} and
-	a.PROCESS = #{process,jdbcType=VARCHAR} and
-	a.PS = #{ps,jdbcType=VARCHAR}
+	a.DEC_DATE = #{searchDate, jdbcType=DATE}
+	and a.PROCESS = #{process,jdbcType=VARCHAR}
+	<!--减值方案不为空，且为普华方案时 -->
+	<if test="lossType !=null and lossType == '02'">
+		AND PS IN ('T01','T35')
+	</if>
 	</select>
 
 	<delete id="deleteModEclResult" >
@@ -49,48 +54,74 @@ where
 		)
 	</delete>
 
-	<select id="selectModLgdConfig" resultType="com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfig">
-select
-	para.SEQNO,
-	para.CONFIG_TYPE ASSET_TYPE,
-	para.LGD
-from (
-	select
-		a.SEQNO,
-		#{MODEL_DEC_CONFIG_TYPE_06} CONFIG_TYPE,
-		a.LGD,
-		1 orderNum
-	from
-		MOD_LGD_SPECIAL_CONFIG a
-	where
-		a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-	UNION ALL
-	select
-		b.SEQNO,
-		#{MODEL_DEC_CONFIG_TYPE_05} CONFIG_TYPE,
-		b.LGD,
-		2 orderNum
-	from
-		MOD_LGD_CONFIG b
-	where
-		b.ASSET_DETAIL_TYPE = (select c.INPUT2 from MOD_ASEET_MAPPING c
-			where c.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and c.OUTPUT1 = #{type8,jdbcType=VARCHAR} and c.OUTPUT5 = #{type12,jdbcType=VARCHAR})
-			and b.IS_CONTAIN_PLEDGE = #{isContainPledge,jdbcType=VARCHAR}
-) para order by para.orderNum asc
+	<select id="selectModLgdConfig" resultType="com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto">
+		select
+			para.SEQNO,
+			para.CONFIG_TYPE ASSET_TYPE,
+			para.LGD
+		from (
+			select
+				a.SEQNO,
+				#{MODEL_DEC_CONFIG_TYPE_06} CONFIG_TYPE,
+				a.LGD,
+				1 orderNum
+			from
+				MOD_LGD_SPECIAL_CONFIG a
+			where
+				a.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+			UNION ALL
+			select
+				b.SEQNO,
+				#{MODEL_DEC_CONFIG_TYPE_05} CONFIG_TYPE,
+				b.LGD,
+				2 orderNum
+			from
+				MOD_LGD_CONFIG b
+			WHERE
+				b.ASSET_TYPE = #{assetType}
+				AND b.ASSET_DETAIL_TYPE = #{assetDetailType}
+				<if test="isContainPledge != null and isContainPledge != ''">
+				  and IS_CONTAIN_PLEDGE = #{isContainPledge}
+		</if>
 	</select>
 
-	<select id="selectInput2" resultType="java.lang.String">
-select
-	a.INPUT2
-from
-	MOD_ASEET_MAPPING a
-where
-	a.MAPPING_TYPE = #{MODEL_MAPPING_TYPE_01} and
-	a.OUTPUT1 = #{type8,jdbcType=VARCHAR} and
-	a.OUTPUT2 = #{type9,jdbcType=VARCHAR} and
-	a.OUTPUT3 = #{type10,jdbcType=VARCHAR} and
-	a.OUTPUT4 = #{type11,jdbcType=VARCHAR} and
-	a.OUTPUT5 = #{type12,jdbcType=VARCHAR}
+	<!-- 查询资产减值管理 -->
+	<select id="queryEclManage" resultType="com.joyintech.tams.common.base.entity.TrdAssetLoss">
+		SELECT
+			T.TRADE_ID,
+			T.SEC_ID,
+			T.STAGE,
+			T.PEROID,
+			T.VAL_DATE,
+			T.STR_DATE,
+			T.END_DATE,
+			T.LOSS_INPUT_TYPE,
+			T.LOSS_RATIO,
+			T.PD_VAULE,
+			T.LGD_VAULE,
+			T.ECL_VAULE,
+			T.FINPROD_ID,
+			T.PEROID_TYPE,
+			T.TERM_DESCRIBE
+		FROM TRD_ASSET_LOSS T
+		WHERE
+		    T.SEC_ID = #{assetId}
+		  	AND T.STATUS ='01'
+			AND T.VAL_DATE = #{platDate}
+		  	<if test="peroidType != null and peroidType != ''">
+				AND (
+					T.PEROID_TYPE = #{peroidType}
+					OR (T.PEROID_TYPE IS NULL AND T.LOSS_INPUT_TYPE = #{INPUT_TYPE_03})
+				)
+			</if>
+		  	<if test="tradeDate != null">
+				AND T.STR_DATE <![CDATA[<=]]> #{tradeDate}
+				AND T.END_DATE <![CDATA[>=]]> #{tradeDate}
+			</if>
+			<if test="inputType != null AND inputType !=''">
+				AND T.LOSS_INPUT_TYPE = #{inputType}
+			</if>
+		ORDER BY T.LOSS_INPUT_TYPE ASC
 	</select>
 
 	<insert id="insertModEclResult">
@@ -101,9 +132,9 @@ where
 		PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE,
 		PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE,
 		LGD, EAD, PRE_PROSPECTIVE_ECL,
-		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE,
+		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE
 		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME)
+		UPDATE_USER, UPDATE_TIME,ECL_RATIO)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
 			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
@@ -115,7 +146,65 @@ where
 			#{item.lgd,jdbcType=DECIMAL}, #{item.ead,jdbcType=DECIMAL}, #{item.preProspectiveEcl,jdbcType=DECIMAL},
 			#{item.prospectiveEcl,jdbcType=DECIMAL}, #{item.allowModelCover,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR},
 			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.eclRatio,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
+
+	<!-- 回购资产抵押品列表 -->
+	<select id="queryFinDealPledgeByFinprodId"
+			resultType="com.joyintech.tams.model.impairment.batch.eclcalculation.dto.FinDealPledgeDTO">
+		SELECT
+			A.PLEDGE_FINPROD_ID AS pledgeFinprodId,
+			B.FINPROD_MARKET_ID AS finprodMarketId,
+			A.PLEDGE_AMT AS pledgeAmt,
+			C.TYPE_18 AS secType,
+			C.TYPE_1 AS secDetailType
+		FROM
+			FIN_DEAL_PLEDGE A
+		LEFT JOIN FIN_PRODUCT B
+		    ON A.PLEDGE_FINPROD_ID = B.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_TYPE C
+		    ON C.FINPROD_ID = B.FINPROD_ID
+		WHERE
+			A.FINPROD_ID =  #{finprodId}
+	</select>
+
+	<!--查询所有LGD违约率配置 -->
+	<select id="selectModLgdConfigAll" resultType="com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto">
+		select
+			a.SEQNO,
+			a.FINPROD_ID,
+			NULL AS ASSET_TYPE,
+			NULL AS ASSET_DETAIL_TYPE,
+			NULL AS IS_CONTAIN_PLEDGE,
+			a.LGD,
+			#{MODEL_DEC_CONFIG_TYPE_06} AS CONFIG_TYPE
+		from
+		MOD_LGD_SPECIAL_CONFIG a
+		UNION ALL
+		select
+			B.SEQNO,
+			NULL AS FINPROD_ID,
+			B.ASSET_TYPE,
+			B.ASSET_DETAIL_TYPE,
+			B.IS_CONTAIN_PLEDGE,
+			B.LGD,
+			#{MODEL_DEC_CONFIG_TYPE_05} AS CONFIG_TYPE
+		from
+		MOD_LGD_CONFIG B
+
+	</select>
+
+
+	<select id="getBokDetailId" resultType="java.lang.String">
+		SELECT
+			T.BOK_DETAIL_ID
+		FROM BOK_DETAIL_ID T
+		WHERE
+			T.BOOKSET_ID = #{booksetId}
+			AND T.BUSI_ID = #{busiId}
+		  	<if test="invAim != null and invAim != ''">
+				AND T.INV_AIM = #{invAim}
+		  	</if>
+	</select>
 </mapper>

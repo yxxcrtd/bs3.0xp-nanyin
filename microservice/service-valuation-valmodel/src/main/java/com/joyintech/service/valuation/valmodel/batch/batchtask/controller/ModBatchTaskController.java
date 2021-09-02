@@ -49,13 +49,27 @@ public class ModBatchTaskController {
         String endDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
         String batchGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE;
         String prodGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_GROUP;
-        if (!modBatchTaskService.checkIsRunning(finprodIds)) {
+        /** modify by yanya on 20210901 检验是否有跑批的数据，单独检验 **/
+        //if (!modBatchTaskService.checkIsRunning(finprodIds)) {
             modBatchTaskService.cleanBatchParams();
             return modBatchTaskService.executeBatch(realName, selectedBatchGroup,
                     selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType, finprodIds);
-        }
-        return false;
+        //}
+        //return false;
     }
+
+    /**
+     * 检验是否有正在跑批的产品
+     * @param params
+     * @return
+     */
+    @PostMapping("checkIsRunning")
+    public boolean checkIsRunning(@RequestBody Map<String, Object> params) {
+        // 资产代码集合
+        String finprodIds = (String) params.get("finprodId");
+        return modBatchTaskService.checkIsRunning(finprodIds);
+    }
+
 
     @PostMapping("findBatchExeTask/{page}/{length}")
     public Page<ModBatchLogDetailDTO> findBatchExeTask(@RequestBody Map<String, Object> params,

@@ -79,11 +79,18 @@
             <div class="layui-inline layui-col-md6"id="o_Type">
                 <label class="layui-form-label form-lable">评级类型</label>
                 <div class="layui-input-inline input-inline">
-                    <select id="oType" name="oType" searchable="false" type="text"
+                    <!--<select id="oType" name="oType" searchable="false" type="text"
                             data-th-data-result='${MODEL_MAIN_GRADE_TYPE}'
                             data-th-initValue="${entity?.oType}"
                             class="layui-input form-input input-select" placeholder="请选择" required>
+                    </select>-->
+                    <select id="oType" name="oType" class="layui-input form-input input-select" placeholder="请选择"
+                            allowClear="true" data-th-data-result="${MODEL_MAIN_GRADE_TYPE}" data-th-initvalue="${entity?.oType}"
+                            data-th-required="true" parentIds="assetType" formatoption = "true"
+                            data-th-data-url="@{/model/impairment/assetratingallocation/assetcategories/AssetCategories002/getGradeType}">
+                        <option></option>
                     </select>
+
                 </div>
             </div>
         </div>

@@ -373,7 +373,7 @@
 			AND (T.INPUT_VALUE_5 = T1.TYPE_12 OR T.INPUT_VALUE_5 IS NULL)
             WHERE T.CONFIG_TYPE = 'RISK_ASSET_TYPE'
         )
-			SELECT T1.CREDIT_TAG_ID,
+			SELECT distinct T1.CREDIT_TAG_ID,
 			T1.CREDIT_RULE_ID,
 			T1.DEDUCT_OBJ_TYPE,
 			T2.RISK_RATIO,
@@ -857,5 +857,7 @@
 			CREDIT_USING_AST
 		where
 			TRADE_ID=#{bTradeId}
+		and
+		      STATUS='01'
 	</select>
 </mapper>

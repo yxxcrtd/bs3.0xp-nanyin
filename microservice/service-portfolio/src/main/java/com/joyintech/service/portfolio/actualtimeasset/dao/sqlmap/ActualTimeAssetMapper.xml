@@ -8,7 +8,7 @@
         (
             select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
                    actualPositionAmount, tradePositionAmount, instructionsAmount, pledgeAmount, preReductionAmount,
-                   marketPrice*actualPositionAmount marketValue
+                   nvl(marketPrice,decode(type8,'F01',100,1))*actualPositionAmount marketValue
             from
               (
 				select portfolioId,portfolioName,secAcctId,secAcctName,finprodId,finprodMarketId,finprodAbbr, type9, type10, type11, type12, type8, type7, type6,
@@ -206,28 +206,40 @@
 							finprodId,
 							marketPrice
 						from
-						(
-							SELECT DISTINCT
-								fp.FINPROD_ID finprodId,
-								CASE
-									WHEN fpt.TYPE_8 = 'F01' THEN mbvi.PRICE
-									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN frv.VALUATION
-									WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN mfmi.CLOSE_PRICE
-									WHEN fpt.TYPE_8 = 'F04' THEN frv.VALUATION
-									WHEN fpt.TYPE_8 = 'F11' THEN msp.CLOSE_PRICE
-								END AS marketPrice
-							FROM
-							FIN_PRODUCT fp
-							INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = fp.FINPROD_ID
-							LEFT JOIN MST_BOND_VALUATION_INFO mbvi
-							ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID AND mbvi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
-							LEFT JOIN FIN_PRODUCT_VALUATION frv
-							ON frv.FINPROD_ID = fp.FINPROD_MARKET_ID AND frv.VAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
-							LEFT JOIN MST_FUND_MARKET_INFO mfmi
-							ON mfmi.FUND_CODE = fp.FINPROD_MARKET_ID AND mfmi.VALUE_DATE = to_date(#{cdate},'yyyy-MM-dd')
-							LEFT JOIN MST_SHARE_PRICE msp
-							ON msp.SHARES_ID = fp.FINPROD_MARKET_ID AND msp.DEAL_DATE = to_date(#{cdate},'yyyy-MM-dd')
-						)gavInfo
+							<!-- ZGZGST-1408:市值要取最近的一次估值 fuyongsheng 20210828 edit start -->
+							(
+							    SELECT finprodId,marketPrice,valueDate,row_number() over(partition by finprodId ORDER BY valueDate DESC)num FROM
+									(
+										SELECT
+											fp.FINPROD_ID finprodId,
+											CASE
+												WHEN fpt.TYPE_8 = 'F01' THEN mbvi.PRICE
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN frv.VALUATION
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN mfmi.CLOSE_PRICE
+												WHEN fpt.TYPE_8 = 'F04' THEN frv.VALUATION
+												WHEN fpt.TYPE_8 = 'F11' THEN msp.CLOSE_PRICE
+											END AS marketPrice,
+											CASE
+												WHEN fpt.TYPE_8 = 'F01' THEN mbvi.VALUE_DATE
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET = '09' THEN frv.VAL_DATE
+												WHEN fpt.TYPE_8 = 'F02' and fp.TRADE_MARKET in ('03','04') THEN mfmi.VALUE_DATE
+												WHEN fpt.TYPE_8 = 'F04' THEN frv.VAL_DATE
+												WHEN fpt.TYPE_8 = 'F11' THEN msp.DEAL_DATE
+											END AS valueDate
+										FROM
+										FIN_PRODUCT fp
+										INNER JOIN FIN_PRODUCT_TYPE fpt ON fpt.FINPROD_ID = fp.FINPROD_ID
+										LEFT JOIN MST_BOND_VALUATION_INFO mbvi
+										ON mbvi.SEC_ID = fp.FINPROD_MARKET_ID AND mbvi.VALUE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+										LEFT JOIN FIN_PRODUCT_VALUATION frv
+										ON frv.FINPROD_ID = fp.FINPROD_MARKET_ID AND frv.VAL_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+										LEFT JOIN MST_FUND_MARKET_INFO mfmi
+										ON mfmi.FUND_CODE = fp.FINPROD_MARKET_ID AND mfmi.VALUE_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+										LEFT JOIN MST_SHARE_PRICE msp
+										ON msp.SHARES_ID = fp.FINPROD_MARKET_ID AND msp.DEAL_DATE &lt;= to_date(#{cdate},'yyyy-MM-dd')
+									)gavInfo
+							) WHERE num = 1
+							<!-- ZGZGST-1408:市值要取最近的一次估值 fuyongsheng 20210828 edit end -->
 					) mv on t.FINPROD_ID = mv.finprodId
 					<where>
 				<if test="type8 != null and type8 !=''">

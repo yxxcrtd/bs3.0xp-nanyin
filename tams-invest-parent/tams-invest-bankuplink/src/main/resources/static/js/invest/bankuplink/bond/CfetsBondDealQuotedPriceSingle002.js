@@ -1,53 +1,40 @@
 (function(){
+    //试算结果
+    var riskResultdata;
+    var cluflag;
 
-    var setQQDiv = function(selArr){
-        $("#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel").val('new');
-        if(selArr&&selArr[0]){
-            $("#CfetsBondDealQuotedPriceSingle002_entrustId").val(selArr[0].entrustId).trigger('change');
-            // $("#CfetsBondDealQuotedPriceSingle002_portfolioId").textSelect('setValue',selArr[0].portfolioId);
-            // $("#CfetsBondDealQuotedPriceSingle002_finprodId").textSelect('setValue',selArr[0].finprodMarketId);
-            // $("#CfetsBondDealQuotedPriceSingle002_ps").val(selArr[0].ps).trigger('change');
-            // $("#CfetsBondDealQuotedPriceSingle002_avaNum").val(selArr[0].entrustNum).trigger('change');
-        }
-    }
-
-    // 委托代码change
-    $("#CfetsBondDealQuotedPriceSingle002_entrustId").change(function () {
-        var entrustId = $("#CfetsBondDealQuotedPriceSingle002_entrustId").val();
+    /**
+     * 委托代码
+     */
+    var entrustIdChangeAction = function(){
+        var entrustId = $('#CfetsBondDealQuotedPriceSingle002_entrustId').val();
         if (entrustId && entrustId != ''){
             Joyin.ajax(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/queryEntrustInfoByEntrustId', {entrustId : entrustId}, function(result) {
                 if (result){
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustAmt').val(result.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val(result.finprodId);
-                    $('#CfetsBondDealQuotedPriceSingle002_portfolioId').textSelect('setValue',result.portfolioId);
-                    $('#CfetsBondDealQuotedPriceSingle002_mySide').textSelect('setValue',result.mySide);
+                    $('#CfetsBondDealQuotedPriceSingle002_portfolioName').attr('disabled', true).textSelect('setValue',result.portfolioId);
+                    $('#CfetsBondDealQuotedPriceSingle002_mySide').attr('disabled', true).textSelect('setValue',result.mySide);
                     $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').textSelect('setValue',result.mySideTrader);
-                    $('#CfetsBondDealQuotedPriceSingle002_ps').val(result.ps).trigger('change');
-                    $('#CfetsBondDealQuotedPriceSingle002_finprodId').textSelect('setValue',result.finprodMarketId);
+                    $('#CfetsBondDealQuotedPriceSingle002_ps').val(result.ps).trigger('change').attr('disabled', true);
+                    $('#CfetsBondDealQuotedPriceSingle002_finprodName').attr('disabled', true).textSelect('setValue',result.finprodMarketId);
                     $('#CfetsBondDealQuotedPriceSingle002_settleCcy').val(result.settleCcy == null ? CNY : result.settleCcy);
-                    $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(result.settleDateStr);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.settleSpreed).trigger('change').attr('disabled', true);
+                    $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(result.settleDateStr).attr('disabled', true);
                     $('#CfetsBondDealQuotedPriceSingle002_avaNum').val(result.avaNumStr).trigger('change');
                     $('#CfetsBondDealQuotedPriceSingle002_effDate').val(result.effDate);
                     $('#CfetsBondDealQuotedPriceSingle002_remark').val(result.remark);
-                    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.data.settleSpreed).trigger('change');
-                    $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.data.secManageAcctId);
-
+                    $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.secManageAcctId);
                 }
             });
         }
-    });
+    };
 
 
-    $("#CfetsBondDealQuotedPriceSingle002_portfolioId").change(function () {
-        var portfolioId = $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val();
-        var vdate = $('#CfetsBondDealQuotedPriceSingle002_tradeDate').val();
-        var ccy= $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val();
-        if(window.EtrInitCash){
-            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
-        }
-    });
-
-    $("#CfetsBondDealQuotedPriceSingle002_finprodId").change(function () {
+    /**
+     * 债券简称
+     */
+    var finprodIdChangeAction = function(){
         var chlFinprodId = '';
         var finprodIdhid = '';
         var ccy =  '';
@@ -67,25 +54,37 @@
         if (todoList == false&&parent.parent.EtrIbBondinfoHq) {
             parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
         }
-    });
+    };
+
+    /**
+     * 组合名称
+     */
+    var portfolioIdChangeAction = function(){
+        var portfolioId = $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val();
+        var vdate = $('#CfetsBondDealQuotedPriceSingle002_tradeDate').val();
+        var ccy= $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val();
+        if(window.EtrInitCash){
+            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        }
+    };
 
 
     /**
      * 清算速度
      */
-    $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').on('change',function(){
+    var settleSpreedChangeAction = function(){
         var settleSpreed = $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val();
         if (settleSpreed == ACCOUNT_SPEED_1){
             Joyin.ajax(basePath + 'invest/bankuplink/common/CfetsQuotedCommon/getNextWorkDay', {
-                'tradeDate': platDate,
-                'settleSpreed': settleSpreed
+                'tradeDate': platDate
             }, function (date) {
                 $("#CfetsBondDealQuotedPriceSingle002_settleDate").val(date).trigger("change");
             });
         }else{
             $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(platDate);
         }
-    });
+    };
+
     /**
      * 保存
      */
@@ -216,7 +215,6 @@
             }
         });
     };
-
     /**
      * 定义数据表格
      */
@@ -270,19 +268,161 @@
             table.addRow(temp);
         }
     };
+    
+    $(function () {
+        // 初始化页面
+        var entrustId = $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustId').val();
+        if (entrustId && entrustId != ''){
+            $('#CfetsBondDealQuotedPriceSingle002_entrustId').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle002_portfolioName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle002_ps').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle002_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceSingle002_mySide').attr('disabled', true);
+        }else{
+            //未选择委托时,默认：T+0
+            if ($("#CfetsBondDealQuotedPriceSingle002_settleSpreed").val() == ''){
+                $("#CfetsBondDealQuotedPriceSingle002_settleSpreed").val(ACCOUNT_SPEED_0).trigger("change");
+            }
+            if ($("#CfetsBondDealQuotedPriceSingle002_settleDate").val() == ''){
+                $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(platDate);
+            }
+            //默认人民币
+            if ($("#CfetsBondDealQuotedPriceSingle002_settleCcy").val() == ''){
+                $('#CfetsBondDealQuotedPriceSingle002_settleCcy').val(CNY).trigger("change");
+            }
+            //默认券款对付
+            if ($("#CfetsBondDealQuotedPriceSingle002_settleMethod").val() == ''){
+                $('#CfetsBondDealQuotedPriceSingle002_settleMethod').val(SETT_MODE_03).trigger("change");
+            }
+            //默认全额清算
+            if ($("#CfetsBondDealQuotedPriceSingle002_settleType").val() == ''){
+                $('#CfetsBondDealQuotedPriceSingle002_settleType').val(CLEAR_TYPE_02).trigger("change");
+            }
+            // 默认登录用户
+            if ($("#CfetsBondDealQuotedPriceSingle002_mySideTrader").val() == ''){
+                $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').val(mySideTraderInit).trigger("change");
+            }
+        }
+        // 判断本方交易员是否可改
+        if (ouTraderIdCanEditFlag === 'N'){
+            $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').attr('disabled', true);
+        }
+        /**
+         * 委托代码
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_entrustId').change(function(){
+            entrustIdChangeAction();
+        });
+        /**
+         * 资产简称
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_finprodName').change(function(){
+            finprodIdChangeAction();
+        });
+        /**
+         * 组合名称
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_portfolioName').change(function(){
+            portfolioIdChangeAction();
+        });
+        /**
+         * 清算速度
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').change(function(){
+            settleSpreedChangeAction();
+        });
+        /**
+         * 保存按钮按下处理
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_btn_save').click(function(){
+            saveAction();
+        });
+        /**
+         * 提交按钮按下处理
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_btn_submit').click(function(){
+            submitAction();
+        });
+        /**
+         * 添加按钮按下处理
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_btn_add').click(function(){
+            addRow();
+        });
+        /**
+         * 撤回按钮按下处理
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_btn_revokeBtn').click(function(){
+            revokeAction();
+        });
+        /**
+         * 成交按钮按下处理
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_btn_clinchDeal').click(function(){
+            clinchDealAction();
+        });
+        /**
+         * 本方
+         */
+        $('#CfetsBondDealQuotedPriceSingle002_mySide').change(function(){
+            mySideChangeAction();
+        });
+    });
+
+    /**
+     * 本方
+     */
+    var mySideChangeAction = function(){
+        $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').val(mySideTraderInit).trigger('change');
+    }
+
+    //撤回按钮不应该在待办及审批环节出现
+    if(busWorkflowId){
+        $("#CfetsBondDealQuotedPrice003_btn_revokeBtn").hide();
+    }
+
+    var setQQDiv = function(selArr){
+        $("#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel").val('new');
+        if(selArr&&selArr[0]){
+            $("#CfetsBondDealQuotedPriceSingle002_entrustId").textSelect('setValue',selArr[0].entrustId);
+        }
+    }
 
     var reset = function () {
     };
-    /**
-     * 添加按钮按下处理
-     */
-    $('#CfetsBondDealQuotedPriceSingle002_btn_add').click(function(){
-        addRow();
-    });
 
     var getriskdata = function () {
-        return null;
+        var obj = {
+            tradeDirection: $("#CfetsBondDealQuotedPriceSingle002_ps").val(),
+            timePoint: MY_SUP_TIME_TYPE_02,
+            valDate: sysDate,
+            portfolioCode: $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val(),
+            assetType: FINPROD_TYPE_F01,
+            isEnabled: "01",
+            assetCode: $("#CfetsBondDealQuotedPriceSingle002_finprodId").val()
+        };
+        if ($("#CfetsBondDealQuotedPriceSingle002_avaNum")) {
+            obj.tradeAmount = $("#CfetsBondDealQuotedPriceSingle002_avaNum").val() * 10000;
+        }
+
+        var object = {
+            tradeDirection: ["ps", "CfetsBondDealQuotedPriceSingle.ps"],
+            portfolioCode: ["portfolioId", "CfetsBondDealQuotedPriceSingle.portfolioId"],
+            tradeAmount: ["fpriceAmt", "CfetsBondDealQuotedPriceSingle.fprinceAmt"],
+            assetType: ["assetType", "CfetsBondDealQuotedPriceSingle.assetType"],
+            counterId: ["counterId", "CfetsBondDealQuotedPriceSingle.counterId"],
+            data: obj
+        };
+        return object;
     };
+
+    function saveRiskResultdata(paraRiskResultdata) {
+        riskResultdata = paraRiskResultdata;
+    }
+    function saveCluflag(paraCluflag) {
+        cluflag = paraCluflag;
+    }
 
     function getSaveOrSubmitParams(operateType) {
         var object = $.serializeToObject("#submitForm");
@@ -306,7 +446,21 @@
         setQQDiv: setQQDiv,
         getriskdata: getriskdata,
         getSaveOrSubmitParams: getSaveOrSubmitParams,
-        reset: reset
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
+    }
+    CfetsBondDealQuotedPriceSingle002 = {
+        setQQDiv: setQQDiv,
+        getriskdata: getriskdata,
+        getSaveOrSubmitParams: getSaveOrSubmitParams,
+        reset: reset,
+        riskResultdata: riskResultdata,
+        cluflag: cluflag,
+        saveRiskResultdata: saveRiskResultdata,
+        saveCluflag: saveCluflag
     }
 
 }());

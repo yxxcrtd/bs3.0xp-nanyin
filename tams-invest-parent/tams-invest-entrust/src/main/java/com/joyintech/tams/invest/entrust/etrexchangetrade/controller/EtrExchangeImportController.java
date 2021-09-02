@@ -79,6 +79,7 @@ public class EtrExchangeImportController extends BaseController{
     
 	@Override
 	public String init(Model model) {
+		this.setSelectOptionToModel(model,new DictCode[]{DictCode.投资目的});
 		Date sysDate = DateUtil.platDateFromCache();
 		model.addAttribute("sysDate", DateUtil.format(sysDate));
 		 //流程id

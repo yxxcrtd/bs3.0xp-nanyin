@@ -22,15 +22,15 @@
                                         class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
                                         <label class="layui-form-label form-lable"
                                             data-th-text="#{TrdLendDuration001.busiCode}">业务编号</label>
-                                        <input type="hidden" id="finprodId" name="finprodId" data-th-value="${entity?.finprodId}" class="layui-input form-input" />
+                                        <input type="hidden" id="busiCode" name="busiCode" data-th-value="${entity?.busiCode}" class="layui-input form-input" />
                                         <input type="hidden" id="bankLendingType" name="bankLendingType" data-th-value="${entity?.bankLendingType}" class="layui-input form-input" />
                                         <input type="hidden" id="totleTradeId" name="totleTradeId" data-th-value="${entity?.totleTradeId}" class="layui-input form-input" />
                                         <input type="hidden" id="pTradeId" name="pTradeId" data-th-value="${entity?.pTradeId}" class="layui-input form-input" />
                                         <input type="hidden" id="mode" name="mode" data-th-value="${entity?.mode}" class="layui-input form-input" />
                                         <div class="layui-input-inline input-inline">
-                                            <input disabled type="text" id="busiCode" name="busiCode"
+                                            <input disabled type="text" id="finprodId" name="finprodId"
                                                 class="layui-input form-input" maxlength="32"
-                                                placeholder="请输入内容" th:value="${entity?.busiCode}"
+                                                placeholder="请输入内容" th:value="${entity?.finprodId}"
                                                 data-th-placeholder="#{SysCommon.placeholder}" />
                                         </div>
                                     </div>

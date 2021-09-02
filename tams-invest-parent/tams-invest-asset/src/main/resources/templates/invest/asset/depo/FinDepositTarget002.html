@@ -303,7 +303,7 @@
 								</div>
 								<div class="layui-form-item">
 									<div id="depositBuyOutRate" class="form-inline-wrap">
-										th:id="|${entityName}_buyOutRate_div|">
+<!--										th:id="|${entityName}_buyOutRate_div|">-->
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{FinInterestFactor.buyOutRate}">买断利率</label>
 										<div class="layui-input-inline input-inline">
@@ -466,7 +466,7 @@
 						th:data-path="@{/component/asset/FinInterestFactor/init}"
 						th:data-params="|{entityName:'finInterestFactorDto',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',finprodId:'${entity?.finprodId?:''}',couponSpecies:'${entity?.couponSpecies}',workflowId:'${workflowId}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}'}|"></div>
 					<!-- 参与方信息 -->
-					<div class="page-component"
+					<div class="page-component" id="bussParticipantInfo"
 						 th:data-path="@{/component/project/BussParticipantInfo/init}"
 						 th:data-params="|{entityName:'bussParticipantInfoDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId ?: ''}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}'}|"></div>
 					<!-- 付息信息业务 -->

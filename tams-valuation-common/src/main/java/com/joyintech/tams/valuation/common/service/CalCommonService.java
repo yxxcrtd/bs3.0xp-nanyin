@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.calculation.asset.SubsectionCalculator;
@@ -325,5 +326,45 @@ public class CalCommonService {
         }
         /**ADD BY WUJIE ON 20190903 END**/
         return resultList;
+    }
+
+    /**
+     * 根据【估值小数位处理方式】和【估值小数位位数】，对传递数值进行处理
+     *
+     * @param value 传递的数值
+     * @param valDecType 估值小数位处理方式
+     * @param valDecDigits 估值小数位位数
+     * @return BigDecimal 处理后的数值
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal round(BigDecimal value, String valDecType,
+                                               String valDecDigits) {
+
+        // 定义返回值
+        BigDecimal result = value == null ? BigDecimal.ZERO : value;//modify by dongjun on 20190509 空判断展开
+
+        /// 传递参数符合要求
+        if (valDecType != null && valDecDigits != null && valDecDigits.trim().length() > 0) {
+            // 保留的小数位数
+            int valDecDigitsNum = Integer.valueOf(valDecDigits);
+
+            if(valDecDigitsNum < 0){
+                return result;
+            } else {
+                // 判断 估值小数位处理方式
+                if (StringUtil.equals(DictCodeList.估值舍入规则_四舍五入.getValue(), valDecType)) {
+                    result = result.setScale(valDecDigitsNum, RoundingMode.HALF_UP);
+                }
+                else if (StringUtil.equals(DictCodeList.估值舍入规则_舍位.getValue(), valDecType)) {
+                    result = result.setScale(valDecDigitsNum, RoundingMode.DOWN);
+                }
+                else if (StringUtil.equals(DictCodeList.估值舍入规则_进位.getValue(), valDecType)) {
+                    result = result.setScale(valDecDigitsNum, RoundingMode.UP);
+                }
+            }
+        }
+
+        return result;
     }
 }

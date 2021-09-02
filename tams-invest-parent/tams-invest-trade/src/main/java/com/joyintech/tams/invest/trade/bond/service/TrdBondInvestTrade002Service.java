@@ -803,6 +803,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             if (StringUtil.isNotEmpty(entity.getEntrustId())) {
                 baseTradeProductDealDto.setEntrustId(entity.getEntrustId());
             }
+            baseTradeProductDealDto.setBondFirstSign(entity.getBondFirstSign());
             finProductTradeDto.setBaseTradeProductDealDtos(Arrays.asList(baseTradeProductDealDto));
             if (entity.getActPortfolioId() != null && !entity.getActPortfolioId().equals(entity.getPortfolioId())) {
                 finProductTradeDto.getBaseTradeProductDealDtos().forEach(finProductTrade -> {
@@ -1110,6 +1111,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             trdProductDeal.setUpdateTime(finProductTradeDto.getUpdateTime());
             trdProductDeal.setUpdateUser(finProductTradeDto.getUpdateUser());
 
+            //          一级投标信息不为空
+            if(StringUtil.isNotEmpty(entity.getBondFirstSign())){
+                baseTradeProductDealDto.setBondFirstSign(entity.getBondFirstSign());
+            }
             String tradeId = trdProductDeal.getTradeId();
             trdProductDeal.setTradeId(entity.getTotleTradeId()); // 让生成的组合流水的tradeId是汇总表的值
             baseTradeProductDealCommService.execute(finProductTradeDto);
@@ -1554,6 +1559,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 finProductTradeDto.setTotalFaceValue(entity.getTotalFaceValue());// 劵面总额
                 finProductTradeDto.setNeedSum(true);
                 BaseTradeProductDealDto baseTradeProductDealDto = new BaseTradeProductDealDto();
+                baseTradeProductDealDto.setBondFirstSign(entity.getBondFirstSign());
                 //设置预录入的成交编号
                 if(StringUtil.isNotBlank(entity.getPreTradeId())){
                     baseTradeProductDealDto.setPreTradeId(entity.getPreTradeId());

@@ -74,12 +74,15 @@
         , {field: 'entrustNum', title: 'EtrInvestBondInfo004.entrustAmt', type: 'number', width: 150, sortable: false}
         , {field: 'priceModelStr', title: 'EtrInvestBondInfo004.priceModel', width: 150, sortable: false}
         , {field: 'price', title: 'EtrInvestBondInfo004.price', type: 'number', width: 150, sortable: false, digit:4}
-        , {field: 'unitFprice', title: 'EtrInvestBondInfo004.fpriceAmt', type: 'number', width: 150, sortable: false, digit:4}
+        // ZGZGST-1631: 修改全价总额字段 fuyongsheng 20210901 add start
+        , {field: 'fpriceAmt', title: 'EtrInvestBondInfo004.fpriceAmt', type: 'number', width: 150, sortable: false, digit:4}
+        // ZGZGST-1631: 修改全价总额字段 fuyongsheng 20210901 add end
         , {field: 'exerYield', title: 'EtrInvestBondInfo004.exerYield', type: 'number', width: 150, sortable: false, digit:12, visible: false}
         , {field: 'matureYield', title: 'EtrInvestBondInfo004.matureYield', type: 'number', width: 150, sortable: false, digit:12}
         , {field: 'minAmt', title: 'EtrInvestBondInfo004.minAmt', type: 'number', width: 150, sortable: false, visible: false}
         , {field: 'settleSpreed', width: 150, visible: false}
         , {field: 'settleSpreedName', title: 'EtrInvestBondInfo004.settleSpreed', width: 150, sortable: false}
+        , {field: 'invAim', width: 150, visible: false}
         , {field: 'invAimName', title: 'EtrInvestBondInfo004.invAim', width: 150, sortable: false}
         , {field: 'tradeMarketName', title: 'EtrInvestBondInfo004.tradeMarket', width: 150, sortable: false, visible: false}
         , {field: 'tradePlatName', title: 'EtrInvestBondInfo004.tradePlat', width: 150, sortable: false, visible: false}

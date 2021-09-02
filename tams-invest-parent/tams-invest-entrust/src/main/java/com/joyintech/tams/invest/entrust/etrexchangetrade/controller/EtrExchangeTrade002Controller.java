@@ -10,15 +10,19 @@
  
 package com.joyintech.tams.invest.entrust.etrexchangetrade.controller;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade001Service;
+import com.joyintech.tams.invest.entrust.etrexchangetrade.service.EtrExchangeTrade003Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +33,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto;
@@ -57,7 +58,9 @@ public class EtrExchangeTrade002Controller extends BaseController{
 
     @Autowired
     private EtrExchangeTrade001Service etrExchangeTrade001Service;
-    
+
+    @Autowired
+    private EtrExchangeTrade003Service etrExchangeTrade003Service;
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model,BussinessDictCode.交易场所);
@@ -158,5 +161,36 @@ public class EtrExchangeTrade002Controller extends BaseController{
     public Page<EtrExchangeTrade003Dto> selectEtrExchange(){
         Page<EtrExchangeTrade003Dto>  result = etrExchangeTrade001Service.selectEtrExchange(RequestUtil.getPageParam());
         return result;
+    }
+
+    /**
+     * 导出信息excel
+     *
+     * @return excel
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping(ACTION_EXPORT)
+    public ResponseEntity<byte[]> export() throws Exception {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        /*指令执行导出*/
+        String datas = this.getParam("datas");
+        List<EtrExchangeTrade003Dto> param1;
+        if (datas == null) {
+            param1 = etrExchangeTrade001Service.selectEtrExchange(RequestUtil.getPageParam()).getRoot();
+        } else {
+            param1 = JsonUtils.json2List(datas, EtrExchangeTrade003Dto.class);
+        }
+        File outFile = etrExchangeTrade003Service.makeFile(
+                "/com/joyintech/tams/invest/entrust/etrexchangetrade/conf/export_conf1.xml",
+                param1);
+        return ExportUtil.export(
+                "场内交易指令管理" + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 }

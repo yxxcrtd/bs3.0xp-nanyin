@@ -134,7 +134,9 @@ public class ValAssetCommonService extends BaseService {
             if(StringUtil.equals(finInterestFactorDto.getCalRateType(), DictCodeListExt3.计息利率方式_买断利率计提.getValue())){
                 rate = ArithmeticUtil.divide(finInterestFactorDto.getBuyOutRate(), new BigDecimal(100), 14);
             }else{
-                rate = investRate;
+                //modify by yanya on 20210826 改为借款利率
+                //rate = investRate;
+                rate = loadRate;
             }
         }else if(StringUtil.equals(dto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())){
             BigDecimal investRate = ArithmeticUtil.divide(finInterestFactorDto.getInvestRate(), new BigDecimal(100), 14);
@@ -511,5 +513,16 @@ public class ValAssetCommonService extends BaseService {
         return restTemplate.postForObject(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME
                         + "/ValAssetCommon/getFinanceProductTaxClass", finProductClass,
                 String.class);
+    }
+
+    /**
+     * 市场机构联想框
+     * @param map
+     * @return
+     */
+    public Page<SelectOptionDto> getCustomerName(Map<String, Object> map) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME
+                        + "/ValAssetCommon/getCustomerName", map,
+                SelectOptionDto.class);
     }
 }

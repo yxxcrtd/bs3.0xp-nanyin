@@ -76,12 +76,12 @@ public class CeAssetGroupManagement002Validator implements BeanValidator {
                             ceAssetGroupManagement002Dto.getFinprodId());
                         if (!StringUtil.isEmptyList(list)) {
                             validList.add(new ValidMessage(this.getMessage("RSK_W_0043",
-                                ceAssetGroupManagement002Dto.getFinprodId(),list.get(0).getAssetpoolName())));
+                                ceAssetGroupManagement002Dto.getFinprodId())));
                         }
                         int countLine = ceAssetGroupManagement003Service.checkisExistAssetByCredit(ceAssetGroupManagement002Dto.getFinprodId());
                         if (countLine > 0) {
                         	validList.add(new ValidMessage(this.getMessage("RSK_W_0043",
-                                    ceAssetGroupManagement002Dto.getFinprodId(),dto.getAssetpoolName())));
+                                    ceAssetGroupManagement002Dto.getFinprodId())));
                         }
                         if (!StringUtil.isEmptyList(totalList)) {
                             for (int i = 0; i < totalList.size(); i++ ) {

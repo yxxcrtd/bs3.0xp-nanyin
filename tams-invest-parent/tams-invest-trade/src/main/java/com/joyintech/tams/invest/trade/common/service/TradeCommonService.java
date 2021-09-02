@@ -391,18 +391,18 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
             }
             // 多组合和单组合的金额信息和交易编号取值不同
-            if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
+//            if (StringUtil.isEmptyList(inputDto.getBussTrdTransfenpeiDto())){
                 creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
                 creditLinesInputDto.setTradeAmt(inputDto.getTotalFaceValue());
-            }else {
-                creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
-                BigDecimal tradeAmt = BigDecimal.ZERO;
-                for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
-                    tradeAmt = tradeAmt.add(item.getTradeAmt());
-                }
-                creditLinesInputDto.setTradeAmt(tradeAmt);
-                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(tradeAmt,100,2));
-            }
+//            }else {
+//                creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
+//                BigDecimal tradeAmt = BigDecimal.ZERO;
+//                for (BussTrdTransfenpeiDto item : inputDto.getBussTrdTransfenpeiDto()){
+//                    tradeAmt = tradeAmt.add(item.getTradeAmt());
+//                }
+//                creditLinesInputDto.setTradeAmt(tradeAmt);
+//                creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(tradeAmt,100,2));
+//            }
             //最新面值
             BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
             if (newFaceValue == null){
@@ -441,50 +441,50 @@ public class TradeCommonService extends BaseService {
             }
         }
         //可转债申购确认
-        if (object instanceof TrdConBond003Dto){
-            TrdConBond003Dto inputDto = (TrdConBond003Dto)object;
-
-            List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
-            if (DictCodeListExt1.交易状态_初始.getValue().equals(status)){
-                // 撤销前置交易
-                CreditLinesInputDto creditInputDto = new CreditLinesInputDto();
-                creditInputDto.setTradeId(inputDto.getbTradeId());
-                creditInputDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
-                creditInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
-                creditInputDto.setPs(DictCodeList.交易方向_买入.getValue());
-                creditInputDto.setTradeDate(iPlatformDate.getSysDate());
-                creditInputDto.setFinprodType2("ManualSettle");
-                inputDtoList.add(creditInputDto);
-            }
-            // 重新实占
-            creditLinesInputDto = new CreditLinesInputDto();
-            BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
-            creditLinesInputDto.setTradeId(inputDto.getBusiCode());
-            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
-            creditLinesInputDto.setTradeStatus(status);
-            creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
-            creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
-            creditLinesInputDto.setFinprodType2(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
-            // 申购日期
-            creditLinesInputDto.setTradeDate(iPlatformDate.getSysDate());
-            creditLinesInputDto.setShareAmt(null);
-            creditLinesInputDto.setTradeAmt(inputDto.getWinlotteryAmt());
-            if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo())){
-                creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
-            }
-            //最新面值
-            BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
-            if (newFaceValue == null){
-                newFaceValue = new BigDecimal(100);
-            }
-            if (creditLinesInputDto.getShareAmt() != null) {
-                creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
-            }else if (creditLinesInputDto.getTradeAmt() != null){
-                creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
-            }
-            inputDtoList.add(creditLinesInputDto);
-            creditLinesInputDto.setInputDtoList(inputDtoList);
-        }
+//        if (object instanceof TrdConBond003Dto){
+//            TrdConBond003Dto inputDto = (TrdConBond003Dto)object;
+//
+//            List<CreditLinesInputDto> inputDtoList = new ArrayList<>();
+//            if (DictCodeListExt1.交易状态_初始.getValue().equals(status)){
+//                // 撤销前置交易
+//                CreditLinesInputDto creditInputDto = new CreditLinesInputDto();
+//                creditInputDto.setTradeId(inputDto.getbTradeId());
+//                creditInputDto.setTradeStatus(DictCodeListExt1.交易状态_撤销.getValue());
+//                creditInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+//                creditInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+//                creditInputDto.setTradeDate(iPlatformDate.getSysDate());
+//                creditInputDto.setFinprodType2("ManualSettle");
+//                inputDtoList.add(creditInputDto);
+//            }
+//            // 重新实占
+//            creditLinesInputDto = new CreditLinesInputDto();
+//            BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+//            creditLinesInputDto.setTradeId(inputDto.getBusiCode());
+//            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+//            creditLinesInputDto.setTradeStatus(status);
+//            creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+//            creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+//            creditLinesInputDto.setFinprodType2(DictCodeListExt2.共通业务类型_可转债申购交易.getValue());
+//            // 申购日期
+//            creditLinesInputDto.setTradeDate(iPlatformDate.getSysDate());
+//            creditLinesInputDto.setShareAmt(null);
+//            creditLinesInputDto.setTradeAmt(inputDto.getWinlotteryAmt());
+//            if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo())){
+//                creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+//            }
+//            //最新面值
+//            BigDecimal newFaceValue = creditLinesDealsMapper.getFaceValue(creditLinesInputDto);
+//            if (newFaceValue == null){
+//                newFaceValue = new BigDecimal(100);
+//            }
+//            if (creditLinesInputDto.getShareAmt() != null) {
+//                creditLinesInputDto.setTradeAmt(newFaceValue.multiply(creditLinesInputDto.getShareAmt()));
+//            }else if (creditLinesInputDto.getTradeAmt() != null){
+//                creditLinesInputDto.setTradeAmt(newFaceValue.multiply(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),100,2)));
+//            }
+//            inputDtoList.add(creditLinesInputDto);
+//            creditLinesInputDto.setInputDtoList(inputDtoList);
+//        }
         //可转债转股
         if (object instanceof TrdBondToStock001Dto){
             TrdBondToStock001Dto inputDto = (TrdBondToStock001Dto)object;
@@ -510,7 +510,7 @@ public class TradeCommonService extends BaseService {
             creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
             creditLinesInputDto.setTradeAmt(inputDto.getWinPrinAmt());
             creditLinesInputDto.setTradeId(inputDto.getBidId());
-            creditLinesInputDto.setTradeDate(inputDto.getPayDate());
+            creditLinesInputDto.setTradeDate(inputDto.getBidDate());
             creditLinesInputDto.setFinprodType2(DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue());
             creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
             creditLinesInputDto.setTradeStatus(status);
@@ -616,7 +616,8 @@ public class TradeCommonService extends BaseService {
         // 基金
         if (object instanceof TrdFundInvestTradeDto){
             TrdFundInvestTradeDto inputDto = (TrdFundInvestTradeDto)object;
-            if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())){
+            if (StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                    ||StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
@@ -657,6 +658,18 @@ public class TradeCommonService extends BaseService {
                 if (StringUtil.equals(DictCodeListExt2.交易方向_转换申请.getValue(),inputDto.getPs()) && status.equals(DictCodeListExt1.交易状态_撤销.getValue())){
                     creditLinesInputDto.setTradeId(inputDto.getTradeId());
                 }
+            }
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_申购确认.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setEntrustId(inputDto.getbTradeId());
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                creditLinesInputDto.setTradeStatus(status);
+                //净值
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                creditLinesInputDto.setIsSpecial("true");
             }
             if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回确认.getValue())
                     || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())) {
@@ -1211,6 +1224,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_转换赎回申请.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }
@@ -1223,6 +1237,7 @@ public class TradeCommonService extends BaseService {
                         || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_赎回确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换申请.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换确认.getValue().equals(creditLinesInputDto.getPs())){
@@ -1247,6 +1262,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }
@@ -1255,6 +1271,7 @@ public class TradeCommonService extends BaseService {
             if (DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeListExt2.交易方向_转换赎回申请.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }

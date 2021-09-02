@@ -50,31 +50,6 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
     private String marketId;
 
     /**
-     * TYPE_8
-     */
-    private String type8;
-
-    /**
-     * TYPE_9
-     */
-    private String type9;
-
-    /**
-     * TYPE_10
-     */
-    private String type10;
-
-    /**
-     * TYPE_11
-     */
-    private String type11;
-
-    /**
-     * TYPE_12
-     */
-    private String type12;
-
-    /**
      * 模型资产类型
      */
     private String modelAssetType;
@@ -305,6 +280,16 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
     private String isContainPledge;
 
     /**
+     * 评级机构类型
+     */
+    private String gradeOrgType;
+
+    /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 取得 序列号
      * @return 序列号
      */
@@ -414,86 +399,6 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
      */
     public void setMarketId(String marketId) {
         this.marketId = marketId == null ? null : marketId.trim();
-    }
-
-    /**
-     * 取得 TYPE_8
-     * @return TYPE_8
-     */
-    public String getType8() {
-        return type8;
-    }
-
-    /**
-     * 设置 TYPE_8
-     * @param type8 TYPE_8
-     */
-    public void setType8(String type8) {
-        this.type8 = type8 == null ? null : type8.trim();
-    }
-
-    /**
-     * 取得 TYPE_9
-     * @return TYPE_9
-     */
-    public String getType9() {
-        return type9;
-    }
-
-    /**
-     * 设置 TYPE_9
-     * @param type9 TYPE_9
-     */
-    public void setType9(String type9) {
-        this.type9 = type9 == null ? null : type9.trim();
-    }
-
-    /**
-     * 取得 TYPE_10
-     * @return TYPE_10
-     */
-    public String getType10() {
-        return type10;
-    }
-
-    /**
-     * 设置 TYPE_10
-     * @param type10 TYPE_10
-     */
-    public void setType10(String type10) {
-        this.type10 = type10 == null ? null : type10.trim();
-    }
-
-    /**
-     * 取得 TYPE_11
-     * @return TYPE_11
-     */
-    public String getType11() {
-        return type11;
-    }
-
-    /**
-     * 设置 TYPE_11
-     * @param type11 TYPE_11
-     */
-    public void setType11(String type11) {
-        this.type11 = type11 == null ? null : type11.trim();
-    }
-
-    /**
-     * 取得 TYPE_12
-     * @return TYPE_12
-     */
-    public String getType12() {
-        return type12;
-    }
-
-    /**
-     * 设置 TYPE_12
-     * @param type12 TYPE_12
-     */
-    public void setType12(String type12) {
-        this.type12 = type12 == null ? null : type12.trim();
     }
 
     /**
@@ -1202,5 +1107,37 @@ public class ImpairmentDataLoadStep2ReaderDto extends NeedOperateEntity {
      */
     public void setIsContainPledge(String isContainPledge) {
         this.isContainPledge = isContainPledge == null ? null : isContainPledge.trim();
+    }
+
+    /**
+     * @return 评级机构类型
+     */
+    public String getGradeOrgType() {
+        return gradeOrgType;
+    }
+
+    /**
+     * 设置 评级机构类型
+     *
+     * @param gradeOrgType 评级机构类型
+     */
+    public void setGradeOrgType(String gradeOrgType) {
+        this.gradeOrgType = gradeOrgType;
+    }
+
+    /**
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     *
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim;
     }
 }

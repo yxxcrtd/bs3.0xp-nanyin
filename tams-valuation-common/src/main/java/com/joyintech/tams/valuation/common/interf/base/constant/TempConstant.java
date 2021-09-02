@@ -126,7 +126,9 @@ public class TempConstant {
     public static final String 账户信息 = "ValAccountInfo";
     public static final String 标的账户信息表 = "ValSubjectInfo";
     public static final String 节假日信息表 = "ValHolidayInfo";
-    
+    public static final String 交易对手 = "ValMstCounterParty";
+    public static final String 评级信息 = "ValMstBondCreditRating";
+
     /**
      * 交易信息
      */
@@ -343,6 +345,18 @@ public class TempConstant {
      * add by yanya on 20210309
      */
     public static final String 债券行权交易="ValSecExecDeal";
+
+    /**
+     * 股票基础信息
+     * add by yanya on 20210827
+     */
+    public static final String 股票基础信息="ValStockBaseInfo";
+
+    /**
+     * 股票行情接口
+     * add by yanya on 20210831
+     */
+    public static final String 股票行情="ValStockQuotationInfo";
 
 }
 

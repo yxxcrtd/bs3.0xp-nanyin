@@ -167,7 +167,7 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             if (StringUtil.isNotBlank(rowData.get(13).toString())) {
                 etrInvestBondInfoDto.setInvAim(rowData.get(13).toString().split(":")[0]);
             }
-            // 到期收益率（%）
+            // 交易平台
             if (StringUtil.isNotBlank(rowData.get(14).toString())) {
                 etrInvestBondInfoDto.setTradeMarket(rowData.get(14).toString().split(":")[0]);
             }
@@ -312,6 +312,16 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                     else if (temp.getMatureYield() != null) {
                         temp.setCalflag("matureYield");
                     }
+                    // ZGZGST-1631: 增加清算速度 fuyongsheng 20210901 add start
+                    if (StringUtil.equals(temp.getSettleSpreed(),
+                            DictCodeList.清算速度_T_0.getValue())) {
+                        temp.setSettleSpreed("0");
+                    }
+                    if (StringUtil.equals(temp.getSettleSpreed(),
+                            DictCodeList.清算速度_T_1.getValue())) {
+                        temp.setSettleSpreed("1");
+                    }
+                    // ZGZGST-1631: 增加清算速度 fuyongsheng 20210901 add end
                     this.calcAmt(temp);
                     etrInvestBondInfoDto.setExerYield(temp.getExerYield());
                     etrInvestBondInfoDto.setMatureYield(temp.getMatureYield());

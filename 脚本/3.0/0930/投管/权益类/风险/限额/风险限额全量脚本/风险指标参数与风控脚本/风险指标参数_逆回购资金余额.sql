@@ -52,19 +52,19 @@ union ALL
 
 union ALL
   select
-       SUM(CASE  WHEN n.PS IN(''T01'',''03'') THEN NVL(n.TRADE_AMT,0)
+       SUM(CASE  WHEN n.PS IN(''T01'',''04'') THEN NVL(n.TRADE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END ) TRADE_AMT
  from TRD_PRODUCT_TEMP_DEAL_ADD m
   inner join TRD_PRODUCT_TEMP_DEAL n on m.TRADE_ID=n.TRADE_ID
   INNER JOIN FIN_TRADE_PRODUCT t2 on t2.FINPROD_ID=n.FINPROD_ID and t2.FINPROD_TYPE2 in (''F03'',''F05'') AND t2.BRANCH=0
-  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and  n.PS in (''T01'',''T07'',''T95'',''T96'',''T54'',''T55'',''T56'')
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and  n.PS in (''T01'',''04'',''T07'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
    AND n.TRADE_STATUS = ''01''
    AND n.IS_CANCEL = ''N''
 
 union ALL
   select
-     SUM(CASE  WHEN n.PS IN(''T01'',''03'') THEN NVL(n.TRADE_AMT,0)
+     SUM(CASE  WHEN n.PS IN(''T01'') THEN NVL(n.TRADE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END ) TRADE_AMT from WFL_TRD_PRODUCT_DEAL_ADD m
   inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''

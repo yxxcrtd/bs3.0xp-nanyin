@@ -158,8 +158,10 @@ public class EntrustCommonPersonSelectService extends BaseService<ITableRow> {
     @Transactional(propagation=Propagation.REQUIRES_NEW)
     public List<EtrInvestAllInfoDto> getRealName2(List<EtrInvestAllInfoDto> dtoList){
         for(EtrInvestAllInfoDto dto:dtoList){
-            String realName = entrustCommonPersonSelectMapper.getRealName(dto.getInvManagerId());
-            dto.setInvManagerId(realName);
+            if (StringUtil.isNotBlank(dto.getInvManagerId())) {
+                String realName = entrustCommonPersonSelectMapper.getRealName(dto.getInvManagerId());
+                dto.setInvManagerId(realName);
+            }
         }
         return dtoList;
     }

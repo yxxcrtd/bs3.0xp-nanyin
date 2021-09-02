@@ -2,9 +2,11 @@ package com.joyintech.tams.invest.common.trade.service.impl.etrcash;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
@@ -1137,7 +1139,17 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     && StringUtil.equals(type6, DictCodeList.回购类型_质押式竞价回购.getValue())) {
                     etrSecPositionFlowDto.setFinprodId(XN_STANDARD_BOND_PRODID);
 //                    etrSecPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
-                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
+                   // etrSecPositionFlowDto.setAmount(ArithmeticUtil.divide(etrEntrust.getEntrustAmt(), 债券面值, 2).negate());
+                   // etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
+                    BigDecimal entrustAmt = etrEntrust.getEntrustAmt();
+                    EtrEntrustAdd etrEntrustAdd = entrustCommonDto.getEtrEntrustAdd();
+                    if (null != etrEntrustAdd && null != etrEntrustAdd.getTargetType() && etrEntrustAdd.getTargetType().equals(DictCodeListExt3.目标类型_数量.getValue())) {
+                        entrustAmt = etrEntrust.getEntrustNum();
+                    }
+                    //获取已完成额度
+                    BigDecimal finishAmt = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
+                    etrSecPositionFlowDto.setAmount(ArithmeticUtil.subtract(entrustAmt, ArithmeticUtil.divide(finishAmt,债券面值,2)));
+                    etrSecPositionFlowDto.setCloseFlag("01"); // 委托关闭特殊处理, 委托关闭后, 再撤销交易时, 委托状态会变成已接收, 这时应该要把这笔数据删除
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDto);
                 }else{
                     // 质押品的组合持仓流水

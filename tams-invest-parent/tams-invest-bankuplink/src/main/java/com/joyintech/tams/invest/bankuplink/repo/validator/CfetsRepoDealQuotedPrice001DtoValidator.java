@@ -421,8 +421,14 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
         if (StringUtil.equals(dto.getPs(), BussinessDictCodeList.回购拆借方向_逆回购.getValue())
         &&(StringUtil.isEmpty(dto.getQuoteRoleType())||StringUtil.equals(dto.getQuoteRoleType(),BussinessDictCodeList.银行间上行本方角色_询价方.getValue()))
         &&(StringUtil.equals(dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_NEW)
-        ||(StringUtil.equals(dto.getQuotaPageModel(),QuotaPageModelUtil.MODEL_EDIT)&&(StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已修改.getValue())||StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已新增.getValue()))))) {
-        } else {
+        ||(StringUtil.equals(dto.getQuotaPageModel(),QuotaPageModelUtil.MODEL_EDIT)
+                &&(StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已修改.getValue())
+                ||StringUtil.equals(dto.getTradeStatus(), BussinessDictCodeList.银行间上行报价状态_已新增.getValue()))))) {
+            //add by chenjiaxing 逆回购回复不做相关校验 start
+        }else if(StringUtil.equals(dto.getPs(), BussinessDictCodeList.回购拆借方向_逆回购.getValue()) && StringUtil.equals(dto.getQuotaPageModel(), QuotaPageModelUtil.MODEL_DIALOGUERESPONSE)){
+            //add by chenjiaxing 逆回购回复不做相关校验 end
+        }
+        else {
             if (null == dto.getPledgePrinTotal()) {
                 validList.add(new ValidMessage("pledgePrinTotal", this.getMessage("请输入券面总额合计。")));
             }

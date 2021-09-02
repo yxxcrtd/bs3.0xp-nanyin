@@ -10,10 +10,13 @@
 
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao;
 
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
+import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveResultDetail;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -33,7 +36,7 @@ public interface CashFlowDiscountMapper {
      * @param param
      * @return
      */
-    List<ModCurveDto> getAllModCurve(Map<String,Object> param);
+    List<ModCurveDto> getAllModCurve(ModAssetInfoParamsDto param);
 
     /**
      * 查找曲线代码
@@ -91,4 +94,12 @@ public interface CashFlowDiscountMapper {
      * @param map
      */
     void deleteCurveResultDetail(Map<String,Object> map);
+
+    void deleteMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
+
+    void insertMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
+
+    void insertFinProductValuation(List<FinProductValuation> listInsert);
+
+    void deleteFinProductValuation(List<FinProductValuation> listInsert);
 }

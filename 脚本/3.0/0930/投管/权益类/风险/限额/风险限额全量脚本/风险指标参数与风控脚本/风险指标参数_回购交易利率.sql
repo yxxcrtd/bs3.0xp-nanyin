@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='HGJYLL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('HGJYLL','回购交易利率','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','N','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('HGJYLL','回购交易利率','N','','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='HGJYLL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('HGJYLL','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,varietyCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -32,7 +32,7 @@ V_CONTENT_04 CLOB := 'select B.TERM_TYPE ||'',''||A.TRADE_ID AS RKEY,B.INT_RATE 
 from TRD_PRODUCT_DEAL  A
 inner join TRD_PRODUCT_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
-and A.TRADE_STATUS !=''03''
+and A.TRADE_STATUS =''01''
 and NVL(A.IS_CANCEL,''N'') =''N''
 inner join FIN_TRADE_PRODUCT B
 on A.FINPROD_ID = B.FINPROD_ID
@@ -45,12 +45,12 @@ select B.TERM_TYPE ||'',''||A.TRADE_ID AS RKEY,B.INT_RATE AS RVALUE
 from TRD_PRODUCT_TEMP_DEAL  A
 inner join TRD_PRODUCT_TEMP_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
-and A.TRADE_STATUS !=''03''
+and A.TRADE_STATUS =''01''
 and NVL(A.IS_CANCEL,''N'') =''N''
 inner join FIN_TRADE_PRODUCT B
 on A.FINPROD_ID = B.FINPROD_ID
 where A.FINPROD_TYPE2 in (''F02'',''F03'')
-AND A.PS IN (''T01'',''T02'')
+AND A.PS IN (''T01'',''T02'',''03'',''04'')
 and C.PORTFOLIO_ID IN ${portfolioCode}
 and A.TRADE_DATE = DATE''${valDate}''
 union all
@@ -58,7 +58,7 @@ select  B.TERM_TYPE ||'',''||A.TRADE_ID AS RKEY,B.INT_RATE AS RVALUE
 from WFL_TRD_PRODUCT_DEAL  A
 inner join WFL_TRD_PRODUCT_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
-and A.TRADE_STATUS != ''03''
+and A.TRADE_STATUS=''01''
 and substr(A.TRADE_ID,length(A.TRADE_ID),length(A.TRADE_ID)-1)!=''R''
 inner join FIN_TRADE_PRODUCT B
 on A.FINPROD_ID = B.FINPROD_ID

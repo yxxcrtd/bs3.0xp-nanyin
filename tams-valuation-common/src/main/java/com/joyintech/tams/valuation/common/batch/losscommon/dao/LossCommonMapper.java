@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
@@ -54,4 +55,10 @@ public interface LossCommonMapper {
      */
     Long getP3num(Map<String, Object> param);
 
+    /**
+     * 减值结果过程表批量入库
+     * @param listInsert
+     * @return
+     */
+    int insertModEclResultProcessBatch(List<ModEclResultProcess> listInsert);
 }

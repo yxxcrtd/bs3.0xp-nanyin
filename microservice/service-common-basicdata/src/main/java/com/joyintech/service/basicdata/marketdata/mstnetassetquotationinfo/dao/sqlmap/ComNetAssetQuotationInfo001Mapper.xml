@@ -67,7 +67,7 @@
 <select id="getAssetCodeList" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT 
 		       FINPROD_MARKET_ID id,
-               FINPROD_MARKET_ID text
+				FINPROD_ABBR text
 		FROM 
 		       FIN_PRODUCT 
 		WHERE  
@@ -80,9 +80,11 @@
 			  AND FINPROD_TYPE=#{TYPE_TOUGUAN_F17}
 		       AND FINPROD_MARKET_ID IS NOT NULL
 		       <if test="search != null and search != ''">
-		       	AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
-
-		       	)
+				   AND (FINPROD_MARKET_ID like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+				   /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 start */
+				   OR FINPROD_ABBR like concat(concat('%', #{search,jdbcType=VARCHAR}),'%')
+				   /*可支持代码和简称的双双模糊查询 add by yujiaping 2020-11-10 end */
+				   )
 		       </if>
 		       <if test="initValue != null and initValue != ''">
 		           AND FINPROD_MARKET_ID = #{initValue}

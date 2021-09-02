@@ -414,13 +414,15 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
+        //update by zznn 20210826  start
+        //指令头寸在流程中处理
         //委托开始日对委托的持仓流水和现金流水做处理
-         if(baseEtrCashPositionCommService!=null){
+        /* if(baseEtrCashPositionCommService!=null){
              entrustCommonDto.setEtrEntrust(etrEntrust);
              entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
              baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-         }
-
+         }*/
+        //update by zznn 20210826  end
 
     }
 

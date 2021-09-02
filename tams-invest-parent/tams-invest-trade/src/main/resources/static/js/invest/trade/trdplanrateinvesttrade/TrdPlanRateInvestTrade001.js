@@ -60,7 +60,7 @@ $(function(){
                 return "<a  class='pro-link' style='cursor: pointer;'>"+row.portfolioId+"</a>";
             }}
             ,{field:'portfolioName', width:150, title: 'TrdPlanRateInvestTrade001.portfolioName'}
-            ,{field:'chlFinprodId', width:150, title: 'TrdPlanRateInvestTrade001.chlFinprodId'}
+            // ,{field:'chlFinprodId', width:150, title: 'TrdPlanRateInvestTrade001.chlFinprodId'}
             ,{field:'finprodId',visible:false}
             ,{field:'finprodMarketId', width:150, title: 'TrdPlanRateInvestTrade001.finprodId',render: function (data, type, row, meta) {
                 return "<a  class='pro-link-fin' style='cursor: pointer;'>"+row.finprodMarketId+"</a>";

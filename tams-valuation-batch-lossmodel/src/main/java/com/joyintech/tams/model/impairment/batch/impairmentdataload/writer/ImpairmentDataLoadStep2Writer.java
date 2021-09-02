@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcessMapper;
+import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ModEclResultProcess2Mapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class ImpairmentDataLoadStep2Writer extends BaseWriter<ImpairmentDataLoad
      * Mapper
      */
     @Autowired
-    private ModEclResultProcessMapper modEclResultProcessMapper;
+    private ModEclResultProcess2Mapper modEclResultProcessMapper;
 
     @Override
     public void write(List<? extends ImpairmentDataLoadStep1ResultDto> items) throws Exception {

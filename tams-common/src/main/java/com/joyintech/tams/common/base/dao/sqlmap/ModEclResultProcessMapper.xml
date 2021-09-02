@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModEclResultProcessMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="ASSET_ID" property="assetId" jdbcType="VARCHAR" />
+        <result column="ASSET_NAME" property="assetName" jdbcType="VARCHAR" />
+        <result column="MARKET_ID" property="marketId" jdbcType="VARCHAR" />
+        <result column="MODEL_ASSET_TYPE" property="modelAssetType" jdbcType="VARCHAR" />
+        <result column="MODEL_ASSET_DETAIL_TYPE" property="modelAssetDetailType" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="FINANCIER" property="financier" jdbcType="VARCHAR" />
+        <result column="GRADE_ORG_ID" property="gradeOrgId" jdbcType="VARCHAR" />
+        <result column="ISSUER" property="issuer" jdbcType="VARCHAR" />
+        <result column="ACTUAL_CREDIT" property="actualCredit" jdbcType="VARCHAR" />
+        <result column="SPONSOR" property="sponsor" jdbcType="VARCHAR" />
+        <result column="RISK_LEVEL_FIVE" property="riskLevelFive" jdbcType="VARCHAR" />
+        <result column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+        <result column="PAPER_RATE" property="paperRate" jdbcType="DECIMAL" />
+        <result column="PLAN_END_DATE" property="planEndDate" jdbcType="DATE" />
+        <result column="IS_CLEAN" property="isClean" jdbcType="VARCHAR" />
+        <result column="DEC_DATE" property="decDate" jdbcType="DATE" />
+        <result column="O_TYPE" property="oType" jdbcType="VARCHAR" />
+        <result column="RESULT_01" property="result01" jdbcType="VARCHAR" />
+        <result column="RESULT_02" property="result02" jdbcType="VARCHAR" />
+        <result column="RESULT_ISSUER" property="resultIssuer" jdbcType="VARCHAR" />
+        <result column="RESULT_FINANCIER" property="resultFinancier" jdbcType="VARCHAR" />
+        <result column="RESULT_SPONSOR" property="resultSponsor" jdbcType="VARCHAR" />
+        <result column="RESULT_ACTUAL_CREDIT" property="resultActualCredit" jdbcType="VARCHAR" />
+        <result column="O_TYPE_FINAL" property="oTypeFinal" jdbcType="VARCHAR" />
+        <result column="ORG_ID_FINAL" property="orgIdFinal" jdbcType="VARCHAR" />
+        <result column="IS_FIN_LICENCE" property="isFinLicence" jdbcType="VARCHAR" />
+        <result column="RESULT_DEAL" property="resultDeal" jdbcType="VARCHAR" />
+        <result column="RESULT_CURRENT" property="resultCurrent" jdbcType="VARCHAR" />
+        <result column="PRIN_OVERDUE_DAY" property="prinOverdueDay" jdbcType="DECIMAL" />
+        <result column="INT_OVERDUE_DAY" property="intOverdueDay" jdbcType="DECIMAL" />
+        <result column="FIN_STAGE" property="finStage" jdbcType="VARCHAR" />
+        <result column="EMA_SHARE_AMT" property="emaShareAmt" jdbcType="DECIMAL" />
+        <result column="EAD" property="ead" jdbcType="DECIMAL" />
+        <result column="PRE_PROSPECTIVE_PD" property="preProspectivePd" jdbcType="DECIMAL" />
+        <result column="PROSPECTIVE_PD" property="prospectivePd" jdbcType="DECIMAL" />
+        <result column="LGD" property="lgd" jdbcType="DECIMAL" />
+        <result column="PRE_PROSPECTIVE_ECL" property="preProspectiveEcl" jdbcType="DECIMAL" />
+        <result column="PROSPECTIVE_ECL" property="prospectiveEcl" jdbcType="DECIMAL" />
+        <result column="PROCESS" property="process" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="IS_CONTAIN_PLEDGE" property="isContainPledge" jdbcType="VARCHAR" />
+        <result column="GRADE_ORG_TYPE" property="gradeOrgType" jdbcType="VARCHAR" />
+        <result column="INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="ISSUE_AMT" property="issueAmt" jdbcType="DECIMAL" />
+        <result column="VDATE" property="vdate" jdbcType="DATE" />
+        <result column="COUPON_SPECIES" property="couponSpecies" jdbcType="VARCHAR" />
+        <result column="ISSUE_PRICE" property="issuePrice" jdbcType="DECIMAL" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="ECL_RATIO" property="eclRatio" jdbcType="DECIMAL" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
+        insert into MOD_ECL_RESULT_PROCESS (SEQNO, PROD_ID, PROD_NAME, 
+            PORTFOLIO_ID, ASSET_ID, ASSET_NAME, 
+            MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, 
+            MDATE, UPDATE_TIME, FINANCIER, 
+            GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, 
+            SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
+            TRADE_DATE, PS, SHARE_AMT, 
+            YIELD, PAPER_RATE, PLAN_END_DATE, 
+            IS_CLEAN, DEC_DATE, O_TYPE, 
+            RESULT_01, RESULT_02, RESULT_ISSUER, 
+            RESULT_FINANCIER, RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, 
+            O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, 
+            RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, 
+            INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, 
+            EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, 
+            LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, 
+            PROCESS, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, IS_CONTAIN_PLEDGE, 
+            GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, 
+            VDATE, COUPON_SPECIES, ISSUE_PRICE, 
+            TRADE_AMT, ECL_RATIO)
+        values (#{seqno,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
+            #{portfolioId,jdbcType=VARCHAR}, #{assetId,jdbcType=VARCHAR}, #{assetName,jdbcType=VARCHAR}, 
+            #{marketId,jdbcType=VARCHAR}, #{modelAssetType,jdbcType=VARCHAR}, #{modelAssetDetailType,jdbcType=VARCHAR}, 
+            #{mdate,jdbcType=DATE}, #{updateTime,jdbcType=TIMESTAMP}, #{financier,jdbcType=VARCHAR}, 
+            #{gradeOrgId,jdbcType=VARCHAR}, #{issuer,jdbcType=VARCHAR}, #{actualCredit,jdbcType=VARCHAR}, 
+            #{sponsor,jdbcType=VARCHAR}, #{riskLevelFive,jdbcType=VARCHAR}, #{tradeId,jdbcType=VARCHAR}, 
+            #{tradeDate,jdbcType=DATE}, #{ps,jdbcType=VARCHAR}, #{shareAmt,jdbcType=DECIMAL}, 
+            #{yield,jdbcType=DECIMAL}, #{paperRate,jdbcType=DECIMAL}, #{planEndDate,jdbcType=DATE}, 
+            #{isClean,jdbcType=VARCHAR}, #{decDate,jdbcType=DATE}, #{oType,jdbcType=VARCHAR}, 
+            #{result01,jdbcType=VARCHAR}, #{result02,jdbcType=VARCHAR}, #{resultIssuer,jdbcType=VARCHAR}, 
+            #{resultFinancier,jdbcType=VARCHAR}, #{resultSponsor,jdbcType=VARCHAR}, #{resultActualCredit,jdbcType=VARCHAR}, 
+            #{oTypeFinal,jdbcType=VARCHAR}, #{orgIdFinal,jdbcType=VARCHAR}, #{isFinLicence,jdbcType=VARCHAR}, 
+            #{resultDeal,jdbcType=VARCHAR}, #{resultCurrent,jdbcType=VARCHAR}, #{prinOverdueDay,jdbcType=DECIMAL}, 
+            #{intOverdueDay,jdbcType=DECIMAL}, #{finStage,jdbcType=VARCHAR}, #{emaShareAmt,jdbcType=DECIMAL}, 
+            #{ead,jdbcType=DECIMAL}, #{preProspectivePd,jdbcType=DECIMAL}, #{prospectivePd,jdbcType=DECIMAL}, 
+            #{lgd,jdbcType=DECIMAL}, #{preProspectiveEcl,jdbcType=DECIMAL}, #{prospectiveEcl,jdbcType=DECIMAL}, 
+            #{process,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{isContainPledge,jdbcType=VARCHAR}, 
+            #{gradeOrgType,jdbcType=VARCHAR}, #{invAim,jdbcType=VARCHAR}, #{issueAmt,jdbcType=DECIMAL}, 
+            #{vdate,jdbcType=DATE}, #{couponSpecies,jdbcType=VARCHAR}, #{issuePrice,jdbcType=DECIMAL}, 
+            #{tradeAmt,jdbcType=DECIMAL}, #{eclRatio,jdbcType=DECIMAL})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
+        insert into MOD_ECL_RESULT_PROCESS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="assetId != null" >
+                ASSET_ID,
+            </if>
+            <if test="assetName != null" >
+                ASSET_NAME,
+            </if>
+            <if test="marketId != null" >
+                MARKET_ID,
+            </if>
+            <if test="modelAssetType != null" >
+                MODEL_ASSET_TYPE,
+            </if>
+            <if test="modelAssetDetailType != null" >
+                MODEL_ASSET_DETAIL_TYPE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="financier != null" >
+                FINANCIER,
+            </if>
+            <if test="gradeOrgId != null" >
+                GRADE_ORG_ID,
+            </if>
+            <if test="issuer != null" >
+                ISSUER,
+            </if>
+            <if test="actualCredit != null" >
+                ACTUAL_CREDIT,
+            </if>
+            <if test="sponsor != null" >
+                SPONSOR,
+            </if>
+            <if test="riskLevelFive != null" >
+                RISK_LEVEL_FIVE,
+            </if>
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="tradeDate != null" >
+                TRADE_DATE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="shareAmt != null" >
+                SHARE_AMT,
+            </if>
+            <if test="yield != null" >
+                YIELD,
+            </if>
+            <if test="paperRate != null" >
+                PAPER_RATE,
+            </if>
+            <if test="planEndDate != null" >
+                PLAN_END_DATE,
+            </if>
+            <if test="isClean != null" >
+                IS_CLEAN,
+            </if>
+            <if test="decDate != null" >
+                DEC_DATE,
+            </if>
+            <if test="oType != null" >
+                O_TYPE,
+            </if>
+            <if test="result01 != null" >
+                RESULT_01,
+            </if>
+            <if test="result02 != null" >
+                RESULT_02,
+            </if>
+            <if test="resultIssuer != null" >
+                RESULT_ISSUER,
+            </if>
+            <if test="resultFinancier != null" >
+                RESULT_FINANCIER,
+            </if>
+            <if test="resultSponsor != null" >
+                RESULT_SPONSOR,
+            </if>
+            <if test="resultActualCredit != null" >
+                RESULT_ACTUAL_CREDIT,
+            </if>
+            <if test="oTypeFinal != null" >
+                O_TYPE_FINAL,
+            </if>
+            <if test="orgIdFinal != null" >
+                ORG_ID_FINAL,
+            </if>
+            <if test="isFinLicence != null" >
+                IS_FIN_LICENCE,
+            </if>
+            <if test="resultDeal != null" >
+                RESULT_DEAL,
+            </if>
+            <if test="resultCurrent != null" >
+                RESULT_CURRENT,
+            </if>
+            <if test="prinOverdueDay != null" >
+                PRIN_OVERDUE_DAY,
+            </if>
+            <if test="intOverdueDay != null" >
+                INT_OVERDUE_DAY,
+            </if>
+            <if test="finStage != null" >
+                FIN_STAGE,
+            </if>
+            <if test="emaShareAmt != null" >
+                EMA_SHARE_AMT,
+            </if>
+            <if test="ead != null" >
+                EAD,
+            </if>
+            <if test="preProspectivePd != null" >
+                PRE_PROSPECTIVE_PD,
+            </if>
+            <if test="prospectivePd != null" >
+                PROSPECTIVE_PD,
+            </if>
+            <if test="lgd != null" >
+                LGD,
+            </if>
+            <if test="preProspectiveEcl != null" >
+                PRE_PROSPECTIVE_ECL,
+            </if>
+            <if test="prospectiveEcl != null" >
+                PROSPECTIVE_ECL,
+            </if>
+            <if test="process != null" >
+                PROCESS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="isContainPledge != null" >
+                IS_CONTAIN_PLEDGE,
+            </if>
+            <if test="gradeOrgType != null" >
+                GRADE_ORG_TYPE,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="issueAmt != null" >
+                ISSUE_AMT,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="couponSpecies != null" >
+                COUPON_SPECIES,
+            </if>
+            <if test="issuePrice != null" >
+                ISSUE_PRICE,
+            </if>
+            <if test="tradeAmt != null" >
+                TRADE_AMT,
+            </if>
+            <if test="eclRatio != null" >
+                ECL_RATIO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetId != null" >
+                #{assetId,jdbcType=VARCHAR},
+            </if>
+            <if test="assetName != null" >
+                #{assetName,jdbcType=VARCHAR},
+            </if>
+            <if test="marketId != null" >
+                #{marketId,jdbcType=VARCHAR},
+            </if>
+            <if test="modelAssetType != null" >
+                #{modelAssetType,jdbcType=VARCHAR},
+            </if>
+            <if test="modelAssetDetailType != null" >
+                #{modelAssetDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="financier != null" >
+                #{financier,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeOrgId != null" >
+                #{gradeOrgId,jdbcType=VARCHAR},
+            </if>
+            <if test="issuer != null" >
+                #{issuer,jdbcType=VARCHAR},
+            </if>
+            <if test="actualCredit != null" >
+                #{actualCredit,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null" >
+                #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="riskLevelFive != null" >
+                #{riskLevelFive,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null" >
+                #{tradeDate,jdbcType=DATE},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="shareAmt != null" >
+                #{shareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="yield != null" >
+                #{yield,jdbcType=DECIMAL},
+            </if>
+            <if test="paperRate != null" >
+                #{paperRate,jdbcType=DECIMAL},
+            </if>
+            <if test="planEndDate != null" >
+                #{planEndDate,jdbcType=DATE},
+            </if>
+            <if test="isClean != null" >
+                #{isClean,jdbcType=VARCHAR},
+            </if>
+            <if test="decDate != null" >
+                #{decDate,jdbcType=DATE},
+            </if>
+            <if test="oType != null" >
+                #{oType,jdbcType=VARCHAR},
+            </if>
+            <if test="result01 != null" >
+                #{result01,jdbcType=VARCHAR},
+            </if>
+            <if test="result02 != null" >
+                #{result02,jdbcType=VARCHAR},
+            </if>
+            <if test="resultIssuer != null" >
+                #{resultIssuer,jdbcType=VARCHAR},
+            </if>
+            <if test="resultFinancier != null" >
+                #{resultFinancier,jdbcType=VARCHAR},
+            </if>
+            <if test="resultSponsor != null" >
+                #{resultSponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="resultActualCredit != null" >
+                #{resultActualCredit,jdbcType=VARCHAR},
+            </if>
+            <if test="oTypeFinal != null" >
+                #{oTypeFinal,jdbcType=VARCHAR},
+            </if>
+            <if test="orgIdFinal != null" >
+                #{orgIdFinal,jdbcType=VARCHAR},
+            </if>
+            <if test="isFinLicence != null" >
+                #{isFinLicence,jdbcType=VARCHAR},
+            </if>
+            <if test="resultDeal != null" >
+                #{resultDeal,jdbcType=VARCHAR},
+            </if>
+            <if test="resultCurrent != null" >
+                #{resultCurrent,jdbcType=VARCHAR},
+            </if>
+            <if test="prinOverdueDay != null" >
+                #{prinOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="intOverdueDay != null" >
+                #{intOverdueDay,jdbcType=DECIMAL},
+            </if>
+            <if test="finStage != null" >
+                #{finStage,jdbcType=VARCHAR},
+            </if>
+            <if test="emaShareAmt != null" >
+                #{emaShareAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ead != null" >
+                #{ead,jdbcType=DECIMAL},
+            </if>
+            <if test="preProspectivePd != null" >
+                #{preProspectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectivePd != null" >
+                #{prospectivePd,jdbcType=DECIMAL},
+            </if>
+            <if test="lgd != null" >
+                #{lgd,jdbcType=DECIMAL},
+            </if>
+            <if test="preProspectiveEcl != null" >
+                #{preProspectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="prospectiveEcl != null" >
+                #{prospectiveEcl,jdbcType=DECIMAL},
+            </if>
+            <if test="process != null" >
+                #{process,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="isContainPledge != null" >
+                #{isContainPledge,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeOrgType != null" >
+                #{gradeOrgType,jdbcType=VARCHAR},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="issueAmt != null" >
+                #{issueAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="couponSpecies != null" >
+                #{couponSpecies,jdbcType=VARCHAR},
+            </if>
+            <if test="issuePrice != null" >
+                #{issuePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeAmt != null" >
+                #{tradeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="eclRatio != null" >
+                #{eclRatio,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModEclResultProcess" >
+        insert into MOD_ECL_RESULT_PROCESS(SEQNO, PROD_ID, PROD_NAME, PORTFOLIO_ID, ASSET_ID, 
+        ASSET_NAME, MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, MDATE, UPDATE_TIME, 
+        FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
+        TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, PLAN_END_DATE, IS_CLEAN, DEC_DATE, 
+        O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, 
+        O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, 
+        INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, 
+        LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, VDATE, COUPON_SPECIES, 
+        ISSUE_PRICE, TRADE_AMT, ECL_RATIO)
+        select SEQNO, PROD_ID, PROD_NAME, PORTFOLIO_ID, ASSET_ID, 
+            ASSET_NAME, MARKET_ID, MODEL_ASSET_TYPE, MODEL_ASSET_DETAIL_TYPE, MDATE, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            FINANCIER, GRADE_ORG_ID, ISSUER, ACTUAL_CREDIT, SPONSOR, RISK_LEVEL_FIVE, TRADE_ID, 
+            TRADE_DATE, PS, SHARE_AMT, YIELD, PAPER_RATE, PLAN_END_DATE, IS_CLEAN, DEC_DATE, 
+            O_TYPE, RESULT_01, RESULT_02, RESULT_ISSUER, RESULT_FINANCIER, RESULT_SPONSOR, RESULT_ACTUAL_CREDIT, 
+            O_TYPE_FINAL, ORG_ID_FINAL, IS_FIN_LICENCE, RESULT_DEAL, RESULT_CURRENT, PRIN_OVERDUE_DAY, 
+            INT_OVERDUE_DAY, FIN_STAGE, EMA_SHARE_AMT, EAD, PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, 
+            LGD, PRE_PROSPECTIVE_ECL, PROSPECTIVE_ECL, PROCESS, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, IS_CONTAIN_PLEDGE, GRADE_ORG_TYPE, INV_AIM, ISSUE_AMT, VDATE, COUPON_SPECIES, 
+            ISSUE_PRICE, TRADE_AMT, ECL_RATIO
+             from MOD_ECL_RESULT_PROCESS
+             where 1 = 1
+    </insert>
+</mapper>

@@ -362,10 +362,10 @@
 											<div class="layui-input-inline input-inline">
 												<select type="text" id="investmentAttributes" name="investmentAttributes"
 													class="layui-input form-input input-select"
-													formatoption="true" required="required" 
+													formatoption="true" required="required"
 													allowClear="true" placeholder="请输入内容"
+														data-th-initValue='${entity?.investmentAttributes}'
 													data-th-placeholder="#{SysCommon.placeholder}"
-													data-th-initValue='${entity?.investmentAttributes}'
 													data-th-data-result='${INVEST_TYPE}' >
 												</select>
 											</div>
@@ -523,7 +523,7 @@
 						</div>
                         <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
 						<!-- 资产推荐方及费率信息 -->
-						<div id="bussFinRecomment" class="page-component" style="display:none"
+						<div id="bussFinRecomment" class="page-component"
 							th:data-path="@{/component/asset/BussFinRecomment/init}"
 							th:data-params="|{entityName:'bussFinRecommentDto',finprodId:'${entity?.finprodId}',workflowId:'${workflowId}', pageId:'${pageId}'}|"></div>
                         <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->

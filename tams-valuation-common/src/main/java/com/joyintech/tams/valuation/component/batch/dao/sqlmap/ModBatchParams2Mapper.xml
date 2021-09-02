@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="BATCH_EXEC_SEQNO" property="batchExecSeqno" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="EXEC_DATE" property="execDate" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Example_Where_Clause" >
+        <where >
+            <foreach collection="oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Update_By_Example_Where_Clause" >
+        <where >
+            <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+                <if test="criteria.valid" >
+                    <trim prefix="(" suffix=")" prefixOverrides="and" >
+                        <foreach collection="criteria.criteria" item="criterion" >
+                            <choose >
+                                <when test="criterion.noValue" >
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue" >
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue" >
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue" >
+                                    and ${criterion.condition}
+                                    <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, BATCH_EXEC_SEQNO BATCH_EXEC_SEQNO, FINPROD_ID FINPROD_ID, EXEC_DATE EXEC_DATE, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Base_Column_List" />
+        from MOD_VAL_BATCH_PARAMS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Base_Column_List" />
+        from MOD_VAL_BATCH_PARAMS
+    </sql>
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParamsExample" >
+        select
+        <if test="distinct" >
+            distinct
+        </if>
+        'true' as QUERYID,
+        <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Base_Column_List" />
+        from MOD_VAL_BATCH_PARAMS
+        <if test="_parameter != null" >
+            <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null" >
+            order by ${orderByClause}
+        </if>
+    </select>
+    <delete id="deleteByExample" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParamsExample" >
+        delete from MOD_VAL_BATCH_PARAMS
+        <if test="_parameter != null" >
+            <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Example_Where_Clause" />
+        </if>
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams" >
+        insert into MOD_VAL_BATCH_PARAMS (SEQNO, BATCH_EXEC_SEQNO, FINPROD_ID, 
+            EXEC_DATE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{batchExecSeqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
+            #{execDate,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams" >
+        insert into MOD_VAL_BATCH_PARAMS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="batchExecSeqno != null" >
+                BATCH_EXEC_SEQNO,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="execDate != null" >
+                EXEC_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="batchExecSeqno != null" >
+                #{batchExecSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="execDate != null" >
+                #{execDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams" >
+        insert into MOD_VAL_BATCH_PARAMS(SEQNO, BATCH_EXEC_SEQNO, FINPROD_ID, EXEC_DATE, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQNO, BATCH_EXEC_SEQNO, FINPROD_ID, EXEC_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_VAL_BATCH_PARAMS
+             where 1 = 1
+    </insert>
+    <select id="countByExample" parameterType="com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParamsExample" resultType="java.lang.Integer" >
+        select count(*) from MOD_VAL_BATCH_PARAMS
+        <if test="_parameter != null" >
+            <include refid="com.joyintech.tams.valuation.component.batch.dao.ModValBatchParams2Mapper.Example_Where_Clause" />
+        </if>
+    </select>
+    <update id="updateByExampleSelective" parameterType="map" >
+        update MOD_VAL_BATCH_PARAMS
+        <set >
+            <if test="record.seqno != null" >
+                SEQNO = #{record.seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="record.batchExecSeqno != null" >
+                BATCH_EXEC_SEQNO = #{record.batchExecSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="record.finprodId != null" >
+                FINPROD_ID = #{record.finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="record.execDate != null" >
+                EXEC_DATE = #{record.execDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="record.updateUser != null" >
+                UPDATE_USER = #{record.updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="record.updateTime != null" >
+                UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        <if test="_parameter != null" >
+            <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+    <update id="updateByExample" parameterType="map" >
+        update MOD_VAL_BATCH_PARAMS
+        set SEQNO = #{record.seqno,jdbcType=VARCHAR},
+            BATCH_EXEC_SEQNO = #{record.batchExecSeqno,jdbcType=VARCHAR},
+            FINPROD_ID = #{record.finprodId,jdbcType=VARCHAR},
+            EXEC_DATE = #{record.execDate,jdbcType=TIMESTAMP},
+            CREATE_USER = #{record.createUser,jdbcType=VARCHAR},
+            CREATE_DEPT = #{record.createDept,jdbcType=VARCHAR},
+            CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP},
+            UPDATE_USER = #{record.updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+        <if test="_parameter != null" >
+            <include refid="com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper.Update_By_Example_Where_Clause" />
+        </if>
+    </update>
+</mapper>

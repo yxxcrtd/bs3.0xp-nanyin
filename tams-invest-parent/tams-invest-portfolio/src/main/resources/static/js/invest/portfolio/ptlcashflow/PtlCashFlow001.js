@@ -125,10 +125,24 @@ $(function() {
             }
             var object = selArr[0];
             object.operateType = "revoke";
-            Joyin.ajaxJson(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/check', object, function(result) {
+            /*Joyin.ajaxJson(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("BUSS_COM_C_0032","撤销"), function(){
                     WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/revoke', object, 
                             "PtlCashFlow001_btn_revoke","PtlCashFlow002");
+                });
+            });*/
+            Joyin.ajaxJson(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/check', object, function(result) {
+                var resdata = result.data;
+                Joyin.prompt(JoyinUtil.getLabel("pingan.common.revokeReason"), 0, function (result) {
+                    Joyin.confirm(resdata, function() {
+                        result = result.replace(/\s+/g,"");
+                        if (!result) {
+                            result = '无';
+                        }
+                        object.revokeReason = result;
+                        WorkFlow.doRevokeList(basePath + 'invest/portfolio/ptlcashflow/PtlCashFlow001/revoke', object,
+                            "PtlCashFlow001_btn_revoke","PtlCashFlow002");
+                    });
                 });
             });
             /*var object = {selectedItem: selArr, operateType:"delete"};//请求参数

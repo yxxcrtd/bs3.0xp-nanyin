@@ -269,6 +269,12 @@ application:
 #交易压力测试性能优化开关
 flag: false
 
+
+valinterf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
+
 ---
 spring:
   profiles: allinone
@@ -470,9 +476,6 @@ tx-lcn:
 
 position:
   flag: false #是否控制账户持仓，true控制，false不控制
-
-
-
 
 ---
 spring:

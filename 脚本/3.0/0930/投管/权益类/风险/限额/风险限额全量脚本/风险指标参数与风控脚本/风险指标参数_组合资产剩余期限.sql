@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='ZCSYQX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZCSYQX','组合资产剩余期限','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('ZCSYQX','组合资产剩余期限','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='ZCSYQX';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('ZCSYQX','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -250,7 +250,7 @@ SELECT SUM(NVL(TEMP.TRADE_AMT,0)) TRADE_AMT, TEMP.FINPROD_ID RKEY, TEMP.LAST_PER
             GROUP BY n.FINPROD_ID, ASSET.LAST_PERIOD
           UNION ALL
             SELECT
-                SUM( CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'') THEN NVL(n.TRADE_AMT,0)
+                SUM( CASE  WHEN n.PS IN(''T01'',''T04'',''T52'',''T25'',''T64'',''04'') THEN NVL(n.TRADE_AMT,0)
                        WHEN n.PS =''T49'' THEN NVL(-100*n.SHARE_AMT,0)
                       ELSE  NVL(-1*n.TRADE_AMT,0)
              END) TRADE_AMT, 
@@ -259,7 +259,7 @@ SELECT SUM(NVL(TEMP.TRADE_AMT,0)) TRADE_AMT, TEMP.FINPROD_ID RKEY, TEMP.LAST_PER
             INNER JOIN TRD_PRODUCT_TEMP_DEAL n ON m.TRADE_ID = n.TRADE_ID
             INNER JOIN ASSET ON ASSET.FINPROD_ID = n.FINPROD_ID
             WHERE n.TRADE_DATE = DATE''${valDate}'' AND m.PORTFOLIO_ID IN  ${portfolioCode}
-                AND n.PS IN (''T01'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T64'',''T63'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
+                AND n.PS IN (''T01'',''04'', ''T02'', ''T03'', ''T04'', ''T19'', ''T07'', ''T11'', ''T52'', ''T22'', ''T23'', ''T38'', ''T39'',''T25'', ''T49'',''T64'',''T63'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'')
                 AND N.TRADE_STATUS = ''01''
                 AND N.IS_CANCEL = ''N''
             GROUP BY n.FINPROD_ID, ASSET.LAST_PERIOD

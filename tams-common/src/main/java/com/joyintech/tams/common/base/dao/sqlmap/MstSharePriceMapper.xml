@@ -4,12 +4,19 @@
     <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstSharePrice" >
         <id column="SHARES_ID" property="sharesId" jdbcType="VARCHAR" />
         <id column="DEAL_DATE" property="dealDate" jdbcType="DATE" />
-        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="PRE_CLOSE_PRICE" property="preClosePrice" jdbcType="DECIMAL" />
         <result column="OPEN_PRICE" property="openPrice" jdbcType="DECIMAL" />
         <result column="HIGH_PRICE" property="highPrice" jdbcType="DECIMAL" />
         <result column="LOW_PRICE" property="lowPrice" jdbcType="DECIMAL" />
         <result column="CLOSE_PRICE" property="closePrice" jdbcType="DECIMAL" />
+        <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
+        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
         <result column="S_SHARES" property="sShares" jdbcType="DECIMAL" />
         <result column="C_SHARES" property="cShares" jdbcType="DECIMAL" />
         <result column="CHANGE" property="change" jdbcType="DECIMAL" />
@@ -23,23 +30,18 @@
         <result column="LOW_PRICE_ADJ" property="lowPriceAdj" jdbcType="DECIMAL" />
         <result column="CLOSE_PRICE_ADJ" property="closePriceAdj" jdbcType="DECIMAL" />
         <result column="FACTOR_ADJ" property="factorAdj" jdbcType="DECIMAL" />
-        <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
-        <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
-        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
-        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
-        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
-        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="PE" property="pe" jdbcType="DECIMAL" />
+        <result column="PB" property="pb" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
-        SHARES_ID SHARES_ID, DEAL_DATE DEAL_DATE, CCY CCY, PRE_CLOSE_PRICE PRE_CLOSE_PRICE, 
-        OPEN_PRICE OPEN_PRICE, HIGH_PRICE HIGH_PRICE, LOW_PRICE LOW_PRICE, CLOSE_PRICE CLOSE_PRICE, 
-        S_SHARES S_SHARES, C_SHARES C_SHARES, CHANGE CHANGE, CHANGE_PERCENT CHANGE_PERCENT, 
-        DEAL_VALUME DEAL_VALUME, DEAL_AMOUNT DEAL_AMOUNT, AVG_PRICE AVG_PRICE, PRE_CLOSE_PRICE_ADJ PRE_CLOSE_PRICE_ADJ, 
-        OPEN_PRICE_ADJ OPEN_PRICE_ADJ, HIGH_PRICE_ADJ HIGH_PRICE_ADJ, LOW_PRICE_ADJ LOW_PRICE_ADJ, 
-        CLOSE_PRICE_ADJ CLOSE_PRICE_ADJ, FACTOR_ADJ FACTOR_ADJ, TRADE_STATUS TRADE_STATUS, 
+        SHARES_ID SHARES_ID, DEAL_DATE DEAL_DATE, PRE_CLOSE_PRICE PRE_CLOSE_PRICE, OPEN_PRICE OPEN_PRICE, 
+        HIGH_PRICE HIGH_PRICE, LOW_PRICE LOW_PRICE, CLOSE_PRICE CLOSE_PRICE, TRADE_STATUS TRADE_STATUS, 
         INPUT_TYPE INPUT_TYPE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
-        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CCY CCY, S_SHARES S_SHARES, C_SHARES C_SHARES, 
+        CHANGE CHANGE, CHANGE_PERCENT CHANGE_PERCENT, DEAL_VALUME DEAL_VALUME, DEAL_AMOUNT DEAL_AMOUNT, 
+        AVG_PRICE AVG_PRICE, PRE_CLOSE_PRICE_ADJ PRE_CLOSE_PRICE_ADJ, OPEN_PRICE_ADJ OPEN_PRICE_ADJ, 
+        HIGH_PRICE_ADJ HIGH_PRICE_ADJ, LOW_PRICE_ADJ LOW_PRICE_ADJ, CLOSE_PRICE_ADJ CLOSE_PRICE_ADJ, 
+        FACTOR_ADJ FACTOR_ADJ, PE PE, PB PB
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -64,26 +66,28 @@
           and DEAL_DATE = #{dealDate,jdbcType=DATE}
     </delete>
     <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstSharePrice" >
-        insert into MST_SHARE_PRICE (SHARES_ID, DEAL_DATE, CCY, 
-            PRE_CLOSE_PRICE, OPEN_PRICE, HIGH_PRICE, 
-            LOW_PRICE, CLOSE_PRICE, S_SHARES, 
-            C_SHARES, CHANGE, CHANGE_PERCENT, 
-            DEAL_VALUME, DEAL_AMOUNT, AVG_PRICE, 
-            PRE_CLOSE_PRICE_ADJ, OPEN_PRICE_ADJ, HIGH_PRICE_ADJ, 
-            LOW_PRICE_ADJ, CLOSE_PRICE_ADJ, FACTOR_ADJ, 
-            TRADE_STATUS, INPUT_TYPE, CREATE_USER, 
-            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
-            UPDATE_TIME)
-        values (#{sharesId,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{ccy,jdbcType=VARCHAR}, 
-            #{preClosePrice,jdbcType=DECIMAL}, #{openPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, 
-            #{lowPrice,jdbcType=DECIMAL}, #{closePrice,jdbcType=DECIMAL}, #{sShares,jdbcType=DECIMAL}, 
-            #{cShares,jdbcType=DECIMAL}, #{change,jdbcType=DECIMAL}, #{changePercent,jdbcType=DECIMAL}, 
-            #{dealValume,jdbcType=DECIMAL}, #{dealAmount,jdbcType=DECIMAL}, #{avgPrice,jdbcType=DECIMAL}, 
-            #{preClosePriceAdj,jdbcType=DECIMAL}, #{openPriceAdj,jdbcType=DECIMAL}, #{highPriceAdj,jdbcType=DECIMAL}, 
-            #{lowPriceAdj,jdbcType=DECIMAL}, #{closePriceAdj,jdbcType=DECIMAL}, #{factorAdj,jdbcType=DECIMAL}, 
-            #{tradeStatus,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
-            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-            #{updateTime,jdbcType=TIMESTAMP})
+        insert into MST_SHARE_PRICE (SHARES_ID, DEAL_DATE, PRE_CLOSE_PRICE, 
+            OPEN_PRICE, HIGH_PRICE, LOW_PRICE, 
+            CLOSE_PRICE, TRADE_STATUS, INPUT_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, CCY, 
+            S_SHARES, C_SHARES, CHANGE, 
+            CHANGE_PERCENT, DEAL_VALUME, DEAL_AMOUNT, 
+            AVG_PRICE, PRE_CLOSE_PRICE_ADJ, OPEN_PRICE_ADJ, 
+            HIGH_PRICE_ADJ, LOW_PRICE_ADJ, CLOSE_PRICE_ADJ, 
+            FACTOR_ADJ, PE, PB
+            )
+        values (#{sharesId,jdbcType=VARCHAR}, #{dealDate,jdbcType=DATE}, #{preClosePrice,jdbcType=DECIMAL}, 
+            #{openPrice,jdbcType=DECIMAL}, #{highPrice,jdbcType=DECIMAL}, #{lowPrice,jdbcType=DECIMAL}, 
+            #{closePrice,jdbcType=DECIMAL}, #{tradeStatus,jdbcType=VARCHAR}, #{inputType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{ccy,jdbcType=VARCHAR}, 
+            #{sShares,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL}, #{change,jdbcType=DECIMAL}, 
+            #{changePercent,jdbcType=DECIMAL}, #{dealValume,jdbcType=DECIMAL}, #{dealAmount,jdbcType=DECIMAL}, 
+            #{avgPrice,jdbcType=DECIMAL}, #{preClosePriceAdj,jdbcType=DECIMAL}, #{openPriceAdj,jdbcType=DECIMAL}, 
+            #{highPriceAdj,jdbcType=DECIMAL}, #{lowPriceAdj,jdbcType=DECIMAL}, #{closePriceAdj,jdbcType=DECIMAL}, 
+            #{factorAdj,jdbcType=DECIMAL}, #{pe,jdbcType=DECIMAL}, #{pb,jdbcType=DECIMAL}
+            )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstSharePrice" >
         insert into MST_SHARE_PRICE
@@ -93,9 +97,6 @@
             </if>
             <if test="dealDate != null" >
                 DEAL_DATE,
-            </if>
-            <if test="ccy != null" >
-                CCY,
             </if>
             <if test="preClosePrice != null" >
                 PRE_CLOSE_PRICE,
@@ -111,6 +112,30 @@
             </if>
             <if test="closePrice != null" >
                 CLOSE_PRICE,
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS,
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="ccy != null" >
+                CCY,
             </if>
             <if test="sShares != null" >
                 S_SHARES,
@@ -151,26 +176,11 @@
             <if test="factorAdj != null" >
                 FACTOR_ADJ,
             </if>
-            <if test="tradeStatus != null" >
-                TRADE_STATUS,
+            <if test="pe != null" >
+                PE,
             </if>
-            <if test="inputType != null" >
-                INPUT_TYPE,
-            </if>
-            <if test="createUser != null" >
-                CREATE_USER,
-            </if>
-            <if test="createDept != null" >
-                CREATE_DEPT,
-            </if>
-            <if test="createTime != null" >
-                CREATE_TIME,
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER,
-            </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME,
+            <if test="pb != null" >
+                PB,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -179,9 +189,6 @@
             </if>
             <if test="dealDate != null" >
                 #{dealDate,jdbcType=DATE},
-            </if>
-            <if test="ccy != null" >
-                #{ccy,jdbcType=VARCHAR},
             </if>
             <if test="preClosePrice != null" >
                 #{preClosePrice,jdbcType=DECIMAL},
@@ -197,6 +204,30 @@
             </if>
             <if test="closePrice != null" >
                 #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeStatus != null" >
+                #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
             </if>
             <if test="sShares != null" >
                 #{sShares,jdbcType=DECIMAL},
@@ -237,49 +268,31 @@
             <if test="factorAdj != null" >
                 #{factorAdj,jdbcType=DECIMAL},
             </if>
-            <if test="tradeStatus != null" >
-                #{tradeStatus,jdbcType=VARCHAR},
+            <if test="pe != null" >
+                #{pe,jdbcType=DECIMAL},
             </if>
-            <if test="inputType != null" >
-                #{inputType,jdbcType=VARCHAR},
-            </if>
-            <if test="createUser != null" >
-                #{createUser,jdbcType=VARCHAR},
-            </if>
-            <if test="createDept != null" >
-                #{createDept,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null" >
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateUser != null" >
-                #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null" >
-                #{updateTime,jdbcType=TIMESTAMP},
+            <if test="pb != null" >
+                #{pb,jdbcType=DECIMAL},
             </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstSharePrice" >
-        insert into MST_SHARE_PRICE(SHARES_ID, DEAL_DATE, CCY, PRE_CLOSE_PRICE, OPEN_PRICE, 
-        HIGH_PRICE, LOW_PRICE, CLOSE_PRICE, S_SHARES, C_SHARES, CHANGE, CHANGE_PERCENT, DEAL_VALUME, 
+        insert into MST_SHARE_PRICE(SHARES_ID, DEAL_DATE, PRE_CLOSE_PRICE, OPEN_PRICE, HIGH_PRICE, 
+        LOW_PRICE, CLOSE_PRICE, TRADE_STATUS, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME, CCY, S_SHARES, C_SHARES, CHANGE, CHANGE_PERCENT, DEAL_VALUME, 
         DEAL_AMOUNT, AVG_PRICE, PRE_CLOSE_PRICE_ADJ, OPEN_PRICE_ADJ, HIGH_PRICE_ADJ, LOW_PRICE_ADJ, 
-        CLOSE_PRICE_ADJ, FACTOR_ADJ, TRADE_STATUS, INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
-        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-        select SHARES_ID, DEAL_DATE, CCY, PRE_CLOSE_PRICE, OPEN_PRICE, 
-            HIGH_PRICE, LOW_PRICE, CLOSE_PRICE, S_SHARES, C_SHARES, CHANGE, CHANGE_PERCENT, DEAL_VALUME, 
+        CLOSE_PRICE_ADJ, FACTOR_ADJ, PE, PB)
+        select SHARES_ID, DEAL_DATE, PRE_CLOSE_PRICE, OPEN_PRICE, HIGH_PRICE, 
+            LOW_PRICE, CLOSE_PRICE, TRADE_STATUS, INPUT_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CCY, S_SHARES, C_SHARES, CHANGE, CHANGE_PERCENT, DEAL_VALUME, 
             DEAL_AMOUNT, AVG_PRICE, PRE_CLOSE_PRICE_ADJ, OPEN_PRICE_ADJ, HIGH_PRICE_ADJ, LOW_PRICE_ADJ, 
-            CLOSE_PRICE_ADJ, FACTOR_ADJ, TRADE_STATUS, INPUT_TYPE, CREATE_USER, CREATE_DEPT, 
-            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            CLOSE_PRICE_ADJ, FACTOR_ADJ, PE, PB
              from MST_SHARE_PRICE
              where 1 = 1 and SHARES_ID = #{sharesId,jdbcType=VARCHAR} and DEAL_DATE = #{dealDate,jdbcType=DATE}
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstSharePrice" >
         update MST_SHARE_PRICE
         <set >
-            <if test="ccy != null" >
-                CCY = #{ccy,jdbcType=VARCHAR},
-            </if>
             <if test="preClosePrice != null" >
                 PRE_CLOSE_PRICE = #{preClosePrice,jdbcType=DECIMAL},
             </if>
@@ -294,6 +307,21 @@
             </if>
             <if test="closePrice != null" >
                 CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeStatus != null" >
+                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null" >
+                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
             </if>
             <if test="sShares != null" >
                 S_SHARES = #{sShares,jdbcType=DECIMAL},
@@ -334,17 +362,11 @@
             <if test="factorAdj != null" >
                 FACTOR_ADJ = #{factorAdj,jdbcType=DECIMAL},
             </if>
-            <if test="tradeStatus != null" >
-                TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            <if test="pe != null" >
+                PE = #{pe,jdbcType=DECIMAL},
             </if>
-            <if test="inputType != null" >
-                INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
-            </if>
-            <if test="updateUser != null" >
-                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            </if>
-            <if test="updateTime != null" >
-                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="pb != null" >
+                PB = #{pb,jdbcType=DECIMAL},
             </if>
         </set>
         where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
@@ -352,12 +374,16 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstSharePrice" >
         update MST_SHARE_PRICE
-        set CCY = #{ccy,jdbcType=VARCHAR},
-            PRE_CLOSE_PRICE = #{preClosePrice,jdbcType=DECIMAL},
+        set PRE_CLOSE_PRICE = #{preClosePrice,jdbcType=DECIMAL},
             OPEN_PRICE = #{openPrice,jdbcType=DECIMAL},
             HIGH_PRICE = #{highPrice,jdbcType=DECIMAL},
             LOW_PRICE = #{lowPrice,jdbcType=DECIMAL},
             CLOSE_PRICE = #{closePrice,jdbcType=DECIMAL},
+            TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
+            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CCY = #{ccy,jdbcType=VARCHAR},
             S_SHARES = #{sShares,jdbcType=DECIMAL},
             C_SHARES = #{cShares,jdbcType=DECIMAL},
             CHANGE = #{change,jdbcType=DECIMAL},
@@ -371,10 +397,8 @@
             LOW_PRICE_ADJ = #{lowPriceAdj,jdbcType=DECIMAL},
             CLOSE_PRICE_ADJ = #{closePriceAdj,jdbcType=DECIMAL},
             FACTOR_ADJ = #{factorAdj,jdbcType=DECIMAL},
-            TRADE_STATUS = #{tradeStatus,jdbcType=VARCHAR},
-            INPUT_TYPE = #{inputType,jdbcType=VARCHAR},
-            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            PE = #{pe,jdbcType=DECIMAL},
+            PB = #{pb,jdbcType=DECIMAL}
         where SHARES_ID = #{sharesId,jdbcType=VARCHAR}
           and DEAL_DATE = #{dealDate,jdbcType=DATE}
     </update>

@@ -3,9 +3,18 @@ package com.joyintech.service.trade.primarybiddingmanage.service;
 
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonResult;
+import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
+import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
+import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
+import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrSecPrimaryBiddingCashPositionDealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -139,23 +148,28 @@ public class PrimaryBiddingManage003Service extends BaseService<BidOrderBidPrice
                     }
                 }
             }
-            //add by xqh 调用债券一级投标中标结果维护（实时头寸）共通
-            //dto转换
-            BaseTradeProductDealDto finProductTradeDto=new BaseTradeProductDealDto();
+
+            //处理指令现金
             if(entity.getBidOrderBidPriceList()!=null && entity.getBidOrderBidPriceList().size()>0){
                 entity.getBidOrderBidPriceList().forEach(item->{
-                    //投标券面总额
-                    baseEtrCashPositionCommService.executeBidResultsMaintenanceExecute(item);
+                    EtrPositionHoldDto etrPositionHoldDto = new EtrPositionHoldDto();
+                    // 现金流水
+                    List<EtrCashPositionFlowDto> etrCashPositionFlows = new ArrayList<>();
+                    etrPositionHoldDto.setPtlCashPositionFlows(etrCashPositionFlows);
+                    EntrustCommonDto entrustCommonDto = EtrCommonCashPositionDealService.findEntrust(item.getEntrustId());
+                    EtrEntrust etrEntrust = entrustCommonDto.getEtrEntrust();
+                    EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService
+                            .getEtrCashPositionFlowDtoFromEtr(entrustCommonDto);
+                    String acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
+                            DictCodeListExt2.资金账户类型_托管户.getValue());
+                    etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(item.getBidPrinAmt(),item.getWinPrinAmt()));
+                    etrCashPositionFlowDto.setAcctId(acctId);
+                    etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+
+                    EtrCommonCashPositionDealService.持久化流水Dto(etrPositionHoldDto);
                 });
             }
-//            finProductTradeDto.getTrdProductDeal().setTradeDate(entity.getBidDate());
-//            finProductTradeDto.getTrdProductDeal().setCounterId(entity.getCounterId());
-//          object.bidId=entity.bidId;  投标编号
-//        	object.bidDate=entity.bidDate; 投标日期
-//        	object.finprodAbbr=entity.finprodAbbr; 
-//        	object.finprodMarketId=entity.finprodMarketId; 
-//        	object.tradeMarket=entity.tradeMarket;
-//          object.counterId=entity.counterId;
+
     	}
 
     }

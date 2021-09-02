@@ -178,6 +178,34 @@ public class ValSecBaseInfo extends BaseEntity {
     private String capiProfFeature;
 
     /**
+     * 风险五级分类
+     */
+    private String bondRiskType;
+
+    /**
+     * 正股代码
+     */
+    private String conFinprodId;
+
+    /**
+     * 转股价格
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal conPrice;
+
+    /**
+     * 回售触发价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal resalePrice;
+
+    /**
+     * 赎回触发价
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal redeemPrice;
+
+    /**
      * 取得 资产代码
      * @return 资产代码
      */
@@ -690,4 +718,85 @@ public class ValSecBaseInfo extends BaseEntity {
     public void setCapiProfFeature(String capiProfFeature) {
         this.capiProfFeature = capiProfFeature == null ? null : capiProfFeature.trim();
     }
+
+    /**
+     * 取得 风险五级分类
+     * @return 风险五级分类
+     */
+    public String getBondRiskType() {
+        return bondRiskType;
+    }
+
+    /**
+     * 设置 风险五级分类
+     * @param bondRiskType 风险五级分类
+     */
+    public void setBondRiskType(String bondRiskType) {
+        this.bondRiskType = bondRiskType;
+    }
+
+    /**
+     * 取得 正股代码
+     * @return 正股代码
+     */
+    public String getConFinprodId() {
+        return conFinprodId;
+    }
+
+    /**
+     * 设置 正股代码
+     * @param conFinprodId 正股代码
+     */
+    public void setConFinprodId(String conFinprodId) {
+        this.conFinprodId = conFinprodId;
+    }
+
+    /**
+     * 取得 转股价格
+     * @return 转股价格
+     */
+    public BigDecimal getConPrice() {
+        return conPrice;
+    }
+
+    /**
+     * 设置 转股价格
+     * @param conPrice 转股价格
+     */
+    public void setConPrice(BigDecimal conPrice) {
+        this.conPrice = conPrice;
+    }
+
+    /**
+     * 取得 回售触发价
+     * @return 回售触发价
+     */
+    public BigDecimal getResalePrice() {
+        return resalePrice;
+    }
+
+    /**
+     * 设置 回售触发价
+     * @param resalePrice 回售触发价
+     */
+    public void setResalePrice(BigDecimal resalePrice) {
+        this.resalePrice = resalePrice;
+    }
+
+    /**
+     * 取得 赎回触发价
+     * @return 赎回触发价
+     */
+    public BigDecimal getRedeemPrice() {
+        return redeemPrice;
+    }
+
+    /**
+     * 设置 赎回触发价
+     * @param redeemPrice 赎回触发价
+     */
+    public void setRedeemPrice(BigDecimal redeemPrice) {
+        this.redeemPrice = redeemPrice;
+    }
+
 }

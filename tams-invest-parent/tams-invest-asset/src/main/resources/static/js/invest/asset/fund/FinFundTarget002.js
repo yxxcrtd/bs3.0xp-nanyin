@@ -276,9 +276,9 @@
      */
     var trmFundTypeChange = function(){
         var fundType = $('#fundType').val();
-        var trmFundType = $('#trmFundType').val();
+        var trmFundType = $('#trmFundType_id').val();
         var secondType = $('#secondType').val();
-        var etfType = $('#etfType').val();
+        var etfType = $('#etfType_id').val();
         if(trmFundType == TRM_FUND_TYPE_03){
             $('#graFundType_div').show();
         }else{
@@ -298,12 +298,12 @@
             $('#faceValue').val("");
         }
         if(fundType==F01){
-            if($('#trmFundType').val()==TRM_FUND_TYPE_01){
-                $('#etfType').val(ETF_TYPE_06);
-                $('#etfType').prop('disabled',true).trigger('change');
+            if($('#trmFundType_id').val()==TRM_FUND_TYPE_01){
+                $('#etfType_id').val(ETF_TYPE_06);
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }else{
-                $('#etfType').val("");
-                $('#etfType').prop('disabled',true).trigger('change');
+                $('#etfType_id').val("");
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }
         }
         if(trmFundType == TRM_FUND_TYPE_01){
@@ -332,51 +332,51 @@
         //场外非货币基金ETF类型不要根据资产二级类型联动
         if($('#tradeMarket').val() != '09'){
             if(secondType == FUND_ASSET_SECOND_TYPE_01&&isEtf){
-                $('#etfType').val(ETF_TYPE_04);
-                $('#etfType').prop('disabled',true).trigger('change');
+                $('#etfType_id').val(ETF_TYPE_04);
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }
             else if(secondType == FUND_ASSET_SECOND_TYPE_06&&isEtf){
-                $('#etfType').val(ETF_TYPE_05);
-                $('#etfType').prop('disabled',true).trigger('change');
+                $('#etfType_id').val(ETF_TYPE_05);
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }
             else if(secondType == FUND_ASSET_SECOND_TYPE_03&&isEtf){
-                $('#etfType').prop('disabled',false).trigger('change');
+                $('#etfType_id').prop('disabled',false).trigger('change');
             }
-            else if(secondType == FUND_ASSET_SECOND_TYPE_02&&$('#trmFundType').va()==TRM_FUND_TYPE_01&&isEtf){
-                $('#etfType').val(ETF_TYPE_06);
-                $('#etfType').prop('disabled',true).trigger('change');
+            else if(secondType == FUND_ASSET_SECOND_TYPE_02&&$('#trmFundType_id').va()==TRM_FUND_TYPE_01&&isEtf){
+                $('#etfType_id').val(ETF_TYPE_06);
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }
             else{
-                if(fundType==F01&&$('#trmFundType').val()==TRM_FUND_TYPE_01&&isEtf){
-                    $('#etfType').val(ETF_TYPE_06);
-                    $('#etfType').prop('disabled',true).trigger('change');
+                if(fundType==F01&&$('#trmFundType_id').val()==TRM_FUND_TYPE_01&&isEtf){
+                    $('#etfType_id').val(ETF_TYPE_06);
+                    $('#etfType_id').prop('disabled',true).trigger('change');
                 }
                 else{
-                    $('#etfType').val("");
-                    $('#etfType').prop('disabled',true).trigger('change');
+                    $('#etfType_id').val("");
+                    $('#etfType_id').prop('disabled',true).trigger('change');
                 }
             }
         }else{
             //场外非货币基金ETF类型不要根据资产二级类型联动
             var fundType = $('#fundType').val();
             if(fundType!=F01){
-                $('#etfType').val("");
-                $('#etfType').prop('disabled',true).trigger('change');
+                $('#etfType_id').val("");
+                $('#etfType_id').prop('disabled',true).trigger('change');
             }else{
-                if($('#trmFundType').val()==TRM_FUND_TYPE_01){
-                    $('#etfType').val(ETF_TYPE_06);
-                    $('#etfType').prop('disabled',true).trigger('change');
+                if($('#trmFundType_id').val()==TRM_FUND_TYPE_01){
+                    $('#etfType_id').val(ETF_TYPE_06);
+                    $('#etfType_id').prop('disabled',true).trigger('change');
                 }else{
-                    $('#etfType').val("");
-                    $('#etfType').prop('disabled',true).trigger('change');
+                    $('#etfType_id').val("");
+                    $('#etfType_id').prop('disabled',true).trigger('change');
                 }
             }
         }
     }
 
     var etfTypeChange = function(){
-        var etfType = $('#etfType').val();
-        var trmFundType = $('#trmFundType').val();
+        var etfType = $('#etfType_id').val();
+        var trmFundType = $('#trmFundType_id').val();
         if(etfType==ETF_TYPE_06){
             $('#faceValue_div').show();
             $('#faceValue').val("100");
@@ -406,12 +406,12 @@
     var tradeMarketChange = function(){
         AssetCommon.setTradeMarketId($('#tradeMarket').val());
         if($('#tradeMarket').val() == '09'){
-            $('#trmFundType').val('').trigger('change');
-            $('#trmFundType').prop('disabled',true);
+            $('#trmFundType_id').val('').trigger('change');
+            $('#trmFundType_id').prop('disabled',true);
             $('#trmFundAbbr').val('');
             $('#trmFundAbbr').prop('disabled',true);
         }else{
-            $('#trmFundType').prop('disabled',false);
+            $('#trmFundType_id').prop('disabled',false);
             $('#trmFundAbbr').prop('disabled',false);
         }
         secondTypeChange();
@@ -425,7 +425,7 @@
             if(fundType == F01 || fundType == ''){
             	$('#bussFinIntPayDto_div').show();
             	//双父级数据字典联动特殊处理
-            	$('#trmFundType').val(tempTrmFundType).trigger('change');
+            	$('#trmFundType_id').val(tempTrmFundType).trigger('change');
             }else{
             	$('#bussFinIntPayDto_div').hide();
             }
@@ -443,20 +443,20 @@
             if($('#fundType').val()&&!$('#secondType').val()) {
                 $('#fundType').trigger('change');
                 if(TRM_FUND_TYPE){
-                    $('#trmFundType').val(TRM_FUND_TYPE).trigger('change');
+                    $('#trmFundType_id').val(TRM_FUND_TYPE).trigger('change');
                 }
             }else{
                 $('#secondType').trigger('change');
                 if(TRM_FUND_TYPE){
-                    $('#trmFundType').val(TRM_FUND_TYPE).trigger('change');
+                    $('#trmFundType_id').val(TRM_FUND_TYPE).trigger('change');
                 }
                 //场外非货币基金ETF类型不要根据资产二级类型联动
                 if($('#tradeMarket').val() != '09'){
                     if(ETF_TYPE){
-                        $('#etfType').val(ETF_TYPE).trigger('change');
+                        $('#etfType_id').val(ETF_TYPE).trigger('change');
                     }
                 }else{
-                    $('#etfType').val("").trigger('change');
+                    $('#etfType_id').val("").trigger('change');
                 }
             }
             //add by zhangnain 20191120 end
@@ -553,13 +553,13 @@
             $('#pFinprodId').val("");
         }
     })
-    $('#trmFundType').change(function () {
+    $('#trmFundType_id').change(function () {
         trmFundTypeChange();
     }).trigger('change');
     $('#secondType').change(function () {
         setTimeout(secondTypeChange, 100);
     }).trigger('change');
-    $('#etfType').change(function () {
+    $('#etfType_id').change(function () {
         etfTypeChange();
     }).trigger('change');
     $('#graFundType').change(function () {
@@ -567,3 +567,25 @@
     }).trigger('change');
     draftInit = false;
 }());
+//资产分类联动带入产品投资类型
+$("#type11,#type10,#type12").on("change", function () {
+    var three = $("#type10").val();
+    var four = $("#type11").val();
+    var five = $("#type12").val();
+    if (three == '23' || four == '032'|| five == '032') {
+        $('#investNature').val('01').trigger('change');
+        /*var tradeMarket = $('#tradeMarket').val();
+        if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
+            $("#commissionAmt").prop("disabled", true).val(0).trigger('blur').trigger('change');
+        }
+        else {
+            $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+        }*/
+    }
+    if (three == '24' || four == '033'|| five == '033') {
+        $('#investNature').val('01').trigger('change');
+    }
+    if (three == '25' || four == '034'|| five == '034') {
+        $('#investNature').val('02').trigger('change');
+    }
+});

@@ -18,13 +18,14 @@ import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchParamsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -64,7 +65,7 @@ public class ModBatchTaskService extends BaseService {
     private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
 
     @Autowired
-    private ModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper modBatchLogsMapper;
 
     public List<BatchTaskDto> getBatchTask(Map<String, Object> params) {
         return modBatchTaskMapper.getBatchTask(params);
@@ -88,19 +89,17 @@ public class ModBatchTaskService extends BaseService {
         params.put("page", page);
         params.put("length", length);
 
-//        Page<BatchAssetInfoDto> assetInfoPages = restTemplate.postForPage(ServiceApplication.CUSTOMER_INTERF_NAME
-//                        + "/interf/ModelCallOnInvest/getBatchAssetInfo"
-//                , params, BatchAssetInfoDto.class);
         Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
-        Boolean isImpairment = (Boolean)params.get("isImpairment");
-        if (isImpairment != null && isImpairment) {
-            assetInfoPages= super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfoImpairment(params));
+        String isImpairment = (String)params.get("isImpairment");
+        String lossType =(String)params.get("lossType");
+        if (isImpairment != null && "true".equals(isImpairment)) {
+              if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossKpmgAssetInfo(params));
+              }else{
+                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossPwcAssetInfo(params));
+              }
         } else {
-            List<String> finprodTypes = new ArrayList<>(2);
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            params.put("finprodTypes", finprodTypes);
-            assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getAssetInfo(params));
+              assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getValAssetInfo(params));
         }
 
         Page<SelectOptionDto> res = new Page<>();
@@ -140,14 +139,11 @@ public class ModBatchTaskService extends BaseService {
     @Autowired
     private SqlSessionTemplate template;
 
-    @Autowired
-    private ModBatchParamsMapper modValBatchParamsMapper;
-
     public void insertBatchParams(List<ModValBatchParams> params) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            ModBatchParamsMapper batchMapper = session.getMapper(ModBatchParamsMapper.class);
+            ModBatchParams2Mapper batchMapper = session.getMapper(ModBatchParams2Mapper.class);
             int size = params.size();
             for(int index = 0; index < size; index++){
                 batchMapper.insert(params.get(index));
@@ -343,9 +339,28 @@ public class ModBatchTaskService extends BaseService {
             Map<String, Object> requestMap = new HashMap<>();
             requestMap.put("finProdIdList", finProdIdList);
             requestMap.put("isImpairment", true);
-            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-                    , requestMap, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+//                    , requestMap, BatchAssetInfoDto.class);
+            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+            Boolean isImpairment = false;
+            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+            }
+            if(isImpairment) {
+                params.put("execDate",params.get("execDate"));
+                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+            }
+            else {
+                List<String> finprodTypes = new ArrayList<>(2);
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("finprodTypes", finprodTypes);
+                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+                    params.put("finprodIdList", finProdIdList);
+                }
+                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+            }
             if (CollectionUtils.isNotEmpty(assetInfos)) {
                 Map<String, BatchAssetInfoDto> map = assetInfos.stream()
                         .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
@@ -387,9 +402,29 @@ public class ModBatchTaskService extends BaseService {
             }
             Map<String, Object> requestMaps = new HashMap<>();
             requestMaps.put("finProdIdList", finProdIdList);
-            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-                    , requestMaps, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+//                    , requestMaps, BatchAssetInfoDto.class);
+            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+            Boolean isImpairment = false;
+            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+            }
+            if(isImpairment) {
+                params.put("execDate",params.get("execDate"));
+                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+            }
+            else {
+                List<String> finprodTypes = new ArrayList<>(2);
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+                params.put("finprodTypes", finprodTypes);
+                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+                    params.put("finprodIdList", finProdIdList);
+                }
+                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+            }
+
             if (CollectionUtils.isNotEmpty(assetInfos)) {
                 Map<String, BatchAssetInfoDto> map = assetInfos.stream()
                         .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));

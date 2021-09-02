@@ -118,7 +118,6 @@
 		SELECT COUNT(1)
 		FROM ASSET_LOSS_RESULT A
 		WHERE PROD_ID = #{prodId}
-		AND BUSS_NO = #{bussNo}
 		AND DEC_DATE = #{decDate}
 	</select>
 

@@ -2,7 +2,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 
 import java.util.List;
 

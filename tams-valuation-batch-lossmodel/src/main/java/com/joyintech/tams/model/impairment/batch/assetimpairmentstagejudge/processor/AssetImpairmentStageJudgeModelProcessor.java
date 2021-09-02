@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.proc
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelReaderEntity;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelResultDto;
+import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.service.AssetImpairmentStageJudgeModelProcessorService;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.service.AssetImpairmentStageJudgeModelReaderService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -16,7 +17,7 @@ public class AssetImpairmentStageJudgeModelProcessor extends BaseProcessor<Asset
      *  资产减值阶段判断批处理Service
      */
     @Autowired
-    private AssetImpairmentStageJudgeModelReaderService assetImpairmentStageJudgeModelReaderService;
+    private AssetImpairmentStageJudgeModelProcessorService assetImpairmentStageJudgeModelProcessorService;
 
     private StepExecution stepExecution;
     /**
@@ -27,7 +28,7 @@ public class AssetImpairmentStageJudgeModelProcessor extends BaseProcessor<Asset
      */
     @Override
     public AssetImpairmentStageJudgeModelResultDto process(AssetImpairmentStageJudgeModelReaderEntity item) throws Exception {
-        return assetImpairmentStageJudgeModelReaderService.execute(item,getParams(),stepExecution);
+        return assetImpairmentStageJudgeModelProcessorService.execute(item,getParams(),stepExecution);
     }
 
     @Override

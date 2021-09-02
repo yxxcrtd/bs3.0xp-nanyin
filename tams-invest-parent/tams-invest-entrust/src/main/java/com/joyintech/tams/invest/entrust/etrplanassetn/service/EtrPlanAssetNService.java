@@ -214,7 +214,10 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
      */
      @Override
      public void doInsert(EtrPlanAssetNDto dto, OperationType type){
-         dto.setOperateType(type.toString());
+         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+         // ZGZGST-1464:fuyongsheng 20210825 delete start
+         // dto.setOperateType(type.toString());
+         // ZGZGST-1464:fuyongsheng 20210825 delete end
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrPlanAssetN/doInsert",dto,
              Integer.class);
@@ -451,10 +454,24 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
             if(StringUtil.isNotEmpty(data.get(7))){
                 dto.setEntrustNum(BigDecimal.valueOf(Double.valueOf(data.get(7).toString())));
             }
+            // ZGZGST-1835:根据导入文件交易对手名称查询Id fuyongsheng 20210901 start
             //交易对手
-            dto.setCounterId(data.get(8).toString().trim());
-            String counterName = getCounterName(data.get(8).toString().trim());
-            dto.setCounterIdName(counterName);
+            if (StringUtil.isNotBlank(data.get(8).toString())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("initValue", data.get(8).toString().trim());
+                map.put("page", 1);
+                map.put("length", 20);
+                map.put("counterType", null);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+                        map, SelectOptionDto.class);
+                if (!selectOptionDtoPage.getRoot().isEmpty()) {
+                    SelectOptionDto counterInfo = selectOptionDtoPage.getRoot().get(0);
+                    dto.setCounterId(counterInfo.getId());
+                    dto.setCounterIdName(counterInfo.getText());
+                }
+            }
+            // ZGZGST-1835:根据导入文件交易对手名称查询Id fuyongsheng 20210901 start
             //获取投资经理
             dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
             //所属部门

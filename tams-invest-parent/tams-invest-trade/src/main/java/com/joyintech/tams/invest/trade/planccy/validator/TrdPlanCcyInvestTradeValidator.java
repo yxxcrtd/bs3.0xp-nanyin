@@ -106,13 +106,13 @@ public class TrdPlanCcyInvestTradeValidator implements TradeCommonValidator {
             if(dto.getTrdInvestPersonInfo() != null){
                 String counterId = dto.getTrdInvestPersonInfo().getCounterTrader();
                 String contactInfo = dto.getTrdInvestPersonInfo().getContactInfo();
-                if(!StringUtil.isNotEmpty(counterId)){
-                    errorList.add(new ValidMessage("trdInvestPersonInfo.counterTrader", this.getMessage("BUSS_COM_E_0038",this.getMessage("EtrInvestPersonInfo002.counterTrader"))));
-                }
+//                if(!StringUtil.isNotEmpty(counterId)){
+//                    errorList.add(new ValidMessage("trdInvestPersonInfo.counterTrader", this.getMessage("BUSS_COM_E_0038",this.getMessage("EtrInvestPersonInfo002.counterTrader"))));
+//                }
               //修改bug BSTOT-512 联系方式必填 add by wangcheng 20200115 
-                if(!StringUtil.isNotEmpty(contactInfo)){
-                    errorList.add(new ValidMessage("trdInvestPersonInfo.contactInfo", this.getMessage("BUSS_COM_E_0038",this.getMessage("TrdOptionTrade002.contact"))));
-                }
+//                if(!StringUtil.isNotEmpty(contactInfo)){
+//                    errorList.add(new ValidMessage("trdInvestPersonInfo.contactInfo", this.getMessage("BUSS_COM_E_0038",this.getMessage("TrdOptionTrade002.contact"))));
+//                }
             }
             if (StringUtil.isNotEmpty(entrustId) && (tradeAmt != null||shareAmt != null)) {
                 Map<String, Object> param = new HashMap<>();
@@ -226,13 +226,13 @@ public class TrdPlanCcyInvestTradeValidator implements TradeCommonValidator {
             if(dto.getTrdInvestPersonInfo() != null){
                 String counterId = dto.getTrdInvestPersonInfo().getCounterTrader();
                 String contactInfo = dto.getTrdInvestPersonInfo().getContactInfo();
-                if(!StringUtil.isNotEmpty(counterId)){
-                    errorList.add(new ValidMessage("trdInvestPersonInfo.counterTrader", this.getMessage("BUSS_COM_E_0038",this.getMessage("EtrInvestPersonInfo002.counterTrader"))));
-                }
+//                if(!StringUtil.isNotEmpty(counterId)){
+//                    errorList.add(new ValidMessage("trdInvestPersonInfo.counterTrader", this.getMessage("BUSS_COM_E_0038",this.getMessage("EtrInvestPersonInfo002.counterTrader"))));
+//                }
                 //修改bug BSTOT-512 联系方式必填 add by wangcheng 20200115 
-                if(!StringUtil.isNotEmpty(contactInfo)){
-                    errorList.add(new ValidMessage("trdInvestPersonInfo.contactInfo", this.getMessage("BUSS_COM_E_0038",this.getMessage("TrdOptionTrade002.contact"))));
-                }
+//                if(!StringUtil.isNotEmpty(contactInfo)){
+//                    errorList.add(new ValidMessage("trdInvestPersonInfo.contactInfo", this.getMessage("BUSS_COM_E_0038",this.getMessage("TrdOptionTrade002.contact"))));
+//                }
             }
             //判断dto.getBussTrdTransfenpeiDto() 为空 为单组合 add by wangcheng 20190116
             if (StringUtil.isNotEmpty(entrustId) && (tradeAmt != null||shareAmt != null) && StringUtil.isEmptyList(dto.getBussTrdTransfenpeiDto())) {

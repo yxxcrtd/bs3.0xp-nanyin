@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModStockdivitrateConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="SEC_TYPE_MODEL" property="secTypeModel" jdbcType="VARCHAR" />
+        <result column="SEC_DETAIL_TYPE_MODEL" property="secDetailTypeModel" jdbcType="VARCHAR" />
+        <result column="STOCK_INTRATE" property="stockIntrate" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig" >
+        insert into MOD_STOCKDIVITRATE_CONFIG (SEQNO, FINPROD_ID, FINPROD_NAME, 
+            SEC_TYPE_MODEL, SEC_DETAIL_TYPE_MODEL, STOCK_INTRATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, 
+            #{secTypeModel,jdbcType=VARCHAR}, #{secDetailTypeModel,jdbcType=VARCHAR}, #{stockIntrate,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig" >
+        insert into MOD_STOCKDIVITRATE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="secTypeModel != null" >
+                SEC_TYPE_MODEL,
+            </if>
+            <if test="secDetailTypeModel != null" >
+                SEC_DETAIL_TYPE_MODEL,
+            </if>
+            <if test="stockIntrate != null" >
+                STOCK_INTRATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="secTypeModel != null" >
+                #{secTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="secDetailTypeModel != null" >
+                #{secDetailTypeModel,jdbcType=VARCHAR},
+            </if>
+            <if test="stockIntrate != null" >
+                #{stockIntrate,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig" >
+        insert into MOD_STOCKDIVITRATE_CONFIG(SEQNO, FINPROD_ID, FINPROD_NAME, SEC_TYPE_MODEL, 
+        SEC_DETAIL_TYPE_MODEL, STOCK_INTRATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, FINPROD_ID, FINPROD_NAME, SEC_TYPE_MODEL, 
+            SEC_DETAIL_TYPE_MODEL, STOCK_INTRATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_STOCKDIVITRATE_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

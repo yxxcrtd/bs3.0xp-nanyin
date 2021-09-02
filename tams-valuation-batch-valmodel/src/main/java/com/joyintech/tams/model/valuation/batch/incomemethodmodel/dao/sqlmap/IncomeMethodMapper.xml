@@ -2,220 +2,32 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper">
 
-	<!--根据映射类型，证券品种，证券细分类查询五级分类集合-->
-	<select id="selectFiveTypeList" resultType="java.lang.String">
+
+	<select id="selectStockIntrateByFinprodIds" resultType="com.joyintech.tams.common.base.entity.ModStockdivitrateConfig">
 		SELECT
-		   DISTINCT A.OUTPUT5
-		from  MOD_ASEET_MAPPING A
-		where A.MAPPING_TYPE=#{str1,jdbcType=VARCHAR}
-		and A.INPUT1 = #{str2,jdbcType=VARCHAR}
-		<if test="assetsFiveTypeList != null and assetsFiveTypeList.size>0">
-			<foreach collection="assetsFiveTypeList" item = "item" open=" and A.INPUT2 in(" separator="," close=")">
+		SEQNO,
+		FINPROD_ID,
+		FINPROD_NAME,
+		SEC_TYPE_MODEL,
+		SEC_DETAIL_TYPE_MODEL,
+		STOCK_INTRATE,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME
+		from  MOD_STOCKDIVITRATE_CONFIG
+		where 1=1
+		<if test="finprodIds != null and finprodIds.size>0">
+			<foreach collection="finprodIds" item="item" index="index" open="(" separator="," close="))">
+				<if test="(index % 999) == 998">
+					null) OR FINPROD_ID in (
+				</if>
 				#{item,jdbcType=VARCHAR}
 			</foreach>
 		</if>
-		ORDER BY A.OUTPUT5
 	</select>
 
-	<select id="selectStockIntrateByFinprodId" resultType="java.lang.String">
-		SELECT STOCK_INTRATE as stockIntrate
-		from  MOD_STOCKDIVITRATE_CONFIG
-		where FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
-	</select>
-
-
-
-
-	<!--资产定价查询-->
-	<select id="selectAssetsMakePriceByFinprodId" resultType="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto">
-		SELECT A.SEQNO as seqNo,
-			A.SEC_TYPE_MODEL as secType,
-			A.SEC_DETAIL_TYPE_MODEL as secDetailType,
-			A.FINPROD_ID as finprodId,
-			A.FINPROD_NAME as finprodName,
-			A.BASEDATE as benchDate,
-			A.B_FULLPRICE as bFullprice,
-			A.MOD_METHOD as valueModelMethod
-		from MOD_RISK_PREMIUM A
-		where A.Finprod_Id =#{finprodId,jdbcType = VARCHAR}
-		and to_char(A.Basedate,'yyyyMMdd') =#{baseDateStr,jdbcType = VARCHAR}
-		and A.MOD_METHOD = #{valueModelMethod,jdbcType = VARCHAR}
-		and rownum=1
-	</select>
-
-	<!--债券估值行情表插入-->
-	<insert id="insertValuationInfoResult" parameterType="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ValBondValuationInfoResultDto" >
-		INSERT INTO MOD_CURVE_RESULT
-		<trim prefix="(" suffix=")" suffixOverrides="," >
-			<if test="seqNo != null" >
-				SEQNO,
-			</if>
-			<if test="finprodId != null" >
-				FINPROD_ID,
-			</if>
-			<if test="valueDate != null" >
-				CDATE,
-			</if>
-			<if test="bAnalDirtyCnbd != null" >
-				FULL_PRICE,
-			</if>
-			<if test="bAnalNetCnbd != null" >
-				NET_PRICE,
-			</if>
-			<if test="valueSource != null" >
-				VAL_MODEL,
-			</if>
-			<if test="createUser != null" >
-				CREATE_USER,
-			</if>
-			<if test="createDept != null" >
-				CREATE_DEPT,
-			</if>
-			<if test="createTime != null" >
-				CREATE_TIME,
-			</if>
-			<if test="updateUser != null" >
-				UPDATE_USER,
-			</if>
-			<if test="updateTime != null" >
-				UPDATE_TIME,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides="," >
-			<if test="seqNo != null" >
-				#{seqNo,jdbcType=VARCHAR},
-			</if>
-			<if test="finprodId != null" >
-				#{finprodId,jdbcType=VARCHAR},
-			</if>
-			<if test="valueDate != null" >
-				#{valueDate,jdbcType=VARCHAR},
-			</if>
-			<if test="bAnalDirtyCnbd != null" >
-				#{bAnalDirtyCnbd,jdbcType=VARCHAR},
-			</if>
-			<if test="bAnalNetCnbd != null" >
-				#{bAnalNetCnbd,jdbcType=VARCHAR},
-			</if>
-			<if test="valueSource != null" >
-				#{valueSource,jdbcType=VARCHAR},
-			</if>
-			<if test="createUser != null" >
-				#{createUser,jdbcType=VARCHAR},
-			</if>
-			<if test="createDept != null" >
-				#{createDept,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null" >
-				#{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="updateUser != null" >
-				#{updateUser,jdbcType=VARCHAR},
-			</if>
-			<if test="updateTime != null" >
-				#{updateTime,jdbcType=TIMESTAMP},
-			</if>
-		</trim>
-	</insert>
-	<!--资产定价表插入-->
-	<insert id="insertMakePriceResult" parameterType="com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.AssetsMakePriceResultDto" >
-		INSERT INTO MOD_RISK_PREMIUM
-		<trim prefix="(" suffix=")" suffixOverrides="," >
-			<if test="seqNo != null" >
-				SEQNO,
-			</if>
-			<if test="secType != null" >
-				SEC_TYPE_MODEL,
-			</if>
-			<if test="secDetailType != null" >
-				SEC_DETAIL_TYPE_MODEL,
-			</if>
-			<if test="finprodId != null" >
-				FINPROD_ID,
-			</if>
-			<if test="finprodName != null" >
-				FINPROD_NAME,
-			</if>
-			<if test="benchDate != null" >
-				BASEDATE,
-			</if>
-			<if test="bFullprice != null" >
-				B_FULLPRICE,
-			</if>
-			<if test="valueModelMethod != null" >
-				MOD_METHOD,
-			</if>
-
-			<if test="createUser != null" >
-				CREATE_USER,
-			</if>
-			<if test="createTime != null" >
-				CREATE_TIME,
-			</if>
-			<if test="updateUser != null" >
-				UPDATE_USER,
-			</if>
-			<if test="updateTime != null" >
-				UPDATE_TIME,
-			</if>
-		</trim>
-		<trim prefix="values (" suffix=")" suffixOverrides="," >
-			<if test="seqNo != null" >
-				#{seqNo,jdbcType=VARCHAR},
-			</if>
-			<if test="secType != null" >
-				#{secType,jdbcType=VARCHAR},
-			</if>
-			<if test="secDetailType != null" >
-				#{secDetailType,jdbcType=VARCHAR},
-			</if>
-			<if test="finprodId != null" >
-				#{finprodId,jdbcType=VARCHAR},
-			</if>
-			<if test="finprodName != null" >
-				#{finprodName,jdbcType=VARCHAR},
-			</if>
-			<if test="benchDate != null" >
-				#{benchDate,jdbcType=DATE},
-			</if>
-			<if test="bFullprice != null" >
-				#{bFullprice,jdbcType=DECIMAL},
-			</if>
-			<if test="valueModelMethod != null" >
-				#{valueModelMethod,jdbcType=VARCHAR},
-			</if>
-
-			<if test="createUser != null" >
-				#{createUser,jdbcType=VARCHAR},
-			</if>
-			<if test="createTime != null" >
-				#{createTime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="updateUser != null" >
-				#{updateUser,jdbcType=TIMESTAMP},
-			</if>
-			<if test="updateTime != null" >
-				#{updateTime,jdbcType=TIMESTAMP},
-			</if>
-		</trim>
-	</insert>
-
-	<!-- 根据条件删除债券估值行情表 -->
-	<delete id="deleteValuationInfoResult">
-		DELETE FROM MOD_CURVE_RESULT
-		where FINPROD_ID = #{finprodId,jdbcType = VARCHAR}
-		and to_char(CDATE,'yyyyMMdd') = to_char(#{valueDate,jdbcType = VARCHAR},'yyyyMMdd')
-		and VAL_MODEL=#{valueSource,jdbcType = VARCHAR}
-	</delete>
-
-
-	<!-- 根据条件删除资产定价表 -->
-	<delete id="deleteMakePriceResult">
-		DELETE FROM MOD_RISK_PREMIUM
-		where FINPROD_ID = #{finprodId,jdbcType = VARCHAR}
-		and to_char(BASEDATE,'yyyyMMdd') = to_char(#{benchDate,jdbcType = VARCHAR},'yyyyMMdd')
-		and MOD_METHOD=#{valueModelMethod,jdbcType = VARCHAR}
-	</delete>
 
 	<!-- 根据条件批量插入债券估值行情表 -->
 	<insert id="insertValuationResultPremium">
@@ -236,7 +48,7 @@
 			#{item.bAnalNetCnbd,jdbcType=DECIMAL}, #{item.curveSpread,jdbcType=DECIMAL},
 			#{item.curveName,jdbcType=VARCHAR},#{item.curveCode,jdbcType=VARCHAR},
 			#{item.basis,jdbcType=VARCHAR},#{item.valueSource,jdbcType=VARCHAR},
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
 			#{item.createTime,jdbcType=TIMESTAMP},#{item.updateUser,jdbcType=VARCHAR},
 			#{item.updateTime,jdbcType=TIMESTAMP}
 		</foreach>
@@ -252,47 +64,45 @@
 		</foreach>
 	</delete>
 
-	<!-- 根据条件批量插入资产定价表 -->
-	<insert id="insertMakePriceResultPremium">
-		INSERT INTO MOD_RISK_PREMIUM (
-		SEQNO, SEC_TYPE_MODEL,
-		SEC_DETAIL_TYPE_MODEL,FINPROD_ID,
-		FINPROD_NAME,GRADE_SOURCE,
-		GRADE_RESULT, BASEDATE,
-		SPREAD, SPREAD_ADJ,
-		B_FULLPRICE, B_QTY,
-		MOD_METHOD,
-		CREATE_USER, CREATE_DEPT,
-		CREATE_TIME, UPDATE_USER,
-		UPDATE_TIME
+
+	<insert id="insertMstBondValuationInfo">
+		insert into MST_BOND_VALUATION_INFO
+		(
+		SEC_ID, VALUE_DATE, VALUE_SOURCE,
+		LAST_PERIOD, PRICE, NETPRICE,
+		M_DURATION, M_CONVEXITY, BPVALUE,
+		SDURATION, SCNVXTY, INTEREST_DURATION,
+		INTEREST_CNVXTY, BPYIELD, INPUT_TYPE,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME, MBPVALUE,
+		VAR, CVAR, MDURATION,
+		IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE,
+		NETVALUATION_RECOMMENDED
 		)
-		<foreach collection="makePriceResultList" item="item" separator="from dual union all select" open="select * from (select "
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
-			#{item.seqNo,jdbcType=VARCHAR}, #{item.secType,jdbcType=VARCHAR} ,
-			#{item.secDetailType,jdbcType=VARCHAR},#{item.finprodId,jdbcType=VARCHAR},
-			#{item.finprodName,jdbcType=VARCHAR}, #{item.gradeSource,jdbcType=VARCHAR},
-			#{item.gradeResult,jdbcType=VARCHAR},#{item.benchDate,jdbcType=DATE},
-			#{item.spread,jdbcType=DECIMAL},#{item.spreadAdj,jdbcType=DECIMAL},
-			#{item.bFullprice,jdbcType=DECIMAL},#{item.bQty,jdbcType=DECIMAL},
-			#{item.valueModelMethod,jdbcType=VARCHAR},
-			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
-			#{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
-			#{item.updateTime,jdbcType=TIMESTAMP}
+			#{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR},
+			#{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL},
+			#{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL},
+			#{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL},
+			#{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+			#{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL},
+			#{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL},
+			#{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL},
+			#{netvaluationRecommended,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 
-
-	<!-- 根据条件批量删除资产定价表 -->
-	<delete id="deleteMakePriceResultPremium">
-		DELETE FROM MOD_RISK_PREMIUM where
-		<foreach collection="makePriceResultList" item="item" separator=" or " index="index">
-			(FINPROD_ID = #{item.finprodId,jdbcType = VARCHAR}
-			and to_char(BASEDATE,'yyyyMMdd') = to_char(#{item.benchDate,jdbcType = VARCHAR},'yyyyMMdd')
-			and MOD_METHOD=#{item.valueModelMethod,jdbcType = VARCHAR})
+	<delete id="deleteMstBondValuationInfo">
+		delete from MST_BOND_VALUATION_INFO where
+		<foreach collection="list" item="item" separator=" or " index="index">
+			(
+			SEC_ID = #{secId,jdbcType=VARCHAR}
+			and VALUE_DATE = #{valueDate,jdbcType=DATE}
+			and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+			)
 		</foreach>
 	</delete>
-
-
-
 
 </mapper>

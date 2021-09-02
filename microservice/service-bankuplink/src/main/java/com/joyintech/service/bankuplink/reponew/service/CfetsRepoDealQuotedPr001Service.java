@@ -197,8 +197,12 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
         bondQuoteInfoDto.setmTradeAmt(bondQuoteExtDto.getmTradeAmt());
         bondQuoteInfoDto.setBondCode(bondQuoteExtDto.getBondCode());
         bondQuoteInfoDto.setBondAbbrName(bondQuoteExtDto.getBondAbbrName());
-        bondQuoteInfoDto.setPledgeRate(bondQuoteExtDto.getPledgeRate().multiply(new BigDecimal("100")));
-        bondQuoteInfoDto.setPrin(bondQuoteExtDto.getPrin());
+        if(bondQuoteExtDto.getPledgeRate() != null){
+            bondQuoteInfoDto.setPledgeRate(bondQuoteExtDto.getPledgeRate().multiply(new BigDecimal("100")));
+        }
+        if(bondQuoteExtDto.getPrin() != null){
+            bondQuoteInfoDto.setPrin(bondQuoteExtDto.getPrin().divide(new BigDecimal("10000")));
+        }
         bondQuoteInfoDto.setExchangerate(new BigDecimal("1"));
         bondQuoteInfoDto.setLstmntdate(bondQuoteExtDto.getUpdateTime());
 

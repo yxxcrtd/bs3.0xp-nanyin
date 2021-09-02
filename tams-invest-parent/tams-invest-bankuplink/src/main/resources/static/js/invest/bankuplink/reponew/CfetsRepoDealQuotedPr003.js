@@ -274,6 +274,10 @@
                 mTradeAmt = shareCtAmt.plus(priceAmt);
             }
         }
+        /*券面总额单位为万元*/
+        pledgePrinTotal = JoyinMath.doDiv(pledgePrinTotal, 10000);
+        zzTotalAmt = JoyinMath.doDiv(zzTotalAmt, 10000);
+        sqTotalAmt = JoyinMath.doDiv(sqTotalAmt, 10000);
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").val(zzTotalAmt).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").val(sqTotalAmt).trigger('blur');
@@ -573,6 +577,7 @@
                         dataList.push(result[i]);
                     }
                     dzhTable.reload({data: dataList});
+                    setBussRepoSecInput();
                 }
             });
         }
@@ -625,6 +630,26 @@
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
             }
+            /*添加限制*/
+            $("#CfetsRepoDealQuotedPrice002_tradeDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_ps").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_settleSpreed").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_term").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_termType").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_vSettleDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mSettleDate").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_actDays").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_cbDealAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_scDealAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mIntAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_mTradeAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_zzTotalAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_sqTotalAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_shareCtAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_cbShareCtAmt").attr("disabled",true);
+            $("#CfetsRepoDealQuotedPrice002_scShareCtAmt").attr("disabled",true);
+            /*添加限制*/
         }
     };
     /**
@@ -642,9 +667,6 @@
     };
 
     $(function () {
-        //将组合分配相关按钮置灰
-        $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
-        $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
         if (dialogueRecord) {
             $("#CfetsBondDealQuotedPrice002_dialogueRecord").html(dialogueRecord);
         }
@@ -688,11 +710,21 @@
          * 交易方向
          */
         $('#CfetsRepoDealQuotedPrice002_ps').change(function () {
-            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
+            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val();
             if (ps) {
                 $('#CfetsRepoDealQuotedPrice002_repoInfo_' + ps).toggle(true);
             }
             setBussRepoSecInput();
+            if(ps == '03'){
+                //将组合分配相关按钮置灰
+                $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
+                $("#distribution").attr('disabled',true);
+            }else if(ps == '04'){
+                $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
+                $("#distribution").attr('disabled',false);
+            }
         });
         /**
          * 对话按钮点击事件
@@ -705,6 +737,7 @@
              * 对外公开的接口
              */
             parent.CfetsRepoDealQuotedPr001.getEtrInfoChange('cfetsRepoDealQuotedPre003');
+
         });
         /**
          * 委托代码
@@ -889,7 +922,13 @@
          * 计算
          */
         $('#CfetsRepoDealQuotedPrice003_btn_cal').click(function () {
-            refreshFpriceAmt();
+            var ps = $("#CfetsRepoDealQuotedPrice002_ps").val()
+            if(ps == '03'){
+                //将组合分配相关按钮置灰
+                return;
+            }else if(ps == '04'){
+                refreshFpriceAmt();
+            }
         })
         setTimeout(function () {
             isshowColumns(showAmtOrg);

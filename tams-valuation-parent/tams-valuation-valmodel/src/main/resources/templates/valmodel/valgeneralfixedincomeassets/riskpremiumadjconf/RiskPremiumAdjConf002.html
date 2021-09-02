@@ -22,7 +22,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="finprodId" name="finprodId" disabled="disabled"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.finprodId}">
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="finprodName" name="finprodName" disabled="disabled"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.finprodName}">
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                                 class="layui-input form-input input-select"
                                 data-th-data-result='${SEC_TYPE}' allowClear="true"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                formatoption="true" required="required"
+                                formatoption="true"
                                 data-th-initvalue="${entity?.secTypeModel}">
                         </select>
                     </div>
@@ -56,7 +56,7 @@
                                 class="layui-input form-input input-select"
                                 data-th-data-result='${MODEL_GRADE_TYPE}' allowClear="true"
                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                formatoption="true" required="required"
+                                formatoption="true"
                                 data-th-initvalue="${entity?.gradeSource}">
                         </select>
                     </div>
@@ -70,7 +70,7 @@
                                     class="layui-input form-input input-select" disabled="disabled"
                                     data-th-data-result='${MAIN_GRADE_RESULT}' allowClear="true"
                                     placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                    formatoption="true" required="required"
+                                    formatoption="true"
                                     data-th-initvalue="${entity?.gradeResult}">
                             </select>
                         </div>
@@ -82,7 +82,7 @@
                             <input class="layui-input form-input input-dateSelect" id="basedate"
                                    name="basedate" placeholder="请选择时间" disabled="disabled"
                                    data-th-value='${#dates.format(entity?.basedate,"yyyy-MM-dd")}'
-                                   required="required">
+                                   >
                         </div>
                     </div>
                 </div>
@@ -93,11 +93,11 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="curveName" name="curveName" disabled="disabled"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.curveName}">
                         <input type="text" id="curveCode" name="curveCode" disabled="disabled" style="display: none;"
                                class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}" required="required"
+                               data-th-placeholder="#{SysCommon.placeholder}"
                                data-th-value="${entity?.curveCode}">
                     </div>
                 </div>
@@ -107,7 +107,7 @@
                         <input class="layui-input form-input input-dateSelect" id="curveDate"
                                name="curveDate" placeholder="请选择时间" disabled="disabled"
                                data-th-value='${#dates.format(entity?.curveDate,"yyyy-MM-dd")}'
-                               required="required">
+                               >
                     </div>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="spread" name="spread" placeholder="请输入内容" disabled="disabled"
                                data-pattern="" data-fixtype="2" data-textrange="4"
-                               class="layui-input form-input text-number" required="required"
+                               class="layui-input form-input text-number"
                                data-th-value="${entity?.spread}">
                         <span class="input-right-show">%</span>
                     </div>

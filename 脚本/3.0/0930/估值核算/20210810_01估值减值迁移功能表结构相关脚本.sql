@@ -227,7 +227,7 @@ create table MOD_CONFIG_USEAGE
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
-   UPDATE_USER          VARCHAR2(20)         not null,
+   UPDATE_USER          VARCHAR2(20)         not null
 );
 
 comment on table MOD_CONFIG_USEAGE is
@@ -248,8 +248,6 @@ comment on column MOD_CONFIG_USEAGE.CREATE_TIME is
 '创建时间';
 comment on column MOD_CONFIG_USEAGE.UPDATE_USER is
 '更新人';
-comment on column MOD_CONFIG_USEAGE.UPDATE_TIME is
-'更新时间';
 commit;
 
 --标的类金融产品附属表添加是否含有利率调整权字段
@@ -453,6 +451,7 @@ create index MOD_BATCH_LOGS1
     on MOD_BATCH_LOGS (BATCH_EXEC_SEQNO, TASK_ID, FINPROD_ID);
 
 -- 批处理服务器信息配置表
+drop table SYS_BATCH_SERVER_INFO;
 create table SYS_BATCH_SERVER_INFO
 (
     SEQ_NO         VARCHAR2(32)      not null
@@ -1154,8 +1153,7 @@ create table MOD_ASEET_MAPPING
    CREATE_DEPT          varchar(32)                    null,
    CREATE_TIME          timestamp                      not null,
    UPDATE_USER          varchar(20)                    not null,
-   UPDATE_TIME          timestamp                      not null,
-   constraint PK_TRD_ASSET_LOSS primary key (SEQ_NO)
+   UPDATE_TIME          timestamp                      not null
 );
 
 comment on table MOD_ASEET_MAPPING is
@@ -1263,6 +1261,7 @@ create index "Index_MOD_CURVE_RESULT10" on MOD_CURVE_RESULT (
 );
 
 --标准评级映射表
+drop table MOD_STANDARD_GRADE_MAPPING;
 create table MOD_STANDARD_GRADE_MAPPING
 (
    SEQ_NO               VARCHAR2(50)         not null,
@@ -1586,23 +1585,16 @@ alter table MOD_STOCKDIVITRATE_CONFIG modify finprod_id not null;
 alter table MOD_STOCKDIVITRATE_CONFIG modify stock_intrate not null;
 
 --MOD_STOCKDIVITRATE_CONFIG字段必填项修改
-drop index MOD_STOCKDIVITRATE_CONFIG_INDEX;
+drop index STOCKDIVITRATE_INDEX;
 --MOD_STOCKDIVITRATE_CONFIG创建索引
-create index MOD_STOCKDIVITRATE_CONFIG_INDEX on MOD_STOCKDIVITRATE_CONFIG (FINPROD_ID);
+create index STOCKDIVITRATE_INDEX on MOD_STOCKDIVITRATE_CONFIG (FINPROD_ID);
 
 --MOD_CURVE_RESULT_DETAIL创建索引
 drop index MOD_CURVE_RESULT_DETAIL_INDEX;
 create index MOD_CURVE_RESULT_DETAIL_INDEX on MOD_CURVE_RESULT_DETAIL (FINPROD_ID, CDATE);
 
 
---减值模型-数据表必填项修改及索引创建
-alter table MOD_ASEET_MAPPING modify input1 not null;
-alter table MOD_ASEET_MAPPING modify input2 not null;
-alter table MOD_ASEET_MAPPING modify output1 not null;
-alter table MOD_ASEET_MAPPING modify output2 not null;
-alter table MOD_ASEET_MAPPING modify output3 not null;
-alter table MOD_ASEET_MAPPING modify output4 not null;
-alter table MOD_ASEET_MAPPING modify output5 not null;
+
 
 drop index MOD_ASEET_MAPPING_INDEX1;
 drop index MOD_ASEET_MAPPING_INDEX2;
@@ -1625,8 +1617,8 @@ alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_name not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify o_type not null;
 
-drop index MOD_ASSET_GRADE_SPECIAL_CONFIG_INDEX;
-create index MOD_ASSET_GRADE_SPECIAL_CONFIG_INDEX on MOD_ASSET_GRADE_SPECIAL_CONFIG (FINPROD_ID);
+drop index MOD_SPECIAL_CONFIG_INDEX;
+create index MOD_SPECIAL_CONFIG_INDEX on MOD_ASSET_GRADE_SPECIAL_CONFIG (FINPROD_ID);
 
 alter table MOD_GRADE_PD_CONFIG modify vouch_year not null;
 alter table MOD_GRADE_PD_CONFIG modify grade_result not null;

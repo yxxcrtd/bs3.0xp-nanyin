@@ -10,12 +10,18 @@
 
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.writer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.github.pagehelper.util.StringUtil;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterParty;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMstBondCreditRating;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,34 +29,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.util.StringUtil;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.security.data.MultilevelDataAuthorityService;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.entity.BokBooksetCapacctInfo;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.MstCalendarInfo;
-import com.joyintech.tams.common.base.entity.MstCustomerInfo;
-import com.joyintech.tams.common.base.entity.MstHoliday;
-import com.joyintech.tams.common.base.entity.MstTradeCalendar;
-import com.joyintech.tams.common.base.entity.StlCapacctInfo;
-import com.joyintech.tams.common.base.entity.StlFinProductAcct;
-import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValBooksetCapacctInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCalendarInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCashInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValCustomerInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAcctBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductTypeBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValHolidayBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValInterflogBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValMstCapacctInfoBatchMapper;
-import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValTradeCalendarBatchMapper;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Scope("prototype")
@@ -60,6 +42,18 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
      */
     @Autowired
     private ValCustomerInfoBatchMapper valCustomerInfoBatchMapper;
+
+    /**
+     * 交易对手BatchMapper
+     */
+    @Autowired
+    private ValCounterPartyBatchMapper valCounterPartyBatchMapper;
+
+    /**
+     * 评级信息BatchMapper
+     */
+    @Autowired
+    private ValMstBondCreditRatingBatchMapper valMstBondCreditRatingBatchMapper;
 
     /**
      * 清算账户信息BatchMapper
@@ -125,7 +119,12 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
      */
     @Autowired
     private ValFinProductTypeBatchMapper valFinProductTypeBatchMapper;
-    
+
+    /** add by yanya on 20210831 增加客户信息附属表 start**/
+    @Autowired
+    private ValCustomerInfoAddBatchMapper valCustomerInfoAddBatchMapper;
+    /** add by yanya on 20210831 增加客户信息附属表 end**/
+
     @Value("${interf.properties.maxSqlNum}")
     private int maxSqlNum;
     
@@ -161,6 +160,85 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
                     valCustomerInfoBatchMapper.insertBatch(listInsert);
                 }
             }
+
+
+
+            // 交易对手
+            List<MstCounterParty> listValCounterParty = result.getValCounterPartyList();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValCounterParty)) {
+
+                //定义一个固定大小插入存放集合
+                List<MstCounterParty> listInsert =  new ArrayList<MstCounterParty>();
+                for(MstCounterParty e :listValCounterParty){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valCounterPartyBatchMapper.deleteBatch(listInsert);
+                        valCounterPartyBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valCounterPartyBatchMapper.deleteBatch(listInsert);
+                    valCounterPartyBatchMapper.insertBatch(listInsert);
+                }
+            }
+
+            // 评级信息
+            List<ValMstBondCreditRating> listValBondCreditRating = result.getValBondCreditRatingList();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValBondCreditRating)) {
+
+                //定义一个固定大小插入存放集合
+                List<ValMstBondCreditRating> listInsert =  new ArrayList<ValMstBondCreditRating>();
+                for(ValMstBondCreditRating e :listValBondCreditRating){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valMstBondCreditRatingBatchMapper.deleteBatch(listInsert);
+                        valMstBondCreditRatingBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valMstBondCreditRatingBatchMapper.deleteBatch(listInsert);
+                    valMstBondCreditRatingBatchMapper.insertBatch(listInsert);
+                }
+            }
+
+
+            /** add by yanya on 20210831 增加客户信息附属表 start**/
+            List<MstCustomerInfoAddWithBLOBs> listValCustomerInfoAdd = result.getValCustomerInfoAddList();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValCustomerInfoAdd)) {
+                //定义一个固定大小插入存放集合
+                List<MstCustomerInfoAddWithBLOBs> listInsert =  new ArrayList<MstCustomerInfoAddWithBLOBs>();
+                for(MstCustomerInfoAddWithBLOBs e :listValCustomerInfoAdd){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valCustomerInfoAddBatchMapper.deleteBatch(listInsert);
+                        valCustomerInfoAddBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valCustomerInfoAddBatchMapper.deleteBatch(listInsert);
+                    valCustomerInfoAddBatchMapper.insertBatch(listInsert);
+                }
+            }
+            /** add by yanya on 20210831 增加客户信息附属表 end**/
+
             // 清算账户信息
             List<StlCapacctInfo> listValMstCapacctInfo = result.getValMstCapacctInfoList();
             /**add by wujie on 20180828 start**/

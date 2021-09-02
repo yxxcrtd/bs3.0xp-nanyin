@@ -424,8 +424,8 @@
         AND c1.CDATE&lt;=to_date(#{vdate,jdbcType=DATE},'yyyy-MM-dd')
         GROUP BY c1.CUSTOMER_ID,c1.CREDIT_MST_ID
         ) table4
-        ON table1.customerId=table3.customerId
-        AND table1.creditMstId=table3.creditMstId
+        ON table1.customerId=table4.customerId
+        AND table1.creditMstId=table4.creditMstId
         LEFT JOIN (
         SELECT
         c1.CUSTOMER_ID customerId,

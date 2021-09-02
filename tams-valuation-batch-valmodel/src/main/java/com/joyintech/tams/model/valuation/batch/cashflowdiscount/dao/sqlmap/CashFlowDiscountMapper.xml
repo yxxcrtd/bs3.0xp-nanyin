@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper">
-	<select id="getAllModCurve" parameterType="java.util.Map" resultType="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto">
+	<select id="getAllModCurve" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto">
 	SELECT
-		T1.SEC_TYPE_MODEL,
-		T1.SEC_DETAIL_TYPE_MODEL,
-		T1.FINPROD_ID,
-		T1.FINPROD_NAME,
-		T1.CURVE_GROUP_CODE,
-		T1.CURVE_TYPE,
-		T1.ISSMOOTH,
-		T1.SMOOTHSECTION,
-		T2.OUTPUT1 ASSET_ONE,
-		T2.OUTPUT2 ASSET_TWO,
-		T2.OUTPUT3 ASSET_THREE,
-		T2.OUTPUT4 ASSET_FOUR,
-		T2.OUTPUT5 ASSET_FIVE
+		SEQNO,
+		SEC_TYPE_MODEL,
+		SEC_DETAIL_TYPE_MODEL,
+		FINPROD_ID,
+		FINPROD_NAME,
+		CURVE_GROUP_CODE,
+		CURVE_TYPE,
+		ISSMOOTH,
+		SMOOTHSECTION,
+		CREATE_USER,
+		CREATE_DEPT,
+		CREATE_TIME,
+		UPDATE_USER,
+		UPDATE_TIME,
+		IS_BOTTOM_GRADE,
+		BOTTOM_GRADE,
+		EFF_DATE,
+		INVALID_DATE
 	FROM
 		MOD_CURVE_CONFIG T1
-		INNER JOIN MOD_ASEET_MAPPING T2 ON T1.SEC_TYPE_MODEL = T2.INPUT1  AND T1.SEC_DETAIL_TYPE_MODEL = T2.INPUT2
 	<where>
-		<if test="MODEL_MAPPING_TYPE_01 != null and MODEL_MAPPING_TYPE_01 != ''">
-			and T2.MAPPING_TYPE  = #{MODEL_MAPPING_TYPE_01}
-		</if>
-		<if test="finprodId != null and finprodId != ''">
-			and T1.FINPROD_ID  = #{finprodId}
-		</if>
-		<if test="finprodIdList != null and finprodIdList.size()>0 ">
-			AND T1.FINPROD_ID IN(
-			<foreach item="item" index="index" collection="finprodIdList" separator=",">
-				#{item}
-			</foreach>
-			)
+	    1=1
+		<if test="searchDate != null">
+			AND T1.EFF_DATE <![CDATA[<=]]> #{searchDate}
+			AND T1.INVALID_DATE <![CDATA[>=]]> #{searchDate}
 		</if>
 	</where>
 	</select>
@@ -55,7 +51,7 @@
 	</select>
 
 	<!--查询溢价信息-->
-	<select id="getModRiskPremium" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium">
+	<select id="getModRiskPremium" resultType="com.joyintech.tams.common.base.entity.ModRiskPremium">
 		SELECT
 		SEQNO SEQNO,
 		SEC_TYPE_MODEL SEC_TYPE_MODEL,
@@ -131,8 +127,6 @@
 		</foreach>
 	</insert>
 
-
-
 	<!--批量登录模型估值结果明细-->
 	<insert id="insertBatchCurveResultDetail">
 		insert into MOD_CURVE_RESULT_DETAIL (SEQNO, RESULT_SEQNO, FINPROD_ID,
@@ -149,4 +143,75 @@
 			#{item.updateTime,jdbcType=TIMESTAMP}
 		</foreach>
 	</insert>
+
+	<delete id="deleteMstBondValuationInfo">
+		delete from MST_BOND_VALUATION_INFO where
+		<foreach collection="list" item="item" separator=" or " index="index">
+			(
+			SEC_ID = #{secId,jdbcType=VARCHAR}
+			and VALUE_DATE = #{valueDate,jdbcType=DATE}
+			and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</delete>
+
+	<insert id="insertMstBondValuationInfo">
+		insert into MST_BOND_VALUATION_INFO
+		(
+		SEC_ID, VALUE_DATE, VALUE_SOURCE,
+		LAST_PERIOD, PRICE, NETPRICE,
+		M_DURATION, M_CONVEXITY, BPVALUE,
+		SDURATION, SCNVXTY, INTEREST_DURATION,
+		INTEREST_CNVXTY, BPYIELD, INPUT_TYPE,
+		CREATE_USER, CREATE_DEPT, CREATE_TIME,
+		UPDATE_USER, UPDATE_TIME, MBPVALUE,
+		VAR, CVAR, MDURATION,
+		IMPLICIT_GRADE, IMPLICIT_HGRADE, NETVALUATION_EXERCISE,
+		NETVALUATION_RECOMMENDED
+		)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			#{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR},
+			#{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL},
+			#{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL},
+			#{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL},
+			#{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
+			#{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+			#{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL},
+			#{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL},
+			#{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL},
+			#{netvaluationRecommended,jdbcType=DECIMAL}
+		</foreach>
+	</insert>
+
+	<delete id="deleteFinProductValuation">
+		delete from fin_product_valuation where
+		<foreach collection="list" item="item" separator=" or " index="index">
+			(
+				FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+				and VAL_DATE = #{valueDate,jdbcType=DATE}
+			)
+		</foreach>
+	</delete>
+
+	<insert id="insertFinProductValuation">
+		insert into FIN_PRODUCT_VALUATION (FINPROD_ID, VAL_DATE, FINPROD_TYPE,
+		FINPROD_TYPE2, PUBLISH_DATE, VALUATION,
+		DAY7_YEAR_YIELD, YEAR_YIELD, TOTAL_VALUE,
+		INPUT_TYPE, REMARK, CREATE_USER,
+		CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+		UPDATE_TIME, REST_NET_VALUE, C_SHARES,
+		FULL_VALUATION, VALUE_SOURCE)
+		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+				 close="from dual)">
+			(#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{finprodType,jdbcType=VARCHAR},
+			#{finprodType2,jdbcType=VARCHAR}, #{publishDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL},
+			#{day7YearYield,jdbcType=DECIMAL}, #{yearYield,jdbcType=DECIMAL}, #{totalValue,jdbcType=DECIMAL},
+			#{inputType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+			#{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+			#{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL},
+			#{fullValuation,jdbcType=DECIMAL}, #{valueSource,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
 </mapper>

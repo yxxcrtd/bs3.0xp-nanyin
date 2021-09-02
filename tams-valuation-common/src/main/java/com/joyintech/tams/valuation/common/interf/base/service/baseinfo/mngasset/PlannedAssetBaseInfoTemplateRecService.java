@@ -182,6 +182,8 @@ public class PlannedAssetBaseInfoTemplateRecService {
         valFinProductExt.setFinprodId(dto.getAssetId());
         //是否其他债券 = A.是否其他债券
         valFinProductExt.setIsQtzq(dto.getIsQtzq());
+        //是否包含有效抵质押物 = A.是否包含有效抵质押物
+        valFinProductExt.setIsEffPledge(dto.getIsEffPledge());
         return valFinProductExt;
     }
     
@@ -242,6 +244,12 @@ public class PlannedAssetBaseInfoTemplateRecService {
         valFinProduct.setCapiIncomeFeature(dto.getCapiProfFeature());
         // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
 		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
+		// 发行人 = A.发行人
+        valFinProduct.setIssuer(dto.getIssuer());
+        // 融资人 = A.融资人
+        valFinProduct.setFinancier(dto.getFinancier());
+        // 担保人 = A.担保人
+        valFinProduct.setSponsor(dto.getSponsor());
         return valFinProduct;
     }
     
@@ -280,6 +288,8 @@ public class PlannedAssetBaseInfoTemplateRecService {
         
         // 分类3 = 调用共通方法查询税务分类
         valFinProductType.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
+        // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
+        valFinProductType.setType18(interfCommonService.getFinanceProductSecType(fdto));
         /**add by wujie on 20180822 end**/
         valFinProductType.setBranch(InterfCommonConstant.分支序号_默认);
         return valFinProductType;

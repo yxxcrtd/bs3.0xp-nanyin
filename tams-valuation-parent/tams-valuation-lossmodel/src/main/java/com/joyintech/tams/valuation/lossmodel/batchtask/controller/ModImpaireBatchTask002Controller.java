@@ -62,7 +62,7 @@ public class ModImpaireBatchTask002Controller extends BaseController {
         List<ModBatchDetailDto> dtoList
                 = modImpaireBatchTask001Service.findBatchExeTaskForExport(RequestUtil.getPageParam());
         File outFile = modImpaireBatchTask001Service.makeFile(
-                "/com/joyintech/tams/valuation/lossmodel/batch/batchtask/config/export_conf.xml", dtoList);
+                "/com/joyintech/tams/valuation/lossmodel/batchtask/config/export_conf.xml", dtoList);
         return ExportUtil.export(
                 "批处理详情" + SystemGlobalConstant.OPEN_PARENTHESIS
                         + DateUtil.format(new Date()) + SystemGlobalConstant.CLOSE_PARENTHESIS

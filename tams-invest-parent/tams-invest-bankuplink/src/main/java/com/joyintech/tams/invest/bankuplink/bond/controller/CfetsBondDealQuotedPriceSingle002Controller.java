@@ -17,6 +17,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealRequestQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CounterInfoDto;
@@ -98,6 +99,11 @@ public class CfetsBondDealQuotedPriceSingle002Controller extends BaseController 
         model.addAttribute("CLEAR_TYPE_02", BussinessDictCodeList.清算类型_全额清算.getValue());
         model.addAttribute("isRevert", BussinessDictCodeList.是否_是.getValue());
         model.addAttribute("effTime", CacheUtil.getSysParam("ibuVar_quoteEffTime"));
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        Date sysDate = DateUtil.platDateFromCache();
+        model.addAttribute("sysDate", DateUtil.format(sysDate));
+
         // 本方交易员是否可改
         model.addAttribute("ouTraderIdCanEditFlag", CacheUtil.getSysParam("ibuFlag_ouTraderIdCanEdit"));
         model.addAttribute("TodoList", false);

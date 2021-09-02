@@ -382,7 +382,7 @@
     </select>
     <select id="getEtrSurplusAmt" resultType="java.math.BigDecimal">
          SELECT
-        NVL(sum(nvl(decode(OFFSET_FLAG,#{OFFSET_FLAG_ZC},-1,#{OFFSET_FLAG_CX},1), 0)*AMOUNT),0)
+        NVL(sum(nvl(decode(OFFSET_FLAG,#{OFFSET_FLAG_ZC},-1,#{OFFSET_FLAG_CX},-1), 0)*AMOUNT),0)
         from
         ETR_CASH_POSITION_FLOW etpf
         where
@@ -893,7 +893,8 @@
 			   and ad.portfolio_id = #{portfolioId}
 			   and deal.trade_status = #{TRADE_STATUS_01}
 			   and deal.is_cancel = #{YES_OR_NO_N}
-
+            <!--update by  zznn 20210831 交易录单 买入已经冲销了委托现金流水 所以不用查有效交易数据-->
+        <if test="ps != null and ps != '' and ps == 'T02'">
 			 union all
 
              select nvl(sum(decode(deal.ps,#{PS_T01},deal.trade_amt,deal.share_amt)),0) as finishAmt
@@ -904,6 +905,7 @@
                and ad.portfolio_id = #{portfolioId}
                and deal.trade_status = #{TRADE_STATUS_01}
                and deal.is_cancel = #{YES_OR_NO_N}
+        </if>
           )
     </select>	
     <select id="selectSumShareAmt"  resultType="java.math.BigDecimal">

@@ -292,7 +292,10 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
      */
      @Override
      public void doInsert(EtrInvestBondInfoDto dto, OperationType type){
-         dto.setOperateType(type.toString());
+         // OperationType枚举值与dto的operateType不同,后续逻辑使用的是dto的operateType,所以不能覆盖
+         // ZGZGST-1502:fuyongsheng 20210825 delete start
+         // dto.setOperateType(type.toString());
+         // ZGZGST-1502:fuyongsheng 20210825 delete end
          restTemplate.postForObject(
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doInsert",dto,
              Integer.class);
@@ -308,6 +311,16 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
              ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doInsert",dto,
              Integer.class);
      }
+
+    @Override
+    public void doBack(EtrInvestBondInfoDto entity) {
+        // ZGZGST-1557:退回工作流 fuyongsheng add start
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/doBack", entity,
+                Integer.class);
+        // ZGZGST-1557:退回工作流 fuyongsheng add end
+    }
+
     /**
      *
      * 删除投资委托
@@ -1400,8 +1413,8 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 Map<String, Object> posMap = this.getAssetAvailablePosition(param);
                 if (posMap != null) {
                     etrInvestBondInfoDto.setAssetAvailablePosition(
-                        posMap.get("position") == null ? BigDecimal.ZERO : new BigDecimal(
-                            posMap.get("position").toString()));
+                        posMap.get("position") == null ? BigDecimal.ZERO : new BigDecimal(100).multiply(new BigDecimal(
+                            posMap.get("position").toString())));
                 }
                 // 本方券券面总额
                 etrInvestBondInfoDto.setEntrustOwnNum(etrInvestBondInfoDto.getEntrustNum());

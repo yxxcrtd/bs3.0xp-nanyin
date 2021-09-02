@@ -7673,4 +7673,13 @@ public class InterfCommonService {
         }
     }
 
+    /**
+     * 查询证券品种
+     * @return 证券品种
+     */
+    public String getFinanceProductSecType(FinProductClass finProductClass) {
+        String valclas = mapper.getFinanceProductSecType(finProductClass);
+        return valclas;
+    }
+
 }

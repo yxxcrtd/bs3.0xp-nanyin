@@ -222,7 +222,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
             //配置单位 edit by yeming 20210721 end
             model.addAttribute(GlobalConstant.ENTITY, entity);
         }
-        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("shortSellingSupported", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));
         //配置单位 add by yeming 20210721 start

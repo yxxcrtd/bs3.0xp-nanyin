@@ -1,10 +1,11 @@
 package com.joyintech.tams.valuation.component.batch.service;
 
+import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -36,7 +37,7 @@ public class ModLogsService {
     private SqlSessionTemplate sqlSessionTemplate;
 
     @Autowired
-    private ModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper modBatchLogsMapper;
 
     /**
      * 批量保存日志
@@ -45,7 +46,7 @@ public class ModLogsService {
     public void saveBatch(List<ModBatchLogs> logs) {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
-            ModBatchLogsMapper mapper = sqlSession.getMapper(ModBatchLogsMapper.class);
+            ValModBatchLogsMapper mapper = sqlSession.getMapper(ValModBatchLogsMapper.class);
             int count = 0;
             for (ModBatchLogs log : logs) {
                 // 每1000条提交一次
@@ -71,6 +72,40 @@ public class ModLogsService {
         } finally {
             sqlSession.commit();
             sqlSession.close();
+        }
+    }
+    /**
+     *
+     * @param taskId
+     * @param batchExeDetailSeqno
+     * @param finprodId
+     */
+    public ModBatchLogs initLog(String taskId, String batchExeDetailSeqno, String finprodId){
+        ModBatchLogs log = new ModBatchLogs();
+        log.setSeqno(IDGenerator.generate());
+        log.setFinprodId(finprodId);
+        log.setBatchExecSeqno(batchExeDetailSeqno);
+        log.setTaskId(taskId);
+        return log;
+    }
+    /**
+     *
+     * @param taskId
+     * @param batchExeDetailSeqno
+     * @param finprodIds
+     */
+    public void batchInitLogs(String taskId, String batchExeDetailSeqno, List<String> finprodIds){
+        List<ModBatchLogs> listLog = new ArrayList<ModBatchLogs>();
+        if (CollectionUtils.isNotEmpty(finprodIds)) {
+            finprodIds.forEach((x) -> {
+                ModBatchLogs log = new ModBatchLogs();
+                log.setSeqno(IDGenerator.generate());
+                log.setFinprodId(x);
+                log.setBatchExecSeqno(batchExeDetailSeqno);
+                log.setTaskId(taskId);
+                listLog.add(log);
+            });
+            this.saveBatch(listLog);
         }
     }
 

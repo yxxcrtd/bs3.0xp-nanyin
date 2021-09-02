@@ -6,6 +6,7 @@
             <Cell order="2" name="要素绝对性">absoluteOfElementsStr</Cell>
             <Cell order="3" name="要素">elementsStr</Cell>
             <Cell order="4" name="参数值">elementsValueStr</Cell>
+            <Cell order="5" name="启用状态">useStatusStr</Cell>
         </Row>
     </Worksheet>
 </Workbook>

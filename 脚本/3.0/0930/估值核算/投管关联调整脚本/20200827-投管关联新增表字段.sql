@@ -1,0 +1,144 @@
+ALTER TABLE MST_BOND_VALUATION_INFO ADD "NETVALUATION_EXERCISE" NUMBER(18,12);
+ALTER TABLE MST_BOND_VALUATION_INFO ADD "NETVALUATION_RECOMMENDED" NUMBER(18,12);
+COMMENT ON COLUMN "MST_BOND_VALUATION_INFO"."NETVALUATION_EXERCISE" IS '估值净价(行权)';
+COMMENT ON COLUMN "MST_BOND_VALUATION_INFO"."NETVALUATION_RECOMMENDED" IS '估值净价(推荐)';
+
+
+
+--金融产品附属表新增字段
+ALTER TABLE FIN_PRODUCT_ADD DROP COLUMN IS_ISSUE_ASSET;
+ALTER TABLE FIN_PRODUCT_ADD ADD IS_ISSUE_ASSET VARCHAR2(2);
+COMMENT ON COLUMN FIN_PRODUCT_ADD.IS_ISSUE_ASSET IS '是否发行标的' ;
+
+ALTER TABLE FIN_PRODUCT_ADD DROP COLUMN APPEAR_MARKET_ID;
+ALTER TABLE FIN_PRODUCT_ADD ADD APPEAR_MARKET_ID VARCHAR2(50);
+COMMENT ON COLUMN FIN_PRODUCT_ADD.APPEAR_MARKET_ID IS '上市代码' ;
+
+
+--添加全价估值字段
+ALTER TABLE FIN_PRODUCT_VALUATION DROP COLUMN FULL_VALUATION;
+ALTER TABLE FIN_PRODUCT_VALUATION ADD FULL_VALUATION  NUMBER(30,14);
+COMMENT ON COLUMN FIN_PRODUCT_VALUATION.FULL_VALUATION IS '每日全价估值，净值、万份收益等';
+
+--添加估值来源字段
+ALTER TABLE FIN_PRODUCT_VALUATION DROP COLUMN VALUE_SOURCE;
+ALTER TABLE FIN_PRODUCT_VALUATION Add VALUE_SOURCE  VARCHAR(36);
+COMMENT ON COLUMN FIN_PRODUCT_VALUATION.VALUE_SOURCE IS '估值来源';
+--测试脚本--
+
+
+alter   table    PTL_PORTFOLIO_VALUATION    add    DEVIATION_DEGREE   number(30,2);
+comment on column PTL_PORTFOLIO_VALUATION.DEVIATION_DEGREE is '偏离度%';
+
+
+-- ----------------------------
+-- Table structure for FIN_PRODUCT_ADD
+-- ----------------------------
+alter table FIN_PRODUCT_ADD add WIND_CODE VARCHAR2(50 BYTE);
+comment on column FIN_PRODUCT_ADD.FUTURES_CONTRACT_ID is 'WIND代码';
+
+
+
+
+-- ----------------------------
+-- Table structure for FIN_PRODUCT_ADD
+-- ----------------------------
+alter table FIN_PRODUCT_ADD add FUTURES_CONTRACT_ID VARCHAR2(50 BYTE);
+comment on column FIN_PRODUCT_ADD.FUTURES_CONTRACT_ID is '期货合约标的';
+
+alter table FIN_PRODUCT_ADD add LAST_TRADE_DATE DATE;
+comment on column FIN_PRODUCT_ADD.LAST_TRADE_DATE is '最后交易日';
+
+alter table FIN_PRODUCT_ADD add LAST_SETTLE_DATE DATE;
+comment on column FIN_PRODUCT_ADD.LAST_SETTLE_DATE is '最后交割日';
+
+alter table FIN_PRODUCT_ADD add DELIVERY_METHOD VARCHAR2(50 BYTE);
+comment on column FIN_PRODUCT_ADD.DELIVERY_METHOD is '交割方式';
+
+alter table FIN_PRODUCT_ADD add CONTRACT_MULTIPLIER NUMBER(22);
+comment on column FIN_PRODUCT_ADD.CONTRACT_MULTIPLIER is '合约乘数';
+
+--增加资金账户字段
+alter table TRD_FEE_CONFIG add (CAPITAL_ACCOUNT_NO VARCHAR2(60));
+comment on column TRD_FEE_CONFIG.CAPITAL_ACCOUNT_NO is '资金账户';
+
+
+-- 增加组合系列字段
+alter table PA_PTL_PORTFOLIO add (PORTFOLIO_SERIES VARCHAR2(50));
+comment on column PA_PTL_PORTFOLIO.PORTFOLIO_SERIES is '组合系列';
+
+
+-- 标的 新增 增信措施和基金经理姓名 字段
+alter table FIN_PRODUCT_ADD add (CREDIT_ENHANCE_MEASURE VARCHAR2(50),FUND_MANGER_NAME VARCHAR2(200));
+comment on column FIN_PRODUCT_ADD.CREDIT_ENHANCE_MEASURE is '增信措施';
+comment on column FIN_PRODUCT_ADD.FUND_MANGER_NAME is '基金经理姓名';
+
+
+--20210708_场内基金标的脚本_新建菜单和画面.sql
+alter table FIN_PRODUCT_ADD add DIVIDE_METHOD VARCHAR(32);
+comment on column FIN_PRODUCT_ADD.DIVIDE_METHOD is '允许的分红方式';
+alter table FIN_PRODUCT_ADD add DAY_BACK_TRADE VARCHAR(32);
+comment on column FIN_PRODUCT_ADD.DAY_BACK_TRADE is '当日回转交易';
+
+alter table FIN_PRODUCT_ADD add BONUS_TYPE VARCHAR(50);
+comment on column FIN_PRODUCT_ADD.BONUS_TYPE is '允许的分红方式(多个用逗号隔开)';
+alter table FIN_PRODUCT_ADD add TDY_REV_TRANS VARCHAR(50);
+comment on column FIN_PRODUCT_ADD.TDY_REV_TRANS is '当日回转交易';
+alter table FIN_PRODUCT_ADD add LISTING_DATE DATE;
+comment on column FIN_PRODUCT_ADD.LISTING_DATE is '上市日期';
+
+alter table TRD_PRODUCT_DEAL ADD YESTERDAY_POSITION NUMBER(30,2);
+comment on column TRD_PRODUCT_DEAL.YESTERDAY_POSITION is '前一日港股持仓市值';
+
+alter table WFL_TRD_PRODUCT_DEAL ADD YESTERDAY_POSITION NUMBER(30,2);
+comment on column WFL_TRD_PRODUCT_DEAL.YESTERDAY_POSITION is '前一日港股持仓市值';
+
+alter table TRD_TRADE_FEE_DETAIL ADD YESTERDAY_POSITION NUMBER(30,2);
+comment on column TRD_TRADE_FEE_DETAIL.YESTERDAY_POSITION is '前一日港股持仓市值';
+
+alter table fin_product_add add  MIN_SALE_UNIT  number;
+comment on column fin_product_add.MIN_SALE_UNIT is '最小买卖单位';
+
+alter table stl_sec_acct_info add  Y_N_HKSTOCKC varchar(50);
+comment on column stl_sec_acct_info.Y_N_HKSTOCKC is '是否开通港股通';
+
+/*新增字段*/
+alter table TRD_PRODUCT_DEAL add HK_MARKET VARCHAR(32);
+comment on column TRD_PRODUCT_DEAL.HK_MARKET is '港股通市场';
+
+alter table TRD_PRODUCT_DEAL add BUY_SETTLE_RATE number(30,14);
+comment on column TRD_PRODUCT_DEAL.BUY_SETTLE_RATE is '买入结算汇兑比率';
+
+alter table TRD_PRODUCT_DEAL add SELL_SETTLE_RATE number(30,14);
+comment on column TRD_PRODUCT_DEAL.SELL_SETTLE_RATE is '卖出结算汇兑比率';
+
+alter table TRD_PRODUCT_DEAL add DEAL_AMT number(30,2);
+comment on column TRD_PRODUCT_DEAL.DEAL_AMT is '成交金额';
+
+alter table TRD_PRODUCT_DEAL add COMMISSION number(30,2);
+comment on column TRD_PRODUCT_DEAL.COMMISSION is '佣金';
+
+alter table TRD_PRODUCT_DEAL add STAMPDUTY number(30,2);
+comment on column TRD_PRODUCT_DEAL.STAMPDUTY is '印花税';
+
+alter table TRD_PRODUCT_DEAL add TRANSACTION_LEVY number(30,2);
+comment on column TRD_PRODUCT_DEAL.TRANSACTION_LEVY is '交易征费';
+
+alter table TRD_PRODUCT_DEAL add TRANSACTION_FEE number(30,2);
+comment on column TRD_PRODUCT_DEAL.TRANSACTION_FEE is '交易费';
+
+alter table TRD_PRODUCT_DEAL add TRANSACTION_SYSTEM_FEE number(30,2);
+comment on column TRD_PRODUCT_DEAL.TRANSACTION_SYSTEM_FEE is '交易系统使用费';
+
+alter table TRD_PRODUCT_DEAL add SHARE_PAYMENT_FEE number(30,2);
+comment on column TRD_PRODUCT_DEAL.SHARE_PAYMENT_FEE is '股份交收费';
+
+--
+
+alter table TRD_PRODUCT_DEAL_ADD ADD REPLACE_AMT number(30,14);
+comment on column TRD_PRODUCT_DEAL_ADD.REPLACE_AMT is '以股代息股本';
+
+alter table WFL_TRD_PRODUCT_DEAL_ADD ADD REPLACE_AMT number(30,14);
+comment on column WFL_TRD_PRODUCT_DEAL_ADD.REPLACE_AMT is '以股代息股本';
+
+

@@ -165,7 +165,9 @@ public class MstCaptialAccountValidator implements BeanValidator{
                 }
                 
                if(StringUtil.isNotEmpty(dto.getAccountType())
-                   && StringUtil.indexOf(dto.getAccountType(), DictCodeListExt1.资金账户类型_券商资金账户.getValue())>0) {
+                   // ZGZGST-1860:修改判断是否有券商资金账户属性方法 fuyongsheng 20210902 edit start
+                   && StringUtil.indexOf(dto.getAccountType(), DictCodeListExt1.资金账户类型_券商资金账户.getValue())>-1) {
+                   // ZGZGST-1860:修改判断是否有券商资金账户属性方法 fuyongsheng 20210902 edit end
                    if(!StringUtil.isNotEmpty(dto.getOwnDept())) {
                        errorList.add(new ValidMessage("ownDept", getMessage("COMMON_E_0057",getMessage("MstCaptialAccount002.ownDept")))); 
                    }

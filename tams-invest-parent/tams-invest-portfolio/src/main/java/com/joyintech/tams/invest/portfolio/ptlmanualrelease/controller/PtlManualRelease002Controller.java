@@ -30,6 +30,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.portfolio.ptlmanualrelease.dto.PtlManualRelease001Dto;
 import com.joyintech.tams.invest.portfolio.ptlmanualrelease.service.PtlManualRelease002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -110,7 +111,7 @@ public class PtlManualRelease002Controller extends BaseController{
 		params.setPageId(this.getPageId());
 		params.setBusinessCode(dto.getTradeId());
 		params.setServiceName("PtlManualRelease002Service");
-		params.setBusinessType(DictCodeList.共通业务类型_手动释放头寸.getValue());
+		params.setBusinessType(DictCodeListExt1.共通业务类型_手动释放头寸.getValue());
 		// 设置工作流注解
 		params.setComment(entity -> this.getMessage("手工释放:")
                 + this.getMessage("交易编号") + "("

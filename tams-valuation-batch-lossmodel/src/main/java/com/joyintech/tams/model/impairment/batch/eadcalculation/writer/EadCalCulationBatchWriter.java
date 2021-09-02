@@ -3,12 +3,15 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalCulationResultDto;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadModEclResultProcess;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -34,7 +37,7 @@ public class EadCalCulationBatchWriter extends BaseWriter<NeedToWriteEntity> imp
     private StepExecution stepExecution;
 
     @Autowired
-    private EadCalculationBatchMapper eadCalculationBatchMapper;
+    private LossCommonMapper lossCommonMapper;
     @Override
     public void write(List<? extends NeedToWriteEntity> items) throws Exception {
         List<EadCalCulationResultDto> resultList = (List<EadCalCulationResultDto>)items;
@@ -68,10 +71,16 @@ public class EadCalCulationBatchWriter extends BaseWriter<NeedToWriteEntity> imp
             return;
         }
         // 定义一个固定大小插入存放集合
-        List<List<EadModEclResultProcess>> list = DataHandleUtil.splitList(listModEclResultProcess);
-        for (List<EadModEclResultProcess> listInsert : list) {
+        List<ModEclResultProcess> listProcess = new ArrayList<ModEclResultProcess>();
+        for(EadModEclResultProcess item : listModEclResultProcess){
+            ModEclResultProcess process = new ModEclResultProcess();
+            BeanUtil.copyPropertiesIgnoreNull(process, item);
+            listProcess.add(process);
+        }
+        List<List<ModEclResultProcess>> list = DataHandleUtil.splitList(listProcess);
+        for (List<ModEclResultProcess> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                eadCalculationBatchMapper.insertBatchResult(listInsert);
+                lossCommonMapper.insertModEclResultProcessBatch(listInsert);
             }
         }
     }

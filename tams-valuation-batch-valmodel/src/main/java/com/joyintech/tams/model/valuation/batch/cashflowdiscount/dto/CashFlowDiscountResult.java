@@ -1,8 +1,10 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 
 import java.util.List;
 
@@ -11,6 +13,15 @@ import java.util.List;
  * @date 2021/7/7
  */
 public class CashFlowDiscountResult extends NeedToWriteEntity {
+
+    /**
+     * 最终的债券估值行情数据
+     */
+    private MstBondValuationInfo mstBondValuationInfo;
+    /**
+     * 最终的其他债权类估值行情数据
+     */
+    private FinProductValuation finProductValuation;
 
     /**
      * 贴现估值结果
@@ -25,6 +36,22 @@ public class CashFlowDiscountResult extends NeedToWriteEntity {
      * 资产定价数据
      */
     private ModRiskPremium modRiskPremium;
+
+    public MstBondValuationInfo getMstBondValuationInfo() {
+        return mstBondValuationInfo;
+    }
+
+    public void setMstBondValuationInfo(MstBondValuationInfo mstBondValuationInfo) {
+        this.mstBondValuationInfo = mstBondValuationInfo;
+    }
+
+    public FinProductValuation getFinProductValuation() {
+        return finProductValuation;
+    }
+
+    public void setFinProductValuation(FinProductValuation finProductValuation) {
+        this.finProductValuation = finProductValuation;
+    }
 
     public ModCurveResult getModCurveResult() {
         return modCurveResult;

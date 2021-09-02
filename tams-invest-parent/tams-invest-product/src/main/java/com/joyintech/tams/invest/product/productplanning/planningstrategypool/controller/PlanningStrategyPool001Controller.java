@@ -39,6 +39,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.product.productplanning.planningstrategypool.dto.PlanningStrategyPool001Dto;
 import com.joyintech.tams.invest.product.productplanning.planningstrategypool.service.PlanningStrategyPool001Service;
 import com.joyintech.tams.invest.product.productplanning.planningstrategypool.service.PlanningStrategyPool002Service;
@@ -166,7 +167,7 @@ public class PlanningStrategyPool001Controller extends BaseController {
 		params.setPageId("PlanningStrategyPool002");
 		params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
 		params.setBusinessCode(item -> item.getStrategyId());
-		params.setBusinessType(DictCodeList.共通业务类型_规划策略池维护.getValue());
+		params.setBusinessType(DictCodeListExt1.共通业务类型_规划策略池维护.getValue());
 		params.setComment(
 				entity -> this.getMessage("PlanningStrategyPool001.strategyId") + "(" + entity.getStrategyId() + ")");
 		processParameter.setWorkFlowParameter(params);

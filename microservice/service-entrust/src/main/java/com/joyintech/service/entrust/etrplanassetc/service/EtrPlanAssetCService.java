@@ -527,6 +527,7 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
         try {
             // etrEntrust
             EtrEntrust etrEntrust = new EtrEntrust();
+            dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
             BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
@@ -537,8 +538,11 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
                 etrEntrust.setEntrustAmt(dto.getEntrustAmt2());
                 etrEntrust.setEntrustNum(dto.getEntrustNum2());
             }
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
+                etrEntrust.setEntrustAmt(dto.getEntrustAmt());
+                etrEntrust.setEntrustNum(dto.getEntrustNum());
+            }
             entity.setEtrEntrust(etrEntrust);
-
             // etrEntrustAdd
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
             BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);

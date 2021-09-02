@@ -7,15 +7,18 @@
 
 <body>
 <div layout:fragment="content">
-    <div class="form-button-area" >
+    <div class="form-button-area">
+        <a id="ValPlannedassetquery001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+        <a id="ValPlannedassetquery001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}" >删除</a>
+        <a id="ValPlannedassetquery001_btn_copy" class="layui-btn layui-btn-sm btn-copy" data-th-text="#{SysCommon.copy}">复制</a>
     </div>
     <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form" id="searchForm">       
             <div class="layui-form-item">              
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">资产</label>
+                    <label class="layui-form-label form-lable">资产代码</label>
                     <div class="layui-input-inline input-inline">
-                        <select id="bond" name="bond"  class="layui-input form-input input-select"  placeholder="请选择资产或输入代码及关键词" 
+                        <select id="bond" name="bond"  class="layui-input form-input input-select"  placeholder="请输入资产代码或名称"
                             data-th-data-url="@{/valuation/assets/plan/ValPlannedassetquery001/getBondId}"
                             multiple="multiple" allowClear="true" >
                         </select>

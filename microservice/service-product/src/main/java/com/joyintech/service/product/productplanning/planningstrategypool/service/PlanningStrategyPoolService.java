@@ -35,6 +35,7 @@ import com.joyintech.tams.common.base.entity.PtlInvStrategy;
 import com.joyintech.tams.common.base.entity.PtlInvStrategyDetail;
 import com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -150,7 +151,7 @@ public class PlanningStrategyPoolService extends CommonExportService<PlanningStr
 		ptlInvStrategyMapper.insert(ptlInvStrategy);
 
 		BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
-		bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_规划策略池维护);
+		bussinessCodeParameter.setCommonBusinessType(DictCodeListExt1.共通业务类型_规划策略池维护);
 
 		List<PlanningStrategyPoolDetailDto> deteilList = entity.getPlanningStrategyPoolDetailList();
 

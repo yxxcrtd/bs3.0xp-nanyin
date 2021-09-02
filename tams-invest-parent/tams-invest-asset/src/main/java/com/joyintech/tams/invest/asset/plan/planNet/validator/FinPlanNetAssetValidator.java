@@ -49,6 +49,13 @@ public class FinPlanNetAssetValidator implements BeanValidator {
                 }
             }
         }
+        //新建页面 资产投资性质 必填校验
+        if(dto.getInvestmentAttributes() == null &&
+                (StringUtil.equals(dto.getOperateType(), "save") || StringUtil.equals(dto.getOperateType(), "submit"))){
+            errorList.add(new ValidMessage("investmentAttributes",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.investmentAttributes"),
+                    getMessage("FinPlanNetAsset002.investmentAttributes"))));
+        }
+
         if(dto.getVdate()!=null && dto.getMdate()!=null && dto.getVdate().compareTo(dto.getMdate()) >= 0){
             errorList.add(new ValidMessage("vdate",getMessage("BUSS_COM_E_0035",getMessage("FinPlanNetAsset002.vDate"),
                 getMessage("FinPlanNetAsset002.mDate"))));

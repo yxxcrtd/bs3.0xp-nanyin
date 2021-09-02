@@ -25,8 +25,8 @@ import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchLogsMapper;
-import com.joyintech.tams.valuation.component.batch.dao.ModValBatchParamsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
+import com.joyintech.tams.valuation.component.batch.dao.ModValBatchParams2Mapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -66,13 +66,13 @@ public class ModImpairementBatchTaskService extends BaseService {
     private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
 
     @Autowired
-    private ModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper modBatchLogsMapper;
 
     @Autowired
     private SqlSessionTemplate template;
 
     @Autowired
-    private ModValBatchParamsMapper modValBatchParamsMapper;
+    private ModValBatchParams2Mapper modValBatchParams2Mapper;
     @Autowired
     private AssetImpairmentManagement001Mapper assetImpairmentManagement001Mapper;
 
@@ -175,7 +175,7 @@ public class ModImpairementBatchTaskService extends BaseService {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            ModValBatchParamsMapper batchMapper = session.getMapper(ModValBatchParamsMapper.class);
+            ModValBatchParams2Mapper batchMapper = session.getMapper(ModValBatchParams2Mapper.class);
             int size = params.size();
             for(int index = 0; index < size; index++){
                 batchMapper.insert(params.get(index));

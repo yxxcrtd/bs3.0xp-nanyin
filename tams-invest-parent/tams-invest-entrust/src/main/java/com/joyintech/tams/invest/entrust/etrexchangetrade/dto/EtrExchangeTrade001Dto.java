@@ -619,6 +619,11 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
     public String getTradeMarketString(){
        return  SysDataUtil.getNameFromDataDict(DictCode.交易场所, super.getTradeMarket());
     }
+    //add by chenjiaxing 投资目的值转化 start
+    public String getInvAimStr(){
+        return  SysDataUtil.getNameFromDataDict(DictCode.投资目的, super.getInvAim());
+    }
+    //add by chenjiaxing 投资目的值转化 end
 
     public String getPriceModelStr(){
         return  SysDataUtil.getNameFromDataDict(DictCode.价格模式, super.getPriceModel());
@@ -669,4 +674,7 @@ public class EtrExchangeTrade001Dto extends EtrEntrust implements ProcessEntity{
 		this.settleSpeed = settleSpeed;
 	}
 
+    public String getTargetTypeStr() {
+        return  SysDataUtil.getNameFromDataDict(DictCode.目标类型, this.getTargetType());
+    }
 }

@@ -13,6 +13,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
@@ -275,6 +276,11 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	if(StringUtil.EMPTY.equals(value)){
     		return value;
     	}
+    	// ZGZGST-1644:对无单位进行特殊处理 fuyongsheng 20210828 add start
+		if(BussinessDictCodeListRds.单位_无.getValue().equals(value)){
+			return StringUtil.EMPTY;
+		}
+		// ZGZGST-1644:对无单位进行特殊处理 fuyongsheng 20210828 add end
     	String retStr=StringUtil.EMPTY;
     	DataDict dataDict = CacheUtil.getDictCode(BussinessDictCodeRds.单位.getValue());
     	List<? extends DataDictItem> itemList = dataDict.getItems();

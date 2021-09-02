@@ -61,8 +61,10 @@
         }
         if(data&&(data.finprodType2 == 'F01'||data.finprodType2 == 'F32')){
             $('#creditPrice').attr("disabled",false);
+            $('#creditPriceDiv').show();
         }else{
             $('#creditPrice').val("").attr("disabled",true);
+            $('#creditPriceDiv').hide();
         }
         // 页面展示控制
         initElements();
@@ -128,21 +130,21 @@
     /**
      * 首次开贷区间展示控制
      */
-    var initFirstLendingIntervalDiv = function (){
-        var data = $('#customerId').select2('data')[0].object;
-        if(data && (data.finprodType2 == finprodType2_F18
-            || (data.finprodType2 == finprodType2_F37 && data.type9 == type9_87))){
-            $("#firstLendingIntervalDiv").toggle(true);
-        }else {
-             $("#firstLendingInterval").val("");
-             $("#firstLendingIntervalDiv").toggle(false);
-         }
-    }
+    // var initFirstLendingIntervalDiv = function (){
+    //     var data = $('#customerId').select2('data')[0].object;
+    //     if(data && (data.finprodType2 == finprodType2_F18
+    //         || (data.finprodType2 == finprodType2_F37 && data.type9 == type9_87))){
+    //         $("#firstLendingIntervalDiv").toggle(true);
+    //     }else {
+    //          $("#firstLendingInterval").val("");
+    //          $("#firstLendingIntervalDiv").toggle(false);
+    //      }
+    // }
     /**
      * 页面原始初始化
      */
     var initElements = function (){
-        initFirstLendingIntervalDiv();
+        // initFirstLendingIntervalDiv();
         initApproveDateDiv();
         initAmt();
     }

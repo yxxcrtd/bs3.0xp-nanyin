@@ -706,4 +706,15 @@ public class FinPayInterestStdInfoDto extends FinCashPayRule {
     public void setIsPayInt(String isPayInt) {
         this.isPayInt = isPayInt;
     }
+
+    /**
+     * 是否没有明确的融资金额
+     */
+    private String isNoIssueAmtFlag;
+    public String getIsNoIssueAmtFlag() {
+        return isNoIssueAmtFlag;
+    }
+    public void setIsNoIssueAmtFlag(String isNoIssueAmtFlag) {
+        this.isNoIssueAmtFlag = isNoIssueAmtFlag;
+    }
 }

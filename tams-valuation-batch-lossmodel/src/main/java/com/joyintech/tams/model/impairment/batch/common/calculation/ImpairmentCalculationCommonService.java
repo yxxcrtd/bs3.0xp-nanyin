@@ -107,4 +107,31 @@ public class ImpairmentCalculationCommonService extends BaseService{
 		return null;
 	}
 
+	/**
+	 * 比较评级高低(返回值 > 0 则，r1评级高；=0则评级相同，<0，则r2评级高)
+	 * @param r1
+	 * @param r2
+	 * @return
+	 */
+	public int comparePoorRating(String r1, String r2) {
+
+		int calc = 0;
+		// 若r1、r2同时为空，则返回 0
+		if (StringUtil.isEmpty(r1) && StringUtil.isEmpty(r2)) {
+			calc= 0;
+		}
+		// 若r1为空，则返回-1
+		else if (StringUtil.isEmpty(r1)) {
+			calc =  -1;
+		}
+		// 若r2为空，则返回1
+		else if (StringUtil.isEmpty(r2)) {
+			calc =  1;
+		}
+		int ra = Integer.valueOf(r1.replaceAll("^(0+)", ""));
+		int rs = Integer.valueOf(r2.replaceAll("^(0+)", ""));
+		calc = rs - ra;
+		return calc;
+	}
+
 }

@@ -52,6 +52,12 @@ public class ModPdFactorConfigDto {
 	@JsonSerialize(using=BigDecimalSerializer.class)
 	private BigDecimal pessimismFactor;
 
+	/**
+	 * 综合系数
+	 */
+	@JsonSerialize(using=BigDecimalSerializer.class)
+	private BigDecimal combinedFactor;
+
 
 	public String getSeqNo() {
 		return seqNo;
@@ -107,5 +113,21 @@ public class ModPdFactorConfigDto {
 
 	public void setPessimismFactor(BigDecimal pessimismFactor) {
 		this.pessimismFactor = pessimismFactor;
+	}
+
+	/**
+	 * @return 综合系数
+	 */
+	public BigDecimal getCombinedFactor() {
+		return combinedFactor;
+	}
+
+	/**
+	 * 设置 综合系数
+	 *
+	 * @param combinedFactor 综合系数
+	 */
+	public void setCombinedFactor(BigDecimal combinedFactor) {
+		this.combinedFactor = combinedFactor;
 	}
 }

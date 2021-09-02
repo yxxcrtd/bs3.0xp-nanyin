@@ -7,8 +7,10 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
 import org.apache.poi.ss.usermodel.Cell;
@@ -68,7 +70,15 @@ public List<SelectOptionDto> getFinprodIdForBintree(Map<String, Object> paramete
 		if(parameters.get("initValue")!=null&&!"".equals(parameters.get("initValue"))){
 			qAssetInfoDto.setInitValue(parameters.get("initValue").toString());
 		}
-		qAssetInfoDto.setType8List(Arrays.asList("F11"));
+		/** modify by yanya on 20210824 修改为按照估值侧证券品种进行查询**/
+		//qAssetInfoDto.setType8List(Arrays.asList("F11"));
+		if(parameters.containsKey("IS_GP") && StringUtil.equals(DictCodeList.是否_是.getValue(), parameters.get("IS_GP").toString())) {
+			qAssetInfoDto.setType18List(Arrays.asList(DictCodeListExt1.证券品种_股票.getValue()));
+		}
+		else {
+			qAssetInfoDto.setType18List(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()));
+			qAssetInfoDto.setType1List(Arrays.asList(DictCodeList.债券类型_可转债.getValue(),DictCodeList.债券类型_可交换债.getValue()));
+		}
 		List<AssetInfoDto> aseetS = restTemplate.postForList(
 				ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getAssetNoClassify", qAssetInfoDto,
 				AssetInfoDto.class);
@@ -76,6 +86,7 @@ public List<SelectOptionDto> getFinprodIdForBintree(Map<String, Object> paramete
 			SelectOptionDto stationDictVO = new SelectOptionDto();
 			stationDictVO.setId(operationStation.getFinprodId());
 			stationDictVO.setText(operationStation.getFinprodAbbr());
+			stationDictVO.setObject(operationStation.getFinprodMarketId());
 			return stationDictVO;
 		}).collect(Collectors.toList());
 

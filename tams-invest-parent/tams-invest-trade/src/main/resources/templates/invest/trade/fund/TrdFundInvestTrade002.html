@@ -155,7 +155,9 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item">
-                                    <div class="form-inline-wrap" id="selector5" style="display: none">
+                                    <!--ZGZGST-1612: 修改展示判断逻辑 fuyongsheng 20210827 edit start-->
+                                    <div class="form-inline-wrap" id="selector5" data-th-if="${isShowType} eq '01'">
+                                    <!--ZGZGST-1612: 修改展示判断逻辑 fuyongsheng 20210827 edit end-->
                                         <label class="layui-form-label form-label-wrap"
                                                th:text="#{TrdFundInvestTrade001.type11}">资产四级分类</label>
                                         <div class="layui-input-inline input-inline">
@@ -471,7 +473,7 @@
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap commissionFee_class" style="display:none">
-                                    <label class="layui-form-label form-label-wrap">佣金 </label>
+                                    <label class="layui-form-label form-label-wrap">佣金</label>
                                     <div class="layui-input-inline input-inline">
                                         <input  type="text" id="commissionFee" name="commissionFee"
                                                class="layui-input form-input text-number" placeholder="请输入内容"

@@ -99,7 +99,16 @@ public class Rsk0017Service extends EventBaseService<Rsk007InEntity> {
         throws Exception {
         String orderId = (String)rskMap.get("orderID");
 
-        List<Map> rsklist = JsonUtils.json2List((String) rskMap.get(DATALIST), Map.class);
+        // modify by etliu 20210831 start
+//        List<Map> rsklist = JsonUtils.json2List((String) rskMap.get(DATALIST), Map.class);
+        List<Map> rsklist;
+        if (rskMap.get(DATALIST) instanceof java.util.List ) {
+            rsklist = (List) rskMap.get(DATALIST);
+        }
+        else {
+            rsklist = JsonUtils.json2List((String) rskMap.get(DATALIST), Map.class);
+        }
+        // modify by etliu 20210831 end
 
         if(StringUtil.isEmptyList(rsklist)) {
             throw new InterfException("业务数据为空");

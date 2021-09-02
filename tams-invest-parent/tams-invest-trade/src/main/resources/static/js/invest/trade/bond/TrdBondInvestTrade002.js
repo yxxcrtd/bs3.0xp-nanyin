@@ -1,5 +1,6 @@
 //@ sourceURL=TrdBondInvestTrade002.js
 var table;
+var calculateField;
 (function () {
     var unitNum;
 	var initFlag = true;
@@ -147,6 +148,7 @@ var table;
                 object.ownFpriceAmt = object.fpriceAmt;
                 object.ownIntAmt = object.intAmt;
             }
+            object.calculateField = calculateField;
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
                 if(isautobond == true){
                     Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
@@ -350,6 +352,7 @@ var table;
         return true;
     }
     var etrEntrust;
+    var etrEntrustAdd;
     /**
      * 计算交割日
      */
@@ -1674,6 +1677,18 @@ var table;
                 // 金融要素信息由投资委托带出，其中有：币种、券面总额、净价、到期收益率、行权收益率等
                 if(data != null && data.etrEntrust != null){
                     etrEntrust = data.etrEntrust;
+                    etrEntrustAdd = data.etrEntrustAdd;
+                    calculateField = etrEntrustAdd.calculateField;
+                    if(etrEntrustAdd.calculateField == "price"){
+                        calculateField = "unitCprice";
+                    }
+                    else if(etrEntrustAdd.calculateField == "matureYield"){
+                        calculateField = "yield";
+                    }
+                    if(calculateField){
+                        $("#calculateField_" + calculateField).attr("checked", true);
+                        layui.form.render('radio');
+                    }
                     checkAndAssign("#portfolioId", etrEntrust.portfolioId); // 组合代码、
                     $('#portfolioId').textSelect('setValue', etrEntrust.portfolioId);
                     checkAndAssign("#finprodId", etrEntrust.finprodId);
@@ -2008,6 +2023,11 @@ var table;
                 $("#calculateField_yield").attr("checked", true);
                 layui.form.render('radio');
                 $('#yield').attr("disabled", true);
+            }
+
+            if(calculateField){
+                $("#calculateField_" + calculateField).attr("checked", true);
+                layui.form.render('radio');
             }
             
           //交易对手改变时  影响通道费金额，内部交易对手随交易支付，外部交易对手根据收取方式

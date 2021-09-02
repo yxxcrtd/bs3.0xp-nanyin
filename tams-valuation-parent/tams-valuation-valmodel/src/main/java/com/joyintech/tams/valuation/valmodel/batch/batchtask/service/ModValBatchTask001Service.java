@@ -28,6 +28,12 @@ import java.util.*;
 public class ModValBatchTask001Service  extends CommonExportService {
 
     /**
+     * 定义常量 估值模型任务组组号
+     * add by yanya on 20210901
+     */
+    private final static String BATCH_GROUP_SEQNO = "valmodel000000000000000000000001";
+
+    /**
      * 获取树的节点信息
      * @param map
      * @return
@@ -56,6 +62,8 @@ public class ModValBatchTask001Service  extends CommonExportService {
     }
 
     public List<String> getBatchList(Map<String, Object> map) {
+        //add by yanya on 20210901 添加估值模型任务组组号
+        map.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
         List<BatchTaskDto> batchTaskDtos = restTemplate.postForList(ServiceApplication.VAL_MODEL_SERVICE_NAME
                 + "/modValBatchTask/getAllBatchTask", map, BatchTaskDto.class);
         if (!CollectionUtils.isEmpty(batchTaskDtos)) {
@@ -91,14 +99,22 @@ public class ModValBatchTask001Service  extends CommonExportService {
         // 用户名
         String realName = SecurityUtil.getLoginUser().getRealName();
         pageParam.put("realName", realName);
-        boolean res = restTemplate.postForObject(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                + "/modValBatchTask/insertBatch", pageParam, Boolean.class);
-        if (res) {
-            isCheck = 0;
-            checkMsg = "执行成功!";
-        } else {
-            isCheck = 1;
-            checkMsg = "执行失败, 请联系管理员!";
+        boolean checkFlag = restTemplate.postForObject(ServiceApplication.VAL_MODEL_SERVICE_NAME
+                + "/modValBatchTask/checkIsRunning", pageParam, Boolean.class);
+        if(!checkFlag) {
+            boolean res = restTemplate.postForObject(ServiceApplication.VAL_MODEL_SERVICE_NAME
+                    + "/modValBatchTask/insertBatch", pageParam, Boolean.class);
+            if (res) {
+                isCheck = 0;
+                checkMsg = "执行成功!";
+            } else {
+                isCheck = 1;
+                checkMsg = "执行失败, 请联系管理员!";
+            }
+        }
+        else {
+            isCheck = 2;
+            checkMsg = "当前有产品正在跑批，请稍后!";
         }
         json.addProperty("isCheck", isCheck);
         json.addProperty("checkMsg", checkMsg);
@@ -111,16 +127,9 @@ public class ModValBatchTask001Service  extends CommonExportService {
      * @param pageParam
      * @return
      */
-    public Page<SelectOptionDto> getAssetInfo(Map<String, Object> pageParam) {
-//        MultiValueMap<String, Object> params = new LinkedMultiValueMap<String, Object>();
-//        if(!CollectionUtils.isEmpty(pageParam)) {
-//            for (Map.Entry<String, Object> entry : pageParam.entrySet()) {
-//                params.add(entry.getKey(), entry.getValue());
-//            }
-//        }
+    public Page<SelectOptionDto> getValBatchAssetInfo(Map<String, Object> pageParam) {
         Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
                 + "/modValBatchTask/getAssetInfo", pageParam, SelectOptionDto.class);
-
         return page;
     }
 
@@ -132,6 +141,8 @@ public class ModValBatchTask001Service  extends CommonExportService {
     public Page<BatchExecutingStatusDto> findBatchExeDetail(String sysDate) {
         Map<String, Object> params = RequestUtil.getPageParam();
         params.put("sysDate", sysDate);
+        //add by yanya on 20210901 添加估值模型任务组组号
+        params.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
         Page<BatchExecutingStatusDto> page = restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
                 + "/modValBatchTask/findBatchExeDetail", params, BatchExecutingStatusDto.class);
 

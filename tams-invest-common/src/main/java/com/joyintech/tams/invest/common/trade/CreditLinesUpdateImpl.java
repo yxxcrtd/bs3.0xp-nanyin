@@ -252,9 +252,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             if (creditLinesOrg == null || creditLinesOrgItem == null){
                 outputDto.setTradeId(inputDto.getFinprodId());
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
-                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_15"));
                 }else {
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_16"));
                 }
                 return;
             }
@@ -276,9 +276,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             if (剩余占用额度1.compareTo(BigDecimal.ZERO) > 0 || 剩余占用额度2.compareTo(BigDecimal.ZERO) > 0){
                 outputDto.setTradeId(inputDto.getFinprodId());
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
-                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_17"));
                 }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
                 }
             }
         }
@@ -1062,6 +1062,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 重置额度管理表剩余可用额度
                     reCalcuUsedAmt(creditLine,inputDto,resetAmt.negate());
                     if (StringUtil.equals(item.getCreditOccureType(),DictCodeListRsk.授信占用类别_预占.getValue())){
+                        item.setShareAmt(前置交易剩余占用额度);
                         item.setNewAmount(前置交易剩余占用额度);
                         if (occupy || StringUtil.equals(creditLine.getIsLoopAmt(), DictCodeList.是否_是.getValue())){
                             item.setAmount(前置交易剩余占用额度);
@@ -1093,6 +1094,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     reCalcuUsedAmt(creditLine,inputDto,resetAmt.negate());
                     if (StringUtil.equals(item.getCreditOccureType(),DictCodeListRsk.授信占用类别_预占.getValue())){
                         item.setNewAmount(前置交易剩余占用额度);
+                        item.setShareAmt(前置交易剩余占用额度);
                         if (occupy || StringUtil.equals(creditLine.getIsLoopAmt(), DictCodeList.是否_是.getValue())){
                             item.setAmount(前置交易剩余占用额度);
                         }
@@ -1751,6 +1753,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
                     BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
                     inputDto.setShareAmt(objShareAmt.abs());
+                    inputDto.setTradeAmt(BigDecimal.ZERO);
                     occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
                 }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
                     inputDto.setTradeAmt(BigDecimal.ZERO);

@@ -224,7 +224,7 @@ public class RiskNamListCommonValidatorService {
     }
 
     private Boolean 机构是否匹配( RiskNamListCommonDto riskNamListCommonDto,Map<String, Object> nameListMap){
-        if(StringUtil.isNotEmpty(riskNamListCommonDto.getCustomerId())){
+        if(riskNamListCommonDto != null && StringUtil.isNotEmpty(riskNamListCommonDto.getCustomerId())){
             nameListMap.put("finprodId", riskNamListCommonDto.getInsitituteCode());
             nameListMap.put("finprodName", riskNamListCommonDto.getCustomerName());
             nameListMap.put("finprodAbbr", riskNamListCommonDto.getCustomerName());
@@ -252,7 +252,7 @@ public class RiskNamListCommonValidatorService {
      * @since 1.0
      */
     private Boolean orgCheckIspass( RiskNamListCommonDto riskNamListCommonDto,Map<String, Object> nameListMap){
-        if(StringUtil.isNotEmpty(riskNamListCommonDto.getCustomerId())){
+        if(riskNamListCommonDto != null && StringUtil.isNotEmpty(riskNamListCommonDto.getCustomerId())){
             nameListMap.put("finprodId", nameListMap.get("finprodId"));
             nameListMap.put("finprodName", riskNamListCommonDto.getCustomerName());
             nameListMap.put("finprodAbbr", riskNamListCommonDto.getCustomerName());

@@ -807,6 +807,11 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             finProductTradeDto.getTrdProductDeal().getCcy(), finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),
                 finProductTradeDto.getTrdProductDeal().getCounterId(),
             etrCashPositionFlowDto);
+        //一级债券 组合托管户 交割现金
+        if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
+            账号 = EtrCommonCashPositionDealService.select组合托管户(finProductTradeDto.getTrdProductDealAdd().getPortfolioId()
+                    , finProductTradeDto.getTrdProductDeal().getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue());
+        }
         // 设置账号
         etrCashPositionFlowDto.setAcctId(账号);
         // 交易生效
@@ -832,6 +837,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 //                if(StringUtil.isNotEmpty(finProductTradeDto.getBondFirstSign())){
 //                	etrPositionHoldDto.getPtlCashPositionFlows().add(gen一级市场冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量));
 //                }else{
+
                         etrPositionHoldDto.getPtlCashPositionFlows().add(gen冲销现金流水生成(etrCashPositionFlowDto, entrustId, 交易日数量,finProductTradeDto.getTrdProductDeal().getSettleDate(), finProductTradeDto.getTrdProductDeal().getTradeMarket(),finProductTradeDto.getBondFirstSign()));
 //                }
                 }
@@ -1063,6 +1069,8 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
 			if (StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
 					|| StringUtil.equals(etrEntrust.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
 				// 场内交易的日间交易已完成额度不能取额度表里的数据，因为如果是按金额下指令的，额度表中存的是金额，所以从交易表和交易零时表中查询实际发生的额度汇总
+
+                map.put("ps",ps);
 				etrFinish = EtrCommonCashPositionDealService.getEtrExchangeFinishAmt(map);
 				if (StringUtil.equals(DictCodeListExt3.交易方向_质押券出库.getValue(), ps) || StringUtil.equals(DictCodeListExt3.交易方向_质押券入库.getValue(), ps)) {
 					etrFinish = etrCommonCashPositionDealService.selectSumStandardTicket(etrEntrust.getEntrustId(), ps);
@@ -1110,7 +1118,9 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
         // add by zhangliang 20200902 交易所取委托信息里的全价 start
         if (StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_上海证券交易所.getValue())
     		||StringUtil.equals(tradePlace, DictCodeListExt1.交易场所_深圳证券交易所.getValue()) ){
-        	return entrustCommonDto.getEtrEntrustAdd().getFullPrice();
+            if (entrustCommonDto.getEtrEntrustAdd().getFullPrice() != null) {
+                return entrustCommonDto.getEtrEntrustAdd().getFullPrice();
+            }
         }
         // add by zhangliang 20200902 交易所取委托信息里的全价 end
         if (StringUtil.equals(entrustCommonDto.getEtrEntrust().getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())

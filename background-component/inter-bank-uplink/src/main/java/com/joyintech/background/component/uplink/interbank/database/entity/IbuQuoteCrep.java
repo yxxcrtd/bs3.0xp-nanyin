@@ -251,6 +251,18 @@ public class IbuQuoteCrep extends BaseEntity {
     private String transactime;
 
     /**
+     * 中债券面总额合计
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal zzTotalAmt;
+
+    /**
+     * 上清券面总额合计
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal sqTotalAmt;
+
+    /**
      * 取得 报价编号（内部代码）
      * @return 报价编号（内部代码）
      */
@@ -988,5 +1000,37 @@ public class IbuQuoteCrep extends BaseEntity {
      */
     public void setTransactime(String transactime) {
         this.transactime = transactime == null ? null : transactime.trim();
+    }
+
+    /**
+     * 取得 中债券面总额合计
+     * @return 中债券面总额合计
+     */
+    public BigDecimal getZzTotalAmt() {
+        return zzTotalAmt;
+    }
+
+    /**
+     * 设置 中债券面总额合计
+     * @param zzTotalAmt 中债券面总额合计
+     */
+    public void setZzTotalAmt(BigDecimal zzTotalAmt) {
+        this.zzTotalAmt = zzTotalAmt;
+    }
+
+    /**
+     * 取得 上清券面总额合计
+     * @return 上清券面总额合计
+     */
+    public BigDecimal getSqTotalAmt() {
+        return sqTotalAmt;
+    }
+
+    /**
+     * 设置 上清券面总额合计
+     * @param sqTotalAmt 上清券面总额合计
+     */
+    public void setSqTotalAmt(BigDecimal sqTotalAmt) {
+        this.sqTotalAmt = sqTotalAmt;
     }
 }

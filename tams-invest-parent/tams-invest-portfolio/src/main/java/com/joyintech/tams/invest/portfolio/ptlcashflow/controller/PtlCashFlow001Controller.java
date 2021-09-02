@@ -10,9 +10,12 @@
  
 package com.joyintech.tams.invest.portfolio.ptlcashflow.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -147,6 +150,13 @@ public class PtlCashFlow001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) PtlCashFlowDto dto, BindingResult result) {
+        if(StringUtil.isNotEmpty(dto) && dto.getTradeStatus().equals("03")){
+            ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+            errorList.add(new ValidMessage(this.getMessage("已撤销的交易不允许撤销")));
+            AjaxResult ar = new AjaxResult();
+            ar.setErrorList(errorList);
+            return ar;
+        }
         return commonCheck(result, dto.getOperateType());
     }
     

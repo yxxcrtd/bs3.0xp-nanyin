@@ -3,6 +3,8 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.common.base.entity.ModBintreeConfig;
+import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 
 import java.math.BigDecimal;
@@ -167,7 +169,7 @@ public class BinaryTreeModelReaderEntity extends NeedOperateEntity {
     /**
      * 股票行情集合
      */
-    private List<ModStockMarketInfoDto> modStockMarketInfoList;
+    private List<MstSharePrice> modStockMarketInfoList;
 
     /**
      * 曲线行情集合
@@ -415,11 +417,11 @@ public class BinaryTreeModelReaderEntity extends NeedOperateEntity {
         this.modCashFlowCalRuleList = modCashFlowCalRuleList;
     }
 
-    public List<ModStockMarketInfoDto> getModStockMarketInfoList() {
+    public List<MstSharePrice> getModStockMarketInfoList() {
         return modStockMarketInfoList;
     }
 
-    public void setModStockMarketInfoList(List<ModStockMarketInfoDto> modStockMarketInfoList) {
+    public void setModStockMarketInfoList(List<MstSharePrice> modStockMarketInfoList) {
         this.modStockMarketInfoList = modStockMarketInfoList;
     }
 

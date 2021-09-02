@@ -197,7 +197,8 @@
                     $('#proAvailableCash_div').show();
                     $('#proAvailableCash1_div').show();
                     // $('#accAvailableCash_div').show();
-                    $('#div_channelCash').show();
+                    //隐藏合作资产可用现金
+                    // $('#div_channelCash').show();
                     $('#entrustAmt').attr('disabled',false);
                     $('#entrustNum').attr('disabled',true);
                     $('#entrustNum').val("");
@@ -209,7 +210,8 @@
                     $('#proAvailableCash_div').hide();
                     $('#proAvailableCash1_div').hide();
                     // $('#accAvailableCash_div').hide();
-                    $('#div_channelCash').hide();
+                    //隐藏合作资产可用现金
+                    // $('#div_channelCash').hide();
                     $('#entrustAmt').attr('disabled',true);
                     $('#entrustAmt').val("");
                     $('#entrustNum').attr('disabled',false);

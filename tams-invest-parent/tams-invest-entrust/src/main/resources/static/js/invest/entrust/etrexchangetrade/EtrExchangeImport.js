@@ -138,6 +138,9 @@
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//持仓成本
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//最新价
+        //add by chenjiaxing 20210830 导入添加投资目的 start
+        , {field:'invAimStr', title: 'EtrExchangeTrade001.invAim', width : 240,sortable: false}
+        //add by chenjiaxing 20210830 导入添加投资目的 end
     ];
 
     //大宗交易指令
@@ -176,6 +179,7 @@
                 url: JoyinUtil.getRealPath('/invest/entrust/etrexchangetrade/EtrExchangeTrade001/selectCounterIdByCounterType')
             }
         }
+        , {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}}
         , {field: 'seatId', title: 'EtrExchangeTrade001.seatId', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
@@ -204,12 +208,14 @@
         }
         , {field: 'fprice', title: 'EtrExchangeTrade001.fprice', width:100, type:'number', digit : 3, sortable: false}
         , {field: 'yield', title: 'EtrExchangeImport.yield', width:100, type:'number', digit : 6, sortable: false}
+        , {field: 'targetTypeStr', title: 'EtrExchangeTrade001.targetType', width:100, sortable: false}
         , {field: 'entrustNum', title: 'EtrExchangeTrade001.entrustNum', width: 120, type:'number', digit : 0, sortable: false}
         , {field: 'entrustAmt', title: 'EtrBrowDepoInfo003.entrustAmt', width: 120, type:'number',sortable: false}
         , {field: 'proAvailableCash', title: 'EtrBrowDepoInfo003.etrAvailableCash', type: 'number', width: 150, sortable: false}
         , {field: 'accAvailablePos', title: 'EtrBrowDepoInfo003.etrAvailablePosition', type: 'number', width: 150, sortable: false}
         , {field: 'counterId', title: 'EtrExchangeTrade001.counterId', width: 120, sortable: false}
         , {field: 'counterTrader', title: 'EtrExchangeTrade001.counterTrader', width: 120, sortable: false}
+        , {field: 'invAim', title: 'EtrAssetConfigTransfer002.invAim', width: 100,edit:true,editOption:{type:'select',formatoption:true,showField: 'text',result: INV_AIM}}
         , {field: 'trader', title: 'EtrExchangeTrade001.traders', width: 120, sortable: false}
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
@@ -274,16 +280,16 @@
      */
     function saveOrSubmit(operateType) {
         // add by zhangrui1 start
-//        var s;
-//        if(BaseRiskMathComm) {
-//            s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-//            if(!s && s != ''){
-//                return;
-//            }
-//            if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-//                return;
-//            }
-//        }
+       var s;
+       if(BaseRiskMathComm) {
+           s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+           if(!s && s != ''){
+               return;
+           }
+           if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+               return;
+           }
+       }
         // add by zhangrui1 end
         //校验数据  校验表格
         var tableData = table.getAllRows();
@@ -319,9 +325,15 @@
                 function (result) {
                     Joyin.confirm(result.data, function () {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport');
+                            WorkFlow.doSaveList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_save",'EtrExchangeImport', function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
                         } else {
-                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeImport');
+                            WorkFlow.doSubmitList(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeImport/save', allDto, "EtrExchangeImport_btn_submit",'EtrExchangeImport', function () {
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
                         }
                     });
                 });

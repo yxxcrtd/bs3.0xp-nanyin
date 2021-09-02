@@ -131,6 +131,11 @@ public class ValBotAstInfo extends BaseEntity {
     private BigDecimal spreadRate;
 
     /**
+     * 风险五级分类
+     */
+    private String bondRiskType;
+
+    /**
      * 取得 资产代码
      * @return 资产代码
      */
@@ -508,6 +513,22 @@ public class ValBotAstInfo extends BaseEntity {
 
     public void setBelongInstitutionCode(String belongInstitutionCode) {
         this.belongInstitutionCode = belongInstitutionCode;
+    }
+
+    /**
+     * 取得 风险五级分类
+     * @return 风险五级分类
+     */
+    public String getBondRiskType() {
+        return bondRiskType;
+    }
+
+    /**
+     * 设置 风险五级分类
+     * @param bondRiskType 风险五级分类
+     */
+    public void setBondRiskType(String bondRiskType) {
+        this.bondRiskType = bondRiskType;
     }
     
 }

@@ -72,39 +72,43 @@
         from FIN_PRODUCT
     </sql>
     <insert id="insertBatch" parameterType="java.util.List" >
-        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2, 
-            FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE, 
-            COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID, 
-            ISSUE_ID, ISSUE_PRICE, ISSUE_AMT, 
-            CCY, BLN_AREA, TRADE_MARKET, 
-            CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE, 
-            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID, 
-            ISSUER, MANAGER, FINANCIER, 
-            IDATE, VDATE, MDATE, TERM_DAYS, 
-            ACTMDATE, LIQUIDATION_DATE, IS_CHL, 
-            IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT, 
-            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID, 
-            REGIST_ORG, EXE_DATE, REMARK, 
-            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME
+        insert into FIN_PRODUCT (FINPROD_ID, FINPROD_TYPE, FINPROD_TYPE2,
+            FINPROD_ABBR, FINPROD_NAME, PROFIT_TYPE,
+            COUPON_SPECIES, CHL_FINPROD_ID, FINPROD_MARKET_ID,
+            ISSUE_ID, ISSUE_PRICE, ISSUE_AMT,
+            CCY, BLN_AREA, TRADE_MARKET,
+            CALENDAR_ID, ISSUE_TYPE, OPERATION_TYPE,
+            ENTRUST_TYPE, ENTRUSTER, TRUSTEE_ID,
+            ISSUER, MANAGER, FINANCIER,
+            IDATE, VDATE, MDATE, TERM_DAYS,
+            ACTMDATE, LIQUIDATION_DATE, IS_CHL,
+            IS_SUS, SUSTAINABLE_REMARK, IS_RIGHT,
+            CAPI_INCOME_FEATURE, P_FINPROD_ID, O_FINPROD_ID,
+            REGIST_ORG, EXE_DATE, REMARK,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, CONTRACT_NO,
+            IS_FIN_ORG, SPONSOR, INVEST_ADVISER,
+            LIQUIDATION_YESNO, SPPI_TEST_STATUS, CIRCULATION_CODE
             )
         <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
                  close=" from dual)">
-          #{item.finprodId,jdbcType=VARCHAR}, #{item.finprodType,jdbcType=VARCHAR}, #{item.finprodType2,jdbcType=VARCHAR}, 
-            #{item.finprodAbbr,jdbcType=VARCHAR}, #{item.finprodName,jdbcType=VARCHAR}, #{item.profitType,jdbcType=VARCHAR}, 
-            #{item.couponSpecies,jdbcType=VARCHAR}, #{item.chlFinprodId,jdbcType=VARCHAR}, #{item.finprodMarketId,jdbcType=VARCHAR}, 
-            #{item.issueId,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL}, 
-            #{item.ccy,jdbcType=VARCHAR}, #{item.blnArea,jdbcType=VARCHAR}, #{item.tradeMarket,jdbcType=VARCHAR}, 
-            #{item.calendarId,jdbcType=VARCHAR}, #{item.issueType,jdbcType=VARCHAR}, #{item.operationType,jdbcType=VARCHAR}, 
-            #{item.entrustType,jdbcType=VARCHAR}, #{item.entruster,jdbcType=VARCHAR}, #{item.trusteeId,jdbcType=VARCHAR}, 
-            #{item.issuer,jdbcType=VARCHAR}, #{item.manager,jdbcType=VARCHAR}, #{item.financier,jdbcType=VARCHAR}, 
-            #{item.idate,jdbcType=DATE}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE}, #{item.termDays,jdbcType=DECIMAL}, 
-            #{item.actmdate,jdbcType=DATE}, #{item.liquidationDate,jdbcType=DATE}, #{item.isChl,jdbcType=VARCHAR}, 
-            #{item.isSus,jdbcType=VARCHAR}, #{item.sustainableRemark,jdbcType=VARCHAR}, #{item.isRight,jdbcType=VARCHAR}, 
-            #{item.capiIncomeFeature,jdbcType=VARCHAR}, #{item.pFinprodId,jdbcType=VARCHAR}, #{item.oFinprodId,jdbcType=VARCHAR}, 
-            #{item.registOrg,jdbcType=VARCHAR}, #{item.exeDate,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, 
-            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, 
-            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+            #{item.finprodId,jdbcType=VARCHAR}, #{item.finprodType,jdbcType=VARCHAR}, #{item.finprodType2,jdbcType=VARCHAR},
+            #{item.finprodAbbr,jdbcType=VARCHAR}, #{item.finprodName,jdbcType=VARCHAR}, #{item.profitType,jdbcType=VARCHAR},
+            #{item.couponSpecies,jdbcType=VARCHAR}, #{item.chlFinprodId,jdbcType=VARCHAR}, #{item.finprodMarketId,jdbcType=VARCHAR},
+            #{item.issueId,jdbcType=VARCHAR}, #{item.issuePrice,jdbcType=DECIMAL}, #{item.issueAmt,jdbcType=DECIMAL},
+            #{item.ccy,jdbcType=VARCHAR}, #{item.blnArea,jdbcType=VARCHAR}, #{item.tradeMarket,jdbcType=VARCHAR},
+            #{item.calendarId,jdbcType=VARCHAR}, #{item.issueType,jdbcType=VARCHAR}, #{item.operationType,jdbcType=VARCHAR},
+            #{item.entrustType,jdbcType=VARCHAR}, #{item.entruster,jdbcType=VARCHAR}, #{item.trusteeId,jdbcType=VARCHAR},
+            #{item.issuer,jdbcType=VARCHAR}, #{item.manager,jdbcType=VARCHAR}, #{item.financier,jdbcType=VARCHAR},
+            #{item.idate,jdbcType=DATE}, #{item.vdate,jdbcType=DATE}, #{item.mdate,jdbcType=DATE}, #{item.termDays,jdbcType=DECIMAL},
+            #{item.actmdate,jdbcType=DATE}, #{item.liquidationDate,jdbcType=DATE}, #{item.isChl,jdbcType=VARCHAR},
+            #{item.isSus,jdbcType=VARCHAR}, #{item.sustainableRemark,jdbcType=VARCHAR}, #{item.isRight,jdbcType=VARCHAR},
+            #{item.capiIncomeFeature,jdbcType=VARCHAR}, #{item.pFinprodId,jdbcType=VARCHAR}, #{item.oFinprodId,jdbcType=VARCHAR},
+            #{item.registOrg,jdbcType=VARCHAR}, #{item.exeDate,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR},
+            #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+            #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.contractNo,jdbcType=VARCHAR},
+            #{item.isFinOrg,jdbcType=VARCHAR}, #{item.sponsor,jdbcType=VARCHAR}, #{item.investAdviser,jdbcType=VARCHAR},
+            #{item.liquidationYesno,jdbcType=VARCHAR}, #{item.sppiTestStatus,jdbcType=CHAR}, #{item.circulationCode,jdbcType=VARCHAR}
         </foreach>
        </insert>
        
@@ -118,5 +122,31 @@
 	            </if>
 	           (#{item.finprodId,jdbcType=VARCHAR})
 	        </foreach>
+    </delete>
+
+    <insert id="insertConvertibleBatch" parameterType="java.util.List" >
+        insert into FIN_PRODUCT_CONVERTIBLE (FINPROD_ID, CON_FINPROD_ID, CON_SHARE_ID,
+            CON_VDATE, CON_PRICE, RESALE_PRICE,
+            REDEEM_PRICE, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select " close=" from dual ) tmp">
+            #{item.finprodId,jdbcType=VARCHAR}, #{item.conFinprodId,jdbcType=VARCHAR}, #{item.conShareId,jdbcType=VARCHAR},
+            #{item.conVdate,jdbcType=DATE}, #{item.conPrice,jdbcType=DECIMAL}, #{item.resalePrice,jdbcType=DECIMAL},
+            #{item.redeemPrice,jdbcType=DECIMAL}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+    </insert>
+
+    <delete id="deleteConvertibleBatch" parameterType="java.util.List" >
+        delete from FIN_PRODUCT_CONVERTIBLE
+        where (FINPROD_ID) in
+        <foreach collection="list" item="item" index="index" separator="," open="("
+                 close=")">
+            <if test="(index % 1000) == 999">
+                (null) ) OR (FINPROD_ID) in (
+            </if>
+            (#{item.finprodId,jdbcType=VARCHAR})
+        </foreach>
     </delete>
 </mapper>

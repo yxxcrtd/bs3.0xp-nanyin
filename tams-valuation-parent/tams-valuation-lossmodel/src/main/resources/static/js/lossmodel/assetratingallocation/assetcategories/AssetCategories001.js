@@ -27,9 +27,9 @@ $(function() {
                 {field : 'seqNo',title : 'seqNo',visible : false},
                 { title: "资产类别", field: 'assetTypeStr',sortField:'assetType',sort : true},
                 { title: "资产分类", field: 'assetDetailTypeStr',sortField:'assetDetailType',sort : true},
+                { title: "评级类型", field: 'oTypeStr',sortField:'oType',sort : true},
                 { title: "评级机构类型", field: 'gradeOrgTypeStr',sortField:'gradeOrgType',sort : true},
                 { title: "评级机构", field: 'gradeOrgIdStr',sortField:'gradeOrgId',sort : true},
-                { title: "评级类型", field: 'oTypeStr',sortField:'oType',sort : true},
                 { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
                ],
         dblclick: function(table, data){

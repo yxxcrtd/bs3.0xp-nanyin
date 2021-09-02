@@ -14,11 +14,15 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.ModCurveResult;
+import com.joyintech.tams.common.base.entity.FinProductValuation;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveResultDetail;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRiskPremium;
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,41 +54,120 @@ public class CashFlowDiscountWriter extends BaseWriter<NeedToWriteEntity>{
         List<ModRiskPremium> modRiskPremiums = new ArrayList<>();
         List<ModCurveResult> modCurveResults = new ArrayList<>();
         List<ModCurveResultDetail> modCurveResultDetails = new ArrayList<>();
-        try{
-            if(!StringUtil.isEmptyList(resultList)){
-                resultList.forEach(item ->{
-                    Map<String,Object> map = new HashMap<>();
-                    ModCurveResult modCurveResult = item.getModCurveResult();
-                    ModRiskPremium modRiskPremium = item.getModRiskPremium();
-                    if(null!=modCurveResult){
-                        map.put("finprodId", modCurveResult.getFinprodId());
-                        map.put("cdate", modCurveResult.getCdate());
-                        modCurveResults.add(item.getModCurveResult());
-                        cashFlowDiscountMapper.deleteCurveResult(map);
-                    }
-                    if(null!=modRiskPremium){
-                        map.put("basedate", modRiskPremium.getBasedate());
-                        modRiskPremiums.add(modRiskPremium);
-                        cashFlowDiscountMapper.deleteRiskPremium(map);
-                    }
-                    if(!StringUtil.isEmptyList(item.getModCurveResultDetails())){
-                        modCurveResultDetails.addAll(item.getModCurveResultDetails());
-                        cashFlowDiscountMapper.deleteCurveResultDetail(map);
-                    }
-                });
-                if(!StringUtil.isEmptyList(modRiskPremiums)){
-                    cashFlowDiscountMapper.insertBatchRiskPremium(modRiskPremiums);
+        List<MstBondValuationInfo> mstBondValuationInfos = new ArrayList<>();
+        List<FinProductValuation> finProductValuations = new ArrayList<>();
+        if(!StringUtil.isEmptyList(resultList)){
+            resultList.forEach(item ->{
+                Map<String,Object> map = new HashMap<>();
+                ModCurveResult modCurveResult = item.getModCurveResult();
+                ModRiskPremium modRiskPremium = item.getModRiskPremium();
+                if(null!=modCurveResult){
+                    map.put("finprodId", modCurveResult.getFinprodId());
+                    map.put("cdate", modCurveResult.getCdate());
+                    modCurveResults.add(item.getModCurveResult());
+                    cashFlowDiscountMapper.deleteCurveResult(map);
                 }
-                if(!StringUtil.isEmptyList(modCurveResults)){
-                    cashFlowDiscountMapper.insertBatchCurveResult(modCurveResults);
+                if(null!=modRiskPremium){
+                    map.put("basedate", modRiskPremium.getBasedate());
+                    modRiskPremiums.add(modRiskPremium);
+                    cashFlowDiscountMapper.deleteRiskPremium(map);
                 }
-                if(!StringUtil.isEmptyList(modCurveResultDetails)){
-                    cashFlowDiscountMapper.insertBatchCurveResultDetail(modCurveResultDetails);
+                if(!StringUtil.isEmptyList(item.getModCurveResultDetails())){
+                    modCurveResultDetails.addAll(item.getModCurveResultDetails());
+                    cashFlowDiscountMapper.deleteCurveResultDetail(map);
                 }
+                if(null!=item.getMstBondValuationInfo()){
+                    mstBondValuationInfos.add(item.getMstBondValuationInfo());
+                }
+                if(null!=item.getFinProductValuation()){
+                    finProductValuations.add(item.getFinProductValuation());
+                }
+            });
+            if(CollectionUtils.isNotEmpty(modRiskPremiums)){
+                cashFlowDiscountMapper.insertBatchRiskPremium(modRiskPremiums);
             }
-        }catch (Exception e){
-            logger.error("现金流贴现批处理writer相关业务处理异常:"+e.getMessage());
+            if(CollectionUtils.isNotEmpty(modCurveResults)){
+                cashFlowDiscountMapper.insertBatchCurveResult(modCurveResults);
+            }
+            if(CollectionUtils.isNotEmpty(modCurveResultDetails)){
+                cashFlowDiscountMapper.insertBatchCurveResultDetail(modCurveResultDetails);
+            }
+            if(CollectionUtils.isNotEmpty(finProductValuations)){
+                deleteFinProductValuation(finProductValuations);
+                insertFinProductValuation(finProductValuations);
+            }
+            if(CollectionUtils.isNotEmpty(mstBondValuationInfos)){
+                deleteMstBondQuotationInfo(mstBondValuationInfos);
+                insertMstBondQuotationInfo(mstBondValuationInfos);
+            }
         }
     }
 
+    /**
+     * 批量插入其他债权类估值
+     * @param finProductValuations
+     */
+    private void insertFinProductValuation(List<FinProductValuation> finProductValuations) {
+        if (finProductValuations == null || finProductValuations.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<FinProductValuation>> list = DataHandleUtil.splitList(finProductValuations);
+        for (List<FinProductValuation> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                cashFlowDiscountMapper.insertFinProductValuation(listInsert);
+            }
+        }
+    }
+
+    /**
+     * 批量删除其他债权类估值
+     * @param finProductValuations
+     */
+    private void deleteFinProductValuation(List<FinProductValuation> finProductValuations) {
+        if (finProductValuations == null || finProductValuations.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<FinProductValuation>> list = DataHandleUtil.splitList(finProductValuations);
+        for (List<FinProductValuation> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                cashFlowDiscountMapper.deleteFinProductValuation(listInsert);
+            }
+        }
+    }
+
+    /**
+     * 插入债券估值行情
+     * @param listMstBondValuationInfo
+     */
+    private void insertMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondValuationInfo) {
+        if (listMstBondValuationInfo == null || listMstBondValuationInfo.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondValuationInfo);
+        for (List<MstBondValuationInfo> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                cashFlowDiscountMapper.insertMstBondValuationInfo(listInsert);
+            }
+        }
+    }
+
+    /**
+     * 删除债券估值行情
+     * @param listMstBondValuationInfo
+     */
+    private void deleteMstBondQuotationInfo(List<MstBondValuationInfo> listMstBondValuationInfo) {
+        if (listMstBondValuationInfo == null || listMstBondValuationInfo.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<MstBondValuationInfo>> list = DataHandleUtil.splitList(listMstBondValuationInfo);
+        for (List<MstBondValuationInfo> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                cashFlowDiscountMapper.deleteMstBondValuationInfo(listInsert);
+            }
+        }
+    }
 }

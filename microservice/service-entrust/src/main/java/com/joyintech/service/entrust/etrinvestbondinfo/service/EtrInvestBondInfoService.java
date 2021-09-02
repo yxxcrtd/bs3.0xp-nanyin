@@ -21,12 +21,15 @@ import com.joyintech.service.entrust.common.dao.EntrustCommonPersonSelectMapper;
 import com.joyintech.service.entrust.common.service.EntrustCommonPersonSelectService;
 import com.joyintech.service.entrust.etrinvestbondinfo.dao.EtrInvestBondInfoMapper;
 import com.joyintech.service.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
+import com.joyintech.service.entrust.etrplanassetc.dto.EtrPlanAssetCDto;
 import com.joyintech.tams.common.base.entity.EtrDistribute;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
 import com.joyintech.tams.component.base.entrust.BusiAutoEtrDispService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService;
 import com.joyintech.tams.invest.common.component.base.entrust.BaseEtrInvestInfoService;
@@ -517,9 +520,9 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
                 mstFileCommonService.updateBusinessId(mstFileInputParameter);
             }
         }
-        if(baseEtrCashPositionCommService!=null){
-            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
-        }
+//        if(baseEtrCashPositionCommService!=null){
+//            baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
+//        }
     }
 
     /**
@@ -669,5 +672,41 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
     public List<SuggestDto> getSecManageAcctId(Map<String, Object> param) {
         return this.queryForSuggest(() -> etrInvestBondInfoMapper.getSecManageAcctId(param),
             null);
+    }
+
+    public BaseEtrInvestInfoDto initBaseDto(EtrInvestBondInfoDto dto){
+        BaseEtrInvestInfoDto entity = new BaseEtrInvestInfoDto();
+
+        try {
+            // etrEntrust
+            EtrEntrust etrEntrust = new EtrEntrust();
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto.getEtrInvestPersonInfo());
+            etrEntrust.setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
+            etrEntrust.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            if(iPlatformDate != null){
+                etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
+            }
+            if(null!=etrEntrust.getEntrustNum()){
+                etrEntrust.setEntrustNum(ArithmeticUtil.divide(etrEntrust.getEntrustNum(),new BigDecimal(100),2));
+            }
+            entity.setEtrEntrust(etrEntrust);
+
+            // etrEntrustAdd
+            EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
+            BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+            etrEntrustAdd.setVdate(null);
+            etrEntrustAdd.setMdate(null);
+            etrEntrustAdd.setAssetType(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+            etrEntrustAdd.setFullPrice(dto.getFpriceAmt());
+            entity.setEtrEntrustAdd(etrEntrustAdd);
+
+            // 添加流程编号
+            entity.setWorkFlowId(dto.getWorkflowId());
+        } catch (Exception e) {
+            // 对象转换赋值失败
+            throw new RuntimeException("对象转换赋值失败", e);
+        }
+        return entity;
     }
 }

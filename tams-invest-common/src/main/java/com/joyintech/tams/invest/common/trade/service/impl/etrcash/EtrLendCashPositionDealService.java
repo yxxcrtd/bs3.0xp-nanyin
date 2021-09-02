@@ -175,18 +175,19 @@ public class EtrLendCashPositionDealService extends EtrCashPositionBaseService {
         String acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
             DictCodeListExt2.资金账户类型_托管户.getValue());
         if (StringUtil.isEmpty(etrEntrust.getChlId())) { // 直投
-            if (DictCodeListExt1.金融产品类型_投管用_拆入.getValue().equals(etrEntrust.getFinprodType2())) { // 拆入
+            /*if (DictCodeListExt1.金融产品类型_投管用_拆入.getValue().equals(etrEntrust.getFinprodType2())) { // 拆入
                 // 预增现金 开始日增加本金金额
                 etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
                 etrCashPositionFlowDto.setAmount(etrEntrust.getEntrustAmt());
-            } else if (DictCodeListExt1.金融产品类型_投管用_拆出.getValue().equals(etrEntrust.getFinprodType2())) {
+            } else */
+            if (DictCodeListExt1.金融产品类型_投管用_拆出.getValue().equals(etrEntrust.getFinprodType2())) {
                 // 可用现金 开始日减少本金金额
                 etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.multiply(etrEntrust.getEntrustAmt(), new BigDecimal(-1)));
-            }
+                etrCashPositionFlowDto.setAcctId(acctId);
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
 
-            etrCashPositionFlowDto.setAcctId(acctId);
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+            }
         }
     }
     
@@ -209,18 +210,23 @@ public class EtrLendCashPositionDealService extends EtrCashPositionBaseService {
             DictCodeListExt2.资金账户类型_托管户.getValue());
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
         if (StringUtil.isEmpty(etrEntrust.getChlId())) { // 直投
-            if (DictCodeListExt1.金融产品类型_投管用_拆入.getValue().equals(etrEntrust.getFinprodType2())) { // 拆入
+            // ZGZGST-1642 撤回拆入指令可用现金不变 fuyongsheng 20210830 edit start
+            /*if (DictCodeListExt1.金融产品类型_投管用_拆入.getValue().equals(etrEntrust.getFinprodType2())) { // 拆入
                 // 预增现金 开始日减少本金金额
                 etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令预增.getValue());
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish), new BigDecimal(-1)));
-            } else if (DictCodeListExt1.金融产品类型_投管用_拆出.getValue().equals(etrEntrust.getFinprodType2())) {
+            } else*/
+            // ZGZGST-1642 撤回拆入指令可用现金不变 fuyongsheng 20210830 edit end
+            if (DictCodeListExt1.金融产品类型_投管用_拆出.getValue().equals(etrEntrust.getFinprodType2())) {
                 // 可用现金 开始日减少本金金额
                 etrCashPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
                 etrCashPositionFlowDto.setAmount(ArithmeticUtil.subtract(etrEntrust.getEntrustAmt(), etrFinish));
+                // ZGZGST-1642 撤回拆入指令可用现金不变 fuyongsheng 20210830 edit start
+                etrCashPositionFlowDto.setAcctId(acctId);
+                etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
+                etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+                // ZGZGST-1642 撤回拆入指令可用现金不变 fuyongsheng 20210830 edit end
             }
-            etrCashPositionFlowDto.setAcctId(acctId);
-            etrCashPositionFlowDto.setOffsetId(etrEntrust.getEntrustId());
-            etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
         }
     }
 }

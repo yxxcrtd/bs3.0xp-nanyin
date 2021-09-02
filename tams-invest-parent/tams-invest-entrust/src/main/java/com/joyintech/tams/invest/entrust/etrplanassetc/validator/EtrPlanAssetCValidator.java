@@ -144,11 +144,13 @@ public class EtrPlanAssetCValidator implements EtrCommonValidator {
                     errorList.add(new ValidMessage("mdate","委托终止日不能大于资产到期日"+DateUtil.format(finmdate)));
                 }
             }
-            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
-                if (!StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getCounterId())) {
-                    errorList.add(new ValidMessage("etrInvestPersonInfo.counterId","请输入交易对手。"));
-                }
+            //ZGZGST-1428 交易对手必填 fuyongsheng 20210828 edit start
+        //  if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())||StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+            if (!StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getCounterId())) {
+                errorList.add(new ValidMessage("etrInvestPersonInfo.counterId","请输入交易对手。"));
             }
+        //  }
+            //ZGZGST-1428 交易对手必填 fuyongsheng 20210828 edit end
 
         BigDecimal entrustNum = dto.getEntrustNum();
         // 交易方向为卖出时，卖出份额为entrustNum2字段

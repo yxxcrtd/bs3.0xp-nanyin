@@ -153,6 +153,18 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // BSTOT-2419 by zhangrui1 Start
             //获取母组合
             exchangePortfolioBySub(dataMap);
+
+            // add by etliu 20210831 start
+            if (isStockFHSZ) {
+                if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占接口)) {
+                    v.setInfCode(BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue());
+                }
+                if (CommonUtil.isType(infCode, BussinessDictCodeListRds.接口系统ID_实占释放接口)) {
+                    v.setInfCode(BussinessDictCodeListRds.接口系统ID_实占释放批量接口.getValue());
+                }
+            }
+            // add by etliu 20210831 end
+
             String counterId = (String) CommonUtil.findValue(dataMap, "counterId");
             if (isInnerTrd || StringUtil.equals(CommonUtil.findValue(dataMap,"ps"),DictCodeList.交易方向_到期续做.getValue())) {
                 counterId = AllTradeCommonUtil.exchangePortfolio(counterId);
@@ -2471,6 +2483,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 retMap.add(dataReMap);
             });
         }
+        // add by etliu 20210830 start
+        // 现券多组合报价
+        else if(StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),v.getAssetType())&&StringUtil.isNotEmpty(dataMap.get("cfetsBondDealQuoteDtoList"))){
+            ((List)dataMap.get("cfetsBondDealQuoteDtoList")).forEach(en->{
+                Map<String, Object> dataReMap = new HashMap<>();
+                dataReMap.putAll(dataMap);
+                dataReMap.putAll((Map)en);
+                retMap.add(dataReMap);
+            });
+        }
+        // add by etliu 20210830 end
         return retMap;
     }
 

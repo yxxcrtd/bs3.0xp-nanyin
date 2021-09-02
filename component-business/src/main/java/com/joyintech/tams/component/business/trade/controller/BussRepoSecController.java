@@ -111,7 +111,7 @@ public class BussRepoSecController extends BaseController {
                     entity.setTotalPrinAmt(ArithmeticUtil.divide(entity.getTotalPrinAmt(),new BigDecimal(10000),4));
                 }
                 //add by chenjiaxing 质押券回购初始化报错
-                if(entity.getPledgeBondList().size() > 0){
+                if(!(entity.getPledgeBondList() == null)){
                     for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
                         if (dto.getAvaPledgePrin() != null) {
                             dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));

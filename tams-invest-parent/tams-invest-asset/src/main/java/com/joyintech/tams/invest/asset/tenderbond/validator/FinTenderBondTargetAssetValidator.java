@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -83,7 +84,8 @@ public class FinTenderBondTargetAssetValidator implements BeanValidator{
             }
         }else{
             if(StringUtil.equals(dto.getCreditFlag(), DictCodeList.是否_是.getValue())
-                && (dto.getActualCreditProvid() == null || StringUtil.equals(dto.getActualCreditProvid(), ""))){
+                && (dto.getActualCreditProvid() == null || StringUtil.equals(dto.getActualCreditProvid(), ""))
+            && "02".equals(CacheUtil.getSysParam(BussinessConstant.CEMODEL))){
                 resultList.add(
                     new ValidMessage("actualCreditProvid",this.getMessage("FW_E_0006", getMessage("FinPlanAssetC002.actualCreditProvid"))));
             }

@@ -215,6 +215,14 @@ public class PtlCashFlowService extends CommonExportService<PtlCashFlowDto>
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlow/doDelete?workflowId="+ workflowId,
             void.class);
     }
+
+    // ZGZGST-1559 退回时释放头寸 fuyongsheng 20210827 add start
+    @Override
+    public void doBack(PtlCashFlowDto entity) {
+        AllTradeCommonUtil.deletePosition(entity.getCancelRemark(), entity.getBusiNo());
+    }
+    // ZGZGST-1559 退回时释放头寸 fuyongsheng 20210827 add end
+
     /**
      * <一句话功能简述>
      * <功能详细描述>

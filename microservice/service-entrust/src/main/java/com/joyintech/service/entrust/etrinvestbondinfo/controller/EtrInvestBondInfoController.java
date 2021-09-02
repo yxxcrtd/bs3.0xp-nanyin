@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -202,6 +203,10 @@ public class EtrInvestBondInfoController {
     @DTXTransaction
     @PostMapping("doComplete")
     public void doComplete(@RequestBody EtrInvestBondInfoDto dto) throws IllegalAccessException, InvocationTargetException{
+        // ZGZGST-1596:删除工作流数据 fuyongsheng add start
+        WFlowCommonService.deleteFlow(dto.getWorkflowId());
+        // ZGZGST-1596:删除工作流数据 fuyongsheng add end
+
         etrInvestBondInfoService.doComplete(dto, dto.getOperateType());
     }
 
@@ -209,8 +214,22 @@ public class EtrInvestBondInfoController {
     @DTXTransaction
     @PostMapping("doInsert")
     public void doInsert(@RequestBody EtrInvestBondInfoDto dto){
+        // ZGZGST-1502:新增工作流数据 fuyongsheng add start
+        WFlowCommonService.doInsertFlow(dto.getOperateType(), etrInvestBondInfoService.initBaseDto(dto));
+        // ZGZGST-1502:新增工作流数据 fuyongsheng add end
+
         etrInvestBondInfoService.doInsert(dto, dto.getOperateType());
     }
+
+    // ZGZGST-1557:退回工作流 fuyongsheng add start
+    @Transactional
+    @DTXTransaction
+    @PostMapping("doBack")
+    public void doBack(@RequestBody EtrInvestBondInfoDto dto){
+        WFlowCommonService.doBackFlow(dto.getWorkflowId(), dto.getEntrustId());
+    }
+    // ZGZGST-1557:退回工作流 fuyongsheng add end
+
     /**
      * 
      * 删除投资委托

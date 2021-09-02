@@ -1487,6 +1487,13 @@ public class CfetsRepoDealQuotedPr001Dto extends EtrEntrust implements ProcessEn
         return pledStrdPrinAmt;
     }
 
+    public BigDecimal getPledStrdPrinAmtTo() {
+        if(this.getPledStrdPrinAmt() != null){
+            return this.getPledStrdPrinAmt().divide(new BigDecimal("10000"));
+        }
+        return null;
+    }
+
     public void setPledStrdPrinAmt(BigDecimal pledStrdPrinAmt) {
         this.pledStrdPrinAmt = pledStrdPrinAmt;
     }
@@ -1513,7 +1520,12 @@ public class CfetsRepoDealQuotedPr001Dto extends EtrEntrust implements ProcessEn
     public BigDecimal getPosStrdPrinAmt() {
         return posStrdPrinAmt;
     }
-
+    public BigDecimal getPosStrdPrinAmtTo() {
+        if(this.getPledStrdPrinAmt() != null){
+            return this.getPosStrdPrinAmt().divide(new BigDecimal("10000"));
+        }
+        return null;
+    }
     public void setPosStrdPrinAmt(BigDecimal posStrdPrinAmt) {
         this.posStrdPrinAmt = posStrdPrinAmt;
     }

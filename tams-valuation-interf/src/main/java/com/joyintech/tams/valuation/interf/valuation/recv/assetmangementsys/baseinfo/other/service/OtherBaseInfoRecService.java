@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.service;
 
 
+import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.other.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +20,6 @@ import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
 import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.other.ValAccountInfoInterfService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.other.ValCustomerInfoInterfService;
-import com.joyintech.tams.valuation.common.interf.base.service.baseinfo.other.ValHolidayInfoInterfService;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
 
 @Service
@@ -44,6 +42,20 @@ public class OtherBaseInfoRecService {
      */
     @Autowired
     private ValHolidayInfoInterfService valHolidayInfoInterfService;
+
+    /**
+     * 交易对手  模板处理Service
+     */
+    @Autowired
+    private ValCounterPartyInterfService valCounterPartyInterfService;
+
+    /**
+     * 评级信息  模板处理Service
+     */
+    @Autowired
+    private ValBondCreditRatingInterfService valBondCreditRatingInterfService;
+
+
     
     /**
      * <一句话功能简述> <功能详细描述>
@@ -73,6 +85,12 @@ public class OtherBaseInfoRecService {
         }
         else if(TempConstant.节假日信息表.equals(acctEntity.getTmpEName())){
             result = valHolidayInfoInterfService.execute(templateSourceFlgDTO, acctEntity);
+        }
+        else if(TempConstant.交易对手.equals(acctEntity.getTmpEName())){
+            result = valCounterPartyInterfService.execute(templateSourceFlgDTO, acctEntity);
+        }
+        else if(TempConstant.评级信息.equals(acctEntity.getTmpEName())){
+            result = valBondCreditRatingInterfService.execute(templateSourceFlgDTO, acctEntity);
         }
         return new OtherBaseInfoForAssetProcessorResult(result);
     }

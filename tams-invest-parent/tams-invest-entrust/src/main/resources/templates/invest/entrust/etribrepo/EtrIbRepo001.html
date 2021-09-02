@@ -120,7 +120,7 @@
 					<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>
 					<form class="layui-form"  id='searchForm_cc'>
 						<div class="layui-form-item">
-							<div class="form-inline-wrap" style="width:30%">
+							<div class="form-inline-wrap" style="width:30%;margin-top: 6px">
 									<div class="layui-input-inline input-inline keywords-inline">
 										<input type="text" id="keywords-entrustOrder" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
 										<a id='EtrIbRepo001_cc_search' class="input-right-show" href='javascript:;' ><i class='iconfont icon-search'></i></a>
@@ -206,12 +206,12 @@
 <!--					                                ></select>-->
 <!--					                            </div>-->
 <!--										</div>-->
-
-										<div class="sgePortDiv">
+										<!--已有有效状态，隐藏掉下面的有效状态-->
+										<div class="sgePortDiv" style="display: none">
 											<label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;" >有效状态</label>
 											<div class="layui-input-inline input-inline">
 												<select type="text" id="entrustStatus" name="entrustStatus"
-														class="layui-input form-input input-select" data-th-data-result='${VALID_STATUS}'
+														class="layui-input form-input input-select" data-th-data-result='${STATUS_VALID}'
 														allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
 														formatoption="true">
 												</select>

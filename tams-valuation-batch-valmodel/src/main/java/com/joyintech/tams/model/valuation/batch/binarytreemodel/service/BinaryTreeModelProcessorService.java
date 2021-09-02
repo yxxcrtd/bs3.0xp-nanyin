@@ -15,10 +15,17 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.ModelDictCode;
+import com.joyintech.tams.common.base.entity.ModCurveResult;
+import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.common.base.entity.MstSharePrice;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelReaderEntity;
+import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.BinaryTreeModelResultDto;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.calculator.TargetRateCalculator;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
@@ -26,6 +33,8 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +56,7 @@ public class BinaryTreeModelProcessorService {
     @Autowired
     private ModLogsService modLogsService;
 
+    private static final Logger logger = LoggerFactory.getLogger(BinaryTreeModelProcessorService.class);
     /**
      * 二叉树模型-reader
      *
@@ -54,87 +64,47 @@ public class BinaryTreeModelProcessorService {
      * @return
      */
     public BinaryTreeModelResultDto excute(BinaryTreeModelReaderEntity entity, Map<String, Object> params, StepExecution stepExecution) {
+        //封装最终计算结果
         BinaryTreeModelResultDto result = new BinaryTreeModelResultDto();
-        ModCurveResult modCurveResult = new ModCurveResult();
-        ModRiskPremium modRiskPremium = new ModRiskPremium();
-        result.setModCurveResult(modCurveResult);
-        result.setModRiskPremium(modRiskPremium);
+
+        //2.处理参数
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        List<CommonErrorParams> errors = (List<CommonErrorParams>) stepExecution.getJobExecution().getExecutionContext().get("ERRORS");
-        if (errors == null) {
-            errors = new ArrayList<CommonErrorParams>();
-        }
         //变量.估值日 = 批处理任务执行信息.发生日
         Date platDate = (Date) params.get("PLATE_DATE");
-        //【批处理名称】：未配置二叉树模型参数
-        if (entity.getModBintreeConfig() == null || StringUtil.isEmpty(entity.getModBintreeConfig().getFinprodId())) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(entity.getFinprodId());
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：未配置二叉树模型参数");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-        }
-        //【批处理名称】：当天无股票行情
-        if (entity.getModStockMarketInfoList() == null || entity.getModStockMarketInfoList().size() == 0) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(entity.getFinprodId());
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无股票行情");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-        }
-        //【批处理名称】：当天无收益率曲线行情
-        if (entity.getModYieldCurveInfoList() == null || entity.getModYieldCurveInfoList().size() == 0) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(entity.getFinprodId());
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无收益率曲线行情");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_警告.getValue());
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-        }
 
-        //1. 计算标的股票波动率
-        BigDecimal stockVolatility = null;
-        try {
-            stockVolatility = calaStockVolatility(entity);
-            if (stockVolatility == null) {
-                return result;
-            }
-        }catch (Exception e) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(entity.getFinprodId());
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：波动率计算错误");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-            e.getMessage();
-        }
 
-        //2.计算二叉树步长
+        //3.取Job上下文的错误日志信息，并增加新得错误信息
+        boolean check = checkParam(entity, stepExecution, batchExecuteInfo);
+        if(!check) return result;//check不通过，不做后续计算
+
+        //初始化封装计算的资产估值结果
+        ModCurveResult modCurveResult = new ModCurveResult();
+        ModRiskPremium modRiskPremium = new ModRiskPremium();
+        MstBondValuationInfo mstBondValuationInfo = new MstBondValuationInfo();
+//        result.setModCurveResult(modCurveResult);
+//        result.setModRiskPremium(modRiskPremium);
+
+        //4.计算波动率
+        //变量.股票收盘价序列列表 = 资产信息.股票行情
+        BigDecimal stockVolatility = calaStockVolatility(entity.getModStockMarketInfoList());
+
+        //5.计算二叉树步长
         // 计算剩余期限
         // 推算计算日前的完整计息年度的个数，以及计算日所在计息年度的年化剩余期限
         ForwadCashCalculator forwadCashCalculator = CalculatorFactory.createForwadCashCalculator();
         BigDecimal encashYears = forwadCashCalculator.calcTerm(BasicUtil.dateToLocal(platDate),
                 BasicUtil.dateToLocal(entity.getMdate()), BasicUtil.dateToLocal(entity.getVdate()),
                 BasicUtil.dateToLocal(entity.getMdate()), null, SecIntSchCalMethod.起息日向后);
-
         //变量.步长  = 变量.年化期限/资产信息.二叉树步数
         BigDecimal binaryTreeLength = ArithmeticUtil.divide(encashYears, entity.getModBintreeConfig().getBintreeStep(), 4, RoundingMode.HALF_UP);
 
-        //3.计算二叉树上升倍数和下降倍数
+        //6.计算二叉树上升倍数和下降倍数
         //变量.上升倍数 = Math.pow（E,sqrt(变量.步长，1/变量.标的股票波动率)）
-        BigDecimal upNum = BigDecimal.valueOf(Math.pow(Math.E, Math.pow(binaryTreeLength.doubleValue(), ArithmeticUtil.divide(BigDecimal.ONE, stockVolatility, 12, RoundingMode.HALF_UP).doubleValue())));
+        BigDecimal upNum = BigDecimal.valueOf(Math.pow(Math.E, ArithmeticUtil.multiply(stockVolatility, BigDecimal.valueOf(Math.sqrt(binaryTreeLength.doubleValue()))).doubleValue()));
         //变量.下降倍数 = 1/变量.上升倍数
         BigDecimal downNum = ArithmeticUtil.divide(BigDecimal.ONE, upNum, 12, RoundingMode.HALF_UP);
 
-        //4.转股期限
+        //7.转股期限
         //变量.转股期限 = 0
         BigDecimal stockLimit = BigDecimal.ZERO;
         //IF 转股起始日 > 跑批日
@@ -146,7 +116,7 @@ public class BinaryTreeModelProcessorService {
             stockLimit = ArithmeticUtil.divide(dateNum, binaryTreeLength, 0, RoundingMode.HALF_UP);
         }
 
-        //5.生成二叉树
+        //8.生成二叉树
         BigDecimal rootStockPrice = BigDecimal.ZERO;
         if (ModelDictCodeList.模型_上市状态_上市.getValue().equals(entity.getModBintreeConfig().getStockBordsttus())) {
             rootStockPrice = entity.getModStockMarketInfoList().get(entity.getModStockMarketInfoList().size() - 1).getClosePrice();
@@ -162,19 +132,20 @@ public class BinaryTreeModelProcessorService {
             rootStockPrice = ArithmeticUtil.multiply(rootStockPrice, entity.getModBintreeConfig().getFinprodNetasset());
         }
 
-        //调用【二叉树生成】
+        //9.调用【二叉树生成】
         StockInfoDto[][] binTree = createBinaryTree(entity.getModBintreeConfig().getBintreeStep(), rootStockPrice, upNum, downNum, stockLimit, entity.getConPrice());
 
-        //6.判定最终节点总价值
+        //10.判定最终节点总价值
         quaryFinalAllValue(binTree, entity);
-        //7.中间节点的总价值
+
+        //11.中间节点的总价值
         quaryMidAllValue(binTree, entity, upNum, downNum, platDate, binaryTreeLength, encashYears, modRiskPremium);
-        //8.估值全价
+        //12.估值全价
         //变量.估值全价 = 变量.二叉树二维数据[0][0].总价值
         BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(8, RoundingMode.HALF_UP);
-        //调用【算法包.计算百元面值的债券的利息-记账用】
+        //13.调用【算法包.计算百元面值的债券的利息-记账用】
         BigDecimal interest = getCalculate(entity, platDate).getInterest();
-        //变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
+        //14.变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
         BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(8, RoundingMode.HALF_UP);
 
         //封装结果
@@ -186,12 +157,79 @@ public class BinaryTreeModelProcessorService {
         modCurveResult.setNetPrice(valueNetPrice);
 
         modRiskPremium.setSeqno(IDGenerator.generate());
-        modRiskPremium.setSecTypeModel(ModelDictCodeList.模型_证券品种_债券.getValue());
+        modRiskPremium.setSecTypeModel(DictCodeListExt1.证券品种_债券.getValue());
         modRiskPremium.setFinprodId(entity.getFinprodId());
         modRiskPremium.setFinprodName(entity.getFinprodAbbr());
-        modRiskPremium.setbFullprice(valueAllPrice);
         modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_二叉树.getValue());
+
+
+        mstBondValuationInfo.setSecId(entity.getFinprodMarketId()); //市场代码
+        mstBondValuationInfo.setValueDate(platDate);//估值日
+        mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
+        mstBondValuationInfo.setPrice(valueAllPrice); //估值全价
+        mstBondValuationInfo.setNetprice(valueNetPrice);//估值净价
+        mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondValuationInfo.setCreateUser("batch"); //
+        mstBondValuationInfo.setUpdateUser("batch");
+        mstBondValuationInfo.setCreateTime(DateUtil.now());
+        mstBondValuationInfo.setUpdateTime(DateUtil.now());
+
+        result.setModCurveResult(modCurveResult);
+        result.setModRiskPremium(modRiskPremium);
+        result.setMstBondValuationInfo(mstBondValuationInfo);
         return result;
+    }
+
+
+    /**
+     * 校验参数
+     * @param entity
+     * @param stepExecution
+     * @param batchExecuteInfo
+     * @return
+     */
+    private boolean checkParam(BinaryTreeModelReaderEntity entity, StepExecution stepExecution, SysBatchExecInfo batchExecuteInfo) {
+        boolean checkResult = true;
+        List<CommonErrorParams> errors = (List<CommonErrorParams>) stepExecution.getJobExecution().getExecutionContext().get("ERRORS");
+        if (errors == null) {
+            errors = new ArrayList<CommonErrorParams>();
+        }
+        //【批处理名称】：未配置二叉树模型参数
+        if (entity.getModBintreeConfig() == null || StringUtil.isEmpty(entity.getModBintreeConfig().getFinprodId())) {
+            CommonErrorParams commonErrorParams = new CommonErrorParams();
+            commonErrorParams.setFinprodId(entity.getFinprodId());
+            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
+            commonErrorParams.setErrorMsg("【二叉树模型批处理】：未配置二叉树模型参数");
+            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            errors.add(commonErrorParams);
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            checkResult = false;
+        }
+        //【批处理名称】：当天无股票行情
+        if (entity.getModStockMarketInfoList() == null || entity.getModStockMarketInfoList().size() == 0) {
+            CommonErrorParams commonErrorParams = new CommonErrorParams();
+            commonErrorParams.setFinprodId(entity.getFinprodId());
+            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
+            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无股票行情");
+            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            errors.add(commonErrorParams);
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            checkResult = false;
+        }
+        //【批处理名称】：当天无收益率曲线行情
+        if (entity.getModYieldCurveInfoList() == null || entity.getModYieldCurveInfoList().size() == 0) {
+            CommonErrorParams commonErrorParams = new CommonErrorParams();
+            commonErrorParams.setFinprodId(entity.getFinprodId());
+            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
+            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无收益率曲线行情");
+            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_警告.getValue());
+            errors.add(commonErrorParams);
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            checkResult = false;
+        }
+        return checkResult;
     }
 
     public AccurIntCalOutParameter getCalculate(BinaryTreeModelReaderEntity entity, Date platDate) {
@@ -230,41 +268,41 @@ public class BinaryTreeModelProcessorService {
         secInfoModel.setIssuePrice(entity.getIssuePrice());
         // 债券类型
         Variety bondsType = null;
-        if (ModelDictCodeList.息票品种_贴现.getValue().equals(entity.getCouponSpecies())) {
+        if (DictCodeList.息票品种_贴现.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.贴现;
         }
-        else if (ModelDictCodeList.息票品种_零息.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_零息.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.零息;
         }
-        else if (ModelDictCodeList.息票品种_附息.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_附息.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.附息;
         }
-        else if (ModelDictCodeList.息票品种_利随本清.getValue().equals(entity.getCouponSpecies())) {
+        else if (DictCodeList.息票品种_利随本清.getValue().equals(entity.getCouponSpecies())) {
             bondsType = Variety.利随本清;
         }
         secInfoModel.setBondsType(bondsType);
         // 计息基础
         Basis basis = null;
         String basisString = modCashFlowCalRule.getBasis();
-        if (ModelDictCodeList.计息基础_A_360.getValue().equals(basisString)) {
+        if (DictCodeList.计息基础_A_360.getValue().equals(basisString)) {
             basis = Basis.A_360;
         }
-        else if (ModelDictCodeList.计息基础_A_365.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_365.getValue().equals(basisString)) {
             basis = Basis.A_365;
         }
-        else if (ModelDictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)
-                || ModelDictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)
+                || DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
             basis = Basis.A_A;
         }
-        else if (ModelDictCodeList.计息基础_A_365F.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_365F.getValue().equals(basisString)) {
             basis = Basis.A_365F;
         }
-        else if (ModelDictCodeList.计息基础_30_360.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_30_360.getValue().equals(basisString)) {
             basis = Basis._30_360;
         }
-        else if (ModelDictCodeList.计息基础_30U_360.getValue().equals(basisString)) {
-            basis = Basis._30U_360;
-        }
+//        else if (DictCodeList.计息基础_30U_360.getValue().equals(basisString)) {
+//            basis = Basis._30U_360;
+//        }
 
         secInfoModel.setBasis(basis);
         // 利率类型
@@ -272,10 +310,10 @@ public class BinaryTreeModelProcessorService {
         secInfoModel.setIntRateType(intRateType);
         // 利息分配方式
         AllocationType allocationType = null;
-        if (ModelDictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)) {
+        if (DictCodeList.计息基础_A_A_平均分配.getValue().equals(basisString)) {
             allocationType = AllocationType.平均分配;
         }
-        else if (ModelDictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
+        else if (DictCodeList.计息基础_A_A_按实际天数分配.getValue().equals(basisString)) {
             allocationType = AllocationType.按实际天数分配;
         }
         else {
@@ -285,29 +323,29 @@ public class BinaryTreeModelProcessorService {
         // 付息计划推算方式
         SecIntSchCalMethod secIntSchCalMethod = null;
         String secIntSchCalMethodString = modCashFlowPayRule.getCalcRule();
-        if (ModelDictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
+        if (DictCodeList.推算方式_起息日向后.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.起息日向后;
         }
-        else if (ModelDictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
+        else if (DictCodeList.推算方式_到期日向前.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.到期日向前;
         }
-        else if (ModelDictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
+        else if (DictCodeList.推算方式_首次支付日.getValue().equals(secIntSchCalMethodString)) {
             secIntSchCalMethod = SecIntSchCalMethod.首次付息日;
         }
         secInfoModel.setCalMethod(secIntSchCalMethod);
         // 付息频率
         IntFrequency yearIntRate = null;
         String yearIntRateString = modCashFlowPayRule.getPayCycle();
-        if (ModelDictCodeList.频率_月.getValue().equals(yearIntRateString)) {
+        if (DictCodeList.频率_月.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.月付;
         }
-        else if (ModelDictCodeList.频率_季.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_季.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.季付;
         }
-        else if (ModelDictCodeList.频率_年.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_年.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.年付;
         }
-        else if (ModelDictCodeList.频率_半年.getValue().equals(yearIntRateString)) {
+        else if (DictCodeList.频率_半年.getValue().equals(yearIntRateString)) {
             yearIntRate = IntFrequency.半年付;
         }
         else {
@@ -320,7 +358,7 @@ public class BinaryTreeModelProcessorService {
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<ModCashFlowDto> intSchList = new ArrayList<ModCashFlowDto>();
         for (ModCashFlowDto item : entity.getModCashFlowList()) {
-            if (StringUtil.equals(item.getCashType2(), ModelDictCodeList.现金流二级类型_利息.getValue())
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())
                     && item.getVdateUnadjust() != null) {
                 SecIntSchedule schedule = new SecIntSchedule();
                 schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
@@ -344,6 +382,13 @@ public class BinaryTreeModelProcessorService {
             ret.setParRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
             return ret;
         }).collect(Collectors.toList());
+        // 利率重置信息按照票面利率生效日排序
+        Collections.sort(paperIrResetList, new Comparator<PaperIrReset>() {
+            @Override
+            public int compare(PaperIrReset o1, PaperIrReset o2) {
+                return o1.getParRateEffDate().compareTo(o2.getParRateEffDate());
+            }
+        });
         if (paperIrResetList != null && paperIrResetList.size() > 0) {
             paperIrResetList.get(0).setBaseRateEffDate(BasicUtil.dateToLocal(entity.getVdate()));
         }
@@ -371,7 +416,7 @@ public class BinaryTreeModelProcessorService {
         BigDecimal printValue = BigDecimal.ZERO;
         for (ModCashFlowDto dto : entity.getModCashFlowList()){
             //If 明细.现金流类型 = 数据字典.现金流类型.中间还本 or 到期还本 and 明细.调整后的计算结束日 <= 跑批日
-            if (StringUtil.equals(dto.getCashType2(), ModelDictCodeList.现金流二级类型_本金.getValue())
+            if (StringUtil.equals(dto.getCashType2(), DictCodeListExt1.现金流二级类型_本金.getValue())
                     && dto.getMdate().compareTo(platDate) <= 0) {
                 //变量.已还本面值 = 变量.已还本面值 + 明细.计划支付本金
                 printValue = ArithmeticUtil.doAdd(printValue, dto.getPrinAmt());
@@ -424,7 +469,9 @@ public class BinaryTreeModelProcessorService {
             //变量.估值日无风险利率 = 返回.收益率
             cdateYield = troutput.getTargerYield();
         }
-
+//        if (cdateYield != null) {
+//            logger.info("估值日无风险利率：" + cdateYield.doubleValue());
+//        }
         //7.2 计算股价上升的概率和下降的概率
         //变量.估价上升概率 =（ pow（E，（变量.估值日无风险利率-变量.股票连续股息率）*变量.步长）-变量.下降倍数）/(变量.上升倍数 - 变量.下降倍数)
         BigDecimal upProbability = ArithmeticUtil.multiply(ArithmeticUtil.subtract(cdateYield, entity.getModBintreeConfig().getSmoothsection()), binaryTreeLength);
@@ -433,7 +480,10 @@ public class BinaryTreeModelProcessorService {
 
         //变量.估价下降概率 = 1- 变量.估计上升概率
         BigDecimal downProbability = ArithmeticUtil.subtract(BigDecimal.ONE, upProbability);
-
+//        if (upProbability != null) {
+//            logger.info("估价上升概率：" + upProbability.doubleValue());
+//            logger.info("估价下降概率：" + downProbability.doubleValue());
+//        }
         //7.3 估值日债券到期收益率计算
         //①到期收益率计算
         //IF 资产信息.最近买入日 = 跑批日
@@ -468,25 +518,30 @@ public class BinaryTreeModelProcessorService {
         //【算法包到期收益率计算】
         //变量.到期收益率折现前 = 返回.到期收益率
         BigDecimal yieldByPriceBefore = calaYieldByPriceCalculator(entity, buyAllPrice, baseDate).getMatYield();
+//        if (yieldByPriceBefore != null) {
+//            logger.info("到期收益率折现前：" + yieldByPriceBefore.doubleValue());
+//        }
 
         //②支付频率
         int calcRule = 0;
-        if (StringUtil.equals(ModelDictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
+        if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
             calcRule = 12;
-        } else if (StringUtil.equals(ModelDictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
+        } else if (StringUtil.equals(DictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
             calcRule = 4;
-        } else if (StringUtil.equals(ModelDictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
+        } else if (StringUtil.equals(DictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
             calcRule = 2;
-        } else if (StringUtil.equals(ModelDictCodeList.频率_年.getValue(), modCashFlowPayRule.getPayCycle())
-                || StringUtil.equals(ModelDictCodeList.频率_到期一次.getValue(), modCashFlowPayRule.getPayCycle())
-                || StringUtil.equals(ModelDictCodeList.频率_不规则.getValue(), modCashFlowPayRule.getPayCycle())) {
+        } else if (StringUtil.equals(DictCodeList.频率_年.getValue(), modCashFlowPayRule.getPayCycle())
+                || StringUtil.equals(DictCodeList.频率_到期一次.getValue(), modCashFlowPayRule.getPayCycle())
+                || StringUtil.equals(DictCodeList.频率_不规则.getValue(), modCashFlowPayRule.getPayCycle())) {
             calcRule = 1;
         }
         //变量.到期收益率 = 变量.到期收益率折现前 * Math.pow（Math.E, 1 + 变量.到期收益率/变量.频率）
         BigDecimal yieldByPrice = ArithmeticUtil.doAdd(BigDecimal.ONE, ArithmeticUtil.divide(yieldByPriceBefore, BigDecimal.valueOf(calcRule), 12, RoundingMode.HALF_UP));
         yieldByPrice = BigDecimal.valueOf(Math.log(yieldByPrice.doubleValue()));
         yieldByPrice = ArithmeticUtil.multiply(BigDecimal.valueOf(calcRule), yieldByPrice);
-
+//        if (yieldByPrice != null) {
+//            logger.info("到期收益率：" + yieldByPrice.doubleValue());
+//        }
         //7.4 票面利率
         //	变量.票面利率 = 变量.现金流计算规则.生效利率
         BigDecimal yield = modCashFlowCalRule.getYield();
@@ -519,12 +574,31 @@ public class BinaryTreeModelProcessorService {
                     binTree[n][i].setStockValue(ArithmeticUtil.doAdd(sto1, sto2).setScale(12, RoundingMode.HALF_UP));
 
                 }
+                if (n == 0 && i == 0 && binTree[n][i].getStockValue() != null) {
+                    BigDecimal stockValue = binTree[n][i].getStockValue();
+                    stockValue = ArithmeticUtil.multiply(stockValue, ArithmeticUtil.divide(currentValue, entity.getConPrice(), 12, RoundingMode.HALF_UP));
+                    binTree[n][i].setStockValue(stockValue);
+                }
                 //变量.二叉树二维数据[n][i].总价值  = 变量.二叉树二维数据[n][i].股权价值 + 变量.二叉树二维数据[n][i].债权价值
                 binTree[n][i].setAllValue(ArithmeticUtil.doAdd(binTree[n][i].getBondValue(), binTree[n][i].getStockValue()));
+
+//                //测试信息打印
+//                if (binTree[n][i].getStockValue() != null) {
+//                    logger.info("股权价值["+ n + "][" + i + "]" + binTree[n][i].getStockValue().doubleValue());
+//                }
+//                if (binTree[n][i].getBondValue() != null) {
+//                    logger.info("债权价值["+ n + "][" + i + "]" + binTree[n][i].getBondValue().doubleValue());
+//                }
+//                if (binTree[n][i].getAllValue() != null) {
+//                    logger.info("总价值["+ n + "][" + i + "]" + binTree[n][i].getAllValue().doubleValue());
+//                }
+//                //测试信息打印
             }
         }
         //最终基准日
         premium.setBasedate(baseDate);
+        //买入全价
+        premium.setbFullprice(buyAllPrice);
     }
 
 
@@ -552,34 +626,34 @@ public class BinaryTreeModelProcessorService {
 
         if (StringUtil.isNotBlank(modCashFlowCalRule.getBasis())) {
             String basis = modCashFlowCalRule.getBasis();
-            if(StringUtil.equals(basis,ModelDictCodeList.计息基础_30_360.getValue())){
+            if(StringUtil.equals(basis,DictCodeList.计息基础_30_360.getValue())){
                 secInfoModel.setBasis(Basis._30_360);
             }
-            else if(StringUtil.equals(basis,ModelDictCodeList.计息基础_A_360.getValue())){
+            else if(StringUtil.equals(basis,DictCodeList.计息基础_A_360.getValue())){
                 secInfoModel.setBasis(Basis.A_360);
             }
-            else if(StringUtil.equals(basis,ModelDictCodeList.计息基础_A_365.getValue())){
+            else if(StringUtil.equals(basis,DictCodeList.计息基础_A_365.getValue())){
                 secInfoModel.setBasis(Basis.A_365);
             }
-            else if(StringUtil.equals(basis,ModelDictCodeList.计息基础_A_365F.getValue())){
+            else if(StringUtil.equals(basis,DictCodeList.计息基础_A_365F.getValue())){
                 secInfoModel.setBasis(Basis.A_365F);
             }
-            else if(StringUtil.equals(basis,ModelDictCodeList.计息基础_A_A.getValue())
-                    ||StringUtil.equals(basis,ModelDictCodeList.计息基础_A_A_平均分配.getValue())
-                    ||StringUtil.equals(basis,ModelDictCodeList.计息基础_A_A_按实际天数分配.getValue())){
+            else if(StringUtil.equals(basis,DictCodeList.计息基础_A_A.getValue())
+                    ||StringUtil.equals(basis,DictCodeList.计息基础_A_A_平均分配.getValue())
+                    ||StringUtil.equals(basis,DictCodeList.计息基础_A_A_按实际天数分配.getValue())){
                 secInfoModel.setBasis(Basis.A_A);
             }
-            else if(StringUtil.equals(basis,ModelDictCodeList.计息基础_30U_360.getValue())){
-                secInfoModel.setBasis(Basis._30U_360);
-            }
-            if (StringUtil.equals(basis,ModelDictCodeList.计息基础_A_A_平均分配.getValue())) {
+//            else if(StringUtil.equals(basis,DictCodeList.计息基础_30U_360.getValue())){
+//                secInfoModel.setBasis(Basis._30U_360);
+//            }
+            if (StringUtil.equals(basis,DictCodeList.计息基础_A_A_平均分配.getValue())) {
                 secInfoModel.setAllocationType(AllocationType.平均分配);
             }
             else {
                 secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             }
         }
-        ModelDictCodeList bondsTypeDict = ModelDictCodeList.from(ModelDictCode.息票品种, entity.getCouponSpecies());
+        DictCodeList bondsTypeDict = DictCodeList.from(DictCode.息票品种, entity.getCouponSpecies());
         switch (bondsTypeDict) {
             case 息票品种_零息:
                 secInfoModel.setBondsType(Variety.零息);
@@ -595,22 +669,22 @@ public class BinaryTreeModelProcessorService {
                 break;
         }
 
-        if (StringUtil.equals(ModelDictCodeList.推算方式_起息日向后.getValue(), modCashFlowPayRule.getCalcRule())) {
+        if (StringUtil.equals(DictCodeList.推算方式_起息日向后.getValue(), modCashFlowPayRule.getCalcRule())) {
             secInfoModel.setCalMethod(SecIntSchCalMethod.起息日向后);
         }
-        else if (StringUtil.equals(ModelDictCodeList.推算方式_到期日向前.getValue(), modCashFlowPayRule.getCalcRule())) {
+        else if (StringUtil.equals(DictCodeList.推算方式_到期日向前.getValue(), modCashFlowPayRule.getCalcRule())) {
             secInfoModel.setCalMethod(SecIntSchCalMethod.到期日向前);
         }
         else {
             secInfoModel.setCalMethod(SecIntSchCalMethod.首次付息日);
         }
-        if (StringUtil.equals(ModelDictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
+        if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
             secInfoModel.setYearIntRate(IntFrequency.月付);
         }
-        else if (StringUtil.equals(ModelDictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
+        else if (StringUtil.equals(DictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
             secInfoModel.setYearIntRate(IntFrequency.季付);
         }
-        else if (StringUtil.equals(ModelDictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
+        else if (StringUtil.equals(DictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
             secInfoModel.setYearIntRate(IntFrequency.半年付);
         }
         // 一体化对应etliu end
@@ -624,7 +698,7 @@ public class BinaryTreeModelProcessorService {
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<ModCashFlowDto> intSchList = new ArrayList<ModCashFlowDto>();
         for (ModCashFlowDto item : entity.getModCashFlowList()) {
-            if (StringUtil.equals(item.getCashType2(), ModelDictCodeList.现金流二级类型_利息.getValue())
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())
                     && item.getVdateUnadjust() != null) {
                 SecIntSchedule schedule = new SecIntSchedule();
                 schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
@@ -639,10 +713,10 @@ public class BinaryTreeModelProcessorService {
         //还本计划
         List<SecPrinSchedule> secPrinScheduleList = new ArrayList<SecPrinSchedule>();
         for (ModCashFlowDto item : entity.getModCashFlowList()) {
-            if (StringUtil.equals(item.getCashType2(), ModelDictCodeList.现金流二级类型_本金.getValue())) {
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_本金.getValue())) {
                 SecPrinSchedule schedule = new SecPrinSchedule();
                 schedule.setAmount(item.getIntAmt());
-//                schedule.setFlag(StringUtil.equals(item.getIsPayInt(), DictCodeList.是否_是.getValue()));
+                schedule.setFlag(StringUtil.equals(item.getIsPayInt(), DictCodeList.是否_是.getValue()));
                 schedule.setPrincipal(item.getPrinAmt());
                 schedule.setInterestEndDate(toLocalDate(item.getMdate()));
                 secPrinScheduleList.add(schedule);
@@ -657,6 +731,13 @@ public class BinaryTreeModelProcessorService {
             ret.setParRateEffDate(BasicUtil.dateToLocal(item.getEffDate()));
             return ret;
         }).collect(Collectors.toList());
+        // 利率重置信息按照票面利率生效日排序
+        Collections.sort(paperIrResetList, new Comparator<PaperIrReset>() {
+            @Override
+            public int compare(PaperIrReset o1, PaperIrReset o2) {
+                return o1.getParRateEffDate().compareTo(o2.getParRateEffDate());
+            }
+        });
         if (paperIrResetList != null && paperIrResetList.size() > 0) {
             paperIrResetList.get(0).setBaseRateEffDate(BasicUtil.dateToLocal(entity.getVdate()));
         }
@@ -672,7 +753,7 @@ public class BinaryTreeModelProcessorService {
         yieldPriceInParameter.setPaperIrResetList(paperIrResetList);
         yieldPriceInParameter.setCashScheme(FlowCashScheme.付息计划推算计息年度);
         yieldPriceInParameter.setDisScheme(DiscountScheme.以剩余年限为单位);
-        if (StringUtil.equals(ModelDictCodeList.息票品种_附息.getValue(), entity.getCouponSpecies())) {
+        if (StringUtil.equals(DictCodeList.息票品种_附息.getValue(), entity.getCouponSpecies())) {
             if (isNotFomartSec(intSchList, modCashFlowPayRule)) {
                 yieldPriceInParameter.setCashScheme(FlowCashScheme.理论付息区间);
                 yieldPriceInParameter.setDisScheme(DiscountScheme.以付息区间为单位);
@@ -704,7 +785,7 @@ public class BinaryTreeModelProcessorService {
         // 根据【实际起始日】排序付息计划
         Collections.sort(secIntScheduleList, (o1, o2) -> o1.getVdateUnadjust().compareTo(o2.getVdateUnadjust()));
 
-        if (StringUtil.equals(ModelDictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
+        if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
                 Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 1);
                 if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
@@ -712,7 +793,7 @@ public class BinaryTreeModelProcessorService {
                 }
             }
         }
-        else if (StringUtil.equals(ModelDictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
+        else if (StringUtil.equals(DictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
                 Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 3);
                 if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
@@ -720,7 +801,7 @@ public class BinaryTreeModelProcessorService {
                 }
             }
         }
-        else if (StringUtil.equals(ModelDictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
+        else if (StringUtil.equals(DictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
                 Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 6);
                 if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
@@ -767,6 +848,16 @@ public class BinaryTreeModelProcessorService {
             }
             //变量.二叉树二维数据[资产信息.二叉树步数][i].总价值 = 变量.二叉树二维数据[资产信息.二叉树步数][i].股票价值 + 变量.二叉树二维数据[资产信息.二叉树步数][i].债券价值
             binTree[bintreeStep.intValue()][i].setAllValue(ArithmeticUtil.doAdd(binTree[bintreeStep.intValue()][i].getStockValue(), binTree[bintreeStep.intValue()][i].getBondValue()));
+//            //测试信息打印
+//            if (binTree[bintreeStep.intValue()][i].getStockValue() != null) {
+//                logger.info("股权价值["+ bintreeStep.intValue() + "][" + i + "]" + binTree[bintreeStep.intValue()][i].getStockValue().doubleValue());
+//            }
+//            if (binTree[bintreeStep.intValue()][i].getBondValue() != null) {
+//                logger.info("债权价值["+ bintreeStep.intValue() + "][" + i + "]" + binTree[bintreeStep.intValue()][i].getBondValue().doubleValue());
+//            }
+//            if (binTree[bintreeStep.intValue()][i].getAllValue() != null) {
+//                logger.info("总价值["+ bintreeStep.intValue() + "][" + i + "]" + binTree[bintreeStep.intValue()][i].getAllValue().doubleValue());
+//            }
         }
     }
 
@@ -780,7 +871,10 @@ public class BinaryTreeModelProcessorService {
      * @param conPrice 转股价
      * @return
      */
-    private StockInfoDto[][] createBinaryTree(BigDecimal bintreeStep, BigDecimal rootStockPrice, BigDecimal upNum, BigDecimal downNum, BigDecimal stockLimit, BigDecimal conPrice) {
+    private StockInfoDto[][] createBinaryTree(BigDecimal bintreeStep, BigDecimal rootStockPrice,
+                                              BigDecimal upNum, BigDecimal downNum, BigDecimal stockLimit,
+                                              BigDecimal conPrice) {
+
         //定义股票二维数组
         StockInfoDto[][] binTree = new StockInfoDto[bintreeStep.intValue() + 1][bintreeStep.intValue() + 1];
         for (int i = 0; i < bintreeStep.intValue() + 1; i++) {
@@ -807,7 +901,7 @@ public class BinaryTreeModelProcessorService {
                     binTree[n][i].setStockPrice(ArithmeticUtil.multiply(binTree[n-1][i-1].getStockPrice(), downNum));
                 }
                 if ((i<n && i>=0) || (i<=n && i>=1)) {
-                    if (i >= stockLimit.intValue() && binTree[n][i].getStockPrice().compareTo(conPrice) > 0) {
+                    if (n >= stockLimit.intValue() && binTree[n][i].getStockPrice().compareTo(conPrice) > 0) {
                         binTree[n][i].setStockFlg(1);
                     } else {
                         binTree[n][i].setStockFlg(0);
@@ -817,15 +911,14 @@ public class BinaryTreeModelProcessorService {
         }
         return binTree;
     }
+
     /**
      * 计算标的股票波动率
-     *
-     * @param entity
+     * @param listStock
      * @return
      */
-    private BigDecimal calaStockVolatility(BinaryTreeModelReaderEntity entity) {
+    private BigDecimal calaStockVolatility(List<MstSharePrice> listStock) {
         //变量.股票收盘价序列列表 = 资产信息.股票行情
-        List<ModStockMarketInfoDto> listStock = entity.getModStockMarketInfoList();
         if (listStock == null || listStock.size() == 0) {
             return null;
         }

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ModBintreeConfigMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ModBintreeConfig" >
+        <result column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="STOCK_BORDSTTUS" property="stockBordsttus" jdbcType="VARCHAR" />
+        <result column="STOCK_ID" property="stockId" jdbcType="VARCHAR" />
+        <result column="COMP_ORG" property="compOrg" jdbcType="VARCHAR" />
+        <result column="MARKET_MULTI" property="marketMulti" jdbcType="VARCHAR" />
+        <result column="COMP_ORGNAME" property="compOrgname" jdbcType="VARCHAR" />
+        <result column="COMP_STOCKID" property="compStockid" jdbcType="VARCHAR" />
+        <result column="FINPROD_PROIT" property="finprodProit" jdbcType="DECIMAL" />
+        <result column="FINPROD_NETASSET" property="finprodNetasset" jdbcType="DECIMAL" />
+        <result column="SMOOTHSECTION" property="smoothsection" jdbcType="DECIMAL" />
+        <result column="BINTREE_STEP" property="bintreeStep" jdbcType="DECIMAL" />
+        <result column="CURVE_CODE" property="curveCode" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ModBintreeConfig" >
+        insert into MOD_BINTREE_CONFIG (SEQNO, FINPROD_ID, FINPROD_NAME, 
+            STOCK_BORDSTTUS, STOCK_ID, COMP_ORG, 
+            MARKET_MULTI, COMP_ORGNAME, COMP_STOCKID, 
+            FINPROD_PROIT, FINPROD_NETASSET, SMOOTHSECTION, 
+            BINTREE_STEP, CURVE_CODE, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqno,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{finprodName,jdbcType=VARCHAR}, 
+            #{stockBordsttus,jdbcType=VARCHAR}, #{stockId,jdbcType=VARCHAR}, #{compOrg,jdbcType=VARCHAR}, 
+            #{marketMulti,jdbcType=VARCHAR}, #{compOrgname,jdbcType=VARCHAR}, #{compStockid,jdbcType=VARCHAR}, 
+            #{finprodProit,jdbcType=DECIMAL}, #{finprodNetasset,jdbcType=DECIMAL}, #{smoothsection,jdbcType=DECIMAL}, 
+            #{bintreeStep,jdbcType=DECIMAL}, #{curveCode,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ModBintreeConfig" >
+        insert into MOD_BINTREE_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="stockBordsttus != null" >
+                STOCK_BORDSTTUS,
+            </if>
+            <if test="stockId != null" >
+                STOCK_ID,
+            </if>
+            <if test="compOrg != null" >
+                COMP_ORG,
+            </if>
+            <if test="marketMulti != null" >
+                MARKET_MULTI,
+            </if>
+            <if test="compOrgname != null" >
+                COMP_ORGNAME,
+            </if>
+            <if test="compStockid != null" >
+                COMP_STOCKID,
+            </if>
+            <if test="finprodProit != null" >
+                FINPROD_PROIT,
+            </if>
+            <if test="finprodNetasset != null" >
+                FINPROD_NETASSET,
+            </if>
+            <if test="smoothsection != null" >
+                SMOOTHSECTION,
+            </if>
+            <if test="bintreeStep != null" >
+                BINTREE_STEP,
+            </if>
+            <if test="curveCode != null" >
+                CURVE_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="stockBordsttus != null" >
+                #{stockBordsttus,jdbcType=VARCHAR},
+            </if>
+            <if test="stockId != null" >
+                #{stockId,jdbcType=VARCHAR},
+            </if>
+            <if test="compOrg != null" >
+                #{compOrg,jdbcType=VARCHAR},
+            </if>
+            <if test="marketMulti != null" >
+                #{marketMulti,jdbcType=VARCHAR},
+            </if>
+            <if test="compOrgname != null" >
+                #{compOrgname,jdbcType=VARCHAR},
+            </if>
+            <if test="compStockid != null" >
+                #{compStockid,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodProit != null" >
+                #{finprodProit,jdbcType=DECIMAL},
+            </if>
+            <if test="finprodNetasset != null" >
+                #{finprodNetasset,jdbcType=DECIMAL},
+            </if>
+            <if test="smoothsection != null" >
+                #{smoothsection,jdbcType=DECIMAL},
+            </if>
+            <if test="bintreeStep != null" >
+                #{bintreeStep,jdbcType=DECIMAL},
+            </if>
+            <if test="curveCode != null" >
+                #{curveCode,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ModBintreeConfig" >
+        insert into MOD_BINTREE_CONFIG(SEQNO, FINPROD_ID, FINPROD_NAME, STOCK_BORDSTTUS, 
+        STOCK_ID, COMP_ORG, MARKET_MULTI, COMP_ORGNAME, COMP_STOCKID, FINPROD_PROIT, FINPROD_NETASSET, 
+        SMOOTHSECTION, BINTREE_STEP, CURVE_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQNO, FINPROD_ID, FINPROD_NAME, STOCK_BORDSTTUS, 
+            STOCK_ID, COMP_ORG, MARKET_MULTI, COMP_ORGNAME, COMP_STOCKID, FINPROD_PROIT, FINPROD_NETASSET, 
+            SMOOTHSECTION, BINTREE_STEP, CURVE_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOD_BINTREE_CONFIG
+             where 1 = 1
+    </insert>
+</mapper>

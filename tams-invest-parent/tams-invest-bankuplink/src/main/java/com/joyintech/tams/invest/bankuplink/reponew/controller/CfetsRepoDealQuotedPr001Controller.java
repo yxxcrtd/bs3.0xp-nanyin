@@ -107,7 +107,7 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
     @RequestMapping(value = "/initHq")
     public String initHq(Model model){
         model.addAttribute("MarketInfoInterf_BaseUrl", MarketInfoInterf_cmdsUrl);
-        return "/invest/bankuplink/reponew/CfetsRepoDealQuotedPrHq";
+        return "invest/bankuplink/reponew/CfetsRepoDealQuotedPrHq";
     }
 
     /**
@@ -189,7 +189,7 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
                     "/com/joyintech/tams/invest/bankuplink/reponew/conf/export_conf1.xml",
                     param1);
             return ExportUtil.export(
-                    this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                    "质押式回购报价指令执行" + SystemGlobalConstant.OPEN_PARENTHESIS
                             + DateUtil.format(DateUtil.platDateFromCache())
                             + SystemGlobalConstant.CLOSE_PARENTHESIS
                             + SystemGlobalConstant.POINT
@@ -209,7 +209,7 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
                     "/com/joyintech/tams/invest/bankuplink/reponew/conf/export_conf2.xml",
                     param1);
             return ExportUtil.export(
-                    this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                    "质押式回购报价委托查询" + SystemGlobalConstant.OPEN_PARENTHESIS
                             + DateUtil.format(DateUtil.platDateFromCache())
                             + SystemGlobalConstant.CLOSE_PARENTHESIS
                             + SystemGlobalConstant.POINT
@@ -229,7 +229,7 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
                     "/com/joyintech/tams/invest/bankuplink/reponew/conf/export_conf3.xml",
                     param1);
             return ExportUtil.export(
-                    this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                    "质押式回购报价成交查询" + SystemGlobalConstant.OPEN_PARENTHESIS
                             + DateUtil.format(DateUtil.platDateFromCache())
                             + SystemGlobalConstant.CLOSE_PARENTHESIS
                             + SystemGlobalConstant.POINT

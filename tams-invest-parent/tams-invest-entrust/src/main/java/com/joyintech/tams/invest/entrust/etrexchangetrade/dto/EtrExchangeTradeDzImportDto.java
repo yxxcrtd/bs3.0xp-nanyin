@@ -116,6 +116,7 @@ public class EtrExchangeTradeDzImportDto extends EtrExchangeTrade001Dto {
      * @param invAim 投资目的
      */
     @Number(13)
+    @DictList(link=DictCode.投资目的)
     public void setInvAim(String invAim) { super.setInvAim(invAim); }
 
     /**

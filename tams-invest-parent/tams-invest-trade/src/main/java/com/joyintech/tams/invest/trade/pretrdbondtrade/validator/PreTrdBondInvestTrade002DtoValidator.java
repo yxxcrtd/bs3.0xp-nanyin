@@ -64,8 +64,11 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 				if (!StringUtil.isNotEmpty(etrInvestInfoDto)) {
 					return errorList;
 				}
+				if( !StringUtil.isNotEmpty(inputDto.getCalculateField())){
+					inputDto.setCalculateField("unitCprice");
+				}
 				// 净价超过委托时的净价;
-				if (inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
+				if (StringUtil.equals(inputDto.getCalculateField(),"unitCprice") && inputDto.getUnitCprice() != null && etrInvestInfoDto.getEtrEntrust().getPrice() != null
 						&& inputDto.getUnitCprice().compareTo(etrInvestInfoDto.getEtrEntrust().getPrice()) > 0) {
 					ValidMessage validMessage = new ValidMessage("unitCprice",
 							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.unitCprice"),
@@ -75,9 +78,9 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 				}
 
 				// 到期收益率低于委托时的到期收益率;
-				if (inputDto.getYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getMatureYield() != null
+				if (StringUtil.equals(inputDto.getCalculateField(),"yield") && inputDto.getYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getMatureYield() != null
 						&& inputDto.getYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getMatureYield()
-						.divide(new BigDecimal(100))) < 0) {
+						.multiply(new BigDecimal(100))) < 0) {
 					ValidMessage validMessage = new ValidMessage("yield",
 							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.yield"),
 									getMessage("TrdBondInvestTrade002.yield"),
@@ -86,9 +89,9 @@ public class PreTrdBondInvestTrade002DtoValidator implements TradeCommonValidato
 				}
 
 				// 行权收益率低于委托时的行权收益率
-				if (inputDto.getExerYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getExerYield() != null
+				if (StringUtil.equals(inputDto.getCalculateField(),"exerYield") && inputDto.getExerYield() != null && etrInvestInfoDto.getEtrEntrustAdd().getExerYield() != null
 						&& inputDto.getExerYield().compareTo(etrInvestInfoDto.getEtrEntrustAdd().getExerYield()
-						.divide(new BigDecimal(100))) < 0) {
+						.multiply(new BigDecimal(100))) < 0) {
 					ValidMessage validMessage = new ValidMessage("exerYield",
 							getMessage("TRD_W_0007", getMessage("TrdBondInvestTrade002.exerYield"),
 									getMessage("TrdBondInvestTrade002.exerYield"),
