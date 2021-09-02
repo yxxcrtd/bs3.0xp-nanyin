@@ -56,8 +56,8 @@ public class FinOptionTargetValidator implements BeanValidator {
 
 
             }else {
-                if (StringUtil.isNotEmpty(dto.getTargetId())) {
-                    FinOptionTargetDto tmp = prodService.getFinprodcodebyId(dto.getTargetId());
+                if (StringUtil.isNotEmpty(dto.getTargetName())) {
+                    FinOptionTargetDto tmp = prodService.getFinprodcodebyName(dto.getTargetName());
                     if (tmp != null) {
                         resultList.add(new ValidMessage("该期权标的已存在！"));
                     }
