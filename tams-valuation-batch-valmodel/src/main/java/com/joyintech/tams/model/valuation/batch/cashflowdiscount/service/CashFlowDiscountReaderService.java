@@ -11,11 +11,10 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
+import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
@@ -25,6 +24,9 @@ import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
+import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +62,12 @@ public class CashFlowDiscountReaderService {
 
     @Autowired
     private ModLogsService modLogsService;
+
+    @Autowired
+    private RateInfoCommonService rateInfoCommonService;
+
+    @Autowired
+    private RateConfigCommonService rateConfigCommonService;
 
     /**
      * 获取数据库数据
@@ -103,16 +111,21 @@ public class CashFlowDiscountReaderService {
         }else{
             //初始化日志
             modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),pendingModAssetInfo.stream().map(x->x.getFinprodId()).collect(Collectors.toList()));
+            Map<String, ModAssetGradeConfig> modAssetGradeConfigMap = rateConfigCommonService.listAssetGradeConfigs();
+            Map<String, ModAssetGradeSpecialConfig> modAssetGradeSpecialConfigMap = rateConfigCommonService.listAssetSpecialGradeConfigs();
+
 
             if(CollectionUtils.isEmpty(allModCurve)){
                 pendingModAssetInfo.forEach(x->{
                     modLogsService.error(x.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少配置，无法继续.");
                 });
                 return result;
+            }else if(modAssetGradeConfigMap ==null && modAssetGradeSpecialConfigMap==null) {
+                pendingModAssetInfo.forEach(x->{
+                    modLogsService.error(x.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少资产评级配置，无法继续.");
+                });
+                return result;
             }else{
-
-
-
                 //处理result
                 pendingModAssetInfo.stream().forEach(item -> {
                     CashFlowDiscountReaderResult cashFlowDiscountReaderResult = new CashFlowDiscountReaderResult();
@@ -131,18 +144,14 @@ public class CashFlowDiscountReaderService {
                         cashFlowDiscountReaderResult.setModCashFlowPayRules(modCashFlowPayRules);
 
                         //查找评级信息
-                        ModRateParamsDto modRateParamsDto = new ModRateParamsDto();
-                        if (null != cashFlowDiscountReaderResult.getModCurveConfig()) {
-                            modRateParamsDto.setModSecType(cashFlowDiscountReaderResult.getModCurveConfig().getSecTypeModel());
-                            if (StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_债券.getValue())) {
-                                modRateParamsDto.setRateId(item.getFinprodMarketId());
-                            } else if (StringUtil.equals(modRateParamsDto.getModSecType(), DictCodeListExt1.证券品种_其他债权类.getValue())) {
-                                //TODO 其他债权评级主体待定
-                                modRateParamsDto.setRateId(item.getIssueId());
-                            }
+                        ViewRatingInfoDto rateInfo = null;
+                        if(modAssetGradeSpecialConfigMap!=null && modAssetGradeSpecialConfigMap.containsKey(item.getFinprodId())){
+                            ModAssetGradeSpecialConfig modAssetGradeSpecialConfig = modAssetGradeSpecialConfigMap.get(item.getFinprodId());
+                            rateInfo = rateInfoCommonService.getRatingInfoBySpecialConfig(item,modAssetGradeSpecialConfig,happenDate);
+                        }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key)){
+                            ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key);
+                            rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
                         }
-                        modRateParamsDto.setSearchDate(happenDate);
-                        ModRateDataDto rateInfo = modValuationCommonService.getRateInfo(modRateParamsDto);
 
                         //处理曲线信息
                         ModCurveConfig modCurveConfig = cashFlowDiscountReaderResult.getModCurveConfig();
@@ -156,65 +165,24 @@ public class CashFlowDiscountReaderService {
                             paramCurveCode.put("curveType", "FS");
                         } else if (StringUtil.equals(modCurveConfig.getCurveType(), DictCodeList.收益率曲线类型_FM远期的到期.getValue())) {
                             paramCurveCode.put("curveType", "FM");
+                        }else{
+                            logger.error("现金流贴现模型配置的曲线类型不正确，曲线类型配置为："+modCurveConfig.getCurveType());
                         }
                         if (null != rateInfo) {
-                            paramCurveCode.put("graderesult", rateInfo.getGraderesult());
+                            paramCurveCode.put("graderesult", rateInfo.getRating());
                         }
                         List<String> curveCode = cashFlowDiscountMapper.getCurveCode(paramCurveCode);
 
-                        cashFlowDiscountReaderResult.setModRateData(rateInfo);
+                        cashFlowDiscountReaderResult.setViewRatingInfoDto(rateInfo);
                         cashFlowDiscountReaderResult.setCurveCodes(curveCode);
 
                         result.add(cashFlowDiscountReaderResult);
                     }else{
                         modLogsService.error(item.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少配置，无法继续.");
                     }
-
-
-
-
                 });
             }
         }
-
-
-
-
-//        //贴现法曲线配置集合
-//        Map<String, ModCurveConfig> modCurveConfigMap = new HashMap<>();
-//        //贴现法曲线配置集合_资产
-//        Map<String, ModCurveConfig> modCurveConfigAssetMap = new HashMap<>();
-//        //资产五级分类集合
-//        List<String> assetFives = new ArrayList<>();
-//        //待查询资产代码集合
-//        List<String> finprodIds = new ArrayList<>();
-//        if (null != allModCurve && allModCurve.size() > 0) {
-//            allModCurve.stream().forEach(item -> {
-//                if (StringUtil.isNotEmpty(item.getFinprodId())) {
-//                    finprodIds.add(item.getFinprodId());
-//                    modCurveConfigAssetMap.put(item.getAssetFive() + item.getFinprodId(), item);
-//                } else {
-//                    modCurveConfigMap.put(item.getAssetFive(), item);
-//                    assetFives.add(item.getAssetFive());
-//                }
-//            });
-//        }
-//
-//        //调用资产基本信息查询_估值模型
-//        if (assetFives.size() > 0) {
-//            ModAssetInfoParamsDto modAssetInfoParamsDto = new ModAssetInfoParamsDto();
-////                modAssetInfoParamsDto.setAssetFiveList(assetFives);
-//            modAssetInfoParamsDto.setSearchDate(happenDate);
-//            pendingModAssetInfo.addAll(modValuationCommonService.selectAssetInfo(modAssetInfoParamsDto));
-//        }
-//        if (finprodIds.size() > 0) {
-//            ModAssetInfoParamsDto modAssetInfoParamsDto = new ModAssetInfoParamsDto();
-//            modAssetInfoParamsDto.setFinprodIdList(finprodIds);
-//            modAssetInfoParamsDto.setSearchDate(happenDate);
-//            pendingModAssetInfo.addAll(modValuationCommonService.selectAssetInfo(modAssetInfoParamsDto));
-//        }
-//
-
 
         return result;
     }

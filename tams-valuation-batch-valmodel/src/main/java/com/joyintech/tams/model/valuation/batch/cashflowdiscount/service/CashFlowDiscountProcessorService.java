@@ -42,6 +42,7 @@ import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,7 @@ public class CashFlowDiscountProcessorService {
                     return result;
                 }
             }
-            if (null == entity.getModRateData()) {
+            if (null == entity.getViewRatingInfoDto()) {
                 modLogsService.warn(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
                         "【现金流折现模型批处理】：资产无评级，采用最小利差法反算");
             }
@@ -259,7 +260,7 @@ public class CashFlowDiscountProcessorService {
      */
     private String handlecurveCode(CashFlowDiscountReaderResult entity, ModRiskPremium modRiskPremium) {
         String curveCode = StringUtil.EMPTY;
-        if (null == entity.getModRateData()) {
+        if (null == entity.getViewRatingInfoDto()) {
             //这里查出来得肯定只有一条
             Map<String, Object> paramCurveCode = new HashMap<>();
             ModCurveConfig modCurveConfig = entity.getModCurveConfig();
@@ -341,7 +342,7 @@ public class CashFlowDiscountProcessorService {
             }
         }
         //处理评级信息
-        handleRateInfo(modRiskPremium, entity.getModRateData(), curveCode);
+        handleRateInfo(modRiskPremium, entity.getViewRatingInfoDto(), curveCode);
         //处理定价其他属性值
         modRiskPremium.setSecTypeModel(entity.getModCurveConfig().getSecTypeModel());
         modRiskPremium.setSecDetailTypeModel(entity.getModCurveConfig().getSecDetailTypeModel());
@@ -508,16 +509,16 @@ public class CashFlowDiscountProcessorService {
      * 处理定价数据的评级结果、评级来源
      *
      * @param modRiskPremium
-     * @param modRateData
+     * @param viewRatingInfoDto
      * @return
      */
-    private ModRiskPremium handleRateInfo(ModRiskPremium modRiskPremium, ModRateDataDto modRateData, String curveCode) {
-        if (null == modRateData) {
+    private ModRiskPremium handleRateInfo(ModRiskPremium modRiskPremium, ViewRatingInfoDto viewRatingInfoDto, String curveCode) {
+        if (null == viewRatingInfoDto) {
             modRiskPremium.setGradeResult(cashFlowDiscountMapper.getGradeResult(curveCode));
             modRiskPremium.setGradeSource(ModelDictCodeList.模型_评级来源类型_系统计算.getValue());
         } else {
-            modRiskPremium.setGradeResult(modRateData.getGraderesult());
-            modRiskPremium.setGradeSource(StringUtil.equals(modRateData.getGradeorgid(), ModelDictCodeList.评级机构_资管内部.getValue()) ? ModelDictCodeList.模型_评级来源类型_内部.getValue() : ModelDictCodeList.模型_评级来源类型_外部.getValue());
+            modRiskPremium.setGradeResult(viewRatingInfoDto.getRating());
+            modRiskPremium.setGradeSource(StringUtil.equals(viewRatingInfoDto.getGradeorgid(), ModelDictCodeList.评级机构_资管内部.getValue()) ? ModelDictCodeList.模型_评级来源类型_内部.getValue() : ModelDictCodeList.模型_评级来源类型_外部.getValue());
         }
         return modRiskPremium;
     }

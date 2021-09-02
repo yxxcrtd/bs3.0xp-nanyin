@@ -1,12 +1,9 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
-import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,7 +42,7 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
     /**
      * 评级信息
      */
-    private ModRateDataDto modRateData;
+    private ViewRatingInfoDto viewRatingInfoDto;
 
     public ModAssetInfoDto getModAssetInfoDto() {
         return modAssetInfoDto;
@@ -95,12 +92,12 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
         this.modCashFlowPayRules = modCashFlowPayRules;
     }
 
-    public ModRateDataDto getModRateData() {
-        return modRateData;
+    public ViewRatingInfoDto getViewRatingInfoDto() {
+        return viewRatingInfoDto;
     }
 
-    public void setModRateData(ModRateDataDto modRateData) {
-        this.modRateData = modRateData;
+    public void setViewRatingInfoDto(ViewRatingInfoDto viewRatingInfoDto) {
+        this.viewRatingInfoDto = viewRatingInfoDto;
     }
 }
 
