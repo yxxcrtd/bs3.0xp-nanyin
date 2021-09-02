@@ -1269,6 +1269,7 @@ public class TrdFundInvestTrade002Service extends BaseService<TrdFundInvestTrade
         inputDto.setFinprodType2(DictCodeList.平安资产类型_基金.getValue());
         inputDto.setPs(dto.getPs());// 交易方向
         inputDto.setType6(dto.getType6());// 资产分类
+        inputDto.setType7(dto.getType7());
         inputDto.setFeeTypeList(Arrays.asList(DictCodeListExt1.一次性费用类型_佣金.getValue()));
         inputDto.setIsGrade("1");
         inputDto.setSecAcctId(dto.getSecManageAcctId());

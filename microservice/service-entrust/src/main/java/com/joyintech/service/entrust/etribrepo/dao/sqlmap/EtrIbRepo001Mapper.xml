@@ -7,7 +7,7 @@
             resultType="com.joyintech.service.entrust.etribrepo.dto.EtrIbRepo001Dto">
          select aaa.* from (
             <choose>
-                <when test="entrustStatusIsAll == YES_OR_NO_Y"> 
+                <when test="entrustStatus == ''">
                     <!-- 查询全部状态 -->
                     <include refid="onlyEtrEntrust"></include>
                     UNION ALL

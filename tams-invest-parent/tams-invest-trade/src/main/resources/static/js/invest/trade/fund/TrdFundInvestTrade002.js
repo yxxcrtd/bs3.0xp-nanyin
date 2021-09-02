@@ -38,7 +38,7 @@ $(function () {
                     ps: ps,
                     tradeDate: $('#tradeDate').val(),
                     type6: $("#type6").val(),
-                    type7: $("#type9").val(),
+                    type7: $("#trmFundType").val(),
                     secManageAcctId: $("#secManageAcctId").val()
                 }
                 Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getCommissionFeeInfo', param,

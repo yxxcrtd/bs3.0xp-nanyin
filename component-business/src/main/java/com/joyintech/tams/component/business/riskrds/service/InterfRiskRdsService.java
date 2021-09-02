@@ -117,7 +117,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     private List<String> 产品端_认购赎回分红=Arrays.asList(DictCodeList.交易方向_产品认购.getValue(),DictCodeList.交易方向_产品申购.getValue()
             ,DictCodeList.交易方向_产品赎回.getValue(),DictCodeList.交易方向_份额强增.getValue(),DictCodeList.交易方向_份额强减.getValue(),DictCodeList.交易方向_现金分红.getValue()
             ,DictCodeList.交易方向_提前终止.getValue(),DictCodeList.交易方向_提前赎回.getValue(),DictCodeList.交易方向_产品付费.getValue(),DictCodeList.交易方向_税费缴税.getValue()
-            ,DictCodeList.交易方向_产品提前赎回.getValue(),DictCodeList.交易方向_产品现金分红.getValue());
+            ,DictCodeList.交易方向_产品提前赎回.getValue(),DictCodeList.交易方向_产品现金分红.getValue(),DictCodeList.交易方向_产品到期.getValue());
 
     private List<String> 协议回购到期交易方向 = Arrays.asList(DictCodeListExt3.交易方向_提前购回.getValue(),DictCodeListExt3.交易方向_到期购回.getValue()
             ,DictCodeListExt3.交易方向_解除质押.getValue());
@@ -2543,7 +2543,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     }
 
                 }
-                else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
+                else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())
+                ||StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品到期.getValue())) {
 
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("expireConfirmDate"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("expireDealAmt")));
@@ -2553,7 +2554,6 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("actBonusDate"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("bonusCashAmt")));
                 }
-
             }
             //货币型产品
             else if ( StringUtil.equals(DictCodeList.收益类型_货币型.getValue(), profitType)) {
@@ -2578,7 +2578,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty((String)dataMap.get("addReduceDealNum03"))?new BigDecimal((String)dataMap.get("addReduceDealNum03")):new BigDecimal((String)dataMap.get("addReduceDealAmt03")));
 
                 }
-                else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())) {
+                else if (StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_提前终止.getValue())
+                        ||StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品到期.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("expireConfirmDate03"))));
                     infRiskRdsDto.setAmount(new BigDecimal((String)dataMap.get("expireDealAmt03")));
                 }
@@ -2601,7 +2602,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     infRiskRdsDto.setEventDate((String)dataMap.get("tradeDate"));
                     infRiskRdsDto.setAmount(ArithmeticUtil.doAdd(new BigDecimal((String)dataMap.get("prinAmt")),new BigDecimal((String)dataMap.get("actCusProfit"))));
                 }
-                else if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品赎回.getValue())) {
+                else if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品赎回.getValue())
+                    ||StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_产品到期.getValue())) {
                     infRiskRdsDto.setEventDate(DateUtil.format(new Date((long)dataMap.get("payDate"))));
                     infRiskRdsDto.setAmount(ArithmeticUtil.doAdd(new BigDecimal((String)dataMap.get("reduceAmt")),new BigDecimal((String)dataMap.get("actCusProfit"))));
                 }
