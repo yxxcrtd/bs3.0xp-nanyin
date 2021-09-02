@@ -429,13 +429,20 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             // 根据交易方向来赋值委托份额和委托金额
             String[] s2 = rowData.get(5).toString().split(":");
 			if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
-				// 委托份额,委托金额
-				dto.setEntrustNum(BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
-				dto.setEntrustNumShow(dto.getEntrustNum());
-				if (StringUtil.isNotEmpty(rowData.get(7).toString().trim())) {
-					dto.setEntrustAmt(BigDecimal.valueOf(Double.valueOf(rowData.get(7).toString().trim())));
-					dto.setEntrustAmtShow(dto.getEntrustAmt());
-				}
+                // 委托份额
+                dto.setEntrustNum2(
+                        BigDecimal.valueOf(Double.valueOf(rowData.get(6).toString().trim())));
+                // 当交易方向为买入的时候，委托金额=委托份额+待结转份额
+                if(StringUtil.isNotEmpty(rowData.get(8).toString().trim())){
+                    dto.setEntrustAmt2(dto.getEntrustNum2().add(
+                            BigDecimal.valueOf(Double.valueOf(rowData.get(8).toString().trim()))));
+                }else {
+                    dto.setEntrustAmt2(dto.getEntrustNum2());
+                }
+                dto.setEntrustNum(dto.getEntrustNum2());
+                dto.setEntrustAmt(dto.getEntrustAmt2());
+                dto.setEntrustNumShow(dto.getEntrustNum2());
+                dto.setEntrustAmtShow(dto.getEntrustAmt2());
 			}
             else if (StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())) {
                 // 委托份额
@@ -470,15 +477,27 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
             }
             // 获取备注
             dto.setRemark(rowData.get(9).toString().trim());
-            // 获取交易对手
-            dto.setCounterId(rowData.get(10).toString().trim());
-            // 获取交易对手名称
-            dto.setCounterIdName(getCounterName(rowData.get(10).toString().trim()));
+            //交易对手
+            if (StringUtil.isNotBlank(rowData.get(10).toString())) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("initValue", rowData.get(10).toString().trim());
+                map.put("page", 1);
+                map.put("length", 20);
+                map.put("counterType", null);
+                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+                        map, SelectOptionDto.class);
+                if (!selectOptionDtoPage.getRoot().isEmpty()) {
+                    SelectOptionDto counterInfo = selectOptionDtoPage.getRoot().get(0);
+                    dto.setCounterId(counterInfo.getId());
+                    dto.setCounterIdName(counterInfo.getText());
+                }
+            }
             // 投资经理
             dto.setEtrInvestPersonInfo(new EtrInvestPersonInfoDto());
             dto.getEtrInvestPersonInfo().setInvManagerId(dto.getCreateUser());
             // 获取交易对手
-            dto.getEtrInvestPersonInfo().setCounterId(rowData.get(10).toString().trim());
+            dto.getEtrInvestPersonInfo().setCounterId(dto.getCounterId());
             // 投资处室
             dto.getEtrInvestPersonInfo().setRoom(dto.getCreateDept());
             // 根据市场代码查出联动值
@@ -587,10 +606,10 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 List<String> rowData = objects.get(i);
                 String lineNo = String.valueOf(i + 1);
                 String indexId = rowData.get(0).toString();
-                if (StringUtil.isBlank(indexId)) {
-                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
-                    break;
-                }
+//                if (StringUtil.isBlank(indexId)) {
+//                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
+//                    break;
+//                }
                 // 委托开始日check非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(1).toString(),
@@ -621,7 +640,9 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                         "EtrPlanAssetR002.finprodId", lineNo));
                 if (StringUtil.isNotEmpty(rowData.get(4).toString())) {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("search", rowData.get(4).toString());
+                    // ZGZGST-1844:资产代码关联查询条件用initValue fuyongsheng 20210902 edit start
+                    map.put("initValue", rowData.get(4).toString());
+                    // ZGZGST-1844:资产代码关联查询条件用initValue fuyongsheng 20210902 edit end
                     map.put("page", 1);
                     map.put("length", 20);
                     Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
@@ -655,7 +676,8 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                             "ETR_E_0030", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
-                }if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
+                }
+                if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                     // 委托金额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(7).toString(),
@@ -680,7 +702,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 // 交易对手非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(10).toString(),
-                        "etrInvestPersonInfo.counterId", lineNo));
+                        "EtrPlanAssetC003.counterId", lineNo));
                 //是否存在check
                 if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                     Map<String, Object> map = new HashMap<>();

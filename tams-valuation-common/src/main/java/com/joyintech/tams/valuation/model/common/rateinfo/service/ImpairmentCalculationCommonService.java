@@ -1,8 +1,8 @@
-package com.joyintech.tams.model.impairment.batch.common.calculation;
+package com.joyintech.tams.valuation.model.common.rateinfo.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -133,5 +133,43 @@ public class ImpairmentCalculationCommonService extends BaseService{
 		calc = rs - ra;
 		return calc;
 	}
+	/**
+	 * 比较评级高低，返回较高的
+	 * @param rating1
+	 * @param rating2
+	 * @return
+	 */
+	public ViewRatingInfoDto maxRating(ViewRatingInfoDto rating1,ViewRatingInfoDto rating2){
+		if(rating1==null){
+			if(rating2==null){
+				return null;
+			}else{
+				return rating2;
+			}
+		}else{
+			if(rating2==null){
+				return rating1;
+			}else{
+				String r1 = rating1.getRating();
+				String r2 = rating2.getRating();
+				int ra = Integer.valueOf(r1.replaceAll("^(0+)", ""));
+				int rs = Integer.valueOf(r2.replaceAll("^(0+)", ""));
+				if(ra > rs){
+					return rating1;
+				}else{
+					return rating2;
+				}
+			}
+		}
+	}
 
+	/**
+	 * 比较评级高低，返回较高的
+	 * @param rating1
+	 * @param rating2
+	 * @return
+	 */
+	public ViewRatingInfoDto maxRating(ViewRatingInfoDto rating1,ViewRatingInfoDto rating2,ViewRatingInfoDto rating3){
+		return maxRating(rating3,maxRating(rating1,rating2));
+	}
 }

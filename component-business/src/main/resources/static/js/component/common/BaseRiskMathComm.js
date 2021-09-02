@@ -1012,6 +1012,21 @@
             }
         }
     }
+
+    var submitT19Check = function(){
+        if($("#riskMathFlag").val()=='01'&& risk_math_switch=='Y'){
+            //内部交易对手不需要风险测试
+            var paramConterId=["etrInvestPersonInfo.counterId","bussEtrInvestPersonInfoDto.counterId","trdInvestPersonInfo.counterId","trdInvestPersonInfo002Dto.counterId"];
+            var counterType=findCounterType(paramConterId);
+            if(counterType != 'N'){
+                Joyin.alert(JoyinUtil.getMessage('ETR_X_013'),2);
+                return ;
+            }
+        }else{
+            return '';
+        }
+    }
+
     /***
      * 检查风险试算是否满足分控场景
      */
@@ -1287,7 +1302,8 @@
             initBaseRiskMathCommLxzlPage:initBaseRiskMathCommLxzlPage,
             reloadRiskTable:reloadRiskTable,
             getparam:getparam,
-            resetRiskMathFlag:resetRiskMathFlag
+            resetRiskMathFlag:resetRiskMathFlag,
+            submitT19Check:submitT19Check
     };
       
     /*吉林银行风险试算-流程控制显示   add by caojin   2019/09/23   start*/

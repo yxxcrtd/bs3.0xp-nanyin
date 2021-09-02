@@ -9,6 +9,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.systemtools.dto.ExcelValidDto;
 import com.joyintech.tams.valuation.basicdata.commarketmanagement.dto.ComMarketManagementDto;
 import com.joyintech.tams.valuation.basicdata.commarketmanagement.service.ComMarketManagement001Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,4 +112,18 @@ public class ComMarketManagementController extends BaseController{
     public ResponseEntity<byte[]> export() throws Exception {
         return carketManagementService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
+
+
+    /**
+     * 评级信息导入
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("importFile")
+    public List<ExcelValidDto> importData(String fileName) throws Exception {
+        return carketManagementService.importData(fileName);
+    }
+
 }

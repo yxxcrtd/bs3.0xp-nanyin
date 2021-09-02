@@ -1,8 +1,8 @@
 package com.joyintech.tams.model.impairment.batch.common.searchinfo.dao;
 
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModStandardGradeMapping;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

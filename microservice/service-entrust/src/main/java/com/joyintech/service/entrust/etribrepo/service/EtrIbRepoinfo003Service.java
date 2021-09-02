@@ -122,7 +122,8 @@ public class EtrIbRepoinfo003Service {
             dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             dto.setRecStatus(DictCodeList.委托状态_待接收.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
-            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+//            由于dto.getEtrInvestPersonInfo()中InvManagerId为null，因此审批后的业务表中无项目经理，故隐藏掉这行代码
+//            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(dto.getEntrustAmt());
             //做交易录单时交易日历丢失 交易日历默认银行间 add by libaisong 2021-03-01 start
@@ -205,7 +206,8 @@ public class EtrIbRepoinfo003Service {
             dto.setEntrustStatus(DictCodeList.委托状态_待接收.getValue());
             dto.setRecStatus(DictCodeList.委托状态_待接收.getValue());
             BeanUtil.copyProperties(etrEntrust, dto);
-            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
+//            由于dto.getEtrInvestPersonInfo()中InvManagerId为null，因此审批后的业务表中无项目经理，故隐藏掉这行代码
+//            BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(dto.getEntrustAmt());
             if(StringUtil.isNotEmpty(etrEntrust.getPrice())){

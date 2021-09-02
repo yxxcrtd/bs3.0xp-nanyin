@@ -1,7 +1,6 @@
-package com.joyintech.tams.model.impairment.batch.common.searchinfo.dto;
+package com.joyintech.tams.valuation.model.common.rateinfo.dto;
 
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.constant.ModelDictCodeList;
 
 import java.util.Date;
 
@@ -27,16 +26,16 @@ public class ViewRatingInfoDto extends BaseEntity {
     /**
      * 评级结果
      */
-    private String mstratingresult01;
+    private String rating;
     /**
      * 查询日
      */
     private Date searchDate;
 
-    public  ViewRatingInfoDto(){
+    public ViewRatingInfoDto(){
 
     }
-    public  ViewRatingInfoDto(String ocode, String gradeorgid, String otype, Date searchDate){
+    public ViewRatingInfoDto(String ocode, String gradeorgid, String otype, Date searchDate){
         this.ocode = ocode;
         this.gradeorgid = gradeorgid;
         this.otype = otype;
@@ -67,12 +66,12 @@ public class ViewRatingInfoDto extends BaseEntity {
         this.gradeorgid = gradeorgid;
     }
 
-    public String getMstratingresult01() {
-        return mstratingresult01;
+    public String getRating() {
+        return rating;
     }
 
-    public void setMstratingresult01(String mstratingresult01) {
-        this.mstratingresult01 = mstratingresult01;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
     public Date getSearchDate() {

@@ -114,7 +114,15 @@ public class FinOptionTargetService extends CommonExportService<FinOptionTargetD
             FinOptionTargetDto.class);
     }
 
-
+    /**
+     * 根据name获取期权标的信息
+     * @param name
+     * @return
+     */
+    public FinOptionTargetDto getFinprodcodebyName(String name){
+        return restTemplate.getForObject(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME +"/FinOptionTarget/getFinprodcodebyId?targetName=" + name,
+                FinOptionTargetDto.class);
+    }
 
     @Override
     protected void buildExportParam(ExportParam exportParam) {

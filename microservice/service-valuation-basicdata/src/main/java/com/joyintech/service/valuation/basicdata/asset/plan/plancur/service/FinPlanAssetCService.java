@@ -275,8 +275,19 @@ public class FinPlanAssetCService extends BaseService<FinPlanAssetCDto> {
         finProductType.setType11(dto.getType11());
         finProductType.setType12(dto.getType12());
         /*添加五级分类 lishuping 2019/7/23 end*/
-        finProductType.setType8(DictCodeList.平安资产类型_计划类资产_货币型.getValue());
-      //现金流信息List
+
+        //modify by yanya on 20210902 增加证券品种type18 start
+        if(StringUtil.equals(DictCodeList.收益类型_货币型.getValue(), dto.getProfitType())) {
+            finProductType.setType18(DictCodeListExt1.证券品种_计划类资产_货币型.getValue());
+            finProductType.setType8(DictCodeList.平安资产类型_计划类资产_货币型.getValue());
+        }
+        else {
+            finProductType.setType18(DictCodeListExt1.证券品种_计划类资产_净值型.getValue());
+            finProductType.setType8(DictCodeList.平安资产类型_计划类资产_净值型.getValue());
+        }
+        //modify by yanya on 20210902 增加证券品种type18 end
+
+        //现金流信息List
         List<FinCashInfo> finCashInfoList = new ArrayList<>();
         //现金流计算规则dtolist
         List<FinCashCalcRule> finCashCalcRuleList = new ArrayList<>();

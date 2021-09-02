@@ -98,5 +98,25 @@ $(function() {
         $("#ComMarketManagement_btn_reset").click(function(event){
             reset( '#selectArea',table);
         });
+
+        /**
+         * 导入按钮
+         * add by yanya on 20210902
+         */
+        $('#ComMarketManagement001_btn_import').click(function() {
+            Joyin.confirm("请确认是否要导入数据？", function() {
+                Joyin.uploadFile(function(fileName) {
+                    Joyin.ajax(basePath +"valuation/basicdata/commarketmanagement/ComMarketManagement/importFile", {
+                        fileName : fileName
+                    },function(result){
+                        if(!result || !($.isArray(result) && result.length > 0)){
+                            layui.layer.closeAll()
+                            table.reload();
+                            //Joyin.alert("文件导入成功！", 0);
+                        }
+                    });
+                });
+            });
+        });
     });
 }());
