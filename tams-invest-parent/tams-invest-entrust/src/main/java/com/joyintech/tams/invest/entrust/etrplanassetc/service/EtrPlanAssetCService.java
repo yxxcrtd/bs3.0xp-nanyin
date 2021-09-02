@@ -587,10 +587,10 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 List<String> rowData = objects.get(i);
                 String lineNo = String.valueOf(i + 1);
                 String indexId = rowData.get(0).toString();
-                if (StringUtil.isBlank(indexId)) {
-                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
-                    break;
-                }
+//                if (StringUtil.isBlank(indexId)) {
+//                    confirmMsg = "第" + (i + 1) + "行序号不能为空";
+//                    break;
+//                }
                 // 委托开始日check非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(1).toString(),
@@ -655,7 +655,8 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                             "ETR_E_0030", getMessage("EtrPlanAssetR002.ps"), lineNo));
                     }
-                }if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
+                }
+                if (StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
                     // 委托金额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(7).toString(),
@@ -680,7 +681,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 // 交易对手非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(10).toString(),
-                        "etrInvestPersonInfo.counterId", lineNo));
+                        "EtrPlanAssetC003.counterId", lineNo));
                 //是否存在check
                 if (StringUtil.isNotBlank(rowData.get(10).toString())) {
                     Map<String, Object> map = new HashMap<>();

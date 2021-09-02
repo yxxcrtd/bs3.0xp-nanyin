@@ -89,6 +89,9 @@
         <if test="targetId != null and targetId != ''">
             and TARGET_ID = #{targetId,jdbcType=VARCHAR}
         </if>
+        <if test="targetName != null and targetName != ''">
+            and TARGET_NAME = #{targetName,jdbcType=VARCHAR}
+        </if>
     </select>
 
   <!--根据标的代码删除期权标的信息-->
