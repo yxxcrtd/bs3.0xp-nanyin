@@ -329,7 +329,9 @@
         sortable: false
     }// 指令可用持仓
     , {
-        field : 'trmFundType',
+        // ZGZGST-1879:基金类型展示文字 fuyongsheng edit start
+        field : 'trmFundTypeStr',
+        // ZGZGST-1879:基金类型展示文字 fuyongsheng edit end
         title : 'EtrFund002.trmFundType',
         width : 200,
         sortfield : 'trmFundType',
