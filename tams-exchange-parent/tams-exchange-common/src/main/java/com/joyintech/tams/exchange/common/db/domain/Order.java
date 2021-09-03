@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Order implements Serializable, Cloneable, OrderInterface, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 7947633128705147688L;
     @NotNull
     @Size(max = 32)
     @Id

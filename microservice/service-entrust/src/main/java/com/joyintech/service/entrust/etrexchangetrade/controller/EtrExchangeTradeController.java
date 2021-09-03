@@ -62,6 +62,12 @@ public class EtrExchangeTradeController {
     public Page<EtrExchangeTrade003Dto> selectEtrExchange(@RequestBody Map<String,Object> param,@PathVariable("page") int page, @PathVariable("length") int length){
         return etrExchangeTradeService.selectEtrExchange(page,length,param);
     }
+    //add by chenjiaxing 导出全部数据 202100902 start
+    @PostMapping("selectEtrExchange2")
+    public List<EtrExchangeTrade003Dto> selectEtrExchange2(@RequestBody Map<String,Object> param){
+        return etrExchangeTradeService.selectEtrExchange2(param);
+    }
+    //add by chenjiaxing 导出全部数据 202100902 end
 
     @PostMapping("buildEtrFlow")
     public BaseEtrInvestInfoDto selectEtrExchange(@RequestBody EtrExchangeTrade001Dto dto){

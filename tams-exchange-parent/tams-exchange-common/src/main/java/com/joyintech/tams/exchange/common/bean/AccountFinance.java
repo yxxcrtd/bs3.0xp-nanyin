@@ -8,6 +8,7 @@ import java.io.Serializable;
  * 客户资金查询返回bean
  */
 public class AccountFinance implements Serializable {
+    private static final long serialVersionUID = -4501627645683023102L;
     private String accountId;
     /**
      * 客户代码

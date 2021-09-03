@@ -1,17 +1,27 @@
 package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
+import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
+import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
+import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +37,17 @@ public class ImpairmentDataLoadReaderStep2Service {
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
     @Autowired
     private ModParamsService modParamsService;
+    @Autowired
+    private RateConfigCommonService rateConfigCommonService;
+    @Autowired
+    private RateInfoCommonService rateInfoCommonService;
+
     /**
      * 二叉树模型-reader
      * @param params
      * @return
      */
-    public List<ImpairmentDataLoadStep2ReaderDto> createReaderList(Map<String, Object> params) {
+    public List<ImpairmentDataLoadStep2ReaderDto> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
         //1.读取需要进行处理的资产
         //跑批日
@@ -42,90 +57,76 @@ public class ImpairmentDataLoadReaderStep2Service {
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         para.put("ps", DictCodeList.交易方向_买入.getValue());
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
+        // 定义 变量.返回结果
+        List<ImpairmentDataLoadStep2ReaderDto> resultList = new ArrayList<ImpairmentDataLoadStep2ReaderDto>();
         //1、获取需要当天处理的初始数据列表
-        List<ImpairmentDataLoadStep2ReaderDto> list = impairmentDataLoadMapper.selectModEclResultProcessForDeal(para);
+        List<ModEclResultProcess> list = impairmentDataLoadMapper.selectModEclResultProcessForDeal(para);
         if (list == null || list.size() == 0) {
-            return list;
+            return resultList;
         }
-        //2、遍历未匹配的交易列表加载查询参数
-        List<ViewRatingInfoDto> paraList = new ArrayList<ViewRatingInfoDto>();
+        //2、查询外部机构评级结果，映射评级机构对应的内部评级
+        // 2.1 查询所有的评级配置数据
+        // 定义 变量.特殊资产评级配置
+        Map<String, ModAssetGradeSpecialConfig> sepcialConfigMap = rateConfigCommonService.listAssetSpecialGradeConfigs();
+        // 定义 变量.资产大类评级配置
+        Map<String, ModAssetGradeConfig> configMap = rateConfigCommonService.listAssetGradeConfigs();
         //2.1.加载查询参数
-        for (ImpairmentDataLoadStep2ReaderDto dto : list) {
-            if (StringUtil.isEmpty(dto.getGradeOrgId())) {
+        for (ModEclResultProcess item : list) {
+            // 定义 变量.返回reader结果
+            ImpairmentDataLoadStep2ReaderDto readerDto = new ImpairmentDataLoadStep2ReaderDto();
+            ModConfigUseage modConfigUseage = new ModConfigUseage();
+            ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
+            BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, item);
+            // 定义 变量.评级信息
+            ViewRatingInfoDto ratingInfoDto = null;
+            // 特殊资产评级配置不为空时
+            if(sepcialConfigMap.get(item.getAssetId()) != null){
+                // 特殊资产评级配置
+                ModAssetGradeSpecialConfig specialConfig = sepcialConfigMap.get(item.getAssetId());
+                //定义 变量.评级配置使用情况.配置流水号 = LGD参数Dto.流水号
+                modConfigUseage.setConfigSeqno(specialConfig.getSeqno());
+                //定义 变量.评级配置使用情况.配置类型 = LGD参数Dto.配置类型
+                modConfigUseage.setConfigType(specialConfig.getoType());
+                // 交易信息.评级配置使用情况 = 变量.评级配置使用情况
+                readerDto.setModConfigUseage(modConfigUseage);
+
+                // 查询对应评级信息
+                ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,item.getTradeDate());
+            }else if(configMap.get(item.getAssetId()) != null){
+                ModAssetGradeConfig config = configMap.get(item.getAssetId());
+                //定义 配置流水号 = LGD参数Dto.流水号
+                modConfigUseage.setConfigSeqno(config.getSeqno());
+                //定义 配置类型 = LGD参数Dto.配置类型
+                modConfigUseage.setConfigType(config.getoType());
+                // 交易信息.评级配置使用情况 = 变量.评级配置使用情况
+                readerDto.setModConfigUseage(modConfigUseage);
+
+                // 查询对应评级信息,查询时间为对应买入交易日期
+                ratingInfoDto = rateInfoCommonService.getRatingInfoByTypeConfig(modAssetInfoDto,config,item.getTradeDate());
+            }
+            else{
+                // 警告：资产无对应资产评级配置
+                String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级配置信息";
+                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                        item.getAssetId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
                 continue;
             }
-            // 债项评级、主体评级
-//            if (StringUtil.isNotEmpty(dto.getMarketId())) {
-            // 资产类型= 债券：债项评级、主体评级
-            if (DictCodeListExt1.证券品种_债券.getValue().equals(dto.getModelAssetType())) {
-                // 市场代码主体评级
-                ViewRatingInfoDto dto1 = new ViewRatingInfoDto(dto.getMarketId(),
-                    dto.getGradeOrgId(), ModelDictCodeList.模型_评级类型_主体评级.getValue(),
-                    dto.getTradeDate());
-                paraList.add(dto1);
-                // 市场代码债项评级
-                ViewRatingInfoDto dto2 = new ViewRatingInfoDto(dto.getMarketId(),
-                    dto.getGradeOrgId(), ModelDictCodeList.模型_评级类型_债项评级.getValue(),
-                    dto.getTradeDate());
-                paraList.add(dto2);
+            if(ratingInfoDto != null){
+                //交易数据.买入时点评级结果 = 评级信息.评级结果
+                item.setResultDeal(ratingInfoDto.getRating());
+                // 添加到返回结果List中
+                readerDto.setModEclResultProcess(item);
             }
-            else {
-                // 其他债权、存款、回购：发行人（回购发行人对应交易对手）
-                if (StringUtil.isNotEmpty(dto.getIssuer())) {
-                    ViewRatingInfoDto dto1 = new ViewRatingInfoDto(dto.getIssuer(),
-                        dto.getGradeOrgId(), ModelDictCodeList.模型_评级类型_主体评级.getValue(),
-                        dto.getTradeDate());
-                    paraList.add(dto1);
-                }
-                if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(dto.getModelAssetType())){
-                    // 融资人
-                    if (StringUtil.isNotEmpty(dto.getFinancier())) {
-                        ViewRatingInfoDto dto1 = new ViewRatingInfoDto(dto.getIssuer(),
-                            dto.getFinancier(), ModelDictCodeList.模型_评级类型_主体评级.getValue(),
-                            dto.getTradeDate());
-                        paraList.add(dto1);
-                    }
-                    // 担保人
-                    if (StringUtil.isNotEmpty(dto.getSponsor())) {
-                        ViewRatingInfoDto dto1 = new ViewRatingInfoDto(dto.getIssuer(),
-                            dto.getSponsor(), ModelDictCodeList.模型_评级类型_主体评级.getValue(),
-                            dto.getTradeDate());
-                        paraList.add(dto1);
-                    }
-                }
+            else{
+                // 警告：资产无对应评级信息
+                String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级结果";
+                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
+                        item.getAssetId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                continue;
             }
 
         }
-
-        //清除缓存中评级信息数据
-        CacheUtil.clearAppCache(GlobalConstant.RATING_INFO);
-        CacheUtil.clearAppCache(GlobalConstant.RATING_INFO_LATEST);
-
-        //3、查询未匹配交易的评级结果数据（查视图）
-        Map<Date,List<ViewRatingInfoDto>>  searchMap =  new HashMap<>();
-        //以查询日为key,对查询评级参数List进行分组，构建查询评级参数Map，数据类型如下：
-        paraList.stream().collect(Collectors.groupingBy(ViewRatingInfoDto::getSearchDate,Collectors.toList()))
-                .forEach(searchMap::put);
-        // 定义 指定机构评级信息Map
-        Map<Date,Map<String, ViewRatingInfoDto>>  ratingMap =  new HashMap<>();
-        // 定义 最新机构评级信息Map
-        Map<Date,Map<String, ViewRatingInfoDto>>  ratingMapLatest =  new HashMap<>();
-        for (Date key : searchMap.keySet()) {
-            List<ViewRatingInfoDto> listViewPara = searchMap.get(key);
-            List<ViewRatingInfoDto> listRating = impairmentCommonService.selectViewRatingInfoByList(listViewPara, key);
-            // 定义 变量.指定评级机构结果Map：每个评级类型对应的指定评级机构的主体评级的较高值
-            Map<String, ViewRatingInfoDto> mapRating = impairmentCommonService.getRatingInfoMap(listRating);
-            // 定义 变量.最新评级机构结果Map：每个评级类型对应的最新评级机构的主体评级的较高值
-            Map<String, ViewRatingInfoDto> latestMapRating = impairmentCommonService.getLatestRatingInfoMap(listRating);
-            // 指定评级机构信息Map放入缓存
-            ratingMap.put(key, mapRating);
-            ratingMapLatest.put(key, latestMapRating);
-        }
-        // 指定评级机构信息Map放入缓存
-        CacheUtil.putAppCache(GlobalConstant.RATING_INFO, ratingMap);
-        // 最新评级机构信息Map放入缓存
-        CacheUtil.putAppCache(GlobalConstant.RATING_INFO_LATEST, ratingMapLatest);
-        return list;
+        return resultList;
     }
 
 }

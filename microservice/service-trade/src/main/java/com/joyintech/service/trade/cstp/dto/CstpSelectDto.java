@@ -221,10 +221,6 @@ public class CstpSelectDto extends InterfCstpTrade{
      */
     private String tradeMethod;
 
-    /**
-     *交易品种  债券代码
-     */
-    private String securityId;
 
     /**
      * 成交状态
@@ -333,14 +329,6 @@ public class CstpSelectDto extends InterfCstpTrade{
 
     public void setTradeMethod(String tradeMethod) {
         this.tradeMethod = tradeMethod;
-    }
-
-    public String getSecurityId() {
-        return securityId;
-    }
-
-    public void setSecurityId(String securityId) {
-        this.securityId = securityId;
     }
 
     public String getExecType() {

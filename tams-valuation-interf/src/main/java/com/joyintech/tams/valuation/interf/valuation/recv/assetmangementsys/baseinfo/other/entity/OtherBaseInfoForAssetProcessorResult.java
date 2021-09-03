@@ -18,6 +18,7 @@ import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterPa
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.common.interf.base.dto.OtherBaseInfoCommonResult;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMstBondCreditRating;
 
 public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 
@@ -34,6 +35,11 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
      * 交易对手
      */
     private List<MstCounterParty> valCounterPartyList = new ArrayList<MstCounterParty>();
+
+    /**
+     * 评级信息
+     */
+    private List<ValMstBondCreditRating> valBondCreditRatingList = new ArrayList<ValMstBondCreditRating>();
 
     /**
      * 清算账户信息
@@ -77,6 +83,7 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
     public OtherBaseInfoForAssetProcessorResult(OtherBaseInfoCommonResult result) {
         this.setValCustomerInfoList(result.getValCustomerInfoList());
         this.setValCounterPartyList(result.getValCounterPartyList());
+        this.setValBondCreditRatingList(result.getValBondCreditRatingList());
         this.setValMstCapacctInfoList(result.getValMstCapacctInfoList());
         this.setValFinProductAcctList(result.getValFinProductAcctList());
         this.setValCalendarInfoList(result.getValCalendarInfoList());
@@ -116,6 +123,14 @@ public class OtherBaseInfoForAssetProcessorResult extends BaseEntity {
 
     public void setValCounterPartyList(List<MstCounterParty> valCounterPartyList) {
         this.valCounterPartyList = valCounterPartyList;
+    }
+
+    public List<ValMstBondCreditRating> getValBondCreditRatingList() {
+        return valBondCreditRatingList;
+    }
+
+    public void setValBondCreditRatingList(List<ValMstBondCreditRating> valBondCreditRatingList) {
+        this.valBondCreditRatingList = valBondCreditRatingList;
     }
 
     /**

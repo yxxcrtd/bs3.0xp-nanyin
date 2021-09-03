@@ -7,6 +7,7 @@ import java.util.List;
  * create By MAXX on 2020/5/12
  */
 public class ExpireIncomeRateRet implements Serializable {
+    private static final long serialVersionUID = -4184293437942470878L;
     private String sortable;
     private String statuCode;
     private String messageType;

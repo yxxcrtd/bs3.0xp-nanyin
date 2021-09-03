@@ -178,7 +178,7 @@ public class EtrExchangeTrade002Controller extends BaseController{
         String datas = this.getParam("datas");
         List<EtrExchangeTrade003Dto> param1;
         if (datas == null) {
-            param1 = etrExchangeTrade001Service.selectEtrExchange(RequestUtil.getPageParam()).getRoot();
+            param1 = etrExchangeTrade001Service.selectEtrExchange2(RequestUtil.getPageParam());
         } else {
             param1 = JsonUtils.json2List(datas, EtrExchangeTrade003Dto.class);
         }

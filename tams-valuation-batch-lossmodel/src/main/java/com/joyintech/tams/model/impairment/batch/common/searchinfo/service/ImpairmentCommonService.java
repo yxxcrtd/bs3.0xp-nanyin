@@ -1,16 +1,17 @@
 package com.joyintech.tams.model.impairment.batch.common.searchinfo.service;
 
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
-import com.joyintech.tams.model.impairment.batch.common.calculation.ImpairmentCalculationCommonService;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dao.ImpairmentViewCommonMapper;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModStandardGradeMapping;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
+import com.joyintech.tams.valuation.model.common.rateinfo.service.ImpairmentCalculationCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -35,9 +37,6 @@ public class ImpairmentCommonService extends BaseService{
 
 	@Autowired
 	private ImpairmentCalculationCommonService impairmentCalculationCommonService;
-
-	// 日志key
-	private final String LOG_KEY = "logkey";
 
 	/**
 	 * 获取资产交易列表
@@ -101,7 +100,7 @@ public class ImpairmentCommonService extends BaseService{
 	}
 
 	/**
-	 * 获取评级类型为最新时，对应的评级机构信息Map
+	 * 获取评级类型为指定时，对应的评级机构信息Map
 	 * @param list
 	 * @return
 	 */
@@ -127,11 +126,11 @@ public class ImpairmentCommonService extends BaseService{
 			for (ViewRatingInfoDto dto : list) {
 				// key = 评级机构+评级类型+评级结果
 				String key = dto.getGradeorgid() + GlobalConstant.UNDER_LINE + dto.getOtype()
-							 + GlobalConstant.UNDER_LINE + dto.getMstratingresult01();
+							 + GlobalConstant.UNDER_LINE + dto.getRating();
 				// 循环遍历映射关系map，通过评级机构+评级类型+评级结果，映射到对应内部评级
 				if(mappingMap.get(key) != null){
 					// 映射对应内部评级，存值
-					dto.setMstratingresult01(mappingMap.get(key).getGradeStandardResult());
+					dto.setRating(mappingMap.get(key).getGradeStandardResult());
 				}
 				// 外部评级机构对应评级信息分组：评级主体_评级类型_评级机构：内部评级结果
 				mapRating.put(dto.getOcode() + GlobalConstant.UNDER_LINE + dto.getOtype() + GlobalConstant.UNDER_LINE + dto.getGradeorgid(), dto);
@@ -169,7 +168,7 @@ public class ImpairmentCommonService extends BaseService{
 					// 比较评级结果，取最大值
 					// 若 变量.最新评级机构结果 < 评级信息Dto.评级结果
 					if (impairmentCalculationCommonService.getPoorRating(
-						latestInfo.getMstratingresult01(), dto.getMstratingresult01()) < 0) {
+						latestInfo.getRating(), dto.getRating()) < 0) {
 						// 最新评级信息Map覆盖更新
 						latestMapRating.put(key,dto);
 					}
@@ -188,23 +187,46 @@ public class ImpairmentCommonService extends BaseService{
 	 * @param logType 日志类型
 	 */
 	// 组装日志上下文信息
-	public void editLogContextInfo(StepExecution stepExecution, SysBatchExecInfo execInfo,
-								   String finprodId, String msg, String logType) {
+	public void sendLogContextInfo(StepExecution stepExecution, SysBatchExecInfo execInfo,
+								   String finprodId, String msg, String logType, String logKey) {
 		ModValBatchLogResult logrst = new ModValBatchLogResult();
 		logrst.setFinprodId(finprodId);
 		logrst.setBatchExecSeqno(execInfo.getBatchExedetailSeqNo());
 		logrst.setTaskId(execInfo.getTaskId());
-		logrst.setMsg("【资产减值阶段判断批处理】：资产无风险五级分类");
-		logrst.setType(ModelDictCodeList.批处理执行结果_警告.getValue());
-		if(stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY) != null){
-			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY);
+		logrst.setMsg(msg);
+		logrst.setType(logType);
+		if (stepExecution.getJobExecution().getExecutionContext().get(logKey) != null) {
+			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution()
+				.getExecutionContext().get(logKey);
 			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
-		}else{
+			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
+		}
+		else {
 			List<ModValBatchLogResult> mvbLogRst = new ArrayList<>();// 异常信息定义
 			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
+			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
 		}
+	}
+
+	/**
+	 * 剩余期限(年)
+	 * @param cdate   计算日
+	 * @param assetMdate 资产到期日
+	 * @return
+	 */
+	public int getRemainingTerm(Date cdate,Date assetMdate){
+		int remainingTerm = 0;
+		Date startDate =  cdate;
+		if(startDate.compareTo(assetMdate) >= 0){
+			return 1;
+		}
+		while(DateUtil.addYear(startDate, 1).compareTo(assetMdate)<= 0){
+			remainingTerm += 1;
+			startDate = DateUtil.addYear(startDate, 1);
+		}
+		remainingTerm += Math.ceil(ArithmeticUtil.divide(
+			BigDecimal.valueOf(DateUtil.getBetweenDayNumber(startDate,assetMdate)),new BigDecimal("365")).doubleValue());
+		return remainingTerm;
 	}
 
 }

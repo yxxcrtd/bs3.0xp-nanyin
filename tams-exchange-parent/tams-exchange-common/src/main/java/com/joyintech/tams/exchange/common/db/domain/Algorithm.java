@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Algorithm implements Serializable, KeyMethodInterface<String>, OrderInterface {
+    private static final long serialVersionUID = -5236098880155593231L;
     @Id
     @NotNull
     @Size(max = 32)

@@ -185,9 +185,6 @@
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
         , {field: 'secAcctId',visible: false}
-        //add by chenjiaxing 20210830 导入添加投资目的 start
-        , {field:'invAimStr', title: 'EtrExchangeTrade001.invAim', width : 240,sortable: false}
-        //add by chenjiaxing 20210830 导入添加投资目的 end
     ];
 
     //固定收益指令
@@ -223,9 +220,6 @@
         , {field: 'agreeOnId', title: 'EtrExchangeTrade001.agreeOnId', width: 120, sortable: false}
         , {field:'vdate', title: 'EtrExchangeTrade003.vdate',type:'date', width : 120,sortField:'VDATE'}//委托开始日
         , {field:'mdate', title: 'EtrExchangeTrade003.mdate',type:'date', width : 120,sortField:'MDATE'}//委托开始日
-        //add by chenjiaxing 20210830 导入添加投资目的 start
-        , {field:'invAimStr', title: 'EtrExchangeTrade001.invAim', width : 240,sortable: false}
-        //add by chenjiaxing 20210830 导入添加投资目的 end
     ];
 
     var table =$("#dataTable").joyintable({

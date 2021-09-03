@@ -12,6 +12,7 @@ import java.util.List;
  * @Date: Created in 14:11 2020/11/5
  */
 public class MinPriceAndMinTrdUnitLimitBean implements Serializable {
+    private static final long serialVersionUID = -8413378793368636977L;
     private int errorCode;
     private String errorMsg;
     private String stockCode;

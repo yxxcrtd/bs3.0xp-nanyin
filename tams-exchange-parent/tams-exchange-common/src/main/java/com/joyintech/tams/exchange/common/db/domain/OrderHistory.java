@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class OrderHistory implements Serializable {
+    private static final long serialVersionUID = -7380682120479964314L;
     private String id;
 
     private String instructionId;

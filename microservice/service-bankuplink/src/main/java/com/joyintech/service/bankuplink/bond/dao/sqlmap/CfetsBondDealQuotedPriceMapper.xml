@@ -90,7 +90,8 @@
 		    <!-- 对手方交易员名称-->
 		    MST_CFETS_CT.TRADER_NAME                                            counterTraderName,
 		    ETR_ENTRUST_ADD.EXER_YIELD * 100                                    exerYield,
-		    ETR_ENTRUST_ADD.CAL_MODE                                            calculateField,
+		    NVL(ETR_ENTRUST_ADD.CAL_MODE,DECODE(ETR_ENTRUST_ADD.CALCULATE_FIELD,'price','01','matureYield','02','exerYield','03','01'))
+		                                              							calculateField,
 		    FIN_PRODUCT.IS_RIGHT                                                isRight,
 		    FIN_PRODUCT_TYPE.TYPE_4                                             assetTypeOne,
 		    ETR_ENTRUST.REMARK                                                  remark,

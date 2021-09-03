@@ -30,6 +30,7 @@ import com.joyintech.tams.invest.common.position.dto.PostionParameter;
 import com.joyintech.tams.invest.common.position.service.CommonPositionService;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 //import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
+import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTrade003Dto;
 import com.joyintech.tams.invest.entrust.etragrereptrade.dto.EtrAgreRepTradeDto;
@@ -178,7 +179,7 @@ public class EtrAgreRepTrade003Controller extends BaseController{
 				return webResult;
 			}
 		}
-//        List<String> entrustIdList = new ArrayList<>();
+        List<String> entrustIdList = new ArrayList<>();
         for(EtrAgreRepTrade003Dto item : dto.getSelectedItem()){
             item.setFromEtrExchange(dto.getFromEtrExchange());
             item.setAssetType2(DictCodeList.回购类型_质押式协议回购.getValue());
@@ -189,9 +190,9 @@ public class EtrAgreRepTrade003Controller extends BaseController{
             // 指令持仓流水、现金流水处理
             etrAgreRepTrade001Service.revokeOrCloseEntrust(item);
             //释放风险接口释放
-//            entrustIdList.add(item.getEntrustId());
+            entrustIdList.add(item.getEntrustId());
         }
-//        EntrustCompleteUtil.doComplete(entrustIdList);
+        EntrustCompleteUtil.doComplete(entrustIdList);
         return new AjaxResult(this.getMessage("ETR_X_003"));
     }
 
@@ -236,7 +237,7 @@ public class EtrAgreRepTrade003Controller extends BaseController{
             item.setIntiTradeId(etrAgreRepTradeDto.getIntiTradeId());
             item.setBusiPs(etrAgreRepTradeDto.getBusiPs());
             // 释放风险接口释放
-//            EntrustRdsCommonAop.doPreOccupy(item, BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
+            EntrustRdsCommonAop.doPreOccupy(item, BussinessDictCodeListRds.接口系统ID_预占释放接口.getValue(),DictCodeList.平安资产类型_质押式回购.getValue());
         }
 		return new AjaxResult(this.getMessage("撤回成功"));
     }

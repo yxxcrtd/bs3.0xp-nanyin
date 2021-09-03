@@ -1,8 +1,8 @@
 package com.joyintech.tams.model.impairment.batch.impairmentdataload.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 
 public class ImpairmentDataLoadStep1ResultDto extends NeedToWriteEntity {
 

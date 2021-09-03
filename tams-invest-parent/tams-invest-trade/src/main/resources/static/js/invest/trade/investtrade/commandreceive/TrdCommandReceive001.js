@@ -1242,11 +1242,8 @@ var TrdCommandReceive001 = function () {
                                         '#TrdCommandReceive001_btn_transaction')
                                         .attr("style",
                                             "display:none");// 交易录单按钮
-                                    $('#TrdCommandReceive001_btn_preTrade').attr("style","display:none");// 交易预录入按钮
-                                    $(
-                                        '#TrdCommandReceive001_btn_contract')
-                                        .attr("style",
-                                            "display:none");// 交易录单按钮
+                                    $('#TrdCommandReceive001_btn_preTrade').hide();// 交易预录入按钮
+                                    $('#TrdCommandReceive001_btn_contract').hide();
                                     $(
                                         '#TrdCommandReceive001_btn_refuce')
                                         .attr("style",
@@ -1285,11 +1282,8 @@ var TrdCommandReceive001 = function () {
                                         '#TrdCommandReceive001_btn_transaction')
                                         .attr("style",
                                             "display:false");
-                                    // $('#TrdCommandReceive001_btn_preTrade').attr("style","display:false");// 交易预录入按钮
-                                    $(
-                                        '#TrdCommandReceive001_btn_contract')
-                                        .attr("style",
-                                            "display:none");
+                                    $('#TrdCommandReceive001_btn_preTrade').show();// 交易预录入按钮
+                                    $('#TrdCommandReceive001_btn_contract').show();
                                     $(
                                         '#TrdCommandReceive001_btn_refuce')
                                         .attr("style",

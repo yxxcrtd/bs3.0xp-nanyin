@@ -17,6 +17,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -29,7 +30,6 @@ import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.calculator.TargetRateCalculator;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam.TargetRateOutputParameter;
-import com.joyintech.tams.model.valuation.batch.datapushvaluationinfo.dto.MstBondQuotationInfoDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -80,7 +80,7 @@ public class BinaryTreeModelProcessorService {
         //初始化封装计算的资产估值结果
         ModCurveResult modCurveResult = new ModCurveResult();
         ModRiskPremium modRiskPremium = new ModRiskPremium();
-        MstBondQuotationInfoDto mstBondQuoTation = new MstBondQuotationInfoDto();
+        MstBondValuationInfo mstBondValuationInfo = new MstBondValuationInfo();
 //        result.setModCurveResult(modCurveResult);
 //        result.setModRiskPremium(modRiskPremium);
 
@@ -163,20 +163,20 @@ public class BinaryTreeModelProcessorService {
         modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_二叉树.getValue());
 
 
-        mstBondQuoTation.setSecId(entity.getFinprodMarketId()); //市场代码
-        mstBondQuoTation.setValueDate(platDate);//估值日
-        mstBondQuoTation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
-        mstBondQuoTation.setPrice(valueAllPrice); //估值全价
-        mstBondQuoTation.setNetprice(valueNetPrice);//估值净价
-        mstBondQuoTation.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
-        mstBondQuoTation.setCreateUser("batch"); //
-        mstBondQuoTation.setUpdateUser("batch");
-        mstBondQuoTation.setCreateTime(DateUtil.now());
-        mstBondQuoTation.setUpdateTime(DateUtil.now());
+        mstBondValuationInfo.setSecId(entity.getFinprodMarketId()); //市场代码
+        mstBondValuationInfo.setValueDate(platDate);//估值日
+        mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
+        mstBondValuationInfo.setPrice(valueAllPrice); //估值全价
+        mstBondValuationInfo.setNetprice(valueNetPrice);//估值净价
+        mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondValuationInfo.setCreateUser("batch"); //
+        mstBondValuationInfo.setUpdateUser("batch");
+        mstBondValuationInfo.setCreateTime(DateUtil.now());
+        mstBondValuationInfo.setUpdateTime(DateUtil.now());
 
         result.setModCurveResult(modCurveResult);
         result.setModRiskPremium(modRiskPremium);
-        result.setMstBondQuoTation(mstBondQuoTation);
+        result.setMstBondValuationInfo(mstBondValuationInfo);
         return result;
     }
 

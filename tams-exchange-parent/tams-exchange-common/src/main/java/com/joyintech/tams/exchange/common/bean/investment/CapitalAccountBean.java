@@ -11,6 +11,7 @@ import java.io.Serializable;
  */
 public class CapitalAccountBean implements Serializable {
 
+    private static final long serialVersionUID = -7758117880214238801L;
     /**
      * 网点账号
      */

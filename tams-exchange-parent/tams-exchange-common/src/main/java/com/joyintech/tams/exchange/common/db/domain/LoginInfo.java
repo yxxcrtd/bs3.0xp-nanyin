@@ -7,6 +7,7 @@ import java.util.List;
  * create By MAXX on 2020/3/13
  */
 public class LoginInfo implements Serializable {
+    private static final long serialVersionUID = 2518461660623414344L;
     private Integer initDate;//交易日期
     private String sysStatus;//系统状态
     private String companyName;//公司名称

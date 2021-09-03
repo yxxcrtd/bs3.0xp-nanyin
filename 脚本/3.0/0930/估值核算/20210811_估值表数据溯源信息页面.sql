@@ -1,4 +1,4 @@
 --估值表溯源信息页面
 DELETE FROM SYS_PAGE where PAGE_ID = 'ValBalanceStatementQuery002';
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ValBalanceStatementQuery002', 'VAL', '/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002', 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002', null, null, null, '02', '02', '估值表（数据溯源信息查看）', 'system', null, '26-5月 -21 03.24.28.000000 下午', 'system', '26-5月 -21 03.24.28.000000 下午');
+values ('ValBalanceStatementQuery002', 'VAL', '/valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002', 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery002', null, null, null, '02', '02', '估值表（数据溯源信息查看）', 'system', null, sysdate, 'system', sysdate);

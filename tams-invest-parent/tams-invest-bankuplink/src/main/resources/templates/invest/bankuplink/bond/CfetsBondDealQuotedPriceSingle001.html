@@ -17,10 +17,27 @@
         .layui-form-radio i{
             font-size: 14px;
         }
+        .form-inline-wrap {
+             display: inline-block;
+             float: left;
+             width: 50%;
+             padding-top: 10px;
+         }
+        .label-deviation-degree{
+            width: 50px;
+            height: 24px;
+            color: red;
+            top: 0;
+            right: 0;
+            position: absolute;
+            text-align: center;
+            line-height: 24px;
+        }
     </style>
     <div class="joyin-form-wrap">
         <form class="layui-form pro-module-form" id="submitForm">
             <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
+            <input type="hidden" id="CfetsBondDealQuotedPriceSingle001_hidden_entrustId" th:value="${entity?.entrustId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle001_hidden_finprodId" th:value="${entity?.finprodId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle001_hidden_isRight" name="isRight" th:value="${entity?.isRight}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle001_hidden_calculateField" name="calculateField" th:value="${calcTypeUnitCprice}" />
@@ -42,11 +59,10 @@
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPriceSingle.entrustId}">指令代码</label>
                     <div class="layui-input-inline input-inline">
-                        <input required disabled type="text" id="CfetsBondDealQuotedPriceSingle001_entrustId"
-                               name="entrustId"
-                               class="layui-input form-input" placeholder="请输入内容"
-                               data-th-placeholder="#{SysCommon.placeholder}"
-                               data-th-value="${entity?.entrustId}"/>
+                        <select required type="text" id="CfetsBondDealQuotedPriceSingle001_entrustId" name="entrustId"
+                                class="layui-input form-input input-select" placeholder="请输入内容" parentIds="CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel,CfetsBondDealQuotedPriceSingle001_mySide,CfetsBondDealQuotedPriceSingle001_ps,CfetsBondDealQuotedPriceSingle001_finprodId,CfetsBondDealQuotedPriceSingle001_settleSpreed"
+                                th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryEntrustInfoList}"
+                                allowClear="true" th:initValue="${entity?.entrustId}" formatoption="false"></select>
                     </div>
                 </div>
 
@@ -68,6 +84,7 @@
                         ></select>
                     </div>
                 </div>
+                <a id='CfetsBondDealQuotedPriceSingle001_entrustId_search' class="input-right-show" href='javascript:;' style='color: #4893e6; left: 50%; padding-top: 38px;'><i class='iconfont icon-search'></i></a>
             </div>
 
             <div class="layui-form-item">
@@ -205,8 +222,7 @@
                                class="layui-input form-input text-number" placeholder="请输入内容"
                                data-fixtype="2" data-textrange="4"
                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.price}">
-                        <span class="input-right-show">元</span>
-                        <label id ="deviationDegree"></label>
+                        <label class="label-deviation-degree" id="deviationDegree"></label>
                     </div>
                 </div>
             </div>
@@ -315,7 +331,7 @@
                            th:text="#{CfetsBondDealQuotedPriceSingle.myTradeId}">本方交易员</label>
                     <div class="layui-input-inline input-inline">
                         <select required type="text" id="CfetsBondDealQuotedPriceSingle001_mySideTrader" name="mySideTrader"
-                                class="layui-input form-input input-select"
+                                class="layui-input form-input input-select" parentIds="CfetsBondDealQuotedPriceSingle001_mySide"
                                 th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
                                 formatoption="true" th:initValue="${entity?.mySideTrader}"></select>

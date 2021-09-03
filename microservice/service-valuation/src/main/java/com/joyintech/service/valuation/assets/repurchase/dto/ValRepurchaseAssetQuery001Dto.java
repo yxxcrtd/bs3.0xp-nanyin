@@ -186,6 +186,19 @@ public class ValRepurchaseAssetQuery001Dto extends FinProduct {
     private String  seRepDayTypeCode;
 
     /**
+     * 交易对手类型
+     */
+    private String counterType;
+
+    public String getCounterType() {
+        return counterType;
+    }
+
+    public void setCounterType(String counterType) {
+        this.counterType = counterType;
+    }
+
+    /**
      * 获取 tradeMarket
      * @return tradeMarket.
      */

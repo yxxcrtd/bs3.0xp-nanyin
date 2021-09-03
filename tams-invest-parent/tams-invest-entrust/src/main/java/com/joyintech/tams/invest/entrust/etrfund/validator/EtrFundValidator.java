@@ -347,6 +347,23 @@ public class EtrFundValidator implements EtrCommonValidator {
                         }
                     }*/
                 }
+            }else if(etrFundDto.getPs().equals(DictCodeListExt2.交易方向_认购.getValue())){
+                //1)	交易方向选择认购时，资产代码必填；
+                //2)	认购时只可委托金额；
+
+                //4)	认购时交易对手默认为管理人；
+
+                if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){
+                    errorList.add(new ValidMessage("finprodMarketId", getMessage("ETR_X_012", getMessage("EtrFund001.finprodId"))));
+                }
+                if(!StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_012", getMessage("EtrFund001.entrustAmt"))));
+                }
+                if(StringUtil.isNotEmpty(etrFundDto.getEntrustAmt())){
+                    if(etrFundDto.getEntrustAmt().compareTo(new BigDecimal(0)) != 1){
+                        errorList.add(new ValidMessage("entrustAmt", getMessage("ETR_X_008",getMessage("EtrFund001.entrustAmt"))));
+                    }
+                }
             }
             else{
             	if(StringUtil.isEmpty(etrFundDto.getFinprodMarketId())){

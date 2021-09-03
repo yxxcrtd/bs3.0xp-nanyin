@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -1062,10 +1063,15 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户):赎回确认日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-//                    etrCashPositionFlowDto.setAcctId(
-//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
-                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
+                    // ZGZGST-1997:处理赎回无划款指令场景 shulifu 20210903 edit start
+                    if(!CollectionUtils.isEmpty(finProductTradeDto.getStlPayOrdersList())){
+                        etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
+                    }else{
+                        etrCashPositionFlowDto.setAcctId(
+                                EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    }
+                    // ZGZGST-1997:处理赎回无划款指令场景 shulifu 20210903 edit end
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道逐笔划款、委托通道一次性划款

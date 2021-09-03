@@ -2,7 +2,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao;
 
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
 import org.springframework.stereotype.Repository;
 
@@ -41,14 +41,6 @@ public interface AssetImpairmentStageJudgeModelMapper {
      * @return
      */
     int deleteResult(Map<String, Object> params);
-
-    /**
-     * 插入
-     * @param list
-     * @return
-     */
-    int insertResult(List<ModEclResultProcess> list);
-
 
     //获取资产现金流计划集合
     List<ModCashFlowDto> getCashFlowPlanInfoByFinprodId(String finprodId);

@@ -82,47 +82,39 @@
 			</if>
 	</select>
 
-    <!-- 获取资产信息集合  -->
+    <!-- 获取现金流贴现法资产信息集合  -->
     <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
-			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
-			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
-			A.FINPROD_MARKET_ID FINPROD_MARKET_ID,/**市场代码**/
-			A.VDATE VDATE,/**起息日**/
-			A.MDATE MDATE,/**到期日**/
-			--A.ISSUER ISSUER,/**发行人**/
-			--A.FINANCIER FINANCIER,/**融资人**/
-			--A.SPONSOR SPONSOR,/**担保人**/
-			--A.IS_SUS IS_SUS,/**是否永续**/
-			--A.IS_RIGHT IS_RIGHT,/**是否含权**/
-			C.CON_FINPROD_ID CON_FINPROD_ID,/**正股代码**/
-			C.CON_VDATE CON_VDATE,/**转股起息日**/
-			C.CON_PRICE CON_PRICE,/**转股价格**/
-			--A.COUPON_SPECIES COUPON_SPECIES,/**息票品种**/
-			CASE WHEN (E.FINPROD_ID IS NOT NULL OR F.SEC_DETAIL_TYPE IS NOT NULL OR G.SEC_TYPE IS NOT NULL)
-			THEN 'Y'
-			ELSE 'N'
-			END MODYORN ,/**是否模型法估值**/
-			A.ISSUE_PRICE ISSUE_PRICE/**,发行价**/
-			--A.ISSUE_AMT ISSUE_AMT/**发行规模**/
+		A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
+		A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
+		A.FINPROD_MARKET_ID FINPROD_MARKET_ID,/**市场代码**/
+		A.VDATE VDATE,/**起息日**/
+		A.MDATE MDATE,/**到期日**/
+		A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
+		D.TYPE_18 AS SEC_TYPE,/**证券品种**/
+		D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
 		FROM
-			FIN_PRODUCT A /**标的类金融产品表**/
-			LEFT JOIN FIN_PRODUCT_ADD B ON A.FINPROD_ID = B.FINPROD_ID/**标的类金融产品附属表**/
-			LEFT JOIN FIN_PRODUCT_CONVERTIBLE C ON A.FINPROD_ID = C.FINPROD_ID/**转股信息表**/
-			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
-			LEFT JOIN (
-				SELECT DISTINCT FINPROD_ID 	FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD'
-			) E ON A.FINPROD_ID = E.FINPROD_ID /**特殊资产估值方案明细表**/
-			LEFT JOIN  (
-				SELECT DISTINCT SEC_DETAIL_TYPE,SEC_TYPE FROM BOK_VAL_SCHEME_DETAIL group by SEC_TYPE,SEC_DETAIL_TYPE WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NOT NULL
-			) F ON  D.TYPE_1 = F.SEC_DETAIL_TYPE AND D.TYPE_18 = F.SEC_TYPE  /**估值方案明细表，资产细分类配置了模型法估值**/
-			LEFT JOIN  (
-				SELECT DISTINCT SEC_TYPE FROM BOK_VAL_SCHEME_DETAIL WHERE VALUATION_PRICE = 'MOD' AND  SEC_DETAIL_TYPE IS NULL
-			) G ON  D.TYPE_18 = G.SEC_TYPE  /**估值方案明细表,资产大类配置模型法估值**/
+		FIN_PRODUCT A /**标的类金融产品表**/
+		INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
 		WHERE
 		1 = 1
-		AND M.CDATE = #{searchDate,jdbcType=DATE}
-		--AND A.MODYORN = 'Y'
+		AND (
+			(
+				D.TYPE_18 = '01' AND (
+				(D.TYPE_1 != '028' AND D.TYPE_1 != '029')/**可转债、可交换债**/ OR (A.IS_SUS = '01' AND A.IS_RIGHT = '01')/**包含永续含权债**/
+				)
+			)
+			OR D.TYPE_18 = '13' /**其他债权类资产**/
+		)
+		AND (
+		EXISTS (
+		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+		)
+		OR
+		EXISTS (
+		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+		)
+		)
 		<if test="finprodIdList != null and finprodIdList.size()>0 ">
 			AND A.FINPROD_ID IN(
 			<foreach item="item" index="index" collection="finprodIdList" separator=",">
@@ -131,210 +123,9 @@
 			)
 		</if>
 		<if test="searchDate != null">
-			A.A.VDATE VDATE <![CDATA[<=]]> #{searchDate,jdbcType=DATE}/**起息日**/
-			A.MDATE MDATE,/**到期日**/
-			AND A.FINPROD_ID IN(
-			<foreach item="item" index="index" collection="finprodIdList" separator=",">
-				#{item}
-			</foreach>
-			)
+			AND A.VDATE <![CDATA[ <= ]]> #{searchDate,jdbcType=DATE}/**起息日**/
+			AND A.MDATE <![CDATA[ >= ]]> #{searchDate,jdbcType=DATE}/**到期日**/
 		</if>
-
-		(SELECT
-		A.FINPROD_ID                                        as FINPROD_ID,
-		A.FINPROD_ABBR                                      as FINPROD_ABBR,
-		A.TRADE_MARKET                                      as TRADE_MARKET,
-		A.FINPROD_MARKET_ID                                 as FINPROD_MARKET_ID,
-		A.VDATE                                             as VDATE,
-		A.MDATE                                             as MDATE,
-		A.ISSUER                                            as ISSUER,
-		A.FINANCIER                                         as FINANCIER,
-		A.SPONSOR                                           as SPONSOR,
-		A.IS_SUS                                            as IS_SUS,
-		A.IS_RIGHT                                          as IS_RIGHT,
-		F.CON_FINPROD_ID                                    as CON_FINPROD_ID,
-		F.CON_SHARE_ID                                      as CON_SHARE_ID,
-		F.CON_VDATE                                         as CON_VDATE,
-		F.CON_PRICE                                         as CON_PRICE,
-		G.ACTUAL_CREDIT_PROVID                              as ACTUAL_CREDIT_PROVID,
-		H.TYPE_8                                            as ASSET_ONE,
-		H.TYPE_9                                            as ASSET_TWO,
-		H.TYPE_10                                           as ASSET_THREE,
-		H.TYPE_11                                           as ASSET_FOUR,
-		H.TYPE_12                                           as ASSET_FIVE,
-		B.IS_FIN_LICENCE                                    as ISSUER_FIN_LICENCE,
-		C.IS_FIN_LICENCE                                    as FINANCIER_FIN_LICENCE,
-		D.IS_FIN_LICENCE                                    as SPONSOR_FIN_LICENCE,
-		E.IS_FIN_LICENCE                                    as ACTUAL_CREDIT_FIN_LICENCE,
-		A.COUPON_SPECIES                                    as COUPON_SPECIES,
-		A.ISSUE_PRICE                                       as ISSUE_PRICE,
-		M.IS_LIMITS                                         as IS_LIMITS,
-		A.ISSUE_AMT                                         AS ISSUE_AMT,
-		CASE WHEN (M.IS_RATE_ADJUST = 'Y' AND A8.CT > 0 )
-		THEN 'Y'
-		ELSE 'N'
-		END IS_AUTHORITY,
-		CASE WHEN (A1.FINPROD_ID IS NOT NULL OR A2.SEC_DETAIL_TYPE IS NOT NULL OR A4.SEC_TYPE IS NOT NULL)
-		THEN 'Y'
-		ELSE 'N'
-		END MODYORN
-		FROM FIN_PRODUCT A
-		INNER JOIN  FIN_PRODUCT_TYPE H
-		ON A.FINPROD_ID = H.FINPROD_ID
-		AND H.BRANCH = 0
-		LEFT JOIN FIN_PRODUCT_ADD  M
-		ON A.FINPROD_ID = M.FINPROD_ID
-		LEFT JOIN FIN_PRODUCT_CONVERTIBLE F
-		ON A.FINPROD_ID = F.FINPROD_ID
-		LEFT JOIN PA_FIN_PRODUCT G
-		ON A.FINPROD_ID = G.FINPROD_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD B
-		ON A.ISSUER = B.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD C
-		ON A.FINANCIER = C.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD D
-		ON A.SPONSOR = D.CUSTOMER_ID
-		LEFT JOIN MST_CUSTOMER_INFO_ADD E
-		ON G.ACTUAL_CREDIT_PROVID = E.CUSTOMER_ID
-		LEFT JOIN (
-		SELECT DISTINCT FINPROD_ID
-		FROM BOK_VAL_SCHEME_DETAIL_SPECIAL
-		WHERE VALUATION_PRICE = 'MOD' ) A1
-		ON A.FINPROD_ID = A1.FINPROD_ID
-		LEFT JOIN  (
-		SELECT DISTINCT SEC_DETAIL_TYPE
-		FROM BOK_VAL_SCHEME_DETAIL
-		WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NOT NULL) A2
-		ON  H.TYPE_1 = A2.SEC_DETAIL_TYPE
-		LEFT JOIN  (
-		SELECT DISTINCT (CASE WHEN SEC_TYPE = '01' THEN 'F01' ELSE 'F06'END ) SEC_TYPE
-		FROM BOK_VAL_SCHEME_DETAIL
-		WHERE VALUATION_PRICE = 'MOD'AND  SEC_DETAIL_TYPE IS NULL) A4
-		ON  H.TYPE_8 = A4.SEC_TYPE
-		LEFT JOIN (
-		SELECT FINPROD_ID,COUNT(1) AS CT FROM FIN_EXERCISE_PLAN PLAN
-		WHERE
-		EXERCISE_TYPE = '01'
-		GROUP BY FINPROD_ID
-		) A8 ON H.FINPROD_ID = A8.FINPROD_ID
-		WHERE A.FINPROD_TYPE2 IN ('F01','F18')
-		) A
-		  LEFT JOIN (SELECT C.FINPROD_ID,
-		                    SUM(C.FPRICE_AMT) / SUM(C.SHARE_AMT) AS LAST_TRADE_AVG_PRICE,
-							SUM(C.CPRICE_AMT) / SUM(C.SHARE_AMT) AS LAST_TRADE_NET_PRICE,
-		                    D.LAST_TRADE_IN_DATE
-		               FROM <!--VW_MOD_TRADE_INFO -->(SELECT NVL(A.TOTLE_TRADE_ID,A.TRADE_ID)  AS TOTLE_TRADE_ID,
-		A.FINPROD_ID                      AS FINPROD_ID,
-		A.FINPROD_TYPE2                   AS FINPROD_TYPE2,
-		A.PS                              AS PS,
-		abs(A.FPRICE_AMT)                 AS FPRICE_AMT,
-		abs(A.UNIT_FPRICE)                AS UNIT_FPRICE,
-		abs(A.CPRICE_AMT)                 AS CPRICE_AMT,
-		abs(A.UNIT_CPRICE)                AS UNIT_CPRICE,
-		abs(A.TRADE_AMT)                  AS TRADE_AMT,
-		abs(A.PRIN_AMT)                   AS PRIN_AMT,
-		abs(A.SHARE_AMT)                  AS SHARE_AMT,
-		A.INV_AIM                         AS INV_AIM,
-		A.YIELD                           AS YIELD,
-		A.SETTLE_DATE                     AS SETTLE_DATE,
-		A.TRADE_DATE                      AS TRADE_DATE,
-		A.MDATE                           AS MDATE,
-		A.IS_CLEAN                        AS IS_CLEAN,
-		P.PORTFOLIO_ID                    AS PORTFOLIO_ID,
-		C.FINPROD_ID                      AS PROD_ID,
-		C.FINPROD_ABBR                    AS PROD_NAME
-		FROM TRD_PRODUCT_DEAL A
-		INNER JOIN PTL_TRADE B
-		ON A.TRADE_ID = B.BUSI_NO
-		INNER JOIN PTL_PORTFOLIO P
-		ON B.PORTFOLIO_ID = P.PORTFOLIO_ID
-		AND P.INVEST_YESORNO = 'Y'
-		LEFT JOIN FIN_PRODUCT C
-		ON (c.FINPROD_MARKET_ID = P.PORTFOLIO_ID or
-		c.FINPROD_MARKET_ID = P.PARENT_PORTFOLIO_ID)
-		AND C.FINPROD_TYPE2 = 'F16'
-		where A.PS IN
-		('T01', 'T02', 'T03', 'T39', 'T22', 'T23', 'T07', 'T08', 'T09')
-		AND A.IS_CANCEL = 'N'
-		AND A.TRADE_STATUS = '01'
-		AND A.FINPROD_TYPE2 IN ('F01', 'F18' )) C
-		              INNER JOIN (SELECT FINPROD_ID,
-		                                MAX(SETTLE_DATE) AS LAST_TRADE_IN_DATE
-		                           FROM <!--VW_MOD_TRADE_INFO -->
-		                           (SELECT NVL(A.TOTLE_TRADE_ID,A.TRADE_ID)  AS TOTLE_TRADE_ID,         /*交易编号*/
-										A.FINPROD_ID                      AS FINPROD_ID,             /*金融产品代码*/
-										A.FINPROD_TYPE2                   AS FINPROD_TYPE2,          /*金融产品类型*/
-										A.PS                              AS PS,                     /*交易方向*/
-										abs(A.FPRICE_AMT)                 AS FPRICE_AMT,             /*全价总额*/
-										abs(A.UNIT_FPRICE)                AS UNIT_FPRICE,            /*单位全价*/
-										abs(A.CPRICE_AMT)                 AS CPRICE_AMT,             /*净价总额*/
-										abs(A.UNIT_CPRICE)                AS UNIT_CPRICE,            /*单位净价*/
-										abs(A.TRADE_AMT)                  AS TRADE_AMT,              /*交易金额*/
-										abs(A.PRIN_AMT)                   AS PRIN_AMT,               /*计息本金*/
-										abs(A.SHARE_AMT)                  AS SHARE_AMT,              /*交易份额*/
-										A.INV_AIM                         AS INV_AIM,                /*投资目的*/
-										A.YIELD                           AS YIELD,                  /*到期收益率 */
-										A.SETTLE_DATE                     AS SETTLE_DATE,            /*交割日期 */
-										A.TRADE_DATE                      AS TRADE_DATE,             /*交易日期 */
-										A.MDATE                           AS MDATE,                  /*到期日 */
-										A.IS_CLEAN                        AS IS_CLEAN,               /*是否结清 */
-										P.PORTFOLIO_ID                    AS PORTFOLIO_ID,           /*组合代码 */
-										C.FINPROD_ID                      AS PROD_ID,                /*产品代码*/
-										C.FINPROD_ABBR                    AS PROD_NAME               /*金融产品简称 */
-										FROM TRD_PRODUCT_DEAL A
-										INNER JOIN PTL_TRADE B
-										ON A.TRADE_ID = B.BUSI_NO
-										INNER JOIN PTL_PORTFOLIO P
-										ON B.PORTFOLIO_ID = P.PORTFOLIO_ID
-										AND P.INVEST_YESORNO = 'Y'
-										LEFT JOIN FIN_PRODUCT C
-										ON (c.FINPROD_MARKET_ID = P.PORTFOLIO_ID or
-										c.FINPROD_MARKET_ID = P.PARENT_PORTFOLIO_ID)
-										AND C.FINPROD_TYPE2 = 'F16'
-										where A.PS IN
-										('T01', 'T02', 'T03', 'T39', 'T22', 'T23', 'T07', 'T08', 'T09')
-										AND A.IS_CANCEL = 'N'
-										AND A.TRADE_STATUS = '01'
-										AND A.FINPROD_TYPE2 IN ('F01', 'F18')
-										)
-		                          WHERE SETTLE_DATE &lt;= #{searchDate,jdbcType=DATE}
-		                            AND PS = 'T01'
-		                          GROUP BY FINPROD_ID) D
-		                 ON C.FINPROD_ID = D.FINPROD_ID
-		                AND C.SETTLE_DATE = D.LAST_TRADE_IN_DATE
-		                AND C.PS = 'T01'
-		              GROUP BY C.FINPROD_ID, D.LAST_TRADE_IN_DATE) B
-		    ON A.FINPROD_ID = B.FINPROD_ID
-		 WHERE EXISTS (SELECT 1
-		          FROM <!--VW_MOD_POSITION_INFO -->
-		           (select A.FINPROD_ID, A.CDATE, A.INV_AIM, SUM(A.AMOUNT) AMOUNT
-						from PTL_SEC_POSITION A
-						INNER JOIN PTL_PORTFOLIO C
-						ON A.PORTFOLIO_ID = C.PORTFOLIO_ID
-						AND C.INVEST_YESORNO = 'Y'
-						INNER JOIN FIN_PRODUCT B
-						ON A.FINPROD_ID = B.FINPROD_ID
-						AND B.FINPROD_TYPE2 IN ('F01', 'F18')
-						where A.HODING_TYPE = '03'
-						GROUP BY A.FINPROD_ID, A.CDATE, A.INV_AIM)M
-					 WHERE A.FINPROD_ID = M.FINPROD_ID
-					   AND M.CDATE = #{searchDate,jdbcType=DATE}
-		           AND M.AMOUNT > 0)
-		   AND A.MODYORN = 'Y'
-		   <if test="finprodIdList != null and finprodIdList.size()>0 ">
-		   AND A.FINPROD_ID IN(
-		        <foreach item="item" index="index" collection="finprodIdList" separator=",">
-						#{item}
-				</foreach>
-		     )
-		   </if>
-		  <if test="assetFiveList != null and assetFiveList.size()>0 ">
-		   AND A.ASSET_FIVE IN(
-		        <foreach item="item" index="index" collection="assetFiveList" separator=",">
-						#{item}
-				</foreach>
-		     )
-		   </if>
 	</select>
 	<select id="selectImpairmentAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT A.FINPROD_ID FINPROD_ID,

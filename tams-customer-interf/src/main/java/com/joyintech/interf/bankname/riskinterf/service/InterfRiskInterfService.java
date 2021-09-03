@@ -197,7 +197,8 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         ClientData data = new ClientData();
         data.setHead(header);
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put(RSK_SZ_LIST,requstjson);
+//        body.put(RSK_SZ_LIST,requstjson);
+        body.put(RSK_SZ_LIST, requestList);
         body.put("orderID",dataMap.get("orderID"));
         data.setBody(body);
 
@@ -466,6 +467,11 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             // 100 * 交易数量
             finDto.setTotalFaceAmt(
                     ArithmeticUtil.multiply(new BigDecimal(100), finDto.getTradeNum()));
+            //到期收益率
+            EtrEntrustAdd etrEntrustAdd = etrEntrustAddMapper.selectByPrimaryKey(entrustCode);
+            if(null!=etrEntrustAdd){
+                finDto.setYieldEndRate(etrEntrustAdd.getMatureYield());
+            }
         }
 
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue(),v.getFinType())||
@@ -584,7 +590,6 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
             }
 
         }
-
         return finDto;
     }
     

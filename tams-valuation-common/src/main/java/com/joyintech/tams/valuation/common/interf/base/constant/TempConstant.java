@@ -127,7 +127,8 @@ public class TempConstant {
     public static final String 标的账户信息表 = "ValSubjectInfo";
     public static final String 节假日信息表 = "ValHolidayInfo";
     public static final String 交易对手 = "ValMstCounterParty";
-    
+    public static final String 评级信息 = "ValMstBondCreditRating";
+
     /**
      * 交易信息
      */

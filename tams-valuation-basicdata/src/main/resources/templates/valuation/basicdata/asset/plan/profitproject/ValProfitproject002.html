@@ -107,19 +107,6 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class=" form-inline-wrap" id="issuerDiv">
-                                        <label class="layui-form-label form-label-wrap">发行人</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <select type="text" id="issuer" name="issuer"
-                                                    class="layui-input form-input input-select"
-                                                    data-th-data-url="@{/valuation/basicdata/asset/plan/profitproject/ValProfitproject002/getIssuerId}"
-                                                    formatoption="true" allowClear="true"
-                                                    data-th-initValue='${entity?.issuer}'
-                                                    placeholder="请输入内容"
-                                                    data-th-placeholder="#{SysCommon.placeholder}">
-                                            </select>
-                                        </div>
-                                    </div>
                                     <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable">币种</label>
                                         <div class="layui-input-inline input-inline">
@@ -132,6 +119,16 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class=" form-inline-wrap">
+                                        <label class="layui-form-label form-label-wrap"
+                                               data-th-text="#{ValProfitproject002.transMode}">清算速度</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <input type="text" id="transMode" name="transMode"
+                                                   required="required" class="layui-input form-input input-checkbox"
+                                                   data-th-data-result='${ACCOUNT_SPEED}'
+                                                   data-th-initValue='${entity?.transMode}'/>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="layui-form-item">
                                     <div class=" form-inline-wrap">
@@ -140,7 +137,7 @@
                                         <div class="layui-input-inline input-inline">
                                             <input type="text" data-fixtype="2" unit="1" style="width: 90%;"
                                                    class="layui-input form-input text-money" id="issueAmt"
-                                                   name="issueAmt" data-th-value="${entity?.issueAmt}" required="required"
+                                                   name="issueAmt" data-th-value="${entity?.issueAmt}"
                                                    data-moneymemory="" data-th-data-textrange="2">
                                             <span class="input-right-show">（万）</span>
                                         </div>
@@ -169,6 +166,19 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item" id="lxDiv">
+                                    <div class=" form-inline-wrap" id="issuerDiv">
+                                        <label class="layui-form-label form-label-wrap">发行人</label>
+                                        <div class="layui-input-inline input-inline">
+                                            <select type="text" id="issuer" name="issuer"
+                                                    class="layui-input form-input input-select"
+                                                    data-th-data-url="@{/valuation/basicdata/asset/plan/profitproject/ValProfitproject002/getIssuerId}"
+                                                    formatoption="true" allowClear="true"
+                                                    data-th-initValue='${entity?.issuer}'
+                                                    placeholder="请输入内容"
+                                                    data-th-placeholder="#{SysCommon.placeholder}">
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class=" form-inline-wrap">
                                         <label class="layui-form-label form-label-wrap"
                                                data-th-text="#{ValProfitproject002.manager}">管理人</label>
@@ -195,16 +205,6 @@
                                                     placeholder="请输入内容"
                                                     data-th-placeholder="#{SysCommon.placeholder}">
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class=" form-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap"
-                                               data-th-text="#{ValProfitproject002.transMode}">清算速度</label>
-                                        <div class="layui-input-inline input-inline">
-                                            <input type="text" id="transMode" name="transMode"
-                                                   required="required" class="layui-input form-input input-checkbox"
-                                                   data-th-data-result='${ACCOUNT_SPEED}'
-                                                   data-th-initValue='${entity?.transMode}'/>
                                         </div>
                                     </div>
                                 </div>

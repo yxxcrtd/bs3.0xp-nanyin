@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Account implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -5054337370709351813L;
     /**
      * 网点账号
      */

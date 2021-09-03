@@ -324,7 +324,8 @@ public class InvestmentManagement extends BaseService {
                 } else {
                     List<Entrust> entrusts = entrustService.queryEntrustByInstructionId(instruction.getEntrustId());
                     if (Objects.nonNull(entrusts)) {
-                        entrusts.forEach(entrust -> {
+                        List<Entrust> entrustListNoCancel = entrusts.stream().filter(entrust -> !EntrustType.CANCEL.value.equals(entrust.getEntrustType())).collect(Collectors.toList());
+                        entrustListNoCancel.forEach(entrust -> {
                             // 审批中订单不可撤
                             if (EntrustStatus.isPendingStatus(entrust.getEntrustStatus())) {
                                 instructionIdSet.add(instruction.getEntrustId());

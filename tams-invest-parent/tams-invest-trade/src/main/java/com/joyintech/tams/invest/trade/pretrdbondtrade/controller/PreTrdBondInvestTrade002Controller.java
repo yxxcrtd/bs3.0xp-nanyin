@@ -218,7 +218,21 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
 //        }
 
         // 净价radio默认选中
-        model.addAttribute("calculateField", "unitCprice");
+        model.addAttribute("calculateField","unitCprice");
+        if(StringUtil.isNotEmpty(dto.getCalculateField())){
+            if(StringUtil.equals(dto.getCalculateField(),"price")){
+                model.addAttribute("calculateField","unitCprice");
+            }
+            else if(StringUtil.equals(dto.getCalculateField(),"matureYield")){
+                model.addAttribute("calculateField","yield");
+            }
+            else if(StringUtil.equals(dto.getCalculateField(),"exerYield")){
+                model.addAttribute("calculateField","exerYield");
+            }
+            else{
+                model.addAttribute("calculateField",dto.getCalculateField());
+            }
+        }
 
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         //--------add by 裴家俊 2019/03/28------start--------

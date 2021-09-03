@@ -75,8 +75,10 @@ comment on column FIN_PRODUCT_ADD.FUND_MANGER_NAME is '基金经理姓名';
 
 
 --20210708_场内基金标的脚本_新建菜单和画面.sql
-alter table FIN_PRODUCT_ADD add DIVIDE_METHOD VARCHAR(32) comment on column FIN_PRODUCT_ADD.DIVIDE_METHOD is '允许的分红方式';
-alter table FIN_PRODUCT_ADD add DAY_BACK_TRADE VARCHAR(32) comment on column FIN_PRODUCT_ADD.DAY_BACK_TRADE is '当日回转交易';
+alter table FIN_PRODUCT_ADD add DIVIDE_METHOD VARCHAR(32);
+comment on column FIN_PRODUCT_ADD.DIVIDE_METHOD is '允许的分红方式';
+alter table FIN_PRODUCT_ADD add DAY_BACK_TRADE VARCHAR(32);
+comment on column FIN_PRODUCT_ADD.DAY_BACK_TRADE is '当日回转交易';
 
 alter table FIN_PRODUCT_ADD add BONUS_TYPE VARCHAR(50);
 comment on column FIN_PRODUCT_ADD.BONUS_TYPE is '允许的分红方式(多个用逗号隔开)';

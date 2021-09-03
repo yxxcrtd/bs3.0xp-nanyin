@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCommonBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +82,12 @@ public class LossCommonBatchService {
      */
     @Autowired
     private FinProductCommonBatchService finProductCommonBatchService;
+
+    /**
+     * 共通方法service
+     */
+    @Autowired
+    private AccountingCommonBatchService accountingCommonBatchService;
 
     /**
      * 冲减减值计算(存续期) 计算存续期时冲减的减值金额
@@ -401,156 +408,7 @@ public class LossCommonBatchService {
             return null;
         }
     }
-    
-    /**
-     * 指定账务明细查询买入交易
-     * @param happenDate 发生日
-     * @param bookDate 入账日
-     * @param booksetId 账套代码
-     * @param bokDetailId 账务明细代码
-     * @param subjectNatureList 科目性质列表
-     * @return
-     */
-    public List<Date> getBuyDate(Date happenDate, Date bookDate,String booksetId,String bokDetailId,List<String> subjectNatureList,Date mdate){
-        Date beginDate =null;
-        List<Date> dateList = new ArrayList<Date>();
-        Date endDate = happenDate;
-        if(mdate!=null && mdate.compareTo(endDate)<=0){
-            endDate = DateUtil.addDay(mdate, -1);
-        }
-        BokStatDetPosiiton bokStatDetPosiiton  = accountingCommonService.getCountAnalysis(
-            null,endDate,bookDate,booksetId,bokDetailId,null,null,DictCodeList.是否_是.getValue());
-        if(bokStatDetPosiiton!=null){
-            beginDate = bokStatDetPosiiton.getHappenDate();
-        }
-        List<BookLatestInfoDto> lists =  accountingCommonService.getBookLatestInfo(
-            booksetId,bookDate,bokDetailId,subjectNatureList,null,null,null,null,beginDate,happenDate,DictCodeList.是否_是.getValue());
-        if(StringUtil.isEmptyList(lists)){
-            return dateList;
-        }
-        for(BookLatestInfoDto dto:lists){
-            dateList.add(dto.getHappenDate());
-        }
-        
-        return dateList;
-    }
-    /**
-     * 根据日期加权处理
-     * @param dateList  买入日列表
-     * @param trdAssetLossList 区分代偿期列表
-     * @return
-     */
-    public  BigDecimal eclCalByDate(List<Date> dateList,List<TrdAssetLoss> trdAssetLossList){
-        BigDecimal ecl = BigDecimal.ZERO;
-        int num =0;
-        if(StringUtil.isEmptyList(trdAssetLossList)){
-            return ecl;
-        }
-        if(StringUtil.isEmptyList(dateList)){
-            return ecl;
-        }
-        for(TrdAssetLoss loss :trdAssetLossList){
-            if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(loss.getStage())){
-                return loss.getEclVaule();
-            }else{
-                if(loss.getStrDate() == null || loss.getEndDate() == null || loss.getEclVaule() ==null ){
-                    continue;
-                }
-                for(Date date :dateList){
-                    if(date == null){
-                        continue;
-                    }
-                    if(loss.getStrDate().compareTo(date)<=0 && loss.getEndDate().compareTo(date)>=0 ){
-                        num++;
-                        ecl = ArithmeticUtil.doAdd(ecl,loss.getEclVaule());
-                        break;
-                    }
-                }
-            }
-            
-            
-        }
-        if(num>0){
-            ecl = ArithmeticUtil.divide(ecl, num, LOSS_CAL_SCALE);
-        }
-        return ecl;
-    }
-    
-    /**
-     * 减值流水处理
-     * 
-     * @param trdAssetLoss 资产减值流水列表
-     * @param targetFinProduct 标的信息
-     * @param happenDate 发生日
-     * @param bookDate 入账日
-     * @param booksetId 账套代码
-     * @param bokDetailId 账务明细代码
-     * @param subjectNatureList 科目性质列表
-     * @return
-     */
-    public BigDecimal trdAssetLossCalculate(List<TrdAssetLoss> trdAssetLoss, TargetFinProduct targetFinProduct,
-                                             String booksetId,String bokDetailId,Date happenDate,
-                                             Date bookDate,List<String> subjectNatureList) {
-        BigDecimal ecl = BigDecimal.ZERO;
-        if(StringUtil.isEmptyList(trdAssetLoss)){
-            return ecl;
-        }
-        if(targetFinProduct == null){
-            return ecl;
-        }
-        Map<BigDecimal,List<TrdAssetLoss>> map= trdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getPeroid));
-        List<TrdAssetLoss> eclTrdAssetLoss  = null;
-        if(map.size()>1){
-            String exeDate = DictCodeList.含权债摊销日_到期日.getValue();
-            if(targetFinProduct!=null){
-                exeDate = finProductCommonBatchService.getExeDate(targetFinProduct, booksetId).getExeDate();
-                if(StringUtil.isEmpty(exeDate) ){
-                    exeDate  = DictCodeList.含权债摊销日_到期日.getValue();
-                }
-            }
-            BigDecimal peroid = peroidDecide(map.keySet(),exeDate);
-            eclTrdAssetLoss = map.get(peroid);
-        }else{
-            eclTrdAssetLoss = trdAssetLoss;
-        }
-        if(StringUtil.isEmptyList(eclTrdAssetLoss)){
-            return ecl;
-        }
-        if(eclTrdAssetLoss.size()>1){
-            List<Date> dates = getBuyDate(happenDate, bookDate, booksetId, bokDetailId,subjectNatureList,targetFinProduct.getMdate());
-            return eclCalByDate(dates,eclTrdAssetLoss);
-        }else{
-            return eclTrdAssetLoss.get(0).getEclVaule();
-        }
-    }
-    /**
-     * 代偿期判断
-     * @param peroids 代偿期列表
-     * @param exeDate 含权债摊销参数
-     * @return
-     */
-    public BigDecimal peroidDecide(Set<BigDecimal> peroids,String exeDate){
-        BigDecimal peroid = null;
-        
-        if (DictCodeList.含权债摊销日_到期日.getValue().equals(exeDate)) {
-            for(BigDecimal cuerentperoid:peroids){
-                if(peroid == null){
-                    peroid = cuerentperoid;
-                }else if(cuerentperoid!=null && cuerentperoid.compareTo(peroid)>0){
-                    peroid = cuerentperoid;
-                }  
-            }
-        }else{
-            for(BigDecimal cuerentperoid:peroids){
-                if(peroid == null){
-                    peroid = cuerentperoid;
-                }else if(cuerentperoid!=null && cuerentperoid.compareTo(peroid)<0){
-                    peroid = cuerentperoid;
-                }  
-            }
-        }
-        return peroid;
-    }
+
     /**
      * 获取三级段减值流水
      * @param happenDate 发生日

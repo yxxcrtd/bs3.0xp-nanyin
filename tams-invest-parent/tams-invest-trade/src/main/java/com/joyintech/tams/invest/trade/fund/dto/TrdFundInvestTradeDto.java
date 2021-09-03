@@ -434,6 +434,16 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
      */
     private String type6;
 
+    private String type7;
+
+    public String getType7() {
+        return type7;
+    }
+
+    public void setType7(String type7) {
+        this.type7 = type7;
+    }
+
     /**
      * 交易场所
      */

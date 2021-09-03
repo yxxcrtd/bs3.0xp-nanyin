@@ -19,7 +19,7 @@ insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 --4.数据字典-增值税资产分类增加枚举值：计划类资产-未上市公司股权（F17）
 DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'TAX_ASSET_TYPE' AND ITEM_CODE = 'F17';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('TAX_ASSET_TYPE', 'F17', '计划类资产-未上市公司股权', 86, '0', 'system', null, '05-MAR-19 12.00.00.000000 AM', 'system', '05-MAR-19 12.00.00.000000 AM', null);
+values ('TAX_ASSET_TYPE', 'F17', '计划类资产-未上市公司股权', 86, '0', 'system', null, sysdate, 'system', sysdate, null);
 
 
 --5.重置资产分类映射关系表

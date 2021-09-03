@@ -19,6 +19,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.MstCounterParty;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMstBondCreditRating;
 import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.other.entity.OtherBaseInfoForAssetProcessorResult;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
@@ -43,10 +44,16 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
     private ValCustomerInfoBatchMapper valCustomerInfoBatchMapper;
 
     /**
-     * 交易对手
+     * 交易对手BatchMapper
      */
     @Autowired
     private ValCounterPartyBatchMapper valCounterPartyBatchMapper;
+
+    /**
+     * 评级信息BatchMapper
+     */
+    @Autowired
+    private ValMstBondCreditRatingBatchMapper valMstBondCreditRatingBatchMapper;
 
     /**
      * 清算账户信息BatchMapper
@@ -181,7 +188,30 @@ public class OtherBaseInfoRecvWriter extends InterfBaseWriter<BaseEntity> {
                 }
             }
 
+            // 评级信息
+            List<ValMstBondCreditRating> listValBondCreditRating = result.getValBondCreditRatingList();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValBondCreditRating)) {
 
+                //定义一个固定大小插入存放集合
+                List<ValMstBondCreditRating> listInsert =  new ArrayList<ValMstBondCreditRating>();
+                for(ValMstBondCreditRating e :listValBondCreditRating){
+                    //小于最大值
+                    if(listInsert.size() < maxSqlNum){
+                        listInsert.add(e);
+                    }else if(listInsert.size() >= maxSqlNum){
+                        valMstBondCreditRatingBatchMapper.deleteBatch(listInsert);
+                        valMstBondCreditRatingBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                //如果循环结束，小于最大值
+                if(CollectionUtils.isNotEmpty(listInsert)){
+                    valMstBondCreditRatingBatchMapper.deleteBatch(listInsert);
+                    valMstBondCreditRatingBatchMapper.insertBatch(listInsert);
+                }
+            }
 
 
             /** add by yanya on 20210831 增加客户信息附属表 start**/

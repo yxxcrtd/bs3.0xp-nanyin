@@ -65,6 +65,7 @@ public class ValRepurchaseAssetQuery002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.期限品种_回购);
         this.setSelectOptionToModel(model, DictCode.估值交易市场);
         this.setSelectOptionToModel(model, DictCode.交易所回购计提天数方式);
+        this.setSelectOptionToModel(model, DictCode.交易对手类型);
 
         ValRepurchaseAssetQuery001Dto dto = valRepurchaseAssetQuery002Service.queryRepassetByfinprodId(
             map);

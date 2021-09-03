@@ -189,6 +189,7 @@
         if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
             object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;;
         }
+        object.calculateField = calculateField;
         Joyin.ajaxJson(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
@@ -1002,6 +1003,9 @@
                                 rowData.doEntrustMoney =JoyinMath.doMul(element.doEntrustMoney,100,2) ;
                             }
                             if( element.etrEntrust.entrustNum){
+                                //交易预录入界面券面总额单位由万元变成元，因此*10000 add by yeming 20210902 start
+                                element.etrEntrust.entrustNum = JoyinMath.doMul(element.etrEntrust.entrustNum,10000,2,JoyinMath.ROUND_HALF_UP);
+                                //交易预录入界面券面总额单位由万元变成元，因此*10000 add by yeming 20210902 end
                                 rowData.tradeAmt = element.etrEntrust.entrustNum;//多组合券面总额
                                 tradeAmtAll = JoyinMath.doAdd(tradeAmtAll,element.etrEntrust.entrustNum,2);
                                 tradeAmtAllEntrust = JoyinMath.doAdd(tradeAmtAllEntrust,element.etrEntrust.entrustNum,2);
@@ -1121,7 +1125,7 @@
         // showOrhide();
         psAndspeed();
         getEntrustByEntrustId();
-        
+
         exerYieldDivContrl();
         
     };
@@ -1150,6 +1154,9 @@
 
             // 设置默认选中净价
             $("#calculateField_unitCprice").attr("checked", true);
+            if(calculateField){
+                $("#calculateField_" + calculateField).attr("checked", true);
+            }
             layui.form.render('radio');
         }
     };

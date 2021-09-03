@@ -20,7 +20,8 @@ import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetImpairment
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.ModConfigUseageResultDto;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.service.PdCalculateProcessService;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -50,6 +51,7 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
 
 	@Autowired
 	private PdCalculateMapper pdCalculateMapper;
+
     @Autowired
     private PdCalculateProcessService pdCalculateProcessService;
 
@@ -62,6 +64,9 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
     public ExitStatus afterStep(StepExecution stepExecution) {
         return null;
     }
+
+    @Autowired
+    private LossCommonMapper lossCommonMapper;
     /**
      * {@inheritDoc}
      */
@@ -141,7 +146,7 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
         List<List<ModEclResultProcess>> list = DataHandleUtil.splitList(EclProcessResultList);
         for (List<ModEclResultProcess> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                pdCalculateMapper.insertEclProcessResultPremium(listInsert);
+                lossCommonMapper.insertModEclResultProcessBatch(listInsert);
             }
         }
 

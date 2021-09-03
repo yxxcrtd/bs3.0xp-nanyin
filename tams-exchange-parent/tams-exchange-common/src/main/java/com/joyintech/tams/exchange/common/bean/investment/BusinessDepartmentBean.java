@@ -15,6 +15,7 @@ import java.io.Serializable;
  */
 public class BusinessDepartmentBean implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(BusinessDepartmentBean.class);
+    private static final long serialVersionUID = 3719878179570814070L;
     /**
      * 所属券商ID
      */

@@ -22,7 +22,7 @@ public class LimitPrice {
 
     public static double getUpperLimitPrice(String stockCode) {
         Double price = upperLimitPriceMap.get(stockCode);
-        return Objects.nonNull(price) ? price : 0;
+        return Objects.nonNull(price) ? price : 99999999;
     }
 
     public static void addLowerLimitPrice(String stockCode, Double lowerLimitPrice) {

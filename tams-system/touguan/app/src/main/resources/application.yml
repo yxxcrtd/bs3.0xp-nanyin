@@ -41,9 +41,9 @@ spring:
     username: rbmq
     password: rbmq
     #243测试环境使用mq配置如下
-#    addresses: 192.168.90.243:5672
-#    username: rbmq
-#    password: rbmq
+    #    addresses: 192.168.90.243:5672
+    #    username: rbmq
+    #    password: rbmq
     publisher-confirms: true
     publisher-returns: true
     listener:
@@ -179,7 +179,7 @@ application:
     isExceptionWhenSendTimeout: 01
   cache:
     file: classpath:ehcache_app.xml
-  remindPage: invest/remindMain  
+  remindPage: invest/remindMain
   menuType: hover
   sysCode: TAMS
   menuPosition: top
@@ -204,39 +204,39 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
-#  不使用服务注册中心,tams和tams-service-container分开部署的方式
-#  loadbalance: false
-#  micorservice:
-#    contextPath:
-#      single: true
-#      commonService: http://127.0.0.1:8114
-#      basicDataService: http://127.0.0.1:8114
-#      documentService: http://127.0.0.1:8114
-#      entrustService: http://127.0.0.1:8114
-#      periodService: http://127.0.0.1:8114
-#      assetService: http://127.0.0.1:8114
-#      portfolioService: http://127.0.0.1:8114
-#      productService: http://127.0.0.1:8114
-#      quotaService: http://127.0.0.1:8114
-#      reportService: http://127.0.0.1:8114
-#      riskService: http://127.0.0.1:8114
-#      riskRdsService: http://127.0.0.1:8114
-#      riskInfService: http://127.0.0.1:8114
-#      settleService: http://127.0.0.1:8114
-#      tradeService: http://127.0.0.1:8114
-#      disclosureService: http://127.0.0.1:8114
-#      valuationService: http://127.0.0.1:8114
-#      chbService: http://127.0.0.1:8114
-#      chb3Service: http://127.0.0.1:8114
-#      svrcomService: http://127.0.0.1:8114
-#      pbcService: http://127.0.0.1:8114
-#      channelService: http://127.0.0.1:8114 
-#      customerInterfService: http://127.0.0.1:8114
-#      tamsServer: http://127.0.0.1:8114
-#      investInterfService: http://127.0.0.1:8114
-#      adapterService: http://127.0.0.1:8114
+  #  不使用服务注册中心,tams和tams-service-container分开部署的方式
+  #  loadbalance: false
+  #  micorservice:
+  #    contextPath:
+  #      single: true
+  #      commonService: http://127.0.0.1:8114
+  #      basicDataService: http://127.0.0.1:8114
+  #      documentService: http://127.0.0.1:8114
+  #      entrustService: http://127.0.0.1:8114
+  #      periodService: http://127.0.0.1:8114
+  #      assetService: http://127.0.0.1:8114
+  #      portfolioService: http://127.0.0.1:8114
+  #      productService: http://127.0.0.1:8114
+  #      quotaService: http://127.0.0.1:8114
+  #      reportService: http://127.0.0.1:8114
+  #      riskService: http://127.0.0.1:8114
+  #      riskRdsService: http://127.0.0.1:8114
+  #      riskInfService: http://127.0.0.1:8114
+  #      settleService: http://127.0.0.1:8114
+  #      tradeService: http://127.0.0.1:8114
+  #      disclosureService: http://127.0.0.1:8114
+  #      valuationService: http://127.0.0.1:8114
+  #      chbService: http://127.0.0.1:8114
+  #      chb3Service: http://127.0.0.1:8114
+  #      svrcomService: http://127.0.0.1:8114
+  #      pbcService: http://127.0.0.1:8114
+  #      channelService: http://127.0.0.1:8114
+  #      customerInterfService: http://127.0.0.1:8114
+  #      tamsServer: http://127.0.0.1:8114
+  #      investInterfService: http://127.0.0.1:8114
+  #      adapterService: http://127.0.0.1:8114
 
-#  不使用服务注册中心,tams和tams-service-container整体部署的方式
+  #  不使用服务注册中心,tams和tams-service-container整体部署的方式
   loadbalance: false
   micorservice:
     contextPath:
@@ -313,11 +313,11 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-#   redis:
-#     database: 0
-#     host: 192.168.60.97
-#     port: 6379
-#     timeout: 20000
+  #   redis:
+  #     database: 0
+  #     host: 192.168.60.97
+  #     port: 6379
+  #     timeout: 20000
   redis:
     cluster:
       nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
@@ -344,6 +344,7 @@ shiro:
     /invest/trade/bond/TrdBondInvestTrade002/secAutoTrade,/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade,/cstp/match/*,/CfetsQuotedCommon/**,
     /InterfSysTrdConfig/**,/interf/risk/**,/EtrTradeSysInterf/**,/MstCaptialAccount/**,/MstSaleDepartment/**,/TrdBondInvestTrade/**,/AssetDeclarationCodeMaintenance/**,/ptlmanagementinfo/**,/InterfSysPara/**,/MstMarketCalendarInfo/**,
     /TrdExchangeWorkflow/**,/invest/trade/bond/TrdBondInvestTrade002/**,/invest/trade/trdrepotrade/TrdRepoTrade002/**,/invest/trade/forwex/TrdForwexInvestTrade002/**,/invest/trade/api/**,/commonPosition/**,
+    /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**
     /CfetsRepoDealQuotedPrice001/selectEtrReByQuoteId,/core/getAssetFiveType,/common/trdcommonbase/insertFinProductCashData,/common/entrustcommonbase/finishEntrust,/TrdRepoTrade/selectPreTradeId,/joyin/**,
     /interf/refreshCache,/interf/execute,/interf/ziguanSysUserInfo
 base:
@@ -625,7 +626,7 @@ exchangesystem:
     urlIP: joyin.gaoyusoft.com
     urlPort: 8989
     urlAppend: /exchange/hello
-    
+
 tx-lcn:
   client:
     managerAddress: 192.168.90.197:8070
@@ -640,4 +641,5 @@ workflow:
 #清除 批处理 缓存的配置，添加此配置后可登录批处理地址http://localhost:8084进行批处理缓存更新
 url:
   batch: http://localhost:8084/main/about/refreshCache
+
 

@@ -58,17 +58,23 @@ public class SZSEBinaryMessageFacade implements SZSEBinaryGateway {
     @SZSEBinaryMessage(msgType = SZSEBinaryMsgType.HEARTBEAT)
     @Override
     public void onHeartbeat(SZSEBinaryHeartbeat heartbeat) {
-        logger.debug("receive heartbeat ... {}", heartbeat);
+        logger.info("receive heartbeat ... {}", heartbeat);
     }
 
     @Override
     public void connected(String message) {
         logger.info("连接成功 -> {}", message);
+        // 连接成功后，发送登录消息。获取行情
+        SZSEBinaryMarketBootstrap binaryMarketBootstrap = SZSEBinaryMarketBootstrap.getInstance(null, null);
+        binaryMarketBootstrap.login();
+//        // 发送心跳包
+        binaryMarketBootstrap.sendHeartbeat();
     }
 
     @Override
     public void disconnected(String message) {
         logger.info("连接断开 -> {}", message);
+        SZSEBinaryMarketBootstrap.getInstance(null, null).disconnect();
     }
 
     @SZSEBinaryMessage(msgType = SZSEBinaryMsgType.LOGON)
@@ -90,7 +96,7 @@ public class SZSEBinaryMessageFacade implements SZSEBinaryGateway {
 
         QuoteProto.TickBean.Builder builder = threadLocalBuilder.get();
         SZSEBinaryConverter.convertToTick(level1MarketSnapshot, builder);
-        quoteService.addTick(builder.build());
+        quoteService.addSZSETick(builder.build());
 
         if(securityId.equals("100303") || securityId.equals("100504")){
             logger.info("level1 -> {}", level1MarketSnapshot);

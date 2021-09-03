@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean.bond;
 import java.io.Serializable;
 
 public class StandardBondQryBean implements Serializable {
+    private static final long serialVersionUID = -258408795730152818L;
     private String accountId;
     private String market;
     private String stockCode;

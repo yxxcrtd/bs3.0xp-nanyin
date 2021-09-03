@@ -6,21 +6,15 @@ import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -61,10 +55,8 @@ public class AssetImpairmentStageJudgeModelReaderService {
         param.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         // 减值方案系统参数
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        param.put("lossType", lossType);
         // 普华方案只查询买入交易的数据
-        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
-            param.put("ps", DictCodeList.交易方向_买入.getValue());
-        }
         eclList = assetImpairmentStageJudgeModelMapper.assetImpairmentStageJudgeList(param);
 
 
@@ -80,8 +72,8 @@ public class AssetImpairmentStageJudgeModelReaderService {
             String msg = "【资产减值阶段判断批处理】：计算错误";
             // 取不到满足条件的数据
             for(int i=0;i<finprodIdList.size();i++){
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodIdList.get(i), msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodIdList.get(i), msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             }
         }
         return list;

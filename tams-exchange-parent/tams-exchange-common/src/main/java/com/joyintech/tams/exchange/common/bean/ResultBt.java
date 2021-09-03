@@ -6,6 +6,7 @@ import java.io.Serializable;
  * create By MAXX on 2020/9/30
  */
 public class ResultBt implements Serializable {
+    private static final long serialVersionUID = 5678909712429371656L;
     private String errorNo;//错误代码
     private String errorInfo;//错误原因
 

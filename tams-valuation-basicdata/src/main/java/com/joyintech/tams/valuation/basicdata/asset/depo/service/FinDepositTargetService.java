@@ -163,6 +163,8 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
         finProductType.setType1(dto.getAssetType());//资产类型
         finProductType.setType2(dto.getAccountintType());//核算分类
         finProductType.setType3(dto.getTaxType());//税务分类
+        //modify by yanya on 20210902 分类表增加证券品种type18字段入库
+        finProductType.setType18(DictCodeListExt1.证券品种_存款.getValue());//证券品种
         // 金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
         BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);

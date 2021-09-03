@@ -2,7 +2,7 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 
 import java.math.BigDecimal;
 

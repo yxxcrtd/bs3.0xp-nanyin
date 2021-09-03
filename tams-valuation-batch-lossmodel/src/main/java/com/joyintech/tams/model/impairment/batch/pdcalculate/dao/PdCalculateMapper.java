@@ -1,14 +1,14 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.dao;
 
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Map;
 
 /**
  * 减值-PD计算批处理DAO
@@ -33,7 +33,7 @@ public interface PdCalculateMapper {
      * @param:
      * @return:
      */
-    List<ModEclResultProcess> selectWaitPdCalculateList(@Param("plateDate") Date plateDate, @Param("finprodIdList") List<String> finprodIdList);
+    List<ModEclResultProcess> selectWaitPdCalculateList(Map<String, Object> params);
 
     /**
      * @Description:获取前瞻因子权重配置信息
@@ -52,10 +52,10 @@ public interface PdCalculateMapper {
      * @param:
      * @return:
      */
-    ModGradePdConfigDto selectModGradePdConfigList(@Param("gradeResult") String gradeResult,@Param("yearNum") BigDecimal yearNum);
+    ModGradePdConfigDto selectModGradePdConfigList(Map<String,Object> params);
 
     /**
-     * @Description:获取年份的评级PD配置列表
+     * @Description:获取年份的前瞻因子
      * @auther: yuzj
      * @date: 2021/7/16
      * @param:
@@ -72,16 +72,6 @@ public interface PdCalculateMapper {
      */
     int selectCountConfigUseAge(@Param("configSeqNo") String configSeqNo,@Param("configType") String configType);
 
-
-    /**
-     * @Description:批量插入债券估值行情表
-     * @auther: yuzj
-     * @date: 2021/7/19
-     * @param:
-     * @return:
-     */
-    int insertEclProcessResultPremium(@Param("eclProcessResultList")List<ModEclResultProcess> eclProcessResultList);
-
     /**
      * @Description:批量插入资产定价表
      * @auther: yuzj
@@ -91,5 +81,13 @@ public interface PdCalculateMapper {
      */
     int insertConfigUseageResultPremium(@Param("configUseageResultList")List<ModConfigUseageResultDto> configUseageResultList);
 
+    /**
+     * @Description:获取年份的综合系数
+     * @auther: weipeng
+     * @date: 2021/08/30
+     * @param:
+     * @return:
+     */
+    ModPdFactorConfigDto getCombinedFactorConfig(@Param("yearStr") String yearStr);
 
 }

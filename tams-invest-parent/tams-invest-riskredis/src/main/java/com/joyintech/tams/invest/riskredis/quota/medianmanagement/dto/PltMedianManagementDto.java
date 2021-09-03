@@ -370,7 +370,7 @@ public class PltMedianManagementDto extends RskIndicatorParaCalcdetail {
     	if(StringUtil.isNotEmpty(this.getChangeValue())){
     		int i = this.getChangeValue().compareTo(BigDecimal.ZERO);
         	if(i == 1 || i==-1){
-        		DecimalFormat df = new DecimalFormat("#,###.00");
+        		DecimalFormat df = new DecimalFormat("#,###.##");
         		str = String.valueOf(df.format(((this.getChangeValue().doubleValue())*100)/100));
         	}else{
         		DecimalFormat df = new DecimalFormat("0.00");
@@ -388,7 +388,7 @@ public class PltMedianManagementDto extends RskIndicatorParaCalcdetail {
     	if(StringUtil.isNotEmpty(this.getNewValue())){
     		int i = this.getNewValue().compareTo(BigDecimal.ZERO);
         	if(i == 1 || i==-1){
-        		DecimalFormat df = new DecimalFormat("#,###.00");
+        		DecimalFormat df = new DecimalFormat("#,###.##");
         		str = String.valueOf(df.format(((this.getNewValue().doubleValue())*100)/100));
         	}else{
         		DecimalFormat df = new DecimalFormat("0.00");
@@ -406,7 +406,7 @@ public class PltMedianManagementDto extends RskIndicatorParaCalcdetail {
     	if(StringUtil.isNotEmpty(this.getOldValue())){
     		int i = this.getOldValue().compareTo(BigDecimal.ZERO);
         	if(i == 1 || i==-1){
-        		DecimalFormat df = new DecimalFormat("#,###.00");
+        		DecimalFormat df = new DecimalFormat("#,###.##");
         		str = String.valueOf(df.format(((this.getOldValue().doubleValue())*100)/100));
         	}else{
         		DecimalFormat df = new DecimalFormat("0.00");

@@ -144,11 +144,12 @@ $(function() {
      */
     var showFinInterestFactorDiv = function(){
         var obj = $('#finInterestFactorDto_div');
-        //getInterestFactorElementById('investRate','div').hide();
+        getInterestFactorElementById('investRate','div').hide();
         //getInterestFactorElementById('loadRate','div').hide();
         getInterestFactorElementById('referRate','div').hide();
         getInterestFactorElementById('buyOutRate','div').hide();
         getInterestFactorElementById('basisStyle','div').hide();
+        document.getElementById("finInterestFactorDto_loadRateLabel").innerHTML = "净投资收益率";
         $('#calRateType_div').hide();
     }
 
@@ -158,6 +159,7 @@ $(function() {
     var showFinPayInterestStdInfoDiv = function(){
         var obj = $('#finPayInterestStdInfoDto_div');
         getPayInterestStdInfoElementById('endTdayRule','div').hide();
+        getPayInterestStdInfoElementById('isNoIssueAmtFlag','div').show();
     }
 
     var resetForm = function(id,value,pageId){
@@ -359,6 +361,13 @@ $(function() {
             //     FinInterestFactor.calBuyOutRateByTable('loadRate');
             // });
             // $('#finInterestFactorDto_investRate').change(FinInterestFactor.calBuyOutRateByTable).trigger('change');
+            if((pageModel != PAGE_MODEL_NEW || YES_OR_NO_Y == COPY_FLAG)
+                && ($('#issueAmt').val() == null || $('#issueAmt').val() == "")) {
+                //getPayInterestStdInfoElementById('isNoIssueAmtFlag','').val(YES_OR_NO_Y).trigger("change");
+                getPayInterestStdInfoElementById('isNoIssueAmtFlag','').prop('checked', true);
+                getPayInterestStdInfoElementById('isNoIssueAmtFlag','').next().addClass('layui-form-onswitch').trigger('change');
+                getPayInterestStdInfoElementById('isNoIssueAmtFlag','').next().find("em").text('是');
+            }
         }
     }
     var init = function(){

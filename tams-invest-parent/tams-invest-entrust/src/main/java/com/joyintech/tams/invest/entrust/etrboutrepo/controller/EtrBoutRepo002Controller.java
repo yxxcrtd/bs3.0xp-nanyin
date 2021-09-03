@@ -132,7 +132,9 @@ public class EtrBoutRepo002Controller extends BaseController {
             dto = etrBoutRepoService.getBussinessEntityByWorkflowId(workflowId);
             //配置单位 edit by yeming 20210723 start
             if(StringUtil.equals(entrustAmtUnit,"02")){
-                if(dto.getEntrustNum() != null) {
+                if(dto.getEntrustAmt() != null){
+                    dto.setEntrustAmt(dto.getEntrustAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }else if(dto.getEntrustNum() != null) {
                     dto.setEntrustAmt(dto.getEntrustNum().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
                 }
             }else {

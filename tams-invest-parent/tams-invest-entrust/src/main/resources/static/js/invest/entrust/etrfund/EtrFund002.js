@@ -839,6 +839,9 @@
                 $("#entrustTongdao").prop("disabled", false);
             }
             tradeMarketCashChange(true);
+            // ZGZGST-1744:证券账户变化时带出资产可用持仓 fuyongsheng 20210831 add start
+            getAssetAvailablePosition();
+            // ZGZGST-1744:证券账户变化时带出资产可用持仓 fuyongsheng 20210831 add end
         });
 
         $("#entrustTongdao").on('change',function(){

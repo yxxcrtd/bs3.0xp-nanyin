@@ -17,6 +17,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
@@ -24,6 +25,8 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.dto.ValProfitprojectDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.profitproject.service.ValProfitprojectService;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,9 @@ import java.util.Map;
 public class ValProfitproject001Controller extends BaseController{
     @Autowired
     private ValProfitprojectService valProfitprojectService;
+
+    @Autowired
+    MstWorkflowCommonService mstWorkflowCommonService;
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
@@ -91,6 +97,24 @@ public class ValProfitproject001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupDelete.class}) ValProfitprojectDto dto, BindingResult result) {
+        AjaxResult ajax = new  AjaxResult();
+        boolean checkFlag = false;
+        for(ValProfitprojectDto entity:dto.getSelectedItem()){
+            if(null!=entity.getFinprodMarketId()){
+                WflValidInputParameter parameter = new WflValidInputParameter();
+                parameter.setPageId("ValProfitproject002");
+                parameter.setBusinessDataPk1(entity.getFinprodMarketId());
+                parameter.setWorkflowId(entity.getWorkflowId());
+                boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+                if(isInWfl){
+                    checkFlag = true;
+                    ajax.appendMessage(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", entity.getFinprodMarketId())));
+                }
+            }
+        }
+        if(checkFlag) {
+            return ajax;
+        }
         return commonCheck(result, dto.getOperateType());
     }
     /**

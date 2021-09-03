@@ -33,7 +33,7 @@ public class ModValuationCommonService extends BaseService {
 	private ModAssetInfoMapper modAssetInfoMapper;
 
 	/**
-	 *  获取资产信息集合
+	 *  获取现金流贴现法资产信息集合
 	 * @param paraMap
 	 * @return
 	 */

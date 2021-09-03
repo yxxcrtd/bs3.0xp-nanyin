@@ -358,6 +358,7 @@ public class FinPlanNetAssetDto extends FinProduct implements ProcessEntity{
     /**
      * 投资性质_固定收益类
      */
+    @NotEmpty(fieldName = "FinPlanNetAsset002.investmentAttributes",groups={ValidateGroupEdit.class})
     private String investmentAttributes;
     
     // 重写合同号 by 赵东东 2019.10.15 start

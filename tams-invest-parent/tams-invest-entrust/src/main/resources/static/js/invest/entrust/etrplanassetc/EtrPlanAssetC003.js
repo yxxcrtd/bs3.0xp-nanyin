@@ -3,70 +3,48 @@
  */
 (function() {
 	var getriskdata = function() {
-    var tableData1 = table.getAllRows();
-    var selectedItem = tableData1;
-    if (selectedItem.length > 0) {
-        var objects = new Array();
-        for ( var index in selectedItem) {
-            var item = selectedItem[index];
-            var trdProductDeal = {};
-            trdProductDeal.tradeAmt = item.entrustAmt;
-            trdProductDeal.shareAmt  = item.entrustNum;
-             if(item.entrustAmt){
-               var obj = {
-                     tradeDirection : item.ps,
-                     timePoint : MY_SUP_TIME_TYPE_02,
-                     valDate : sysDate,
-                     portfolioCode : item.portfolioId,
-                     tradeAmount : item.entrustAmt,
-                     assetType : fintype,
-                     isEnabled : '01',
-                     assetCode : item.finprodId,
-                     fullDataFlag : '1',
-                     trdProductDeal : trdProductDeal
-                 }
-             }else if (item.entrustNum) {
+        var tableData1 = table.getAllRows();
+        var selectedItem = tableData1;
+        // ZGZGST-1852: 合并投资交易风险代码 fuyongsheng 20210902 edit start
+        if (selectedItem.length > 0) {
+            var list = [];
+            var object = {
+                tradeDirection : [ 'ps', 'EtrPlanAssetC002.ps' ],
+                portfolioCode : [ 'portfolioId', 'EtrPlanAssetC002.portfolioId' ],
+                tradeAmount : [ 'entrustAmt', 'EtrPlanAssetC002.entrustAmt' ],
+                assetType : [ 'assetType1', 'EtrPlanAssetC002.assetType1' ],
+                data : list
+            };
+            for ( var index in selectedItem) {
+                var item = selectedItem[index];
+                var trdProductDeal = {};
+                trdProductDeal.tradeAmt = item.entrustAmt;
+                trdProductDeal.shareAmt = item.entrustNum;
                 var obj = {
-                     tradeDirection : item.ps,    
-                     timePoint : MY_SUP_TIME_TYPE_02,
-                     valDate : sysDate,
-                     portfolioCode : item.portfolioId,
-                     tradeAmount : item.entrustNum,
-                     assetType : fintype,
-                     isEnabled : '01',
-                     amtType:'1',
-                     assetCode : item.finprodId,
-                     fullDataFlag : '1',
-                     trdProductDeal : trdProductDeal
-                 }
-            }else {
-              var obj = {
                     tradeDirection : item.ps,
                     timePoint : MY_SUP_TIME_TYPE_02,
                     valDate : sysDate,
                     portfolioCode : item.portfolioId,
-                    tradeAmount : item.entrustAmt,
                     assetType : fintype,
                     isEnabled : '01',
                     assetCode : item.finprodId,
                     fullDataFlag : '1',
                     trdProductDeal : trdProductDeal
+                };
+                if (item.entrustNum) {
+                    obj.tradeAmount = item.entrustNum;
+                    obj.amtType = '1';
+                }else {
+                    obj.tradeAmount = item.entrustAmt;
                 }
+                list.push(obj);
             }
-             var object = {
-                 tradeDirection : [ 'ps', 'EtrPlanAssetC002.ps' ],
-                 portfolioCode : [ 'portfolioId', 'EtrPlanAssetC002.portfolioId' ],
-                 tradeAmount : [ 'entrustAmt', 'EtrPlanAssetC002.entrustAmt' ],
-                 assetType : [ 'assetType1', 'EtrPlanAssetC002.assetType1' ],
-                 data : obj
-             }
-             objects.push(object);
-         }
-        // add by zhangrui1 交易对手影响风险试算 start
-        object.counterId = ['counterId', 'EtrPlanAssetC002.counterId'];
-        // add by zhangrui1 交易对手影响风险试算 end
-         return objects;
-     }
+            // add by zhangrui1 交易对手影响风险试算 start
+            object.counterId = ['counterId', 'EtrPlanAssetC002.counterId'];
+            // add by zhangrui1 交易对手影响风险试算 end
+            return object;
+            // ZGZGST-1852: 合并投资交易风险代码 fuyongsheng 20210902 edit end
+        }
 	}
 
 	/**
@@ -177,10 +155,12 @@
 											result.data,
 											function() {
 												if (operateType === 'submit') {
-													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/save',objects,"EtrPlanAssetC002_btn_save");
-													}else {
-                                                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetC003/save', objects, "EtrPlanAssetC002_btn_submit", "EtrPlanAssetR002");
-	                                                  }
+                                                    // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit start
+													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/save',allDto,"EtrPlanAssetC002_btn_save");
+                                                }else {
+                                                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetC003/save', allDto, "EtrPlanAssetC002_btn_submit", "EtrPlanAssetR002");
+                                                    // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit end
+												}
 											});
 						});
 	}

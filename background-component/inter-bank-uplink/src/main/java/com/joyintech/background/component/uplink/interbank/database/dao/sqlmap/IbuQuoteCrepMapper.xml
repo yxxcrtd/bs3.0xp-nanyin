@@ -53,6 +53,8 @@
         <result column="BRANCH_ID" property="branchId" jdbcType="VARCHAR" />
         <result column="TERM_TYPE" property="termType" jdbcType="VARCHAR" />
         <result column="TRANSACTIME" property="transactime" jdbcType="VARCHAR" />
+        <result column="ZZ_TOTAL_AMT" property="zzTotalAmt" jdbcType="DECIMAL" />
+        <result column="SQ_TOTAL_AMT" property="sqTotalAmt" jdbcType="DECIMAL" />
     </resultMap>
     <sql id="Base_Column_List" >
         QUOTE_ID QUOTE_ID, QUOTE_TYPE QUOTE_TYPE, P_QUOTE_ID P_QUOTE_ID, VERSION VERSION, 
@@ -68,7 +70,7 @@
         MY_ACCT_NO MY_ACCT_NO, SEC_MANAGE_ACCT_ID SEC_MANAGE_ACCT_ID, EXECID EXECID, B_VERSION B_VERSION, 
         REMARK REMARK, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CREATE_DEPT CREATE_DEPT, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, BRANCH_ID BRANCH_ID, TERM_TYPE TERM_TYPE, 
-        TRANSACTIME TRANSACTIME
+        TRANSACTIME TRANSACTIME, ZZ_TOTAL_AMT ZZ_TOTAL_AMT, SQ_TOTAL_AMT SQ_TOTAL_AMT
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -107,8 +109,8 @@
             SEC_MANAGE_ACCT_ID, EXECID, B_VERSION, 
             REMARK, CREATE_USER, CREATE_TIME, 
             CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
-            BRANCH_ID, TERM_TYPE, TRANSACTIME
-            )
+            BRANCH_ID, TERM_TYPE, TRANSACTIME, 
+            ZZ_TOTAL_AMT, SQ_TOTAL_AMT)
         values (#{quoteId,jdbcType=VARCHAR}, #{quoteType,jdbcType=VARCHAR}, #{pQuoteId,jdbcType=VARCHAR}, 
             #{version,jdbcType=DECIMAL}, #{exeType,jdbcType=VARCHAR}, #{cfetsQuoteId,jdbcType=VARCHAR}, 
             #{quoteRoleType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
@@ -125,8 +127,8 @@
             #{secManageAcctId,jdbcType=VARCHAR}, #{execid,jdbcType=VARCHAR}, #{bVersion,jdbcType=DECIMAL}, 
             #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
             #{createDept,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-            #{branchId,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, #{transactime,jdbcType=VARCHAR}
-            )
+            #{branchId,jdbcType=VARCHAR}, #{termType,jdbcType=VARCHAR}, #{transactime,jdbcType=VARCHAR}, 
+            #{zzTotalAmt,jdbcType=DECIMAL}, #{sqTotalAmt,jdbcType=DECIMAL})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrep" >
         insert into IBU_QUOTE_CREP
@@ -284,6 +286,12 @@
             <if test="transactime != null" >
                 TRANSACTIME,
             </if>
+            <if test="zzTotalAmt != null" >
+                ZZ_TOTAL_AMT,
+            </if>
+            <if test="sqTotalAmt != null" >
+                SQ_TOTAL_AMT,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="quoteId != null" >
@@ -439,6 +447,12 @@
             <if test="transactime != null" >
                 #{transactime,jdbcType=VARCHAR},
             </if>
+            <if test="zzTotalAmt != null" >
+                #{zzTotalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="sqTotalAmt != null" >
+                #{sqTotalAmt,jdbcType=DECIMAL},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteCrep" >
@@ -449,7 +463,7 @@
         CB_FPRICE_AMT, SC_FPRICE_AMT, M_INT_AMT, M_TRADE_AMT, BASIS, TRADE_STATUS, SEND_STATUS, 
         EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, SEC_MANAGE_ACCT_ID, 
         EXECID, B_VERSION, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, UPDATE_USER, UPDATE_TIME, 
-        BRANCH_ID, TERM_TYPE, TRANSACTIME)
+        BRANCH_ID, TERM_TYPE, TRANSACTIME, ZZ_TOTAL_AMT, SQ_TOTAL_AMT)
         select QUOTE_ID, QUOTE_TYPE, P_QUOTE_ID, VERSION, EXE_TYPE, CFETS_QUOTE_ID, 
             QUOTE_ROLE_TYPE, PORTFOLIO_ID, ENTRUST_ID, QUOTE_DATE, V_SETTLE_DATE, M_SETTLE_DATE, 
             SETTLE_SPEED, V_DELIVERY_TYPE, M_DELIVERY_TYPE, SETT_TYPE, SETT_CCY, CCY, REPO_PS, 
@@ -457,7 +471,7 @@
             CB_FPRICE_AMT, SC_FPRICE_AMT, M_INT_AMT, M_TRADE_AMT, BASIS, TRADE_STATUS, SEND_STATUS, 
             EFF_TIME, OU_PARTY_ID, OU_TRADER_ID, CP_PARTY_ID, CP_TRADER_ID, MY_ACCT_NO, SEC_MANAGE_ACCT_ID, 
             EXECID, B_VERSION, REMARK, CREATE_USER, CREATE_TIME, CREATE_DEPT, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
-            BRANCH_ID, TERM_TYPE, TRANSACTIME
+            BRANCH_ID, TERM_TYPE, TRANSACTIME, ZZ_TOTAL_AMT, SQ_TOTAL_AMT
              from IBU_QUOTE_CREP
              where 1 = 1 and QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </insert>
@@ -605,6 +619,12 @@
             <if test="transactime != null" >
                 TRANSACTIME = #{transactime,jdbcType=VARCHAR},
             </if>
+            <if test="zzTotalAmt != null" >
+                ZZ_TOTAL_AMT = #{zzTotalAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="sqTotalAmt != null" >
+                SQ_TOTAL_AMT = #{sqTotalAmt,jdbcType=DECIMAL},
+            </if>
         </set>
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
@@ -656,7 +676,9 @@
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             BRANCH_ID = #{branchId,jdbcType=VARCHAR},
             TERM_TYPE = #{termType,jdbcType=VARCHAR},
-            TRANSACTIME = #{transactime,jdbcType=VARCHAR}
+            TRANSACTIME = #{transactime,jdbcType=VARCHAR},
+            ZZ_TOTAL_AMT = #{zzTotalAmt,jdbcType=DECIMAL},
+            SQ_TOTAL_AMT = #{sqTotalAmt,jdbcType=DECIMAL}
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
     </update>
 </mapper>

@@ -213,6 +213,18 @@ public class TradeResponseImpl implements ITradeResponse {
     }
 
     /***
+     * @Description: 大宗证券委托回报
+     * @Param: [entrust]
+     * @return: void
+     * @Author: MAXX
+     * @Date: 2020/4/7
+     */
+    @Override
+    public void integratedEntrustWriteBack(IntegratedEntrust entrust) {
+        terminalAgent.asyncWrite(FunctionCode.NOTIFY_INTEGRATED_ENTRUST, entrust);
+    }
+
+    /***
      * @Description: 证券成交回报
      * @Param: [trade]
      * @return: void

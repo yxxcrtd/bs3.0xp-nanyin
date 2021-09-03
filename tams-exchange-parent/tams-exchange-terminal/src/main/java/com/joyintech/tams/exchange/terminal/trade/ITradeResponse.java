@@ -146,6 +146,8 @@ public interface ITradeResponse {
      */
     void entrustWriteBack(Entrust entrust);
 
+    void integratedEntrustWriteBack(IntegratedEntrust entrust);
+
     /***
      * @Description: 证券成交回报
      * @Param: [trade]

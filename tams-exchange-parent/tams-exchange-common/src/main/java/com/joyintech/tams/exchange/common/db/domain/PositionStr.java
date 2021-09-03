@@ -7,6 +7,7 @@ import java.util.Set;
  * create By MAXX on 2020/4/17
  */
 public class PositionStr implements Serializable {
+    private static final long serialVersionUID = 4384749860335512424L;
     private String protocolBackPositionStr;//协议回购定位串 大宗成交(索引成交编号)
     private String tradePositionStr;//成交主动拉取定位串  普通成交(定位串)
     private String orderPositionStr;//委托主动拉取定位串 普通委托(索引合同号)

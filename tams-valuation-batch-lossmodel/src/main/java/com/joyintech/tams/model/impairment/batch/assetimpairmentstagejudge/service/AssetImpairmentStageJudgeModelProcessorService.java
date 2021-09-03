@@ -9,8 +9,9 @@ import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.A
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelReaderEntity;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelResultDto;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
-import com.joyintech.tams.valuation.common.dto.modelDto.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.slf4j.Logger;
@@ -78,8 +79,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 if (StringUtil.isEmpty(resultProcess.getRiskLevelFive())) {
                     // 警告	取不到风险五级分类	【批处理名称】：资产无风险五级分类
                     msg = "【资产减值阶段判断批处理】：资产无风险五级分类";
-                    impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                        finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                    impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                        finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 } else if (StringUtil.isNotEmpty(resultProcess.getRiskLevelFive()) && riskList.contains(resultProcess.getRiskLevelFive())) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
@@ -89,13 +90,13 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             } else {
                 // 警告,未配置三阶段判定风险五级分类标准；【批处理名称】：未配置三阶段风险五级分类标准
                 msg = "【资产减值阶段判断批处理】：未配置三阶段风险五级分类标准";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             }
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：三阶段资产无风险五级分类判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -107,9 +108,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 if (StringUtil.isEmpty(resultProcess.getResultCurrent())) {
                     // 失败	取不到当前时点的评级	【批处理名称】：无当前时点的评级
                     msg = "【资产减值阶段判断批处理】：无当前时点的评级";
-                    impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                        finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
-                    return null;
+                    impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                        finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 } else if (StringUtil.isNotEmpty(resultProcess.getResultCurrent()) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
@@ -119,14 +119,13 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             } else {
                 // 失败	未配置三阶段判定评级标准	【批处理名称】：未配置三阶段评级标准
                 msg = "【资产减值阶段判断批处理】：未配置三阶段评级标准";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
-                return null;
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             }
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：三阶段评级标准判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -179,14 +178,14 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             } else {
                 // 失败	未配置三阶段判定逾期参数	【批处理名称】：未配置三阶段逾期参数
                 msg = "【资产减值阶段判断批处理】：未配置三阶段本金逾期参数";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             }
         } catch (Exception e) {
             // 失败：逾期天数判断异常
             msg = "【资产减值阶段判断批处理】：本金逾期天数判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -225,13 +224,13 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             } else {
                 // 失败	未配置三阶段判定逾期参数	【批处理名称】：未配置三阶段利息逾期参数
                 msg = "【资产减值阶段判断批处理】：未配置三阶段利息逾期参数";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             }
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：利息逾期天数判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -253,13 +252,13 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             } else {
                 // 警告,未配置二阶段判定风险五级分类标准；【批处理名称】：未配置二阶段风险五级分类标准
                 msg = "【资产减值阶段判断批处理】：未配置二阶段风险五级分类标准";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             }
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：二阶段风险五级分类标准判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -270,8 +269,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             if (StringUtil.isEmpty(itemValue)) {
                 // 失败	未配置二阶段判定评级标准	【批处理名称】：未配置二阶段评级标准
                 msg = "【资产减值阶段判断批处理】：未配置二阶段评级标准";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             } else if (StringUtil.isNotEmpty(itemValue) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
                 finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                 resultProcess.setFinStage(finStage);
@@ -281,8 +280,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         } catch (Exception e) {
             // 失败	未配置二阶段判定评级标准	【批处理名称】：未配置二阶段评级标准
             msg = "【资产减值阶段判断批处理】：二阶段评级标准判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -293,8 +292,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             if (StringUtil.isEmpty(itemValue)) {
                 // 失败	未配置二阶段判定逾期参数	【批处理名称】：未配置二阶段逾期参数
                 msg = "【资产减值阶段判断批处理】：未配置二阶段逾期参数";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 return null;
             } else if (StringUtil.isNotEmpty(itemValue) && prinOverdueDay.compareTo(BigDecimal.valueOf(Long.valueOf(itemValue))) >= 0) {
                 finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
@@ -304,8 +303,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             }
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：二阶段逾期参数判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -316,8 +315,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             if (StringUtil.isEmpty(itemValue)) {
                 // 失败	未配置二阶段判定逾期参数	【批处理名称】：未配置二阶段逾期参数
                 msg = "【资产减值阶段判断批处理】：未配置二阶段逾期参数";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
             } else if (StringUtil.isNotEmpty(itemValue) && intOverdueDay.compareTo(BigDecimal.valueOf(Long.valueOf(itemValue))) >= 0) {
                 finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                 resultProcess.setFinStage(finStage);
@@ -327,8 +326,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         } catch (Exception e) {
             // 失败	未配置二阶段判定逾期参数	【批处理名称】：未配置二阶段逾期参数
             msg = "【资产减值阶段判断批处理】：二阶段逾期参数判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
 
@@ -339,17 +338,16 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             if(StringUtil.isEmpty(itemValue)){
                 // 失败	未配置减值阶段判定评级下迁标准	【批处理名称】：未配置减值阶段判定评级下迁标准
                 msg = "【资产减值阶段判断批处理】：未配置减值阶段判定评级下迁标准";
-                impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue());
+                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                    finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 return null;
             }else{
                 if (resultProcess.getResultDeal() == null) {
                     // 失败	取不到买入时点评级	【批处理名称】：【机构名称/资产代码】买入时点无评级信息
                     String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, item.getModEclResultProcess().getGradeOrgId());
                     msg = "【资产减值阶段判断批处理】：【"+gradeOrgName+"/"+item.getAssetId()+"】买入时点无评级信息";
-                    impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                        finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
-                    return null;
+                    impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                        finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 }else if (resultProcess.getResultDeal() != null && resultProcess.getResultCurrent() != null &&
                           getPoorRating(resultProcess.getResultDeal(), resultProcess.getResultCurrent()) > Integer.valueOf(itemValue)
                 ) {
@@ -362,8 +360,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             return rstDto;
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：减值阶段判定评级下迁标准判断异常";
-            impairmentCommonService.editLogContextInfo(stepExecution, sysBatchExecInfo,
-                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
+                finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
         }
     }
@@ -404,4 +402,16 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         return rs - ra;
     }
 
+    // 组装日志上下文信息
+    private void editLogContextInfo(StepExecution stepExecution, ModValBatchLogResult logrst){
+        if(stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY) != null){
+            List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get(LOG_KEY);
+            mvbLogRst.add(logrst);
+            stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
+        }else{
+            List<ModValBatchLogResult> mvbLogRst = new ArrayList<>();// 异常信息定义
+            mvbLogRst.add(logrst);
+            stepExecution.getJobExecution().getExecutionContext().put(LOG_KEY,mvbLogRst);
+        }
+    }
 }

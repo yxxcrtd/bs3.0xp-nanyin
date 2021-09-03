@@ -270,6 +270,8 @@ public class EntrustServiceImpl extends AsyncServiceImpl<String, Entrust> implem
             criteria.andEntrustPropEqualTo(entrustProp);
         if (entrustStatus > -100)
             criteria.andEntrustStatusEqualTo(entrustStatus);
+        // 过滤撤单委托
+        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
         PageHelper.startPage(pageNum, pageSize);
         List<Entrust> entrustList = entrustMapper.selectByExample(entrustExample);
         entrustList.forEach(entrust -> {

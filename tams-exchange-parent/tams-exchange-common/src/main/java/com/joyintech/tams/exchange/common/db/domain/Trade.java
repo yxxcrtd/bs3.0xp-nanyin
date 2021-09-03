@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Trade implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 5901437777136803168L;
     @NotNull
     @Size(max = 32)
     @Id

@@ -117,7 +117,7 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
     /**
      * 计息基础
      */
-    @NotEmpty(fieldName = "TrdRepoTrade002.basis", groups = ValidateGroupEdit.class)
+//    @NotEmpty(fieldName = "TrdRepoTrade002.basis", groups = ValidateGroupEdit.class)
     private String basis;
 
     /**
@@ -236,6 +236,16 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
      * 分配方式
      */
     private String distribution;
+
+    private String calculateField;
+
+    public String getCalculateField() {
+        return calculateField;
+    }
+
+    public void setCalculateField(String calculateField) {
+        this.calculateField = calculateField;
+    }
 
     public String getDistribution() {
         return distribution;

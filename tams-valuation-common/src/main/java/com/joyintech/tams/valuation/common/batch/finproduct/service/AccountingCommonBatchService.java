@@ -12,11 +12,21 @@ package com.joyintech.tams.valuation.common.batch.finproduct.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
+import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.TrdAssetLoss;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListTableId;
+import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +71,12 @@ public class AccountingCommonBatchService {
      */
     @Autowired
     private AccountingCommonBatchMapper accountingCommonBatchMapper;
+
+    /**
+     * 共通方法service
+     */
+    @Autowired
+    private FinProductCommonBatchService finProductCommonBatchService;
 
     /**
      * 公用处理：科目余额汇总处理
@@ -692,5 +708,239 @@ public class AccountingCommonBatchService {
         }
         // 返回 出参.余额Map
         return resultMap;
+    }
+
+    /**
+     * 账务类共通方法设计 - 统计分析账务明细汇总查询
+     *
+     * @param beginDate 查询开始日 ---【非必填】
+     * @param endDate 查询结束日 ---【非必填】
+     * @param bookDate 入账日 ---【必填】
+     * @param booksetId 账套代码 ---【必填】
+     * @param bokDetailId 账务明细代码 ---【非必填】
+     * @param busiId 业务明细代码---【非必填】
+     * @param searchDateList 查询日列表 ---【非必填】
+     * @return 账务明细汇总
+     * @see
+     * @since 1.0
+     */
+    public BokStatDetPosiiton getCountAnalysis(Date beginDate, Date endDate, Date bookDate,
+                                               String booksetId, String bokDetailId, String busiId,
+                                               List<Date> searchDateList, String isPosZero) {
+        // 设置sql查询参数map
+        Map<String, Object> paMap = new HashMap<String, Object>();
+        paMap.put("beginDate", beginDate);
+        paMap.put("endDate", endDate);
+        paMap.put("bookDate", bookDate);
+        paMap.put("booksetId", booksetId);
+        paMap.put("bokDetailId", bokDetailId);
+        paMap.put("busiId", busiId);
+        paMap.put("isPosZero", isPosZero);
+        paMap.put("searchDateList", searchDateList);
+
+
+        // 数据查询
+        List<BokStatDetPosiiton> list = accountingCommonBatchMapper.getCountAnalysis(paMap);
+
+        // 只取第一个
+        BokStatDetPosiiton bokSummaryTable = null;
+        if (list != null && !list.isEmpty()) {
+            bokSummaryTable = list.get(0);
+        }
+
+        return bokSummaryTable;
+    }
+
+    /**
+     * 凭证最新账务查询
+     *
+     * @param booksetId 账套代码
+     * @param bookDate 入账日
+     * @param bokDetailId 账务明细代码
+     * @param baseSubjectNature 基础科目性质
+     * @param tableId 场景代码
+     * @param tradeId 交易编号
+     * @param happenDate 发生日
+     * @param onwayDate 在途日期
+     * @param beginHappenCycDate 发生周期开始日
+     * @param endHappenCycDate 发生周期结束日
+     * @param isadd 数量增加
+     * @return List<BookLatestInfoDto>
+     * @see
+     * @since 1.0
+     */
+    public List<BokBookdetailCurrent> getBookLatestInfo(String booksetId, Date bookDate,
+                                                        String bokDetailId,
+                                                        List<String> baseSubjectNatureList,
+                                                        String tableId, String tradeId,
+                                                        Date happenDate, Date onwayDate,
+                                                        Date beginHappenCycDate,
+                                                        Date endHappenCycDate,
+                                                        String isadd) {
+
+        // 设置sql查询参数map
+        Map<String, Object> paMap = new HashMap<String, Object>();
+        paMap.put("booksetId", booksetId);
+        paMap.put("bookDate", bookDate);
+        paMap.put("bokDetailId", bokDetailId);
+        paMap.put("baseSubjectNatureList", baseSubjectNatureList);
+        paMap.put("tableId", tableId);
+        paMap.put("tradeId", tradeId);
+        paMap.put("happenDate", happenDate);
+        paMap.put("onwayDate", onwayDate);
+        paMap.put("offsetFlag", DictCodeList.冲正标识_正常交易.getValue());
+        paMap.put("beginHappenCycDate", beginHappenCycDate);
+        paMap.put("endHappenCycDate", endHappenCycDate);
+        return accountingCommonBatchMapper.getBookLatestInfo(paMap);
+    }
+
+
+
+    /**
+     * 通过减值流水计算ECL损失比例
+     *
+     * @param trdAssetLoss 资产减值流水列表
+     * @param targetFinProduct 标的信息
+     * @param happenDate 发生日
+     * @param bookDate 入账日
+     * @param booksetId 账套代码
+     * @param bokDetailId 账务明细代码
+     * @param subjectNatureList 科目性质列表
+     * @return
+     */
+    public BigDecimal calcEclByTrdLoss(List<TrdAssetLoss> trdAssetLoss, TargetFinProduct targetFinProduct,
+                                       String booksetId, String bokDetailId, Date happenDate,
+                                       Date bookDate, List<String> subjectNatureList) {
+        BigDecimal ecl = BigDecimal.ZERO;
+        if(StringUtil.isEmptyList(trdAssetLoss)){
+            return ecl;
+        }
+        if(targetFinProduct == null){
+            return ecl;
+        }
+        Map<BigDecimal,List<TrdAssetLoss>> map= trdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getPeroid));
+        List<TrdAssetLoss> eclTrdAssetLoss  = null;
+        if(map.size()>1){
+            String exeDate = DictCodeList.含权债摊销日_到期日.getValue();
+            if(targetFinProduct!=null){
+                exeDate = finProductCommonBatchService.getExeDate(targetFinProduct, booksetId).getExeDate();
+                if(StringUtil.isEmpty(exeDate) ){
+                    exeDate  = DictCodeList.含权债摊销日_到期日.getValue();
+                }
+            }
+            BigDecimal peroid = peroidDecide(map.keySet(),exeDate);
+            eclTrdAssetLoss = map.get(peroid);
+        }else{
+            eclTrdAssetLoss = trdAssetLoss;
+        }
+        if(StringUtil.isEmptyList(eclTrdAssetLoss)){
+            return ecl;
+        }
+        if(eclTrdAssetLoss.size()>1){
+            List<Date> dates = getBuyDate(happenDate, bookDate, booksetId, bokDetailId,subjectNatureList,targetFinProduct.getMdate());
+            return eclCalByDate(dates,eclTrdAssetLoss);
+        }else{
+            return eclTrdAssetLoss.get(0).getEclVaule();
+        }
+    }
+
+    /**
+     * 代偿期判断
+     * @param peroids 代偿期列表
+     * @param exeDate 含权债摊销参数
+     * @return
+     */
+    public BigDecimal peroidDecide(Set<BigDecimal> peroids, String exeDate){
+        BigDecimal peroid = null;
+        if (DictCodeList.含权债摊销日_到期日.getValue().equals(exeDate)) {
+            for(BigDecimal cuerentperoid:peroids){
+                if(peroid == null){
+                    peroid = cuerentperoid;
+                }else if(cuerentperoid!=null && cuerentperoid.compareTo(peroid)>0){
+                    peroid = cuerentperoid;
+                }
+            }
+        }else{
+            for(BigDecimal cuerentperoid:peroids){
+                if(peroid == null){
+                    peroid = cuerentperoid;
+                }else if(cuerentperoid!=null && cuerentperoid.compareTo(peroid)<0){
+                    peroid = cuerentperoid;
+                }
+            }
+        }
+        return peroid;
+    }
+
+    /**
+     * 指定账务明细查询买入交易
+     * @param happenDate 发生日
+     * @param bookDate 入账日
+     * @param booksetId 账套代码
+     * @param bokDetailId 账务明细代码
+     * @param subjectNatureList 科目性质列表
+     * @return
+     */
+    public List<Date> getBuyDate(Date happenDate, Date bookDate,String booksetId,String bokDetailId,List<String> subjectNatureList,Date mdate){
+        Date beginDate =null;
+        List<Date> dateList = new ArrayList<Date>();
+        Date endDate = happenDate;
+        if(mdate!=null && mdate.compareTo(endDate)<=0){
+            endDate = DateUtil.addDay(mdate, -1);
+        }
+        BokStatDetPosiiton bokStatDetPosiiton  = this.getCountAnalysis(
+            null,endDate,bookDate,booksetId,bokDetailId,null,null,DictCodeList.是否_是.getValue());
+        if(bokStatDetPosiiton!=null){
+            beginDate = bokStatDetPosiiton.getHappenDate();
+        }
+        List<BokBookdetailCurrent> lists =  this.getBookLatestInfo(
+            booksetId,bookDate,bokDetailId,subjectNatureList,null,null,null,null,beginDate,happenDate,DictCodeList.是否_是.getValue());
+        if(StringUtil.isEmptyList(lists)){
+            return dateList;
+        }
+        for(BokBookdetailCurrent dto:lists){
+            dateList.add(dto.getHappenDate());
+        }
+        return dateList;
+    }
+
+    /**
+     * 根据日期加权处理
+     * @param dateList  买入日列表
+     * @param trdAssetLossList 区分代偿期列表
+     * @return
+     */
+    public  BigDecimal eclCalByDate(List<Date> dateList,List<TrdAssetLoss> trdAssetLossList){
+        BigDecimal ecl = BigDecimal.ZERO;
+        int num =0;
+        if(StringUtil.isEmptyList(trdAssetLossList)){
+            return ecl;
+        }
+        if(StringUtil.isEmptyList(dateList)){
+            return ecl;
+        }
+        for(TrdAssetLoss loss :trdAssetLossList){
+            if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(loss.getStage())){
+                return loss.getEclVaule();
+            }else{
+                if(loss.getStrDate() == null || loss.getEndDate() == null || loss.getEclVaule() ==null ){
+                    continue;
+                }
+                for(Date date :dateList){
+                    if(date == null){
+                        continue;
+                    }
+                    if(loss.getStrDate().compareTo(date)<=0 && loss.getEndDate().compareTo(date)>=0 ){
+                        num++;
+                        ecl = ArithmeticUtil.doAdd(ecl,loss.getEclVaule());
+                        break;
+                    }
+                }
+            }
+        }
+        if(num>0){
+            ecl = ArithmeticUtil.divide(ecl, num, DEFALUT_SCALE);
+        }
+        return ecl;
     }
 }

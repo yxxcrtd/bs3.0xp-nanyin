@@ -52,7 +52,18 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow{
      */
     private String elementId;
 
-   
+    /**
+     * 金融产品简称
+     */
+    private String finprodAbbr;
+
+    public String getFinprodAbbr() {
+        return finprodAbbr;
+    }
+
+    public void setFinprodAbbr(String finprodAbbr) {
+        this.finprodAbbr = finprodAbbr;
+    }
 
     /**
      * 获取 selectedItem

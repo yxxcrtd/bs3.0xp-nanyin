@@ -8,6 +8,7 @@ import java.util.List;
 
 public class OrderAndEntrustQryResult implements Serializable {
 
+    private static final long serialVersionUID = -1701098381926217047L;
     private List<Order> orderList;
 
     private List<Entrust> entrustList;

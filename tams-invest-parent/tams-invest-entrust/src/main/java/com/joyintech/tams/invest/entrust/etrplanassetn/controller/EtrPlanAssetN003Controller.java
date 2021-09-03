@@ -104,7 +104,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
     /**
      * 保存按钮点击时的check
      *
-     * @param dto dto
+     * @param allDto dto
      * @param result BindingResult
      * @return check结果
      * @see
@@ -112,9 +112,10 @@ public class EtrPlanAssetN003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody  List<EtrPlanAssetNDto> dtoList, BindingResult result) {
+    public AjaxResult check(@RequestBody EtrPlanAssetNDto allDto, BindingResult result) {
         List<ValidMessage> messages = new ArrayList<>();
         StringBuffer confirmMessage = new StringBuffer();
+        List<EtrPlanAssetNDto> dtoList = allDto.getSelectedItem();
         for (int i = 0; i < dtoList.size(); i++ ) {
             EtrPlanAssetNDto dto = dtoList.get(i);
             ValidationUtil.ValidResult itemResult = ValidationUtil.validateBean(dto,
@@ -177,7 +178,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
     /**
      * 导入excel数据时check
      *
-     * @param map dto
+     * @param fileName fileName
      * @return check结果
      * @see
      * @since 1.0
@@ -191,7 +192,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
     /**
      * 保存/提交
      * 
-     * @param dto dto
+     * @param allDto allDto
      * @param br br
      * @return 结果
      * @throws Exception 异常
@@ -201,7 +202,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
     public AjaxResult save(@RequestBody EtrPlanAssetNDto allDto, BindingResult br)
         throws Exception {
         List<EtrPlanAssetNDto> dtoList = allDto.getSelectedItem();
-        AjaxResult ajaxResult = this.check(dtoList, br);
+        AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
         }
@@ -232,7 +233,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
         // add by zhangrui1 批量提交设置风控指标明细 end
         ProcessParameter<EtrPlanAssetNDto> processParameter = new ProcessParameter<EtrPlanAssetNDto>();
         WorkFlowParameter<EtrPlanAssetNDto> params = new WorkFlowParameter<EtrPlanAssetNDto>();
-        params.setPageId(this.getPageId());
+        params.setPageId("EtrPlanAssetN002");
         params.setElementId(dtoList.get(0).getElementId());
         params.setBusinessCode(EtrPlanAssetNDto::getEntrustId);
         params.setBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_投资委托.getValue());

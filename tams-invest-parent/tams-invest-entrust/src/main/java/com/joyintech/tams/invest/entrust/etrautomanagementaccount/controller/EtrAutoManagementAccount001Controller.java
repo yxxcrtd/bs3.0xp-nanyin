@@ -73,7 +73,9 @@ public class EtrAutoManagementAccount001Controller extends BaseController {
             throws Exception {
         Map<String, Object> map = RequestUtil.getPageParam();
         map.put("planAssetSecType", DictCodeList.计划类资产二级分类_自主管理.getValue());
-        Page<SelectOptionDto> temp = etrAutoManagementAccountService.getSelectPortfolioId(RequestUtil.getPageParam());
+        //ZGZGST-1948: 修改查询自主专户代码传参 fuyongsheng 20210902 edit start
+        Page<SelectOptionDto> temp = etrAutoManagementAccountService.getSelectPortfolioId(map);
+        //ZGZGST-1948: 修改查询自主专户代码传参 fuyongsheng 20210902 edit end
         return temp;
     }
 
