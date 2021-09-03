@@ -747,7 +747,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 
     @DTXTransaction
     @Transactional(rollbackFor = {Exception.class})
-    public ReturnTodoDto getNextWorkFlowInfo(String workFlowId) throws Exception {
+    public ReturnTodoDto getNextWorkFlowInfo(String workFlowId) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //查询下一节点信息
         Map<String, Object> variables = null;
         Map<String, Object> param = new HashMap<>();
@@ -761,7 +761,12 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
 //	        if (WorkflowContext.getWorkFlowService().isConditionModule(processKey) && ActivitiType.排他网关.getValue().equals(processService.getNextActType(workFlowInfoDto.getProcessInstanceId()))) {
 //	            variables = WorkflowContext.getBusinessVariables(flowEntity, workFlowInfoDto.getCurTaskId());
 //	        }
-	        nextTaskId = processService.getNextTaskDefinitionId(workFlowInfoDto.getCurTaskId(), variables);
+            try {
+                nextTaskId = processService.getNextTaskDefinitionId(workFlowInfoDto.getCurTaskId(), variables);
+            }
+            catch (Exception e) {
+                throw new WorkFlowException(e);
+            }
 	        
 	        //ajax请求下一核审信息
 	        //AjaxResult result = restTemplate.postForObject(ServiceApplication.PINGAN_SERVICE_NAME + "/workflow/nextTask",param,AjaxResult.class);
@@ -866,7 +871,7 @@ public class MobileApprovalService extends CommonExportService<PreInvestApproveI
     }
 
     //根据工作流代码获取当前流程信息
-    private WorkFlowInfoDto getCurrentInfo(String workFlowId,Map<String, Object> param) throws Exception {
+    private WorkFlowInfoDto getCurrentInfo(String workFlowId,Map<String, Object> param) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         WorkFlowInfoDto workFlowInfoDto = null;
         //根据工作流代码查询当前处理人信息
         String curUser = mobileApprovalMapper.queryCurUser(workFlowId);
