@@ -35,7 +35,7 @@
 							 (SELECT * from RISK_WEIGHT order by ASSET_TYPE_ONE,ASSET_TYPE_TWO) a,
                                  (select @rownum:=0,@ASSET_TYPE_ONE:=null,@ASSET_TYPE_TWO:=null,@rank:=0)b
                              WHERE
-                                 #{tradedate} >= EFF_DATE )
+                                 #{tradedate} >= a.EFF_DATE )
                      WHERE
                          rowno=1 ) T1
   			INNER JOIN FIN_PRODUCT_TYPE T2

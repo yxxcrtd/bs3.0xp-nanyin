@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstopicsparamante.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,14 +70,12 @@ public class MstOpicsParaMante001Controller extends BaseController {
     /**
      * 查询按钮的查询方法 
      * @return Page
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("selectOpicsParaManteInfo")
-    public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo()
-        throws Exception {
+    public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo(){
         Page<MstOpicsParaManteDto> page = mstOpicsParaManteService.selectOpicsParaManteInfo(
             RequestUtil.getPageParam());
         return page;
@@ -102,15 +101,13 @@ public class MstOpicsParaMante001Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果集
      * @return AjaxResult
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstOpicsParaManteDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstOpicsParaManteDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -138,11 +135,9 @@ public class MstOpicsParaMante001Controller extends BaseController {
      * 导出
      * 
      * @return ResponseEntity
-     * @throws Exception 异常
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstOpicsParaManteService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

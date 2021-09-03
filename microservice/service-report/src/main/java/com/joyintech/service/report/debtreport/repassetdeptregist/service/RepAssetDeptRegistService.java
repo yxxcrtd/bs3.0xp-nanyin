@@ -54,7 +54,7 @@ public class RepAssetDeptRegistService extends BaseService<RepAssetDeptRegistDto
      * @since 1.0
      */
     public Page<RepAssetDeptRegistDto> selectForPage(int page, int length,
-                                                            Map<String, Object> pageParam) throws Exception {
+                                                            Map<String, Object> pageParam) {
         Page<RepAssetDeptRegistDto> resultPage = null;
         String tableNum = "";
         String assetType = (String)pageParam.get("assetType");

@@ -65,7 +65,8 @@
 			,{field:'remark', title: 'TrdOutRightRepoTrade001.table.remark', width:100}
             ,{field:'ps', visible:false}
             /*,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}*/
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     
     

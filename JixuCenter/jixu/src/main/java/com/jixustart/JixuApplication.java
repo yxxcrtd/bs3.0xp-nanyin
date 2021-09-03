@@ -14,7 +14,7 @@ import java.util.Locale;
 @ComponentScan({"com.joyintech.jixu"})
 public class JixuApplication extends SpringBootServletInitializer{
 	
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args){
 		Locale local = new Locale("zh", "CN");
 		Locale.setDefault(local);
 		SpringApplication.run(JixuApplication.class, args);

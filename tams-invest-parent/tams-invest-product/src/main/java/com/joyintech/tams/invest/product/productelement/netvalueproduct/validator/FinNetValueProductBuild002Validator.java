@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +21,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -28,21 +28,13 @@ import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
-//import com.joyintech.tams.common.base.dao.PrdSaleParamMapper;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
 import com.joyintech.tams.common.base.entity.FinOpenPlan;
-//import com.joyintech.tams.common.base.entity.PrdSaleParam;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
-//import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.component.business.prod.dto.BussBenchMarkInfoDto;
-import com.joyintech.tams.component.business.prod.dto.BussBenchMarkLayeredInfoDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductFeeInfoDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductFloatFeeDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductInvestPeriodDto;
-import com.joyintech.tams.component.business.prod.dto.BussFinProductLayeredInfoDto;
+import com.joyintech.tams.component.business.prod.dto.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -52,6 +44,7 @@ import com.joyintech.tams.invest.product.productelement.netvalueproduct.dto.FinN
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild001Service;
 import com.joyintech.tams.invest.product.productelement.netvalueproduct.service.FinNetValueProductBuild002Service;
 import com.joyintech.tams.invest.product.productelement.scheduling.service.FinProductScheduling002Service;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 
@@ -91,7 +84,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * {@linkplain}
@@ -396,6 +389,11 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         this.getMessage("FinProductBuild002.continueFlag"))));
             }
         }
+
+        if (!StringUtil.isNotEmpty(entity.getLiquidationDate())) {
+            validList.add(new ValidMessage("liquidationDate", this.getMessage("BUSS_COM_E_0038",
+                    this.getMessage("FinProductBuild002.liquidationDate"))));
+        }
         
         // 付费计划业务组件
         if (entity.getBussFinProductFeeInfoDto() != null && !StringUtil.isEmptyList(entity.getBussFinProductFeeInfoDto().getBussFinProductFeeInfoDtoList()))  {
@@ -429,6 +427,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         this.getMessage("BUSS_COM_E_0038",
                             this.getMessage("BussFinProductFeeInfo.provisionFirstDay"))));
                 }
+
                  //计提结束日
                 if(!StringUtil.isNotEmpty(bussFinProductFeeInfoDto.geteAccrDate())){
                     //ZGBUG-175计提结束日未输入时提示信息建议加上产品费用模块 guyunfei  20200310 start
@@ -445,7 +444,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         //计提结束日应该大于产品起息日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0106")));
                     }
-                    if(DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.geteAccrDate()) <= 0){
+                    if(StringUtil.isNotEmpty(entity.getLiquidationDate()) && DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.geteAccrDate()) <= 0){
                         //计提结束日应该小于产品清盘日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0107")));
                     }
@@ -460,7 +459,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                         //首次计费结束日应该大于产品起息日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0109")));
                     }
-                    if(DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.getFirstCalEndDate()) < 0){
+                    if(StringUtil.isNotEmpty(entity.getLiquidationDate()) && DateUtil.compareDate(entity.getLiquidationDate(), bussFinProductFeeInfoDto.getFirstCalEndDate()) < 0){
                         //首次计费结束日应该小于产品清盘日
                         validList.add(new ValidMessage("", getMessage("FIN_PROD_E_0110")));
     
@@ -588,6 +587,26 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
                 }
             }
           }//add by yujiaping 2020-11-18 TISHKBS-734“分档”产品，浮动管理费增加计提结束日不能大于产品到期日的校验 end
+            boolean isCycleInv=false;
+            HashMap<String, String> investmentCycles=new HashMap<String, String>();
+            if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
+                    && (StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode()))
+                    && StringUtil.equals(DictCodeListExt2.期限类型_多固定期限.getValue(), entity.getPeriod())
+            ){
+              for(BussFinProductFloatFeeDto bussFinProductFloatFeeDto :entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList()){
+                  if(StringUtil.isNotEmpty(bussFinProductFloatFeeDto.getFeeId())
+                  ){
+                      if(investmentCycles.containsKey(bussFinProductFloatFeeDto.getInvestmentCycle())){
+                          isCycleInv=true;
+                          break;
+                      }
+                      investmentCycles.put(bussFinProductFloatFeeDto.getInvestmentCycle(),bussFinProductFloatFeeDto.getFeeId());
+                  }
+              }
+          }
+          if(isCycleInv){
+              validList.add(new ValidMessage("净值型周期型多固定期限产品同一期限不允许设置多条浮动管理费规则。"));
+          }
             
             
             if(!StringUtil.isEmptyList(entity.getBussFinProductFloatFeeDto().getBussFinProductFloatFeeInfoDtoList())
@@ -1428,6 +1447,9 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	if(!StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getToffStart())) {
     		validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart", getMessage("BUSS_COM_E_0038",
     				getMessage("BussFinProductSaleParam.toffStart"))));
+    	}else if(entity.getBussFinProductSaleParamDto().getToffStart().compareTo(BigDecimal.ZERO)==0){
+            validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart",
+                    getMessage("BUSS_COM_E_0036", getMessage("BussFinProductSaleParam.toffStart"),"0")));
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
     	if (StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getInvestorType()) &&
@@ -1438,7 +1460,7 @@ public class FinNetValueProductBuild002Validator implements BeanValidator {
     	}
     	/**20200319 taoran add 同业机构报错后输入框描红*/
 
-         validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null, ValidMessage.class);
+         validList = chbDataCheckService.chbCheckCommon(validList, entity, "FinNetValueProductBuild002", null);
 
          //同一数据行：开放开始日小于等于开放结束日，开放结束日小于等于开放确认日
         if (entity.getBussFinProductOpenPlanDto() != null) {

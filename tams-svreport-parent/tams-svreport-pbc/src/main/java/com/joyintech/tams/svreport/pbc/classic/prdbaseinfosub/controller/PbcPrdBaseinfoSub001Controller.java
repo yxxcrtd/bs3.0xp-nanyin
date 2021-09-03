@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +70,18 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
     	super.setSelectOptionToModel(model,	DictCode.报送数据状态,DictCode.报送状态,DictCode.人行报送反馈状态,DictCode.人行产品类型,DictCode.人行产品运作模式);
         return super.init(model);
     }
+
+
+	/**
+	 * 生成产品代码列表
+	 * @return 产品代码下拉框初始值
+	 */
+	@ResponseBody
+	@RequestMapping("/getPbcProdId")
+	public List<SelectOptionDto> getPbcProdId() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		return pbcPrdBaseinfoSubMService.getPbcProdId(param);
+	}
     
     /**
      * 产品基本信息信息查询

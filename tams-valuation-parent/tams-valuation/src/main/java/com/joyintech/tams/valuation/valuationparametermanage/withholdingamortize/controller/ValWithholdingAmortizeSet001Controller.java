@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.valuationparametermanage.withholdingamortize.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ValWithholdingAmortizeSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-        throws Exception {
+         {
         return valWithholdingAmortizeSet001Service.getBooksetIdNew(RequestUtil.getPageParam());
     }
 
@@ -108,7 +109,7 @@ public class ValWithholdingAmortizeSet001Controller extends BaseController {
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) ValWithholdingAmortizeSet001Dto dto,
                             BindingResult bindingResult)
-        throws Exception {
+         {
         String msg = StringUtil.EMPTY;
         String operateType = dto.getOperateType();
         if (!bindingResult.hasErrors()) {// 基础验证通过
@@ -196,7 +197,7 @@ public class ValWithholdingAmortizeSet001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws IOException {
         String datas = this.getParam("datas");
         List<ValWithholdingAmortizeSet001Dto> listdto;
 

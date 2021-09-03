@@ -26,7 +26,7 @@ public class ValSztInterfValDataService extends CommonExportService<ValSztInterf
 	 * @see
 	 * @since 1.0
 	 */
-	public Page<ValSztInterfValDataDto> findPage(int page, int length, Map<String, Object> params) throws Exception{
+	public Page<ValSztInterfValDataDto> findPage(int page, int length, Map<String, Object> params) {
 	    return super.queryForPage(page, length, () -> mapper.queryPageList(params));
     }
 

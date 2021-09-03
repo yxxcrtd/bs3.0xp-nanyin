@@ -5,6 +5,7 @@ package com.joyintech.tams.invest.basicdata.exchangerateinfo.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -72,8 +73,7 @@ public class MstExchangeQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstExchangeQuotationInfoDto> selectAll()
-        throws Exception {
+    public Page<MstExchangeQuotationInfoDto> selectAll(){
         Page<MstExchangeQuotationInfoDto> page = mstExchangeQuotationInfoService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -101,15 +101,14 @@ public class MstExchangeQuotationInfo001Controller extends BaseController {
      * @param dto 删除数据
      * @param br 报错信息
      * @return 删除结果
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstExchangeQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -137,13 +136,11 @@ public class MstExchangeQuotationInfo001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
 //        List<MstExchangeQuotationInfoDto> dtoList = mstExchangeQuotationInfoService.selectAllList(
 //            RequestUtil.getParameters(getRequest()));
 //        File outFile = mstExchangeQuotationInfoService.makeFile(

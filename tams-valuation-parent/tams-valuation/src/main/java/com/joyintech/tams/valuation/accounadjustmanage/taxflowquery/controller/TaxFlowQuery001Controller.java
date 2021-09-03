@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.taxflowquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -78,7 +79,7 @@ public class TaxFlowQuery001Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<TaxFlowQuery001Dto> findPage() throws Exception {
+	public Page<TaxFlowQuery001Dto> findPage() throws ParseException {
 		  Map<String, Object> params= this.getRequestMap();
 //		  TaxFlowQuery001Dto dto = (TaxFlowQuery001Dto)JsonUtils.map2entity(params, TaxFlowQuery001Dto.class);	     
 		return  taxFlowQuery001Service.selectForPage(params);
@@ -109,10 +110,17 @@ public class TaxFlowQuery001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException, ParseException {
 		String datas = this.getParam("datas");
 		Map<String, Object> paraMap = this.getRequestMap();
-		TaxFlowQuery001Dto dto = (TaxFlowQuery001Dto)JsonUtils.map2entity(paraMap, TaxFlowQuery001Dto.class);
+		TaxFlowQuery001Dto dto = null;
+		try {
+			dto = (TaxFlowQuery001Dto) JsonUtils.map2entity(paraMap, TaxFlowQuery001Dto.class);
+		} catch (Exception e) {
+//			e.printStackTrace();
+			getLogger().error(e.getMessage());
+			throw new ParseException(e.getMessage(),0);
+		}
 		List<TaxFlowQuery001Dto> listdto;
 		if (datas == null) {
 			listdto = (List<TaxFlowQuery001Dto>) taxFlowQuery001Service.findPageout(dto);

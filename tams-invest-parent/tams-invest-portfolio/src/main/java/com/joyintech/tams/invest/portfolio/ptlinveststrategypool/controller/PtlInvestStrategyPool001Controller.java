@@ -61,12 +61,10 @@ public class PtlInvestStrategyPool001Controller extends BaseController {
      * 分页查询
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlInvestStrategyPool001Dto> findPage()
-        throws Exception {
+    public Page<PtlInvestStrategyPool001Dto> findPage(){
         return ptlInvestStrategyPool001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -91,14 +89,12 @@ public class PtlInvestStrategyPool001Controller extends BaseController {
      * @param dto MstMarketInstitutionsDto
      * @param br BindingResult
      * @return AjaxResult
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody PtlInvestStrategyPool001Dto dto)
-        throws Exception {
+    public AjaxResult delete(@RequestBody PtlInvestStrategyPool001Dto dto){
         String msg = "删除失败";
         int num = ptlInvestStrategyPool001Service.delete(dto);
         if (num > 0) {
@@ -111,13 +107,11 @@ public class PtlInvestStrategyPool001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<PtlInvestStrategyPool001Dto> listdto = ptlInvestStrategyPool001Service.selectForExport(
             paraMap);

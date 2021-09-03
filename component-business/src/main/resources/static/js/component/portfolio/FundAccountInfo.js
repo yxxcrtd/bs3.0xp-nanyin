@@ -5,6 +5,7 @@
       var table = $("#fundAccountTable").joyintable({
         data:funDto==null?[]:funDto,
         searchOnInit:true,
+        page: false,
         height:'225px',
         cols:[
               {field:'acctType', title: 'FundAccountInfo.acctType',sortable:false, edit:true, editOption:{type:'select',formatoption:true,result: ACCT_TYPE}}

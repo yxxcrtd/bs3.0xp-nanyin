@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -118,13 +119,12 @@ public class FinPayPlanAdjustment001Controller extends BaseController{
      * 根据产品代码和费用名称，联动带出产品对应费用的付费计划
      * <功能详细描述>
      * @return Page<FinPayPlanAdjustmentDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<FinPayPlanAdjustmentDto> selectForPage() throws Exception{
+    public List<FinPayPlanAdjustmentDto> selectForPage(){
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finPayPlanAdjustmentService.selectForPage(param);
     }
@@ -133,13 +133,11 @@ public class FinPayPlanAdjustment001Controller extends BaseController{
      * 文件导出 <功能详细描述>
      * 
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finPayPlanAdjustmentService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -166,13 +164,13 @@ public class FinPayPlanAdjustment001Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinPayPlanAdjustmentDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinPayPlanAdjustmentDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

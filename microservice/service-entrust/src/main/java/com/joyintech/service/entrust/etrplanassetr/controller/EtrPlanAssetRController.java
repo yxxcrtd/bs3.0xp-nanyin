@@ -62,7 +62,7 @@ public class EtrPlanAssetRController {
     public Page<EtrPlanAssetRDto> selectForPage(@RequestBody Map<String, Object> param,
                                                @PathVariable("page") int page,
                                                @PathVariable("length") int length)
-        throws Exception {
+    {
         return etrPlanAssetService.selectForPage(page, length, param);
     }
 
@@ -76,7 +76,7 @@ public class EtrPlanAssetRController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrPlanAssetService.getentrustId(map);
         return temp;
     }
@@ -91,7 +91,7 @@ public class EtrPlanAssetRController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrPlanAssetService.getfinprodId(finprodId);
         return temp;
     }
@@ -156,7 +156,7 @@ public class EtrPlanAssetRController {
     @PostMapping("getentrustIdForAdd/{page}/{length}")
     @ResponseBody
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = etrPlanAssetService.getfinprodIdForAdd(page,length,map);
         return temp;
     }

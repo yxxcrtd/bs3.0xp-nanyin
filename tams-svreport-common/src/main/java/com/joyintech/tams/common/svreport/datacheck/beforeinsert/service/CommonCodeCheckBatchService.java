@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -63,7 +64,7 @@ public class CommonCodeCheckBatchService {
      * @param  list 被检查的数据
      * @param  tableInfo  检查的表名
      */
-    public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo){
+    public void codeCheckCommonOnly(List<Map<String, String>> list, ChbCheckTableInfo tableInfo) {
 
         Set<String> prodRegistCodeList = new HashSet<>();
 
@@ -130,7 +131,7 @@ public class CommonCodeCheckBatchService {
 	 * @param  tableInfo  检查的表名
      * @param  fileName 导入的文件名
 	 */
-	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName){
+	public void codeCheckCommon(List<Map<String, String>> list, ChbCheckTableInfo tableInfo, String fileName) {
 		//错误信息集合
 		List<ChbInterfErrodataWithBLOBs> erroList=new ArrayList<ChbInterfErrodataWithBLOBs>();
         // 资产要素错误信息集合
@@ -232,7 +233,7 @@ public class CommonCodeCheckBatchService {
      * 底层资产持仓登记
      * @param dataMap
      */
-    private void checkBotAstPos(Map<String, String> dataMap, Map<String,String> ListMap){
+    private void checkBotAstPos(Map<String, String> dataMap, Map<String,String> ListMap) {
         String  errMsg = dataMap.getOrDefault("ERRMSG", "");
         // 发行机构代码
         String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
@@ -773,7 +774,7 @@ public class CommonCodeCheckBatchService {
      * 代码检查产品申报登记
      * @param dataMap
      */
-    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList){
+    private  void  checkPrdoIssue(Map<String, String> dataMap,Set<String> prodRegistCodeList) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         // 发行机构代码
         String issuePartyId=dataMap.get("ISSUE_PARTY_ID");
@@ -1412,7 +1413,7 @@ public class CommonCodeCheckBatchService {
      * @param dataMap
      * @param list
      */
-    public  void  checkProdEndSubTmp(Map<String, String> dataMap,Set<String> prodRegistCodeList){
+    public  void  checkProdEndSubTmp(Map<String, String> dataMap,Set<String> prodRegistCodeList) {
         String  errMsg=dataMap.getOrDefault("ERRMSG", "");
         //发行机构代码
         String   issuePartyId=dataMap.get("ISSUE_PARTY_ID");

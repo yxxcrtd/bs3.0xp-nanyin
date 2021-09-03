@@ -102,7 +102,7 @@ public class TrdCommandDispatcher003Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("addAutoTime")
-	public AjaxResult addAutoTime(@RequestBody TrdCommandDispatcher001Dto dto) throws Exception{
+	public AjaxResult addAutoTime(@RequestBody TrdCommandDispatcher001Dto dto) {
 //		trdCommandDispatcher001Service.addAutoTime(dto);
 	    //自动分发保存的check
 	    AjaxResult result=new AjaxResult();

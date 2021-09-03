@@ -49,7 +49,7 @@ public class AssetInterestCal {
      * @since 1.0
      */
     public static <T extends FinCashPlan> List<T> cal(FinCashPayRule is, AssetCommonInfoDto scai, List<String> holidayList,
-                                                         boolean isFull, Class<T> class1) {
+                                                         boolean isFull, Class<T> class1) throws IllegalAccessException, InstantiationException {
         // 付息频率转换
         String payCycle = is.getPayCycle();
         int cycle = 0;
@@ -113,7 +113,7 @@ public class AssetInterestCal {
      * @since 1.0
      */
     public static <T extends FinCashPlan> List<T> cal2(AssetCommonInfoDto scai, List<Date[]> dates, FinCashPayRule is, 
-                                                          List<String> holidayList, Class<T> class1) {
+                                                          List<String> holidayList, Class<T> class1) throws InstantiationException, IllegalAccessException {
         // 付息计划列表
         List<T> res = new ArrayList<T>();
         // 循环处理

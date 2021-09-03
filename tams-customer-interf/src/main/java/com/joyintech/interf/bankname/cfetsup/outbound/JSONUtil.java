@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -14,6 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class JSONUtil {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(JSONUtil.class);
+
 	/**
 	 * ObjectMapper
 	 */
@@ -30,11 +37,11 @@ public class JSONUtil {
 		try {
 			return om.readValue(json, c);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -48,11 +55,11 @@ public class JSONUtil {
 		try {
 			return om.writeValueAsString(o);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -70,11 +77,11 @@ public class JSONUtil {
 		try {
 			return om.readValue(json, javaType);
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

@@ -256,7 +256,7 @@ public class ReportHomeService{
     public List<String> selectMenulist(){
     	List<String> menulist1 = new ArrayList<String>();
 
-    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM));
+    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_FIRST_MENU_ID));
     	if(!CollectionUtils.isEmpty(menulist)){
     		for(String menu : menulist){
     			switch(menu){

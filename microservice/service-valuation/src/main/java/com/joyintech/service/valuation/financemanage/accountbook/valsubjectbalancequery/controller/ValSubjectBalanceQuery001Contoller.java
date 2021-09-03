@@ -63,14 +63,13 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValSubjectBalanceQuery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length) {
         return valSubjectBalanceQuery001Service.findPage(page, length, param);
     }
     /**
      * 所属账套下拉框获取
      *
      * @return 返回的数据
-     * @exception Exception
      *                异常
      * @since 1.0
      */

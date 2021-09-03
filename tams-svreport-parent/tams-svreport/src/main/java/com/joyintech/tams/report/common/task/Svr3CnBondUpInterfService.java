@@ -218,8 +218,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
 					this.getInterfInputStream(ftpType, url, StringUtil.toInt(port), username, password,
 					 salesRemotePath + currentDate, localPath, DictCodeListExt2.数据来源_销售系统.getValue());
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
 			}
             // // 读取销售系统
@@ -295,7 +294,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error(e.getMessage(),e);
             return;
         }
@@ -500,7 +499,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -525,7 +524,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
         else {
             monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_异常结束.getValue());
             //add by liubin start 当异常在解析时未捕获时，即handLeResultMsg为空，则处理给个默认值
-            if("".equals(monitorInfoDto.getFileHandleResultMsg()) || monitorInfoDto.getFileHandleResultMsg() == null){
+            if(monitorInfoDto.getFileHandleResultMsg() == null || "".equals(monitorInfoDto.getFileHandleResultMsg())){
             	 monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
             }
             //add by liubin end
@@ -561,7 +560,7 @@ public class Svr3CnBondUpInterfService extends InterfService {
 					}
 					info.append("\n");
 				} catch (Exception e) {
-//					e.printStackTrace();
+//					logger.error(e.getMessage(),e);
 		            logger.error(e.getMessage(),e);
 				}finally {
                     //关闭流
@@ -569,7 +568,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             in.close();
                         } catch (Exception e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -577,7 +575,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             bfinput.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -585,7 +582,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             inreader.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }
@@ -593,7 +589,6 @@ public class Svr3CnBondUpInterfService extends InterfService {
                         try {
                             reader.close();
                         } catch (IOException e) {
-//					e.printStackTrace();
                             logger.error(e.getMessage(),e);
                         }
                     }

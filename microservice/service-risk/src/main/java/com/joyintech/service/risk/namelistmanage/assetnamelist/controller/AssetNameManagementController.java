@@ -43,7 +43,7 @@ public class AssetNameManagementController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskAccessListDto> selectAll(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return assetNameManagementService.selectForPage(page, length, param);
     }
 
@@ -58,7 +58,7 @@ public class AssetNameManagementController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody RskAccessListDto dto) throws Exception {
+    public void insert(@RequestBody RskAccessListDto dto) {
         assetNameManagementService.insert(dto);
     }
 
@@ -72,7 +72,7 @@ public class AssetNameManagementController {
     @Transactional
     @DTXTransaction
     @PostMapping("doDelete")
-    public void doDelete(@RequestBody String workflowId) throws Exception{
+    public void doDelete(@RequestBody String workflowId) {
         // 1.删除各业务流程信息
         // 名单
         mapperDelegateService.deleteBySpecificKey("WFL_RSK_ACCESS_LIST", "WORKFLOW_ID",
@@ -95,7 +95,7 @@ public class AssetNameManagementController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody RskAccessListDto dto) throws Exception{
+    public void delete(@RequestBody RskAccessListDto dto) {
         assetNameManagementService.delete(dto);
     }
 
@@ -110,7 +110,7 @@ public class AssetNameManagementController {
     @Transactional
     @DTXTransaction
     @PostMapping("insertBussFlow")
-    public void insertBussFlow(@RequestBody RskAccessListDto dto) throws Exception {
+    public void insertBussFlow(@RequestBody RskAccessListDto dto) {
         assetNameManagementService.insertBussFlow(dto);
     }
 
@@ -121,7 +121,7 @@ public class AssetNameManagementController {
      * @throws Exception
      */
     @PostMapping("selectRskAccessList")
-    public RskAccessListDto selectRskAccessList(@RequestBody Map<String,Object> param)throws Exception{
+    public RskAccessListDto selectRskAccessList(@RequestBody Map<String,Object> param) {
         return assetNameManagementService.selectRskAccessList(param);
     }
     
@@ -136,7 +136,7 @@ public class AssetNameManagementController {
     @ResponseBody
     @RequestMapping("getRskEntityByName")
     public int getRskEntityByName(@RequestBody Map<String,Object> param)
-        throws Exception{
+     {
         return assetNameManagementService.getRskEntityByName(param);
     }
     
@@ -149,7 +149,7 @@ public class AssetNameManagementController {
     @ResponseBody
     @RequestMapping("getEntityList")
     public List<RskAccessListDetail> getEntityList(@RequestBody Map<String,Object> param)
-        throws Exception{
+    {
         return assetNameManagementService.getEntityList(param);
     }
 
@@ -162,7 +162,7 @@ public class AssetNameManagementController {
     @ResponseBody
     @RequestMapping("selectListId")
     public List<SelectOptionDto> selectListId(@RequestBody Map<String,Object> param)
-            throws Exception{
+    {
         return assetNameManagementService.selectListId(param);
     }
 

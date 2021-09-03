@@ -24,7 +24,7 @@ public class SdBotAstPosCBMainService extends AutoSendCBBaseService{
     @Autowired
     private SdBotAssetPosRegBatchService sdAssetPosRegBatchService;
     
-	public void sdBottomAstPositionRegData(Date currentTime)  throws Exception {
+	public void sdBottomAstPositionRegData(Date currentTime) {
 		sdAssetPosRegBatchService.sdBottomAstPositionRegData(currentTime);
 	}
 	

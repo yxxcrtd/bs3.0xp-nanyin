@@ -61,7 +61,7 @@ public class MstCalendarTypeController {
     @DTXTransaction
     @PostMapping("delete")
     public int delete(@RequestBody MstCalendarType001Dto dto)
-        throws Exception {
+    {
         return mstCalendarTypeService.delete(dto);
     }
 
@@ -76,7 +76,7 @@ public class MstCalendarTypeController {
     @DTXTransaction
     @PostMapping("insert")
     public int insert(@RequestBody MstCalendarType001Dto dto)
-        throws Exception {
+    {
         return mstCalendarTypeService.insert(dto);
     }
 
@@ -91,7 +91,7 @@ public class MstCalendarTypeController {
     @DTXTransaction
     @PostMapping("update")
     public int update(@RequestBody MstCalendarType001Dto dto)
-        throws Exception {
+    {
         return mstCalendarTypeService.update(dto);
     }
 
@@ -106,7 +106,7 @@ public class MstCalendarTypeController {
      */
     @PostMapping("/getCalendarNameList")
     public List<SuggestDto> getCalendarNameList(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = mstCalendarTypeService.getCalendarNameList(map);
         return temp;
     }
@@ -123,7 +123,7 @@ public class MstCalendarTypeController {
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<MstCalendarType001Dto> selectForPage(@RequestBody Map<String, Object> map, @PathVariable("page") int page,
                                                      @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCalendarTypeService.selectForPage(page, length, map);
     }
 
@@ -179,7 +179,7 @@ public class MstCalendarTypeController {
     @PostMapping("/selectCanlendarDetail/{page}/{length}")
     public Page<MstCalendarType001Dto> selectCanlendarDetail(@RequestBody Map<String, Object> map, @PathVariable("page") int page,
                                                              @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCalendarTypeService.selectCanlendarDetail(page, length, map);
     }
 

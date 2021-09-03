@@ -45,7 +45,7 @@ public class RepTradeRegistController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<RepTradeRegistDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repTradeRegistService.findPage(page, length, param);
     }
     

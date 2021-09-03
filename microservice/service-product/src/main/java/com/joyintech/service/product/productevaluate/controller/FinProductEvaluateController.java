@@ -47,7 +47,7 @@ public class FinProductEvaluateController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<FinproductEvaluateDto> selectForPage(@RequestBody Map<String,Object> params,
-           @PathVariable("page") int page, @PathVariable("length") int length)throws Exception{
+           @PathVariable("page") int page, @PathVariable("length") int length) {
         return finProductEvaluateService.selectForPage(page,length,params);
     }
 
@@ -71,7 +71,7 @@ public class FinProductEvaluateController {
      * @throws Exception
      */
     @RequestMapping("/selectForPage3")
-    public List<FinBokPositionPrdDto> selectForPage3(@RequestBody Map<String,Object> params)throws Exception{
+    public List<FinBokPositionPrdDto> selectForPage3(@RequestBody Map<String,Object> params) {
         return finProductEvaluateService.selectForPage3(params);
     }
 

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.jixu.adapter.service.parent.AfterCallClassesAbstract;
 import com.jixu.adapter.types.CallClassParamsDto;
-import com.jixu.common.util.ServiceApplication;
+import com.jixu.config.ServiceApplication;
 /**
  * 
  * @author wangqidong

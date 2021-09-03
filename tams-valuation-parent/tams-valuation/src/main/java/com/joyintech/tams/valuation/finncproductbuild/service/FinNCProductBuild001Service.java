@@ -47,7 +47,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<FinNCProductBuild001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<FinNCProductBuild001Dto> findPage(Map<String, Object> params) {
     	return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/FinNCProductBuild001/findPage",
                 params, FinNCProductBuild001Dto.class);
@@ -237,7 +237,7 @@ public class FinNCProductBuild001Service extends CommonExportService<FinNCProduc
      * @param paramCode
      * @return
      */
-    public List<FinNCProductBuild001Dto> deleteCheck(String finprodId) throws Exception {
+    public List<FinNCProductBuild001Dto> deleteCheck(String finprodId) {
   	return restTemplate.postForList(
               ServiceApplication.VALUATION_SERVICE_NAME + "/FinNCProductBuild001/deleteCheck",
               finprodId, FinNCProductBuild001Dto.class);

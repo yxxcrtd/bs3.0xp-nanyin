@@ -97,7 +97,7 @@
 					</div>
 				</div>
 				<!-- 业绩基准共同 -->
-				<div class="page-component" th:data-path="@{/component/prod/BussBenchMarkInfo/init}" data-params="{pageModel:pageModel, entityName: 'bussBenchMarkInfoDto',finprodId:PAGE_finprodId,workflowId:workflowId,profitType:'profitType',effDate:PAGE_effDate}"></div>
+				<div class="page-component" th:data-path="@{/component/prod/BussBenchMarkInfo/init}" th:data-params="|{pageModel:pageModel, entityName: 'bussBenchMarkInfoDto',finprodId:'${PAGE_finprodId ?: ''}',workflowId:workflowId,profitType:'profitType',effDate:'${PAGE_effDate ?: ''}'}|"></div>
 				<!-- 备注 -->
 				<div class="pro-module-wrap">
 					<div class="pro-module">
@@ -155,10 +155,9 @@
 	</div>
 	<div layout:fragment="script">
 		<script th:inline="javascript" type="text/javascript">
-		    var profitType = /*[[${profitType}]]*/;
+		    var profitType = /*[[${profitType}]]*/'';
 			var workflowId = /*[[${entity?.workflowId}]]*/'';
-			//var PAGE_finprodId = /*[[${(entity.prodStyle !=null && entity.prodStyle != '')?entity.prodStyle:entity.finprodId}]]*/'';
-			var PAGE_finprodId = /*[[${PAGE_finprodId}]]*/;
+			var PAGE_finprodId = /*[[${PAGE_finprodId}]]*/'';
 			var opType = /*[[${entity?.opType}]]*/'';
 			var PAGE_effDate = $("#effDate").val();
 			var PROD_STYLE = /*[[${entity?.prodStyle}]]*/'';

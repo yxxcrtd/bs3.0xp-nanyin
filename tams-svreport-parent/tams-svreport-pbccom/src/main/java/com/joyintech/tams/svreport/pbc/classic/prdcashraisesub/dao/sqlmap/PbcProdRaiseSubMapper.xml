@@ -1790,7 +1790,7 @@
 	    a.UPDATE_TIME updateTime,
 	    b.PROD_ID prodId,
 	    t2.PBC_CODE pbcCode,
-	    a.PBC_PROD_ID pbcProdIdShow
+        nvl(t2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
     from PBC_PROD_RAISING_SUB a 
     left join PBC_PRD_BASEINFO_SUB b
     on a.PBC_PROD_ID = b.PBC_PROD_ID 

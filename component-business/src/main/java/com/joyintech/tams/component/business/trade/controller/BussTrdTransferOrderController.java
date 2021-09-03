@@ -23,6 +23,8 @@ import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +39,10 @@ import java.util.List;
 @Controller
 @RequestMapping("/component/trade/BussTrdTransferOrder")
 public class BussTrdTransferOrderController extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BussTrdTransferOrderController.class);
 
     /**
      * 清算指令共通Service
@@ -116,7 +122,7 @@ public class BussTrdTransferOrderController extends BaseController {
                     model.addAttribute("entityList", list);
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             // 不改变原有逻辑的基础上，新增处理逻辑，展示多条指令用  add by renping 2019-07-10 end
@@ -227,6 +233,8 @@ public class BussTrdTransferOrderController extends BaseController {
         }else{
             if(StringUtils.equals(param.getRepPageId(),"PtlFundAllocation002")) {
                 notEmptyCheck(param.getDeal().getTradeAmt(), "BussTrdTransferOrder.transferAmt", messages);
+            }else if(StringUtils.equals(param.getRepPageId(),"FinNetProductDuration") && param.getDeal().getTradeAmt() ==null){
+                messages.add(new ValidMessage("此交易没有金额，不需生成指令！可直接提交交易"));
             }
             else {
                 notEmptyCheck(param.getDeal().getTradeAmt(), "BussTrdTransferOrder.tradeAmt", messages);
@@ -377,8 +385,7 @@ public class BussTrdTransferOrderController extends BaseController {
 
     @RequestMapping("select")
     @ResponseBody
-    public List<SelectOptionDto> select()
-        throws Exception {
+    public List<SelectOptionDto> select() throws IOException {
         List<SelectOptionDto> tempList = new ArrayList<>();
         // DVP资金调拨管理,直接使用画面上选择的收付款账户
         String selectValue = getParam("selectValue");

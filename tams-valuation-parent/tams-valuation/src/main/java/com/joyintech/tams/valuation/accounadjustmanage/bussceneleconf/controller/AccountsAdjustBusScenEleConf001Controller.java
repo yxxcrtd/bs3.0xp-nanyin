@@ -69,7 +69,7 @@ public class AccountsAdjustBusScenEleConf001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<AccountsAdjustBusScenEleConf001Dto> queryPage()
-        throws Exception {
+         {
         Page<AccountsAdjustBusScenEleConf001Dto> page = accountsAdjustBusScenEleConf001Service.findPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -85,7 +85,7 @@ public class AccountsAdjustBusScenEleConf001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(AccountsAdjustBusScenEleConf001Dto dto) 
-		throws Exception{
+		 {
     	String msg = "";
     	accountsAdjustBusScenEleConf001Service.deleteBokTableListInfo(dto.getTableId());
     	msg = "删除成功！";

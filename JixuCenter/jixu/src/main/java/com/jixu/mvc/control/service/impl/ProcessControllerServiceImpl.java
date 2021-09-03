@@ -254,8 +254,6 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 	
 	/**
 	 * @param exeDate	执行日期
-	 * @param initShares	初始化份额
-	 * @param initType		执行类型	0. 新基金上线	1.老基金迁移
 	 * @param newFundContent
 	 * @return
 	 */
@@ -591,7 +589,7 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 	/**
 	 * 创建科目余额表
 	 * @param container
-	 * @param portnum
+	 * @param portfolio
 	 * @param initDate
 	 * @param tbHM
 	 * @throws NewFundException
@@ -1010,6 +1008,9 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 					if(workbook != null){
 						workbook.close();
 					}
+					if (mpf.getInputStream() != null){
+						mpf.getInputStream().close();
+					}
 				}
 			}
 		}catch(Exception e){
@@ -1073,6 +1074,9 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 				} finally {
 					if(workbook != null){
 						workbook.close();
+					}
+					if (mpf.getInputStream() != null){
+						mpf.getInputStream().close();
 					}
 				}
 			}
@@ -1175,6 +1179,8 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 				}finally {
 					if(workbook != null){
 						workbook.close();
+					}if (mpf.getInputStream() != null){
+						mpf.getInputStream().close();
 					}
 				}
 			}
@@ -1188,7 +1194,8 @@ public class ProcessControllerServiceImpl implements ProcessControllerService{
 	}
 	
 	public String getXLSCellValue(Cell cell) {
-		String result = new String();
+//		String result = new String();
+		String result = "";
 		if(cell==null){
 			return "";
 		}

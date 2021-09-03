@@ -47,7 +47,7 @@ public class FxTraderManagerController001 extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getUser")
-    public List<SuggestDto> getUser() throws Exception {
+    public List<SuggestDto> getUser() {
         List<SuggestDto> temp = fxTraderManager001Service.getUser(RequestUtil.getPageParam());
         return temp;
     }

@@ -4,21 +4,21 @@
 	namespace="com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.feeinfo.dao.FeeInfoMapper">
 	<select id="queryFeeData"
 		resultType="com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.feeinfo.dto.FeeInfoDto">
-		select  SUBJECT_NO as subjectNo,  /*科目号*/
-		 To_char(BALANCE_DATE,'yyyy-mm-dd') as valDate, /*计提日期*/																																		
-		 ACCT_SUBJECT_ID as prodId,	  /*产品代码*/		
-		 BOK_BOOKSET.BOOKSET_ID AS booksetId,																											
-		 ACCT_MODE as prodType,  	/*产品类型*/																															
-	     O_AMT  as feeAmt	  /*当日累计应付费用*/																																		
-	     from BOK_BALANCE, BOK_BOOKSET																																			
+		select  BBA.SUBJECT_NO as subjectNo,  /*科目号*/
+		 To_char(BBA.BALANCE_DATE,'yyyy-mm-dd') as valDate, /*计提日期*/																																		
+		 BBO.ACCT_SUBJECT_ID as prodId,	  /*产品代码*/		
+		 BBO.BOOKSET_ID AS booksetId,																											
+		 BBO.ACCT_MODE as prodType,  	/*产品类型*/																															
+	     BBA.O_AMT  as feeAmt	  /*当日累计应付费用*/																																		
+	     from BOK_BALANCE BBA, BOK_BOOKSET BBO	 																																	
 	     where  
-		 BOK_BALANCE.BOOKSET_ID in 
+		 BBA.BOOKSET_ID in 
         <foreach item="item" index="index" collection="booksetList" open="("  close=")" separator=",">  
           			#{item,jdbcType=VARCHAR}
         </foreach> 																																			
-	     AND BOK_BALANCE.BOOKSET_ID = BOK_BOOKSET.BOOKSET_ID
-		 and BALANCE_DATE = #{exeDate,jdbcType=TIMESTAMP}																																	
-		 and  SUBJECT_NO IN ('22060101','22060201','22070101','22080101','22100101','22110101')
+	     AND BBA.BOOKSET_ID = BBO.BOOKSET_ID
+		 and BBA.BALANCE_DATE = #{exeDate,jdbcType=TIMESTAMP}																																	
+		 and BBA.SUBJECT_NO IN ('22060101','22060201','22070101','22080101','22100101','22110101')
 	</select>
 	
 	<select id="queryCashId"

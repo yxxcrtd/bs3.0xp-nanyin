@@ -718,7 +718,7 @@ public class CalcOccupyInfoService {
                 if (!StringUtil.isEmpty(instCode)) {
                     if (para != null && CommonUtil.isType(para.getParaDisplayType(),
                         BussinessDictCodeListRds.指标参数实现类型_固定值) &&
-                        instCode.toString().equals(para.getInstitutionCode())) {
+                        instCode.equals(para.getInstitutionCode())) {
                         String content = para.getContent();
                         BigDecimal value = new BigDecimal(content); 
                         map.put(key.replace(instCode,BussinessDictCodeListRds.指标参数实现类型_固定值.getValue()), value);

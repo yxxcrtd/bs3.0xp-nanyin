@@ -91,7 +91,7 @@ public class FinIntPayDateAdjustmentController {
      */
     @PostMapping("selectForPage")
     public List<FinIntPayDateAdjustmentDto> selectForPage(@RequestBody Map<String, Object> param)
-            throws Exception{
+    {
         return finIntPayDateAdjustmentService.selectForPage(param);
     }
     

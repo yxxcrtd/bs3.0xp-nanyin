@@ -64,7 +64,7 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
     /**
      * 导出
      * @return ResponseEntity<byte[]>
-     * @throws Exception
+     * @throws IOException
      */
 	public ResponseEntity<byte[]> export(Map<String, Object> selectParam) throws IOException {
 		String pageId = (String) selectParam.get("pageId");
@@ -186,6 +186,7 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
                                 List<?> contents, LongAdder current, long total, int sheetMaxRowCount)
         throws IOException {
         ReportCfgHandler handler = new ReportCfgHandler();
+        FileOutputStream fos = null;
         try{
             wb.close();
             wb = getWorkbook(reportConfig);
@@ -285,11 +286,15 @@ public class PtlAnalyzeAfterInvest003Service extends CommonExportService<PtlAnal
             if (!file.getParentFile().exists()) {
                 file.getParentFile().mkdirs();
             }
-            wb.write(new FileOutputStream(file));
+            fos = new FileOutputStream(file);
+            wb.write(fos);
             return file;
         }finally {
             if(wb != null){
                 wb.close();
+            }
+            if (fos != null){
+                fos.close();
             }
         }
     }

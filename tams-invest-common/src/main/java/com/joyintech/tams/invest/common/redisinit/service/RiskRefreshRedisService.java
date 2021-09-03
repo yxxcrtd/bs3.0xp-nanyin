@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common.redisinit.service;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.invest.common.redisinit.dto.IParaRds;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public interface RiskRefreshRedisService<T extends IParaRds> {
      * 获取参数待处理数据
      * @param var 传递参数
      */
-    public void refreshParamRedis(T var) throws Exception;
+    public void refreshParamRedis(T var);
 
     /**
      * 获取模块待处理数据

@@ -20,6 +20,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -157,8 +158,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrPlanAssetService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -172,8 +172,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrPlanAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -289,7 +288,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrPlanAssetRDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrPlanAssetRDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

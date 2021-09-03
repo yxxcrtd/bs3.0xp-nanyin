@@ -34,6 +34,8 @@ import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdbuyoutduration.dto.TrdRepoBuyoutDuration002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +54,7 @@ import java.util.Map;
  */
 @Service
 public class TrdRepoBuyoutDuration002Service extends BaseService<TrdRepoBuyoutDuration002Dto> implements BaseProcessService<TrdRepoBuyoutDuration002Dto> {
-
+    private static final Logger logger = LoggerFactory.getLogger(TrdRepoBuyoutDuration002Service.class);
     @Autowired
     private BaseTradeProductDealCommService baseTradeProductDealCommServiceImpl;
 
@@ -98,7 +100,8 @@ public class TrdRepoBuyoutDuration002Service extends BaseService<TrdRepoBuyoutDu
             entity.setOperateType(BussinessConstant.REVOKE);
             
             //根据工作流代码查询交易相关信息
-            System.out.println("tradeid-----------" + entity.getBusiCode());
+//            System.out.println("tradeid-----------" + entity.getBusiCode());
+            logger.info("tradeid-----------" + entity.getBusiCode());
             String tradeId = restTemplate.postForObject(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdRepoDuration/findCeTradeIdByTotleTradeId/" + entity.getBusiCode(), null,
                 String.class);

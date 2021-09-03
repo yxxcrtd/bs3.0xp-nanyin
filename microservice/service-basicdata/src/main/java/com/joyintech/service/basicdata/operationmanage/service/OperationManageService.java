@@ -37,7 +37,7 @@ public class OperationManageService extends BaseService<OperationManageDto>{
 	private OperationManageMapper operationManageMapper;
 	
 	public Page<OperationManageDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-	        throws Exception {
+	{
 			if(pageParam.get("index").equals("0")){
 				if (StringUtil.isNotEmpty((String)pageParam.get("startCdate"))) {
 					pageParam.put("startCdate", DateUtil.parse((String)pageParam.get("startCdate")));

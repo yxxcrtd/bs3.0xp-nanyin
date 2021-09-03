@@ -1,5 +1,8 @@
 package com.joyintech.tams.disclosure.busicommon.common.calculation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +24,10 @@ import java.util.Map;
  * @since 2018-12-28
  */
 public class PerformanceBenchmarkCa {
-
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PerformanceBenchmarkCa.class);
 
     /**
      * 阶段业绩比较基准List
@@ -77,21 +83,21 @@ public class PerformanceBenchmarkCa {
 				}
 				rmap.put(da, stMance);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			finally {
 				if(ps!=null){
 					try {
 						ps.close();
 					} catch (SQLException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				}
 				if(rs!=null){
 					try {
 						rs.close();
 					} catch (SQLException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				}
 			}
@@ -114,7 +120,7 @@ public class PerformanceBenchmarkCa {
      * @throws SQLException 
      * @returnMap<BigDecimal, List<BigDecimal>>
      */
-	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) throws Exception {
+	public static Map<String,Object> getClaCompareRule(Date startDate, Date endDate,String prodId, Connection conn) {
 		Map<String,Object> resultMap = new HashMap<>();
 		//定义：期末业绩比较基准 = 0；
 		BigDecimal  qmCompareValue=BigDecimal.ZERO;
@@ -256,21 +262,21 @@ public class PerformanceBenchmarkCa {
 				stMance =rs.getBigDecimal("stMance");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if(ps!=null){
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -309,21 +315,21 @@ public class PerformanceBenchmarkCa {
 				listDate.add(caDate);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if(ps!=null){
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -361,21 +367,21 @@ public class PerformanceBenchmarkCa {
 				maxDate = rs.getDate("VALUE_DATE");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if(ps!=null){
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if(rs!=null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

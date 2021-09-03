@@ -54,7 +54,7 @@ public class FundSecuritiesAccountService extends BaseService<FundSecuritiesAcco
      * @throws Exception 异常信息
      */
     public Page<FundSecuritiesAccountDto> selectForPage(int page, int length,Map<String, Object> param)
-        throws Exception {
+    {
         // 只查询基金账户数据
         return super.queryForPage(page, length, () -> fundSecuritiesAccountMapper.select(param));
     }

@@ -7,6 +7,8 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.trade.transfer.common.dto.TransferCommon001Dto;
 import com.joyintech.tams.invest.trade.transfer.common.dto.TransferInfoDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +24,11 @@ import java.util.Map;
 @Service
 public class TransferCommon001Service extends BaseService {
     /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TransferCommon001Service.class);
+
+    /**
      * 查询待转仓组合信息
      * @param pageParam 参数
      * @return list
@@ -35,7 +42,7 @@ public class TransferCommon001Service extends BaseService {
                 listInfoList = JsonUtils.json2List((String)pageParam.get("listInfoList"),TransferInfoDto.class);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         //减去画面已转仓交易金额
         if(StringUtil.isNotEmpty(listInfoList) && StringUtil.isNotEmpty(resultList)){

@@ -45,7 +45,7 @@ public class PbcCapAssetInfo001MService extends BaseService<PbcCapAssetInfo001Dt
      * @param param
      * @return
      */
-    public List<SelectOptionDto> queryInsideProdIdList(Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryInsideProdIdList(Map<String, Object> param) {
         return restTemplate.postForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/PbcCapAssetInfo/getAssetCodeList",
                 param, SelectOptionDto.class);
     }
@@ -56,7 +56,7 @@ public class PbcCapAssetInfo001MService extends BaseService<PbcCapAssetInfo001Dt
      * @param param
      * @return
      */
-    public List<SelectOptionDto> queryPobCasSeTidList(Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryPobCasSeTidList(Map<String, Object> param) {
         return restTemplate.postForList(SvrServiceApplication.COMMON_SERVICE_NAME + "/PbcCapAssetInfo/setPobCasSeTidList",
                 param, SelectOptionDto.class);
     }

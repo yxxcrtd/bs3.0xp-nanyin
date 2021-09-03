@@ -38,7 +38,7 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @see
      * @since 1.0
      */
-    public int insert(RskValStructureDto dto) throws Exception {
+    public int insert(RskValStructureDto dto)  {
         dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/insert",
@@ -52,7 +52,7 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @see
      * @since 1.0
      */
-    public int update(RskValStructureDto dto) throws Exception {
+    public int update(RskValStructureDto dto) {
     	String srcColIndex = "";
     	if(StringUtil.isNotEmpty(dto.getSrcColIndex())&&dto.getSrcColIndex().matches("^[\\d]+$")) {
     		srcColIndex = dto.getSrcColIndex();

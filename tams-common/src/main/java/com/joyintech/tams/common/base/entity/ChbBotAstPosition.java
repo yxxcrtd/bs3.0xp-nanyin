@@ -130,7 +130,16 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
      * 穿透后资产价值取值控制，01：市值(产品端期末余额等于份额*单位净值)，02：份额
      */
     private String monthReport;
-    
+
+    /**
+     * 资管计划是否只有现金 01：是  02：否
+     */
+    private String cashFlag;
+
+    /**
+     * 利息
+     */
+    private BigDecimal intAmt;
 
     /**
      * 发行机构代码
@@ -497,6 +506,22 @@ public class ChbBotAstPosition extends ChbBotAstPositionKey{
 	public void setMonthReport(String monthReport) {
 		this.monthReport = monthReport;
 	}
-    
-    
+    public String getCashFlag() {
+        return cashFlag;
+    }
+
+    public void setCashFlag(String cashFlag) {
+        this.cashFlag = cashFlag;
+    }
+
+    public BigDecimal getIntAmt() {
+        return intAmt;
+    }
+
+    public void setIntAmt(BigDecimal intAmt) {
+        this.intAmt = intAmt;
+    }
+    public String getPlanAssetIdAndSubjectCd() {
+        return this.getPlanAssetId() + this.getAssetCode();
+    }
 }

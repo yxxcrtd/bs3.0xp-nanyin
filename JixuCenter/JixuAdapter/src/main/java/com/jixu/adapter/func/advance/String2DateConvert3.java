@@ -1,5 +1,6 @@
 package com.jixu.adapter.func.advance;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class String2DateConvert3 extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws ParseException {
 		String newValue=genConvertFormula(inputValue, colcfgMap);
 		String[] results=newValue.split(",");
 		String date1=results[0];
@@ -62,7 +63,7 @@ public class String2DateConvert3 extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

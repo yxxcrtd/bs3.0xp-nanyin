@@ -35,7 +35,7 @@ public class AssetClassManagementController {
     public Page<AssetClassManagementDto> selectAll(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+	{
         Page<AssetClassManagementDto> pages = assetClassManagementService.selectForPage(page,
             length, param);
         return pages;
@@ -65,7 +65,7 @@ public class AssetClassManagementController {
 	    @Transactional
 	    @DTXTransaction
 	    @PostMapping("doCompeleteUpdate")
-	    public int update(@RequestBody AssetClassManagementDto dto) throws Exception {
+	    public int update(@RequestBody AssetClassManagementDto dto) {
 	        return assetClassManagementService.doupdate(dto);
 	    }
 	    /**

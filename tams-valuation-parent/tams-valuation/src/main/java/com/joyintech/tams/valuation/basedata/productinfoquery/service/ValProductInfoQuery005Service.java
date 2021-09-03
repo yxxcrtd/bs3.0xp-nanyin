@@ -40,7 +40,7 @@ public class ValProductInfoQuery005Service extends BaseService<ValProductInfoFee
      * @return
 	 * @throws Exception 
      */
-	public Page<ValProductInfoFeeDto> findFeeAdjust(Map<String, Object> pageParam) throws Exception {
+	public Page<ValProductInfoFeeDto> findFeeAdjust(Map<String, Object> pageParam) {
 //		return super.queryForPage(()->mapper.selectFeeAdjust(pageParam));
 		return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValProductInfoQuery005/findPage",

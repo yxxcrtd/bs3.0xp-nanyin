@@ -25,6 +25,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -98,6 +99,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -285,6 +287,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
+
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
 
@@ -704,7 +710,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
      */
     private void handleBussFlowData(TrdBondInvestTradeDto entity) {
         // 多组合交易时对附件进行处理
-        setDzhUploadFileList(entity);
+        //setDzhUploadFileList(entity);
 
         if (!StringUtil.equals("submit", entity.getOperateType())) {
             return;
@@ -1266,7 +1272,6 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 					
 				} catch (Exception e) {
 					logger.error("解析dto出错："+e);
-					e.printStackTrace();
 				}
         	}
         	else {
@@ -1291,12 +1296,12 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
     }
 
-    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws Exception{
+    public List<TrdBondInvestTradeDto> getDtoList(TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException {
     	List<TrdBondInvestTradeDto> dtoList = new ArrayList<>();
     	List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();
     	List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();
@@ -1335,6 +1340,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				else {
 					tempDto.setTotleTradeId(IDGenerator.generate());
 				}
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        tempDto.getTotleTradeId());
     			dtoList.add(tempDto);
     		}
     		
@@ -1405,7 +1415,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         			debtbaseinfo.setCreateDept(LoginUserUtil.getDeptCode());
         			debtbaseinfo.setUpdateUser(LoginUserUtil.getUserName());
         			//判断交易对手表中是否存在
-        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName().toString());
+        			int flag=trdFinProductDealTotalMapper.selectCounterName(debtbaseinfo.getCounterName());
         			if(flag == 0){
             			trdFinProductDealTotalMapper.insertDebtBaseInfo(debtbaseinfo);
         			}
@@ -2845,7 +2855,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getYield() != null) {
@@ -2927,7 +2937,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }
@@ -3348,7 +3358,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                             interfComponentService.sendMurexRequest(OrderCaller.BOND001, sendData);
                         }
                         catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -3432,7 +3442,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }
@@ -3521,6 +3531,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     }
 
     public BigDecimal getTongDaoCash(Map<String, Object> param) {
+        param.put("platDate",iPlatformDate.getSysDate());
         BigDecimal bigDecimal = restTemplate.postForObject(
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getTongDaoCash", param, BigDecimal.class);
         return bigDecimal;

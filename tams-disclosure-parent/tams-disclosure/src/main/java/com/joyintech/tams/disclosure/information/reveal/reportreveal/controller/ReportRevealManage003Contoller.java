@@ -59,7 +59,7 @@ public class ReportRevealManage003Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BokFileTransfer003Dto> findPage() throws Exception{
+    public Page<BokFileTransfer003Dto> findPage(){
 //        return valNetValueReveal003Service.findPage(RequestUtil.getPageParam());
         return null;
     }
@@ -81,8 +81,7 @@ public class ReportRevealManage003Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
-	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 	    AjaxResult res = new AjaxResult();
 		 int num = reportRevealManage003Service.updateRepRevealById(RequestUtil.getPageParam());
          if(num>0){
@@ -109,8 +108,7 @@ public class ReportRevealManage003Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo){
 		return null;
 	}
 	
@@ -128,8 +126,7 @@ public class ReportRevealManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request){
            return null;
     }
     
@@ -146,7 +143,6 @@ public class ReportRevealManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/deleteFile")
     @ResponseBody
-    public void deleteFile(HttpServletRequest request)
-            throws Exception { 
+    public void deleteFile(HttpServletRequest request){
     }
 }

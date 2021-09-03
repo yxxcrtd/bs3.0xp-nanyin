@@ -83,7 +83,7 @@ public class TrdOutRightRepoTradeService extends BaseService<TrdOutRightRepoTrad
      */
     public Page<TrdOutRightRepoTradeDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("effective", DictCodeListExt1.交易流程状态_有效.getValue());
         pageParam.put("revoke", DictCodeListExt1.交易流程状态_撤销.getValue());
         pageParam.put("inflow", DictCodeListExt1.交易流程状态_流程中.getValue());

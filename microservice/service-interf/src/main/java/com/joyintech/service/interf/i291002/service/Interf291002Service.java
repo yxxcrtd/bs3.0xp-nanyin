@@ -67,7 +67,7 @@ public class Interf291002Service extends SendEsbService<Interf291002InEntity, In
      */
     @Override
     public Interf291002InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         InterfFinProdDto dto = (InterfFinProdDto)param;
         InterfAliveProdEntity<?> prodInfo = prodMapper.selectProdInfo(dto.getFinProdId());
         // 当产品不存在时返回空
@@ -89,7 +89,7 @@ public class Interf291002Service extends SendEsbService<Interf291002InEntity, In
      */
     @Override
     public int saveInterfData(Interf291002OutEntity entity)
-        throws Exception {
+    {
         int result = 0;
         entity.setCdate(cDate);
         deleteMapper.deleteInfo(entity);
@@ -105,7 +105,7 @@ public class Interf291002Service extends SendEsbService<Interf291002InEntity, In
      */
     @Override
     public int saveBusinessData(Interf291002OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

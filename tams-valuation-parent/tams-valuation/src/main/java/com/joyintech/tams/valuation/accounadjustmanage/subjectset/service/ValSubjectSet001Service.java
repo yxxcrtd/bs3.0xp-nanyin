@@ -96,7 +96,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getSubjectId2(Map<String, Object> map) throws Exception {
+    public List<SelectOptionDto> getSubjectId2(Map<String, Object> map) {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getSubjectId2", map, SelectOptionDto.class);
 //        List<SelectOptionDto> list = valSubjectSet001Mapper.getSubjectId2(map);
 //        if(CollectionUtils.isNotEmpty(list)) {
@@ -117,7 +117,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see 
      * @since 1.0
      */
-    public List<SelectOptionDto> getSubjectLevel(Map<String, Object> map) throws Exception {
+    public List<SelectOptionDto> getSubjectLevel(Map<String, Object> map)  {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/getSubjectLevel", map, SelectOptionDto.class);
 //        return valSubjectSet001Mapper.getSubjectLevel(map);
     }
@@ -153,7 +153,7 @@ public class ValSubjectSet001Service extends CommonExportService<ValBokSubjectDt
      * @see
      * @since 1.0
      */
-    public Page<ValBokSubjectDto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ValBokSubjectDto> selectForPage(Map<String, Object> pageParam) {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValSubjectSet001/findPage", pageParam, ValBokSubjectDto.class);
 //        return super.queryForPage(()-> valSubjectSet001Mapper.selectAll(pageParam));
     }

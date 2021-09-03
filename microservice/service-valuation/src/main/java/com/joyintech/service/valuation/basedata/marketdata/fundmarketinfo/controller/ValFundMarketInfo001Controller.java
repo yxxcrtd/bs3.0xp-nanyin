@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
  * 
  * @author wangqidong
  * @version 1.0 2018年7月17日
- * @see ValBondMarketInfo001
+ * @see ValFundMarketInfo001Controller
  * @since 1.0
  */
 @RestController(value="serviceValFundMarketInfo001Controller")
@@ -80,14 +81,13 @@ public class ValFundMarketInfo001Controller extends BaseController {
      * @throws Exception Exception
      */
     @PostMapping("/tableLoad")
-    public List<ValFundMarketInfo001dto> tableLoad(@RequestBody Map<String, Object> params)
-        throws Exception {
+    public List<ValFundMarketInfo001dto> tableLoad(@RequestBody Map<String, Object> params){
 //        Map<String, Object> params = RequestUtil.getPageParam();
         return valFundMarketInfo001Service.tableLoad(params);
     }
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValFundMarketInfo001dto> findPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length){
         return valFundMarketInfo001Service.findPage(page,length,params);
     }
     
@@ -98,8 +98,7 @@ public class ValFundMarketInfo001Controller extends BaseController {
      * @throws Exception Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
 
         String datas = this.getParam("datas");
         Map<String, Object> params = RequestUtil.getPageParam();

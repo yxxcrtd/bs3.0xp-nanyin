@@ -76,7 +76,7 @@ public class CbondcurvecnbdService extends WindService<InterfCbondcurvecnbd> {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
     public int insert(InterfCbondcurvecnbd entity)
-        throws Exception {
+    {
         // 删除重复数据
         insertMapper.deleteByPrimaryKey(entity.getObjectId());
         // 登陆接口表

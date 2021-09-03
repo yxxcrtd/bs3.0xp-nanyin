@@ -10,11 +10,13 @@
 
 package com.joyintech.tams.valuation.taxparametermanage.taxscheme.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -112,8 +114,8 @@ public class TaxScheme005Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findAsset")
-    public List<SelectOptionDto> findAsset()
-        throws Exception {
+    public Page<SelectOptionDto> findAsset()
+         {
         return taxScheme005Service.findAsset(RequestUtil.getPageParam());
     }
 
@@ -126,7 +128,7 @@ public class TaxScheme005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getAssetInfo")
     public TaxScheme005Dto getAssetInfo()
-        throws Exception {
+         {
         return taxScheme005Service.getAssetInfo(RequestUtil.getPageParam());
     }
 
@@ -134,25 +136,25 @@ public class TaxScheme005Controller extends BaseController {
      * 提交/保存 check
      * 
      * @param dto
-     * @param result
-     * @param operateType
+     * @param
+     * @param
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme005Dto dto, BindingResult bindingResult)
-        throws Exception {
+            throws ParseException {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
 
         if (!bindingResult.hasErrors()) { // 基础验证通过
-            // 免税收入类型为条件必填，应税标志为免税时必填
-            // if (DictCodeList.计税方式_免税.getValue().equals(dto.getTaxableSign())
-            // && StringUtils.isEmpty(dto.getFeeType())) {
-            // msg = "免税收入类型不能为空！";
-            // return new AjaxResult(msg, MessageType.错误消息);
-            // }
+             //免税收入类型为条件必填，应税标志为免税时必填
+             if (DictCodeList.计税方式_免税.getValue().equals(dto.getTaxableSign())
+                    && StringUtils.isEmpty(dto.getFeeType())) {
+                 msg = "应税标识为免税时,免税收入类型不能为空！";
+                 return new AjaxResult(msg, MessageType.错误消息);
+             }
 
              //日期检查：生效日必须大于等于平台日。
              SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -187,7 +189,7 @@ public class TaxScheme005Controller extends BaseController {
     /**
      * 新建或修改 并启动流程
      * @param dto
-     * @param bindingResult
+     * @param
      * @return
      */
     @ResponseBody

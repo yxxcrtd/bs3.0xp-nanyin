@@ -58,7 +58,7 @@ public class InterfMOPT1001Service extends SendEsbService<InterfMOPT1001InEntity
     @SuppressWarnings("unchecked")
     @Override
     public InterfMOPT1001InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         Map<String, Object> dto = (Map<String, Object>)param;
         String key = (String)dto.get(InterfMurexService.KEY);
         InterfSendMurex info = interfSendMurexMapper.selectByPrimaryKey(key);
@@ -85,7 +85,7 @@ public class InterfMOPT1001Service extends SendEsbService<InterfMOPT1001InEntity
      */
     @Override
     public int saveInterfData(InterfMOPT1001OutEntity entity)
-        throws Exception {
+    {
         int result = 0;
         List<InterfMOPT1001TranOutEntity> tranList = entity.getTranlist();
         // 判断 输出entity是否含有明细entity
@@ -103,7 +103,7 @@ public class InterfMOPT1001Service extends SendEsbService<InterfMOPT1001InEntity
      */
     @Override
     public int saveBusinessData(InterfMOPT1001OutEntity entity)
-        throws Exception {
+    {
         // 无需登录业务表
         return 0;
     }

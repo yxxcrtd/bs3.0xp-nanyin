@@ -88,7 +88,7 @@ public class RepFinProductRegistCodeMngService extends BaseService<RepFinProduct
      * @since 1.0
      */
     public Page<RepFinProductRegistCodeMngDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));

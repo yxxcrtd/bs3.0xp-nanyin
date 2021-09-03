@@ -46,7 +46,7 @@ public class RiskFactor003Controller {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RiskFactor003Dto> selectAll(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return RiskFactor001Service.selectForPage(page, length, param);
     }
     /**
@@ -59,7 +59,7 @@ public class RiskFactor003Controller {
      * @since 1.0
      */
     @PostMapping("selectdate")
-    public RiskFactor003Dto selectdate(@RequestBody Map<String, Object> param) throws Exception {
+    public RiskFactor003Dto selectdate(@RequestBody Map<String, Object> param) {
         return RiskFactor001Service.selectdto(param);
     }
 

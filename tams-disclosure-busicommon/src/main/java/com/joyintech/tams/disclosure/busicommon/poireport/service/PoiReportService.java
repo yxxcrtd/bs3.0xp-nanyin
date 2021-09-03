@@ -173,7 +173,7 @@ public class PoiReportService {
 						logger.debug("等待生成echarts图片1000毫秒");
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 					waitTimes--;
 				}
@@ -293,7 +293,7 @@ public class PoiReportService {
 			conn = jdbcTemplate.getDataSource().getConnection();
 			ps = conn.prepareStatement(sql);
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		}
 		ResultSet rs = null;
 		try {
@@ -301,13 +301,13 @@ public class PoiReportService {
 				rs = ps.executeQuery();
 				// 子表的一行数据
 				List<String> row = new ArrayList<>();
-				while (rs.next()) {
+				while (rs != null && rs.next()) {
 					row = new ArrayList<>();
 					// 遍历获取每列数据
 					for (int i = 1; i < 50; i++) {
 						try {
 							// 遍历超越列数则异常，跳出for循环
-							row.add(rs.getString(i));
+							row.add(rs.getString(i)==null?"":rs.getString(i));
 						} catch (Exception e) {
 							break;
 						}
@@ -316,27 +316,27 @@ public class PoiReportService {
 				}
 			}
 		} catch (SQLException e1) {
-			e1.printStackTrace();
+			logger.error(e1.getMessage(),e1);
 		} finally {
 			if(null != ps) {
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (null != conn) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (null != rs) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}

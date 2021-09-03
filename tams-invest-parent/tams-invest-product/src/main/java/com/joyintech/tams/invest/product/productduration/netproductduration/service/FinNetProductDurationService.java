@@ -11,6 +11,8 @@ import java.util.*;
 
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.dao.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -89,6 +91,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinNetProductDurationService extends CommonExportService<FinNetProductDurationDto> implements BaseProcessService<FinNetProductDurationDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinNetProductDurationService.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -423,7 +429,7 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
     				 }
     			 }
     		}catch (Exception e) {
-    			e.printStackTrace();
+				logger.error(e.getMessage(),e);
     		}
     		 this.handleBussFlowData(dto);
     	}
@@ -1067,7 +1073,6 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 // add by zhangJin 邮储项目个性化-TA交易发送 end
             }
         }
-
         // 组合持仓流水Entity
         List<PtlSecPositionFlowDto> ptlSecPositionFlows = genPtlSecPositionFlowDto(dto, finTradeProduct, isRevoke);
         // 组合现金流水Entity
@@ -2078,15 +2083,28 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
 
                     listBaseTradeProductDealDto.add(baseTradeProductDealDto);
                 }
-            }
-            else if (DictCodeList.交易方向_份额强增.getValue().equals(dto.getDealType())
-                     || DictCodeList.交易方向_份额强减.getValue().equals(dto.getDealType())) {
+            }else if (DictCodeList.交易方向_份额强增.getValue().equals(dto.getDealType())) {
+				trdProductDeal.setTradeDate(dto.getAddReduceConfirmDate03());
+				trdProductDeal.setSettleDate(dto.getAddReduceConfirmDate03());
+				trdProductDeal.setShareAmt(dto.getAddReduceDealNum03());
+				trdProductDeal.setPrinAmt(dto.getAddReduceDealAmt03());
+				trdProductDeal.setFpriceAmt(dto.getAddReduceDealAmt03());
+				trdProductDeal.setTradeAmt(dto.getAddReduceDealAmt03());
+				trdProductDeal.setRemark(dto.getAddReduceRemark03());
+				baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
+
+				baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAdd);
+
+				baseTradeProductDealDto.setTrdTradeFeeDetailList(trdTradeFeeDetailList);
+
+				listBaseTradeProductDealDto.add(baseTradeProductDealDto);
+			} else if (DictCodeList.交易方向_份额强减.getValue().equals(dto.getDealType())) {
                 trdProductDeal.setTradeDate(dto.getAddReduceConfirmDate03());
                 trdProductDeal.setSettleDate(dto.getAddReduceConfirmDate03());
                 trdProductDeal.setShareAmt(dto.getAddReduceDealNum03());
-                trdProductDeal.setPrinAmt(dto.getAddReduceDealAmt03());
-                trdProductDeal.setFpriceAmt(dto.getAddReduceDealAmt03());
-                trdProductDeal.setTradeAmt(dto.getAddReduceDealAmt03());
+                trdProductDeal.setPrinAmt(dto.getAddReduceDealNum03());
+                trdProductDeal.setFpriceAmt(dto.getAddReduceDealNum03());
+                trdProductDeal.setTradeAmt(dto.getAddReduceDealNum03());
                 trdProductDeal.setRemark(dto.getAddReduceRemark03());
                 baseTradeProductDealDto.setTrdProductDeal(trdProductDeal);
 
@@ -2095,6 +2113,50 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 baseTradeProductDealDto.setTrdTradeFeeDetailList(trdTradeFeeDetailList);
 
                 listBaseTradeProductDealDto.add(baseTradeProductDealDto);
+                //modify by hxy TISHKBS-2510 场景：货币型产品，份额强减时，金额和份额不一致
+				if (dto.getAddReduceDealAmt03().compareTo(dto.getAddReduceDealNum03()) != 0) {
+					baseTradeProductDealDto = new BaseTradeProductDealDto();
+
+					TrdProductDeal trdProductDealInt = genTrdProductDealCommon(dto);
+
+					TrdProductDealAdd trdProductDealAddInt = genTrdProductDealAddCommon(dto);
+
+					String tradeId = genTradeId(DictCodeList.共通业务类型_收益型产品中间付息管理);
+
+					trdProductDealInt.setTradeId(tradeId);
+					trdProductDealAddInt.setTradeId(trdProductDealInt.getTradeId());
+
+					trdProductDealInt.setTradeDate(dto.getAddReduceConfirmDate03());
+					trdProductDealInt.setSettleDate(dto.getAddReduceConfirmDate03());
+
+					trdProductDealInt.setPs(DictCodeList.交易方向_赎回收益确认.getValue());
+
+					trdProductDealInt.setVdate(dto.getvDate());
+//                    trdProductDealInt.setMdate(dto.getmDate());
+					trdProductDealInt.setMdate(dto.getAddReduceConfirmDate03());
+
+					// trdProductDealInt.setPrinAmt(dto.getRedPrinAmt03());
+					trdProductDealInt.setFpriceAmt(ArithmeticUtil.subtract(dto.getAddReduceDealAmt03(),dto.getAddReduceDealNum03()));
+
+					trdProductDealInt.setIntAmt(ArithmeticUtil.subtract(dto.getAddReduceDealAmt03(),dto.getAddReduceDealNum03()));
+
+					trdProductDealInt.setTradeAmt(ArithmeticUtil.subtract(dto.getAddReduceDealAmt03(),dto.getAddReduceDealNum03()));
+
+					trdProductDealInt.setRemark(dto.getExpireRemark());
+					baseTradeProductDealDto.setTrdProductDeal(trdProductDealInt);
+
+					baseTradeProductDealDto.setTrdProductDealAdd(trdProductDealAddInt);
+
+					trdTradeFeeDetailList = new ArrayList<TrdTradeFeeDetail>();
+					baseTradeProductDealDto.setTrdTradeFeeDetailList(trdTradeFeeDetailList);
+
+					PaTrdProductDeal paTrdProductDeal = new PaTrdProductDeal();
+					paTrdProductDeal.setTradeId(trdProductDealInt.getTradeId());
+
+					baseTradeProductDealDto.setPaTrdProductDeal(paTrdProductDeal);
+
+					listBaseTradeProductDealDto.add(baseTradeProductDealDto);
+				}
             }
             else if (DictCodeList.交易方向_产品现金分红.getValue().equals(dto.getDealType())) {
                 // modify by wm 交易日存红利下发日 start 2019-07-11
@@ -3143,8 +3205,7 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 trdFinProductDealTotal.setRedCost(dto.getExpirePrinAmt03());
                 trdFinProductDealTotal.setRedProfit(dto.getExpireProfit03());
             }
-            else if (DictCodeList.交易方向_份额强增.getValue().equals(dto.getDealType())
-                     || DictCodeList.交易方向_份额强减.getValue().equals(dto.getDealType())) {
+            else if (DictCodeList.交易方向_份额强增.getValue().equals(dto.getDealType())) {
                 trdFinProductDealTotal.setTradeDate(dto.getAddReduceConfirmDate03());
                 trdFinProductDealTotal.setSettleDate(dto.getAddReduceConfirmDate03());
                 trdFinProductDealTotal.setShareAmt(dto.getAddReduceDealNum03());
@@ -3152,7 +3213,18 @@ public class FinNetProductDurationService extends CommonExportService<FinNetProd
                 trdFinProductDealTotal.setFpriceAmt(dto.getAddReduceDealAmt03());
                 trdFinProductDealTotal.setTradeAmt(dto.getAddReduceDealAmt03());
                 trdFinProductDealTotal.setRemark(dto.getAddReduceRemark03());
-            }
+            }else if (DictCodeList.交易方向_份额强减.getValue().equals(dto.getDealType())) {
+				trdFinProductDealTotal.setTradeDate(dto.getAddReduceConfirmDate03());
+				trdFinProductDealTotal.setSettleDate(dto.getAddReduceConfirmDate03());
+				trdFinProductDealTotal.setShareAmt(dto.getAddReduceDealNum03());
+				trdFinProductDealTotal.setPrinAmt(dto.getAddReduceDealNum03());
+				trdFinProductDealTotal.setIntAmt(ArithmeticUtil.subtract(dto.getAddReduceDealAmt03(),dto.getAddReduceDealNum03()));
+                trdFinProductDealTotal.setFpriceAmt(dto.getAddReduceDealAmt03());
+				trdFinProductDealTotal.setTradeAmt(dto.getAddReduceDealAmt03());
+				trdFinProductDealTotal.setRemark(dto.getAddReduceRemark03());
+				trdFinProductDealTotal.setRedProfit(ArithmeticUtil.subtract(dto.getAddReduceDealAmt03(),dto.getAddReduceDealNum03()));
+				trdFinProductDealTotal.setRedCost(dto.getAddReduceDealNum03());
+			}
             else if (DictCodeList.交易方向_产品现金分红.getValue().equals(dto.getDealType())) {
                 trdFinProductDealTotal.setTradeDate(dto.getBonusCashEndDate03());
                 trdFinProductDealTotal.setSettleDate(dto.getBonusCashBonusDate03());

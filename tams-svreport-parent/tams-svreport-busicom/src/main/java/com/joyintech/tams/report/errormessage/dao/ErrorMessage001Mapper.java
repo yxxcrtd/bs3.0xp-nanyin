@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.report.errormessage.dto.ErrorMessage001;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ErrorMessage001Mapper {
   int deleteByPrimaryKey(String dataid);
 

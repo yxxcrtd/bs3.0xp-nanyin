@@ -154,7 +154,7 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
      */
     public Page<EtrInvestBondInfoDto> selectForPage(int page, int length,
                                                     Map<String, Object> param)
-        throws Exception {
+    {
         param.put("bond", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         //子组合查询改造 王贵奇 2019/8/20
         param.put("portfolioType", DictCodeListExt1.组合类型_子组合.getValue());

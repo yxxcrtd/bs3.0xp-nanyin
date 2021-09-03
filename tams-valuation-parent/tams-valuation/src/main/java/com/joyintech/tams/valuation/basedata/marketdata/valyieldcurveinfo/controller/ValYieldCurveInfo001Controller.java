@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.valyieldcurveinfo.controller;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,7 +78,7 @@ public class ValYieldCurveInfo001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValYieldCurveInfoDto> selectAll()
-        throws Exception {
+         {
         Page<ValYieldCurveInfoDto> page = valYieldCurveInfoService.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -111,7 +112,7 @@ public class ValYieldCurveInfo001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  ValYieldCurveInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  ValYieldCurveInfoDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -141,7 +142,7 @@ public class ValYieldCurveInfo001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() {
         return valYieldCurveInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

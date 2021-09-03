@@ -9,7 +9,9 @@ import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
 import com.joyintech.tams.report.investormerger.dto.ChbInvestholdInfoCheckDto;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbInvestholdInfoCheckDtoMapper {
     int insert(ChbInvestholdInfoCheckDto record);
 

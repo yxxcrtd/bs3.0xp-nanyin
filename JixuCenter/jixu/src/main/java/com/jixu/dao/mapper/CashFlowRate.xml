@@ -29,6 +29,7 @@
 		)
 		values(
 		#{id},
+		#{cfDate,jdbcType=TIMESTAMP},
 		#{cfid,jdbcType=INTEGER}
 		)
 	</insert>

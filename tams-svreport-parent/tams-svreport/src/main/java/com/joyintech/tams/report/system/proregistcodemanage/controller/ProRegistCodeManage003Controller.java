@@ -3,6 +3,7 @@ package com.joyintech.tams.report.system.proregistcodemanage.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -88,8 +89,7 @@ public class ProRegistCodeManage003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) ProRegistCodeManage002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) ProRegistCodeManage002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -148,7 +148,7 @@ public class ProRegistCodeManage003Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("checkInsertData1")
-    public AjaxResult checkInsertData1(String regCode)  {
-        return proRegistCodeManage003Service.checkInsertData1(regCode);
+    public AjaxResult checkInsertData1(String prodId,String regCode)  {
+        return proRegistCodeManage003Service.checkInsertData1(prodId,regCode);
     }
 }

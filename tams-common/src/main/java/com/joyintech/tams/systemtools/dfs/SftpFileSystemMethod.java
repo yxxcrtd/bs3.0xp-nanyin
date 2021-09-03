@@ -81,7 +81,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
      * @see
      * @since 1.0
      */
-    private void getFile(SftpDto dto, String remoteFile, String localDir) throws Exception {
+    private void getFile(SftpDto dto, String remoteFile, String localDir) throws SftpException {
         File localFile = new SafelyFile(localDir);
         if (localFile.exists()) {
             // 本地目录不是目录，先删除
@@ -99,7 +99,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
             dto.getSftp().get(remoteFile, localDir);
         } catch (SftpException e) {
             logger.error("连接失败！", e);
-            throw new Exception("下载文件失败");
+            throw new SftpException(1,"下载文件失败");
         }
     }
 
@@ -117,7 +117,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
     }
 
 
-    private SftpDto login() throws Exception {
+    private SftpDto login() throws JSchException {
         String ip = CacheUtil.getSysParam("SYS_FS_SFTP_IP");
         String port = CacheUtil.getSysParam("SYS_FS_SFTP_PORT");
         Integer logintype = Integer.valueOf(CacheUtil.getSysParam("SYS_FS_SFTP_LOGINTYPE"));
@@ -147,7 +147,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
             res.setSftp(sftp);
         } catch (JSchException e) {
             logger.error("", e);
-            throw new Exception("登录文件服务器失败");
+            throw new JSchException("登录文件服务器失败");
         }
         return res;
     }

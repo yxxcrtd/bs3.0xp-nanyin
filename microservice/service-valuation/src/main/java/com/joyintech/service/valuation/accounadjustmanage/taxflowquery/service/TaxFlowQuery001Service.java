@@ -37,7 +37,7 @@ public class TaxFlowQuery001Service  extends CommonExportService<TaxFlowQuery001
 	private TaxFlowQuery001Mapper taxFlowQuery001Mapper;
 
 	public Page<TaxFlowQuery001Dto> selectForPage(int page, int length, TaxFlowQuery001Dto dto)
-			 throws Exception {
+	{
 		 return super.queryForPage(page,length,() -> taxFlowQuery001Mapper.queryList(dto));
 	}
 	
@@ -81,7 +81,7 @@ public class TaxFlowQuery001Service  extends CommonExportService<TaxFlowQuery001
 	 * @return
 	 * @throws Exception
 	 */
-	 public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto) throws Exception {
+	 public List<TaxFlowQuery001Dto> findPageout(TaxFlowQuery001Dto dto) {
 	       
 	        return  taxFlowQuery001Mapper.queryList(dto);
 	    }

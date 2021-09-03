@@ -234,7 +234,7 @@
 	      </if>
     </select>
     <select id="queryProdIdInfo" resultType="com.joyintech.framework.select.SelectOptionDto" >
-       select FIN_PRODUCT.FINPROD_ID id, FIN_PRODUCT.FINPROD_MARKET_ID text,
+       select FIN_PRODUCT.FINPROD_ID id, FIN_PRODUCT.FINPROD_ABBR text,
        			FIN_PRODUCT_ADD.DEAL_MODE object
 	     from FIN_PRODUCT,FIN_PRODUCT_ADD,PTL_PORTFOLIO_AUTHORITY
 	    where FIN_PRODUCT.FINPROD_TYPE = #{finprodType1}

@@ -7,10 +7,86 @@ RskValTableImport001 = function(){
                     valTableFileName = res[0].fileName;
                  // 为了消除进度条
                     Joyin.ajax(JoyinUtil.getRealPath('invest/risk/valtblimport/RskValTableImport001/uploadFile'));
+
+                    // 解析上传文件名称，获取资产名称和估值日期
+                    var arr = valTableFileName.split(chbValSplitStr);
+                    var dateFlag = true;
+                    if (typeof arr[1] != 'undefined') {
+                        var valDate = arr[1];
+                        if (valDate.indexOf('_') >= 0) {
+                            var dateArr = valDate.split('_');
+                            valDate = dateArr[0];
+                        }
+                        if (valDate.length == 8) {
+                            var year = valDate.substr(0,4);
+                            var month = valDate.substr(4,2);
+                            var day = valDate.substr(6,2);
+                            valDate = year + "-" + month + "-" + day;
+                            if (checkDate(valDate)) {
+                                $('#valDate').val(valDate);
+                                // $('#RskValTableImport001_btn_see').attr("disabled", false);
+                                dateFlag = false;
+                            }
+                        }
+                    }
+
+                    if (dateFlag){
+                        $('#ptlName').val('');
+                        $('#ptlId').val('');
+                        $('#valDate').val('');
+                        $('#ptlId').trigger('change');
+                        Joyin.error("上传的估值表文件名称不符合格式要求!");
+                        // $('#RskValTableImport001_btn_see').attr("disabled", true);
+                    } else {
+                        var ptlName = arr[0];
+                        if (ptlName.indexOf('\\') >= 0) {
+                            var nameArr = ptlName.split('\\');
+                            ptlName = nameArr[nameArr.length - 1];
+                        }
+                        $('#ptlName').val(ptlName);
+                        $('#ptlId').val(ptlName);
+
+                        var object = $.serializeToObject('#submitForm');
+                        object.valTableFileName = valTableFileName;
+
+                        Joyin.ajaxJson(basePath + 'invest/risk/valtblimport/RskValTableImport001/checkFileName',object, function(result) {
+                            if (typeof result.data == 'undefined') {
+                                $('#ptlName').val('');
+                                $('#ptlId').val('');
+                                $('#valDate').val('');
+                                $('#ptlId').trigger('change');
+                                Joyin.error("上传的估值表文件资产名称不存在!");
+                            } else {
+                                $('#ptlName').val(result.data.text);
+                                $('#ptlId').val(result.data.id);
+                                $('#ptlId').trigger('change');
+                            }
+                        });
+                    }
                 }
             }
         }
 }();
+/**
+ * 验证日期是否正确
+ * 日期格式：yyyy-mm-dd，yyyy-m-d，yyyy/mm/dd，yyyy/m/d
+ */
+function checkDate(dateStr) {
+    dateStr = dateStr.replace(/\//g, '-');
+    var dateReg = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+    var rValue = dateStr.match(dateReg);
+    if (rValue == null) {
+        return false;
+    }
+    rValue[1] = parseInt(rValue[1], 10);
+    rValue[2] = parseInt(rValue[2] - 1, 10);
+    rValue[3] = parseInt(rValue[3], 10);
+    var dateObj = new Date(rValue[1], rValue[2], rValue[3]);
+    if (dateObj.getFullYear() != rValue[1] || dateObj.getMonth() != rValue[2] || dateObj.getDate() != rValue[3]) {
+        return false;
+    }
+    return true;
+}
 (function() {
     /**
      * 获取查询参数
@@ -73,13 +149,16 @@ RskValTableImport001 = function(){
             visible : false
         }, {
             field : 'srcCode',
-            title : 'RskValAssetCode004.srcCode',sortField:'SRC_CODE'
+            sortField : "SRC_CODE",
+            title : 'RskValAssetCode004.srcCode'
         }, {
             field : 'tgtCode',
-            title : 'RskValAssetCode004.tgtCode',sortField:'TGT_CODE'
+            sortField : "TGT_CODE",
+            title : 'RskValAssetCode004.tgtCode'
         }, {
             field : 'allowSumName',
-            title : 'RskValAssetCode004.allowSum',sortField:'ALLOW_SUM'
+            sortField : "ALLOW_SUM",
+            title : 'RskValAssetCode004.allowSum'
         }, {
             field : 'memo',
             title : 'RskValAssetCode004.memo'
@@ -219,6 +298,34 @@ RskValTableImport001 = function(){
         
     }
 
+        //批量导入
+        function batchUpload() {
+            Joyin.confirm("请确认是否要批量导入数据？", function () {
+                Joyin.uploadFile(
+                    {
+                        pageId : 'RskValTableImport001',
+                        exts: 'zip',
+                        hideTpl: true
+                    },
+                    function (fileName) {
+                        $('#valDate').val('');
+                        $('#ptlName').val('');
+                        $('#ptlId').val('').trigger('change');
+
+                        JoyinProgress.showInDialog('uploadFileProgressBar');
+                        Joyin.ajax(basePath + "invest/risk/valtblimport/RskValTableImport001/batchUploadFile?",
+                            {
+                                fileName: fileName
+                            }, function (result) {
+                               // layer.close(processIndex);
+                                //点击保存后关闭窗口
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                    });
+            });
+        }
+
     /**
      * 画面加载完成
      */
@@ -226,5 +333,7 @@ RskValTableImport001 = function(){
         $('#ptlId').change(reloadTable);
         // 绑定入库按钮事件
         $('#RskValTableImport001_btn_see').click(showDialog);
+        // 绑定批量导入事件
+        $('#RskValTableImport001_btn_batchUpload').click(batchUpload);
     });
 }());

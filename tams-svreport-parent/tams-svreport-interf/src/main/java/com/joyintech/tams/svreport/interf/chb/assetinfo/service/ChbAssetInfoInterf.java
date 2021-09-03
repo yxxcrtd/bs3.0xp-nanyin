@@ -1,15 +1,14 @@
 package com.joyintech.tams.svreport.interf.chb.assetinfo.service;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.busicommon.productRating.service.CommonProductRatingService;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -29,10 +28,6 @@ import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.jdbc.datasource.DataSource;
-import com.joyintech.tams.common.base.entity.ChbAssetInfo;
-import com.joyintech.tams.common.base.entity.ChbMstCounterParty;
-import com.joyintech.tams.common.base.entity.ChbTypeMapping;
-import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.common.svreport.base.service.ChbTypeMappingService;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
@@ -74,6 +69,12 @@ public class ChbAssetInfoInterf  extends BaseService{
     
     @Autowired
     private ChbTypeMappingMapper chbTypeMappingMapper;
+
+    /**
+     * 角色权限service
+     */
+    @Autowired
+    private TamsBaseCommonService baseCommonService;
     
     /**
      * 映射service
@@ -103,7 +104,7 @@ public class ChbAssetInfoInterf  extends BaseService{
      * @param isSynchronizeTask 是否为轮训批处理
      * void
      */
-    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask) { 
+    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask,String institutionCode) {
         logger.debug("上游资产要素信息入库:----开始------" +  df.format(new Date()));
         // 通道交易是否穿透報送 01 是 02 否
         String isChlBtm = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
@@ -139,7 +140,27 @@ public class ChbAssetInfoInterf  extends BaseService{
         List<ChbAssetInfo> insertDataList = new ArrayList<ChbAssetInfo>();
         // 发行机构代码
         //String issueId = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_ISSUE_PARTY_ID);
-        String issueId = CommonUtil.selectBankCode();
+        //String issueId = CommonUtil.selectBankCode();
+        String issueId = "";
+        //根据登录用户获取当前机构的登记编码
+        if(institutionCode!=null) {
+            String orgCode = "";
+            if (MultilevelDataAuthorityUtil.isEnabled()) {
+                orgCode = institutionCode;
+            } else {
+                // 银行模式下 只有一个总行  直接查总行对应的 code
+                orgCode = baseCommonService.getYHGeneralBankCode();
+            }
+
+            String code = baseCommonService.selectBankCode(orgCode);
+
+            if (MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(code)) {
+                code = CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID");
+            }
+            issueId = null!=code?code:"";
+        }else{
+            issueId = CommonUtil.selectBankCode();
+        }
         // 映射源数据和中债所需数据
         List<ChbTypeMapping> assetTypeTwoMappingList = chbTypeMappingMapper.selectMappingBySrcDataType(InterfMappingConstants.MAAPING_ASSETTYPETWO_ZG);
         Map<String, ChbTypeMapping> assetTypeTwoMappingMap  = new HashMap<String, ChbTypeMapping>();
@@ -312,6 +333,9 @@ public class ChbAssetInfoInterf  extends BaseService{
         logger.debug("上游资产要素信息插入:----开始------" +  df.format(new Date()));
         insertDataMerge(insertDataList,null);
         logger.debug("上游资产要素信息插入:----结束------" +  df.format(new Date()));
+
+        //抽数债券的还本付息计划
+        this.generateChbSecRepayInfoData();
 //      if (CollectionUtils.isNotEmpty(insertDataList)) {
 ////            allData.addAll(insertDataList);
 //          // 批量插入
@@ -348,7 +372,7 @@ public class ChbAssetInfoInterf  extends BaseService{
      * 从数据字典中获取参数值
      *
      * @param dictCode 数据字典
-     * @param itemCode 数据代码
+     * @param dictItemCode 数据代码
      * @return 参数值
      * @see
      * @since 1.0
@@ -533,6 +557,10 @@ public class ChbAssetInfoInterf  extends BaseService{
      * @param saveFlag:F－全量，I－增量
      */
     public void insertDataMerge(List<ChbAssetInfo> assetInfoList,String saveFlag) {
+
+        // 先根据属性 assetcode 将重复数据过滤 否则下面会报错
+        assetInfoList = assetInfoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(ChbAssetInfo::getAssetCode))), ArrayList::new));
+
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
@@ -746,5 +774,21 @@ public class ChbAssetInfoInterf  extends BaseService{
                 }
             }
         }
+    }
+
+    /**
+     * 功能:抽数债券的还本付息计划
+     * @since 2.1.8
+     * @version 2.1.8
+     * @author：yjp 2021年7月26日
+     *
+     */
+    public void generateChbSecRepayInfoData() {
+        //删除债券还本付息a表里的数据
+        chbAssetInfoInterfMapper.deleteAllChbSecRepayInfoData();
+        //插入查询债券的还本付息计划a
+        ChbSecRepayInfo record = new ChbSecRepayInfo();
+        chbAssetInfoInterfMapper.insertChbSecRepayInfoData(record);
+
     }
 }

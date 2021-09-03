@@ -505,7 +505,6 @@ public class SztInterfCommonService {
             return resp.substring(SztValConstant.深圳通_接口字符串格式化_进制);
         }
         catch (Exception e){
-            e.printStackTrace();
             log.error("error:",e);
         }
         return resp;

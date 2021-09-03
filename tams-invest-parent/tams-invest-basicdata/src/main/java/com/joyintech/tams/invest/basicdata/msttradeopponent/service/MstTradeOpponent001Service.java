@@ -69,7 +69,6 @@ public class MstTradeOpponent001Service extends CommonExportService<MstTradeOppo
      * 分页查询
      * @param pageParam 分页查询条件
      * @return page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

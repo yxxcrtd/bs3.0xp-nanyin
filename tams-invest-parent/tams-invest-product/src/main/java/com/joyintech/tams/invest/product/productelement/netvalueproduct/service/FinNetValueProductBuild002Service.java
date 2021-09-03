@@ -5,6 +5,7 @@
 
 package com.joyintech.tams.invest.product.productelement.netvalueproduct.service;
 
+import com.google.common.collect.Maps;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.intf.DataDictItem;
@@ -40,8 +41,11 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.service.WorkFlowService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +65,10 @@ import java.util.Map;
  */
 @Service
 public class FinNetValueProductBuild002Service extends BaseService<FinNetValueProductBuild002Dto> implements BaseProcessService<FinNetValueProductBuild002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetValueProductBuild002Service.class);
 
     /**
      * {@linkplain}
@@ -116,6 +124,12 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
 
     @Autowired(required = false)
     private FinNetValueProductBuild002Service finNetValueProductBuild002Service;
+
+    /**
+     * 业务流程表service
+     */
+    @Autowired(required = false)
+    private WorkFlowService workflowService;
 
     /**
      * 处理其他信息（待处理的组合信息、费用信息）
@@ -254,7 +268,7 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
             WorkFlowUtil.startProcess(params, null, null, userName, OperationType.NEW, false, ptlPortfolioInfoDto);
         }
         catch (Exception e) {
-            e.printStackTrace();// SpringContextUtil.getTextValue("COMMON_I_0005")
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -881,6 +895,18 @@ public class FinNetValueProductBuild002Service extends BaseService<FinNetValuePr
 
     @Override
     public void doUpdate(FinNetValueProductBuild002Dto entity) {
+        Map<String, Object> map = Maps.newConcurrentMap();
+        map.put("title",this.getMessage("FinProductBuild002.finprodMarketId") + "("
+                + entity.getFinprodMarketId() + ")"
+                + this.getMessage("FinProductBuild002.finprodAbbr") + "("
+                + entity.getFinprodAbbr() + ")" + this.getMessage("FinProductBuild002.vdate")
+                + "(" + DateUtil.format(entity.getVdate()) + ")"
+                + this.getMessage("FinProductBuild002.mdate") + "("
+                + DateUtil.format(entity.getMdate()) + ")");
+        map.put("workFlowId",entity.getWorkflowId());
+        map.put("updateUser", LoginUserUtil.getUserName());
+        map.put("updateTime",DateUtil.now());
+        workflowService.updateTitle(map);
         updateFiles(entity);
     }
 

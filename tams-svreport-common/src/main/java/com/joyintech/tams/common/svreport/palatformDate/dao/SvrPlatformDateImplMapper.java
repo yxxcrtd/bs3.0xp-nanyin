@@ -11,7 +11,9 @@
 package com.joyintech.tams.common.svreport.palatformDate.dao;
 
 import java.util.Date;
+import java.util.List;
 
+import com.joyintech.framework.security.data.InstitutionDate;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -49,4 +51,14 @@ public interface SvrPlatformDateImplMapper {
      * @return 更新结果
      */
 	int updateSysDate(@Param("newDate") Date newDate);
+
+    Date getSysDateByIns(@Param("institutionCode")String institutionCode);
+
+    Date getCommonSysDate();
+
+    int updateSysDateByIns(@Param("newDate") Date newDate, @Param("institutionCode") String institutionCode);
+
+    int updateAllSysDate(@Param("institutionCode") String institutionCode);
+
+    List<InstitutionDate> getAllSysDate(@Param("institutionCode") String institutionCode);
 }

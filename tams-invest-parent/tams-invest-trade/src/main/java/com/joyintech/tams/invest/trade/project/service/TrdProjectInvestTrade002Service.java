@@ -14,6 +14,8 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -88,6 +90,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInvestTrade002Dto> implements BaseProcessService<TrdProjectInvestTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdProjectInvestTrade002Service.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -1032,6 +1038,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
 //        转换
 
+        wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
+
         ////update by wangpeng 通道信息不登表
         String chlid = wflTrdProductDeal.getChlId();
         wflTrdProductDeal.setChlId(null);
@@ -1385,7 +1393,7 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         saveDataWhenStartWorkflow(entity);
     }

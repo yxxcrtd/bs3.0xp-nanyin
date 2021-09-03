@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.period.trddepoduration.dto;
 import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -146,4 +147,16 @@ public class TrdDepoDuration001Dto extends TrdDepoDurationCommonDto implements P
         this.appPingAnCodeSin = appPingAnCodeSin;
     }
 
+    /**
+     * 附件上传
+     */
+    private List<UploadFile> uploadFileList;
+
+    public List<UploadFile> getUploadFileList() {
+        return uploadFileList;
+    }
+
+    public void setUploadFileList(List<UploadFile> uploadFileList) {
+        this.uploadFileList = uploadFileList;
+    }
 }

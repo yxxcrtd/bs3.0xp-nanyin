@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.disclosure.interf.interf.common.imp;
 
+import java.io.IOException;
+
 /**
  * 数据导入接口
  * 
@@ -27,6 +29,5 @@ public interface ImpExcutor {
      * @return 结果
      * @throws Exception 异常信息
      */
-    boolean excute(ImpArgument args)
-        throws Exception;
+    boolean excute(ImpArgument args) throws IOException, InterruptedException;
 }

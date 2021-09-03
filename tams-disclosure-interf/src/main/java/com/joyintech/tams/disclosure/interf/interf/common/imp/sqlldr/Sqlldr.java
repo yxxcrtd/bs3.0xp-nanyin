@@ -79,14 +79,13 @@ public class Sqlldr implements ImpExcutor {
      * {@inheritDoc}
      */
     @Override
-    public boolean excute(ImpArgument args)
-        throws Exception {
+    public boolean excute(ImpArgument args) throws IOException, InterruptedException {
         String sh = "sqlldr ";
         if (!(args instanceof SqlldrImpArgument)) {
             LOGGER.warn("不支持的参数类型:" + args.getClass().getName());
         }
         String command = ((SqlldrImpArgument)args).toString();
-        LOGGER.info("执行命令：" + sh + command);
+//        LOGGER.info("执行命令：" + sh + command);
         Process process = Runtime.getRuntime().exec(sh + command);
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(process.getInputStream()));

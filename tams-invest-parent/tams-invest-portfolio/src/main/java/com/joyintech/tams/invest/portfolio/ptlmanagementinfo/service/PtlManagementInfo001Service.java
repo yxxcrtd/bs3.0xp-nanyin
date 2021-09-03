@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.portfolio.ptlmanagementinfo.service;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
@@ -230,7 +231,7 @@ public class PtlManagementInfo001Service extends CommonExportService<PtlManageme
             }
             ResultObject resultObject = updatePortfolio(entity);
             if (!StringUtil.equals(resultObject.getResultCode(), ResultCode.SUCCESS.getCode())) {
-                throw new RuntimeException(resultObject.getResultMsg());
+                throw new BusinessException(resultObject.getResultMsg());
             }
             String portfolioId = entity.getPortfolioId();
             if (!ptlPortfolios.isEmpty()) {

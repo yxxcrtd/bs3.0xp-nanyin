@@ -15,10 +15,12 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -33,6 +35,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,6 +73,9 @@ public class EtrBoutRepo002Controller extends BaseController {
 
     @Autowired
     private EtrBoutRepoService etrBoutRepoService;
+
+    @Autowired
+    private PlatformDate platformDate;
 
     /**
      * {@inheritDoc}
@@ -121,7 +127,10 @@ public class EtrBoutRepo002Controller extends BaseController {
         model.addAttribute("R3M", DictCodeList.回购期限品种_R3M.getValue());
         model.addAttribute("R4M", DictCodeList.回购期限品种_R4M.getValue());
         model.addAttribute("R6M", DictCodeList.回购期限品种_R6M.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
+
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -177,14 +186,12 @@ public class EtrBoutRepo002Controller extends BaseController {
      * 获取组合代码联想文本框信息 <功能详细描述>
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrBoutRepoService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -192,7 +199,7 @@ public class EtrBoutRepo002Controller extends BaseController {
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -293,12 +300,11 @@ public class EtrBoutRepo002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBoutRepoDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrBoutRepoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

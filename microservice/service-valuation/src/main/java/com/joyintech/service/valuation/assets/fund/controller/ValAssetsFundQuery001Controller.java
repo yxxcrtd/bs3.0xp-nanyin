@@ -59,8 +59,8 @@ public class ValAssetsFundQuery001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValAssetsFundQuery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
-//        return valAssetsFundQuery001Service.findPage(RequestUtil.getPageParam());
+			@PathVariable("page") int page, @PathVariable("length") int length){
+//        return valAssetsFundQuery001Service.fndPage(RequestUtil.getPageParam();
     	 return valAssetsFundQuery001Service.findPage(page, length, param);
     }
 
@@ -80,16 +80,14 @@ public class ValAssetsFundQuery001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/getAssets")
-    public List<SelectOptionDto> getAssets(@RequestBody Map<String,Object> map)
-        throws Exception {
+    public List<SelectOptionDto> getAssets(@RequestBody Map<String,Object> map){
         return valAssetsFundQuery001Service.getAssets(map);
     }
 
     @Transactional
 	@DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody ValAssetsFundQuery002Dto dto) throws Exception{
-//        finBondTargetAssetService.delete(dto);
+    public void delete(@RequestBody ValAssetsFundQuery002Dto dto){
     	valAssetsFundQuery001Service.delete(dto.getFinprodId(), dto.getFundType());
     }
     

@@ -43,7 +43,7 @@ public class FlowRiskStressTestView002Controller{
 	
 	 @PostMapping("findPage/{page}/{length}")
 	    public Page<FlowRiskStressTestView002Dto> selectAll(@RequestBody Map<String, Object> param,
-	            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	            @PathVariable("page") int page, @PathVariable("length") int length) {
 	
 	     return FlowRiskStressTestView002Service.selectForPage(page, length, param);
 	     
@@ -56,7 +56,7 @@ public class FlowRiskStressTestView002Controller{
 	  * @throws Exception
 	  */
 	 @PostMapping("queryDetByTestId")
-	 public FlowRiskStressTestView002Dto selectAll(@RequestBody Map<String, Object> param) throws Exception {
+	 public FlowRiskStressTestView002Dto selectAll(@RequestBody Map<String, Object> param) {
 
 		 return FlowRiskStressTestView002Service.queryDetByTestId(param);
      

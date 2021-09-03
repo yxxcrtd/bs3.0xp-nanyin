@@ -198,8 +198,7 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){
@@ -286,7 +285,7 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@ResponseBody
 		@RequestMapping("downloadReport")
-		public ResponseEntity<byte[]> downloadReport() throws Exception {
+		public ResponseEntity<byte[]> downloadReport() throws IOException {
 			
 			
 			return reportModelManage002Service.downLoadReportInfo(this.getParam("folder"));

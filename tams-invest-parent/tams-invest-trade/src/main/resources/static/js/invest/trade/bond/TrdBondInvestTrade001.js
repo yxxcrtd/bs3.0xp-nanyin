@@ -102,6 +102,7 @@
             ,{field:'ccy', visible: false}
             ,{field:'systemFinprodId', visible: false}
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
         //loadonce:true
     });
   

@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.trade.trdstandardbond.service.TrdStandardBond00
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -96,8 +97,7 @@ public class TrdStandardBond003Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdStandardBond003Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdStandardBond003Dto dto) throws WorkFlowException {
         ProcessParameter<TrdStandardBond003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdStandardBond003Dto> workFlowParameter = new WorkFlowParameter<>();
         processParameter.setWorkFlowParameter(workFlowParameter);

@@ -64,7 +64,7 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
     /**
      * 日志
      */
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(ProdTerminationRegistBatchService.class);
     
 	public void generateRegistData(Date executeDate,List<String> prodIdList) {
 		// 设置批处理bean
@@ -514,23 +514,23 @@ public class ProdTerminationRegistBatchService extends SvrDataStatusUtil {
         //-------费用因四舍五入差一分导致check不过进行倒减处理-------<<<<<<<
     }
 
-    public static void main(String[] args) {
-        BigDecimal A = new BigDecimal("90");
-        BigDecimal B = new BigDecimal("20");
-        BigDecimal C = new BigDecimal("140");
-        BigDecimal D = new BigDecimal("240");
-        BigDecimal E = new BigDecimal("50");
-        List<BigDecimal> tmpList = new ArrayList<>();
-        tmpList.add(A);
-        tmpList.add(B);
-        tmpList.add(C);
-        tmpList.add(D);
-        tmpList.add(E);
-        Collections.sort(tmpList);
-        tmpList.forEach(x-> {
-            System.out.println(x);
-        });
-    }
+//    public static void main(String[] args) {
+//        BigDecimal A = new BigDecimal("90");
+//        BigDecimal B = new BigDecimal("20");
+//        BigDecimal C = new BigDecimal("140");
+//        BigDecimal D = new BigDecimal("240");
+//        BigDecimal E = new BigDecimal("50");
+//        List<BigDecimal> tmpList = new ArrayList<>();
+//        tmpList.add(A);
+//        tmpList.add(B);
+//        tmpList.add(C);
+//        tmpList.add(D);
+//        tmpList.add(E);
+//        Collections.sort(tmpList);
+//        tmpList.forEach(x-> {
+//            logger.info(x.toString());
+//        });
+//    }
 
 
     /**

@@ -307,7 +307,7 @@ public class BussFinProductOpenPlanDto extends FinOpenRule {
      * {@inheritDoc}
      */
     @Override
-    @Length(fieldName = "FinProductOpenRule.openCycle", max = 10)
+    @Length(fieldName = "FinProductOpenRule.openCycle", max = 3)
     public Long getOpenCycle() {
         return super.getOpenCycle();
     }

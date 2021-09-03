@@ -296,7 +296,6 @@ public class EquityInfoValid {
             existCount = equityInfoRegist001Mapper.selectExistsByIndentifyMark(param);
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage());
         }
         if(existCount != 0){
@@ -443,7 +442,6 @@ public class EquityInfoValid {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage());
             return;
         }
@@ -753,8 +751,7 @@ public class EquityInfoValid {
             }
             else {
                 // 风险偏好
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderRiskPrefer())
-                        && !equityInfo001Dto.getHolderRiskPrefer().equals(
+                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
@@ -2596,7 +2593,6 @@ public class EquityInfoValid {
             }
             catch (Exception e) {
 //                System.out.println("getEditMap出异常，异常信息：" + e.getMessage());
-//                e.printStackTrace();
                 logger.error("getEditMap出异常，异常信息：" + e.getMessage());
             }
             //01 新增/02 识别标识变更/03 重要信息变更/04 其他信息变更
@@ -3151,7 +3147,8 @@ public class EquityInfoValid {
                 checkMess+=mes;
 
 
-                System.out.println("message 信息如下："+mes);
+//                System.out.println("message 信息如下："+mes);
+                logger.info("message 信息如下："+mes);
                 logger.error("message 信息如下：{}" , mes);
             }
         }

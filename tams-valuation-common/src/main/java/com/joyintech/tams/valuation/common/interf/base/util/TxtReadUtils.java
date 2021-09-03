@@ -65,7 +65,7 @@ public class TxtReadUtils {
      * @since 1.0
      */
     public <T> TemplateCheckReturnResult readTxt(TemplateOrderInfoReaderResult acctEntity) {
-        
+
         TemplateCheckReturnResult result = new TemplateCheckReturnResult();
         //文件路径
         String filePath= acctEntity.getFilePath();
@@ -78,12 +78,14 @@ public class TxtReadUtils {
         List<String> pathList = SearchFilePath.queryFilePath(filePath, tmpEName);
         for (String path : pathList) {
             List list = new ArrayList();
-            InputStreamReader isr;
+            InputStreamReader isr = null;
             BufferedReader br =null;
-            try {          	
+            FileInputStream fis = null;
+            try {
                 File file = new File(path);
+                fis = new FileInputStream(file);
                 if (file.isFile() && file.exists()) {
-					isr = new InputStreamReader( new FileInputStream(file), "utf-8");
+					isr = new InputStreamReader( fis, "utf-8");
                     br = new BufferedReader(isr);
                     String lineTxt = null; // 读取文件的方法
 //                    int num=0;
@@ -102,21 +104,21 @@ public class TxtReadUtils {
                         while ((lineTxt = br.readLine()) != null) {
                             HqBondMarketInfo info=new HqBondMarketInfo();
                             String[] arrStrings = lineTxt.split("\\|"); // 用于把一个字符串分割成字符串数组
-                            String s1 = arrStrings[0].trim().toString();
+                            String s1 = arrStrings[0].trim();
                             if("HEADER".equals(s1)){
-                                date = arrStrings[6].trim().toString().substring(0, 8);
+                                date = arrStrings[6].trim().substring(0, 8);
                             }
-                            String s2 = arrStrings[1].trim().toString();
-                            if(!"HEADER".equals(s1) && !"TRAILER".equals(s1) && 
+                            String s2 = arrStrings[1].trim();
+                            if(!"HEADER".equals(s1) && !"TRAILER".equals(s1) &&
                                 ("01".equals(s2.substring(0,2)) || "1".equals(s2.substring(0,1)))){
-                                info.setSecId(arrStrings[1].trim().toString());
+                                info.setSecId(arrStrings[1].trim());
                                 info.setValueSource(DictCodeListExt1.估值交易市场_上交所.getValue());
                                 info.setValueDate(DateUtil.parse(date));
-                                info.setMaxPrice(new BigDecimal(arrStrings[7].trim().toString()));
-                                info.setMinPrice(new BigDecimal(arrStrings[8].trim().toString()));
-                                info.setClosePrice(new BigDecimal(arrStrings[10].trim().toString()));
-                                info.setBuyOnePrice(new BigDecimal(arrStrings[11].trim().toString()));
-                                info.setSellOnePrice(new BigDecimal(arrStrings[13].trim().toString()));
+                                info.setMaxPrice(new BigDecimal(arrStrings[7].trim()));
+                                info.setMinPrice(new BigDecimal(arrStrings[8].trim()));
+                                info.setClosePrice(new BigDecimal(arrStrings[10].trim()));
+                                info.setBuyOnePrice(new BigDecimal(arrStrings[11].trim()));
+                                info.setSellOnePrice(new BigDecimal(arrStrings[13].trim()));
                                 infoList.add(info);
                             }
                         }
@@ -127,20 +129,20 @@ public class TxtReadUtils {
                         while ((lineTxt = br.readLine()) != null) {
                             HqFundMarketInfo info=new HqFundMarketInfo();
                             String[] arrStrings = lineTxt.split("\\|"); // 用于把一个字符串分割成字符串数组
-                            String s1 = arrStrings[0].trim().toString();
+                            String s1 = arrStrings[0].trim();
                             if("HEADER".equals(s1)){
-                                date = arrStrings[6].trim().toString().substring(0, 8);
+                                date = arrStrings[6].trim().substring(0, 8);
                             }
-                            String s2 = arrStrings[1].trim().toString();
+                            String s2 = arrStrings[1].trim();
                             if(!"HEADER".equals(s1) && !"TRAILER".equals(s1) && "5".equals(s2.substring(0,1))){
-                                info.setFundCode(arrStrings[1].trim().toString());
+                                info.setFundCode(arrStrings[1].trim());
                                 info.setValueSource(DictCodeListExt1.估值交易市场_上交所.getValue());
                                 info.setValueDate(DateUtil.parse(date));
-                                info.setMaxPrice(new BigDecimal(arrStrings[7].trim().toString()));
-                                info.setMinPrice(new BigDecimal(arrStrings[8].trim().toString()));
-                                info.setClosePrice(new BigDecimal(arrStrings[10].trim().toString()));
-                                info.setBuyOnePrice(new BigDecimal(arrStrings[11].trim().toString()));
-                                info.setSellOnePrice(new BigDecimal(arrStrings[13].trim().toString()));
+                                info.setMaxPrice(new BigDecimal(arrStrings[7].trim()));
+                                info.setMinPrice(new BigDecimal(arrStrings[8].trim()));
+                                info.setClosePrice(new BigDecimal(arrStrings[10].trim()));
+                                info.setBuyOnePrice(new BigDecimal(arrStrings[11].trim()));
+                                info.setSellOnePrice(new BigDecimal(arrStrings[13].trim()));
                                 infoList.add(info);
                             }
                         }
@@ -154,30 +156,44 @@ public class TxtReadUtils {
                         }
                     }else {
                         //预留其他txt接口文件处理
-                    } 
+                    }
                 }
             }
             catch (Exception e) {
             	logger.error("",e);
-            }finally{
-            	if(br!=null){
-            		try {
-						br.close();
-					} catch (IOException e) {
-						logger.error("",e);
-					} 
-            	}
+            }finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
+                if (isr != null) {
+                    try {
+                        isr.close();
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
             }
             listAll.addAll(list);
         }
         result.setT(listAll);
         return result;
     }
-    
+
     /**
-     * 
+     *
      * 读取中证债券估值行情
-     * 
+     *
      * @param line
      * @return
      */
@@ -188,38 +204,38 @@ public class TxtReadUtils {
             HqBondValuationInfo info = null;
             if (StringUtils.isNotEmpty(arrStrings[1].trim())) {
                 info = new HqBondValuationInfo();
-                info.setSecId(arrStrings[1].trim().toString());
+                info.setSecId(arrStrings[1].trim());
                 info.setValueource(DictCodeList.交易流通场所_上海证券交易所.getValue());
-                info.setValueDate(DateUtil.parse(arrStrings[0].trim().toString()));
-                info.setPrice(arrStrings[4].trim().toString().equals("")?null:new BigDecimal(arrStrings[4].trim().toString()));
-                info.setBpyield(arrStrings[5].trim().toString().equals("")?null:new BigDecimal(arrStrings[5].trim().toString()));
-                info.setmDuration(arrStrings[6].trim().toString().equals("")?null:new BigDecimal(arrStrings[6].trim().toString()));
-                info.setmConvexity(arrStrings[7].trim().toString().equals("")?null:new BigDecimal(arrStrings[7].trim().toString()));
-                info.setNetprice(arrStrings[8].trim().toString().equals("")?null:new BigDecimal(arrStrings[8].trim().toString()));
+                info.setValueDate(DateUtil.parse(arrStrings[0].trim()));
+                info.setPrice(arrStrings[4].trim().equals("")?null:new BigDecimal(arrStrings[4].trim()));
+                info.setBpyield(arrStrings[5].trim().equals("")?null:new BigDecimal(arrStrings[5].trim()));
+                info.setmDuration(arrStrings[6].trim().equals("")?null:new BigDecimal(arrStrings[6].trim()));
+                info.setmConvexity(arrStrings[7].trim().equals("")?null:new BigDecimal(arrStrings[7].trim()));
+                info.setNetprice(arrStrings[8].trim().equals("")?null:new BigDecimal(arrStrings[8].trim()));
                 list.add(info);
             }
             if (StringUtils.isNotEmpty(arrStrings[2].trim())) {
                 info = new HqBondValuationInfo();
-                info.setSecId(arrStrings[2].trim().toString());
+                info.setSecId(arrStrings[2].trim());
                 info.setValueource(DictCodeList.交易流通场所_深圳证券交易所.getValue());
-                info.setValueDate(DateUtil.parse(arrStrings[0].trim().toString()));
-                info.setPrice(arrStrings[4].trim().toString().equals("")?null:new BigDecimal(arrStrings[4].trim().toString()));
-                info.setBpyield(arrStrings[5].trim().toString().equals("")?null:new BigDecimal(arrStrings[5].trim().toString()));
-                info.setmDuration(arrStrings[6].trim().toString().equals("")?null:new BigDecimal(arrStrings[6].trim().toString()));
-                info.setmConvexity(arrStrings[7].trim().toString().equals("")?null:new BigDecimal(arrStrings[7].trim().toString()));
-                info.setNetprice(arrStrings[8].trim().toString().equals("")?null:new BigDecimal(arrStrings[8].trim().toString()));
+                info.setValueDate(DateUtil.parse(arrStrings[0].trim()));
+                info.setPrice(arrStrings[4].trim().equals("")?null:new BigDecimal(arrStrings[4].trim()));
+                info.setBpyield(arrStrings[5].trim().equals("")?null:new BigDecimal(arrStrings[5].trim()));
+                info.setmDuration(arrStrings[6].trim().equals("")?null:new BigDecimal(arrStrings[6].trim()));
+                info.setmConvexity(arrStrings[7].trim().equals("")?null:new BigDecimal(arrStrings[7].trim()));
+                info.setNetprice(arrStrings[8].trim().equals("")?null:new BigDecimal(arrStrings[8].trim()));
                 list.add(info);
             }
             if (StringUtils.isNotEmpty(arrStrings[3].trim())) {
                 info = new HqBondValuationInfo();
-                info.setSecId(arrStrings[3].trim().toString());
+                info.setSecId(arrStrings[3].trim());
                 info.setValueource(DictCodeList.交易流通场所_银行间债券市场.getValue());
-                info.setValueDate(DateUtil.parse(arrStrings[0].trim().toString()));
-                info.setPrice(arrStrings[4].trim().toString().equals("")?null:new BigDecimal(arrStrings[4].trim().toString()));
-                info.setBpyield(arrStrings[5].trim().toString().equals("")?null:new BigDecimal(arrStrings[5].trim().toString()));
-                info.setmDuration(arrStrings[6].trim().toString().equals("")?null:new BigDecimal(arrStrings[6].trim().toString()));
-                info.setmConvexity(arrStrings[7].trim().toString().equals("")?null:new BigDecimal(arrStrings[7].trim().toString()));
-                info.setNetprice(arrStrings[8].trim().toString().equals("")?null:new BigDecimal(arrStrings[8].trim().toString()));
+                info.setValueDate(DateUtil.parse(arrStrings[0].trim()));
+                info.setPrice(arrStrings[4].trim().equals("")?null:new BigDecimal(arrStrings[4].trim()));
+                info.setBpyield(arrStrings[5].trim().equals("")?null:new BigDecimal(arrStrings[5].trim()));
+                info.setmDuration(arrStrings[6].trim().equals("")?null:new BigDecimal(arrStrings[6].trim()));
+                info.setmConvexity(arrStrings[7].trim().equals("")?null:new BigDecimal(arrStrings[7].trim()));
+                info.setNetprice(arrStrings[8].trim().equals("")?null:new BigDecimal(arrStrings[8].trim()));
                 list.add(info);
             }
         } else {
@@ -227,9 +243,9 @@ public class TxtReadUtils {
         }
         return list;
     }
-    
+
     /**
-     * 
+     *
      * 利率行情信息读取
      *
      * @param line
@@ -239,13 +255,14 @@ public class TxtReadUtils {
         HqIntRateInfo info = new HqIntRateInfo();
         String[] arrStrings = line.split("\\|"); // 用于把一个字符串分割成字符串数组
         if (!arrStrings[0].trim().equals("PUBLISHDATE")) {
-            info.setIntRateId(arrStrings[2].trim().toString());
-            info.setRelaeseDate(DateUtil.parse(arrStrings[0].trim().toString()));
-            info.setEffDate(DateUtil.parse(arrStrings[5].trim().toString()));
-            info.setIntRate(new BigDecimal(arrStrings[4].trim().toString()));
+            info.setIntRateId(arrStrings[2].trim());
+            info.setRelaeseDate(DateUtil.parse(arrStrings[0].trim()));
+            info.setEffDate(DateUtil.parse(arrStrings[5].trim()));
+            info.setIntRate(new BigDecimal(arrStrings[4].trim()));
         } else {
             return null;
         }
         return info;
     }
 }
+

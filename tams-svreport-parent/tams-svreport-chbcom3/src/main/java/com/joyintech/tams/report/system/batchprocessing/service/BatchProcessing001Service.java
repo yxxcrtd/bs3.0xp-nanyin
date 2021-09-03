@@ -284,11 +284,13 @@ public class BatchProcessing001Service extends BaseService<BatchProcessing001Dto
         StringBuffer logContent = new StringBuffer();
         String logFileUrl = fileInfo.getFilePath();
         File logFile = new File(logFileUrl);
+        FileInputStream fis = null;
         if (logFile.exists()) {
             BufferedReader reader = null;
             try {
+                fis = new FileInputStream(logFile);
                 reader = new BufferedReader(
-                    new InputStreamReader(new FileInputStream(logFile), "UTF-8"));
+                    new InputStreamReader(fis, "UTF-8"));
                 String tempString = null;
                 // 一次读入一行，直到读入null为文件结束
                 while ((tempString = reader.readLine()) != null) {
@@ -297,21 +299,22 @@ public class BatchProcessing001Service extends BaseService<BatchProcessing001Dto
                 }
             }
             catch (Exception e) {
-//                e.printStackTrace();
                 logger.error(e.getMessage(),e);
             }
             finally {
+                try {
                 if (reader != null) {
-                    try {
                         reader.close();
                     }
+                    if (fis != null){
+                        fis.close();
+                    }
+                }
                     catch (IOException e) {
-//                        e.printStackTrace();
                         logger.error(e.getMessage(),e);
                     }
                 }
             }
-        }
         return logContent.toString();
     }
 }

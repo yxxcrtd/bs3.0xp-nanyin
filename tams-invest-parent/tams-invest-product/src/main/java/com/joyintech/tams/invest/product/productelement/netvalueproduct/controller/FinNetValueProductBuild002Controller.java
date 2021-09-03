@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import com.joyintech.tams.component.business.prod.dto.BussFinProductFundAccountInfoDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -499,8 +500,7 @@ public class FinNetValueProductBuild002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinNetValueProductBuild002Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinNetValueProductBuild002Dto dto) throws WorkFlowException {
         ProcessParameter<FinNetValueProductBuild002Dto> processParameter = new ProcessParameter<FinNetValueProductBuild002Dto>();
         WorkFlowParameter<FinNetValueProductBuild002Dto> params = new WorkFlowParameter<FinNetValueProductBuild002Dto>();
         params.setElementId(dto.getElementId());
@@ -646,7 +646,7 @@ public class FinNetValueProductBuild002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getTempletNameList")
-    public Page<SelectOptionDto> getTempletNameList() throws Exception{
+    public Page<SelectOptionDto> getTempletNameList(){
         Map<String , Object> map = RequestUtil.getPageParam();
         List<String> profitTypeList = new ArrayList<String>();
         profitTypeList.add(DictCodeList.收益类型_净值型.getValue());

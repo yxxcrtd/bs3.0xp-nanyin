@@ -42,7 +42,7 @@ public class PtlSingleIssuerPositionAnalysisService extends BaseService<PtlSingl
      * @throws Exception 异常信息
      */
     public Page<PtlSingleIssuerPositionAnalysisDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
         List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
         pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
@@ -65,7 +65,7 @@ public class PtlSingleIssuerPositionAnalysisService extends BaseService<PtlSingl
      * @throws Exception 异常信息
      */
     public Page<PtlSingleIssuerPositionAnalysisDto> selectForExport(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	if(StringUtil.isNotEmpty(pageParam.get("publisher"))){
             pageParam.put("publisherList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("publisher")));
         }
@@ -107,7 +107,7 @@ public class PtlSingleIssuerPositionAnalysisService extends BaseService<PtlSingl
      */
     // add by wangyang1【吉林银行个性化代码】添加导出一级明细数据  start
     public Page<PtlSingleIssuerPositionAnalysisDto> selectForExportTwo(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if(StringUtil.isNotEmpty(pageParam.get("publisher"))){
             pageParam.put("publisherList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("publisher")));
         }

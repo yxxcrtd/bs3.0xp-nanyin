@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -98,7 +99,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
     @RequestMapping("ValBondValuationInfo001Search")
     @ResponseBody
     public Page<ValBondValuationInfo001Dto> queryPageList()
-        throws Exception {
+         {
         Map<String, Object> params = RequestUtil.getPageParam();
 //        ValBondValuationInfo001SearchDto dto = (ValBondValuationInfo001SearchDto)JsonUtils.map2entity(
 //            params, ValBondValuationInfo001SearchDto.class);
@@ -143,8 +144,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params = this.getRequestMap();
 //        ValBondValuationInfo001SearchDto dto = (ValBondValuationInfo001SearchDto)JsonUtils.map2entity(
@@ -182,7 +182,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteCheck")
     public AjaxResult check(@Valid @RequestBody ValBondValuationInfo001Dto dto, BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -202,7 +202,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult deleteList(@RequestBody ValBondValuationInfo001Dto dto, BindingResult result)
-        throws Exception {
+         {
         String msg = getMessage("COMMON_I_0001");
         List<ValBondValuationInfo001Dto> listDto = dto.getListValBondValuationInfo001Dto();
 

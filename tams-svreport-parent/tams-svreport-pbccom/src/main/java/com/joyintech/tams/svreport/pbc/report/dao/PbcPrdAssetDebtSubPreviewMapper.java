@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.svreport.pbc.report.dto.PbcLoanDetailInfoSub;
+import org.springframework.stereotype.Repository;
+
 /**
  * 资产负债管理-贷款、信托明细信息预览Mapper
  * @author hpp
  *
  */
+@Repository
 public interface PbcPrdAssetDebtSubPreviewMapper {
 
 	/**

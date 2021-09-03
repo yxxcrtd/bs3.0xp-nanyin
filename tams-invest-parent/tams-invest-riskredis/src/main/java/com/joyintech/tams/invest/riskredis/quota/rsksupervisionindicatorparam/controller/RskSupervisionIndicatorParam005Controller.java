@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.se
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam005Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -146,11 +147,11 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @RequestMapping("getIndustryTreeNode")
     public List<TreeNode> getIndustryTreeNode(HttpServletRequest request) {
 		List<TreeNode> list = new ArrayList<>();
-		String parentId = request.getParameter("id");
-        String parentName = request.getParameter("name");
-		String parentChecked = request.getParameter("checked");
-        String category = request.getParameter("category");
-		String initValue = request.getParameter("initValue");
+		String parentId = request.getParameter("id")==null?"":request.getParameter("id");
+        String parentName = request.getParameter("name")==null?"":request.getParameter("name");
+		String parentChecked = request.getParameter("checked")==null?"":request.getParameter("checked");
+        String category = request.getParameter("category")==null?"":request.getParameter("category");
+		String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
 		List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(category)&&StringUtil.equals(category, "WIND")){
         	if(null == parentId) {
@@ -222,11 +223,11 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @RequestMapping("getAssetTreeNode")
     public List<TreeNode> getAssetTreeNode(HttpServletRequest request) {
 		List<TreeNode> list = new ArrayList<>();
-		String parentId = request.getParameter("id");
-        String parentName = request.getParameter("name");
-        String parentChecked = request.getParameter("checked");
-        String assetType = request.getParameter("assetType");
-        String initValue = request.getParameter("initValue");
+		String parentId = request.getParameter("id")==null?"":request.getParameter("id");
+        String parentName = request.getParameter("name")==null?"":request.getParameter("name");
+        String parentChecked = request.getParameter("checked")==null?"":request.getParameter("checked");
+        String assetType = request.getParameter("assetType")==null?"":request.getParameter("assetType");
+        String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
         List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_授权分类.getValue())){
         	if(null == parentId) {
@@ -808,8 +809,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam005Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam005Dto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -852,8 +852,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskSupervisionIndicatorParam005Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskSupervisionIndicatorParam005Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

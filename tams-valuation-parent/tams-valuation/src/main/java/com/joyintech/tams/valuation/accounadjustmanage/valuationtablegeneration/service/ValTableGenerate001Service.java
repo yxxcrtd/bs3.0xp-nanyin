@@ -146,7 +146,7 @@ public class ValTableGenerate001Service extends CommonExportService<ValTableGene
      * @throws Exception
      */
     public Page<ValTableGenerate001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
         
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValTableGenerate001/findPage", params, ValTableGenerate001Dto.class);
         

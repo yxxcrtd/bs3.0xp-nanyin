@@ -61,7 +61,8 @@ public class EtrProjectController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrProjectDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrProjectDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         String assetType1 = (String)param.get("assetType1");
         if(StringUtil.isNotEmpty(assetType1)){
             param.put("assetType1List", StringUtil.split(assetType1, GlobalConstant.COMMA));
@@ -80,7 +81,7 @@ public class EtrProjectController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrProjectService.getentrustId(map);
         return temp;
     }
@@ -95,7 +96,7 @@ public class EtrProjectController {
      */
     @GetMapping("getfinprodId")
     public List<SuggestDto> getfinprodId(String finprodId)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrProjectService.getfinprodId(finprodId);
         return temp;
     }
@@ -157,7 +158,7 @@ public class EtrProjectController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     @ResponseBody
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<SelectOptionDto> temp = etrProjectService.getfinprodIdForAdd(page,length,map);
         return temp;
     }

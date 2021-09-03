@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 税务方案 - 主界面公用 
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme00
  * @see TaxScheme001Mapper
  * @since 1.0
  */
+@Repository
 public interface TaxScheme001Mapper {
 
 	/**

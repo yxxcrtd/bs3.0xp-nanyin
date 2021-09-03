@@ -44,19 +44,26 @@ RskValAssetCode003 = function(){
      }
     
     var fiterSrcCode = function(){
-        var list = table.getAllRows();
-        var childstr ='' ;var parentstr='';
-        if(list){
-            var treeSourceObj = $.fn.zTree.getZTreeObj("treeSource");
-            $.each(list, function (i, item) {
-                var src_code = item.srcCode;
-                var node = treeSourceObj.getNodeByParam("id", src_code, null);
-                childstr+=","+src_code;
-                childstr =getAllChildrenNodes(node,childstr);
-                parentstr=getAllParentNodes(node,parentstr);
-            });
-        }
-        refreshInitTree(childstr+parentstr,true);
+        //var list = table.getAllRows();
+        //list需获取全量数据
+        var paramObj=getSearchParams();
+        Joyin.ajaxJson(basePath + 'invest/risk/penetrationmanagement/rskvalassetcode/RskValAssetCode001/findListDtl',paramObj,
+             function(result) {
+                 var childstr ='' ;var parentstr='';
+                 if(result){
+                      var treeSourceObj = $.fn.zTree.getZTreeObj("treeSource");
+                      $.each(result, function (i, item) {
+                           var src_code = item.srcCode;
+                           var node = treeSourceObj.getNodeByParam("id", src_code, null);
+                           childstr+=","+src_code;
+                           childstr =getAllChildrenNodes(node,childstr);
+                           parentstr=getAllParentNodes(node,parentstr);
+                     　});
+                 }
+                 refreshInitTree(childstr+parentstr,true);
+
+             }
+        );
     }
     
     /**

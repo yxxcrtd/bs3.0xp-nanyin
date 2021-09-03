@@ -12,9 +12,16 @@ import javax.servlet.ServletOutputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.json.JsonSanitizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JsonUtil {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(JsonUtil.class);
+
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	
 	public static void writeJSONToResponse(HttpServletResponse response, String json){
@@ -25,8 +32,8 @@ public class JsonUtil {
             pw.print(JsonSanitizer.sanitize(json));  
             pw.flush(); 
             pw.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
+        } catch (IOException e) {
+			logger.error(e.getMessage(),e);
         }   
 	}
 	
@@ -38,8 +45,8 @@ public class JsonUtil {
             output.print(json);  
             output.flush();
             output.close();
-        } catch (IOException e) {  
-            e.printStackTrace();  
+        } catch (IOException e) {
+			logger.error(e.getMessage(),e);
         }   
 	}
 	
@@ -55,7 +62,7 @@ public class JsonUtil {
 		try {
 			return objectMapper.writeValueAsString(obj);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return "";
 		}
 	}
@@ -64,7 +71,7 @@ public class JsonUtil {
 		try {
 			return objectMapper.readValue(JsonSanitizer.sanitize(json), List.class);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return new ArrayList<Object>();
 		}
 	}
@@ -95,7 +102,7 @@ public class JsonUtil {
 			List<List<String>> aaa=new ArrayList<List<String>>();
 			return objectMapper.readValue(JsonSanitizer.sanitize(json), aaa.getClass());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return new ArrayList<List<String>>();
 		}
 	}
@@ -105,7 +112,7 @@ public class JsonUtil {
 			List<HashMap<String, Object>> aaa=new ArrayList<HashMap<String, Object>>();
 			return objectMapper.readValue(JsonSanitizer.sanitize(json), aaa.getClass());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return new ArrayList<HashMap<String, Object>>();
 		}
 	}

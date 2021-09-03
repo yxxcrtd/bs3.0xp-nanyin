@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstbondquotationinfo.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,12 +74,10 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 债券代码下拉选择框
      * @param param 参数
      * @return list结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getSecId")
-    public List<SuggestDto> getSecIdOption(String param)
-        throws Exception {
+    public List<SuggestDto> getSecIdOption(String param){
         List<SuggestDto> list = mstBondQuotationInfoService.getSecIdOption(param);
         return list;
     }
@@ -88,24 +87,20 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 
      * @param param 参数
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getFinProdAbbr")
-    public List<SuggestDto> getFinProdAbbr(String param)
-        throws Exception {
+    public List<SuggestDto> getFinProdAbbr(String param){
         return mstBondQuotationInfoService.getFinProdAbbr(param);
     }
 
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstBondQuotationInfoDto> selectAll()
-        throws Exception {
+    public Page<MstBondQuotationInfoDto> selectAll(){
         Page<MstBondQuotationInfoDto> page = mstBondQuotationInfoService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -131,13 +126,11 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * @param dto 页面选中的数据
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstBondQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstBondQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -165,14 +158,12 @@ public class MstBondQuotationInfo001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstBondQuotationInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

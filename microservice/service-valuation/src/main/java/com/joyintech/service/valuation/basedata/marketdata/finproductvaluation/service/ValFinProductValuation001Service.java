@@ -55,7 +55,7 @@ public class ValFinProductValuation001Service extends CommonExportService<Result
      * @see
      * @since 1.0
      */
-    public Page<ResultDto> tableLoadPage(int page,int length,Map<String, Object> params) throws Exception {
+    public Page<ResultDto> tableLoadPage(int page,int length,Map<String, Object> params) {
         return super.queryForPage(page,length,()->valFinProductValuation001Mapper.tableLoad(params));
     }
 
@@ -68,7 +68,7 @@ public class ValFinProductValuation001Service extends CommonExportService<Result
      * @see
      * @since 1.0
      */
-    public List<ResultDto> tableLoad(Map<String, Object> params) throws Exception {
+    public List<ResultDto> tableLoad(Map<String, Object> params){
         return valFinProductValuation001Mapper.tableLoad(params);
     }
 

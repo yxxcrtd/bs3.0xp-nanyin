@@ -42,7 +42,7 @@ public class FinSupplementPlanChgController {
 
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<FinSupplementPlanChgDto> selectForPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		Page<FinSupplementPlanChgDto> dtoPage = finSupplementPlanChgService.selectForPage(page, length, param);
 		return dtoPage;
 	}

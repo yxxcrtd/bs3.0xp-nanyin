@@ -127,7 +127,7 @@ public class FinIntPayDateAdjustmentService extends BaseService<FinIntPayDateAdj
      * @since 1.0
      */
     public List<FinIntPayDateAdjustmentDto> selectForPage(Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("no", DictCodeList.是否_否.getValue());
         pageParam.put("yes", DictCodeList.是否_是.getValue());
         pageParam.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());

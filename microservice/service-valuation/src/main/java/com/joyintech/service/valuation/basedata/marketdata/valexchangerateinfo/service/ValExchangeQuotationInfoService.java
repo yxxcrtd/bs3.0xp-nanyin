@@ -62,8 +62,7 @@ public class ValExchangeQuotationInfoService extends BaseService<ValExchangeQuot
      * @see
      * @since 1.0
      */
-    public Page<ValExchangeQuotationInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    public Page<ValExchangeQuotationInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam){
         return super.queryForPage(page,length,() -> valExchangeQuotationInfoMapper.select(pageParam));
     }
 

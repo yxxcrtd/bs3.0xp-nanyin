@@ -83,7 +83,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValBondValuationInfo001Dto> queryPageList(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length ) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length ) {
 //        Map<String, Object> params = this.getRequestMap();
 //        ValBondValuationInfo001SearchDto dto = (ValBondValuationInfo001SearchDto)JsonUtils.map2entity(
 //            params, ValBondValuationInfo001SearchDto.class);
@@ -127,7 +127,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/queryAll")
-    public List<ValBondValuationInfo001Dto> queryAll(@RequestBody Map<String, Object> params) throws Exception{
+    public List<ValBondValuationInfo001Dto> queryAll(@RequestBody Map<String, Object> params){
             return  valBondValuationInfo001Service.queryAll(params);
         
     }
@@ -144,8 +144,7 @@ public class ValBondValuationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("deleteCheck")
-    public AjaxResult check(@Valid @RequestBody ValBondValuationInfo001Dto dto, BindingResult result)
-        throws Exception {
+    public AjaxResult check(@Valid @RequestBody ValBondValuationInfo001Dto dto, BindingResult result){
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }

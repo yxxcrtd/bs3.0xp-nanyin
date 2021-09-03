@@ -304,11 +304,13 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		 Workbook workbook=null;
 		 // 获取导入表名
 		 String tableName = null;
+		 FileInputStream fis = null;
 		 try {
+			 fis = new FileInputStream(file);
 			 if(!fileName.toLowerCase().endsWith("xls")){
-				 workbook = new XSSFWorkbook(new FileInputStream(file));
+				 workbook = new XSSFWorkbook(fis);
 			 }else if(!fileName.toLowerCase().endsWith("xlsx")){
-				 workbook = new HSSFWorkbook(new FileInputStream(file));
+				 workbook = new HSSFWorkbook(fis);
 			 }
 			 Sheet xssfSheet = workbook.getSheetAt(0);
 			 tableName = xssfSheet.getSheetName();
@@ -316,6 +318,21 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 			 logger.error(e1.getMessage(),e1);
 		 } catch (IOException e1) {
 			 logger.error(e1.getMessage(),e1);
+		 } finally {
+		 	if (workbook != null){
+				try {
+					workbook.close();
+				} catch (IOException e) {
+
+				}
+			}
+		 	if (fis != null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error("文件处理异常",e);
+				}
+			}
 		 }
 
 		 try {
@@ -342,11 +359,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 		 } catch (FileNotFoundException e) {
 			 logger.error("文件获取失败",e);
 		 }
-		 try {
-			workbook.close();
-		} catch (IOException e) {
-			logger.error("文件处理异常",e);
-		}
+
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
 		 return simpleRestTemplate.postForList(
@@ -370,17 +383,18 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 		File file = new File(fileName);
 		Workbook workbook=null;
 		// 获取导入表名
 		String tableName = null;
+		FileInputStream fis = null;
 		try {
+			fis = new FileInputStream(file);
 			 if(!fileName.toLowerCase().endsWith("xls")){
-				 workbook = new XSSFWorkbook(new FileInputStream(file));
+				 workbook = new XSSFWorkbook(fis);
 			 }else if(!fileName.toLowerCase().endsWith("xlsx")){
-				 workbook = new HSSFWorkbook(new FileInputStream(file));
+				 workbook = new HSSFWorkbook(fis);
 			 }
 			 Sheet xssfSheet = workbook.getSheetAt(0);
 			 tableName = xssfSheet.getSheetName();
@@ -388,7 +402,23 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 			logger.error(e1.getMessage(),e1);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage(),e1);
+		}finally {
+			if (workbook != null){
+				try {
+					workbook.close();
+				} catch (IOException e) {
+
+				}
+			}
+			if (fis != null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					logger.error("文件处理异常",e);
+				}
+			}
 		}
+
 		try {
 		    int headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
 		    if(tableName.equals("从业人员登记要素")){
@@ -399,7 +429,7 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
 				 fileName, null, null, 0, headerNum - 1, headerNum - 1);
 		     }
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		logger.info(dataList.toString());
@@ -426,7 +456,6 @@ public class SubOperationalInfoMService extends BaseService<FilterInformationDto
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
         File file = new File(fileName);
 		// 获取导入表名

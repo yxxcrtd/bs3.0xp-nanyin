@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetpositionmanagement.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -84,7 +85,7 @@ public class CeAssetPositionManagement002Service extends CommonExportService<CeA
      * @see
      * @since 1.0
      */
-    public List<ExcelValidDto> importData(String fileName) throws Exception {
+    public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException {
         //记录错误信息
         List<ExcelValidDto> errorMessage = new ArrayList<ExcelValidDto>();
         // 检查文件名是否为空

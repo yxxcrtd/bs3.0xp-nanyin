@@ -70,7 +70,7 @@ public class ProdPlanImpMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("产品开放计划接口数据接入Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

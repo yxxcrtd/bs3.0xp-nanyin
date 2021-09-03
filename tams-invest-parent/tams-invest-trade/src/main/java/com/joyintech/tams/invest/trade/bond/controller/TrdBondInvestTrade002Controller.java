@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.trade.bond.controller;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -24,6 +26,7 @@ import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -199,6 +202,10 @@ public class TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("tradeId", dto.getTotleTradeId());
             //---------add by zxjjpei 风险试算需要交易编号 20200325 start------
             model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?this.getParam("entrustId"):dto.getTotleTradeId());
+            if(StringUtil.equals(dto.getOperateType(),"revoke")){
+                model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?null:dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length() - 1));
+
+            }
             //---------add by zxjjpei 风险试算需要交易编号 20200325 end------
         }
         if (StringUtil.isNotBlank(workflowId)) {
@@ -722,8 +729,7 @@ public class TrdBondInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
     	if(flag) {
 			if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());

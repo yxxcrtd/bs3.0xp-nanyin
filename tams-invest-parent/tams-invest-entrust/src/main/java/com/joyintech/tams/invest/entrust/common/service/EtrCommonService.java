@@ -150,9 +150,7 @@ public class EtrCommonService extends BaseCommonService {
     public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
         if (baseEtrCashPositionCommService != null) {
             dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            BigDecimal result = baseEtrCashPositionCommService.qryAvailablePosition(dto);
-            result = ArithmeticUtil.multiply(result, new BigDecimal(100));
-            return result;
+            return baseEtrCashPositionCommService.qryAvailablePosition(dto);
         }
         return null;
     }

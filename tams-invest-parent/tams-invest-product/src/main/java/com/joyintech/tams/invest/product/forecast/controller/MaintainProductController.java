@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.forecast.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -66,15 +67,13 @@ public class MaintainProductController extends BaseController {
     /**
      * 查询流动性储备情况列表 <功能详细描述>
      * 
-     * @param feeId
      * @return
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findReserveDetail")
-    public Page<FinFlowForecastConfig> findReserveDetail()
-        throws Exception {
+    public Page<FinFlowForecastConfig> findReserveDetail(){
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("queryDate", this.getRequest().getParameter("queryDate"));
         Page<FinFlowForecastConfig> reserveDetailList = flowForecastService.findReserveDetail(map);
@@ -83,8 +82,7 @@ public class MaintainProductController extends BaseController {
 
     @ResponseBody
     @RequestMapping("getTargetName")
-    public FinFlowForecastConfig getTargetName()
-        throws Exception {
+    public FinFlowForecastConfig getTargetName() throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String queryType = this.getRequest().getParameter("queryType");
         String queryDate = this.getRequest().getParameter("queryDate");
@@ -106,8 +104,7 @@ public class MaintainProductController extends BaseController {
 
     @ResponseBody
     @RequestMapping("findForecast")
-    public Page<FinFlowForecastConfig> findForecast()
-        throws Exception {
+    public Page<FinFlowForecastConfig> findForecast() throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("queryDate", this.getRequest().getParameter("queryDate"));
         map.put("depType", this.getRequest().getParameter("depType"));
@@ -117,8 +114,7 @@ public class MaintainProductController extends BaseController {
 
     @ResponseBody
     @RequestMapping("findNetValueOpenforecast")
-    public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast()
-        throws Exception {
+    public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast() throws ParseException {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("queryDate", this.getRequest().getParameter("queryDate"));
         Page<FinFlowForecastDealAmontDto> netValueOpenforecastList = flowForecastService.findNetValueOpenforecast(
@@ -128,8 +124,7 @@ public class MaintainProductController extends BaseController {
 
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated FinFlowForecastConfig dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated FinFlowForecastConfig dto, BindingResult br){
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +47,11 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.serv
 @PageId("RskValStructure003")
 @RequestMapping("/invest/risk/penetrationmanagement/rskvalstructure/RskValStructure003")
 public class RskValStructure003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValStructure003Controller.class);
+
     @Autowired
     private RskValStructure003Service rskValStructure003Service;
     
@@ -64,8 +71,7 @@ public class RskValStructure003Controller extends BaseController {
         		try {
 					entity.setSrcColIndex(ExcelUtilForRisk.indexToColumn(Integer.parseInt(dto.getSrcColIndex())));
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
         	}
             model.addAttribute(GlobalConstant.ENTITY, entity);
@@ -112,7 +118,7 @@ public class RskValStructure003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("insert")
-    public AjaxResult insert(@RequestBody RskValStructureDto dto) throws Exception {
+    public AjaxResult insert(@RequestBody RskValStructureDto dto) {
         rskValStructure003Service.insert(dto);
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }
@@ -128,7 +134,7 @@ public class RskValStructure003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("update")
-    public AjaxResult update(@RequestBody RskValStructureDto dto) throws Exception {
+    public AjaxResult update(@RequestBody RskValStructureDto dto) {
         rskValStructure003Service.update(dto);
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }

@@ -62,7 +62,7 @@ public class FinProductBmQuotationValidator implements BeanValidator {
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             // 删除check
             List<FinProductBmQuotationDto> list = dto.getSelectedItem();
-            if (list.size() > 0 && list != null) {
+            if (list != null && list.size() > 0) {
                 for (FinProductBmQuotationDto mst : list) {
                     // 判断估值日期是否大于平台日期
                     if (mst.getEffDate().compareTo(DateUtil.platDateFromCache()) < 0) {

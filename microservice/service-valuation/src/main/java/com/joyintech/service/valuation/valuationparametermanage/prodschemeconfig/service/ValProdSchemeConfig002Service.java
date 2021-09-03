@@ -53,7 +53,7 @@ public class ValProdSchemeConfig002Service extends CommonExportService<ValProdSc
     @Autowired
     private DBUtil dBUtil;
     
-    public List<ValProdSchemeConfig002Dto> findPage(Map<String, Object> params) throws Exception{
+    public List<ValProdSchemeConfig002Dto> findPage(Map<String, Object> params) {
         params.put("booksetType", DictCodeList.账套类别_理财账套.getValue());
         return mapper.queryPageList(params);
     }

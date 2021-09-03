@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +56,7 @@ public class SdProdIssueBatchService {
 	@Autowired
 	private ProdPersonIssue001Service prodPersonIssue001Service;
 	
-	public void sendIssueInfoMsg(Date batchDate, List<String> prodIdList) throws Exception  {
+	public void sendIssueInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品发行信息登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		List<SdProdPersonIssueDto> listSub = sdprodIssueSvrMapper.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
@@ -129,7 +130,7 @@ public class SdProdIssueBatchService {
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdIssueSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbPrdIssueSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		// 报文发送
 		logger.debug("产品发行信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数

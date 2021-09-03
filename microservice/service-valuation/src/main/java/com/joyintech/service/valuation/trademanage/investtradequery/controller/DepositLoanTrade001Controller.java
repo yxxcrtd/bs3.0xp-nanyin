@@ -47,8 +47,7 @@ public class DepositLoanTrade001Controller extends BaseController {
     // }
     
     @PostMapping("/findByTradeId")
-    public DepositLoanTradeDto findByTradeId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public DepositLoanTradeDto findByTradeId(@RequestBody Map<String, Object> param){
         return depositLoanTrade001Service.findByTradeId(param);
     }
 }

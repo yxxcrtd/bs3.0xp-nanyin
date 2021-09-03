@@ -31,7 +31,7 @@ public class CalFunReturnAssetID extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception {
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws InterfaceException {
 		HashMap<String, String> map=new HashMap<String, String>();
 		
 		String assetStr = genConvertFormula(inputValue, colcfgMap);
@@ -56,7 +56,7 @@ public class CalFunReturnAssetID extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

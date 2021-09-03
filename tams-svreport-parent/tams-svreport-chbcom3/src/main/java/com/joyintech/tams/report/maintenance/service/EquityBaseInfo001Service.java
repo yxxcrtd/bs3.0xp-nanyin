@@ -215,7 +215,7 @@ public class EquityBaseInfo001Service extends CommonExportService<EquiteBaseInfo
                         });
                     }
                     catch (Exception e) {
-//                        e.printStackTrace();
+//                        logger.error(e.getMessage(),e);
                         logger.error(e.getMessage(),e);
                         checkResult = new ArrayList<>();
                         checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,
@@ -473,7 +473,6 @@ public class EquityBaseInfo001Service extends CommonExportService<EquiteBaseInfo
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
             checkResult = new ArrayList<>();
             checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,

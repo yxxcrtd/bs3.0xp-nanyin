@@ -70,7 +70,7 @@ public class FinSubmittedModuleDetailController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinSubmittedModuleDetailDto> selectForPage(@RequestBody Map<String, Object> map,
-                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                       @PathVariable("page") int page, @PathVariable("length") int length) {
         return finSubmittedModule002Service.selectForPage(page, length, map);
     }
 

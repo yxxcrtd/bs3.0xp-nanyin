@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.fundaccountquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class FundAccountQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<FundAccountQuery001Dto> findPage()
-        throws Exception {
+          {
         return fundAccountQuery001Service.queryFundAccountList(RequestUtil.getPageParam());
     }
 
@@ -84,7 +85,7 @@ public class FundAccountQuery001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws IOException {
         String datas = this.getParam("datas");
         List<FundAccountQuery001Dto> listdto;
         if (datas == null) {

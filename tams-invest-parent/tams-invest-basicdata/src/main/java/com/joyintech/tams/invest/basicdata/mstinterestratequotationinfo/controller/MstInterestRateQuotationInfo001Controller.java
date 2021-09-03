@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -80,8 +81,7 @@ public class MstInterestRateQuotationInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstInterestRateQuotationInfoDto> selectAllMstInterestRate()
-        throws Exception {
+    public Page<MstInterestRateQuotationInfoDto> selectAllMstInterestRate(){
         Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.利率行情, null);
         List<String> intRateIdList = new ArrayList<String>();
@@ -106,8 +106,7 @@ public class MstInterestRateQuotationInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstInterestRateQuotationInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -137,8 +136,7 @@ public class MstInterestRateQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstInterestRateQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstInterestRateQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

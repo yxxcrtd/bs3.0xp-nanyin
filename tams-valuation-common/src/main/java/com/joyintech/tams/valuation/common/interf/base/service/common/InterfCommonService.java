@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -175,8 +176,16 @@ public class InterfCommonService {
         BokBookset valBokBookset = (BokBookset)booksetInfoMap.get(
             InterfCommonConstant.账套信息查询_账套信息);
         // 账套配置
-        List<BokBooksetExt> listValBokBooksetExt = (List<BokBooksetExt>)booksetInfoMap.get(
-            InterfCommonConstant.账套信息查询_账套配置);
+        //判断账套是否已经有历史账套参数配置，若有，则不取账套模板中的，取自账套本身　modify by hxy 20210827
+        List<BokBooksetExt> listValBokBooksetExt = mapper.selectBooksetExtByBooksetId(dto.getFinprodId());
+        boolean ishaveBooksetExt=true;
+        if(StringUtil.isEmptyList(listValBokBooksetExt)){
+            listValBokBooksetExt= (List<BokBooksetExt>)booksetInfoMap.get(
+                    InterfCommonConstant.账套信息查询_账套配置);
+            ishaveBooksetExt=false;
+        }
+        /*List<BokBooksetExt> listValBokBooksetExt = (List<BokBooksetExt>)booksetInfoMap.get(
+            InterfCommonConstant.账套信息查询_账套配置);*/
         
         // 2.2.1 账套表(BOK_BOOKSET)
         BokBookset resValBokBookset = new BokBookset();
@@ -282,67 +291,92 @@ public class InterfCommonService {
             if (ValDictCodeList.账套配置表参数项_活期存款是否计提.getValue().equals(ext.getParamCode())) {
                 isAreadyMap.put(ValDictCodeList.账套配置表参数项_活期存款是否计提.getValue(), true);
                 if (dtoAdd != null && dtoAdd.getIsCalc() != null) {
-                    ext.setParamValue(dtoAdd.getIsCalc());
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(dtoAdd.getIsCalc());
+                    }
                 }
             }
             // 2. 货币型产品
             if (DictCodeList.收益类型_货币型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(UP_CARRYOVER_CYCLE_HBX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(UP_CARRYOVER_CYCLE_HBX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(PAL_CARRYOVER_CYCLE_HBX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(PAL_CARRYOVER_CYCLE_HBX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
-                    ext.setParamValue(CARRYOVER_CYCLE_HBX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(CARRYOVER_CYCLE_HBX);
+                    }
                 }
             }
             // 3. 净值型产品
             if (DictCodeList.收益类型_净值型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
-                    ext.setParamValue(CARRYOVER_CYCLE_JZX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(CARRYOVER_CYCLE_JZX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(UP_CARRYOVER_CYCLE_JZX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(UP_CARRYOVER_CYCLE_JZX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(PAL_CARRYOVER_CYCLE_JZX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(PAL_CARRYOVER_CYCLE_JZX);
+                    }
                 }
             }
             // 4.收益类型
             if (DictCode.收益类型.getValue().equals(ext.getParamCode())) {
                 isAreadyMap.put(DictCode.收益类型.getValue(), true);
-                ext.setParamValue(profitType);
+                if(!ishaveBooksetExt){
+                    ext.setParamValue(profitType);
+                }
             }
             // 5. 预期收益产品 add by wujie on 20181008
             if (DictCodeList.收益类型_收益型.getValue().equals(profitType)) {
                 if (ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_本期利润损益结转频率.getValue(), true);
-                    ext.setParamValue(UP_CARRYOVER_CYCLE_SYX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(UP_CARRYOVER_CYCLE_SYX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益平准金结转频率.getValue(), true);
-                    ext.setParamValue(PAL_CARRYOVER_CYCLE_SYX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(PAL_CARRYOVER_CYCLE_SYX);
+                    }
                 }
                 if (ValDictCodeList.账套配置表参数项_损益结转频率.getValue().equals(ext.getParamCode())) {
                     isAreadyMap.put(ValDictCodeList.账套配置表参数项_损益结转频率.getValue(), true);
-                    ext.setParamValue(CARRYOVER_CYCLE_SYX);
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(CARRYOVER_CYCLE_SYX);
+                    }
                 }
             }
       
             //6.估值表模板 add by wujie on 20181220
             if (ValDictCodeList.账套配置表参数项_估值表模板.getValue().equals(ext.getParamCode())) {
                 isAreadyMap.put(ValDictCodeList.账套配置表参数项_估值表模板.getValue(), true);
-                ext.setParamValue(valSysParaService.findParamValue("SCHEME_MODE"));
-                
+                if(!ishaveBooksetExt){
+                    ext.setParamValue(valSysParaService.findParamValue("SCHEME_MODE"));
+                }
                 if (otherParams != null && otherParams.getValuationTemplate() != null) {
-                    ext.setParamValue(otherParams.getValuationTemplate());
+                    if(!ishaveBooksetExt){
+                        ext.setParamValue(otherParams.getValuationTemplate());
+                    }
                 }
             }
             resValBokBooksetExt.add(ext);
@@ -665,7 +699,7 @@ public class InterfCommonService {
                 if (invAimDto.getSchemeCnt() > 1) {
                     // 抛出异常
                     try {
-                        throw new Exception("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
+                        throw new BusinessException("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
                     }
                     catch (Exception e) {
                         logger.error("", e);
@@ -6911,7 +6945,7 @@ public class InterfCommonService {
                     if (invAimDto.getSchemeCnt() > 1) {
                         // 抛出异常
                         try {
-                            throw new Exception("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
+                            throw new BusinessException("变量.账套信息Dto.账套代码—输入.金融产品交易.金融产品代码：出现重复估值方案");
                         }
                         catch (Exception e) {
                             logger.error("", e);
@@ -7189,7 +7223,7 @@ public class InterfCommonService {
      */
     public  Map<String,String> parameterConditionAnalysis(String parms){
         Map<String,String> resultMap = new HashMap<String,String>();
-        if(parms.isEmpty() || parms == null){
+        if(parms == null || parms.isEmpty()){
             return  resultMap;
         }
         String[] parm = parms.split("\\|");
@@ -7220,7 +7254,7 @@ public class InterfCommonService {
 	        Object obj = method.invoke(dto);
 	        settleAmt = obj == null ? BigDecimal.ZERO :(BigDecimal) obj ;
         }catch(Exception e){
-        	e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return settleAmt;
     }

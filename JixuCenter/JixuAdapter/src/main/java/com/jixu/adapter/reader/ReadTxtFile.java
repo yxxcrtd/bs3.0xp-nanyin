@@ -1,9 +1,6 @@
 package com.jixu.adapter.reader;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -28,7 +25,7 @@ public class ReadTxtFile extends ReadFileBasic {
 		return InterfaceConfig.txt;
 	}
 
-	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws Exception{
+	public DataReadResult readFileDataResult(InterfaceSource source,DataCounter dataCounter) throws IOException {
 		List<String> filePaths = getReadFiles(source);
 		DataReadResult result = new DataReadResult();
 		if(result.getFilePathList().size()==0){
@@ -36,6 +33,7 @@ public class ReadTxtFile extends ReadFileBasic {
 		}
 		
 		BufferedReader buf = null;
+		FileInputStream fis = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		//获取文件开头需要过滤的行数
 		int ignoreLine=getIgnoreLines(source);
@@ -51,7 +49,8 @@ public class ReadTxtFile extends ReadFileBasic {
 				logger.info(source.getSourceName() + "		读取文件: " + filepath);
 				
 				int readLineNum = 0;
-				buf = new BufferedReader(new InputStreamReader(new FileInputStream(new SafelyFile(filepath)), FileEncodeType.optionHM.get(source.getEnCodeType())));
+				fis = new FileInputStream(new SafelyFile(filepath));
+				buf = new BufferedReader(new InputStreamReader(fis, FileEncodeType.optionHM.get(source.getEnCodeType())));
 				String line = null;
 				int readstartLine=0;
 				int readEndLine=0;
@@ -131,12 +130,15 @@ public class ReadTxtFile extends ReadFileBasic {
 				//}
 			}
 		} finally {
-			if (buf != null) {
-				try {
+			try {
+				if (buf != null) {
 					buf.close();
-				} catch (IOException e) {
-					logger.error("Error", e);
 				}
+				if (fis	!= null){
+					fis.close();
+				}
+			} catch (IOException e) {
+				logger.error("Error", e);
 			}
 		}
 		result.setDataResult(fileContainer);

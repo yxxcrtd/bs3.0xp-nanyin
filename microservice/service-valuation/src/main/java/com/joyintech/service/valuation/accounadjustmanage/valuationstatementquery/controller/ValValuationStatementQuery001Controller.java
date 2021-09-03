@@ -171,7 +171,7 @@ public class ValValuationStatementQuery001Controller extends BaseController {
 	 */
 	@PostMapping("/findPage/{page}/{length}")
 	public Page<ValValuationStatementQuery001Dto> findPage(@RequestBody Map<String, Object> params,
-	                                                       @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	                                                       @PathVariable("page") int page, @PathVariable("length") int length) {
 		return valValuationStatementQuery001Service.findPage(page,length,params);
 
 	}

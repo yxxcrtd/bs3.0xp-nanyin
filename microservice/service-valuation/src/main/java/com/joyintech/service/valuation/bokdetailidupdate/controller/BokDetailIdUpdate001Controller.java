@@ -111,7 +111,7 @@ public class BokDetailIdUpdate001Controller extends BaseController {
      * @throws ParseException
      */
     @PostMapping("/update")
-    public String update(@RequestBody List<BokDetailIdUpdate001Dto> params) throws Exception {
+    public String update(@RequestBody List<BokDetailIdUpdate001Dto> params) {
         return bokDetailIdUpdate001Service.update(params);  
     }
 }

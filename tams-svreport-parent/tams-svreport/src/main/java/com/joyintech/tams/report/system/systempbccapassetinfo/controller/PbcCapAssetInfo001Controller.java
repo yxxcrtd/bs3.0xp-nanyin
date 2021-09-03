@@ -98,7 +98,7 @@ public class PbcCapAssetInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getAssetCode")
-    public List<SelectOptionDto> queryInsideProdIdList(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryInsideProdIdList(@RequestParam Map<String, Object> param) {
         return pbcCapAssetInfo001MService.queryInsideProdIdList(param);
     }
 
@@ -112,7 +112,7 @@ public class PbcCapAssetInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getPobCasSeTidList")
-    public List<SelectOptionDto> queryPobCasSeTidList(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryPobCasSeTidList(@RequestParam Map<String, Object> param) {
         return pbcCapAssetInfo001MService.queryPobCasSeTidList(param);
     }
 

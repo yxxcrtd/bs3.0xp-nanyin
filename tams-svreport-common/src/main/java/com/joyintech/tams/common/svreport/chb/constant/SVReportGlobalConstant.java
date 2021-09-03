@@ -372,6 +372,11 @@ public class SVReportGlobalConstant {
      * 系统参数:是否中债子系统
      */
     public static final String SVR_IS_SUB_SYSTEM = "SVR_IS_SUB_SYSTEM";
+
+    /**
+     * 系统参数  监管报送 模块的 menu_id 类似于 REPORT_001 各项目配置不一样 按实际配置
+     */
+    public static final String SVR_FIRST_MENU_ID = "SVR_FIRST_MENU_ID";
     /**
      * 系统参数:是否子公司
      */

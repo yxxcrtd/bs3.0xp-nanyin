@@ -1,6 +1,7 @@
 package com.joyintech.tams.disclosure.information.manage.estimatereveal.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +80,7 @@ public class EstimateReveal001Controller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -95,7 +95,7 @@ public class EstimateReveal001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<EstimateReveal001Dto> findPage() throws Exception{
+    public Page<EstimateReveal001Dto> findPage() {
     	Page<EstimateReveal001Dto> pageList = estimateReveal001Service.findPage(RequestUtil.getPageParam());
         return pageList;
     }
@@ -115,7 +115,7 @@ public class EstimateReveal001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
 		List<EstimateReveal001Dto> dtoList;
 		if (datas == null) {

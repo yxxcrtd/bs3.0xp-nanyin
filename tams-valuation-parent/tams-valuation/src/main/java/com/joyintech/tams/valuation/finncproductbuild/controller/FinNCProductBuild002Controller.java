@@ -151,14 +151,14 @@ public class FinNCProductBuild002Controller extends BaseController {
     @RequestMapping("queryFeeList")
     @ResponseBody
     public List<ValProductInfoFeeDto> queryFeeList()
-        throws Exception {
+         {
         return finNCProductBuild001Service.queryFeeList(RequestUtil.getPageParam());
     }
     
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) FinNCProductBuild001Dto dto, BindingResult bindingResult)
-			throws Exception {
+			 {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 		

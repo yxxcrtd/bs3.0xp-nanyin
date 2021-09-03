@@ -50,7 +50,7 @@ public class ExternalOptions002Service extends CommonExportService<ExternalOptio
 
     public String findByBenchmarkId(String finprodId2)
     {
-        String str = new String();
+        String str = "";
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
                         + "/ExternalOptions/findByBenchmarkId?finprodId2="+finprodId2,str,
                  String.class);

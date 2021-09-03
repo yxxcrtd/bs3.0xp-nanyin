@@ -71,7 +71,7 @@ public class CurrentDeposit001Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<CurrentDepositDto> findPage()  throws Exception {
+    public Page<CurrentDepositDto> findPage() {
         String tradeId=this.getParam("tradeId");
         return currentDeposit001Service.selectByTradeId3(tradeId);
     }

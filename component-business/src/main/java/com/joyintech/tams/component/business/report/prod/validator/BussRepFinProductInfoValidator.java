@@ -127,12 +127,12 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
             }
         }
         // 业务联络人座机
-        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
-                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepLiaisonTel())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepLiaisonTel(), 30)) {
+//                resultList.add(new ValidMessage("repLiaisonTel", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//            }
+//        }
         // 业务联络人手机
         if (StringUtil.isNotEmpty(dto.getRepLiaisonMobile())) {
         	if(!RepCheckUtil.checkNum11(dto.getRepLiaisonMobile())){
@@ -197,18 +197,18 @@ public class BussRepFinProductInfoValidator implements BeanValidator {
 //                        this.getMessage("BussRepFinProductInfo.repInvTypeRat"))));
 //            }
 //        }
-        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
-                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
-            }
-        }
-        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
-            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
-                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
-                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
-            }
-        }
+//        if (StringUtil.isNotEmpty(dto.getRepRuleComment())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepRuleComment(), 256)) {
+//                resultList.add(new ValidMessage("repRuleComment", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repRuleComment"))));
+//            }
+//        }
+//        if (StringUtil.isNotEmpty(dto.getRepOpenBussRemark())) {
+//            if (RepCheckUtil.checkByteLength(dto.getRepOpenBussRemark(), 256)) {
+//                resultList.add(new ValidMessage("repOpenBussRemark", this.getMessage("FW_E_0002",
+//                    this.getMessage("BussRepFinProductInfo.repOpenBussRemark"))));
+//            }
+//        }
         if (StringUtil.isNotEmpty(dto.getRepRemark())) {
             if (RepCheckUtil.checkByteLength(dto.getRepRemark(), 256)) {
                 resultList.add(new ValidMessage("repRemark", this.getMessage("FW_E_0002",

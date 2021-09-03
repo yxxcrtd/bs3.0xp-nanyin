@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.Asset
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,8 +130,7 @@ public class AssetNameManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskAccessListDetailDto> selectAll()
-        throws Exception {
+    public Page<RskAccessListDetailDto> selectAll() throws IOException {
         Page<RskAccessListDetailDto> page = assetNameManagementService.selectForDetailPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -164,8 +165,7 @@ public class AssetNameManagement003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.manage.workrule.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +48,7 @@ import com.joyintech.framework.util.CacheUtil;
  * 作业规则查询
  * @author 
  * @version 1.0 2018年5月16日
- * @see ValNetValueConfirm001Contoller
+ * @see ReportRule001Contoller
  * @since 1.0
  */
 @Controller
@@ -97,7 +98,7 @@ public class ReportRule001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportRule001Dto> findPage() throws Exception{
+    public Page<ReportRule001Dto> findPage() {
         Page<ReportRule001Dto>  pageList = reportRule001Service.findPage(RequestUtil.getPageParam());
         return pageList;
     }
@@ -113,7 +114,7 @@ public class ReportRule001Contoller extends BaseController {
      */
     @SuppressWarnings("unchecked")
 	@RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
  		 String datasAll = this.getParam("datasAll");
          List<ReportRule001Dto> dtoList;
@@ -145,7 +146,7 @@ public class ReportRule001Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/check")
-	public AjaxResult check(@RequestBody ReportRule001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportRule001Dto dto, BindingResult result) {
 		return new AjaxResult();
 	}
 }

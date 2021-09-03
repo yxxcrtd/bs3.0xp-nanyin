@@ -99,7 +99,7 @@ public class SvrMstExchangeQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(SvrMstExchangeQuotationInfoDto dto)
-        throws Exception {
+         {
         String msg = this.getMessage("REPORT_COMMON_I_0006");
         if("0".equals(dto.getPageModel())){
         	Map<String, Object> pageParam = new HashMap<String, Object>();

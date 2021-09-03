@@ -103,7 +103,7 @@ public class ProfitDistributionBookProcessorService {
      * @since 1.0
      */
     public ProfitDistributionResult execute(Map<String, Object> params)
-        throws Exception {
+         {
         // 获取reader返回值
         ProfitDistributionReaderDto acctEntity = (ProfitDistributionReaderDto)params.get(
             GlobalConstant.READER_RESULT);

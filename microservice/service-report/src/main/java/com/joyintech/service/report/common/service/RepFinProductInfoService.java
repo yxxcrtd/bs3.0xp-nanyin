@@ -96,7 +96,7 @@ public class RepFinProductInfoService {
      * @see
      * @since 1.0
      */
-    public BussRepFinProductInfoDto select(String finprodId) throws Exception {
+    public BussRepFinProductInfoDto select(String finprodId) throws InvocationTargetException, IllegalAccessException {
         BussRepFinProductInfoDto bussRepFinProductInfoDto = new BussRepFinProductInfoDto();
         RepProdDeclare repProdDeclare = repProdDeclareMapper.selectByPrimaryKey(finprodId);
         if (repProdDeclare != null){
@@ -163,7 +163,7 @@ public class RepFinProductInfoService {
      * @see
      * @since 1.0
      */
-    public void insert(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws Exception{
+    public void insert(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws InvocationTargetException, IllegalAccessException {
         this.delete(bussRepFinProductInfoDto.getRepFinprodId());
         
         BaseRepFinProductInfoDto baseRepFinProductInfoDto = new BaseRepFinProductInfoDto();
@@ -227,7 +227,7 @@ public class RepFinProductInfoService {
      * @see
      * @since 1.0
      */
-    public void update(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws Exception{
+    public void update(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws InvocationTargetException, IllegalAccessException {
     	if(bussRepFinProductInfoDto.getIsMerger()!=null
     			&& bussRepFinProductInfoDto.getIsMerger().equals(DictCodeList.是否_否.getValue())){
     		//删除发行要素
@@ -304,7 +304,7 @@ public class RepFinProductInfoService {
      * @see
      * @since 1.0
      */
-    public BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId) throws Exception {
+    public BussRepFinProductInfoDto selectRepFinprodId(String repFinprodInsId) throws InvocationTargetException, IllegalAccessException {
         BussRepFinProductInfoDto bussRepFinProductInfoDto = new BussRepFinProductInfoDto();
         RepProdDeclare repProdDeclare = baseRepFinProductInfoMapper.selectRepFinprodId(repFinprodInsId);
         if (repProdDeclare != null){
@@ -343,7 +343,7 @@ public class RepFinProductInfoService {
      * @see
      * @since 1.0
      */
-    public void insertMergerNo(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws Exception{
+    public void insertMergerNo(BussRepFinProductInfoDto bussRepFinProductInfoDto) throws InvocationTargetException, IllegalAccessException {
     	//删除发行要素
     	repProdIssueMapper.deleteByPrimaryKey(bussRepFinProductInfoDto.getRepFinprodId());
     	

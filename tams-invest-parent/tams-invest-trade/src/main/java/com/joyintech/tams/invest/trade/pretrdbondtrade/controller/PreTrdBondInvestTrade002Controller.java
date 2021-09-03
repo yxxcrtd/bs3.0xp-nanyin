@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -493,7 +494,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody PreTrdBondInvestTrade002Dto dto)   throws Exception {
+    AjaxResult save(@RequestBody PreTrdBondInvestTrade002Dto dto) throws WorkFlowException {
 
         String msg = "";
 //        Object[] fenpeiDto = dto.getBussTrdTransfenpeiDto();

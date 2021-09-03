@@ -16,8 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,9 +54,18 @@ import net.sf.jxls.transformer.XLSTransformer;
  */
 @Service
 public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCashFlowGapAnalysis001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
+
 	@Autowired(required = false) 
 	private IPlatformDate iPlatformDate;
 	
+	/**
+     * 日志
+     */
+//    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
 	/**
      * 模糊查询组合代码
      * @param param 模糊查询参数
@@ -69,12 +81,10 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
 	/**
 	 * 获取发行人信息
 	 * 
-	 * @param paraMap
+	 * @param map
 	 * @return
-	 * @throws Exception
 	 */
-	public List<SelectOptionDto> getFundAccount(Map<String,Object> map)
-			throws Exception {
+	public List<SelectOptionDto> getFundAccount(Map<String,Object> map){
 		map.put("userId", SecurityUtil.getLoginUser().getUserName());
 		List<SelectOptionDto> fundAccountSelect = restTemplate.postForList(
 				ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlCashFlowGapAnalysis/getFundAccount",map,
@@ -87,7 +97,6 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -206,7 +215,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> detailExport(Map<String, Object> selectParam) {
+    public ResponseEntity<byte[]> detailExport(Map<String, Object> selectParam) throws IOException, InvalidFormatException {
         Map<Object, Object> data = new HashMap<Object, Object>(); 
         List<PtlCashFlowGapAnalysis001Dto> list = this.selectListData(selectParam);
         List<Map<String, Object>> lists = getColumnMap(list);  
@@ -277,7 +286,7 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @since 1.0
      */
     public ResponseEntity<byte[]> exportExcel(Map<Object, Object> data,
-                                                         String exceltemplate) {
+                                                         String exceltemplate) throws IOException, InvalidFormatException {
         String termname = data.get("termname").toString();
         String flieName =  termname +".xlsx";
         File depositfile = createFile(data, exceltemplate);
@@ -292,11 +301,13 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
      * @see
      * @since 1.0
      */
-    public File createFile(Map<Object, Object> data, String exceltemplate) {
+    public File createFile(Map<Object, Object> data, String exceltemplate) throws IOException, InvalidFormatException {
         String termname = data.get("termname").toString();
         String flieName =  termname + ".xlsx";
         File depositfile = null;
         OutputStream os = null;
+        FileOutputStream fis = null;
+        InputStream stream = null;
         try {
             // 关联模板
             XLSTransformer transformer = new XLSTransformer();  
@@ -309,21 +320,34 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
             }
             String templateFile = exceltemplate + ".xlsx";
             // 模板输入流
-            InputStream stream  = CommonExportService.class.getResourceAsStream(
+            stream  = CommonExportService.class.getResourceAsStream(
                     "/tpl/" + templateFile);
             Workbook workbook = transformer.transformXLS(stream, data);
-            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+            fis = new FileOutputStream(depositfilePath + File.separator + flieName);
+            os = new BufferedOutputStream(fis);
             workbook.write(os); 
         }
-        catch (Exception e) { 
-            throw new RuntimeException(e);
-        }finally {
+        finally {
             if(os != null){
                 try {
                     os.flush();
                     os.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            if (fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+        }
+            }
+            if (stream != null){
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

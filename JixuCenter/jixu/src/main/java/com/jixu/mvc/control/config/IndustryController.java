@@ -7,6 +7,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +21,7 @@ import com.orm.obj.RPSecType;
 
 @Controller
 public class IndustryController extends ExceptionControl{
-	
+	private static final Logger logger = LoggerFactory.getLogger(IndustryController.class);
 	@Resource(name="configService")
 	private ConfigService configService;
 	
@@ -59,11 +61,13 @@ public class IndustryController extends ExceptionControl{
      public void industryUpdate(@RequestParam(value = "id", required = true) String id,
              				    @RequestParam(value = "params", required = true) String params,
              			     HttpServletResponse response){
-        System.out.println("Update industry id -" + id + ". Detail is as below - ");
+//        System.out.println("Update industry id -" + id + ". Detail is as below - ");
+        logger.info("Update industry id -" + id + ". Detail is as below - ");
         List<Object> param_list = JsonUtil.stringToList(params);
         configService.updateIndustry(param_list);
         
-        System.out.println(param_list);
+//        System.out.println(param_list);
+        logger.info(param_list.toString());
         JsonUtil.writeObjToResponse(response, "");
     }
 }

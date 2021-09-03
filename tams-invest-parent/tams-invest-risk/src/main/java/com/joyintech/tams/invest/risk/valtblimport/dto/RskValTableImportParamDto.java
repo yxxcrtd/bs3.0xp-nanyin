@@ -11,9 +11,13 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.invest.risk.valtblimport.valid.RskValTableImportParamValidator;
 
 /**
@@ -21,7 +25,7 @@ import com.joyintech.tams.invest.risk.valtblimport.valid.RskValTableImportParamV
  * 〈功能详细描述〉
  * @author zhangnian
  * @version 1.0 2018年12月29日
- * @see RskValTableImportParam
+ * @see RskValTableImportParamDto
  * @since 1.0
  */
 @ValidLogic(targetClass = RskValTableImportParamValidator.class, groups = {ValidateGroupEdit.class})
@@ -57,6 +61,15 @@ public class RskValTableImportParamDto{
     
     //---add by 裴家俊 20190514------
     private String filterId;
+
+    // add by swwan 20210615 start
+    private String assetName;
+
+    private Map<String, Integer> warnMap;
+    // add by swwan 20210615 end
+
+	private List<RskValtblAssetSubDto>  selectedItem;
+
     /**
      * 获取 ptlId
      * @return ptlId.
@@ -259,7 +272,40 @@ public class RskValTableImportParamDto{
 	public void setFilterId(String filterId) {
 		this.filterId = filterId;
 	}
-    
-    
-    
+
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
+    }
+
+    public Map<String, Integer> getWarnMap() {
+        return warnMap;
+    }
+
+    public void setWarnMap(Map<String, Integer> warnMap) {
+        this.warnMap = warnMap;
+    }
+
+	public List<RskValtblAssetSubDto> getSelectedItem() {
+		return selectedItem;
+	}
+
+
+	public void setSelectedItem(List<RskValtblAssetSubDto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+    private Queue<RskOutValtblImportHis> importHisQueue;
+
+    public Queue<RskOutValtblImportHis> getImportHisQueue() {
+        return importHisQueue;
+    }
+
+    public void setImportHisQueue(Queue<RskOutValtblImportHis> importHisQueue) {
+        this.importHisQueue = importHisQueue;
+    }
 }

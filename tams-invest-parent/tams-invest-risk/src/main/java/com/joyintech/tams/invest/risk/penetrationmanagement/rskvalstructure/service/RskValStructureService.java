@@ -131,7 +131,7 @@ public class RskValStructureService extends CommonExportService<RskValStructureD
             // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
             editOrgCodeList = Arrays.asList(dto.getCreateInst());
             // 记录二级法人权限
-            insertDataAuthTypeInst(dto.getId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_估值表资产科目映射.getValue());
+            insertDataAuthTypeInst(dto.getId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_估值表指标结构映射.getValue());
         }
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure002/insert",

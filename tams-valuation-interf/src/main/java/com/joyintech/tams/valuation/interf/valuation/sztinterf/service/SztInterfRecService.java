@@ -47,8 +47,10 @@ public class SztInterfRecService {
 			String result = "";
 			if (null != respMsg) {
 				result = SztDecodeXml.decodeOutZip(respMsg.getBody());
-				System.out.println("result:" + result);
-				System.out.println("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
+//				System.out.println("result:" + result);
+				logger.info("result:" + result);
+//				System.out.println("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
+				logger.info("Response:orgPkgId:" + respMsg.getCorrPkgId() + ",body:" + respMsg.getBody());
 			}
 			else{
 				logger.info("深圳通接口轮询查询到的返回结果为空");
@@ -58,7 +60,7 @@ public class SztInterfRecService {
 			try {
 				Thread.sleep(SztValConstant.深圳通_接口处理休眠时间);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			if(StringUtil.isNotEmpty(result)) {
 				//定义 变量.对账结果 = 解析返回报文(result);
@@ -114,7 +116,7 @@ public class SztInterfRecService {
 			}
 			logger.info("the sztConnector listen thread is exit!" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			logger.info("the sztConnector listen throws Exception!");
 		}
 	}
@@ -316,7 +318,7 @@ public class SztInterfRecService {
 			}
 		}
 		catch (DocumentException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		//对账集合
 		result.setReconciliaResults(results);

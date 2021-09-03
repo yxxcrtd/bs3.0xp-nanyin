@@ -63,7 +63,7 @@ public class CbonddescriptionService extends WindService<InterfCbonddescription>
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfCbonddescription entity) throws Exception {
+	public int insert(InterfCbonddescription entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

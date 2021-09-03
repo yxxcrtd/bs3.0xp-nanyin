@@ -2,6 +2,7 @@
  * 存款存续期
  */
 $(function() {
+    var uploadFileList =[];
     function formatDateByMis(mis){
         if(mis){
             var tempDate = new Date(mis);
@@ -56,6 +57,9 @@ $(function() {
         object.tradeAmtReal = $('#intAmt').val()?$('#intAmt').val():0;
         object.tradeAmt = $('#intAmt').val()?$('#intAmt').val():0;
         object.isClean = 'Y';//默认已结清
+        if(FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo()
+        }
         if($('#intSettType').val()==INT_SETT_TYPE_01){
             object.ps = PS_T12;
         }
@@ -231,7 +235,7 @@ $(function() {
             }
             else{
                 triValueChange('ccy');
-                triValueChange('finprodMarketName');
+                $('#finprodMarketName').val('').trigger("change");
                 triValueChange('vdate');
                 triValueChange('mdate');
                 /*triValueChange('vdateProd');*/
@@ -263,7 +267,7 @@ $(function() {
                 });
             }
             else{
-                triValueChange('portfolioName');
+                $('#portfolioName').val('').trigger("change");
             }
             calResiPrincipal();
             calTheoryIntDemand();

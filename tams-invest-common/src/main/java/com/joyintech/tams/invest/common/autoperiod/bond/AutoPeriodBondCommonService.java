@@ -5,6 +5,8 @@
 
 package com.joyintech.tams.invest.common.autoperiod.bond;
 
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 债券资产存续期共通Service 批处理自动存续期和存续期画面共用逻辑
@@ -50,6 +53,8 @@ public class AutoPeriodBondCommonService {
      */
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 //
 //    private BigDecimal result;
 
@@ -303,6 +308,15 @@ public class AutoPeriodBondCommonService {
                 });
             }
         });
+
+        // 将附件和当前业务对象绑定（更新附件的业务代码）
+        if(entity.getUploadFileList() !=null){
+            fileAttachmentProcess.updateBussinessNo(
+                    entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                            Collectors.toList()),
+                    entity.getBusiCode());
+        }
+
         return result;
     }
 

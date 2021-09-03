@@ -62,7 +62,7 @@
     		$("#"+BussRepAssetMngProdInfo_entityName+"_repMaxRate").attr("disabled",false);
     		$("#"+BussRepAssetMngProdInfo_entityName+"_repMinRate").attr("disabled",false);
     		getElementById('repMaxRate').prop('required', true);
-            getElementById('repMinRate').prop('required', true).trigger('change');
+            getElementById('repMinRate').prop('required', false).trigger('change');
     	}
         star();
         layui.form.render();

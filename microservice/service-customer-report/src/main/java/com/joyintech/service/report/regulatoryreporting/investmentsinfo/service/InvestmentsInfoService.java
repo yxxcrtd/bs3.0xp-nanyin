@@ -27,9 +27,12 @@ import java.util.Map;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
 import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +56,11 @@ import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.Inve
  */
 @Service
 public class InvestmentsInfoService {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(InvestmentsInfoService.class);
+
 	@Autowired
 	private InvestmentBusinessDetailsMapper investmentBusinessDetailsMapper;
 	@Autowired
@@ -230,8 +237,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
-		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
@@ -616,7 +623,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -884,6 +891,9 @@ public class InvestmentsInfoService {
 
 			resultMap.put(key, money);
 		}
+		//针对表二B57和C57数据
+		resultMap.put("t2_cur57_amt", ArithmeticUtil.subtract(resultMap.get("t2_cur57_amtfq"), resultMap.get("t2_cur55_amt")));
+		resultMap.put("t2_last57_amt", ArithmeticUtil.subtract(resultMap.get("t2_last57_amtfq"), resultMap.get("t2_last55_amt")));
 
 		return resultMap;
 	}
@@ -908,7 +918,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -977,7 +987,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -1047,7 +1057,7 @@ public class InvestmentsInfoService {
 		    calendar.add(Calendar.MONTH, -3);
 		    termId = DateUtil.format(calendar.getTime(), "yyyyMM");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return termId;
 	}
@@ -1089,7 +1099,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(cdate);
@@ -1536,7 +1546,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2007,7 +2017,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2170,7 +2180,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(cdate);
@@ -2560,7 +2570,7 @@ public class InvestmentsInfoService {
 		try {
 			startDate = DateUtil.parseDate(startDateStr,"yyyy-MM-dd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);
@@ -2581,7 +2591,7 @@ public class InvestmentsInfoService {
 		try {
 			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar1 = Calendar.getInstance();
 		calendar1.setTime(cdate);
@@ -2694,7 +2704,7 @@ public class InvestmentsInfoService {
 		try {
 			startDate = DateUtil.parseDate(startDateStr,"yyyy-MM-dd");
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(startDate);

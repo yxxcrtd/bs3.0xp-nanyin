@@ -10,6 +10,7 @@
  
 package com.joyintech.service.report.poc.riskmonitorindicators.service; 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ public class RiskMonitorIndicatorsService extends BaseService<RiskMonitorIndicat
     @Autowired
     private RiskMonitorIndicatorsMapper riskMonitorIndicatorsMapper;
     
-    public Page<RiskMonitorIndicatorsDto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<RiskMonitorIndicatorsDto> selectForPage(int page, int length, Map<String, Object> pageParam) {
         List<RiskMonitorIndicatorsDto> list = new ArrayList<>();
         RiskMonitorIndicatorsDto dto1 = new RiskMonitorIndicatorsDto();
         dto1.setProdId("zuhemingcheng001");//组合代码
@@ -146,7 +147,7 @@ public class RiskMonitorIndicatorsService extends BaseService<RiskMonitorIndicat
         
     }
     
-    public Page<RiskMonitorIndicatorsDto> selectForDB(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<RiskMonitorIndicatorsDto> selectForDB(int page, int length, Map<String, Object> pageParam) throws ParseException {
         boolean isProdId = false; 
         if (StringUtil.isNotEmpty(pageParam.get("searchdate"))) {
             pageParam.put("searchDate", pageParam.get("searchdate").toString());

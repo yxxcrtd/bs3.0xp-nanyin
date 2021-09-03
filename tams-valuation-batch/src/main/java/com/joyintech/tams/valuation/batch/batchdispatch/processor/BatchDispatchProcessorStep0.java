@@ -13,7 +13,7 @@ import com.joyintech.tams.valuation.batch.batchdispatch.dto.BatchDispatchReaderD
 public class BatchDispatchProcessorStep0 extends BaseProcessor<BatchDispatchReaderDto, NeedToWriteEntity>{
     
     public NeedToWriteEntity process(BatchDispatchReaderDto readerDto)
-            throws Exception {
+             {
             // 任务组执行ID
             BatchDispatchProcessorDto dto = new BatchDispatchProcessorDto();
             dto.setOldDate(readerDto.getOldDate());
