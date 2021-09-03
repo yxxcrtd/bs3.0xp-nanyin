@@ -1197,10 +1197,10 @@ $(function () {
                     }, function (result) {
                         if (pageModel == PAGE_MODEL_NEW) {
                             $("#purCfmDate").val(result).trigger("change");
+                            //update by zhangnian 20191102  start 预计到账日需要节假日推迟
+                            $("#expectedArrivalDate").val(result).trigger("change");
+                            //update by zhangnian 20191102  end 预计到账日需要节假日推迟
                         }
-                        //update by zhangnian 20191102  start 预计到账日需要节假日推迟
-                        $("#expectedArrivalDate").val(result).trigger("change");
-                        //update by zhangnian 20191102  end 预计到账日需要节假日推迟
                     });
                 }
             }
