@@ -45,7 +45,8 @@
 		    to_char(a.mpay_date,'yyyy-MM-dd') mpayDate ,/*到期交付日*/ 
 		    a.act_cap_days actCapDays, /*实际占宽天数*/
 		    c.se_rep_day_type seRepDayType,/*交易所回购计提天数方式*/
-		    c.se_rep_day_type seRepDayTypeCode /*交易所回购计提天数方式*/
+		    c.se_rep_day_type seRepDayTypeCode, /*交易所回购计提天数方式*/
+		    D.COUNTER_TYPE AS counterType
 		    FROM
 		    FIN_TRADE_PRODUCT A   
 		        LEFT JOIN MST_CALENDAR_INFO B
@@ -53,6 +54,8 @@
 		    left join  fin_product_valuation_para c
 		    on a.finprod_id=c.finprod_id
 		    and a.branch=c.branch
+		    LEFT JOIN MST_COUNTER_PARTY D
+		    ON A.COUNTER_ID = D.COUNTER_ID
 		WHERE
 			(A.BRANCH = 0 OR A.BRANCH is null)
 		AND A.FINPROD_ID = #{finprodId}
