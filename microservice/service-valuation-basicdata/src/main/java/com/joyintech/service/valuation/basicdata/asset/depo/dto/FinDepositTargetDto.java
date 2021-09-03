@@ -1020,4 +1020,14 @@ public class FinDepositTargetDto extends FinProduct {
     public void setAccountingClassName(String accountingClassName) {
         this.accountingClassName = accountingClassName;
     }
+
+    private String bondRiskType;
+
+    public String getBondRiskType() {
+        return bondRiskType;
+    }
+
+    public void setBondRiskType(String bondRiskType) {
+        this.bondRiskType = bondRiskType;
+    }
 }

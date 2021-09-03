@@ -90,6 +90,7 @@ public class FinDepositTarget002Controller extends BaseController {
         String assetType=getParam("assetType");
         //初始化基本信息画面数据字典
         setSelectOptionToModel(model, DICT_CODES);
+        setSelectOptionToModel(model, DictCode.风险五级分类);
         model.addAttribute("workflowId", workflowId);
         model.addAttribute("YES", DictCodeList.是否_是.getValue());
         model.addAttribute("isTradeCalendar", DictCodeList.是否_是.getValue());
@@ -139,6 +140,7 @@ public class FinDepositTarget002Controller extends BaseController {
             }
             FinDepositTargetDto finDepositTargetDto = finDepositTargetService.getBussinessEntityByWorkflowId(workflowId);
             model.addAttribute("entity", finDepositTargetDto);
+            System.out.println("1");
         }else if(WorkFlowUtil.isNotFromToDoList()&& StringUtil.isNotEmpty(finprodId)) {
             if(DictCodeListExt1.存款类资产类型_GZ_同业借款.getValue().equals(assetType)){
                 //资产类型
