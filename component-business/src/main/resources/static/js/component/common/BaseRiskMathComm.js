@@ -841,7 +841,9 @@
                     }
                 }
                 if(!resultArr||!resultArr.body||!resultArr.body.RSK_LIST||!resultArr.body.rskStatus){
-                    $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit start
+                    // $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit end
                     $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
                     return;
                 }
@@ -867,12 +869,16 @@
                 // var cluflag=resultArr.body.rskStatus!="3"?resultArr.body.rskStatus=="4"&&forbidFlag?false:true:true;
                 if(!cluflag){
                     $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.noclusion"))
-                    $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit start
+                    // $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit end
                     Joyin.dialog("风险试算", basePath +'component/common/BaseRiskMathCommEtr/init', '98%', '95%',{initParam:JSON.stringify(resultArr)});
 
                 }
                 else{
-                    $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit start
+                    // $("#FundAccountInfo_DIV3").hide();
+                    // ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit end
                     $("#riskTrialSpan").html("&nbsp;&nbsp;"+JoyinUtil.getLabel("BaseRiskMathComm.clusion"))
                 }
                 if (!(initParam instanceof Array)){
