@@ -88,26 +88,9 @@ where
 		</foreach>
 	</insert>
 
-	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto">
+	<select id="selectModEclResultProcessForDeal" resultType="com.joyintech.tams.common.base.entity.ModEclResultProcess">
 select
-	a.SEQNO, a.PROD_ID, a.PROD_NAME,
-	a.PORTFOLIO_ID, a.ASSET_ID, a.ASSET_NAME,
-	a.MARKET_ID,
-	a.MODEL_ASSET_TYPE, a.MODEL_ASSET_DETAIL_TYPE,
-	a.MDATE, a.FINANCIER,
-	a.GRADE_ORG_ID, a.ISSUER, a.ACTUAL_CREDIT,
-	a.SPONSOR, a.RISK_LEVEL_FIVE, a.TRADE_ID,
-	a.TRADE_DATE, a.PS, a.SHARE_AMT,
-	a.YIELD, a.PAPER_RATE, a.PLAN_END_DATE,
-	a.IS_CLEAN, a.DEC_DATE, a.O_TYPE,
-	a.RESULT_01, a.RESULT_02, a.RESULT_ISSUER,
-	a.RESULT_FINANCIER, a.RESULT_SPONSOR, a.RESULT_ACTUAL_CREDIT,
-	a.O_TYPE_FINAL, a.ORG_ID_FINAL, a.IS_FIN_LICENCE,
-	a.RESULT_DEAL, a.RESULT_CURRENT, a.PRIN_OVERDUE_DAY,
-	a.INT_OVERDUE_DAY, a.FIN_STAGE, a.EMA_SHARE_AMT,
-	a.EAD, a.PRE_PROSPECTIVE_PD, a.PROSPECTIVE_PD,
-	a.LGD, a.PRE_PROSPECTIVE_ECL, a.PROSPECTIVE_ECL,
-	a.PROCESS, a.IS_CONTAIN_PLEDGE, a.GRADE_ORG_TYPE,a.INV_AIM
+	a.*
 from
 	MOD_ECL_RESULT_PROCESS a
 	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID

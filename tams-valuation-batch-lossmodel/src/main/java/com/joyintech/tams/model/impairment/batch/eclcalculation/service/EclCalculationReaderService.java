@@ -39,52 +39,17 @@ import java.util.*;
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_PD计算.getValue());
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
+        List<EclCalculationReaderDto> rstList = new ArrayList<>();
         //1.获取理需要处理的每一笔交易数据（计划做在数据加载批处理中）
         // 减值方案系统参数
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         para.put("lossType", lossType);
         List<ModEclResultProcess> list = eclCalculationMapper.selectModEclResultProcessForDeal(
             para);
-        List<EclCalculationReaderDto> rstList = new ArrayList<>();
-        // 定义 变量.减值结果过程Map集合
-        Map<String, List<ModEclResultProcess>> modEclResultProcessMap = new HashMap<>();
-        if (list != null && list.size() > 0) {
-            for (ModEclResultProcess dto : list) {
-                // 定义 变量.key =  账套代码 + 资产代码 + 投资目的
-                String key = dto.getProdId() + "," + dto.getAssetId()+","+dto.getInvAim();
-                // map集合无key对应value值
-                if (modEclResultProcessMap.get(key) == null) {
-                    // 放入map集合中
-                    modEclResultProcessMap.put(key, Arrays.asList(dto));
-                }
-                else {
-                    // 获取对应value值
-                    List<ModEclResultProcess> listProcess = modEclResultProcessMap.get(key);
-                    // 增加dto
-                    listProcess.add(dto);
-                    // 更新Map
-                    modEclResultProcessMap.put(key, listProcess);
-                }
-            }
-            for (String key : modEclResultProcessMap.keySet()) {
-                EclCalculationReaderDto rstDto = new EclCalculationReaderDto();
-                String[] keyArr = key.split(",");
-                rstDto.setProdId(keyArr[0]);
-                rstDto.setAssetId(keyArr[1]);
-                // 当投资目的为空时，keyArr长度为2
-                if(keyArr.length>2){
-                    rstDto.setInvAim(keyArr[2]);
-                }
-                rstDto.setModEclResultProcessList(modEclResultProcessMap.get(key));
-                rstList.add(rstDto);
-            }
+        if(CollectionUtils.isEmpty(list)){
+            return rstList;
         }
 
-        // 查询LGD违约损失率配置并放入缓存
-        //清除缓存中LGD配置相关数据
-        CacheUtil.clearAppCache(GlobalConstant.OTHER_LGD_CONFIG);
-        CacheUtil.clearAppCache(GlobalConstant.DELT_RIGHT_LGD_CONFIG);
-        CacheUtil.clearAppCache(GlobalConstant.SPECIAL_LGD_CONFIG);
         // 债券类、存款类、回购类资产LGD违约损失率配置
         Map<String, ModLgdConfigDto> otherLgdConfigMap = new HashMap<>();
         // 其他债权类资产LGD违约损失率配置
@@ -113,10 +78,42 @@ import java.util.*;
                 }
             }
         }
-        // 指定评级机构信息Map放入缓存
-        CacheUtil.putAppCache(GlobalConstant.OTHER_LGD_CONFIG, otherLgdConfigMap);
-        CacheUtil.putAppCache(GlobalConstant.DELT_RIGHT_LGD_CONFIG, deltRightLgdConfigMap);
-        CacheUtil.putAppCache(GlobalConstant.SPECIAL_LGD_CONFIG, specialLgdConfigMap);
+
+        // 定义 变量.减值结果过程Map集合
+        Map<String, List<ModEclResultProcess>> modEclResultProcessMap = new HashMap<>();
+        for (ModEclResultProcess dto : list) {
+            // 定义 变量.key =  账套代码 + 资产代码 + 投资目的
+            String key = dto.getProdId() + "," + dto.getAssetId()+","+dto.getInvAim();
+            // map集合无key对应value值
+            if (modEclResultProcessMap.get(key) == null) {
+                // 放入map集合中
+                modEclResultProcessMap.put(key, Arrays.asList(dto));
+            }
+            else {
+                // 获取对应value值
+                List<ModEclResultProcess> listProcess = modEclResultProcessMap.get(key);
+                // 增加dto
+                listProcess.add(dto);
+                // 更新Map
+                modEclResultProcessMap.put(key, listProcess);
+            }
+        }
+        for (String key : modEclResultProcessMap.keySet()) {
+            EclCalculationReaderDto rstDto = new EclCalculationReaderDto();
+            String[] keyArr = key.split(",");
+            rstDto.setProdId(keyArr[0]);
+            rstDto.setAssetId(keyArr[1]);
+            // 当投资目的为空时，keyArr长度为2
+            if(keyArr.length>2){
+                rstDto.setInvAim(keyArr[2]);
+            }
+            rstDto.setModEclResultProcessList(modEclResultProcessMap.get(key));
+            rstDto.setOtherLgdConfigMap(otherLgdConfigMap);
+            rstDto.setDeltRightLgdConfigMap(deltRightLgdConfigMap);
+            rstDto.setSpecialLgdConfigMap(specialLgdConfigMap);
+            rstList.add(rstDto);
+        }
+
         return rstList;
     }
 

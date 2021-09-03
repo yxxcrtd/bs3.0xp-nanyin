@@ -128,8 +128,10 @@
                     </div>
                 </div>
                 <!-- 风险试算 -->
+                <!--ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit start-->
                 <div id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}"
-                     th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}',IS_ETR:'Y'}|"></div>
+                     th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+                <!--ZGZGST-1985:展示风险试算结果 fuyongsheng 20210903 edit end-->
                 <!--上农商个性化_指令环节风险试算改造,添加IS_ETR:'Y'  modify by zhangpei 20201212 end  -->
             </form>
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">

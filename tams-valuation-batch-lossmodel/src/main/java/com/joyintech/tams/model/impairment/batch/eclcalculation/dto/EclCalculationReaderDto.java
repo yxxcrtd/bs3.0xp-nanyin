@@ -4,6 +4,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,20 @@ public class EclCalculationReaderDto extends NeedOperateEntity {
      * 质押券信息
      */
     private List<FinDealPledgeDTO> finDealPledgeDTOList;
+
+    /**
+     * 债券类、存款类、回购类资产LGD违约损失率配置
+     */
+    Map<String, ModLgdConfigDto> otherLgdConfigMap;
+    /**
+     * 其他债权类资产LGD违约损失率配置
+     */
+    Map<String, ModLgdConfigDto> deltRightLgdConfigMap;
+    /**
+     * 特殊资产LGD违约损失率配置
+     */
+    Map<String, ModLgdConfigDto> specialLgdConfigMap;
+
 
     /**
      * @return 资产类型
@@ -136,5 +151,53 @@ public class EclCalculationReaderDto extends NeedOperateEntity {
      */
     public void setInvAim(String invAim) {
         this.invAim = invAim;
+    }
+
+    /**
+     * @return 债券类、存款类、回购类资产LGD违约损失率配置
+     */
+    public Map<String, ModLgdConfigDto> getOtherLgdConfigMap() {
+        return otherLgdConfigMap;
+    }
+
+    /**
+     * 设置 债券类、存款类、回购类资产LGD违约损失率配置
+     *
+     * @param otherLgdConfigMap 债券类、存款类、回购类资产LGD违约损失率配置
+     */
+    public void setOtherLgdConfigMap(Map<String, ModLgdConfigDto> otherLgdConfigMap) {
+        this.otherLgdConfigMap = otherLgdConfigMap;
+    }
+
+    /**
+     * @return 其他债权类资产LGD违约损失率配置
+     */
+    public Map<String, ModLgdConfigDto> getDeltRightLgdConfigMap() {
+        return deltRightLgdConfigMap;
+    }
+
+    /**
+     * 设置 其他债权类资产LGD违约损失率配置
+     *
+     * @param deltRightLgdConfigMap 其他债权类资产LGD违约损失率配置
+     */
+    public void setDeltRightLgdConfigMap(Map<String, ModLgdConfigDto> deltRightLgdConfigMap) {
+        this.deltRightLgdConfigMap = deltRightLgdConfigMap;
+    }
+
+    /**
+     * @return 特殊资产LGD违约损失率配置
+     */
+    public Map<String, ModLgdConfigDto> getSpecialLgdConfigMap() {
+        return specialLgdConfigMap;
+    }
+
+    /**
+     * 设置 特殊资产LGD违约损失率配置
+     *
+     * @param specialLgdConfigMap 特殊资产LGD违约损失率配置
+     */
+    public void setSpecialLgdConfigMap(Map<String, ModLgdConfigDto> specialLgdConfigMap) {
+        this.specialLgdConfigMap = specialLgdConfigMap;
     }
 }

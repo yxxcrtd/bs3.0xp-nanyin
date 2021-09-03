@@ -49,7 +49,7 @@
             if(typeof(bondFirstSign) != 'undefined' && bondFirstSign){
                 params.bondFirstSign = bondFirstSign;
             }
-            if(entrustId){
+            if(typeof(bondFirstSign) != 'undefined' && entrustId){
                 params.entrustId = entrustId;
             }
             Joyin.ajaxJson(JoyinUtil.getRealPath('/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), params, function (data) {

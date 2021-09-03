@@ -1224,6 +1224,29 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 }
             }
         }
+        //自主管理专户投资指令
+        if(object instanceof EtrAutoManagementAccountDto){
+            EtrAutoManagementAccountDto inputDto = (EtrAutoManagementAccountDto) object;
+            creditLinesInputDto = new CreditLinesInputDto();
+            creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+            creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+            creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+            creditLinesInputDto.setTradeDate(inputDto.getEntrustDate());
+            creditLinesInputDto.setTradeStatus(status);
+            creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+            creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+            creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
+
+            if(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())){
+                //最新净值
+                BigDecimal lastPrice = creditLinesDealsMapper.getLastPrice(inputDto.getFinprodId(),iPlatformDate.getSysDate());
+                if (lastPrice == null){
+                    lastPrice = BigDecimal.ONE;
+                }
+                creditLinesInputDto.setNetPrice(lastPrice);
+                creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt().divide(lastPrice));
+            }
+        }
         // 交易所指令
         if (object instanceof EtrExchangeTrade001Dto){
             EtrExchangeTrade001Dto inputDto = (EtrExchangeTrade001Dto) object;
@@ -1296,6 +1319,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 creditLinesInputDto.setNetPrice(lastPrice);
             }
         }
+
         // 交易所协议回购指令（逆回购、正向）
         if (object instanceof EtrAgreRepTradeDto){
             EtrAgreRepTradeDto inputDto = (EtrAgreRepTradeDto) object;

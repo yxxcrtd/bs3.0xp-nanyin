@@ -673,6 +673,7 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
      *
      * @return investNature
      */
+    @NotEmpty(fieldName = "资产投资性质" ,groups = {ValidateGroupEdit.class})
     public String getInvestNature() {
         return investNature;
     }

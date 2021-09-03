@@ -191,6 +191,7 @@
 	        checkbox: false,
 	        addbtn: true,
 	        searchOnInit: true,
+			height: 400,
 	        cols:[
 			     {field:'seqno', width:50, visible: false}
 		        ,{field:'creditTagId', width:400,title: 'CeOrg002.creditQuoteType', edit:true , editOption:{type:'select',url: JoyinUtil.getRealPath('/invest/risk/creditmanagement/creditlinemanage/CeLine002/getCreditTagInfoList')}, sortable:false}
