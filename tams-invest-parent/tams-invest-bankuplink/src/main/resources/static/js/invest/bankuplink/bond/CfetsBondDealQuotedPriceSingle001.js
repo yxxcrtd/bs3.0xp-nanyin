@@ -2,7 +2,10 @@
     //试算结果
     var riskResultdata;
     var cluflag;
-
+    /**
+     * 是否可编辑
+     */
+    var editFlag = true;
     var entrustIdChangeFlag = false;
     /**
      * 控制显示行权收益率
@@ -54,6 +57,11 @@
                             $('#calculateField_span_exerYield').css({'color':'blue'});
                             $('#calculateField_span_unitCprice').css({'color':'black'});
                             $('#calculateField_span_yield').css({'color':'black'});
+                        }else{
+                            $("input[name=calculateField][value=01]").prop("checked","true");
+                            $('#calculateField_span_unitCprice').css({'color':'blue'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
                         }
                         layui.form.render();
                     }
@@ -108,15 +116,15 @@
                             $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', true);
                             $("input[name='calculateField']").attr('disabled', true);
                             $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val("01");
-                            $("input[name=calculateField][value=01]").prop("checked","true");
-                            layui.form.render();
+                            // $("input[name=calculateField][value=01]").prop("checked","true");
+                            // layui.form.render();
                         }else if(result.data && result.data.assetTypeOne == assetTypeOne_abs){
                             $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', true);
                             $('#CfetsBondDealQuotedPriceSingle001_exerYield').attr('disabled', true);
                             $("input[name='calculateField']").attr('disabled', true);
                             $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val("01");
-                            $("input[name=calculateField][value=01]").prop("checked","true");
-                            layui.form.render();
+                            // $("input[name=calculateField][value=01]").prop("checked","true");
+                            // layui.form.render();
                         }else{
                             $('#CfetsBondDealQuotedPriceSingle001_unitCprice').attr('disabled', false);
                             $('#CfetsBondDealQuotedPriceSingle001_matureYield').attr('disabled', false);
@@ -452,6 +460,19 @@
                     $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val(),$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val());
             }
             calcAmt('01');
+        });
+        /**
+         * 单位净价
+         */
+        $('#CfetsBondDealQuotedPriceSingle001_unitCprice').on('blur',function(){
+            // 根据净价计算净价偏离度
+            calDeviationDegree();
+            var portfolioIds = [];
+            portfolioIds.push($("#CfetsBondDealQuotedPriceSingle001_portfolioId").val());
+            if(parent.parent.EtrIbBondinfoHq){
+                parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,$('#CfetsBondDealQuotedPriceSingle001_settleCcy').val(),
+                    $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val(),$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val());
+            }
         });
         /**
          * 到期收益率
@@ -820,23 +841,19 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!$("#CfetsBondDealQuotedPriceSingle001_unitCprice").val()||!$("#CfetsBondDealQuotedPriceSingle001_hidden_finprodId").val()
-            ||!$('#CfetsBondDealQuotedPriceSingle001_tradeDate').val()){
-            return;
-        }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: $("#CfetsBondDealQuotedPriceSingle001_unitCprice").val(),
-                finprodId: $("#CfetsBondDealQuotedPriceSingle001_hidden_finprodId").val(),
-                vdate:$('#CfetsBondDealQuotedPriceSingle001_tradeDate').val()
-            }, function (result) {
-                if (result ) {
-                    document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
-                        JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-                }
+        if ($("#CfetsBondDealQuotedPriceSingle001_hidden_finprodId").val() && $("#CfetsBondDealQuotedPriceSingle001_unitCprice").val()) {
+            var paramObj = {};
+            paramObj.finprodId = $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val();
+            if($('#CfetsBondDealQuotedPriceSingle001_finprodId').val()){
+                paramObj.finprodMarketId = $('#CfetsBondDealQuotedPriceSingle001_finprodId').val();
+            }
+            paramObj.unitCprice = $("#CfetsBondDealQuotedPriceSingle001_unitCprice").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
             });
+        } else {
+            $("#deviationDegree").text("");
+        }
     }
 
     /**

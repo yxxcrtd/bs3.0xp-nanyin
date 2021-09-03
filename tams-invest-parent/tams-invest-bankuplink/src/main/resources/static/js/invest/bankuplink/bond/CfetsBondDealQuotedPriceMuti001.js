@@ -864,7 +864,6 @@
         cluflag: cluflag,
         saveRiskResultdata: saveRiskResultdata,
         saveCluflag: saveCluflag,
-        saveEntrustSelectData: saveEntrustSelectData,
         disabledElementByDzh:disabledElementByDzh
     }
     CfetsBondDealQuotedPriceMuti001 = {
@@ -876,7 +875,6 @@
         cluflag: cluflag,
         saveRiskResultdata: saveRiskResultdata,
         saveCluflag: saveCluflag,
-        saveEntrustSelectData: saveEntrustSelectData,
         disabledElementByDzh:disabledElementByDzh
     };
 
