@@ -1344,6 +1344,7 @@ public class TisUtil {
 				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
 				// 字体颜色设置
 				newStyle.setFont(ztFont1);
+				newStyle.setAlignment(HorizontalAlignment.CENTER);
 				cell.setCellStyle(newStyle);
 			}
 		}

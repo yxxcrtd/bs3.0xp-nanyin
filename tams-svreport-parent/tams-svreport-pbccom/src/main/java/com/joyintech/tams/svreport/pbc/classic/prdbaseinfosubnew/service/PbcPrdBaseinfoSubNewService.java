@@ -317,11 +317,12 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 	 * @return
 	 */
 	public String getPbcBankCode(String IssuePartyId){
-		String orgCode = "";
-		String code = pbcPrdBaseinfoSubNewMapper.selectPbcBankCodeName(IssuePartyId);
-		if(MultilevelDataAuthorityUtil.isEnabled() && StringUtil.isEmpty(code)){
-			code=CacheUtil.getSysParam("SVR_ISSUE_PARTY_ID");
+		String code = "";
+		if(StringUtil.isEmpty(IssuePartyId)){
+			IssuePartyId=CommonUtil.selectBankCode();
 		}
+		code = pbcPrdBaseinfoSubNewMapper.selectPbcBankCodeName(IssuePartyId);
+
 		return null!=code?code:"";
 	}
 

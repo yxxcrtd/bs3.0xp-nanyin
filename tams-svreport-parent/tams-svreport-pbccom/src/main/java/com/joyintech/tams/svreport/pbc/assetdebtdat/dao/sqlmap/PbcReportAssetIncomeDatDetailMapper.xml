@@ -268,5 +268,8 @@
     where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
       and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
       and prp.PROPERTYCODE is  not  null
+      and (prp.LOAN_INCOME_RIGHT &lt;&gt; 0 or prp.DEBT_SECURITIES_INCOME_RIGHTS &lt;&gt; 0 or prp.RECEIVABLE_INCOME_RIGHTS &lt;&gt; 0
+       or prp.OTHER_CREDITOR_RIGHTS &lt;&gt; 0 or prp.STOCK_INCOME_RIGHT &lt;&gt; 0 or prp.OTHER_EQUITY_INCOME_RIGHTS &lt;&gt; 0
+       or prp.PROPERTY_RIGHTS &lt;&gt; 0 or prp.TOTAL &lt;&gt; 0)
   </select>
 </mapper>

@@ -49,6 +49,7 @@ import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
 import com.joyintech.tams.svreport.pbc.report.service.PbcMonthReport001Service;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import groovy.util.MapEntry;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,6 +141,11 @@ public class PbcZipDataFileService {
 		Set<String> reslut = new HashSet<String>();
     	//zipDat更新数据
 		List<PbcSendZipDatFile> zipDatFileList=new ArrayList<>();
+		//获取压缩包传进来时候的状态
+		Map<String,String> dataStatus = new HashMap<>();
+		for(Map.Entry<String, PbcSendZipDatFile> entity :zipInfoMap.entrySet()){
+			dataStatus.put(entity.getValue().getStatusVdate(),entity.getValue().getZipSendStatus());
+		}
 		List<PbcSendZipDatFile> baseZipDatFileList=new ArrayList<>();
 		//pbcReport更新数据
 		List<DatDownloadDto> datDownloadDtos = new ArrayList<>();
@@ -245,7 +251,7 @@ public class PbcZipDataFileService {
 			ajaxResult.setData(finalZipFile);
 		}
 		//更新数据状态
-		updateFileDatAndPbcReport(zipDatFileList,date,statusVdate);
+		updateFileDatAndPbcReport(zipDatFileList,date,statusVdate,dataStatus);
 		//更新产本基本和终止信息状态
 		updateBaseFileDatAndPbcReport(baseZipDatFileList,datDownloadDtos);
 		return ajaxResult;
@@ -1008,21 +1014,25 @@ public class PbcZipDataFileService {
 		return datFile;
 	}
 	//更新数据状态
-	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,Date date,String statusVdate){
+	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,Date date,String statusVdate,Map<String,String> termidMap){
 		if(!CollectionUtils.isEmpty(datFileList)){
 			//更新PBC_SEND_ZIP_DAT_FILE
 			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList);
-			List<PbcMonthReport> reportList  = new ArrayList<PbcMonthReport>();
-			PbcMonthReport report = new PbcMonthReport();
-			report.setTermid(statusVdate);
-			report.setOrgCode(CommonUtil.getOrgCode());
-			reportList.add(report);
-			pbcMonthReport001Service.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), reportList);
+			for(Map.Entry<String,String> dto :termidMap.entrySet()){
+				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getValue())){
+					List<PbcMonthReport> reportList  = new ArrayList<PbcMonthReport>();
+					PbcMonthReport report = new PbcMonthReport();
+					report.setTermid(dto.getKey());
+					report.setOrgCode(CommonUtil.getOrgCode());
+					reportList.add(report);
+					pbcMonthReport001Service.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), reportList);
+				}
+			}
 			//更新报表
 			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), datFileList);
 
 		}
-		}
+	}
 	//更新数据状态
 	private  void updateBaseFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,List<DatDownloadDto> datDownloadDtos){
 		//更新报送文件管理表PBC_SEND_ZIP_DAT_FILE

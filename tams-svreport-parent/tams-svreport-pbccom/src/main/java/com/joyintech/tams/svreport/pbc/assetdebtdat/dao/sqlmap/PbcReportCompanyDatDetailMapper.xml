@@ -236,5 +236,7 @@
     where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
       and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
       and prp.PROPERTYCODE is  not  null
+        and (prp.LARGE_COMPANY_AMT &lt;&gt; 0 or prp.MEDIUM_COMPANY_AMT &lt;&gt; 0 or prp.SMALL_COMPANY_AMT &lt;&gt; 0 or prp.MICRO_COMPANY_AMT &lt;&gt; 0 or prp.OTH_AMT &lt;&gt; 0 or
+             prp.SUM_AMT &lt;&gt; 0)
   </select>
 </mapper>

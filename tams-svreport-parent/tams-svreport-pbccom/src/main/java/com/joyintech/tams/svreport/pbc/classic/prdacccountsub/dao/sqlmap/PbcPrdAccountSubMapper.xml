@@ -364,8 +364,10 @@
 		t1.CREATE_TIME createTime,
 		t1.UPDATE_USER updateUser,
 		t1.UPDATE_TIME updateTime,
-		t2.PBC_CODE pbcCode
+		t2.PBC_CODE pbcCode,
+        CB.PROFIT_TYPE prodProfitType
     from PBC_PRD_ACCOUNT_SUB t1
+    LEFT JOIN CHB_PRD_BASEINFO CB ON T1.ACCOUNT_ID=CB.PROD_ID AND CB.STATUS IN ('E','M')
     LEFT JOIN(
         SELECT
             inside_prod_id,
@@ -384,7 +386,7 @@
             </foreach>
         </if>
   		<if test="issuePartyId != null and issuePartyId !=''">
-  			and ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
+  			and t1.ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR}
   		</if>
   		<!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 begin -->
   		<if test="prodIdList != null and prodIdList.size > 0">
@@ -395,25 +397,25 @@
         </if>
         <!-- 手工处理传入的产品ID列表 add by gaojian 2019-06-18 end -->
   		<if test="statusList != null and statusList.size > 0">
-            and STATUS in
+            and t1.STATUS in
             <foreach collection="statusList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="keyList != null and keyList.size > 0">
-            and trim(REGIST_SEQNO) in
+            and trim(t1.REGIST_SEQNO) in
             <foreach collection="keyList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="sendStatusList != null and sendStatusList.size > 0">
-            and SEND_STATUS in
+            and t1.SEND_STATUS in
             <foreach collection="sendStatusList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
         <if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size > 0">
-            and SUBMIT_FEEDBACK_STATUS in
+            and t1.SUBMIT_FEEDBACK_STATUS in
             <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
@@ -437,25 +439,25 @@
            and to_char(PBC_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{pbcSubmitDeadlineDateEnd}
         </if>
         <if test="vdateStart != null and vdateStart != ''">
-           and to_char(VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
+           and to_char(t1.VDATE,'yyyy-MM-dd') &gt;= #{vdateStart}
         </if>
         <if test="vdateEnd != null and vdateEnd != ''">
-           and to_char(VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
+           and to_char(t1.VDATE,'yyyy-MM-dd') &lt;= #{vdateEnd}
         </if>
         <if test="updateTime != null and updateTime != ''">
-           and to_char(UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+           and to_char(t1.UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
         </if>
         <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 begin -->
         <if test="startDate != null and startDate != ''">
-           and to_char(VDATE,'yyyy-MM-dd') &gt;= #{startDate}
+           and to_char(t1.VDATE,'yyyy-MM-dd') &gt;= #{startDate}
         </if>
         <if test="endDate != null and endDate != ''">
-           and to_char(VDATE,'yyyy-MM-dd') &lt;= #{endDate}
+           and to_char(t1.VDATE,'yyyy-MM-dd') &lt;= #{endDate}
         </if>
         <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
   	</where>
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 begin -->
-  	 ORDER BY PBC_SUBMIT_DEADLINE ASC, UPDATE_TIME DESC
+  	 ORDER BY PBC_SUBMIT_DEADLINE ASC, t1.UPDATE_TIME DESC
   	<!-- 查询结果默认按照报送截止日升序,数据更新时间降序 add by gaojian 2019-06-25 end -->
   </select>
   <!-- 手工处理 -->
