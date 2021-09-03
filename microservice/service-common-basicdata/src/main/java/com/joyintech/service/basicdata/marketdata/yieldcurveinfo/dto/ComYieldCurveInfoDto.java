@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto;
 
 import java.math.BigDecimal;
@@ -33,7 +33,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 5143537191208289654L;
-    
+
     /**
      * 选中的数据
      */
@@ -43,34 +43,29 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
      * 操作类型
      */
     private String operateType;
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String pageModel;
 
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String elementId;
 
+    /**
+     * 曲线名称
+     */
+    private String curveName;
 
-    
    /**
-    * 
+    *
     */
     @SuppressWarnings("unused")
     private String curveTypeName;
-    
-    
-    /**
-     * 设置 curveTypeName
-     * @param curveTypeName curveTypeName
-     */
-    public void setCurveTypeName(String curveTypeName) {
-        this.curveTypeName = curveTypeName;
-    }
+
 
     /**
      * 获取 selectedItem
@@ -80,7 +75,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         return selectedItem;
     }
 
-    
+
     /**
      * 设置 selectedItem
      * @param selectedItem selectedItem
@@ -89,7 +84,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         this.selectedItem = selectedItem;
     }
 
-    
+
     /**
      * 获取 operateType
      * @return operateType.
@@ -98,7 +93,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         return operateType;
     }
 
-    
+
     /**
      * 设置 operateType
      * @param operateType operateType
@@ -107,7 +102,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         this.operateType = operateType;
     }
 
-    
+
     /**
      * 获取 pageModel
      * @return pageModel.
@@ -117,7 +112,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
+
     /**
      * 设置 pageModel
      * @param pageModel pageModel
@@ -127,7 +122,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
+
     /**
      * 获取 elementId
      * @return elementId.
@@ -137,7 +132,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
+
     /**
      * 设置 elementId
      * @param elementId elementId
@@ -145,14 +140,14 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-    
-   
+
+
     @Override
     public String getCurveCode() {
-        
+
         return super.getCurveCode();
     }
-    
+
     /**
      * 设置曲线日期为主键
      * <一句话功能简述>
@@ -164,17 +159,17 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public String getCurveDateStr() {
         return DateUtil.format(super.getCurveDate());
     }
-    
+
     @Override
     public Date getCurveDate() {
         return super.getCurveDate();
     }
-   
+
     @Override
     public String getCurveType() {
         return super.getCurveType();
     }
-    
+
 	//添加n、k modified by lishuping 20190930 start
     private BigDecimal K;
 
@@ -222,4 +217,21 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         return super.getKeyPoint();
     }
     //修改返回值 modified by lishuping 20190930 end
+
+
+    public String getCurveName() {
+        return curveName;
+    }
+
+    public void setCurveName(String curveName) {
+        this.curveName = curveName;
+    }
+
+    public String getCurveTypeName() {
+        return curveTypeName;
+    }
+
+    public void setCurveTypeName(String curveTypeName) {
+        this.curveTypeName = curveTypeName;
+    }
 }

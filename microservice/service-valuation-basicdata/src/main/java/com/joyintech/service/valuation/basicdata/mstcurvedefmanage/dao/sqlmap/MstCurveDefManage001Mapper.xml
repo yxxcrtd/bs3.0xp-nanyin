@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dao.MstCurveDefManage001Mapper">
+
+
+	<select id="select" resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
+		select t.value_source as valueSource,
+		       t.curve_code as curveCode,
+		       t.remark as curveName,
+		       t.int_curve_type as intCurveType,
+		       'CNY' as ccy,
+		       '线性插值' as interMethod,
+		       'A/365' as dayRules,
+		       '银行间交易日历' as calender,
+				'起息日向后' as interestDateRule,
+				'按年复利' as  interestCalMethod,
+				'年付' as interestFreq/*,
+		        eff_status as effStatus*/
+		from MST_CURVE_DEF t
+		<where>
+		    1=1
+			<if test="curveCode != null and curveCode != ''">
+				and t.curve_code = #{curveCode}
+			</if>
+			<if test="curve_type != null and curve_type != ''">
+				and t.curve_type = #{curve_type}
+			</if>
+			<if test="intCurveType != null and intCurveType != ''">
+				and t.int_curve_type = #{intCurveType}
+			</if>
+		</where>
+	</select>
+
+	<select id="getCurveCode" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		CURVE_CODE id,
+		<!--I9 add by changqifei SNSGZ-6 20210703  start-->
+		/*CURVE_CODE || ':' || INT_CURVE_TYPE text,*/
+		remark text,
+		<!--I9 add by changqifei SNSGZ-6 20210703  end-->
+		INT_CURVE_TYPE object
+		from   MST_CURVE_DEF
+		<where>
+			1=1
+			<if test="search != null and search != ''">
+			AND	(
+					CURVE_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+					OR
+					INT_CURVE_TYPE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+					OR
+					remark LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+			<if test="curve_type != null and curve_type != ''">
+				AND curve_type = #{curve_type}
+			</if>
+		</where>
+
+	</select>
+
+
+	<select id="getCurveDefCount" parameterType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto"
+			resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
+		select
+		CURVE_CODE curveCode,
+		remark curveName,
+		INT_CURVE_TYPE as curveType
+		from MST_CURVE_DEF
+		<where>
+			1=1
+-- 			 NVL(eff_status,'E') = #{effStatus,jdbcType=VARCHAR}
+			<if test="curveName != null and curveName != ''">
+				and remark = #{curveName,jdbcType=VARCHAR}
+			</if>
+			<if test="curve_type != null and curve_type != ''">
+				and t.curve_type = #{curve_type}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectByKey" resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
+		select t.value_source as valueSource,
+			   t.curve_code as curveCode,
+			   t.remark as curveName,
+			   t.int_curve_type as intCurveType,
+			   'CNY' as ccy,
+			   '线性插值' as interMethod,
+			   'A/365' as dayRules,
+			   '银行间交易日历' as calender,
+			   '起息日向后' as interestDateRule,
+			   '按年复利' as  interestCalMethod,
+			   '年付' as interestFreq/*,
+			   eff_status as effStatus*/
+		from MST_CURVE_DEF t
+		where	t.curve_code = #{curveCode}
+				and rownum=1
+	</select>
+</mapper>

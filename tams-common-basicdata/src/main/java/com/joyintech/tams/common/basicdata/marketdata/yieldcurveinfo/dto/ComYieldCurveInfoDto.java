@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.tams.common.basicdata.marketdata.yieldcurveinfo.dto;
 
 import java.math.BigDecimal;
@@ -35,18 +35,19 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * 收益率曲线dto
  * 〈一句话功能简述〉
  * 〈功能详细描述〉
+ *
  * @author wangzhao
  * @version 1.0 2018年8月8日
  * @see ComYieldCurveInfoDto
  * @since 1.0
  */
-@ValidLogic(targetClass = ComYieldCurveInfoValidator.class, groups = {ValidateGroupEdit.class,ValidateGroupDelete.class})
-public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow,ProcessEntity  {
+@ValidLogic(targetClass = ComYieldCurveInfoValidator.class, groups = {ValidateGroupEdit.class, ValidateGroupDelete.class})
+public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow, ProcessEntity {
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private static final long serialVersionUID = 5143537191208289654L;
-    
+
     /**
      * 选中的数据
      */
@@ -55,13 +56,13 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
      * 操作类型
      */
     private String operateType;
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
     private String pageModel;
 
-    
+
     /**
      * <意义，目的和功能，以及可能被用到的地方>
      */
@@ -70,37 +71,36 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
 
     private String curveDateFormatStr;
 
-    public String getCurveDateFormatStr() {
-        return curveDateFormatStr;
-    }
-
-    public void setCurveDateFormatStr(String curveDateFormatStr) {
-        this.curveDateFormatStr = curveDateFormatStr;
-    }
-
     /**
-    * 
-    */
-    @SuppressWarnings("unused")
+     * 曲线名称
+     */
+    private String curveName;
+    /**
+     * 曲线类型名称
+     */
     private String curveTypeName;
-    
-    
+
+
+    //添加n、k modified by lishuping 20190930 start
+    private BigDecimal K;
+
+    private BigDecimal N;
+
     /**
      * 获取 curveTypeName
+     *
      * @return curveTypeName.
      */
-	//修改数据字典值 modified by lishuping 20191008 start
+    //修改数据字典值 modified by lishuping 20191008 start
     public String getCurveTypeName() {
         return SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型, this.getCurveType());
     }
     //修改数据字典值 modified by lishuping 20191008 end
 
 
-
-
-    
     /**
      * 设置 curveTypeName
+     *
      * @param curveTypeName curveTypeName
      */
     public void setCurveTypeName(String curveTypeName) {
@@ -108,22 +108,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-
-
-
-    /**
-     * 获取 curveName
-     * @return curveName.
-     */
-    public String getCurveName() {
-        
-        return SysDataUtil.getNameFromDataDict(DictCode.收益率曲线, this.getCurveCode());
-    }
-
-
-
     /**
      * 获取 selectedItem
+     *
      * @return selectedItem.
      */
     public List<ComYieldCurveInfoDto> getSelectedItem() {
@@ -131,9 +118,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 设置 selectedItem
+     *
      * @param selectedItem selectedItem
      */
     public void setSelectedItem(List<ComYieldCurveInfoDto> selectedItem) {
@@ -141,9 +128,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 获取 operateType
+     *
      * @return operateType.
      */
     public String getOperateType() {
@@ -151,9 +138,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 设置 operateType
+     *
      * @param operateType operateType
      */
     public void setOperateType(String operateType) {
@@ -161,9 +148,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 获取 pageModel
+     *
      * @return pageModel.
      */
     public String getPageModel() {
@@ -171,9 +158,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 设置 pageModel
+     *
      * @param pageModel pageModel
      */
     public void setPageModel(String pageModel) {
@@ -181,9 +168,9 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 获取 elementId
+     *
      * @return elementId.
      */
     public String getElementId() {
@@ -191,29 +178,29 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     }
 
 
-    
     /**
      * 设置 elementId
+     *
      * @param elementId elementId
      */
     public void setElementId(String elementId) {
         this.elementId = elementId;
     }
-    
-   
+
+
     @Override
     @Length(fieldName = "ComYieldCurveInfo001.curveName", max = 32, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "ComYieldCurveInfo001.curveName", groups = {ValidateGroupEdit.class})
-    @PrimaryKey(value=Field.PK_1)
+    @PrimaryKey(value = Field.PK_1)
     public String getCurveCode() {
-        
         return super.getCurveCode();
     }
-    
+
     /**
      * 设置曲线日期为主键
      * <一句话功能简述>
      * <功能详细描述>
+     *
      * @return String
      * @see
      * @since 1.0
@@ -222,13 +209,13 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public String getCurveDateStr() {
         return DateUtil.format(super.getCurveDate());
     }
-    
+
     @Override
     @NotEmpty(fieldName = "ComYieldCurveInfo001.curveDate", groups = {ValidateGroupEdit.class})
     public Date getCurveDate() {
         return super.getCurveDate();
     }
-   
+
     @Override
     @Length(fieldName = "ComYieldCurveInfo001.curveType", max = 50, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "ComYieldCurveInfo001.curveType", groups = {ValidateGroupEdit.class})
@@ -236,18 +223,16 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public String getCurveType() {
         return super.getCurveType();
     }
+
     @PrimaryKey(value = Field.PK_4)
     public String getKeyPointStr() {
         return String.valueOf(super.getKeyPoint());
     }
 
-	//添加n、k modified by lishuping 20190930 start
-    private BigDecimal K;
-
-    private BigDecimal N;
 
     /**
      * 设置k
+     *
      * @param k k
      */
     public void setK(BigDecimal k) {
@@ -256,11 +241,13 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
 
     /**
      * 设置n
+     *
      * @param n n
      */
     public void setN(BigDecimal n) {
         N = n;
     }
+
     //add by lishuping 20191009 start
     @Length(fieldName = "ComYieldCurveInfo001.K", max = 30, groups = {ValidateGroupEdit.class})
     /*@NotEmpty(fieldName = "MstYieldCurveInfo001.K", groups = {ValidateGroupEdit.class})*/
@@ -273,6 +260,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public BigDecimal getN() {
         return N;
     }
+
     //add by lishuping 20191009 end
     @Override
     @Length(fieldName = "ComYieldCurveInfo001.yield", max = 30, groups = {ValidateGroupEdit.class})
@@ -280,7 +268,7 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
     public BigDecimal getYield() {
         return super.getYield();
     }
-   
+
     @Override
     @Length(fieldName = "ComYieldCurveInfo001.keyPoint", max = 10, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "ComYieldCurveInfo001.keyPoint", groups = {ValidateGroupEdit.class})
@@ -288,15 +276,19 @@ public class ComYieldCurveInfoDto extends MstYieldCurveInfo implements ITableRow
         return super.getKeyPoint();
     }
 
-    /**
-     * 获取 曲线代码转换数据字典
-     *
-     * @return 曲线代码转换数据字典
-     */
-    public String getCurveCodeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.曲线代码, getCurveCode()))?
-                SysDataUtil.getNameFromDataDict(DictCode.曲线代码, getCurveCode()):getCurveCode();
+    public String getCurveDateFormatStr() {
+        return curveDateFormatStr;
+    }
 
-//        return SysDataUtil.getNameFromDataDict(DictCode.会计场景代码, tableId);
+    public void setCurveDateFormatStr(String curveDateFormatStr) {
+        this.curveDateFormatStr = curveDateFormatStr;
+    }
+
+    public String getCurveName() {
+        return curveName;
+    }
+
+    public void setCurveName(String curveName) {
+        this.curveName = curveName;
     }
 }

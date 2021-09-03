@@ -506,6 +506,72 @@ SELECT interf.SECID id,
 			AND T1.ENTRUST_ID = #{entrustId}
 		</if>
 		</where>
+		union all
+		SELECT
+		T1.ENTRUST_ID		 entrustId,
+		T1.PORTFOLIO_ID		 portfolioId,
+		T1.VDATE             vdate,
+		T1.MDATE             mdate,
+		T6.ASSET_TYPE1		 assetType1,
+		<!-- 新增type10和type11	王贵奇2019/7/27 开始 -->
+		T6.ASSET_TYPE_10	 assetType10,
+		T6.ASSET_TYPE_11	 assetType11,
+		<!-- 新增type10和type11	王贵奇2019/7/27 结束 -->
+		T1.CCY               ccy,
+		T1.FINPROD_ID        finprodId,
+		T3.FINPROD_MARKET_ID finprodMarketId,
+		T3.FINPROD_NAME      finprodName,
+		T1.PS                ps,
+		T1.TRADE_MARKET      tradeMarket,
+		T1.TRADE_PLAT        tradePlat,
+		T1.TRADE_MARKET_MODE tradeMarketMode,
+		T1.INV_AIM			 invAim,
+		T1.AVAILABLE_NUM	 availableNum,
+		T1.ENTRUST_NUM*100	 entrustNum,
+		T6.MIN_AMT	         minAmt,
+		T1.PRICE			 price,
+		T1.PRICE_MODEL		 priceModel,
+		T6.EXER_YIELD*100	 exerYield,
+		T6.MATURE_YIELD*100	 matureYield,
+		T6.SETTLE_SPREED	 settleSpeed,
+		T6.SEC_ACCT_ID secAcctId,
+		T6.OUR_ENT_NUM*100 entrustOwnNum,
+		T6.LENDIN_ENT_NUM*100 entrustIntegrateNum,
+		T1.PRO_AVAILABLE_CASH proAvailableCash,
+		T1.ACC_AVAILABLE_CASH accAvailableCash,
+		T1.REMARK            remark,
+		T1.COUNTER_ID		 counterId,
+		T1.COUNTER_TRADER  	 counterTrader,
+		T1.CONTACT_INFO		 contactInfo,
+		T2.TRADER			 trader,
+		T1.INV_MANAGER_ID	 invManagerId,
+		T1.chl_id chlId
+		FROM
+		WFL_ETR_ENTRUST T1
+		LEFT JOIN
+		ETR_DISTRIBUTE T2
+		ON
+		T1.ENTRUST_ID = T2.ENTRUST_ID
+		LEFT JOIN
+		FIN_PRODUCT T3
+		ON
+		T1.FINPROD_ID = T3.FINPROD_ID
+		AND T3.FINPROD_TYPE2 =#{bond}
+		LEFT JOIN
+		WFL_ETR_ENTRUST_ADD T6
+		ON
+		T1.ENTRUST_ID = T6.ENTRUST_ID
+		<where>
+			<if test="portfolioId != null and !portfolioId.equals('')">
+				T1.PORTFOLIO_ID=#{portfolioId}
+			</if>
+			<if test="finprodId != null and !finprodId.equals('')">
+				AND T1.FINPROD_ID = #{finprodId}
+			</if>
+			<if test="entrustId !=null and !entrustId.equals('')">
+				AND T1.ENTRUST_ID = #{entrustId}
+			</if>
+		</where>
 	</select>
 	
 	<select id="getAvailableNum" resultType="java.math.BigDecimal">

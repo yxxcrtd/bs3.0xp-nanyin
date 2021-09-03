@@ -23,7 +23,16 @@
              width: 50%;
              padding-top: 10px;
          }
-
+        .label-deviation-degree{
+            width: 50px;
+            height: 24px;
+            color: red;
+            top: 0;
+            right: 0;
+            position: absolute;
+            text-align: center;
+            line-height: 24px;
+        }
     </style>
     <div class="joyin-form-wrap">
         <form class="layui-form pro-module-form" id="submitForm">
@@ -213,8 +222,7 @@
                                class="layui-input form-input text-number" placeholder="请输入内容"
                                data-fixtype="2" data-textrange="4"
                                th:placeholder="#{SysCommon.placeholder}" th:value="${entity?.price}">
-                        <span class="input-right-show">元</span>
-                        <label id ="deviationDegree"></label>
+                        <label class="label-deviation-degree" id="deviationDegree"></label>
                     </div>
                 </div>
             </div>
@@ -323,7 +331,7 @@
                            th:text="#{CfetsBondDealQuotedPriceSingle.myTradeId}">本方交易员</label>
                     <div class="layui-input-inline input-inline">
                         <select required type="text" id="CfetsBondDealQuotedPriceSingle001_mySideTrader" name="mySideTrader"
-                                class="layui-input form-input input-select"  parentIds="CfetsBondDealQuotedPriceSingle001_mySide"
+                                class="layui-input form-input input-select" parentIds="CfetsBondDealQuotedPriceSingle001_mySide"
                                 th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
                                 formatoption="true" th:initValue="${entity?.mySideTrader}"></select>
