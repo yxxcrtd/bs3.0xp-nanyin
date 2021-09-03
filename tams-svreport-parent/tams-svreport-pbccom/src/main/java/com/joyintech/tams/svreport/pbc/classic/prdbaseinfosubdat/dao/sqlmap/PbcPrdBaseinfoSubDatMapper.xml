@@ -1500,7 +1500,7 @@
 		prd.CREATE_DEPT createDeptPrd,
 		prd.CREATE_TIME createTimePrd
 		from PBC_PRD_BASEINFO_SUB_DAT dat
-		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id
+		left join PBC_PRD_BASEINFO_SUB_NEW  prd on dat.prod_id=prd.prod_id AND PRD.STATUS = '01'
 		where	dat.DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR}
 		order  by dat.PROD_ID asc)
 	</select>

@@ -26,7 +26,7 @@
                 ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME,
                 SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE,
                 PROD_VARIETY, PERSON_LIABLE, CONTACT,
-                REPORT_DATE
+                REPORT_DATE,ENDDATE
                 )
             <foreach collection="dataList" item="item" separator="from dual union all select" open="select * from (select " close="from dual)">
                 sys_guid(), #{item.datZipCode,jdbcType=VARCHAR}, #{item.datZipPath,jdbcType=VARCHAR},
@@ -40,7 +40,7 @@
                 #{item.issuePartyId,jdbcType=VARCHAR}, #{item.issuePartyName,jdbcType=VARCHAR}, #{item.reportOrgName,jdbcType=VARCHAR},
                 #{item.socialCreditCode,jdbcType=VARCHAR}, #{item.finInstitutionCode,jdbcType=VARCHAR},
                 #{item.prodVariety,jdbcType=VARCHAR}, #{item.personLiable,jdbcType=VARCHAR}, #{item.contact,jdbcType=VARCHAR},
-                #{item.reportDate,jdbcType=DATE}
+                #{item.reportDate,jdbcType=DATE} ,#{item.enddate,jdbcType=DATE}
             </foreach>
 
         </insert>
