@@ -192,7 +192,9 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
                 }
                 if (entrustInfo != null && entrustInfo.getEtrEntrust() != null
                     && entrustInfo.getEtrEntrust().getEntrustAmt() != null
-                    && ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)).compareTo(
+                    &&
+//                        ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000))
+                        inputDto.getShareAmt().compareTo(
                         ArithmeticUtil.subtract(entrustInfo.getEtrEntrust().getEntrustAmt(), finishAmt)) > 0) {
                     ValidMessage validMessage = new ValidMessage("tradeAmt",
                         getMessage("TRD_W_0009", getMessage("TrdBondLendInvestTrade002.tradeAmt")));
