@@ -26,8 +26,11 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -367,22 +370,42 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                message.add(this.getMessage("REPORT_COMMON_FILE_E_0004", "产品登记编码"));
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0026", "产品登记编码", "14", "15"));
             }
-            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(list.get(2)).matches()){
+            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]?[0-9]{6}$").matcher(list.get(2)).matches()){
                 message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
             }
             else{
-                entity.setRegCode(list.get(2));
-                if(prodIdToRegCodeMap.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
-                        message.add("不同的产品代码不能对应同一产品登记编码");
+                Boolean isRight=true;
+                //从产品申报信息中查询数据
+                ChbPrdDeclareInfoDto dtoDeclare = proRegistCodeManage001Mapper.selectInfoByProdId(list.get(4));
+                if(null!=dtoDeclare){
+                    if(StringUtil.equals(dtoDeclare.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())){
+                        //公募产品
+                        if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[0-9]{6}$").matcher(list.get(2)).matches()){
+                            message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+                            isRight=false;
+                        }
+                    }else if(StringUtil.equals(dtoDeclare.getRaiseType(), DictCodeListExt2.募集方式_中债_私募.getValue())){
+                        //私募产品
+                        if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]{1}[0-9]{6}$").matcher(list.get(2)).matches()){
+                            message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+                            isRight=false;
+                        }
                     }
                 }
-                else if(box.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
-                        message.add("不同的产品代码不能对应同一产品登记编码");
+                if(isRight){
+                    entity.setRegCode(list.get(2));
+                    if(prodIdToRegCodeMap.values().contains(list.get(2))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
+                            message.add("不同的产品代码不能对应同一产品登记编码");
+                        }
                     }
+                    else if(box.values().contains(list.get(2))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
+                            message.add("不同的产品代码不能对应同一产品登记编码");
+                        }
+                    }
+                    box.put(entity.getProdid(),list.get(2));
                 }
-                box.put(entity.getProdid(),list.get(2));
 //                Map<String , Object> map =new HashMap<>();
 //                map.put("regCode",entity.getRegCode());
 //                map.put("orgCode",this.getUserFromSession().getOrgCode());
