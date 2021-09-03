@@ -51,6 +51,7 @@ public class LocalhostService {
                           + DateUtil.format(entity.getOccurTime(), DateUtil.DEFAULT_OTHER_FORMAT);
         File localDirFile = new File(localDir);
         if (localDirFile.exists()) {
+            logger.debug("先删除本地文件夹："+localDir);
             delFolder(localDir);
         }
         localDirFile.mkdirs();
@@ -59,10 +60,11 @@ public class LocalhostService {
             DateUtil.DEFAULT_OTHER_FORMAT);
         // 如果是空的列表，全部下载
         if (StringUtil.isEmptyList(tempList)) {
-        	List<File> files = SearchFilePath.searchAllFile(remotePath,false);
+            List<File> files = SearchFilePath.searchAllFile(remotePath,false);
         	files.forEach(file->{
                 String remoteFile = remotePath + File.separator + file.getName();
                 SearchFilePath.copyFile(remoteFile, localDir);
+                logger.debug("复制文件，从："+remoteFile+"->到："+localDir);
                 ValInterflog log = new ValInterflog();
                 log.setFileName(file.getName());
                 // 操作日期
