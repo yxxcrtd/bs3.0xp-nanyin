@@ -91,8 +91,9 @@
 			                                    allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
 			                            </div>
 			                        </div>
+									<!--改为脚本控制，不能直接注释 by yeming 交易对手改造 20210903 start-->
 									<!--update by chenjiaixng 交易对手改造 20210729 start-->
-<!--                                    <div class="form-inline-wrap">
+                                    <div class="form-inline-wrap">
                                         <label class="layui-form-label form-lable"  data-th-text="#{MstTradeOpponent002.pTypeOne}">交易对手类型</label>
                                         <div class="layui-input-inline input-inline">                                           
 											<select type="text" id="pTypeOne" name="pTypeOne"
@@ -102,11 +103,11 @@
 													data-th-placeholder="#{SysCommon.placeholder}" formatoption = true>
 											</select>
                                         </div>
-                                    </div>-->
+                                    </div>
 									<!--update by chenjiaixng 交易对手改造 20210729 end-->
 			                    </div>
 								<!--update by chenjiaixng 交易对手改造 20210729 start-->
-<!--								<div class="layui-form-item">
+ 								<div class="layui-form-item">
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.pTypeTwo}">二级交易对手类型</label>
 										<div class="layui-input-inline input-inline">
@@ -118,8 +119,8 @@
 											</select>
 										</div>
 									</div>
-									&lt;!&ndash; 需求说暂时先不要展示  &ndash;&gt;
-									&lt;!&ndash;<div class="form-inline-wrap">
+									<!--需求说暂时先不要展示-->
+									<div class="form-inline-wrap">
 										<label class="layui-form-label form-lable" data-th-text="#{MstTradeOpponent002.isCentralCounter}">是否为中央交易对手</label>
 										<div class="layui-input-inline input-inline">
 											<select id="isCentralCounter" name="isCentralCounter" data-th-initValue='${dto?.isCentralCounter}'
@@ -127,9 +128,10 @@
 												   allowClear="true" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
 											</select>
 										</div>
-									</div>	&ndash;&gt;
-								</div>-->
+									</div>
+								</div>
 								<!--update by chenjiaixng 交易对手改造 20210729 end-->
+								<!--改为脚本控制，不能直接注释 by yeming 交易对手改造 20210903 end-->
                 <!-- </fieldset> -->
                 			</div>
                 		</div>
