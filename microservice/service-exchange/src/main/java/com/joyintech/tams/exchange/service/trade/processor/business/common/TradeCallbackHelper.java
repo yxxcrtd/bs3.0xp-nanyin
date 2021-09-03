@@ -56,10 +56,7 @@ public class TradeCallbackHelper {
     public void onTrade(Trade tradeRecord) {
         logger.info("成交回报信息 {}", JsonUtils.getJsonFromObject(tradeRecord));
         //撤单、废单成交无需去重。 支持重复处理
-        Trade tradeDb = null;
-        if (!TradeType.probablyNoBrokerTradeId(tradeRecord.getTradeType())) {
-            tradeDb = tradeService.queryTradeByAccountIdAndBrokerTradeId(tradeRecord.getAccountId(), tradeRecord.getBrokerTradeId());
-        }
+        Trade tradeDb = tradeService.queryTradeByAccountIdAndBrokerTradeId(tradeRecord.getAccountId(), tradeRecord.getBrokerTradeId());
         Date now = new Date(System.currentTimeMillis());
         if (Objects.isNull(tradeDb)) {
             EntrustInterface entrust = null;
