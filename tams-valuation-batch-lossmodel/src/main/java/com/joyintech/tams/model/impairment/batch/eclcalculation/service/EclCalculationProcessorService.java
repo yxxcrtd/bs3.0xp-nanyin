@@ -9,6 +9,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.common.base.entity.TrdAssetLoss;
 import com.joyintech.tams.constant.*;
@@ -59,7 +60,7 @@ import java.util.*;
         // 定义 变量.返回结果
         EclCalculationResultDto result = new EclCalculationResultDto();
         // 初始化返回结果集
-        result.setModConfigUseageList(new ArrayList<>());
+        result.setModConfigUseageList(new ArrayList<ModConfigUseage>());
         result.setModEclResultProcessList(new ArrayList<>());
         result.setModEclResultList(new ArrayList<>());
         // 定义 变量.账套代码 = 返回结果.产品代码

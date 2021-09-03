@@ -32,6 +32,11 @@ public class ViewRatingInfoDto extends BaseEntity {
      */
     private Date searchDate;
 
+    /**
+     * 主体是否持有金融牌照
+     */
+    private String isFinLicence;
+
     public ViewRatingInfoDto(){
 
     }
@@ -80,5 +85,37 @@ public class ViewRatingInfoDto extends BaseEntity {
 
     public void setSearchDate(Date searchDate) {
         this.searchDate = searchDate;
+    }
+
+    /**
+     * @return gradeOrgType
+     */
+    public String getGradeOrgType() {
+        return gradeOrgType;
+    }
+
+    /**
+     * 设置 gradeOrgType
+     *
+     * @param gradeOrgType gradeOrgType
+     */
+    public void setGradeOrgType(String gradeOrgType) {
+        this.gradeOrgType = gradeOrgType;
+    }
+
+    /**
+     * @return 主体是否持有金融牌照
+     */
+    public String getIsFinLicence() {
+        return isFinLicence;
+    }
+
+    /**
+     * 设置 主体是否持有金融牌照
+     *
+     * @param isFinLicence 主体是否持有金融牌照
+     */
+    public void setIsFinLicence(String isFinLicence) {
+        this.isFinLicence = isFinLicence;
     }
 }

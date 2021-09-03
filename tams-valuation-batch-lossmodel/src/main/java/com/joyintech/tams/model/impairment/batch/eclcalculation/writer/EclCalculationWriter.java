@@ -5,7 +5,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;

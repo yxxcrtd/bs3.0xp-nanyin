@@ -193,8 +193,8 @@ public class ImpairmentCommonService extends BaseService{
 		logrst.setFinprodId(finprodId);
 		logrst.setBatchExecSeqno(execInfo.getBatchExedetailSeqNo());
 		logrst.setTaskId(execInfo.getTaskId());
-		logrst.setMsg("【资产减值阶段判断批处理】：资产无风险五级分类");
-		logrst.setType(ModelDictCodeList.批处理执行结果_警告.getValue());
+		logrst.setMsg(msg);
+		logrst.setType(logType);
 		if (stepExecution.getJobExecution().getExecutionContext().get(logKey) != null) {
 			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution()
 				.getExecutionContext().get(logKey);

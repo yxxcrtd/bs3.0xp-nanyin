@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -129,33 +130,7 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      * 评级类型（数据字典 评级类型_模型）
      */
     private String oType;
-    /**
-     * 债项评级结果
-     */
-    private String result01;
-    /**
-     * 债券主体评级结果
-     */
-    private String result02;
-    /**
-     * 发行人评级结果
-     */
-    private String resultIssuer;
 
-    /**
-     * 融资人评级结果
-     */
-    private String resultFinancier;
-
-    /**
-     * 担保人评级结果
-     */
-    private String resultSponsor;
-
-    /**
-     * 实际授信主体评级结果
-     */
-    private String resultActualCredit;
     /**
      * 最新评级结果
      */
@@ -209,6 +184,11 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      * 投资目的
      */
     private String invAim;
+
+    /**
+     *  模型配置使用情况
+     */
+    private ModConfigUseage modConfigUseage;
 
     public String getFinprodId() {
         return finprodId;
@@ -430,54 +410,6 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
         this.oType = oType;
     }
 
-    public String getResult01() {
-        return result01;
-    }
-
-    public void setResult01(String result01) {
-        this.result01 = result01;
-    }
-
-    public String getResult02() {
-        return result02;
-    }
-
-    public void setResult02(String result02) {
-        this.result02 = result02;
-    }
-
-    public String getResultIssuer() {
-        return resultIssuer;
-    }
-
-    public void setResultIssuer(String resultIssuer) {
-        this.resultIssuer = resultIssuer;
-    }
-
-    public String getResultFinancier() {
-        return resultFinancier;
-    }
-
-    public void setResultFinancier(String resultFinancier) {
-        this.resultFinancier = resultFinancier;
-    }
-
-    public String getResultSponsor() {
-        return resultSponsor;
-    }
-
-    public void setResultSponsor(String resultSponsor) {
-        this.resultSponsor = resultSponsor;
-    }
-
-    public String getResultActualCredit() {
-        return resultActualCredit;
-    }
-
-    public void setResultActualCredit(String resultActualCredit) {
-        this.resultActualCredit = resultActualCredit;
-    }
-
     public String getResultCurrent() {
         return resultCurrent;
     }
@@ -596,5 +528,21 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
      */
     public void setInvAim(String invAim) {
         this.invAim = invAim;
+    }
+
+    /**
+     * @return 模型配置使用情况
+     */
+    public ModConfigUseage getModConfigUseage() {
+        return modConfigUseage;
+    }
+
+    /**
+     * 设置 模型配置使用情况
+     *
+     * @param modConfigUseage 模型配置使用情况
+     */
+    public void setModConfigUseage(ModConfigUseage modConfigUseage) {
+        this.modConfigUseage = modConfigUseage;
     }
 }
