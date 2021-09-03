@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
 import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
@@ -78,45 +79,84 @@ public class EtrCommonController extends BaseController {
 
     @RequestMapping("check")
     @ResponseBody
-    public AjaxResult check(@RequestBody TrdProductDeal trdProductDeal) {
+    public AjaxResult check(@RequestBody TrdProductDealDto trdProductDeal) {
         AjaxResult wr = new AjaxResult();
         //名单管理  isNameSoftControl true:软控  false:硬控
         boolean isNameSoftControl = Boolean.parseBoolean(CacheUtil.getSysParam("IS_NAME_SOFTCONTROL"));
         Map<String,Object> params = new HashMap<>();
         List<JoyinMessage> joyinMessages = new ArrayList<>();
         if (isNameSoftControl) {
-            Map<String, Object> param = new HashMap<>();
-            param.put("listDate", trdProductDeal.getTradeDate());
-            param.put("connterId",trdProductDeal.getCounterId());
-            if (StringUtil.isNotEmpty(trdProductDeal.getFinprodId())) {
-                param.put("finprodId", trdProductDeal.getFinprodId());
-            }else{
-                param.put("inputValue1", trdProductDeal.getInputValue1());
-                param.put("inputValue2", trdProductDeal.getInputValue2());
-                param.put("inputValue3", trdProductDeal.getInputValue3());
-            }
-            param = riskNamListCommonValidatorService.名单是否匹配(param);
-            if (Boolean.parseBoolean(param.get("isAssetMatch").toString())) {
-                if (param.containsKey("listTypeAsset")) {
-                    JoyinMessage ms = new JoyinMessage("资产在黑名单内，是否确认提交?", MessageType.确认消息);
+            //多对多
+            if(null!=trdProductDeal.getSelectedItem()&&!trdProductDeal.getSelectedItem().isEmpty()){
+                for(TrdProductDealDto item : trdProductDeal.getSelectedItem()) {
+                    Map<String, Object> param = new HashMap<>();
+                    param.put("listDate", null != item.getTradeDate() ? item.getTradeDate() : item.getEntrustDate());
+                    param.put("counterId", item.getCounterId());
+                    if (StringUtil.isNotEmpty(item.getFinprodId())) {
+                        param.put("finprodId", item.getFinprodId());
+                    } else {
+                        param.put("inputValue1", item.getInputValue1());
+                        param.put("inputValue2", item.getInputValue2());
+                        param.put("inputValue3", item.getInputValue3());
+                    }
+                    param = riskNamListCommonValidatorService.名单是否匹配(param);
+                    if (Boolean.parseBoolean(param.get("isAssetMatch").toString())) {
+                        if (param.containsKey("listTypeAsset")) {
+                            JoyinMessage ms = new JoyinMessage("资产在黑名单内，是否确认提交?", MessageType.确认消息);
+                            joyinMessages.add(ms);
+                            wr.setJoyinMessages(joyinMessages);
+                        }
+                    } else if(!Boolean.parseBoolean(param.get("isAssetMatch").toString()) && Boolean.parseBoolean(param.get("isAssetWhiteList").toString())) {
+                        JoyinMessage ms = new JoyinMessage("该资产不在白名单内，是否确认提交?", MessageType.确认消息);
+                        joyinMessages.add(ms);
+                        wr.setJoyinMessages(joyinMessages);
+                    }
+                    if (!Boolean.parseBoolean(param.get("isOrgBlackMatch").toString())) {
+                        if (param.containsKey("listTypeOrg")) {
+                            JoyinMessage ms = new JoyinMessage("资产所属机构（或交易对手）在黑名单内，是否确认提交?", MessageType.确认消息);
+                            joyinMessages.add(ms);
+                            wr.setJoyinMessages(joyinMessages);
+                        }
+                    } else if (!Boolean.parseBoolean(param.get("isOrgWhiteMatch").toString())) {
+                        JoyinMessage ms = new JoyinMessage("该资产所属机构（或交易对手）不在白名单内，是否确认提交?", MessageType.确认消息);
+                        joyinMessages.add(ms);
+                        wr.setJoyinMessages(joyinMessages);
+                    }
+                }
+            } else{
+                Map<String, Object> param = new HashMap<>();
+                param.put("listDate", trdProductDeal.getTradeDate());
+                param.put("connterId",trdProductDeal.getCounterId());
+                if (StringUtil.isNotEmpty(trdProductDeal.getFinprodId())) {
+                    param.put("finprodId", trdProductDeal.getFinprodId());
+                }else{
+                    param.put("inputValue1", trdProductDeal.getInputValue1());
+                    param.put("inputValue2", trdProductDeal.getInputValue2());
+                    param.put("inputValue3", trdProductDeal.getInputValue3());
+                }
+                param = riskNamListCommonValidatorService.名单是否匹配(param);
+                if (Boolean.parseBoolean(param.get("isAssetMatch").toString())) {
+                    if (param.containsKey("listTypeAsset")) {
+                        JoyinMessage ms = new JoyinMessage("资产在黑名单内，是否确认提交?", MessageType.确认消息);
+                        joyinMessages.add(ms);
+                        wr.setJoyinMessages(joyinMessages);
+                    }
+                } else if(!Boolean.parseBoolean(param.get("isAssetMatch").toString()) && Boolean.parseBoolean(param.get("isAssetWhiteList").toString())) {
+                    JoyinMessage ms = new JoyinMessage("该资产不在白名单内，是否确认提交?", MessageType.确认消息);
                     joyinMessages.add(ms);
                     wr.setJoyinMessages(joyinMessages);
                 }
-            } else if(!Boolean.parseBoolean(param.get("isAssetMatch").toString()) && Boolean.parseBoolean(param.get("isAssetWhiteList").toString())) {
-                JoyinMessage ms = new JoyinMessage("该资产不在白名单内，是否确认提交?", MessageType.确认消息);
-                joyinMessages.add(ms);
-                wr.setJoyinMessages(joyinMessages);
-            }
-            if (!Boolean.parseBoolean(param.get("isOrgBlackMatch").toString())) {
-                if (param.containsKey("listTypeOrg")) {
-                    JoyinMessage ms = new JoyinMessage("资产所属机构（或交易对手）在黑名单内，是否确认提交?", MessageType.确认消息);
+                if (!Boolean.parseBoolean(param.get("isOrgBlackMatch").toString())) {
+                    if (param.containsKey("listTypeOrg")) {
+                        JoyinMessage ms = new JoyinMessage("资产所属机构（或交易对手）在黑名单内，是否确认提交?", MessageType.确认消息);
+                        joyinMessages.add(ms);
+                        wr.setJoyinMessages(joyinMessages);
+                    }
+                } else if (!Boolean.parseBoolean(param.get("isOrgWhiteMatch").toString())) {
+                    JoyinMessage ms = new JoyinMessage("该资产所属机构（或交易对手）不在白名单内，是否确认提交?", MessageType.确认消息);
                     joyinMessages.add(ms);
                     wr.setJoyinMessages(joyinMessages);
                 }
-            } else if (!Boolean.parseBoolean(param.get("isOrgWhiteMatch").toString())) {
-                JoyinMessage ms = new JoyinMessage("该资产所属机构（或交易对手）不在白名单内，是否确认提交?", MessageType.确认消息);
-                joyinMessages.add(ms);
-                wr.setJoyinMessages(joyinMessages);
             }
         }
 

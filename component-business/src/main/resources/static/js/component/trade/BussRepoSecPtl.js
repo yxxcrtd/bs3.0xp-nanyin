@@ -368,7 +368,14 @@
              
              var entrustId = $("#entrustId").val();
              if(entrustId){
-                 $('.btn_add_plegin').remove();
+                 //add by chenjiaxing 质押券回购交易添加质押券为空时添加质押券按钮 20210903 start
+                 var temp = pledgeBondTotalTblDetailed.getAllRows();
+                 if(temp.length == 0){
+
+                 }else{
+                     $('.btn_add_plegin').remove();
+                 }
+                 //add by chenjiaxing 质押券回购交易添加质押券为空时添加质押券按钮 20210903 end
                  $('.laytable-cell-4-0-13').remove();
              }
              //自动计算可用标准券额度
