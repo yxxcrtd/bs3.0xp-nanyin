@@ -170,16 +170,16 @@ public class EtrConBondCashPositionDealService extends EtrCashPositionBaseServic
                     etrSecPositionFlowDtoShare.setFinprodId(barterDeal.getFinprodId());
                     etrSecPositionFlowDtoShare.setCdate(deal.getTradeDate());
                     etrPositionHoldDto.getPtlSecPositionFlows().add(etrSecPositionFlowDtoShare);
-                    if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0){
-                        // 交易生成的现金流水
-                        EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
-                                finProductTradeDto);
-                        etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
-                        etrCashPositionFlowDto.setAcctId(stlPayOrdersDtos.get(0).getMyAcctNo());
-                        etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt());
-                        etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
-                        etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
-                    }
+//                    if(stlPayOrdersDtos!= null && stlPayOrdersDtos.size()>0){
+//                        // 交易生成的现金流水
+//                        EtrCashPositionFlowDto etrCashPositionFlowDto = EtrCommonCashPositionDealService.getEtrCashPositionFlowDto(
+//                                finProductTradeDto);
+//                        etrCashPositionFlowDto.setOrderId(finProductTradeDto.getTrdProductDeal().getTradeId());
+//                        etrCashPositionFlowDto.setAcctId(stlPayOrdersDtos.get(0).getMyAcctNo());
+//                        etrCashPositionFlowDto.setAmount(stlPayOrdersDtos.get(0).getSettleAmt());
+//                        etrCashPositionFlowDto.setCdate(stlPayOrdersDtos.get(0).getSettleDate());
+//                        etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
+//                    }
                 }
             }
             
