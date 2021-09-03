@@ -560,6 +560,56 @@ public class InvestorsHoldInfoDistinctService {
     }
 
 	/**
+     * 合并-前台导入用
+     * 
+     * @param list
+     * @param type
+     *            01 map类型 02dto 类型
+     */	
+    public void mergeInvestorsHoldInfolistNew(String type, String interType) {
+	//删除info表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkWH();
+	//删除sub表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ();
+
+	// 查询需要合并的数据
+	List<InvestorsHoldInfo001Dto> resultList = chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();
+
+	/**** 数据处理,大批量删除导致速度降低,修改逻辑 **/
+	if (!resultList.isEmpty()) {
+	    this.deleteInvestholdInfoSubBatchGroupDto(resultList);
+	    this.deleteInvestholdInfoBatchGroupDto(resultList);
+	}
+	// 更新持有检查表数据状态
+	chbInvestholdInfoCheckDtoMapper.updateChbInvestholdCheckAftermerged();
+	// 插入维护及登记表
+	InvestorsHoldInfo001Service investorsHoldInfo001Service = SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
+	// 获取所有的产品登记编码
+	Map<String, String> prdRegistMap = new HashMap<String, String>();
+	List<InvestorsHoldInfo001Dto> listA = new ArrayList<InvestorsHoldInfo001Dto>();
+	List<InvestorsHoldInfo001Dto> listE = new ArrayList<InvestorsHoldInfo001Dto>();
+	for (InvestorsHoldInfo001Dto single : resultList) {
+	    if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		if (prdRegistMap.isEmpty()) {
+		    prdRegistMap = investorsHoldInfo001Mapper.getAllRegistProdCodeSet().stream().collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
+		}
+		if (single.getProdid() != null) {
+		    single.setPrdRegistCode(prdRegistMap.get(single.getProdid()));
+		}
+		if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		    if (interType.equals(DictCodeListExt2.数据来源_资管系统.getValue()))
+			listA.add(single);
+		} else {
+		    listE.add(single);
+		}
+	    } else {
+		listE.add(single);
+	    }
+	}
+	investorsHoldInfo001Service.afterCheckDeal(listE, listA, interType, null, null, null, null);
+    }
+	
+	/**
 	 * @param type "01" 数据检查  02自动报送的检查
 	 * @param registList
 	 * @returnqueryRepeatEquityInfoHoldUnSubmit

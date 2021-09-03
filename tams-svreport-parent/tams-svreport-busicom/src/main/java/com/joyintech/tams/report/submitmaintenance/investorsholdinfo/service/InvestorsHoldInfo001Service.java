@@ -842,7 +842,7 @@ public class InvestorsHoldInfo001Service extends CommonExportService<InvestorsHo
 				// 进行了数据检查与转化后 无错误信息可以进行后续操作
 				investorsHoldInfoDistinctService.checkInvestorsHoldInfolist(listE,"02");
 				afterCheckDeal(listE, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, null);
-				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolist("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
+				investorsHoldInfoDistinctService.mergeInvestorsHoldInfolistNew("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
 			}
 			return checkResult;
 		}
