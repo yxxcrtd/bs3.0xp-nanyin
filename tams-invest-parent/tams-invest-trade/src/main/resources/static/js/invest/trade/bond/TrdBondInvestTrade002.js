@@ -119,8 +119,12 @@ var calculateField;
 	        object.settleAmt=$("#settleAmt").val();
 	        object.exchangeAmt=$("#exchangeAmt").val();
 	        object.commissionAmt=$("#commissionAmt").val();
-	        object.refundRate=$("#refundRate").val();
-	        object.refundAmount=$("#refundAmount").val();
+            if($("#refundRate").val()){
+                object.refundRate=$("#refundRate").val();
+            }
+            if($("#refundAmount").val()){
+                object.refundAmount=$("#refundAmount").val();
+            }
 	        object.preTradeId = preTradeId;
 //	        object.fTradeId = fTradeId;
 	        object.entrustNum = entrustNum; // 指令时的券面总额
@@ -707,6 +711,8 @@ var calculateField;
             checkAndAssign("#ps", PS_T01);
             checkAndAssign("#unitInt", '0');
             checkAndAssign("#intAmt", '0');
+            $("#refundRate_div").show();
+            $("#refundAmount_div").show();
             /*var tradeMarket = $('#tradeMarket').val();
             if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                 $("#commissionAmt").prop("disabled", true).val(0).trigger('blur').trigger('change');
@@ -716,6 +722,10 @@ var calculateField;
             }*/
         } else {
             // $("#commissionAmt").prop("disabled", false).val(commissionAmt).trigger('blur').trigger('change');
+            $("#refundRate").val('');
+            $("#refundAmount").val('');
+            $("#refundRate_div").hide();
+            $("#refundAmount_div").hide();
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
             }else if ($("#fTradeId").val()){
@@ -2335,6 +2345,20 @@ var calculateField;
     $(function() {
         //初始化画面
         init();
+        // 在一级市场缴款时才展示，二级市场无需展示
+        var tradeMarketMode = $("#tradeMarketMode").val();
+        if(tradeMarketMode){
+            if(tradeMarketMode==SHARES_TRADE_MARKET_01){
+                $("#refundRate_div").show();
+                $("#refundAmount_div").show();
+            }
+            else if(tradeMarketMode==SHARES_TRADE_MARKET_02){
+                $("#refundRate").val('');
+                $("#refundAmount").val('');
+                $("#refundRate_div").hide();
+                $("#refundAmount_div").hide();
+            }
+        }
         // 是否显示划款指令
         if(GEN_PAY_ORDERS_AUTO=='01'){
         	$('#bussTrdTransferOrder_div').hide() ;
