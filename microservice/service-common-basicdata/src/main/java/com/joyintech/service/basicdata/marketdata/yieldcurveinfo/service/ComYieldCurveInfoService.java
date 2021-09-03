@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：理财资管管理系统V2.0
  */
- 
+
 package com.joyintech.service.basicdata.marketdata.yieldcurveinfo.service;
 
 import java.math.BigDecimal;
@@ -42,17 +42,17 @@ import com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCur
 public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
 
    /**
-    * 
+    *
     */
     @Autowired
     private ComYieldCurveInfo001Mapper comYieldCurveInfo001Mapper;
    /**
-    * 
+    *
     */
     @Autowired
     private  MstYieldCurveInfoMapper mstYieldCurveInfoMapper;
     /**
-     * 
+     *
      * <一句话功能简述>
      * <功能详细描述>
      * @param pageParam Map<String, Object>
@@ -62,11 +62,11 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
      * @since 1.0
      */
     public Page<ComYieldCurveInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
-    	pageParam.put("curveIntType", DictCode.曲线利率类型.getValue());
+    	pageParam.put("CURVE_CLASS", DictCodeListExt2.曲线类别_收益率曲线.getValue());
     	return super.queryForPage(page,length,()-> comYieldCurveInfo001Mapper.select(pageParam));
     }
     /**
-     * 
+     *
      * <一句话功能简述>
      * <功能详细描述>
      * @param pageParam Map<String, Object>
@@ -78,7 +78,7 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
         return comYieldCurveInfo001Mapper.select(pageParam);
     }
     /**
-     * 
+     *
      * 工作流完结之后的操作
      * <功能详细描述>
      * @param entity 实体
@@ -89,7 +89,7 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
     public void doComplete(ComYieldCurveInfoDto entity) {
         //新建或删除时，收益率除100
         if(StringUtil.isNotEmpty(entity.getYield())){
-            entity.setYield(entity.getYield().divide(new BigDecimal(100+"")));
+            entity.setYield(entity.getYield().divide(new BigDecimal(100)));
         }
         if(StringUtil.equals(entity.getOperateType(), "DELETE")) {
             mstYieldCurveInfoMapper.deleteByPrimaryKey(entity);

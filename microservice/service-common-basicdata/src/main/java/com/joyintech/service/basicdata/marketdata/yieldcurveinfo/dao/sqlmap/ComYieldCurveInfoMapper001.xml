@@ -3,11 +3,11 @@
 <mapper namespace="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dao.ComYieldCurveInfo001Mapper">
 	<sql id = "BASE_COLUMNS">
 		CURVE_DATE as curveDate,
-		CURVE_CODE as curveCode,		
+		CURVE_CODE as curveCode,
 		KEY_POINT as keyPoint,
 		YIELD*100 as yield,
 		CURVE_TYPE as curveType,
-		INPUT_TYPE as inputType, 
+		INPUT_TYPE as inputType,
 		CREATE_USER as createUser,
 		CREATE_DEPT as createDept,
 		CREATE_TIME as createTime,
@@ -15,7 +15,7 @@
 		UPDATE_TIME as updateTime
 	</sql>
 	<select id="selectByParams" resultType="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
-		select 
+		select
 			<include refid="BASE_COLUMNS"></include>
 		from MST_YIELD_CURVE_INFO
 		<where>
@@ -27,27 +27,30 @@
 	<!--修改查询内容 modified by lishuping 20191008 start-->
 	<select id="select" resultType="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
 		select
-		MY.CURVE_DATE as curveDate,
-		MY.CURVE_CODE as curveCode,
-		MY.KEY_POINT as keyPoint,
-		MY.YIELD*100 as yield,
-		MY.CURVE_TYPE as curveType,
-		MC.N as n,
-		MC.K as k
+			MY.CURVE_DATE as curveDate,
+		    MC.REMARK AS curveName,
+			MY.CURVE_CODE as curveCode,
+			MY.KEY_POINT as keyPoint,
+			MY.YIELD*100 as yield,
+			MY.CURVE_TYPE as curveType,
+			MC.N as n,
+			MC.K as k
 		from  MST_YIELD_CURVE_INFO MY
 		INNER JOIN  MST_CURVE_DEF MC on MC.CURVE_CODE = MY.CURVE_CODE
 		<where>
+			1 = 1
 			<if test="curveCode != null and curveCode != ''">
-				MY.CURVE_CODE like concat(concat('%', #{curveCode,jdbcType=VARCHAR}),'%')
+				AND MY.CURVE_CODE = #{curveCode,jdbcType=VARCHAR}
 			</if>
 			<if test="curveType != null and curveType != ''">
-				AND MY.CURVE_TYPE like concat(concat('%', #{curveType,jdbcType=VARCHAR}),'%')
+				AND MY.CURVE_TYPE = #{curveType,jdbcType=VARCHAR}
 			</if>
 			<if test="curveDate != null and curveDate != ''">
 				AND TO_CHAR(MY.CURVE_DATE,'yyyy-MM-dd') = #{curveDate}
 			</if>
-			<if test="curveIntType != null and curveIntType != ''">
-				AND MY.CURVE_TYPE IN (SELECT ITEM_CODE FROM SYS_DATADICT_LIST WHERE DICT_CODE = #{curveIntType,jdbcType=VARCHAR})
+			<if test="CURVE_CLASS != null and CURVE_CLASS != ''">
+				/**曲线信息表中的[CURVE_TYPE]代表的时曲线类型：收益率曲线、利率互换曲线等**/
+				AND MC.CURVE_TYPE = #{CURVE_CLASS,jdbcType=VARCHAR}
 			</if>
 		</where>
 		order by  curveDate, curveCode,keyPoint,yield,n,k
@@ -57,15 +60,16 @@
 	<select id="getCurveName" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		CURVE_CODE id,
-		CURVE_CODE || ':' || INT_CURVE_TYPE text,
+		remark text,
 		INT_CURVE_TYPE object
 		from   MST_CURVE_DEF
 		<where>
+			1=1
 			<if test="search != null and search != ''">
-				(
+				AND (
 				CURVE_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				OR
-				INT_CURVE_TYPE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				remark LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
 			<if test="initValue != null and initValue != ''">
@@ -83,14 +87,14 @@
 		K k
 		FROM
 		MST_CURVE_DEF
-		WHERE
+		WHERE 1=1
 		<if test="curveCode != null and curveCode != ''">
-			CURVE_CODE = #{curveCode}
+			AND CURVE_CODE = #{curveCode}
 		</if>
 	</select>
 	<!--添加曲线名称下拉框查询、添加N、K联动查询 add by lishuping 20191008 start-->
-	
-	
+
+
 		<!--  收益率曲线信息导入   -->
 	 	<insert id="mergeInfoList"  parameterType="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
     		MERGE INTO MST_YIELD_CURVE_INFO CII
@@ -112,12 +116,12 @@
         </foreach>
         ) TEMP
         <!-- 业务主键匹配 -->
-        ON (CII.CURVE_DATE = TEMP.CURVE_DATE AND CII.CURVE_CODE = TEMP.CURVE_CODE 
+        ON (CII.CURVE_DATE = TEMP.CURVE_DATE AND CII.CURVE_CODE = TEMP.CURVE_CODE
         	AND CII.KEY_POINT = TEMP.KEY_POINT)
         <!-- 匹配到则更新 -->
         WHEN MATCHED THEN
         UPDATE
-        SET 
+        SET
         <!--CII.CURVE_DATE = TEMP.CURVE_DATE,
         CII.CURVE_CODE = TEMP.CURVE_CODE,
         CII.KEY_POINT = TEMP.KEY_POINT,-->

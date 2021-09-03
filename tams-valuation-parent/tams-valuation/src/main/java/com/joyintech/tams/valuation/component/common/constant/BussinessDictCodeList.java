@@ -2423,7 +2423,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 计划类资产（货币型）赎回到账
      */
     平安业务类型_计划类资产货币型_赎回到账(BussinessDictCode.平安业务类型,"73","计划类资产（货币型）赎回确认"),
-    
+
     /**
      * 增值税缴纳
      */
@@ -2756,7 +2756,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     /**
      * 计息基础_A_A_B_DAY
      */
-    计息基础_A_A_B_DAY(BussinessDictCode.计息基础,"A/A_B_DAY","A/A(按实际天数分配)"),
+    计息基础_A_A_B_DAY(BussinessDictCode.计息基础,"_DAY","A/A(按实际天数分配)"),
     /**
      * 计息基础_30_360
      */
@@ -4308,7 +4308,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 税类型_地方教育费
      */
     税类型_地方教育费(BussinessDictCode.税类型,"ALT0302","地方教育费"),
-    
+
     /**
      * 税类型_水利基金税
      */
@@ -4454,7 +4454,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 金融产品类型_理财子产品
      */
     金融产品类型_理财子产品(BussinessDictCode.金融产品类型,"F22","理财子产品"),
-    
+
 	/**
 	 * 金融产品类型_通道
 	 */
@@ -4843,7 +4843,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
    * 销售模式_直销
    */
   销售模式_直销(BussinessDictCode.销售模式,"01","销售模式_直销"),
-  
+
 	/**
 	 * 业务类型_债券交易
 	 */
