@@ -32,19 +32,26 @@ import org.springframework.util.CollectionUtils;
 import java.math.RoundingMode;
 import java.util.*;
 
-@Service public class EclCalculationProcessorService {
+@Service
+public class EclCalculationProcessorService {
 
-    @Autowired private EclCalculationMapper eclCalculationMapper;
+    @Autowired
+    private EclCalculationMapper eclCalculationMapper;
 
-    @Autowired private ImpairmentDataLoadMapper impairmentDataLoadMapper;
+    @Autowired
+    private ImpairmentDataLoadMapper impairmentDataLoadMapper;
 
-    @Autowired private ModLogsService modLogsService;
+    @Autowired
+    private ModLogsService modLogsService;
 
-    @Autowired private FinProductMapper finProductMapper;
+    @Autowired
+    private FinProductMapper finProductMapper;
 
-    @Autowired private BokFinProductValuationParaMapper bokFinProductValuationParaKeyMapper;
+    @Autowired
+    private BokFinProductValuationParaMapper bokFinProductValuationParaKeyMapper;
 
-    @Autowired private FinProductCommonBatchService finProductCommonBatchService;
+    @Autowired
+    private FinProductCommonBatchService finProductCommonBatchService;
 
     /**
      * 减值模型数据加载-processor
@@ -68,9 +75,9 @@ import java.util.*;
         // 定义 变量.金融产品代码 = 返回结果.资产代码
         String finprodId = entity.getAssetId();
         //跑批日
-        Date platDate = (Date)params.get("PLATE_DATE");
+        Date platDate = (Date) params.get("PLATE_DATE");
         // 批处理任务执行信息
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) params.get("BATCH_INFO");
         // 定义 变量.减值配置使用情况表List
         List<ModConfigUseage> modConfigUseageList = new ArrayList<>();
         // 定义 变量.减值结果过程表List
@@ -87,8 +94,8 @@ import java.util.*;
         // 查询实体类塞入查询实体类List中
         targetSearchDtoList.add(标的信息);
         Map<TargetSearchDto, Object> resultMap = finProductCommonBatchService.getTargetInfo(
-            finprodId, targetSearchDtoList);
-        TargetFinProduct targetFinProduct = (TargetFinProduct)resultMap.get(标的信息);
+                finprodId, targetSearchDtoList);
+        TargetFinProduct targetFinProduct = (TargetFinProduct) resultMap.get(标的信息);
         if (targetFinProduct == null) {
             return result;
         }
@@ -107,7 +114,7 @@ import java.util.*;
         // 若标的信息.是否含权 = 是，且金融产品类型 = 债券
         if (DictCodeList.是否_是.getValue().equals(targetFinProduct.getIsRight())) {
             exeDate = finProductCommonBatchService.getExeDate(targetFinProduct,
-                booksetId).getExeDate();
+                    booksetId).getExeDate();
             // IF 含权摊销日 != 到期日
             if (!DictCodeList.含权债摊销日_到期日.getValue().equals(exeDate)) {
                 // 变量.代偿期类型 = [数据字典.代偿期类型 PERIOD_TYPE: '01 行权']
@@ -121,13 +128,13 @@ import java.util.*;
         }
         // 定义 变量.三阶段减值管理数据 = null
         TrdAssetLoss trdAssetLossP3 = null;
-        List<CommonErrorParams> errors = (List<CommonErrorParams>)stepExecution.getJobExecution().getExecutionContext().get(
-            "ERRORS");
+        List<CommonErrorParams> errors = (List<CommonErrorParams>) stepExecution.getJobExecution().getExecutionContext().get(
+                "ERRORS");
         if (errors == null) {
             errors = new ArrayList<CommonErrorParams>();
         }
         //模型计算LGD
-        caclLGD(assetInfo, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
+        caclLGD(entity, assetInfo, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
 
         // 循环 变量.减值结果过程List
         for (ModEclResultProcess entityDto : listProcess) {
@@ -150,7 +157,7 @@ import java.util.*;
                 searchPara.put("INPUT_TYPE_03", DictCodeListExt3.减值数据来源_中债接入.getValue());
                 // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
                 List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
-                    searchPara);
+                        searchPara);
                 // 返回结果不为空
                 if (!CollectionUtils.isEmpty(listTrdAssetLoss)) {
                     // 定义 变量.减值管理Dto= list.get(0)
@@ -159,12 +166,11 @@ import java.util.*;
                     dataSource = trdAssetLoss.getLossInputType();
                     // 手工录入：当存在交易处于三阶段时，则所有交易按三阶段比例计算ECL
                     if (DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(
-                        trdAssetLoss.getStage())) {
+                            trdAssetLoss.getStage())) {
                         // 变量.三阶段减值管理数据= 变量.减值管理Dto
                         trdAssetLossP3 = trdAssetLoss;
                         break;
-                    }
-                    else {
+                    } else {
                         // 前瞻前PD置空
                         entityDto.setPreProspectivePd(null);
                         // 前瞻后PD = 变量.减值管理Dto.PD
@@ -173,9 +179,9 @@ import java.util.*;
                         entityDto.setLgd(trdAssetLossP3.getLgdVaule());
                         // 交易信息DTO.前瞻后ECL预期信用损失 = 变量.资产减值流水List.get(0).ECL预期信用损失比例 * 交易信息.EAD 四舍五入保留2位小数
                         entityDto.setProspectiveEcl(
-                            ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(),
-                                RoundingMode.HALF_UP, trdAssetLoss.getEclVaule(),
-                                entityDto.getEad()));
+                                ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(),
+                                        RoundingMode.HALF_UP, trdAssetLoss.getEclVaule(),
+                                        entityDto.getEad()));
                     }
                 }
                 // 无手工录入、wind、中债导入，采用模型LGD计算
@@ -183,27 +189,26 @@ import java.util.*;
                     // 计算ECL值
                     //交易信息.前瞻前ECL预期信用损失 = 交易信息.前瞻前PD违约概率% * 交易信息.EAD * 交易信息.LGD 四舍五入保留2位小数
                     entityDto.setPreProspectiveEcl(
-                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                            entityDto.getPreProspectivePd(), entityDto.getEad(),
-                            entityDto.getLgd()));
+                            ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
+                                    entityDto.getPreProspectivePd(), entityDto.getEad(),
+                                    entityDto.getLgd()));
                     //交易信息.前瞻后ECL预期信用损失 = 交易信息.前瞻后PD违约概率% * 交易信息.EAD * 交易信息.LGD  四舍五入保留2位小数
                     entityDto.setProspectiveEcl(
-                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                            entityDto.getProspectivePd(), entityDto.getEad(), entityDto.getLgd()));
+                            ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
+                                    entityDto.getProspectivePd(), entityDto.getEad(), entityDto.getLgd()));
                 }
 
                 //3.3 封装结果集
                 quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
-                    dataSource);
+                        dataSource);
 
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 CommonErrorParams commonErrorParams = new CommonErrorParams();
                 commonErrorParams.setFinprodId(entityDto.getAssetId());
                 commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
                 commonErrorParams.setErrorMsg(
-                    "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
-                    + "】计算异常");
+                        "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
+                                + "】计算异常");
                 commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
                 errors.add(commonErrorParams);
                 stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
@@ -227,8 +232,8 @@ import java.util.*;
                 item.setLgd(trdAssetLossP3.getLgdVaule());
                 // ECL = EAD *   变量.三阶段减值管理数据.三阶段ECL损失比例
                 item.setProspectiveEcl(
-                    ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                        item.getEad(), trdAssetLossP3.getEclVaule()));
+                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
+                                item.getEad(), trdAssetLossP3.getEclVaule()));
             }
             // 循环 变量.资产减值结果List，重新赋值ECL
             for (ModEclResult item : modEclResultList) {
@@ -242,8 +247,8 @@ import java.util.*;
                 item.setDataSource(trdAssetLossP3.getLossInputType());
                 // ECL = EAD *  变量.三阶段ECL损失比例
                 item.setProspectiveEcl(
-                    ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                        item.getEad(), trdAssetLossP3.getEclVaule()));
+                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
+                                item.getEad(), trdAssetLossP3.getEclVaule()));
             }
         }
         result.setModConfigUseageList(modConfigUseageList);
@@ -290,47 +295,42 @@ import java.util.*;
     /**
      * 模型计算LGD值
      *
-     * @param entityDto
+     * @param processEntity
      * @param params
      * @param batchExecuteInfo
      * @param errors
      * @param stepExecution
      * @param modConfigUseage
      */
-    public void caclLGD(ModEclResultProcess entityDto, Map<String, Object> params,
+    public void caclLGD(EclCalculationReaderDto entity, ModEclResultProcess processEntity, Map<String, Object> params,
                         SysBatchExecInfo batchExecuteInfo, List<CommonErrorParams> errors,
                         StepExecution stepExecution, List<ModConfigUseage> modConfigUseageList) {
         // 债券类、存款类、回购类资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> otherLgdConfigMap = CacheUtil.getAppCache(
-            GlobalConstant.OTHER_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> otherLgdConfigMap = entity.getOtherLgdConfigMap();
         // 其他债权类资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> deltRightLgdConfigMap = CacheUtil.getAppCache(
-            GlobalConstant.DELT_RIGHT_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> deltRightLgdConfigMap = entity.getDeltRightLgdConfigMap();
         // 特殊资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> specialLgdConfigMap = CacheUtil.getAppCache(
-            GlobalConstant.SPECIAL_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> specialLgdConfigMap = entity.getSpecialLgdConfigMap();
 
         //定义 变量.LGD配置信息
         ModLgdConfigDto configDto = new ModLgdConfigDto();
         // 查询特殊资产LGD配置
-        if (specialLgdConfigMap.get(entityDto.getAssetId()) != null) {
-            configDto = specialLgdConfigMap.get(entityDto.getAssetId());
-        }
-        else if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(entityDto.getModelAssetType())) {
+        if (specialLgdConfigMap.get(processEntity.getAssetId()) != null) {
+            configDto = specialLgdConfigMap.get(processEntity.getAssetId());
+        } else if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(processEntity.getModelAssetType())) {
             configDto = deltRightLgdConfigMap.get(
-                entityDto.getModelAssetType() + GlobalConstant.UNDER_LINE
-                + entityDto.getIsContainPledge());
-        }
-        else {
+                    processEntity.getModelAssetType() + GlobalConstant.UNDER_LINE
+                            + processEntity.getIsContainPledge());
+        } else {
             configDto = otherLgdConfigMap.get(
-                entityDto.getModelAssetType() + GlobalConstant.UNDER_LINE
-                + entityDto.getModelAssetDetailType());
+                    processEntity.getModelAssetType() + GlobalConstant.UNDER_LINE
+                            + processEntity.getModelAssetDetailType());
         }
 
         // 模型计算LGD值
         if (configDto != null) {
             //交易信息.LGD = LGD参数Dto.LGD
-            entityDto.setLgd(configDto.getLgd());
+            processEntity.setLgd(configDto.getLgd());
             //定义 配置流水号 = LGD参数Dto.流水号
             String seqno = configDto.getSeqno();
             //定义 配置类型 = LGD参数Dto.配置类型
@@ -349,12 +349,11 @@ import java.util.*;
                 modConfigUseage.setConfigType(configType);
                 modConfigUseageList.add(modConfigUseage);
             }
-        }
-        else {
+        } else {
             CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(entityDto.getAssetId());
+            commonErrorParams.setFinprodId(processEntity.getAssetId());
             commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【ECL计算批处理】：资产【"+entityDto.getAssetId()+"】未配置LGD参数");
+            commonErrorParams.setErrorMsg("【ECL计算批处理】：资产【" + processEntity.getAssetId() + "】未配置LGD参数");
             commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
             errors.add(commonErrorParams);
             stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
