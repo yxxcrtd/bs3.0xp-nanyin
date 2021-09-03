@@ -960,6 +960,9 @@
                     tradeDirection: $('#ps').val(),
                     timePoint: MY_SUP_TIME_TYPE_02,
                     valDate: sysDate,
+                    // ZGZGST-1843: 将指令截止日转至后台参与风险试算 fuyongsheng 20210903 add start
+                    mdate: $('#mdate').val(),
+                    // ZGZGST-1843: 将指令截止日转至后台参与风险试算 fuyongsheng 20210903 add end
                     portfolioCode: item.portfolioId,
                     entrustAmt: item.entrustAmt,
                     assetType: fintype,
