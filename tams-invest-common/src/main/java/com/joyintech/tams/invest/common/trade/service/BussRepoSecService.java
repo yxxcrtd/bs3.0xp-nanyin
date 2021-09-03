@@ -228,9 +228,9 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
             params.put("bondTypeArr", StringUtil.split(bondType,","));
         }
         //CFETS质押式回购报价界面，质押券维护界面 仅展示银行间的债券
-        if(StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002")
+        if(params.get("pageFromTz") != null && (StringUtils.equals(params.get("pageFromTz").toString(),"CfetsRepoDealQuotedPrice002")
         		||StringUtils.equals(params.get("pageFromTz").toString(),"EtrIbRepoinfo002")
-        		||StringUtils.equals(params.get("pageFromTz").toString(),"EtribRepoInfo003")){
+        		||StringUtils.equals(params.get("pageFromTz").toString(),"EtribRepoInfo003"))){
             tradeMarket = DictCodeList.交易流通场所_银行间债券市场.getValue();
         }
         Page<PledgeBondInfoDto> resultList = new Page<>();
