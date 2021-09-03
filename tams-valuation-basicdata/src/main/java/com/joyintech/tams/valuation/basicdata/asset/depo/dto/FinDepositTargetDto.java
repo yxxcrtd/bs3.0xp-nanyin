@@ -1512,4 +1512,16 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
 	public void setAccountingClassName(String accountingClassName) {
 		this.accountingClassName = accountingClassName;
 	}
+	/**
+	 * 风险五级分类
+	 */
+	private String bondRiskType;
+
+	public String getBondRiskType() {
+		return bondRiskType;
+	}
+
+	public void setBondRiskType(String bondRiskType) {
+		this.bondRiskType = bondRiskType;
+	}
 }

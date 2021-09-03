@@ -203,6 +203,20 @@
 											</select>
 										</div>
 									</div>
+									<div class="form-inline-wrap">
+										<label class="layui-form-label form-label-wrap"
+											   data-th-text="#{FinBondTargetAsset002.riskType}">风险五级分类</label>
+										<div class="layui-input-inline input-inline">
+											<select id="bondRiskType"
+													name="bondRiskType"
+													class="layui-input form-input input-select"
+													placeholder="请输入内容"
+													data-th-initValue='${entity?.bondRiskType}'
+													data-th-placeholder="#{SysCommon.placeholder}" required
+													data-th-data-result="${BOND_RISK_TYPE}">
+											</select>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
