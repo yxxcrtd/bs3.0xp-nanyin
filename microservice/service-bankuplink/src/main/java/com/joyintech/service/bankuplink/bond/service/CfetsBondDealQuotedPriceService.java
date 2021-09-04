@@ -227,6 +227,28 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
         return this.queryForPageForSelectReturn(page, length,()->cfetsBondDealQuotedPriceMapper.queryEntrustInfoList(param));
     }
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param param 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SuggestDto> queryHisEntrustInfoList(int page, int length, Map<String, Object> param){
+        param.put("finprodType2", BussinessDictCodeList.金融产品类型_债券.getValue());
+        param.put("tradeMarket", BussinessDictCodeList.交易场所_银行间.getValue());
+        param.put("tradeMarketMode", BussinessDictCodeList.交易市场_二级市场.getValue());
+        param.put("entrustStatusAccept", BussinessDictCodeList.委托状态_已接收.getValue());
+        param.put("secAcctSource", BussinessDictCodeList.账户来源_自营.getValue());
+        param.put("secAcctSource_01", BussinessDictCodeList.账户来源_理财.getValue());
+        param.put("psT01", BussinessDictCodeList.交易方向_买入.getValue());
+        param.put("psT02", BussinessDictCodeList.交易方向_卖出.getValue());
+        return this.queryForPageForSelectReturn(page, length,()->cfetsBondDealQuotedPriceMapper.queryHisEntrustInfoList(param));
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
     
     /**
      * 根据查询查询符合条件的报价编号

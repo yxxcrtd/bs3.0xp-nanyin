@@ -19,6 +19,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
@@ -174,6 +175,25 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 				SelectOptionDto.class);
 		return pageList;
 	}
+
+	// ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+	/**
+	 * 根据查询查询符合条件的历史委托列表
+	 *
+	 * @param param
+	 *            入参
+	 * @return 委托列表
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SuggestDto> queryHisEntrustInfoList(Map<String, Object> param) {
+		param.put("loginUserId", LoginUserUtil.getUserName());
+		Page<SuggestDto> pageList = restTemplate.postForPage(
+				ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/queryHisEntrustInfoList", param,
+				SuggestDto.class);
+		return pageList;
+	}
+	// ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
 
 	/**
 	 * 质押券对话报价新增<br />

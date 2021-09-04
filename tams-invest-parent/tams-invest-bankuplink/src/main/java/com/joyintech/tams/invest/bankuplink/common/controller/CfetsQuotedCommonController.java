@@ -69,6 +69,21 @@ public class CfetsQuotedCommonController extends BaseController {
     public Page<SelectOptionDto> getentrustIdAdd(){
         return cfetsQuotedCommonService.queryEntrustInfoList(RequestUtil.getPageParam());
     }
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的委托列表
+     *
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/queryHisEntrustInfoList")
+    public Page<SuggestDto> getHisEntrustIdAdd(){
+        return cfetsQuotedCommonService.queryHisEntrustInfoList(RequestUtil.getPageParam());
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
     
     /**
      * 委托放弃处理

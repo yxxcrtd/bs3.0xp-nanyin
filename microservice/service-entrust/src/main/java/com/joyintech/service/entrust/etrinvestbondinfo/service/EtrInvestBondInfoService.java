@@ -338,13 +338,19 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
         map.put("bond", DictCodeListExt1.金融产品类型_债券.getValue());
         List<String> traderList = entrustCommonPersonSelectMapper.getTraderList(map);
         EtrInvestBondInfoDto etrInvestBondInfoDto = etrInvestBondInfoMapper.selectByKey(map);
-        etrInvestBondInfoDto.setSettleSpreed(String.valueOf(etrInvestBondInfoDto.getSettleSpeed()));
-        String trader = "";
-        for (int i = 0; i < traderList.size(); i++ ) {
-            trader = trader + "," + traderList.get(i);
+        // ZGZGST-1936:针对数据为空进行处理 fuyongsheng 20210902 edit start
+        if(null != etrInvestBondInfoDto){
+            etrInvestBondInfoDto.setSettleSpreed(String.valueOf(etrInvestBondInfoDto.getSettleSpeed()));
+            String trader = "";
+            for (int i = 0; i < traderList.size(); i++ ) {
+                trader = trader + "," + traderList.get(i);
+            }
+            etrInvestBondInfoDto.getEtrInvestPersonInfo().setTrader(trader);
+            return etrInvestBondInfoDto;
+        }else{
+            return new EtrInvestBondInfoDto();
         }
-        etrInvestBondInfoDto.getEtrInvestPersonInfo().setTrader(trader);
-        return etrInvestBondInfoDto;
+        // ZGZGST-1936:针对数据为空进行处理 fuyongsheng 20210902 edit end
     }
 
     /**
