@@ -607,36 +607,38 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     map33.put("page", 1);
                     map33.put("length", 20);
                     Page<SelectOptionDto> page = getfinprodIdForAdd(map33);
-                    SelectOptionDto selectOptionDto = page.getRoot().get(0);
-                    Map<String, Object> m = (Map<String, Object>) selectOptionDto.getObject();
-                     //当二级分类为公募计划，且交易方向为卖出或赎回时，委托金额为空，委托份额必填。
-                    if (StringUtil.equals((String)m.get("assetType2"),
-                            DictCodeList.计划类资产二级分类_公募计划.getValue())) {
-                        String[] s = rowData.get(5).toString().split(":");
-                        if (StringUtil.equals(s[0], DictCodeList.交易方向_卖出.getValue())
-                                || StringUtil.equals(s[0], DictCodeList.交易方向_赎回.getValue())) {
-                            //委托金额
-                            if (StringUtil.isNotBlank(rowData.get(6).toString())) {
-                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0102",
-                                        lineNo));
-                            }
-                            //委托份额
-                            message = etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrPlanAssetN002.entrustNum", lineNo);
-                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
+                    //查到的时候才对委托金额与委托份额的check
+                    if(!page.getRoot().isEmpty()){
+                        SelectOptionDto selectOptionDto = page.getRoot().get(0);
+                        Map<String, Object> m = (Map<String, Object>) selectOptionDto.getObject();
+                        //当二级分类为公募计划，且交易方向为卖出或赎回时，委托金额为空，委托份额必填。
+                        if (StringUtil.equals((String)m.get("assetType2"),
+                                DictCodeList.计划类资产二级分类_公募计划.getValue())) {
+                            String[] s = rowData.get(5).toString().split(":");
+                            if (StringUtil.equals(s[0], DictCodeList.交易方向_卖出.getValue())
+                                    || StringUtil.equals(s[0], DictCodeList.交易方向_赎回.getValue())) {
+                                //委托金额
+                                if (StringUtil.isNotBlank(rowData.get(6).toString())) {
+                                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0102",
+                                            lineNo));
+                                }
+                                //委托份额
+                                message = etrCommonService.checkIsBlank(rowData.get(7).toString(), "EtrPlanAssetN002.entrustNum", lineNo);
+                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
 
-                        }
-                        //当交易方向为买入或申购时，委托份额为空，委托金额必填。
-                        else{
-                            //委托份额
-                            if (StringUtil.isNotBlank(rowData.get(7).toString())) {
-                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0100",
-                                        lineNo));
                             }
-                            //委托金额
-                            message = etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrPlanAssetN002.entrustAmt", lineNo);
-                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
+                            //当交易方向为买入或申购时，委托份额为空，委托金额必填。
+                            else{
+                                //委托份额
+                                if (StringUtil.isNotBlank(rowData.get(7).toString())) {
+                                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0100",
+                                            lineNo));
+                                }
+                                //委托金额
+                                message = etrCommonService.checkIsBlank(rowData.get(6).toString(), "EtrPlanAssetN002.entrustAmt", lineNo);
+                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
+                            }
                         }
-                    }
                         //当二级分类不为公募计划，且交易方向为卖出或赎回时，委托金额与委托份额必填且只能填一个。
                         else{
                             String[] s2 = rowData.get(5).toString().split(":");
@@ -662,6 +664,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                             }
 
                         }
+                    }
                    /* //当交易方向为买入与申购时对委托份额与金额的check
                     String[] s = rowData.get(5).toString().split(":");
                     if (StringUtil.equals(s[0], DictCodeList.交易方向_买入.getValue())
