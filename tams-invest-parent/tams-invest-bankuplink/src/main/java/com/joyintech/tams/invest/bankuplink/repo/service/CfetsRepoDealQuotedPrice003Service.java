@@ -187,8 +187,9 @@ public class CfetsRepoDealQuotedPrice003Service extends CommonExportService<Cfet
     public String getIsShowDsfPledge(Map<String,Object> map) {
         map.put("quoteRoleType", BussinessDictCodeList.银行间上行本方角色_回复方.getValue());
         map.put("ps",BussinessDictCodeList.回购拆借方向_正回购.getValue());
-        return restTemplate.postForObject(
+        String str =restTemplate.postForObject(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPrice001/getIsShowDsfPledge",
                 map, String.class);
+        return str;
     }
 }

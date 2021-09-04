@@ -127,7 +127,7 @@ public class RskValStructureValidator implements BeanValidator{
             }
             //add by yangwenjun 控制列长度 start
             try {
-				if(dto.getSrcColIndexLetter().length()>20) {
+				if(StringUtil.isNotEmpty(dto.getSrcColIndexLetter()) && dto.getSrcColIndexLetter().length()>20) {
 					errorList.add(new ValidMessage(getMessage("列过长","")));
 				}
 			} catch (Exception e) {

@@ -71,7 +71,8 @@ public class FinSupplementPlanChg002Controller extends BaseController {
     @RequestMapping("/getAccrDate")
     public String getAccrDate(@RequestParam Map<String, Object> params) {
         String dateStr = finSupplementPlanChg001Service.getAccrDate(params);
-        return JsonSanitizer.sanitize(dateStr);
+//        return JsonSanitizer.sanitize(dateStr);
+        return dateStr;
     }
     
 }

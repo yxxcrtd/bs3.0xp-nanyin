@@ -121,7 +121,8 @@ $(function() {
             }
             
             if(table.getAllCheckedRows()[0].isAvailable !=YES_OR_NO_Y) {
-                Joyin.error(JoyinUtil.getMessage(FIN_PROD_E_0228));
+                // Joyin.error(JoyinUtil.getMessage(FIN_PROD_E_0228));
+                Joyin.error(JoyinUtil.getMessage("不可拆分尚未提交审批的计划!"));
                 return ; 
             }
             
