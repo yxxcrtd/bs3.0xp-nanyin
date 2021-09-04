@@ -860,4 +860,15 @@
 		and
 		      STATUS='01'
 	</select>
+
+	<select id="getCreditUsingAstListByFin1" resultType="com.joyintech.tams.common.base.entity.CreditUsingAst" flushCache="true" useCache="false">
+		SELECT
+		<include refid="com.joyintech.tams.common.base.dao.CreditUsingAstMapper.Base_Column_List" />
+		FROM CREDIT_USING_SERIES T
+		WHERE T.FINPROD_ID = #{finprodId}
+		AND T.STATUS = '01'
+		AND T.CREDIT_OCCURE_TYPE = '02'
+		AND T.SHARE_AMT > 0
+		ORDER BY T.CREATE_TIME ASC
+	</select>
 </mapper>

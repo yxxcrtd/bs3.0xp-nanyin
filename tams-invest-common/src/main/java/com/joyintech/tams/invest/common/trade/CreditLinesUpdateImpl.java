@@ -502,6 +502,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 释放金额
                     // 资产授信占用列表
                     List<CreditUsingAst> astList = creditLinesDealsMapper.getCreditUsingAstListByFin(inputDto);
+                    if("0003".equals(creditLinesAst.getCreditMstId())){
+                        astList=creditLinesDealsMapper.getCreditUsingAstListByFin1(inputDto);
+                    }
                     for (CreditUsingAst item : astList){
                         BigDecimal releaseAmt = BigDecimal.ZERO;
                         if (shareAmtTotal.compareTo(BigDecimal.ZERO) <= 0 || 已占用额度.compareTo(BigDecimal.ZERO) <= 0){
@@ -1751,7 +1754,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             return outputDto;
         }
         //处理 当授信对象为金额时 申购/认购 的待释放份额为0
-        if(creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_金额.getValue())
+        if(BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())
                 &&(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
                 ||DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))){
             inputDto.setShareAmt(BigDecimal.ZERO);
@@ -1759,7 +1762,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
             if(creditLinesAst!=null) {
-                if (creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_份额.getValue())) {
+                if (BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
                     BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
                     BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
                     inputDto.setShareAmt(objShareAmt.abs());
