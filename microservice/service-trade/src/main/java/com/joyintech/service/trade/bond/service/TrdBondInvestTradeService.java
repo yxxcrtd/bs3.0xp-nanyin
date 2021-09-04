@@ -709,7 +709,7 @@ public class TrdBondInvestTradeService extends BaseService {
         ptlSecValutionKey.setPortfolioId(组合代码);
         ptlSecValutionKey.setFinprodId(金融产品代码);
         ptlSecValutionKey.setInvAim(投资目的);
-        ptlSecValutionKey.setInvAim(证券管理通道代码);
+        ptlSecValutionKey.setSecAcctId(证券管理通道代码);
 
         PtlSecValution ptlSecValution = ptlSecValutionMapper.selectByPrimaryKey(ptlSecValutionKey);
         if (ptlSecValution == null) {

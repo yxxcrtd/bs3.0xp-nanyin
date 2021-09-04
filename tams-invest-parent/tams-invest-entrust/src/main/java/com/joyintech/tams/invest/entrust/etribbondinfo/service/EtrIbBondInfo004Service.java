@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -191,21 +192,22 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                     etrInvestBondInfoDto.setFinprodId(jsonObject.get("finprodId").toString());
                 }
             }
-//            // 证券账户
-//            if (StringUtil.isNotBlank(rowData.get(18).toString())) {
-//                etrInvestBondInfoDto.setSecAcctId(rowData.get(18).toString());
-//                param = new HashMap<>();
-//                param.put("initValue", rowData.get(18).toString());
-//                param.put("portfolioId", etrInvestBondInfoDto.getPortfolioId());
-//                param.put("tradeMarket", etrInvestBondInfoDto.getTradeMarket());
-//                param.put("page", 1);
-//                param.put("length", 20);
-//                List<SelectOptionDto> selectOptionDtoList = this.getSecManageAcctId(param);
-//                if (!StringUtil.isEmptyList(selectOptionDtoList)) {
-//                    etrInvestBondInfoDto.setSecManageAcctIdName(
-//                        selectOptionDtoList.get(0).getText());
-//                }
-//            }
+            // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 edit start
+            // 证券账户
+            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
+                param = new HashMap<>();
+                param.put("initValue", rowData.get(15).toString());
+                param.put("portfolioId", etrInvestBondInfoDto.getPortfolioId());
+                param.put("tradeMarket", etrInvestBondInfoDto.getTradeMarket());
+                param.put("page", 1);
+                param.put("length", 20);
+                List<SelectOptionDto> selectOptionDtoList = this.getSecManageAcctId(param);
+                if (!StringUtil.isEmptyList(selectOptionDtoList)) {
+                    etrInvestBondInfoDto.setSecAcctId(
+                        selectOptionDtoList.get(0).getText());
+                }
+            }
+            // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 edit end
             // 通道
             if (StringUtil.isNotBlank(rowData.get(16).toString())) {
                 etrInvestBondInfoDto.setChlId(rowData.get(16).toString());
@@ -231,8 +233,10 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
 //                etrInvestBondInfoDto.setTradeMarket(rowData.get(16).toString().split(":")[0]);
 //            }
+            // ZGZGST-1631:计算全价需要交易市场 fuyongsheng 20210904 edit start
             // 交易市场固定为二级市场
-//            etrInvestBondInfoDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            etrInvestBondInfoDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            // ZGZGST-1631:计算全价需要交易市场 fuyongsheng 20210904 edit start
             // 交易平台
 //            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
 //                etrInvestBondInfoDto.setTradePlat(rowData.get(17).toString().split(":")[0]);
@@ -1332,5 +1336,34 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
         return true;
     }
 
-    
+    // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 add start
+    /**
+     * 查询证券托管户：联想框文本框
+     *
+     * @param parameters 画面参数
+     * @return 证券托管户：联想框文本框
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getSecManageAcctId(Map<String, Object> parameters) {
+        List<SuggestDto> tempList = restTemplate.postForList(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/getSecManageAcctId",
+                parameters, SuggestDto.class);
+
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        if (!StringUtil.isEmptyList(tempList)) {
+            for (SuggestDto suggestDto : tempList) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(suggestDto.getCode());
+                selectOptionDto.setText(suggestDto.getName());
+                if (StringUtil.isNotBlank((String) parameters.get("portfolioId"))) {
+                    selectOptionDto.setParentId((String) parameters.get("portfolioId"));
+                }
+                resultList.add(selectOptionDto);
+            }
+        }
+
+        return resultList;
+    }
+    // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 add end
 }
