@@ -124,15 +124,6 @@
         if (finprodMarketId){
             $('#finprodMarketId').val(finprodMarketId.split('.')[0]);
         }
-    	//如果授信模式=='02'，则显示批复号和实际授信主体
-    	if(CE_MODEL == '02'){
-    		$('#actualCreditProvidDiv').show();
-    		$('#pflshDiv').show();
-    	}
-    	else{
-    		$('#actualCreditProvidDiv').hide();
-    		$('#pflshDiv').hide();
-    	}
     	var hapCreditAmt = $("#hapCreditAmt").val();
     	if(hapCreditAmt && hapCreditAmt>0){
     		$("#pflsh").attr("disabled",true).trigger('change');
@@ -537,14 +528,6 @@
         });
         /*type4 and type5's automatic match added by wangguiqi on 2019/7/23 -end*/
     });
-    //是否展示资产四五级分类
-    if(IS_SHOW_TYPE == '01'){
-    	$('#selector5').show();
-    	$('#selector6').show();
-    }else{
-    	$('#selector5').hide();
-    	$('#selector6').hide();
-    }
     $('#pMarketId').change(function () {
         var str = $('#pMarketId').select2('data')[0];
         if (str){
