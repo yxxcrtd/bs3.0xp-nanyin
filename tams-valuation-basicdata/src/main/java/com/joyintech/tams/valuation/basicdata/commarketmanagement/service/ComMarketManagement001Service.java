@@ -287,7 +287,8 @@ implements BaseProcessService<ComMarketManagementDto>{
 		index++;
 		//评级结果
 		if (StringUtil.isNotEmpty(list.get(index))) {
-			String lastStr = getEffDictKey(list.get(index).trim(), DictCode.评级结果);
+//			String lastStr = getEffDictKey(list.get(index).trim(), DictCode.评级结果);
+			String lastStr = list.get(index).trim();
 			if (StringUtil.isNotEmpty(lastStr)) {
 				dto.setGradeResult(lastStr);
 			}
