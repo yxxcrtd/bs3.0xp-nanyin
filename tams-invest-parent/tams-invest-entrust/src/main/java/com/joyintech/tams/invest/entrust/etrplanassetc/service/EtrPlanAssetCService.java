@@ -656,22 +656,22 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(5).toString(), "EtrPlanAssetR002.ps",
                             lineNo));
-                // 根据交易方向来chec委托份额和委托金额
+                // 根据交易方向来check委托份额和委托金额
                 String[] s2 = rowData.get(5).toString().split(":");
                 if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
-                    // 委托份额
+                    // 委托份额 改为 指令份额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(6).toString(),
-                            "EtrPlanAssetR002.entrustNum", lineNo));
+                            "EtrPlanAssetC002.entrustNum", lineNo));
                     /*// 委托金额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                         etrCommonService.checkIsBlank(rowData.get(7).toString(),
                             "EtrPlanAssetR002.entrustAmt", indexId));*/
                 }else if(StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())) {
-                	 // 委托份额
+                    // 委托份额 改为 指令份额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(6).toString(),
-                            "EtrPlanAssetR002.entrustNum", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(6).toString(),
+                                    "EtrPlanAssetC002.entrustNum", lineNo));
                     // 交易方向为卖出时，委托金额为空check
                     if (StringUtil.isNotBlank(rowData.get(7).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
@@ -690,10 +690,10 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                     }
                 }
                 else if(StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())){
-                    // 委托份额
+                    // 委托份额 改为 指令份额
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(6).toString(),
-                            "EtrPlanAssetR002.entrustNum", lineNo));
+                            etrCommonService.checkIsBlank(rowData.get(6).toString(),
+                                    "EtrPlanAssetC002.entrustNum", lineNo));
                     // 交易方向为赎回时，委托金额为空check
                     if (StringUtil.isNotBlank(rowData.get(7).toString())) {
                         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
