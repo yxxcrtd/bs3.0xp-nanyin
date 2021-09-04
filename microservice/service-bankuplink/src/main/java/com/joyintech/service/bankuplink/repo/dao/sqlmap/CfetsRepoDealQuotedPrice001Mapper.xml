@@ -281,7 +281,62 @@
                 </otherwise>
             </choose>
     </select>
-    
+
+    <!-- ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start-->
+    <select id="queryHisEntrustInfoList" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        ETR_ENTRUST.ENTRUST_ID code,
+        ETR_ENTRUST.ENTRUST_ID name
+        FROM
+        ETR_ENTRUST
+        LEFT JOIN
+        ETR_ENTRUST_ADD C
+        ON
+        ETR_ENTRUST.ENTRUST_ID = C.ENTRUST_ID
+        LEFT JOIN
+        ETR_DISTRIBUTE E
+        ON
+        ETR_ENTRUST.ENTRUST_ID = E.ENTRUST_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON
+        ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+        WHERE
+        ETR_ENTRUST.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+        and ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
+        <choose>
+            <when test="initValue != null and initValue != ''">
+                and ETR_ENTRUST.ENTRUST_ID = #{initValue}
+            </when>
+            <otherwise>
+                AND E.TRADER = #{loginUserId}
+                AND ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatusAccept}
+                AND NVL(T5.FINISH_AMT,0) &lt; ETR_ENTRUST.ENTRUST_AMT
+                <if test="platDate != null">
+                    and ETR_ENTRUST.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+                    and ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+                </if>
+                <if test="search != null and !search.equals('')">
+                    AND ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{search},'%'))
+                </if>
+                <if test="ps != null and !ps.equals('')">
+                    AND ETR_ENTRUST.PS = #{ps}
+                </if>
+                <if test="settleSpreed != null and settleSpreed != ''">
+                    AND DECODE(C.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+    <!--ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end -->
+
     <select id="queryPledgeBondList" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
         SELECT
             fp.FINPROD_ID                                        AS finprodId,

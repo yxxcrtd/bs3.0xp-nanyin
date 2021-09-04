@@ -242,6 +242,26 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
             () -> cfetsRepoDealQuotedPrice001Mapper.queryEntrustInfoList(param));
     }
 
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param param 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SuggestDto> queryHisEntrustInfoList(int page, int length,
+                                                      Map<String, Object> param) {
+        param.put("FINPROD_TYPE2_Z", BussinessDictCodeList.金融产品类型_债券质押式正回购.getValue());
+        param.put("FINPROD_TYPE2_N", BussinessDictCodeList.金融产品类型_债券质押式逆回购.getValue());
+        param.put("tradeMarket", BussinessDictCodeList.交易场所_银行间.getValue());
+        param.put("entrustStatusAccept", BussinessDictCodeList.委托状态_已接收.getValue());
+        return this.queryForPageForSelectReturn(page, length,
+                () -> cfetsRepoDealQuotedPrice001Mapper.queryHisEntrustInfoList(param));
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 质押券对话报价新增<br />
      * 对话报价信息入库

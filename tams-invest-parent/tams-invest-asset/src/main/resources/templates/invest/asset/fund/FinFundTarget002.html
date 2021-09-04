@@ -290,7 +290,7 @@
                                 <div class="layui-form-item"-->
 							</div>
 							<div class="layui-form-item">
-								<div class=" form-inline-wrap" id="pflshDiv">
+								<div class=" form-inline-wrap" id="pflshDiv" data-th-if="${CE_MODEL eq '02'}">
 									<label class="layui-form-label form-label-wrap"
 										   data-th-text="#{FinFundTarget002.pflsh}">批复号</label>
 									<div class="layui-input-inline input-inline">
@@ -303,7 +303,7 @@
 										</select>
 									</div>
 								</div>
-								<div class=" form-inline-wrap" id="actualCreditProvidDiv">
+								<div class=" form-inline-wrap" id="actualCreditProvidDiv" data-th-if="${CE_MODEL eq '02'}">
 									<label class="layui-form-label form-label-wrap"
 										   data-th-text="#{FinFundTarget002.actualCreditProvid}">实际授信主体</label>
 									<div class="layui-input-inline input-inline">

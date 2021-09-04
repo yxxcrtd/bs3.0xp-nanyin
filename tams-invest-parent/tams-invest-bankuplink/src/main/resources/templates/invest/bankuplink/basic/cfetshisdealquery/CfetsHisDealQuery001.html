@@ -158,9 +158,10 @@
 			                                    <label class="layui-form-label form-label-wrap"
 			                                    	data-th-text="#{CfetsHisDealQuery001.Bond.entrustId}">指令代码</label>
 			                                    <div class="layui-input-inline input-inline">
-			                                        <select  type="text" id="bondEntrustId" name="entrustId" class="layui-input form-input input-select" maxlength="60"
-			                                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" 
-			                                               data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryEntrustInfoList}" formatoption = "false"></select>
+			                                        <input  type="text" id="bondEntrustId" name="entrustId" class="layui-input form-input input-lenovoselect" maxlength="60"
+														placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+														data-th-data-effectivefieldsalias='|{"shortName":"#{CfetsHisDealQuery001.Bond.entrustId}","code":"#{CfetsHisDealQuery001.Bond.entrustId}"}|'
+														data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryHisEntrustInfoList}" formatoption = true/>
 		                                    	</div>
 		                                	</div>
 		                                	<!-- <div class="layui-inline" style="float: right;">
@@ -257,9 +258,10 @@
 	                                    <label class="layui-form-label form-label-wrap"
 	                                    	data-th-text="#{CfetsHisDealQuery001.Repo.entrustId}">指令代码</label>
 	                                    <div class="layui-input-inline input-inline">
-	                                    <select  type="text" id="repoEntrustId" name="entrustId" class="layui-input form-input input-select" maxlength="60"
-			                                               placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" 
-			                                               data-th-data-url="@{/invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/queryEntrustInfoList}" formatoption = "false"></select>
+	                                    	<input  type="text" id="repoEntrustId" name="entrustId" class="layui-input form-input input-lenovoselect" maxlength="60"
+										    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+										    data-th-data-effectivefieldsalias='|{"shortName":"#{CfetsHisDealQuery001.Bond.entrustId}","code":"#{CfetsHisDealQuery001.Bond.entrustId}"}|'
+										    data-th-data-url="@{/invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/queryHisEntrustInfoList}" formatoption = true/>
                                     	</div>
                                 	</div>
                                 	<!-- <div class="layui-inline" style="float: right;">

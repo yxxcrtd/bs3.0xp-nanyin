@@ -377,7 +377,97 @@
 	            </otherwise>
 	        </choose>
 	</select>
-	
+
+	<!-- ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start -->
+	<select id="queryHisEntrustInfoList" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT
+		ETR_ENTRUST.ENTRUST_ID code,
+		ETR_ENTRUST.ENTRUST_ID name
+		FROM
+		ETR_ENTRUST
+		LEFT JOIN
+		ETR_ENTRUST_ADD
+		ON
+		ETR_ENTRUST.ENTRUST_ID = ETR_ENTRUST_ADD.ENTRUST_ID
+		LEFT JOIN
+		STL_SEC_ACCT_INFO
+		ON
+		ETR_ENTRUST_ADD.SEC_ACCT_ID = STL_SEC_ACCT_INFO.SEC_ACCT_ID
+		LEFT JOIN
+		IBU_PORTFOLIO_ACCT_RELA
+		ON  ETR_ENTRUST.PORTFOLIO_ID = IBU_PORTFOLIO_ACCT_RELA.PORTFOLIO_ID
+		AND IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE = #{secAcctSource_01}
+		LEFT JOIN
+		FIN_PRODUCT
+		ON  ETR_ENTRUST.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN
+		ETR_DISTRIBUTE
+		ON
+		ETR_ENTRUST.ENTRUST_ID = ETR_DISTRIBUTE.ENTRUST_ID
+		LEFT JOIN
+		(
+		SELECT
+		ENTRUST_ID,
+		SUM(FINISH_AMT) AS FINISH_AMT
+		FROM
+		ETR_QUOTE_FINISH_STATUS
+		GROUP BY
+		ENTRUST_ID) T5
+		ON
+		ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+		WHERE
+		ETR_ENTRUST.FINPROD_TYPE2 = #{finprodType2}
+		and ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
+		and ETR_ENTRUST.TRADE_MARKET_MODE = #{tradeMarketMode}
+		and ETR_ENTRUST.PS IN (#{psT01}, #{psT02})
+		<if test="param != null and !param.equals('')">
+			and ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatusAccept}
+			AND	(ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{param},'%'))
+			or ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{param},'%')))
+		</if>
+		<choose>
+			<when test="initValue != null and initValue != ''">
+				and ETR_ENTRUST.ENTRUST_ID = #{initValue}
+			</when>
+			<otherwise>
+				and ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatusAccept}
+				AND NVL(T5.FINISH_AMT,0) &lt; NVL(ETR_ENTRUST.ENTRUST_NUM, 0) * 100
+				<if test="loginUserId != null and loginUserId != ''">
+					AND ETR_DISTRIBUTE.TRADER = #{loginUserId}
+				</if>
+				<if test="search != null and search != ''">
+					AND ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{search},'%'))
+				</if>
+				<if test="platDate != null">
+					and ETR_ENTRUST.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+					and ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+				</if>
+				<if test="quotaPageModel != null and (quotaPageModel eq 'marketResponse' or quotaPageModel eq 'dialogueResponse')">
+					AND NVL(T5.FINISH_AMT,0) &lt; NVL(ETR_ENTRUST.ENTRUST_NUM, 0) * 100
+					<if test="quotaPageModel eq 'marketResponse'">
+						AND STL_SEC_ACCT_INFO.SEC_ACCT_SOURCE = #{secAcctSource}
+					</if>
+					<if test="mySide!= null and mySide != ''">
+						AND IBU_PORTFOLIO_ACCT_RELA.PARTY_ID = #{mySide}
+					</if>
+					<if test="finprodId != null and finprodId != ''">
+						AND ETR_ENTRUST.FINPROD_ID = #{finprodId}
+					</if>
+					<if test="finprodName != null and finprodName != ''">
+						AND (ETR_ENTRUST.FINPROD_ID = #{finprodName} OR FIN_PRODUCT.FINPROD_MARKET_ID = #{finprodName})
+					</if>
+					<if test="ps != null and ps != ''">
+						AND ETR_ENTRUST.PS = #{ps}
+					</if>
+					<if test="settleSpreed != null and settleSpreed != ''">
+						AND DECODE(ETR_ENTRUST_ADD.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+					</if>
+				</if>
+			</otherwise>
+		</choose>
+	</select>
+	<!--ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end-->
+
 	<select id="queryCfetsQuoteIdList" resultType="com.joyintech.framework.select.SuggestDto">
 		select distinct
 			IBU_QUOTE_BOND.CFETS_QUOTE_ID code,

@@ -1239,6 +1239,7 @@ public class TradeCommonService extends BaseService {
                         || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeList.交易方向_认购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_赎回确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换申请.getValue().equals(creditLinesInputDto.getPs())
@@ -1256,7 +1257,9 @@ public class TradeCommonService extends BaseService {
                         || DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(creditLinesInputDto.getPs())){
                     return true;
                 }
-                if(DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs()))return true;
+                if(DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeList.交易方向_认购确认.getValue().equals(creditLinesInputDto.getPs()))return true;
+
             }
         }
         // 买入、申购，退回时，释放授信

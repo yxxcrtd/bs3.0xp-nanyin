@@ -77,6 +77,15 @@ public interface CfetsRepoDealQuotedPrice001Mapper {
      */
     List<SelectOptionDto> queryEntrustInfoList(Map<String, Object> map);
 
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param map 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> queryHisEntrustInfoList(Map<String, Object> map);
     
     /**
      * 根据查询查询符合条件的报价编号

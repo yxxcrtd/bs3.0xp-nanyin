@@ -1209,6 +1209,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setEntrustId(creditLinesInputDto.getEntrustId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_资产授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingAst item = new CreditUsingAst();
@@ -1230,6 +1231,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingAstList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_系列授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingSeries item = new CreditUsingSeries();
@@ -1252,6 +1254,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingSeriesList.add(item);
         }else {
             CreditUsingCustomerMst item = new CreditUsingCustomerMst();
@@ -1272,6 +1275,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setEntrustId(creditLinesInputDto.getEntrustId());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerMstList.add(item);
         }
     }
@@ -1746,7 +1750,13 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         if (creditLinesAst == null && oneStepInfo != null && oneStepInfo.getDeductObj() == null){
             return outputDto;
         }
-        //处理 净值型、货币型、基金的申购确认
+        //处理 当授信对象为金额时 申购/认购 的待释放份额为0
+        if(creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_金额.getValue())
+                &&(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
+                ||DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))){
+            inputDto.setShareAmt(BigDecimal.ZERO);
+        }
+        //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
             if(creditLinesAst!=null) {
                 if (creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_份额.getValue())) {
