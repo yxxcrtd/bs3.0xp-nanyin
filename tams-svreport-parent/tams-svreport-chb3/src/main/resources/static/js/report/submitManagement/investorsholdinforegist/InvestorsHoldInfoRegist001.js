@@ -106,6 +106,7 @@ $(function() {
                     }
                 }*/
             },
+            {title: '报送流水号',field:'sumitSeq', width:150},
             {title: '登记银行代码',field:'registBankCode', width:200},
             {title: '产品登记编码', field:'prdRegistCode', width:100},
             {title: '识别标识',field:'indentifyMark', width:150},
@@ -116,7 +117,6 @@ $(function() {
             {title: '机构代码',field:'orgCode', width:150},
             {field:'ccyCode', visible:false},
             {field:'sendStatusCode', visible:false},
-            {field:'sumitSeq', visible:false},
             {field:'statusCode', visible:false}
         ]
     });

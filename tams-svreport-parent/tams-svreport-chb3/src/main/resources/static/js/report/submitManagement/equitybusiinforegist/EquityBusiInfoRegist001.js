@@ -113,6 +113,7 @@ $(function() {
                       }
                   }*/
             },
+            {title: '报送流水号',field:'sumitSeq', width:150},
             {title: '发行机构代码',field:'registBankCode', width:200},
             {title: '识别标识',field:'indentifyMark', width:150},
             {title: '产品登记编码', field:'regCode', width:100},
@@ -143,7 +144,6 @@ $(function() {
             {title: '备注',field:'remark', width:150},
               {field:'submitStatus', visible:false},
             {field:'checkSeqno', visible:false},
-            {field:'sumitSeq', visible:false},
               {field:'busiType', visible:false}
         ]
     });
