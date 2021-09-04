@@ -34,7 +34,7 @@ $(function() {
         cols: [
             {field: 'seqno', visible: false}
             , {field: 'vouchYear', title: '年份',sortable:false}
-            , {field: 'combinedFactor', title: '综合系数',sortable:false}
+            , {field: 'combinedFactor', title: '综合因子',sortable:false}
             , {field: 'action', width: 200, title: 'SysCommon.operation', type: 'action', buttons: ['edit', 'delt']}
         ]
     });

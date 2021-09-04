@@ -1,6 +1,8 @@
 package com.joyintech.tams.valuation.lossmodel.pddefaultmanager.pdfactorconfig.controller;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +35,8 @@ public class PdDefaultManager001Controller extends BaseController {
 	@Override
 	@RequestMapping(PAGE_INIT)
 	public String init(Model model) {
-		model.addAttribute("lossType", CacheUtil.getSysParam(ValComponentConstant.LOSSTYPE));
-		model.addAttribute("isShowMyHome", true);//展示前瞻因子配置（普华）
-		model.addAttribute("isShowKpmgMyHome", true);//展示前瞻因子配置(毕马威)
-		model.addAttribute("isShowRemind", true);//债券、其他债权评级PD维护
-		model.addAttribute("isShowHgPd", true);  //回购评级PD维护
-		model.addAttribute("isShowCkPd", true);  //存款评级PD维护
+		String lossType = CacheUtil.getSysParam(ValComponentConstant.LOSSTYPE);
+		model.addAttribute("lossType", lossType);
 		return super.init(model);
 	}
 }
