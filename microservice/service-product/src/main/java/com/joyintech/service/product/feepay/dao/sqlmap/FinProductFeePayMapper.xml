@@ -207,7 +207,7 @@
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2-->
 
-        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,b.cdate,fcp.cash_id
         ,fcp.vdate,fcp.mdate,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
         from fin_cash_plan fcp
         left join fin_cash_info fci
@@ -220,7 +220,7 @@
         and b.cdate>=fcp.vdate
         and b.cdate&lt; fcp.mdate
         group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
-        ,fcp.vdate,fcp.mdate)BOK_POSITION_PRDFEE
+        ,fcp.vdate,fcp.mdate,b.cdate)BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2
@@ -383,7 +383,7 @@
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2-->
 
-        inner join ( select  b.finprod_id,b.branch,b.fee_type,fcp.cash_id
+        inner join ( select  b.finprod_id,b.branch,b.fee_type,b.cdate,fcp.cash_id
         ,fcp.vdate,fcp.mdate,b.p_finprod_id,sum(nvl(b.tdy_intincexp_add,0)) as TDY_UNPAID_INTINCEXP
         from fin_cash_plan fcp
         left join fin_cash_info fci
@@ -396,7 +396,7 @@
         and b.cdate>=fcp.vdate
         and b.cdate&lt; fcp.mdate
         group by b.finprod_id,b.branch,b.fee_type,fcp.cash_id
-        ,fcp.vdate,fcp.mdate,b.p_finprod_id)BOK_POSITION_PRDFEE
+        ,fcp.vdate,fcp.mdate,b.p_finprod_id,b.cdate)BOK_POSITION_PRDFEE
         ON FIN_CASH_INFO.FINPROD_ID=BOK_POSITION_PRDFEE.FINPROD_ID
         AND FIN_CASH_INFO.BRANCH=BOK_POSITION_PRDFEE.BRANCH
         AND BOK_POSITION_PRDFEE.FEE_TYPE = FIN_CASH_INFO.CASH_TYPE_2

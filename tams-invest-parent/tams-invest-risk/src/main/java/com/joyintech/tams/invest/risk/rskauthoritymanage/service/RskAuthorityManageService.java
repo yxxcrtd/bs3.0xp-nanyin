@@ -388,6 +388,10 @@ public class RskAuthorityManageService  extends CommonExportService<RskAuthority
      * @since 1.0
      */
     public boolean checkDtoIsConflict(RskAuthorityManageDto dto1,RskAuthorityManageDto dto2){
+        //如果是修改，且是自身seqNo,则不为重复
+        if(StringUtil.isNotEmpty(dto1.getSeqNo()) && StringUtil.isNotEmpty(dto2.getSeqNo()) && dto1.getSeqNo().equals(dto2.getSeqNo())){
+            return false;
+        }
         //第一级返回false再判断第二级，第二级返回false再判断第三级
         if(isNotSame(dto1.getRolePos(), dto2.getRolePos())||isNotSame(dto1.getUserName(), dto2.getUserName())
             ||isNotSame(dto1.getAssetType(), dto2.getAssetType())||isNotSame(dto1.getAssetSecType(),dto2.getAssetSecType())||isNotSame(dto1.getTradeMarket(),dto2.getTradeMarket())

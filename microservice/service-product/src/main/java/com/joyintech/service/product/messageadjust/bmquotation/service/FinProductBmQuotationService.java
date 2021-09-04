@@ -320,6 +320,7 @@ public class FinProductBmQuotationService extends BaseService<FinProductBmQuotat
         dto.setBaseRuleId(e.getBaseRuleId());
         dto.setRemark(e.getRemark());
         dto.setpFinprodId(entity.getpFinprodId());
+        dto.setRate(ArithmeticUtil.multiply(e.getRate(),new BigDecimal("100")));//利率
         if(finProductAdd!=null){
         	if(StringUtil.equals(finProductAdd.getDealMode(), DictCodeList.处理模式_周期型.getValue())){
             	dto.setInvestmentCycle(finProductAdd.getInvestmentCycle());	
