@@ -277,6 +277,13 @@
         $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').change(function(){
             settleSpreedChangeAction();
         });
+
+        /**
+         * 券面总额
+         */
+        $("#CfetsBondDealQuotedPriceMuti002_avaNum").change(function() {
+            proportionalMethod();
+        });
         /**
          * 保存按钮按下处理
          */

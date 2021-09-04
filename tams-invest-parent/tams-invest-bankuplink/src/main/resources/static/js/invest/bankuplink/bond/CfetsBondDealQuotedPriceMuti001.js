@@ -247,6 +247,7 @@
          */
         $('#CfetsBondDealQuotedPriceMuti001_avaNum').on('change',function(){
             calcAmt();
+            proportionalMethod();
         });
         /**
          * 回复量
