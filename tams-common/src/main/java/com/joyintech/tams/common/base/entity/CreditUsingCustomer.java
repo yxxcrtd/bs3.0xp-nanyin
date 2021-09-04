@@ -329,4 +329,17 @@ public class CreditUsingCustomer extends BaseEntity {
     public void setAmountAdd(BigDecimal amountAdd) {
         this.amountAdd = amountAdd;
     }
+
+    /**
+     * 顶层金融产品代码
+     */
+    private String pFinprodId;
+
+    public String getpFinprodId() {
+        return pFinprodId;
+    }
+
+    public void setpFinprodId(String pFinprodId) {
+        this.pFinprodId = pFinprodId;
+    }
 }

@@ -1209,6 +1209,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setEntrustId(creditLinesInputDto.getEntrustId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_资产授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingAst item = new CreditUsingAst();
@@ -1230,6 +1231,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingAstList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_系列授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingSeries item = new CreditUsingSeries();
@@ -1252,6 +1254,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingSeriesList.add(item);
         }else {
             CreditUsingCustomerMst item = new CreditUsingCustomerMst();
@@ -1272,6 +1275,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setEntrustId(creditLinesInputDto.getEntrustId());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerMstList.add(item);
         }
     }

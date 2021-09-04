@@ -1230,11 +1230,13 @@ public class EtrCommonService extends BaseService<ITableRow> {
             creditLinesInputDto = new CreditLinesInputDto();
             creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
             creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+            creditLinesInputDto.setpFinprodId(inputDto.getPortfolioIdChange());
             creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
             creditLinesInputDto.setTradeDate(inputDto.getEntrustDate());
             creditLinesInputDto.setTradeStatus(status);
             creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
             creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+            creditLinesInputDto.setFinprodType2(inputDto.getFinprodType2());
             creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
             creditLinesInputDto.setIsBottom("Y");
             if(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())){

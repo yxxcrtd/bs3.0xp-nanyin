@@ -23,6 +23,7 @@
         <result column="ORI_TRADE_ID" property="oriTradeId" jdbcType="VARCHAR" />
         <result column="STATUS" property="status" jdbcType="VARCHAR" />
         <result column="AMOUNT_ADD" property="amountAdd" jdbcType="DECIMAL" />
+        <result column="P_FINPROD_ID" property="pFinprodId" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         SEQNO SEQNO, CUSTOMER_ID CUSTOMER_ID, CDATE CDATE, LAST_AMOUNT LAST_AMOUNT, AMOUNT AMOUNT, 
@@ -59,7 +60,7 @@
             IS_BOTTOM, CREATE_USER, CREATE_DEPT, 
             CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
             CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, 
-            ORI_TRADE_ID, STATUS, AMOUNT_ADD
+            ORI_TRADE_ID, STATUS, AMOUNT_ADD,P_FINPROD_ID
             )
         values (#{seqno,jdbcType=VARCHAR}, #{customerId,jdbcType=VARCHAR}, #{cdate,jdbcType=DATE}, 
             #{lastAmount,jdbcType=DECIMAL}, #{amount,jdbcType=DECIMAL}, #{newAmount,jdbcType=DECIMAL}, 
@@ -67,7 +68,7 @@
             #{isBottom,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{creditLinesId,jdbcType=VARCHAR}, #{creditOccureType,jdbcType=VARCHAR}, #{entrustId,jdbcType=VARCHAR}, 
-            #{oriTradeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{amountAdd,jdbcType=DECIMAL}
+            #{oriTradeId,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{amountAdd,jdbcType=DECIMAL},#{pFinprodId,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
@@ -136,6 +137,9 @@
             <if test="amountAdd != null" >
                 AMOUNT_ADD,
             </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="seqno != null" >
@@ -201,17 +205,20 @@
             <if test="amountAdd != null" >
                 #{amountAdd,jdbcType=DECIMAL},
             </if>
+            <if test="pFinprodId != null" >
+                #{pFinprodId,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.CreditUsingCustomer" >
         insert into CREDIT_USING_CUSTOMER(SEQNO, CUSTOMER_ID, CDATE, LAST_AMOUNT, AMOUNT, 
         NEW_AMOUNT, TRADE_ID, FINPROD_ID, BRANCH, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
         UPDATE_USER, UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, ORI_TRADE_ID, 
-        STATUS, AMOUNT_ADD)
+        STATUS, AMOUNT_ADD,P_FINPROD_ID)
         select SEQNO, CUSTOMER_ID, CDATE, LAST_AMOUNT, AMOUNT, 
             NEW_AMOUNT, TRADE_ID, FINPROD_ID, BRANCH, IS_BOTTOM, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
             #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREDIT_LINES_ID, CREDIT_OCCURE_TYPE, ENTRUST_ID, ORI_TRADE_ID, 
-            #{status,jdbcType=VARCHAR} STATUS, AMOUNT_ADD
+            #{status,jdbcType=VARCHAR} STATUS, AMOUNT_ADD,P_FINPROD_ID
              from CREDIT_USING_CUSTOMER
              where STATUS = 'E' and SEQNO = #{seqno,jdbcType=VARCHAR}
     </insert>
@@ -269,6 +276,9 @@
             <if test="amountAdd != null" >
                 AMOUNT_ADD = #{amountAdd,jdbcType=DECIMAL},
             </if>
+            <if test="pFinprodId != null" >
+                P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
+            </if>
         </set>
         where SEQNO = #{seqno,jdbcType=VARCHAR}
     </update>
@@ -281,6 +291,7 @@
             NEW_AMOUNT = #{newAmount,jdbcType=DECIMAL},
             TRADE_ID = #{tradeId,jdbcType=VARCHAR},
             FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            P_FINPROD_ID = #{pFinprodId,jdbcType=VARCHAR},
             BRANCH = #{branch,jdbcType=DECIMAL},
             IS_BOTTOM = #{isBottom,jdbcType=VARCHAR},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
