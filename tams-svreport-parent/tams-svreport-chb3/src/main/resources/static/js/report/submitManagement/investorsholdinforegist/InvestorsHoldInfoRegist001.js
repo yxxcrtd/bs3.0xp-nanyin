@@ -563,7 +563,7 @@ $(function() {
        
        //导出中债excel
        var exportZZExcel = function(flag) {
-       	var expArr=table.getAllCheckedRows();
+       	   var expArr=table.getAllCheckedRows();
            
            //先判断有没有勾选数据
            if(!expArr || expArr.length ==0){
@@ -583,29 +583,44 @@ $(function() {
 //                       }
 //                   });
 //           		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
-                   	var param = getSearchParams();
-                       param.status='01,02';
-                       param.flag = "0";
+//                    	var param = getSearchParams();
+//                        param.status='01,02';
+//                        param.flag = "0";
                    	//没有勾选数据
                    	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
                    	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？
-                       Joyin.ajax('countExportNum',param,function(dataNum){
-                           if(dataNum>100000){
-                                Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
-                               	 exportAndDoManual(param);
-                                });
-                           }else{
-                        	   Joyin.confirm("是否确认导出中债Excel?", function() {
-                        		 exportAndDoManual(param);
-                        	   });
-                           }
-                       });
+                       // Joyin.ajax('countExportNum',param,function(dataNum){
+                       //     if(dataNum>100000){
+                       //          Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
+                       //         	 exportAndDoManual(param);
+                       //          });
+                       //     }else{
+                       //  	   Joyin.confirm("是否确认导出中债Excel?", function() {
+                       //  		 exportAndDoManual(param);
+                       //  	   });
+                       //     }
+                       // });
 //                   });
+               Joyin.ajaxJson('checkExport',param,function(result){
+                   if(result.date){
+                       exportAndDoManual(param);
+                   } else {
+                       // 无勾选导出，数量小于设置值走勾选逻辑
+                       Joyin.ajax('searchInfo',
+                           param,
+                           function (result) {
+                               if (result && result.length > 0){
+                                   exportZZ(true,result);
+                               }
+                           });
+                   }
+
+               });
            }else{
            	//有勾选数据
            	//先判断勾选的数据有没有包含有删除状态的数据
              	 for(var i=0;i<expArr.length;i++){
-                    if(expArr[i].status =="03"){
+                    if(expArr[i].statusCode =="03"){
                    	 //如果包含有删除状态的数据，给出提示并返回
                         Joyin.error(JoyinUtil.getMessage("REPORT_MANUAL_0010"));
                         return;
@@ -615,7 +630,7 @@ $(function() {
              	 var showTip=false;
              	 var doManualTip=false;
              	for(var i=0;i<expArr.length;i++){
-             		if(expArr[i].submitStatus=="01"){
+             		if(expArr[i].sendStatusCode=="01"){
              			doManualTip=true; 
              		}
              	}
@@ -633,18 +648,17 @@ $(function() {
              		//给出提示框【导出数据包含修改或已报送数据，请确认是否导出！】
                    Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0011"), function() {
                    	  //点击“是”导出数据并且手工处理，否则重新选择数据
-                   	  exportZZ(doManualTip);
+                   	  exportZZ(doManualTip,expArr);
                      });
              	}else{
              		//勾选的数据正常，不需要给出提示，直接导出数据并且手工处理
-             		exportZZ(doManualTip);
+             		exportZZ(doManualTip,expArr);
              	}
            }
        	
        }
-       function exportZZ(flag){
+       function exportZZ(flag,expArr){
        	//导出中债excel并且调用手工处理
-       	var expArr=table.getAllCheckedRows();
            $.each(expArr, function(i, v) {
                v.sendStatus=v.sendStatusCode;
                v.status=v.statusCode;

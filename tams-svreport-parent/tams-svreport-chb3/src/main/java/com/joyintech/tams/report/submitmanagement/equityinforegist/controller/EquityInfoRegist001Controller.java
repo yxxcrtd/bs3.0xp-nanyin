@@ -132,6 +132,20 @@ public class EquityInfoRegist001Controller extends BaseController {
         Map<String, Object> param = RequestUtil.getPageParam();
         return equityInfoRegistMService.searchForPage(param);
     }
+
+    /**
+     *
+     * 查询功能(无分页)
+     * <功能详细描述>
+     * @return 存储了查询结果的list
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/searchInfo")
+    public List<EquityInfoRegist001Dto> searchInfo(@RequestParam Map<String,Object> param){
+        return equityInfoRegistMService.queryForEquityInfoRegistPage(param);
+    }
     /**
      *
      * 导出功能

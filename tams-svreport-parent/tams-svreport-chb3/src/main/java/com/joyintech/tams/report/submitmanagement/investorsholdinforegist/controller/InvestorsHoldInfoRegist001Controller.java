@@ -155,6 +155,19 @@ public class InvestorsHoldInfoRegist001Controller extends BaseController {
 
 	/**
 	 *
+	 * 查询事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	@ResponseBody
+	@RequestMapping("searchInfo")
+	public List<InvestorsHoldInfoRegist001Dto> searchInfo(@RequestParam Map<String,Object> param) {
+		return investorsHoldInfoRegistMService.queryForHoldInfoRegist(param);
+	}
+	/**
+	 *
 	 * 导入
 	 *
 	 * @param fileName

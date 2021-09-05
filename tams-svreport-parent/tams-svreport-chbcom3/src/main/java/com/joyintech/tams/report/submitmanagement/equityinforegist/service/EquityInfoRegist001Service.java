@@ -375,6 +375,29 @@ public class EquityInfoRegist001Service extends CommonExportService<EquityInfoRe
     }
     
     public List<EquityInfoRegist001Dto> queryForEquityInfoRegistPage(Map<String,Object> param){
+        String orgCode = (String)param.get("orgCode");
+        List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+        if (StringUtil.isBlank(orgCode)) {
+            orgCodeList = CommonUtil.getOrgCodeListForSearch();
+        }
+        param.put("orgCodeList", orgCodeList);
+        String personalIdentifyType = (String)param.get("personalIdentifyType");
+        String institutionIdentifyType = (String)param.get("institutionIdentifyType");
+        String status = (String)param.get("status");
+        String submitStatus = (String)param.get("submitStatus");
+        String submitFeedbackStatus = (String)param.get("submitFeedbackStatus");
+        String holderType = (String)param.get("holderType");
+        // 增加发送状态
+        String sendStatus = (String)param.get("sendStatus");
+        param.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+        param.put("holderTypeList", StringUtil.splitToList(GlobalConstant.COMMA, holderType));
+        param.put("personalIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, personalIdentifyType));
+        param.put("institutionIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, institutionIdentifyType));
+        param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        param.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitStatus));
+        param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+        param.put("submitDeadLineStart", param.get("submitDeadLineStart"));
+        param.put("submitDeadLineEnd", DateCalcUtil.getEndOfDay((String)param.get("submitDeadLineEnd")));
         return equityInfoRegist001Mapper.queryForEquityInfoRegistPage(param);
     }
     public List<EquityInfoRegist001Dto> queryExportListByKeys(List<EquityInfoRegist001Dto> equityRegistList){

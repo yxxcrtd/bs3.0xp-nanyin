@@ -184,6 +184,19 @@ public class InvestorsHoldInfoRegist001Service extends CommonExportService<Inves
 	}
 
 	/**
+	 * 查询数据（无分页）
+	 * @param param
+	 * @return
+	 */
+	public List<InvestorsHoldInfoRegist001Dto> queryForHoldInfoRegist(Map<String, Object> param) {
+		dealSearchParam(param);
+		List<InvestorsHoldInfoRegist001Dto> list = new ArrayList<>();
+		list = investorsHoldInfoRegist001Mapper.selectAllData(param);
+		dealDataList(list, false);
+		return list;
+	}
+
+	/**
 	 * 处理查询前的参数 <功能详细描述>
 	 *
 	 * @param pageParam
