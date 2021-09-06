@@ -28,7 +28,7 @@ $(function() {
         },
         cols:[
             { title: "压缩包名称", field: 'datZipCode',width:250,sortable:false},
-            { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
+            // { title: '压缩包放置路径',field:'datZipPath',width:150,sortable:false},
             { title: "报送类型", field: 'datZipTypeStr',width:100, type: 'datetime',sortable:false},
             { title: "报送明细类型", field: 'datZipDatTypeStr',width:150,sortable:false},
             { title: 'zip包状态',field:'datZipStatusStr',width:150,sortable:false},
