@@ -10,23 +10,18 @@
  
 package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.controller;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackage003Dto;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPoolConfigDto;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPtlPortfolioDto;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.service.RskSupervisionPortfPoint003Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -132,5 +127,15 @@ public class RskSupervisionPortfPoint003Controller {
     public Page<RskPtlPortfolioDto> selectPortElementForPage(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPoint003Service.selectPortElementForPage(page, length, param);
+    }
+
+    /**
+     * 查询组合包组合基本信息
+     * @return 查询结果集
+     * @throws Exception 异常
+     */
+    @GetMapping("queryPortfolioPackageDtlByBagId")
+    public List<String> queryPortfolioPackageDtlByBagId(String bagId) {
+        return rskSupervisionPortfPoint003Service.queryPortfolioPackageDtlByBagId(bagId);
     }
 }

@@ -1,25 +1,23 @@
 package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao.RskSupervisionPortfPoint003Mapper;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackage003Dto;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackageDtlDto;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPackageDtlImp;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioPoolConfigDto;
-import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPtlPortfolioDto;
+import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.*;
 import com.joyintech.tams.common.base.dao.PtlParamPoolConfigMapper;
 import com.joyintech.tams.common.base.dao.RskPortfolioPackageDtlMapper;
 import com.joyintech.tams.common.base.dao.RskPortfolioPackageMapper;
 import com.joyintech.tams.common.base.entity.PtlParamPoolConfig;
 import com.joyintech.tams.common.base.entity.RskPortfolioPackageDtl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 监控指标
@@ -193,4 +191,19 @@ public class RskSupervisionPortfPoint003Service extends BaseService {
             () -> rskSupervisionPortfPoint003Mapper.selectPortElementForPage(param));
     }
 
+    /**
+     * 查询组合包组合明细
+     *
+     * @param entity
+     * @return
+     */
+    public List<String> queryPortfolioPackageDtlByBagId(String bagId) {
+        List<RskPortfolioPackageDtlImp> portfDtlList = rskSupervisionPortfPoint003Mapper.selectPortfBagDtlByBagId(
+                bagId);
+        List<String> list= new ArrayList<>();
+        if (StringUtil.isNotEmpty(portfDtlList)) {
+            list= portfDtlList.stream().map(item->item.getPortfolioId()).collect(Collectors.toList());
+        }
+        return list;
+    }
 }
