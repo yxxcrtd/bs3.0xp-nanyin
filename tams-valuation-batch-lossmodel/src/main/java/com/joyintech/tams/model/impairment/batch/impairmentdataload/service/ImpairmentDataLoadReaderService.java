@@ -65,6 +65,7 @@ public class ImpairmentDataLoadReaderService {
         para.put("SEC_TYPE_13", DictCodeListExt1.证券品种_其他债权类.getValue());
         para.put("finprodIdList", finprodIdList);
         List<ImpairmentDataLoadStep1ReaderDto> list = new ArrayList<>();
+        List<ImpairmentDataLoadStep1ReaderDto> listErrorDto = new ArrayList<>();
         // 减值方案系统参数
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
@@ -113,6 +114,8 @@ public class ImpairmentDataLoadReaderService {
             // 定义 查询参数.资产信息
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, entity);
+            modAssetInfoDto.setSecType(entity.getSecTypeModel());
+            modAssetInfoDto.setSecTypeDetail(entity.getSecDetailTypeModel());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -134,7 +137,8 @@ public class ImpairmentDataLoadReaderService {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,platDate);
-            }else if(configMap.get(entity.getFinprodId()) != null){
+            }else if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null
+                || configMap.get(entity.getSecTypeModel()) != null){
                 // 一般资产评级配置
                 ModAssetGradeConfig config = configMap.get(entity.getFinprodId());
                 //定义 配置流水号 = LGD参数Dto.流水号
@@ -158,6 +162,7 @@ public class ImpairmentDataLoadReaderService {
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
                         entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                listErrorDto.add(entity);
                 continue;
             }
             if(ratingInfoDto != null){
@@ -173,9 +178,12 @@ public class ImpairmentDataLoadReaderService {
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
                         entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                listErrorDto.add(entity);
             }
         }
-
+        if(CollectionUtils.isNotEmpty(listErrorDto)){
+            list.removeAll(listErrorDto);
+        }
         return list;
     }
 

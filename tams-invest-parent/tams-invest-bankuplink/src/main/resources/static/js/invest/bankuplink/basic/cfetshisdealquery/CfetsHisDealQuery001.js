@@ -110,9 +110,24 @@
                 	}*/
             }//成交编号
             ,{field:'portfolioId', title: 'CfetsHisDealQuery001.Bond.portfolioId',width:120 ,sortField:'I_Q_B_PORTFOLIO_ID'}//组合代码
-            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Bond.entrustId',width:170 ,render : function(data, type, row, meta) {
+            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Bond.entrustId',width:400  ,render : function(data, type, row, meta) {
+                // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 edit start
                 if(row.entrustId){
-                    return "<a  class='pro-link entrustIdLink' style='cursor: pointer;'>"+row.entrustId+"</ a>";
+                    var arr=row.entrustId.split(',');
+                    if(arr.length == 1){
+                        return "<a  class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[0]+">"+row.entrustId+"</ a>";
+                    }else if(arr.length > 1){
+                        var url = "";
+                        for(var i = 0;i<arr.length;i++){
+                            if(i<arr.length - 1){
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[i]+">"+arr[i]+','+"</ a>"
+                            }else{
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[i]+">"+arr[i]+"</ a>"
+                            }
+                        }
+                        return url;
+                    }
+                // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 edit end
                 }else{
                     return '';
                 }
@@ -234,6 +249,15 @@
      * 组合代码链接
      */
     dvpTransferTable.bind('click','.entrustIdLink', function(row) {
+        // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 add start
+        var arr=row.entrustId.split(',');
+        for(var i = 0;i<arr.length;i++){
+            if(arr[i] == $(this).context.id){
+                row.portfolioId = row.portfolioId.split(',')[i];
+            }
+        }
+        row.entrustId = $(this).context.id;
+        // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 add end
     	row.pageModel=PAGE_MODEL_REFERENCE;
         Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo002.refrence"),
                 JoyinUtil.getRealPath("invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init"),

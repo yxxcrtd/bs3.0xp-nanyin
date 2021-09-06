@@ -1,0 +1,1 @@
+update SYS_PARA set PARAM_VALUE = '01', REMARK = '下拉框只有一个选项时是否默认显示(01:选中 02：不选中)' where PARA_CODE = 'SELECT_ONLY_ONE_DISPLAY';

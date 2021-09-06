@@ -227,7 +227,8 @@ create table MOD_CONFIG_USEAGE
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
-   UPDATE_USER          VARCHAR2(20)         not null
+   UPDATE_USER          VARCHAR2(20)         not null,
+   UPDATE_TIME          TIMESTAMP            not null
 );
 
 comment on table MOD_CONFIG_USEAGE is
@@ -248,6 +249,8 @@ comment on column MOD_CONFIG_USEAGE.CREATE_TIME is
 '创建时间';
 comment on column MOD_CONFIG_USEAGE.UPDATE_USER is
 '更新人';
+comment on column MOD_CONFIG_USEAGE.UPDATE_TIME is
+'更新时间';
 commit;
 
 --标的类金融产品附属表添加是否含有利率调整权字段
@@ -1602,7 +1605,6 @@ create index MOD_ASEET_MAPPING_INDEX1 on MOD_ASEET_MAPPING (MAPPING_TYPE, INPUT1
 create index MOD_ASEET_MAPPING_INDEX2 on MOD_ASEET_MAPPING (MAPPING_TYPE, OUTPUT5);
 
 alter table MOD_ASSET_GRADE_CONFIG modify asset_type not null;
-alter table MOD_ASSET_GRADE_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_CONFIG modify o_type not null;
 alter table MOD_ASSET_GRADE_CONFIG modify create_time not null;
 alter table MOD_ASSET_GRADE_CONFIG modify update_user not null;
@@ -1614,7 +1616,6 @@ create index MOD_ASSET_GRADE_CONFIG_INDEX on MOD_ASSET_GRADE_CONFIG (ASSET_TYPE,
 
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_name not null;
-alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify o_type not null;
 
 drop index MOD_SPECIAL_CONFIG_INDEX;

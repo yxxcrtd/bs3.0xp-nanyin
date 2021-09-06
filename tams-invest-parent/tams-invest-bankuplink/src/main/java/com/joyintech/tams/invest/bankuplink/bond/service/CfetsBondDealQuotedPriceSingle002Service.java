@@ -589,11 +589,11 @@ public class CfetsBondDealQuotedPriceSingle002Service extends BaseService<CfetsB
             cfetsBondDealRequestQuote.setEntrustAvaNum(cfetsBondDealRequestQuote.getAvaNum());
             cfetsBondDealRequestQuote.setAvaNum(null);
             if(StringUtil.equals(cfetsBondDealRequestQuoteDto.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
-                if(price.compareTo(cfetsBondDealRequestQuote.getPrice())>0){
+                if(StringUtil.isNotEmpty(price)&&price.compareTo(cfetsBondDealRequestQuote.getPrice())>0){
                     price=cfetsBondDealRequestQuote.getPrice();
                 }
             }else{
-                if(price.compareTo(cfetsBondDealRequestQuote.getPrice())<0){
+                if(StringUtil.isNotEmpty(price)&&price.compareTo(cfetsBondDealRequestQuote.getPrice())<0){
                     price=cfetsBondDealRequestQuote.getPrice();
                 }
             }

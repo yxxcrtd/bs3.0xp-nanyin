@@ -522,6 +522,9 @@
     var getriskdata = function () {
         let dataList = [];
         let portfolioIdList = $.serializeToObject('#submitForm').cfetsBondDealRequestQuoteDtoList;
+        if (!portfolioIdList) {
+            portfolioIdList = $.serializeToObject('#submitForm').cfetsBondDealDialogueQuoteDtoList;
+        }
         if (portfolioIdList.length > 0) {
             for (var index in portfolioIdList) {
                 let item = portfolioIdList[index];

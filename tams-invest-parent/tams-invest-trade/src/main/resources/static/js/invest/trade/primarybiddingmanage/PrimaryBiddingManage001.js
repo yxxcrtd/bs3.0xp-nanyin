@@ -208,7 +208,11 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
                 return;
             }
-            
+            //因为是在001页面获取的数据，因此是万元为单位，要转换成元
+            if(selArr[0].allBidPrinAmt) {
+                selArr[0].allBidPrinAmt = JoyinMath.doMul(selArr[0].allBidPrinAmt, 10000, 2) ;
+            }
+
             //只能撤销已确认、已中标、未中标的记录
             if(selArr[0].tenderconfirmstatus == confirmstatus02 ||
             	selArr[0].tenderconfirmstatus == confirmstatus03||

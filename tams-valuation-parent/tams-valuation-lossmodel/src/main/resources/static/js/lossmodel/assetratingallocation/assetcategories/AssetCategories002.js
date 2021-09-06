@@ -72,5 +72,16 @@ $(function () {
     $("#grade_party_type").on('change',function(){
         gradePartyTypeChange();
     });
-    
+
+    // 资产类别onchange事件
+    $("#assetType").on('change',function(){
+        // assetTypeChange();
+        if($("#assetType").val() == '07' || $("#assetType").val() == '09' ){
+            $("#assetDetailType").prop("disabled",true);
+        }
+        else{
+            $("#assetDetailType").prop("disabled",false);
+        }
+
+    });
 });

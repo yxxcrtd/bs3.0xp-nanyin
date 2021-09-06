@@ -21,7 +21,7 @@
 			FROM MST_BOND_CREDIT_RATING MBCR
 			WHERE 1 = 1
 			<if test="ocode !=null">
-				AND MBCR.O_CODE = #{O_CODE,jdbcType=VARCHAR}
+				AND MBCR.O_CODE = #{ocode,jdbcType=VARCHAR}
 			</if>
 			<if test="otype !=null">
 				AND MBCR.O_TYPE = #{otype,jdbcType=VARCHAR}
