@@ -65,6 +65,7 @@ public class ImpairmentDataLoadReaderService {
         para.put("SEC_TYPE_13", DictCodeListExt1.证券品种_其他债权类.getValue());
         para.put("finprodIdList", finprodIdList);
         List<ImpairmentDataLoadStep1ReaderDto> list = new ArrayList<>();
+        List<ImpairmentDataLoadStep1ReaderDto> listErrorDto = new ArrayList<>();
         // 减值方案系统参数
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
@@ -158,6 +159,7 @@ public class ImpairmentDataLoadReaderService {
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
                         entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                listErrorDto.add(entity);
                 continue;
             }
             if(ratingInfoDto != null){
@@ -173,9 +175,12 @@ public class ImpairmentDataLoadReaderService {
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
                         entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                listErrorDto.add(entity);
             }
         }
-
+        if(CollectionUtils.isNotEmpty(listErrorDto)){
+            list.removeAll(listErrorDto);
+        }
         return list;
     }
 
