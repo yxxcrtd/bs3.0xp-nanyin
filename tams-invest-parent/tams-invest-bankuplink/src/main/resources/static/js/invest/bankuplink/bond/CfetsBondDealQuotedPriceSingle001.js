@@ -135,7 +135,7 @@
                         }
                     }
                     entrustIdChangeFlag = false;
-                    calcAmt("01");
+                    calcAmt($("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val());
                 }
             });
         }
@@ -926,6 +926,9 @@
         var object = $.serializeToObject("#submitForm");
         if(!object.finprodId){
             object.finprodId = $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val();
+        }
+        if(!object.calculateField) {
+            object.calculateField = $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val();
         }
         object.operatorType = operateType;
         return object;

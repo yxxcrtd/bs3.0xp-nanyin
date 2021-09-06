@@ -103,6 +103,7 @@ public class CfetsBondDealQuotedPriceSingle002Controller extends BaseController 
         model.addAttribute("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
+        model.addAttribute("calcTypeUnitCprice", BussinessDictCodeList.计算选择方式_净价.getValue());
 
         // 本方交易员是否可改
         model.addAttribute("ouTraderIdCanEditFlag", CacheUtil.getSysParam("ibuFlag_ouTraderIdCanEdit"));

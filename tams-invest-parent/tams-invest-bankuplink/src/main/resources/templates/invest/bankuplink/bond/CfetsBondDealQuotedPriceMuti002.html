@@ -188,41 +188,45 @@
                 </div>
 
             </div>
-
-            <div class="pro-module">
-                <h3 class="pro-module-title">
-                    <span class="title-des" data-th-utext="#{BussRepoSecPtl.ptlDistribution}">组合分配</span>
-                    <i class="iconfont icon-arrow-down pro-down-icon"></i>
-                </h3>
-
-                <div class="layui-form-item" id = "distributionMuti002_DIV" style="display:none;">
-                    <div class="form-inline-wrap">
-                        <label class="layui-form-label form-label-wrap"
-                               data-th-utext="#{BussRepoSecPtl.distribution}">分配方式</label>
-                        <div class="layui-input-inline input-inline">
-                            <select type="text" id="cfetsQuoTedCommon_distribution"
-                                    class="layui-input form-input input-select"
-                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                    allowClear="true" formatoption="true"
-                                    data-th-data-result='${DISTRIBUTION}'>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-inline-wrap">
-                        <a  id="cfetsQuoTedCommon_btn_autoAllocation"  class="layui-btn layui-btn-sm"> 计算 </a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a id="CfetsQuotedCommon001_dzh_add_btn" class="layui-btn layui-btn-sm" >添加</a>
-                    </div>
-                </div>
-                <div class="pro-module-item pro-item-wrap">
-                    <div><!-- 对话报价 -->
-                        <div>
-                            <table class="layui-table" id="cfetsQuoTedCommonTable"
-                                   name="cfetsBondDealRequestQuoteDtoList"></table>
-                        </div>
-                    </div>
-                </div>
+            <!-- 组合分配信息 -->
+            <div class="page-component" th:data-path="@{/invest/bankuplink/common/CfetsQuotedCommon001/init}" id="cfetsQuotedCommon_div"
+                 th:data-params="|{entityName: 'bussTrdTransferOrder', pageFrom: 'submitForm', entity:'${cfetsBondDealRequestQuoteDtoList}', bizCode:'${tradeId}', quoteType: '02'}|">
             </div>
+
+<!--            <div class="pro-module">-->
+<!--                <h3 class="pro-module-title">-->
+<!--                    <span class="title-des" data-th-utext="#{BussRepoSecPtl.ptlDistribution}">组合分配</span>-->
+<!--                    <i class="iconfont icon-arrow-down pro-down-icon"></i>-->
+<!--                </h3>-->
+
+<!--                <div class="layui-form-item" id = "distributionMuti002_DIV" style="display:none;">-->
+<!--                    <div class="form-inline-wrap">-->
+<!--                        <label class="layui-form-label form-label-wrap"-->
+<!--                               data-th-utext="#{BussRepoSecPtl.distribution}">分配方式</label>-->
+<!--                        <div class="layui-input-inline input-inline">-->
+<!--                            <select type="text" id="cfetsQuoTedCommon_distribution"-->
+<!--                                    class="layui-input form-input input-select"-->
+<!--                                    placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                                    allowClear="true" formatoption="true"-->
+<!--                                    data-th-data-result='${DISTRIBUTION}'>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-inline-wrap">-->
+<!--                        <a  id="cfetsQuoTedCommon_btn_autoAllocation"  class="layui-btn layui-btn-sm"> 计算 </a>-->
+<!--                        &nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                        <a id="CfetsQuotedCommon001_dzh_add_btn" class="layui-btn layui-btn-sm" >添加</a>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="pro-module-item pro-item-wrap">-->
+<!--                    <div>&lt;!&ndash; 对话报价 &ndash;&gt;-->
+<!--                        <div>-->
+<!--                            <table class="layui-table" id="cfetsQuoTedCommonTable"-->
+<!--                                   name="cfetsBondDealRequestQuoteDtoList"></table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
 
             <div class="pro-module-wrap">

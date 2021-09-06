@@ -13,11 +13,11 @@
                 if (result){
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustAmt').val(result.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val(result.finprodId);
-                    $('#CfetsBondDealQuotedPriceSingle002_portfolioName').attr('disabled', true).textSelect('setValue',result.portfolioId);
+                    $('#CfetsBondDealQuotedPriceSingle002_portfolioId').attr('disabled', true).textSelect('setValue',result.portfolioId);
                     $('#CfetsBondDealQuotedPriceSingle002_mySide').attr('disabled', true).textSelect('setValue',result.mySide);
                     $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').textSelect('setValue',result.mySideTrader);
                     $('#CfetsBondDealQuotedPriceSingle002_ps').val(result.ps).trigger('change').attr('disabled', true);
-                    $('#CfetsBondDealQuotedPriceSingle002_finprodName').attr('disabled', true).textSelect('setValue',result.finprodMarketId);
+                    $('#CfetsBondDealQuotedPriceSingle002_finprodId').attr('disabled', true).textSelect('setValue',result.finprodMarketId);
                     $('#CfetsBondDealQuotedPriceSingle002_settleCcy').val(result.settleCcy == null ? CNY : result.settleCcy);
                     $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.settleSpreed).trigger('change').attr('disabled', true);
                     $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(result.settleDateStr).attr('disabled', true);
@@ -25,6 +25,7 @@
                     $('#CfetsBondDealQuotedPriceSingle002_effDate').val(result.effDate);
                     $('#CfetsBondDealQuotedPriceSingle002_remark').val(result.remark);
                     $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.secManageAcctId);
+                    $("#CfetsBondDealQuotedPriceSingle002_hidden_calculateField").val(result.calculateField);
                 }
             });
         }
@@ -428,6 +429,9 @@
         var object = $.serializeToObject("#submitForm");
         if(!object.finprodId){
             object.finprodId = $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val();
+        }
+        if(!object.calculateField) {
+            object.calculateField = $("#CfetsBondDealQuotedPriceSingle002_hidden_calculateField").val();
         }
         object.operatorType = operateType;
         var orgList = table.getAllRows();
