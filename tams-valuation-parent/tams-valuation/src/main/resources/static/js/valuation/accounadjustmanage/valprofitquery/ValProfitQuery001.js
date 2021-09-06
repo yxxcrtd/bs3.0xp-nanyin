@@ -208,8 +208,8 @@ $(function() {
 			var laydate = layui.laydate;
 			var arr1 = ["03", "04"] // 03-季报, 04-半年报
 			//update yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
-			//var arr2 = ["03", "04", "05"] // 03-季报, 04-半年报, 05-年报
-			var arr2 = ["03", "04"] // 03-季报, 04-半年报, 05-年报
+			var arr2 = ["03", "04", "05"] // 03-季报, 04-半年报, 05-年报
+			//var arr2 = ["03", "04"] // 03-季报, 04-半年报, 05-年报
 			var reportTermType = $("#reportTermType").val();
 			if(arr1.indexOf(reportTermType) >= 0){// 报表期限类型为半年报或季报时，可以选择报表期限
 				$("#c_reportTerm").show();
@@ -250,17 +250,17 @@ $(function() {
 				clearDateInput();
 			}
 			//add by yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
-			if(reportTermType == '05'){// 年报
-				laydate.render({
-					elem: '#date_reportDate',
-					type: 'date',
-					format: 'yyyy-MM-dd'
-				});
-				$("#c_year_reportDate").hide();
-				$("#c_month_reportDate").hide();
-				$("#c_date_reportDate").show();
-				clearDateInput();
-			}
+//			if(reportTermType == '05'){// 年报
+//				laydate.render({
+//					elem: '#date_reportDate',
+//					type: 'date',
+//					format: 'yyyy-MM-dd'
+//				});
+//				$("#c_year_reportDate").hide();
+//				$("#c_month_reportDate").hide();
+//				$("#c_date_reportDate").show();
+//				clearDateInput();
+//			}
 		});
 		$("#year_reportDate").click(function(event){
 			event.stopPropagation();// 阻止事件冒泡
