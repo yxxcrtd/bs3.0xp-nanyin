@@ -207,9 +207,9 @@ public class EtribBondInfo003Controller extends BaseController {
 //            if(!StringUtil.isNotEmpty(dtoList.get(0).getCounterId())){
 //                messages.add(new ValidMessage("counterId", "请选择交易对手！"));
 //            }
-            if(!StringUtil.isNotEmpty(dtoList.get(0).getCalculateField())){
-                messages.add(new ValidMessage("calculateField", "净价、到期收益率、行权收益率三选一！"));
-            }
+//            if(!StringUtil.isNotEmpty(dtoList.get(0).getCalculateField())){
+//                messages.add(new ValidMessage("calculateField", "净价、到期收益率、行权收益率三选一！"));
+//            }
             // 价格模式check
             if (StringUtil.isNotEmpty(dto.getPriceModel()) &&
                     (StringUtil.equals(dto.getPriceModel(), DictCodeListExt2.价格模式_指定价格.getValue())
