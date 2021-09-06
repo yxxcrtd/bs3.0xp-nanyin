@@ -55,9 +55,19 @@
         },
         done: function () {
     	    if(quoteType == '01'){
-    	        window.CfetsBondDealQuotedPrice004.disabledElementByDzh(table.getAllRows());
+    	        if(window.CfetsBondDealQuotedPrice004){
+                    window.CfetsBondDealQuotedPrice004.disabledElementByDzh(table.getAllRows());
+                }
+                if(window.CfetsBondDealQuotedPriceMuti001){
+                    window.CfetsBondDealQuotedPriceMuti001.disabledElementByDzh(table.getAllRows());
+                }
             }else{
-				window.CfetsBondDealQuotedPrice005.disabledElementByDzh(table.getAllRows());
+                if(window.CfetsBondDealQuotedPrice005){
+                    window.CfetsBondDealQuotedPrice005.disabledElementByDzh(table.getAllRows());
+                }
+                if(window.CfetsBondDealQuotedPriceMuti002){
+                    window.CfetsBondDealQuotedPriceMuti002.disabledElementByDzh(table.getAllRows());
+                }
 			}
         }
     });
@@ -80,8 +90,13 @@
         }
     }
 
+    var clearTable = function(){
+        table.clear();
+    }
+
 	window.CfetsQuotedCommon001 = {
-        reloadPtlAllocation: reloadPtlAllocation
+        reloadPtlAllocation: reloadPtlAllocation,
+        clearTable: clearTable
     };
     
 	

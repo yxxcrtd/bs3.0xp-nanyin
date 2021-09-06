@@ -273,6 +273,10 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
         if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
             cfetsBondDealDialogueQuoteDto.setQuotaPageModel(this.getParam("quotaPageModel"));
         }
+
+        if(!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuotaPageModel())){
+            cfetsBondDealDialogueQuoteDto.setQuotaPageModel("new");
+        }
         
         if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCalculateField())) {
             cfetsBondDealDialogueQuoteDto.setCalculateField(DictCodeListExt3.债券计算模式_单位净价.getValue());

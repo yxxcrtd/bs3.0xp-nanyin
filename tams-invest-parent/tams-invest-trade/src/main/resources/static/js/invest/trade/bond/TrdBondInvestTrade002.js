@@ -131,7 +131,10 @@ var calculateField;
 	        object.entrustPrice = entrustPrice; // 指令时的净价
 	        object.entrustYield = entrustYield; // 指令时的到期收益率
 	        object.entrustExerYield = entrustExerYield; // 指令时的行权收益率
-	        object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
+            // 是否随交易支付赋值 fuyongsheng 20210906 add start
+            object.isPayWithTrade = $("#isPayWithTrade").val()?$("#isPayWithTrade").val():YES_OR_NO_Y;//佣金是否随交易支付，默认为是
+            // 是否随交易支付赋值 fuyongsheng 20210906 add end
+            object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
 	        object.bondFirstSign = $("#bondFirstSign").val(); //中标结果页面进入的标识 add by gejiaao 2019/8/9
 	        object.deviation=  parseFloat($("#deviationDegreeLabel").text())/100;//偏离度获取界面值并将其转换为数值型by赵东东 2019.9.24
 	        var data = $("#chlId").find("option:selected").data("data");
@@ -2531,9 +2534,11 @@ var calculateField;
                         if(v.feeType==FEE_TYPE_05&&v.feeAmt){
                             cntC++;
                             isPayWithTrade = v.isPayWithTrade;
-                            // add by wangguoxian 费用设置 20190808 start
-                            $("#isPayWithTrade").val(isPayWithTrade);
-                            // add by wangguoxian 费用设置 20190808 end
+                            if(isPayWithTrade){
+                                // add by wangguoxian 费用设置 20190808 start
+                                $("#isPayWithTrade").val(isPayWithTrade);
+                                // add by wangguoxian 费用设置 20190808 end
+                            }
                             commissionAmt = v.feeAmt;
                             $("#commissionAmtRate").val(v.feeRate).trigger("blur");
                             var feeAmt = v.feeAmt;
