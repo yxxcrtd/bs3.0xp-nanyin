@@ -373,6 +373,11 @@ public class BaseEtrCashPositionCommServiceImpl extends BaseService implements B
                 // add by etliu 20210421 权益类资产相关代码合并 end
                 // 委托撤回或拒绝时，当前平台日处理实时持仓
                 //协议是回购处理头寸  走配置化头寸共通
+                for(EtrCashPositionFlowDto flowDto:etrPositionHoldDto.getPtlCashPositionFlows()){
+                    if(StringUtil.isEmpty(flowDto.getAcctId())){
+                        System.out.println("AccId IS NULL");
+                    }
+                }
                 if(!StringUtil.equals(etrEntrustAdd.getAssetType1(), DictCodeList.回购类型_质押式协议回购.getValue())){
                     etrPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platformDateImpl.getSysDate()));
                     etrPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platformDateImpl.getSysDate()));

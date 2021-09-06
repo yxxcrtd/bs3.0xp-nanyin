@@ -462,7 +462,8 @@ public class TrdBondDuration003Service extends BaseService<TrdBondDuration003Pro
         PaTrdFinProductDealTotal paTrdFinProductDealTotal = new PaTrdFinProductDealTotal();
         paTrdFinProductDealTotal.setTotleTradeId(entity.getBizCode());
         paTrdFinProductDealTotal.setPaBussType(DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
-        paTrdFinProductDealTotal.setTheoryAmt(entity.getIntAmtTheory().add(entity.getcPriceAmt()));
+//        paTrdFinProductDealTotal.setTheoryAmt(entity.getIntAmtTheory().add(entity.getcPriceAmt()));
+        paTrdFinProductDealTotal.setTheoryAmt(ArithmeticUtil.doAdd(entity.getIntAmtTheory(),entity.getcPriceAmt()));
         entity.setPaTrdFinProductDealTotal(paTrdFinProductDealTotal);
 
         List<BussTrdTransferOrderDto> bussTrdTransferOrderDtos = bussTrdTransferOrderImplService.save(
