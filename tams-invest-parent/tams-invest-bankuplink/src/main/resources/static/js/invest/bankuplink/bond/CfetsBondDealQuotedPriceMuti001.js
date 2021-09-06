@@ -625,6 +625,30 @@
                     $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(result.data.finprodId);
                     // 区分画面打开模式
                     var quotaPageModel = $('#CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel').val();
+                    if (result.data.calculateField){
+                        if (result.data.calculateField === calcTypeUnitCprice){
+                            $("input[name=calculateField][value=01]").prop("checked","true");
+                            $('#calculateField_span_unitCprice').css({'color':'blue'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }else if (result.data.calculateField === calcTypeYield){
+                            $("input[name=calculateField][value=02]").prop("checked","true");
+                            $('#calculateField_span_yield').css({'color':'blue'});
+                            $('#calculateField_span_unitCprice').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }else if (result.data.calculateField === calcTypeExecYield){
+                            $("input[name=calculateField][value=03]").prop("checked","true");
+                            $('#calculateField_span_exerYield').css({'color':'blue'});
+                            $('#calculateField_span_unitCprice').css({'color':'black'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                        }else{
+                            $("input[name=calculateField][value=01]").prop("checked","true");
+                            $('#calculateField_span_unitCprice').css({'color':'blue'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }
+                        layui.form.render();
+                    }
 
                     // 做市方回复
                     if (quotaPageModel != 'marketResponse'){
