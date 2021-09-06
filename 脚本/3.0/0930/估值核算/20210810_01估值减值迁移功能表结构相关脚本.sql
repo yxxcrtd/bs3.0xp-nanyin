@@ -227,7 +227,8 @@ create table MOD_CONFIG_USEAGE
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
-   UPDATE_USER          VARCHAR2(20)         not null
+   UPDATE_USER          VARCHAR2(20)         not null,
+   UPDATE_TIME          TIMESTAMP            not null
 );
 
 comment on table MOD_CONFIG_USEAGE is
@@ -248,6 +249,8 @@ comment on column MOD_CONFIG_USEAGE.CREATE_TIME is
 '创建时间';
 comment on column MOD_CONFIG_USEAGE.UPDATE_USER is
 '更新人';
+comment on column MOD_CONFIG_USEAGE.UPDATE_TIME is
+'更新时间';
 commit;
 
 --标的类金融产品附属表添加是否含有利率调整权字段

@@ -107,8 +107,7 @@
                  close="from dual)">
             #{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
             #{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-            #{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-            #{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+            #{item.marketId,jdbcType=VARCHAR},
             #{item.modelAssetType,jdbcType=VARCHAR}, #{item.modelAssetDetailType,jdbcType=VARCHAR},
             #{item.mdate,jdbcType=DATE}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.financier,jdbcType=VARCHAR},
             #{item.gradeOrgId,jdbcType=VARCHAR}, #{item.issuer,jdbcType=VARCHAR}, #{item.actualCredit,jdbcType=VARCHAR},
