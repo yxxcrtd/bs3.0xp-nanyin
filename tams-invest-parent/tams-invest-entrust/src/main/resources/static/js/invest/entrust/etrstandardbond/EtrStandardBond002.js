@@ -157,6 +157,9 @@
         var pledgeAllRows = pledgeBondTbl.getAllRows();
         var isStoreHouse ;
         var params;
+        //add by chenjiaxing 质押券入库已在流程中的不可再添加 start
+
+        //add by chenjiaxing 质押券入库已在流程中的不可再添加 end
         Joyin.ajaxJson(basePath + 'invest/entrust/etrstandardbond/EtrStandardBond001/selectPageData', params, function (result) {
             if(result&&!result.data){
                   isStoreHouse = result;
@@ -361,9 +364,9 @@
      */
     $(function () {
     	pledgeBondTbl.load();
-
         // 工作流查看时，直接加载质押券列表
-        if (pledgeBondList) {
+        //add by chenjiaxing 20210903 工作流查看改造 start
+        /*if (pledgeBondList) {
             pledgeBondTbl.reload({data: JSON.parse(pledgeBondList), url: null});
         }
         if (avaPledgeBondList) {
@@ -371,7 +374,15 @@
             avaPledgeBondTBL.reload({data: JSON.parse(avaPledgeBondList), url: null});
         }else{
             avaPledgeBondTBL.reload();
+        }*/
+        avaPledgeBondTBL.load();
+        if (pledgeBondListData) {
+            pledgeBondTbl.reload({data: pledgeBondListData});
         }
+        if (avaPledgeBondListData) {
+            avaPledgeBondTBL.reload({data:avaPledgeBondListData});
+        }
+        //add by chenjiaxing 20210903 工作流查看改造 end
         // 检索按钮事件
         $("#EtrStandardBond002_btn_search").click(function () {
             avaPledgeBondTBL.load();
@@ -392,5 +403,11 @@
         if (!$('#secAcctId').val() && secAcctId) {
             $('#secAcctId').textSelect('setValue', secAcctId);
         }
+        //add by chenjiaxing 20210906 流程中查询区域不展示 start
+        setTimeout(function(){
+            $(".one").show();
+            $(".two").show();
+        },2000);
+        //add by chenjiaxing 20210906 流程中查询区域不展示 end
     });
 }());

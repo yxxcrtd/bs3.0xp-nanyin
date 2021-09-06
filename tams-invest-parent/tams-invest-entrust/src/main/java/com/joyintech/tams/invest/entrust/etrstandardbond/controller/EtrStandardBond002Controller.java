@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.entrust.etrstandardbond.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,9 +28,6 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
@@ -70,6 +68,19 @@ public class EtrStandardBond002Controller extends BaseController {
         dto.setPortfolioId(this.getParam("portfolioId"));
         dto.setTradePlace(this.getParam("tradePlace"));
         dto.setSecAcctId(this.getParam("secAcctId"));
+        //add by chenjiaxing 初始化流程中的入库界面 start
+        Map<String,Object> paraMap = RequestUtil.getPageParam();
+        String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        //来自代办
+        if(!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)){
+            // 根据工作流与留痕处理提供的共通方法获取业务实体
+            dto = etrStandardBond002Service.getBussinessEntityByWorkflowId(workflowId);
+            // 设置到model中
+            model.addAttribute("pledgeBondListData",dto.getPledgeBondList());
+            model.addAttribute("avaPledgeBondListData",dto.getAvaPledgeBondList());
+            model.addAttribute(GlobalConstant.WORKFLOW_ID,workflowId);
+        }
+        //add by chenjiaxing 初始化流程中的入库界面 start
         model.addAttribute("entity", dto);
         this.setSelectOptionToModel(model, DictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.资产三级分类);
