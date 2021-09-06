@@ -54,6 +54,7 @@ public class CreditOccupProcessor extends BaseProcessor<NeedOperateEntity, Credi
             //实占按委托编号、占用类型求和
             Map<String, Map<String,BigDecimal>> sumByEntrustId =
                     sZCreditUsings.stream()
+                            .filter(creditUsingDto -> StringUtil.isNotEmpty(creditUsingDto.getEntrustId()))
                             .collect(Collectors.groupingBy(CreditUsingDto::getEntrustId,
                                     Collectors.groupingBy(CreditUsingDto::getCreditUsingType,
                                     Collectors.mapping(CreditUsingDto::getAmount,
