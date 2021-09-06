@@ -1237,7 +1237,6 @@ public class EtrCommonService extends BaseService<ITableRow> {
             creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
             creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
             creditLinesInputDto.setFinprodType2(inputDto.getFinprodType2());
-            creditLinesInputDto.setShareAmt(inputDto.getEntrustAmt());
             creditLinesInputDto.setIsBottom("Y");
             if(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())){
                 //最新净值
