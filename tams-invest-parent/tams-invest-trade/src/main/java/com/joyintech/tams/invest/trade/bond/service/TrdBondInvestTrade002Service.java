@@ -1516,8 +1516,14 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 trdTradeFeeDetail -> trdTradeFeeDetailMapper.insertSelective(trdTradeFeeDetail));
 
             entity.getPtlTrade().forEach(trdTradeFeeDetail -> ptlTradeMapper.insertSelective(trdTradeFeeDetail));
+
             //改造保存结算费经手费
-            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
+//            entity.getTrdTradeFeeTotals().forEach(trdTradeFeeDetail -> trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail));
+            for(TrdTradeFeeTotal trdTradeFeeDetail:entity.getTrdTradeFeeTotals()){
+                if(!BigDecimal.ZERO.equals(trdTradeFeeDetail.getFeeAmt())){
+                    trdTradeFeeTotalMapper.insertSelective(trdTradeFeeDetail);
+                }
+            }
 
             this.deleteBussFlowData(entity.getWorkflowId());
 

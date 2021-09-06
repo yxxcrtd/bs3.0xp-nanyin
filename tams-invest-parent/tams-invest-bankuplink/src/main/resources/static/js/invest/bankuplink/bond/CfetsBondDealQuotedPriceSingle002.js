@@ -271,6 +271,14 @@
     };
     
     $(function () {
+        var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel').val();
+        if (quotaPageModel && quotaPageModel == 'new'){
+            $('#CfetsBondDealQuotedPriceSingle002_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_submit').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_cancel').toggle(false);
+        }
         // 初始化页面
         var entrustId = $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustId').val();
         if (entrustId && entrustId != ''){

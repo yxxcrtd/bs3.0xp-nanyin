@@ -253,6 +253,14 @@
     }
 
     $(function () {
+        var quotaPageModel = $('#CfetsBondDealQuotedPriceMuti002_hidden_quotaPageModel').val();
+        if (quotaPageModel && quotaPageModel == 'new'){
+            $('#CfetsBondDealQuotedPriceMuti002_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceMuti002_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceMuti002_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceMuti002_btn_submit').toggle(false);
+            $('#CfetsBondDealQuotedPriceMuti002_btn_cancel').toggle(false);
+        }
         // 初始化页面
         $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', true);
@@ -569,8 +577,8 @@
         object.isDzh = 'Y';
         object.operatorType = operateType;
         object.pageId = "CfetsBondDealQuotedPriceMuti002";
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         return object;
     }
@@ -597,7 +605,8 @@
         riskResultdata: riskResultdata,
         cluflag: cluflag,
         saveRiskResultdata: saveRiskResultdata,
-        saveCluflag: saveCluflag
+        saveCluflag: saveCluflag,
+        disabledElementByDzh: disabledElementByDzh
     }
     CfetsBondDealQuotedPriceMuti002 = {
         setQQDiv: setQQDiv,
@@ -607,6 +616,7 @@
         riskResultdata: riskResultdata,
         cluflag: cluflag,
         saveRiskResultdata: saveRiskResultdata,
-        saveCluflag: saveCluflag
+        saveCluflag: saveCluflag,
+        disabledElementByDzh: disabledElementByDzh
     }
 }());
