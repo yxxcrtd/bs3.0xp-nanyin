@@ -2534,9 +2534,11 @@ var calculateField;
                         if(v.feeType==FEE_TYPE_05&&v.feeAmt){
                             cntC++;
                             isPayWithTrade = v.isPayWithTrade;
-                            // add by wangguoxian 费用设置 20190808 start
-                            $("#isPayWithTrade").val(isPayWithTrade);
-                            // add by wangguoxian 费用设置 20190808 end
+                            if(isPayWithTrade){
+                                // add by wangguoxian 费用设置 20190808 start
+                                $("#isPayWithTrade").val(isPayWithTrade);
+                                // add by wangguoxian 费用设置 20190808 end
+                            }
                             commissionAmt = v.feeAmt;
                             $("#commissionAmtRate").val(v.feeRate).trigger("blur");
                             var feeAmt = v.feeAmt;
