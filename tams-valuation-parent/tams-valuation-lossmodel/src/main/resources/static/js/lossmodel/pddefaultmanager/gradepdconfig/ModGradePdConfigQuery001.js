@@ -137,7 +137,7 @@ $(function () {
     //导入按钮点击事件
     $('#ModGradePdConfig001_btn_import').click(function() {
 
-            Joyin.uploadFile(function(fileName) {
+            Joyin.uploadFile({pageId: 'PdDefaultManager001MTM'}, function(fileName) {
                 Joyin.ajax(basePath + 'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig001/checkGradePdImportData'
                     ,{fileName: fileName}, function(result) {
                       if(result.data != undefined && result.data.indexOf("数据如下") > 0){

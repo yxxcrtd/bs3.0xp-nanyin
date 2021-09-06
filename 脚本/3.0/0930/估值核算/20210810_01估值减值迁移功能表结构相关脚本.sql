@@ -1602,7 +1602,6 @@ create index MOD_ASEET_MAPPING_INDEX1 on MOD_ASEET_MAPPING (MAPPING_TYPE, INPUT1
 create index MOD_ASEET_MAPPING_INDEX2 on MOD_ASEET_MAPPING (MAPPING_TYPE, OUTPUT5);
 
 alter table MOD_ASSET_GRADE_CONFIG modify asset_type not null;
-alter table MOD_ASSET_GRADE_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_CONFIG modify o_type not null;
 alter table MOD_ASSET_GRADE_CONFIG modify create_time not null;
 alter table MOD_ASSET_GRADE_CONFIG modify update_user not null;
@@ -1614,7 +1613,6 @@ create index MOD_ASSET_GRADE_CONFIG_INDEX on MOD_ASSET_GRADE_CONFIG (ASSET_TYPE,
 
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_name not null;
-alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify o_type not null;
 
 drop index MOD_SPECIAL_CONFIG_INDEX;
