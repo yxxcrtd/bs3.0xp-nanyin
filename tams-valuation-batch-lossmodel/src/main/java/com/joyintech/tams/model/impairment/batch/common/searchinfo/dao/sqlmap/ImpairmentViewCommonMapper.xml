@@ -80,10 +80,10 @@
         )
         AND ACC.INV_AIM IN ('AC','FVOCI')
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -291,10 +291,10 @@
         AND NVL(fin.VDATE,trdfin.VDATE) <![CDATA[<=]]> #{searchDate}
         AND NVL(NVL(fin.MDATE,trdfin.MDATE) , #{searchDate}+1)<![CDATA[>]]> #{searchDate}
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -372,10 +372,10 @@
         OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
         )
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
