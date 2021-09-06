@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -224,15 +225,27 @@ public class SAXParserHandler extends DefaultHandler {
         	}else{
         		if(cols.size()<check.size()){
         			//模版中缺少字段，全部数据丢弃
-        			checkLog.setIsCheck(DictCodeList.是否_否.getValue());
         			StringBuffer lostCol = new StringBuffer();
-        			for(Entry<String,TemplateOrderInfoReaderDTO> entry : check.entrySet()){
-        				if(!cols.contains(entry.getValue().getColEName())){
-        					lostCol.append(entry.getValue().getColEName()+";");
-        				}
-        			}
-        			checkError.append(acctEntity.getTmpCName() +" 接口文件中缺少字段："+lostCol+"，该文件所有数据将被丢弃，请联系管理员立即处理.");
-        			logger.error(acctEntity.getTmpCName() +" 接口文件中缺少字段："+lostCol+"，该文件所有数据将被丢弃，请联系管理员立即处理.");
+					for(Entry<String,TemplateOrderInfoReaderDTO> entry : check.entrySet()){
+						if(!cols.contains(entry.getValue().getColEName())&&entry.getValue().getIsExist().equals("1")){
+							lostCol.append(entry.getValue().getColEName()+";");
+						}else{
+							continue;
+						}
+					}
+					//增加对IS_EXIST逻辑启用
+					if(StringUtils.isNotEmpty(lostCol)){
+						checkLog.setIsCheck(DictCodeList.是否_否.getValue());
+						checkError.append(acctEntity.getTmpCName() +" 接口文件中缺少字段："+lostCol+"，该文件所有数据将被丢弃，请联系管理员立即处理.");
+						logger.error(acctEntity.getTmpCName() +" 接口文件中缺少字段："+lostCol+"，该文件所有数据将被丢弃，请联系管理员立即处理.");
+					}else{
+						/**add by wujie on 20190102 start**/
+						InterfHelper.setValInterflogKey(result, InterfHelper.getInterfLogKey(checkLog));
+						/**add by wujie on 20190102 end**/
+
+						resultList.add(result);
+						checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+					}
         		}else{
         			
         			/**add by wujie on 20190102 start**/
@@ -304,6 +317,9 @@ public class SAXParserHandler extends DefaultHandler {
 	private String checkStrValue(String _v, String colName) {
 		if(check!=null&&check.containsKey(colName)){
 			TemplateOrderInfoReaderDTO _c = check.get(colName);
+			if(!_c.getIsExist().equals("1")){
+				checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+			}
 			//非空检查
 			if(DictCodeList.是否_是.getValue().equals(_c.getIsNull())){
 				if(_v==null||_v.isEmpty()){
@@ -385,6 +401,9 @@ public class SAXParserHandler extends DefaultHandler {
 		Long l = null;
 		if(check.containsKey(colName)){
 			TemplateOrderInfoReaderDTO _c = check.get(colName);
+			if(!_c.getIsExist().equals("1")){
+				checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+			}
 			//非空检查
 			if(DictCodeList.是否_是.getValue().equals(_c.getIsNull())){
 				if(_v==null||_v.isEmpty()){
@@ -438,6 +457,9 @@ public class SAXParserHandler extends DefaultHandler {
 		Integer l = null;
 		if(check.containsKey(colName)){
 			TemplateOrderInfoReaderDTO _c = check.get(colName);
+			if(!_c.getIsExist().equals("1")){
+				checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+			}
 			//非空检查
 			if(DictCodeList.是否_是.getValue().equals(_c.getIsNull())){
 				if(_v==null||_v.isEmpty()){
@@ -491,6 +513,9 @@ public class SAXParserHandler extends DefaultHandler {
 		BigDecimal l = null;
 		if(check.containsKey(colName)){
 			TemplateOrderInfoReaderDTO _c = check.get(colName);
+			if(!_c.getIsExist().equals("1")){
+				checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+			}
 			//非空检查
 			if(DictCodeList.是否_是.getValue().equals(_c.getIsNull())){
 				if(_v==null||_v.isEmpty()){
@@ -545,6 +570,9 @@ public class SAXParserHandler extends DefaultHandler {
 		Date l = null;
 		if(check.containsKey(colName)){
 			TemplateOrderInfoReaderDTO _c = check.get(colName);
+			if(!_c.getIsExist().equals("1")){
+				checkLog.setIsCheck(DictCodeList.是否_是.getValue());
+			}
 			//非空检查
 			if(DictCodeList.是否_是.getValue().equals(_c.getIsNull())){
 				if(_v==null||_v.isEmpty()){
