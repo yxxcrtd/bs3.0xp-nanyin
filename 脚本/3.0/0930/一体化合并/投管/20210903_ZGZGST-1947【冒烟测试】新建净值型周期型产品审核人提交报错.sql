@@ -9,5 +9,3 @@ values ('de4E4A59-6813-5A9E-E050-007F01006A77                            ', 'Fin
 
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('de314A60-6813-5A9E-E050-007F01006A77                            ', 'FinNetValueProductBuild002', 'compareValueAsNumber', 'bussFinProductSaleParamDto.raiseAmtPlan', '>', '0', 'Y', '计划募集金额（元）必须大于0', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
-
-update CHB_DATACHECK_RULE_INV set checkclass = 'com.joyintech.tams.invest.common.ChbBaseCheckLib';
