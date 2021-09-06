@@ -64,7 +64,7 @@ insert into SYS_MENU values ('ASSET_MANAGEMENT_001_004_006','MST','','ASSET_MANA
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005','MST','','ASSET_MANAGEMENT_001','','4','2','市场参数管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_001','MST','','ASSET_MANAGEMENT_001_005','MstMarketInstitutions001','1','2','市场机构管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_002','MST','','ASSET_MANAGEMENT_001_005','ComTradeOpponent001','2','2','交易对手管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_003','MST','','ASSET_MANAGEMENT_001_005','ComMarketManagement','3','2','评级信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_003','MST','','ASSET_MANAGEMENT_001_005','ComMarketManagement','3','2','评级信息管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_004','MST','','ASSET_MANAGEMENT_001_005','InsideOutsideGrade001','4','2','资产评级关系映射','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_005','MST','','ASSET_MANAGEMENT_001_005','AssetRatingAllocation001','5','2','资产评级配置','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_007','MST','','ASSET_MANAGEMENT_001_005','ComMarketCalendarInfo001','7','2','交易日历管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -225,8 +225,8 @@ insert into SYS_MENU values ('VALUATION_001_010_004','VAL','','VALUATION_001_010
 insert into SYS_MENU values ('VALUATION_001_010_005','VAL','','VALUATION_001_010','ModImpaireBatchTask001','8','1','减值批处理任务','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_010_006','VAL','','VALUATION_001_010','TrdAssetLoss001','9','1','资产减值管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_010_007','VAL','','VALUATION_001_010','TrdAssetLossBalance001','10','1','资产减值余额查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALUATION_001_010_008','VAL','','VALUATION_001_010','AssetImpairmentManagement001','11','1','减值结果管理-普华','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALUATION_001_010_009','VAL','','VALUATION_001_010','AssetImpairmentKpmgManagement001','12','1','减值结果管理-毕马威','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('VALUATION_001_010_008','VAL','','VALUATION_001_010','AssetImpairmentManagement001','11','1','交易减值结果管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('VALUATION_001_010_009','VAL','','VALUATION_001_010','AssetImpairmentKpmgManagement001','12','1','资产减值结果管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 
 --刷新PAGE表的MENU_ID
 update sys_page page set menu_id = (select menu_id from sys_menu where page_id = page.page_id);
