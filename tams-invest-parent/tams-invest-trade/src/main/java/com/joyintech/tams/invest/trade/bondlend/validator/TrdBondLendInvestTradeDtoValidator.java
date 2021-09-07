@@ -148,7 +148,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
             }
         }
         // 交易方向为融出时，显示可用持仓，券面总额不可大于可用持仓；
-//        if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), inputDto.getPs())) {
+        if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), inputDto.getPs())) {
             if (inputDto.getShareAmt() != null && inputDto.getAssetPosition() != null
                 && inputDto.getShareAmt().multiply(new BigDecimal(100)).compareTo(inputDto.getAssetPosition()) > 0) {
                 ValidMessage validMessage = new ValidMessage(
@@ -156,7 +156,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
                         getMessage("TrdBondLendInvestTrade002.avaliblePosition")));
                 errorList.add(validMessage);
             }
-//        }
+        }
 
         // 委托场合相关check
         if (StringUtil.isNotBlank(inputDto.getEntrustId())) {
@@ -170,9 +170,10 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
                 		finishAmt = ArithmeticUtil.doAdd(finishAmt,fin.getFinishAmt());
                 	}
                 }
+                //券面总额在js中已经转成元，故此处比较不再乘10000
                 if (entrustInfo != null && entrustInfo.getEtrEntrust() != null
                     && entrustInfo.getEtrEntrust().getEntrustAmt() != null
-                    && ArithmeticUtil.multiply(inputDto.getShareAmt(),new BigDecimal(10000)).compareTo(
+                    && inputDto.getShareAmt().compareTo(
                         ArithmeticUtil.subtract(entrustInfo.getEtrEntrust().getEntrustAmt(), finishAmt)) > 0) {
                     ValidMessage validMessage = new ValidMessage("tradeAmt",
                         getMessage("TRD_W_0009", getMessage("TrdBondLendInvestTrade002.tradeAmt")));
