@@ -24,5 +24,27 @@ public class TradeConstant {
     public static String realTypeOffset = "8";//平仓
     public static String realTypeCredit = "9";//信用
     public static String realTypeOption = "G";//期权强制平仓
+    /**
+     * entrust_type
+     */
+    public static String entrustTypeEntrust = "0";//委托
+    public static String entrustTypeQry = "1";//查询
+    public static String entrustTypeCancel = "2";//撤单
+    public static String entrustTypeSup = "3";//补单
+    public static String entrustTypeConfirm = "4";//确认
+    public static String entrustTypeBig = "5";//大宗
+    public static String entrustTypeStock = "6";//信用融资
+    public static String entrustTypeBond = "7";//信用融券
+    public static String entrustTypePC = "8";//信用平仓
+    public static String entrustTypeXYJY = "9";//信用交易
+    public static String entrustTypeCDBD = "A";//撤单补单
+    public static String entrustTypeGD = "B";//改单
+    public static String entrustTypeZHMM = "C";//组合买卖
+    public static String entrustTypeZHZH = "D";//组合转换
+    public static String entrustTypeZHCX = "E";//组合撤销
+    public static String entrustTypeQQQZPC = "G";//期权强制平仓
+    public static String entrustTypeQZPC = "H";//强制平仓
+    public static String entrustTypeGPZYDZWYMC = "I";//股票质押大宗违约卖出
+
 
 }

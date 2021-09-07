@@ -15,6 +15,7 @@ import java.math.BigDecimal;
  * @create 2020-03-20 13:13
  */
 public class InstructionPledge implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = -7130177040330108562L;
     @NotNull
     @Size(max = 64)
     @Id

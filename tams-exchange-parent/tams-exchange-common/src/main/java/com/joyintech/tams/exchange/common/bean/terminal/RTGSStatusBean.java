@@ -8,6 +8,7 @@ import java.io.Serializable;
  * @Date: Created in 15:19 2020/12/10
  */
 public class RTGSStatusBean implements Serializable {
+    private static final long serialVersionUID = -8096972893177955365L;
     private String accountId;   //账户编号
     private String entrustDate; //委托日期
     private String reportNo;    //报单编号、合同序号

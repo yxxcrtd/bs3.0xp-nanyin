@@ -401,6 +401,9 @@
                 //$('#proAvailableCash').val(result).trigger('blur');
                 $('#proAvailableCash').val(result.cashT).trigger('blur');
                 $('#accAvailableCash').val(result.cashTG).trigger('blur');
+                // ZGZGST-2077:展示交易所可用现金 fuyongsheng 20210904 add start
+                $('#tradeMarketCash').val(result.cashT4).trigger('blur');
+                // ZGZGST-2077:展示交易所可用现金 fuyongsheng 20210904 add end
             });
         }
     }

@@ -162,6 +162,7 @@ public class AssetCategories002Dto extends BaseEntity implements ProcessEntity{
         this.isEdit = isEdit;
     }
 
+    @NotEmpty(fieldName = "评级机构类型", groups = {ValidateGroupEdit.class})
     public String getGradeOrgType() {
         return gradeOrgType;
     }

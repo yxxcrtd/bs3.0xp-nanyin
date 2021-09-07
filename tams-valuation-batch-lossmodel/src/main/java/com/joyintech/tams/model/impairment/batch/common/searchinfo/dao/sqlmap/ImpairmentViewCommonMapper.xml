@@ -80,10 +80,10 @@
         )
         AND ACC.INV_AIM IN ('AC','FVOCI')
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -93,7 +93,7 @@
     </select>
 
     <select id="selectViewRatingInfo"
-            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
+            resultType="com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto">
         select
         OCODE,
         OTYPE,
@@ -161,8 +161,7 @@
     </select>
 
     <select id="selectViewRatingInfoByList"
-            resultType="com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto">
-
+            resultType="com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto">
         select
         OCODE,
         OTYPE,
@@ -286,16 +285,16 @@
         AND VAL.INV_AIM IN ('AC','FVOCI','999999')
         AND (
         typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
-        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND fin.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
-        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND fin.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
+        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
+        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
         )
         AND NVL(fin.VDATE,trdfin.VDATE) <![CDATA[<=]]> #{searchDate}
         AND NVL(NVL(fin.MDATE,trdfin.MDATE) , #{searchDate}+1)<![CDATA[>]]> #{searchDate}
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -369,14 +368,14 @@
         AND DEAL.TRADE_DATE = #{searchDate}
         AND (
         typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
-        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND fin.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
-        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND fin.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
+        OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
+        OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
         )
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -397,7 +396,7 @@
 						SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
 						WHERE B.DSC_COST_AMT = 0
 							AND B.FINPROD_ID=#{finprodId}
-						  	AND B.PORTFOLIO_ID=#{portfolioId})
+						  	AND B.PORTFOLIO_ID=#{portfolioId}
 				),A.TRADE_DATE
 			)
 			AND ACC.BOOKSET_ID = #{prodId}

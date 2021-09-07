@@ -186,9 +186,23 @@
         }
     }
 
+    // ZGZGST-1822:可转债申购指令删除战略配售的申购类型 fuyongsheng 20210902 add start
+    var deletePurchModle = function () {
+        $.each($('#purchModle').find('option'),function (index,element) {
+            // 03:战略配售
+            if(element.value == '03'){
+                element.remove();
+            }
+        });
+    }
+    // ZGZGST-1822:可转债申购指令删除战略配售的申购类型 fuyongsheng 20210902 add end
+
     $(function(){
         star();
         init();
+        // ZGZGST-1822:可转债申购指令删除战略配售的申购类型 fuyongsheng 20210902 add start
+        deletePurchModle();
+        // ZGZGST-1822:可转债申购指令删除战略配售的申购类型 fuyongsheng 20210902 add end
 	    /**
 	     * 保存
 	     */

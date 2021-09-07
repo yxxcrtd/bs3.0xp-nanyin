@@ -130,7 +130,7 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         
         CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto = new CfetsBondDealDialogueQuoteDto();
-        
+        boolean isInit = false;
         // 目前流程中场合只适用撤销逻辑,因为新建没走流程拿不到数据留痕表的记录，只能根据报价代码反查  20201225开始新增走流程了
         if (StringUtil.equals(this.getParam("workflowStatus"), BussinessDictCodeList.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(getParam(GlobalConstant.WORKFLOW_ID)))) {
@@ -241,6 +241,7 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
         }
         // 无委托模式
         else {
+            isInit = true;
         	// 设置默认的银行间交易员为登录用户
         	cfetsBondDealDialogueQuoteDto.setMySideTrader(cfetsQuotedCommonService.queryLoginTraderId(RequestUtil.getPageParam()));
         }
@@ -273,8 +274,12 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
         if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
             cfetsBondDealDialogueQuoteDto.setQuotaPageModel(this.getParam("quotaPageModel"));
         }
+
+        if(!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getQuotaPageModel())){
+            cfetsBondDealDialogueQuoteDto.setQuotaPageModel("new");
+        }
         
-        if (!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCalculateField())) {
+        if (!isInit&&!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCalculateField())) {
             cfetsBondDealDialogueQuoteDto.setCalculateField(DictCodeListExt3.债券计算模式_单位净价.getValue());
         }
         model.addAttribute("assetTypeOne",cfetsBondDealDialogueQuoteDto.getAssetTypeOne());

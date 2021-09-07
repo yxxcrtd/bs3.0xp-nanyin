@@ -354,6 +354,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		return restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange",
 				param, EtrExchangeTrade003Dto.class);
 	}
+	//add by chenjiaxing 导出全部数据 202100902 start
+	public List<EtrExchangeTrade003Dto> selectEtrExchange2(Map<String, Object> param) {
+		param.put("userId", LoginUserUtil.getUserName());
+		param.put("sysDate",iPlatformDate.getSysDateStr());
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectEtrExchange2",
+				param, EtrExchangeTrade003Dto.class);
+	}
+	//add by chenjiaxing 导出全部数据 202100902 end
 
     /**
      * 对手方交易商联想文本框初始化。
@@ -1658,6 +1666,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//检查资产是否存在且在指令范围资产类型内
 				return this.checkAstScope(dzImportDto, "EtrExchangeTrade001.secId");
 			});
+			//add by chenjiaxing 添加申报类型校验 20210907 start
+			if(StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getDeclaType(), "EtrExchangeTrade001.priceModel2", lineNo);
+				});
+			}
+			//add by chenjiaxing 添加申报类型校验 20210907 end
 			// 委托方向
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPs(), "EtrExchangeTrade001.ps", lineNo);

@@ -32,14 +32,13 @@ $(function () {
                 carryAmt = 0;
             }
             var commissionFee = $('#commissionFee').val();
-            if (!commissionFee) {
-                commissionFee = 0;
-            } else if (ps && $('#finprodId').val()) {
+            if (ps && $('#finprodId').val()) {
                 param = {
                     tradeMarket: $('#tradeMarket').val(),
                     ps: ps,
                     tradeDate: $('#tradeDate').val(),
                     type6: $("#type6").val(),
+                    type7: $("#trmFundType").val(),
                     secManageAcctId: $("#secManageAcctId").val()
                 }
                 Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade002/getCommissionFeeInfo', param,
@@ -47,6 +46,8 @@ $(function () {
                         if (result && result.isPayWithTrade) {
                             if (result.isPayWithTrade == YES_OR_NO_N) {
                                 commissionFee = 0;
+                            }else{
+                                commissionFee = result.feeAmt;
                             }
                             $("#isPayWithTrade").val(result.isPayWithTrade);
                         } else {
@@ -55,6 +56,7 @@ $(function () {
                     }, false);
 
             }
+            $('#commissionFee').val(commissionFee)
             var chlFee = $('#channelAmt').val();
             if ($('#chlId').val()) {
                 var data = $('#chlId').select2('data')[0].object;
@@ -1195,10 +1197,10 @@ $(function () {
                     }, function (result) {
                         if (pageModel == PAGE_MODEL_NEW) {
                             $("#purCfmDate").val(result).trigger("change");
+                            //update by zhangnian 20191102  start 预计到账日需要节假日推迟
+                            $("#expectedArrivalDate").val(result).trigger("change");
+                            //update by zhangnian 20191102  end 预计到账日需要节假日推迟
                         }
-                        //update by zhangnian 20191102  start 预计到账日需要节假日推迟
-                        $("#expectedArrivalDate").val(result).trigger("change");
-                        //update by zhangnian 20191102  end 预计到账日需要节假日推迟
                     });
                 }
             }
@@ -1258,6 +1260,7 @@ $(function () {
                 $("#trdInvestPersonInfo_counterId").on("change", counterIdOnChange);
                 pageItemDisplay();
                 initFlag = false;
+                calcTradeAmt()
                 if(pageModel == PAGE_MODEL_NEW){
                     selectManeger();
                 }

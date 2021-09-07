@@ -15,10 +15,13 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
+import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.constant.*;
+import com.joyintech.tams.valuation.batch.assetimpairmentprovision.dao.AssetImpairmentProvisionMapper;
 import com.joyintech.tams.valuation.batch.assetimpairmentprovision.dto.AssetImpairmentProvisionReaderResult;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalance;
 import com.joyintech.tams.valuation.batch.common.accounting.entity.SubjectBalanceSearchDto;
@@ -89,6 +92,9 @@ public class AssetImpairmentProvisionProcessorService {
 	@Autowired
 	private DBUtil dBUtil;
 
+	@Autowired
+	private AssetImpairmentProvisionMapper assetImpairmentProvisionMapper;
+
 	/**
 	 * process 数据处理
 	 * 
@@ -155,12 +161,12 @@ public class AssetImpairmentProvisionProcessorService {
 		searchDto.setBaseSubjectNatureList(costSubjectNatureList);
 		List<SubjectBalance> costSubjectBalanceList = accountingCommonService
 				.getSubjectBalanceExpectDirection(searchDto, DictCodeList.余额方向_借方.getValue());
-		// 变量.成本科目余额 = 科目余额		
+		// 变量.成本科目余额 = 科目余额
 		BigDecimal costSubjectBalance = BigDecimal.ZERO;
 		// 变量.原币 = 原币种
 		//String oCcy  = null;
-		if(costSubjectBalanceList !=null&& costSubjectBalanceList.size() > 0){			 
-			costSubjectBalance = costSubjectBalanceList.get(0).getBalance();			
+		if(costSubjectBalanceList !=null&& costSubjectBalanceList.size() > 0){
+			costSubjectBalance = costSubjectBalanceList.get(0).getBalance();
 			//oCcy = costSubjectBalanceList.get(0).getOCcy();
 		}else{
 			costSubjectBalance = BigDecimal.ZERO;
@@ -173,12 +179,12 @@ public class AssetImpairmentProvisionProcessorService {
 		searchDto.setBaseSubjectNatureList(intrestSubjectNatureList);
 		List<SubjectBalance> intrestSubjectBalanceList = accountingCommonService
 				.getSubjectBalanceExpectDirection(searchDto, DictCodeList.余额方向_借方.getValue());
-		// 变量.应计利息余额 = 科目余额	
+		// 变量.应计利息余额 = 科目余额
 		BigDecimal intrestSubjectBalance = BigDecimal.ZERO;
-		if(intrestSubjectBalanceList !=null&& intrestSubjectBalanceList.size() > 0){			 
-			 intrestSubjectBalance = intrestSubjectBalanceList.get(0).getBalance();
+		if(intrestSubjectBalanceList !=null&& intrestSubjectBalanceList.size() > 0){
+			intrestSubjectBalance = intrestSubjectBalanceList.get(0).getBalance();
 		}else{
-			 intrestSubjectBalance = BigDecimal.ZERO;
+			intrestSubjectBalance = BigDecimal.ZERO;
 		}
 
 		// 1.3.溢折价类科目余额
@@ -190,7 +196,7 @@ public class AssetImpairmentProvisionProcessorService {
 				.getSubjectBalanceExpectDirection(searchDto, DictCodeList.余额方向_借方.getValue());
 		// 变量.利息调整 = 科目余额
 		BigDecimal premiumSubjectBalance = BigDecimal.ZERO;
-		if(premiumSubjectBalanceList !=null&& premiumSubjectBalanceList.size() > 0){			 
+		if(premiumSubjectBalanceList !=null&& premiumSubjectBalanceList.size() > 0){
 			premiumSubjectBalance = premiumSubjectBalanceList.get(0).getBalance();
 		}else{
 			premiumSubjectBalance = BigDecimal.ZERO;
@@ -203,8 +209,8 @@ public class AssetImpairmentProvisionProcessorService {
 				.getSubjectBalanceCollection(searchDto, DictCodeList.余额方向_借方.getValue(),null);
 		// 变量.其他应收本金 = 科目余额
 		BigDecimal receivableBjSubjectBalance = BigDecimal.ZERO;
-		if(receivableMap !=null&& receivableMap.get(targetFinProduct.getCcy())!=null){			 
-			 receivableBjSubjectBalance = receivableMap.get(targetFinProduct.getCcy());
+		if(receivableMap !=null&& receivableMap.get(targetFinProduct.getCcy())!=null){
+			receivableBjSubjectBalance = receivableMap.get(targetFinProduct.getCcy());
 		}else{
 			receivableBjSubjectBalance = BigDecimal.ZERO;
 		}
@@ -212,16 +218,16 @@ public class AssetImpairmentProvisionProcessorService {
 		// 1.5.其他应收款-利息
 		// 变量.其他应收利息 = 科目余额
 		searchDto.setBaseSubjectNatureList(
-            new ArrayList<String>(Arrays.asList(DictCodeBaseSubjectNatrue.其他应收款_利息.getValue())));
+				new ArrayList<String>(Arrays.asList(DictCodeBaseSubjectNatrue.其他应收款_利息.getValue())));
 		Map<String, BigDecimal> receivableLxMap = accountingCommonService
-                .getSubjectBalanceCollection(searchDto, DictCodeList.余额方向_借方.getValue(), null);
-        // 变量.其他应收本金 = 科目余额
-        BigDecimal receivableLxSubjectBalance  = BigDecimal.ZERO;
-        if(receivableLxMap !=null && receivableLxMap.get(targetFinProduct.getCcy())!=null){ 
-            receivableLxSubjectBalance = receivableLxMap.get(targetFinProduct.getCcy());
-        }else{
-            receivableLxSubjectBalance = BigDecimal.ZERO;
-        }
+				.getSubjectBalanceCollection(searchDto, DictCodeList.余额方向_借方.getValue(), null);
+		// 变量.其他应收本金 = 科目余额
+		BigDecimal receivableLxSubjectBalance  = BigDecimal.ZERO;
+		if(receivableLxMap !=null && receivableLxMap.get(targetFinProduct.getCcy())!=null){
+			receivableLxSubjectBalance = receivableLxMap.get(targetFinProduct.getCcy());
+		}else{
+			receivableLxSubjectBalance = BigDecimal.ZERO;
+		}
 
 		// 1.6.逾期利息
 		searchDto.setBaseSubjectNatureList(
@@ -236,17 +242,17 @@ public class AssetImpairmentProvisionProcessorService {
 			overdueLxSubjectBalance = BigDecimal.ZERO;
 		}
 
-		// 1.7.减值准备科目余额
+		// 1.7 调用共通查询减值准备科目余额
 		// 基础科目性质查询
 		List<String> jzzbSubjectNatureList = accountingCommonService
 				.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_减值计提减值准备类对应科目查询.getValue());
 		searchDto.setBaseSubjectNatureList(jzzbSubjectNatureList);
 		List<SubjectBalance> jzzbSubjectBalanceList = accountingCommonService
 				.getSubjectBalanceExpectDirection(searchDto, DictCodeList.余额方向_借方.getValue());
-		// 变量.昨日减值余额 
+		// 变量.昨日减值余额
 		BigDecimal yLossSubjectBalance = BigDecimal.ZERO;
 		// 变量.昨日减值本币余额
-		BigDecimal yLossbSubjectBalance = BigDecimal.ZERO;		
+		BigDecimal yLossbSubjectBalance = BigDecimal.ZERO;
 		if(jzzbSubjectBalanceList !=null&& jzzbSubjectBalanceList.size() > 0){
 			// 变量.昨日减值余额 = 科目余额
 			yLossSubjectBalance = jzzbSubjectBalanceList.get(0).getBalance();
@@ -256,8 +262,6 @@ public class AssetImpairmentProvisionProcessorService {
 			yLossSubjectBalance = BigDecimal.ZERO;
 			yLossbSubjectBalance = BigDecimal.ZERO;
 		}
-
-		
 
 		// 2.计提减值
 		// 变量.EAD = 变量.成本科目余额+变量.应计利息余额+变量.利息调整+变量.其他应收本金+变量.其他应收利息+变量.逾期利息
@@ -275,6 +279,57 @@ public class AssetImpairmentProvisionProcessorService {
 			return null;
 		}
 
+		//========= modify by weipeng :加入减值模型相关处理 start========
+		// 定义 变量.减值余额
+		BigDecimal lossBalance = BigDecimal.ZERO;
+		// 获取系统参数——减值方案类型
+		String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+		// 定义 变量.减值模型ECL结果
+		ModEclResult modEclResult = new ModEclResult();
+		// 减值方案不为空时，查询对应减值模型结果
+		if(StringUtil.isNotEmpty(lossType)){
+			Map<String, Object> params = new HashMap<>();
+			params.put("booksetId", acctEntity.getBooksetId());
+			params.put("assetId", acctEntity.getBusiId());
+			params.put("invAim", acctEntity.getInvAim());
+			params.put("happenDate", acctEntity.getHappenDate());
+			modEclResult = assetImpairmentProvisionMapper.getModelEclResult(params);
+		}
+		if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+			// 变量.减值余额 = 减值模型ECL结果.前瞻后ECL预期信用损失
+			lossBalance = modEclResult.getProspectiveEcl();
+		}
+		else{
+			// 定义 变量.ecl损失比例
+			BigDecimal eclRatio = BigDecimal.ZERO;
+			// 若采用毕马威方案，则ecl损失比例直接查询，无需重新计算
+			if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+				// 变量.ecl损失比例 =  减值模型ECL结果.ecl损失比例
+				eclRatio = modEclResult.getEclRatio();
+			}
+			else{
+				List<String> subjectNatureList = accountingCommonService
+						.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
+
+				eclRatio= accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
+						acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
+						acctEntity.getBookDate(), subjectNatureList);
+			}
+			// 变量.减值余额 = EAD * ECL信用损失比例 *-1
+			lossBalance = ArithmeticUtil.multiply(variableEda,eclRatio);
+			lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);
+			// 若采用的是毕马威方案，则返回结果EAD需要更新入库
+			if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+				// 变量.减值模型ECL结果.EAD = 变量.EAD
+				modEclResult.setEad(variableEda);
+				//  变量.减值模型ECL结果.前瞻后ECL预期信用损失= 变量.减值余额
+				modEclResult.setProspectiveEcl(lossBalance);
+				// 将ECL结果添加到返回结果中
+				result.setModEclResult(modEclResult);
+			}
+		}
+		lossBalance = ArithmeticUtil.multiply(lossBalance,new BigDecimal(-1));
+
 		// 调用减值相关共通【减值计提计算】
 		// 组装成的资产减值流水DTO
 //		TrdAssetLoss trdAssetLoss = new TrdAssetLoss();
@@ -283,18 +338,9 @@ public class AssetImpairmentProvisionProcessorService {
 //		trdAssetLoss.setLossRatio(acctEntity.getLossRatio());
 //		trdAssetLoss.setPdVaule(acctEntity.getPdValue());
 //		trdAssetLoss.setLgdVaule(acctEntity.getLgdValue());
-//		// 定义 变量.减值余额
-		BigDecimal lossBalance = BigDecimal.ZERO;
 //		lossBalance = lossCommonService.lossProvisionCalculate(trdAssetLoss, variableEda);
-		List<String> subjectNatureList = accountingCommonService
-            .getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
-		BigDecimal ecl = accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
-		    acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
-		    acctEntity.getBookDate(), subjectNatureList);
-		// 变量.减值余额 = 上述返回值*-1
-		lossBalance = ArithmeticUtil.multiply(variableEda,ecl,new BigDecimal(-1));
-		lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);
+		//========= modify by weipeng :加入减值模型相关处理 end========
 
 		// 变量.减值金额 = 变量.减值余额 - 变量.昨日减值余额
 		BigDecimal lossAmount = lossBalance.subtract(yLossSubjectBalance);

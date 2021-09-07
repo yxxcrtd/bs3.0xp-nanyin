@@ -2,6 +2,9 @@ package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.bas
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jixu.common.type.ResultInterface;
@@ -45,7 +48,8 @@ public class StandardInfoRecjxService {
      */
     @Autowired
     private ValFinProductAcctBatchMapper valFinProductAcctBatchMapper;
-	
+
+    Logger logger = LoggerFactory.getLogger(StandardInfoRecjxService.class);
 	
 	public void prodInfoJx(StandardInfoProcessorResult  result) {
 		List<ValSubjectInfo> listValSubjectInfo = result.getListValSubjectInfo();
@@ -77,17 +81,17 @@ public class StandardInfoRecjxService {
     	//银行账户代码
     	jjBkCashAcctDto.setAcct_no(dto.getActNo());
     	//查询信息
-    	StlCapacctInfo StlCapacctInfo = valFinProductAcctBatchMapper.getStlCapacctInfo(dto.getActNo(),dto.getCcy());
+    	StlCapacctInfo stlCapacctInfo = valFinProductAcctBatchMapper.getStlCapacctInfo(dto.getActNo(),dto.getCcy());
     	//银行账户名
-    	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
+    	jjBkCashAcctDto.setAcct_name(stlCapacctInfo==null?"":stlCapacctInfo.getAcctName());
     	//账套名称
     	jjBkCashAcctDto.setBookset_id(booksetId);
     	/**modify by wujie on 20210429
     	//银行信息
-    	jjBkCashAcctDto.setBank_dep(StlCapacctInfo.getBankDep());
+    	jjBkCashAcctDto.setBank_dep(stlCapacctInfo.getBankDep());
 		 **/
     	//货币
-    	jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
+    	jjBkCashAcctDto.setCcy(dto.getCcy());
         //账户   	
     	jjBkCashAcctDto.setAcc_type(dto.getActType());
     	 

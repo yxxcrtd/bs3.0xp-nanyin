@@ -280,6 +280,11 @@ public class CfetsBondDealQuotedPriceMuti002Controller extends BaseController {
         if (StringUtil.isNotEmpty(this.getParam("quotaPageModel"))) {
         	cfetsBondDealRequestQuoteDto.setQuotaPageModel(this.getParam("quotaPageModel"));
         }
+
+        if(!StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getQuotaPageModel())){
+            cfetsBondDealRequestQuoteDto.setQuotaPageModel("new");
+        }
+
         model.addAttribute("businessId", StringUtil.isNotEmpty(cfetsBondDealRequestQuoteDto.getQuoteId())?cfetsBondDealRequestQuoteDto.getQuoteId(): IDGenerator.generate());
 
         model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealRequestQuoteDto);

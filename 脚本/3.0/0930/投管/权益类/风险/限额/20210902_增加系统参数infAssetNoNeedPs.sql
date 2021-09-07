@@ -1,0 +1,2 @@
+delete from SYS_PARA  where  PARA_CODE = 'infAssetNoNeedPs';
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG) VALUES ('RSK', 'infAssetNoNeedPs', 'C11', null, null, '不需要校验资产代码的交易', 'system', null, sysdate, 'system', sysdate, null, '01');

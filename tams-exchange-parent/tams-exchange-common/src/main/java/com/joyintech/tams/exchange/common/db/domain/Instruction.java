@@ -16,6 +16,7 @@ import java.util.Objects;
 
 public class Instruction implements Serializable, KeyMethodInterface<String>, Cloneable {
 
+    private static final long serialVersionUID = -81616163906470229L;
     @Size(max = 50)
     private String approverFlage;//审批标志
 

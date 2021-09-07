@@ -20,6 +20,11 @@ public class QuoteService {
     private static final Logger logger = LoggerFactory.getLogger(QuoteService.class);
 
     private Map<String, TickByte> tickBytesMap = Maps.newConcurrentMap();
+
+    private Map<String, TickByte> SZSETickBytesMap = Maps.newConcurrentMap();
+
+    private Map<String, TickByte> SSETickBytesMap = Maps.newConcurrentMap();
+
     private Map<String, QuoteProto.TickBean> tickBeanMap = Maps.newConcurrentMap();
 
     private Map<String, TickByte> updateTickBeanMap = Maps.newConcurrentMap();
@@ -29,6 +34,9 @@ public class QuoteService {
 
     @Value("${sse.file.active:false}")
     private boolean isSSEFileClientActive;
+
+    @Value("${szse.binary.active:false}")
+    private boolean isSZSEBinaryClientActive;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -40,9 +48,24 @@ public class QuoteService {
         tickBeanMap.put(tickBean.getInstrumentID(), tickBean);
     }
 
-    public void addUpdateTick(QuoteProto.TickBean tickBean) {
+    public void addSZSETick(QuoteProto.TickBean tickBean) {
+        SZSETickBytesMap.put(tickBean.getInstrumentID(), new TickByte(tickBean.toByteArray()));
+        tickBeanMap.put(tickBean.getInstrumentID(), tickBean);
+    }
+
+
+    public void addSSETick(QuoteProto.TickBean tickBean) {
+        SSETickBytesMap.put(tickBean.getInstrumentID(), new TickByte(tickBean.toByteArray()));
+        tickBeanMap.put(tickBean.getInstrumentID(), tickBean);
+    }
+
+
+    // 上交所为文件行情 --- 更新时做变更的更新，不更新全部。 第一次除外
+    public void updateTick(QuoteProto.TickBean tickBean) {
         updateTickBeanMap.put(tickBean.getInstrumentID(), new TickByte(tickBean.toByteArray()));
-        addTick(tickBean);
+        tickBeanMap.put(tickBean.getInstrumentID(), tickBean);
+        quoteTickService.saveTicks(updateTickBeanMap);
+        updateTickBeanMap.remove(tickBean.getInstrumentID());
     }
 
     public double getUpdateTime(String instrumentID) {
@@ -53,19 +76,22 @@ public class QuoteService {
     @Scheduled(fixedRateString = "${scheduled.quote.stock.flush}")
     public void flushTickToCache() {
         try {
+            // 深交所直接更新全部行情信息
+            if (isSZSEBinaryClientActive) {
+                if (SZSETickBytesMap.size() > 0) quoteTickService.saveTicks(SZSETickBytesMap);
+            }
             // 上交所为文件行情 --- 更新时做变更的更新，不更新全部。 第一次除外
             if (isSSEFileClientActive) {
                 SSEFileClient client = applicationContext.getBean(SSEFileClient.class);
-                if (client.isInit()) {
-                    if (isUpdate) {
-                        if (updateTickBeanMap.size() > 0) quoteTickService.saveTicks(updateTickBeanMap);
-                        return;
-                    } else {
-                        isUpdate = true;
-                    }
+                if (client.isInit() && !isUpdate) {
+                    logger.info("更新全量上海行情信息...");
+                    if (SSETickBytesMap.size() > 0) quoteTickService.saveTicks(SSETickBytesMap);
+                    isUpdate = true;
+                    logger.info("更新全量上海行情信息完成");
                 }
+            } else {
+                if (tickBytesMap.size() > 0) quoteTickService.saveTicks(tickBytesMap);
             }
-            if (tickBytesMap.size() > 0) quoteTickService.saveTicks(tickBytesMap);
         } catch (Exception e) {
             logger.error("flush ticks error:{}", e);
         }

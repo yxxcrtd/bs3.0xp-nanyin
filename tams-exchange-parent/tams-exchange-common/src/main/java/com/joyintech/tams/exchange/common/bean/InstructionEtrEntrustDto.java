@@ -11,6 +11,7 @@ import java.util.Date;
 
 public class InstructionEtrEntrustDto implements Serializable {
 
+    private static final long serialVersionUID = 2008146098778450660L;
     private String entrustId = "";//委托代码
     private String portfolioId = "";//组合代码
     private String portfolioName = "";//组合名称

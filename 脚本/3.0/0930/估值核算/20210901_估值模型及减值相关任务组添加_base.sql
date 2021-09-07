@@ -1,11 +1,11 @@
-/** Ìí¼Ó¹ÀÖµÄ£ÐÍ¼°¼õÖµÈÎÎñ×é add by yanya on 20210901**/
+/** æ·»åŠ ä¼°å€¼æ¨¡åž‹åŠå‡å€¼ä»»åŠ¡ç»„ add by yanya on 20210901**/
 delete SYS_BATCH_GRP where SEQ_NO in ('valmodel000000000000000000000001','valloss0000000000000000000000001');
-insert into SYS_BATCH_GRP values ('valmodel000000000000000000000001','VAL','¹ÀÖµÄ£ÐÍÈÎÎñ×é','¹ÀÖµ¼õÖµÄ£ÐÍÈÎÎñ×é','','','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'),'01');
-insert into SYS_BATCH_GRP values ('valloss0000000000000000000000001','VAL','¹ÀÖµ¼õÖµÈÎÎñ×é','¹ÀÖµ¼õÖµÈÎÎñ×é','','','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'),'01');
+insert into SYS_BATCH_GRP values ('valmodel000000000000000000000001','VAL','ä¼°å€¼æ¨¡åž‹ä»»åŠ¡ç»„','ä¼°å€¼å‡å€¼æ¨¡åž‹ä»»åŠ¡ç»„','','','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'),'01');
+insert into SYS_BATCH_GRP values ('valloss0000000000000000000000001','VAL','ä¼°å€¼å‡å€¼ä»»åŠ¡ç»„','ä¼°å€¼å‡å€¼ä»»åŠ¡ç»„','','','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'),'01');
 
-delete from SYS_BATCH_JOB where BATCH_SEQ_NO = 'valmodel000000000000000000000001' 
+delete from SYS_BATCH_JOB where BATCH_SEQ_NO = 'valmodel000000000000000000000001'
 	and TASK_ID in ('2021','2023','2024','2022');
-delete from SYS_BATCH_JOB where BATCH_SEQ_NO = 'valloss0000000000000000000000001' 
+delete from SYS_BATCH_JOB where BATCH_SEQ_NO = 'valloss0000000000000000000000001'
 	and TASK_ID in ('2043','2045','2044','2041','2026','2042');
 insert into SYS_BATCH_JOB values ('valmodel000000000000000000000001','2021','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'));
 insert into SYS_BATCH_JOB values ('valmodel000000000000000000000001','2023','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'));
@@ -17,4 +17,3 @@ insert into SYS_BATCH_JOB values ('valloss0000000000000000000000001','2044','sys
 insert into SYS_BATCH_JOB values ('valloss0000000000000000000000001','2041','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'));
 insert into SYS_BATCH_JOB values ('valloss0000000000000000000000001','2026','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'));
 insert into SYS_BATCH_JOB values ('valloss0000000000000000000000001','2042','system','',to_date('2021/9/1', 'yyyy/mm/dd'), 'system',to_date('2021/9/1', 'yyyy/mm/dd'));
-

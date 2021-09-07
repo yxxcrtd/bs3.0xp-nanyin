@@ -1,10 +1,9 @@
 package com.joyintech.tams.model.impairment.batch.impairmentdataload.dao;
 
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
-import com.joyintech.tams.model.impairment.batch.common.searchinfo.dto.ViewRatingInfoDto;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.*;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.*;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRateDataDto;
 import org.springframework.stereotype.Repository;
 
@@ -27,7 +26,7 @@ public interface ImpairmentDataLoadMapper {
 
 
 	//获取需要当天处理的初始数据列表(买入时点用)
-	List<ImpairmentDataLoadStep2ReaderDto> selectModEclResultProcessForDeal(Map<String, Object> params);
+	List<ModEclResultProcess> selectModEclResultProcessForDeal(Map<String, Object> params);
 
 	int deleteModEclResultProcess(Map<String, Object> params);
 

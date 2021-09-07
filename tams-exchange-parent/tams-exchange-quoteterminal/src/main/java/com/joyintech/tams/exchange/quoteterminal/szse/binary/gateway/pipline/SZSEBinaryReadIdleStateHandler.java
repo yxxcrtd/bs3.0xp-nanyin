@@ -21,7 +21,7 @@ public class SZSEBinaryReadIdleStateHandler extends IdleStateHandler {
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) {
         ctx.channel().writeAndFlush(heartbeat);
-        logger.info("send heartbeat ... ");
+        logger.debug("send heartbeat ... ");
         try {
             super.channelIdle(ctx, evt);
         } catch (Exception e) {

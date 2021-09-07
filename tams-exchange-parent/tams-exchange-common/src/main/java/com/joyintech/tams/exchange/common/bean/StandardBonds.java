@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.common.bean;
 import java.io.Serializable;
 
 public class StandardBonds implements Serializable {
+    private static final long serialVersionUID = 8569288818585352732L;
     private String stockCode; //对应的质押券代码
     private String stockName;
     private String market;

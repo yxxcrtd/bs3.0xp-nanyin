@@ -261,6 +261,8 @@ public class FinFundTargetService extends BaseService<FinFundTargetDto> {
         finProductType.setType10(dto.getType10());
         finProductType.setType11(dto.getType11());
         finProductType.setType12(dto.getType12());
+        //modify by yanya on 20210902 分类表增加证券品种type18字段入库
+        finProductType.setType18(DictCodeListExt1.证券品种_基金.getValue());//证券品种
         // 4 new types added by wangguiqi on 2019/7/22 -start
         //现金流信息Entity-本金
         FinCashInfo finCashInfoCapital = new FinCashInfo();

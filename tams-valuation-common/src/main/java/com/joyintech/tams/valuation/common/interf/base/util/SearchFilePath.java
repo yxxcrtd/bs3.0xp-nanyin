@@ -124,7 +124,10 @@ public class SearchFilePath {
 	public static List<File> searchAllFile(String localPath, boolean flag) {
 		List<File> fileList = new ArrayList<File>();
 		File localFile = new File(localPath);// 获取文件夹
-		if (localFile.isDirectory()) {// 是文件夹则查找目录下文件
+		if(localFile==null){
+			logger.warn("源文件夹不存在："+localPath);
+		}
+		else if (localFile.isDirectory()) {// 是文件夹则查找目录下文件
 			File[] files = localFile.listFiles();// 获取文件夹下的文件列表
 			if (files != null) {
 				for (File file : files) {

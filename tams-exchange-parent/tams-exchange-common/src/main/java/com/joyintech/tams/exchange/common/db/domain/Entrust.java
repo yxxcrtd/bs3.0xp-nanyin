@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Entrust extends BaseEntity implements Serializable, EntrustInterface, Cloneable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 4354102783892014792L;
     @NotNull
     @Size(max = 32)
     @Id

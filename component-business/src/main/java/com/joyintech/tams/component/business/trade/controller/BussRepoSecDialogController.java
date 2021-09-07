@@ -167,17 +167,23 @@ public class BussRepoSecDialogController extends BaseController {
     public Page<PledgeBondInfoDto> selectAvaPledgeBondDetailList(@RequestParam Map<String, Object> params) {
         //配置单位 edit by yeming 20210802 start
         Page<PledgeBondInfoDto> page = bussRepoSecService.selectAvaPledgeBondDetailPage(params);
-        for(PledgeBondInfoDto dto:page.getRoot()){
-            if(dto.getPrin() != null) {
-                dto.setPrin(dto.getPrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+        //add by chenjiaxing 质押式回购报价多组合单位异常 start
+        boolean temp = true;
+        if (!StringUtil.equals(params.get("isDzh"), "Y") && temp) {
+            for(PledgeBondInfoDto dto:page.getRoot()){
+                if(dto.getPrin() != null) {
+                    dto.setPrin(dto.getPrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if(dto.getPledgePrin() != null) {
+                    dto.setPledgePrin(dto.getPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
+                if(dto.getAvaPledgePrin() != null) {
+                    dto.setAvaPledgePrin(dto.getAvaPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
+                }
             }
-            if(dto.getPledgePrin() != null) {
-                dto.setPledgePrin(dto.getPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            }
-            if(dto.getAvaPledgePrin() != null) {
-                dto.setAvaPledgePrin(dto.getAvaPledgePrin().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
-            }
+            temp = false;
         }
+        //add by chenjiaxing 质押式回购报价多组合单位异常 end
         return page;
         //配置单位 edit by yeming 20210802 end
 //        return bussRepoSecService.selectAvaPledgeBondDetailPage(params);

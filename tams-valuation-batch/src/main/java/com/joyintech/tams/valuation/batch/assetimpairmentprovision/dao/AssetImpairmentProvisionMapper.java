@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.batch.assetimpairmentprovision.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ModEclResult;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
@@ -47,5 +48,11 @@ public interface AssetImpairmentProvisionMapper {
      * @since 1.0
      */
     int updateBokStatDetPosiiton(BokStatLossPosiiton bokStatLossPosiiton);
-    
+
+    /**
+     * 查询资产减值结果表
+     * @param params
+     * @return
+     */
+    ModEclResult getModelEclResult(Map<String, Object> params);
 }

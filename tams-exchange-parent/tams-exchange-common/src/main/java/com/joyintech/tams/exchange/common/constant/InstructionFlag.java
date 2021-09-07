@@ -4,7 +4,8 @@ public enum InstructionFlag {
 
     SUCCESS("指令接收成功", "0"),
     ACCEPT("指令接收", "1"),
-    REFUSE("指令放弃", "2");
+    REFUSE("指令放弃", "2"),
+    RETURN("指令退回", "3");
 
     public final String value;
     public final String name;
@@ -12,5 +13,9 @@ public enum InstructionFlag {
     InstructionFlag(String name, String value) {
         this.name = name;
         this.value = value;
+    }
+
+    public static boolean isRefuseOrReturn(String recStatus) {
+        return REFUSE.value.equals(recStatus) || RETURN.value.equals(recStatus);
     }
 }

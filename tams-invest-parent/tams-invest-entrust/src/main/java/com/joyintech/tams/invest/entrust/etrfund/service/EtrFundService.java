@@ -861,7 +861,9 @@ public class EtrFundService extends CommonExportService<EtrFundDto> implements B
                 PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
                 ptlSecPositionFlowDto.setCcy(dto.getCcy());
                 ptlSecPositionFlowDto.setFinprodId(dto.getFinprodId());
-                ptlSecPositionFlowDto.setSecAcctId(dto.getChlId());
+                // ZGZGST-1879:修改证券管理账号赋值 20210902 fuyongsheng edit start
+                ptlSecPositionFlowDto.setSecAcctId(StringUtil.isEmpty(dto.getSecAcctId()) ? dto.getChlId() : dto.getSecAcctId());
+                // ZGZGST-1879:修改证券管理账号赋值 20210902 fuyongsheng edit end
                 ptlSecPositionFlowDto.setPortfolioId(dto.getPortfolioId());
                 dto.setAssetAvailablePosition(getAssetAvailablePosition(ptlSecPositionFlowDto));
             }else {

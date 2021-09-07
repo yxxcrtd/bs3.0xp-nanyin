@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorator="~{layout/default}">
+<head>
+<title data-th-text="#{MstCurveDefManage002}">收益率曲线详情</title>
+    <style>
+        .height30{
+            height:30px;
+            padding-top:0px;
+        }
+    </style>
+</head>
+<body>
+     <div layout:fragment="content">
+
+           <form class="layui-form"  id="submitForm">
+               <div class="layui-form-item">
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.valueSource}">曲线来源</label>
+                       <div class="layui-input-inline input-inline">
+                           <select formatoption = "true" type="text" id="valueSource"
+                                   name="valueSource"class="layui-input form-input input-select"
+                                   data-th-data-result='${VALUATION_SOURCE}' data-th-initValue="${entity?.valueSource}"
+                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}">
+                           </select>
+                       </div>
+                   </div>
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.curveCode}">曲线代码</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="curveCode" name="curveCode" maxlength="50"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容" data-th-value = "${entity?.curveCode}"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                              >
+                       </div>
+                   </div>
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.curveName}">曲线名称</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="curveName" name="curveName"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.curveName}"
+                                  >
+                       </div>
+                   </div>
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.intCurveType}">曲线类型</label>
+                       <div class="layui-input-inline input-inline">
+                         <!--  <input type="text" id="intCurveType" name="intCurveType"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.intCurveType}">-->
+                           <select formatoption = "true" type="text" id="intCurveType"
+                                   name="intCurveType"class="layui-input form-input input-select"
+                                   data-th-data-result='${CURVE_TYPE}' data-th-initValue="${entity?.intCurveType}"
+                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}">
+                           </select>
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.ccy}">币种</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="ccy" name="ccy"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.ccy}">
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.interMethod}">插值方式</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="interMethod" name="interMethod"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.interMethod}">
+                       </div>
+                   </div>
+
+
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.dayRules}">日算规则</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="dayRules" name="dayRules"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.dayRules}">
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.calender}">日历</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="calender" name="calender"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.calender}">
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.interestDateRule}">付息日规则</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="interestDateRule" name="interestDateRule"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.interestDateRule}">
+                       </div>
+                   </div>
+
+               </div>
+
+               <div class="layui-form-item">
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.interestCalMethod}">计息方式</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="interestCalMethod" name="interestCalMethod"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.interestCalMethod}">
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
+                       <label class="layui-form-label form-lable"
+                              data-th-text="#{MstCurveDefManage002.interestFreq}">付息频率</label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="interestFreq" name="interestFreq"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.interestFreq}">
+                       </div>
+                   </div>
+               </div>
+
+           </form>
+
+    </div>
+    <div layout:fragment="script">
+        <script data-th-src="@{/js/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002.js}" type="text/javascript"></script>
+    </div>
+</body>
+
+</html>

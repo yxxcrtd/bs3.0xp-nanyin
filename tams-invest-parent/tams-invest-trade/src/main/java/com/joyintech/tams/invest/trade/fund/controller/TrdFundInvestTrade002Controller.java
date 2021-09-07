@@ -274,6 +274,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         dto.setrFinprodId(entrustDto.getEtrEntrustAdd().getrFinprodId());
                         dto.setChangeToFinprodMarketId(entrustDto.getChangeToFinprodMarketId());
                         dto.setChangeToFinprodName(entrustDto.getChangeToFinprodName());
+                        //dto.setCommissionFee(entrustDto.);
                         TrdInvestPersonInfo002Dto trdInvestPersonInfo = new TrdInvestPersonInfo002Dto();
                         trdInvestPersonInfo.setCounterTrader(eedto.getCounterTrader());
                         trdInvestPersonInfo.setIsOutTrade(eedto.getIsOutTrade());

@@ -13,10 +13,7 @@ package com.joyintech.tams.valuation.batch.common.accountingmethod.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.joyintech.tams.common.base.entity.BokAssetMarketInfo;
-import com.joyintech.tams.common.base.entity.BokBatchMarketwarningInfo;
-import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
-import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
+import com.joyintech.tams.common.base.entity.*;
 
 /**
  * 记账凭证生成结果(带【账务汇总表（账套）】 列表,带账务明细辅助表)的
@@ -48,6 +45,10 @@ public class BookGenerateResultWithBokSummary extends BookGenerateResult {
      */
     private List<BokAssetMarketInfo> bokAssetMarketInfoList = new ArrayList<BokAssetMarketInfo>();
 
+    /**
+     * 减值模型ECL结果
+     */
+    private ModEclResult modEclResult;
 
 
     public List<BokStatDetPosiiton> getBokSummaryList() {
@@ -98,5 +99,21 @@ public class BookGenerateResultWithBokSummary extends BookGenerateResult {
      */
     public void setBokAssetMarketInfoList(List<BokAssetMarketInfo> bokAssetMarketInfoList){
         this.bokAssetMarketInfoList = bokAssetMarketInfoList;
+    }
+
+    /**
+     * @return 减值模型ECL结果
+     */
+    public ModEclResult getModEclResult() {
+        return modEclResult;
+    }
+
+    /**
+     * 设置 减值模型ECL结果
+     *
+     * @param modEclResult 减值模型ECL结果
+     */
+    public void setModEclResult(ModEclResult modEclResult) {
+        this.modEclResult = modEclResult;
     }
 }

@@ -116,7 +116,7 @@ implements BaseProcessService<FinBondTargetAssetDto>{
     public List<FinBondTargetAssetDto> selectAllList(Map<String, Object> pageParam) {
         pageParam.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
         pageParam.put("cashType",DictCodeListExt1.现金流二级类型_利息.getValue());
-        pageParam.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());//现金流业务类型
+        pageParam.put("cashFinprodType", DictCodeListExt1.金融产品类型_债券.getValue());//现金流业务类型
         //添加是否新增债券查询条件 add by liupeilin 2020-01-15 end
         List<FinBondTargetAssetDto> list = restTemplate.postForList(
                 ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME + "/FinBondTargetAsset/selectAllList",
@@ -242,10 +242,13 @@ implements BaseProcessService<FinBondTargetAssetDto>{
         finProductType.setType1(dto.getAssetType());//资产类型
         finProductType.setType2(dto.getAccountintType());//核算分类
         finProductType.setType3(dto.getTaxType());//税务分类
+        //modify by yanya on 20210902 分类表增加证券品种type18字段入库
+        finProductType.setType18(DictCodeListExt1.证券品种_债券.getValue());//证券品种
         //金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
         BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
         finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
+        finProductAdd.setBondRiskType(dto.getRiskType());//风险五级分类
         if (OperationType.NEW.equals(type)) {
             finProductAdd.setDataSource(DictCodeListExt3.估值数据来源_手工.getValue());
         }

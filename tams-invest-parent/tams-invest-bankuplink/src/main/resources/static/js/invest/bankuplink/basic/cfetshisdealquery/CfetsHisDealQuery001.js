@@ -110,9 +110,24 @@
                 	}*/
             }//成交编号
             ,{field:'portfolioId', title: 'CfetsHisDealQuery001.Bond.portfolioId',width:120 ,sortField:'I_Q_B_PORTFOLIO_ID'}//组合代码
-            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Bond.entrustId',width:170 ,render : function(data, type, row, meta) {
+            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Bond.entrustId',width:400  ,render : function(data, type, row, meta) {
+                // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 edit start
                 if(row.entrustId){
-                    return "<a  class='pro-link entrustIdLink' style='cursor: pointer;'>"+row.entrustId+"</ a>";
+                    var arr=row.entrustId.split(',');
+                    if(arr.length == 1){
+                        return "<a  class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[0]+">"+row.entrustId+"</ a>";
+                    }else if(arr.length > 1){
+                        var url = "";
+                        for(var i = 0;i<arr.length;i++){
+                            if(i<arr.length - 1){
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[i]+">"+arr[i]+','+"</ a>"
+                            }else{
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+arr[i]+">"+arr[i]+"</ a>"
+                            }
+                        }
+                        return url;
+                    }
+                // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 edit end
                 }else{
                     return '';
                 }
@@ -234,6 +249,15 @@
      * 组合代码链接
      */
     dvpTransferTable.bind('click','.entrustIdLink', function(row) {
+        // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 add start
+        var arr=row.entrustId.split(',');
+        for(var i = 0;i<arr.length;i++){
+            if(arr[i] == $(this).context.id){
+                row.portfolioId = row.portfolioId.split(',')[i];
+            }
+        }
+        row.entrustId = $(this).context.id;
+        // ZGZGST-1936 多组合指令处理 fuyongsheng 20210906 add end
     	row.pageModel=PAGE_MODEL_REFERENCE;
         Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo002.refrence"),
                 JoyinUtil.getRealPath("invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init"),
@@ -272,9 +296,18 @@
             ,{field:'cfetsQuoteId', title: 'CfetsHisDealQuery001.Repo.cfetsQuoteId',width:155 ,sortField:'I_Q_C_CFETS_QUOTE_ID'}
             ,{field:'execid', title: 'CfetsHisDealQuery001.Repo.fTradeId',width:120, sortField:'I_Q_C_EXECID'}
             ,{field:'portfolioId', title: 'CfetsHisDealQuery001.Repo.portfolioId',width:120 ,sortField:'I_Q_C_PORTFOLIO_ID'}
-            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Repo.entrustId',width:170 ,render : function(data, type, row, meta) {
+            ,{field:'entrustId', title: 'CfetsHisDealQuery001.Repo.entrustId',width:400 ,render : function(data, type, row, meta) {
                 if(row.entrustId){
-                    return "<a  class='pro-link entrustIdLink' style='cursor: pointer;'>"+row.entrustId+"</ a>";
+                    var wgArrSub = row.entrustId.split(",");
+                    if(wgArrSub.length == 1){
+                        return "<a  class='pro-link entrustIdLink' style='cursor: pointer;' id = "+wgArrSub[0]+">"+row.entrustId+"</ a>";
+                    }else if(wgArrSub.length > 1){
+                        var url = "";
+                        for(var i = 0;i<wgArrSub.length;i++){
+                            url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+wgArrSub[i]+">"+wgArrSub[i]+','+"</ a>"
+                        }
+                        return url;
+                    }
                 }else{
                     return '';
                 }
@@ -300,6 +333,7 @@
      * 组合代码链接
      */
     transferTable.bind('click','.entrustIdLink', function(row) {
+        row.entrustId = $(this).context.id;
     	row.pageModel=PAGE_MODEL_REFERENCE;
         Joyin.dialog(JoyinUtil.getLabel("EtrRepo002.refrence"),
                 JoyinUtil.getRealPath("invest/entrust/etrrepo/EtrRepo002/init"),

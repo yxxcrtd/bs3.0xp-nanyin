@@ -4,7 +4,7 @@ import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
 import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
@@ -37,10 +37,6 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
         List<ImpairmentDataLoadStep1ResultDto> resultList = (List<ImpairmentDataLoadStep1ResultDto>) items;
         List<ModConfigUseage> listModConfigUseage = new ArrayList<ModConfigUseage>();
         List<ModEclResultProcess> listModEclResultProcess = new ArrayList<ModEclResultProcess>();
-        //清除缓存中评级信息数据
-        if (CacheUtil.getAppCache(GlobalConstant.RATING_INFO, Map.class) != null) {
-            CacheUtil.clearAppCache(GlobalConstant.RATING_INFO);
-        }
 
         if (resultList != null && resultList.size() > 0) {
             for (ImpairmentDataLoadStep1ResultDto dto : resultList) {

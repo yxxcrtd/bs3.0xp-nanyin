@@ -8,6 +8,7 @@ import java.util.Date;
  * create By MAXX on 2020/10/15
  */
 public class MinTrdUnitLimit implements Serializable {
+    private static final long serialVersionUID = 4144411393550111397L;
     private String tradeMarket;//交易场所
     private String tradePlat;//交易平台
     private String assetType;//资产一级分类

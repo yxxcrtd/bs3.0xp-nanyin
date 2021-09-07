@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond002Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,7 +79,34 @@ public class EtrStandardBond001Controller extends BaseController {
     public Page<EtrStandardBond001Dto> selectPageData() throws Exception {
         return etrStandardBond001Service.selectPageData(RequestUtil.getPageParam());
     }
-    
+
+    //add by chenjiaxing 20210906 质押券入库增加流程中校验 start
+    /**
+     * 质押券管理列表查询
+     *
+     * @return Page<TrdStandardBond001Dto>泛型的page实体类
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectPageDataWfl")
+    @ResponseBody
+    public AjaxResult selectPageDataWfl(@RequestBody EtrStandardBond002Dto dto) throws Exception {
+        List<EtrStandardBond001Dto> temp = etrStandardBond001Service.selectPageDataWfl(dto);
+        AjaxResult result = new AjaxResult();
+        String msg = "";
+        for(int i = 0 ; i < temp.size() ; i++ ){
+            msg += "组合代码:"+temp.get(i).getPortfolioId()+
+                    ",债券代码:"+temp.get(i).getFinProdId()+
+                    "证券账户/合作资产:"+temp.get(i).getSecAcctId();
+        }
+        if(StringUtil.isNotEmpty(msg)){
+            msg += "上述所选的质押券已在流程中，是否继续添加？";
+            result.setData(msg);
+        }
+        return result;
+    }
+    //add by chenjiaxing 20210906 质押券入库增加流程中校验 end
     /**
      * 导出信息excel
      *

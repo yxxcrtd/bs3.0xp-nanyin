@@ -102,6 +102,26 @@ public class CfetsQuotedCommonService extends BaseService {
             param, SelectOptionDto.class);
     }
 
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param param 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SuggestDto> queryHisEntrustInfoList(Map<String, Object> param) {
+        param.put("loginUserId", LoginUserUtil.getUserName());
+        if(StringUtil.isNotEmpty(param.get("noLoginUserId"))){
+            param.remove("loginUserId");
+        }
+        return restTemplate.postForPage(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsBondDealQuotedPrice/queryHisEntrustInfoList",
+                param, SuggestDto.class);
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 委托放弃处理
      * 

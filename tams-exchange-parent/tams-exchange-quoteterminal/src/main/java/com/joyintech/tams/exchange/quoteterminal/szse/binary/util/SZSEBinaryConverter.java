@@ -1,6 +1,8 @@
 package com.joyintech.tams.exchange.quoteterminal.szse.binary.util;
 
+import com.joyintech.tams.exchange.common.constant.Market;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
+import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.quoteterminal.szse.binary.model.message.SZSEBinaryLevel1MarketSnapshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,9 @@ public class SZSEBinaryConverter {
 
     public static void convertToTick(SZSEBinaryLevel1MarketSnapshot  data, QuoteProto.TickBean.Builder builder) {
         builder.clear();
-        builder.setExchange("sz");
-        builder.setInstrumentID(data.getSecurityId().getValue());
+        builder.setExchange(Market.SZSE.value);
+        String stockCode = StockCodeUtils.formatStockCode(data.getSecurityId().getValue(), Market.SZSE.value);
+        builder.setInstrumentID(stockCode);
         builder.setLastPrice(data.getLastPx());
         builder.setOpenPrice(data.getOpenPx());
         builder.setHighPrice(data.getHighPx());

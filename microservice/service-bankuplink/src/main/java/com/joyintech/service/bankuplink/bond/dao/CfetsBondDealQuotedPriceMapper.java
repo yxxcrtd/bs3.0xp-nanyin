@@ -54,7 +54,19 @@ public interface CfetsBondDealQuotedPriceMapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryEntrustInfoList(Map<String, Object> map);
-    
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param map 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> queryHisEntrustInfoList(Map<String, Object> map);
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 根据查询查询符合条件的报价编号
      * 

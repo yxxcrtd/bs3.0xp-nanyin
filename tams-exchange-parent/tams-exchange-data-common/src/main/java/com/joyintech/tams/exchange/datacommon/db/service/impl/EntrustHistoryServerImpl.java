@@ -3,6 +3,7 @@ package com.joyintech.tams.exchange.datacommon.db.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.joyintech.tams.exchange.common.constant.EntrustType;
 import com.joyintech.tams.exchange.common.constant.InvestmentAssetType;
 import com.joyintech.tams.exchange.common.db.domain.EntrustHistory;
 import com.joyintech.tams.exchange.common.db.domain.EntrustHistoryExample;
@@ -50,6 +51,8 @@ public class EntrustHistoryServerImpl implements EntrustHistoryService {
             criteria.andEntrustPropEqualTo(entrustProp);
         if (entrustStatus > -100)
             criteria.andEntrustStatusEqualTo(entrustStatus);
+        // 过滤撤单委托
+        criteria.andEntrustTypeNotEqualTo(EntrustType.CANCEL.value);
         PageHelper.startPage(pageNum, pageSize);
         List<EntrustHistory> entrustHistoryList = entrustHistoryMapper.selectByExample(entrustHistoryExample);
         entrustHistoryList.forEach(entrustHistory -> {

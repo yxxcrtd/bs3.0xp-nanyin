@@ -155,7 +155,25 @@ public class CfetsBondDealQuotedPriceController {
                                                       @PathVariable("length") int length){
         return cfetsBondDealQuotedPriceService.queryEntrustInfoList(page,length,param);
     }
-    
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param param 入参
+     * @param page 页数
+     * @param length 步长
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryHisEntrustInfoList/{page}/{length}")
+    public Page<SuggestDto> queryHisEntrustInfoList(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                      @PathVariable("length") int length){
+        return cfetsBondDealQuotedPriceService.queryHisEntrustInfoList(page,length,param);
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 根据查询查询符合条件的报价编号
      * 

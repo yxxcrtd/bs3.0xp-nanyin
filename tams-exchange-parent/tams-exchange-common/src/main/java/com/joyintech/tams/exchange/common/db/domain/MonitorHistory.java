@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class MonitorHistory implements Serializable, KeyMethodInterface<String> {
+    private static final long serialVersionUID = 2068910518575967809L;
     private String id;
 
     private String recordId;

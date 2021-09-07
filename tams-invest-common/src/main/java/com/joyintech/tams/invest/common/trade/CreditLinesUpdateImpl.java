@@ -252,9 +252,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             if (creditLinesOrg == null || creditLinesOrgItem == null){
                 outputDto.setTradeId(inputDto.getFinprodId());
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
-                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_15"));
                 }else {
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_16"));
                 }
                 return;
             }
@@ -276,9 +276,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             if (剩余占用额度1.compareTo(BigDecimal.ZERO) > 0 || 剩余占用额度2.compareTo(BigDecimal.ZERO) > 0){
                 outputDto.setTradeId(inputDto.getFinprodId());
                 if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_否.getValue())){
-                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_12"));
+                    outputDto.setErrMessage(getMessage("BUSS_COM_CREDIT_TZJY_17"));
                 }else if (StringUtil.equals(CREDIT_SOFT_SKIP_MODE,DictCodeList.是否_是.getValue())){
-                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_14"));
+                    outputDto.getConfirmMessages().add(getMessage("BUSS_COM_CREDIT_TZJY_18"));
                 }
             }
         }
@@ -538,7 +538,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         linesInputDto.setEntrustId(item.getTradeId());
                         linesInputDto.setNetPrice(item.getNetPrice());
                         // 释放 releaseAmt
-                        generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
+                        generateDealResult(linesInputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy, occupyType);
                     }
                     // 资产系列授信占用列表
                     List<CreditUsingSeries> seriesList = creditLinesDealsMapper.findCreditUsingSeriesByFin(inputDto);
@@ -577,7 +577,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         linesInputDto.setEntrustId(item.getTradeId());
                         linesInputDto.setNetPrice(item.getNetPrice());
                         // 释放 releaseAmt
-                        generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
+                        generateDealResult(linesInputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy, occupyType);
                     }
                     logger.info(getMessage("==========处理数据结束,交易或指令编号: "+inputDto.getTradeId()+",释放规则：先进先出=========="));
                 }else {
@@ -1209,6 +1209,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setEntrustId(creditLinesInputDto.getEntrustId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_资产授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingAst item = new CreditUsingAst();
@@ -1230,6 +1231,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingAstList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_系列授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingSeries item = new CreditUsingSeries();
@@ -1252,6 +1254,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingSeriesList.add(item);
         }else {
             CreditUsingCustomerMst item = new CreditUsingCustomerMst();
@@ -1272,6 +1275,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setEntrustId(creditLinesInputDto.getEntrustId());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerMstList.add(item);
         }
     }
@@ -1746,13 +1750,20 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         if (creditLinesAst == null && oneStepInfo != null && oneStepInfo.getDeductObj() == null){
             return outputDto;
         }
-        //处理 净值型、货币型、基金的申购确认
+        //处理 当授信对象为金额时 申购/认购 的待释放份额为0
+        if(BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())
+                &&(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
+                ||DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))){
+            inputDto.setShareAmt(BigDecimal.ZERO);
+        }
+        //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
             if(creditLinesAst!=null) {
-                if (creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_份额.getValue())) {
+                if (BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
                     BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
                     BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
                     inputDto.setShareAmt(objShareAmt.abs());
+                    inputDto.setTradeAmt(BigDecimal.ZERO);
                     occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
                 }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
                     inputDto.setTradeAmt(BigDecimal.ZERO);

@@ -115,16 +115,16 @@ public class RskSupervisionIndividuationService extends BaseService {
                 e.setPrtBagId(dto.getPrtBagId());
                 conditionLineMapper.insert(e);
                 // 如果是否计算组合包  === 是
-                if (StringUtil.equals(e.getIsBagCalc(),"Y")){
-                    List<String> list = rskSupervisionIndividuationMapper.findPortfolioByPackId(dto.getPrtBagId());
-                    if (list.size() > 0){
-                        for (String str : list){
-                            e.setConditionId(IDGenerator.generate());
-                            e.setPrtBagId(str);
-                            conditionLineMapper.insert(e);
-                        }
-                    }
-                }
+//                if (StringUtil.equals(e.getIsBagCalc(),"Y")){
+//                    List<String> list = rskSupervisionIndividuationMapper.findPortfolioByPackId(dto.getPrtBagId());
+//                    if (list.size() > 0){
+//                        for (String str : list){
+//                            e.setConditionId(IDGenerator.generate());
+//                            e.setPrtBagId(str);
+//                            conditionLineMapper.insert(e);
+//                        }
+//                    }
+//                }
             }
         }
         return 0;

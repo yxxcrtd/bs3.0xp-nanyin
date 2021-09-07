@@ -208,11 +208,11 @@ public class TokenJob {
         String urlPrefix = "http://";
         ServiceApplication.EXCHANGE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getExchangeService());
         ServiceApplication.QUOTE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getQuoteService());
-        ServiceApplication.CUSTOMER_INTERFACE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getCustomerInterfService());
-        ServiceApplication.BASIC_DATA_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getBasicDataService());
-        ServiceApplication.INSTRUCTION_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getEntrustService());
-        ServiceApplication.TRADE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getTradeService());
-        ServiceApplication.PORTFOLIO_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getPortfolioService());
+//        ServiceApplication.CUSTOMER_INTERFACE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getCustomerInterfService());
+//        ServiceApplication.BASIC_DATA_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getBasicDataService());
+//        ServiceApplication.INSTRUCTION_SERVICE = urlPrefix + masterAddress + getServiceSuffix(config.getEntrustService());
+//        ServiceApplication.TRADE_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getTradeService());
+//        ServiceApplication.PORTFOLIO_SERVICE_NAME = urlPrefix + masterAddress + getServiceSuffix(config.getPortfolioService());
     }
 
     private String getServiceSuffix(String contextPath) {

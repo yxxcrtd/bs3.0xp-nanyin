@@ -36,14 +36,9 @@
             <div class="layui-inline layui-col-md6"id="asset_detail_type">
                 <label class="layui-form-label form-lable">资产分类</label>
                 <div class="layui-input-inline input-inline">
-                    <!--<select id="assetDetailType" name="assetDetailType" searchable="false" type="text"
-                            data-th-data-result='${MODEL_SEC_DETAIL_TYPE}'
-                            data-th-initValue="${entity?.assetDetailType}"
-                            class="layui-input form-input input-select" placeholder="请选择">
-                    </select>-->
                     <select id="assetDetailType" name="assetDetailType" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请选择"
-                            data-th-initvalue="${entity?.assetDetailType}" parentIds="assetType" data-th-required="true" formatoption = "true"
+                            data-th-initvalue="${entity?.assetDetailType}" parentIds="assetType" formatoption = "true"
                             data-th-data-url="@{/model/impairment/assetratingallocation/assetcategories/AssetCategories001/getAssetDetailType}">
                         <option></option>
                     </select>
@@ -62,20 +57,19 @@
                     </select>
                 </div>
             </div>
-        </div>
-
-        <div class="layui-form-item">
             <div class="layui-inline layui-col-md6"id="grade_org_id"  >
                 <label class="layui-form-label form-lable">指定评级机构</label>
                 <div class="layui-input-inline input-inline">
                     <select id="gradeOrgId" name="gradeOrgId" searchable="false" type="text"
-                            data-th-data-result='${GRADE_PARTY}'
+                            data-th-data-result='${GRADE_PARTY}' data-th-required="true"
                             data-th-initValue="${entity?.gradeOrgId}"
-                            class="layui-input form-input input-select" placeholder="请选择" required>
+                            class="layui-input form-input input-select" placeholder="请选择" >
                     </select>
                 </div>
             </div>
+        </div>
 
+        <div class="layui-form-item">
             <div class="layui-inline layui-col-md6"id="o_Type">
                 <label class="layui-form-label form-lable">评级类型</label>
                 <div class="layui-input-inline input-inline">

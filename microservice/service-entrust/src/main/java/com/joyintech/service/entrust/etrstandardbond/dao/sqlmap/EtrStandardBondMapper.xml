@@ -714,6 +714,47 @@
 			 	sys_role.role_pos = #{role_pos,jdbcType=VARCHAR}
 			)
 	</select>
+
+	<!--add by chenjiaxing 质押券入库校验流程中数据 20210906 start-->
+	<select id="selectSearchDataWfl" resultType="com.joyintech.service.entrust.etrstandardbond.dto.EtrStandardBondSearchDto">
+		SELECT distinct weep.PORTFOLIO_ID    portfolioId,/*组合代码*/
+						weep.SEC_ACCT_ID     secAcctId,/*证券账户/通道代码*/
+						fp.FINPROD_MARKET_ID finProdId/*金融产品Id*/
+		FROM WFL_ETR_ENTRUST_PLEDGE weep
+				 left join FIN_PRODUCT fp on weep.FINPROD_ID = fp.FINPROD_ID
+		where 1=1
+		<if test="portfolioId != null and !portfolioId.isEmpty()">
+			AND (weep.PORTFOLIO_ID in
+			<foreach collection="portfolioId" item="item" index= "index" open="(" close=")" separator="," >
+				<if test="(index % 998) == 0">
+					null) or weep.PORTFOLIO_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="finProdId != null and !finProdId.isEmpty()">
+			AND (weep.FINPROD_ID in
+			<foreach collection="finProdId" item="item" index= "index" open="(" close=")" separator="," >
+				<if test="(index % 998) == 0">
+					null) or weep.FINPROD_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		<if test="secAcctId != null and !secAcctId.isEmpty()">
+			AND (weep.SEC_ACCT_ID in
+			<foreach collection="secAcctId" item="item" index= "index" open="(" close=")" separator="," >
+				<if test="(index % 998) == 0">
+					null) or weep.SEC_ACCT_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+	</select>
+	<!--add by chenjiaxing 质押券入库校验流程中数据 20210906 end-->
 </mapper>
 
 

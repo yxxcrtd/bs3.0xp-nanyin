@@ -42,14 +42,16 @@ public class SZSEBinaryClient extends QuoteClient {
     @Override
     public void init() {
         bootstrap = SZSEBinaryMarketBootstrap.getInstance(configure, facade);
-        boolean connect = bootstrap.connect();
-        if (connect) {
-            bootstrap.login();
-        }
+        bootstrap.init();
+        bootstrap.connect();
     }
 
     @Override
     public void release() {
-        bootstrap.logout();
+        try {
+            bootstrap.logout();
+        } catch (Exception e) {
+            logger.error("SZSEBinaryClient release exception {}", e);
+        }
     }
 }

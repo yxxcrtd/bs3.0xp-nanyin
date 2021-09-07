@@ -154,7 +154,14 @@ public class PreTrdRepoTrade002Controller extends BaseController {
             trdInvestPersonInfoDto.setSecAcctId(dto.getSecManageAcctId());
 
             model.addAttribute("validPortfolioId",DictCodeListExt1.是否_否.getValue());
-            model.addAttribute("isEntrust",DictCodeListExt1.是否_是.getValue());
+            //add by chenjiaxing 界面放开添加质押券按钮 start
+            if(dto.getBussRepoSecPtl() != null
+                    && dto.getBussRepoSecPtl().getPledgeBondList() != null
+                    && dto.getBussRepoSecPtl().getPledgeBondListDetailed() != null
+                    && dto.getBussRepoSecPtl().getPledgeBondListDetailed().size() > 0){
+                model.addAttribute("isEntrust",DictCodeListExt1.是否_是.getValue());
+            }
+            //add by chenjiaxing 界面放开添加质押券按钮 end
         }
 
         model.addAttribute("noBranchNoValue", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));

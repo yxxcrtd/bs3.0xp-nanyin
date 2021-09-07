@@ -30,6 +30,18 @@ $(function () {
             $('#vouchQuarter').attr("disabled", true);*/
         }
     };
+
+    $("#optimisticWeight").bind('change',function(){
+       if($("#optimisticWeight").val() && $("#basicWeight").val()){
+           $("#pessimismWeight").val(100 - $("#optimisticWeight").val() - $("#basicWeight").val());
+       }
+    });
+
+    $("#basicWeight").bind('change',function(){
+        if($("#optimisticWeight").val() && $("#basicWeight").val()){
+            $("#pessimismWeight").val(100 - $("#optimisticWeight").val() - $("#basicWeight").val());
+        }
+    });
     
     $(function () {
         //初始化画面

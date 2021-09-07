@@ -79,8 +79,8 @@
             ,{field:'ps',visible:false}
             ,{field:'psStr', width:100, title: 'TrdPlanCcyInvestTrade001.ps',sortField:"PS"}
             ,{field:'tradeDate', width:100, title: 'TrdPlanCcyInvestTrade001.tradeDate',type:'date',sortField:"TRADE_DATE"}
-            ,{field:'tradeAmt', width:100, title: 'TrdPlanCcyInvestTrade001.tradeAmt',sortField:"PRIN_AMT"}
-            ,{field:'shareAmt', width:100, title: 'TrdPlanCcyInvestTrade001.shareAmt',sortField:"SHARE_AMT"}
+            ,{field:'tradeAmt', width:100, title: 'TrdPlanCcyInvestTrade001.tradeAmt',sortField:"PRIN_AMT",type:'number', digit:2}
+            ,{field:'shareAmt', width:100, title: 'TrdPlanCcyInvestTrade001.shareAmt',sortField:"SHARE_AMT",type:'number', digit:2}
             ,{field:'ccy',visible:false}
             ,{field:'ccyStr', width:'10%', title: 'TrdPlanCcyInvestTrade001.ccy',sortField:"tpd.CCY"}
             ,{field:'remark', width:'20%', title: 'TrdPlanCcyInvestTrade001.remark',sortable:false}

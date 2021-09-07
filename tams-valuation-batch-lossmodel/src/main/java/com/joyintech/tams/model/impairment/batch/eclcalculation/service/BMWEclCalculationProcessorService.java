@@ -15,7 +15,7 @@ import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculati
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.FinDealPledgeDTO;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
