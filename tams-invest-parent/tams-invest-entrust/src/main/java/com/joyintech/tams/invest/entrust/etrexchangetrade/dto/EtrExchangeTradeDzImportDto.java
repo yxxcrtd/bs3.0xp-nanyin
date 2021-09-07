@@ -144,17 +144,24 @@ public class EtrExchangeTradeDzImportDto extends EtrExchangeTrade001Dto {
     public void setMdate(Date mdate) { super.setMdate(mdate); }
 
     /**
-     * 申报类型代码
+     * @param declaType 申报类型
      */
+    @Number(18)
+    @DictList(link=DictCode.申报类型)
+    public void setDeclaType(String declaType) { super.setDeclaType(declaType); }
+
+/*    *
+     * 申报类型代码
+
     public String getDeclaType() {
         return DictCodeListExt3.申报类型_不指定.getValue();
-    }
+    }*/
 
-    /**
-     * 申报类型名称
-     */
+/*    *
+     * 申报类型名称*/
+
     public String getDeclaTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.申报类型,getDeclaType());
+        return SysDataUtil.getNameFromDataDict(DictCode.申报类型,super.getDeclaType());
     }
 
     /**

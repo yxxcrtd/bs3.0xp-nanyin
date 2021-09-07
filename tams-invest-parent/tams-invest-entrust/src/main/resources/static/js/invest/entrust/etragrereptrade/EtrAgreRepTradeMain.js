@@ -87,6 +87,16 @@
               object.fromEtrExchange = "Y";
               object.busiPs = object.repPs;
               object.assetType2 = "H01";
+              //ZGZGST-1813:提示输入回购期限和回购利率 fuyongsheng 20210906 add start
+              if(!object.term){
+                  Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
+                  return;
+              }
+              if(!object.yield){
+                  Joyin.error(JoyinUtil.getMessage("请输入回购利率"));
+                  return;
+              }
+              //ZGZGST-1813:提示输入回购期限和回购利率 fuyongsheng 20210906 add end
               if(riskdata && riskInterfUrl) {
                   window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object,riskdata,riskMathRedisCallback);
               }

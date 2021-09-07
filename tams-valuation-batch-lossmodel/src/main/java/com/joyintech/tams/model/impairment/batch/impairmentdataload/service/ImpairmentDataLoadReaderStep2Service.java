@@ -77,6 +77,9 @@ public class ImpairmentDataLoadReaderStep2Service {
             ModConfigUseage modConfigUseage = new ModConfigUseage();
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, item);
+            modAssetInfoDto.setSecType(item.getModelAssetType());
+            modAssetInfoDto.setFinprodId(item.getAssetId());
+            modAssetInfoDto.setSecTypeDetail(item.getModelAssetDetailType());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -92,7 +95,8 @@ public class ImpairmentDataLoadReaderStep2Service {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,item.getTradeDate());
-            }else if(configMap.get(item.getAssetId()) != null){
+            }else if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null
+                    || configMap.get(item.getModelAssetType()) != null){
                 ModAssetGradeConfig config = configMap.get(item.getAssetId());
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());

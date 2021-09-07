@@ -38,6 +38,15 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
+					<label class="layui-form-label form-lable">标的股票代码</label>
+					<div class="layui-input-inline input-inline">
+						<input id="stockId" name="stockId"
+							   class="layui-input form-input" allowClear="true"
+							   data-th-placeholder="#{SysCommon.placeholder}"
+							   data-th-value="${entity?.stockId}"/>
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md6">
 					<label class="layui-form-label form-lable">标的公司上市状态</label>
 					<div class="layui-input-inline input-inline">
 						<input type="text" id="stockBordsttus" name="stockBordsttus"
@@ -46,15 +55,6 @@
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.stockBordsttus}"
 							data-th-data-result='${MODEL_BOARD_STATUS}' required />
-					</div>
-				</div>
-				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">标的股票代码</label>
-					<div class="layui-input-inline input-inline">
-						<input id="stockId" name="stockId"
-							class="layui-input form-input" allowClear="true"
-							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-value="${entity?.stockId}"/>
 					</div>
 				</div>
 			</div>

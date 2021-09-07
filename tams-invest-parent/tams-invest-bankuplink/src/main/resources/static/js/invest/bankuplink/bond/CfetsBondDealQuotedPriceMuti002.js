@@ -587,6 +587,23 @@
     }
 
     var reset = function () {
+        $("#CfetsBondDealQuotedPriceMuti002_hidden_entrustId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_portfolioSeries").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_finprodId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_ps").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleType").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_tradeDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleMethod").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_avaNum").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_mySide").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_mySideTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_remark").val("").trigger("change");
+        window.CfetsQuotedCommon001.clearTable();
+        table.clear();
+        layui.form.render(); // reload layui
+        pageModel = PAGE_MODEL_NEW;
     };
 
     function saveRiskResultdata(paraRiskResultdata) {

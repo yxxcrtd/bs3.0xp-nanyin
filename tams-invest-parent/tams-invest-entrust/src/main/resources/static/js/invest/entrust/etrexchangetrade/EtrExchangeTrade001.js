@@ -2424,9 +2424,9 @@
      */
     var isNeedRiskcal = function (){
         //大宗交易平台的意向申报不需要走风险
-        if(currentTab == 'dz' && $("#declaType_dz").val() && $("#declaType_dz").val() == DECLA_TYPE_PRM06) {
-            return false;
-        }
+        // if(currentTab == 'dz' && $("#declaType_dz").val() && $("#declaType_dz").val() == DECLA_TYPE_PRM06) {
+        //     return false;
+        // }
         //质押券入库和出库不需要走风险试算
         ps = $("#ps_" + currentTab).val();
         if(ps == PS_T68 || ps == PS_T69) {

@@ -76,6 +76,7 @@
                 title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.portfolioName'
             }
             , {field: 'secAcctName', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId'}
+            , {field: 'secAcctId', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId',visible: false}
             , {field: 'settleSpreedStr', width: 90, title: '清算速度', sortField: "settleSpreed"}
             , {
                 field: 'psStr',

@@ -144,6 +144,9 @@
                 if (param[0].price) {
                     $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
                 }
+                if (param[0].secAcctId) {
+                    $("#secAcctId").textSelect('setValue', param[0].secAcctId);//委托代码
+                }
                 /*添加限制*/
                 $("#CfetsRepoDealQuotedPrice002_entrustId").attr("disabled",true);
                 $("#CfetsRepoDealQuotedPrice002_portfolioName").attr("disabled",true);
@@ -604,6 +607,7 @@
     };
 
     $(function () {
+        $("#secAcctId").attr("disabled",true);
     	if(dialogueRecord){
     		$("#CfetsBondDealQuotedPrice002_dialogueRecord").html(dialogueRecord);
     		$("#dialogueRecord_div").show();

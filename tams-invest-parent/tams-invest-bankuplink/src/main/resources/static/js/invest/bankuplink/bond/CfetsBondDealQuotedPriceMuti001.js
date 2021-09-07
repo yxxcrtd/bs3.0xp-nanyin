@@ -588,23 +588,19 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!$("#CfetsBondDealQuotedPriceMuti001_unitCprice").val()||!$("#CfetsBondDealQuotedPriceMuti001_hidden_finprodId").val()
-            ||!$('#CfetsBondDealQuotedPriceMuti001_tradeDate').val()){
-            return;
-        }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: $("#CfetsBondDealQuotedPriceMuti001_unitCprice").val(),
-                finprodId: $("#CfetsBondDealQuotedPriceMuti001_hidden_finprodId").val(),
-                vdate:$('#CfetsBondDealQuotedPriceMuti001_tradeDate').val()
-            }, function (result) {
-                if (result ) {
-                    document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
-                        JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-                }
+        if ($("#CfetsBondDealQuotedPriceMuti001_hidden_finprodId").val() && $("#CfetsBondDealQuotedPriceMuti001_unitCprice").val()) {
+            var paramObj = {};
+            paramObj.finprodId = $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val();
+            if($('#CfetsBondDealQuotedPriceMuti001_finprodId').val()){
+                paramObj.finprodMarketId = $('#CfetsBondDealQuotedPriceMuti001_finprodId').val();
+            }
+            paramObj.unitCprice = $("#CfetsBondDealQuotedPriceMuti001_unitCprice").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
             });
+        } else {
+            $("#deviationDegree").text("");
+        }
     }
 
 
@@ -625,6 +621,30 @@
                     $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(result.data.finprodId);
                     // 区分画面打开模式
                     var quotaPageModel = $('#CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel').val();
+                    if (result.data.calculateField){
+                        if (result.data.calculateField === calcTypeUnitCprice){
+                            $("input[name=calculateField][value=01]").prop("checked","true");
+                            $('#calculateField_span_unitCprice').css({'color':'blue'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }else if (result.data.calculateField === calcTypeYield){
+                            $("input[name=calculateField][value=02]").prop("checked","true");
+                            $('#calculateField_span_yield').css({'color':'blue'});
+                            $('#calculateField_span_unitCprice').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }else if (result.data.calculateField === calcTypeExecYield){
+                            $("input[name=calculateField][value=03]").prop("checked","true");
+                            $('#calculateField_span_exerYield').css({'color':'blue'});
+                            $('#calculateField_span_unitCprice').css({'color':'black'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                        }else{
+                            $("input[name=calculateField][value=01]").prop("checked","true");
+                            $('#calculateField_span_unitCprice').css({'color':'blue'});
+                            $('#calculateField_span_yield').css({'color':'black'});
+                            $('#calculateField_span_exerYield').css({'color':'black'});
+                        }
+                        layui.form.render();
+                    }
 
                     // 做市方回复
                     if (quotaPageModel != 'marketResponse'){
@@ -782,6 +802,34 @@
     // });
 
     var reset = function () {
+        $("#CfetsBondDealQuotedPriceMuti001_hidden_entrustId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_portfolioSeries").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_finprodId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_ps").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_settleType").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_tradeDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_responseAmt").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_settleMethod").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_avaNum").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_unitCprice").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_unitInt").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_unitFprice").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_intAmt").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_exerYield").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_matureYield").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_fpriceAmt").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_parValue").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_parValueAmt").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_mySide").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_mySideTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_counterId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_counterTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti001_remark").val("").trigger("change");
+        window.CfetsQuotedCommon001.clearTable();
+        layui.form.render(); // reload layui
+        pageModel = PAGE_MODEL_NEW;
     };
 
     function getBaseRiskdata(item) {

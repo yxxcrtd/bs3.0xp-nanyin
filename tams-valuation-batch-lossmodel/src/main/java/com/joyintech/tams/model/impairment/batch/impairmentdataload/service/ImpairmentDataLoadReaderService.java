@@ -114,6 +114,8 @@ public class ImpairmentDataLoadReaderService {
             // 定义 查询参数.资产信息
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, entity);
+            modAssetInfoDto.setSecType(entity.getSecTypeModel());
+            modAssetInfoDto.setSecTypeDetail(entity.getSecDetailTypeModel());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -135,7 +137,8 @@ public class ImpairmentDataLoadReaderService {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,platDate);
-            }else if(configMap.get(entity.getFinprodId()) != null){
+            }else if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null
+                || configMap.get(entity.getSecTypeModel()) != null){
                 // 一般资产评级配置
                 ModAssetGradeConfig config = configMap.get(entity.getFinprodId());
                 //定义 配置流水号 = LGD参数Dto.流水号

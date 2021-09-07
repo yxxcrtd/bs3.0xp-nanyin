@@ -88,7 +88,7 @@ $(function() {
         }
         var data = {selectedItem: selArr, operateType:type};
         Joyin.ajaxJson(basePath + 'model/impairment/phaseparameter/ModStagePara001/setStageParaSwitch', data, function (result) {
-
+            table.reload();
         });
 
 

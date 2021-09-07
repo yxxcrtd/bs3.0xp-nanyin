@@ -28,7 +28,7 @@
     <sql id="delCommonSql">
         <where>
             <if test="executeDate != null and executeDate != ''">
-                and temp.CDATE  = to_date(#{executeDate,'yyyy-MM-dd'})
+                and temp.CDATE  = to_date(#{executeDate},'yyyy-MM-dd')
             </if>
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
@@ -56,7 +56,7 @@
             CREDIT_USING_SERIES temp
         <where>
             <if test="executeDate != null and executeDate != ''">
-                and temp.CDATE  = to_date(#{executeDate,'yyyy-MM-dd'})
+                and temp.CDATE  = to_date(#{executeDate},'yyyy-MM-dd')
             </if>
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
@@ -83,7 +83,7 @@
             CREDIT_USING_AST temp
         <where>
             <if test="executeDate != null and executeDate != ''">
-                and temp.CDATE  = to_date(#{executeDate,'yyyy-MM-dd'})
+                and temp.CDATE  = to_date(#{executeDate},'yyyy-MM-dd')
             </if>
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
@@ -113,7 +113,7 @@
         CREDIT_USING_CUSTOMER temp
         <where>
             <if test="executeDate != null and executeDate != ''">
-                and temp.CDATE  = to_date(#{executeDate,'yyyy-MM-dd'})
+                and temp.CDATE  = to_date(#{executeDate},'yyyy-MM-dd')
             </if>
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
@@ -143,7 +143,7 @@
         CREDIT_USING_CUSTOMER_MST temp
         <where>
             <if test="executeDate != null and executeDate != ''">
-                and temp.CDATE  = to_date(#{executeDate,'yyyy-MM-dd'})
+                and temp.CDATE  = to_date(#{executeDate},'yyyy-MM-dd')
             </if>
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
@@ -228,16 +228,16 @@
 
     <resultMap id="TrdResultMap" type="com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto" >
         <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
-        <result column="ENTRUST_ID" property="fileName" jdbcType="VARCHAR" />
-        <result column="FINPROD_TYPE2" property="path" jdbcType="VARCHAR" />
-        <result column="PS" property="businessId" jdbcType="VARCHAR" />
-        <result column="FINPROD_ID" property="createUser" jdbcType="VARCHAR" />
-        <result column="COUNTER_ID" property="createTime" jdbcType="VARCHAR" />
-        <result column="CCY" property="updateUser" jdbcType="VARCHAR" />
-        <result column="TRADE_AMT" property="updateTime" jdbcType="DECIMAL" />
-        <result column="SHARE_AMT" property="updateTime" jdbcType="DECIMAL" />
-        <result column="UNIT_CPRICE" property="updateTime" jdbcType="DECIMAL" />
-        <result column="TRADE_DATE" property="updateTime" jdbcType="DATE" />
+        <result column="ENTRUST_ID" property="entrustId" jdbcType="VARCHAR" />
+        <result column="FINPROD_TYPE2" property="finprodType2" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="TRADE_AMT" property="tradeAmt" jdbcType="DECIMAL" />
+        <result column="SHARE_AMT" property="shareAmt" jdbcType="DECIMAL" />
+        <result column="UNIT_CPRICE" property="netPrice" jdbcType="DECIMAL" />
+        <result column="TRADE_DATE" property="tradeDate" jdbcType="DATE" />
         <result column="isBottom" property="isBottom" jdbcType="VARCHAR" />
         <collection column="{skuId=TRADE_ID}" property="pledgeBondInfoDtoList" ofType="com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto" select="listFinDealPledges" >
         </collection>
