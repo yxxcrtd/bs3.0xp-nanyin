@@ -63,17 +63,10 @@ public class ValProfitQuery002Service extends CommonExportService<ValProfitQuery
 
         String[] strArr = reportDate.split(",")[0].split("-");
         if (DictCodeListExt1.报表期限类型_年报.getValue().equals(reportTermType)) {// 年底
-        	//update yanya 20190929 年报原控件类型yyyy更为到天yyyy-MM-dd 利润表年报变更为选择具体天数时，增加参数类型区分，后端区别处理日期类型
-            if(StringUtil.isNotEmpty(yearType) && "ValProfitQuery001".equals(yearType)) {
-                year = Integer.valueOf(strArr[0]);
-                month += Integer.valueOf(strArr[1]);
-                day = Integer.valueOf(strArr[2]);
-            }else {
-                year = Integer.valueOf(strArr[0]);
-                month += 12;
-                day = 31;
-            }
-            
+            year = Integer.valueOf(strArr[0]);
+            month += 12;
+            day = 31;
+
         }
         if (DictCodeListExt1.报表期限类型_半年报.getValue().equals(reportTermType)) {
             year = Integer.valueOf(strArr[0]);
