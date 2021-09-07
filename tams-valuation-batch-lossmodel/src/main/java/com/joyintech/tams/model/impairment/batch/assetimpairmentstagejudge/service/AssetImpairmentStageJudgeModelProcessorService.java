@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.serv
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
@@ -126,6 +127,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             msg = "【资产减值阶段判断批处理】：三阶段评级标准判断异常";
             impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                 finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
+            e.printStackTrace();
             return null;
         }
 
@@ -262,7 +264,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             return null;
         }
 
-        // 第6步骤：key：二阶段_绝对_公司评级信息低于（含）P2_01_03
+        // 第6.1步骤：key：二阶段_绝对_公司评级信息低于（含）P2_01_03
         itemKey = "P2_01_03";
         try {
             itemValue = (String) param.get(itemKey);
@@ -283,6 +285,11 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                 finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
+        }
+
+        // 6.2 债项类资产阶段判断，债项评级在“C”以上（不含），主体评级在“C” 级以下（含）的债券
+        if(DictCodeListExt1.证券品种_债券.getValue().equals(resultProcess.getModelAssetType())){
+
         }
 
         //第7步骤：key：二阶段_绝对_本金逾期超过天数（含）P2_01_01
@@ -399,7 +406,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         }
         int ra = Integer.valueOf(r1.replaceAll("^(0+)", ""));
         int rs = Integer.valueOf(r2.replaceAll("^(0+)", ""));
-        return rs - ra;
+        return ra - rs;
     }
 
     // 组装日志上下文信息
