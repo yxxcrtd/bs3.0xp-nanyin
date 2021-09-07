@@ -79,7 +79,11 @@ public class StandardInfoRecjxService {
     	//查询信息
     	StlCapacctInfo StlCapacctInfo = valFinProductAcctBatchMapper.getStlCapacctInfo(dto.getActNo(),dto.getCcy());
     	//银行账户名
-    	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
+		if(StlCapacctInfo != null){
+			jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
+			jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
+		}
+//    	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
     	//账套名称
     	jjBkCashAcctDto.setBookset_id(booksetId);
     	/**modify by wujie on 20210429
@@ -87,7 +91,7 @@ public class StandardInfoRecjxService {
     	jjBkCashAcctDto.setBank_dep(StlCapacctInfo.getBankDep());
 		 **/
     	//货币
-    	jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
+//    	jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
         //账户   	
     	jjBkCashAcctDto.setAcc_type(dto.getActType());
     	 
