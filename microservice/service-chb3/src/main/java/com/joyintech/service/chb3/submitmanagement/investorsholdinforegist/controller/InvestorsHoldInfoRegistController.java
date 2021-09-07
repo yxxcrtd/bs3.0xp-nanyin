@@ -79,6 +79,11 @@ public class InvestorsHoldInfoRegistController{
 		return page;
 	}
 
+	@PostMapping("queryForHoldInfoRegist")
+	public List<InvestorsHoldInfoRegist001Dto> queryForHoldInfoRegist(@RequestBody Map<String, Object> param) {
+		return investorsHoldInfoRegist001Service.queryForHoldInfoRegist(param);
+	}
+
 	/**
 	 *
 	 * 导入

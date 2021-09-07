@@ -97,14 +97,20 @@
             ON E.FINPROD_ID = B.BUSI_ID     
         WHERE
             (
-                NVL(E.CAPI_INCOME_FEATURE, D.CAPI_INCOME_FEATURE) = A.CAPI_INCOME_FEATURE 
+             NVL(E.CAPI_INCOME_FEATURE, D.CAPI_INCOME_FEATURE) = A.CAPI_INCOME_FEATURE 
                 OR 
                 A.CAPI_INCOME_FEATURE IS NULL
             )
-            AND B.BOK_DETAIL_ID IN 
-            <foreach collection="listBokDetailId" item="item" open="( " close=" )" separator=",">
+            
+            AND (B.BOK_DETAIL_ID IN
+            <foreach collection="listBokDetailId" item="item" index="index" open="( " close=" )" separator=",">
+                <if test="(index % 998) == 0">
+                    null) OR B.BOK_DETAIL_ID in (
+                </if>
                 #{item}
             </foreach>
+            )
+            
             AND SCH_ID IN (
                 SELECT 
                     SCHEME_ID

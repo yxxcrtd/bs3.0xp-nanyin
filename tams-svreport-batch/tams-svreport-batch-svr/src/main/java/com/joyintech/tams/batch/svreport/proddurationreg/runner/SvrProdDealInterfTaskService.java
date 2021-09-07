@@ -55,9 +55,9 @@ public class SvrProdDealInterfTaskService extends BatchBaseService {
             SysBatchgrpExecInfo batchExecuteDetail = this.getBatchExecuteDetail();
             List<String> prodList = new ArrayList<String>();
             // 数据接入不再支持单产品接入
-//            if (StringUtil.isNotEmpty(batchExecuteDetail.getPrdGroupSeqNo())) {
-//                prodList = this.getProductIdList();
-//            }
+            if (StringUtil.isNotEmpty(batchExecuteDetail.getPrdGroupSeqNo())) {
+                prodList = this.getProductIdList();
+            }
             mainService.generatePrdDealData(batchExecuteInfo.getExecuteDate(),prodList);
             result.setStatus(BatchStatus.COMPLETED);
         }

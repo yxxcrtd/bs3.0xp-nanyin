@@ -387,7 +387,7 @@ public class EquityBusiInfoExportCommonService extends CommonExportService<Equit
             }
         }
 
-        String outFileName = CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE  + System.currentTimeMillis() + fileNameIndex + sum + fileType;
+        String outFileName = CHB_EQUDET_SUB_NAME + GlobalConstant.UNDER_LINE +sum + GlobalConstant.UNDER_LINE + System.currentTimeMillis() + fileNameIndex +  fileType;
         String tmpPath = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_TMP_PATH);
         File file = new File(tmpPath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {

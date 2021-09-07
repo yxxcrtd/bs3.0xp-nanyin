@@ -8,7 +8,6 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.InterfFile;
-import com.joyintech.tams.common.base.dao.SaleCustSvrreportMapper;
 import com.joyintech.tams.common.base.entity.ChbPrdDeal;
 import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
 import com.joyintech.tams.common.svreport.chb.constant.ChbInterfConfig;
@@ -17,7 +16,6 @@ import com.joyintech.tams.common.svreport.chb.util.ChbInterfUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dao.SaleCustSvrreportVoMapper;
 import com.joyintech.tams.common.svreport.salecustsvrreportfordeal.dto.SaleCustSvrreportVo;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.interf.chb.conf.DataSourceType;
 import com.joyintech.tams.svreport.interf.chb.proddeal.dao.ChbPrdDealInterfMapper;
@@ -98,9 +96,6 @@ public class ProdDealInterfService extends BaseService{
 
 	@Autowired
 	private ChbPrdBaseinfoInterfMapper chbPrdBaseinfoInterfMapper;
-	
-	@Autowired
-	private SaleCustSvrreportMapper saleCustSvrreportMapper;
 
 	@Autowired
 	private SaleCustSvrreportVoMapper saleCustSvrreportVoMapper;
@@ -156,10 +151,26 @@ public class ProdDealInterfService extends BaseService{
 	* @author: 王冠/wangguan
 	* @date: 2019年9月27日 下午3:50:20 
 	*/
-	public String generatePrdDealDataFx(Date batchTime) {	
+	public String generatePrdDealDataFx(Date batchTime,List<String> prodIdList) {	
         //数据从文件中读取入库
 		logger.debug("上游产品存续期交易批处理开始:----开始------" +  df.format(new Date()));
 		List<Map<String, String>> listData = new ArrayList<Map<String,String>>();
+		//add by dengyu 20210602 begin
+		if(prodIdList!=null){
+			List<String> tmp =new ArrayList<>();
+			 Iterator<String> iterator = prodIdList.iterator();
+			 while(iterator.hasNext()){
+				 String key = iterator.next();
+				 if(key.startsWith("F16_")){
+					 iterator.remove();
+					 tmp.add(key.substring(4));
+					}
+			 }
+			 prodIdList.addAll(tmp);
+			 tmp.clear();
+		}
+		//add by dengyu 20210602 end
+		
 		List<SaleCustSvrreportVo> resultList = saleCustSvrreportVoMapper.getSaleCustSvrreportOfFx(batchTime);
 		if(!resultList.isEmpty()) {
 			for(SaleCustSvrreportVo deal : resultList) {

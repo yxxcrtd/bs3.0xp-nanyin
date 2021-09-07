@@ -59,6 +59,15 @@ public interface CnBondInterfMapper {
      * @since 1.0
      */
     int updateChbEquDetSubmitStatus(ChbSubmitStatus status);
+    /**
+     * 更新投资者明细反馈状态
+     *
+     * @param status 中债报送结果
+     * @return 更新结果
+     * @see
+     * @since 1.0
+     */
+    int mergerChbEquDetSubmitStatus(List<ChbSubmitStatus> dataList);
 
     /**
      * 登录中债直连报送数据
@@ -95,4 +104,14 @@ public interface CnBondInterfMapper {
      * @since 1.0
      */
     String selectOrgCodeByRegistBankCode(Map<String, Object> paramMap);
+    
+    /**
+     * 根据登记银行代码获取机构代码
+     *
+     * @param paramMap 查询参数
+     * @return 机构代码
+     * @see
+     * @since 1.0
+     */
+    List<String> selectReportFile(Map<String, Object> paramMap);
 }

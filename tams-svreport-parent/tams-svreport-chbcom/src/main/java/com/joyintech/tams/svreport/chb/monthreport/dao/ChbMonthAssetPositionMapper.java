@@ -149,4 +149,14 @@ public interface ChbMonthAssetPositionMapper {
      */
     List<ChbMonthAssetPosition> selectChlDealByCommon(ChbMonthAssetPosition pos);
     
+    /**
+     * 查询穿透资产信息调用共同方法
+     * <功能详细描述>
+     * @param pos
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<ChbMonthAssetPosition> selectPlanInfoListByCommon(ChbMonthAssetPosition pos);
+    
 }
