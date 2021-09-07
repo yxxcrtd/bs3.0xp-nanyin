@@ -1575,6 +1575,30 @@
         }
     }
 
+    //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start
+    /**
+     * 净值偏离度
+     */
+    function calDeviationDegree() {
+        var price = $("#price_" + currentTab).val();
+        var finprodId = $("#finprodId_" + currentTab).val();
+        var secId = $("#secId_" + currentTab).val();
+        if (secId && price) {
+            var paramObj = {};
+            paramObj.finprodId = secId;
+            if(finprodId){
+                paramObj.finprodMarketId = finprodId
+            }
+            paramObj.unitCprice = price;
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
+            });
+        } else {
+            $("#deviationDegree").text("");
+        }
+    }
+    //add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end
+
     /**
      * 联动可用持仓信息
      */
@@ -3158,6 +3182,12 @@
         // 金融产品类型（投管）
         $("#finprodType2_jj,#finprodType2_dz,#finprodType2_gd").change(function() {
             finprodType2Change();
+            //add by chenjiaxing 债券竞价交易添加偏离度 20210907 start
+            if($("#finprodType2_" + currentTab).val() == FINPROD_TYPE_TG_F01 && currentTab == 'jj'){
+                document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
+                    '0.0000%' +"</span>";
+            }
+            //add by chenjiaxing 债券竞价交易添加偏离度 20210907 end
         });
         // 资金账户
         $("#acctNo_jj,#acctNo_dz,#acctNo_gd").change(function() {
@@ -3217,6 +3247,9 @@
             }
             calcPriceAndYield();
             calCanBuyAmount();
+            if(currentTab == 'jj' && $("#price_jj").val()){
+                calDeviationDegree();
+            }
         });
         // 委托方向变更时
         $("#ps_jj,#ps_dz,#ps_gd").change(function() {

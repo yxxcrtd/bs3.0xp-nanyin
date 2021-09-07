@@ -452,4 +452,19 @@ public class EtrExchangeTradeController {
     public List<WflEtrEntrust> selectWflEntrust(@RequestBody Map<String,Object> map){
         return etrExchangeTradeService.selectWflEntrust(map);
     }
+
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 start
+    /**
+     * 1.6计算偏离度
+     *
+     * @param param 画面参数
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("calcDeviationDegree")
+    public String calcDeviationDegree(@RequestBody Map<String, Object> param) {
+        return etrExchangeTradeService.calcDeviationDegree(param);
+    }
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 end
 }
