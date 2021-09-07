@@ -194,7 +194,7 @@
             object.calculateField = calcField;
             object.finprodId = finprodId;
             object.avaNum = new BigNumber(object.avaNum).multipliedBy(new BigNumber(10000));
-            object.settleDate = object.tradeDate;
+            // object.settleDate = object.tradeDate;
 
             Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/calcAmt', object, function(result){
                 if (result.data){
@@ -605,6 +605,7 @@
 
 
     var setDhDiv = function(entrustIdList){
+        reset();
         $("#CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel").val('new');
         if(entrustIdList){
             $("#CfetsBondDealQuotedPriceMuti001_hidden_entrustId").val(entrustIdList).trigger('change');

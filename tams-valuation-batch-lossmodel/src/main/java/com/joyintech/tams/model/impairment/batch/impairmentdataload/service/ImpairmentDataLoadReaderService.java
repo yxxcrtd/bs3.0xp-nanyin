@@ -140,7 +140,15 @@ public class ImpairmentDataLoadReaderService {
             }else if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null
                 || configMap.get(entity.getSecTypeModel()) != null){
                 // 一般资产评级配置
-                ModAssetGradeConfig config = configMap.get(entity.getFinprodId());
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null){
+                    config = configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(entity.getSecTypeModel());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型
