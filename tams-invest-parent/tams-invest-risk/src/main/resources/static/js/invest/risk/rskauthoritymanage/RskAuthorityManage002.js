@@ -192,26 +192,38 @@ $(function() {
     	cols:[
              // 资产类型改为授权类型 modify by renping 2019-08-06  end
              {field:'assetType' , title: 'RskAuthorityManage001.assetType',width:200 , edit:true
-            	 ,editOption:{type:'select',childrenIds:'assetSecType,tradeDirection,tradeMarket',id:"assetType",formatoption:true,result:RSK_AUTHORIZE_TYPE1}, sortable:false
+            	 ,editOption:{type:'select',childrenIds:'assetSecType,tradeDirection,tradeMarket',id:"assetType",formatoption:false,result:RSK_AUTHORIZE_TYPE1}, sortable:false
              }
-             ,{field:'assetSecType' ,title: 'RskAuthorityManage001.assetSecType', width:200 ,edit:true,
-                render: function (data, type, row, meta) {
-                    return row.assetSecTypeStr;
-                }
-            	 ,editOption:{type:'select',parentIds:'assetType',id:"assetSecType",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllAssetSecType')}, sortable:false
-             }
-             ,{field:'tradeMarket' ,title: 'RskAuthorityManage001.tradeMarket', width:200 ,edit:true,
-                render: function (data, type, row, meta) {
-                    return row.tradeMarketStr;
-                }
-            	 ,editOption:{type:'select',parentIds:'assetType',id:"tradeMarket",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAlltradeMarket')}, sortable:false
-             }
-             ,{field:'tradeDirection',title: 'RskAuthorityManage001.tradeDirection',width:200 , edit:true,
-                render: function (data, type, row, meta) {
-                    return row.tradeDirectionStr;
-                }
-            	 ,editOption:{type:'select',parentIds:'assetType',id:"tradeDirection",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllPs')}, sortable:false
-             }
+             // ,{field:'assetSecType' ,title: 'RskAuthorityManage001.assetSecType', width:200 ,edit:true,
+             //    render: function (data, type, row, meta) {
+             //        return row.assetSecTypeStr;
+             //    }
+            	//  ,editOption:{type:'select',parentIds:'assetType',id:"assetSecType",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllAssetSecType')}, sortable:false
+             // }
+            // 授权类型二级
+           ,{field:'assetSecType' , title: 'RskAuthorityManage001.assetSecType',width:200 , edit:true
+                ,editOption:{type:'select',parentIds:'assetType',id:"assetSecType",formatoption:false,result:RSK_AUTHORIZE_TYPE2}, sortable:false
+            }
+             // ,{field:'tradeMarket' ,title: 'RskAuthorityManage001.tradeMarket', width:200 ,edit:true,
+             //    render: function (data, type, row, meta) {
+             //        return row.tradeMarketStr;
+             //    }
+            	//  ,editOption:{type:'select',parentIds:'assetType',id:"tradeMarket",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAlltradeMarket')}, sortable:false
+             // }
+            // 交易场所
+            ,{field:'tradeMarket' , title: 'RskAuthorityManage001.tradeMarket',width:200 , edit:true
+                ,editOption:{type:'select',parentIds:'assetType',id:"tradeMarket",formatoption:true,result:TRADE_PLACE}, sortable:false
+            }
+             // ,{field:'tradeDirection',title: 'RskAuthorityManage001.tradeDirection',width:200 , edit:true,
+             //    render: function (data, type, row, meta) {
+             //        return row.tradeDirectionStr;
+             //    }
+            	//  ,editOption:{type:'select',parentIds:'assetType',id:"tradeDirection",formatoption:true,url:JoyinUtil.getRealPath('invest/risk/rskauthoritymanage/RskAuthorityManage002/makeAllPs')}, sortable:false
+             // }
+            // 交易方向
+            ,{field:'tradeDirection' , title: 'RskAuthorityManage001.tradeDirection',width:200 , edit:true
+                ,editOption:{type:'select',parentIds:'assetType',id:"tradeDirection",formatoption:true,result:PS}, sortable:false
+            }
              // 资产类型改为授权类型 modify by renping 2019-08-06  end
              //------------modify by jjpei 20190710------隐藏授权类型，且默认为授权-------------
              ,{field:'authorizeType' ,title: 'RskAuthorityManage001.authorizeType',visible:false, edit:true

@@ -449,9 +449,12 @@ public class CommonBusinessService extends BaseService {
         // 资产类型改为授权类型 modify by renping 2019-08-06  start
         // 根据资产类型取得授权类型 
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
-        if (StringUtil.equals(DictCodeListExt2.平安资产类型_债券借贷.getValue(), assetType)){
-            finProductTypeConfig.setOutputValue1("12");
-        }
+        // region 映射表中存在F12 --> SQ_14
+//        if (StringUtil.equals(DictCodeListExt2.平安资产类型_债券借贷.getValue(), assetType)){
+//            finProductTypeConfig.setOutputValue1("12");
+//        }
+
+        // end region
         Map<String, Object> authorizeLimitAmt = null;
         if(finProductTypeConfig!= null && StringUtil.isNotEmpty(finProductTypeConfig.getOutputValue1())){
             authorizeLimitAmt = getAuthorizeLimitAmt(LoginUserUtil.getUserName(), finProductTypeConfig.getOutputValue1(), finProductTypeConfig.getOutputValue2(),
@@ -691,9 +694,12 @@ public class CommonBusinessService extends BaseService {
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
         Map<String, Object> authorizeLimitAmt = null;
-        if (StringUtil.equals(DictCodeListExt2.平安资产类型_债券借贷.getValue(), assetType)){
-            finProductTypeConfig.setOutputValue1("12");
-        }
+        // region 映射表中存在F12 --> SQ_14
+//        if (StringUtil.equals(DictCodeListExt2.平安资产类型_债券借贷.getValue(), assetType)){
+//            finProductTypeConfig.setOutputValue1("12");
+//        }
+
+        // end region
         if (finProductTypeConfig!= null && StringUtil.isNotEmpty(finProductTypeConfig.getOutputValue1())) {
             authorizeLimitAmt = getAuthorizeLimitAmt(LoginUserUtil.getUserName(),
                     finProductTypeConfig.getOutputValue1(), finProductTypeConfig.getOutputValue2(),
@@ -782,8 +788,12 @@ public class CommonBusinessService extends BaseService {
         if (portfolio != null) {
             return false;
         }
+
+        // 获取配置映射
+        FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(null, assetType);
         
-        Map<String, Object> authorizeLimitAmtMap = getAuthorizeLimitAmt(LoginUserUtil.getUserName(), assetType, assetSecType,
+        Map<String, Object> authorizeLimitAmtMap = getAuthorizeLimitAmt(LoginUserUtil.getUserName()
+                , finProductTypeConfig.getOutputValue1(), finProductTypeConfig.getOutputValue2(),
             tradeMarket, tradeDirection, "01");
 
         if (authorizeLimitAmtMap != null && !DictCodeList.授权类型_授权.getValue().equals(authorizeLimitAmtMap.get("AUTHORIZE_TYPE"))) {
