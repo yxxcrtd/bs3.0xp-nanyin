@@ -7,7 +7,7 @@
         A.ELEMENTS_VALUE AS itemValue
         FROM MOD_STAGE_PARA A
         WHERE 1=1
-        AND A.STATUS = 'Y'
+        AND A.STATUS = '01'
     </select>
 
     <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.common.base.entity.ModEclResultProcess">
