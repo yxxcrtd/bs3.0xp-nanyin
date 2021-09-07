@@ -123,7 +123,10 @@ $(function () {
      * 新建
      */
     function showDialog() {
-        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/init', '45%', '75%',function(){table.reload();});
+        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/init', '45%', '75%',
+            {pageModel:PAGE_MODEL_NEW},function(){
+            table.reload();
+        });
     }
 
     /**
