@@ -38,7 +38,13 @@
             obj.counterId = $('#etrInvestPersonInfo_counterId').val();
             // add by zhangrui1 交易对手影响风险试算 end
             //---add by 裴家俊  2019/03/20  添加资产类型条件---end-----
-            var object = {tradeDirection:['ps','EtrPlanAssetN002.ps'],portfolioCode:['portfolioId','EtrPlanAssetN002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetN002.entrustAmt'],assetType:['assetType1','EtrPlanAssetN002.assetType1'],data:obj}
+            // ZGZGST-2218:根据指令金额和指令份额必选情况分别展示提示语 fuyongsheng 20210907 edit start
+            if($("#entrustAmt").attr("required")==="required"){
+                var object = {tradeDirection:['ps','EtrPlanAssetN002.ps'],portfolioCode:['portfolioId','EtrPlanAssetN002.portfolioId'],tradeAmount:['entrustAmt','EtrPlanAssetN002.entrustAmt'],assetType:['assetType1','EtrPlanAssetN002.assetType1'],data:obj}
+            }else{
+                var object = {tradeDirection:['ps','EtrPlanAssetN002.ps'],portfolioCode:['portfolioId','EtrPlanAssetN002.portfolioId'],tradeAmount:['entrustNum','EtrPlanAssetN002.entrustNum'],assetType:['assetType1','EtrPlanAssetN002.assetType1'],data:obj}
+            }
+            // ZGZGST-2218:根据指令金额和指令份额必选情况分别展示提示语 fuyongsheng 20210907 edit end
         }
         // add by zhangrui1 交易对手影响风险试算 start
         object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
