@@ -1654,7 +1654,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                         && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()))
                     || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        && (DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        ||DictCodeList.回购类型_质押式回购.getValue().equals(assetType2))
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
                     || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         /* && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) */
