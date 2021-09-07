@@ -1751,9 +1751,9 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             return outputDto;
         }
         //处理 当授信对象为金额时 申购/认购 的待释放份额为0
-        if(BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())
-                &&(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
-                ||DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))){
+        if (creditLinesAst!=null && BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())
+                && (DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
+                || DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))) {
             inputDto.setShareAmt(BigDecimal.ZERO);
         }
         //处理 净值型、货币型、基金的申购/认购确认
