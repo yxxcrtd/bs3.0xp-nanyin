@@ -81,6 +81,14 @@ public class FinProdService extends BaseService<FinOptionTargetDto> {
     public FinOptionTargetDto getFinprodcodebyId(String code){
         return finOptionTargetMapper.getFinprodcodebyId(code);
     }
+    /**
+     * 根据查询关键字获取期权标的信息
+     * @param serchInfo
+     * @return
+     */
+    public FinOptionTargetDto getFinprodBySearchInfo(String serchInfo){
+        return finOptionTargetMapper.getFinprodcodebySerchInfo(serchInfo);
+    }
 
     /**
      * 保存标的信息
