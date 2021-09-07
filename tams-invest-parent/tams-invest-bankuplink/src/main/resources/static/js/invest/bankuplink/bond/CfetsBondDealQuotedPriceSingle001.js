@@ -885,7 +885,7 @@
         $("#CfetsBondDealQuotedPriceSingle001_mySideTrader").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterId").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterTrader").val("").trigger("change");
-        $("#CfetsBondDealQuotedPriceSingle001_remark").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_remark").val("").trigger("change");
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };
