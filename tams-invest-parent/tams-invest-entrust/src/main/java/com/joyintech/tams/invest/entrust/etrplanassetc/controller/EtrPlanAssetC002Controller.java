@@ -100,6 +100,9 @@ public class EtrPlanAssetC002Controller extends BaseController {
             model.addAttribute("riskTrialRetDto", JsonUtils.object2Json(dto.getRiskTrialRetDto()));
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",dto.getWorkflowId());
+            // ZGZGST-2045:审批页面展示流程中的风险试算结果需要workflowId fuyongsheng 20210907 add start
+            model.addAttribute("workflowId", workflowId);
+            // ZGZGST-2045:审批页面展示流程中的风险试算结果需要workflowId fuyongsheng 20210907 add end
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             EtrPlanAssetCDto dto = etrPlanAssetCService.selectByKey(entrustId);
