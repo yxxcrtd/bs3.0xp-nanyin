@@ -22,7 +22,8 @@
 	                 <select type="text" id="curveCode" name="curveCode" class="layui-input form-input input-select"  
 
 		                     placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                             data-th-data-result="${CURVE_CODE}" allowClear="true"
+                             data-th-data-url="@{/common/basicdata/marketdata/yieldcurveinfo/ComYieldCurveInfo001/getCurveName}"
+                             allowClear="true"
 		                     formatoption = "true">
                         <option></option>
                      </select>
