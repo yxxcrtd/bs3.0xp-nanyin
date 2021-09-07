@@ -631,6 +631,15 @@ public class TradeCommonService extends BaseService {
                 if (lastPrice == null){
                     lastPrice = BigDecimal.ONE;
                 }
+                if("24".equals(inputDto.getType10())){
+                    if ("01".equals(inputDto.getTrmFundType())) {
+                        lastPrice = new BigDecimal(100);
+                    }else if("05".equals(inputDto.getTrmFundType())){
+                        lastPrice = new BigDecimal(0.01);
+                    }else{
+                        lastPrice = BigDecimal.ONE;
+                    }
+                }
                 creditLinesInputDto.setNetPrice(lastPrice);
                 creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),lastPrice,2));
             }

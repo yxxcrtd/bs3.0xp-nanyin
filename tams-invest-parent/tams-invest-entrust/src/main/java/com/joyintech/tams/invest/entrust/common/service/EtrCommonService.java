@@ -1020,6 +1020,17 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if (lastPrice == null){
                     lastPrice = BigDecimal.ONE;
                 }
+                if((StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                        || StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs()))
+                        && "24".equals(inputDto.getAssetType10())){
+                    if ("01".equals(inputDto.getTrmFundType())) {
+                        lastPrice = new BigDecimal(100);
+                    }else if("05".equals(inputDto.getTrmFundType())){
+                        lastPrice = new BigDecimal(0.01);
+                    }else{
+                        lastPrice = BigDecimal.ONE;
+                    }
+                }
                 creditLinesInputDto.setNetPrice(lastPrice);
                 creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),lastPrice,2));
 
