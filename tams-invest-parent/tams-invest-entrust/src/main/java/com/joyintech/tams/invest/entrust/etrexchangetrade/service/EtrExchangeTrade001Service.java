@@ -1666,6 +1666,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//检查资产是否存在且在指令范围资产类型内
 				return this.checkAstScope(dzImportDto, "EtrExchangeTrade001.secId");
 			});
+			//add by chenjiaxing 添加申报类型校验 20210907 start
+			if(StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getDeclaType(), "EtrExchangeTrade001.priceModel2", lineNo);
+				});
+			}
+			//add by chenjiaxing 添加申报类型校验 20210907 end
 			// 委托方向
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPs(), "EtrExchangeTrade001.ps", lineNo);
