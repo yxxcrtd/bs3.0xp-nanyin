@@ -68,6 +68,17 @@ public class FinOptionTargetController {
         throws Exception {
         return finProdService.getFinprodcodebyId(code);
     }
+    /**
+     * 根据查询关键字获取期权标的信息
+     * @param searchInfo
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("getFinprodBySearchInfo")
+    public FinOptionTargetDto getFinprodBySearchInfo(@RequestParam("searchInfo") String searchInfo)
+        throws Exception {
+        return finProdService.getFinprodBySearchInfo(searchInfo);
+    }
 
     /**
      * 保存标的信息

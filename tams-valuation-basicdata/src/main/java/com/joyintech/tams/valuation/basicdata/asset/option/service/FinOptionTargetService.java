@@ -120,7 +120,7 @@ public class FinOptionTargetService extends CommonExportService<FinOptionTargetD
      * @return
      */
     public FinOptionTargetDto getFinprodcodebyName(String name){
-        return restTemplate.getForObject(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME +"/FinOptionTarget/getFinprodcodebyId?targetName=" + name,
+        return restTemplate.getForObject(ServiceApplication.VALUATION_BASICDATA_SERVICE_NAME +"/FinOptionTarget/getFinprodBySearchInfo?searchInfo=" + name,
                 FinOptionTargetDto.class);
     }
 
