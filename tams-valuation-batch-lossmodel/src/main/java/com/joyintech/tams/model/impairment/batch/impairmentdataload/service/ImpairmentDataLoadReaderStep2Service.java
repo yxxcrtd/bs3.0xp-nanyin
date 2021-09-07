@@ -97,7 +97,15 @@ public class ImpairmentDataLoadReaderStep2Service {
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,item.getTradeDate());
             }else if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null
                     || configMap.get(item.getModelAssetType()) != null){
-                ModAssetGradeConfig config = configMap.get(item.getAssetId());
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null){
+                    config = configMap.get(item.getModelAssetType()+item.getModelAssetDetailType());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(item.getModelAssetType());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型
