@@ -38,6 +38,7 @@ public class CreditOccupSzProcessor extends BaseProcessor<NeedOperateEntity, Cre
                 logger.error("授信日终实占批处理异常:"+e.getMessage());
             }
         }
+
         return null;
     }
 }
