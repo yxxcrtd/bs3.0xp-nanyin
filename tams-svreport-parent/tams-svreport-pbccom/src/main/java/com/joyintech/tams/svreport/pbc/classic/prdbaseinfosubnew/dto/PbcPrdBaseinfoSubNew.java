@@ -105,7 +105,7 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
     /**
      * 募集方式，1-公募，2-私募
      */
-    @DictFormat(DictCode.人行募集方式)
+    @DictFormat(DictCode.新人行募集方式)
     private String raiseType;
 
     /**
@@ -129,13 +129,13 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
     /**
      * 运行方式，2-开放式净值型/3-开放式非净值型/4一封闭式净值型/5-封闭式非净值型
      */
-    @DictFormat(DictCode.人行产品运作模式)
+    @DictFormat(DictCode.新人行产品运作模式)
     private String operateMode;
 
     /**
      * 产品类型，007-固定收益类/008-权益类/009-商品及金融衍生品类/010-混合类
      */
-    @DictFormat(DictCode.人行产品类型)
+    @DictFormat(DictCode.新人行产品类型)
     private String ivstorientation;
 
     /**
@@ -222,7 +222,7 @@ public class PbcPrdBaseinfoSubNew extends BaseEntity{
     /**
      * 增信机构类型，1 广义政府/2 非金融性公司/3 金融性公司/4 住户部门/5 国外部门
      */
-    @DictFormat(DictCode.人行信誉机构类型)
+    @DictFormat(DictCode.新人行增信机构类型)
     private String creditType;
 
     /**

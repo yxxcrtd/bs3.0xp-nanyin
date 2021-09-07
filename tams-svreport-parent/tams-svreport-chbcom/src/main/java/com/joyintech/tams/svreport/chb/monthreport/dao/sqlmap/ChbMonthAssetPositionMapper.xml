@@ -558,6 +558,7 @@
     	where PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
     	and POS_DATE=#{posDate,jdbcType=DATE}
     	and status !='D'
+        and asset_code!='REMAININGCASH'
     	
   	</select>
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 

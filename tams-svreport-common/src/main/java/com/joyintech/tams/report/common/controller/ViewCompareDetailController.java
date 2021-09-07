@@ -352,6 +352,10 @@ public class ViewCompareDetailController extends BaseController {
                           Class<?> targetClass,StringBuilder sb,String pageId) {
         Field[] fields = targetClass.getDeclaredFields();
         Map<String, Object> searchParam = new HashMap<>();
+        //新人行表名称过长导致需要修改
+        if("PBC_PRD_BASEINFO_END_SUB_NEW_HIS".equals(tableName)){
+            tableName =  "PBC_PRD_BASEEND_SUB_NEW_HIS";
+        }
         searchParam.put("tableName", tableName);
         List<Map<String, Object>> where = new ArrayList<>();
         searchParam.put("condition", where);

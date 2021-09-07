@@ -17,6 +17,7 @@ import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dao.PbcPrdBasei
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubdat.dto.PbcPrdBaseinfoSubDatDiffDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,21 +131,48 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             result.setCreditFlag( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getCreditFlag()));
         }
         if (StringUtil.isNotEmpty(result.getCreditType())){
-            result.setCreditType( SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,result.getCreditType()));
-        }
-        if (StringUtil.isNotEmpty(result.getCreditMode())){
             //多个用,切开
-            String [] creditModes=result.getCreditMode().split(GlobalConstant.COMMA);
+            String [] creditModes=result.getCreditType().split(GlobalConstant.COMMA);
             String creditMode="";
             int i=0;
             for(String single:creditModes){
                 i++;
-                creditMode=creditMode+SysDataUtil.getNameFromDataDict(DictCode.人行增信形式,single);
+                String name = "";
+                if(PbcDictCodeEnums.增信机构类型_住户.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_住户.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_商品及金融衍生品类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_商品及金融衍生品类.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_境外.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_境外.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_权益类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_权益类.getName();
+                }
+                if(PbcDictCodeEnums.增信机构类型_混合类.getCode().equals(single)){
+                    name = PbcDictCodeEnums.增信机构类型_混合类.getName();
+                }
+                creditMode=creditMode + name;
                 if(i<creditModes.length){
                     creditMode=creditMode+GlobalConstant.COMMA;
                 }
             }
-            result.setCreditMode(creditMode);
+            result.setCreditType(creditMode);
+        }
+        if (StringUtil.isNotEmpty(result.getCreditMode())){
+            String creditMode = result.getCreditMode();
+            String name = "";
+            if(PbcDictCodeEnums.增信形式_内部增级.getCode().equals(creditMode)){
+                name = PbcDictCodeEnums.增信形式_内部增级.getName();
+            }
+            if(PbcDictCodeEnums.增信形式_外部增级.getCode().equals(creditMode)){
+                name = PbcDictCodeEnums.增信形式_外部增级.getName();
+            }
+            if(PbcDictCodeEnums.增信形式_内外增级.getCode().equals(creditMode)){
+                name = PbcDictCodeEnums.增信形式_内外增级.getName();
+            }
+            result.setCreditMode(name);
         }
         if (StringUtil.isNotEmpty(result.getIsConstracte())){
             result.setIsConstracte( SysDataUtil.getNameFromDataDict(DictCode.人行是否,result.getIsConstracte()));
@@ -155,14 +183,14 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         if (StringUtil.isNotEmpty(result.getIdentiFlag())){
             result.setIdentiFlag( SysDataUtil.getNameFromDataDict(DictCode.人行理财产品发起机构标识,result.getIdentiFlag()));
         }
-        if(result.getOutDepCtry()!=null){
+        /*if(result.getOutDepCtry()!=null){
             List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
             result.setOutDepCtry("");
             for(String outDepCtry : outDepCtrys){
                 result.setOutDepCtry(result.getOutDepCtry()+","+outDepCtry+" "+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, outDepCtry));
             }
             result.setOutDepCtry(result.getOutDepCtry().substring(1));
-        }
+        }*/
         // 境内托管机构名称
         if(result.getInDepName()!=null){
             result.setInDepName(result.getInDepName().trim()+" "+SvrDataUtil.getNameFromDataDict(DictCode.境内托管机构名称, result.getInDepName()));

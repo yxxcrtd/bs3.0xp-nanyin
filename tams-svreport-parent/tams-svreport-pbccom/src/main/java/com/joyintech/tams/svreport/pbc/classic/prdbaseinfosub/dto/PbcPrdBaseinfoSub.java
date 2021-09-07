@@ -164,6 +164,16 @@ public class PbcPrdBaseinfoSub extends BaseEntity{
 
     private String pbcPoolCode;
 
+    private String prodProfitType;
+
+    public String getProdProfitType() {
+        return prodProfitType;
+    }
+
+    public void setProdProfitType(String prodProfitType) {
+        this.prodProfitType = prodProfitType;
+    }
+
     public String getPbcPoolCode() {
         return pbcPoolCode;
     }

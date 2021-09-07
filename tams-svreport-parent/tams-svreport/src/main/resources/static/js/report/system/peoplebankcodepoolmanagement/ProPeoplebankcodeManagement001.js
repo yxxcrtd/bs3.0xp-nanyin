@@ -51,8 +51,10 @@
         $('#ProPeoplebankcodeManagement001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
                 Joyin.uploadFile(function(fileName) {
-                    Joyin.ajax(basePath + 'svreport/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
-                        Joyin.ajax(basePath + 'svreport/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001/importFile', {fileName: fileName});
+                    Joyin.ajax(basePath + 'svreport/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001/checkConfirmMsgForImportData', {fileName: fileName}, function(result) {
+                        if(result.statuCode==200){
+                            Joyin.ajax(basePath + 'svreport/system/peoplebankcodepoolmanagement/ProPeoplebankcodeManagement001/importFile', {fileName: fileName});
+                        }
                     });
                 },function() {
                     table.reload();

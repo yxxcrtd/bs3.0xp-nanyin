@@ -81,12 +81,12 @@ public class PbcClassicsDataFileHelper {
     
     // 手工处理和取消手工处理一次性处理的数据条数
     public static final Integer COMMIT_CONSTANTS = 800;
-	
+
     private static SysSeqService sysSeqService;
     @Autowired
     public void setSysSeqService(SysSeqService sysSeqLogic) {
     	PbcClassicsDataFileHelper.sysSeqService = sysSeqLogic;
-    }	
+    }
     /**
      * 生成文件
      * @param datas
@@ -217,6 +217,7 @@ public class PbcClassicsDataFileHelper {
 				logger.error(e.getMessage(),e);
             }
         }
+
         return result;
     }
     

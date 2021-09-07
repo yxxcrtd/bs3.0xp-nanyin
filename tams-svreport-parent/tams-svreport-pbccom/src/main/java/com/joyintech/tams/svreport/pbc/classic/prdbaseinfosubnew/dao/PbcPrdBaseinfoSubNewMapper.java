@@ -47,7 +47,9 @@ public interface PbcPrdBaseinfoSubNewMapper {
 
     void deleteBatchBySendStatus(List<PbcPrdBaseinfoSubNew> deleteList);
 
-    int updateZipDatStatus(@Param("updateStatus") String updateStatus, @Param("sendStatus") String sendStatus);
+    int updateZipDatStatus(Map<String, Object> searchParam);
+
+    int updateZipDatStatusUn(Map<String, Object> searchParam);
 
     int updateBaseSubDat(@Param("list") List<PbcPrdBaseinfoSubNew> updateList);
 

@@ -30,7 +30,7 @@ public class RskValBotDetailReportDto extends BaseEntity {
     //穿透后底层资产持有价值:固定公式“=E列/D列*L列”
     private String mColumn;
     //穿透后底层资产持有价值（系统）:系统折算后的资产持有价值。系统公式=底层资产的总价值*（产品持有资管计划的实收资本/资管计划的总实收资本）
-    //private String nColumn;
+    private String nColumn;
     //G06科目
     private String oColumn;
     //最新债项评级
@@ -223,13 +223,13 @@ public class RskValBotDetailReportDto extends BaseEntity {
         this.mColumn = mColumn;
     }
 
- /*   public String getnColumn() {
+    public String getnColumn() {
         return nColumn;
     }
 
     public void setnColumn(String nColumn) {
         this.nColumn = nColumn;
-    }*/
+    }
 
     public String getoColumn() {
         return oColumn;

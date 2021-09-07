@@ -8,15 +8,15 @@
         <result column="DAT_ZIP_TYPE" property="datZipType" jdbcType="VARCHAR" />
         <result column="DAT_ZIP_DAT_TYPE" property="datZipDatType" jdbcType="VARCHAR" />
         <result column="DAT_ZIP_STATUS" property="datZipStatus" jdbcType="VARCHAR" />
-        <result column="ZIP_DOWNLOAD_TIME" property="zipDownloadTime" jdbcType="DATE" />
+        <result column="ZIP_DOWNLOAD_TIME" property="zipDownloadTime" jdbcType="TIMESTAMP" />
         <result column="STATUS_VDATE" property="statusVdate" jdbcType="VARCHAR" />
         <result column="REPORTUUID" property="reportuuid" jdbcType="CHAR" />
         <result column="PIB_DETAIL_CNT" property="pibDetailCnt" jdbcType="DECIMAL" />
-        <result column="SUBMIT_TIME" property="submitTime" jdbcType="DATE" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
         <result column="ZIP_SEND_STATUS" property="zipSendStatus" jdbcType="VARCHAR" />
         <result column="RETURN_ZIP_SEND_STATUS" property="returnZipSendStatus" jdbcType="VARCHAR" />
         <result column="RETURN_ZIP_CODE" property="returnZipCode" jdbcType="VARCHAR" />
-        <result column="RETURN_TIME" property="returnTime" jdbcType="DATE" />
+        <result column="RETURN_TIME" property="returnTime" jdbcType="TIMESTAMP" />
         <result column="RETURN_MSG" property="returnMsg" jdbcType="VARCHAR" />
         <result column="RETURN_ERROR_CNT" property="returnErrorCnt" jdbcType="DECIMAL" />
         <result column="RETURN_PASS_CNT" property="returnPassCnt" jdbcType="DECIMAL" />
@@ -34,7 +34,8 @@
         <result column="PROD_VARIETY" property="prodVariety" jdbcType="VARCHAR" />
         <result column="PERSON_LIABLE" property="personLiable" jdbcType="VARCHAR" />
         <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
-        <result column="REPORT_DATE" property="reportDate" jdbcType="DATE" />
+        <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP" />
+        <result column="ENDDATE" property="enddate" jdbcType="TIMESTAMP" />
     </resultMap>
     <sql id="Base_Column_List" >
         REGIST_SEQNO REGIST_SEQNO, DAT_ZIP_CODE DAT_ZIP_CODE, DAT_ZIP_PATH DAT_ZIP_PATH, 
@@ -47,7 +48,7 @@
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, ISSUE_PARTY_ID ISSUE_PARTY_ID, 
         ISSUE_PARTY_NAME ISSUE_PARTY_NAME, REPORT_ORG_NAME REPORT_ORG_NAME, SOCIAL_CREDIT_CODE SOCIAL_CREDIT_CODE, 
         FIN_INSTITUTION_CODE FIN_INSTITUTION_CODE, PROD_VARIETY PROD_VARIETY, PERSON_LIABLE PERSON_LIABLE, 
-        CONTACT CONTACT, REPORT_DATE REPORT_DATE
+        CONTACT CONTACT, REPORT_DATE REPORT_DATE,ENDDATE
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -81,7 +82,7 @@
             ISSUE_PARTY_ID, ISSUE_PARTY_NAME, REPORT_ORG_NAME, 
             SOCIAL_CREDIT_CODE, FIN_INSTITUTION_CODE, 
             PROD_VARIETY, PERSON_LIABLE, CONTACT, 
-            REPORT_DATE)
+            REPORT_DATE,ENDDATE)
         values (#{registSeqno,jdbcType=VARCHAR}, #{datZipCode,jdbcType=VARCHAR}, #{datZipPath,jdbcType=VARCHAR}, 
             #{datZipType,jdbcType=VARCHAR}, #{datZipDatType,jdbcType=VARCHAR}, #{datZipStatus,jdbcType=VARCHAR}, 
             #{zipDownloadTime,jdbcType=DATE}, #{statusVdate,jdbcType=VARCHAR}, #{reportuuid,jdbcType=CHAR}, 
@@ -93,7 +94,7 @@
             #{issuePartyId,jdbcType=VARCHAR}, #{issuePartyName,jdbcType=VARCHAR}, #{reportOrgName,jdbcType=VARCHAR}, 
             #{socialCreditCode,jdbcType=VARCHAR}, #{finInstitutionCode,jdbcType=VARCHAR}, 
             #{prodVariety,jdbcType=VARCHAR}, #{personLiable,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
-            #{reportDate,jdbcType=DATE})
+            #{reportDate,jdbcType=DATE},#{enddate,jdbcType=DATE})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
         insert into PBC_SEND_ZIP_DAT_FILE
@@ -476,6 +477,9 @@
         from PBC_SEND_ZIP_DAT_FILE
         where STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR}
         AND DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR}
+        <if test="reportOrgName != null" >
+            and  ORG_CODE = #{reportOrgName,jdbcType=VARCHAR}
+        </if>
     </select>
 
     <delete id="deleteByUUIDAndType" parameterType="java.util.Map">
@@ -490,10 +494,30 @@
         select
         <include refid="Base_Column_List" />
         from PBC_SEND_ZIP_DAT_FILE
-        where ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR}
-        and DAT_ZIP_CODE is not null
+        where  DAT_ZIP_CODE is not null
+        <if test="seqnoList ==null or seqnoList.size() &lt;= 0">
+            and  ZIP_SEND_STATUS = '01'
+        </if>
+        <if test="orgCode !=null">
+            and  ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+        </if>
+        <if test="datZipTypeList != null and datZipTypeList.size()&gt;0">
+            <foreach close=")" collection="datZipTypeList" item="item" open="and DAT_ZIP_TYPE in(" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="zipSendStatusList != null and zipSendStatusList.size()&gt;0">
+            <foreach close=")" collection="zipSendStatusList" item="item" open="and ZIP_SEND_STATUS in(" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="returnZipSendStatusList != null and returnZipSendStatusList.size() &gt; 0">
+            <foreach close=")" collection="returnZipSendStatusList" item="item" open=" AND RETURN_ZIP_SEND_STATUS IN (" separator=",">
+                #{item,jdbcType=VARCHAR}
+            </foreach>
+        </if>
         <if test="seqnoList != null and seqnoList.size() &gt; 0">
-            <foreach close=")" collection="seqnoList" item="item" open=" AND REGIST_SEQNO IN (" separator=",">
+            <foreach close=")" collection="seqnoList" item="item" open=" AND DAT_ZIP_CODE IN (" separator=",">
                 #{item,jdbcType=VARCHAR}
             </foreach>
         </if>
@@ -510,8 +534,8 @@
             DAT_ZIP_STATUS=#{item.datZipStatus,jdbcType=VARCHAR},
             SUBMIT_TIME=#{item.submitTime,jdbcType=TIMESTAMP}
             where
-            DAT_ZIP_TYPE= #{datZipType,jdbcType=VARCHAR}
-            and DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
+            DAT_ZIP_CODE= #{item.datZipCode,jdbcType=VARCHAR}
+            and ZIP_SEND_STATUS='01'
         </foreach>
     </update>
 
@@ -522,4 +546,49 @@
         where DAT_ZIP_DAT_TYPE = #{reporttype,jdbcType=VARCHAR}
         and REPORTUUID = #{reportuuid,jdbcType=CHAR}
     </select>
+
+    <select id="selectByDatZipCode" resultType="integer" resultMap="BaseResultMap"  >
+        select
+        <include refid="Base_Column_List" />
+        from PBC_SEND_ZIP_DAT_FILE
+        where
+        DAT_ZIP_DAT_TYPE= #{datZipType,jdbcType=VARCHAR}
+        and DAT_ZIP_CODE= #{datZipCode,jdbcType=VARCHAR}
+        <if test="reportOrgName != null" >
+            and  ORG_CODE = #{reportOrgName,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <update id="updateByZipCode" parameterType="com.joyintech.tams.common.base.entity.PbcSendZipDatFile" >
+        update PBC_SEND_ZIP_DAT_FILE
+        set DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR},
+            DAT_ZIP_PATH = #{datZipPath,jdbcType=VARCHAR},
+            DAT_ZIP_TYPE = #{datZipType,jdbcType=VARCHAR},
+            DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR},
+            DAT_ZIP_STATUS = #{datZipStatus,jdbcType=VARCHAR},
+            ZIP_DOWNLOAD_TIME = #{zipDownloadTime,jdbcType=DATE},
+            STATUS_VDATE = #{statusVdate,jdbcType=VARCHAR},
+            REPORTUUID = #{reportuuid,jdbcType=CHAR},
+            PIB_DETAIL_CNT = #{pibDetailCnt,jdbcType=DECIMAL},
+            SUBMIT_TIME = #{submitTime,jdbcType=DATE},
+            ZIP_SEND_STATUS = #{zipSendStatus,jdbcType=VARCHAR},
+            RETURN_ZIP_SEND_STATUS = #{returnZipSendStatus,jdbcType=VARCHAR},
+            RETURN_ZIP_CODE = #{returnZipCode,jdbcType=VARCHAR},
+            RETURN_TIME = #{returnTime,jdbcType=DATE},
+            RETURN_MSG = #{returnMsg,jdbcType=VARCHAR},
+            RETURN_ERROR_CNT = #{returnErrorCnt,jdbcType=DECIMAL},
+            RETURN_PASS_CNT = #{returnPassCnt,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            ISSUE_PARTY_ID = #{issuePartyId,jdbcType=VARCHAR},
+            ISSUE_PARTY_NAME = #{issuePartyName,jdbcType=VARCHAR},
+            REPORT_ORG_NAME = #{reportOrgName,jdbcType=VARCHAR},
+            SOCIAL_CREDIT_CODE = #{socialCreditCode,jdbcType=VARCHAR},
+            FIN_INSTITUTION_CODE = #{finInstitutionCode,jdbcType=VARCHAR},
+            PROD_VARIETY = #{prodVariety,jdbcType=VARCHAR},
+            PERSON_LIABLE = #{personLiable,jdbcType=VARCHAR},
+            CONTACT = #{contact,jdbcType=VARCHAR},
+            REPORT_DATE = #{reportDate,jdbcType=DATE}
+        where DAT_ZIP_CODE = #{datZipCode,jdbcType=VARCHAR} and DAT_ZIP_TYPE = 'PI'
+    </update>
 </mapper>

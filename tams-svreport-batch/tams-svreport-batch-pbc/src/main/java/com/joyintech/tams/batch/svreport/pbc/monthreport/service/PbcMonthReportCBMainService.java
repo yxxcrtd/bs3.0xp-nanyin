@@ -1,15 +1,13 @@
 package com.joyintech.tams.batch.svreport.pbc.monthreport.service;
 
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
+import com.joyintech.tams.svreport.pbc.report.service.PbcMonthReportRegistBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
-import com.joyintech.tams.svreport.pbc.report.service.PbcMonthReportRegistBatchService;
+import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -30,7 +28,7 @@ public class PbcMonthReportCBMainService  extends AutoSendCBBaseService{
      * @param isEdit 是否是修改的数据
      * @throws Exception 
      */
-    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
-        pbcMonthReportRegistBatchService.generateReport(batchDate, prodIdList, isEdit);
+    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit,String orgCode) {
+        pbcMonthReportRegistBatchService.generateReport(batchDate, prodIdList, isEdit,orgCode);
     }
 }

@@ -905,6 +905,16 @@ public class CommonUtil {
 		String code = baseCommonService.selectPbcBankCode(orgCode);
 		return null!=code?code:"";
 	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCodeBack(String pbcBankCode){
+		String code = baseCommonService.selectPbcBankCodeBack(pbcBankCode);
+		return null!=code?code:"";
+	}
 	
 	
 	// 微服务版本获取登录用户的机构类型

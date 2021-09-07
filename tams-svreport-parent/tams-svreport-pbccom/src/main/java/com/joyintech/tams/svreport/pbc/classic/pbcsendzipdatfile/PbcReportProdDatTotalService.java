@@ -13,6 +13,7 @@ import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportProdDatMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsub.dao.PbcPrdBaseinfoEndSubMapper;
 import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubdat.dao.PbcPrdBaseinfoEndSubDatMapper;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -54,6 +55,9 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		if (pbcReport == null){
 			return data;
 		}
+		if(StringUtil.isNotEmpty(pbcReport.getProdVariety())){
+			pbcReport.setProdVariety(PbcDictCodeEnums.银行非保本理财_01.getName());
+		}
 		//pbcReport.setProdVariety(pbcReport.getProdVariety() + "-" + SysDataUtil.getNameFromDataDict(DictCode.产品品种, pbcReport.getProdVariety()));
 		data.put("report",JsonUtils.object2Map(pbcReport));
 		// 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
@@ -62,7 +66,7 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		if (!CollectionUtils.isEmpty(listDetail)){
 			for(PbcReportProdDatDto detail : listDetail){
 				dealAreaDateListForDiff(detail);
-				dealAreaDateListForExport(detail);
+				dealAreaDateListForExport(detail,reporttype);
 				dealProdData(detail,isShowZero);
 				data.put(detail.getPropertyCode(), JsonUtils.object2Map(detail));
 			}
@@ -147,40 +151,48 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 	 * @return
 	 * PbcReportAssetDebtDetailDto
 	 */
-	public void dealAreaDateListForExport(PbcReportProdDatDto detail) {
+	public void dealAreaDateListForExport(PbcReportProdDatDto detail,String type) {
 		BigDecimal tenthousand = new BigDecimal(10000);
-		// 人民币
-		if(detail.getCny() != null){
-			detail.setCny(detail.getCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+		if(!"1_3".equals(type)){
+			// 人民币
+			if(detail.getCny() != null){
+				detail.setCny(detail.getCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//外币
+			//		if(detail.getForeignCcy() != null){
+			//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
+			//		}
+			//美元折人民币
+			if(detail.getUsdToCny() != null){
+				detail.setUsdToCny(detail.getUsdToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//欧元折人民币
+			if(detail.getEurToCny() != null){
+				detail.setEurToCny(detail.getEurToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//英镑折人民币
+			if(detail.getGbpToCny() != null){
+				detail.setGbpToCny(detail.getGbpToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//日元折人民币
+			if(detail.getJpyToCny() != null){
+				detail.setJpyToCny(detail.getJpyToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//其他币种(外币)折人民币
+			if(detail.getOthToCny() != null){
+				detail.setOthToCny(detail.getOthToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//合计
+			if(detail.getTotal() != null){
+				detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
+			}
+			//只数
+			/*if(detail.getProdcounts() != null){
+				BigDecimal divide = new BigDecimal(detail.getProdcounts()).divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
+				detail.setProdcounts(divide.longValue());
+			}*/
 		}
-		//外币
-//		if(detail.getForeignCcy() != null){
-//			detail.setForeignCcy(detail.getForeignCcy().divide(tenthousand));
-//		}
-		//美元折人民币
-		if(detail.getUsdToCny() != null){
-			detail.setUsdToCny(detail.getUsdToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//欧元折人民币
-		if(detail.getEurToCny() != null){
-			detail.setEurToCny(detail.getEurToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//英镑折人民币
-		if(detail.getGbpToCny() != null){
-			detail.setGbpToCny(detail.getGbpToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//日元折人民币
-		if(detail.getJpyToCny() != null){
-			detail.setJpyToCny(detail.getJpyToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//其他币种(外币)折人民币
-		if(detail.getOthToCny() != null){
-			detail.setOthToCny(detail.getOthToCny().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
-		//合计
-		if(detail.getTotal() != null){
-			detail.setTotal(detail.getTotal().divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP));
-		}
+
 	}
 
 	/**
@@ -219,6 +231,10 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 		//合计
 		if(!StringUtil.equals(detail.getTotal(),detail.getTotalPrd())){
 			detail.setTotalDiff(1);
+		}
+		//只数
+		if(!StringUtil.equals(detail.getProdcounts(),detail.getProdcountsPrd())){
+			detail.setProdcountsDiff(1);
 		}
 	}
 

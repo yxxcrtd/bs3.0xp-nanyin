@@ -15,5 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ReportGroup {
     //分组
     String group() default "";
+    //需不需要除以10000
+    boolean isDivide() default true;
 
 }
