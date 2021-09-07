@@ -455,7 +455,23 @@ implements BaseProcessService<TrdLendDuration001Dto>{
         List<String>finProdTypeList = new ArrayList<>();
         finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
         finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
+        // ZGZGST-1611:增加拆借存续期业务编号查询条件 fuyongsheng 20210907 add start
+        finProdTypeList.add(DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
+        map.put("IS_CANCEL",DictCodeList.是否_否.getValue());
         map.put("finProdTypeList",finProdTypeList);
+        map.put("PAGE_DATE_STATUS01", DictCodeListExt1.画面数据状态_待处理.getValue());
+        map.put("PAGE_DATE_STATUS03", DictCodeListExt1.画面数据状态_流程中.getValue());
+        map.put("PAGE_DATE_STATUS05", DictCodeListExt1.画面数据状态_有效.getValue());
+        map.put("PAGE_DATE_STATUS06", DictCodeListExt1.画面数据状态_撤销.getValue());
+        map.put("COMMON_BUSINESS_TYPETRD11", DictCodeList.共通业务类型_拆借存续期交易.getValue());
+        map.put("PS_HBDZ", DictCodeList.交易方向_还本到账.getValue());
+        map.put("TRADE_STATUS01", DictCodeListExt1.交易状态_初始.getValue());
+        map.put("TRADE_STATUS03", DictCodeListExt1.交易状态_撤销.getValue());
+        map.put("YES_OR_NO_N", DictCodeList.是否_否.getValue());
+        map.put("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
+        map.put("COM_TYPE_TRD03", DictCodeList.业务类型_拆借交易.getValue());
+        map.put("userName", LoginUserUtil.getUserName());
+        // ZGZGST-1611:增加拆借存续期业务编号查询条件 fuyongsheng 20210907 add end
         return restTemplate.postForPage(
                 ServiceApplication.PERIOD_SERVICE_NAME + "/TrdDepoDuration/getBusiCode",
                 map, SelectOptionDto.class);
