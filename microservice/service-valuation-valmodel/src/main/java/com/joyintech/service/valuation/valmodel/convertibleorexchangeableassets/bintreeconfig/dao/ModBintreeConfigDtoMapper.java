@@ -36,4 +36,6 @@ public interface ModBintreeConfigDtoMapper {
     List<SelectOptionDto> getMarketId(Map<String, Object> map);
 
     List<SelectOptionDto> getCurveCode(Map<String, Object> map);
+
+    List<SelectOptionDto> getAssetInfo( Map<String, Object> param);
 }
