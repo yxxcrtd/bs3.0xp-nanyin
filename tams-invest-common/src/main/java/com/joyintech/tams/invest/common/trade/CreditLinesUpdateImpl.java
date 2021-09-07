@@ -502,9 +502,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     // 释放金额
                     // 资产授信占用列表
                     List<CreditUsingAst> astList = creditLinesDealsMapper.getCreditUsingAstListByFin(inputDto);
-                    if("0003".equals(creditLinesAst.getCreditMstId())){
-                        astList=creditLinesDealsMapper.getCreditUsingAstListByFin1(inputDto);
-                    }
                     for (CreditUsingAst item : astList){
                         BigDecimal releaseAmt = BigDecimal.ZERO;
                         if (shareAmtTotal.compareTo(BigDecimal.ZERO) <= 0 || 已占用额度.compareTo(BigDecimal.ZERO) <= 0){
@@ -541,7 +538,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         linesInputDto.setEntrustId(item.getTradeId());
                         linesInputDto.setNetPrice(item.getNetPrice());
                         // 释放 releaseAmt
-                        generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
+                        generateDealResult(linesInputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy, occupyType);
                     }
                     // 资产系列授信占用列表
                     List<CreditUsingSeries> seriesList = creditLinesDealsMapper.findCreditUsingSeriesByFin(inputDto);
@@ -580,7 +577,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         linesInputDto.setEntrustId(item.getTradeId());
                         linesInputDto.setNetPrice(item.getNetPrice());
                         // 释放 releaseAmt
-                        generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
+                        generateDealResult(linesInputDto,creditLinesAst,compareAmtAst,compareAmtAst,occupy, occupyType);
                     }
                     logger.info(getMessage("==========处理数据结束,交易或指令编号: "+inputDto.getTradeId()+",释放规则：先进先出=========="));
                 }else {
