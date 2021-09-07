@@ -150,22 +150,19 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
-            return;
-        }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: query("#price").val(),
-                finprodId: query("#finprodId").val(),
-                vdate:query('#vdate').val()
-            }, function (result) {
-            if (result ) {
-                document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
-                    JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
+        if (query("#finprodIdhid").val() && query("#price").val()) {
+            var paramObj = {};
+            paramObj.finprodId = query("#finprodIdhid").val();
+            if(query("#finprodId").val()){
+                paramObj.finprodMarketId = query("#finprodId").val();
             }
-        });
+            paramObj.unitCprice = query("#price").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
+            });
+        } else {
+            $("#deviationDegree").text("");
+        }
     }
 
     //净价、行权收益率、到期收益率联动
@@ -313,6 +310,7 @@
      * 初始化
      */
     var init = function () {
+        query("#calculateField_price").prop('checked', true);
         if (todoList == false) {
             query('#EtrIbBondinfo002_btn_fileupload').css('display', 'none');
             query('#EtrIbBondinfo002_btn_riskcal').css('display', 'none');
