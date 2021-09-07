@@ -79,14 +79,14 @@ V_CONTENT_04 CLOB := 'select sum(amount) AS amount from
     union all
     --1.产品端交易表
     select
-     CASE  WHEN n.PS IN(''C1'',''C2'',''C3'',''C10'',''C15'',''T98'') THEN NVL(n.TRADE_AMT,0)
+     CASE  WHEN n.PS IN(''C1'',''C2'',''C3'',''C15'',''T98'') THEN NVL(n.TRADE_AMT,0)
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END amount
     from TRD_PRODUCT_DEAL_ADD m
     inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID
     where m.PORTFOLIO_ID in ${portfolioCode}  and
     n.TRADE_DATE=date''${valDate}''
-    AND  n.PS IN (''C1'', ''C2'', ''C3'', ''C4'', ''C5'', ''C6'', ''C7'', ''C9'', ''C10'', ''C14'', ''C15'', ''C16'', ''C17'',''C18'', ''C19'',''C20'',''T98'',''T99'')
+    AND  n.PS IN (''C1'', ''C2'', ''C3'', ''C4'', ''C5'', ''C6'', ''C7'', ''C9'', ''C14'', ''C15'', ''C16'', ''C17'',''C18'', ''C19'',''C20'',''T98'',''T99'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
 
@@ -211,10 +211,14 @@ INSERT INTO RSK_EVENT_PARA_REL VALUES('CPZZC','EVENT_ID_CPZZC_05','02','+','amou
 
 ----产品总资产-卖出预占
 DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_CPZZC_06';
-INSERT INTO RSK_EVENT VALUES ('EVENT_ID_CPZZC_06','产品总资产-卖出预占','Y','','system','',sysdate,'admin',sysdate);
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_CPZZC_06','产品总资产-卖出预占','Y','','system','',sysdate,'cdj',sysdate);
          
  
 DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_CPZZC_06';
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_CPZZC_06','assetType','7e014d7da34d4c29b0ceb8508adbeea0','','F07','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_CPZZC_06','assetType2','7e014d7da34d4c29b0ceb8508adbeea0','','03','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_CPZZC_06','eventType','7e014d7da34d4c29b0ceb8508adbeea0','','0','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_CPZZC_06','ps','7e014d7da34d4c29b0ceb8508adbeea0','','T07','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
 
 DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_CPZZC_06';
 INSERT INTO RSK_EVENT_PARA_REL VALUES('CPZZC','EVENT_ID_CPZZC_06','03','-','amount','','system','',SYSDATE,'system',SYSDATE,'','');
