@@ -279,4 +279,8 @@ public interface EtrExchangeTradeMapper {
 	List<SubEqutityDto> getsubEqutity(Map<String, Object> map);
 
     List<WflEtrEntrust> selectWflEntrust(Map<String, Object> map);
+
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
+	BigDecimal getLastNetPrice(Map<String, Object> param);
+	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
 }

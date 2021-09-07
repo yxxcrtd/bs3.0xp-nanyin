@@ -159,6 +159,12 @@ public class EtrExchangeTradeService extends BaseService{
     @Autowired
     EtrSecPositionFlowMapper etrSecPositionFlowMapper;
 
+    /**
+     * FinProductMapper
+     */
+    @Autowired(required = false)
+    private FinProductMapper finProductMapper;
+
     public static final String ENTRUST_RECORD_NEW = "new";
     
     public static final String ENTRUST_RECORD_MODIFY = "modify";
@@ -2226,4 +2232,71 @@ public class EtrExchangeTradeService extends BaseService{
         map.put("ps_T04",DictCodeList.交易方向_申购.getValue());
         return etrExchangeTradeMapper.selectWflEntrust(map);
     }
+
+    //add by chenjiaxing 债券竞价交易展示偏移度 start
+    /**
+     * 1.6计算偏离度
+     *
+     * @param
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    public String calcDeviationDegree(Map<String, Object> param) {
+        // 参数.资产代码(市场代码)
+        String 市场代码 = (String) param.get("finprodMarketId");
+        // 参数.净价
+        String 净价 = (String) param.get("unitCprice");
+        if (StringUtil.isBlank(市场代码) || StringUtil.isBlank(净价)) {
+            return null;
+        }
+
+        String sysDate = (String) param.get("sysDate");
+        param.put("sysDate", DateUtil.parse(sysDate));
+
+        // 查询债券登记托管机构
+        FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) param.get("finprodId"));
+        if (finProduct != null) {
+            if (StringUtil.equals(DictCodeList.登记托管机构_中债_中央国债登记结算有限责任公司.getValue(),
+                    finProduct.getRegistOrg())) {
+                param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+            }
+            else if (StringUtil.equals(DictCodeList.登记托管机构_中债_上海清算所.getValue(),
+                    finProduct.getRegistOrg())) {
+                param.put("VALUATION_SOURCE", DictCodeList.估值来源_上清所_SCH.getValue());
+            }
+            else if (StringUtil.equals(DictCodeList.登记托管机构_中债_中国证券登记结算有限责任公司.getValue(),
+                    finProduct.getRegistOrg())) {
+                param.put("VALUATION_SOURCE", DictCodeList.估值来源_中证登_CSD.getValue());
+            }
+            else {
+                param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+            }
+        }
+        else {
+            param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
+        }
+
+        // 查询上一估值日的净价
+        BigDecimal 上一估值日净价 = etrExchangeTradeMapper.getLastNetPrice(param);
+        if (上一估值日净价 == null || BigDecimal.ZERO.compareTo(上一估值日净价) == 0) {
+            return "0%";
+        }
+
+        try {
+            BigDecimal 所输净价 = new BigDecimal(净价);
+
+            // 计算公式：（所输净价-上一估值净价）/上一估值净价*100%
+            BigDecimal result = ArithmeticUtil.subtract(所输净价, 上一估值日净价);
+            result = ArithmeticUtil.multiply(result, new BigDecimal(100));
+            result = ArithmeticUtil.divide(result, 上一估值日净价, 0);
+
+            return String.valueOf(result) + "%";
+        }
+        catch (Exception e) {
+        }
+
+        return null;
+    }
+    //add by chenjiaxing 债券竞价交易展示偏离度 end
 }

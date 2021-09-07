@@ -1896,12 +1896,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		Map<String, Object> param = new HashMap<>();
 		param.put("portfolioId", t.getPortfolioId());
 		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 start
-		String tradeMarket = t.getFinprodId();
-		String[] arr = StringUtil.split(tradeMarket, ".");
-		if(StringUtil.equals(arr[1],"SH")){
-			param.put("tradeMarket", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		}else if(StringUtil.equals(arr[1],"SZ")){
-			param.put("tradeMarket", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+		if(StringUtil.isNotEmpty(t.getFinprodId())){
+			String tradeMarket = t.getFinprodId();
+			String[] arr = StringUtil.split(tradeMarket, ".");
+			if(StringUtil.equals(arr[1],"SH")){
+				param.put("tradeMarket", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+			}else if(StringUtil.equals(arr[1],"SZ")){
+				param.put("tradeMarket", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+			}
 		}
 		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 end
 		List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
@@ -3602,6 +3604,22 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 WflEtrEntrust.class);
     }
 
+	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
+	/**
+	 * 1.6计算偏离度
+	 *
+	 * @param parameters 画面参数
+	 * @return 偏离度
+	 * @see
+	 * @since 1.0
+	 */
+	public String calcDeviationDegree(Map<String, Object> parameters) {
+		// 平台日
+		parameters.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 
+		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/EtrExchangeTrade/calcDeviationDegree",
+				parameters, String.class);
+	}
+    //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
 }

@@ -99,7 +99,16 @@
             left: 0!important;
             width: 160px!important;
         }
-
+        .label-deviation-degree{
+            width: 50px;
+            height: 24px;
+            color: red;
+            top: 0;
+            right: -50px;
+            position: absolute;
+            text-align: center;
+            line-height: 24px;
+        }
         .price {
             width: -webkit-fill-available;
             /* position: absolute; */
@@ -317,6 +326,9 @@
                                data-th-value="${entity?.price}" required="required" autocomplete="off" maxlength=9>
                         <span class="input-right-show priceTitle">元</span>
                         <button type="button" class="increase-button">+</button>
+                        <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start-->
+                        <label class="label-deviation-degree" id="deviationDegree"></label>
+                        <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end-->
                     </div>
                 </div>
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="fprice_div_jj">

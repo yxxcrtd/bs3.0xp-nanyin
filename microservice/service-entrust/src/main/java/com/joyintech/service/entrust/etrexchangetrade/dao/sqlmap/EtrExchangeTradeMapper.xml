@@ -1275,5 +1275,19 @@
             </if>
         </where>
     </select>
-
+    <select id="getLastNetPrice" resultType="java.math.BigDecimal">
+        SELECT
+            NETPRICE
+        FROM
+            MST_BOND_VALUATION_INFO
+        WHERE
+            SEC_ID = #{finprodMarketId}
+            AND VALUE_SOURCE = #{VALUATION_SOURCE}
+            AND VALUE_DATE = (
+                SELECT MAX(VALUE_DATE) FROM MST_BOND_VALUATION_INFO
+                WHERE VALUE_DATE &lt; #{sysDate,jdbcType=DATE}
+                    AND SEC_ID = #{finprodMarketId}
+                    AND VALUE_SOURCE = #{VALUATION_SOURCE}
+            )
+    </select>
 </mapper>
