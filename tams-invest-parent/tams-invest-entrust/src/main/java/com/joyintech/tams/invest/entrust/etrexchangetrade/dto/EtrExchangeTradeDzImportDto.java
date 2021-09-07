@@ -70,85 +70,86 @@ public class EtrExchangeTradeDzImportDto extends EtrExchangeTrade001Dto {
     }
 
     /**
-     * @param entrustPrice 指令价格
+     * @param declaType 申报类型
      */
     @Number(6)
+    @DictList(link=DictCode.申报类型)
+    public void setDeclaType(String declaType) { super.setDeclaType(declaType); }
+
+    /**
+     * @param entrustPrice 指令价格
+     */
+    @Number(7)
     public void setEntrustPrice(BigDecimal entrustPrice) { super.setEntrustPrice(entrustPrice); }
 
     /**
      * @param fprice 全价
      */
-    @Number(7)
+    @Number(8)
     public void setFprice(BigDecimal fprice) { super.setFprice(fprice); }
 
     /**
      * @param yield 收益率
      */
-    @Number(8)
+    @Number(9)
     public void setYield(BigDecimal yield) { super.setYield(yield); }
 
     /**
      * @param targetType 目标类型
      */
-    @Number(9)
+    @Number(10)
     @DictList(link=DictCode.目标类型)
     public void setTargetType(String targetType) { super.setTargetType(targetType); }
 
     /**
      * @param entrustNum 指令数量
      */
-    @Number(10)
+    @Number(11)
     public void setEntrustNum(BigDecimal entrustNum) { super.setEntrustNum(entrustNum); }
 
     /**
      * @param entrustAmt 指令金额
      */
-    @Number(11)
+    @Number(12)
     public void setEntrustAmt(BigDecimal entrustAmt) { super.setEntrustAmt(entrustAmt); }
 
     /**
      * @param counterId 交易对手
      */
-    @Number(12)
+    @Number(13)
     public void setCounterId(String counterId) { super.setCounterId(counterId); }
 
     /**
      * @param invAim 投资目的
      */
-    @Number(13)
+    @Number(14)
     @DictList(link=DictCode.投资目的)
     public void setInvAim(String invAim) { super.setInvAim(invAim); }
 
     /**
      * @param seatId 对方席位
      */
-    @Number(14)
+    @Number(15)
     public void setSeatId(String seatId) { super.setSeatId(seatId); }
 
     /**
      * @param agreeOnId 约定号
      */
-    @Number(15)
+    @Number(16)
     public void setAgreeOnId(String agreeOnId) { super.setAgreeOnId(agreeOnId); }
 
     /**
      * @param vdate 开始日期
      */
-    @Number(16)
+    @Number(17)
     public void setVdate(Date vdate) { super.setVdate(vdate); }
 
     /**
      * @param mdate 结束日期
      */
-    @Number(17)
+    @Number(18)
     public void setMdate(Date mdate) { super.setMdate(mdate); }
 
-    /**
-     * @param declaType 申报类型
-     */
-    @Number(18)
-    @DictList(link=DictCode.申报类型)
-    public void setDeclaType(String declaType) { super.setDeclaType(declaType); }
 
 /*    *
      * 申报类型代码

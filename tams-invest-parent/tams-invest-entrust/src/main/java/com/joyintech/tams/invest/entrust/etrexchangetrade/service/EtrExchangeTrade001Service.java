@@ -2018,26 +2018,26 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 List<String> rowData = objects.get(i);
                 // 委托开始日日期非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(11), "EtrExchangeTrade001.vdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
                 // 委托开始日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(11), "EtrExchangeTrade001.vdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
                 // 委托结束日日期非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
                 // 委托结束日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
                 /**** 委托开始日与终止日必须是平台日 ***/
                 if (StringUtil.isBlank(confirmMsg)) {
-                    confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(11), rowData.get(12),
+                    confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(12), rowData.get(13),
                             lineNo);
                 }
                 if (StringUtil.isBlank(confirmMsg)) {
                     // 委托开始日
-                    unit.setVdate(DateUtil.parse(rowData.get(11)));
+                    unit.setVdate(DateUtil.parse(rowData.get(12)));
                     // 委托结束日
-                    unit.setMdate(DateUtil.parse(rowData.get(12)));
+                    unit.setMdate(DateUtil.parse(rowData.get(13)));
                 } else {
                     // 设置提示信息
                     promptMsg = confirmMsg;
@@ -2165,14 +2165,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     }
                 }
 				//add by chenjiaxing 校验投资目的不能为空 start
-				if (!StringUtil.isNotEmpty(rowData.get(13)) && StringUtils.isNotEmpty(unit.getFinprodType2())
+				if (!StringUtil.isNotEmpty(rowData.get(11)) && StringUtils.isNotEmpty(unit.getFinprodType2())
 						&&  !unit.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService
-							.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.invAim", lineNo));
+							.checkIsBlank(rowData.get(11), "EtrExchangeTrade001.invAim", lineNo));
 				}
 				if (StringUtil.isBlank(confirmMsg)) {
 					// 投资目的
-					String priceModel = convertToItemCode(DictCode.投资目的.getValue(), rowData.get(13));
+					String priceModel = convertToItemCode(DictCode.投资目的.getValue(), rowData.get(11));
 					unit.setInvAim(priceModel);
 				} else {
 					// 设置提示信息
