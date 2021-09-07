@@ -15,6 +15,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.annotation.Pattern;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -306,7 +307,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * @return 市场代码，可以按规则生成，或者手输，不校验唯一。对于理财产品分层，同母金融产品代码对应的市场代码。
      */
     @Override
-   // @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
+//    @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]\\.*[a-zA-Z]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
     @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId() {
@@ -374,18 +375,18 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * @return
      */
     @Override
-   @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr",groups={ValidateGroupEdit.class})//非空校验
+   @NotEmpty(fieldName = "FinStockInfo002.finprodName",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodName() {
         return super.getFinprodName();
     }
 
-    @Override
-    @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr", groups = {ValidateGroupEdit.class})
-    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
-        ValidateGroupEdit.class})
-    public String getFinprodAbbr() {
-        return super.getFinprodAbbr();
-    }
+//    @Override
+//    @NotEmpty(fieldName = "FinStockInfo002.finprodAbbr", groups = {ValidateGroupEdit.class})
+//    @Length(fieldName = "FinStockInfo002.finprodAbbr", max = 100, groups = {
+//        ValidateGroupEdit.class})
+//    public String getFinprodAbbr() {
+//        return super.getFinprodAbbr();
+//    }
 
     /**
      * 公司名称非空校验
