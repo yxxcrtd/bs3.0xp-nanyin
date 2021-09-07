@@ -170,6 +170,12 @@
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
+        if(!calflag){
+            calflag =  query("input[name=calculateField]:checked").val();
+        }
+        if (!query("#"+calflag).val()) {
+            return;
+        }
         if (!initFlag) {
             let finvdate = query("#vdate").val();
             let finmdate = query("#mdate").val();
@@ -807,9 +813,7 @@
                 }
             }
             if (pageModel != PAGE_MODEL_REFERENCE) {
-                if (query("#price").val()) {
-                    calData("price");
-                }
+                calData();
             }
             // 画星星
             star();
@@ -852,9 +856,7 @@
                 query("#finmdate").val(new Date(data.finmdate)).trigger("change");
                 query("#ccy").val(data.ccy).trigger("change").attr("disabled", true);
                 checkFinMdate();
-                if (query("#price").val()) {
-                    calData("price");
-                }
+                calData();
             } else {
                 // 为空
                 query("#finprodIdhid").val("").trigger("change");
@@ -916,20 +918,14 @@
          */
         query("#mdate").change(function () {
             checkFinMdate();
-            if (query("#price").val()) {
-                calData("price");
-            }
+            calData();
         });
 
         /**
          * 清算速度
          */
         query("#settleSpreed").change(function () {
-            if (query("#price").val() || query("#exerYield").val() || query("#matureYield").val()) {
-                if (query("#price").val()) {
-                    calData("price");
-                }
-            }
+            calData();
         });
 
         /**
@@ -1021,10 +1017,8 @@
                 }
 
                 query('#finprodId').trigger("change"); // 触发star功能
-                
-                if (query("#price").val()) {
-                    calData("price");
-                }
+
+                calData();
             }
         });
 
