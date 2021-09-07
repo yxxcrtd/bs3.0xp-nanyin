@@ -673,8 +673,8 @@ where
 		</where>
 	</select>
 	
-	<select id="selectInvestHoldInfoDataCount" resultType="java.lang.Integer">
-	   select count(1) from CHB_INVESTHOLD_INFO where to_char(HOLD_DATE, 'yyyy-MM-dd') = #{holdDate,jdbcType=VARCHAR}
+	<select id="selectInvestHoldInfoDataCount" resultType="int" parameterType="java.util.Date">
+	   select count(1) from CHB_INVESTHOLD_INFO where HOLD_DATE = #{holdDate,jdbcType=DATE} and rownum = 1
 	</select>
 	
 	<!-- 批量  -->

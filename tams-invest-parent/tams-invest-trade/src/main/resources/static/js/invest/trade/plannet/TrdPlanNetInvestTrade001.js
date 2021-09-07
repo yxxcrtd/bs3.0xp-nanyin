@@ -109,6 +109,7 @@
 //            }]
             }
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
     });
   
     /**

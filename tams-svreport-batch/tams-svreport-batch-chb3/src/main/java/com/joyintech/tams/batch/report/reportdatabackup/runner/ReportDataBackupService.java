@@ -10,6 +10,10 @@
 
 package com.joyintech.tams.batch.report.reportdatabackup.runner;
 
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.batch.report.reportdatabackup.service.ReportDataBackupMainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -17,11 +21,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
-import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.tams.batch.report.reportdatabackup.service.ReportDataBackupMainService;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
 
 /**
  * 数据备份批处理
@@ -45,6 +44,9 @@ public class ReportDataBackupService extends BatchBaseService {
     @Autowired
     private ReportDataBackupMainService mainService;
 
+
+//    @Autowired
+//    private InvestholdDataBackupMainService mainServiceEx;
     @Override
     public JobExecution execute() {
         JobExecution result = new JobExecution(1l);
@@ -57,6 +59,7 @@ public class ReportDataBackupService extends BatchBaseService {
 
         try {
             mainService.generateRegistData(DateUtil.format(batchExecuteInfo.getExecuteDate()));
+//        	  mainServiceEx.generateRegistData(DateUtil.format(batchExecuteInfo.getExecuteDate()));
         }
         catch (Exception e) {
             logger.error("数据备份批处理Error",e);

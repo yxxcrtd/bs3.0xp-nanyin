@@ -179,7 +179,10 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
      */
     private String fIssueOefDnddateinst;
     // add by jiangpeng on 20200721 公募基金标的 接口 end
-
+    /**
+     * 投资阶段
+     */
+    private String investmentPhase;
     /**
      * 取得 前端代码
      * @return 前端代码
@@ -884,5 +887,13 @@ public class InterfCmfunddescrip extends InterfCmfunddescripKey {
 
     public void setFundCompanyName(String fundCompanyName) {
         this.fundCompanyName = fundCompanyName;
+    }
+
+    public String getInvestmentPhase() {
+        return investmentPhase;
+    }
+
+    public void setInvestmentPhase(String investmentPhase) {
+        this.investmentPhase = investmentPhase;
     }
 }

@@ -2,12 +2,14 @@ package com.joyintech.tams.svreport.pbc.classic.pbcreportfilemanage.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.svreport.seq.service.SysSeqService;
+import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileNewService;
+import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsDataFileService;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.dao.PbcNewPrdDatFileMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,6 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.ZipFileUtil;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDataFileMapper;
@@ -62,6 +59,9 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 	private Logger logger = LoggerFactory.getLogger(PbcReportFileManageService.class);
 
 	@Autowired
+	public PbcClassicsDataFileNewService pbcClassicsDataFileNewService;
+
+	@Autowired
 	private PbcDataFileMapper pbcDataFileMapper;
 	@Autowired
     private PbcPrdBaseinfoSubService001 pbcPrdBaseinfoSubService001;
@@ -79,6 +79,8 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
     private PbcPrdAssetDebtSubService001 pbcPrdAssetDebtSubService001;
 	@Autowired
 	private PbcDatfileDetailRelationMapper pbcDatfileDetailRelationMapper;
+	@Autowired
+	private PbcClassicsDataFileHelper pbcClassicsDataFileHelper;
 	
 	/**
 	 * 生成文件标识码下拉框初始值
@@ -86,7 +88,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 	 * @return 文件标识码下拉框初始值
 	 */
 	public List<SelectOptionDto> getFileCode() {
-		Map<String, String> fileCodeMap = PbcClassicsDataFileHelper.getFileCodeMap();
+		Map<String, String> fileCodeMap = pbcClassicsDataFileHelper.getFileCodeMap();
 		List<SelectOptionDto> resultList = new ArrayList<>();
 		for (String key : fileCodeMap.keySet()) {
 			SelectOptionDto resultDto = new SelectOptionDto();
@@ -105,7 +107,7 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 	 */
 	public Page<PbcDataFile> findPage(Map<String, Object> param) {
 		String fileCodeIds = (String) param.get("fileCodeIds");
-		List<String> fileCodeList = PbcClassicsDataFileHelper.buildFileCodeList(fileCodeIds);
+		List<String> fileCodeList = pbcClassicsDataFileHelper.buildFileCodeList(fileCodeIds);
 		param.put("fileCodeList", fileCodeList);
 		int pagenum = StringUtil.integerValueOf(""+param.get(GlobalConstant.PARAM_PAGE), 1);
         int length = StringUtil.integerValueOf(""+param.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
@@ -199,7 +201,15 @@ public class PbcReportFileManageService extends CommonExportService<PbcDataFile>
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (PbcDataFile pbcDataFile : pbcDataFileList) {
-			File file = new SafelyFile(pbcDataFile.getFilepath());
+			File file;
+			if(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI.equals(pbcDataFile.getFilecode())){
+				Map<String,Object> map = new HashMap<>();
+				//碰到PPI类型文件重新组装
+				pbcClassicsDataFileHelper.setSysSeqService(SpringContextUtil.getBean(SysSeqService.class));
+				file = new SafelyFile(pbcClassicsDataFileNewService.genDataFile(PbcClassicsDataFileHelper.DATAFILE_TYPE_PPI,pbcDataFile.getFileid(),new Date(),map));
+			}else{
+				file = new SafelyFile(pbcDataFile.getFilepath());
+			}
 			sourceFiles.add(file);
 		}
 		// 只有一个文件,直接导出,且不能删除源文件

@@ -326,9 +326,6 @@ public class SVReportGlobalConstant {
      * 人行汇率取值来源(01:开盘价，02:收盘价，03:最高价，04:最低价，05:中间价)
      */
     public static final String SVR_EXCHANGE_SOURCE_PBC = "SVR_EXCHANGE_SOURCE_PBC";
-
-    /**统一数据维护删除逻辑***/
-    public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
     /**
      * 人行报表-报送时点配置时分秒
      */
@@ -559,6 +556,12 @@ public class SVReportGlobalConstant {
      * 中债投资者明细信息是否直连 01是 02 否*/
     public static final String SVR_IS_SEND_EQUDET = "IS_SEND_EQUDET";
     
+	 
+    /**
+     * 中债系统参数:导出excel或预览时，值为0的单元格显示成0还是显示成空，系统实现可配置 add by zhouqiang
+     */
+    public static final String CHB_IS_SHOW_ZERO = "CHB_IS_SHOW_ZERO";
+	
     /**
      * 产品汇总信息是否从投资者交易表中汇总 01 是   02 否
      */
@@ -578,5 +581,9 @@ public class SVReportGlobalConstant {
      * 存续期产品余额计算方式(01:投资端持有汇总  02:交易汇总)
      */
     public static final String DEALSUB_BALANCEAMT_SUM_TYPE = "DEALSUB_BALANCEAMT_SUM_TYPE";
+    
+
+    /**统一数据维护删除逻辑***/
+    public static final String SVR_OPER_DELETE_FLAG = "SVR_OPER_DELETE_FLAG";
     
 }

@@ -558,6 +558,7 @@
     	where PLAN_ASSET_ID = #{planAssetId,jdbcType=VARCHAR}
     	and POS_DATE=#{posDate,jdbcType=DATE}
     	and status !='D'
+        and asset_code!='REMAININGCASH'
     	
   	</select>
   	<select id="selectPlanInfo" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition" 
@@ -620,6 +621,8 @@
     then nvl(ASSETINFO.PRO_INDUSTRY,ASSETINFO.INDUSTRY_PBC)
     when POSITION.ASSETTYPE2 in ('2101')
     then ASSETINFO.INDUSTRY
+    when POSITION.ASSETTYPE2 in ('DRC1107')
+    then '10'
     else null
     end INDUSTRY1,
     /*行业分类改造*/
@@ -1124,4 +1127,66 @@
         info.MANAGE_TYPE
     </select>
 
+    <select id="selectPlanInfoListByCommon" resultMap="BaseResultMap" parameterType="com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition"
+            flushCache="true" useCache="false">
+        select
+        #{bookdate,jdbcType=DATE} bookdate
+        ,#{enddate,jdbcType=DATE} enddate
+        ,info.asset_type assettype
+        ,info.ASSET_TYPE2 assettype2
+        ,nvl(nvl(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES) INDUSTRY1 /*所属行业*/
+        ,info.IN_ASSET_TYPE
+        ,nvl(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT) rating/*债券评级*/
+        ,decode(info.PRIVATE_FLAG,'01','01',null) MONIT_TYPE
+        ,decode(info.PPPFLAG,'01','01',null) PPPFLAG
+        ,decode(info.IS_GOVERN_FUND,'01','01',null) IS_GOVERN_FUND1
+        ,decode(info.PRIVATEFUND_FLAG,'01','01',null) PRIVATEFUND_FLAG
+        ,decode(info.PRIVATEPRD_FLAG,'01','01',null) PRIVATEPRD_FLAG
+        ,decode(info.BONDTOSTOCK_FLAG,'01','01',null) BONDTOSTOCK_FLAG
+        ,info.MANAGE_TYPE MANAGE_TYPE /*管理方式*/
+        ,info.ASSET_CODE
+        from CHB_ASSET_INFO info
+        <!--获取债项评级 -->
+        left join (
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM (
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZx != null and getProductRatingOrderSqlByZx != ''">
+            ${getProductRatingOrderSqlByZx}
+        </if>
+        )t where t.rk = '1'
+        )bestRatingZx on bestRatingZx.OCODE = info.ASSET_CODE
+        <!--获取主体评级 -->
+        left join(
+        select t.OCODE as OCODE,t.GRADERESULT as GRADERESULT FROM(
+        SELECT
+        TEMP.GRADERESULT as GRADERESULT,
+        TEMP.OCODE AS OCODE,
+        rank() over (partition by TEMP.OCODE order by rownum) rk
+        FROM(
+        <include refid="com.joyintech.tams.busicommon.productRating.dao.CommonProductRatingMapper.searchProductRatingSql"/>
+        )
+        <!--SQL注入 -->
+        <if test="getProductRatingOrderSqlByZt != null and getProductRatingOrderSqlByZt != ''">
+            ${getProductRatingOrderSqlByZt}
+        </if>
+        )t where t.rk = '1'
+        )bestRatingZt on bestRatingZt.OCODE = info.FINANCIE
+        where 1=1
+        and info.status !='D'
+        group by #{bookdate,jdbcType=DATE},#{enddate,jdbcType=DATE},
+        info.asset_type, info.ASSET_TYPE2, nvl(nvl(info.PRO_INDUSTRY,info.INDUSTRY1),info.INDUSTRY_SHARES),info.IN_ASSET_TYPE, null,nvl(bestRatingZx.GRADERESULT,bestRatingZt.GRADERESULT),
+        decode(info.PRIVATE_FLAG,'01','01',null),
+        decode(info.PPPFLAG,'01','01',null), decode(info.IS_GOVERN_FUND,'01','01',null),
+        decode(info.PRIVATEFUND_FLAG,'01','01',null), decode(info.PRIVATEPRD_FLAG,'01','01',null),
+        decode(info.BONDTOSTOCK_FLAG,'01','01',null),
+        info.MANAGE_TYPE,
+        info.ASSET_CODE
+    </select>
 </mapper>

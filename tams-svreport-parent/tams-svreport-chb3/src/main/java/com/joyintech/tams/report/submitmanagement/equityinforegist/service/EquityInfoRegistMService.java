@@ -50,6 +50,22 @@ public class EquityInfoRegistMService extends BaseService<EquityInfoRegist001Dto
 	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/findPage", param,
 	       		EquityInfoRegist001Dto.class);
    }
+   /**
+    *
+    * 查询功能（无分页）
+    * <功能详细描述>
+    * @return 存储了查询结果的list
+    * @see
+    * @since 1.0
+    */
+   public List<EquityInfoRegist001Dto> queryForEquityInfoRegistPage(Map<String, Object> param){
+	   return restTemplate.postForList(
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityInfoRegist/queryForEquityInfoRegistPage",
+			   param,
+			   EquityInfoRegist001Dto.class);
+   }
+
+
 
    /**
     *

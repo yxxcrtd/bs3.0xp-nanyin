@@ -20,14 +20,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SpringContextUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
@@ -743,6 +736,8 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
         paramMap.put("ccy", (String)map.get("ccy"));
         //  paramMap.put("calendarId", dto.getCalendarId());
         paramMap.put("finprodId", (String) map.get("finprodId"));
+        //考虑流程中被占用,是的话
+        paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
         //获得资产维度的持仓
         Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
 
@@ -750,6 +745,12 @@ public class TrdDepositInvestTrade003Controller extends BaseController {
         BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
         //已融资金额
         BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
+        //流程中占用金额
+        BigDecimal positionFlow =null;
+        if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+            positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+        }
+        position=ArithmeticUtil.doAdd(position,positionFlow);
         AjaxResult result = new AjaxResult();
         BigDecimal resultAmt = issueAmt.subtract(position);
         result.setData(resultAmt);

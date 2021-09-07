@@ -69,7 +69,7 @@
    			and ti.SUBJECT_NATURE = #{booksetId}
        </if>
 		and ti.DECLARE_DATE = #{foreDeclar}
-		and ti.DECLARE_YEAR = #{year}
+		and ti.DECLARE_YEAR = #{declareYear}
 	</select>
 	
 	<select id="quryTaxBokDetail"	resultType="com.joyintech.tams.common.base.entity.TaxBokDetail">

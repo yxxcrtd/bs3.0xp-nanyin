@@ -603,7 +603,7 @@ $(function () {
                 	}
                 }
             } else if ((ps == ps_T19)) {
-                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE && !isTodoList) {
+                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE) {
                     // var tradeAmtHid = shareAmt * unitCprice;
                     // $('#tradeAmt').val(tradeAmtHid).trigger('blur');
                     // $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');

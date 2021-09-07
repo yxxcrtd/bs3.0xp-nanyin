@@ -81,7 +81,8 @@ public enum BatchBeanName {
 	子资管计划资产指标信息("3050","svrSubInvestmentPlanAssetIndicatorInfoTaskService","subInvestImpMainService","子资管计划资产指标信息"),
     贷款明细信息接口数据接入("3051","svrLoanDetailInfoInterfTaskService","loanDetailInfoImpMainService","贷款明细信息接口数据接入"),
 
-    新人行单产品报表生成("3056","svrNewPbcDatFileTaskService","PbcNewDatFileCBMainService","新人行单产品报表生成"),
+    新人行单产品报表生成("3055","svrNewPbcSinglePrdReportTaskService","svrNewPbcSinglePrdReportTaskService","新人行单产品报表生成"),
+    新人行dat报表生成("3056","svrNewPbcDatFileTaskService","svrNewPbcDatFileTaskService","新人行dat报表生成"),
     新人行月报Dat文件生成批处理("3057","svrNewPbcReportDatFileTaskService","PbcNewReportDatFileCBMainService","新人行月报Dat文件生成批处理"),
 
     贷款明细原始合同信息接入("3081","svrLoanDetailContractInterfTaskService","loanDetailInfoFileImpService","贷款明细原始合同信息接入"),
@@ -105,8 +106,8 @@ public enum BatchBeanName {
 	产品分红交易接口数据接入("3077","svrProdDiviendBasisInfoTaskService","chbPrdDividendBasisImpMainService","产品分红交易接口数据接入"),
     产品利率基本信息接口数据接入("4100","svrProdRateInfoInterfTaskService","SvrProdRateInfoImpMainService","产品利率基本信息接口数据接入"),
     资产利率基本信息接口数据接入("4101","svrAssetRateInfoInterfTaskService","SvrAssetRateInfoImpMainService","资产利率基本信息接口数据接入"),
-	投资者身份信息登记导出("3083","equityInfoExportService","equityInfoExportMainService","投资者身份信息登记导出"),
-	投资者持有信息登记导出("3084","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
+	投资者身份信息登记导出("3074","equityInfoExportService","equityInfoExportMainService","投资者身份信息登记导出"),
+	投资者持有信息登记导出("3076","investorsHoldInfoExportService","investorsHoldInfoExportMainService","投资者持有信息登记导出"),
 
             ;
 	/**

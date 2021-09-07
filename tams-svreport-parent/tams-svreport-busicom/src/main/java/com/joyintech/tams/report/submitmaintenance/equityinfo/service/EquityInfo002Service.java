@@ -170,7 +170,7 @@ public class EquityInfo002Service extends BaseService{
         List<EquityInfo001Dto> equityList1 =new ArrayList<EquityInfo001Dto>();
         equityList1.add(dto) ;
         List<String> keys = equityInfoDistinctService.getKeys(equityList1);
-        equityInfoDistinctService.checkSendedData(equityList1,keys,"02","01");
+        equityInfoDistinctService.checkSendedData(equityList1,keys,"02");
         equityInfoDistinctService.checkAllData(equityList1,keys,"02");
         if(equityList1.isEmpty()){
         	 message.add("识别标识不可用！该投资者存在多个识别标识。");

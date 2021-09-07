@@ -17,8 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import com.csii.dc.client.util.StringUtil;
+//import com.csii.dc.client.util.StringUtil;
 import com.joyintech.framework.sso.SSOCookieOperateor;
+import com.joyintech.framework.util.StringUtil;
 
 /**
  * SSOCookieOperateor实现类

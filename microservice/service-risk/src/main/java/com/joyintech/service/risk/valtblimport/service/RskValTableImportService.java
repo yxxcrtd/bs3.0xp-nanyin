@@ -149,7 +149,7 @@ public class RskValTableImportService {
                     finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();//F03
                     tradeMarket=DictCodeListExt1.交易场所_上海证券交易所.getValue();
                     type6=DictCodeList.回购类型_质押式回购.getValue();
-                    type7=DictCodeList.回购拆借方向_正回购.getValue();
+                    type7=DictCodeList.回购拆借方向_逆回购.getValue();
                     type8=BussinessDictCodeList.平安资产类型_回购.getValue();
 
                 }else if(StringUtil.equals(code,"12020102")){

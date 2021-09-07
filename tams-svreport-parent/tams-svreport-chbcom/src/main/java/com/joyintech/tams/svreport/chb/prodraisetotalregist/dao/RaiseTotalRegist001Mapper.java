@@ -140,5 +140,5 @@ public interface RaiseTotalRegist001Mapper {
 	 * @param prodId
 	 * @return
 	 */
-	List<RaiseTotalRegist001Dto>   getEquCount(@Param("prodId")String prodId);
+	List<RaiseTotalRegist001Dto>   getEquCount(String prodId);
 }

@@ -78,14 +78,10 @@ $(function() {
         },
         cols:[
             { title: "数据状态", field: 'status',width:100},
-            {title: '持有日期',field:'holdDate', width:100, visible:false},/*界面查询性能优化*/
             {title: '持有日期',field:'holdDateStr', width:100,sortField:'holdDate'},
-            { title: "数据日期", field: 'updateTime', visible:false},/*界面查询性能优化*/
             { title: "数据日期", field: 'updateTimeStr',sortField:'updateTime'},
             { title: "报送状态", field: 'sendStatus',width:100 },
-            { title: "报送日期", field: 'submitTime', visible:false},/*界面查询性能优化*/
             { title: "报送日期", field: 'submitTimeStr',sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadline', visible:false},/*界面查询性能优化*/
             { title: "报送截止日", field: 'chbSubmitDeadlineStr',sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
@@ -110,6 +106,7 @@ $(function() {
                     }
                 }*/
             },
+            {title: '报送流水号',field:'sumitSeq', width:150},
             {title: '登记银行代码',field:'registBankCode', width:200},
             {title: '产品登记编码', field:'prdRegistCode', width:100},
             {title: '识别标识',field:'indentifyMark', width:150},
@@ -120,7 +117,6 @@ $(function() {
             {title: '机构代码',field:'orgCode', width:150},
             {field:'ccyCode', visible:false},
             {field:'sendStatusCode', visible:false},
-            {field:'sumitSeq', visible:false},
             {field:'statusCode', visible:false}
         ]
     });
@@ -144,7 +140,8 @@ $(function() {
 
     //导出中债Excel
     $('#InvestorsHoldInfoRegist001_btn_chbexport').click(function() {
-        exportExcel("0");
+        //exportExcel("0");
+        	exportZZExcel();
     });
 
     //导出删除模板
@@ -561,6 +558,206 @@ $(function() {
         // 绑定按钮事件
         $('#InvestorsHoldInfoRegist001_btn_search').click(function() {
             table.load();
-        });
-    });
+           });
+       });
+       
+       //导出中债excel
+       var exportZZExcel = function(flag) {
+       	   var expArr=table.getAllCheckedRows();
+           
+           //先判断有没有勾选数据
+           if(!expArr || expArr.length ==0){
+               	var param = getSearchParams();
+                   param.status='01,02';
+                   param.flag = "0";
+               	//没有勾选数据
+               	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
+               	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？
+//                   Joyin.ajax('countExportNum',param,function(dataNum){
+//                       if(dataNum>500){
+//                            Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
+//                           	 exportAndDoManual(param);
+//                            });
+//                       }else{
+//                       	exportAndDoManual(param);
+//                       }
+//                   });
+//           		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
+//                    	var param = getSearchParams();
+//                        param.status='01,02';
+//                        param.flag = "0";
+                   	//没有勾选数据
+                   	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
+                   	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？
+                       // Joyin.ajax('countExportNum',param,function(dataNum){
+                       //     if(dataNum>100000){
+                       //          Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
+                       //         	 exportAndDoManual(param);
+                       //          });
+                       //     }else{
+                       //  	   Joyin.confirm("是否确认导出中债Excel?", function() {
+                       //  		 exportAndDoManual(param);
+                       //  	   });
+                       //     }
+                       // });
+//                   });
+               Joyin.ajaxJson('checkExport',param,function(result){
+                   if(result.date){
+                       exportAndDoManual(param);
+                   } else {
+                       // 无勾选导出，数量小于设置值走勾选逻辑
+                       Joyin.ajax('searchInfo',
+                           param,
+                           function (result) {
+                               if (result && result.length > 0){
+                                   exportZZ(true,result);
+                               }
+                           });
+                   }
+
+               });
+           }else{
+           	//有勾选数据
+           	//先判断勾选的数据有没有包含有删除状态的数据
+             	 for(var i=0;i<expArr.length;i++){
+                    if(expArr[i].statusCode =="03"){
+                   	 //如果包含有删除状态的数据，给出提示并返回
+                        Joyin.error(JoyinUtil.getMessage("REPORT_MANUAL_0010"));
+                        return;
+                    }
+                }
+             	 //不包含有删除状态的数据
+             	 var showTip=false;
+             	 var doManualTip=false;
+             	for(var i=0;i<expArr.length;i++){
+             		if(expArr[i].sendStatusCode=="01"){
+             			doManualTip=true; 
+             		}
+             	}
+             	 for(var i=0;i<expArr.length;i++){
+             		 if(expArr[i].statusCode =="02"||expArr[i].sendStatusCode != "01"){
+                        //若勾选数据中含有数据状态为“修改”或报送状态不为“未报送”的数据时
+                   	 //赋值showTip为true，给出提示框
+                   	 showTip=true;
+                        break;
+                    }
+                    
+                }
+             	 //根据提示状态判断
+             	if(showTip){
+             		//给出提示框【导出数据包含修改或已报送数据，请确认是否导出！】
+                   Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0011"), function() {
+                   	  //点击“是”导出数据并且手工处理，否则重新选择数据
+                   	  exportZZ(doManualTip,expArr);
+                     });
+             	}else{
+             		//勾选的数据正常，不需要给出提示，直接导出数据并且手工处理
+             		exportZZ(doManualTip,expArr);
+             	}
+           }
+       	
+       }
+       function exportZZ(flag,expArr){
+       	//导出中债excel并且调用手工处理
+           $.each(expArr, function(i, v) {
+               v.sendStatus=v.sendStatusCode;
+               v.status=v.statusCode;
+               v.ccy=v.ccyCode;
+           });
+           var param = {};
+           var keyList = [];
+           param.status='01,02';
+           param.flag = "0";
+           param.keyList = JSON.stringify(expArr);
+           param.expKeys = keyList.join(',')
+           Joyin.exportExcel('export', param);
+           if(flag){
+   	        Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
+   	              Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+                         layui.layer.open({type:3});
+                       Joyin.ajax('doManual', {flag : '02',keyList: JSON.stringify(expArr)}, function() {
+                           table.load();
+                           layui.layer.closeAll();
+                       });
+                     });
+   	          });
+           }
+       }
+       
+       function exportAndDoManual(param){
+    	   Joyin.confirm(JoyinUtil.getMessage("是否将导出数据的报送状态改为“手工处理”？"), function() {
+    		   Joyin.ajax('batchExportAnddoManual', 
+      					{key: JSON.stringify(param),
+      					busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
+      					selectedBatchGroup: '3076,3072',// 批处理id
+      	                selectedProductGroup: '',
+      	                startDate: new Date(),
+      	                endDate: new Date(),
+      	                batchGroupType: '1',
+      	                prodGroupType: '0',
+      	                detailName: '投资者持有信息登记-导出中债excel文件'},
+      	                function(result2) {
+      	                	if(result2.data){
+       	                		Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+       	                	}else{
+       	                		Joyin.alert(result2.message);
+       	                	}
+       	                	table.load();
+      	                }
+      	            );
+    	   },null,function(){
+       	// 添加后台批处理导出逻辑 zhangyf 20200113 start
+          // Joyin.ajaxJson('checkExport', param, function(result) {
+   			//if(result.data){
+   				// 后台批处理导出
+   				Joyin.ajax('batchExport', 
+   					{key: JSON.stringify(param),
+   					busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
+   					selectedBatchGroup: '3076',// 批处理id
+   	                selectedProductGroup: '',
+   	                startDate: new Date(),
+   	                endDate: new Date(),
+   	                batchGroupType: '1',
+   	                prodGroupType: '0',
+   	                detailName: '投资者持有信息登记-导出中债excel文件'},
+   	                function(result2) {
+   	                	if(result2.data){
+   	                		Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+   	                	}else{
+   	                		Joyin.alert(result2.message);
+   	                	}
+   	                	table.load();
+   	                }
+   	            );
+   			//}else{
+   			//	Joyin.exportExcel('export', param);//原导出逻辑
+   			//	doManual(JoyinUtil.getMessage("REPORT_MANUAL_0012"),param);//原手工处理逻辑
+   			//}
+        //  });
+           // 添加后台批处理导出逻辑 zhangyf 20200113 end
+    	   });
+       }
+       
+       function doManual(message,param){	
+       	Joyin.confirm(message, function() {
+       		Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+        		layui.layer.open({type:3});
+                Joyin.ajax('doManual', 
+                {	
+                	flag:'01',
+                	key: JSON.stringify(param),
+                	selectedBatchGroup: '3072',
+    				selectedProductGroup: '',
+    				startDate: new Date(),
+    				endDate: new Date(),
+    				batchGroupType: '1',
+    				prodGroupType: '0',
+    				detailName: 'CYSGCL'
+                }, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+    		});     
+       	}); 
+       }
 }());

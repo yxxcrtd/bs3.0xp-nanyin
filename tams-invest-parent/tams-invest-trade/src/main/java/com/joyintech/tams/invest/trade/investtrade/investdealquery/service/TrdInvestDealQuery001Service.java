@@ -369,7 +369,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    
 	    /**
 	     * 获取数据
-	     * @param selectParam
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -460,8 +460,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 获取excel列表数据
 	     * 
-	     * @param prodDto
-	     * @param assetDto
+	     * @param daoList
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -559,6 +558,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		File depositfile = null;
 		OutputStream os = null;
 		InputStream stream = null;
+		FileOutputStream fos = null;
 		try {
 			// 关联模板
 			XLSTransformer transformer = new XLSTransformer();
@@ -574,29 +574,29 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			stream  = CommonExportService.class.getResourceAsStream(
 					"/tpl/" + templateFile);
 			Workbook workbook = transformer.transformXLS(stream, data);
-			os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+			fos = new FileOutputStream(depositfilePath + File.separator + flieName);
+			os = new BufferedOutputStream(fos);
 			workbook.write(os);
 		}
 		catch (Exception e) {
 			logger.info(exceltemplate + "生成失败！");
 			throw new BusinessException(e);
 		}finally {
+			try {
 			if(os != null){
-				try {
 					os.flush();
 					os.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
 				}
-			}
 			if(stream != null){
-				try {
 					stream.close();
+				}
+				if (fos != null){
+				   fos.close();
+				}
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}
 			}
-		}
 		return depositfile;
 	}
 
@@ -619,10 +619,12 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		}
 		tmpDir.mkdirs();
 		ZipOutputStream zipOut= null;
+		FileOutputStream fos = null;
 		InputStream input = null;
 		try {
 			File zipFile = new SafelyFile(exportFilePath + File.separator + fileName);
-			zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+			fos = new FileOutputStream(zipFile);
+			zipOut = new ZipOutputStream(fos);
 			if (files != null && !files.isEmpty()) {
 				for (File realFile : files) {
 					if (realFile.exists()) {
@@ -650,14 +652,20 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			logger.info(fileName + "zip生成失败！");
 			logger.error(e.getMessage(),e);
 		}finally {
-			if (zipOut != null){
-				try {
+			try {
+				if (zipOut != null){
 					zipOut.flush();
 					zipOut.close();
+				}
+				if (fos != null){
+					fos.close();
+				}
+				if (input != null){
+					input.close();
+				}
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}
-			}
 			if (input != null){
 				try {
 					input.close();
@@ -685,7 +693,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 债券类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -699,7 +707,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 存款类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -712,7 +720,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类利率型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -725,7 +733,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类净值型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -738,7 +746,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 计划类货币型交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -751,7 +759,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 基金类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -764,7 +772,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * 项目类交易
 	     * 
-	     * @param map
+	     * @param teadIds
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -777,7 +785,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * <一句话功能简述>
 	     * <功能详细描述>
-	     * @param map
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0
@@ -790,7 +798,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 	    /**
 	     * <一句话功能简述>
 	     * <功能详细描述>
-	     * @param map
+	     * @param dto
 	     * @return
 	     * @see
 	     * @since 1.0

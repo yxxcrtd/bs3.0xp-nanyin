@@ -834,7 +834,7 @@ public class FinProductBuild002Dto extends FinProduct implements ProcessEntity{
      * {@inheritDoc}
      */
     @Override
-    //@NotEmpty(fieldName = "FinProductBuild002.ccy")
+    @NotEmpty(fieldName = "FinProductBuild002.ccy")
     public String getCcy() {
         return super.getCcy();
     }

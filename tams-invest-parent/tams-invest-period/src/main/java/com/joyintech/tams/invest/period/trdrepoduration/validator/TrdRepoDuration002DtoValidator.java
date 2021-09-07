@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
 import com.joyintech.tams.invest.period.trdrepoduration.service.TrdRepoDuration002Service;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,11 +55,13 @@ public class TrdRepoDuration002DtoValidator implements BeanValidator {
                 errorList.add(new ValidMessage("penaltyIntamt",getMessage("FW_E_0006",getMessage("TrdRepoDuration002.penaltyIntamt"))));
             }
             //校验其前置的现金流信息所对应的交易 是否在流程中
-            TrdRepoDuration002Dto  trdRepoDurationCheckDto=new TrdRepoDuration002Dto();
-            BeanUtil.copyPropertiesIgnoreNull(trdRepoDurationCheckDto, dto);
-            trdRepoDurationCheckDto.setBusiCode(null);
-            if(trdRepoDuration002Service.checkBusinessDataInFlow(trdRepoDurationCheckDto)){
-                errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0027", "原始交易编号", trdRepoDurationCheckDto.getFinprodId())));
+            if (WorkFlowUtil.isNotFromToDoList()) {
+                TrdRepoDuration002Dto  trdRepoDurationCheckDto=new TrdRepoDuration002Dto();
+                BeanUtil.copyPropertiesIgnoreNull(trdRepoDurationCheckDto, dto);
+                trdRepoDurationCheckDto.setBusiCode(null);
+                if(trdRepoDuration002Service.checkBusinessDataInFlow(trdRepoDurationCheckDto)){
+                    errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0027", "原始交易编号", trdRepoDurationCheckDto.getFinprodId())));
+                }
             }
             if("T56".equals(dto.getPstype())){//新建时对续做页面做校验
                 errorList.addAll(bussValid(dto));

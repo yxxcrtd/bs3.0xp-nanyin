@@ -16,7 +16,7 @@
             <Cell order="12" name="现金红利金额">bonusCashAmt</Cell>
             <Cell order="13" name="红利再投金额">bonusShareAmt</Cell>
             <Cell order="14" name="红利再投份额">bonusShareNum</Cell>            
-            <Cell order="15" name="备注">remark</Cell>
+
             
         </Row>
     </Worksheet>

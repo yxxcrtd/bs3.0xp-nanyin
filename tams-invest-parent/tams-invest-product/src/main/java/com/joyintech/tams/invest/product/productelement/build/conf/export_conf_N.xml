@@ -2,7 +2,6 @@
 <Workbook filePath="FinProductBuild_N.xlsx" name="产品新建管理">
     <Worksheet javaBean="com.joyintech.tams.invest.product.productelement.build.dto.FinProductBuild001Dto">
         <Row>
-            <Cell order="1" name="有效状态">effectStatus</Cell>
             <Cell order="2" name="发行状态">issueStatusStr</Cell>
             <Cell order="3" name="组合代码">portfolioId</Cell>
             <Cell order="4" name="产品代码">finprodMarketId</Cell>             
@@ -28,9 +27,7 @@
             <Cell order="24" name="追加金额">lowestAmt</Cell>                  
             <Cell order="25" name="追加金额">issueAmt</Cell>                   
             <Cell order="26" name="产品系列">prodSeriesStr</Cell>  
-            <Cell order="27" name="产品设计系列编号">prdDesignId</Cell> 
-            <Cell order="28" name="产品设计系列名称">prdDesignName</Cell>           
-            <Cell order="29" name="产品分类">prodClass</Cell>                  
+            <Cell order="29" name="产品分类">prodClass</Cell>
             <Cell order="30" name="利率类型">rateType</Cell>                   
             <Cell order="31" name="预期收益率（%）">yield</Cell>                         
         </Row>

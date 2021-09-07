@@ -162,7 +162,7 @@ public class FTPTool {
 			if (file.isFile()) {
 				FileInputStream fis = null;
 				try{
-					new FileInputStream(file);
+					fis = new FileInputStream(file);
 					String fileName = new String(file.getName().getBytes(
 							ENCODE_UTF8), ENCODE_ISO);
 					String remoteFile = remote + file.getName();

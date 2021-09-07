@@ -40,6 +40,15 @@
     </select>
 
 
+    <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectPbcBankCodeBack" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.ORG_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.PBC_BANK_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
         select
         SI.INSTITUTION_NAME
@@ -178,8 +187,15 @@
 		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
 	</select>
 
-    <update id="updateSequenceIndexData" >
-		 UPDATE SYS_SEQUENCE SET begin_num = ((#{incrNum,jdbcType=INTEGER} * incr) + begin_num) WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+    <update id="updateSequenceIndexData" parameterType= "map" statementType="CALLABLE">
+    
+       <if test="databaseType == 'Oracle'"> 
+          {call UPDATE_SEQUENCE_CHB(
+		#{incrNum, jdbcType=VARCHAR, mode=IN},
+		#{sequenceName, jdbcType=VARCHAR, mode=IN} 
+		)
+	  }	
+        </if>
 	</update>
 
 </mapper>

@@ -635,7 +635,7 @@ public class FinProductCommonService {
         }else{
             if ((DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
                     || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies()))
-                    && marketPriceDto.getPrice() == null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) == 0) {
+                    && (marketPriceDto.getPrice() == null || marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) == 0)) {
                 marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
             }
         }

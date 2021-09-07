@@ -530,12 +530,12 @@
                         Joyin.ajaxJson(basePath+ "invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/getTdyIntincexp",param,function(result){
                             if (Number(result) > 0){
                                 $('#intAmt').val(Number(result));
+                                if ($('#finprodType').val() == 'D03'){
+                                     $('#intAmt').val('');
+                                }
                                 changeTradeAmtAndFee();
                             }else {
                                 $('#intAmt').val('');
-                            }
-                            if ($('#finprodType').val() == 'D03'){
-                                 $('#intAmt').val('');
                             }
                         });
                         //终止协议勾选时，本金金额不可编辑，等于资产可用持仓

@@ -40,4 +40,16 @@
         WHERE FP.FINPROD_ID = #{finprodId}
         GROUP BY T.FINPROD_ID, FP.ISSUE_AMT
     </select>
+    <select id="getFinAvaPositionFlow" resultType="java.math.BigDecimal" >
+        select
+        SUM(share_amt)
+        from wfl_trd_product_deal
+        where trade_date &lt;= to_date(#{tradeDate}, 'yyyy-mm-dd')
+        <if test="finprodId != null and finprodId != ''">
+            and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        </if>
+        <if test="isnotContainTrds != null and isnotContainTrds != ''">
+            and trade_id != #{isnotContainTrds,jdbcType=VARCHAR}
+        </if>
+    </select>
 </mapper>

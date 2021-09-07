@@ -180,21 +180,23 @@ $(function(){
 		             });
 	        	}
 	        }else{
-	        	for(var i=0;i<rows.length;i++){
-	              if ((rows[i].sendStatus == '01'
-	                  || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
-	  	        	var paramObj= {};
-		        	paramObj.flag = '01';
-		        	paramObj.infoList = rows;
-		          Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
-		        	  layui.layer.open({type:3});
-		              Joyin.ajaxJson('doManul', paramObj, function() {
-		                  table.load();
-		                  layui.layer.closeAll();
-		              });
-		          });
-	              }
-	          }
+				for(var i=0;i<rows.length;i++){
+					if (!(rows[i].sendStatus == '01'
+						|| (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
+						Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
+						return;
+					}
+				}
+				var paramObj= {};
+				paramObj.flag = '01';
+				paramObj.infoList = rows;
+				Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
+					layui.layer.open({type:3});
+					Joyin.ajaxJson('doManul', paramObj, function() {
+						table.load();
+						layui.layer.closeAll();
+					});
+				});
 	        }
 		}
     };

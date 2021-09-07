@@ -458,7 +458,7 @@
   <select id="selectPIB2All" parameterType="map" resultMap="BaseResultMap" flushCache="true" useCache="false">
     select
     nvl(t2.pbc_code,a.pbc_prod_id) PBC_PROD_ID, a.CUSTOMER_TYPE1, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
-    a.INIT_RAISING_QTY, a.BUY_PLACE, a.CCY
+    a.INIT_RAISING_QTY, a.BUY_PLACE, a.CCY,b.PROD_ID
     from PBC_INIT_PROD_RAISING_SUB a
     left join (<include refid="PBC_PRD_BASEINFO_SUB" />) b on a.PBC_PROD_ID = b.PBC_PROD_ID
     <!-- and a.ORG_CODE = b.ORG_CODE -->
@@ -567,6 +567,7 @@
     SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
     '000000' BUY_PLACE,
     'BWB' CCY
+    ,PROD_ID
     from(
     select
     a.REGIST_SEQNO,nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
@@ -682,6 +683,7 @@
     ) group by
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
+    ,PROD_ID
     union all
     select
     PBC_PROD_ID,
@@ -691,6 +693,7 @@
     SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
     '000000' BUY_PLACE,
     CCY
+    ,PROD_ID
     from(
     select
     a.REGIST_SEQNO,nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
@@ -807,6 +810,7 @@
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,CCY
+    ,PROD_ID
     union all
     select
     PBC_PROD_ID,
@@ -816,6 +820,7 @@
     SUM(INIT_RAISING_QTY) INIT_RAISING_QTY,
     BUY_PLACE,
     'BWB' CCY
+    ,PROD_ID
     from(
     select
     a.REGIST_SEQNO,nvl(t2.pbc_code,a.PBC_PROD_ID)PBC_PROD_ID, a.BUY_PLACE, a.CUSTOMER_TYPE1, a.CCY, a.INIT_RAISING_AMTSUM, a.INIT_RAISING_AMTSUMCNY,
@@ -932,6 +937,7 @@
     PBC_PROD_ID
     ,CUSTOMER_TYPE1
     ,BUY_PLACE
+    ,PROD_ID
     order by
     PBC_PROD_ID
   </select>
@@ -982,7 +988,7 @@
     )t2 ON t2.inside_prod_id=b.PROD_ID
   	<where>
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+            <foreach collection="pbcProdIdList" item="items" open="and nvl(t2.pbc_code,a.PBC_PROD_ID)  in (" separator="," close =")">
             #{items,jdbcType=VARCHAR}
             </foreach>
         </if>

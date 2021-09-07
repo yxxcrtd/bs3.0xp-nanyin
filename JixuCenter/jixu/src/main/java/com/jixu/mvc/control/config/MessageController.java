@@ -53,9 +53,10 @@ public class MessageController extends ExceptionControl{
 		
     	int userID=JixuUserUtil.getUserIDbyRequest(request);
 		Iterator<String> itr = request.getFileNames();
+		DataInputStream in = null;
 		while(itr.hasNext()){
 			try {
-				DataInputStream in = new DataInputStream(request.getFile(itr.next()).getInputStream());
+				in = new DataInputStream(request.getFile(itr.next()).getInputStream());
 				br=new BufferedReader(new InputStreamReader(in,"gbk"));
 				String line=null;
 				int num=1;
@@ -82,15 +83,18 @@ public class MessageController extends ExceptionControl{
 			} catch (IOException e) {
 				logger.error(e.getMessage(),e);
 			}finally {
+				try {
 				if (br != null){
-					try {
 						br.close();
+					}
+					if (in != null){
+						in.close();
+					}
 					} catch (IOException e) {
 						logger.error(e.getMessage(),e);
 					}
 				}
 			}
-		}
 		result.put("data", data);
 		JsonUtil.writeObjToResponse(response, result);
 	}

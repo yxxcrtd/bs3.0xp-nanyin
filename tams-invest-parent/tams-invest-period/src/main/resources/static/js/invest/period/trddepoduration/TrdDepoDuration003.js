@@ -4,6 +4,7 @@
 $(function() {
 	var needInit = true;
 	var acctNoList;
+    var uploadFileList =[];
 	/**
      * 页面初始化
      */
@@ -435,6 +436,9 @@ $(function() {
         var object = $.serializeToObject('#informationForm', true);
         object.operateType = operateType;
         object.opType = opType;
+        if(FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo()
+        }
         Joyin
                 .ajaxJson(
                         basePath

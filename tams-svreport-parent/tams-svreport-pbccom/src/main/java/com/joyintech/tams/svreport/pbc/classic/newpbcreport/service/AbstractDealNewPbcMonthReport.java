@@ -91,6 +91,10 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
      * 制表日期
      */
     public final static String REPORT_DATE = "reportDate";
+    /**
+     * 制表日期
+     */
+    public final static String DATA_DATE = "dataDate";
 
     public PbcSendZipDatFile newPbcSendZipDatFile(ReportDealParamDto paramDto, int size) throws Exception{
         PbcSendZipDatFile sendZipDatFile = new PbcSendZipDatFile();
@@ -121,13 +125,31 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
         sendZipDatFile.setContact(contact);
         //制表日期
         try {
-            String reportDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(REPORT_DATE),true);
+            /*String reportDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(REPORT_DATE),true);
             if(StrUtil.isNotEmpty(reportDate)){
                 DateTime dateTime = DateUtil.parse(reportDate, "yyyy-MM-dd");
                 sendZipDatFile.setReportDate(dateTime);
-            }
+            }*/
+            //制表日期取系统时间,以前是取导入表格中的制表日期
+            sendZipDatFile.setReportDate(new Date());
         }catch (Exception e){
             throw new Exception(sheetName()+"制表日期格式不正确!正确格式为:yyyy-MM-dd");
+        }
+        //数据日期
+        try {
+            /*
+            String dataDate = getCellValue(paramDto.getHssfSheet(), baseMap.get(DATA_DATE),true);
+            if(StrUtil.isNotEmpty(dataDate)){
+                DateTime dateTime = DateUtil.parse(dataDate, "yyyy-MM-dd");
+                sendZipDatFile.setEnddate(dateTime);
+            }*/
+            //以前是取导入表格中的制表日期
+            String statusVdate = paramDto.getStatusVdate();
+            DateTime dateTime = DateUtil.parse(statusVdate, "yyyyMM");
+            DateTime endOfMonth = DateUtil.endOfMonth(dateTime);
+            sendZipDatFile.setEnddate(endOfMonth);
+        }catch (Exception e){
+            throw new Exception(sheetName()+"数据日期格式不正确!正确格式为:yyyy-MM-dd");
         }
         sendZipDatFile.setRegistSeqno(UUID.randomUUID().toString());
         sendZipDatFile.setDatZipCode(paramDto.getDatZipCode());
@@ -137,7 +159,6 @@ public abstract class AbstractDealNewPbcMonthReport implements IDealNewPbcMonthR
         sendZipDatFile.setStatusVdate(paramDto.getStatusVdate());
         sendZipDatFile.setReportuuid(paramDto.getReportUUID());
         sendZipDatFile.setPibDetailCnt(1);
-        sendZipDatFile.setSubmitTime(new Date());
         sendZipDatFile.setZipSendStatus("01");
         sendZipDatFile.setOrgCode(paramDto.getOrgCode());
         return sendZipDatFile;

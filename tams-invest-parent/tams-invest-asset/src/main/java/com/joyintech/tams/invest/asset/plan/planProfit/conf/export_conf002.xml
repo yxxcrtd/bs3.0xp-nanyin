@@ -7,8 +7,8 @@
            <!--  /*  start、zhuyongkang、2019.7.22、添加了2345级，隐藏了12级   */ -->
          <!--    <Cell order="3" name="一级分类">categoryAbbr</Cell>
             <Cell order="4" name="二级分类">typeAbbr</Cell> -->
-            <Cell order="3" name="二级分类">type9Abbr</Cell>
-            <Cell order="4" name="三级分类">type10Abbr</Cell>
+            <Cell order="3" name="资产二级分类">type9Abbr</Cell>
+            <Cell order="4" name="资产三级分类">type10Abbr</Cell>
 <!--             <Cell order="5" name="四级分类">type11Abbr</Cell> -->
 <!--             <Cell order="6" name="五级分类">type12Abbr</Cell> -->
              <!--  /*  end、zhuyongkang、2019.7.22、添加了2345级，隐藏了12级   */ -->

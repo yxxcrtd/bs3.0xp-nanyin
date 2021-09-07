@@ -113,13 +113,9 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
 
         String[] strArr = reportDate.split(",")[0].split("-");
         if (DictCodeListExt1.报表期限类型_年报.getValue().equals(reportTermType)) {// 年底
-        	//update yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
-            //year = Integer.valueOf(strArr[0]);
-            //month += 12;
-            //day = 31;
             year = Integer.valueOf(strArr[0]);
-            month += Integer.valueOf(strArr[1]);
-            day = Integer.valueOf(strArr[2]);
+            month += 12;
+            day = 31;
         }
         if (DictCodeListExt1.报表期限类型_半年报.getValue().equals(reportTermType)) {
             year = Integer.valueOf(strArr[0]);
@@ -303,11 +299,11 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         else if (StringUtil.equals(reportTermType, DictCodeListExt1.报表期限类型_年报.getValue())) {
         	//update yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
             pageParam.put("thisTermVdate", thisYear + "-01-01");
-            //pageParam.put("thisTermMdate", thisYear + "-12-31");
+            pageParam.put("thisTermMdate", thisYear + "-12-31");
             pageParam.put("lastTermVdate", lastYear + "-01-01");
-            //pageParam.put("lastTermMdate", lastYear + "-12-31");
-            pageParam.put("thisTermMdate", valDate);
-            pageParam.put("lastTermMdate", DateUtil.format(DateUtil.addYear(now, -1)));
+            pageParam.put("lastTermMdate", lastYear + "-12-31");
+            //pageParam.put("thisTermMdate", valDate);
+            //pageParam.put("lastTermMdate", DateUtil.format(DateUtil.addYear(now, -1)));
         }
     }
 

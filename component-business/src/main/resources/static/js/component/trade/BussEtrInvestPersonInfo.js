@@ -52,6 +52,9 @@
                         // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
                         $("#settleSpreed").prop("disabled", false).change();
                         $("#settleSpeed").prop("disabled", false).change();
+                        if(callPageId == 'EtrInvestBondInfo002'){
+                             $('#price').val('');
+                        }
                     }
                     // 【债券投资委托】交易对手选择内部交易对手时，清算速度为T+0不可改
                     if (交易对手 == 'N') {
@@ -64,6 +67,9 @@
                         $("#settleSpeed").prop("disabled", false);
                         $('#entrustIntegrateNum').prop("disabled", false);
                         $('#entrustOwnNum').prop("disabled", false);
+                        if(callPageId == 'EtrInvestBondInfo002'){
+                             $('#price').val('');
+                        }
                     }
             	}
             }

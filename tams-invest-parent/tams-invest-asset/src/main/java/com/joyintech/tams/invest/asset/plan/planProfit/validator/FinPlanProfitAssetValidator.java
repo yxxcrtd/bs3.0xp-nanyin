@@ -125,12 +125,14 @@ public class FinPlanProfitAssetValidator implements BeanValidator {
 	            }
 	        }
 			if (StringUtil.equals(dto.getOperateType(), "save") ||StringUtil.equals(dto.getOperateType(), "submit")){
-				for(FinCashPlan finCashPlan : dto.getFinPayInterestStdInfoDto().getFinCashPlanList()){
-					//计息开始日=到期日 或者 计息开始日等于计息结束日都不给提交
-					if(finCashPlan.getVdate().compareTo(dto.getMdate())==0 ||
-							finCashPlan.getVdate().compareTo(finCashPlan.getMdate())==0){
-						errorList.add(new ValidMessage("存在计息开始日等于到期日/计息开始日等于计息结束日的付息记录!"));
-						break;
+				if(StringUtil.isNotEmpty(dto.getFinPayInterestStdInfoDto())){
+					for(FinCashPlan finCashPlan : dto.getFinPayInterestStdInfoDto().getFinCashPlanList()){
+						//计息开始日=到期日 或者 计息开始日等于计息结束日都不给提交
+						if(finCashPlan.getVdate().compareTo(dto.getMdate())==0 ||
+								finCashPlan.getVdate().compareTo(finCashPlan.getMdate())==0){
+							errorList.add(new ValidMessage("存在计息开始日等于到期日/计息开始日等于计息结束日的付息记录!"));
+							break;
+						}
 					}
 				}
 			}

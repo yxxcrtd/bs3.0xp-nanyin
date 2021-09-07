@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
@@ -51,13 +52,6 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -381,12 +375,23 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             //paramMap.put("calendarId", dto.getCalendarId());
             paramMap.put("chlId", dto.getChlId());
             paramMap.put("finprodId", dto.getFinprodId());
+            //考虑流程中被占用,是的情况
+            paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
+            //针对，流程中数据退回，然后又重新提交时，流程中占有应不包含该数据
+            paramMap.put("isnotContainTrds",dto.getTradeId());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+
 
             BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
             //融资金额
             BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            //流程中占用金额
+            BigDecimal positionFlow =null;
+            if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+                positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+            }
+            position= ArithmeticUtil.doAdd(position,positionFlow);
             position = com.joyintech.framework.util.ArithmeticUtil.doAdd(position, dto.getPrinAmt());
             //资产 融资金额、发行金额
             if (issueAmt.compareTo(position) < 0) {

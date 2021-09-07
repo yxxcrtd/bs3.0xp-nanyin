@@ -2153,15 +2153,55 @@ public class FinProductCommonService extends BaseService {
 		                            finBaseRuleInfoMapper.insert(bussBenchMarkInfoDto);
 
 		                            // 重新生成 第一个期次的数据 branch 为 fintradeProduct的branch
-                                    BussBenchMarkInfoDto bussBenchMarkInfoDto2 = new BussBenchMarkInfoDto();
-                                    BeanUtil.copyProperties(bussBenchMarkInfoDto2,bussBenchMarkInfoDto);
-                                    bussBenchMarkInfoDto2.setBranch(finTradeProduct.getBranch());
-                                    bussBenchMarkInfoDto2.setBaseRuleId(CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
-                                            Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue()));
-                                    finBaseRuleInfoMapper.insert(bussBenchMarkInfoDto2);
+//                                    BussBenchMarkInfoDto bussBenchMarkInfoDto2 = new BussBenchMarkInfoDto();
+//                                    BeanUtil.copyProperties(bussBenchMarkInfoDto2,bussBenchMarkInfoDto);
+//                                    bussBenchMarkInfoDto2.setBranch(finTradeProduct.getBranch());
+//                                    bussBenchMarkInfoDto2.setBaseRuleId(CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
+//                                            Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue()));
+//                                    finBaseRuleInfoMapper.insert(bussBenchMarkInfoDto2);
 
 		                        }
 			                }
+
+			                //  重新生成 第一个期次的数据 branch 为 fintradeProduct的branch  上面的代码 如果 非区间披露 并且bussBenchMarkInfoDto.getRateType()为空
+                            //  则不生成  finBaseRuleInfo 则 第一个有效期次无法展示在期次管理页面
+                            if(StringUtil.equals(DictCodeList.处理模式_周期型.getValue(), entity.getDealMode())&&
+                                    StringUtil.equals(DictCodeList.收益类型_净值型.getValue(), entity.getProfitType()) && entity.getBussBenchMarkInfoDto()!=null){
+                                // 重新生成 第一个期次的数据 branch 为 fintradeProduct的branch
+                                BussBenchMarkInfoDto bussBenchMarkInfoDto = new BussBenchMarkInfoDto();
+                                bussBenchMarkInfoDto.setBranch(finTradeProduct.getBranch());
+                                bussBenchMarkInfoDto.setBaseRuleId(CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
+                                        Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue()));
+
+                                bussBenchMarkInfoDto.setBaseRuleType(DictCodeListExt1.业绩基准类型_产品披露.getValue());
+//                                bussBenchMarkInfoDto.setBranch(entity.getBranch());
+                                bussBenchMarkInfoDto.setRateLower(ArithmeticUtil.divide(bussBenchMarkInfoDto.getRateLower(), 100, 14));
+                                bussBenchMarkInfoDto.setRateLimit(ArithmeticUtil.divide(bussBenchMarkInfoDto.getRateLimit(), 100, 14));
+                                bussBenchMarkInfoDto.setRate(ArithmeticUtil.divide(bussBenchMarkInfoDto.getRate(), 100, 14));
+                                if (StringUtil.isNotEmpty(finProduct.getVdate())) {
+                                    bussBenchMarkInfoDto.setEffDate(finProduct.getVdate());
+                                }
+                                else {
+                                    bussBenchMarkInfoDto.setEffDate(DateUtil.platDateFromCache());
+                                }
+                                if (StringUtil.equals(bussBenchMarkInfoDto.getRateType(),
+                                        DictCodeList.利率类型_浮动利率.getValue())) {
+                                    MstIndexInfo mstIndexInfo = mstIndexInfoMapper.selectByPrimaryKey(
+                                            bussBenchMarkInfoDto.getIndexId());
+                                    if (mstIndexInfo != null) {
+                                        bussBenchMarkInfoDto.setIndexSource(mstIndexInfo.getIndexType());
+                                    }
+                                    else {
+                                        bussBenchMarkInfoDto.setIndexSource(DictCodeListExt1.基准类型_2_利率.getValue());
+                                    }
+                                }
+                                bussBenchMarkInfoDto.setFinprodId(finProduct.getFinprodId());
+                                bussBenchMarkInfoDto.setSpreadRate(
+                                        ArithmeticUtil.divide(bussBenchMarkInfoDto.getSpreadRate(), 100, 14));
+
+                                finBaseRuleInfoMapper.insert(bussBenchMarkInfoDto);
+
+                            }
 			                // 浮动管理费
 		                	FinProductFloatFeeDto finProductFloatFeeDto = entity.getBussFinProductFloatFeeDto();
 		                	if(finProductFloatFeeDto != null && (StringUtil.equals(DictCodeList.收益类型_净值型.getValue(), entity.getProfitType())
@@ -2509,14 +2549,50 @@ public class FinProductCommonService extends BaseService {
 				                            finBaseRuleInfoMapper.insert(finBaseRuleInfo);
 
                                             // 重新生成 第一个期次的数据 branch 为 fintradeProduct的branch
-                                            BussBenchMarkLayeredInfoDto finBaseRuleInfo2 = new BussBenchMarkLayeredInfoDto();
-                                            BeanUtil.copyProperties(finBaseRuleInfo2,finBaseRuleInfo);
-                                            finBaseRuleInfo2.setBranch(finTradeProduct.getBranch());
-                                            finBaseRuleInfo2.setBaseRuleId(CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
-                                                    Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue()));
-                                            finBaseRuleInfoMapper.insert(finBaseRuleInfo2);
+//                                            BussBenchMarkLayeredInfoDto finBaseRuleInfo2 = new BussBenchMarkLayeredInfoDto();
+//                                            BeanUtil.copyProperties(finBaseRuleInfo2,finBaseRuleInfo);
+//                                            finBaseRuleInfo2.setBranch(finTradeProduct.getBranch());
+//                                            finBaseRuleInfo2.setBaseRuleId(CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
+//                                                    Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue()));
+//                                            finBaseRuleInfoMapper.insert(finBaseRuleInfo2);
 
 				                        }
+
+				                        if(finBaseRuleInfo!=null){
+                                            String baseRuleId = CommonUtil.generateCashFlowCode(finTradeProduct.getPeriodId(), null,
+                                                    Long.valueOf(finTradeProduct.getBranch()), DictCodeListExt1.业绩基准类型_产品披露.getValue());
+                                            finBaseRuleInfo.setBaseRuleId(baseRuleId);
+                                            finBaseRuleInfo.setBaseRuleType(DictCodeListExt1.业绩基准类型_产品披露.getValue());
+                                            finBaseRuleInfo.setBranch(finTradeProduct.getBranch());
+                                            finBaseRuleInfo.setRateLower(ArithmeticUtil.divide(finBaseRuleInfo.getRateLower(), 100, 14));
+                                            finBaseRuleInfo.setRateLimit(ArithmeticUtil.divide(finBaseRuleInfo.getRateLimit(), 100, 14));
+                                            finBaseRuleInfo.setRate(ArithmeticUtil.divide(finBaseRuleInfo.getRate(), 100, 14));
+                                            if (StringUtil.isNotEmpty(finProduct.getVdate())) {
+                                                finBaseRuleInfo.setEffDate(finProduct.getVdate());
+                                            }
+                                            else {
+                                                finBaseRuleInfo.setEffDate(DateUtil.platDateFromCache());
+                                            }
+                                            if (StringUtil.equals(finBaseRuleInfo.getRateType(),
+                                                    DictCodeList.利率类型_浮动利率.getValue())) {
+                                                MstIndexInfo mstIndexInfo = mstIndexInfoMapper.selectByPrimaryKey(
+                                                        finBaseRuleInfo.getIndexId());
+                                                if (mstIndexInfo != null) {
+                                                    finBaseRuleInfo.setIndexSource(mstIndexInfo.getIndexType());
+                                                }
+                                                else {
+                                                    finBaseRuleInfo.setIndexSource(DictCodeListExt1.基准类型_2_利率.getValue());
+                                                }
+                                            }
+                                            finBaseRuleInfo.setFinprodId(finProduct.getFinprodId());
+                                            finBaseRuleInfo.setSpreadRate(
+                                                    ArithmeticUtil.divide(finBaseRuleInfo.getSpreadRate(), 100, 14));
+
+                                            finBaseRuleInfoMapper.insert(finBaseRuleInfo);
+
+
+                                        }
+
 				                    }
 				                
 				                }

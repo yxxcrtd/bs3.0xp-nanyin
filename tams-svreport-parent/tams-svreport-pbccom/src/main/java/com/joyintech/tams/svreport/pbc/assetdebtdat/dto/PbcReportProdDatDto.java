@@ -72,6 +72,11 @@ public class PbcReportProdDatDto {
     private Long prodcounts;
 
     /**
+     * 只数
+     */
+    private Long prodcountsPrd;
+
+    /**
      * 合计		
      */
     private BigDecimal total;
@@ -147,6 +152,8 @@ public class PbcReportProdDatDto {
      * 合计
      */
     private Integer totalDiff=0;
+
+    private Integer prodcountsDiff=0;
     /**
      * 合计
      */
@@ -165,6 +172,22 @@ public class PbcReportProdDatDto {
      * 发行机构代码
      */
     private String issuePartyId;
+
+    public Integer getProdcountsDiff() {
+        return prodcountsDiff;
+    }
+
+    public void setProdcountsDiff(Integer prodcountsDiff) {
+        this.prodcountsDiff = prodcountsDiff;
+    }
+
+    public Long getProdcountsPrd() {
+        return prodcountsPrd;
+    }
+
+    public void setProdcountsPrd(Long prodcountsPrd) {
+        this.prodcountsPrd = prodcountsPrd;
+    }
 
     /**
      * 主键

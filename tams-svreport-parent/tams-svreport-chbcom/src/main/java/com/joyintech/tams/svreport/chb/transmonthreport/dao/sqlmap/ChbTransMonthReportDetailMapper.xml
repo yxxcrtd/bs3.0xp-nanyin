@@ -10,11 +10,11 @@
   nvl(case when fp.profit_type='02' then llcalc.yield
       when fp.profit_type ='01'
        then case when jzcalc.strvalue = null or jzcalc.strvalue=0 then 0
-            else  (jzcalc.endvalue-jzcalc.strvalue)/(jzcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*decode(finrate.basis,'A/365',365,360)
+            else  (jzcalc.endvalue-jzcalc.strvalue)/(jzcalc.strvalue*(#{enddate,jdbcType=DATE}-jzcalc.strdate))*decode(finrate.basis,'A/365',365,360)
             end
       when fp.profit_type ='03'
        then case when   hbcalc.strvalue = null or hbcalc.strvalue=0 then 0  
-               else  (hbcalc.endvalue-hbcalc.strvalue)/(hbcalc.strvalue*(#{enddate,jdbcType=DATE}-#{startdate,jdbcType=DATE}+1))*decode(finrate.basis,'A/365',365,360)
+               else  (hbcalc.endvalue-hbcalc.strvalue)/(hbcalc.strvalue*(#{enddate,jdbcType=DATE}-hbcalc.strdate))*decode(finrate.basis,'A/365',365,360)
             end
         end,0) as prodprice,fp.finprod_id as finprodId
    from chb_month_prd_position chbprd
@@ -44,17 +44,24 @@
     and  llcalc.idx=1
     left join (select endval.finprod_id,
            nvl(endval.TOTAL_NET_VALUE,0) endvalue,
-           nvl(strval.TOTAL_NET_VALUE,1) strvalue
+           nvl(strval.TOTAL_NET_VALUE,1) strvalue,
+           nvl(strval.val_date,vdateval.val_date) strdate
            from BOK_VALBAL_TABLE_STATUS endval
 			left join BOK_VALBAL_TABLE_STATUS strval
 			on endval.finprod_id=strval.finprod_id
 			and strval.val_date= #{startdate,jdbcType=DATE}-1
+            left join fin_product fp
+            on endval.finprod_id=fp.finprod_id
+            left join BOK_VALBAL_TABLE_STATUS vdateval
+            on endval.finprod_id=vdateval.finprod_id
+            and fp.vdate=vdateval.val_date
 			where endval.val_date=#{enddate,jdbcType=DATE})jzcalc
 			on  fp.finprod_id=jzcalc.finprod_id
    left join (
    select endval.bookset_id as finprod_id,
            nvl(endval.subject_name,0) endvalue,
-           nvl(strval.subject_name,vdateval.subject_name) strvalue
+           nvl(strval.subject_name,vdateval.subject_name) strvalue,
+           nvl(strval.val_date,vdateval.val_date) strdate
            from bok_val_table_data endval
       left join bok_val_table_data strval
       on endval.bookset_id=strval.bookset_id

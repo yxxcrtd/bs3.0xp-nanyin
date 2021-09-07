@@ -134,6 +134,7 @@ public class EquityBusiDetails002Service extends BaseService{
 		List<Map<String, String>> checkList = new ArrayList<Map<String, String>>();
 		checkList.add(resultStrMap);
 		List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>();
+        List<EquiteBusiDetails001Dto> entitiesListQuery = new ArrayList<>();
 		// 删除导入用的临时的数据
 		equityBusiDetails001Service.deleteImportTmpData();
 		// 插入导入用的临时数据
@@ -146,11 +147,16 @@ public class EquityBusiDetails002Service extends BaseService{
 			upmap.put("INDENTIFY_MARK", map.get("indentifyMark"));
 			insertList.add(upmap);
 
+        	EquiteBusiDetails001Dto  temp = new EquiteBusiDetails001Dto();
+               temp.setRegistBankCode(map.get("registBankCode"));
+               temp.setBusiSeqno(map.get("busiSeqno"));
+               temp.setAccount( map.get("account"));
+               entitiesListQuery.add(temp);
 		}
 
 		equityBusiDetails001Mapper.insertIntoImportTable(insertList);
 		bankCode=dto.getRegistBankCode();
-		equityBusiDetails001Service.checkDataInfo(null,checkList, entitiesList,bankCode,deptCode,orgCode,userName);
+        equityBusiDetails001Service.checkDataInfo(null,checkList, entitiesListQuery,entitiesList,bankCode,deptCode,orgCode,userName);
 		if(!entitiesList.isEmpty()){
 			if(entitiesList.get(0).getTempMap()!=null){
 				dto.setTempMap(entitiesList.get(0).getTempMap());

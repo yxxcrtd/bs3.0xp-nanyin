@@ -5,7 +5,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -63,6 +66,8 @@ public class TrdBondDuration002Controller extends BaseController {
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 
     @Override
     public String init(Model model) {
@@ -117,6 +122,7 @@ public class TrdBondDuration002Controller extends BaseController {
         if (entity != null) {
             model.addAttribute("ps", change现金流类型To交易方向(entity.getCashType()));
             PeriodCommonService.setEntityBussOrderToModel(model, entity.getBussTrdTransferOrder());
+            model.addAttribute("tradeId",entity.getBusiCode());
         }
 //       2.0处理
 //        if (entity != null) {
@@ -193,6 +199,11 @@ public class TrdBondDuration002Controller extends BaseController {
 //        	2.0
         	dto.setBaseTotalTradeInfoDto(trdBondDuration002Service.genFinProductTradeDto2(dto));
         }
+        // 将附件和当前业务对象绑定（更新附件的业务代码）
+        fileAttachmentProcess.updateBussinessNo(
+                dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                        Collectors.toList()),
+                dto.getBusiCode());
         String msg = trdBondDuration002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

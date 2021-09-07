@@ -454,11 +454,21 @@
             <if test="termid != null and termid != ''">
                 and termid = #{termid,jdbcType=VARCHAR}
             </if>
+
+            <if test="termidList != null and termidList.size() &gt; 0">
+                <foreach close=")" collection="termidList" item="termid"
+                         open=" AND termid IN (" separator=",">
+                    #{termid,jdbcType=VARCHAR}
+                </foreach>
+            </if>
             <if test="enddate != null and enddate != ''">
                 and to_char(ENDDATE,'yyyy-MM-dd') = #{enddate,jdbcType=VARCHAR}
             </if>
             <if test="updateTime != null and updateTime != ''">
                 and to_char(UPDATE_TIME,'yyyy-MM-dd') = #{updateTime}
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                and ORG_CODE = #{orgCode}
             </if>
             <!-- 多法人改造 传入createDept，部门有值则查询加上此判断，无值表示总行部门，可以查所有数据 ADD BY WUJIAN 20200310  START  -->
             <!-- 	         <if test="createDept != null and createDept !=''"> -->
@@ -479,23 +489,35 @@
 
 
     <update id="updateDoMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '03',DAT_ZIP_STATUS = '03'
+        update PBC_SEND_ZIP_DAT_FILE set
+        ZIP_SEND_STATUS = '03',
+        DAT_ZIP_STATUS = '01',
+        SUBMIT_TIME = SYSDATE,
+        RETURN_ZIP_SEND_STATUS = '03'
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
-                AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
+                DAT_ZIP_TYPE = 'MI'
+                AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </where>
     </update>
 
     <update id="updateCancelMannultSendZipDatFile" parameterType="java.util.Map">
-        update PBC_SEND_ZIP_DAT_FILE set ZIP_SEND_STATUS = '01',DAT_ZIP_STATUS = '01'
+        update PBC_SEND_ZIP_DAT_FILE set
+        ZIP_SEND_STATUS = '01',
+        SUBMIT_TIME = null,
+        RETURN_ZIP_SEND_STATUS = null,
+        DAT_ZIP_PATH = null
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
-                AND DAT_ZIP_TYPE = 'MIT'
-                AND STATUS_VDATE =#{regist.statusDate,jdbcType=VARCHAR}
+                DAT_ZIP_TYPE = 'MI'
+                AND STATUS_VDATE =#{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </where>
     </update>
@@ -533,20 +555,26 @@
             <!-- 手工处理修改数据日期为数据库时间 add by gaojian 2019-06-25 end -->
         </set>
         <where>
-            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+            <!--<foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
                 sub.REPORTUUID = #{regist.reportuuid,jdbcType=CHAR}
+            </foreach>-->
+            <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                sub.TERMID = #{regist.termid,jdbcType=CHAR}
             </foreach>
         </where>
     </update>
 
     <delete id="deleteBatchBySendStatus" parameterType="java.util.List">
         delete from PBC_REPORT
-        where
-        REPORTUUID in
-        <foreach collection="list" item="item" open="(" close=")" separator=",">
-            #{item.reportuuid,jdbcType=CHAR}
-        </foreach>
-        and SEND_STATUS in ('02','03')
+        <where>
+            <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
+                TERMID = #{dto.termid}
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+            </foreach>
+            and SEND_STATUS in ('02','03')
+        </where>
     </delete>
     <update id="cancelMannultRegist" parameterType="java.util.Map">
         update PBC_REPORT
@@ -558,7 +586,11 @@
         </set>
         <where>
             <foreach collection="list" item="dto" open="(" close=")" separator=") or (">
-                REPORTUUID = #{dto.reportuuid}
+                TERMID = #{dto.termid}
+                <if test="null!=dto.orgCode and dto.orgCode != ''">
+                    and ORG_CODE = nvl(#{dto.orgCode,jdbcType=VARCHAR},'')
+                </if>
+
             </foreach>
         </where>
     </update>
@@ -646,12 +678,13 @@
         from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" and (" close=")" separator=") or (">
+                TERMID = #{regist.termid}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
+
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
     </insert>
@@ -659,11 +692,11 @@
         delete from PBC_REPORT
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open="  AND(" close=")" separator=") or (">
+                TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -708,11 +741,11 @@
         from PBC_REPORT_HIS his
         <where>
             <if test="registList !=null and registList.size()>0">
-                <foreach collection="registList" item="regist" open="(TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
-                         separator="UNION all" close=")">
-                    select #{regist.termid,jdbcType=VARCHAR},
-                    #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                    from dual
+                <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
+                    TERMID = #{regist.termid,jdbcType=VARCHAR}
+                    <if test="null!=regist.orgCode and regist.orgCode != ''">
+                        and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                    </if>
                 </foreach>
             </if>
         </where>
@@ -723,11 +756,11 @@
         delete from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND (" close=")" separator=") or (">
+                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -739,11 +772,11 @@
         from PBC_REPORT_HIS
         where 1 =1
         <if test="registList !=null and registList.size()>0">
-            <foreach collection="registList" item="regist" open="and (TERMID,REPORTTYPE,nvl(PBC_ACCOUNT_ID,'')) IN ("
-                     separator="UNION all" close=")">
-                select #{regist.termid,jdbcType=VARCHAR},
-                #{regist.reporttype,jdbcType=VARCHAR},nvl(#{regist.pbcAccountId,jdbcType=VARCHAR},'')
-                from dual
+            <foreach collection="registList" item="regist" open=" AND(" close=")" separator=") or (">
+                 TERMID = #{regist.termid,jdbcType=VARCHAR}
+                <if test="null!=regist.orgCode and regist.orgCode != ''">
+                    and ORG_CODE = nvl(#{regist.orgCode,jdbcType=VARCHAR},'')
+                </if>
             </foreach>
         </if>
         and SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
@@ -984,10 +1017,10 @@
                 prod_variety        ,
                 person_liable       ,
                 contact             ,
-                report_date
+                report_date,
+                ENDDATE
         from PBC_REPORT
         where reporttype != 'ONEPRD_ASSET_DEBT'
-        and ORG_CODE is not null
         <foreach collection="list" item="item" open="and SEND_STATUS in (" separator="," close=")">
               #{item,jdbcType=VARCHAR}
         </foreach>
@@ -997,7 +1030,7 @@
         group by
         TERMID,
         REPORTTYPE,
-        ORG_CODE ORG_CODE,
+        ORG_CODE,
         REPORTUUID,
         ISSUE_PARTY_ID,
         issue_party_name    ,
@@ -1008,7 +1041,8 @@
         prod_variety        ,
         person_liable       ,
         contact             ,
-        report_date
+        report_date,
+        ENDDATE
     </select>
 
     <select id="findProductByName" resultType="java.lang.String">
@@ -1024,7 +1058,9 @@
         SUBMIT_FEEDBACK_STATUS=#{submitFeedbackStatus,jdbcType=VARCHAR}
         <where>
             <foreach collection="registList" item="regist" open="(" close=")" separator=") or (">
-                REPORTUUID = #{regist,jdbcType=VARCHAR}
+                REPORTUUID = #{regist.reportuuid,jdbcType=VARCHAR}
+                and REPORTTYPE=#{regist.datZipDatType,jdbcType=VARCHAR}
+                and SEND_STATUS='01'
             </foreach>
         </where>
     </update>

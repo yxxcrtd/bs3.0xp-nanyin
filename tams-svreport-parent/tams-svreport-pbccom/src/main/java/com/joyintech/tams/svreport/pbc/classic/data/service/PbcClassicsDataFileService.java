@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -347,7 +348,7 @@ public class PbcClassicsDataFileService {
     	
     	// 【dat文件生成留痕】文件和数据的主键集合map（key="pathfilenameDatakeylist"，value=文件全名和文件内数据主键list）
     	Map<String,Object> fileDataMap = new HashMap<String,Object>();
-    	
+
     	//记录序列号
     	Map<String,List<String>> seqMap = new HashMap<String,List<String>>();
     	//生成dat文件
@@ -2307,6 +2308,7 @@ public class PbcClassicsDataFileService {
     		fileInfo.setFileid(fileid);
     		fileInfo.setFilecode(dataInfo.get(0));
     		fileInfo.setHeadOrgcode(dataInfo.get(1));
+			fileInfo.setOrgCode(CommonUtil.selectPbcBankCodeBack(dataInfo.get(1)));
     		fileInfo.setCdate(genDate);
     		fileInfo.setFileseqno(fileseqno);
     		fileInfo.setFilepath(folderPath.replace("_", "")+".zip");

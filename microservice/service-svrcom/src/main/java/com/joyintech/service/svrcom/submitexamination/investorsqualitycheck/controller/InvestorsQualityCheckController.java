@@ -101,11 +101,11 @@ public class InvestorsQualityCheckController{
         List<InvestorsQualityCheckBaseService> serviceList = new ArrayList<>();
         // 添加需要查询的Service对象
         serviceList.add(investorsQualityCheckCPZTService);
-        serviceList.add(investorsQualityCheckSLPPService);
         serviceList.add(investorsQualityCheckCPYEFBXService);
         serviceList.add(investorsQualityCheckCPYEKFXService);
         serviceList.add(investorsQualityCheckCPFEFBXService);
         serviceList.add(investorsQualityCheckCPFEKFXService);
+        serviceList.add(investorsQualityCheckSLPPService);
         serviceList.add(investorsQualityCheckMJQYEService);
         serviceList.add(investorsQualityCheckMJQFEService);
         serviceList.add(investorsQualityCheckDJWZXService);

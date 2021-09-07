@@ -68,6 +68,21 @@ public class InvestorsHoldInfoRegistMService extends BaseService<InvestorsHoldIn
 
 	/**
 	 *
+	 * 业务画面查询事件
+	 *
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public List<InvestorsHoldInfoRegist001Dto> queryForHoldInfoRegist(Map<String, Object> param) {
+    	return restTemplate.postForList(
+	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfoRegist/queryForHoldInfoRegist",
+				param,
+	       		InvestorsHoldInfoRegist001Dto.class);
+	}
+
+	/**
+	 *
 	 * 导入
 	 *
 	 * @param fileName

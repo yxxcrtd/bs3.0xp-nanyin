@@ -81,6 +81,11 @@ public final class ImportGenerator {
                 column.setType(JDBCType.CHAR);
                 column.setLength(col.getDataLength());
             }
+            if(StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.VARCHAR.name())||
+            		col.getDataLength()>255){
+            	column.setType(JDBCType.CHAR);
+            	column.setLength(col.getDataLength());
+            }
             // DATE
             else if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.DATE.name())) {
                 column.setType(JDBCType.DATE);
@@ -303,6 +308,9 @@ public final class ImportGenerator {
             param.setLog(path + StringUtil.lowerCase(table.getName()) + ".log");
             param.setTable(table);
             param.setRows(reportInterfOneTimeSqlLdrCommitCount);
+            
+            param.setBadFileDir(CacheUtil.getSysParam(
+                ReportGlobalConstant.SVR_BAD_FILE_PATH));
 
             // add by etliu 20180926 start
 //            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());

@@ -1986,7 +1986,7 @@ var table;
             		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdBondInvestTrade002.fpriceAmt")]));
             		return null;
             	}
-            	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
+            	if (!$("#bondFirstSign").val() && (!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券托管户或者合作资产']));
                		return null;
