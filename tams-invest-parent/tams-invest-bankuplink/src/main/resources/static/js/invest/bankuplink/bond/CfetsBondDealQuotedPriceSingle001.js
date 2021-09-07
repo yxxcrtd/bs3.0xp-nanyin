@@ -434,6 +434,9 @@
         if(workflowId || (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) && !(quotaPageModel && (quotaPageModel == 'dialogueResponse'))){//流程中、修改、查看
             $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.4);
         }
+        if(quotaPageModel == "new"){
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.0);
+        }
 
         /**
          * 券面总额

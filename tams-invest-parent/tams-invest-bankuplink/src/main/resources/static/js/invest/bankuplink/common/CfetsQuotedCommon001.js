@@ -34,6 +34,8 @@
                     // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)
                     if (quotaPageModel && quotaPageModel == 'edit' && initEntrustId.indexOf(row.entrustId) > -1) {
                         return "";
+                    }else if(quotaPageModel && quotaPageModel == 'new'){
+                        return "";
                     }
                     else {
                         return '<i class="btn layui-icon delt" title="删除">&#xe640;</i>';
@@ -104,6 +106,9 @@
      * 画面加载完成
      */
     $(function () {
+        if(quotaPageModel&&quotaPageModel=="new"){
+            $('#CfetsQuotedCommon001_dzh_add_btn').hide();
+        }
     	$("#cfetsQuoTedCommon_btn_autoAllocation").click(function(){
     		if(!$("#cfetsQuoTedCommon_distribution").val()){
     			Joyin.error("请选择分配方式!");
@@ -147,15 +152,15 @@
             for(var i in tableResult){
                 entrustIds += tableResult[i].entrustId+",";
             }
-			var ps = $('#CfetsBondDealQuotedPrice005_ps').val();
-			var mySide = $('#CfetsBondDealQuotedPrice005_mySide').val();
-			var settleSpreed = $('#CfetsBondDealQuotedPrice005_settleSpreed').val();
-			var finprodId = $('#CfetsBondDealQuotedPrice005_hidden_finprodId').val();
+			var ps = $('#CfetsBondDealQuotedPrice005_ps').val()?$('#CfetsBondDealQuotedPrice005_ps').val():$('#CfetsBondDealQuotedPriceMuti002_ps').val();
+			var mySide = $('#CfetsBondDealQuotedPrice005_mySide').val()?$('#CfetsBondDealQuotedPrice005_mySide').val():$('#CfetsBondDealQuotedPriceMuti002_mySide').val();
+			var settleSpreed = $('#CfetsBondDealQuotedPrice005_settleSpreed').val()?$('#CfetsBondDealQuotedPrice005_settleSpreed').val():$('#CfetsBondDealQuotedPriceMuti002_settleSpreed').val();
+			var finprodId = $('#CfetsBondDealQuotedPrice005_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice005_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti002_hidden_finprodId').val();
 			if(quoteType == '01'){
-				ps = $('#CfetsBondDealQuotedPrice004_ps').val();
-				mySide = $('#CfetsBondDealQuotedPrice004_mySide').val();
-				settleSpreed = $('#CfetsBondDealQuotedPrice004_settleSpreed').val();
-				finprodId = $('#CfetsBondDealQuotedPrice004_hidden_finprodId').val();
+				ps = $('#CfetsBondDealQuotedPrice004_ps').val()?$('#CfetsBondDealQuotedPrice004_ps').val():$('#CfetsBondDealQuotedPriceMuti001_ps').val();
+				mySide = $('#CfetsBondDealQuotedPrice004_mySide').val()?$('#CfetsBondDealQuotedPrice004_mySide').val():$('#CfetsBondDealQuotedPriceMuti001_mySide').val();
+				settleSpreed = $('#CfetsBondDealQuotedPrice004_settleSpreed').val()?$('#CfetsBondDealQuotedPrice004_settleSpreed').val():$('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val();
+				finprodId = $('#CfetsBondDealQuotedPrice004_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice004_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val();
 			}
             Joyin.dialog(JoyinUtil.getLabel("CfetsRepoDealQuotedPrice005"),
                 basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPrice006/init", "99%", "80%", {
