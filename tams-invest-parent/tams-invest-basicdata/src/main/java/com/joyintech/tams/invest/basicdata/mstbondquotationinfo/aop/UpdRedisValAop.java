@@ -58,13 +58,27 @@ public class UpdRedisValAop {
             put("MstCoinFundQuotationInfo001Service", DictCodeList.共通业务类型_基金类估值行情信息.getValue());
             put("MstNetAssetQuotationInfo001Service", DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
             put("MstSharePriceService", DictCodeListExt2.共通业务类型_股票行情信息.getValue());
+
+            // add by etliu 20210904 start
+            // 行情等通用画面，移动到tams-common-basicdata工程了，画面id和包路径都变了，导致aop拦截不到了
+            put("ComBondQuotationInfoService", DictCodeList.共通业务类型_债券估值行情信息.getValue());
+            put("ComCoinFundQuotationInfo001Service", DictCodeList.共通业务类型_基金类估值行情信息.getValue());
+            put("ComNetAssetQuotationInfo001Service", DictCodeList.共通业务类型_计划类资产_净值型_信息.getValue());
+            put("ComSharePriceService", DictCodeListExt2.共通业务类型_股票行情信息.getValue());
+            // add by etliu 20210904 end
         }
     };
 
     @Pointcut("execution(* com.joyintech.tams.invest.basicdata.mstbondquotationinfo.service.MstBondQuotationInfoService.doComplete(..))"
             + "|| execution(* com.joyintech.tams.invest.basicdata.mstcoinfundquotationinfo.service.MstCoinFundQuotationInfo001Service.doComplete(..)) "
             + "|| execution(* com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.service.MstNetAssetQuotationInfo001Service.doComplete(..)) "
-            + "|| execution(* com.joyintech.tams.invest.basicdata.mstshareprice.service.MstSharePriceService.doComplete(..))")
+            + "|| execution(* com.joyintech.tams.invest.basicdata.mstshareprice.service.MstSharePriceService.doComplete(..))"
+            + "|| execution(* com.joyintech.tams.common.basicdata.marketdata.mstbondquotationinfo.service.ComBondQuotationInfoService.doComplete(..)) "
+            + "|| execution(* com.joyintech.tams.common.basicdata.marketdata.mstcoinfundquotationinfo.service.ComCoinFundQuotationInfo001Service.doComplete(..)) "
+            + "|| execution(* com.joyintech.tams.common.basicdata.marketdata.mstnetassetquotationinfo.service.ComNetAssetQuotationInfo001Service.doComplete(..)) "
+            + "|| execution(* com.joyintech.tams.common.basicdata.marketdata.mstshareprice.service.ComSharePriceService.doComplete(..)) "
+    )
+    // add by etliu 20210904 end
     protected void completePoint() {
 
     }
