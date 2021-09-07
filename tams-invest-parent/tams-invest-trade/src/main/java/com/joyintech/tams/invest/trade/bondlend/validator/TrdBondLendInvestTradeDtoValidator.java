@@ -148,7 +148,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
             }
         }
         // 交易方向为融出时，显示可用持仓，券面总额不可大于可用持仓；
-//        if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), inputDto.getPs())) {
+        if (StringUtil.equals(DictCodeList.回购拆借方向_融出.getValue(), inputDto.getPs())) {
             if (inputDto.getShareAmt() != null && inputDto.getAssetPosition() != null
                 && inputDto.getShareAmt().multiply(new BigDecimal(100)).compareTo(inputDto.getAssetPosition()) > 0) {
                 ValidMessage validMessage = new ValidMessage(
@@ -156,7 +156,16 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
                         getMessage("TrdBondLendInvestTrade002.avaliblePosition")));
                 errorList.add(validMessage);
             }
-//        }
+        }
+        if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(), inputDto.getPs())) {
+            if (inputDto.getShareAmt() != null && inputDto.getBussRepoSec() != null && inputDto.getBussRepoSec().getTotalPrinAmt() !=null
+                    && inputDto.getShareAmt().compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+                ValidMessage validMessage = new ValidMessage(
+                        getMessage("BUSS_COM_E_0003", getMessage("TrdBondLendInvestTrade002.tradeAmt"),
+                                getMessage("BussRepoSec.totalPrinAmt")));
+                errorList.add(validMessage);
+            }
+        }
 
         // 委托场合相关check
         if (StringUtil.isNotBlank(inputDto.getEntrustId())) {
