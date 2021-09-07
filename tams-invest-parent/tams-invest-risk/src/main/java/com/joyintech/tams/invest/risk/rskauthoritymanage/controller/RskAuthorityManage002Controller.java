@@ -72,7 +72,7 @@ public class RskAuthorityManage002Controller extends BaseController {
      * 初始化的查询条件
      */
    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.角色岗位,
-            DictCode.平安资产类型, DictCode.交易场所,DictCode.授权类型
+            DictCode.平安资产类型, DictCode.交易场所,DictCode.授权类型,DictCode.交易方向
             // 资产类型改为授权类型 add by renping 2019-08-06  start
             , DictCode.授权类型一级, DictCode.授权类型二级
             // 资产类型改为授权类型 add by renping 2019-08-06  end

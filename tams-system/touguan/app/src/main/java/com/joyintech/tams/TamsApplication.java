@@ -3,6 +3,9 @@ package com.joyintech.tams;
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.WebApplication;
 import com.joyintech.tams.common.ErrorPageFilter;
+import org.activiti.spring.boot.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -11,6 +14,7 @@ import org.springframework.context.annotation.Bean;
  * @see 
  * @since 1.0
  */
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class })
 public class TamsApplication extends WebApplication {
     @Bean
     public ErrorPageFilter errorPageFilter() {

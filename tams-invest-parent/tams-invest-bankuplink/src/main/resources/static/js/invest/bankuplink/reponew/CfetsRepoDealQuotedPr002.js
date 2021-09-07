@@ -744,7 +744,7 @@
             var finprodIdhid = '';
             var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
             var termType = $("#CfetsRepoDealQuotedPrice002_term").val();
-            var vdate = $("#tradeDate").val();
+            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
             var ccy = "CNY";
             parent.CfetsRepoDealQuotedPrHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
             window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);

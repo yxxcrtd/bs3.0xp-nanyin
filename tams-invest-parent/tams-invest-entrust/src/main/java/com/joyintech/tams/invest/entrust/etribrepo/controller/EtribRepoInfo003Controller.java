@@ -352,12 +352,16 @@ public class EtribRepoInfo003Controller extends BaseController {
             	dto.setBussRepoSec(new BussRepoSecDto());
                 dto.getBussRepoSec().setPageFrom(this.getPageId());;
                 List<PledgeBondInfoDto> pledgeBondList= new ArrayList<>();
-                for(PledgeBondInfoDto pledgeBondInfoDto :RepoInfoDto.getPledgeBondTotalListDetailed()){
-                	if(StringUtil.equals(dto.getPortfolioId(), pledgeBondInfoDto.getPortfolioId())){
-                		//组合代码相同
-                		pledgeBondList.add(pledgeBondInfoDto);
-                	}
+                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit start
+                if(CollectionUtils.isNotEmpty(RepoInfoDto.getPledgeBondTotalListDetailed())){
+                    for(PledgeBondInfoDto pledgeBondInfoDto :RepoInfoDto.getPledgeBondTotalListDetailed()){
+                        if(StringUtil.equals(dto.getPortfolioId(), pledgeBondInfoDto.getPortfolioId())){
+                            //组合代码相同
+                            pledgeBondList.add(pledgeBondInfoDto);
+                        }
+                    }
                 }
+                // ZGZGST-2152: 回购方向是逆回购时,质押券信息列表明细是null,增加非空判断 fuyongsheng 20210907 edit end
                 dto.getBussRepoSec().setPledgeBondList(pledgeBondList);
             }
         }
