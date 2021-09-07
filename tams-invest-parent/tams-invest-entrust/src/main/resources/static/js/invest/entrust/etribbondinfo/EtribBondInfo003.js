@@ -315,9 +315,7 @@
                         query('#availableNum').val(result);
                     });
                 checkFinMdate();
-                if (query('#price').val()) {
-                    calData('price');
-                }
+                calData();
             } else {
                 // 为空
                 query('#finprodIdhid').val('').trigger('change');
@@ -694,9 +692,7 @@
         } else {
             query("#secAcctId").val('999999');
         }
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
         //左下行情信息联动
         var chlFinprodId = query("#chlFinprodId").val();
         var finprodIdhid = query("#finprodIdhid").val();
@@ -864,20 +860,14 @@
      */
     query("#mdate").change(function () {
         checkFinMdate();
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
     });
 
     /**
      * 清算速度
      */
     query("#settleSpeed").change(function () {
-        if (query("#price").val() || query("#exerYield").val() || query("#matureYield").val()) {
-            if (query("#price").val()) {
-                calData("price");
-            }
-        }
+        calData();
     });
 
     /**
@@ -1234,6 +1224,12 @@
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
+        if(!calflag){
+            calflag =  query("input[name=calculateField]:checked").val();
+        }
+        if (!query("#"+calflag).val()) {
+            return;
+        }
         if (!initFlag) {
             let finvdate = query("#vdate").val();
             let finmdate = query("#mdate").val();
