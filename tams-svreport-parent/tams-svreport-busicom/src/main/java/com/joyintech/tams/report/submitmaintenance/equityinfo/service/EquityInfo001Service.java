@@ -1543,6 +1543,13 @@ public class EquityInfo001Service extends CommonExportService<EquityInfo001Dto> 
             }
         }
         
+        for (Map<String, String> tmpMap : equityList) {
+        	if(StringUtil.equals(DictCodeList.境内外_境内.getValue(), tmpMap.get("HOLDER_MARK"))
+        			&& StringUtil.isNotEmpty(tmpMap.get("HOLDER_NAME"))){
+        		tmpMap.put("HOLDER_NAME", tmpMap.get("HOLDER_NAME").replace(StringUtil.SPACE, StringUtil.EMPTY)) ;
+        	}
+        }
+        
         //-----add by lingxq on 2019-03-21 for 三要素合并升级------>>>>>
         EquityInfoDistinctService equityInfoDistinctService =   SpringContextUtil.getBean(EquityInfoDistinctService.class);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
