@@ -121,6 +121,9 @@ public class EtrFund002Controller extends BaseController{
             EtrFundDto dto = etrFundService.getBussinessEntityByWorkflowId(
                 workflowId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
+            // ZGZGST-2281:审批页面的风险试算结果展示需要交易Id fuyongsheng 20210908 add start
+            model.addAttribute("tradeId", dto.getEntrustId());
+            // ZGZGST-2281:审批页面的风险试算结果展示需要交易Id fuyongsheng 20210908 add end
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getBussEtrInvestPersonInfoDto()));
             model.addAttribute("businessId", workflowId);
