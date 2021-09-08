@@ -302,13 +302,18 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                     }
                     //特殊处理中标结果中批量缴款 end
                     List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto = inputDto.getBussTrdTransfenpeiDto();
+                    BigDecimal entrustNum_;
                     for (BussTrdTransfenpeiDto fenpeiDto:bussTrdTransfenpeiDto) {
                         for (BaseEtrInvestInfoDto entrustInfo:entrustInfos) {
+                            entrustNum_ = entrustInfo.getEtrEntrust().getEntrustNum();
+                            if(StringUtils.equals("02",CacheUtil.getSysParam("entrustAmtUnit"))){
+                                entrustNum_ = entrustNum_.multiply(new BigDecimal(10000));
+                            }
                             if (StringUtils.equals(fenpeiDto.getPortfolioId(),entrustInfo.getEtrEntrust().getPortfolioId())
                             		&& StringUtils.equals(fenpeiDto.getEntrustId(),entrustInfo.getEtrEntrust().getEntrustId())
                                     &&entrustInfo != null && entrustInfo.getEtrEntrust() != null
                                     && entrustInfo.getEtrEntrust().getEntrustNum() != null) {
-                                if(fenpeiDto.getTradeAmt().compareTo(entrustInfo.getEtrEntrust().getEntrustNum())>0){
+                                if(fenpeiDto.getTradeAmt().compareTo(entrustNum_)>0){
                                     ValidMessage validMessage = new ValidMessage(
                                             getMessage("TRD_W_0009", getMessage("TrdBondInvestTrade002.tradeAmt")));
                                     errorList.add(validMessage);
