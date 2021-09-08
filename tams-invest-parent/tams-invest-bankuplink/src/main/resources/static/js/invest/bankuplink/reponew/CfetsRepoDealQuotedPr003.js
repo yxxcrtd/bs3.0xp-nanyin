@@ -8,6 +8,7 @@
     var entrustIdRepoNew = null;
     var riskResultdata;
     var cluflag;
+
     /**
      * 组合分配
      */
@@ -568,6 +569,7 @@
             window.CfetsRepoDealQuotedPrMain.errorShow("请选择多条指令执行的数据！");
             return;
         } else {
+            entrustIdRepoNew = entrustId;
             setEntrust(data);
             /*初始化组合分配信息*/
             Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr003/selectQuoteCrepPledgeForDzh', {entrustId: entrustId}, function (result) {
@@ -599,9 +601,9 @@
      */
     var setEntrust = function (param) {
         if (param) {
-            if (param[0].entrustId) {
+/*            if (param[0].entrustId) {
                 entrustIdRepoNew = param[0].entrustId;//委托代码
-            }
+            }*/
             if (param[0].portfolioSeries) {
                 $("#CfetsRepoDealQuotedPrice002_portfolioSeries").textSelect('setValue', param[0].portfolioSeries);//委托代码
             }
