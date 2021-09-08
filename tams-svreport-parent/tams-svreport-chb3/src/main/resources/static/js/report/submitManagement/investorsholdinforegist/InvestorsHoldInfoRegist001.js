@@ -602,7 +602,7 @@ $(function() {
                        // });
 //                   });
                Joyin.ajaxJson('checkExport',param,function(result){
-                   if(result.date){
+                   if(result.data){
                        exportAndDoManual(param);
                    } else {
                        // 无勾选导出，数量小于设置值走勾选逻辑

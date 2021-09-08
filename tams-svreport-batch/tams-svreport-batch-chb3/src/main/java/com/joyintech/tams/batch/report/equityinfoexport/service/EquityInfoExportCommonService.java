@@ -199,6 +199,14 @@ public class EquityInfoExportCommonService extends CommonExportService<EquityInf
             batchLog.setDealStatus(DictCodeListExt3.报送处理状态_警告.getValue());
             batchLog.setDealMessage("总记录数不符合或者其他异常,请联系管理员!");
         }
+        // add  “业务确认日期”取跑批生成压缩文件的日期 by caozhenming 20210907 start
+        try {
+            String busiConfirmDate =  DateUtil.format(startTime) + "-" + DateUtil.format(endTime);
+            batchLog.setBusiConfirmDate(busiConfirmDate);
+        } catch (Exception e) {
+            logger.error("业务确认日期格式转换失败");
+        }
+        // add  “业务确认日期”取跑批生成压缩文件的日期 by caozhenming 20210907 end
         chbSubinfoAutoBatchLogMapper.updateByPrimaryKeySelective(batchLog);
 
         return "success";
