@@ -2,6 +2,7 @@
     //试算结果
     var riskResultdata;
     var cluflag;
+    var portfolioIds = [];
     /**
      * 是否可编辑
      */
@@ -22,7 +23,6 @@
             ccy = data.ccy;
             $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(data.finprodId);
             $("#CfetsBondDealQuotedPriceMuti001_settleCcy").val(data.ccy);
-            $("#CfetsBondDealQuotedPriceMuti001_hidden_finprodId").val(data.finprodId);
             if (data.isRight == yesNoFlag_yes){
                 $('#CfetsBondDealQuotedPriceMuti001_div_exerYield').toggle(true);
             }
@@ -53,31 +53,14 @@
             $("#CfetsBondDealQuotedPriceMuti001_hidden_finprodId").val('');
             $("#CfetsBondDealQuotedPriceMuti001_settleCcy").val(CCY_CNY);
         }
-        var portfolioId = $("#CfetsBondDealQuotedPriceMuti001_portfolioId").val();
         var sysDateT1 = $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val();
         var calId = '';
         if (parent.parent.EtrIbBondinfoHq) {
-            parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+            parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,'',chlFinprodId,ccy,sysDateT1,calId);
         }
         var calcField = $("[name=calculateField]:checked").val();
         if(calcField){
             calcAmt(calcField);
-        }
-    };
-
-    /**
-     * 组合名称
-     */
-    var portfolioIdChangeAction = function(){
-        var quotaPageModel = $('#CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel').val();
-        if(quotaPageModel != 'dialogueResponse'){
-            $('#CfetsBondDealQuotedPriceMuti001_mySide').val('').trigger('change');
-        }
-        var portfolioId = $("#CfetsBondDealQuotedPriceMuti001_portfolioId").val();
-        var vdate = $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val();
-        var ccy= $("#CfetsBondDealQuotedPriceMuti001_settleCcy").val();
-        if(window.EtrInitCash){
-            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
         }
     };
 
@@ -225,6 +208,13 @@
                     $('#CfetsBondDealQuotedPriceMuti001_intAmt').val(result.data.intAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPriceMuti001_fpriceAmt').val(result.data.fpriceAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPriceMuti001_parValueAmt').val(result.data.parValueAmt).trigger('blur');
+
+                    if(parent.parent.EtrIbBondinfoHq){
+                        parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,
+                            $('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
+                            $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
+                            $('#CfetsBondDealQuotedPriceMuti001_unitCprice').val());
+                    }
                     entrustIdChangeFlag = false;
                 }
             })
@@ -464,12 +454,7 @@
         $('#CfetsBondDealQuotedPriceMuti001_finprodId').change(function(){
             finprodIdChangeAction();
         });
-        /**
-         * 组合名称
-         */
-        $('#CfetsBondDealQuotedPriceMuti001_portfolioId').change(function(){
-            portfolioIdChangeAction();
-        });
+
         /**
          * 清算速度
          */
@@ -681,10 +666,14 @@
                     $('#CfetsBondDealQuotedPriceMuti001_portfolioSeries').val(result.data.portfolioSeries).trigger('change');
                     $('#CfetsBondDealQuotedPriceMuti001_settleSpreed').val(result.data.settleSpreed).trigger('change');
                     if(result.data.cfetsBondDealDialogueQuoteDtoList){
+                        portfolioIds=[];
                         // table.clear();
                         // for (var index in result.data.cfetsBondDealDialogueQuoteDtoList){
                         //     table.addRow(result.data.cfetsBondDealDialogueQuoteDtoList[index]);
                         // }
+                        for (var index in result.data.cfetsBondDealDialogueQuoteDtoList){
+                                portfolioIds.push(result.data.cfetsBondDealDialogueQuoteDtoList[index].portfolioId);
+                        }
                         window.CfetsQuotedCommon001.clearTable();
                         window.CfetsQuotedCommon001.reloadPtlAllocation(result.data.cfetsBondDealDialogueQuoteDtoList);
 
@@ -692,6 +681,21 @@
                     }
                 }
                 calcAmt("01");
+                if (parent.parent.EtrIbBondinfoHq) {
+                    parent.parent.EtrIbBondinfoHq.querySecinfo(
+                        $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(),'','',
+                        $("#CfetsBondDealQuotedPriceMuti001_settleCcy").val(),
+                        $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),'');
+                    parent.parent.EtrIbBondinfoHq.queryAmountInfoMuti(
+                        $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(),
+                        portfolioIds,'',$('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
+                        $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
+                        '');
+                    parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,
+                        $('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
+                        $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
+                        $('#CfetsBondDealQuotedPriceMuti001_unitCprice').val());
+                }
             });
         }
     });

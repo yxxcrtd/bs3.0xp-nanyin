@@ -238,16 +238,16 @@
         //组合分配列表
         if (entrustList.length>0){
             $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         }
         else{
-            $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', false);
+            $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', false);
             $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', false);
-            $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', false);
+            $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', false);
             $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', false);
         }
     }
@@ -263,9 +263,9 @@
         }
         // 初始化页面
         $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);
-        $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', true);
+        $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
-        $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', true);
+        $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         // 判断本方交易员是否可改
