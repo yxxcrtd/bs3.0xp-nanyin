@@ -860,6 +860,12 @@
             submitAction();
         });
         /**
+         * 重置按钮按下处理
+         */
+        $('#cfetsRepoDealQuotedPr002_chongzhi').click(function(){
+            document.location.reload();
+        });
+        /**
          * 取消按钮按下处理
          */
         $('#CfetsRepoDealQuotedPrice003_btn_cancel2').click(function () {

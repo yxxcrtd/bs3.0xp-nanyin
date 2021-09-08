@@ -772,6 +772,14 @@
         $('#CfetsRepoDealQuotedPrice002_btn_submit').click(function(){
             submitAction();
         });
+
+        /**
+         * 重置按钮按下处理
+         */
+        $('#cfetsRepoDealQuotedPr002_chongzhi').click(function(){
+            document.location.reload();
+        });
+
         /**
          * 附件上传
          */
