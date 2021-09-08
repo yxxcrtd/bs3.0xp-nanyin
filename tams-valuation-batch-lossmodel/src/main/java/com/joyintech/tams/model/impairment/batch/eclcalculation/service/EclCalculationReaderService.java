@@ -58,8 +58,8 @@ import java.util.*;
         Map<String, ModLgdConfigDto> specialLgdConfigMap = new HashMap<>();
         // 查询所有LGD配置
         Map<String, Object> searchPara = new HashMap<>();
-        para.put("MODEL_DEC_CONFIG_TYPE_06", ModelDictCodeList.模型_减值配置类型_特殊资产LGD配置.getValue());
-        para.put("MODEL_DEC_CONFIG_TYPE_05", ModelDictCodeList.模型_减值配置类型_资产大类LGD配置.getValue());
+        searchPara.put("MODEL_DEC_CONFIG_TYPE_06", ModelDictCodeList.模型_减值配置类型_特殊资产LGD配置.getValue());
+        searchPara.put("MODEL_DEC_CONFIG_TYPE_05", ModelDictCodeList.模型_减值配置类型_资产大类LGD配置.getValue());
         List<ModLgdConfigDto> lgdConfigList = eclCalculationMapper.selectModLgdConfigAll(searchPara);
         if(!CollectionUtils.isEmpty(lgdConfigList)){
             for(ModLgdConfigDto item : lgdConfigList){

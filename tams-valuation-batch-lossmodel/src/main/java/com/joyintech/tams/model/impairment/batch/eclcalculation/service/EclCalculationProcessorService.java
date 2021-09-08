@@ -201,7 +201,10 @@ public class EclCalculationProcessorService {
                 //3.3 封装结果集
                 quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
                         dataSource);
-
+                // 变量.减值结果过程表List 更新
+                modEclResultProcessList.add(modEclResultProcess);
+                // 变量.资产减值结果表List 更新
+                modEclResultList.add(modEclResult);
             } catch (Exception e) {
                 CommonErrorParams commonErrorParams = new CommonErrorParams();
                 commonErrorParams.setFinprodId(entityDto.getAssetId());
@@ -212,12 +215,8 @@ public class EclCalculationProcessorService {
                 commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
                 errors.add(commonErrorParams);
                 stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-                e.getMessage();
+                e.printStackTrace();
             }
-            // 变量.减值结果过程表List 更新
-            modEclResultProcessList.add(modEclResultProcess);
-            // 变量.资产减值结果表List 更新
-            modEclResultList.add(modEclResult);
         }
 
         // 若变量.三阶段ECL损失比例 != null,重新计算所有ECL
