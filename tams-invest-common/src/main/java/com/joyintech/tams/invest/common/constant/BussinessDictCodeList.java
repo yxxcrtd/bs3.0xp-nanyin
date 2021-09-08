@@ -5472,6 +5472,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     //add by chenjiaxing 固定值参数更新提醒 20210726
     提醒类型_小分类_固定值参数更新提醒(BussinessDictCode.提醒类型_小分类,"R5S3","固定值参数更新提醒"),
     //add by chenjiaxing 固定值参数更新提醒 20210726
+    提醒类型_大分类_债券上市流通(BussinessDictCode.提醒类型_大分类,"R11","债券上市流通"),
   ;
 	//add by gaopeng 20191024 start
 	//add by gaopeng 20191024 end

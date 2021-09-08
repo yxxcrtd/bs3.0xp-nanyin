@@ -140,6 +140,7 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 end
 
+        model.addAttribute("R11", BussinessDictCodeList.提醒类型_大分类_债券上市流通.getValue());
         model.addAttribute("R11S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
         model.addAttribute("R11S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
 
