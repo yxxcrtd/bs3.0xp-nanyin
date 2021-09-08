@@ -8,10 +8,13 @@ import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfigService;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -156,4 +159,36 @@ public class ModBintreeConfigController {
         return modBintreeConfigService.selectByFinprodId(dto);
     }
 
+    /**
+     *
+     * 查询股票代码信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getStockAssetInfo/{page}/{length}")
+    @ResponseBody
+    public Page<SelectOptionDto> getStockAssetInfo(@RequestBody Map<String, Object> param,
+                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        param.put("type18", DictCodeListExt1.证券品种_股票.getValue());
+        return modBintreeConfigService.getAssetInfo(page, length, param);
+    }
+
+    /**
+     *
+     * 查询股票代码信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getSecAssetInfo/{page}/{length}")
+    @ResponseBody
+    public Page<SelectOptionDto> getSecAssetInfo(@RequestBody Map<String, Object> param,
+                                                   @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+        param.put("type18", DictCodeListExt1.证券品种_债券.getValue());
+        param.put("type1", Arrays.asList(DictCodeList.债券类型_可转债.getValue(),DictCodeList.债券类型_可交换债.getValue()));
+        return modBintreeConfigService.getAssetInfo(page, length, param);
+    }
 }
