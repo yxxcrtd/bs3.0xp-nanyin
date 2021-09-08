@@ -723,6 +723,11 @@ public class SpecialassetsService extends BaseService<ModAssetGradeSpecialConfig
         return modAssetGradeSpecialConfigDtoMapper.getSecTypeByFinprodId(param);
     }
 
+    public Integer getSpecialCountByFinprodId(ModAssetGradeSpecialConfigDto dto){
+        return modAssetGradeSpecialConfigDtoMapper.getSpecialCountByFinprodId(dto);
+    }
+
+
 
 
 
