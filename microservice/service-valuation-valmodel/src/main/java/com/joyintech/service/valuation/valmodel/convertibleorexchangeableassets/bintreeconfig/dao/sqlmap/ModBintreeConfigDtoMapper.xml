@@ -400,4 +400,35 @@
       and (CURVE_CODE=#{initValue} or CURVE_NAME =#{initValue})
     </if>
   </select>
+
+  <!-- 查询股票资产信息 -->
+  <select id="getAssetInfo" resultType="com.joyintech.framework.select.SelectOptionDto" >
+    SELECT
+        fp.FINPROD_ID id,
+        case
+            when fpt.TYPE_18 ='06' then fp.FINPROD_ID || ':' ||fp.FINPROD_ABBR
+        else fp.FINPROD_ABBR end as text,
+        fp.FINPROD_MARKET_ID object
+    FROM FIN_PRODUCT fp
+    left join fin_product_type fpt on fp.FINPROD_ID=fpt.FINPROD_ID
+    WHERE P_FINPROD_ID is null
+    <if test="search != null and search != ''">
+      and (fp.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')
+      or fp.FINPROD_ABBR like concat(concat('%',#{search}),'%'))
+    </if>
+    <if test="initValue != null and initValue != ''">
+      and (fp.FINPROD_ABBR=#{initValue} or fp.FINPROD_ID =#{initValue})
+    </if>
+    <!-- modify by yanya on 20210824 增加按照估值侧的类型进行查询的条件:type1、type2、type3、type18 start-->
+    <if test="type1List != null and type1List.size()>0 ">
+      AND fpt.TYPE_1 IN(
+      <foreach item="item" index="index" collection="type1List" separator=",">
+        #{item}
+      </foreach>
+      )
+    </if>
+    <if test="type18 != null and type18 != '' ">
+      AND fpt.TYPE_18 = #{type18}
+    </if>
+  </select>
 </mapper>

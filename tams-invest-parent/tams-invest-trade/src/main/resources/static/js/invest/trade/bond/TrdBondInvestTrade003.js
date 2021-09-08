@@ -1,6 +1,7 @@
 var table;
 
 (function () {
+    var unitNum;
     var returnValAll={
         isPayWithTrade:'Y',
         procedureAmt:0,
@@ -290,6 +291,14 @@ var table;
 		if(FileCommon) {
 			object.uploadFileList = FileCommon.getUploadFileInfo();
 		}
+        object.tradeAmt = JoyinMath.doMul( !$("#tradeAmt").val()?0:$("#tradeAmt").val(),unitNum,2,JoyinMath.ROUND_HALF_UP);
+        var tableData  = table.getAllRows();
+        for (var i=0; i<tableData.length; i++){
+            if(tableData[i].tradeAmt){
+                tableData[i].tradeAmt = JoyinMath.doMul(tableData[i].tradeAmt, unitNum, 2) ;
+            }
+        }
+        object.bussTrdTransfenpeiDto = tableData;
 		object.settleAmt=$("#settleAmt").val();
         object.exchangeAmt=$("#exchangeAmt").val();
         object.commissionAmt=$("#commissionAmt").val();
@@ -1219,12 +1228,13 @@ var table;
     function extractedJiSun() {
         if(isOpen){
             var paramObj = getCalcParam();
+            paramObj.tradeAmt = JoyinMath.doMul(paramObj.tradeAmt, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calculateData'), paramObj, function (result) {
                 if (result && result.data) {
                     var numberAll = 0;
                     var data = result.data;
                     if (!isCSTP) {
-                        $("#tradeAmt").val(data.tradeAmt).trigger("blur");
+                        $("#tradeAmt").val(JoyinMath.doDiv(data.tradeAmt, unitNum, 2, JoyinMath.ROUND_HALF_UP)).trigger("blur");
                         $("#unitCprice").val(data.unitCprice).trigger("blur");
                         $("#unitFprice").val(data.unitFprice).trigger("blur");
                         $("#cpriceAmt").val(data.cpriceAmt).trigger("blur");
@@ -1875,6 +1885,9 @@ var table;
                                 rowData.doEntrustMoney =JoyinMath.doMul(element.doEntrustMoney,100,2) ;
                             }
                             if( element.etrEntrust.entrustNum){
+                                //配置单位 add by yeming 20210906 start
+                                element.etrEntrust.entrustNum = JoyinMath.doMul(element.etrEntrust.entrustNum,10000/unitNum,2,JoyinMath.ROUND_HALF_UP);
+                                //配置单位 add by yeming 20210906 end
                                 rowData.tradeAmt = element.etrEntrust.entrustNum;//多组合券面总额
                                 tradeAmtAll = JoyinMath.doAdd(tradeAmtAll,element.etrEntrust.entrustNum,2);
                                 tradeAmtAllEntrust = JoyinMath.doAdd(tradeAmtAllEntrust,element.etrEntrust.entrustNum,2);
@@ -2610,6 +2623,12 @@ var table;
      * 画面加载完成
      */
     $(function() {
+        if(entrustAmtUnit == '01' ){
+            $(".unitNum").text('元');
+            unitNum = 1;
+        }else{
+            unitNum = 10000;
+        }
         //初始化画面
         init();
         // 是否显示划款指令
@@ -3421,7 +3440,7 @@ var table;
                               }
                           }
 			               ,{field:'investaim', width:100, title: 'TrdInvestFenPeiInfo.investaim',edit:true, sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM}}
-			               ,{field:'tradeAmt',  width:100,title: 'TrdInvestFenPeiInfo.tradeAmt',edit:true, sortable:false,type:'number', digit:2}
+			               ,{field:'tradeAmt',  width:100,title: function(){return entrustAmtUnit == '01' ? JoyinUtil.getLabel("TrdInvestFenPeiInfo.tradeAmt1") : JoyinUtil.getLabel("TrdInvestFenPeiInfo.tradeAmt3");}(), edit:true, sortable:false,type:'number', digit:2}
                           ,{field:'secManageAcctIdDuo', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
                               editOption:{type:'select',showField:'text',id:'secManageAcctIdDuo', parentIds:'portfolioId,tradeMarket', multiple: false,searchable: true,
                                   url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAccId')

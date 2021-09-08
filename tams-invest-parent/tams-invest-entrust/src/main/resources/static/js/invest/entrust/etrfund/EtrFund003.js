@@ -12,7 +12,9 @@
                 trdProductDeal.tradeAmt = item.entrustAmt;
                 trdProductDeal.unitCprice  = item.price;
                 trdProductDeal.shareAmt  = item.entrustNum;
-                if (item.ps == T04) {
+                // ZGZGST-2255:增加交易方向认购 fuyongsheng 20210908 edit start
+                if (item.ps == T04 || item.ps == T52) {
+                // ZGZGST-2255:增加交易方向认购 fuyongsheng 20210908 edit end
                     var obj = {
                         tradeDirection : item.ps,
                         timePoint : MY_SUP_TIME_TYPE_02,

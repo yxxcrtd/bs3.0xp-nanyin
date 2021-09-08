@@ -18,11 +18,11 @@
 							class="layui-input form-input" placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.finprodId}" required/>-->
-						<select id="finprodId" name="finprodId"
+						<select type="text" id="finprodId" name="finprodId"
 								class="layui-input form-input input-select" allowClear="true"
-								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/getFinprodIdForBintree}"
-								data-th-initvalue="${entity?.finprodId}"></select>
+								data-th-placeholder="#{SysCommon.placeholder}" formatOption="true"
+								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getSecAssetInfo}"
+								data-th-initvalue="${entity?.finprodId}"> </select>
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
@@ -64,7 +64,6 @@
 					<div class="layui-input-inline input-inline">
 						<select type="text" id="compOrg"
 							data-th-initvalue='${entity?.compOrg}' name="compOrg"
-							formatoption="true"
 							class="tabJump layui-input form-input input-select"
 							data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getMarketId}"
 							placeholder="请输入内容"
@@ -73,26 +72,19 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">可比公司股票名称</label>
+					<label class="layui-form-label form-lable">可比公司股票</label>
 					<div class="layui-input-inline input-inline">
-						<select id="compStockid" name="compStockid"
-							class="tabJump layui-input form-input input-select" allowClear="true"
-							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig001/getFinprodIdForBintree(IS_GP=${YES_OR_NO_Y})}"
-							data-th-initvalue="${entity?.compStockid}"></select>
+						<select type="text" id="compStockid"
+								data-th-initvalue='${entity?.compStockid}' name="compStockid"
+								class="layui-input form-input input-select" allowClear="true"
+								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getStockAssetInfo}"
+								placeholder="请输入内容"
+								data-th-placeholder="#{SysCommon.placeholder}">
+						</select>
 					</div>
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">可比公司股票代码</label>
-					<div class="layui-input-inline input-inline">
-						<input type="text" id="compStockCode" name="compStockCode" disabled="true"
-							class="layui-input form-input" placeholder="请输入内容"
-							data-th-placeholder="#{SysCommon.placeholder}"
-							data-th-value="${entity?.compStockid}">
-					</div>
-				</div>
 				<div class="layui-inline layui-col-md6">
 					<label class="layui-form-label form-lable">市场乘数方法</label>
 					<div class="layui-input-inline input-inline">
@@ -107,41 +99,21 @@
 			</div>
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
+					<label class="layui-form-label form-lable">标的公司每股收益</label>
+					<div class="layui-input-inline input-inline">
+						<input id="finprodProit" name="finprodProit"
+							   class="layui-input form-input text-number" allowClear="true"
+							   data-th-placeholder="#{SysCommon.placeholder}"
+							   data-th-value="${entity?.finprodProit}"/>
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md6">
 					<label class="layui-form-label form-lable">标的公司每股净资产</label>
 					<div class="layui-input-inline input-inline">
 						<input id="finprodNetasset" name="finprodNetasset"
 							class="layui-input form-input text-number" allowClear="true"
 							data-th-placeholder="#{SysCommon.placeholder}" 
 							data-th-value="${entity?.finprodNetasset}"/>
-					</div>
-				</div>
-				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">标的公司每股收益</label>
-					<div class="layui-input-inline input-inline">
-						<input id="finprodProit" name="finprodProit"
-							class="layui-input form-input text-number" allowClear="true"
-							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-value="${entity?.finprodProit}"/>
-					</div>
-				</div>
-			</div>
-			<div class="layui-form-item">
-				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">连续股息率</label>
-					<div class="layui-input-inline input-inline">
-						<input id="smoothsection" name="smoothsection"
-							class="layui-input form-input text-number" allowClear="true"
-							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-value="${entity?.smoothsection}" required/>
-					</div>
-				</div>
-				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">二叉树步数</label>
-					<div class="layui-input-inline input-inline">
-						<input id="bintreeStep" name="bintreeStep"
-							class="layui-input form-input text-number" allowClear="true"
-							data-th-placeholder="#{SysCommon.placeholder}" data-textrange="0"
-							data-th-value="${entity?.bintreeStep}" required/>
 					</div>
 				</div>
 			</div>
@@ -163,6 +135,26 @@
 								placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}">
 						</select>
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md6">
+					<label class="layui-form-label form-lable">连续股息率</label>
+					<div class="layui-input-inline input-inline">
+						<input id="smoothsection" name="smoothsection"
+							class="layui-input form-input text-number" allowClear="true"
+							data-th-placeholder="#{SysCommon.placeholder}" 
+							data-th-value="${entity?.smoothsection}" required/>
+					</div>
+				</div>
+			</div>
+			<div class="layui-form-item">
+				<div class="layui-inline layui-col-md6">
+					<label class="layui-form-label form-lable">二叉树步数</label>
+					<div class="layui-input-inline input-inline">
+						<input id="bintreeStep" name="bintreeStep"
+							   class="layui-input form-input text-number" allowClear="true"
+							   data-th-placeholder="#{SysCommon.placeholder}" data-textrange="0"
+							   data-th-value="${entity?.bintreeStep}" required/>
 					</div>
 				</div>
 			</div>

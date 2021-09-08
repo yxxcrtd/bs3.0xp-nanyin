@@ -722,7 +722,9 @@
                     <div class="layui-col-md4">
                         <div class="remind-risk-wrap">
                             <div class="remind-risk-left">
-                                <a href="javascript:;" class="link-num click" id="R5S2" data-th-one="${R5}" data-th-two="${R5S2}" data-th-text="${result?.R5S1}" ></a>
+                                <!--ZGZGST-2249: 修改指标违规提醒参数展示字段为R5S2 fuyongsheng 20210908 edit start-->
+                                <a href="javascript:;" class="link-num click" id="R5S2" data-th-one="${R5}" data-th-two="${R5S2}" data-th-text="${result?.R5S2}" ></a>
+                                <!--ZGZGST-2249: 修改指标违规提醒参数展示字段为R5S2 fuyongsheng 20210908 edit end-->
                                 <div class="risk-left-des" data-th-text="#{PaActiveRemind001.R5S2}">指标违规提醒</div>
                             </div>
                             <div class="remind-risk-right risk-right-icon">

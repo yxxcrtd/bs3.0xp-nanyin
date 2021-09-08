@@ -10,10 +10,13 @@
  
 package com.joyintech.tams.invest.entrust.etrbrowdepoinfo.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -197,7 +200,32 @@ public class EtrBrowDepoInfo001Controller extends BaseController {
         // add by zhangrui1 批量委托关闭 start
         // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
         if (!CollectionUtils.isEmpty(entrustIdList)) {
-            EntrustCompleteUtil.doComplete(entrustIdList);
+            Map<String, BigDecimal> etrFinishMap = EntrustCompleteUtil.getEtrFinishAmtList(entrustIdList);
+            //委托没有做过交易的，和撤销相同逻辑，删除预占
+            List<EtrBrowDepoInfoDto> recallEntrustIdList = new ArrayList<>();
+            //委托已有完成额度，做过交易，走关闭完成的逻辑，更新预占
+            List<String> closeEntrustIdList = new ArrayList<>();
+            for(EtrBrowDepoInfoDto etrDto : list) {
+                if(StringUtil.isNotEmpty(etrFinishMap) && StringUtil.isNotEmpty(etrFinishMap.get(etrDto.getEntrustId()))
+                        && BigDecimal.ZERO.compareTo(etrFinishMap.get(etrDto.getEntrustId()))<0) {
+                    closeEntrustIdList.add(etrDto.getEntrustId());
+                }
+                else if(entrustIdList.contains(etrDto.getEntrustId())){
+                    recallEntrustIdList.add(etrDto);
+                }
+            }
+
+            //没有做过交易，直接关闭的
+            if(!StringUtil.isEmptyList(recallEntrustIdList)) {
+                // add by yushilong 批量撤销预占 start
+                EntrustRdsCommonAop.doListPreOccupy(recallEntrustIdList, DictCodeList.平安资产类型_存款.getValue(),
+                        BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+                // add by yushilong 批量撤销预占 end
+            }
+            //已经有委托完成度的
+            if(!StringUtil.isEmptyList(closeEntrustIdList)) {
+                EntrustCompleteUtil.doComplete(entrustIdList);
+            }
         }
         // add by zhangrui1 批量委托关闭 end
         return ajaxResult;
