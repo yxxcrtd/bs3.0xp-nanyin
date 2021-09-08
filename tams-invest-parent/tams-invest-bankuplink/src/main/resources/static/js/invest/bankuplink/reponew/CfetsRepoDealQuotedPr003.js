@@ -676,6 +676,9 @@
         if (pageModel == PAGE_MODEL_NEW && quotaPageModel === "new" && $('#CfetsRepoDealQuotedPrice002_term').val() == "0") {
             $('#CfetsRepoDealQuotedPrice002_term').val("");
         }
+        if(pageModel != PAGE_MODEL_NEW){
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
         $("#CfetsBondDealQuotedPrice002_dialogueRecord").hide();
         if (quotaPageModel == "edit") {
             $("#dialogueRecord_div").show();
