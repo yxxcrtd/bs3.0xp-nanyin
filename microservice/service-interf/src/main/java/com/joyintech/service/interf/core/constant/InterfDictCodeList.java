@@ -806,7 +806,7 @@ public enum InterfDictCodeList implements BaseDictCodeList {
      * 收益率曲线类型_远期
      */
     收益率曲线类型_远期(
-        InterfDictCode.收益率曲线类型, "MA", "远期"
+        InterfDictCode.收益率曲线类型, "MA", "到期"
     ),
     /**
      * 收益率曲线类型_远期的即期

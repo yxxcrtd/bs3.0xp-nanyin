@@ -730,7 +730,7 @@ public enum DictCodeList implements BaseDictCodeList {
 	利率行情_美元1年拆借(DictCode.利率行情,"USDIBO1Y.IB","美元1年拆借"),
 	利率行情_美元2月拆借(DictCode.利率行情,"USDIBO2M.IB","美元2月拆借"),
 	收益率曲线类型_SP即期(DictCode.收益率曲线类型,"SP","SP即期"),
-	收益率曲线类型_MA远期(DictCode.收益率曲线类型,"MA","MA远期"),
+	收益率曲线类型_MA到期(DictCode.收益率曲线类型,"MA","MA到期"),
 	收益率曲线类型_FS远期的即期(DictCode.收益率曲线类型,"FS","FS远期的即期"),
 	收益率曲线类型_FM远期的到期(DictCode.收益率曲线类型,"FM","FM远期的到期"),
 	收益率曲线_中债登收益率曲线(DictCode.收益率曲线,"01","中债登收益率曲线"),
