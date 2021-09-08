@@ -2,6 +2,7 @@ package com.joyintech.service.valuation.valmodel.batch.batchtask.dao;
 
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.base.entity.SysBatchJob;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchTaskDto;
@@ -35,11 +36,11 @@ public interface ModBatchTaskMapper {
 
     List<BatchAssetInfoDto> getAssetInfoImpairment(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getLossKpmgAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getLossKpmgAssetInfo(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getLossPwcAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getLossPwcAssetInfo(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getValAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getValAssetInfo(Map<String, Object> param);
 
 
 
