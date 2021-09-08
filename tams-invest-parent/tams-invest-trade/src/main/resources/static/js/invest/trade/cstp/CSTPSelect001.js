@@ -2756,7 +2756,7 @@ $(function(){
                         confirmContent = confirmContent+confirmContent4;
                     }
                     if(!isSome.isSomeJiaoYiYuan){
-                        confirmContent5 = '质押式回购指令的回购利率与质押式成交单的回购利率不一致，';
+                        confirmContent5 = '质押式回购指令的交易员与质押式成交单的交易员不一致，';
                         confirmContent = confirmContent+confirmContent5;
                     }
 
