@@ -448,15 +448,20 @@
             <!-- 场内基金改造 add by renping 20191117 end -->
             T3.PUR_SPEED,
             T3.RED_SPEED
-        FROM 
+        FROM
             FIN_PRODUCT T1
-        LEFT JOIN 
+        LEFT JOIN
             FIN_PRODUCT_TYPE T2
             ON T1.FINPROD_ID = T2.FINPROD_ID
         LEFT JOIN
         FIN_PRODUCT_ADD T3
         ON T1.FINPROD_ID = T3.FINPROD_ID
         <include refid="getFinprodIdWhere"></include>
+        <if test="ps != null and ps != ''">
+            <if test="ps == PS_T01 or ps == PS_T02 ">
+                and (T3.TRM_FUND_TYPE != #{TRM_FUND_TYPE_05} or  T3.TRM_FUND_TYPE is null)
+            </if>
+        </if>
         <if test="finprodId != null and finprodId != '' and changeTo != null and changeTo">
             AND T1.FINPROD_MARKET_ID != #{finprodId,jdbcType=VARCHAR}
         </if>
