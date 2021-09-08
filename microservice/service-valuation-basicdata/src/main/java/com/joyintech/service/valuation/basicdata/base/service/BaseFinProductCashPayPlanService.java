@@ -51,6 +51,15 @@ public class BaseFinProductCashPayPlanService {
             for(FinCashPlan dto:list){
                 //新增数据前根据现金流代码和结束日删除已有数据
                 // finCashPlanMapper.deleteByPrimaryKey(dto);
+                //  add by weipeng20210908: 后续算法包计算时需要用到未调整的日期，对应为空时存值
+                // 未调整的计算开始日 = 调整后的计算开始日
+                if(dto.getVdateUnadjust() == null){
+                    dto.setVdateUnadjust(dto.getVdate());
+                }
+                // 未调整的计算结束日 = 调整后的计算结束日
+                if(dto.getMdateUnadjust() == null){
+                    dto.setMdateUnadjust(dto.getMdate());
+                }
                 finCashPlanMapper.insert(dto);
             }
             return true;
@@ -68,6 +77,11 @@ public class BaseFinProductCashPayPlanService {
             FinCashPlan entity =new FinCashPlan();
             entity.setCashId(cashId);
             entity.setMdate(dto.getMdate());
+            //  add by weipeng20210908: 后续算法包计算时需要用到未调整的日期，对应为空时存值
+            // 未调整的计算结束日 = 调整后的计算结束日
+            if(dto.getMdateUnadjust() == null){
+                dto.setMdateUnadjust(dto.getMdate());
+            }
             entity.setBranch(dto.getBranch());
             entity.setFinprodId(dto.getFinprodId());
             if(this.deleteByPrimaryKey(entity)){
