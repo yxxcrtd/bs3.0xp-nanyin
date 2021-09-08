@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -130,7 +131,7 @@ public class PdCalculateProcessService {
             //2.1 判断需要查询PD的年份
             //定义 年份列表 = 估值日(跑批日)所在年份(含) -> 资产到期日所在年份(含) 中的所有年份
             variablePdCalculateDto.setYearList(getYearMonList(plateDate,variablePdCalculateDto.getMdate(),VariablePdCalculateDto.YEAR_TYPE));
-            if(variablePdCalculateDto.getTtStage()==false && variablePdCalculateDto.getMaturityYear() ==false){
+            if(!variablePdCalculateDto.getTtStage() && variablePdCalculateDto.getMaturityYear() ==false){
                 Date endYearMonDate = DateUtil.parse(variablePdCalculateDto.getEndYearMonStr());
                 variablePdCalculateDto.setYearList(getYearMonList(plateDate,endYearMonDate,VariablePdCalculateDto.YEAR_TYPE));
             }
@@ -366,7 +367,7 @@ public class PdCalculateProcessService {
                     // 前瞻前第12个月累积加权PD = 前瞻前累积PD
                     variablePdCalculateDto.setPreTwelveMonWeightedPd(variablePdCalculateDto.getPreCdfPd());
                    // 主体是否持有金融牌照 = 是
-                    if(VariablePdCalculateDto.TRUE_STR.equals(variablePdCalculateDto.getIsFinLicence())){
+                    if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
                         // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
                         variablePdCalculateDto.setTwelveMonWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getTwelveMonWeightedPd(), BigDecimal.valueOf(0.7)));
                         // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
@@ -379,7 +380,7 @@ public class PdCalculateProcessService {
                     // 前瞻前到期日累积加权PD = 前瞻前累积PD
                     variablePdCalculateDto.setPreMdateWeightedPd(variablePdCalculateDto.getPreCdfPd());
                     // 主体是否持有金融牌照 = 是
-                    if(VariablePdCalculateDto.TRUE_STR.equals(variablePdCalculateDto.getIsFinLicence())){
+                    if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
                         // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
                         variablePdCalculateDto.setMdateWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getMdateWeightedPd(), BigDecimal.valueOf(0.7)));
                         // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
@@ -391,7 +392,7 @@ public class PdCalculateProcessService {
             //5、加载每一笔交易数据的加权PD
             for(ModEclResultProcess aipcDto:variablePdCalculateDto.getAssetImpairmentPdCalculateList()){
                 // if 资产剩余期限是否不足一年 == false && 交易数据i.减值阶段 == 一阶段
-                if(variablePdCalculateDto.getTtStage()==false && ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aipcDto.getFinStage())){
+                if(!variablePdCalculateDto.getTtStage()&& ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aipcDto.getFinStage())){
                     // 交易数据i.前瞻前PD违约概率% = 前瞻前第12个月累积加权PD
                     aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreTwelveMonWeightedPd());
                     //交易数据i.前瞻后PD违约概率% = 第12个月累积加权PD
