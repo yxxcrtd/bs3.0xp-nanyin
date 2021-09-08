@@ -176,7 +176,7 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                 //委托基本信息判断
                 for(PtlAllocationDto ptlAllocationDto : newestPtlAllocations){
                     委托基本信息(validList,ptlAllocationDto.getEntrustStatus(),ptlAllocationDto.getVdate(),ptlAllocationDto.getMdate());
-                    委托完成度(validList,dto.getEntrustId(),dto.getQuoteId());
+                    委托完成度(validList,ptlAllocationDto.getEntrustId(),dto.getQuoteId());
                     if(null!=validList&&validList.size()>0){return validList;}
                 }
                 if (StringUtil.equals("01",CacheUtil.getSysParam("ibuFlag_repoOverEntrustAvaAmt"))) {
