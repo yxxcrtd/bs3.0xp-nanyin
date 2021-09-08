@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +67,21 @@ public class EntrustCompleteService extends BaseService<EtrEntrust> {
         Map<String, Boolean> entrustList = new HashMap<>();
         for (BaseEtrFinishAmtDto dto : finishList) {
             entrustList.put(dto.getEntrustId(), dto.getSumFinishPercent().compareTo(NUM_100) >= 0);
+        }
+        return entrustList;
+    }
+
+    /**
+     * 取得指令完成状况
+     * @param etrList 指令代码
+     * @return 指令完成详细情况
+     */
+
+    public Map<String, BigDecimal> getEtrFinishAmtList(List<String> etrList) {
+        List<BaseEtrFinishAmtDto> finishList = etrInfoService.queryDelegateStatus(etrList);
+        Map<String, BigDecimal> entrustList = new HashMap<>();
+        for (BaseEtrFinishAmtDto dto : finishList) {
+            entrustList.put(dto.getEntrustId(), StringUtil.isNotEmpty(dto.getSumFinishPercent())?dto.getSumFinishPercent():BigDecimal.ZERO);
         }
         return entrustList;
     }
