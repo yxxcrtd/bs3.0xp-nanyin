@@ -86,7 +86,7 @@ public class PdCalculateProcessService {
                 variablePdCalculateDto.setTtStage(false);
                 //遍历 交易数据
                 for(ModEclResultProcess aiPdDto :variablePdCalculateDto.getAssetImpairmentPdCalculateList()){
-                    if(StringUtil.isNotEmpty(aiPdDto.getFinStage()) && "P1".equals(aiPdDto.getFinStage())){
+                    if(StringUtil.isNotEmpty(aiPdDto.getFinStage()) && ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aiPdDto.getFinStage())){
                         //资产是否有交易处于二三阶段
                         variablePdCalculateDto.setTtStage(true);
                         break;
@@ -141,7 +141,7 @@ public class PdCalculateProcessService {
             Map<String, Object> params = new HashMap<>();
             params.put("gradeResult", variablePdCalculateDto.getGradeResult());
             params.put("pdConfigType", DictCodeListExt3.评级PD类型_债券_其他债权.getValue());
-            params.put("configType_03", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());
+            params.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());
             if(variablePdCalculateDto.getYearList() !=null){
                 for(String yearStr:variablePdCalculateDto.getYearList()){
                     params.put("yearNum", new BigDecimal(yearStr));
@@ -209,14 +209,17 @@ public class PdCalculateProcessService {
                     if(modPdFactorConfigDto !=null){
                         //3.2.2 计算调整后Z值
                         if(ModelDictCodeList.季度_第一季度.getValue().equals(quarterStr)){//一季度
-                            //乐观因子-一季度
+                            //乐观因子-一季度 Zstress
                             pdConfigDto.setOptimisticFactorOne(getZtStress(modPdFactorConfigDto.getOptimisticFactor(),pdConfigDto));
+                            // 乐观因子一季度 PDstress
                             pdConfigDto.setOptimisticFactorPdOne(getPdStress(pdConfigDto.getOptimisticFactorOne(),pdConfigDto));
-                            //基础因子-一季度
+                            //基础因子-一季度 Zstress
                             pdConfigDto.setBasicFactorOne(getZtStress(modPdFactorConfigDto.getBasicFactor(),pdConfigDto));
+                            //基础因子-一季度 PDstress
                             pdConfigDto.setBasicFactorPdOne(getPdStress(pdConfigDto.getBasicFactorOne(),pdConfigDto));
-                            //悲观因子-一季度
+                            //悲观因子-一季度 Zstress
                             pdConfigDto.setPessimismFactorOne(getZtStress(modPdFactorConfigDto.getPessimismFactor(),pdConfigDto));
+                            // 悲观因子-一季度 PDstress
                             pdConfigDto.setPessimismFactorPdOne(getPdStress(pdConfigDto.getPessimismFactorOne(),pdConfigDto));
                         }else if(ModelDictCodeList.季度_第二季度.getValue().equals(quarterStr)){ //二季度
                             //乐观因子-二季度
@@ -280,26 +283,38 @@ public class PdCalculateProcessService {
             }
 
             //4.2 计算每个累积PD
-
+            // 遍历年月列表
             for(int i = 0; i < variablePdCalculateDto.getYearMonList().size() ; i++){
                 String yearMonStr = variablePdCalculateDto.getYearMonList().get(i);//年月 202107
-                String yearStr = variablePdCalculateDto.getYearMonList().get(i).substring(0,4);//年份 2021
-                String monStr = variablePdCalculateDto.getYearMonList().get(i).substring(4);//月份 07
+                // 当前年份
+                String yearStr = variablePdCalculateDto.getYearMonList().get(i).substring(0,4);
+                // 当前月份
+                String monStr = variablePdCalculateDto.getYearMonList().get(i).substring(4);
+                // 遍历 [PD计算过程DTO]列表--每年对应的PD值
                 for(ModGradePdConfigDto pdConfigDto: variablePdCalculateDto.getModGradePdConfigList()){
+                    // 当前年份 = PD对应的年份时
                     if(yearStr.equals(pdConfigDto.getYearStr())){
                         //先计算前瞻前的
+                        // 计算前瞻前月度累积
                         if(i==0){
+                            // 前瞻前累积PD（PD1A） = PD1M
                             variablePdCalculateDto.setPreCdfPd(getPdm(pdConfigDto.getForwardYearPd()));
                         }else{
-                            variablePdCalculateDto.setPreCdfPd(ArithmeticUtil.doAdd(variablePdCalculateDto.getPreCdfPd(),ArithmeticUtil.multiply(ArithmeticUtil.subtract(BigDecimal.ONE,variablePdCalculateDto.getPreCdfPd()),getPdm(pdConfigDto.getForwardYearPd()))));
+                            // 前瞻前累积PD = 调用前瞻前月度累积计算公式：得出累计PDt
+                            variablePdCalculateDto.setPreCdfPd(ArithmeticUtil.doAdd(variablePdCalculateDto.getPreCdfPd(),
+                                    ArithmeticUtil.multiply(ArithmeticUtil.subtract(BigDecimal.ONE, variablePdCalculateDto.getPreCdfPd()),
+                                            getPdm(pdConfigDto.getForwardYearPd()))));
                         }
 
                         //这里开始计算前瞻后PD
                         int monInt = Integer.valueOf(monStr).intValue();
                         if(monInt>=1 && monInt<=3){
                             if(i==0){
+                                // 一季度乐观因子 PDstress 计算出 PDm
                                 variablePdCalculateDto.setOptimisticCdfPd(getPdm(pdConfigDto.getOptimisticFactorPdOne()));
+                                // 一季度基础因子 PDstress 计算出 PDm
                                 variablePdCalculateDto.setBasicCdfPd(getPdm(pdConfigDto.getBasicFactorPdOne()));
+                                // 一季度悲观因子 PDstress 计算出 PDm
                                 variablePdCalculateDto.setPessimismCdfPd(getPdm(pdConfigDto.getPessimismFactorPdOne()));
                             }else{
                                 variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),pdConfigDto.getOptimisticFactorPdOne()));
@@ -346,24 +361,49 @@ public class PdCalculateProcessService {
 
                 if(i == 11){
                     //第12个月累积加权PD
-                    BigDecimal deciTwelve1  =ArithmeticUtil.multiply(variablePdCalculateDto.getOptimisticCdfPd(),modPdWeightConfigDto.getOptimisticWeight());
-                    BigDecimal deciTwelve2  =ArithmeticUtil.multiply(variablePdCalculateDto.getBasicCdfPd(),modPdWeightConfigDto.getBasicWeight());
-                    BigDecimal deciTwelve3  =ArithmeticUtil.multiply(variablePdCalculateDto.getPessimismCdfPd(),modPdWeightConfigDto.getPessimismWeight());
-                    variablePdCalculateDto.setTwelveMonWeightedPd(ArithmeticUtil.doAdd(deciTwelve1,deciTwelve2,deciTwelve3));
-                    //前瞻前第12个月累积加权PD
-                    variablePdCalculateDto.setPreTwelveMonWeightedPd(ArithmeticUtil.doAdd(deciTwelve1,deciTwelve2,deciTwelve3));
+                    // 第12个月累积加权PD=乐观因子PDm *  乐观因子权重+基础因子PDm *  基础因子权重+悲观因子PDm * 悲观因子权重
+                    variablePdCalculateDto.setTwelveMonWeightedPd(calcPdRight(variablePdCalculateDto, modPdWeightConfigDto));
+                    // 前瞻前第12个月累积加权PD = 前瞻前累积PD
+                    variablePdCalculateDto.setPreTwelveMonWeightedPd(variablePdCalculateDto.getPreCdfPd());
+                   // 主体是否持有金融牌照 = 是
                     if(VariablePdCalculateDto.TRUE_STR.equals(variablePdCalculateDto.getIsFinLicence())){
+                        // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
+                        variablePdCalculateDto.setTwelveMonWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getTwelveMonWeightedPd(), BigDecimal.valueOf(0.7)));
+                        // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
+                        variablePdCalculateDto.setPreTwelveMonWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getPreTwelveMonWeightedPd(),BigDecimal.valueOf(0.7)));
+                    }
+                }
+                if(i == variablePdCalculateDto.getYearMonList().size() -1 ){
+                    // 到期日累积加权PD = 乐观累积PD*乐观因子权重 + 基础累积PD*基础因子权重 + 悲观累积PD*悲观因子权重
+                    variablePdCalculateDto.setMdateWeightedPd(calcPdRight(variablePdCalculateDto, modPdWeightConfigDto));
+                    // 前瞻前到期日累积加权PD = 前瞻前累积PD
+                    variablePdCalculateDto.setPreMdateWeightedPd(variablePdCalculateDto.getPreCdfPd());
+                    // 主体是否持有金融牌照 = 是
+                    if(VariablePdCalculateDto.TRUE_STR.equals(variablePdCalculateDto.getIsFinLicence())){
+                        // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
                         variablePdCalculateDto.setMdateWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getMdateWeightedPd(), BigDecimal.valueOf(0.7)));
+                        // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
                         variablePdCalculateDto.setPreMdateWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getPreMdateWeightedPd(),BigDecimal.valueOf(0.7)));
                     }
-
                 }
             }
 
             //5、加载每一笔交易数据的加权PD
             for(ModEclResultProcess aipcDto:variablePdCalculateDto.getAssetImpairmentPdCalculateList()){
-                aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreMdateWeightedPd());
-                aipcDto.setProspectivePd(variablePdCalculateDto.getMdateWeightedPd());
+                // if 资产剩余期限是否不足一年 == false && 交易数据i.减值阶段 == 一阶段
+                if(variablePdCalculateDto.getTtStage()==false && ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aipcDto.getFinStage())){
+                    // 交易数据i.前瞻前PD违约概率% = 前瞻前第12个月累积加权PD
+                    aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreTwelveMonWeightedPd());
+                    //交易数据i.前瞻后PD违约概率% = 第12个月累积加权PD
+                    aipcDto.setProspectivePd(variablePdCalculateDto.getTwelveMonWeightedPd());
+                }
+                else{
+                    // 交易数据i.前瞻前PD违约概率% = 到期日累积加权PD
+                    aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreMdateWeightedPd());
+                    //交易数据i.前瞻后PD违约概率% = 到期日累积加权PD
+                    aipcDto.setProspectivePd(variablePdCalculateDto.getMdateWeightedPd());
+                }
+
             }
 
             //6、加载减值配置使用情况表
@@ -409,6 +449,7 @@ public class PdCalculateProcessService {
             logMsg ="【PD计算批处理】：计算异常";
             impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
                 readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+            e.printStackTrace();
             //=====记录计算错误日志=====end=====
             return null;
         }
@@ -573,4 +614,19 @@ public class PdCalculateProcessService {
         }
     }
 
+    /**
+     * 计算前瞻因子加权PD
+     * @param variablePdCalculateDto
+     * @return
+     */
+    public BigDecimal calcPdRight(VariablePdCalculateDto variablePdCalculateDto, ModPdWeightConfigDto modPdWeightConfigDto){
+        // 乐观因子累计PDm *  乐观因子权重
+        BigDecimal deciTwelve1  =ArithmeticUtil.multiply(variablePdCalculateDto.getOptimisticCdfPd(),modPdWeightConfigDto.getOptimisticWeight());
+        // 基础因子累计PDm *  基础因子权重
+        BigDecimal deciTwelve2  =ArithmeticUtil.multiply(variablePdCalculateDto.getBasicCdfPd(),modPdWeightConfigDto.getBasicWeight());
+        // 悲观因子累计PDm * 悲观因子权重
+        BigDecimal deciTwelve3  =ArithmeticUtil.multiply(variablePdCalculateDto.getPessimismCdfPd(),modPdWeightConfigDto.getPessimismWeight());
+        // 第12个月累积加权PD=乐观因子PDm *  乐观因子权重+基础因子PDm *  基础因子权重+悲观因子PDm * 悲观因子权重
+       return ArithmeticUtil.doAdd(deciTwelve1,deciTwelve2,deciTwelve3);
+    }
 }

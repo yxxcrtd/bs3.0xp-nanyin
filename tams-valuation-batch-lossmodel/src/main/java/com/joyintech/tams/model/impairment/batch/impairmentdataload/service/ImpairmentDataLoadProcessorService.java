@@ -121,6 +121,8 @@ public class ImpairmentDataLoadProcessorService {
         BeanUtil.copyPropertiesIgnoreNull(modEclResultProcess, entity);
         //序列号
         modEclResultProcess.setSeqno(IDGenerator.generate());
+        // 交易日期 = readerEntity.交割日
+        modEclResultProcess.setTradeDate(entity.getSettleDate());
 //        //交易编号
 //        modEclResultProcess.setTradeId(entity.getTradeId());
         //资产代码
