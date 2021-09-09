@@ -4,6 +4,7 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -98,6 +99,16 @@ public class ImpairmentDataLoadProcessorService {
             modConfigUseage.setUseProcess(ModelDictCodeList.模型_减值过程_数据加载.getValue());
             // 返回结果.评级配置使用情况 = 变量.评级配置使用情况
             result.setModConfigUseage(modConfigUseage);
+        }
+
+        //若跑批参数表数据为空，表示全资产跑批，手动插入参数表数据
+        if(params.get("listBatch") == null){
+            ModValBatchParams batchParams = new ModValBatchParams();
+            batchParams.setSeqno(IDGenerator.generate());
+            batchParams.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+            batchParams.setFinprodId(entity.getFinprodId());
+            batchParams.setExecDate(platDate);
+            result.setModValBatchParams(batchParams);
         }
 
         return result;
