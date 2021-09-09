@@ -24,9 +24,9 @@
             <div class="layui-row ">
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md6">
-                        <label class="layui-form-label form-lable"><span style="color: red"> * </span>年份</label>
+                        <label class="layui-form-label form-lable">年份</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="vouchYear" name="vouchYear" class="layui-input form-input" autocomplete="off"
+                            <input id="vouchYear" name="vouchYear" class="layui-input form-input" autocomplete="off" REQUIRED="required"
                                    allowClear="true" data-th-value="${entity?.vouchYear}"
                                    data-th-placeholder="#{SysCommon.placeholder}">
                         </div>
@@ -34,10 +34,10 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md6">
-                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 季度</label>
+                        <label class="layui-form-label form-lable">季度</label>
                         <div class="layui-input-inline input-inline">
                             <select id="vouchQuarter" name="vouchQuarter" class="layui-input form-input input-select"
-                                    allowClear="true" data-th-data-result="${QUARTER}"
+                                    allowClear="true" data-th-data-result="${QUARTER}"  REQUIRED="required"
                                     data-th-placeholder="#{SysCommon.placeholder}"
                                     data-th-initvalue="${entity?.vouchQuarter}">
                             </select>
@@ -47,9 +47,9 @@
 
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md6">
-                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 乐观因子</label>
+                        <label class="layui-form-label form-lable">乐观因子</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="optimisticFactor" name="optimisticFactor" class="layui-input form-input text-number"
+                            <input id="optimisticFactor" name="optimisticFactor" class="layui-input form-input text-number"  REQUIRED="required"
                                     allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
                                     data-th-value="${entity?.optimisticFactor}">
                         </div>
@@ -57,9 +57,9 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md6">
-                    <label class="layui-form-label form-lable"><span style="color: red"> * </span> 基础因子</label>
+                    <label class="layui-form-label form-lable">基础因子</label>
                     <div class="layui-input-inline input-inline">
-                        <input id="basicFactor" name="basicFactor" class="layui-input form-input text-number"
+                        <input id="basicFactor" name="basicFactor" class="layui-input form-input text-number"  REQUIRED="required"
                                allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
                                data-th-value="${entity?.basicFactor}">
                     </div>
@@ -67,9 +67,9 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-inline layui-col-md6">
-                        <label class="layui-form-label form-lable"><span style="color: red"> * </span> 悲观因子</label>
+                        <label class="layui-form-label form-lable">悲观因子</label>
                         <div class="layui-input-inline input-inline">
-                            <input id="pessimismFactor" name="pessimismFactor" class="layui-input form-input text-number"
+                            <input id="pessimismFactor" name="pessimismFactor" class="layui-input form-input text-number"  REQUIRED="required"
                                     allowClear="true" data-th-placeholder="#{SysCommon.placeholder}" data-fixtype="2" data-textrange="4" maxlength="10"
                                     data-th-value="${entity?.pessimismFactor}">
                         </div>
