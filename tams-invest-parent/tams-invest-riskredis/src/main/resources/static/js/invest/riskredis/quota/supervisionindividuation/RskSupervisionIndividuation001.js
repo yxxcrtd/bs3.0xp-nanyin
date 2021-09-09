@@ -373,7 +373,7 @@
 			,{field:'warnCond', width:200, title: 'RskSupervisionIndividuation001.warnCond', type: 'number', sortable: false,edit:true,render: parseValue}//预警线
 			,{field:'approveCond', width:200, title: 'RskSupervisionIndividuation001.approveCond', type: 'number',sortable: false,edit:true,render: parseValue}//审批线
 			,{field:'foulCond', width:200, title: 'RskSupervisionIndividuation001.foulCond', type: 'number',sortable: false,edit:true,render: parseValue}//禁止线
-			,{field: 'operation', width: 100, title: 'SysCommon.operation', type: 'action',
+			,{field: 'operation', width: 100, title: 'SysCommon.operation', type: 'action', fixed:true,
 				buttons: ['delt']
 			}
 		]
