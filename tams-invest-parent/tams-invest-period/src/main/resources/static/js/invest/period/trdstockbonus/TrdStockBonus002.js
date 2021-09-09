@@ -15,10 +15,10 @@
 	        cols: [
 	            //组合代码
 	            {field: 'portfolioId', width: "300", title: 'IntDetailDuration.portfolioId', sortable:false}
-	            //证券托管户
-	            ,{field: 'secAcctId', width: "300", title: 'TrdStockBonus001.secManageAcctId', sortable:false}
 	            //组合名称
 	            ,{field: 'portfolioName', width: "300", title: 'IntDetailDuration.portfolioName', sortable:false}
+                //证券托管户
+                ,{field: 'secAcctId', width: "300", title: 'TrdStockBonus001.secManageAcctId', sortable:false}
 	            //权益登记日股本
 	            , {field: 'regDateAmt', width: "200", title: '权益登记日股本', type: 'money', sortable:false}
 	            //分红金额

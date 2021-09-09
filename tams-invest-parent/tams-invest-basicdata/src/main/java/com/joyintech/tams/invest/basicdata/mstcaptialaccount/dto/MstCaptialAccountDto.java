@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.framework.validation.annotation.Code;
 import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.annotation.PageId;
@@ -263,6 +264,8 @@ public class MstCaptialAccountDto extends StlCapacctInfo implements ITableRow, P
 //    @NotEmpty(fieldName = "MstCaptialAccount002.accountOutlet", groups = {ValidateGroupEdit.class})
     @Length(fieldName = "MstCaptialAccount002.accountOutlet", max = 20, groups = {
         ValidateGroupEdit.class})
+    @Code(fieldName = "MstCaptialAccount002.accountOutlet", length = 20, groups = {
+            ValidateGroupEdit.class})
     @PrimaryKey(value=Field.PK_2)
     public String getLargePayno() {
         return super.getLargePayno();
