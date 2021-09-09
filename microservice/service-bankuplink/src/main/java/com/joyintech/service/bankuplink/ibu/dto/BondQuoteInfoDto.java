@@ -157,8 +157,46 @@ public class BondQuoteInfoDto extends BaseEntity {
      */
     private String isDzh;
 
-    
-    
+
+    /**
+     * 待偿期
+     */
+    private BigDecimal pendingPeriod;
+
+    /**
+     * 评级
+     */
+    private String grade;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public BigDecimal getPendingPeriod() {
+        return pendingPeriod;
+    }
+
+    public void setPendingPeriod(BigDecimal pendingPeriod) {
+        this.pendingPeriod = pendingPeriod;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
     /**
      * 获取 quoteId
      * @return quoteId.

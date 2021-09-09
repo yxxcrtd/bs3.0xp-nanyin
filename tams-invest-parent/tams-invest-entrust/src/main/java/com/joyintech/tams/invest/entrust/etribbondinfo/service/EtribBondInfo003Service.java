@@ -153,7 +153,7 @@ public class EtribBondInfo003Service extends CommonExportService<EtribBondInfo00
         // 获取平台日
         Date tradeDate = DateUtil.platDateFromCache();
         // 交易日历
-        String calId = (String) param.get("calId");
+        String calId = StringUtil.isNotEmpty(param.get("calId"))?(String) param.get("calId"):BussinessDictCodeList.wind交易场所_银行间.getValue();
         Date tradeDateNext = DateUtil.addDay(tradeDate, 1);
         if (StringUtil.isNotEmpty(calId)) {
             List<String> holidayList = dateCalService.getDealCalendarHoliday(DateUtil.parse(DateUtil.format(tradeDate)), DateUtil.addDay(DateUtil.parse(DateUtil.format(tradeDate)), 15), calId);
