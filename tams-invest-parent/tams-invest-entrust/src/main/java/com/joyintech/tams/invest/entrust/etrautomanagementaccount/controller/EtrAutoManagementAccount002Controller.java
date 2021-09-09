@@ -71,6 +71,9 @@ public class EtrAutoManagementAccount002Controller extends BaseController {
 //            model.addAttribute("portfolioIdChangeDb", dto.getPortfolioId ());
 //            String portfolioId = dto.getPortfolioId ().substring(dto.getPortfolioId ().indexOf("_")+1,dto.getPortfolioId ().length ());
 //            dto.setPortfolioId (portfolioId);金融产品类型_投管用_计划类资产
+            // ZGZGST-2332:指令详情信息中展示风控指标的具体试算结果需要tradeId fuyongsheng 20210909 add start
+            model.addAttribute("tradeId", dto.getEntrustId());
+            // ZGZGST-2332:指令详情信息中展示风控指标的具体试算结果需要tradeId fuyongsheng 20210909 add end
             model.addAttribute("portfolioIdChange",DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue()+GlobalConstant.UNDER_LINE+ dto.getPortfolioId ());
             model.addAttribute(GlobalConstant.ENTITY, dto);
 

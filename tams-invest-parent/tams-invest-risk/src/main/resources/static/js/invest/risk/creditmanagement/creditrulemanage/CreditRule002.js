@@ -58,6 +58,59 @@ $(function() {
             $('#selector5').hide();
             $('#selector6').hide();
         }
-        
+
+        $('#astType1').change(function () {
+            var astType1 = $('#astType1').val();
+            if (astType1 != '') {
+                $('#astType2').prop("disabled", false);
+            } else {
+                $('#astType2').val('').trigger('change')
+                $('#astType2').prop("disabled", true);
+                $('#astType3').val('').trigger('change')
+                $('#astType3').prop("disabled", true);
+                $('#astType4').val('').trigger('change')
+                $('#astType4').prop("disabled", true);
+                $('#astType5').val('').trigger('change')
+                $('#astType5').prop("disabled", true);
+            }
+        });
+
+        $('#astType2').change(function () {
+            var astType2 = $('#astType2').val();
+            if (astType2 != '') {
+                $('#astType3').prop("disabled", false);
+            } else {
+                $('#astType3').val('').trigger('change')
+                $('#astType3').prop("disabled", true);
+                $('#astType4').val('').trigger('change')
+                $('#astType4').prop("disabled", true);
+                $('#astType5').val('').trigger('change')
+                $('#astType5').prop("disabled", true);
+
+            }
+        });
+
+        $('#astType3').change(function () {
+            var astType3 = $('#astType3').val();
+            if (astType3 != '') {
+                $('#astType4').prop("disabled", false);
+            } else {
+                $('#astType4').val('').trigger('change')
+                $('#astType4').prop("disabled", true);
+                $('#astType5').val('').trigger('change')
+                $('#astType5').prop("disabled", true);
+
+            }
+        });
+        $('#astType4').change(function () {
+            var astType4 = $('#astType4').val();
+            if (astType4 != '') {
+                $('#astType5').prop("disabled", false);
+            } else {
+                $('#astType5').val('').trigger('change')
+                $('#astType5').prop("disabled", true);
+
+            }
+        });
     });
 }());

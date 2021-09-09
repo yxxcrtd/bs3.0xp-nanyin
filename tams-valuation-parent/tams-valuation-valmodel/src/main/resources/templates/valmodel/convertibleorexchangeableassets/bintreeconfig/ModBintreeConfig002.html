@@ -19,7 +19,7 @@
 							data-th-placeholder="#{SysCommon.placeholder}"
 							data-th-value="${entity?.finprodId}" required/>-->
 						<select type="text" id="finprodId" name="finprodId"
-								class="layui-input form-input input-select" allowClear="true"
+								class="layui-input form-input input-select" allowClear="true" required="required"
 								data-th-placeholder="#{SysCommon.placeholder}" formatOption="true"
 								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getSecAssetInfo}"
 								data-th-initvalue="${entity?.finprodId}"> </select>
@@ -129,7 +129,7 @@
 							data-th-data-result='${CURVE_CODE}' required/>-->
 						<select type="text" id="curveCode"
 								data-th-initvalue='${entity?.curveCode}' name="curveCode"
-								formatoption="true"
+								formatoption="true" required="required"
 								class="layui-input form-input input-select"
 								data-th-data-url="@{/valmodel/convertibleorexchangeableassets/bintreeconfig/ModBintreeConfig002/getCurveCode}"
 								placeholder="请输入内容"

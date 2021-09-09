@@ -253,6 +253,9 @@
            ,{field:'yield',type:'number', width:120, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.matuYield', digit:4}
            ,{field:'prinAmtHun',type:'number', width:125, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.bondPosition'}
            ,{field:'assetTypeOneStr', width:90, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.bondType', sortField:"assetTypeOne"}
+           ,{field:'pendingPeriod',type:'number', width:120, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.pendingPeriod', digit:2}
+           ,{field:'gradeStr', width:90, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.grade'}
+           ,{field:'remark', width:150, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.remark'}
            ,{field:'cfetsQuoteId', width:200, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.offerId'}
            ,{field:'fTradeId', width:150, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.dealId'}
            ,{field:'quoteId', visible: false}
