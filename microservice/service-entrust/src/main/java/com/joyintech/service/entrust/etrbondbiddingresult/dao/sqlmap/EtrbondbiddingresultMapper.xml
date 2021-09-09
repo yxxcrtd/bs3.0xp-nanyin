@@ -276,7 +276,7 @@
 	</update>
 
 	<select id="getisFrozenPosition" resultType="java.math.BigDecimal">
-		select
+		select distinct
 		WIN_PRIN_AMT * 100 * WIN_CPRICE * -1
 		from BID_ORDER_BID_PRICE
 		where is_frozen_position = 'Y'
