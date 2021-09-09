@@ -172,16 +172,16 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
         	param.put("portfolioIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("portfolioIdList")));
         }
-        // 组合代码
-        Object portfolioIdObj = param.get("portfolioId");
-        if (portfolioIdObj != null) {
-            param.put("portfolioIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
-            param.put("portfolioId",null);
-        }
-        else {
-            param.put("portfolioIdList", new ArrayList<>());
-        }
+//        // 组合代码
+//        Object portfolioIdObj = param.get("portfolioId");
+//        if (portfolioIdObj != null) {
+//            param.put("portfolioIdList",
+//                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
+//            param.put("portfolioId",null);
+//        }
+//        else {
+//            param.put("portfolioIdList", new ArrayList<>());
+//        }
         Object entrustIdObj = param.get("entrustId");
         if (entrustIdObj != null) {
             param.put("entrustIdMultiple",
