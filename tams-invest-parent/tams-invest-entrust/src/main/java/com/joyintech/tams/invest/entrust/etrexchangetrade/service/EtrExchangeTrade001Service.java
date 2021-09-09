@@ -3598,6 +3598,18 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
                 WflEtrEntrust.class);
     }
+	/**
+	 *
+	 * @Description 查询流程及委托表中是否有同一股东下达的可转债申购指令
+	 * @Param [map]
+	 * @return java.util.List<java.lang.String>
+	 * @version 1.0
+	 * @see
+	 **/
+	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+				String.class);
+	}
 
 	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
 	/**

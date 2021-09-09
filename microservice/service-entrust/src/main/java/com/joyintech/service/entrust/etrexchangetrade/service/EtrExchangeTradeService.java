@@ -2233,6 +2233,10 @@ public class EtrExchangeTradeService extends BaseService{
         return etrExchangeTradeMapper.selectWflEntrust(map);
     }
 
+    public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String, Object> map) {
+        return etrExchangeTradeMapper.selectWflEntrustAddAndEtrEntrustAdd(map);
+    }
+
     //add by chenjiaxing 债券竞价交易展示偏移度 start
     /**
      * 1.6计算偏离度
