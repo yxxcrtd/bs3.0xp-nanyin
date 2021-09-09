@@ -51,6 +51,7 @@
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
+        <module>../../tams-valuation-api</module>
         <module>../../tams-valuation-batch</module>
         <module>../../tams-valuation-batch-lossmodel</module>
         <module>../../tams-valuation-batch-valmodel</module>
