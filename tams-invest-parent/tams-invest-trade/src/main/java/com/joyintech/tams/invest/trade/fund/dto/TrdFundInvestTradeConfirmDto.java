@@ -197,6 +197,11 @@ public class TrdFundInvestTradeConfirmDto extends TrdProductDeal implements Proc
     private List<TrdTradeFeeDetail> trdTradeFeeDetailList;
 
     /**
+     * 申购时份额  更新redis差额需要
+     */
+    private BigDecimal shareAmtSg;
+
+    /**
      * 获取 trdTradeFeeDetailList
      * 
      * @return trdTradeFeeDetailList.
@@ -1271,5 +1276,13 @@ public class TrdFundInvestTradeConfirmDto extends TrdProductDeal implements Proc
 
     public void setBussTrdTransfenpeiDto(List<BussTrdTransfenpeiDto> bussTrdTransfenpeiDto) {
         this.bussTrdTransfenpeiDto = bussTrdTransfenpeiDto;
+    }
+
+    public BigDecimal getShareAmtSg() {
+        return shareAmtSg;
+    }
+
+    public void setShareAmtSg(BigDecimal shareAmtSg) {
+        this.shareAmtSg = shareAmtSg;
     }
 }
