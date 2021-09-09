@@ -16,6 +16,8 @@ import com.joyintech.tams.model.impairment.batch.impairmentdataload.reader.Impai
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadDelWriter;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadStep2Writer;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadWriter;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,6 +96,9 @@ public class ImpairmentDataLoadTask extends BatchBaseService {
     @Autowired
     private ImpairmentDataLoadListener impairmentDataLoadListener;
 
+    @Autowired
+    private ModParamsService modParamsService;
+
     @Override
     public JobExecution execute() throws BatchException {
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
@@ -108,6 +114,8 @@ public class ImpairmentDataLoadTask extends BatchBaseService {
 //        把执行日期当作平台日来替换处理
         params.put("PLATE_DATE", batchExecuteInfo.getExecuteDate());
         params.put("TASK_ID",batchExecuteInfo.getTaskId());
+        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        params.put("listBatch", listBatch);
         // 各步骤设置参数
         impairmentDataLoadReader.setParams(params);
         impairmentDataLoadProcessor.setParams(params);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.BokStatLossPosiiton;
@@ -61,4 +62,11 @@ public interface LossCommonMapper {
      * @return
      */
     int insertModEclResultProcessBatch(List<ModEclResultProcess> listInsert);
+
+    /**
+     * 减值结果过程表批量入库
+     * @param listInsert
+     * @return
+     */
+    int insertModValBatchParamsBatch(List<ModValBatchParams> listInsert);
 }
