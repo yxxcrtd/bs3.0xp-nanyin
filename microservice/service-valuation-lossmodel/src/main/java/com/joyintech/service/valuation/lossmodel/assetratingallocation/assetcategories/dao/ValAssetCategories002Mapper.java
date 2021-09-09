@@ -52,4 +52,6 @@ public interface ValAssetCategories002Mapper {
     int deleteByPrimaryKey(String seqno);
 
     int checkAssetData(ValAssetCategories002Dto dto);
+
+    int updateBySeqNo(ValAssetCategories002Dto dto);
 }

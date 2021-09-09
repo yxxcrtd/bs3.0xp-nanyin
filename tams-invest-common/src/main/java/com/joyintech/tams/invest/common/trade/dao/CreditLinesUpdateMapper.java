@@ -99,5 +99,7 @@ public interface CreditLinesUpdateMapper {
 
     BigDecimal getShareAmt(String bTradeId);
 
-    List<CreditUsingAst> getCreditUsingAstListByFin1(CreditLinesInputDto inputDto);
+    BigDecimal getOccupiedQuota(CreditLinesInputDto inputDto);
+
+    BigDecimal getOccupiedQuota1(CreditLinesInputDto inputDto);
 }
