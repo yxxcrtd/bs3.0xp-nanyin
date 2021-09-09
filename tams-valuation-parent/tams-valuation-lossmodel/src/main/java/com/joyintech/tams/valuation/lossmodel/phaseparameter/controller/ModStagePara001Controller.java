@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.lossmodel.phaseparameter.controller;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.pdfactorconfig.dto.PdFactorConfigDto;
 import com.joyintech.tams.valuation.lossmodel.phaseparameter.dto.ModStageParaDto;
@@ -21,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -130,6 +136,35 @@ public class ModStagePara001Controller extends BaseController{
             msg="其他错误";
         }
         return new AjaxResult(msg);
+    }
+
+
+    /**启用，停用校验
+     * @Description:
+     * @auther: yuzj
+     * @date: 2021/9/9
+     * @param:
+     * @return:
+     */
+    @ResponseBody
+    @RequestMapping("useCheck")
+    public AjaxResult useCheck(@RequestBody ModStageParaDto dto) {
+        AjaxResult ajaxResult = new AjaxResult();
+        String message="";
+        List<ModStageParaDto> selectedItem = dto.getSelectedItem();
+        List<String> useStatusList = new ArrayList<>();
+        for(ModStageParaDto modStageParaDto:selectedItem){
+            useStatusList.add(modStageParaDto.getUseStatus());
+        }
+        if(dto.getOperateType().equals("on") && useStatusList.contains("01")){
+            message = "请选择停用状态的数据！";
+            return new AjaxResult(message, MessageType.错误消息);
+        }
+        if(dto.getOperateType().equals("off") && useStatusList.contains("02")){
+            message = "请选择启用状态的数据！";
+            return new AjaxResult(message, MessageType.错误消息);
+        }
+        return ajaxResult;
     }
 
 
