@@ -116,10 +116,12 @@
                 var selArr = table.getAllCheckedRows();
             }
             for(var i=0; i<selArr.length; i++){
-                // if(selArr[i].entrustStatusStr == '待接收'){
-                //     Joyin.error('不能对待接收的数据进行关闭操作');
-                //     return;
-                // }
+                // ZGZGST-2320:不能对待接收的数据进行关闭操作 fuyongsheng 20210909 edit start
+                if(selArr[i].entrustStatusStr == '待接收'){
+                    Joyin.error('不能对待接收的数据进行关闭操作');
+                    return;
+                }
+                // ZGZGST-2320:不能对待接收的数据进行关闭操作 fuyongsheng 20210909 edit end
                 if(selArr[i].entrustStatusStr == '已关闭'){
                     Joyin.error('已关闭状态的数据不允许再次关闭');
                     return;

@@ -29,6 +29,22 @@
             ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
             ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
             ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+            , {
+                field: 'proAvailableCash',
+                width: 120,
+                title: '组合T日可用现金',
+                sortable: false,
+                type: 'number',
+                digit: 2
+            }, {
+                field: 'secManageAvailablePosition',
+                width: 120,
+                title: '组合T日可用持仓',
+                sortable: false,
+                type: 'number',
+                digit: 2,
+                visible: true
+            }
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt'],
                 render(data, type, row, meta) {
                     // 报价修改时组合信息只可以添加和修改额度，不允许删除(初始化的组合信息不允许删除，手工添加的组合信息可以删除)
@@ -48,6 +64,45 @@
         		 table.renderRow(data.LAY_TABLE_INDEX, {"avaNum": tempAvaNum});
         		Joyin.error("券面总额不得大于剩余额度!");
         	}
+            if (field == "portfolioId") {
+                var rowData = {};
+                if (value != null && value !== '') {
+
+                    var datas = {
+                        portfolioId:data.portfolioId,
+                        ccy:$('#CfetsBondDealQuotedPrice005_settleCcy').val()?$('#CfetsBondDealQuotedPrice005_settleCcy').val():$('#CfetsBondDealQuotedPriceMuti002_settleCcy').val(),
+                        tradeDate:$('#CfetsBondDealQuotedPrice005_tradeDate').val()?$('#CfetsBondDealQuotedPrice005_tradeDate').val():$('#CfetsBondDealQuotedPriceMuti002_tradeDate').val(),
+                        calendarId:"",
+                        acctTypeList: "A01,A07",
+                        finprodId:$('#CfetsBondDealQuotedPrice005_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice005_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti002_hidden_finprodId').val()
+                    };
+                    if(quoteType == '01'){
+                        datas = {
+                            portfolioId:data.portfolioId,
+                            ccy:$('#CfetsBondDealQuotedPrice004_settleCcy').val()?$('#CfetsBondDealQuotedPrice004_settleCcy').val():$('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
+                            tradeDate:$('#CfetsBondDealQuotedPrice004_tradeDate').val()?$('#CfetsBondDealQuotedPrice004_tradeDate').val():$('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
+                            calendarId:"",
+                            acctTypeList: "A01,A07",
+                            finprodId:$('#CfetsBondDealQuotedPrice004_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice004_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val()
+                        };
+                    }
+                    datas.multiParam = 100;
+                    datas.secAcctId =obj.secManageAcctId;
+                    Joyin.ajaxJson(JoyinUtil.getRealPath( '/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), datas, function (result) {
+                        if (result) {
+                            if (result) {
+                                rowData.proAvailableCash = result.T_0;
+                                rowData.secManageAvailablePosition = result.position;
+                            }
+                            table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                        }
+                    });
+                }else{
+                    rowData.proAvailableCash = ' ';
+                    rowData.secManageAvailablePosition = ' ';
+                    table.renderRow(data.LAY_TABLE_INDEX, rowData);
+                }
+            }
         },
         beforeEditCell: function (preVal, field, rowData) {
             if (field === "avaNum") {
@@ -88,7 +143,41 @@
     var reloadPtlAllocation = function(result){
         for (var i in result) {
             var obj = result[i];
-            table.addRow(obj);
+            debugger;
+            if (obj != null && obj !== '') {
+                var datas = {
+                    portfolioId:obj.portfolioId,
+                    ccy:$('#CfetsBondDealQuotedPrice005_settleCcy').val()?$('#CfetsBondDealQuotedPrice005_settleCcy').val():$('#CfetsBondDealQuotedPriceMuti002_settleCcy').val(),
+                    tradeDate:$('#CfetsBondDealQuotedPrice005_tradeDate').val()?$('#CfetsBondDealQuotedPrice005_tradeDate').val():$('#CfetsBondDealQuotedPriceMuti002_tradeDate').val(),
+                    calendarId:"",
+                    acctTypeList: "A01,A07",
+                    finprodId:$('#CfetsBondDealQuotedPrice005_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice005_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti002_hidden_finprodId').val()
+                };
+                if(quoteType == '01'){
+                    datas = {
+                        portfolioId:obj.portfolioId,
+                        ccy:$('#CfetsBondDealQuotedPrice004_settleCcy').val()?$('#CfetsBondDealQuotedPrice004_settleCcy').val():$('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
+                        tradeDate:$('#CfetsBondDealQuotedPrice004_tradeDate').val()?$('#CfetsBondDealQuotedPrice004_tradeDate').val():$('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
+                        calendarId:"",
+                        acctTypeList: "A01,A07",
+                        finprodId:$('#CfetsBondDealQuotedPrice004_hidden_finprodId').val()?$('#CfetsBondDealQuotedPrice004_hidden_finprodId').val():$('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val()
+                    };
+                }
+                datas.multiParam = 100;
+                datas.secAcctId =obj.secManageAcctId;
+                Joyin.ajaxJson(JoyinUtil.getRealPath( '/component/trade/BussTrdAvailableCashQuery/getAvailableCash'), datas, function (result) {
+                    if (result) {
+                        obj.proAvailableCash = result.T_0;
+                        obj.secManageAvailablePosition = result.position;
+                    }
+                    table.addRow(obj);
+                });
+
+            }else{
+                obj.proAvailableCash = ' ';
+                obj.secManageAvailablePosition = ' ';
+                table.addRow(obj);
+            }
         }
     }
 
@@ -106,9 +195,9 @@
      * 画面加载完成
      */
     $(function () {
-        if(quotaPageModel&&quotaPageModel=="new"){
-            $('#CfetsQuotedCommon001_dzh_add_btn').hide();
-        }
+        // if(quotaPageModel&&quotaPageModel=="new"){
+        //     $('#CfetsQuotedCommon001_dzh_add_btn').hide();
+        // }
     	$("#cfetsQuoTedCommon_btn_autoAllocation").click(function(){
     		if(!$("#cfetsQuoTedCommon_distribution").val()){
     			Joyin.error("请选择分配方式!");

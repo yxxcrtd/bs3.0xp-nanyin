@@ -57,4 +57,13 @@ public interface ModAssetGradeSpecialConfigDtoMapper {
 
     String getSecTypeByFinprodId(Map<String, Object> map);
 
+    /**
+     * @Description:根据资产代码查询条数
+     * @auther: yuzj
+     * @date: 2021/9/8
+     * @param:
+     * @return:
+     */
+    Integer getSpecialCountByFinprodId(ModAssetGradeSpecialConfigDto dto);
+
 }

@@ -133,15 +133,18 @@ public class FinStockInfoValidator implements BeanValidator {
 //	                   		dto.setFinprodMarketId(dto.getFinprodMarketId().substring(0,dto.getFinprodMarketId().indexOf(".")));
                        parameter.setPageId("FinStockInfo002");
                        parameter.setBusinessDataPk1(dto.getFinprodMarketId());
-                       boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
-                       if(isInWfl){
-                           errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", dto.getFinprodMarketId())));
+
+                   String workflowId = dto.getWorkflowId();
+//                   boolean isInWfl = mstWorkflowCommonService.isInWflProcess(parameter);
+//                   if(isInWfl){
+                   if(StringUtil.isNotEmpty(workflowId)){
+                       errorList.add(new ValidMessage(getMessage("REPORT_COMMON_E_0021", "资产代码", dto.getFinprodMarketId())));
 //	                           	Map<String, Object> parammap= new HashMap<String, Object>();
 //	                           	parammap.put("pageId", "FinStockInfo002");
 //	                           	parammap.put("pk1", dto.getFinprodIdStr());
 //	                           	String username =finStockInfoService.getIsInWorkFlowReturnUser(parammap);
 //	                           	errorList.add(new ValidMessage(getMessage("FIN_ASSET_STOCK_2", username)));
-                       }
+                   }
                    //}
                    FinStockInfoDto finStockInfoDto = finStockInfoService.getShares(map);
                    if(StringUtil.isNotEmpty(finStockInfoDto)){

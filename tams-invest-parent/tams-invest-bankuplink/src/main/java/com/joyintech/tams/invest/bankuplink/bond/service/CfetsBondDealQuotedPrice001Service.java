@@ -24,7 +24,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
+import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.netflix.discovery.converters.Auto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -131,6 +134,12 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+
+    /**
+     * 产品评级共通
+     */
+    @Autowired(required = false)
+    private BusiProductRatingService busiProductRatingService;
 
     /**
      * 根据查询条件查询委托列表
@@ -309,6 +318,19 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
 		}
 		List<BondQuoteInfoDto> res = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME
                 + "/CfetsBondDealQuotedPrice/getDayOfferTableList",param, BondQuoteInfoDto.class);
+
+        // 债项评级
+        for(BondQuoteInfoDto dto : res ){
+            Map<String,Object> zxparam = new HashMap<String,Object>();
+            zxparam.put("oCode", dto.getFinprodMarketId());
+            zxparam.put("oType", DictCodeList.评级类型_债项评级.getValue());
+            //查询评级类型是债项评级的数据
+            List<BusiFinProductRatingDto> zxList = busiProductRatingService.getZxBestRatingByMarketId(zxparam);
+            if(zxList != null && zxList.size()>0){
+                //只取第一条数据
+                dto.setGrade(zxList.get(0).getGradeResult());
+            }
+        }
          if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(res)){
         	 res = (List<BondQuoteInfoDto>) getKeyWordsList(res,keywords,(String) param.get("keycols"));
          }

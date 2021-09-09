@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.service.AssetCategories001Service;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.service.Specialassets002Service;
@@ -58,6 +62,13 @@ public class Specialassets002Controller extends BaseController{
 	private Specialassets002Service specialassets002Service;
     @Autowired
     private AssetCategories001Service assetCategories001Service;
+
+    /**
+     *  工作流共通Service
+     */
+    @Autowired(required = false)
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
     @Override
     public String init(Model model) {
     	super.setSelectOptionToModel(model, DictCode.评级机构, DictCode.评级类型_减值);
@@ -88,6 +99,43 @@ public class Specialassets002Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) ModAssetGradeSpecialConfigDto dto, BindingResult result) {
+        if (result != null && result.hasErrors()) {
+            return new AjaxResult(result);
+        }
+        if (StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getFinprodId())){
+            WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+            wflValidInputParameter.setPageId("TrdAssetLoss002");
+            wflValidInputParameter.setBusinessDataPk1(dto.getFinprodId());
+            if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0041")));
+                AjaxResult ar = new AjaxResult();
+                ar.setErrorList(errorList);
+                return ar;
+            }
+        }
+        //根据资产代码判断数据重复校验
+        int count = specialassets002Service.getSpecialCountByFinprodId(dto);
+        if(GlobalConstant.DETAIL_PAGE_MODEL_NEW.equals(dto.getPageModel())){
+            if(count>0){
+                return new AjaxResult("当前资产代码已存在数据，请修改！", MessageType.错误消息);
+            }
+        }else if(GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())){
+            if(count>1){
+                return new AjaxResult("当前资产代码已存在数据，请修改！", MessageType.错误消息);
+            }
+        }
+
+//        String message="";
+//        Boolean flag = modGradePdConfigService.getRepeatCheck(dto);
+//        //true 表示有重复 false表示无重复
+//        if(flag){
+//            message = "年份、评级结果有重复，不可提交！";
+//            return new AjaxResult(message, MessageType.错误消息);
+//        }
+
+
+
         return commonCheck(result, dto.getOperateType());
     }
     /**

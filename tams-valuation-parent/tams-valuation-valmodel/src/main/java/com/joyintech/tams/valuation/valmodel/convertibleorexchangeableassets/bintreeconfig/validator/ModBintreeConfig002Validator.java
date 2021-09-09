@@ -68,7 +68,7 @@ public class ModBintreeConfig002Validator implements BeanValidator {
 			if(dto.getStockId()==null||"".equals(dto.getStockId())){
 				errorList.add(new ValidMessage("当标的公司上市状态为上市时，标的股票代码不能为空！"));
 			}
-		}else{//未上市
+		}else if("02".equals(dto.getStockBordsttus())){//未上市
 			if(dto.getCompOrg()==null||"".equals(dto.getCompOrg())){
 				errorList.add(new ValidMessage("当标的公司上市状态为未上市时，可比公司不能为空！"));
 			}

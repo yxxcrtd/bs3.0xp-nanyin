@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.constant.DictCode;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -189,7 +190,51 @@ public class BondQuoteInfoDto extends BaseEntity {
      * 是否多组合
      */
     private String isDzh;
-    
+
+    /**
+     * 待偿期
+     */
+    private BigDecimal pendingPeriod;
+
+    /**
+     * 评级
+     */
+    private String grade;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    public BigDecimal getPendingPeriod() {
+        return pendingPeriod;
+    }
+
+    public void setPendingPeriod(BigDecimal pendingPeriod) {
+        this.pendingPeriod = pendingPeriod;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getGradeStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级结果, this.getGrade());
+    }
+
+
     /**
      * 获取 quoteId
      * 

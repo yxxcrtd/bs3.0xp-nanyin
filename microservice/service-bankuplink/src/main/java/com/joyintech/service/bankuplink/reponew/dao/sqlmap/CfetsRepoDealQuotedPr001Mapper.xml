@@ -435,7 +435,8 @@
         else COUNTERDEPOSITACCOUNTNUMBER
         end as ourdepositaccountnumber,
         su.USER_NAME userName,
-        I.OURDEPOSITINSTITUTION ourdepositinstitution
+        I.OURDEPOSITINSTITUTION ourdepositinstitution,
+        tpd.FINPROD_ID           finprodId
         FROM
         INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM INTERF_CSTP_TRADE GROUP BY EXECID) II ON II.EXECID =
@@ -466,10 +467,10 @@
         LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
         GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE
         ) QUOTE ON QUOTE.EXECID=I.EXECID
-        left join ETR_ENTRUST on ETR_ENTRUST.ENTRUST_ID = QUOTE.ENTRUST_ID
-        left join ptl_portfolio on ptl_portfolio.portfolio_id = ETR_ENTRUST.Portfolio_Id
         left join TRD_PRODUCT_DEAL tpd on I.EXECID = tpd.F_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
+        left join ETR_ENTRUST on ETR_ENTRUST.ENTRUST_ID = tpda.ENTRUST_ID
+        left join ptl_portfolio on ptl_portfolio.portfolio_id = ETR_ENTRUST.Portfolio_Id
         LEFT JOIN (select a.QUOTE_ID,
                     a.PLEDGE_RATIO,
                     a.PLEDGE_AMT,

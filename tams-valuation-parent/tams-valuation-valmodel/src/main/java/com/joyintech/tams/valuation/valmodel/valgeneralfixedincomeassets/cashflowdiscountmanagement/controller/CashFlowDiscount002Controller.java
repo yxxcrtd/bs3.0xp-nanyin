@@ -79,11 +79,10 @@ public class CashFlowDiscount002Controller extends BaseController {
             dto = cashFlowDiscount001Service.getBussinessEntityByWorkflowId(workflowId);
             model.addAttribute("pageModel",dto.getPageModel());
         }
-
+        this.setSelectOptionToModel(model, DictCode.收益率曲线类型);
         this.setSelectOptionToModel(model, DictCode.资产类型);
         this.setSelectOptionToModel(model, DictCode.资产分类);
         this.setSelectOptionToModel(model, DictCode.曲线族);
-        this.setSelectOptionToModel(model, DictCode.收益率曲线类型);
         this.setSelectOptionToModel(model, DictCode.平滑区间);
         /** modify by yanya on 20210821 增加评级结果**/
         this.setSelectOptionToModel(model, DictCode.评级结果);

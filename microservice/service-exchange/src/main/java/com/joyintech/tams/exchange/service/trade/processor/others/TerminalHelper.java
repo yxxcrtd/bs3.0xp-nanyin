@@ -13,7 +13,6 @@ import com.joyintech.tams.exchange.common.utils.ConvertListUtils;
 import com.joyintech.tams.exchange.common.utils.StockCodeUtils;
 import com.joyintech.tams.exchange.datacommon.db.service.*;
 import com.joyintech.tams.exchange.service.trade.management.service.InvestmentManagement;
-import com.joyintech.tams.exchange.service.trade.processor.TradeHelper;
 import com.joyintech.tams.exchange.service.trade.scheduled.LoginJob;
 import com.joyintech.tams.exchange.service.trade.scheduled.quote.QuoteJob;
 import com.joyintech.tams.exchange.service.trade.server.agent.AccountManager;
@@ -31,7 +30,7 @@ import java.util.Objects;
 
 @Component
 public class TerminalHelper {
-    private static final Logger logger = LoggerFactory.getLogger(TradeHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(TerminalHelper.class);
 
     @Autowired
     private TradeAgentManager tradeAgentManager;

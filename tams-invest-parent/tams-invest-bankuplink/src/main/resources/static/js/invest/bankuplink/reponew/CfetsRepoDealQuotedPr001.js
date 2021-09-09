@@ -624,6 +624,7 @@
             , {field: 'fTradeId', width: '120',visible: false}
             , {field: 'rTradeId', width: '120',visible: false}
             , {field: 'ps', sortField: 'side', visible: false}
+            , {field: 'finprodId', sortField: 'finprodId', visible: false}
             , {field: 'settleSpeed', title: '清算速度', width: '100', visible: false}
             , {
                 field: 'settleDate',

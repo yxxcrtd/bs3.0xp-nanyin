@@ -9,6 +9,7 @@ import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.dto.AssetCategories001Dto;
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -208,4 +209,9 @@ public class AssetCategories001Service extends CommonExportService<AssetCategori
                         + "/ValuationMethodScheme001/getLinkSelectOption",
                 param, SelectOptionDto.class);
     }
+
+
+
+
+
 }

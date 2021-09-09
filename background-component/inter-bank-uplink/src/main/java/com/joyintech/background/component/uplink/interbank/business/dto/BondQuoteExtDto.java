@@ -114,6 +114,32 @@ public class BondQuoteExtDto extends IbuQuoteBondDto {
     private String isDzh;
 
     /**
+     * 待偿期
+     */
+    private BigDecimal pendingPeriod;
+
+    /**
+     * 评级
+     */
+    private String grade;
+
+    public BigDecimal getPendingPeriod() {
+        return pendingPeriod;
+    }
+
+    public void setPendingPeriod(BigDecimal pendingPeriod) {
+        this.pendingPeriod = pendingPeriod;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    /**
      * 获取 ibuQuoteBondDet
      * 
      * @return ibuQuoteBondDet.
