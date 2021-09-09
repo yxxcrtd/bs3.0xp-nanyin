@@ -171,7 +171,7 @@
                         obj.secManageAvailablePosition = result.position;
                     }
                     table.addRow(obj);
-                });
+                },false);
 
             }else{
                 obj.proAvailableCash = ' ';
