@@ -32,8 +32,8 @@ var rsk = function() {
             ,{field:'indId',visible :false}
             ,{field:'supDate',type:'date',visible:false}
             ,{field:'indName', title: 'RskSupervisionRiskAnalyze001.indName'}
-            ,{field:'assetCode', title: 'RskSupervisionRiskAnalyze001.assetCode'}
-            ,{field:'assetName', title: 'RskSupervisionRiskAnalyze001.assetName'}
+            ,{field:'assetCode', title: 'RskSupervisionRiskAnalyze002.assetCode'}
+            ,{field:'assetName', title: 'RskSupervisionRiskAnalyze002.assetName'}
             ,{field:'warnCond', title: 'RskSupervisionRiskAnalyze001.warnCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'approveCond', title: 'RskSupervisionRiskAnalyze001.approveCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'foulCond', title: 'RskSupervisionRiskAnalyze001.foulCond',render: RskQuotaCommon.transferWarnFoul}
