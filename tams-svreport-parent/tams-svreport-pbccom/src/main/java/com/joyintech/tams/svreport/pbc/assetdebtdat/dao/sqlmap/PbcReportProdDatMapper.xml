@@ -103,6 +103,7 @@
         prp.GBP_TO_CNY as gbpToCnyPrd,
         prp.JPY_TO_CNY as jpyToCnyPrd,
         prp.OTH_TO_CNY as othToCnyPrd,
+        prp.PRODCOUNTS as prodcountsPrd,
         prp.TOTAL as totalPrd
         from PBC_REPORT_PROD_DAT ppd
         left join PBC_REPORT_PROD  prp on ppd.REPORTUUID=prp.REPORTUUID
@@ -126,6 +127,8 @@
         where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
             and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
           and prp.PROPERTYCODE is  not  null
+          and (prp.CNY &lt;&gt; 0 or prp.USD_TO_CNY &lt;&gt; 0 or prp.EUR_TO_CNY &lt;&gt; 0 or prp.GBP_TO_CNY &lt;&gt; 0 or prp.JPY_TO_CNY &lt;&gt; 0 or
+             prp.OTH_TO_CNY &lt;&gt; 0 or prp.PRODCOUNTS &lt;&gt; 0 or prp.TOTAL&lt;&gt; 0)
     </select>
 
 

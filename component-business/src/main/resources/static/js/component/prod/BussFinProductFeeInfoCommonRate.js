@@ -411,8 +411,27 @@
 	               bussFinProductFeeInfoTable.renderRow(index, {eAccrDate: eAccrDateVal});
 	           }
 	       });
+	    	 //到期日和首次付费日联动
+			var firstCalEndDateVal=$('#' + mdate).val();
+			$.each(finAssetIntInfos,function(index,obj){
+				if(finAssetIntInfos[index].chargeType != CHARGE_TYPE_02){
+					bussFinProductFeeInfoTable.renderRow(index, {firstCalEndDate: firstCalEndDateVal});
+				}
+			});
     	}
     }
+    //联动起息日和计提开始日
+	function provisionFirstDaychange(){
+		var finAssetIntInfos = bussFinProductFeeInfoTable.getAllRows();
+		if(finAssetIntInfos.length>0){
+			var provisionFirstDayVal=$('#' + vdate).val();
+			$.each(finAssetIntInfos,function(index,obj){
+				if(finAssetIntInfos[index].chargeType != CHARGE_TYPE_02){
+					bussFinProductFeeInfoTable.renderRow(index, {provisionFirstDay: provisionFirstDayVal});
+				}
+			});
+		}
+	}
   //add by gcl 2019/3/29 end
     //add by yejiejie 2019-2-22 日期加减
     function addDate(date,days){
@@ -587,6 +606,7 @@
 
     $(function() {
     	 $('#' + mdate).change(eAccrDatechange);
+		$('#' + vdate).change(provisionFirstDaychange);
         // 父画面收益类型联动事件
     	profitTypeChange();
     	$('#' + getElementById('profitTypeElement').val()).on('change', function () {

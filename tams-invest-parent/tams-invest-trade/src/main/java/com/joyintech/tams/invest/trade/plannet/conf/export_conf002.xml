@@ -17,10 +17,11 @@
             <!--添加资产二级-四级分类 zhangpuyu 2019/7/31 end-->
             <Cell order="10" name="交易方向">psStr</Cell>
             <Cell order="11" name="交易日期">tradeDateStr</Cell>
-            <Cell order="12" name="交易金额">prinAmt</Cell>
-            <Cell order="13" name="交易份额">shareAmt</Cell>
-            <Cell order="14" name="币种">ccyStr</Cell>
-            <Cell order="15" name="备注">remark</Cell>
+            <Cell order="12" name="确认日期">confirmDateStr</Cell>
+            <Cell order="13" name="交易金额">prinAmt</Cell>
+            <Cell order="14" name="交易份额">shareAmt</Cell>
+            <Cell order="15" name="币种">ccyStr</Cell>
+            <Cell order="16" name="备注">remark</Cell>
         </Row>
     </Worksheet>
 </Workbook>

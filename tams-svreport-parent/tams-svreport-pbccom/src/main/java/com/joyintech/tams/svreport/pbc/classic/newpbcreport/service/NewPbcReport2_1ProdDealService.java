@@ -46,6 +46,8 @@ public class NewPbcReport2_1ProdDealService extends AbstractDealNewPbcMonthRepor
                     .createDataFromExcel(paramDto.getHssfSheet(), PBC_REPORT, ExcelPbcReportProdDat2_1FZQYDto.class);
             List<ExcelPbcReportProdDat2_1ZCHJDto> dataFromExcel1 = MonthReportUtil
                     .createDataFromExcel(paramDto.getHssfSheet(), PBC_REPORT, ExcelPbcReportProdDat2_1ZCHJDto.class);
+            List<ExcelPbcReportProdDat2_1ExtraDto> dataFromExcel2 = MonthReportUtil
+                    .createDataFromExcel(paramDto.getHssfSheet(), PBC_REPORT, ExcelPbcReportProdDat2_1ExtraDto.class);
             List<PbcReportAssetDebtDatDetailDto> debtDatDetailDtos = new ArrayList<>();
             for (ExcelPbcReportProdDat2_1FZQYDto excelPbcReportProdDatDto : dataFromExcel) {
                 PbcReportAssetDebtDatDetailDto datDetailDto = new PbcReportAssetDebtDatDetailDto();
@@ -58,6 +60,14 @@ public class NewPbcReport2_1ProdDealService extends AbstractDealNewPbcMonthRepor
             for (ExcelPbcReportProdDat2_1ZCHJDto excelPbcReportProdDatDto : dataFromExcel1) {
                 PbcReportAssetDebtDatDetailDto pbcReportProdDatDto = new PbcReportAssetDebtDatDetailDto();
                 BeanUtils.copyProperties(excelPbcReportProdDatDto,pbcReportProdDatDto);
+                pbcReportProdDatDto.setDetailuuid(UUID.randomUUID().toString());
+                pbcReportProdDatDto.setReportuuid(paramDto.getReportUUID());
+                pbcReportProdDatDto.setReporttype(PBC_REPORT);
+                debtDatDetailDtos.add(pbcReportProdDatDto);
+            }
+            for (ExcelPbcReportProdDat2_1ExtraDto excelPbcReportProdDat2_1ExtraDto : dataFromExcel2) {
+                PbcReportAssetDebtDatDetailDto pbcReportProdDatDto = new PbcReportAssetDebtDatDetailDto();
+                BeanUtils.copyProperties(excelPbcReportProdDat2_1ExtraDto,pbcReportProdDatDto);
                 pbcReportProdDatDto.setDetailuuid(UUID.randomUUID().toString());
                 pbcReportProdDatDto.setReportuuid(paramDto.getReportUUID());
                 pbcReportProdDatDto.setReporttype(PBC_REPORT);
@@ -131,6 +141,8 @@ public class NewPbcReport2_1ProdDealService extends AbstractDealNewPbcMonthRepor
         baseMap.put(CONTACT,"81,9");
         //制表日期
         baseMap.put(REPORT_DATE,"81,19");
+        //数据日期
+        baseMap.put(DATA_DATE,"1,9");
         return baseMap;
     }
 

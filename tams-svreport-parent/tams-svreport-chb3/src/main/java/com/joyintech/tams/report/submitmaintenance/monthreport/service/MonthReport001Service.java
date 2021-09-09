@@ -143,29 +143,10 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 	}
 
 	public ResponseEntity<byte[]> exportMonthReportBB(String pageId, Map<String, Object> pageParam) {
-//				List<MonthReportFBB001Dto> report = monthReportFBB001Mapper.getMonthReportBB(pageParam);
-//				this.beforeExprot();
-//				
-//				Map<Object,Object> data = new HashMap<Object,Object>();
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				Calendar c = Calendar.getInstance();
-//				
 				FileInputStream is = null;
 				FileOutputStream out = null;
 				HSSFWorkbook wbs = null;
 				try{
-//				// 关联模板
-//		        XLSTransformer transformer = new XLSTransformer();
-//		        
-//				String template  = null;
-//				//windows环境地址
-//		        if(File.separator.equals("\\")){
-//		        	template = getXmlPath("MonthReportBB001.xls");
-//		        }
-//		        //linux环境地址
-//		        if(File.separator.equals("/")){
-//		        	
-//		        }
 		        String reportdate = pageParam.get("exportdate")==null?"":pageParam.get("exportdate").toString();//文件夹名称
 		        String reportMonth = "";
 		        if(reportdate.length()==7){
@@ -192,10 +173,9 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 
 		    	is = new FileInputStream(depositfile);
 				wbs = new HSSFWorkbook(is);
-				wbs.write(new FileOutputStream(exportFile));
-				is.close();
-				wbs.close();
-				
+				out = new FileOutputStream(exportFile);
+				wbs.write(out);
+
 				String exportFileName = "保本银行月度统计表(" + reportMonth + ")"
 						+ "." + FileNameUtil.getFileExtName(exportFile);
 				return ExportUtil.export(exportFileName, exportFile, true);

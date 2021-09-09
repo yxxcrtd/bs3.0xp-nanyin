@@ -330,7 +330,7 @@ public class TisUtil {
 	/**
 	 * txt生成调用此方法即可
 	 * @param list
-	 * @param path
+	 * @param fpath
 	 * @throws IOException
 	 */
 	public static void writeDataToTxtFile(List list,String fpath) throws IOException {
@@ -344,8 +344,8 @@ public class TisUtil {
 
 	/**
 	 * txt生成调用此方法即可
-	 * @param list
-	 * @param path
+	 * @param newStr
+	 * @param fpath
 	 * @throws IOException
 	 */
 	public static void writeDataToTxtFile(String newStr,String fpath) {
@@ -633,8 +633,8 @@ public class TisUtil {
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-			outputStream = new FileOutputStream(file);
 
+			outputStream = new FileOutputStream(file);
 			wb.write(outputStream);
 
 			return file;
@@ -650,7 +650,7 @@ public class TisUtil {
 				if(inputStream != null) {
 					inputStream.close();
 				}
-				if (outputStream != null){
+				if (outputStream != null) {
 					outputStream.flush();
 					outputStream.close();
 				}
@@ -695,7 +695,7 @@ public class TisUtil {
 	/**
 	 * 删除指定的Sheet
 	 * @param targetFile  目标文件
-	 * @param sheetName   Sheet名称
+	 * @param sheetNameList   Sheet名称
 	 */
 	public static void deleteSheet(File targetFile,List<String> sheetNameList) {
 		try (FileInputStream fis = new FileInputStream(targetFile);
@@ -1327,8 +1327,8 @@ public class TisUtil {
 			cell.setCellValue((Double)value);
 		}
 		else if (value instanceof BigDecimal) {
-			BigDecimal cellValue = (BigDecimal)value;
-			cell.setCellValue(cellValue.doubleValue());
+			//BigDecimal cellValue = (BigDecimal)value;
+			cell.setCellValue(value.toString());
 		}
 		else if (value instanceof Integer) {
 			Integer cellValue = (Integer)value;//转为整形会变成.0,转为字符串正常
@@ -1338,23 +1338,16 @@ public class TisUtil {
 			Integer keyDiff=Integer.parseInt(datas.get(valKey+"Diff").toString());
 			if(1==keyDiff) {
 				CellStyle newStyle = wb.createCellStyle();
-				newStyle.cloneStyleFrom(cell.getCellStyle());
+				newStyle.cloneStyleFrom(newStyle);
 				// 修改字体颜色为红色
 				Font ztFont1 = wb.createFont();
 				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
 				// 字体颜色设置
 				newStyle.setFont(ztFont1);
+				newStyle.setAlignment(HorizontalAlignment.CENTER);
 				cell.setCellStyle(newStyle);
 			}
 		}
 	}
 
-	private static Integer replaceInteger(String key, Map<String, Integer> datas) {
-		if(key.contains(".")&&null!=datas) {
-			String subKey = key.substring(key.indexOf(".")+1, key.length());
-			Integer index = datas.get(subKey);
-			return index;
-		}
-		return 0;
-	}
 }

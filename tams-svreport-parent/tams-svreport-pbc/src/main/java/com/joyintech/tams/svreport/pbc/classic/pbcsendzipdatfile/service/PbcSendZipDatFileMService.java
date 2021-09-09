@@ -102,11 +102,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 						for (ValidMessage message : errorList) {
 							builder.append(message.getMessage()).append("<br>");
 						}
-						builder.append("是否继续?");
 						ajaxResult.setMessage(builder.toString());
 					}
-					ajaxResult.setMessageType(MessageType.确认消息);
-					ajaxResult.setStatuCode(HttpStatus.OK.value());
+					ajaxResult.setMessageType(MessageType.错误消息);
+					ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 					return ajaxResult;
 				}
 				return commonAjaxResult;
@@ -124,7 +123,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 						for (ValidMessage message : errorList) {
 							builder.append(message.getMessage()).append("<br>");
 						}
-						builder.append("是否继续?");
 						ajaxResult.setMessage(builder.toString());
 					}
 					ajaxResult.setMessageType(MessageType.确认消息);
@@ -146,7 +144,6 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 	 */
 	public List<ExcelValidDto> importBaseInfoSubDat(String fileName) {
 		Map<String,Object> param = new HashMap<String,Object>();
-		param.put("dataList", ExcelUtil.getDataList1(fileName));
 		String name = FileNameUtil.getName(fileName);
 		String[] strName = name.split("_");
 		if(strName.length > 0){
@@ -190,11 +187,10 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 				for (ValidMessage message : errorList) {
 					builder.append(message.getMessage()).append("<br>");
 				}
-				builder.append("是否继续?");
 				ajaxResult.setMessage(builder.toString());
 			}
-			ajaxResult.setMessageType(MessageType.确认消息);
-			ajaxResult.setStatuCode(HttpStatus.OK.value());
+			ajaxResult.setMessageType(MessageType.错误消息);
+			ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return ajaxResult;
 		}
 		if(commonAjaxResult.getData() != null && "TEMP_ERROR_MSG".equals(commonAjaxResult.getData().toString())){
@@ -250,8 +246,8 @@ public class PbcSendZipDatFileMService extends BaseService<PbcSendZipDatFile>{
 			}
 			builder.append("请等待老人行报送完成!");
 			ajaxResult.setMessage(builder.toString());
-			ajaxResult.setMessageType(MessageType.警告消息);
-			ajaxResult.setStatuCode(HttpStatus.OK.value());
+			ajaxResult.setMessageType(MessageType.错误消息);
+			ajaxResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			return ajaxResult;
 		}
 		return ajaxResult;

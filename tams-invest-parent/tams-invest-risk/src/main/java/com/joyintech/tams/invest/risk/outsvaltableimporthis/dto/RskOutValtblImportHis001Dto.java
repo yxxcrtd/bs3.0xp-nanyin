@@ -1,10 +1,12 @@
 package com.joyintech.tams.invest.risk.outsvaltableimporthis.dto;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
 import java.util.Date;
@@ -110,6 +112,11 @@ public class RskOutValtblImportHis001Dto extends RskOutValtblImportHis implement
     }
 
     public String getErrorCodeStr() {
+        if (StringUtil.equals(this.getErrorCode(), DictCodeListExt1.估值表自动解析错误码_超过可配置的估值日期.getValue())){
+            String days = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
+            return  SysDataUtil.getNameFromDataDict(DictCode.估值表自动解析错误码, this.getErrorCode()) +":"
+                    + DateUtil.format(DateUtil.addDay(this.getImpdate(),-1*Integer.valueOf(days)))+ "-" + DateUtil.format(this.getImpdate());
+        }
         return SysDataUtil.getNameFromDataDict(DictCode.估值表自动解析错误码, this.getErrorCode());
     }
 

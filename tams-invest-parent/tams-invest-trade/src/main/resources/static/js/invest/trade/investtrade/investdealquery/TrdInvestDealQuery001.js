@@ -456,7 +456,8 @@ $(function(){
 			,{field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号'}
         	,{field:'finprodType2', visible:false}
         	,{field:'finprodId', visible:false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     
     

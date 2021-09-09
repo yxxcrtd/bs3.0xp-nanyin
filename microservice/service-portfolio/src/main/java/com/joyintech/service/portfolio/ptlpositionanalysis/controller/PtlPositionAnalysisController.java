@@ -180,7 +180,7 @@ public class PtlPositionAnalysisController {
      * @since 1.0
      */
     @PostMapping("getAllTreeNode")
-    public List<TargetDetail> getAllTreeNode(@RequestBody String param){
+    public List<TargetDetail> getAllTreeNode(@RequestBody Map<String, Object> param){
         return ptlPositionAnalysisService.getAllTreeNode(param);
     }
 

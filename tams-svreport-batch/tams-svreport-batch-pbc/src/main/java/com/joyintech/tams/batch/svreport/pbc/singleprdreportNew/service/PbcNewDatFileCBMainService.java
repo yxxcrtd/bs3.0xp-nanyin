@@ -38,7 +38,7 @@ public class PbcNewDatFileCBMainService extends AutoSendCBBaseService{
 	public Map<String, List<String>> generatePbcDatFile(Date batchDate,List<String> prodList,String OrgCode){
 		Map<String, List<String>> mapPara = new HashMap<String, List<String>>();
 		// 设置批处理bean
-		setBatchBeanName(BatchBeanName.新人行单产品报表生成);
+		setBatchBeanName(BatchBeanName.新人行dat报表生成);
 		logInfoBatchStart();
 		try {
 			//生成全部类型的dat文件，产品listProds暂为空

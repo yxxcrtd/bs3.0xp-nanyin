@@ -1052,8 +1052,8 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 }
             	//add  by wm 确认日要不小于起息日 end 2019-06-29
             	//强增强减 交易金额、交易份额校验
-            	if(dto.getAddReduceDealNum03()==null&&dto.getAddReduceDealAmt03()==null){
-                    errorList.add(new ValidMessage("交易金额与交易份额至少填写一个，且填写数值必须大于0"));
+            	if(dto.getAddReduceDealNum03()==null || dto.getAddReduceDealAmt03()==null){
+                    errorList.add(new ValidMessage("货币型产品强增强减必须同时输入金额和份额，且填写数值必须大于0"));
             	}
             	if(dto.getAddReduceDealNum03()!=null && dto.getAddReduceDealNum03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("addReduceDealNum03","输入的交易份额必须大于0"));

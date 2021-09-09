@@ -25,6 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.ZipFileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -311,7 +312,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
 	//    			zipOut.setEncoding(ReportGlobalConstant.SYS_PARA_SALES_FILE_ENCODE);
 	    			for (Map.Entry<String, String> val : resultMap.entrySet()) {
 	            		reportModelManage001Dto.getParam().put("portnum", val.getKey());
-	    				compressFile2(zipOut, new SafelyFile(val.getValue()),buildFileName(reportModelManage001Dto));
+                        ZipFileUtil.compressZip(exportFile,false,new SafelyFile(val.getValue()));
 					}
                 }finally {
         		    if(zipOut != null){
@@ -401,56 +402,4 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     		
     		
     	}
-    	
-    	
-    	/**
-         * 压缩报表信息
-         * @param
-         * @param
-         * @param
-		 * @throws IOException 
-         */
-		private void compressFile2(ZipOutputStream out, File sourcefile, String basedir) throws IOException{
-	        if (sourcefile.isDirectory()) {
-	        	File[] files = sourcefile.listFiles();
-	        	
-	        	if(files==null||files.length==0) {
-					out.putNextEntry(new ZipEntry(basedir + File.separator));
-				} 
-	        	else {
-					for(int i=0; i<files.length; i++) {
-						compressFile2(out, files[i], files[i].getName());
-					}
-				}
-	        }
-	        else {
-    			out.putNextEntry(new ZipEntry(basedir));
-
-				FileInputStream fos = null;
-				BufferedInputStream bis = null;
-    	        try {
-					 fos = new FileInputStream(sourcefile);
-					 bis = new BufferedInputStream(fos);
-					int len;
-					byte[] buf = new byte[1024];
-					while((len=bis.read(buf, 0, 1024)) != -1) {
-						out.write(buf, 0, len);
-					}
-				}catch (Exception e)
-				{
-
-				}
-				finally {
-					bis.close();
-					if(fos!=null)
-					{
-						fos.close();
-					}
-
-				}
-
-
-        	}
-		}
-    	
 }

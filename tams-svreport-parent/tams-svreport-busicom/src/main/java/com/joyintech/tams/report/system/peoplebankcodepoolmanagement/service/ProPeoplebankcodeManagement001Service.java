@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -176,6 +177,16 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 			if (CollectionUtils.isNotEmpty(dataList)) {
 				List<String> data = new ArrayList<String>();
 				List<ProPeoplebankcodeManagement001Dto> entities = convertToBean(dataList);
+
+				for(ProPeoplebankcodeManagement001Dto dto : entities){
+					if(dto.getPbcCode().length()>15){
+						webResult.setMessage("人行产品代码长度不得大于15");
+						webResult.setMessageType(MessageType.错误消息);
+						webResult.setStatuCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+						return webResult;
+					}
+				}
+
 				if (entities.size() > 100) {
 					List<ProPeoplebankcodeManagement001Dto> newDataList = new ArrayList<ProPeoplebankcodeManagement001Dto>();
 					newDataList.addAll(entities);
@@ -258,11 +269,10 @@ public class ProPeoplebankcodeManagement001Service extends CommonExportService<P
 					entities.forEach(item -> {
 						ProPeoplebankcodeManagement001Dto record = new ProPeoplebankcodeManagement001Dto();
 						BeanUtil.copyPropertiesIgnoreNull(record, item);
-						record.setOrgCode(null);
+						record.setOrgCode(CommonUtil.getOrgCode());
 						record.setCreateUser(CommonUtil.getUserName());
 						record.setCreateDept(null);
 						record.setCreateTime(new Date());
-						record.setCreateDept(null);
 						record.setUpdateUser(CommonUtil.getUserName());
 						record.setUpdateTime(new Date());
 						record.setStatus(DictCodeListExt1.维护数据状态_有效.getValue());

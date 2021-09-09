@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.PbcSendZipDatFile;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
@@ -152,6 +153,6 @@ public interface PbcMonthReportMapper {
 
 
     int updatePbcReportSendInfo(@Param("sendStatus")String sendStatus,@Param("submitTime") Date submitTime
-            ,@Param("submitFeedbackStatus")String submitFeedbackStatus,@Param("registList")List<String> registList);
+            ,@Param("submitFeedbackStatus")String submitFeedbackStatus,@Param("registList")List<PbcSendZipDatFile> datFileList);
 
 }

@@ -393,7 +393,12 @@
 	select 
     sub.REGIST_SEQNO registSeqno,
     sub.PROD_ID prodId,
-    decode(info.REG_CODE,null, sub.ISSUE_PARTY_ID) issuePartyId, /*发行机构代码*/
+    <if test="model_type != null">
+		info.REG_CODE issuePartyId, /*发行机构代码*/
+	  </if>
+	  <if test="model_type == null">
+    	sub.ISSUE_PARTY_ID issuePartyId,
+	  </if>
     sub.SINGLE_TOTAL singleTotal,
     sub.LEGAL_TOTAL legalTotal,
     sub.UNLEGAL_TOTAL unlegalTotal,
@@ -1004,32 +1009,59 @@ FROM(
 			CCY
 		from P_INTERF_RAISE_SUM
    </select>
-   <select id="getEquCount"  resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"  parameterType="java.lang.String">
-   		<!-- 个人 -->
-   		SELECT  '01' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
-			select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
-			LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
-			WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
-			AND DET.STATUS='E'
-			and   DET.BUSI_TYPE='01'
-			AND  HOLDER_TYPE IN('01','02','03')) GREN
-			union all
- 			<!-- 法人 -->
-		SELECT  '02' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
-			select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
-			LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
-			WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
-			AND DET.STATUS='E'
-			and   DET.BUSI_TYPE='01'
-			AND  HOLDER_TYPE IN('04','05','06','07','08','09','10','11','12','13','14','15','16')) GREN
-		union all
- 		<!-- 非法人 -->
-		SELECT  '03' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
-		select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
-		LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
-		WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
-		AND DET.STATUS='E'
-			and   DET.BUSI_TYPE='01'
-		AND  HOLDER_TYPE IN('17','18','19','20','21','22','23','24','25','26')) GREN
-   </select>
+
+    <select id="getEquCount"  resultType="com.joyintech.tams.svreport.chb.prodraisetotalregist.dto.RaiseTotalRegist001Dto"  parameterType="java.lang.String">
+        <!-- 个人 -->
+        SELECT  '01' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+        
+        AND EXISTS (select 1 from (select indentify_mark,sum(decode(busi_type,'15',-1*shares,shares))shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+        
+        AND  HOLDER_TYPE IN ('01','02','03')) GREN
+        union all
+        <!-- 法人 -->
+        SELECT  '02' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+         
+        
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+        
+        AND EXISTS (select 1 from (select indentify_mark,sum(decode(busi_type,'15',-1*shares,shares))shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+        
+        AND  HOLDER_TYPE IN('04','05','06','07','08','09','10','11','12','13','14','15','16')) GREN
+        union all
+        <!-- 非法人 -->
+        SELECT  '03' equType,  COUNT(GREN.INDENTIFY_MARK) equCount FROM (
+        select  DISTINCT DET.INDENTIFY_MARK from CHB_EQUDET  DET
+        LEFT JOIN  CHB_EQU_HOLD   HOLD  ON  HOLD.INDENTIFY_MARK=DET.INDENTIFY_MARK  AND  HOLD.STATUS='E'
+        WHERE   ACCOUNT=#{prodId,jdbcType=VARCHAR}
+        AND DET.STATUS='E'
+        and   (DET.BUSI_TYPE='01' or (DET.BUSI_TYPE IN ('14','15')
+        and exists (select 1 from chb_prd_baseinfo info1 where info1.prod_id =det.account
+        and info1.vdate =det.equity_conf_date and info1.status !='D')))
+        
+        AND EXISTS (select 1 from (select indentify_mark,sum(decode(busi_type,'15',-1*shares,shares))shares
+        from chb_equdet where account=#{prodid,jdbcType=VARCHAR}
+        and equity_conf_date in (select vdate from chb_prd_baseinfo where prod_id=#{prodid,jdbcType=VARCHAR} )
+        group by indentify_mark)t where t.indentify_mark=det.indentify_mark and shares!=0)
+        
+        AND  HOLDER_TYPE IN('17','18','19','20','21','22','23','24','25','26')) GREN
+    </select>
 </mapper>

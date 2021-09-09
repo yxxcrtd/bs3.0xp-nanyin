@@ -16,6 +16,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.grid.Page;
@@ -1869,9 +1870,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
 					workbook.write(out);
 					responseEntity = ExportUtil.export(exportFileName, exportFile, true);
 				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
+					logger.error(e.getMessage(), e);
 				} finally {
-					if (out != null){
+					if (out != null) {
 						out.close();
 					}
 				}
@@ -1985,6 +1986,19 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     								+ "[CREDIT_TYPE="+creditType+"] ",
     								"产品增信机构类型"));
     					}
+    					//境外托管机构国别多选校验
+						String outDepCity=strList.get(45) ;
+    					if(StringUtil.isNotEmpty(outDepCity)){
+							List<String> outDepCitys = Arrays.asList(outDepCity.split(","));
+							String investArae=strList.get(18) ;//资金投向地区
+							if(outDepCitys.size()>1 && StringUtil.equals(investArae,DictCodeListExt2.资金投向地区_境外.getValue()+" "+DictCodeListExt2.资金投向地区_境外.getCodeName())){
+								if(outDepCitys.contains("CHN")){
+									checkResult.add(new ExcelValidDto(strList.get(2)+"|"+strList.get(63), String.valueOf(i + 1), "当“资金投向地区”要素选择“02 境外”时,境外托管机构国别不能填写中国。"
+											+ "[OUT_DEP_CTRY="+"CHN"+"] ",
+											"境外托管机构国别"));
+								}
+							}
+						}
     				}else if (StringUtil.equals(CHB_EMPLOYEE_INFO, tableName)){
     					String FinProfessionalCrtf = strList.get(16) ;
     					//理财专业证书
@@ -3793,9 +3807,9 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
     	if(clob == null) {   
             return null;   
         }   
+		Reader inStreamDoc = null;
         try{   
-            Reader inStreamDoc = clob.getCharacterStream();   
-               
+			inStreamDoc = clob.getCharacterStream();
             char[] tempDoc = new char[(int) clob.length()];
             if(inStreamDoc!=null) {
 				inStreamDoc.read(tempDoc);
@@ -3810,8 +3824,15 @@ public class OperationalInfo001Service extends CommonExportService<FilterInforma
         catch (SQLException es)   
         {   
         	logger.error(es.getMessage(),es);
+	  	}finally {
+        	if (inStreamDoc != null){
+				try {
+					inStreamDoc.close();
+				} catch (IOException e) {
+					throw new BusinessException(e);
           }   
-             
+			}
+		}
           return null;   
       }
     

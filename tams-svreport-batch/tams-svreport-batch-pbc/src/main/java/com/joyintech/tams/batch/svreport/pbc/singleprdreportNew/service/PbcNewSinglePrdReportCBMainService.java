@@ -49,7 +49,7 @@ public class PbcNewSinglePrdReportCBMainService extends AutoSendCBBaseService{
      */
     public void generateReport(final Date batchDate,final List<String> prodIdList) throws Exception{
         // 设置批处理bean
-        setBatchBeanName(BatchBeanName.人行报表单产品批处理);
+        setBatchBeanName(BatchBeanName.新人行单产品报表生成);
         logInfoBatchStart();
         // 按照顺序调度人行单产品批处理的执行顺序
 //        // 人行单产品报表-资产池基本信息登记

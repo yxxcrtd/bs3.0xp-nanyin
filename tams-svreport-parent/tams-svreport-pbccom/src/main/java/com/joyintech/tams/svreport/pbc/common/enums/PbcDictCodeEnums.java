@@ -1,5 +1,7 @@
 package com.joyintech.tams.svreport.pbc.common.enums;
 
+import com.joyintech.framework.util.StringUtil;
+
 public enum PbcDictCodeEnums {
     募集方式_公募("1-公开募集","1"),
     募集方式_私募("2-非公开募集","2"),
@@ -26,7 +28,9 @@ public enum PbcDictCodeEnums {
     增信机构类型_境外("6-境外","6"),
     增信形式_内部增级("1-内部增级","1"),
     增信形式_外部增级("2-外部增级","2"),
-    银行非保本理财("01-银行非保本理财","01"),
+    增信形式_内外增级("3-内外增级","3"),
+    银行非保本理财("1-银行非保本理财","1"),
+    银行非保本理财_01("01-银行非保本理财","01"),
     信托公司资管产品("02-信托公司资管产品","02"),
     证券公司及其子公司资管产品("03-证券公司及其子公司资管产品","03"),
     基金管理公司及其子公司专户("04-基金管理公司及其子公司专户","04"),
@@ -59,6 +63,6 @@ public enum PbcDictCodeEnums {
                 return codeEnums.code;
             }
         }
-        return null;
+        return "";
     }
 }

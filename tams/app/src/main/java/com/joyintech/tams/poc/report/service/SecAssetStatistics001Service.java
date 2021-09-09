@@ -288,21 +288,19 @@ public class SecAssetStatistics001Service extends CommonExportService<SecAssetSt
          logger.info(exceltemplate+"生成失败！");
          throw new InvalidFormatException(e.getMessage());
      }finally{
-         if(fos !=null){
-             try {
+
+         try {
+             if(fos !=null){
                  fos.close();
+             }
+             if (fis != null){
+                fis.close();
+             }
              } catch (IOException e) {
                  logger.error(e.getMessage(),e);
              }
          }
-         if(fis !=null){
-             try {
-                 fis.close();
-             } catch (IOException e) {
-                 logger.error("",e);
-             }
-         }
-     }
+
       return depositfile;
  }
  

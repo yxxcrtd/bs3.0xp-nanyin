@@ -100,7 +100,7 @@ $(function () {
     var getTaxSchaBokConfigParams = function() {
     	return {
             schemeId: s_schId,
-            tableId: $.trim($('#taxSchaBokConfig_tableId').val()),
+            tableIds: $.trim($('#taxSchaBokConfig_tableId').val()),
             vatType: $.trim($('#taxSchaBokConfig_vatType').val())
         }
     };

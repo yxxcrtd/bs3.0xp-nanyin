@@ -119,6 +119,8 @@ public class NewPbcReport2_2ProdDealService extends AbstractDealNewPbcMonthRepor
         baseMap.put(CONTACT,"30,4");
         //制表日期
         baseMap.put(REPORT_DATE,"30,8");
+        //数据日期
+        baseMap.put(DATA_DATE,"1,4");
         return baseMap;
     }
 }

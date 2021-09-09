@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -155,13 +158,33 @@ public class ProRegistCodeManage003Service extends CommonExportService<ProRegist
         return webResult;
     }
     
-    public AjaxResult checkInsertData1(String regCode ) {
-    	AjaxResult webResult = new AjaxResult();    
-    	if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(regCode).matches()){
+    public AjaxResult checkInsertData1(String prodId,String regCode ) {
+    	AjaxResult webResult = new AjaxResult();
+        List<ValidMessage> errList = new ArrayList<ValidMessage>();
+
+        //从产品申报信息中查询数据
+        ChbPrdDeclareInfoDto dto = proRegistCodeManage001Mapper.selectInfoByProdId(prodId);
+        if(null!=dto){
+            if(StringUtil.equals(dto.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())){
+                //公募产品
+                if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[0-9]{6}$").matcher(regCode).matches()){
+                    errList.add(new ValidMessage("公募产品产品登记编码格式不符合规范。"));
+
+                }
+            }else if(StringUtil.equals(dto.getRaiseType(), DictCodeListExt2.募集方式_中债_私募.getValue())){
+                //私募产品
+                if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]{1}[0-9]{6}$").matcher(regCode).matches()){
+                    errList.add(new ValidMessage("私募产品产品登记编码格式不符合规范。"));
+
+                }
+            }
+        }
+        /*if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(regCode).matches()){
     		 webResult.setMessage(
                      "产品登记编码格式不符合规范，请确认是否继续操作？",
                      MessageType.确认消息);
-        }            
+        }  */
+        webResult.setData(errList);
         return webResult;
     }
     

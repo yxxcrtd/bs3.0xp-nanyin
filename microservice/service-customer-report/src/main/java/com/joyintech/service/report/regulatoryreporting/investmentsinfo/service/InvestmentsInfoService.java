@@ -27,6 +27,7 @@ import java.util.Map;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.report.regulatoryreporting.investmentsinfo.dto.InvestmentBusinessCounterDetailsDto;
 import org.apache.commons.lang.time.DateUtils;
@@ -236,8 +237,8 @@ public class InvestmentsInfoService {
 		tablePorpertyMap_2.put("t2_last54_amt", "ASSETAMT1_5_10");
 		tablePorpertyMap_2.put("t2_cur55_amt", "ASSETAMT1_5_16_a");
 		tablePorpertyMap_2.put("t2_last55_amt", "ASSETAMT1_5_16_a");
-		tablePorpertyMap_2.put("t2_cur57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
-		tablePorpertyMap_2.put("t2_last57_amt", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_cur57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
+		tablePorpertyMap_2.put("t2_last57_amtfq", "ASSETAMT1_5_16+ASSETAMT1_5_7");
 		tablePorpertyMap_2.put("t2_cur58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_last58_amt", "ASSETAMT1_6_5");
 		tablePorpertyMap_2.put("t2_cur59_amt", "ASSETAMT1_6_1");
@@ -890,6 +891,9 @@ public class InvestmentsInfoService {
 
 			resultMap.put(key, money);
 		}
+		//针对表二B57和C57数据
+		resultMap.put("t2_cur57_amt", ArithmeticUtil.subtract(resultMap.get("t2_cur57_amtfq"), resultMap.get("t2_cur55_amt")));
+		resultMap.put("t2_last57_amt", ArithmeticUtil.subtract(resultMap.get("t2_last57_amtfq"), resultMap.get("t2_last55_amt")));
 
 		return resultMap;
 	}

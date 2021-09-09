@@ -44,10 +44,10 @@ $(function(){
 				{ title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
 				{ title: "发行机构内部产品代码", field: 'prodId',width:150,sortField:'prodId'},
 				{ title: "产品实际终止日期", field: 'mdate',width:150,type:'date',sortField:'mdate'},
-			{ title: "兑付客户收益率", field: 'cusYearYield',width:150,type: 'number',digit:5,sortField:'cusYearYield'},
+				{ title: "兑付客户实际收益率", field: 'cusYearYield',width:150,type: 'number',digit:5,sortField:'cusYearYield'},
 				{ title: "币种代码", field: 'ccy',width:150,sortField:'ccy'},
-			{ title: "兑付客户收益", field: 'customProfit',width:150,type:'money',digit:2,sortField:'customProfit'},
-			{ title: "兑付客户收益折人民币", field: 'customProfitCny',width:150,type:'money',digit:2,sortField:'customProfitCny'},
+				{ title: "兑付客户收益", field: 'customProfit',width:150,type:'money',digit:2,sortField:'customProfit'},
+				{ title: "兑付客户收益转人民币", field: 'customProfitCny',width:150,type:'money',digit:2,sortField:'customProfitCny'},
 
 			// { title: "发行机构实现收入", field: 'profit',width:150,type:'money',digit:2,sortField:'profit'},
 				// { title: "发行机构实现收入折人民币", field: 'profitCny',width:150,type:'money',digit:2,sortField:'profitCny'},
@@ -139,13 +139,19 @@ $(function(){
 			var param = {};
 			var expArr=table.getAllCheckedRows();
 			var keyList = '';
-			layui.each(expArr,function(index,data){
-				if(index == expArr.length-1){
-					keyList = keyList + data.registSeqno+'';
+			for(var i=0;i<expArr.length;i++){
+				if(i == expArr.length-1){
+					keyList = keyList + expArr[i].registSeqno+'';
 				}else{
-					keyList = keyList + data.registSeqno+',';
+					keyList = keyList + expArr[i].registSeqno+',';
 				}
-			})
+				if (!(expArr[i].sendStatus == '01'
+					|| (expArr[i].sendStatus == '02' && (expArr[i].submitFeedbackStatus == '02' || expArr[i].submitFeedbackStatus == '04')))) {
+					Joyin.error("所选数据包含已报送数据，请重新选择！");
+					return;
+				}
+			}
+
 			param.keyList = keyList;
 			Joyin.exportExcel("pedestrianExport",param);
 			Joyin.ajaxSync('searchPage',param, function(result){
@@ -155,6 +161,8 @@ $(function(){
 	            }
 	        })
 		}
+		//ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG
+		isHaveData = false;
 		if (isHaveData){
 			var rows = table.getAllCheckedRows();
 	        if(rows.length === 0) {
@@ -179,21 +187,25 @@ $(function(){
 		             });
 	        	}
 	        }else{
+
 	        	for(var i=0;i<rows.length;i++){
-	              if ((rows[i].sendStatus == '01'
-	                  || (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
-	  	        	var paramObj= {};
-		        	paramObj.flag = '01';
-		        	paramObj.infoList = rows;
-		          Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
-		        	  layui.layer.open({type:3});
-		              Joyin.ajaxJson('doManul', paramObj, function() {
-		                  table.load();
-		                  layui.layer.closeAll();
-		              });
-		          });
-	              }
-	          }
+					if (!(rows[i].sendStatus == '01'
+						|| (rows[i].sendStatus == '02' && (rows[i].submitFeedbackStatus == '02' || rows[i].submitFeedbackStatus == '04')))) {
+						Joyin.error("所选数据包含已报送数据，请重新选择！");
+						return;
+					}
+	          	}
+
+				var paramObj= {};
+				paramObj.flag = '01';
+				paramObj.infoList = rows;
+				Joyin.confirm("请确认是否要手工处理选中产品的全部未报送的记录？", function() {
+					layui.layer.open({type:3});
+					Joyin.ajaxJson('doManul', paramObj, function() {
+						table.load();
+						layui.layer.closeAll();
+					});
+				});
 	        }
 		}
     };

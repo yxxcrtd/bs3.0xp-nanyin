@@ -42,20 +42,14 @@ public class ExcelPbcReportDebtTermDat3_3AssetDto {
     /**
      * 股权
      */
-    @ExcelCell(columnNumber = 2)
+    @ExcelCell(columnNumber = 3)
     private BigDecimal stockRight;
 
     /**
      * 特定目的载体份额
      */
-    @ExcelCell(columnNumber = 2)
+    @ExcelCell(columnNumber = 4)
     private BigDecimal specialShare;
-
-    /**
-     * 实收本金
-     */
-    @ExcelCell(columnNumber = 2)
-    private BigDecimal actualAmt;
 
     public String getReporttype() {
         return reporttype;
@@ -105,11 +99,4 @@ public class ExcelPbcReportDebtTermDat3_3AssetDto {
         this.specialShare = specialShare;
     }
 
-    public BigDecimal getActualAmt() {
-        return actualAmt;
-    }
-
-    public void setActualAmt(BigDecimal actualAmt) {
-        this.actualAmt = actualAmt;
-    }
 }

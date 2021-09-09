@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -130,6 +131,18 @@ public class PbcPrdBaseinfoSub001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("doManul")
 	public AjaxResult manul(@RequestBody Map<String,Object> map) {
+
+		if("01".equals(map.get("isall"))){
+			map.put("submitFeedbackStatusExp","02,04,06");
+			List<PbcPrdBaseinfoSub> dtoList = pbcPrdRaiseSubService001.searchByExcel(map);
+			for(PbcPrdBaseinfoSub sub:dtoList){
+				if(StringUtil.isEmpty(sub.getPbcPoolCode())){
+					return new AjaxResult("请先维护人行产品代码后，再进行手工处理。",MessageType.错误消息);
+				}
+			}
+		}
+
+
 	    pbcPrdBaseinfoSubMService.updateSumStaus(map);
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0008"));
 	}

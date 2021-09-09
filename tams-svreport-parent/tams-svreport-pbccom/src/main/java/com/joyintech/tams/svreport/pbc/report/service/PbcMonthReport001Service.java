@@ -34,6 +34,8 @@ import java.util.stream.Collectors;
 import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.svreport.pbc.classic.pbcNewDat.service.PbcNewReportPrdDatFileService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -144,6 +146,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	private CheckReport001Mapper checkReport001Mapper;
     @Autowired
 	private PbcBeforeSubCheck pbcBeforeSubCheck;
+	@Autowired
+	private PbcNewReportPrdDatFileService pbcNewReportPrdDatFileService;
 
     /**
      * 短sql最大一次最大插入条数
@@ -196,19 +200,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	public Page<PbcMonthReport> searchPage(Map<String, Object> pageParam) {
 		dealSearchParam(pageParam);
 		//将发送状态改为空
-		pageParam.put("sendStatus", "");
-        String submitDateStart = (String) pageParam.get("submitDateStart");
-        if (!StringUtil.isEmpty(submitDateStart)
-                && submitDateStart.length() >= 7){
-            submitDateStart = submitDateStart.substring(0,4)+submitDateStart.substring(5,7);
-            pageParam.put("submitDateStart", submitDateStart);
-        }
-		String submitDateEnd = (String) pageParam.get("submitDateEnd");
-        if (!StringUtil.isEmpty(submitDateEnd)
-                && submitDateEnd.length() >= 7){
-            submitDateEnd = submitDateEnd.substring(0,4)+submitDateEnd.substring(5,7);
-            pageParam.put("submitDateEnd", submitDateEnd);
-        }
+
         if (pageParam.get(GlobalConstant.PARAM_PAGE) != null
                 && pageParam.get(GlobalConstant.PARAM_LENGTH) != null){
             int pagenum = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
@@ -302,6 +294,22 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 	 * @since 1.0
 	 */
 	public void dealSearchParam(Map<String, Object> pageParam) {
+
+		pageParam.put("sendStatus", "");
+		String submitDateStart = (String) pageParam.get("submitDateStart");
+		if (!StringUtil.isEmpty(submitDateStart)
+				&& submitDateStart.length() >= 7){
+			submitDateStart = submitDateStart.substring(0,4)+submitDateStart.substring(5,7);
+			pageParam.put("submitDateStart", submitDateStart);
+		}
+		String submitDateEnd = (String) pageParam.get("submitDateEnd");
+		if (!StringUtil.isEmpty(submitDateEnd)
+				&& submitDateEnd.length() >= 7){
+			submitDateEnd = submitDateEnd.substring(0,4)+submitDateEnd.substring(5,7);
+			pageParam.put("submitDateEnd", submitDateEnd);
+		}
+
+
 		// 选择行数据时
 		if (pageParam.containsKey("keyList")) {
 			String keyList = pageParam.get("keyList").toString();
@@ -325,7 +333,6 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			String sendStatus = (String) pageParam.get("sendStatus");
 			// 反馈状态
 			String submitFeedbackStatus = (String) pageParam.get("submitFeedbackStatus");
-
 
 			// 将数据状态当做多选下拉框处理
 			if (StringUtil.isNotBlank(status)) {
@@ -399,6 +406,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             // 手工处理只处理未报送的
             if (DictCodeListExt2.报送状态_未报送.getValue().equals(m.getSendStatus())){
                 reportList.add(m);
+
             }
         }
  		
@@ -433,15 +441,12 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
  		    pbcMonthReportMapper.insertReportHis(investList);
             //删除正式表已报送数据
 			investList.get(0).getStatusDate();
- 		    pbcMonthReportMapper.deleteLastSubmitRegist(investList);
+// 		    pbcMonthReportMapper.deleteLastSubmitRegist(investList);
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus, investList,null);
  			pbcMonthReportMapper.updateDoMannultSendZipDatFile(investList);
 
  			return;
  		}
-
- 	
-
  		List<PbcMonthReport> newDataList = new ArrayList<PbcMonthReport>();
  		newDataList.addAll(investList);
 
@@ -452,9 +457,10 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             //已报送数据进留痕表
             pbcMonthReportMapper.insertReportHis(newDataList.subList(0, maxDataCountOneTime));
             //删除正式表已报送数据
-            pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
+//            pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus,
                  newDataList.subList(0, maxDataCountOneTime),null);
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList.subList(0, maxDataCountOneTime));
  			newDataList.subList(0, maxDataCountOneTime).clear();
  			logger.info("单次更新登记表end===");
  		}
@@ -464,9 +470,11 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             //已报送数据进留痕表
             pbcMonthReportMapper.insertReportHis(newDataList.subList(0, maxDataCountOneTime));
             //删除正式表已报送数据
-            pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
+//            pbcMonthReportMapper.deleteLastSubmitRegist(newDataList.subList(0, maxDataCountOneTime));
  			pbcMonthReportMapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList,null);
- 			logger.info("单次更新登记表end===");
+			pbcMonthReportMapper.updateDoMannultSendZipDatFile(newDataList);
+
+			logger.info("单次更新登记表end===");
  		}
  	}
 
@@ -509,7 +517,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         }
  		pbcMonthReportMapper.cancelMannultRegist(list);
  		// 将履历表中履历号最大的数据挪回登记表
- 		pbcMonthReportMapper.insertReportDataFromHis(list);
+// 		pbcMonthReportMapper.insertReportDataFromHis(list);
  		// 删除履历表中移除数据
  		pbcMonthReportMapper.deleteLastSubmitHis(list);
 
@@ -524,10 +532,18 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
         List<File> sourceFiles = new ArrayList<>();
     	@SuppressWarnings("unchecked")
         List<PbcMonthReport> dataList =  (List<PbcMonthReport>) selectParam.get("reportList");
-    	// 不选报表导出全部
-    	if (CollectionUtils.isEmpty(dataList)){
-    	    dataList = searchByCondition(selectParam);
-    	}
+		Set<String> termList = new HashSet<>();
+
+		//设置单选多选都是全部导出
+		if(null!=dataList&&dataList.size()>0){
+			for(int i =0 ;i < dataList.size();i++){
+				termList.add(dataList.get(i).getTermid());
+			}
+			selectParam.put("termidList",termList);
+		}
+
+		// 不选报表导出全部
+		dataList = searchByCondition(selectParam);
     	Map<String, List<PbcMonthReport>> dataParam = new HashMap<String, List<PbcMonthReport>>();
     	// 单选导出
     	for (int i =0 ;i < dataList.size();i++){
@@ -598,7 +614,8 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			}
 			PbcMonthReport pbcReport = (PbcMonthReport) data.get("report");
 			//生成文件
-			String fileName = DateUtil.format(new Date(), "yyyyMMdd")+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
+			String fileName = DateUtil.format(pbcReport.getEnddate())+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
+//			String fileName = DateUtil.format(DateUtil.getLastDay(new Date()), "yyyyMMdd")+"-"+f2.format(count)+"-"+pbcReport.getSocialCreditCode()+"-"+pbcReport.getReportOrgName() +".xls";
 //			File depositfile = PbcExcelUtil.createFile(data, "PbcReport", fileName);
 			File depositfile = TisUtil.createFile(PbcExcelUtil.convertMapKey2String(data), "pbc/PbcReport", fileName);
 			// 删除多余的sheet页
@@ -882,7 +899,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             reporttypeProdList.add(DictCodeListExt2.人行报表名称_资管产品到期未兑付统计表.getValue());
             reporttypeProdList.add(DictCodeListExt2.人行报表名称_存续产品分合同期限募集余额统计表.getValue());
             reporttypeProdList.add(DictCodeListExt2.人行报表名称_新发产品分合同期限募集金额统计表.getValue());
-            String msgProd = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeProdList);
+            String msgProd = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeProdList,CommonUtil.getOrgCode());
             if(msgProd != null && !StringUtil.isEmpty(msgProd)){
                 return msgProd;
             } 
@@ -892,7 +909,7 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资产收益权按基础资产投向分类统计表.getValue());
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资管产品只数情况统计表.getValue());
             reporttypeAssetList.add(DictCodeListExt2.人行报表名称_资管产品资产负债剩余期限统计表.getValue());
-            String msgAsset = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeAssetList);
+            String msgAsset = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeAssetList,CommonUtil.getOrgCode());
             if(msgAsset != null&&!StringUtil.isEmpty(msgAsset)){
                 return msgAsset;
             } 
@@ -919,6 +936,14 @@ public class PbcMonthReport001Service extends CommonExportService<PbcMonthReport
 			}
             reportStartDate = DateUtil.addMonthDate(reportStartDate, 1);
         }
+        //添加生成新人行dat文件的方法 leipeng 20210827
+		try {
+			pbcNewReportPrdDatFileService.genDataFile(null, null, batchDate, null,CommonUtil.getOrgCode());
+		}catch (Exception e){
+			logger.error("生成dat文件错误",e);
+			return "重新生成人行月报文件成功,但是生成新人行dat文件失败!";
+		}
+
         return "success";
     }
    

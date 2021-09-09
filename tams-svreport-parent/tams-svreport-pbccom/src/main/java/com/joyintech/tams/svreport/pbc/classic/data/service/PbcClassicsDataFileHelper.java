@@ -81,12 +81,12 @@ public class PbcClassicsDataFileHelper {
     
     // 手工处理和取消手工处理一次性处理的数据条数
     public static final Integer COMMIT_CONSTANTS = 800;
-	
+
     private static SysSeqService sysSeqService;
     @Autowired
     public void setSysSeqService(SysSeqService sysSeqLogic) {
     	PbcClassicsDataFileHelper.sysSeqService = sysSeqLogic;
-    }	
+    }
     /**
      * 生成文件
      * @param datas
@@ -134,6 +134,8 @@ public class PbcClassicsDataFileHelper {
         String seq = getSeqByNum(filePath,num,seqMap,seqCode,seqDate);
     	//dat文件写入
     	BufferedWriter writer = null;
+		FileOutputStream fos = null;
+		FileOutputStream fosx = null;
     	// 人行dat生成文件编码
     	String SVR_DAT_FILE_ENCODE = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SVR_DAT_FILE_ENCODE);
     	if (StringUtil.isEmpty(SVR_DAT_FILE_ENCODE)) {
@@ -149,7 +151,8 @@ public class PbcClassicsDataFileHelper {
 
             
             file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
+			fos = new FileOutputStream(file,true);
+            writer = new BufferedWriter(new OutputStreamWriter(fos, SVR_DAT_FILE_ENCODE));
             
             for (LinkedHashMap<String,String> data:datas ) {
                 if ( fileSize>=maxFileSize ) {
@@ -165,7 +168,8 @@ public class PbcClassicsDataFileHelper {
                         createFolder(fullPath,type);
 //                        file = new File(fullPath + "/"+type + ".dat");
                         file = new SafelyFile(fullPath + "/"+dataType + ".dat");
-                        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
+                        fosx = new FileOutputStream(file,true);
+                        writer = new BufferedWriter(new OutputStreamWriter(fosx, SVR_DAT_FILE_ENCODE));
                         // 【dat文件生成留痕】如果创建新的文件，则需要创建新的数据的key集合 
                         dataValueList = new ArrayList<String>();
                 	}
@@ -203,10 +207,17 @@ public class PbcClassicsDataFileHelper {
             try {
                 if ( writer!=null )
                     writer.close();
+                if (fos != null){
+                	fos.close();
+				}
+				if (fosx != null){
+					fosx.close();
+				}
             } catch (IOException e) {
 				logger.error(e.getMessage(),e);
             }
         }
+
         return result;
     }
     

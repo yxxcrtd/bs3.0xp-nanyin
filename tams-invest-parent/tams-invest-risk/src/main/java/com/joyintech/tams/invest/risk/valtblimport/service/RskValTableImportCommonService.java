@@ -6,8 +6,15 @@ import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.RskOutValtblImportHisMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportDateTraceMapper;
+import com.joyintech.tams.common.base.dao.ValtblImportHisTraceMapper;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.RskOutValtblImportHis;
+import com.joyintech.tams.common.base.entity.RskOutValtblImportHisKey;
+import com.joyintech.tams.common.base.entity.ValtblImportDateTrace;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.service.RskValRelateImport001Service;
@@ -41,6 +48,15 @@ public class RskValTableImportCommonService extends BaseService {
      */
     @Autowired
     private RskValRelateImport001Service rskValRelateImport001Service;
+
+    @Autowired
+    private RskOutValtblImportHisMapper rskOutValtblImportHisMapper;
+
+    @Autowired
+    private ValtblImportHisTraceMapper valtblImportHisTraceMapper;
+    @Autowired
+    private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
+
     private Logger logger = LoggerFactory.getLogger(getClass());
     public List<ChbAssetInfo> queryAssetInfo() {
         return restTemplate.getForList(
@@ -259,6 +275,45 @@ public class RskValTableImportCommonService extends BaseService {
             }
         }
         return list;
+    }
+    public void saveRskOutValtblImportHis(String name,String path,String ptlId,String portfolioName,Date resValDate,
+                                           String importType,String errorCode,Date startDate,Date impdate,String deptCode,String resultInfo) {
+        //保存委托估值表接入记录
+        RskOutValtblImportHis dto = new RskOutValtblImportHis();
+        dto.setFileName(name);
+        dto.setFilePath(path);
+        dto.setPortfolioId(ptlId);
+        dto.setPortfolioName(portfolioName);
+        dto.setValdate(resValDate);
+        dto.setImpdate(impdate);
+        dto.setImportType(importType);
+        dto.setErrorCode(errorCode);
+        dto.setStartTime(startDate);
+        dto.setEndTime(DateUtil.now());
+        dto.setResultInfo(resultInfo);
+        dto.setTimedTaskStatus("S");
+        dto.setCreateDept(deptCode);
+        RskOutValtblImportHisKey key=new RskOutValtblImportHisKey();
+        key.setFileName(dto.getFileName());
+        key.setPortfolioName(portfolioName);
+        key.setValdate(dto.getValdate());
+        RskOutValtblImportHis rskOutValtblImportHisDto = rskOutValtblImportHisMapper.selectByPrimaryKey(key);
+        if(rskOutValtblImportHisDto!=null || StringUtil.isNotEmpty(rskOutValtblImportHisDto)){
+            rskOutValtblImportHisMapper.updateByPrimaryKey(dto);
+        }else{
+            rskOutValtblImportHisMapper.insertSelective(dto);
+        }
+        valtblImportHisTraceMapper.insert(dto);
+        //处理成功的文件入库估值表导入日期记录表
+        if (StringUtil.equals(dto.getImportType(), DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue())){
+            ValtblImportDateTrace dateDto = new ValtblImportDateTrace();
+            dateDto.setUuid(IDGenerator.generate());
+            dateDto.setImpdate(dto.getImpdate());
+            dateDto.setPortfolioId(dto.getPortfolioId());
+            dateDto.setValdate(dto.getValdate());
+            dateDto.setCreateDept(deptCode);
+            valtblImportDateTraceMapper.insert(dateDto);
+        }
     }
 
 }

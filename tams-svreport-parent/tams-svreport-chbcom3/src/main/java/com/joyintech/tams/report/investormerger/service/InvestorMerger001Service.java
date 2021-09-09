@@ -226,8 +226,11 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 			List<ChbEquHoldCheckDto> dtolist = entry.getValue();
 			//获取该投资者的所有持有信息
 			List<ChbInvestholdInfoCheckDto> investorholdlist = new ArrayList<>();
-			for(ChbEquHoldCheckDto dto : dtolist){
-				if(!CollectionUtils.isEmpty(dto.getHoldlist())){
+			
+		  List<String> sequenceList = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, dtolist.size());
+            int index = 0;
+			for (ChbEquHoldCheckDto dto : dtolist) {
+				if (!CollectionUtils.isEmpty(dto.getHoldlist())) {
 					investorholdlist.addAll(dto.getHoldlist());
 				}
 				if(indentifyMark.equals(dto.getIndentifyMark())){
@@ -246,33 +249,45 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 					chbEquHoldCheckDtoMapper.insertToChbEquHold(dto);
 					//身份信息入登记库
 					ChbEquSub infosub = new ChbEquSub();
-					infosub = changeToChbEquSub(dto);
+					infosub = changeToChbEquSub(dto,index,sequenceList);
 					chbEquHoldCheckDtoMapper.insertChbEquSub(infosub);
+					index++;
 				}
 			}
-			//合并持有信息
-			Map<String,ChbInvestholdInfoCheckDto> holddealMap = mergerHoldData(investorholdlist);
-			
-			//持有信息和持有信息登记数据入库
-			Iterator<Map.Entry<String, ChbInvestholdInfoCheckDto>> holdentries = holddealMap.entrySet().iterator();
-			while(holdentries.hasNext()) {
-				Map.Entry<String, ChbInvestholdInfoCheckDto> holdentry = holdentries.next();
-				ChbInvestholdInfoCheckDto holdmodel = holdentry.getValue();
-				holdmodel.setIndentifyMark(indentifyMark);
-//				部门代码
-				holdmodel.setDeptCode(CommonUtil.getDeptCode());
-//				机构代码
-				holdmodel.setOrgCode(CommonUtil.getOrgCode());
-				chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfo(holdmodel);
-				ChbInvestholdInfoSub holdsub = new ChbInvestholdInfoSub();
-				holdsub = changeToChbInvestholdInfoSub(holdmodel);
+			// 合并持有信息
+			Map<String, ChbInvestholdInfoCheckDto> holdMap = mergerHoldData(investorholdlist);
+
+			   List<String> sequenceListEx = CommonUtil.getBatchSequenceIndexData(DataIndexSequenceType.中债登记管理, holdMap.size()*2);
+	            int indexEx = 0;
+	            
+			// 持有信息和持有信息登记数据入库
+			holdMap.forEach((key,value)->{
+				value.setIndentifyMark(indentifyMark);
+				value.setDeptCode(CommonUtil.getDeptCode());
+				value.setOrgCode(CommonUtil.getOrgCode());
+				chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfo(value);
+				ChbInvestholdInfoSub holdsub = changeToChbInvestholdInfoSub(value,indexEx,sequenceListEx);
 				chbInvestholdInfoCheckDtoMapper.insertChbInvestholdInfoSub(holdsub);
-			}
+			});
+//			// 持有信息和持有信息登记数据入库
+//			Iterator<Map.Entry<String, ChbInvestholdInfoCheckDto>> iterator = holdMap.entrySet().iterator();
+//			while (iterator.hasNext()) {
+//				Map.Entry<String, ChbInvestholdInfoCheckDto> holdentry = iterator.next();
+//				ChbInvestholdInfoCheckDto holdmodel = holdentry.getValue();
+//				holdmodel.setIndentifyMark(indentifyMark);
+//				holdmodel.setDeptCode(CommonUtil.getDeptCode());
+//				holdmodel.setOrgCode(CommonUtil.getOrgCode());
+//				chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfo(holdmodel);
+//				
+//				ChbInvestholdInfoSub holdsub = changeToChbInvestholdInfoSub(holdmodel);
+//				
+//				chbInvestholdInfoCheckDtoMapper.insertChbInvestholdInfoSub(holdsub);
+//			}
 		}
 		return afterholdlist;
 	}
-	
-	private ChbEquSub changeToChbEquSub(ChbEquHoldCheckDto chbEquHoldCheckDto) {
+
+	private ChbEquSub changeToChbEquSub(ChbEquHoldCheckDto chbEquHoldCheckDto,int index,List<String> seqList) {
 		ChbEquSub equSub = new ChbEquSub();
 		BeanUtils.copyProperties(chbEquHoldCheckDto,equSub);
 //		识别标识
@@ -316,7 +331,10 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 //		数据状态
         equSub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
 //		报送流水号
-        equSub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+		equSub.setSumitSeq(
+				//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+				CommonUtil.getSequenceStr(seqList, index)
+				);
 //		部门代码
         equSub.setDeptCode(CommonUtil.getDeptCode());
 //		机构代码
@@ -326,7 +344,7 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 		return equSub;
 	}
 
-	private ChbInvestholdInfoSub changeToChbInvestholdInfoSub(ChbInvestholdInfoCheckDto holdmodel) {
+	private ChbInvestholdInfoSub changeToChbInvestholdInfoSub(ChbInvestholdInfoCheckDto holdmodel,int index,List<String> list) {
 		ChbInvestholdInfoSub holdSub = new ChbInvestholdInfoSub();
 		BeanUtils.copyProperties(holdmodel,holdSub);
 //		报送截止日
@@ -346,11 +364,17 @@ public class InvestorMerger001Service extends CommonExportService<ChbEquHoldChec
 		holdSub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
 //		创建人
 		holdSub.setCreateUser(SecurityUtil.getLoginUser().getUserName());
-//		报送流水号
-		holdSub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//		登记序号
-		holdSub.setRegistSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
-//		登记银行代码
+		// 报送流水号
+		holdSub.setSumitSeq(
+				//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+				CommonUtil.getSequenceStr(list, index) 
+				);
+		// 登记序号
+		holdSub.setRegistSeqno(
+				//CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理)
+				CommonUtil.getSequenceStr(list, index) 
+				);
+		// 登记银行代码
 		holdSub.setRegistBankCode(CommonUtil.getUserBankCode(null));
 //		机构代码
 		holdSub.setOrgCode(CommonUtil.getOrgCode());

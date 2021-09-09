@@ -63,6 +63,10 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
 	private IPlatformDate iPlatformDate;
 	
 	/**
+     * 日志
+     */
+//    private Logger logger = LoggerFactory.getLogger(PtlCashFlowGapAnalysis001Service.class);
+	/**
      * 模糊查询组合代码
      * @param param 模糊查询参数
      * @return 联想文本框实体类
@@ -302,6 +306,8 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
         String flieName =  termname + ".xlsx";
         File depositfile = null;
         OutputStream os = null;
+        FileOutputStream fis = null;
+        InputStream stream = null;
         try {
             // 关联模板
             XLSTransformer transformer = new XLSTransformer();  
@@ -314,10 +320,11 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
             }
             String templateFile = exceltemplate + ".xlsx";
             // 模板输入流
-            InputStream stream  = CommonExportService.class.getResourceAsStream(
+            stream  = CommonExportService.class.getResourceAsStream(
                     "/tpl/" + templateFile);
             Workbook workbook = transformer.transformXLS(stream, data);
-            os = new BufferedOutputStream(new FileOutputStream(depositfilePath + File.separator + flieName));
+            fis = new FileOutputStream(depositfilePath + File.separator + flieName);
+            os = new BufferedOutputStream(fis);
             workbook.write(os); 
         }
         finally {
@@ -325,6 +332,20 @@ public class PtlCashFlowGapAnalysis001Service extends CommonExportService<PtlCas
                 try {
                     os.flush();
                     os.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }
+            if (fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+        }
+            }
+            if (stream != null){
+                try {
+                    stream.close();
                 } catch (IOException e) {
                     logger.error(e.getMessage(),e);
                 }

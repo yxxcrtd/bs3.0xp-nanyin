@@ -62,7 +62,8 @@
 				}               
 				break;
 			}else {
-                getElementById('excFinSector').val('02').trigger('change');
+                // getElementById('excFinSector').val('02').trigger('change');
+                $('#bussRepFinProductInfoDto_excFinSector').val('02').trigger('change');
 			}
             //客户类型仅有金融同业时，中债报送的 是否同业专属字段 才为是 必输 可编辑 yjm end 20190807
 			if(i == repInArr.length - 1){

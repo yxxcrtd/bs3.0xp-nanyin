@@ -293,6 +293,58 @@ public class CommonUtil {
 	}
 	
 	/**
+	 * 获取批量序列值
+	 * @param sequenceType
+	 * @param size
+	 * @return
+	 */
+	public  static  List<String> getBatchSequenceIndexData(DataIndexSequenceType sequenceType, int size) {
+		if(size <= 0) {
+			return new ArrayList<>();
+		}
+
+		List<String> list = new ArrayList<>();
+		Map<String, String> param = new HashMap<>();
+		
+		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+
+		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+		
+		param.put("databaseType", databaseType);
+		param.put("sequenceName", sequenceType.getSequenceName());
+		
+		synchronized(CommonUtil.class){
+     	Long result = baseMapper.getSequenceIndexData(param);
+		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
+		String shortName = sequenceType.getShortName();
+		for(int i = 0;i<size;i++) {
+			Long data = result + i;//i*步长，默认步长为1
+			String sequenceResult = String.format("%018d", data);
+			sequenceResult = shortName + sequenceResult;
+			list.add(sequenceResult);
+		}
+		param.put("incrNum", size+"");
+		baseMapper.updateSequenceIndexData(param);
+	}
+		return list;
+	}
+	
+	
+    /**
+     * 获取序列
+     * @param list
+     * @param index
+     * @return
+     */
+    public  static String getSequenceStr(List<String> list, int index) {
+        if(StringUtil.isEmptyList(list) || index >= list.size()) {
+            return null;
+        }
+        else {
+            return list.get(index);
+        }
+    }
+	/**
 	 * 根据採番名採番
 	 *
 	 * @param sequenceType
@@ -851,6 +903,16 @@ public class CommonUtil {
 			}
 		}
 		String code = baseCommonService.selectPbcBankCode(orgCode);
+		return null!=code?code:"";
+	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCodeBack(String pbcBankCode){
+		String code = baseCommonService.selectPbcBankCodeBack(pbcBankCode);
 		return null!=code?code:"";
 	}
 	

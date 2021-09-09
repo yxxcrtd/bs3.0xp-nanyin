@@ -34,9 +34,16 @@ public class ApplicationConfig {
 	
 	public static SztMessage msgInit() throws IOException {
 		SztMessage  msg= new SztMessage();
-		
+		InputStream is = null;
 		Properties prop = new Properties();
-		prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties"));
+		try{
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream("sztInterfClientMsg.properties");
+			prop.load(is);
+		}finally {
+			if (is != null){
+				is.close();
+			}
+		}
 		if(prop!=null) {
 			msg.setFromAppId(prop.getProperty("fromAppId")==null?"":prop.getProperty("fromAppId"));
 			msg.setFromUserId(prop.getProperty("fromUserId")==null?"":prop.getProperty("fromUserId"));

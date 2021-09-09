@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,4 +110,23 @@ public class PbcDatPriviewService extends BaseService<ITableRow>{
 		return new HashMap<Object, Object>();
 	}
 
+
+	public boolean compareBigDecimal(BigDecimal b1, BigDecimal b2){
+		boolean flag=true;
+		if(b1==null&&b2==null){
+			flag=true;
+		}else{
+			flag= null != b1 && null != b2 ? b1.compareTo(b2)==0 : false;
+		}
+		return !flag;
+	}
+	public boolean compareDate(Date b1, Date b2){
+		boolean flag=true;
+		if(b1==null&&b2==null){
+			flag=true;
+		}else{
+			flag= null != b1 && null != b2 ? b1.compareTo(b2)==0 : false;
+		}
+		return !flag;
+	}
 }

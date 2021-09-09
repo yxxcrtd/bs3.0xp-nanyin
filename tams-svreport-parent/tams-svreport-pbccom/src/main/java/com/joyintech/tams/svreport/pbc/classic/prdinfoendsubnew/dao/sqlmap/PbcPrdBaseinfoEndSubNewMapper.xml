@@ -48,11 +48,10 @@
   	PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE
   </sql>
   <sql id="PBC_PRD_BASEINFO_SUB">
-  (select a.* from (SELECT nvl(pac.pbc_code,pbs.PBC_PROD_ID) PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,pbs.status status,RAISE_ENDDATE,pbs.ORG_CODE,ISSUE_PARTY_ID,
-	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(pbs.UPDATE_TIME,pbs.CREATE_TIME)
+  (select a.* from (SELECT PBC_PROD_ID,PROD_ID,OPERATE_MODE,IVSTORIENTATION,VDATE,status,RAISE_ENDDATE,ORG_CODE,ISSUE_PARTY_ID,
+	row_number() OVER (partition BY PBC_PROD_ID ORDER BY NVL(UPDATE_TIME,CREATE_TIME)
 	DESC) AS myrank
-	FROM pbc_prd_baseinfo_sub_new pbs
-  LEFT JOIN pbc_prod_assetpool_code pac ON pac.status='E'AND pac.code_type='01' AND pac.INSIDE_PROD_ID = pbs.PROD_ID) a
+	FROM pbc_prd_baseinfo_sub_new) a
 	WHERE a.myrank=1)
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
@@ -369,7 +368,7 @@
 	    t2.PBC_CODE pbcCode,
         NVL(T2.pbc_code,a.PBC_PROD_ID) pbcProdIdShow
   	from PBC_PRD_BASEINFO_END_SUB_NEW a 
-  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID 
+  	left join <include refid="PBC_PRD_BASEINFO_SUB" /> b on a.PBC_PROD_ID = b.PBC_PROD_ID
   	<!-- and a.ORG_CODE = b.ORG_CODE -->
   	LEFT JOIN(
         SELECT
@@ -387,7 +386,7 @@
       ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
   	<where>
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+            <foreach collection="pbcProdIdList" item="items" open="and NVL(T2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
             #{items,jdbcType=VARCHAR}
             </foreach>
         </if>
@@ -422,6 +421,13 @@
             <foreach collection="submitFeedbackStatusList" open="(" close=")" separator="," item="item">
                 #{item,jdbcType=VARCHAR}
             </foreach>
+        </if>
+        <if test="submitFeedbackStatusListExp != null and submitFeedbackStatusListExp.size > 0">
+          and (SUBMIT_FEEDBACK_STATUS is null or SUBMIT_FEEDBACK_STATUS in
+          <foreach collection="submitFeedbackStatusListExp" open="(" close=")" separator="," item="item">
+            #{item,jdbcType=VARCHAR}
+          </foreach>
+          )
         </if>
         <if test="operateModeList != null and operateModeList.size > 0">
             and b.OPERATE_MODE in
@@ -850,7 +856,7 @@
 	    a.PBC_SUBMIT_DEADLINE, a.SUBMIT_DEADLINE, a.STATUS, a.CREATE_USER, a.ORG_CODE, a.CREATE_DEPT, 
 	    a.CREATE_TIME, a.UPDATE_USER, a.UPDATE_TIME,b.PROD_ID,b.OPERATE_MODE,b.IVSTORIENTATION,b.VDATE,t2.pbc_code
 	  	from PBC_PRD_BASEINFO_END_SUB_NEW a left join <include refid="PBC_PRD_BASEINFO_SUB" /> b
-	  	on a.PBC_PROD_ID = b.PBC_PROD_ID 
+	  	on a.PBC_PROD_ID = b.PBC_PROD_ID
 	  	<!-- and a.ORG_CODE = b.ORG_CODE  -->
 	  	LEFT JOIN(
 	        SELECT

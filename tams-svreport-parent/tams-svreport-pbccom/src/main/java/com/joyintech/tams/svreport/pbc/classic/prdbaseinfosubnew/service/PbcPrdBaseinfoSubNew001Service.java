@@ -16,6 +16,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.ChbCheckRuleout;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.report.interf.common.util.TisUtil;
@@ -102,7 +103,6 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 //		if(CommonUtil.isBAmodel()){
 			searchParam.put("model_type", "01");
 //		}
-
 		int pagenum = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_PAGE), 1);
         int length = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
 		Page<PbcPrdBaseinfoSubNew> page = queryForPage(pagenum,length,()->pbcPrdBaseinfoSubNewMapper.searchPage(searchParam));
@@ -200,7 +200,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.人行信誉机构类型,single);
+					creditMode=creditMode+single+"-"+SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode=creditMode+GlobalConstant.COMMA;
 					}
@@ -322,7 +322,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				int i=0;
 				for(String single:creditModes){
 					i++;
-					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.借款人类型,single);
+					creditMode=creditMode+ single + "-" +SysDataUtil.getNameFromDataDict(DictCode.新人行增信机构类型,single);
 					if(i<creditModes.length){
 						creditMode= creditMode+GlobalConstant.COMMA;
 					}
@@ -359,7 +359,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				List<String> outDepCtrys=StringUtil.splitToList(GlobalConstant.COMMA, result.getOutDepCtry());
 				result.setOutDepCtry("");
 				for(String outDepCtry : outDepCtrys){
-					result.setOutDepCtry(result.getOutDepCtry()+","+SvrDataUtil.getNameFromDataDict(DictCode.所属国家或地区, outDepCtry));
+					result.setOutDepCtry(result.getOutDepCtry()+","+ outDepCtry);
 				}
 				result.setOutDepCtry(result.getOutDepCtry().substring(1));
 			}
@@ -370,17 +370,17 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
             //募集资金币种
             if (StringUtil.isNotEmpty(result.getRaiseCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getRaiseCcy());
-            	result.setRaiseCcy(result.getRaiseCcy()+"-"+raiseCcyStr);
+            	result.setRaiseCcy(result.getRaiseCcy()+" "+raiseCcyStr);
             }
             //兑付本金币种
             if (StringUtil.isNotEmpty(result.getCashPrinCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashPrinCcy());
-            	result.setCashPrinCcy(result.getCashPrinCcy()+"-"+raiseCcyStr);
+            	result.setCashPrinCcy(result.getCashPrinCcy()+" "+raiseCcyStr);
             }
             //兑付收益币种
             if (StringUtil.isNotEmpty(result.getCashProfCcy())){
             	String raiseCcyStr= getRaiseCcy(result.getCashProfCcy());
-            	result.setCashProfCcy(result.getCashProfCcy()+"-"+raiseCcyStr);
+            	result.setCashProfCcy(result.getCashProfCcy()+" "+raiseCcyStr);
             }
             //预计客户最高年收益率
             if (result.getHighYieldIssue() != null && BigDecimal.ZERO.compareTo(result.getHighYieldIssue()) != 0) {
@@ -455,6 +455,8 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	            StringUtil.splitToList(",",(String) searchParam.get("sendStatus")));
 		searchParam.put("submitFeedbackStatusList",
 	            StringUtil.splitToList(",",(String) searchParam.get("submitFeedbackStatus")));
+		searchParam.put("submitFeedbackStatusListExp",
+				StringUtil.splitToList(",",(String) searchParam.get("submitFeedbackStatusExp")));
 		searchParam.put("operateModeList",
 	            StringUtil.splitToList(",",(String) searchParam.get("operateMode")));
 		searchParam.put("ivstorientationList",
@@ -485,7 +487,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
 		exportParam.config(
-	            "/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosub/conf/export_conf.xml")
+	            "/com/joyintech/tams/svreport/pbc/classic/prdbaseinfosubnew/conf/export_conf.xml")
 	            .dataSource(DataSourceType.MASERT);
 	}
 	/**
@@ -536,6 +538,10 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			return ;
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 begin */
 		int grps = infoList.size()/PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
+		map.put("updateStatus",DictCodeListExt2.报送状态_手工处理.getValue());
+		map.put("sendStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("zipStatus", DictCodeListExt3.zip包状态_已使用.getValue());
+		map.put("returnStatus", DictCodeListExt2.人行报送反馈状态_人行通过.getValue());
 		int idx = 0;
 		for ( int i=0;i<grps;i++ ) {
 			List<PbcPrdBaseinfoSubNew> list1 = infoList.subList(idx,idx + PbcClassicsDataFileHelper.COMMIT_CONSTANTS);
@@ -549,7 +555,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				//更新DAT 表
 				pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list1);
 
-				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(map);
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -564,7 +570,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			//更新DAT 表
 			pbcPrdBaseinfoSubNewMapper.updateBaseSubDat(list2);
 			//找到不包含未报送的zip数据,修改zip状态为手工处理
-			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_手工处理.getValue(),DictCodeListExt2.报送状态_未报送.getValue());
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(map);
 
 		}
 		/* 手工处理数据批量进行 update by gaojian 2019-06-22 end */
@@ -600,6 +606,11 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 begin */
 		int grps = infoList.size()/PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		int idx = 0;
+
+		map.put("updateStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("sendStatus",DictCodeListExt2.报送状态_未报送.getValue());
+		map.put("zipStatus", DictCodeListExt3.zip包状态_可编辑.getValue());
+
 		for ( int i=0;i<grps;i++ ) {
 			List<PbcPrdBaseinfoSubNew> list1 = infoList.subList(idx,idx + PbcClassicsDataFileHelper.COMMIT_CONSTANTS);
 			if ( list1.size()>0 ) {
@@ -613,7 +624,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 				pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list1);
 
 				//找到不包含手工处理的zip数据,修改zip状态为未报送
-				pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
+				pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(map);
 			}
 			idx += 	PbcClassicsDataFileHelper.COMMIT_CONSTANTS;
 		}
@@ -628,7 +639,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 			pbcPrdBaseinfoSubNewMapper.deleteBatchSubFromHisByUpdateTime(list2);
 
 			//找到不包含手工处理的zip数据,修改zip状态为未报送
-			pbcPrdBaseinfoSubNewMapper.updateZipDatStatus(DictCodeListExt2.报送状态_未报送.getValue(),DictCodeListExt2.报送状态_手工处理.getValue());
+			pbcPrdBaseinfoSubNewMapper.updateZipDatStatusUn(map);
 		}
 		/* 取消手工处理批量进行 update by gaojian 2019-06-22 end */
 		logger.debug("取消手工处理结束:------------------------------"+new Date());
@@ -683,7 +694,7 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
 						checkResult.add(exc);
 					} else {
 						ExcelValidDto exc=new ExcelValidDto();
-						exc.setValidKey("产品代码:"+repmap.get(key).getPbcProdId());
+						exc.setValidKey("产品代码:"+repmap.get(key).getProdId());
 						exc.setCheckResult("01");
 						checkResult.add(exc);
 					}

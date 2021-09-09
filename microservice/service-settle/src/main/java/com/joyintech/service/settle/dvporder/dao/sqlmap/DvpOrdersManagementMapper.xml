@@ -233,6 +233,107 @@
             OR T3.ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
             )
         </if>
+
+        UNION ALL
+        SELECT T1.TRADE_ID bizCode,
+            #{PINAN_BUSINESS_TYPE_81} PA_BUSS_TYPE,
+            T2.PORTFOLIO_ID,
+            t4.PORTFOLIO_NAME,
+            case T2.PS
+            when '02' then
+            T2.MY_ACCT_NO
+            else
+            T2.COUNTER_ACCT_NO
+            end as payAcctNo,
+            case T2.PS
+            when '02' then
+            SCI.ACCT_NAME
+            else
+            SCI1.ACCT_NAME
+            end payAcctName,
+            case T2.PS
+            when '02' then
+            T2.COUNTER_ACCT_NO
+            else
+            T2.MY_ACCT_NO
+            end as recAcctNo,
+            case T2.PS
+            when '02' then
+            SCI1.ACCT_NAME
+            else
+            SCI.ACCT_NAME
+            end recAcctName,
+            '',
+            '',
+            '',
+            '',
+            TO_CHAR(t1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE,
+            TO_CHAR(t1.SETTLE_DATE, 'yyyy-MM-dd') SETTLE_DATE,
+            T1.TRADE_AMT,
+            t1.CCY,
+            T6.COUNTER_ACCT_NO,
+            T6.MY_ACCT_NO,
+            '' REGIST_ORG,
+            case
+            when SDTM.ORDER_ID is null then
+            '02'
+            else
+            '01'
+            end dealStatus
+        FROM TRD_PRODUCT_DEAL T1
+        LEFT JOIN STL_DVP_TRADE_MATCH SDTM ON T1.TRADE_ID = SDTM.TRADE_ID
+        LEFT JOIN STL_DVP_ORDERS T2 ON T2.ORDER_ID = SDTM.ORDER_ID
+        LEFT JOIN PA_TRD_PRODUCT_DEAL T3 ON T1.TRADE_ID = T3.TRADE_ID
+        LEFT JOIN PTL_PORTFOLIO T4 ON T2.PORTFOLIO_ID = T4.PORTFOLIO_ID
+        LEFT JOIN FIN_PRODUCT T5 ON T1.FINPROD_ID = T5.FINPROD_ID
+        LEFT JOIN STL_PAY_ORDERS T6 ON T1.TRADE_ID = T6.TRADE_ID
+        LEFT JOIN STL_CAPACCT_INFO SCI ON T2.MY_ACCT_NO = SCI.ACCT_NO
+        LEFT JOIN STL_CAPACCT_INFO SCI1 ON T2.COUNTER_ACCT_NO = SCI1.ACCT_NO
+        and exists (select 1 from STL_DVP_ORDERS
+                        where SDTM.order_id = STL_DVP_ORDERS.order_id
+                          and (STL_DVP_ORDERS.ORDER_STATUS is null or
+                          STL_DVP_ORDERS.ORDER_STATUS != '02'))
+        WHERE T1.IS_CANCEL = 'N'
+        and t1.TRADE_STATUS = '01'
+        AND T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_88}, #{PINAN_BUSINESS_TYPE_89},#{PINAN_BUSINESS_TYPE_90},#{PINAN_BUSINESS_TYPE_91},#{PINAN_BUSINESS_TYPE_92},#{PINAN_BUSINESS_TYPE_93})
+        <if test="portfolioId != null and !portfolioId.isEmpty()">
+            AND T2.PORTFOLIO_ID IN
+            <foreach collection="portfolioId" open="(" close=")" separator="," item="item">#{item}</foreach>
+        </if>
+        <if test="finprodMarketId != null and !finprodMarketId.isEmpty()">
+            AND instr(T5.FINPROD_MARKET_ID, #{finprodMarketId}) > 0
+        </if>
+        <if test="bizCode != null and !bizCode.isEmpty()">
+            AND instr(T1.TRADE_ID, #{bizCode}) > 0
+        </if>
+        <if test="acctType != null and !acctType.isEmpty()">
+            AND 1 = 2
+        </if>
+        <if test="settleDateStart != null and !settleDateStart.isEmpty()">
+            AND T1.SETTLE_DATE >= TO_DATE(#{settleDateStart}, 'yyyy-MM-dd')
+        </if>
+        <if test="settleDateEnd != null and !settleDateEnd.isEmpty()">
+            AND T1.SETTLE_DATE &lt;= TO_DATE(#{settleDateEnd}, 'yyyy-MM-dd')
+        </if>
+        <if test="paBusinessType != null and !paBusinessType.isEmpty()">
+            <if test="paBusinessType1 == null || paBusinessType1.isEmpty()">
+               and 1=2
+            </if>
+            <if test="paBusinessType1 != null and !paBusinessType1.isEmpty()">
+                AND T3.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_88}, #{PINAN_BUSINESS_TYPE_89},#{PINAN_BUSINESS_TYPE_90},#{PINAN_BUSINESS_TYPE_91},#{PINAN_BUSINESS_TYPE_92},#{PINAN_BUSINESS_TYPE_93})
+            </if>
+        </if>
+        <if test="dealStatus != null and !dealStatus.isEmpty() and dealStatus == DISPOSE_STATUS_01">
+            AND EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TRADE_ID)
+        </if>
+        <if test="dealStatus != null and !dealStatus.isEmpty() and dealStatus == DISPOSE_STATUS_02">
+            AND NOT EXISTS (SELECT 1 FROM STL_DVP_TRADE_MATCH tt where tt.TRADE_ID = t1.TRADE_ID)
+        </if>
+        <if test="counterAcctNo1 != null and !counterAcctNo1.isEmpty()">
+            AND (T2.MY_ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            OR T2.COUNTER_ACCT_NO like concat(concat('%',#{counterAcctNo1}),'%')
+            )
+        </if>
     </select>
 
     <select id="findTradeData" resultType="com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementDto">

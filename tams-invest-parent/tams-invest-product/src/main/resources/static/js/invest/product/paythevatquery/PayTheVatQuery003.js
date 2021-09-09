@@ -65,6 +65,6 @@ $(function () {
           }
 
 	      //备注金额重新赋值 modify by jiangpeng on 20210514 ZGBSSE-366 备注金额取两位小数
-	      $("#remark").val($("#remark").val().split(":")[0]+":"+(parseFloat($("#appreciationTax").val())+parseFloat($("#additionalTax").val())).toFixed(2));
+	      //$("#remark").val($("#remark").val().split(":")[0]+":"+(parseFloat($("#appreciationTax").val())+parseFloat($("#additionalTax").val())).toFixed(2));
 	  });
 });

@@ -85,13 +85,10 @@ $(function() {
         cols:[
             { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
             { field: 'status',visible:false},
-            { title: "数据日期", field: 'statusDate', width:100,  visible: false},/*界面查询性能优化*/
             { title: "数据日期", field: 'statusDateStr', width:100,sortField:'statusDate'},
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},
             { field: 'submitStatus',visible:false},
-            { title: "报送日期", field: 'submitTime', width:100,  visible: false},/*界面查询性能优化*/
             { title: "报送日期", field: 'submitTimeStr', width:100,sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadline', width:100,  visible: false},/*界面查询性能优化*/
             { title: "报送截止日", field: 'chbSubmitDeadlineStr', width:100,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus' /*界面查询性能优化,
@@ -116,6 +113,7 @@ $(function() {
                       }
                   }*/
             },
+            {title: '报送流水号',field:'sumitSeq', width:150},
             {title: '发行机构代码',field:'registBankCode', width:200},
             {title: '识别标识',field:'indentifyMark', width:150},
             {title: '产品登记编码', field:'regCode', width:100},
@@ -144,15 +142,14 @@ $(function() {
             {title: '业务发生地所属监管',field:'busiFsa', width:150},
             {title: '交易柜员号',field:'tranTellName', width:150},
             {title: '备注',field:'remark', width:150},
-//            {field:'submitStatus', visible:false},
+              {field:'submitStatus', visible:false},
             {field:'checkSeqno', visible:false},
-            {field:'sumitSeq', visible:false},
-//            {field:'busiType', visible:false}
+              {field:'busiType', visible:false}
         ]
     });
-
-
-
+    
+    
+    
     //导出所有查询结果
     $('#EquityBusiInfoRegist001_btn_export').click(function() {
         exportExcel("1");

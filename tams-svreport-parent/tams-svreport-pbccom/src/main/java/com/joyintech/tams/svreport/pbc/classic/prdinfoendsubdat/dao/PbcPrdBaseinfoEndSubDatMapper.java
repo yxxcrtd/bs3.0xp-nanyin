@@ -30,6 +30,9 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
     
     List<PbcPrdBaseinfoEndSubDat> searchPage(Map<String, Object> map);
 
+	/***删除未报送的当前压缩包的数据**/
+	int deletebySearch(Map<String, Object> searchParam);
+
 	int doManul(@Param("list") List<PbcPrdBaseinfoEndSubNew> updateList, @Param("submitadd") String submitadd);
 
 	int cancelManul(@Param("list") List<PbcPrdBaseinfoEndSubNew> updateList);
@@ -100,5 +103,7 @@ public interface PbcPrdBaseinfoEndSubDatMapper {
 	List<PbcPrdBaseinfoEndSubDat> selectByDatZipCode(@Param("datZipCode") String datZipCode);
 
 	int updateByDatZipCode(PbcPrdBaseinfoEndSubDat record);
+
+	int updateByDatZipCodeAndProdId(PbcPrdBaseinfoEndSubDat record);
 
 }

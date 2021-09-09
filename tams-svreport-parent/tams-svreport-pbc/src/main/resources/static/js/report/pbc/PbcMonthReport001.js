@@ -204,9 +204,17 @@ $(function () {
                     return;
                 }
             })
-            if (!isHaveData){
-                Joyin.error("列表无数据，不支持导出！");
-                return;
+            Joyin.exportExcel("export", param);
+            //ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG 20210827
+            isHaveData = false;
+            if (isHaveData) {
+                Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
+                    layui.layer.open({type: 3});
+                    Joyin.ajaxJson('doManual', param, function () {
+                        table.load();
+                        layui.layer.closeAll();
+                    });
+                });
             }
             Joyin.exportExcel("export",param);
             if (isHaveData){
@@ -271,6 +279,9 @@ $(function () {
                 expArr.splice(j, 1);
             }
         }
+
+        //ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG 20210827
+        isNotSendData = false;
         if (isNotSendData) {
             Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
                 layui.layer.open({type: 3});
@@ -478,8 +489,7 @@ $(function () {
                     return;
                 }
             }
-
-            Joyin.confirm("请确认是否要手工处理选中记录？", function () {
+            Joyin.confirm("请确认是否要手工处理选中相同报告期的记录？", function () {
                 layui.layer.open({type: 3});
                 Joyin.ajaxJson('doManual', {keyList: JSON.stringify(rows)}, function () {
                     table.load();
@@ -587,7 +597,7 @@ $(function () {
                 }
             }
             ;
-            Joyin.confirm("请确认是否要取消手工处理选中记录？", function () {
+            Joyin.confirm("请确认是否要取消手工处理选中相同报告期的记录？", function () {
                 layui.layer.open({type: 3});
                 Joyin.ajaxJson('cancelMannul', {keyList: JSON.stringify(manArr)}, function () {
                     table.load();

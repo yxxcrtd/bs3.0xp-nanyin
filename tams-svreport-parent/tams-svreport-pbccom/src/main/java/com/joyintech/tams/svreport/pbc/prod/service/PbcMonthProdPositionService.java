@@ -243,7 +243,7 @@ public class PbcMonthProdPositionService  extends BaseService{
         return result;
 	} 
 	
-	public String checkSendStatus(Date batchDate,List<String> reporttypeList){
+	public String checkSendStatus(Date batchDate,List<String> reporttypeList,String orgCode){
 		//检查已报送
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(batchDate);
@@ -263,13 +263,14 @@ public class PbcMonthProdPositionService  extends BaseService{
 		param.put("sendStatusList", sendStatusList);
 		param.put("reporttypeList",reporttypeList);
 		param.put("enddate",DateUtil.format(reportEndDate));
+		param.put("orgCode",orgCode);
 		List<PbcMonthReport> listRegisted = pbcMonthReportMapper.searchPage(param);
 		for(PbcMonthReport sub : listRegisted){
 			msg.append(sub.getReportname()).append(GlobalConstant.SEMICOLON);
 		}
 		// 如果有已登记的资产要素则抛异常
 		if (!StringUtil.isEmpty(msg.toString())){
-			return "存在已报送的人行报表:"+msg+"\n";
+			return "存在已报送的人行报表:"+msg+"月报不支持生成修改未报送,生成停止!!\n";
 		}else{
 			return null;
 		}

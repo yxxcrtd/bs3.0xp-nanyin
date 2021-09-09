@@ -233,6 +233,8 @@ public class BussTrdTransferOrderController extends BaseController {
         }else{
             if(StringUtils.equals(param.getRepPageId(),"PtlFundAllocation002")) {
                 notEmptyCheck(param.getDeal().getTradeAmt(), "BussTrdTransferOrder.transferAmt", messages);
+            }else if(StringUtils.equals(param.getRepPageId(),"FinNetProductDuration") && param.getDeal().getTradeAmt() ==null){
+                messages.add(new ValidMessage("此交易没有金额，不需生成指令！可直接提交交易"));
             }
             else {
                 notEmptyCheck(param.getDeal().getTradeAmt(), "BussTrdTransferOrder.tradeAmt", messages);

@@ -149,6 +149,10 @@ public class PbcSendZipDatFile extends BaseEntity {
      * 制表日期
      */
     private Date reportDate;
+    /**
+     * 结束日期
+     */
+    private Date enddate;
 
     /**
      * 取得 主键uuid
@@ -677,5 +681,13 @@ public class PbcSendZipDatFile extends BaseEntity {
             return SysDataUtil.getNameFromDataDict(DictCode.zip包状态, this.getDatZipStatus());
         }
         return "" ;
+    }
+
+    public Date getEnddate() {
+        return enddate;
+    }
+
+    public void setEnddate(Date enddate) {
+        this.enddate = enddate;
     }
 }

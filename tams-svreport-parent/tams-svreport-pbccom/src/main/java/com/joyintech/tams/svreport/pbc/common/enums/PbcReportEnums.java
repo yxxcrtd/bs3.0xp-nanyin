@@ -504,8 +504,9 @@ public enum PbcReportEnums {
     AMT_821280_JW (75,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_821280_JW"),//境外
     AMT_822000_ZBGJ (76,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_822000_ZBGJ"),//资本公积
     AMT_823000_WFPLR (77,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_823000_WFPLR"),//未分配利润
-//    AMT_000001_FFXRBNZCYEBWBHJ (78,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_000001_FFXRBNZCYEBWBHJ"),//附：发行人表内资产余额（本外币合计）
-//    AMT_000002_FXRBNJRZCYEBWBHJ (79,PbcMonthReportGroupConstants.PBC_REPORT_2_1_2,PbcReportType.PBC_REPORT_2_1, "AMT_000002_FXRBNJRZCYEBWBHJ"),//发行人表内金融资产余额（本外币合计）
+
+    AMT_000001_FFXRBNZCYEBWBHJ (78,PbcMonthReportGroupConstants.PBC_REPORT_2_1_3,PbcReportType.PBC_REPORT_2_1, "AMT_000001_FFXRBNZCYEBWBHJ"),//附：发行人表内资产余额（本外币合计）
+    AMT_000002_FXRBNJRZCYEBWBHJ (79,PbcMonthReportGroupConstants.PBC_REPORT_2_1_3,PbcReportType.PBC_REPORT_2_1, "AMT_000002_FXRBNJRZCYEBWBHJ"),//发行人表内金融资产余额（本外币合计）
 
     /**
      * 2-2 除回购和拆借外贷款分行业、企业规模统计表

@@ -33,6 +33,7 @@ public class ReadTxtFile extends ReadFileBasic {
 		}
 		
 		BufferedReader buf = null;
+		FileInputStream fis = null;
 		List<List<Object>> fileContainer = new ArrayList<List<Object>>();
 		//获取文件开头需要过滤的行数
 		int ignoreLine=getIgnoreLines(source);
@@ -48,7 +49,8 @@ public class ReadTxtFile extends ReadFileBasic {
 				logger.info(source.getSourceName() + "		读取文件: " + filepath);
 				
 				int readLineNum = 0;
-				buf = new BufferedReader(new InputStreamReader(new FileInputStream(new SafelyFile(filepath)), FileEncodeType.optionHM.get(source.getEnCodeType())));
+				fis = new FileInputStream(new SafelyFile(filepath));
+				buf = new BufferedReader(new InputStreamReader(fis, FileEncodeType.optionHM.get(source.getEnCodeType())));
 				String line = null;
 				int readstartLine=0;
 				int readEndLine=0;
@@ -128,12 +130,15 @@ public class ReadTxtFile extends ReadFileBasic {
 				//}
 			}
 		} finally {
-			if (buf != null) {
-				try {
+			try {
+				if (buf != null) {
 					buf.close();
-				} catch (IOException e) {
-					logger.error("Error", e);
 				}
+				if (fis	!= null){
+					fis.close();
+				}
+			} catch (IOException e) {
+				logger.error("Error", e);
 			}
 		}
 		result.setDataResult(fileContainer);

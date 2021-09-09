@@ -80,7 +80,8 @@
 				,{field : 'tradePlat',visible : false}
 				,{field : 'workflowId', visible:false}
 				,{field : 'ccy',visible : false} 
-				]
+				],
+				initSort: {field: 'TRADE_DATE',type: 'desc'}
 			});
 
 	var exportExcel = function() {

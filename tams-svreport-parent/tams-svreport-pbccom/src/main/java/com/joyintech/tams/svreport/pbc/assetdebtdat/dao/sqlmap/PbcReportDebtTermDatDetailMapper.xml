@@ -213,5 +213,6 @@
     where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
       and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
       and prp.PROPERTYCODE is  not  null
+      and (prp.DEBT_INSTRUMENT &lt;&gt; 0 or  prp.STOCK_RIGHT &lt;&gt; 0 or prp.SPECIAL_SHARE&lt;&gt; 0  or prp.ACTUAL_AMT&lt;&gt; 0)
   </select>
 </mapper>

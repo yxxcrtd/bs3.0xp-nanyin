@@ -26,8 +26,11 @@ import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +61,7 @@ import com.joyintech.tams.report.common.XmlParseUtil;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.report.common.util.ExcelUtil;
 import com.joyintech.tams.report.common.util.ReportGlobalConstant;
+import com.joyintech.tams.report.submitmaintenance.businessdetailed.service.EquityBusiDetails001Service;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service.InvestorsHoldInfo001Service;
 import com.joyintech.tams.report.system.proregistcodemanage.dao.ProRegistCodeManage001Mapper;
 import com.joyintech.tams.report.system.proregistcodemanage.dto.ProRegistCodeManage001Dto;
@@ -91,6 +95,11 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
      */
     @Autowired
     private InvestorsHoldInfo001Service investorsHoldInfo001Service;
+    /**
+     * EquityBusiDetails001Service
+     */
+    @Autowired
+    private EquityBusiDetails001Service equityBusiDetails001Service;
     /**
      * logger
      */
@@ -292,6 +301,9 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 
                     // 根据最新导入的有效的产品登记编码数据，联动处理持有者信息待处理数据
                     investorsHoldInfo001Service.refreshStatusAData(entities, bankCode,deptCode,orgCode);
+                 //add by dengyu监管检查投资者明细报送修改20201022---》根据最新导入的有效的产品登记编码数据，联动处理投资者明细信息待处理数据 begin
+                    equityBusiDetails001Service.refreshStatusAData(entities,bankCode,deptCode,orgCode);
+                  //add by dengyu监管检查投资者明细报送修改20201022---》根据最新导入的有效的产品登记编码数据，联动处理投资者明细信息待处理数据 end
                 }
                 return checkResult;
             }
@@ -367,22 +379,42 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
 //                message.add(this.getMessage("REPORT_COMMON_FILE_E_0004", "产品登记编码"));
                 message.add(this.getMessage("REPORT_COMMON_FILE_E_0026", "产品登记编码", "14", "15"));
             }
-            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(list.get(2)).matches()){
+            else if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]?[0-9]{6}$").matcher(list.get(2)).matches()){
                 message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
             }
             else{
-                entity.setRegCode(list.get(2));
-                if(prodIdToRegCodeMap.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
-                        message.add("不同的产品代码不能对应同一产品登记编码");
+                Boolean isRight=true;
+                //从产品申报信息中查询数据
+                ChbPrdDeclareInfoDto dtoDeclare = proRegistCodeManage001Mapper.selectInfoByProdId(list.get(4));
+                if(null!=dtoDeclare){
+                    if(StringUtil.equals(dtoDeclare.getRaiseType(), DictCodeListExt2.募集方式_中债_公募.getValue())){
+                        //公募产品
+                        if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[0-9]{6}$").matcher(list.get(2)).matches()){
+                            message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+                            isRight=false;
+                        }
+                    }else if(StringUtil.equals(dtoDeclare.getRaiseType(), DictCodeListExt2.募集方式_中债_私募.getValue())){
+                        //私募产品
+                        if(!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[A]{1}[0-9]{6}$").matcher(list.get(2)).matches()){
+                            message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+                            isRight=false;
+                        }
                     }
                 }
-                else if(box.values().contains(list.get(2))){
-                    if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
-                        message.add("不同的产品代码不能对应同一产品登记编码");
+                if(isRight){
+                    entity.setRegCode(list.get(2));
+                    if(prodIdToRegCodeMap.values().contains(list.get(2))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap,list.get(2)),list.get(3))){
+                            message.add("不同的产品代码不能对应同一产品登记编码");
+                        }
                     }
+                    else if(box.values().contains(list.get(2))){
+                        if(!StringUtil.equals(this.getMapKeyByValue(box,list.get(2)),list.get(3))){
+                            message.add("不同的产品代码不能对应同一产品登记编码");
+                        }
+                    }
+                    box.put(entity.getProdid(),list.get(2));
                 }
-                box.put(entity.getProdid(),list.get(2));
 //                Map<String , Object> map =new HashMap<>();
 //                map.put("regCode",entity.getRegCode());
 //                map.put("orgCode",this.getUserFromSession().getOrgCode());
@@ -650,6 +682,10 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
         if ("xml".equals(suffix)) {
             try {
                 infoList = XmlParseUtil.parse(in);
+                
+                if(StringUtil.isEmptyList(infoList)){
+                	return "success";
+                }
             } catch (ParserConfigurationException | SAXException | IOException e) {
                 logger.error(e.getMessage(),e);
                 return "fail";
@@ -658,6 +694,10 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
         else if ("txt".equals(suffix)) {
             try {
                 infoList = TxtParseUtil.parse(in, reportInterfFileEncoding, reportInterfSplitCharacter);
+                
+                if(StringUtil.isEmptyList(infoList)){
+                	return "success";
+                }
             } catch (ParserConfigurationException | SAXException | IOException e) {
                 logger.error(e.getMessage(),e);
                 return "fail";
@@ -746,4 +786,196 @@ public class ProRegistCodeManage001Service extends CommonExportService<ProRegist
             entities.add(proRegistCodeManage001Dto);
         }
     }
+    
+    public AjaxResult checkConfirmMsgForImportChbData(List<List<String>> dataList, String orgCode, String deptCode) {
+		AjaxResult webResult = new AjaxResult();
+		if (!StringUtil.isEmptyList(dataList)) {
+			if (CollectionUtils.isNotEmpty(dataList)) {
+				List<ProRegistCodeManage001Dto> entities = convertChbDataToBean(dataList);
+				List<String> data = new ArrayList<String>();
+				if (entities.size() > 100) {
+					List<ProRegistCodeManage001Dto> newDataList = new ArrayList<ProRegistCodeManage001Dto>();
+					newDataList.addAll(entities);
+					int part = entities.size() / 1000; // 分批数
+					for (int i = 0; i < part; i++) {
+						data.addAll(
+								proRegistCodeManage001Mapper.getRegistExcelList(newDataList.subList(0, 1000), orgCode));
+						newDataList.subList(0, 1000).clear();
+					}
+					if (CollectionUtils.isNotEmpty(newDataList)) {
+						data.addAll(proRegistCodeManage001Mapper.getRegistExcelList(newDataList, orgCode));
+					}
+				} else {
+					data = proRegistCodeManage001Mapper.getRegistExcelList(entities, orgCode);
+				}
+
+				if (data != null && data.size() > 0) {
+					Map<String, List<ProRegistCodeManage001Dto>> equityInfo001Map = entities.stream()
+							.collect(JoyinCollectors.groupingBy(x -> x.getProdId()));
+					List<String> excelNumList = new ArrayList<String>();
+					List<Integer> excelNumIntList = new ArrayList<Integer>();
+					for (String string : data) {
+						List<ProRegistCodeManage001Dto> listTemp = equityInfo001Map.get(string);
+						excelNumIntList.add(Integer.valueOf(listTemp.get(0).getExcelNum()));
+					}
+					Collections.sort(excelNumIntList);
+					for (Integer rowNo : excelNumIntList) {
+						excelNumList.add(String.valueOf(rowNo));
+					}
+					webResult.setMessage(this.getMessage("CHB_ISCOVER_EQU",
+							StringUtil.joinString(excelNumList, GlobalConstant.COMMA)), MessageType.确认消息);
+				} else {
+					// 防止在进行导入前check时进行了两次的弹框
+					webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+				}
+			} else {
+				webResult.setData(ReportGlobalConstant.NO_INFO_SHOWOUT);
+			}
+		}
+		return webResult;
+	}
+
+	private List<ProRegistCodeManage001Dto> convertChbDataToBean(List<List<String>> dataList) {
+		List<ProRegistCodeManage001Dto> entities = new ArrayList<ProRegistCodeManage001Dto>();
+		for (int i = 0; i < dataList.size(); i++) {
+			List<String> list = dataList.get(i);
+			ProRegistCodeManage001Dto entity = new ProRegistCodeManage001Dto();
+			String prodName = list.get(1);
+			String regCode = list.get(2);
+			String identification = list.get(3);
+			String prodId = list.get(4);
+			if (!StringUtil.isNotEmpty(prodId)) {
+				prodId = identification;
+			}
+
+			entity.setProdId(prodId);
+			entity.setProdName(prodName);
+			entity.setRegCode(regCode);
+			entity.setExcelNum(String.valueOf(i + 2));
+			entities.add(entity);
+		}
+		return entities;
+	}
+
+	public List<ExcelValidDto> importChbData(List<List<String>> dataList, List<List<String>> tempList, String bankCode,
+			String orgCode, String deptCode) {
+		if (!StringUtil.isEmptyList(dataList)) {
+			List<String> headList = new ArrayList<String>();
+			headList.add("发行机构名称");
+			headList.add("产品名称");
+			headList.add("产品登记编码");
+			headList.add("行内标识码");
+			headList.add("理财产品代码");
+			headList.add("产品运作模式");
+			headList.add("目标客户类型");
+			headList.add("产品状态");
+			headList.add("产品登记编码生成日");
+			List<ExcelValidDto> tempCheckResult = ExcelUtil.checkExcelTemp(tempList, headList);
+			if (!StringUtil.isEmptyList(tempCheckResult)) {
+				return tempCheckResult;
+			}
+			if (null != dataList) {
+				List<ChbPrdresistCode> entities = new ArrayList<>(dataList.size());
+				Map<String, String> box = new HashMap<String, String>();
+				List<ExcelValidDto> checkResult = convertToChbEntity(dataList, entities, box, orgCode);
+				if (checkResult.isEmpty()) {
+				    entities.forEach(item -> {
+				        ChbPrdresistCode record = new ChbPrdresistCode();
+				        BeanUtil.copyPropertiesIgnoreNull(record, item);
+				        // 机构代码
+				        record.setOrgCode(orgCode);
+				        // 部门代码
+				        record.setDeptCode(deptCode);
+				        record.setCreateDept(null);
+				        record.setFlag("2");
+
+				        // 产品要素维护管理中产品代码不存在 存在则更新数据
+				        record.setReg_code(record.getRegCode());
+
+				        ChbPrdresistCode dto = chbPrdresistCodeMapper.selectByPrimaryKey(record);
+				        if (dto != null) {
+				            chbPrdresistCodeMapper.updateByPrimaryKeySelective(record);
+				        } else {
+				            // 不存在插入新数据
+				            chbPrdresistCodeMapper.insertSelective(record);
+				        }
+				    });
+				}
+				return checkResult; 
+			}
+		}
+		return null;
+	}
+
+	private List<ExcelValidDto> convertToChbEntity(List<List<String>> dataList, List<ChbPrdresistCode> entities,
+			Map<String, String> box, String orgCode) {
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		for (int i = 0; i < dataList.size(); i++) {
+			List<String> list = dataList.get(i);
+			if (null == list || list.size() != 9) {
+				checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i),
+						this.getMessage("REPORT_COMMON_FILE_E_0001", "文件内容")));
+				continue;
+			}
+			ChbPrdresistCode entity = new ChbPrdresistCode();
+			// 验证消息
+			List<String> message = new ArrayList<>();
+			// 系统中所有产品代码对应产品登记编码信息
+			Map<String, String> prodIdToRegCodeMap = proRegistCodeManage001Mapper.selectProdInfo().stream()
+					.collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REGCODE")));
+
+			String prodName = list.get(1);
+			String regCode = list.get(2);
+			String identification = list.get(3);
+			String prodId = list.get(4);
+			if (!StringUtil.isNotEmpty(prodId)) {
+				prodId = identification;
+			}
+			entity.setProdid(prodId);
+			Map<String, Object> map = new HashMap<>();
+			map.put("prodid", entity.getProdid());
+			map.put("orgCode", orgCode);
+
+			// 产品名称
+			String error1 = checkCode2(prodName, "产品名称", 200, false);
+			if (StringUtil.isNotEmpty(error1)) {
+				message.add(error1);
+			} else {
+				entity.setProdname(prodName);
+			}
+			// 重复的产品登记编码
+			String error2 = checkCode(regCode, "产品登记编码", 200, true);
+			if (StringUtil.isNotEmpty(error2)) {
+				message.add(error2);
+			} else if (CommonUtil.getStringLen(regCode) != 14 && CommonUtil.getStringLen(regCode) != 15) {
+				message.add(this.getMessage("REPORT_COMMON_FILE_E_0026", "产品登记编码", "14", "15"));
+			} else if (!Pattern.compile("^[0-9a-zA-Z]{6}[0-9]{2}[ABC]?[0-9]{6}$").matcher(regCode).matches()) {
+				message.add(this.getMessage("REPORT_COMMON_E_0067", "产品登记编码"));
+			} else {
+				entity.setRegCode(regCode);
+				if (prodIdToRegCodeMap.values().contains(regCode)) {
+					if (!StringUtil.equals(this.getMapKeyByValue(prodIdToRegCodeMap, regCode), prodId)) {
+						message.add("不同的产品代码不能对应同一产品登记编码");
+					}
+				} else if (box.values().contains(regCode)) {
+					if (!StringUtil.equals(this.getMapKeyByValue(box, regCode), prodId)) {
+						message.add("不同的产品代码不能对应同一产品登记编码");
+					}
+				}
+				box.put(entity.getProdid(), regCode);
+			}
+
+			List<ProRegistCodeManage001Dto> list1 = proRegistCodeManage001Mapper.queryProdid(prodId);
+			if (list1.size() != 0 && StringUtil.isEmpty(regCode)) {
+				message.add("系统中存在对应数据，更新数据请输入产品登记编码！");
+			}
+			if (CollectionUtils.isNotEmpty(message)) {
+				checkResult.add(new ExcelValidDto(entity.getProdid(), String.valueOf(i + 1),
+						StringUtil.joinString(message, GlobalConstant.COMMA)));
+			} else {
+				entities.add(entity);
+			}
+		}
+		return checkResult;
+	}
 }
