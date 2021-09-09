@@ -152,7 +152,6 @@ public class AssetCategories002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) AssetCategories002Dto dto, BindingResult result) {
-
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }

@@ -24,6 +24,10 @@
         <result column="LOW_PRICE_ADJ" property="lowPriceAdj" jdbcType="DECIMAL" />
         <result column="CLOSE_PRICE_ADJ" property="closePriceAdj" jdbcType="DECIMAL" />
         <result column="FACTOR_ADJ" property="factorAdj" jdbcType="DECIMAL" />
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        <result column="PE" property="pe" jdbcType="DECIMAL" />
+        <result column="PB" property="pb" jdbcType="DECIMAL" />
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
         <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -53,8 +57,13 @@
         HIGH_PRICE_ADJ 		HIGH_PRICE_ADJ, 
         LOW_PRICE_ADJ 		LOW_PRICE_ADJ, 
         CLOSE_PRICE_ADJ 	CLOSE_PRICE_ADJ, 
-        FACTOR_ADJ 			FACTOR_ADJ, 
-        TRADE_STATUS 		TRADE_STATUS, 
+        FACTOR_ADJ 			FACTOR_ADJ,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        PE 			        PE,
+        PB 			        PB,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
+        <!-- 查询全部状态 -->
+        TRADE_STATUS 		TRADE_STATUS,
         INPUT_TYPE 			INPUT_TYPE, 
         CREATE_USER 		CREATE_USER, 
         CREATE_DEPT 		CREATE_DEPT, 
@@ -104,7 +113,11 @@
         a.HIGH_PRICE_ADJ 		HIGH_PRICE_ADJ, 
         a.LOW_PRICE_ADJ 		LOW_PRICE_ADJ, 
         a.CLOSE_PRICE_ADJ 		CLOSE_PRICE_ADJ, 
-        a.FACTOR_ADJ 			FACTOR_ADJ, 
+        a.FACTOR_ADJ 			FACTOR_ADJ,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        a.PE 			        PE,
+        a.PB 			        PB,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
         a.TRADE_STATUS 			TRADE_STATUS, 
         a.INPUT_TYPE 			INPUT_TYPE, 
         a.CREATE_USER 			CREATE_USER, 
@@ -112,7 +125,9 @@
         a.CREATE_TIME 			CREATE_TIME, 
         a.UPDATE_USER 			UPDATE_USER, 
         a.UPDATE_TIME 			UPDATE_TIME,
-        b.finprod_abbr 			finprodAbbr
+        <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit start-->
+        b.FINPROD_ABBR			FINPROD_ABBR
+        <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit end-->
         from mst_share_price a 
         left join fin_product b on a.shares_id=b.finprod_market_id
         <where> 

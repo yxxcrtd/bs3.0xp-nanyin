@@ -2,22 +2,25 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='LLZDBJYJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LLZDBJYJJ','利率债单笔交易净价','N','','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('LLZDBJYJJ','利率债单笔交易净价','N','','system','',sysdate,'system',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='LLZDBJYJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('LLZDBJYJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
-V_CONTENT_01_02_03 CLOB := 'SELECT 0 RVALUE,FINPROD_ID RKEY FROM FIN_PRODUCT_TYPE  WHERE BRANCH=0 AND TYPE_8=''F01'' AND  (TYPE_6 IN (''B12'', ''B01'', ''B02'', ''B03'') OR (TYPE_4 = ''B05'' AND TYPE_5= ''01''))';
+V_CONTENT_01_02_03 CLOB := 'SELECT 0 RVALUE,t2.FINPROD_ID RKEY FROM FIN_PRODUCT_TYPE 
+ LEFT JOIN FIN_PRODUCT t2 ON FIN_PRODUCT_TYPE.FINPROD_ID = t2.FINPROD_ID
+ WHERE BRANCH=0 AND TYPE_8=''F01'' AND  (TYPE_6 IN (''B12'', ''B01'', ''B02'', ''B03'') OR (TYPE_4 = ''B05'' AND TYPE_5= ''01''))
+   AND t2.VDATE <= date''${valDate}'' AND t2.MDATE >= date''${valDate}''';
 
 ----事后(日间)
 V_CONTENT_04 CLOB := 'SELECT DISTINCT n.UNIT_CPRICE as RVALUE ,n.FINPROD_ID RKEY
