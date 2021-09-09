@@ -224,4 +224,90 @@
 		row_id &lt;= #{end}
 		AND row_id &gt; #{start}
 	</select>
+
+	<select id="getBusiConfirmDateEx" parameterType="map" resultType="map">
+		SELECT
+		MIN(HOLD_DATE) MINDATE,
+		MAX(HOLD_DATE) MAXDATE
+		from CHB_INVESTHOLD_INFO_SUB ciis
+		left join CHB_SUBMIT_STATUS status
+		on ciis.sumit_seq = status.seqno
+		<where>
+			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+				to_char(ciis.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &gt;= #{submitDeadLineStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+				and to_char(ciis.CHB_SUBMIT_DEADLINE,'yyyy-MM-dd') &lt;= #{submitDeadLineEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="sendStatusList != null and sendStatusList.size()>0">
+				<foreach collection="sendStatusList" item="item" open="and ciis.SEND_STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="statusList != null and statusList.size()>0">
+				<foreach collection="statusList" item="item" open="and ciis.STATUS in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="updateTimeStart != null and updateTimeStart != ''">
+				and to_char(ciis.UPDATE_TIME,'yyyy-MM-dd') &gt;= #{updateTimeStart,jdbcType=VARCHAR}
+			</if>
+			<if test="updateTimeEnd != null and updateTimeEnd != ''">
+				and to_char(ciis.UPDATE_TIME,'yyyy-MM-dd') &lt;= #{updateTimeEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateStart != null and submitDateStart != ''">
+				and to_char(ciis.SUBMIT_TIME,'yyyy-MM-dd') &gt;= #{submitDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				and to_char(ciis.SUBMIT_TIME,'yyyy-MM-dd') &lt;= #{submitDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+				<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+					#{submitFeedbackStatus,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="registBankCode!= null and registBankCode != ''">
+				and ciis.REGIST_BANK_CODE like concat(concat('%',#{registBankCode,jdbcType=VARCHAR}),'%')
+			</if>
+			<!-- <if test="prdRegistCode != null  and prdRegistCode != ''">
+				and ciis.PRD_REGIST_CODE like concat(concat('%',#{prdRegistCode,jdbcType=VARCHAR}),'%')
+			</if> -->
+			<if test="prdRegistCodeList != null and prdRegistCodeList.size()>0">
+				<foreach collection="prdRegistCodeList" item="item" open="and ciis.PRD_REGIST_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="indentifyMark != null  and indentifyMark != ''">
+				and ciis.INDENTIFY_MARK like concat(concat('%',#{indentifyMark,jdbcType=VARCHAR}),'%')
+			</if>
+			<if test="holdDateStart != null and holdDateStart != ''">
+				and to_char(ciis.HOLD_DATE,'yyyy-MM-dd') &gt;= #{holdDateStart,jdbcType=VARCHAR}
+			</if>
+			<if test="holdDateEnd != null and holdDateEnd != ''">
+				and to_char(ciis.HOLD_DATE,'yyyy-MM-dd') &lt;= #{holdDateEnd,jdbcType=VARCHAR}
+			</if>
+			<if test="orgCodeList != null and orgCodeList.size()>0">
+				<foreach collection="orgCodeList" item="item" open="and ciis.ORG_CODE in(" separator="," close=")">
+					#{item,jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="investList!=null and investList.size()>0">
+				<foreach collection="investList" item="investDto" open=" (" close=")" separator=") or (">
+					ciis.PRD_REGIST_CODE = #{investDto.prdRegistCode,jdbcType=VARCHAR}
+					and ciis.REGIST_BANK_CODE = #{investDto.registBankCode,jdbcType=VARCHAR}
+					and ciis.INDENTIFY_MARK = #{investDto.indentifyMark,jdbcType=VARCHAR}
+					and ciis.CCY = #{investDto.ccy,jdbcType=VARCHAR}
+					and to_char(ciis.HOLD_DATE,'yyyy-MM-dd') = to_char(#{investDto.holdDate,jdbcType=DATE},'yyyy-MM-dd')
+					<choose>
+						<when test="checkFlag!=null and checkFlag!=''">
+							and ciis.SEND_STATUS in('02','03')
+						</when>
+						<otherwise>
+							and ciis.SEND_STATUS = #{investDto.sendStatus,jdbcType=VARCHAR}
+						</otherwise>
+					</choose>
+				</foreach>
+			</if>
+		</where>
+	</select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.joyintech.tams.batch.report.investorsholdinfoexport.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,4 +34,11 @@ public interface InvestorsHoldInfoExportMapper {
      * @since 1.0
      */
     List<InvestorsHoldInfoRegist001Dto> selectAllDataByPage(Map<String,Object> map);
+
+    /**
+     * 获取导出数据的最小日期和最大日期
+     * @param map
+     * @return
+     */
+    Map<String, Date> getBusiConfirmDateEx(Map<String,Object> map);
 }

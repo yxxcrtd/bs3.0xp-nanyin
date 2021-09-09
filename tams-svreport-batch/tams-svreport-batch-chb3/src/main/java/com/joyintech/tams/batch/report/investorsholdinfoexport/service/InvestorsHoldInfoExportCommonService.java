@@ -26,6 +26,7 @@ import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.In
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.service.InvestorsHoldInfoRegist001Service;
 import com.joyintech.tams.report.system.subinfobatchlog.dao.ChbSubinfoAutoBatchLogMapper;
 import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog;
+import org.apache.commons.collections.MapUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -171,6 +172,21 @@ public class InvestorsHoldInfoExportCommonService extends CommonExportService<In
             batchLog.setDealStatus(DictCodeListExt3.报送处理状态_警告.getValue());
             batchLog.setDealMessage("总记录数不符合或者其他异常,请联系管理员!");
         }
+        // add 投资者持有登记取导出文件中各条数据的最早持有日期和最晚持有日期作为业务确认日期 by caozhenming 20210907 start
+        // 获取该批次持有时间最大值和最小值
+        String nowDate = DateUtil.format(new Date());
+        String busiConfirmDate = nowDate + "-" + nowDate; // 默认当前日期
+        Map<String,Date> dateMap = investorsHoldInfoExportMapper.getBusiConfirmDateEx(param);
+        if (MapUtils.isNotEmpty(dateMap)){
+            // 最小日期
+            String minDate = DateUtil.format(dateMap.get("MINDATE"),"yyyy-MM-dd");
+            // 最大日期
+            String maxDate = DateUtil.format(dateMap.get("MAXDATE"),"yyyy-MM-dd");
+
+            busiConfirmDate = minDate + "-" + maxDate;
+        }
+        batchLog.setBusiConfirmDate(busiConfirmDate);
+        // add 投资者持有登记取导出文件中各条数据的最早持有日期和最晚持有日期作为业务确认日期 by caozhenming 20210907 end
         chbSubinfoAutoBatchLogMapper.updateByPrimaryKeySelective(batchLog);
 
         return "success";
