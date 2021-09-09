@@ -33,8 +33,8 @@
         <module>../../tams-svreport-common</module>
         <module>../../tams-valuation-common</module>
         <module>../../tams-common-basicdata</module>
-        <module>../../tams-valuation-batch-valmodel</module>
-        <module>../../tams-valuation-batch-lossmodel</module>
+<!--        <module>../../tams-valuation-batch-valmodel</module>-->
+<!--        <module>../../tams-valuation-batch-lossmodel</module>-->
 		<!-- 后台服务 -->
         <module>../../microservice/service-chb</module>
 		<module>../../microservice/service-chb3</module>
