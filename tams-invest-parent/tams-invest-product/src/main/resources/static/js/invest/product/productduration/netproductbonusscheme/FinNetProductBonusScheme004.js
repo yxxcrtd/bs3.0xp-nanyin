@@ -141,10 +141,15 @@
                 $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
             }
         }else {
-            $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
-            $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
-            $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
-            $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+             if($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != '' && $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''){
+                $('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+             }
+             if($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != '' && $('#netvalue').val() != '' && $('#netvalue').val() != ''){
+                $('#netvalue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
+                $('#netvalue').val(parseFloat($('#netvalue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
+             }
+
         }
 
         bonuScalcFlagChange(true);

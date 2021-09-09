@@ -89,7 +89,7 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
         model.addAttribute("R7", BussinessDictCodeList.提醒类型_大分类_变更提醒.getValue());
         model.addAttribute("R9", BussinessDictCodeList.提醒类型_大分类_公共数据变更.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 start
-        model.addAttribute("R10", BussinessDictCodeList.提醒类型_大分类_分销缴款提醒.getValue());
+        model.addAttribute("R11", BussinessDictCodeList.提醒类型_大分类_分销缴款提醒.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 end
         //小分类
         model.addAttribute("R6S1", BussinessDictCodeList.提醒类型_小分类_净值披露提醒.getValue());
@@ -137,12 +137,12 @@ public class PaActiveRemind001Controller extends BaseController implements Activ
 
         model.addAttribute("R9S1", BussinessDictCodeList.提醒类型_小分类_数据修改.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 start
-        model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
+        model.addAttribute("R11S1", BussinessDictCodeList.提醒类型_小分类_分销缴款提醒.getValue());
         //add by chenjiaxing 分销缴款提醒 20210727 end
 
-        model.addAttribute("R11", BussinessDictCodeList.提醒类型_大分类_债券上市流通.getValue());
-        model.addAttribute("R11S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
-        model.addAttribute("R11S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
+        model.addAttribute("R10", BussinessDictCodeList.提醒类型_大分类_债券上市流通.getValue());
+        model.addAttribute("R10S1", BussinessDictCodeList.提醒类型_小分类_债券上市流通操作.getValue());
+        model.addAttribute("R10S2", BussinessDictCodeList.提醒类型_小分类_资产要素登记修改.getValue());
 
         if (MultilevelDataAuthorityUtil.isEnabled()) {
             User user = SecurityUtil.getLoginUser();
