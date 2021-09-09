@@ -111,7 +111,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     msg = "【资产减值阶段判断批处理】：无当前时点的评级";
                     impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                         finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
-                } else if (StringUtil.isNotEmpty(resultProcess.getResultCurrent()) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
+                } else if (StringUtil.isNotEmpty(resultProcess.getResultCurrent()) && getPoorRating(itemValue, resultProcess.getResultCurrent()) <= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
                     rstDto.setModEclResultProcess(resultProcess);
@@ -215,11 +215,11 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                         }
                     }
                 }
-
+                // 利息逾期天数
+                resultProcess.setIntOverdueDay(intOverdueDay);
                 if (intOverdueDay.compareTo(BigDecimal.valueOf(Long.valueOf(itemValue))) >= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
-                    resultProcess.setIntOverdueDay(intOverdueDay);
                     rstDto.setModEclResultProcess(resultProcess);
                     return rstDto;
                 }
@@ -273,7 +273,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 msg = "【资产减值阶段判断批处理】：未配置二阶段评级标准";
                 impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                     finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
-            } else if (StringUtil.isNotEmpty(itemValue) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
+            } else if (StringUtil.isNotEmpty(itemValue) && getPoorRating(itemValue, resultProcess.getResultCurrent()) <= 0) {
                 finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                 resultProcess.setFinStage(finStage);
                 rstDto.setModEclResultProcess(resultProcess);
@@ -285,11 +285,6 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                 finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
             return null;
-        }
-
-        // 6.2 债项类资产阶段判断，债项评级在“C”以上（不含），主体评级在“C” 级以下（含）的债券
-        if(DictCodeListExt1.证券品种_债券.getValue().equals(resultProcess.getModelAssetType())){
-
         }
 
         //第7步骤：key：二阶段_绝对_本金逾期超过天数（含）P2_01_01
@@ -395,7 +390,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
     }
 
     /**
-     * 评级差(返回值 > 0 则，r1评级高；=0则评级相同，<0，则r2评级高)
+     * 评级差(返回值 > 0 则，r2评级高；=0则评级相同，<0，则r1评级高)
      * @param r1
      * @param r2
      * @return
