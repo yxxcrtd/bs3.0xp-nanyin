@@ -163,6 +163,11 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     private  String periodType;
 
+    /**
+     *  资产类型
+     */
+    private String assetType;
+
 
     public String getTermDescribe() {
         return termDescribe;
@@ -516,4 +521,19 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
         this.insitituteCode = insitituteCode;
     }
 
+    /**
+     * @return assetType
+     */
+    public String getAssetType() {
+        return assetType;
+    }
+
+    /**
+     * 设置 assetType
+     *
+     * @param assetType assetType
+     */
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
 }
