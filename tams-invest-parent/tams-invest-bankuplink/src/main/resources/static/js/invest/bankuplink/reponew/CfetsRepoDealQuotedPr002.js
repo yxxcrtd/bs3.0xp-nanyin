@@ -768,6 +768,11 @@
     	        $('#CfetsRepoDealQuotedPrice002_repoInfo_'+ps).toggle(true);
     	    }
             setBussRepoSecInput();
+            if(ps == '03'){
+                $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
+            }else if(ps == '04'){
+                $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
+            }
     	});
         /**
          * 保存按钮按下处理
