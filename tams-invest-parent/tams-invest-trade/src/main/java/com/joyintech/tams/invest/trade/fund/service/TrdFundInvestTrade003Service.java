@@ -5,34 +5,19 @@
 
 package com.joyintech.tams.invest.trade.fund.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.workflow.engine.WorkflowContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.redis.lock.Locker;
 import com.joyintech.system.base.dao.SysUploadFileInfoMapper;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -40,28 +25,39 @@ import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.settle.dto.BussSettleOrderParameterDto;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.BaseTradeProductDealDto;
 import com.joyintech.tams.invest.common.dto.StlPayOrdersDto;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplProdAssetAmount;
+import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetAmountService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeConfirmDto;
-import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.fund.dto.WorkFlowDto;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -121,6 +117,12 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
      */
     @Autowired
     private DateCalService dateCalService;
+    
+    @Autowired
+    private ProdAssetAmountService prodAssetAmountService;
+
+    @Autowired
+    protected ProdAssetAmountService prodAssetAmtSrc;
 
     /**
      * 查询待结转份额
@@ -322,6 +324,13 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
                     }
                 }
             }
+        }
+        //申购确认  更新redis资产实时规模信息  num
+        //申购份额1000   申购确认时份额是800  redis中num更新掉  否则影响占比的相关指标
+        if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+            try{
+                refreshRedisNum(entity.getPortfolioId(),entity.getFinprodId(),ArithmeticUtil.subtract(entity.getShareAmt(),entity.getShareAmtSg()));
+            }catch (Exception e){}
         }
         // 调接口 by 赵东东 20191206 start
         try {
@@ -1091,5 +1100,41 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
         }
         return simpleRestTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME + "/TrdFundInvestTrade/selectTrdTransfenpeiList",
                 pageParam,BussTrdTransfenpeiDto.class);
+    }
+
+    /**
+     *申购确认  更新redis资产实时规模信息  num
+     * @param portfolioId
+     * @param finprodId
+     * @param balance  差额
+     */
+    private void refreshRedisNum(String portfolioId,String finprodId,BigDecimal balance) throws Exception {
+        while (true) {
+            // 如果能获取锁则执行处理，否则阻塞
+            if (Locker.lock()) {
+                try {
+                    ImplProdAssetAmount info = (ImplProdAssetAmount)prodAssetAmountService.getProdAssetAmount(portfolioId, finprodId);
+                    if(null!=info){
+                        info.setNum(ArithmeticUtil.doAdd(info.getNum(),balance));
+                        prodAssetAmtSrc.saveToRedis(info);
+                    }
+                }
+                catch (Exception e) {
+                    throw new Exception("申购确认更新redis资产实时规模信息异常:"+e.getMessage());
+                }
+                finally {
+                    // 释放锁
+                    Locker.unLock();
+                }
+                break;
+            }
+            try {
+                Thread.sleep(5);
+            }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new Exception("申购确认更新redis资产实时规模信息异常:"+e.getMessage());
+            }
+        }
     }
 }

@@ -518,6 +518,16 @@ public class TrdFundInvestTrade002Controller extends BaseController {
 //                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_基金.getValue(),
 //                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
             String ps = dto.getPs();
+            //add by zznn 20210909 start
+            //申购实占  处理下份额   相关指比按占比计算  redis资产实时规模信息amount和num 均置为交易金额 有问题
+            if(StringUtil.equals(ps,DictCodeList.交易方向_申购.getValue())){
+                if(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue())){
+                    dto.setShareAmt(ArithmeticUtil.multiply(dto.getTradeAmt(), new BigDecimal(100)));
+                }else{
+                    dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), new BigDecimal(100),2));
+                }
+            }
+            //add by zznn 20210909 end
             String infCode = BussinessDictCodeListRds.接口系统ID_实占接口.getValue();
             if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请) || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
                 infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();

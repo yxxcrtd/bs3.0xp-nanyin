@@ -1595,7 +1595,7 @@ var TrdCommandReceive001 = function () {
                         pagePath = "invest/trade/conbond/TrdConBond002/init";
                     }
                     else if (finprodType2 == PINAN_ASSET_TYPE_F01&&tableData.length ==1&& tableData[0].ps==PS_T49) {//债转股
-                        label = 'TrdBondToStock001';
+                        label = 'TrdBondToStock002';
                         pagePath = "invest/trade/bondtostock/TrdBondToStock002/init";
                     }
                     else if (finprodType2 == PINAN_ASSET_TYPE_F01&&tableData.length ==1) {//债券
