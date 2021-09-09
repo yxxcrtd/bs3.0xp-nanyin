@@ -9,6 +9,7 @@ $(function () {
                 $("#grade_org_id").show();
             }else{
                 $("#grade_org_id").hide();
+                $("#gradeOrgId").val("");
             }
         };
 
@@ -47,6 +48,7 @@ $(function () {
             $("#grade_org_id").show();
         }else{
             $("#grade_org_id").hide();
+            $("#gradeOrgId").val("");
         }
 
     };
