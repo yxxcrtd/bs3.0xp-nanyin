@@ -2787,8 +2787,8 @@ select #{R7S1} as remType,
 	</select>
 
 	<!--分销缴款提醒 add by chenjiaxing 20210728 start-->
-	<select id="searchCountR10S1" resultType="java.util.HashMap" >
-		select count(*) R10S1
+	<select id="searchCountR11S1" resultType="java.util.HashMap" >
+		select count(*) R11S1
 		from(select distinct a.assetCode assetCode,
              a.assetName assetName,
              a.remType remType,
@@ -2805,7 +2805,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
                                fp.finprod_name                                           assetName, /*资产名称*/
-                               'R10S1'                                                   remType,
+                               'R11S1'                                                   remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
                                bo.PAY_DATE                                               mdate, /*缴款日*/
                                REMINDER_SET.DAYS                                         days,
@@ -2836,7 +2836,7 @@ select #{R7S1} as remType,
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S1'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -2848,7 +2848,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
                                fp.finprod_name                               assetName, /*资产名称*/
-                               'R10S1'                                       remType,
+                               'R11S1'                                       remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
                                bo.PAY_DATE                                   mdate, /*缴款日*/
                                REMINDER_SET.DAYS                             days,
@@ -2877,7 +2877,7 @@ select #{R7S1} as remType,
                                  left join BID_ORDER bo on bo.bid_id = bobp.bid_id
                                  LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S1'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -2889,7 +2889,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
                                fp.finprod_name                               assetName, /*资产名称*/
-                               'R10S1'                                       remType,
+                               'R11S1'                                       remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
                                bo.PAY_DATE                                   mdate, /*缴款日*/
                                REMINDER_SET.DAYS                             days,
@@ -2920,7 +2920,7 @@ select #{R7S1} as remType,
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S1'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -2932,7 +2932,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
                                fp.finprod_name                                           assetName, /*资产名称*/
-                               'R10S1'                                                   remType,
+                               'R11S1'                                                   remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
                                bo.PAY_DATE                                               mdate, /*缴款日*/
                                REMINDER_SET.DAYS                                         days,
@@ -2961,7 +2961,7 @@ select #{R7S1} as remType,
                                  left join BID_ORDER bo on bo.bid_id = bobp.bid_id
                                  LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S1'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S1'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -2977,7 +2977,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
                                fp.finprod_name                                           assetName, /*资产名称*/
-                               'R10S1'                                                   remType,
+                               'R11S1'                                                   remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
                                bo.PAY_DATE                                               mdate, /*缴款日*/
                                REMINDER_SET.DAYS                                         days,
@@ -3008,7 +3008,7 @@ select #{R7S1} as remType,
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S2'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -3020,7 +3020,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
                                fp.finprod_name                               assetName, /*资产名称*/
-                               'R10S1'                                       remType,
+                               'R11S1'                                       remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
                                bo.PAY_DATE                                   mdate, /*缴款日*/
                                REMINDER_SET.DAYS                             days,
@@ -3049,7 +3049,7 @@ select #{R7S1} as remType,
                                  left join BID_ORDER bo on bo.bid_id = bobp.bid_id
                                  LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S2'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -3061,7 +3061,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                             entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                          assetCode, /*资产代码*/
                                fp.finprod_name                               assetName, /*资产名称*/
-                               'R10S1'                                       remType,
+                               'R11S1'                                       remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款' reminder,
                                bo.PAY_DATE                                   mdate, /*缴款日*/
                                REMINDER_SET.DAYS                             days,
@@ -3092,7 +3092,7 @@ select #{R7S1} as remType,
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
                                  LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S2'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -3104,7 +3104,7 @@ select #{R7S1} as remType,
                                ee.ENTRUST_STATUS                                         entrustStatus, /*委托状态*/
                                fp.FINPROD_MARKET_ID                                      assetCode, /*资产代码*/
                                fp.finprod_name                                           assetName, /*资产名称*/
-                               'R10S1'                                                   remType,
+                               'R11S1'                                                   remType,
                                to_char(bo.PAY_DATE, 'yyyy-MM-dd') || '_分销缴款'             reminder,
                                bo.PAY_DATE                                               mdate, /*缴款日*/
                                REMINDER_SET.DAYS                                         days,
@@ -3133,7 +3133,7 @@ select #{R7S1} as remType,
                                  left join BID_ORDER bo on bo.bid_id = bobp.bid_id
                                  LEFT JOIN ETR_ENTRUST_BID_PRICE ebp
                                            on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
-                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R10S2'
+                                 LEFT JOIN SYS_ACTIVEREMINDER_SET REMINDER_SET ON REMINDER_SET.REM_TYPE = 'R11S2'
                         where 1 = 1
                           and bobp.is_win = 'Y'
                           and bo.is_win = bobp.is_win
@@ -3150,7 +3150,7 @@ select #{R7S1} as remType,
 		AND NOT EXISTS(
 		SELECT 1
 		FROM SYS_ACTIVEREMINDER_INFO
-		WHERE SYS_ACTIVEREMINDER_INFO.REM_TYPE = 'R10S1'
+		WHERE SYS_ACTIVEREMINDER_INFO.REM_TYPE = 'R11S1'
 		AND SYS_ACTIVEREMINDER_INFO.EFFFLAG = #{noFlag}
 		AND SYS_ACTIVEREMINDER_INFO.FINPROD_ID = a.assetCode
 		AND SYS_ACTIVEREMINDER_INFO.MDATE = a.mdate
@@ -3580,15 +3580,15 @@ select #{R7S1} as remType,
 		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR9S1_data"/>
 		)
 	</select>
-	<select id="searchCountR11S1" resultType="java.util.HashMap">
-		select count(1) R11S1 from (
-		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR11S1_data"/>
+	<select id="searchCountR10S1" resultType="java.util.HashMap">
+		select count(1) R10S1 from (
+		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR10S1_data"/>
 		)
 	</select>
 
-	<select id="searchCountR11S2" resultType="java.util.HashMap">
-		select count(1) R11S2 from (
-		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR11S2_data"/>
+	<select id="searchCountR10S2" resultType="java.util.HashMap">
+		select count(1) R10S2 from (
+		<include refid="com.joyintech.tams.invest.remind.dao.PaActiveRemind002Mapper.selramindR10S2_data"/>
 		)
 	</select>
 </mapper>

@@ -759,13 +759,35 @@
             </li>
 
             <li>
-                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R10}">分销缴款提醒</h3>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R10}">债券上市流通</h3>
+                <div class="layui-row layui-col-space20">
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R10S1}">债券上市流通操作</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R10S1" data-th-one="${R10}" data-th-two="${R10S1}" data-th-text="${result?.R10S1}">10000</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md4">
+                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
+                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R10S2}">资产要素登记修改</h3>
+                            <div class="bond-des">
+                                <a href="javascript:;" class="link-num click" id="R10S2" data-th-one="${R10}" data-th-two="${R10S2}" data-th-text="${result?.R10S2}">10000</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li>
+                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R11}">分销缴款提醒</h3>
                 <div class="layui-row layui-col-space20">
                     <div class="layui-col-md4">
                         <div class="remind-risk-wrap">
                             <div class="remind-risk-left">
-                                <a href="javascript:;" class="link-num click" id="R10S1" data-th-one="${R10}" data-th-two="${R10S1}" data-th-text="${result?.R10S1}" ></a>
-                                <div class="risk-left-des" data-th-text="#{PaActiveRemind001.R10S1}">分销缴款提醒</div>
+                                <a href="javascript:;" class="link-num click" id="R11S1" data-th-one="${R11}" data-th-two="${R11S1}" data-th-text="${result?.R11S1}" ></a>
+                                <div class="risk-left-des" data-th-text="#{PaActiveRemind001.R11S1}">分销缴款提醒</div>
                             </div>
                             <div class="remind-risk-right risk-right-icon">
                                 <i class="iconfont icon-warning_fill"></i>
@@ -775,27 +797,6 @@
                 </div>
             </li>
 
-            <li>
-                <h3 class="remind-title" data-th-text="#{PaActiveRemind001.R11}">债券上市流通</h3>
-                <div class="layui-row layui-col-space20">
-                    <div class="layui-col-md4">
-                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
-                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R11S1}">债券上市流通操作</h3>
-                            <div class="bond-des">
-                                <a href="javascript:;" class="link-num click" id="R11S1" data-th-one="${R11}" data-th-two="${R11S1}" data-th-text="${result?.R11S1}">10000</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-md4">
-                        <div class="remind-risk-wrap cover-wrap" style="background-position: bottom center;">
-                            <h3 class="bond-title" data-th-text="#{PaActiveRemind001.R11S2}">资产要素登记修改</h3>
-                            <div class="bond-des">
-                                <a href="javascript:;" class="link-num click" id="R11S2" data-th-one="${R11}" data-th-two="${R11S2}" data-th-text="${result?.R11S2}">10000</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
 
         </ul>
     </div>

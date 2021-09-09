@@ -49,7 +49,7 @@ $(function() {
                     + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
                     + "&orgId=" + orgId + "&orgName=" + orgName + "&dDate=" + ddate;
 
-            }else if (remType == 'R10S1') {
+            }else if (remType == 'R11S1') {
                 urlPara = "?finprodId=" + id + "&feeId=" + feeId + "&remType=" + remType + "&days=" + days
                     + "&quaryDate=" + $('#quaryDate').val() + "&pageModel=" + PAGE_MODEL_NEW + "&mdate=" + mdate
                     + "&orgId=" + orgId + "&orgName=" + orgName + "&dDate=" + ddate;
@@ -71,7 +71,7 @@ $(function() {
             }
             //add by chenjiaxing 20210727 固定值参数更新提醒 end
             //add by chenjiaxing 20210728 债券分销缴款提醒 start
-            if(remType == 'R10S1'){
+            if(remType == 'R11S1'){
                 urls = url+urlPara;
             }
             //add by chenjiaxing 20210728 债券分销缴款提醒 end
@@ -812,7 +812,7 @@ $(function() {
             dealRemind(row.url, row.lable, row.assetName, row.remType, row.days, row.feeId, row.menuId, tableR2,row.odateStr);
         }else if(row.remType=='R3S5'){
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName,row.dDateStr);
-        }else if(row.remType=='R10S1'){
+        }else if(row.remType=='R11S1'){
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName,row.dDateStr);
         }else{
             dealRemind(row.url, row.lable, row.assetCode, row.remType, row.days, row.feeId, row.menuId, tableR2,row.mdateStr,row.orgId,row.orgName);
