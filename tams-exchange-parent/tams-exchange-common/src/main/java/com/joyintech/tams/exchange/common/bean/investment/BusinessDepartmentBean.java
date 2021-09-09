@@ -195,6 +195,7 @@ public class BusinessDepartmentBean implements Serializable {
             serverExtendInfo.setUfxTradeClientName(objectFromJson.getUfxTradeClientName());
             serverExtendInfo.setTradeTopicName(objectFromJson.getTradeTopicName());
             serverExtendInfo.setEntrustTopicName(objectFromJson.getEntrustTopicName());
+            serverExtendInfo.setIncomeTradeTopic(objectFromJson.getIncomeTradeTopic());
             return serverExtendInfo;
         } catch (Exception e) {
             logger.warn("createServerExtendInfo fail {}", e);

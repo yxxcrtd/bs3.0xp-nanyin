@@ -1,0 +1,1 @@
+delete from  sys_page_dictlist t where page_id = 'CashFlowDiscount002' and dict_id='CURVE_TYPE';

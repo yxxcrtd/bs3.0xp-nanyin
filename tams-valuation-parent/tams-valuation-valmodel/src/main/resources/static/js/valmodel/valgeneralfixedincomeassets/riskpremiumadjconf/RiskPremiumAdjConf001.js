@@ -34,7 +34,7 @@ $(function () {
             {field:'gradeResultFmt', sortField: "gradeResult",width:150, title: '评级'},
             {field:'gradeResult',  width:200, title: '评级', visible:false},
             /** modify by yanya on 20210823 调整基准日为定价日并增加曲线名称、曲线日期 start**/
-            {field:'basedateFmt', sortField: "basedate",width:150, title: '定假日'},
+            {field:'basedateFmt', sortField: "basedate",width:150, title: '定价日'},
             {field:'basedate',width:120, title: '定价日', visible:false},
             {field:'curveName', sortField: "curveName",width:180, title: '曲线名称'},
             {field:'curveCode',width:120, title: 'curveCode', visible:false},

@@ -565,6 +565,10 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         bondQuoteInfoDto.setPortfolioId(bondQuoteExtDto.getPortfolioId());
         //是否多组合
         bondQuoteInfoDto.setIsDzh(bondQuoteExtDto.getIsDzh());
+        //待偿期 评级 备注
+        bondQuoteInfoDto.setPendingPeriod(bondQuoteExtDto.getPendingPeriod());
+        bondQuoteInfoDto.setGrade(bondQuoteExtDto.getGrade());
+        bondQuoteInfoDto.setRemark(bondQuoteExtDto.getRemark());
         return bondQuoteInfoDto;
     }
     

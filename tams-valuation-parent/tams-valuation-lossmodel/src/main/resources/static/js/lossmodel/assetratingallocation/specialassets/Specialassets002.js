@@ -118,7 +118,7 @@
         	var object = $.serializeToObject('#submitForm');
             object.pageModel = pageModel;
             object.workflowId = workflowId;
-            object.finprodName = $("#finprodName").text();
+            object.finprodName = $("#finprodName").val();
             object.finprodId = $("#finprodId").val();
             object.gradeOrgId = $("#gradeOrgId").val();
             object.oType = $("#oType").val();
@@ -134,7 +134,7 @@
         	var object = $.serializeToObject('#submitForm');
             object.pageModel = pageModel;
             object.workflowId = workflowId;
-            object.finprodName = $("#finprodName").text();
+            object.finprodName = $("#finprodName").val();
             object.finprodId = $("#finprodId").val();
             object.gradeOrgId = $("#gradeOrgId").val();
             object.oType = $("#oType").val();
