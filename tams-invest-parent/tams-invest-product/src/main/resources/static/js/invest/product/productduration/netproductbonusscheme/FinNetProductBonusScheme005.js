@@ -12,13 +12,8 @@
 				$('#unitvalueDec').val(str[3]);
 			}
 		}
-		if(pageModel != PAGE_MODEL_REFERENCE){
-			if ($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != ''
-				&& $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''){
-				$('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
-				$('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
-			}
-		}else {
+		if ($('#unitvalueDec').val() != null && $('#unitvalueDec').val() != ''
+			 && $('#tdyUnitValue').val() != '' && $('#tdyUnitValue').val() != ''){
 			$('#tdyUnitValue').attr("data-textrange", parseInt($('#unitvalueDec').val())).trigger('change');
 			$('#tdyUnitValue').val(parseFloat($('#tdyUnitValue').val()).toFixed(parseInt($('#unitvalueDec').val()))).trigger("change");
 		}
