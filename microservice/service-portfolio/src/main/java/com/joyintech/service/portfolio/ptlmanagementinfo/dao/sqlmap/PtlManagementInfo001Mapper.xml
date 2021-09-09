@@ -451,10 +451,10 @@
 		STL_SEC_ACCT_INFO
 		<where>
 			<if test='search != null and search != ""'>
-				SEC_ACCT_ID LIKE CONCAT('%',CONCAT(#{search},'%'))
+				SEC_ACCT_ID LIKE CONCAT('%',CONCAT(#{search},'%')) or SEC_ACCT_NAME LIKE CONCAT('%',CONCAT(#{search},'%'))
 			</if>
 			<if test='initValue != null and initValue != ""'>
-				SEC_ACCT_ID = #{initValue}
+				SEC_ACCT_ID = #{initValue} or SEC_ACCT_NAME = #{initValue}
 			</if>
 		</where>
 	</select>
