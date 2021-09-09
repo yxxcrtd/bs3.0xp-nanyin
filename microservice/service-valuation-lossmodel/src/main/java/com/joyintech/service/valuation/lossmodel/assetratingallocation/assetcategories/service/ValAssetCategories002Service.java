@@ -57,6 +57,10 @@ public class ValAssetCategories002Service extends BaseService<ValAssetCategories
         mapper.updateByPrimaryKey(assetCategories);
     }
 
+    public void updateBySeqNo(ValAssetCategories002Dto dto){
+        mapper.updateBySeqNo(dto);
+    }
+
     public void insert(ValAssetCategories002Dto entity){
         AssetCategories assetCategories = new AssetCategories();
         // 资产类型
