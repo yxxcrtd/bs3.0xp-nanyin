@@ -53,7 +53,7 @@ public class RskSupervisionPortfPoint002Controller {
      */
     @PostMapping("/queryRelatedIndList/{page}/{length}")
     public Page<RskSupervisionIndicator002Dto> queryRelatedIndList(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPoint002Service.queryRelatedIndList(page, length, param);
     }
 
@@ -63,7 +63,7 @@ public class RskSupervisionPortfPoint002Controller {
      * @throws Exception 异常
      */
     @GetMapping("getPortfolioConst")
-    public String getPortfolioConst(String portfolioCode) throws Exception {
+    public String getPortfolioConst(String portfolioCode) {
         return rskSupervisionPortfPoint002Service.getPortfolioConst(portfolioCode);
     }
     
@@ -73,7 +73,7 @@ public class RskSupervisionPortfPoint002Controller {
      * @throws Exception 异常
      */
     @GetMapping("queryPortfIndByPortfId")
-    public RskPortfolioIndicator002Dto queryPortfIndByPortfId(String portfId,String indId) throws Exception {
+    public RskPortfolioIndicator002Dto queryPortfIndByPortfId(String portfId,String indId) {
         return rskSupervisionPortfPoint002Service.queryPortfIndByPortfId(portfId,indId);
     }
     
@@ -85,7 +85,7 @@ public class RskSupervisionPortfPoint002Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody RskPortfolioIndicator002Dto dto) throws Exception {
+    public void insert(@RequestBody RskPortfolioIndicator002Dto dto) {
     	rskSupervisionPortfPoint002Service.insert(dto);
     }
     
@@ -108,7 +108,7 @@ public class RskSupervisionPortfPoint002Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody RskPortfolioIndicator002Dto dto) throws Exception {
+    public int delete(@RequestBody RskPortfolioIndicator002Dto dto) {
         return rskSupervisionPortfPoint002Service.delete(dto);
     }
     

@@ -20,8 +20,8 @@
 	<!-- 产品代码联想下拉框 -->
 	<select id="getFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select	
-				FIN_PRODUCT.FINPROD_MARKET_ID	id,			
-				FIN_PRODUCT.FINPROD_ABBR	text,
+				FIN_PRODUCT.FINPROD_MARKET_ID	id,
+		        FIN_PRODUCT.FINPROD_MARKET_ID||':'||FIN_PRODUCT.FINPROD_ABBR	text,
 				FIN_PRODUCT.FINPROD_ID		object			
 		from					
 				FIN_PRODUCT
@@ -126,8 +126,8 @@
 	<!-- 新建页面产品代码联想下拉框 -->
 	<select id="getSelectFinprodId" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select		
-				FIN_PRODUCT.FINPROD_MARKET_ID	id,						
-				FIN_PRODUCT.FINPROD_ABBR  text,
+				FIN_PRODUCT.FINPROD_MARKET_ID	id,
+				FIN_PRODUCT.FINPROD_MARKET_ID||':'||FIN_PRODUCT.FINPROD_ABBR  text,
 				FIN_PRODUCT.FINPROD_ID object,
 				<!--modify by wm  增加周期型产品后修改  start 2019-10-16-->
 				<!-- DECODE(FIN_PRODUCT.PROFIT_TYPE,#{profitType_02},#{YES_OR_NO_N},FIN_PRODUCT_ADD.IS_LAY)  col-->

@@ -55,7 +55,7 @@ public class ReportRule001Service extends CommonExportService<ReportRule001Dto> 
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportRule001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ReportRule001Dto> findPage(int page, int length, Map<String, Object> params) {
 
         return super.queryForPageForSelectReturn(page, length, ()-> reportRule001Mapper.queryPageList(params));
     }

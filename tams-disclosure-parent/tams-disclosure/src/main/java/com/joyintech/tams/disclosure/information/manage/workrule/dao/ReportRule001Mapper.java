@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.disclosure.information.manage.workmanage.dto.ReportWorkManage001Dto;
 import com.joyintech.tams.disclosure.information.manage.workrule.dto.ReportRule001Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -25,6 +26,7 @@ import com.joyintech.tams.disclosure.information.manage.workrule.dto.ReportRule0
  * @see ReportRule001Mapper
  * @since 1.0
  */
+@Repository
 public interface ReportRule001Mapper {
     
     /**

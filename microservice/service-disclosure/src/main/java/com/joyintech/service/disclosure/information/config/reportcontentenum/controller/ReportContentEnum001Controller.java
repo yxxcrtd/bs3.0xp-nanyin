@@ -51,7 +51,7 @@ public class ReportContentEnum001Controller  extends BaseController{
      */
     @PostMapping("findIndexId/{page}/{length}")
 	public Page<ReportContentEnum001Dto> findIndexId(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		Page<ReportContentEnum001Dto> page1 = reportContentEnum001Service
 				.findIndexByPage(page, length, param);
 		return page1;
@@ -66,7 +66,7 @@ public class ReportContentEnum001Controller  extends BaseController{
      */
     @PostMapping("findIndexIdDetail/{page}/{length}")
 	public Page<ReportContentEnum002Dto> findIndexIdDetail(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length)  {
 		Page<ReportContentEnum002Dto> page1 = reportContentEnum002Service
 				.findIndexDetailByPage(page, length, param);
 		return page1;

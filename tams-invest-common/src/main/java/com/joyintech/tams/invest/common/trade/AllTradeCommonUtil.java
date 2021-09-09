@@ -9,6 +9,15 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+
+import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -74,6 +83,7 @@ import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCom
  * @since 1.0
  */
 @Service
+@Lazy(false)
 public class AllTradeCommonUtil {
 
     private static Logger logger = LoggerFactory.getLogger("接口调用");
@@ -904,7 +914,12 @@ public class AllTradeCommonUtil {
                                 stl.setPs(DictCodeListExt1.收支方向_支出.getValue().equals(
                                     stl.getPs()) ? DictCodeListExt1.收支方向_收入.getValue() : DictCodeListExt1.收支方向_支出.getValue());
                                 if(!(DictCodeList.共通业务类型_项目类资产交易.getValue().equals(busiType) || DictCodeList.共通业务类型_计划类资产_利率型_交易.getValue().equals(busiType))){
-                                stl.setTradeId(deal.getTradeId());}//项目类和计划类利率型交易存的是汇总交易编号； add by zhouxiuping
+                                stl.setTradeId(deal.getTradeId());} //项目类和计划类利率型交易存的是汇总交易编号； add by zhouxiuping
+                                // add by zoujiamin ZGBSSE-256 start
+                                if(DictCodeList.共通业务类型_债券类资产交易.getValue().equals(busiType)){
+                                    stl.setTradeId(deal.getTotleTradeId());
+                                }
+                                // add by zoujiamin ZGBSSE-256 end  暂时只针对债券调整 
                                 stlPayOrdersMapper.insert(stl);
                                 stlPayOrders.add(stl);
                                 ptlCashPositionFlows.addAll(
@@ -1173,7 +1188,10 @@ public class AllTradeCommonUtil {
         params.put("fileNo", fileNo);
         params.put("createUser", SecurityUtil.getLoginUser().getUserName());
         params.put("seqNo", IDGenerator.generate());
-        trdCommonBaseMapper.insertSelectFileInfoByFileNo(params);
+        //外部交易对手买入卖出交易不会生成交易编号，也不用插入附件信息
+        if(StringUtil.isNotBlank(新交易编号)){
+            trdCommonBaseMapper.insertSelectFileInfoByFileNo(params);
+        }
     }
 
     public static List<PtlCashPositionFlowDto> getPtlCashPositionFlowDto(TrdProductDeal deal,

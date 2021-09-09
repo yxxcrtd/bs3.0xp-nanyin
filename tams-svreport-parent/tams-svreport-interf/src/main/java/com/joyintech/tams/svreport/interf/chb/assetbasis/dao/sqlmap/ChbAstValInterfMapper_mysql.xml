@@ -43,7 +43,7 @@
 				  when 'STOCK' then (costAmt+floatingpl)/posAmt
 				  when 'DERIVATIVE' then (costAmt+floatingpl)
 				  when 'OPTION' then (costAmt+floatingpl)
-		          else (case assetbasis.valueDate when assetbasis.mdate then 100 else 100*costAmt/posAmt end) end) unitValNet,
+		          else (case assetbasis.valueDate when assetbasis.mdate then 100 else 100*(costAmt+floatingpl)/posAmt end) end) unitValNet,
         ifnull(price.PRICE,1)
           *	(case typex.SRCFIELD1 when 'MONEYFOUND' then (costAmt+floatingpl+intincexp)/posAmt
 			when 'NOMONEYFOUND' then (costAmt+floatingpl)/posAmt

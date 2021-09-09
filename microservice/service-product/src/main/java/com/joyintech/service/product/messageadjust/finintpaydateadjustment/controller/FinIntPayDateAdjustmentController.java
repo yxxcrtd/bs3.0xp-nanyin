@@ -60,6 +60,22 @@ public class FinIntPayDateAdjustmentController {
     public List<SelectOptionDto> getCashId(@RequestBody Map<String, Object> param){
         return finIntPayDateAdjustmentService.getCashId(param);
     }
+
+    /**
+     * 产品代码下拉框
+     * <功能详细描述>
+     *
+     * @param param Map<String, Object>
+     * @return Page<SelectOptionDto>
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/getCashIdForPage/{page}/{length}")
+    public Page<SelectOptionDto> getCashIdForPage(@RequestBody Map<String, Object> param,
+                                                  @PathVariable("page") int page,
+                                                  @PathVariable("length") int length) {
+        return finIntPayDateAdjustmentService.getCashIdForPage(page, length, param);
+    }
     
     /**
      * 
@@ -75,7 +91,7 @@ public class FinIntPayDateAdjustmentController {
      */
     @PostMapping("selectForPage")
     public List<FinIntPayDateAdjustmentDto> selectForPage(@RequestBody Map<String, Object> param)
-            throws Exception{
+    {
         return finIntPayDateAdjustmentService.selectForPage(param);
     }
     

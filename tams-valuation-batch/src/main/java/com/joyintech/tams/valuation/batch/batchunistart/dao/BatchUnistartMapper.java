@@ -113,4 +113,5 @@ public interface BatchUnistartMapper {
      */
     public List<BatchUnistartGrpconfig> findGrpconfigById(@Param("configId") String configId);
 
+    List<String> selectErrorPrebatchResult(Map<String, Object> param);
 }

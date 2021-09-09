@@ -60,7 +60,7 @@ public class NonStandardAvailableCredit001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("selectForPage")
-	public Page<NonStandardAvailableCredit001Dto> selectAll() throws Exception {
+	public Page<NonStandardAvailableCredit001Dto> selectAll(){
 
 		Page<NonStandardAvailableCredit001Dto> page = nonStandardAvailableCredit001Service
 				.selectForPage(RequestUtil.getParameters(getRequest()));
@@ -120,8 +120,7 @@ public class NonStandardAvailableCredit001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return nonStandardAvailableCredit001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

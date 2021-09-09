@@ -238,9 +238,9 @@
 		)
 		SELECT 
 		'thamt1_3_4' AS propertycode,
-		TEMP_CUR.AMOUNT AS sessionendNum,
-		TEMP_LAST.AMOUNT AS lastSessionendNum
-		FROM TEMP_CUR, TEMP_LAST
+		TC.AMOUNT AS sessionendNum,
+		TL.AMOUNT AS lastSessionendNum
+		FROM TEMP_CUR TC, TEMP_LAST TL
     </select>	
     
     

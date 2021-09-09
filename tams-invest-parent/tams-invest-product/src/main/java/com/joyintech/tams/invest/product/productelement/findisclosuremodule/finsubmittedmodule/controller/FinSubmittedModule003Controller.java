@@ -25,6 +25,7 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -188,8 +189,7 @@ public class FinSubmittedModule003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinSubmittedModule002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinSubmittedModule002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

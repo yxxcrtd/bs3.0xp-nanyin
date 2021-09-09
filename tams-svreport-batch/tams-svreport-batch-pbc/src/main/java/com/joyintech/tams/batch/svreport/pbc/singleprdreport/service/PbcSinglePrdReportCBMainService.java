@@ -53,7 +53,7 @@ public class PbcSinglePrdReportCBMainService  extends AutoSendCBBaseService{
      * @param isEdit 是否是修改的数据
      * @throws Exception 
      */
-    public void generateReport(final Date batchDate,final List<String> prodIdList) throws Exception{
+    public void generateReport(final Date batchDate,final List<String> prodIdList) {
         // 设置批处理bean
         setBatchBeanName(BatchBeanName.人行报表单产品批处理);
         logInfoBatchStart();

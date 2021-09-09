@@ -19,7 +19,7 @@ import com.joyintech.tams.invest.risk.valtblimport.filtertools.util.XlsUtil;
  */
 public class MergeColsFilter extends AbstractFilter {
 	@Override
-	public Workbook doFilter(Workbook workbook, int sheetIndex, String param) throws Exception {
+	public Workbook doFilter(Workbook workbook, int sheetIndex, String param) {
 
 		Map<String, String> paramMap = new LinkedHashMap<String, String>();
 		// 格式化参数

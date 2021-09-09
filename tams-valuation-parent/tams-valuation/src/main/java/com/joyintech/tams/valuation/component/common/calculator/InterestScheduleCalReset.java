@@ -64,7 +64,7 @@ public class InterestScheduleCalReset {
                                                     List<FinCashPlanDto> lirs,
                                                     FinRateInfo irr, List<? extends FinCashCalcRule> liy, FinCashPayRule isr,
                                                     List<String> holidayList, Date sysdate, Class<T> class1, 
-                                                    Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException {
+                                                    Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException, InstantiationException, IllegalAccessException {
      InterestScheduleCal.interestScheduleCalA(lis, scai, lirs, irr, liy, isr, holidayList, scai.getAmount(), classdetail);
      return lis;
  }

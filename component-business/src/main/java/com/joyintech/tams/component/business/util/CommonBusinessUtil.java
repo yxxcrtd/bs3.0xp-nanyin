@@ -185,10 +185,10 @@ public class CommonBusinessUtil {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        double money = 5254005540048.22322;
-        BigDecimal numberOfMoney = BigDecimal.valueOf(money);
-        String s = getUpperMoneyResult(numberOfMoney);
-        System.out.println("你输入的金额为：【" + money + "】   #--# [" + s.toString() + "]");
-    }
+//    public static void main(String[] args) {
+//        double money = 5254005540048.22322;
+//        BigDecimal numberOfMoney = BigDecimal.valueOf(money);
+//        String s = getUpperMoneyResult(numberOfMoney);
+//        System.out.println("你输入的金额为：【" + money + "】   #--# [" + s + "]");
+//    }
 }

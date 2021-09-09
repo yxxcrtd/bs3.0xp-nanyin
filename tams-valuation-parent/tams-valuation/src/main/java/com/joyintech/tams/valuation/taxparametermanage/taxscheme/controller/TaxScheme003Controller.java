@@ -112,7 +112,7 @@ public class TaxScheme003Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) TaxScheme003Dto dto,
                             BindingResult bindingResult)
-        throws Exception {
+        {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
 

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.report.debtreport.repfinproductregistcodemng.service;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -225,8 +226,7 @@ public class RepFinProductRegistCodeMngService extends CommonExportService<RepFi
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String flieName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String flieName) throws FileNotFoundException {
         //记录错误信息
         List<ExcelValidDto> errorMessage = new ArrayList<ExcelValidDto>();
         // 检查文件名是否为空

@@ -134,6 +134,28 @@ public class MstWorkflowCommonServiceImpl implements MstWorkflowCommonService{
     }
 
     /**
+     * 通过留痕表查询流程中数据,返回list
+     * add by jiangpeng on 20210514 ZGBSSE-388
+     * @param wflValidInputParameter 函数输入参数
+     * @return 数据状态
+     * @since 1.0
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DataSource(DataSourceType.OTHER)
+    @Override
+    public List<ProcessMark> getDataEntityFromProcessMarkList(WflValidInputParameter wflValidInputParameter) {
+        // 查询流程中数据"01"
+        wflValidInputParameter.setSeachMode("01");
+        List<ProcessMark> result = mstWorkflowCommonServiceMapper.getBusinessDataEntity(
+                wflValidInputParameter);
+        // 为空则不展示
+        if (StringUtil.isEmptyList(result)) {
+            return null;
+        }
+        return result;
+    }
+
+    /**
      * 
      * 查询工作流数据
      * <功能详细描述>

@@ -25,7 +25,7 @@
             $('#' +  obj.termType).updateChosenArr({item: ['R001','R007','R014','R021','R1M' ,'R1Y' ,'R2M' ,'R3M' ,'R4M' ,'R6M' ,'R9M' ],
                 disabled: false});
         }else {
-            $('#' +  obj.termType).updateChosenArr({item: [''], disabled: false});
+            $('#' +  obj.termType).updateChosenArr({item: [''], disabled: true});//modify by jiangpeng on 20210526 ZGBSSE-15 质押式协议回购深交所 期限品种置灰为空不可选
         }
         if(obj.termTypeValue){
             $('#' +  obj.termType).val(obj.termTypeValue).trigger('change');

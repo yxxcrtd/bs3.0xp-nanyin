@@ -57,7 +57,7 @@ public class ValInertfLog002Controller extends BaseController {
     @RequestMapping("initTable")
     @ResponseBody
     public Page<ValInertfLog001Dto> search()
-        throws ParseException, java.text.ParseException , Exception{
+        throws ParseException, java.text.ParseException{
         String tmpName = this.getParam("tmpName");
         String fileName = this.getParam("fileName");
         String exDate = this.getParam("exDate");

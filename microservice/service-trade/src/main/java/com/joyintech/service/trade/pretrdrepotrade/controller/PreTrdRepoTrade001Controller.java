@@ -46,7 +46,7 @@ public class PreTrdRepoTrade001Controller {
     public Page<PreTrdRepoTrade001Dto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-            throws Exception {
+    {
         return preTrdRepoTrade001Service.selectForPage(page, length, param);
     }
 
@@ -78,7 +78,7 @@ public class PreTrdRepoTrade001Controller {
      */
     @PostMapping("getAcct")
     public List<SelectOptionDto> getAcct(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
 
             return preTrdRepoTrade001Service.getAcct( params);
     }
@@ -94,7 +94,7 @@ public class PreTrdRepoTrade001Controller {
      */
     @PostMapping("getSecAcct")
     public List<SelectOptionDto> getSecAcct(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
         return preTrdRepoTrade001Service.getSecAcct( params);
     }
 
@@ -110,7 +110,7 @@ public class PreTrdRepoTrade001Controller {
      */
     @PostMapping("getAcctId")
     public PreTrdRepoTrade001Dto getAcctId(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
         return preTrdRepoTrade001Service.getAcctId( params);
     }
 
@@ -125,7 +125,7 @@ public class PreTrdRepoTrade001Controller {
      */
     @PostMapping("getSecAcctDto")
     public PreTrdRepoTrade001Dto getSecAcctDto(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
         return preTrdRepoTrade001Service.getSecAcctDto( params);
     }
     /**
@@ -138,7 +138,7 @@ public class PreTrdRepoTrade001Controller {
      */
     @PostMapping("findTrdMatchInfo")
     public List<Map<String, Object>> findTrdMatchInfo(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
         return preTrdRepoTrade001Service.findTrdMatchInfo( params);
     }
 }

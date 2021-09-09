@@ -82,7 +82,6 @@ public class EnumUtils {
                 }
                 enummap.put(resultkey+"", resultValue+"");
             } catch (Exception e) {
-                e.printStackTrace();
                 log.error("枚举类转成Map异常",e);
             }
         }
@@ -120,7 +119,7 @@ public class EnumUtils {
             /**返回结果*/
             return resut;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
         }
         return resut;
     }

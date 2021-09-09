@@ -48,7 +48,7 @@ public class ValInterestRateQuotationInfoController  {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<ValInterestRateQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<ValInterestRateQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length){
         return valInterestRateQuotationInfoService.selectForPage(page,length,pageParam);
     }
     

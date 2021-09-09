@@ -67,7 +67,7 @@ public class MstPerformanceBenchMarkService extends BaseService<MstPerformanceBe
      * @throws Exception 异常信息
      */
     public Page<MstPerformanceBenchMarkDto> selectForPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> mstPerformanceBenchMark001Mapper.select(pageParam));
     }
         /**
@@ -77,7 +77,7 @@ public class MstPerformanceBenchMarkService extends BaseService<MstPerformanceBe
          * @throws Exception 异常信息
          */
         public List<MstIndexComponent> selectComponentInfoPage(Map<String, Object> pageParam)
-            throws Exception {
+        {
             return  mstPerformanceBenchMark001Mapper.selectComponentInfoPage(pageParam);
         }
     /**

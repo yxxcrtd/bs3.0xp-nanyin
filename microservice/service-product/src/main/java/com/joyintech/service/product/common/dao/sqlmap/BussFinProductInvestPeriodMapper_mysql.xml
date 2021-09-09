@@ -4,13 +4,13 @@
 	<select id="queryPeriodList" resultType="com.joyintech.service.product.common.dto.BussFinProductInvestPeriodDto">
      	SELECT
 			@rownum:=@rownum+1 as sn,
-    		PRD_LAYER_PARAM.FINPROD_ID as finprodId,
-    		PRD_LAYER_PARAM.TERM_MAX  as  investDays
+    		PLP.FINPROD_ID as finprodId,
+    		PLP.TERM_MAX  as  investDays
 		FROM (SELECT @rownum:=0) r,
-    		PRD_LAYER_PARAM
+    		PRD_LAYER_PARAM PLP
 		WHERE
-    		PRD_LAYER_PARAM.P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+    		PLP.P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 		ORDER BY
-    		PRD_LAYER_PARAM.TERM_MAX 
+    		PLP.TERM_MAX 
      </select>
 </mapper>

@@ -182,7 +182,7 @@ public class ShadowPriceScheme003Controller extends BaseController {
     @ResponseBody
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Valid ShadowPriceScheme002Dto dto, BindingResult bindingResult)
-        throws Exception {
+         {
         String msg = StringUtil.EMPTY;
         String operateType = dto.getOperateType();
         // 基础验证通过

@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -86,7 +87,7 @@ public class FinProductEvaluate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage4")
-    public List<FinProductEvaluate001Tab4Dto> findPage4() throws Exception{
+    public List<FinProductEvaluate001Tab4Dto> findPage4() throws ParseException {
         return finProductEvaluate001Service.selectForPage4(RequestUtil.getPageParam());
     }
 
@@ -97,7 +98,7 @@ public class FinProductEvaluate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage5")
-    public List<FinProductEvaluate001Tab5Dto> findPage5() throws Exception{
+    public List<FinProductEvaluate001Tab5Dto> findPage5() throws ParseException {
         return finProductEvaluate001Service.selectForPage5(RequestUtil.getPageParam());
     }
 
@@ -108,7 +109,7 @@ public class FinProductEvaluate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage6")
-    public List<FinProductEvaluate001Tab6Dto> findPage6() throws Exception{
+    public List<FinProductEvaluate001Tab6Dto> findPage6() throws ParseException {
         return finProductEvaluate001Service.selectForPage6(RequestUtil.getPageParam());
     }
 
@@ -119,7 +120,7 @@ public class FinProductEvaluate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage7")
-    public List<FinProductEvaluate001Tab7Dto> findPage7() throws Exception{
+    public List<FinProductEvaluate001Tab7Dto> findPage7() throws ParseException {
         return finProductEvaluate001Service.selectForPage7(RequestUtil.getPageParam());
     }
 

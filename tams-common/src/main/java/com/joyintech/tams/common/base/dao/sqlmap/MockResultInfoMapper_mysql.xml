@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MockResultInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="GENERATE_TIME" property="generateTime" jdbcType="TIMESTAMP" />
+        <result column="MOCK_DATE" property="mockDate" jdbcType="DATE" />
+        <result column="PRD_DESIGN_ID" property="prdDesignId" jdbcType="VARCHAR" />
+        <result column="PRD_SCALE" property="prdScale" jdbcType="DECIMAL" />
+        <result column="PRD_PERIOD" property="prdPeriod" jdbcType="VARCHAR" />
+        <result column="RATE_MAX" property="rateMax" jdbcType="VARCHAR" />
+        <result column="RATE_MIX" property="rateMix" jdbcType="VARCHAR" />
+        <result column="REQUIREMENT_ID" property="requirementId" jdbcType="VARCHAR" />
+        <result column="BATCH_ID" property="batchId" jdbcType="CHAR" />
+        <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, GENERATE_TIME GENERATE_TIME, MOCK_DATE MOCK_DATE, PRD_DESIGN_ID PRD_DESIGN_ID, 
+        PRD_SCALE PRD_SCALE, PRD_PERIOD PRD_PERIOD, RATE_MAX RATE_MAX, RATE_MIX RATE_MIX, 
+        REQUIREMENT_ID REQUIREMENT_ID, BATCH_ID BATCH_ID, DATA_STATUS DATA_STATUS, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockResultInfoMapper.Base_Column_List" />
+        from MOCK_RESULT_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockResultInfoMapper.Base_Column_List" />
+        from MOCK_RESULT_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MockResultInfoMapper.Base_Column_List" />
+        from MOCK_RESULT_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MOCK_RESULT_INFO
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        insert into MOCK_RESULT_INFO (SEQ_NO, GENERATE_TIME, MOCK_DATE, 
+            PRD_DESIGN_ID, PRD_SCALE, PRD_PERIOD, 
+            RATE_MAX, RATE_MIX, REQUIREMENT_ID, 
+            BATCH_ID, DATA_STATUS, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{generateTime,jdbcType=TIMESTAMP}, #{mockDate,jdbcType=DATE}, 
+            #{prdDesignId,jdbcType=VARCHAR}, #{prdScale,jdbcType=DECIMAL}, #{prdPeriod,jdbcType=VARCHAR}, 
+            #{rateMax,jdbcType=VARCHAR}, #{rateMix,jdbcType=VARCHAR}, #{requirementId,jdbcType=VARCHAR}, 
+            #{batchId,jdbcType=CHAR}, #{dataStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        insert into MOCK_RESULT_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="generateTime != null" >
+                GENERATE_TIME,
+            </if>
+            <if test="mockDate != null" >
+                MOCK_DATE,
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID,
+            </if>
+            <if test="prdScale != null" >
+                PRD_SCALE,
+            </if>
+            <if test="prdPeriod != null" >
+                PRD_PERIOD,
+            </if>
+            <if test="rateMax != null" >
+                RATE_MAX,
+            </if>
+            <if test="rateMix != null" >
+                RATE_MIX,
+            </if>
+            <if test="requirementId != null" >
+                REQUIREMENT_ID,
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID,
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="generateTime != null" >
+                #{generateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mockDate != null" >
+                #{mockDate,jdbcType=DATE},
+            </if>
+            <if test="prdDesignId != null" >
+                #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdScale != null" >
+                #{prdScale,jdbcType=DECIMAL},
+            </if>
+            <if test="prdPeriod != null" >
+                #{prdPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMax != null" >
+                #{rateMax,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMix != null" >
+                #{rateMix,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementId != null" >
+                #{requirementId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchId != null" >
+                #{batchId,jdbcType=CHAR},
+            </if>
+            <if test="dataStatus != null" >
+                #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        insert into MOCK_RESULT_INFO(SEQ_NO, GENERATE_TIME, MOCK_DATE, PRD_DESIGN_ID, PRD_SCALE, 
+        PRD_PERIOD, RATE_MAX, RATE_MIX, REQUIREMENT_ID, BATCH_ID, DATA_STATUS, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, GENERATE_TIME, MOCK_DATE, PRD_DESIGN_ID, PRD_SCALE, 
+            PRD_PERIOD, RATE_MAX, RATE_MIX, REQUIREMENT_ID, BATCH_ID, DATA_STATUS, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MOCK_RESULT_INFO
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        update MOCK_RESULT_INFO
+        <set >
+            <if test="generateTime != null" >
+                GENERATE_TIME = #{generateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="mockDate != null" >
+                MOCK_DATE = #{mockDate,jdbcType=DATE},
+            </if>
+            <if test="prdDesignId != null" >
+                PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            </if>
+            <if test="prdScale != null" >
+                PRD_SCALE = #{prdScale,jdbcType=DECIMAL},
+            </if>
+            <if test="prdPeriod != null" >
+                PRD_PERIOD = #{prdPeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMax != null" >
+                RATE_MAX = #{rateMax,jdbcType=VARCHAR},
+            </if>
+            <if test="rateMix != null" >
+                RATE_MIX = #{rateMix,jdbcType=VARCHAR},
+            </if>
+            <if test="requirementId != null" >
+                REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID = #{batchId,jdbcType=CHAR},
+            </if>
+            <if test="dataStatus != null" >
+                DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MockResultInfo" >
+        update MOCK_RESULT_INFO
+        set GENERATE_TIME = #{generateTime,jdbcType=TIMESTAMP},
+            MOCK_DATE = #{mockDate,jdbcType=DATE},
+            PRD_DESIGN_ID = #{prdDesignId,jdbcType=VARCHAR},
+            PRD_SCALE = #{prdScale,jdbcType=DECIMAL},
+            PRD_PERIOD = #{prdPeriod,jdbcType=VARCHAR},
+            RATE_MAX = #{rateMax,jdbcType=VARCHAR},
+            RATE_MIX = #{rateMix,jdbcType=VARCHAR},
+            REQUIREMENT_ID = #{requirementId,jdbcType=VARCHAR},
+            BATCH_ID = #{batchId,jdbcType=CHAR},
+            DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

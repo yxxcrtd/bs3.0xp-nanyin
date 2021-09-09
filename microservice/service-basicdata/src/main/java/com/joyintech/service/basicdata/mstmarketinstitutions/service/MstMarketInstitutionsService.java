@@ -98,7 +98,8 @@ public class MstMarketInstitutionsService extends BaseService<MstMarketInstituti
      * @return Page类
      * @throws Exception 异常信息
      */
-    public Page<MstMarketInstitutionsDto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception {
+    public Page<MstMarketInstitutionsDto> selectForPage(int page,int length,Map<String, Object> pageParam)
+    {
         return super.queryForPage(page,length,() -> mstMarketInstitutionsMapper.select(pageParam));
     }
     /**

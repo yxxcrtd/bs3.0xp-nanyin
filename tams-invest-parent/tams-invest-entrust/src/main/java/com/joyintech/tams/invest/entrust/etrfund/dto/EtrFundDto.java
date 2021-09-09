@@ -17,6 +17,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
@@ -116,7 +118,9 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
     private String portfolioName;
     
     //已完成额度
-    private long finishAmt;
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    @Amount(fieldName = "EtrFund001.finishAmt", groups = {ValidateGroupEdit.class})
+    private BigDecimal finishAmt;
     
     //交易完成度
     private long transactioncom;
@@ -560,7 +564,7 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
      * 获取 finishAmt
      * @return finishAmt.
      */
-    public long getFinishAmt() {
+    public BigDecimal getFinishAmt() {
         return finishAmt;
     }
 
@@ -569,7 +573,7 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
      * 设置 finishAmt
      * @param finishAmt finishAmt
      */
-    public void setFinishAmt(long finishAmt) {
+    public void setFinishAmt(BigDecimal finishAmt) {
         this.finishAmt = finishAmt;
     }
 

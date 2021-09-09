@@ -44,7 +44,7 @@ public class DepositTransfereController {
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
     public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return depositTransfereService.selectPortoId(param);
     }
 

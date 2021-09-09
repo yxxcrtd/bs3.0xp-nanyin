@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.stresstestmanage.marketriskscenemanage.co
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -121,7 +122,7 @@ public class MarketRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryMarketRiskFactor")
-    public List<MarketRiskSceneFactorTypeDto> queryMarketRiskFactor() throws Exception {
+    public List<MarketRiskSceneFactorTypeDto> queryMarketRiskFactor() {
         //市场性风险因子分类
         List<MarketRiskSceneFactorTypeDto> factorList = new ArrayList<MarketRiskSceneFactorTypeDto>();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -157,7 +158,7 @@ public class MarketRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryIndexTypePro")
-    public List<MarketRiskSceneManage002Dto> queryIndexTypePro() throws Exception {
+    public List<MarketRiskSceneManage002Dto> queryIndexTypePro() {
         String modelId = getParam("modelId");
         
         return marketRiskSceneManage002Service.selectTmplIndByType(modelId, DictCodeListRsk.压力测试指标类型_产品指标.getValue());
@@ -173,7 +174,7 @@ public class MarketRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryIndexTypeStr")
-    public List<MarketRiskSceneManage002Dto> queryIndexTypeStr() throws Exception {
+    public List<MarketRiskSceneManage002Dto> queryIndexTypeStr() {
         String modelId = getParam("modelId");
         return marketRiskSceneManage002Service.selectTmplIndByType(modelId, DictCodeListRsk.压力测试指标类型_承压指标.getValue());
     }
@@ -197,8 +198,7 @@ public class MarketRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody @Validated MarketRiskSceneManage002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated MarketRiskSceneManage002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

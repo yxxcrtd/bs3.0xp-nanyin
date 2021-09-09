@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.portfolio.ptlinvportfoliostrategy.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -101,11 +102,10 @@ public class PtlInvPortfolioStrategy001Controller extends BaseController {
 	 * 分页查询
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<PtlInvPortfolioStrategy001Dto> findPage() throws Exception {
+	public Page<PtlInvPortfolioStrategy001Dto> findPage() {
 		return ptlInvPortfolioStrategy001Service.selectForPage(RequestUtil.getPageParam());
 	}
 
@@ -143,7 +143,7 @@ public class PtlInvPortfolioStrategy001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
-	public AjaxResult delete(@RequestBody PtlInvPortfolioStrategy001Dto dto) throws Exception {
+	public AjaxResult delete(@RequestBody PtlInvPortfolioStrategy001Dto dto) {
 		String msg = "删除失败";
 		int num = ptlInvPortfolioStrategy001Service.delete(dto);
 		if (num > 0) {
@@ -156,13 +156,13 @@ public class PtlInvPortfolioStrategy001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
+	 * @throws IOException
 	 *             异常
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		List<PtlInvPortfolioStrategy001Dto> listdto;

@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import cn.hutool.core.util.StrUtil;
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.constant.DictCodeList;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -433,6 +436,13 @@ public class CnBondInterfService extends InterfService {
     @Autowired
     private InvestorsHoldInfo001InterfService investorsHoldInfo001InterfService;
     /**
+     * 添加中债挡板直连标识
+     * 02直连，01标识挡板
+     */
+    @Value("${application.chb.dangbanFlag:02}")
+    private String dangbanFlag;
+
+    /**
      * 中债报送
      *
      * @param paras 报送参数list
@@ -699,7 +709,7 @@ public class CnBondInterfService extends InterfService {
         CnBondUtil.generationXML(entity, BusinessForXMLEntity.class, cbFilepath, fileName);
         logger.info("CnBondInterfService 报文拼装处理结束：" + DateUtil.getCurrentDateTime());
         // 添加报文文件
-        files.add(new File(cbFilepath + fileName));
+        files.add(new SafelyFile(cbFilepath + fileName));
         // 添加压缩文件路径
         resourceFilePath.add(fileName);
         // 压缩文件
@@ -712,9 +722,15 @@ public class CnBondInterfService extends InterfService {
         logger.info("CnBondInterfService 报送中债处理开始：" + DateUtil.getCurrentDateTime());
         AsynReportEntity asynReportEntity = markDangBan();
 //        	CnBondUtil.recurrence(WMRS + fileType + STRING_001_01,cbFilepath + fileZip);
-            
+        /** 根据挡板标识来确认是否打开 start**/
+        if(StrUtil.equals(dangbanFlag, DictCodeList.是否_中债_是.getValue())) {
+            asynReportEntity = markDangBan();
+        }else {
+            asynReportEntity = CnBondUtil.recurrence(WMRS + fileType + STRING_001_01, cbFilepath + fileZip);
+        }
+        /** 根据挡板标识来确认是否打开 end**/
         logger.info("CnBondInterfService 报送中债处理结束：" + DateUtil.getCurrentDateTime());
-        File a = new File("./AppCfg/DC/cfg");
+        File a = new SafelyFile("./AppCfg/DC/cfg");
         if (asynReportEntity == null) {
             // printLog(log, DictCodeList.接口类型_发送联机交易.getValue(), FAILURE, WARNING,
             // "返回报文为空,文件地址：" + a.exists(), true);
@@ -1558,7 +1574,6 @@ public class CnBondInterfService extends InterfService {
             }
             catch (Exception e) {
                 logger.error("analysisData出现异常，异常内容：" + e.getMessage(),e);
-//                e.printStackTrace();
                 continue; // 当前报错跳过执行下一条
             }
         }
@@ -1572,7 +1587,6 @@ public class CnBondInterfService extends InterfService {
             }
             catch (Exception e) {
                 logger.error("getProdRecode出现异常，异常内容：" + e.getMessage(),e);
-//                e.printStackTrace();
                 continue; // 当前报错跳过执行下一条
             }
         }
@@ -1831,6 +1845,7 @@ public class CnBondInterfService extends InterfService {
             if(DictCodeListExt2.报表名称_投资者明细信息登记.getValue().equals(submitType)){
                 //如果成功数不为0 全部更新为成功再一个一个更新失败
                 if(!StringUtil.isEmptyList(equdetinfos)){
+                	logger.info("明细登记更新【成功状态】开始=============>>>>>>>>>>");
                     // 更新中债报送结果
                     ChbSubmitStatus status = new ChbSubmitStatus();
                     // 报送编码
@@ -1839,10 +1854,15 @@ public class CnBondInterfService extends InterfService {
                     status.setSubmitFeedbackStatus(DictCodeListExt2.报送反馈状态_中债通过.getValue());
                     // 更新数据
                     cnBondInterfMapper.updateChbEquDetSubmitStatus(status);
+                	logger.info("明细登记更新【成功状态】结束=============<<<<<<<<<<<");
                 }
-                for(ChbSubmitStatus erro:equdeterros){
-                    cnBondInterfMapper.updateChbEquDetSubmitStatus(erro);
-                }
+            	int resultCnt = 0;
+            	if(!StringUtil.isEmptyList(equdeterros)){
+            		logger.info("明细登记更新【失败状态】开始=============>>>>>>>>>>");
+                     resultCnt = equdeterros.size();
+                     mergerChbEqudetStatus(equdeterros, resultCnt);
+             		logger.info("明细登记更新【失败状态】结束=============<<<<<<<<<<");
+            	}
             }
         }
 //        if (xml == null) {
@@ -1870,6 +1890,25 @@ public class CnBondInterfService extends InterfService {
         logger.info("根据下载文件更新反馈状态结束");
     }
 
+    private void mergerChbEqudetStatus(List<ChbSubmitStatus> equdetinfos, int resultCnt) {
+		int updateSize = 500;
+		if (resultCnt <= updateSize) {
+			cnBondInterfMapper.mergerChbEquDetSubmitStatus(equdetinfos);
+		}else{
+		    int part = resultCnt / updateSize; // 分批数
+		    List<ChbSubmitStatus> newDataList = new ArrayList<ChbSubmitStatus>();
+		    newDataList.addAll(equdetinfos);
+		    for (int i = 0; i < part; i++ ) {
+		    	cnBondInterfMapper.mergerChbEquDetSubmitStatus(newDataList.subList(0, updateSize));
+		        newDataList.subList(0, updateSize).clear();
+		    }
+		    // 最后剩下的数据
+		    if (CollectionUtils.isNotEmpty(newDataList)) {
+		    	cnBondInterfMapper.mergerChbEquDetSubmitStatus(newDataList);
+		    }
+		}
+	}
+    
     /**
      * 将字符串转成int
      *

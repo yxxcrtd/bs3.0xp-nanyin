@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.trade.trddepositinvesttrade.validate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -105,12 +106,12 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
             if (!StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue()) && StringUtil.isEmpty(dto.getTermDays())) {
                 errorList.add(new ValidMessage("termDays",getMessage("BUSS_COM_E_0038",getMessage("TrdDepositInvestTrade002.termDays"))));
             }
-            //同一标的只能一个组合交易
-            if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
-                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
-                    && trdDepositInvestTrade002Service.checkTradeById(dto)>0) {
-                errorList.add(new ValidMessage("",getMessage("TRD_DEPOSIT_001")));
-            }
+//            //同一标的只能一个组合交易
+//            if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
+//                    && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
+//                    && trdDepositInvestTrade002Service.checkTradeById(dto)>0) {
+//                errorList.add(new ValidMessage("",getMessage("TRD_DEPOSIT_001")));
+//            }
             //验证标的是否做过终止协议交易
             if (StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
                     && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())
@@ -147,6 +148,10 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
                         errorList.add(new ValidMessage("",getMessage("FW_E_0006",getMessage("TrdDepositInvestTrade002.recAcctNo"))));
                     }
                 }
+                if(dto.getIntAmt() != null && dto.getIntAmt() != null
+                        && dto.getIntAmt().compareTo(BigDecimal.ZERO) < 0){
+                    errorList.add(new ValidMessage("intAmt",getMessage("REPORT_COMMON_E_0023",getMessage("TrdDepositInvestTrade002.intAmt"),"0")));
+                }
             }
             else if (DictCodeList.交易方向_买入.getValue().equals(dto.getPs())) {
                 if (!dto.getBussTrdTransferOrder().isEmpty()) {
@@ -156,14 +161,6 @@ public class TrdDepositInvestTrade001Validator implements TradeCommonValidator{
                     }
                 }
             }
-            //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-            if(!(StringUtil.equals(dto.getFinprodType(), DictCodeListExt3.存款类资产类型_活期存放.getValue())
-               && StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue()))){
-            	 if (!StringUtil.isNotEmpty(dto.getIntAmt())) {
-                     errorList.add(new ValidMessage("请输入应计利息总额。"));
-                 } 
-               }
-            //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
             if (StringUtil.isNotEmpty(dto.getBussTrdTransfenpeiDto())){
                 Map<String, List<BussTrdTransfenpeiDto>> map = dto.getBussTrdTransfenpeiDto().stream().collect(JoyinCollectors.groupingBy(item->item.getPortfolioId()));
                 if (map.keySet().size()<dto.getBussTrdTransfenpeiDto().size()){

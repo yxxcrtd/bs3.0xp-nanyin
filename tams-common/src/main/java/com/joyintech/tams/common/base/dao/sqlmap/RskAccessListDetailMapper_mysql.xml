@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskAccessListDetailMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        <id column="LIST_ID" property="listId" jdbcType="VARCHAR" />
+        <id column="LIST_DATE" property="listDate" jdbcType="DATE" />
+        <id column="LIST_DETAIL_NAME" property="listDetailName" jdbcType="VARCHAR" />
+        <result column="LIST_DETAIL_ID" property="listDetailId" jdbcType="VARCHAR" />
+        <result column="LIST_DETAIL_TYPE" property="listDetailType" jdbcType="VARCHAR" />
+        <result column="OPERATE_TYPE" property="operateType" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        LIST_ID LIST_ID, LIST_DATE LIST_DATE, LIST_DETAIL_NAME LIST_DETAIL_NAME, LIST_DETAIL_ID LIST_DETAIL_ID, 
+        LIST_DETAIL_TYPE LIST_DETAIL_TYPE, OPERATE_TYPE OPERATE_TYPE, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListDetailMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST_DETAIL
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListDetailMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST_DETAIL
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetailKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListDetailMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST_DETAIL
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+          and LIST_DATE = #{listDate,jdbcType=DATE}
+          and LIST_DETAIL_NAME = #{listDetailName,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetailKey" >
+        delete from RSK_ACCESS_LIST_DETAIL
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+          and LIST_DATE = #{listDate,jdbcType=DATE}
+          and LIST_DETAIL_NAME = #{listDetailName,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        insert into RSK_ACCESS_LIST_DETAIL (LIST_ID, LIST_DATE, LIST_DETAIL_NAME, 
+            LIST_DETAIL_ID, LIST_DETAIL_TYPE, OPERATE_TYPE, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            ,INSTITUTION_CODE /* add by songyawei 添加创建人机构编号 */
+            )
+        values (#{listId,jdbcType=VARCHAR}, #{listDate,jdbcType=DATE}, #{listDetailName,jdbcType=VARCHAR}, 
+            #{listDetailId,jdbcType=VARCHAR}, #{listDetailType,jdbcType=VARCHAR}, #{operateType,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            ,#{insitituteCode,jdbcType=VARCHAR} /* add by songyawei 添加创建人机构编号 */
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        insert into RSK_ACCESS_LIST_DETAIL
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                LIST_ID,
+            </if>
+            <if test="listDate != null" >
+                LIST_DATE,
+            </if>
+            <if test="listDetailName != null" >
+                LIST_DETAIL_NAME,
+            </if>
+            <if test="listDetailId != null" >
+                LIST_DETAIL_ID,
+            </if>
+            <if test="listDetailType != null" >
+                LIST_DETAIL_TYPE,
+            </if>
+            <if test="operateType != null" >
+                OPERATE_TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="listId != null" >
+                #{listId,jdbcType=VARCHAR},
+            </if>
+            <if test="listDate != null" >
+                #{listDate,jdbcType=DATE},
+            </if>
+            <if test="listDetailName != null" >
+                #{listDetailName,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailId != null" >
+                #{listDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailType != null" >
+                #{listDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="operateType != null" >
+                #{operateType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        insert into RSK_ACCESS_LIST_DETAIL(LIST_ID, LIST_DATE, LIST_DETAIL_NAME, LIST_DETAIL_ID, 
+        LIST_DETAIL_TYPE, OPERATE_TYPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select LIST_ID, LIST_DATE, LIST_DETAIL_NAME, LIST_DETAIL_ID, 
+            LIST_DETAIL_TYPE, OPERATE_TYPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_ACCESS_LIST_DETAIL
+             where 1 = 1 and LIST_ID = #{listId,jdbcType=VARCHAR} and LIST_DATE = #{listDate,jdbcType=DATE} and LIST_DETAIL_NAME = #{listDetailName,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        update RSK_ACCESS_LIST_DETAIL
+        <set >
+            <if test="listDetailId != null" >
+                LIST_DETAIL_ID = #{listDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="listDetailType != null" >
+                LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR},
+            </if>
+            <if test="operateType != null" >
+                OPERATE_TYPE = #{operateType,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+          and LIST_DATE = #{listDate,jdbcType=DATE}
+          and LIST_DETAIL_NAME = #{listDetailName,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskAccessListDetail" >
+        update RSK_ACCESS_LIST_DETAIL
+        set LIST_DETAIL_ID = #{listDetailId,jdbcType=VARCHAR},
+            LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR},
+            OPERATE_TYPE = #{operateType,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where LIST_ID = #{listId,jdbcType=VARCHAR}
+          and LIST_DATE = #{listDate,jdbcType=DATE}
+          and LIST_DETAIL_NAME = #{listDetailName,jdbcType=VARCHAR}
+    </update>
+    
+     <select id="selectByName" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select 
+        COUNT(1)
+        from RSK_ACCESS_LIST_DETAIL
+        where LIST_DETAIL_NAME = #{finprodName,jdbcType=VARCHAR}
+         <![CDATA[AND  LIST_DATE <= #{sysDate,jdbcType=DATE} ]]>
+         and  LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR}
+         and  LIST_ID = #{listId,jdbcType=VARCHAR}
+     </select>
+    
+     <select id="selectEntityList" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskAccessListDetailMapper.Base_Column_List" />
+        from RSK_ACCESS_LIST_DETAIL
+        where <![CDATA[LIST_DATE <= #{sysDate,jdbcType=DATE} ]]>
+         and  LIST_DETAIL_TYPE = #{listDetailType,jdbcType=VARCHAR}
+         and  LIST_ID = #{listId,jdbcType=VARCHAR}
+    </select>
+    
+</mapper>

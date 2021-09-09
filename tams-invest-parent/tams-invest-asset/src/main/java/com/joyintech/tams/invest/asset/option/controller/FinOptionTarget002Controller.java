@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.asset.option.dto.FinOptionTargetDto;
 import com.joyintech.tams.invest.asset.option.service.FinOptionTargetService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,8 +79,7 @@ public class FinOptionTarget002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinOptionTargetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinOptionTargetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

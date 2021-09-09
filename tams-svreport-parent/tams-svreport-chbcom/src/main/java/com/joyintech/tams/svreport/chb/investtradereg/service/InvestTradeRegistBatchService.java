@@ -262,16 +262,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 						dto.setSubmitDeadline(dateListUn.get(1));
 					}
 				}*/
-				if (dto.getDealdate() != null) {
-					List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),
-							DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
-							dto.getDealdate());
-					if (CollectionUtils.isNotEmpty(dateList)) {
-						dto.setChbSubmitDeadline(dateList.get(0));
-						dto.setSubmitDeadline(dateList.get(1));
-					}
 
-				}
 				// 登记编码
 				dto.setRegistSeqno(IDGenerator.generate(36));
 				// 报送流水号
@@ -446,6 +437,17 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 			if (DictCodeListExt2.资金流动类型_投资资产所得收益.getValue().equals(dto.getCurAssetType())) {
 				dto.setAssetMethod(null);
 			}
+
+			if (dto.getDealdate() != null) {
+				List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),
+						dto.getStatus(), dateMap,
+						dto.getDealdate());
+				if (CollectionUtils.isNotEmpty(dateList)) {
+					dto.setChbSubmitDeadline(dateList.get(0));
+					dto.setSubmitDeadline(dateList.get(1));
+				}
+			}
+
 		}
 	       
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
@@ -618,7 +620,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
             catch(Exception e){
             	logger.error(e.getMessage(),e);
                 session.rollback();
-                throw e;
+                throw new BusinessException(e);
             }
             finally {
                 session.close();
@@ -679,20 +681,23 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 		genDto.setEndRate(dto.getEndRate() != null ? dto.getEndRate().setScale(14) : null);
 		genDto.setContractCode(dto.getContractCode());
 		genDto.setRemark(dto.getRemark());
-		genDto.setChlCpctId(dto.getChlCpctId());
-		genDto.setTradeType(dto.getTradeType());
-		genDto.setChlAgrtName(dto.getChlAgrtName());
-		genDto.setFeeId(dto.getFeeId());
-		genDto.setFeeName(dto.getFeeName());
-		genDto.setFeeType(dto.getFeeType());
-		genDto.setFeeSectype(dto.getFeeSectype());
-		genDto.setOrgCode(dto.getOrgCode());
-		genDto.setDeleteRes(dto.getDeleteRes());
-		genDto.setDataSource(dto.getDataSource());
+//		genDto.setChlCpctId(dto.getChlCpctId());
+//		genDto.setTradeType(dto.getTradeType());
+//		genDto.setChlAgrtName(dto.getChlAgrtName());
+//		genDto.setFeeId(dto.getFeeId());
+//		genDto.setFeeName(dto.getFeeName());
+//		genDto.setFeeType(dto.getFeeType());
+//		genDto.setFeeSectype(dto.getFeeSectype());
+//		genDto.setOrgCode(dto.getOrgCode());
+//		genDto.setDeleteRes(dto.getDeleteRes());
+//		genDto.setDataSource(dto.getDataSource());
 		// modify by zhangliang 20201205 交易登记日（取跑批日）不是业务数据不参与比较
 		//genDto.setDealRegistDate(dto.getDealRegistDate());
-		genDto.setIsAssetSub(dto.getIsAssetSub());
-		genDto.setRefTradeseqno(dto.getRefTradeseqno());
+//		genDto.setIsAssetSub(dto.getIsAssetSub());
+		//delete by lpf
+		// 交易信息登记如果已经手工报送过了，然后如果将CHB_INVEST_TRADE表数据库删除了，重新改config日期，重新跑批，就会重新生成接入数据，然后用接入数据和报送过的数据比较，如果不一致就会再生成个修改未报送的数据，因为在比较的时候也用了CHB_INVEST_TRADE表的TRADE_SEQNO字段和CHB_INVEST_TRADE_SUB表的REF_TRADESEQNO字段比较了。
+		//CHB_INVEST_TRADE表数据如果删除过重新接TRADE_SEQNO字段就会重新生成，如果不删除重新接不会重新生成
+		/*genDto.setRefTradeseqno(dto.getRefTradeseqno());*/
 		genDto.setNum(dto.getNum() != null ? dto.getNum().setScale(5) : null);
 		genDto.setAssetMethod(dto.getAssetMethod());
 		genDto.setRivalPartyType(dto.getRivalPartyType());

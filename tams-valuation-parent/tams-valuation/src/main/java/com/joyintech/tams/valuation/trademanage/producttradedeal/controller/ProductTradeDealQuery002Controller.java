@@ -68,7 +68,7 @@ public class ProductTradeDealQuery002Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ProductTradeDealQuery002Dto> findPage() throws Exception{
+    public Page<ProductTradeDealQuery002Dto> findPage()  {
         return productTradeDealQuery002Service.findPageByCondition(RequestUtil.getPageParam());
     }
     
@@ -79,7 +79,7 @@ public class ProductTradeDealQuery002Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		List<ProductTradeDealQuery002Dto> dtoList = productTradeDealQuery002Service.findAllByCondition(RequestUtil.getPageParam());
 		File outFile = productTradeDealQuery002Service.makeFile(
 				"/com/joyintech/tams/valuation/trademanage/producttradedeal/conf/export_producttradedealquery002.xml",

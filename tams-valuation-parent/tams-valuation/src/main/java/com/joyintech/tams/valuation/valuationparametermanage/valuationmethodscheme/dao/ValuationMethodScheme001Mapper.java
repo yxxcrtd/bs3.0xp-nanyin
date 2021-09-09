@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.SelectPageOptionDto;
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -25,6 +26,7 @@ import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodsche
  * @see ValuationMethodScheme001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValuationMethodScheme001Mapper {
 
 	/**

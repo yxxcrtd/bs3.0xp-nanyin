@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -191,7 +192,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 			 try {
 					infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcProdRaiseSub.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+				 	logger.error(e.getMessage(),e);
 					logger.debug("数据转换异常",e.getMessage(),e);
 					return ;
 				}
@@ -258,7 +259,7 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 			 try {
 					infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcProdRaiseSub.class);
 				} catch (IOException e) {
-					e.printStackTrace();
+				 	logger.error(e.getMessage(),e);
 					logger.debug("数据转换异常",e.getMessage(),e);
 					return "fail";
 				}
@@ -626,13 +627,13 @@ public class PbcPrdCashRaiseSubService001 extends CommonExportService<PbcProdRai
 //            String zipFileName = FileNameUtil.createFileName("zip");
 //            String zipFileName = "PbocPrdRaise("+DateUtil.format(new Date(), "yyyy-MM-dd")+").zip";
 			String zipFileName = "资金募集数据"+".zip";
-			outFile = new File(exportFilePath + File.separator + zipFileName);
+			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

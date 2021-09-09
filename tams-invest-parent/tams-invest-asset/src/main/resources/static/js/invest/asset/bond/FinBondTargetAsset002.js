@@ -294,10 +294,10 @@ $(function() {
         $('#calRateType_div').hide();
     }
     
-    var issuerChange = function(){
+    /*var issuerChange = function(){
         var customerId = $('#issuer').val();
         AssetCommon.getRepInfoByIssuer(customerId);
-    }
+    }*/
 
     var resetForm = function(id,value,pageId){
         //update by zhangnian 20191112 start
@@ -610,7 +610,7 @@ $(function() {
 	                    }
 	                    isCityBondChange();
                     }
-                    if(result.data.registOrg != "99" ){
+                    if(result.data.registOrg != "99" && result.data.registOrg != "06"){
                         $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
                     }
 				}
@@ -626,6 +626,17 @@ $(function() {
         var customerId = $('#issuer').val();
         if(customerId){
             AssetCommon.getRepInfoByIssuer(customerId);
+            if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+            　　　Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getFinBondRatingDto?issuer='+customerId, '' ,function(result){
+                    if (result) {
+                    　　　　$('#busiFinBondRatingInfoTable').data('joyintable').reload({
+                              data : result,
+                              url : null
+                              });
+                           }
+                });
+            }
+          　
         }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
@@ -828,6 +839,7 @@ $(function() {
                     //股票一级市场  则显示  是否债转股
                     	$('#bussRepEquityInfoDto_repDeptEquity_div').show();
                     	$('#repDeptEquity').attr('required',true);
+                    	$('#bussRepEquityInfoDto_repInvestStage').parent().parent().find('i.must').remove();
                 }
                 
             }else {
@@ -892,6 +904,8 @@ $(function() {
         //修改  资产代码置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $("#finprodMarketId").attr('disabled',true);
+            //提交流程确认后，交易场所置灰不允许修改
+            $("#tradeMarket").attr('disabled',true);
             $('.btn-save').hide();
         }
         //是否含权债change
@@ -960,13 +974,13 @@ $(function() {
             obj.type = FINPROD_TYPE_TG_F01;
             AssetCommon.checkDate(obj);
         });
-        $("#registOrg").change(function () {
-            if($(this).val()=='04'){
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
-            }else{
-                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
-            }
-        });
+//        $("#registOrg").change(function () {
+//            if($(this).val()=='04'){
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('中证机构间报价系统股份有限公司');
+//            }else{
+//                $('#bussFinBondRepInfoDto_repRegistorgComment').val('');
+//            }
+//        });
         $("#pflsh").change(function(){
             var str = '';
             if($('#pflsh').select2('data')[0].object){

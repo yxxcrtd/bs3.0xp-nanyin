@@ -51,6 +51,7 @@ public class BusiFinBondRatingInfoController extends BaseController{
         String entityName = StringUtil.defaultString(this.getParam("entityName"),
             BusiFinBondRatingInfoService.DEFAULT_ENTITY_NAME);
         model.addAttribute("entityName", entityName);
+        model.addAttribute("pageId", this.getParam("pageId"));
         this.setSelectOptionToModel(model, DictCode.评级类型);
         this.setSelectOptionToModel(model, DictCode.长期短期);
         this.setSelectOptionToModel(model, DictCode.评级结果);

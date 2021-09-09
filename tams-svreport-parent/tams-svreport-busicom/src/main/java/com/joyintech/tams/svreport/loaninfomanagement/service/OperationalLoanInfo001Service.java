@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.loaninfomanagement.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,7 +41,7 @@ public class OperationalLoanInfo001Service extends BaseService<OperationalLoanIn
 	
 	/**
 	 * 根据主键删除数据
-	 * @param dto
+	 * @param param
 	 */
 	public void doDelete(Map<String, Object> param){
 		String assetUuid = param.get("ASSET_UUID").toString();
@@ -66,8 +67,8 @@ public class OperationalLoanInfo001Service extends BaseService<OperationalLoanIn
 	 * @param param
 	 * @return
 	 */
-	public List<SelectOptionDto> queryPbcAssetCode(Map<String, Object> param){
-		return operationalLoanInfo001Mapper.queryPbcAssetCode(param);
+	public Page<SelectOptionDto> queryPbcAssetCode(Map<String, Object> param,int page,int length){
+		return this.queryForPageForSelectReturn(page, length,()->operationalLoanInfo001Mapper.queryPbcAssetCode(param));
 	}
 	public String queryPbcAssetType(Map<String, Object> param){
 		String assetCode = param.get("assetCode").toString();
@@ -122,8 +123,8 @@ public class OperationalLoanInfo001Service extends BaseService<OperationalLoanIn
      */
     @Transactional
     @DataSource(DataSourceType.OTHER)
-    public List<SelectOptionDto> getAddressSelectOption(Map<String, Object> param){
-        return operationalLoanInfo001Mapper.getAddressSelectOption(param);
+    public Page<SelectOptionDto> getAddressSelectOption(Map<String, Object> param,int page,int length){
+        return this.queryForPageForSelectReturn(page, length,()->operationalLoanInfo001Mapper.getAddressSelectOption(param));
     }
 	
 }

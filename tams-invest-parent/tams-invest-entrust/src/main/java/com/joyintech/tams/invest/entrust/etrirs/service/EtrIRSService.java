@@ -11,6 +11,14 @@
 package com.joyintech.tams.invest.entrust.etrirs.service;
 
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.invest.entrust.etrstock.dto.EtrStockDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -278,12 +286,12 @@ public class EtrIRSService extends CommonExportService<EtrIRSDto> implements Bas
         return selectForPage(selectParam);
     }
 
-    /*@Override
+    @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
         if (StringUtil.equals(propName, "transactioncom")) {
             cell.setCellValue(value + "%");
         }
-    }*/
+    }
 
     /**
      * 组合可用现金查询 <功能详细描述>

@@ -250,6 +250,8 @@ public class ValItemValueGenAop {
             targetTalbleObj.setRepContainExpectedYield2(coverNo(targetTalbleObj.getRepContainExpectedYield2()));
             //REP_INDUSTRY_FLAG 是否属于重点监控行业和领域"
             targetTalbleObj.setRepIndustryFlag(coverNo(targetTalbleObj.getRepIndustryFlag()));
+            //REP_DEPT_EQUITY 是否为债转股
+            targetTalbleObj.setRepDeptEquity(coverNo(targetTalbleObj.getRepDeptEquity()));
         }
         //REP_ASSET_AST_QDII_SEC存值不符合接口规范
         else if(paramObject instanceof RepAssetAstQdiiSec){

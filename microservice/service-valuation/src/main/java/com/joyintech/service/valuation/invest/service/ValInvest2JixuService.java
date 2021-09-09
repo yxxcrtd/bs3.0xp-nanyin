@@ -1,15 +1,11 @@
 package com.joyintech.service.valuation.invest.service;
 
+import com.jixu.common.type.FinProductTypes;
 import com.jixu.common.type.ResultContainer;
-import com.jixu.common.types.FinProductTypes;
-import com.jixu.common.util.JsonUtil;
 import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
 import com.jixu.msg.dto.*;
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
@@ -69,7 +65,7 @@ public class ValInvest2JixuService{
 //			return resultContainer;
 //		}
 		BaseEntity dto = transDto(o);
-		String jsonMsg = JsonUtil.objToString(dto);
+		String jsonMsg = JsonUtils.object2Json(dto);
 		logger.info("jsonMsg字符串消息:"+jsonMsg);
 		ResultContainer resultContainer = joyin2JixuInterface.executeJixuMessage(jsonMsg);
 		ResultObject resultObject = new ResultObject();

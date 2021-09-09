@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
@@ -71,6 +73,8 @@ public class AdapterInterfaceController extends ExceptionControl{
 	
 	@Autowired
 	private InterfaceLogDao interfaceLogDao;
+
+	private static final Logger logger = LoggerFactory.getLogger(AdapterInterfaceController.class);
 	
 	@RequestMapping(value="/dataAdapter.do", method = RequestMethod.GET, name="管理-数据适配器-页面显示")
 	public String adapterPage(){
@@ -546,7 +550,8 @@ public class AdapterInterfaceController extends ExceptionControl{
 	@RequestMapping(value = "/interface/allMsgColsRemove.do", method = RequestMethod.POST)
 	public void removeAllMsgCols(@RequestParam(value = "id", required = true) int interfaceID,
 							 HttpServletResponse response) {
-		System.out.println("Remove all message cols in interface -" + interfaceID);
+//		System.out.println("Remove all message cols in interface -" + interfaceID);
+		logger.info("Remove all message cols in interface -" + interfaceID);
         JsonUtil.writeObjToResponse(response, "");
 	}
 	

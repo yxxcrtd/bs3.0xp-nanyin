@@ -59,7 +59,7 @@ public class PtlInvPortfolioStrategyController {
 	 */
 	@PostMapping("/getPortfolioId/{page}/{length}")
 	public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlInvPortfolioStrategyService.getPortfolioId(pageParam, page, length);
 	}
 
@@ -75,7 +75,7 @@ public class PtlInvPortfolioStrategyController {
 	 */
 	@PostMapping("/getStrategyId/{page}/{length}")
 	public Page<SelectOptionDto> getStrategyId(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlInvPortfolioStrategyService.getStrategyId(pageParam, page, length);
 	}
 
@@ -94,7 +94,7 @@ public class PtlInvPortfolioStrategyController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<PtlInvPortfolioStrategyDto> selectForPage(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return ptlInvPortfolioStrategyService.selectForPage(page, length, pageParam);
 	}
 
@@ -187,7 +187,7 @@ public class PtlInvPortfolioStrategyController {
 	@PostMapping("/insert")
 	@Transactional
 	@DTXTransaction
-	public int insert(@RequestBody PtlInvPortfolioStrategyDto dto) throws Exception {
+	public int insert(@RequestBody PtlInvPortfolioStrategyDto dto) {
 		return ptlInvPortfolioStrategyService.insert(dto);
 	}
 

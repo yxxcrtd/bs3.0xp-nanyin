@@ -250,6 +250,7 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
      * 完成额度
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
+    @Amount(fieldName = "EtrInvestBondInfo002.finishAmt", groups = {ValidateGroupEdit.class})
     private BigDecimal finishAmt;
     
     /**

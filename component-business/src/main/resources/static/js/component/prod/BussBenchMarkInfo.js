@@ -85,7 +85,7 @@
             getElementById('indexId').val('').trigger('change').prop('disabled', true);
             getElementById('coefficient').val('').trigger('change').prop('disabled', true);
             getElementById('spreadRate').val('').trigger('change').prop('disabled', true);
-            getElementById('resetType').trigger('change').prop('disabled', true);
+            getElementById('resetType').val('').trigger('change').prop('disabled', true);
         } else {
             getElementById('rate').val('').trigger('change').prop('disabled', true);
             getElementById('indexId').trigger('change').prop('disabled', false);
@@ -126,7 +126,7 @@
         } else {
             getElementById('div').show();
         }
-        getElementById('publishType').val('').trigger('change');
+        getElementById('publishType').val('02').trigger('change');
         getElementById('rateType').val('').trigger('change');
     }
     /**
@@ -143,7 +143,7 @@
         	else{
                 getElementById('div').show();
         	} 
-            getElementById('publishType').val('').trigger('change');
+            getElementById('publishType').val('02').trigger('change');
             getElementById('rateType').val('').trigger('change');
     	}
     }

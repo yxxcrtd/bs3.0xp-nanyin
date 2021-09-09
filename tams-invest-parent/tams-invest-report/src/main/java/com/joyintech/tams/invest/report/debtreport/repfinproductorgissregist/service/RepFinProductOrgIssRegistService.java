@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.report.debtreport.repfinproductorgissregist.se
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,11 @@ import com.joyintech.tams.invest.report.debtreport.repfinproductorgissregist.dto
  */
 @Service
 public class RepFinProductOrgIssRegistService extends CommonExportService<RepFinProductOrgIssRegistDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RepFinProductOrgIssRegistService.class);
+
     /**
      * 
      */
@@ -95,7 +102,7 @@ public class RepFinProductOrgIssRegistService extends CommonExportService<RepFin
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

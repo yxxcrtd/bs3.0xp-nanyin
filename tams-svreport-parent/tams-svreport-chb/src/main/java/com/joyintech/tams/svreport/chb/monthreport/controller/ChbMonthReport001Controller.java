@@ -126,7 +126,7 @@ public class ChbMonthReport001Controller extends BaseController{
            result.put("SENDSTATUS", report.getSendStatus());
            result.put("STATUS", report.getStatus());
        }
-       return JsonUtils.object2Json(result);
+       return StringUtil.trimHtmlTag(JsonUtils.object2Json(result));
    }
 	/**
 	 * 

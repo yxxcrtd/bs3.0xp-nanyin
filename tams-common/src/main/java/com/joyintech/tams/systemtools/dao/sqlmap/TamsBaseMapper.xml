@@ -9,6 +9,9 @@
         <if test="databaseType == 'Oracle'"> 
           select ${sequenceName}.nextVal from dual
         </if>
+        <if test="databaseType == 'Mysql'">
+            select _NEXTINDEX(${sequenceName}) from dual
+        </if>
     </select>
     <!-- 查询所有有权限的机构代码 -->
 <!--     <select id="selectOrgCode" parameterType="java.lang.String" resultType="java.lang.String">
@@ -26,6 +29,26 @@
     	where 
     	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
     </select>
+
+    <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectPbcBankCode" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.PBC_BANK_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.ORG_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
+
+    <!-- 根据机构代码和用户id查询用户的登记银行编码 -->
+    <select id="selectPbcBankCodeBack" parameterType="java.lang.String" resultType="java.lang.String">
+    	select
+    	corb.ORG_CODE
+    	from CHB_ORG_REGIST_BANK_CODE corb
+    	where
+    	corb.PBC_BANK_CODE = #{orgCode,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectBankCodeName" parameterType="java.lang.String" resultType="java.lang.String">
         select
         SI.INSTITUTION_NAME
@@ -156,5 +179,23 @@
         and data_type = #{dataType}
     </select>
 
+    <select id="getSequenceIndexByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT (begin_num + incr) FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <select id="getSequenceIncrByParam" parameterType="java.util.Map"  resultType="java.lang.Long" useCache="false" flushCache="true">
+		SELECT incr FROM SYS_SEQUENCE WHERE `name` = #{sequenceName,jdbcType=VARCHAR}
+	</select>
+
+    <update id="updateSequenceIndexData" parameterType= "map" statementType="CALLABLE">
+    
+       <if test="databaseType == 'Oracle'"> 
+          {call UPDATE_SEQUENCE_CHB(
+		#{incrNum, jdbcType=VARCHAR, mode=IN},
+		#{sequenceName, jdbcType=VARCHAR, mode=IN} 
+		)
+	  }	
+        </if>
+	</update>
 
 </mapper>

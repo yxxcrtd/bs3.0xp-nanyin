@@ -56,7 +56,7 @@ public class PlanningStrategyPoolController {
 	 */
 	@PostMapping("/getStrategyId/{page}/{length}")
 	public Page<SelectOptionDto> getStrategyId(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return planningStrategyPoolService.getStrategyId(pageParam, page, length);
 	}
 
@@ -75,7 +75,7 @@ public class PlanningStrategyPoolController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<PlanningStrategyPoolDto> selectForPage(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		// 策略代码处理
 		if (StringUtil.isNotEmpty(pageParam.get("strategyId"))) {
 			pageParam.put("strategyId", StringUtil.splitToList(null, pageParam.get("strategyId").toString()));
@@ -124,7 +124,7 @@ public class PlanningStrategyPoolController {
 	@PostMapping("/insert")
 	@Transactional
 	@DTXTransaction
-	public int insert(@RequestBody PlanningStrategyPoolDto entity) throws Exception {
+	public int insert(@RequestBody PlanningStrategyPoolDto entity) {
 		return planningStrategyPoolService.insert(entity);
 	}
 
@@ -138,7 +138,7 @@ public class PlanningStrategyPoolController {
 	@PostMapping("/modify")
 	@Transactional
 	@DTXTransaction
-	public int modify(@RequestBody PlanningStrategyPoolDto entity) throws Exception {
+	public int modify(@RequestBody PlanningStrategyPoolDto entity) {
 		return planningStrategyPoolService.modify(entity);
 	}
 
@@ -152,7 +152,7 @@ public class PlanningStrategyPoolController {
 	@PostMapping("/delete")
 	@Transactional
 	@DTXTransaction
-	public int delete(@RequestBody PlanningStrategyPoolDto entity) throws Exception {
+	public int delete(@RequestBody PlanningStrategyPoolDto entity) {
 		return planningStrategyPoolService.delete(entity);
 	}
 

@@ -85,7 +85,7 @@ public class ProdChannelFeeCalBookProcessorService {
 	 * @see
 	 * @since 1.0
 	 */
-	public BookGenerateResult execute(Map<String, Object> params) throws Exception {
+	public BookGenerateResult execute(Map<String, Object> params) {
 		// 获取reader返回值
 		ProdChannelFeeCalBookReaderDto acctEntity = (ProdChannelFeeCalBookReaderDto) params
 				.get(GlobalConstant.READER_RESULT);

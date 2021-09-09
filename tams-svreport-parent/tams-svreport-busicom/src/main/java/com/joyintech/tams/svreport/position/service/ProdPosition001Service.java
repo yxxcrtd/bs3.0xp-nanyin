@@ -260,6 +260,16 @@ public class ProdPosition001Service  extends SvrCBBaseService{
 				sdDeal.setTradeCost(sdDeal.getTradeCost()==null?BigDecimal.ZERO:sdDeal.getTradeCost().negate());
 				sdDeal.setIntAmt(BigDecimal.ZERO);
 				updatePosition(prdcostalg, sdDeal, valuePosition);
+    		}else{
+    			ChbPrdPosition position = convertTdPosition(sdDeal,sdDeal.getSettdateDate());
+    			position.setTdaddAmt(sdDeal.getTradePrince()==null?BigDecimal.ZERO:sdDeal.getTradePrince().negate());
+    			position.setTdaddCost(sdDeal.getTradePrince()==null?BigDecimal.ZERO:sdDeal.getTradePrince().negate());
+    			position.setTdaddQty(sdDeal.getTradeQty()==null?BigDecimal.ZERO:sdDeal.getTradeQty().negate());
+    			position.setBalanceAmt(sdDeal.getTradePrince()==null?BigDecimal.ZERO:sdDeal.getTradePrince().negate());
+    			position.setBalanceQty(sdDeal.getTradeQty()==null?BigDecimal.ZERO:sdDeal.getTradeQty().negate());
+    			List<ChbPrdPosition> positionList=new ArrayList<ChbPrdPosition>();
+    			positionList.add(position);
+    			positionMap.put(dealkey, positionList);
     		}
     	}
     	//再处理认申购、红利再投
@@ -317,7 +327,6 @@ public class ProdPosition001Service  extends SvrCBBaseService{
     		}
     	}
 
-    	//更新新增字段字段
     	// 查询交易信息
         List<ChbPrdDeal> dealList = chbPrdPositionMapper.selectPrdDeal(bookDate,prodIdList);
         for (ChbPrdDeal chbPrdDeal : dealList) {

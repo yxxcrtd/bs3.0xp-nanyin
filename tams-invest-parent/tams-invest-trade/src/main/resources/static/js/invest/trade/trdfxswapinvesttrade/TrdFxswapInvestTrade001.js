@@ -73,7 +73,8 @@ $(function(){
             ,{field:'fCorCurAmt', title: 'TrdFxswapInvestTrade002.fCorCurAmt', width:100,type:'number',sortField:'fCorCurAmt'}
             ,{field:'fUsdAmt', title: 'TrdFxswapInvestTrade002.fUsdAmt', width:100,type:'number',sortField:'fUsdAmt'}
             ,{field:'remark', title: 'TrdFxswapInvestTrade001.remark', width:100}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     /**
      * 导出事件

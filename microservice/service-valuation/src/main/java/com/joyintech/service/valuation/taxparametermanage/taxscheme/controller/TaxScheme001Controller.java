@@ -82,7 +82,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
     @PostMapping("/findScheme/{page}/{length}")
 	public Page<TaxScheme001Dto> findScheme(@RequestBody Map<String, Object> param,
-	                                        @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+	                                        @PathVariable("page") int page, @PathVariable("length") int length) {
 		return taxScheme001Service.findSchemeByPage(page, length, param);
 	}
 
@@ -94,7 +94,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
     @PostMapping("/findVatTax/{page}/{length}")
 	public Page<TaxScheme001Dto> findVatTax(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
 		return taxScheme001Service.findVatTaxByPage(page, length, param);
 	}
 
@@ -106,7 +106,7 @@ public class TaxScheme001Controller extends BaseController {
 	 */
 	@PostMapping("/findAdtTax/{page}/{length}")
 	public Page<TaxScheme001Dto> findAdtTax(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
 		return taxScheme001Service.findAdtTaxByPage(page, length, param);
 	}
 
@@ -118,7 +118,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @PostMapping("/findTaxable/{page}/{length}")
     public Page<TaxScheme001Dto> findTaxable(@RequestBody Map<String, Object> param,
-                                             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                             @PathVariable("page") int page, @PathVariable("length") int length) {
         return taxScheme001Service.findTaxableByPage(page, length, param);
     }
 	
@@ -130,7 +130,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @PostMapping("/findConfig/{page}/{length}")
     public Page<TaxScheme001Dto> findConfig(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return taxScheme001Service.findConfigByPage(page, length, param);
     }
 
@@ -142,7 +142,7 @@ public class TaxScheme001Controller extends BaseController {
      */
     @PostMapping("/findTaxSchaBokConfig/{page}/{length}")
     public Page<TaxScheme001Dto> findTaxSchaBokConfig(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return taxScheme001Service.findTaxSchaBokConfigByPage(page, length, param);
     }
 
@@ -153,7 +153,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("findVatTax")
-    public List<TaxScheme001Dto> findVatTax(@RequestBody Map<String, Object> param) throws Exception {
+    public List<TaxScheme001Dto> findVatTax(@RequestBody Map<String, Object> param) {
         return taxScheme001Service.findVatTax(param);
     }
     
@@ -164,7 +164,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("findAdtTax")
-    public List<TaxScheme001Dto> findAdtTax(@RequestBody Map<String, Object> param) throws Exception {
+    public List<TaxScheme001Dto> findAdtTax(@RequestBody Map<String, Object> param){
         return taxScheme001Service.findAdtTax(param);
     }
     
@@ -175,7 +175,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("findTaxable")
-    public List<TaxScheme001Dto> findTaxable(@RequestBody Map<String, Object> param) throws Exception {
+    public List<TaxScheme001Dto> findTaxable(@RequestBody Map<String, Object> param) {
         return taxScheme001Service.findTaxable(param);
     }
     
@@ -186,7 +186,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("findConfig")
-    public List<TaxScheme001Dto> findConfig(@RequestBody Map<String, Object> param) throws Exception {
+    public List<TaxScheme001Dto> findConfig(@RequestBody Map<String, Object> param) {
         return taxScheme001Service.findConfig(param);
     }
 
@@ -208,7 +208,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/findAsset")
-    public List<SelectOptionDto> findAsset(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> findAsset(@RequestBody Map<String, Object> param) {
         return taxScheme001Service.findAsset(param);
     }
     
@@ -219,7 +219,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/findProject")
-    public List<SelectOptionDto> findProject(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> findProject(@RequestBody Map<String, Object> param) {
         return taxScheme006Service.findProject(param);
     }
 
@@ -232,7 +232,7 @@ public class TaxScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("exportVatTax")
-	public ResponseEntity<byte[]> exportVatTax(@RequestBody Map<String, Object> param) throws Exception {
+	public ResponseEntity<byte[]> exportVatTax(@RequestBody Map<String, Object> param) {
 
 		List<TaxScheme001Dto> dtoList = taxScheme001Service.findVatTax(param);
 		File outFile = taxScheme001Service.makeFile(
@@ -251,7 +251,7 @@ public class TaxScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("exportAdtTax")
-	public ResponseEntity<byte[]> exportAdtTax() throws Exception {
+	public ResponseEntity<byte[]> exportAdtTax() {
 
 		List<TaxScheme001Dto> dtoList = taxScheme001Service.findAdtTax(RequestUtil.getPageParam());
 		File outFile = taxScheme001Service.makeFile(
@@ -270,7 +270,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("exportTaxable")
-    public ResponseEntity<byte[]> exportTaxable() throws Exception {
+    public ResponseEntity<byte[]> exportTaxable() {
 
         List<TaxScheme001Dto> dtoList = taxScheme001Service.findTaxable(RequestUtil.getPageParam());
         File outFile = taxScheme001Service.makeFile(
@@ -289,7 +289,7 @@ public class TaxScheme001Controller extends BaseController {
      * @throws Exception
      */
     @PostMapping("exportConfig")
-    public ResponseEntity<byte[]> exportConfig() throws Exception {
+    public ResponseEntity<byte[]> exportConfig() {
 
         List<TaxScheme001Dto> dtoList = taxScheme001Service.findConfig(RequestUtil.getPageParam());
         File outFile = taxScheme001Service.makeFile(

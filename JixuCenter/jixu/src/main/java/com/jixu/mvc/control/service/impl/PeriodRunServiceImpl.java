@@ -128,7 +128,7 @@ public class PeriodRunServiceImpl implements PeriodRunService{
 
 				// 输出做账结果
 			    data=returnPeriodData(data,mainContainer,startDate);
-				if (mainContainer.isCorrectFlag()) {
+				if (mainContainer != null && mainContainer.isCorrectFlag()) {
 					// 更新工作流状态
 					wfService.updateWorkFlowStep(jobID, ports_list, startDate,WorkFlowStatus.finish);
 				} else {
@@ -147,7 +147,7 @@ public class PeriodRunServiceImpl implements PeriodRunService{
 				  }
 			  }*/
 			// 下一天
-			if(!mainContainer.isCorrectFlag()){
+			if(mainContainer != null && !mainContainer.isCorrectFlag()){
 				break;
 			}
 			startDate = DateUtil.getNextDay(startDate);
@@ -218,14 +218,14 @@ public class PeriodRunServiceImpl implements PeriodRunService{
 				// 输出撤账结果
 				 data=returnPeriodData(data,mainContainer,endDate);
 				// 更新工作流状态
-				if(mainContainer.isCorrectFlag()){
+				if(mainContainer != null && mainContainer.isCorrectFlag()){
 					wfService.updateWorkFlowStep(jobID, ports_list, endDate, WorkFlowStatus.process);
 				}else{
 					break;
 				}
 			}
 			
-			if(!mainContainer.isCorrectFlag()){
+			if(mainContainer != null && !mainContainer.isCorrectFlag()){
 				break;
 			}
 			

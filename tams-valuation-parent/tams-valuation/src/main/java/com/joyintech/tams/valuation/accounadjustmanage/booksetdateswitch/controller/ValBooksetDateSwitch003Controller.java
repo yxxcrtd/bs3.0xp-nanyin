@@ -54,12 +54,11 @@ public class ValBooksetDateSwitch003Controller extends BaseController {
     /**
      * 查询数据获得
      * @return 套账日期
-     * @throws Exception
      * @see
      */
     @RequestMapping("findList")
     @ResponseBody
-    public List<ValBooksetDateSwitch003Dto> findList() throws Exception {
+    public List<ValBooksetDateSwitch003Dto> findList() {
         return valBooksetDateSwitch003Service.findList(RequestUtil.getPageParam());
 
     }

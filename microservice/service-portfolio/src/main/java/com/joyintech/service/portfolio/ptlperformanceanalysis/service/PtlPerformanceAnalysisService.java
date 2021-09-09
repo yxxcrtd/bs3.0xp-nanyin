@@ -45,7 +45,7 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
 	
 	
     public Page<PtlPerformanceAnalysis001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+	{
     	Date searchDateStart = DateUtil.parse((String) pageParam.get("searchDateStart"));
     	Date searchDateEnd = DateUtil.parse((String) pageParam.get("searchDateEnd"));
     	
@@ -677,14 +677,16 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
 		}
 		
 		//平均分配
-		BigDecimal avgYield = maxyleftData.subtract(minyleftData).divide(new BigDecimal(5),BigDecimal.ROUND_HALF_UP,4);
-		for(int i = 0 ; i < 5 ; i++){
-			BigDecimal tempYield = minyleftData.add(avgYield);
-			ptlPerformanceLineDto.getYleftaxisdata().add(tempYield.toString());
+		if (maxyleftData != null){
+			BigDecimal avgYield = maxyleftData.subtract(minyleftData).divide(new BigDecimal(5),BigDecimal.ROUND_HALF_UP,4);
+			for(int i = 0 ; i < 5 ; i++){
+				if(avgYield != null){
+					BigDecimal tempYield = minyleftData.add(avgYield);
+					ptlPerformanceLineDto.getYleftaxisdata().add(tempYield.toString());
+				}
+			}
 		}
 
-		
-		
 		//对于日期时间赋值
 		if(list.size() > 0 ){
 			dateStartDate = list.get(0).getCdate();
@@ -929,7 +931,7 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
     		if("total".equals(type)){
     			temp.setYield(calcSingleIntTotalYield(calcList,BigDecimal.ONE,new BigDecimal((String)map.get("coefficient")),new BigDecimal((String)map.get("spreadRate")),dto.getCdate(),vdate,weight));
     		}else {
-    			temp.setYield(calcSingleIntPYield(calcList,BigDecimal.ONE,new BigDecimal((String)map.get("coefficient")),new BigDecimal((String)map.get("spreadRate")),dto.getCdate(),vdate,weight));
+    			temp.setYield(new BigDecimal((String)map.get("coefficient")));
     		}
     		resultList.add(temp);
     	}
@@ -981,12 +983,12 @@ public class PtlPerformanceAnalysisService extends BaseService<PtlPerformanceAna
     }
     
     
-    //计算区间收益率
-    public BigDecimal calcSingleIntPYield(List<DailyYieldDto> list,
-	BigDecimal weight,BigDecimal coefficient,
-	BigDecimal spreadRate,Date curDate,Date vdate,BigDecimal fhjzweight){
-    	return calcSingleIntPYield(list,weight,coefficient,spreadRate,curDate,vdate,fhjzweight);
-    }    
+//    //计算区间收益率
+//    public BigDecimal calcSingleIntPYield(List<DailyYieldDto> list,
+//	BigDecimal weight,BigDecimal coefficient,
+//	BigDecimal spreadRate,Date curDate,Date vdate,BigDecimal fhjzweight){
+//    	return calcSingleIntPYield(list,weight,coefficient,spreadRate,curDate,vdate,fhjzweight);
+//    }
     
     public List<DailyYieldDto> calcBatchCurveYield(Date startDate,Date endDate,Map<String,Object> map,Date vdate,String type){
     	

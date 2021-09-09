@@ -467,7 +467,7 @@
 		(T14.ACCT_NO = T12.MY_ACCT_NO AND T12.PS = #{IE_FLAG_02}) OR
 		(T14.ACCT_NO = T12.COUNTER_ACCT_NO AND T12.PS = #{IE_FLAG_01})
 		where
-		T1.TRADE_ID = #{bizCode}
+		(T1.TOTLE_TRADE_ID = #{bizCode} OR T1.TRADE_ID = #{bizCode})
 		AND NOT EXISTS (SELECT 1 FROM
 		FIN_CASH_CALC_RULE FC WHERE FC.CASH_ID =
 		T4.CASH_ID AND FC.EFF_DATE >
@@ -525,7 +525,8 @@
 		(T14.ACCT_NO = T12.MY_ACCT_NO AND T12.PS = #{IE_FLAG_02}) OR
 		(T14.ACCT_NO = T12.COUNTER_ACCT_NO AND T12.PS = #{IE_FLAG_01})
 		where
-		T1.TRADE_ID = #{bizCode}
+		T1.TOTLE_TRADE_ID = #{bizCode}
+		OR T1.TRADE_ID = #{bizCode}
 	</select>
 
 	<select id="findDataForCashAndFee"

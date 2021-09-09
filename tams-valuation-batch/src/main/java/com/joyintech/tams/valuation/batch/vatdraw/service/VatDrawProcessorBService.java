@@ -32,6 +32,7 @@ import com.joyintech.tams.valuation.common.constants.*;
 import com.joyintech.tams.valuation.common.utils.CalendarUtil;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -361,6 +362,7 @@ public class VatDrawProcessorBService {
         paramCodeList.add(ValDictCodeList.账套配置表参数项_证券类型计税方式_贷款业务收入_发生.getValue());
         paramCodeList.add(ValDictCodeList.账套配置表参数项_当日计税计提基准_金融商品转让_发生.getValue());
         paramCodeList.add(ValDictCodeList.账套配置表参数项_证券类型计税方式_金融商品转让_发生.getValue());
+        paramCodeList.add(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue());
 
         Map<String, Object> booksetExtMap = accountingCommonService.getValBokBooksetExtForMap(acctEntity.getBooksetId(),
             paramCodeList);
@@ -373,8 +375,8 @@ public class VatDrawProcessorBService {
 
         Set<String> bokDetailIds1 = new HashSet<>();
         for (TaxBokBalance info : listTaxBokBalance) {
-            if (!bokDetailIds1.contains(info.getBokDetailId())
-                && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null
+                && !bokDetailIds1.contains(info.getBokDetailId())) {
                 bokDetailIds1.add(info.getBokDetailId());
             }
         }
@@ -526,8 +528,8 @@ public class VatDrawProcessorBService {
             // 4'.2 根据上述查询结果,账务明细代码排重后取税则
             List<String> listBokDetailId = new ArrayList<String>();
             for (BookLatestInfoDto info : listBookLatestInfoDto) {
-                if (!listBokDetailId.contains(info.getBokDetailId())
-                    && info.getBokDetailId() != null) {
+                if (info.getBokDetailId() != null
+                    && !listBokDetailId.contains(info.getBokDetailId())) {
                     listBokDetailId.add(info.getBokDetailId());
                 }
             }
@@ -684,6 +686,54 @@ public class VatDrawProcessorBService {
         // 4.1 查询发生日当天最新的凭证:
         List<BookLatestInfoDto> listBookLatestInfo = accountingCommonService.getBookLatestInfo(
             booksetId, bookDate, null, null, null, null, happenDate, null, null, null);
+        //摊销已摊成0，后续出现预估转发生的情况账务明细当前表查询不到利息调整科目导致预估不能冲减问题特殊处理
+        List<BookLatestInfoDto>  listBookLatestInfotemp = new ArrayList<BookLatestInfoDto>();
+        List<BookLatestInfoDto> bookLatestInfoDtotmeplist =new ArrayList<BookLatestInfoDto>();
+        List<BookLatestInfoDto> listBookLatestInfotemp1 = listBookLatestInfo.stream().filter(bookLatestInfoDto1 ->
+                (StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_摊余成本类债券_卖出.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_综合收益类债券_卖出.getValue())
+                        ||StringUtil.equals(bookLatestInfoDto1.getTableId(), DictCodeListTableId.会计场景代码_综合收益类债券_行权赎回.getValue()))).collect(Collectors.toList());
+
+        Map<String, List<BookLatestInfoDto>> totalDataMap = listBookLatestInfotemp1.stream().collect(
+                JoyinCollectors.groupingBy(x ->x.getBookId()));
+
+        for (String key : totalDataMap.keySet()) {
+            List<BookLatestInfoDto> bookLatestInfoDtotemp1 = totalDataMap.get(key).stream().filter(
+                    item -> (item.getBaseSubjectNature().equals(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue())
+                            || item.getBaseSubjectNature().equals(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue()))).collect(Collectors.toList());
+            if(bookLatestInfoDtotemp1 == null || bookLatestInfoDtotemp1.isEmpty()){
+                listBookLatestInfotemp.addAll(totalDataMap.get(key));
+            }
+        }
+        Map<String,BookLatestInfoDto> paraMap =new HashMap<String,BookLatestInfoDto>();
+        for(BookLatestInfoDto bookLatestInfoDto : listBookLatestInfotemp){
+            //账套参数“摊销额小于0是否只摊到0”为是，同时是场景是1316、1353、1325、1355才需要组装一条是利息调整金额0的记录
+            if(StringUtil.equals(DictCodeList.是否_是.getValue(),booksetExtMap.get(ValDictCodeList.账套配置表参数项_摊销额小于0是否只摊到0.getValue()))){
+                //防止出现多条记录
+                if(paraMap.get(bookLatestInfoDto.getBokDetailId()) == null){
+                    BookLatestInfoDto bookLatestInfoDtotmep =new BookLatestInfoDto();
+                    paraMap.put(bookLatestInfoDto.getBokDetailId(),bookLatestInfoDto);
+                    BeanUtil.copyPropertiesIgnoreNull(bookLatestInfoDtotmep, bookLatestInfoDto);
+                    bookLatestInfoDtotmep.setoHappenAmt(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setbHappenAmt(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setoAmtHappenDate(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setbAmtHappenDate(BigDecimal.ZERO);
+                    bookLatestInfoDtotmep.setBookOrder(new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.处理序列)));
+                    bookLatestInfoDtotmep.setSubjectNo("110");
+                    if(StringUtil.equals(bookLatestInfoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_卖出.getValue())||
+                            StringUtil.equals(bookLatestInfoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_行权赎回.getValue())){
+                        bookLatestInfoDtotmep.setBaseSubjectNature(DictCodeBaseSubjectNatrue.摊余成本类利息调整.getValue());
+                    }else{
+                        bookLatestInfoDtotmep.setBaseSubjectNature(DictCodeBaseSubjectNatrue.综合收益类利息调整.getValue());
+                    }
+                    bookLatestInfoDtotmeplist.add(bookLatestInfoDtotmep);
+                }
+             }
+        }
+        if(bookLatestInfoDtotmeplist !=null && bookLatestInfoDtotmeplist.size() > 0){
+            listBookLatestInfo.addAll(bookLatestInfoDtotmeplist);
+        }
         // add by xiongran 20201120 TISHKBS-1610 start
         List<BookLatestInfoDto> listBookLatestInfo2=new ArrayList<BookLatestInfoDto>();
         if(StringUtil.isNotEmpty(cfConfigs.get("SH_DEAL_ORDER"))&&StringUtil.equals(cfConfigs.get("SH_DEAL_ORDER"),"02")){
@@ -727,7 +777,7 @@ public class VatDrawProcessorBService {
         List<String> listBokDetailId = new ArrayList<String>();
         for (
             BookLatestInfoDto info : listBookLatestInfo) {
-            if (!listBokDetailId.contains(info.getBokDetailId()) && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null && !listBokDetailId.contains(info.getBokDetailId())) {
                 listBokDetailId.add(info.getBokDetailId());
             }
         }
@@ -746,6 +796,15 @@ public class VatDrawProcessorBService {
         // 定义 增值税已抵扣增值额List
         List<TaxDeductedBalance> listDeductedBalance = new ArrayList<TaxDeductedBalance>();
         for ( BookLatestInfoDto infoDto : listBookLatestInfo) {
+            //上市流通凭证中不处理上市标的
+            if(StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                    ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                    ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                Boolean isShbdByBusiId = vatDrawMapper.getIsShbdByBusiId(infoDto.getBusiId());
+                if(!isShbdByBusiId){
+                    continue;
+                }
+            }
             detailConfigMap = new HashMap<>();
 
             // if (本币特殊处理基础科目性质列表 包含 账务明细（当前表）M.基础科目性质 时)
@@ -1206,6 +1265,14 @@ public class VatDrawProcessorBService {
                             List<BookLatestInfoDto> listVouchNow = listBookLatestInfo.stream().filter(
                                 item -> item.getBookId().equals(infoDto.getBookId())).collect(
                                     Collectors.toList());
+                            //上市流通交易一个凭证存在两个成本，故此处需要加上过滤，以防资产成本取错
+                            if(StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                                    ||StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                                    ||StringUtil.equals(listVouchNow.get(0).getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                                listVouchNow = listVouchNow.stream().filter(
+                                        item -> item.getBokDetailId().equals(infoDto.getBokDetailId())).collect(
+                                        Collectors.toList());
+                            }
                             // 账务明细（当前表） 当前成本 = 当期凭证.filter(基础科目性质 = 占比科目性质)
                             BookLatestInfoDto costNow = listVouchNow.stream().filter(
                                 item -> configDto.getCalcSnature().equals(
@@ -1413,6 +1480,37 @@ public class VatDrawProcessorBService {
                 }
                 // 增值税账务明细List.add(增值税账务明细)
                 ValTaxBokDetails.add(taxBokDetail);
+                //上市流通交易,根据发行标的组装上市标的的计税流水
+                if(StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_公允价值损益类债券_上市流通.getValue())
+                        ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_摊余成本类债券_上市流通.getValue())
+                        ||StringUtil.equals(infoDto.getTableId(),DictCodeListTableId.会计场景代码_综合收益类债券_上市流通.getValue())){
+                    //根据发行标的组装上市标的的计税流水
+                    Map<String, String> orginInfoMap = new HashMap<String, String>();
+                    orginInfoMap.put("busiId",infoDto.getBusiId());
+                    orginInfoMap.put("booksetId",infoDto.getBooksetId());
+                    String Shbdbokdetailid = vatDrawMapper.getTaxBokDetailsByOrgin(orginInfoMap);
+                    if(StringUtil.isNotBlank(Shbdbokdetailid)){
+                        TaxBokDetail taxBokDetailShbd = new TaxBokDetail();
+                        BeanUtil.copyPropertiesIgnoreNull(taxBokDetailShbd, taxBokDetail);
+                        taxBokDetailShbd.setSeqNo(dBUtil.getSequenceIndexData(DataIndexSequenceType.记账类型));
+                        taxBokDetailShbd.setBokDetailId(Shbdbokdetailid);
+                        taxBokDetailShbd.setHappenAmt(ArithmeticUtil.multiply(taxBokDetail.getHappenAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setTaxAmt(ArithmeticUtil.multiply(taxBokDetail.getTaxAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setBalAmt(ArithmeticUtil.multiply(taxBokDetail.getBalAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCarryAmt(ArithmeticUtil.multiply(taxBokDetail.getCarryAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCreateTime(new Date());
+                        taxBokDetailShbd.setUpdateTime(new Date());
+                        taxBokDetailShbd.setHappenAmtB(ArithmeticUtil.multiply(taxBokDetail.getHappenAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setTaxAmtB(ArithmeticUtil.multiply(taxBokDetail.getTaxAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setBalAmtB(ArithmeticUtil.multiply(taxBokDetail.getBalAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setCarryAmtB(ArithmeticUtil.multiply(taxBokDetail.getCarryAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeAccrAmt(ArithmeticUtil.multiply(taxBokDetail.getIncomeAccrAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeCarryAmt(ArithmeticUtil.multiply(taxBokDetail.getIncomeCarryAmt(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeAccrAmtB(ArithmeticUtil.multiply(taxBokDetail.getIncomeAccrAmtB(), new BigDecimal(-1)));
+                        taxBokDetailShbd.setIncomeCarryAmtB(ArithmeticUtil.multiply(taxBokDetail.getIncomeCarryAmtB(), new BigDecimal(-1)));
+                        ValTaxBokDetails.add(taxBokDetailShbd);
+                    }
+                }
 
                 // IF 配置.是否处理待抵扣增值额 = 'Y'
                 if (DictCodeList.是否_是.getValue().equals(isCalcTurned)) {

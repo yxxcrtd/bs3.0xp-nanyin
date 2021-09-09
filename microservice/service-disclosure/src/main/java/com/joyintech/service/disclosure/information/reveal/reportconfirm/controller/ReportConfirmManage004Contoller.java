@@ -20,7 +20,7 @@ public class ReportConfirmManage004Contoller extends BaseController {
 
     @PostMapping("/querySameCount")
     public int querySameCount(@RequestBody Map<String, Object> params)
-        throws Exception {
+    {
         return reportConfirmManage004Service.querySameCount(params);
     }
 

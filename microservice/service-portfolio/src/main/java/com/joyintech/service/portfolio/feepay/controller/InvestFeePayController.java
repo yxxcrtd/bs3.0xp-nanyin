@@ -53,7 +53,7 @@ public class InvestFeePayController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<InvestFeePayDto> selectForPage(@RequestBody Map<String, Object> param,
-                                                   @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                   @PathVariable("page") int page, @PathVariable("length") int length) throws NoSuchFieldException {
         return investFeePayService.selectForPage(page, length, param);
     }
 
@@ -81,7 +81,7 @@ public class InvestFeePayController {
      */
     @GetMapping("getSecAcctId")
     public List<SuggestDto> getSecAcctId(String secAcctId)
-        throws Exception {
+    {
         List<SuggestDto> temp = investFeePayService.getSecAcctId(secAcctId);
         return temp;
     }
@@ -469,7 +469,8 @@ public class InvestFeePayController {
         return investFeePayService.queryByPtlId(ptlId);
     }
     @PostMapping("selectDetail/{page}/{length}")
-    public Page<InvestFeePayFeeDetailDto> selectDetail(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<InvestFeePayFeeDetailDto> selectDetail(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return investFeePayService.selectDetail(page,length,pageParam);
     }
 

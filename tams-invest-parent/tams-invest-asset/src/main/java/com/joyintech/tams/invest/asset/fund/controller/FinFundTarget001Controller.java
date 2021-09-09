@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -95,8 +96,7 @@ public class FinFundTarget001Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public List<SuggestDto> getFinprodMarketIdList(String param)
-        throws Exception{
+    public List<SuggestDto> getFinprodMarketIdList(String param){
         return finFundTargetService.getFinprodMarketIdList(param);
     }
     
@@ -114,8 +114,7 @@ public class FinFundTarget001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinFundTargetDto> selectAll()
-        throws Exception {
+    public Page<FinFundTargetDto> selectAll(){
         return finFundTargetService.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -163,8 +162,7 @@ public class FinFundTarget001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) FinFundTargetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) FinFundTargetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -198,8 +196,7 @@ public class FinFundTarget001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return finFundTargetService.export(this.getPageId(),param);

@@ -31,11 +31,11 @@
 	 </select>
 	 
 	 
-	 <select id="getPortfolioConst"	resultType="java.lang.String" parameterType="Map">
+	 <select id="getPortfolioConst"	resultType="java.lang.String">
 		<!-- select  TO_CHAR(wm_concat(p.PORTFOLIO_NAME)) -->
 		<![CDATA[	select XMLAGG(xmlelement(E,p.PORTFOLIO_NAME || ',')).extract('//text()').getclobval() as portfConst ]]>
 		from RSK_PORTFOLIO_PACKAGE_DTL t 
-		inner join PTL_PORTFOLIO p on t.PORTFOLIO_ID=p.PORTFOLIO_ID and p.mdate &gt; (select CUR_DATE from SYS_DATE)
+		inner join PTL_PORTFOLIO p on t.PORTFOLIO_ID=p.PORTFOLIO_ID and p.mdate &gt; #{paramSysDate}
 		<where> 	
  		<if test="portfolioCode != null and portfolioCode != ''">
 			 t.PTL_BAG_ID = #{portfolioCode}

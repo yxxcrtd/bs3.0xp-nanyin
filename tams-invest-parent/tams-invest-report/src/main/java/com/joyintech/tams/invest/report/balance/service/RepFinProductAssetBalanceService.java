@@ -123,7 +123,7 @@ public class RepFinProductAssetBalanceService extends CommonExportService<RepFin
     }
     
     public List<RepFinProductAssetBalanceDto> selectAllListSum(Map<String, Object> pageParam)
-        throws Exception {
+    {
         List<RepFinProductAssetBalanceDto> root = super.queryForTree(() -> selectSum(pageParam),
             RepFinProductAssetBalanceDto::getId, RepFinProductAssetBalanceDto::getParentInfo,
             RepFinProductAssetBalanceDto::getPortfolioName, getFilter(pageParam)).getRoot();

@@ -70,14 +70,14 @@ public class FlowRiskStressTestView002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<FlowRiskStressTestView002Dto> selectForPage()
-        throws Exception {
+         {
        Map<String, Object> map = RequestUtil.getParameters(getRequest());
        Page<FlowRiskStressTestView002Dto> page = service.selectAll(map);
         return page;
     }
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 
@@ -90,7 +90,7 @@ public class FlowRiskStressTestView002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("queryDetByTestId")
-    public FlowRiskStressTestView002Dto queryDetByTestId()throws Exception {
+    public FlowRiskStressTestView002Dto queryDetByTestId() {
        String testId = getParam("testId");
        return service.queryDetByTestId(testId);
     }

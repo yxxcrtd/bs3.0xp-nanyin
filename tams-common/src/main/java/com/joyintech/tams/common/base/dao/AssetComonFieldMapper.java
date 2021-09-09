@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.common.base.dao;
 
+import org.springframework.stereotype.Repository;
 
 /**
  * 资产端公共映射
@@ -19,6 +20,7 @@ package com.joyintech.tams.common.base.dao;
  * @see AssetComonFieldMapper
  * @since 1.0
  */
+@Repository
 public interface AssetComonFieldMapper {
 
 }

@@ -11,8 +11,11 @@
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -115,18 +118,10 @@ public class RskValSumname003Service extends CommonExportService<RskValSumnameDt
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> selecctRskValtblSubjectCodeList() {
-        List<RskValtblSubject> list = rskValAssetCode003Service.selecctRskValtblSubjectCodeList("02");
-        List<SelectOptionDto> selectList = new ArrayList<SelectOptionDto>();
-        if(list != null && list.size()>0){
-            for(RskValtblSubject e:list){
-                SelectOptionDto dto = new SelectOptionDto();
-                dto.setId(e.getSubCode());
-                dto.setText(e.getSubName());
-                selectList.add(dto);
-            }
-        }
-        return selectList;
+    public Page<SelectOptionDto> selecctRskValtblSubjectCodeList(Map<String, Object> pageParam) {
+        pageParam.put("subType","02");
+        return rskValAssetCode003Service.selecctRskValtblSubjectSumCodeList(pageParam);
+
     }
 
 }

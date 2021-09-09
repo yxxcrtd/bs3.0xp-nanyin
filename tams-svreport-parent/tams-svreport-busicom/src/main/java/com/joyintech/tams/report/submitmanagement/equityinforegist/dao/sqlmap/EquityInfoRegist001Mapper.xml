@@ -1201,4 +1201,79 @@
 			bj.TASK_ID=#{taskid,jdbcType=VARCHAR}
 			and info.STATUS in ('UNR','RUN')
 	</select>
+	
+	<select id="countExportNum" parameterType="map" resultType="int">
+		select count(1) from chb_equ_sub sub
+  			left join CHB_SUBMIT_STATUS status on sub.sumit_seq = status.seqno
+		<where>
+			<if test="bankCode != null and bankCode != ''">
+		 	sub.REGIST_BANK_CODE LIKE concat(concat('%',#{bankCode}),'%')
+		 	</if>
+		 	<if test="orgCodeList != null and orgCodeList.size() > 0">
+			 	<foreach collection="orgCodeList" item="orgCode" open=" AND sub.ORG_CODE IN (" close=")" separator=",">
+			 	 #{orgCode}
+			 	</foreach>
+			</if>
+		 	<if test="statusList != null and statusList.size() > 0">
+            	<foreach collection="statusList" item="status" open=" AND sub.STATUS IN (" close=")" separator=",">
+             		#{status}
+            	</foreach>
+		 	</if>
+		 	<if test="indentifyMark != null and indentifyMark != ''">
+		 	AND sub.INDENTIFY_MARK LIKE concat(concat('%',#{indentifyMark}),'%')
+		 	</if>
+		 	<if test="personalIdentifyTypeList != null and personalIdentifyTypeList.size() > 0">
+		 		<foreach collection="personalIdentifyTypeList" item="personalIdentifyType" open=" AND sub.PERSONAL_IDENTIFY_TYPE IN (" close=")" separator=",">
+             		#{personalIdentifyType}
+            	</foreach>
+		 	</if>
+		 	<if test="institutionIdentifyTypeList != null and institutionIdentifyTypeList.size() > 0">
+		 		<foreach collection="institutionIdentifyTypeList" item="institutionIdentifyType" open=" AND sub.INSTITUTION_IDENTIFY_TYPE IN (" close=")" separator=",">
+             		#{institutionIdentifyType}
+            	</foreach>		 	
+		 	</if>
+		 	<if test="holderName != null and holderName != ''">
+		 	AND sub.HOLDER_NAME LIKE concat(concat('%',#{holderName}),'%')
+		 	</if>
+		 	<if test="identifyNumber != null and identifyNumber != ''">
+		 	AND sub.IDENTIFY_NUMBER LIKE concat(concat('%',#{identifyNumber}),'%')
+		 	</if>
+		 	<if test="orgIndentifyMark != null and orgIndentifyMark != ''">
+		 	AND sub.ORG_INDENTIFY_MARK LIKE concat(concat('%',#{orgIndentifyMark}),'%')
+		 	</if>
+		 	<if test="submitFeedbackStatusList != null and submitFeedbackStatusList.size() > 0">
+		 		<foreach collection="submitFeedbackStatusList" item="submitFeedbackStatus" open=" AND status.SUBMIT_FEEDBACK_STATUS IN (" close=")" separator=",">
+             		#{submitFeedbackStatus}
+            	</foreach>	
+		 	</if>
+		 	<if test="submitStatusList != null and submitStatusList.size() > 0">
+		 		<foreach collection="submitStatusList" item="submitStatus" open=" AND sub.SUBMIT_STATUS IN (" close=")" separator=",">
+             		#{submitStatus}
+            	</foreach>			 	
+		 	</if>
+		 	<if test="holderTypeList != null and holderTypeList.size() > 0">
+            	<foreach collection="holderTypeList" item="holderType" open=" AND sub.HOLDER_TYPE IN (" close=")" separator=",">
+             		#{holderType,jdbcType=VARCHAR}
+           		</foreach>
+		 	</if>
+		 	<if test="submitDate != null and submitDate != ''">
+				AND to_char(sub.SUBMIT_TIME,'yyyy-MM-dd') >= #{submitDate}
+			</if>
+			<if test="submitDateEnd != null and submitDateEnd != ''">
+				AND to_char(sub.SUBMIT_TIME,'yyyy-MM-dd') <![CDATA[<=]]>#{submitDateEnd}
+			</if>
+		 	<if test="updateTime != null and updateTime != ''">
+		 	AND to_char(sub.UPDATE_TIME,'yyyy-MM-dd') >= #{updateTime}
+		 	</if>
+		 	<if test="updateTimeEnd != null and updateTimeEnd != ''">
+		 	AND to_char(sub.UPDATE_TIME,'yyyy-MM-dd') <![CDATA[<=]]> #{updateTimeEnd}
+		 	</if>
+		 	<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
+		 	AND sub.CHB_SUBMIT_DEADLINE &gt;= to_date(#{submitDeadLineStart},'yyyy-MM-dd HH24:mi:ss')
+		 	</if>
+		 	<if test="submitDeadLineEnd != null and submitDeadLineEnd != ''">
+		 	AND sub.CHB_SUBMIT_DEADLINE &lt;= to_date(#{submitDeadLineEnd},'yyyy-MM-dd HH24:mi:ss')
+		 	</if>
+		</where>
+	</select> 
 </mapper>

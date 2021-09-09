@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -390,7 +391,7 @@ public class FileUtil {
 	 * @since 1.0
 	 */
 	public static List<String> getFile(String fullPath, String encode) throws IOException {
-		File file = new File(fullPath);
+		File file = new SafelyFile(fullPath);
 		if (!file.exists()) {
 			return null;
 		}
@@ -409,43 +410,26 @@ public class FileUtil {
 			// 显示行号
 			result.add(tempString);
 		}
-		fis.close();
-		isr.close();
-		reader.close();
 		}
 		catch(IOException e){
 			logger.error(e.getMessage(),e);
 		    throw new IOException(); 
 		}
 		finally {
+			try {
           if(fis!=null){
-              try {
                 fis.close();
             }
-            catch (IOException e) {
-//                e.printStackTrace();
-                logger.error(e.getMessage(),e);
-            }
-          }  
           if(isr!=null){
-              try {
                   isr.close();
               }
-              catch (IOException e) {
-//                  e.printStackTrace();
-                  logger.error(e.getMessage(),e);
-              }
-          }  
           if(reader!=null){ 
-              try {
                   reader.close();
               }
-              catch (IOException e) {
-//                  e.printStackTrace();
+			} catch (IOException e) {
                   logger.error(e.getMessage(),e);
               }
           }  
-        }
 		return result;
 	}
 
@@ -462,7 +446,7 @@ public class FileUtil {
 		if (StringUtil.isEmpty(filePath)) {
 			return null;
 		}
-		File folder = new File(filePath);
+		File folder = new SafelyFile(filePath);
 		// 判断文件夹是否存在
 		if (!folder.exists()) {
 			return null;
@@ -500,7 +484,7 @@ public class FileUtil {
 	public static FileDisposeResultEntity removeFileToDirectory(String fullPath, String directoryPath) {
 		// 处理结果
 		FileDisposeResultEntity result = new FileDisposeResultEntity();
-		File directory = new File(directoryPath);
+		File directory = new SafelyFile(directoryPath);
 		// 判断文件夹不存在并且创建失败
 		if (!directory.exists() && !directory.mkdirs()) {
 			result.setMessage(InterfConstant.FOLDER_CREATE_FAILURE_MSG);
@@ -513,7 +497,7 @@ public class FileUtil {
 			result.setStatus(false);
 			return result;
 		}
-		File file = new File(fullPath);
+		File file = new SafelyFile(fullPath);
 		// 判断文件夹是否存在
 		if (!file.exists()) {
 			result.setMessage(InterfConstant.FILE_NOT_EXISTED_MSG);
@@ -544,7 +528,7 @@ public class FileUtil {
 	 * @since 1.0
 	 */
 	public static FileDisposeResultEntity deleteFile(String fullPath) {
-		File file = new File(fullPath);
+		File file = new SafelyFile(fullPath);
 		// 处理结果
 		FileDisposeResultEntity result = new FileDisposeResultEntity();
 		try {
@@ -602,10 +586,6 @@ public class FileUtil {
 				br.write("\n");
 			}
 			br.flush();
-			fos.close();
-			osw.close();
-			br.close();
-
 		} catch (UnsupportedEncodingException e) {
 			result.setMessage(InterfConstant.UNSUPPORTEDENCODINGE_MSG);
 			result.setStatus(false);
@@ -659,7 +639,7 @@ public class FileUtil {
 		// 处理结果
 		FileDisposeResultEntity result = new FileDisposeResultEntity();
 		// 文件夹
-		File folder = new File(path);
+		File folder = new SafelyFile(path);
 		// 判断文件夹不存在并且创建失败
 		if (!folder.exists() && !folder.mkdirs()) {
 			result.setMessage(InterfConstant.FOLDER_CREATE_FAILURE_MSG);
@@ -674,7 +654,7 @@ public class FileUtil {
 		}
         //String fullFileDir=path + System.getProperty(InterfConstant.FILE_SEPARATOR) + name;
         String fullFileDir=path + File.separator + name;
-		File file = new File(fullFileDir);
+		File file = new SafelyFile(fullFileDir);
 		// 判断相同路径下有没有一个同名文件夹
 		if (file.exists() && file.isDirectory()) {
 			result.setMessage(InterfConstant.FILE_NOT_FILE_MSG);

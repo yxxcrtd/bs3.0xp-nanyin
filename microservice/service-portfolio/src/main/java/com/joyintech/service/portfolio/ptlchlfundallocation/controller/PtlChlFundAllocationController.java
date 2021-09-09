@@ -72,7 +72,7 @@ public class PtlChlFundAllocationController {
     public Page<PtlChlFundAllocationDto> selectAll(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlChlFundAllocationService.findPage(page, length, param);
     }
 

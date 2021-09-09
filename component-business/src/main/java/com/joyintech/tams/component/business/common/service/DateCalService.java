@@ -431,7 +431,7 @@ public class DateCalService {
      */
     public String calculationTradingDayForBefore(String beforeAdjustDate, int days,
                                                  List<String> holidayList, String flag)
-        throws Exception {
+    {
         // 交易日计数
         int dayCount = 0;
         // 调整后非跨月日期

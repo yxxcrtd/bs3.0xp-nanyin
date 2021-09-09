@@ -69,6 +69,7 @@ public class ErrorMessage001Controller extends BaseController{
 		Map<String, Object> map = RequestUtil.getPageParam();
 		if(StringUtil.isNotEmpty(map.get("interfType"))) {
 			model.addAttribute("interfType", map.get("interfType").toString().trim());
+			model.addAttribute("interfTypeStr", map.get("interfType").toString().trim());
 			model.addAttribute("searchDataStart", map.get("searchDataStart"));
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isFromMain", "01");

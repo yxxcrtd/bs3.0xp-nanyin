@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfCbondindustrywindMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        <id column="OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_INFO_WINDCODE" property="sInfoWindcode" jdbcType="VARCHAR" />
+        <result column="S_INFO_INDUSTRYCODE" property="sInfoIndustrycode" jdbcType="VARCHAR" />
+        <result column="S_INFO_INDUSTRYNAME" property="sInfoIndustryname" jdbcType="VARCHAR" />
+        <result column="S_INFO_INDUSTRYCODE2" property="sInfoIndustrycode2" jdbcType="VARCHAR" />
+        <result column="S_INFO_INDUSTRYNAME2" property="sInfoIndustryname2" jdbcType="VARCHAR" />
+        <result column="OPDATE" property="opdate" jdbcType="DATE" />
+        <result column="OPMODE" property="opmode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        OBJECT_ID OBJECT_ID, S_INFO_WINDCODE S_INFO_WINDCODE, S_INFO_INDUSTRYCODE S_INFO_INDUSTRYCODE, 
+        S_INFO_INDUSTRYNAME S_INFO_INDUSTRYNAME, S_INFO_INDUSTRYCODE2 S_INFO_INDUSTRYCODE2, 
+        S_INFO_INDUSTRYNAME2 S_INFO_INDUSTRYNAME2, OPDATE OPDATE, OPMODE OPMODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondindustrywindMapper.Base_Column_List" />
+        from INTERF_CBONDINDUSTRYWIND
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondindustrywindMapper.Base_Column_List" />
+        from INTERF_CBONDINDUSTRYWIND
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfCbondindustrywindMapper.Base_Column_List" />
+        from INTERF_CBONDINDUSTRYWIND
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INTERF_CBONDINDUSTRYWIND
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        insert into INTERF_CBONDINDUSTRYWIND (OBJECT_ID, S_INFO_WINDCODE, S_INFO_INDUSTRYCODE, 
+            S_INFO_INDUSTRYNAME, S_INFO_INDUSTRYCODE2, 
+            S_INFO_INDUSTRYNAME2, OPDATE, OPMODE
+            )
+        values (#{objectId,jdbcType=VARCHAR}, #{sInfoWindcode,jdbcType=VARCHAR}, #{sInfoIndustrycode,jdbcType=VARCHAR}, 
+            #{sInfoIndustryname,jdbcType=VARCHAR}, #{sInfoIndustrycode2,jdbcType=VARCHAR}, 
+            #{sInfoIndustryname2,jdbcType=VARCHAR}, #{opdate,jdbcType=DATE}, #{opmode,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        insert into INTERF_CBONDINDUSTRYWIND
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE,
+            </if>
+            <if test="sInfoIndustrycode != null" >
+                S_INFO_INDUSTRYCODE,
+            </if>
+            <if test="sInfoIndustryname != null" >
+                S_INFO_INDUSTRYNAME,
+            </if>
+            <if test="sInfoIndustrycode2 != null" >
+                S_INFO_INDUSTRYCODE2,
+            </if>
+            <if test="sInfoIndustryname2 != null" >
+                S_INFO_INDUSTRYNAME2,
+            </if>
+            <if test="opdate != null" >
+                OPDATE,
+            </if>
+            <if test="opmode != null" >
+                OPMODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoWindcode != null" >
+                #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustrycode != null" >
+                #{sInfoIndustrycode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustryname != null" >
+                #{sInfoIndustryname,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustrycode2 != null" >
+                #{sInfoIndustrycode2,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustryname2 != null" >
+                #{sInfoIndustryname2,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                #{opmode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        insert into INTERF_CBONDINDUSTRYWIND(OBJECT_ID, S_INFO_WINDCODE, S_INFO_INDUSTRYCODE, 
+        S_INFO_INDUSTRYNAME, S_INFO_INDUSTRYCODE2, S_INFO_INDUSTRYNAME2, OPDATE, OPMODE)
+        select OBJECT_ID, S_INFO_WINDCODE, S_INFO_INDUSTRYCODE, 
+            S_INFO_INDUSTRYNAME, S_INFO_INDUSTRYCODE2, S_INFO_INDUSTRYNAME2, OPDATE, OPMODE
+             from INTERF_CBONDINDUSTRYWIND
+             where 1 = 1 and OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        update INTERF_CBONDINDUSTRYWIND
+        <set >
+            <if test="sInfoWindcode != null" >
+                S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustrycode != null" >
+                S_INFO_INDUSTRYCODE = #{sInfoIndustrycode,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustryname != null" >
+                S_INFO_INDUSTRYNAME = #{sInfoIndustryname,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustrycode2 != null" >
+                S_INFO_INDUSTRYCODE2 = #{sInfoIndustrycode2,jdbcType=VARCHAR},
+            </if>
+            <if test="sInfoIndustryname2 != null" >
+                S_INFO_INDUSTRYNAME2 = #{sInfoIndustryname2,jdbcType=VARCHAR},
+            </if>
+            <if test="opdate != null" >
+                OPDATE = #{opdate,jdbcType=DATE},
+            </if>
+            <if test="opmode != null" >
+                OPMODE = #{opmode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfCbondindustrywind" >
+        update INTERF_CBONDINDUSTRYWIND
+        set S_INFO_WINDCODE = #{sInfoWindcode,jdbcType=VARCHAR},
+            S_INFO_INDUSTRYCODE = #{sInfoIndustrycode,jdbcType=VARCHAR},
+            S_INFO_INDUSTRYNAME = #{sInfoIndustryname,jdbcType=VARCHAR},
+            S_INFO_INDUSTRYCODE2 = #{sInfoIndustrycode2,jdbcType=VARCHAR},
+            S_INFO_INDUSTRYNAME2 = #{sInfoIndustryname2,jdbcType=VARCHAR},
+            OPDATE = #{opdate,jdbcType=DATE},
+            OPMODE = #{opmode,jdbcType=VARCHAR}
+        where OBJECT_ID = #{objectId,jdbcType=VARCHAR}
+    </update>
+</mapper>

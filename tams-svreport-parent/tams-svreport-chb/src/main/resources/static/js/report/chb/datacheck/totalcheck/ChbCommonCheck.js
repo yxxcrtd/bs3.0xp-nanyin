@@ -55,6 +55,7 @@ $(function () {
                 window.submitChb = submitChb;
                 window.submitUrl = submitUrl;
                 window.dataTable = table;
+                window.opertionType = paramObj.opertionType;
                 Joyin.checkData(dataTitle, checkUrl, paramObj, null, paramObj.opertionType);
             })
             return ;
@@ -100,6 +101,7 @@ $(function () {
             window.submitChb = submitChb;
             window.submitUrl = submitUrl;
             window.dataTable = table;
+            window.opertionType = paramObj.opertionType
             Joyin.checkData(dataTitle, checkUrl, {checkKeys: checkKeys.join(','), keyList: JSON.stringify(keyList)}, null, paramObj.opertionType);
         })
     }
@@ -110,7 +112,7 @@ $(function () {
     window.submitChb = function(){
         Joyin.confirm("请确认是否要报送选中记录？", function() {
             layui.layer.open({type:3});
-            Joyin.ajaxJson(window.submitUrl, {keyList: JSON.stringify(window.rows)}, function() {
+            Joyin.ajaxJson(window.submitUrl, {keyList: JSON.stringify(window.rows), opertionType: window.opertionType}, function() {
                 window.dataTable.load();
                 layui.layer.closeAll();
             });

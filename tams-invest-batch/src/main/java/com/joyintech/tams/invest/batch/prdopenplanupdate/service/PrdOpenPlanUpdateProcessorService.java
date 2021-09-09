@@ -3,7 +3,9 @@ package com.joyintech.tams.invest.batch.prdopenplanupdate.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.tams.invest.batch.common.util.BatchConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -94,15 +96,15 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList, PrdOpenPlanUpdateDto popuDto, Map<String, Object> param) {
 		// 经过处理的List<开放计划>
 		List<FinOpenPlan> newFinOpenPlanList = new ArrayList<FinOpenPlan>();
-
+		Date plateDate = (Date) param.get(BatchConstant.PLATE_DATE);
 		for (FinOpenPlan finOpenPlan : finOpenPlanList) {
             finOpenPlan.setOpenVdateUn(finOpenPlan.getOpenVdate());
 			if (finOpenPlan.getOpenVdateUn().compareTo(popuDto.getOpenVdate()) < 0 ) { // 前者小于后者
 				continue;
-			}else if(finOpenPlan.getOpenDateEnd().compareTo(platformDateService.getSysDate()) <1){ // 开放结束日小于平台日
+			}else if(finOpenPlan.getOpenDateEnd().compareTo(plateDate) <1){ // 开放结束日小于平台日
 				popuDto.setOpenDateEnd(DateUtil.addDay(popuDto.getOpenDateEnd(), 1));
 				continue;
 			} else {
@@ -143,7 +145,7 @@ public class PrdOpenPlanUpdateProcessorService extends BaseService{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, PrdOpenPlanUpdateDto popuDto) throws Exception {
+	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, PrdOpenPlanUpdateDto popuDto) {
 		// 经过处理的List<付息/分红计划>
 		List<FinCashPlan> newFinCashPlanList = new ArrayList<FinCashPlan>();
 

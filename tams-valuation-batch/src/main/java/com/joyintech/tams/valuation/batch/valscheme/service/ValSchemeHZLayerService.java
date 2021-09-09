@@ -90,7 +90,7 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
     private FinProductMapper finProductMapper;
 
     public ValSchemeGenerateResult execute(Map<String, Object> params1)
-        throws Exception {
+         {
         // 获取reader返回值
         ValSchemeTodoDto acctEntity = (ValSchemeTodoDto)params1.get(GlobalConstant.READER_RESULT);
 
@@ -1203,7 +1203,7 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
         params.put("vatType", DictCodeList.增值税类型_价差收入.getValue());
         params.put("taxPType", DictCodeList.增值税_确认类型_发生计税.getValue());
         TaxBokBalanceSum dtoInvIncomeTax = valSchemeMapper.selectInvIncomeTax(params);
-        if(StringUtil.isNotEmpty(dtoInvIncomeTax) && (BigDecimal.ZERO.compareTo(deductInvIncomeTax) <= 0 || deductInvIncomeTax == null)){
+        if((deductInvIncomeTax == null || BigDecimal.ZERO.compareTo(deductInvIncomeTax) <= 0) && StringUtil.isNotEmpty(dtoInvIncomeTax)){
         	deductInvIncomeTax = dtoInvIncomeTax.getTaxAmtSum().setScale(2, RoundingMode.HALF_UP);
         }
         
@@ -1218,7 +1218,7 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
         params.put("vatType", DictCodeList.增值税类型_价差收入.getValue());
         params.put("taxPType", DictCodeList.增值税_确认类型_预估计税.getValue());
         TaxBokBalanceSum dtoProEstInvIncomeTax = valSchemeMapper.selectInvIncomeTax(params);
-        if(StringUtil.isNotEmpty(dtoProEstInvIncomeTax) && (BigDecimal.ZERO.compareTo(extDeductInvIncomeTax) <= 0 || extDeductInvIncomeTax == null)){
+        if((extDeductInvIncomeTax == null || BigDecimal.ZERO.compareTo(extDeductInvIncomeTax) <= 0) && StringUtil.isNotEmpty(dtoProEstInvIncomeTax)){
         	extDeductInvIncomeTax = dtoProEstInvIncomeTax.getTaxAmtSum().setScale(2, RoundingMode.HALF_UP);
         }
         ProdValuationDto extDeductInvestIncomeTax = new ProdValuationDto();
@@ -1607,14 +1607,24 @@ public class ValSchemeHZLayerService extends CommonExportService<ValSchemeBatchD
             tdyIncomeBef.setSubjectName(String.valueOf(ArithmeticUtil.doSub(tdyBokPosition.getNetAssetValueBef(),tdyBokPosition.getCapital()).setScale(NumberEnum.MONEY.getCode(),
                     RoundingMode.HALF_UP)));
             result.setTdyIncomeBef(tdyIncomeBef);
-            
+            // add by jiangpeng on 20210427 start
+            // TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+            Map<String, Object> param = new HashMap<>();
+            param.put("booksetId", position.getBooksetId());
+            param.put("cdFlag", DictCodeList.借贷方向_贷.getValue());
+            param.put("bookDate", position.getBookDate());
+            BigDecimal vouchAmt = accountingCommonService.getVouchAmt(param);
+            BigDecimal profitAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(vouchAmt, tdyBokPosition.getProfitAmt()), 2, RoundingMode.HALF_UP);
+            // add by jiangpeng on 20210427 end
             // 出参.结构集.产品本日收益： 设置
             ProdValuationDto tdyProdProfit = new ProdValuationDto();
             // 科目代码 <- "产品本日收益："
             tdyProdProfit.setSubjectNo("产品本日收益-费后：");
             // 科目名称 <- 变量.当日账套汇总信息.应付利润
-            tdyProdProfit.setSubjectName(
-                (tdyBokPosition.getProfitAmt() == null) ? BigDecimal.ZERO.toString() : tdyBokPosition.getProfitAmt().toString());
+            // add by modify on 20210427 start
+            // TISHKBS-1998 【估值核算-估值表】货币型产品估值表中的“本日收益-费后”统计的是当日应付利润发生额，但是并未将手工账的应付利润发生额统计进去
+            tdyProdProfit.setSubjectName(StringUtil.isNotEmpty(profitAmt) ? profitAmt.toString() : BigDecimal.ZERO.toString());
+            // add by modify on 20210427 end
             result.setTdyProdProfit(tdyProdProfit);
 
             

@@ -45,7 +45,7 @@ public class OpicsBondTradeService extends OpicsService {
      */
     @Override
     public void saveData()
-        throws Exception {
+    {
         Map<String, Object> params = new HashMap<>();
         params.put(InterfConstant.EFFECTFLAG, InterfDictCodeList.COST有效标识_有效.getValue());
         params.put(InterfConstant.CDATE, getSysDate());

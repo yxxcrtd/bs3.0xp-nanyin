@@ -1,21 +1,21 @@
 package com.joyintech.tams.valuation.system.batchstart.dao;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Repository;
-
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.base.entity.SysBatchJob;
 import com.joyintech.framework.base.entity.SysBatchPrdGrp;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.tams.common.base.entity.BokBookset;
+import com.joyintech.tams.common.base.entity.BokBooksetDate;
+import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
 import com.joyintech.tams.valuation.system.batchstart.dto.Product;
-import com.joyintech.tams.common.base.entity.BokBookset;
-import com.joyintech.tams.common.base.entity.BokBooksetDate;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface ValBatchStart001Mapper {
@@ -64,4 +64,6 @@ public interface ValBatchStart001Mapper {
 	 * @return
 	 */
 	List<com.joyintech.tams.valuation.system.batchstart.dto.Product> findAllProdByInstitutionCode(@Param("institutionCode")String createInst);
+
+    List<SysPrebatchResult> selectErrorPrebatchResults(Map<String, Object> param);
 }

@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.portfolio.feepay.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -48,6 +49,13 @@ public class InvestFeePay001Service extends CommonExportService<InvestFeePay001D
     public Page<InvestFeePay001Dto> selectForPage(Map<String, Object> param) {
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         param.put("flag", DictCodeList.是否_是.getValue());
+        //添加多选框查询
+        String secAcctId = (String)param.get("secAcctId");
+        if(StringUtil.isNotEmpty(secAcctId)) {
+            List<String> secAcctIdList = StringUtil.splitToList(GlobalConstant.COMMA,secAcctId);
+            param.put("secAcctIdList", secAcctIdList);
+            param.remove("secAcctId");
+        }
         return restTemplate.postForPage(
             ServiceApplication.PORTFOLIO_SERVICE_NAME + "/InvestFeePay/selectForPage", param,
             InvestFeePay001Dto.class);

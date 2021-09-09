@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttStressInddataMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        <id column="S_S_I_SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="S_S_I_TEST_ID" property="testId" jdbcType="VARCHAR" />
+        <result column="S_S_I_OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_S_I_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="S_S_I_SCENE_ID" property="sceneId" jdbcType="VARCHAR" />
+        <result column="S_S_I_IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="S_S_I_VALUE_STRUCT" property="valueStruct" jdbcType="VARCHAR" />
+        <result column="S_S_I_VALUE" property="value" jdbcType="VARCHAR" />
+        <result column="S_S_I_VALUE_TYPE" property="valueType" jdbcType="VARCHAR" />
+        <result column="S_S_I_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_I_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_I_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_I_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_I_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO as S_S_I_SEQ_NO, TEST_ID as S_S_I_TEST_ID, OBJECT_ID as S_S_I_OBJECT_ID, ELEMENT_ID as S_S_I_ELEMENT_ID, 
+        SCENE_ID as S_S_I_SCENE_ID, IND_ID as S_S_I_IND_ID, VALUE_STRUCT as S_S_I_VALUE_STRUCT, 
+        VALUE as S_S_I_VALUE, VALUE_TYPE as S_S_I_VALUE_TYPE, CREATE_USER as S_S_I_CREATE_USER, 
+        CREATE_DEPT as S_S_I_CREATE_DEPT, CREATE_TIME as S_S_I_CREATE_TIME, UPDATE_USER as S_S_I_UPDATE_USER, 
+        UPDATE_TIME as S_S_I_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressInddataMapper.Base_Column_List" />
+        from STT_STRESS_INDDATA
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressInddataMapper.Base_Column_List" />
+        from STT_STRESS_INDDATA
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStressInddataMapper.Base_Column_List" />
+        from STT_STRESS_INDDATA
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_STRESS_INDDATA
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_STRESS_INDDATA
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        insert into STT_STRESS_INDDATA (SEQ_NO, TEST_ID, OBJECT_ID, 
+            ELEMENT_ID, SCENE_ID, IND_ID, 
+            VALUE_STRUCT, VALUE, VALUE_TYPE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{testId,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, 
+            #{elementId,jdbcType=VARCHAR}, #{sceneId,jdbcType=VARCHAR}, #{indId,jdbcType=VARCHAR}, 
+            #{valueStruct,jdbcType=VARCHAR}, #{value,jdbcType=VARCHAR}, #{valueType,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        insert into STT_STRESS_INDDATA
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="testId != null" >
+                TEST_ID,
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="sceneId != null" >
+                SCENE_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="valueStruct != null" >
+                VALUE_STRUCT,
+            </if>
+            <if test="value != null" >
+                VALUE,
+            </if>
+            <if test="valueType != null" >
+                VALUE_TYPE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="testId != null" >
+                #{testId,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneId != null" >
+                #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueStruct != null" >
+                #{valueStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="value != null" >
+                #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="valueType != null" >
+                #{valueType,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        insert into STT_STRESS_INDDATA(SEQ_NO, TEST_ID, OBJECT_ID, ELEMENT_ID, SCENE_ID, 
+        IND_ID, VALUE_STRUCT, VALUE, VALUE_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select SEQ_NO, TEST_ID, OBJECT_ID, ELEMENT_ID, SCENE_ID, 
+            IND_ID, VALUE_STRUCT, VALUE, VALUE_TYPE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_STRESS_INDDATA
+             where STATUS = 'E' and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        update STT_STRESS_INDDATA
+        <set >
+            <if test="testId != null" >
+                TEST_ID = #{testId,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueStruct != null" >
+                VALUE_STRUCT = #{valueStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="value != null" >
+                VALUE = #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="valueType != null" >
+                VALUE_TYPE = #{valueType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        update STT_STRESS_INDDATA
+        <set >
+            <if test="seqNo != null" >
+                SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="testId != null" >
+                TEST_ID = #{testId,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                IND_ID = #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="valueStruct != null" >
+                VALUE_STRUCT = #{valueStruct,jdbcType=VARCHAR},
+            </if>
+            <if test="value != null" >
+                VALUE = #{value,jdbcType=VARCHAR},
+            </if>
+            <if test="valueType != null" >
+                VALUE_TYPE = #{valueType,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        update STT_STRESS_INDDATA
+        set 
+        SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+        TEST_ID = #{testId,jdbcType=VARCHAR},
+        OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+        IND_ID = #{indId,jdbcType=VARCHAR},
+        VALUE_STRUCT = #{valueStruct,jdbcType=VARCHAR},
+        VALUE = #{value,jdbcType=VARCHAR},
+        VALUE_TYPE = #{valueType,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttStressInddata" >
+        update STT_STRESS_INDDATA
+        set TEST_ID = #{testId,jdbcType=VARCHAR},
+            OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            IND_ID = #{indId,jdbcType=VARCHAR},
+            VALUE_STRUCT = #{valueStruct,jdbcType=VARCHAR},
+            VALUE = #{value,jdbcType=VARCHAR},
+            VALUE_TYPE = #{valueType,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

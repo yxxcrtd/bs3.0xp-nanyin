@@ -35,7 +35,7 @@ public class InstanceOfClass {
             obj=cls.newInstance();
         } 
         catch (Exception e) {
-            throw new RuntimeException("参数出现异常");
+            throw new IllegalArgumentException("参数出现异常");
         }
         return obj;
     }

@@ -81,8 +81,8 @@ public class BasisDaysCal {
                     return days.abs();
                 }
             }
-            while (order == 1 && fromDate.compareTo(endDate) <= 0
-                || order == -1 && fromDate.compareTo(endDate) >= 0) {
+            while (fromDate != null && (order == 1 && fromDate.compareTo(endDate) <= 0
+                    || order == -1 && fromDate.compareTo(endDate) >= 0)) {
                 Date tempDate = CalendarUtil.calendarcal(fromDate, Calendar.YEAR, order);
                 if (order == 1 && svDate.compareTo(fromDate) >=0 && svDate.compareTo(tempDate) < 0
                     || order == -1 && svDate.compareTo(tempDate) >=0 && svDate.compareTo(fromDate) < 0

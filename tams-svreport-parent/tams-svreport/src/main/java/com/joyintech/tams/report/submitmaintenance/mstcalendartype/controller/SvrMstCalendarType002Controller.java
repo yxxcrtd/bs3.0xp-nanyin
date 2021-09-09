@@ -141,7 +141,7 @@ public class SvrMstCalendarType002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(SvrMstCalendarType001Dto dto)
-        throws Exception {
+        {
     	String msg = this.getMessage("REPORT_COMMON_I_0006");
     	if("0".equals(dto.getPageModel())){
     		mstCalendarType001001service.doComplete(dto, OperationType.NEW);

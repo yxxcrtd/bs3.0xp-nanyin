@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        <id column="TRADE_ID" property="tradeId" jdbcType="VARCHAR" />
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <id column="RESULT_TYPE" property="resultType" jdbcType="VARCHAR" />
+        <result column="PLEDGE_AMT" property="pledgeAmt" jdbcType="DECIMAL" />
+        <result column="SCALE" property="scale" jdbcType="DECIMAL" />
+        <result column="FIRST_NETPRICE" property="firstNetprice" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TRADE_ID TRADE_ID, FINPROD_ID FINPROD_ID, BRANCH BRANCH, RESULT_TYPE RESULT_TYPE,
+        PLEDGE_AMT PLEDGE_AMT, SCALE SCALE, FIRST_NETPRICE FIRST_NETPRICE, CREATE_USER CREATE_USER,
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper.Base_Column_List" />
+        from FIN_PLEDGE_DISPLACE_RESULT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper.Base_Column_List" />
+        from FIN_PLEDGE_DISPLACE_RESULT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResultKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinPledgeDisplaceResultMapper.Base_Column_List" />
+        from FIN_PLEDGE_DISPLACE_RESULT
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and RESULT_TYPE = #{resultType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResultKey" >
+        delete from FIN_PLEDGE_DISPLACE_RESULT
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and RESULT_TYPE = #{resultType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        insert into FIN_PLEDGE_DISPLACE_RESULT (TRADE_ID, FINPROD_ID, BRANCH,
+            RESULT_TYPE, PLEDGE_AMT, SCALE,
+            FIRST_NETPRICE, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{tradeId,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{resultType,jdbcType=VARCHAR}, #{pledgeAmt,jdbcType=DECIMAL}, #{scale,jdbcType=DECIMAL},
+            #{firstNetprice,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        insert into FIN_PLEDGE_DISPLACE_RESULT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                TRADE_ID,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="resultType != null" >
+                RESULT_TYPE,
+            </if>
+            <if test="pledgeAmt != null" >
+                PLEDGE_AMT,
+            </if>
+            <if test="scale != null" >
+                SCALE,
+            </if>
+            <if test="firstNetprice != null" >
+                FIRST_NETPRICE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="tradeId != null" >
+                #{tradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="resultType != null" >
+                #{resultType,jdbcType=VARCHAR},
+            </if>
+            <if test="pledgeAmt != null" >
+                #{pledgeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="scale != null" >
+                #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="firstNetprice != null" >
+                #{firstNetprice,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        insert into FIN_PLEDGE_DISPLACE_RESULT(TRADE_ID, FINPROD_ID, BRANCH, RESULT_TYPE,
+        PLEDGE_AMT, SCALE, FIRST_NETPRICE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        select TRADE_ID, FINPROD_ID, BRANCH, RESULT_TYPE,
+            PLEDGE_AMT, SCALE, FIRST_NETPRICE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_PLEDGE_DISPLACE_RESULT
+             where 1 = 1 and TRADE_ID = #{tradeId,jdbcType=VARCHAR} and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and BRANCH = #{branch,jdbcType=DECIMAL} and RESULT_TYPE = #{resultType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        update FIN_PLEDGE_DISPLACE_RESULT
+        <set >
+            <if test="pledgeAmt != null" >
+                PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="scale != null" >
+                SCALE = #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="firstNetprice != null" >
+                FIRST_NETPRICE = #{firstNetprice,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and BRANCH = #{branch,jdbcType=DECIMAL}
+        and RESULT_TYPE = #{resultType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinPledgeDisplaceResult" >
+        update FIN_PLEDGE_DISPLACE_RESULT
+        set PLEDGE_AMT = #{pledgeAmt,jdbcType=DECIMAL},
+            SCALE = #{scale,jdbcType=DECIMAL},
+            FIRST_NETPRICE = #{firstNetprice,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+          and FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and BRANCH = #{branch,jdbcType=DECIMAL}
+          and RESULT_TYPE = #{resultType,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -75,7 +75,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValBondassetquery001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValBondassetquery001Dto> findPage(Map<String, Object> params) {
         return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValBondassetquery001/findPage",
                 params, ValBondassetquery001Dto.class);
@@ -89,7 +89,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @see
      * @since 1.0
      */
-    public List<ValBondassetquery001Dto> findPageout(Map<String, Object> params) throws Exception {
+    public List<ValBondassetquery001Dto> findPageout(Map<String, Object> params) {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValBondassetquery001/findPageout",
                 params, ValBondassetquery001Dto.class);
@@ -132,7 +132,7 @@ public class ValBondassetquery001Service extends CommonExportService<ValBondasse
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public AjaxResult doDeleteCheck(BindingResult result, ValBondassetquery001Dto dto) throws Exception {
+    public AjaxResult doDeleteCheck(BindingResult result, ValBondassetquery001Dto dto) {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }

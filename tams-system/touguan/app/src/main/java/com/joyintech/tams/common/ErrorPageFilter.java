@@ -219,12 +219,12 @@ public class ErrorPageFilter implements Filter, ErrorPageRegistry {
     }
 
     private void rethrow(Throwable ex) throws IOException, ServletException {
-        if (ex instanceof RuntimeException) {
-            throw (RuntimeException) ex;
-        }
-        if (ex instanceof Error) {
-            throw (Error) ex;
-        }
+//        if (ex instanceof RuntimeException) {
+//            throw (RuntimeException) ex;
+//        }
+//        if (ex instanceof Error) {
+//            throw (Error) ex;
+//        }
         if (ex instanceof IOException) {
             throw (IOException) ex;
         }

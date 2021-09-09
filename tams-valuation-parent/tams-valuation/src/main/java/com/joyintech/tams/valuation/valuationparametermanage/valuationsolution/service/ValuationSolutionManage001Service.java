@@ -30,7 +30,7 @@ public class ValuationSolutionManage001Service extends BaseService<ValuationSolu
 
     @Autowired
     private ValuationSolutionManage001Mapper valuationSolutionManage001Mapper;
-    public Page<ValuationSolutionManage001Dto> findPage(Map<String, Object> parameters) throws Exception {
+    public Page<ValuationSolutionManage001Dto> findPage(Map<String, Object> parameters) {
         return super.queryForPage(ValuationSolutionManage001Mapper.class, "selectValScheme", parameters);
     }
 

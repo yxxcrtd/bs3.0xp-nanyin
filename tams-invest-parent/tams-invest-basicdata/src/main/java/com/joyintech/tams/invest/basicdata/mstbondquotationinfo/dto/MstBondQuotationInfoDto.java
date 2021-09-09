@@ -118,8 +118,8 @@ public class MstBondQuotationInfoDto extends MstBondValuationInfo implements Pro
      * 
      * @return String
      */
-    // @NotEmpty(fieldName = "MstBondQuotationInfo001.finprodAbbr", groups =
-    // {ValidateGroupEdit.class})
+     @NotEmpty(fieldName = "MstBondQuotationInfo001.finprodAbbr", groups =
+     {ValidateGroupEdit.class})
     public String getFinprodAbbr() {
         return finprodAbbr;
     }

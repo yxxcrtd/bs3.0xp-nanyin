@@ -4,8 +4,22 @@ $(function () {
         return $.serializeToObject('#searchForm');
     };
     var exportExcel = function () {
-        var paramObj = getSearchParams();
-        Joyin.exportExcel('export', paramObj);
+//        var paramObj = getSearchParams();
+//        Joyin.exportExcel('export', paramObj);
+
+        if (oneTable != null && oneTable != '') {
+            var selArr = oneTable.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+
     };
     var oneTable = $("#oneTable").joyintable({
         ajax: {

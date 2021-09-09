@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.StlDvpOrdersMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        <id column="ORDER_ID" property="orderId" jdbcType="VARCHAR" />
+        <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+        <result column="PORTFOLIO_ID" property="portfolioId" jdbcType="VARCHAR" />
+        <result column="SETTLE_DATE" property="settleDate" jdbcType="DATE" />
+        <result column="MY_ACCT_NO" property="myAcctNo" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="COUNTER_ACCT_NO" property="counterAcctNo" jdbcType="VARCHAR" />
+        <result column="SETTLE_AMT" property="settleAmt" jdbcType="DECIMAL" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="SETTLE_STATUS" property="settleStatus" jdbcType="VARCHAR" />
+        <result column="PURPOSE" property="purpose" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="IS_NEED_SEND" property="isNeedSend" jdbcType="VARCHAR" />
+        <result column="ORDER_STATUS" property="orderStatus" jdbcType="VARCHAR" />
+        <result column="P_TRADE_ID" property="pTradeId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="SEND_DATE" property="sendDate" jdbcType="DATE" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_REC_STATUS" property="orderRecStatus" jdbcType="VARCHAR" />
+        <result column="ORDER_RET_STATUS" property="orderRetStatus" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ORDER_ID ORDER_ID, PAY_TYPE PAY_TYPE, PORTFOLIO_ID PORTFOLIO_ID, SETTLE_DATE SETTLE_DATE, 
+        MY_ACCT_NO MY_ACCT_NO, PS PS, COUNTER_ACCT_NO COUNTER_ACCT_NO, SETTLE_AMT SETTLE_AMT, 
+        CCY CCY, SETTLE_STATUS SETTLE_STATUS, PURPOSE PURPOSE, REMARK REMARK, IS_NEED_SEND IS_NEED_SEND, 
+        ORDER_STATUS ORDER_STATUS, P_TRADE_ID P_TRADE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, SEND_DATE SEND_DATE, 
+        SEND_STATUS SEND_STATUS, ORDER_REC_STATUS ORDER_REC_STATUS, ORDER_RET_STATUS ORDER_RET_STATUS
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlDvpOrdersMapper.Base_Column_List" />
+        from STL_DVP_ORDERS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlDvpOrdersMapper.Base_Column_List" />
+        from STL_DVP_ORDERS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.StlDvpOrdersMapper.Base_Column_List" />
+        from STL_DVP_ORDERS
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STL_DVP_ORDERS
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        insert into STL_DVP_ORDERS (ORDER_ID, PAY_TYPE, PORTFOLIO_ID, 
+            SETTLE_DATE, MY_ACCT_NO, PS, 
+            COUNTER_ACCT_NO, SETTLE_AMT, CCY, 
+            SETTLE_STATUS, PURPOSE, REMARK, 
+            IS_NEED_SEND, ORDER_STATUS, P_TRADE_ID, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, SEND_DATE, 
+            SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS
+            )
+        values (#{orderId,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR}, #{portfolioId,jdbcType=VARCHAR}, 
+            #{settleDate,jdbcType=DATE}, #{myAcctNo,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, 
+            #{counterAcctNo,jdbcType=VARCHAR}, #{settleAmt,jdbcType=DECIMAL}, #{ccy,jdbcType=VARCHAR}, 
+            #{settleStatus,jdbcType=VARCHAR}, #{purpose,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{isNeedSend,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, #{pTradeId,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{sendDate,jdbcType=DATE}, 
+            #{sendStatus,jdbcType=VARCHAR}, #{orderRecStatus,jdbcType=VARCHAR}, #{orderRetStatus,jdbcType=VARCHAR}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        insert into STL_DVP_ORDERS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="orderId != null" >
+                ORDER_ID,
+            </if>
+            <if test="payType != null" >
+                PAY_TYPE,
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID,
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE,
+            </if>
+            <if test="myAcctNo != null" >
+                MY_ACCT_NO,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="counterAcctNo != null" >
+                COUNTER_ACCT_NO,
+            </if>
+            <if test="settleAmt != null" >
+                SETTLE_AMT,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="settleStatus != null" >
+                SETTLE_STATUS,
+            </if>
+            <if test="purpose != null" >
+                PURPOSE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="isNeedSend != null" >
+                IS_NEED_SEND,
+            </if>
+            <if test="orderStatus != null" >
+                ORDER_STATUS,
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS,
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="orderId != null" >
+                #{orderId,jdbcType=VARCHAR},
+            </if>
+            <if test="payType != null" >
+                #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="settleDate != null" >
+                #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="myAcctNo != null" >
+                #{myAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="counterAcctNo != null" >
+                #{counterAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="settleAmt != null" >
+                #{settleAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleStatus != null" >
+                #{settleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="purpose != null" >
+                #{purpose,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isNeedSend != null" >
+                #{isNeedSend,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                #{orderStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendDate != null" >
+                #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        insert into STL_DVP_ORDERS(ORDER_ID, PAY_TYPE, PORTFOLIO_ID, SETTLE_DATE, MY_ACCT_NO, 
+        PS, COUNTER_ACCT_NO, SETTLE_AMT, CCY, SETTLE_STATUS, PURPOSE, REMARK, IS_NEED_SEND, 
+        ORDER_STATUS, P_TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, 
+        SEND_DATE, SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS)
+        select ORDER_ID, PAY_TYPE, PORTFOLIO_ID, SETTLE_DATE, MY_ACCT_NO, 
+            PS, COUNTER_ACCT_NO, SETTLE_AMT, CCY, SETTLE_STATUS, PURPOSE, REMARK, IS_NEED_SEND, 
+            ORDER_STATUS, P_TRADE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, 
+            SEND_DATE, SEND_STATUS, ORDER_REC_STATUS, ORDER_RET_STATUS
+             from STL_DVP_ORDERS
+             where 1 = 1 and ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        update STL_DVP_ORDERS
+        <set >
+            <if test="payType != null" >
+                PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            </if>
+            <if test="portfolioId != null" >
+                PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            </if>
+            <if test="settleDate != null" >
+                SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            </if>
+            <if test="myAcctNo != null" >
+                MY_ACCT_NO = #{myAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="counterAcctNo != null" >
+                COUNTER_ACCT_NO = #{counterAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="settleAmt != null" >
+                SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="settleStatus != null" >
+                SETTLE_STATUS = #{settleStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="purpose != null" >
+                PURPOSE = #{purpose,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isNeedSend != null" >
+                IS_NEED_SEND = #{isNeedSend,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null" >
+                ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="pTradeId != null" >
+                P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE = #{sendDate,jdbcType=DATE},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRecStatus != null" >
+                ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="orderRetStatus != null" >
+                ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.StlDvpOrders" >
+        update STL_DVP_ORDERS
+        set PAY_TYPE = #{payType,jdbcType=VARCHAR},
+            PORTFOLIO_ID = #{portfolioId,jdbcType=VARCHAR},
+            SETTLE_DATE = #{settleDate,jdbcType=DATE},
+            MY_ACCT_NO = #{myAcctNo,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            COUNTER_ACCT_NO = #{counterAcctNo,jdbcType=VARCHAR},
+            SETTLE_AMT = #{settleAmt,jdbcType=DECIMAL},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            SETTLE_STATUS = #{settleStatus,jdbcType=VARCHAR},
+            PURPOSE = #{purpose,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            IS_NEED_SEND = #{isNeedSend,jdbcType=VARCHAR},
+            ORDER_STATUS = #{orderStatus,jdbcType=VARCHAR},
+            P_TRADE_ID = #{pTradeId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            SEND_DATE = #{sendDate,jdbcType=DATE},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            ORDER_REC_STATUS = #{orderRecStatus,jdbcType=VARCHAR},
+            ORDER_RET_STATUS = #{orderRetStatus,jdbcType=VARCHAR}
+        where ORDER_ID = #{orderId,jdbcType=VARCHAR}
+    </update>
+</mapper>

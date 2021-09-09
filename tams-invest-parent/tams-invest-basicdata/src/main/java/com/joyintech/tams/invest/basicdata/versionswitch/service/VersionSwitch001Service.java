@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +46,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class VersionSwitch001Service extends CommonExportService<MstYieldCurveInfoDto>{
-	
+	private static final Logger logger = LoggerFactory.getLogger(VersionSwitch001Service.class);
 	
 	/**
      * 版本切换
@@ -73,8 +75,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 		try {
 			conn = jdbcTemplate.getDataSource().getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		}
 
@@ -113,7 +114,8 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					if (sqlString.startsWith("##")) {
 						continue;
 					}
-					System.out.println("执行第" + line + "行:" + sqlString);
+//					System.out.println("执行第" + line + "行:" + sqlString);
+					logger.info("执行第" + line + "行:" + sqlString);
 					sqlString = sqlString.replace(";", "");
 					if(!executeSql(conn, sqlString)){
 						return false;
@@ -134,7 +136,8 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					if (sqlString.startsWith("##")) {
 						continue;
 					}
-					System.out.println("执行第" + line + "行:" + sqlString);
+//					System.out.println("执行第" + line + "行:" + sqlString);
+					logger.info("执行第" + line + "行:" + sqlString);
 					sqlString = sqlString.replace(";", "");
 					if(!executeSql(conn, sqlString)){
 						return false;
@@ -152,7 +155,8 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 					if (sqlString.startsWith("##")) {
 						continue;
 					}
-					System.out.println("执行第" + line + "行:" + sqlString);
+//					System.out.println("执行第" + line + "行:" + sqlString);
+					logger.info("执行第" + line + "行:" + sqlString);
 					sqlString = sqlString.replace(";", "");
 					if(!executeSql(conn, sqlString)){
 						return false;
@@ -161,25 +165,30 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 			}
 			return true;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
-					e.printStackTrace();
-					return false;
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
+				}
+			}
+			if (is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
 					return false;
 				}
 			}
@@ -201,7 +210,7 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 			rs = ps.executeQuery();
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return false;
 		} finally {
 			// 释放连接
@@ -209,16 +218,14 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 				try {
 					ps.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
-					return false;
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
-					return false;
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -226,8 +233,6 @@ public class VersionSwitch001Service extends CommonExportService<MstYieldCurveIn
 	
 	/**
      * 查询当前版本类型
-     * 
-     * @param map
      * @return
      */
 	public String selectVersionType() {

@@ -9,6 +9,7 @@
  */
 package com.joyintech.service.product.common.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -152,7 +153,7 @@ public class FinProductOpenPlanService {
 	 * @return 开放计划信息
 	 * @throws Exception 
 	 */
-	public List<BussFinProductOpenPlanDto> selectOpenPlanInfoByFinprodId(String finprodId) throws Exception{
+	public List<BussFinProductOpenPlanDto> selectOpenPlanInfoByFinprodId(String finprodId) throws InvocationTargetException, IllegalAccessException {
 	    
 		List<BussFinProductOpenPlanDto> bussFinProductOpenPlanDtoList = new ArrayList<BussFinProductOpenPlanDto>();
 	    Map<String, Object> map = new HashMap<String, Object>();

@@ -211,8 +211,9 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
                     BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
                     EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
-                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
-                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);                  
+                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(),
+                            StringUtil.isNotEmpty(EtrCashPositionKey) ? EtrCashPositionKey.getAmount() : BigDecimal.ZERO));
+                    etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);
                 }
             }
             // 组合现金流水Entity
@@ -812,6 +813,9 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
 					if (isRevoke) {
 					    Map<String, Object> map = new HashMap<String, Object>(); 
 					    map.put("totleTradeId", trdProductDealtmp.getTotleTradeId());
+                        //ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错
+                        map.put("branch", dtoTmp.getBranch());
+                        //ADD BY JIANGPENG ON 20210427 TISHKBS-2042 CLONE - 【产品存续期查询】净值型周期型红利再投交易，撤销，审批人审批报错
 					    tradeId = restTemplate.postForObject(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/queryTradeIdByTotle",
 				            map, String.class);
                     } 
@@ -916,10 +920,10 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketId(Map<String, Object> map) {
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketId",
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketId",
             map, SelectOptionDto.class);
     }
 
@@ -1006,10 +1010,10 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
         User user = SecurityUtil.getLoginUser();
         map.put("userName", user.getUserName());
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinNetProductBonusScheme/getFinprodMarketIdList", map,
             SelectOptionDto.class);
     }

@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -82,27 +83,23 @@ public class PtlChlFundAllocation001Controller extends BaseController {
     /**
      * 分页查询
      * @return Page<>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlChlFundAllocationDto> findPage()
-        throws Exception {
+    public Page<PtlChlFundAllocationDto> findPage(){
         return ptlChlFundAllocation001Service.findPage(RequestUtil.getPageParam());
     }
     
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return ptlChlFundAllocation001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -124,12 +121,11 @@ public class PtlChlFundAllocation001Controller extends BaseController {
      * @param dto 验证的实体类
      * @param br 错误结果
      * @return 错误信息
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@RequestBody PtlChlFundAllocationDto dto)
-        throws Exception {
+    public AjaxResult revoke(@RequestBody PtlChlFundAllocationDto dto) throws WorkFlowException {
         ProcessParameter<PtlChlFundAllocationDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<PtlChlFundAllocationDto> params = new WorkFlowParameter<>();
         params.setPageId("PtlChlFundAllocation002");

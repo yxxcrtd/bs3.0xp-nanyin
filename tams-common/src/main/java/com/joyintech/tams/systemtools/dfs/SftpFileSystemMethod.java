@@ -2,6 +2,7 @@ package com.joyintech.tams.systemtools.dfs;
 
 import com.jcraft.jsch.*;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -48,7 +49,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
     @Override
     public UploadFile fecth(SysUploadFileInfo file) {
         String remotePathPrefix = CacheUtil.getSysParam("SYS_FS_REMOTE_PATH_PREFIX");
-        File f = new File(file.getPath());
+        File f = new SafelyFile(file.getPath());
         if (f.exists()) {
             // 本地文件存在不去下载
             UploadFile uploadFile = new UploadFile(null, file.getSeqNo(), f);
@@ -80,8 +81,8 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
      * @see
      * @since 1.0
      */
-    private void getFile(SftpDto dto, String remoteFile, String localDir) throws Exception {
-        File localFile = new File(localDir);
+    private void getFile(SftpDto dto, String remoteFile, String localDir) throws SftpException {
+        File localFile = new SafelyFile(localDir);
         if (localFile.exists()) {
             // 本地目录不是目录，先删除
             if (!localFile.isDirectory()) {
@@ -98,7 +99,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
             dto.getSftp().get(remoteFile, localDir);
         } catch (SftpException e) {
             logger.error("连接失败！", e);
-            throw new Exception("下载文件失败");
+            throw new SftpException(1,"下载文件失败");
         }
     }
 
@@ -116,7 +117,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
     }
 
 
-    private SftpDto login() throws Exception {
+    private SftpDto login() throws JSchException {
         String ip = CacheUtil.getSysParam("SYS_FS_SFTP_IP");
         String port = CacheUtil.getSysParam("SYS_FS_SFTP_PORT");
         Integer logintype = Integer.valueOf(CacheUtil.getSysParam("SYS_FS_SFTP_LOGINTYPE"));
@@ -146,7 +147,7 @@ public class SftpFileSystemMethod implements JoyinFileSystemMethod {
             res.setSftp(sftp);
         } catch (JSchException e) {
             logger.error("", e);
-            throw new Exception("登录文件服务器失败");
+            throw new JSchException("登录文件服务器失败");
         }
         return res;
     }

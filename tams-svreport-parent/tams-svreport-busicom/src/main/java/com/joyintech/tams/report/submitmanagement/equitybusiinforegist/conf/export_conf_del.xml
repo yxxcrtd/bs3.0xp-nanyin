@@ -5,6 +5,7 @@
 			<Cell order="1" name="发行机构代码">registBankCode</Cell><!-- 发行机构代码 -->
 			<Cell order="2" name="核心交易流水号">busiSeqno</Cell><!-- 核心交易流水号 -->
 			<Cell order="3" name="产品登记编码">regCode</Cell><!-- 产品登记编码 -->
+			<Cell order="4" name="业务确认日期">equityConfDateStr</Cell>
 		</Row>
 	</Worksheet>
 </Workbook>

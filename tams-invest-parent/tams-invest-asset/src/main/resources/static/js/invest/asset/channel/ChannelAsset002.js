@@ -121,5 +121,12 @@ $(function() {
             }
             star();
         });
+        $("#prodRegistCode").change(function(){
+            //非查看模式
+             if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+                var prodRegistCode = $('#prodRegistCode').val();
+                $("#bussRepAssetMngProdInfo_repRegistCode").val(prodRegistCode).trigger('change');　
+             }
+       　});
     });
 });

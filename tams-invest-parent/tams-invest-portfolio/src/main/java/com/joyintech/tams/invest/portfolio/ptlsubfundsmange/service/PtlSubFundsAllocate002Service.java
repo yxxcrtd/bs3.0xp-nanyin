@@ -174,7 +174,6 @@ public class PtlSubFundsAllocate002Service extends CommonExportService<PtlSubFun
 	                WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
 	            }
 	            catch (Exception e) {
-	                e.printStackTrace();
 	            }*/
             } else {
                 entity.setSettleDate(DateUtil.getSysDate());

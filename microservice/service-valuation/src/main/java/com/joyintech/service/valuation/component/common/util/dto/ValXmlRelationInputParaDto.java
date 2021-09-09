@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.component.common.util.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.util.StringUtil;
@@ -133,5 +134,10 @@ public class ValXmlRelationInputParaDto implements Serializable {
         return StringUtil.equals(this.getSysCode(), inputParaDto1.getSysCode())
             && StringUtil.equals(this.getDictCode(), inputParaDto1.getDictCode())
             && StringUtil.equals(this.getItemCode(), inputParaDto1.getItemCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sysCode, dictCode, itemCode);
     }
 }

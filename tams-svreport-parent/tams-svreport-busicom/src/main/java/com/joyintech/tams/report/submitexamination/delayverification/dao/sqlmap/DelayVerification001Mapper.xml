@@ -100,8 +100,7 @@
                      from CHB_PRD_DECLARE_SUB ces
                      /* add by songyawei 20200702 start */
                      <if test="flag">
-                     	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -126,8 +125,7 @@
                         from CHB_PRD_DECLARE_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                    <if test="flag">
-	                     	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -173,8 +171,7 @@
                      from CHB_PRD_ISSUE_SUB ces
                      /* add by songyawei 20200702 start */
                     <if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -199,8 +196,7 @@
                         from CHB_PRD_ISSUE_SUB_HIS ces
                         /* add by songyawei 20200702 start */
                     	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -246,8 +242,7 @@
                      from CHB_PRD_RAISETOT_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -272,8 +267,7 @@
                         from CHB_PRD_RAISETOT_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -319,8 +313,7 @@
                      from CHB_PRD_DEAL_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -345,8 +338,7 @@
                         from CHB_PRD_DEAL_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -392,8 +384,7 @@
                      from CHB_PRD_END_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -418,8 +409,7 @@
                         from CHB_PRD_END_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -465,8 +455,7 @@
                      from CHB_ASSET_INFO_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -491,8 +480,8 @@
                         from CHB_ASSET_INFO_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -538,8 +527,7 @@
                      from CHB_INVEST_TRADE_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -564,8 +552,7 @@
                         from CHB_INVEST_TRADE_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -611,8 +598,8 @@
                      from CHB_AST_VAL_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
+                        LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -637,8 +624,8 @@
                         from CHB_AST_VAL_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -684,8 +671,8 @@
                      from CHB_BOT_AST_POS_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                        LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
+                        LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -710,8 +697,8 @@
                         from CHB_BOT_AST_POS_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces.asset_code=ces1.asset_code
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -819,8 +806,7 @@
                      from CHB_INVESTHOLD_INFO_SUB ces
                      /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ces.PRODID = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -845,8 +831,7 @@
                         from CHB_INVESTHOLD_INFO_SUB_HIS ces
                         /* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ces.PRODID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
                          where ces.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -935,8 +920,7 @@
 					 from CHB_EQUDET_SUB ceqs
 					 /* add by songyawei 20200702 start */
                    	<if test="flag">
-                    	LEFT JOIN FIN_PRODUCT FP ON ceqs.ACCOUNT = FP.FINPROD_MARKET_ID
-                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                      </if>
                      /* add by songyawei 20200702 end */
 						 where ceqs.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -959,8 +943,7 @@
 						from CHB_EQUDET_SUB_HIS ceqs
 						/* add by songyawei 20200702 start */
 	                   	<if test="flag">
-	                    	LEFT JOIN FIN_PRODUCT FP ON ceqs.ACCOUNT = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ceqs.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                     </if>
 	                     /* add by songyawei 20200702 end */
 						 where ceqs.CHB_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1021,8 +1004,7 @@
                 from PBC_PRD_ACCOUNT_SUB ces
                 /* add by songyawei 20200702 start */
                	<if test="flag">
-                	LEFT JOIN FIN_PRODUCT FP ON ces.ACCOUNT_ID = FP.FINPROD_MARKET_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1049,8 +1031,7 @@
                 from PBC_PRD_ACCOUNT_SUB_HIS ces
                 /* add by songyawei 20200702 start */
                	<if test="flag">
-                	LEFT JOIN FIN_PRODUCT FP ON ces.ACCOUNT_ID = FP.FINPROD_MARKET_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1097,8 +1078,7 @@
                 from PBC_PRD_BASEINFO_SUB ces
                 /* add by songyawei 20200702 start */
                	<if test="flag">
-                	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1125,8 +1105,7 @@
                 from PBC_PRD_BASEINFO_SUB_HIS ces
                 /* add by songyawei 20200702 start */
                	<if test="flag">
-                	LEFT JOIN FIN_PRODUCT FP ON ces.PROD_ID = FP.FINPROD_MARKET_ID 
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1174,8 +1153,7 @@
                 /* add by songyawei 20200702 start */
                	<if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID  
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1203,8 +1181,7 @@
                 /* add by songyawei 20200702 start */
                	<if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID 
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1252,8 +1229,7 @@
                 /* add by songyawei 20200702 start */
                	<if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID 
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1282,8 +1258,7 @@
                 /* add by songyawei 20200702 start */
                <if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-               	 	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1331,8 +1306,7 @@
                 /* add by songyawei 20200702 start */
                <if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1361,8 +1335,7 @@
                 /* add by songyawei 20200702 start */
                <if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_ACCOUNT_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1410,8 +1383,7 @@
                 /* add by songyawei 20200702 start */
                <if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1440,8 +1412,7 @@
                 /* add by songyawei 20200702 start */
                <if test="flag">
                 	Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = ces.PBC_PROD_ID
-                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                  </if>
                  /* add by songyawei 20200702 end */
                 where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
@@ -1756,57 +1727,51 @@ SELECT
                     <!-- 1. 个人申报登记 -->
                     <if test="flag">
 	                    <if test="tableId != null and tableId == 'CHB_PRD_DECLARE_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                     <!-- 2. 发行登记登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_PRD_ISSUE_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <!-- 3. 产品募集期登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_PRD_RAISETOT_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <!-- 4. 产品存续期登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_PRD_DEAL_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <!-- 5. 终止登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_PRD_END_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <!-- 6. 资产要素登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_ASSET_INFO_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces1.asset_code=info.ASSET_CODE
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
+
 	                    </if>
 	                    <!-- 7. 交易信息登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_INVEST_TRADE_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <!-- 8. 资产估值信息登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_AST_VAL_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on info.ASSET_CODE=ces1.asset_code
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 	                    </if>
 	                    <!-- 9. 底层资产持仓信息登记 -->
 	                    <if test="tableId != null and tableId == 'CHB_BOT_AST_POS_SUB'">
-	                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
-	                    </if>
+                            LEFT JOIN CHB_ASSET_INFO_SUB ces1 on info.ASSET_CODE=ces1.asset_code
+                            LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
+
+                        </if>
 	                    <!-- 11. 资产持有者信息登记 -->
 	                    <if test="tableId !=null and tableId=='CHB_INVESTHOLD_INFO_SUB'">
-		                    LEFT JOIN FIN_PRODUCT FP ON info.PRODID = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 	                    </if>
 	                    <if test="tableId !=null and tableId=='CHB_EQUDET_SUB'">
-							LEFT JOIN FIN_PRODUCT FP ON info.ACCOUNT = FP.FINPROD_MARKET_ID
-	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 						</if>
 					</if>
                     /* add by songyawei 20200702 end */
@@ -1973,57 +1938,49 @@ SELECT
 	                    <!-- 1. 个人申报登记 -->
 	                    <if test="flag">
 		                    <if test="tableId != null and tableId == 'CHB_PRD_DECLARE_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                     <!-- 2. 发行登记登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_PRD_ISSUE_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 3. 产品募集期登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_PRD_RAISETOT_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 4. 产品存续期登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_PRD_DEAL_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 5. 终止登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_PRD_END_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 6. 资产要素登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_ASSET_INFO_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                                LEFT JOIN CHB_ASSET_INFO_SUB ces1 on ces1.asset_code=info.ASSET_CODE
+                                LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 		                    </if>
 		                    <!-- 7. 交易信息登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_INVEST_TRADE_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 8. 资产估值信息登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_AST_VAL_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                                LEFT JOIN CHB_ASSET_INFO_SUB ces1 on info.ASSET_CODE=ces1.asset_code
+                                LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 		                    </if>
 		                    <!-- 9. 底层资产持仓信息登记 -->
 		                    <if test="tableId != null and tableId == 'CHB_BOT_AST_POS_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.ASSET_CODE = FP.FINPROD_MARKET_ID
-	                     		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                                LEFT JOIN CHB_ASSET_INFO_SUB ces1 on info.ASSET_CODE=ces1.asset_code
+                                LEFT JOIN chb_asset_sub_status INST ON INST.regist_seqno = ces1.regist_seqno
 		                    </if>
 		                    <!-- 11. 资产持有者信息登记 -->
 		                    <if test="tableId !=null and tableId=='CHB_INVESTHOLD_INFO_SUB'">
-			                    LEFT JOIN FIN_PRODUCT FP ON info.PRODID = FP.FINPROD_MARKET_ID
-		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =info.PRODID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <if test="tableId !=null and tableId=='CHB_EQUDET_SUB'">
-								LEFT JOIN FIN_PRODUCT FP ON info.ACCOUNT = FP.FINPROD_MARKET_ID
-		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+		                     	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 							</if>
 						</if>
 	                    /* add by songyawei 20200702 end */
@@ -2156,37 +2113,31 @@ SELECT
                 <if test="flag">
                 	<!-- 1. 人行单产品月报-资产池基本信息 -->
                     <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_SUB'">
-                        LEFT JOIN FIN_PRODUCT FP ON info.ACCOUNT_ID = FP.FINPROD_MARKET_ID
-                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     <!-- 2. 人行单产品月报-产品基本信息 -->
                     <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     <!-- 3. 人行单产品月报-产品起始募集信息 -->
                     <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
                         Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-	                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID  
-	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     <!-- 4. 人行单产品月报-产品终止信息 -->
                     <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
                         Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-	                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID 
-	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     <!-- 5. 人行单产品月报-资产池终止信息 -->
                     <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_END_SUB'">
                         Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_ACCOUNT_ID
-	                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                     <!-- 6. 人行单产品月报-产品募集信息 -->
                     <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
                         Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-	                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                 </if>
 	            /* add by songyawei 20200702 end */
@@ -2301,37 +2252,31 @@ SELECT
                         <if test="flag">
 		                	<!-- 1. 人行单产品月报-资产池基本信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.ACCOUNT_ID = FP.FINPROD_MARKET_ID
-		                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+		                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 2. 人行单产品月报-产品基本信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB'">
-		                        LEFT JOIN FIN_PRODUCT FP ON info.PROD_ID = FP.FINPROD_MARKET_ID
-		                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+		                 		LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 3. 人行单产品月报-产品起始募集信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_INIT_PROD_RAISING_SUB'">
 		                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-			                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID  
-			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 4. 人行单产品月报-产品终止信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB'">
 		                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-			                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID 
-			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 5. 人行单产品月报-资产池终止信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_PRD_ACCOUNT_END_SUB'">
 		                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_ACCOUNT_ID
-			                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                    <!-- 6. 人行单产品月报-产品募集信息 -->
 		                    <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
 		                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
-			                	LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = ppas.ACCOUNT_ID
-			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = FP.FINPROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'FINPROD04'
+			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
 		                </if>
 			            /* add by songyawei 20200702 end */

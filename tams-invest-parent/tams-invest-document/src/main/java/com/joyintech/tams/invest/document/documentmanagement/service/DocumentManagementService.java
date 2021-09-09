@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -39,6 +41,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class DocumentManagementService  extends CommonExportService<DocumentManagementDto>
 implements BaseProcessService<DocumentManagementDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(DocumentManagementService.class);
 
     /**
      * {@inheritDoc}
@@ -143,7 +149,7 @@ implements BaseProcessService<DocumentManagementDto> {
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

@@ -23,7 +23,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.common.base.entity.FinProduct;
+
+import com.joyintech.tams.common.base.entity.FinProduct;import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.component.business.bond.BusiFinBondRatingInfoService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -36,6 +38,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +82,8 @@ public class FinBondTargetAsset002Controller extends BaseController{
     
     @Autowired
     private CommonBusinessService commonBusinessService;
-    
+    @Autowired
+    private BusiFinBondRatingInfoService busiFinBondRatingInfoService;
     /**
      * 初始化数据字典下拉框
      */
@@ -210,8 +214,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinBondTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinBondTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -270,6 +273,8 @@ public class FinBondTargetAsset002Controller extends BaseController{
                 finprodMarketId + tradeMarketId);
         if (StringUtil.isNotEmpty(dto)) {
             dto.setFinprodMarketId(finprodMarketId);
+            //快录时不带出上市代码
+            dto.setAppearMarketId(null);
             //债券快录时不考虑  授信
             dto.setCreditFlag("");
             ar.setData(dto);
@@ -295,8 +300,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
 
     @ResponseBody
     @RequestMapping("/getBasicInfo")
-    public FinBondTargetAssetDto getBasicInfo(@RequestBody FinBondTargetAssetDto finBondTargetAssetDto)
-            throws Exception {
+    public FinBondTargetAssetDto getBasicInfo(@RequestBody FinBondTargetAssetDto finBondTargetAssetDto){
         FinBondTargetAssetDto resultDto = finBondTargetAssetService.getBasicInfo(
                 finBondTargetAssetDto.getFinprodId());
         return resultDto;
@@ -313,11 +317,29 @@ public class FinBondTargetAsset002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         return finBondTargetAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
     }
-    
+        /**
+     * 初始化评级信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getFinBondRatingDto")
+    @ResponseBody
+    public List<MstBondCreditRating> getFinBondRatingDto(@RequestParam("issuer") String issuer) {
+        List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
+        Map<String,Object> ztparam = new HashMap<String,Object>();
+        //主体为发行人（债券类资产）
+        if(StringUtil.isNotEmpty(issuer)) {
+            ztparam.put("oCode", issuer);
+            mstBondCreditRatingList.addAll(busiFinBondRatingInfoService.getmstBondCreditRatingByOcode(ztparam));
+        }
+        return mstBondCreditRatingList;
+    }
+
     @ResponseBody
     @RequestMapping("/getIsNetSett")
     private AjaxResult getIsNetSett(@RequestParam("finprodMarketId") String finprodMarketId,

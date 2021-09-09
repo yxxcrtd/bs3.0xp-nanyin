@@ -1,5 +1,6 @@
 package com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscgenfiledetail.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,7 +69,7 @@ public class InfoDiscGenFileDetailService {
 	 * @param executeDateStr 跑批日期
 	 * @throws Exception 异常
 	 */
-	public boolean genInstallFileDetail(InfoDisclosureReadAndGenEntity infoDisclosureReadAndGenEntity, Map<String,Date> dateMap, Date executeDateStr) throws Exception{
+	public boolean genInstallFileDetail(InfoDisclosureReadAndGenEntity infoDisclosureReadAndGenEntity, Map<String,Date> dateMap, Date executeDateStr) throws ParseException {
 		boolean  flag = false;
 		//规则表信息
 		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(infoDisclosureReadAndGenEntity.getRuleId());
@@ -134,7 +135,7 @@ public class InfoDiscGenFileDetailService {
 	 * @throws Exception
 	 */
 	public List<ProdInfoListEntity> getRuleProdList(InfoDisclosureReadAndGenEntity infoDisclosureReadAndGenEntity, RepRuleEntity repRule, Date executeDateStr, 
-			Date ptDate, Map<String,Date> dateMap) throws Exception{
+			Date ptDate, Map<String,Date> dateMap) throws ParseException {
 		//获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(infoDisclosureReadAndGenEntity.getJobId());
 		//通过组装的条件，查询产品相关内容
@@ -272,7 +273,7 @@ public class InfoDiscGenFileDetailService {
 	 * @throws Exception
 	 */
 	public boolean doInsert(List<ProdInfoListEntity> list, InfoDisclosureReadAndGenEntity infoDisclosureReadAndGenEntity,RepRuleEntity repRule,
-			Map<String, Date> dateMap, boolean runAgainFlag) throws Exception{
+			Map<String, Date> dateMap, boolean runAgainFlag) {
 	    
 	    boolean flag = false;
 		List<RepInstallFile> revealList = new ArrayList<RepInstallFile>();

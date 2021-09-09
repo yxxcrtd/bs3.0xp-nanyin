@@ -113,6 +113,7 @@
         <!--LEFT JOIN PA_FIN_PRODUCT PFP ON A.FINPROD_ID = PFP.FINPROD_ID-->
         LEFT JOIN PRD_VAL_PARAM C on a.FINPROD_ID = C.FINPROD_ID
         LEFT JOIN MST_COUNTER_PARTY D ON ','||A.ENTRUSTER||',' LIKE '%,'||D.COUNTER_ID||',%'
+        LEFT JOIN PRD_SALE_PARAM PSP ON A.FINPROD_ID = PSP.FINPROD_ID
         <where>
             A.P_FINPROD_ID IS NULL AND B.ISSUE_STATUS = #{ISSUE_STATUS01}
             AND B.DEAL_MODE IN (#{dealType01}, #{dealType11}, #{dealType10}, #{dealType10})
@@ -125,6 +126,7 @@
             <if test="profitType != null and profitType != ''">
                 and A.PROFIT_TYPE = #{profitType}
             </if>
+            AND PSP.RED_FLAG = 'Y'
         </where>
         group by A.FINPROD_ID,A.FINPROD_MARKET_ID,
         A.FINPROD_ABBR,

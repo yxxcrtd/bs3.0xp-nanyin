@@ -251,7 +251,7 @@ public class SppiTest001Service extends CommonExportService<SppiTest001Dto> {
     	param.put("tempList", ExcelUtil.getTempList(fileName));
     	param.put("orgCode", CommonUtil.getOrgCode());
     	param.put("deptCode", CommonUtil.getDeptCode());
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	return restTemplate.postForList(
     			ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest001/importData", 
 	       		param,

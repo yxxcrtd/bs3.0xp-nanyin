@@ -91,8 +91,10 @@ public class DatReadUtils {
                 if (file.isFile() && file.exists()) {
                     InputStreamReader isr = null;
                     BufferedReader br = null;
+                    FileInputStream fis = null;
                     try {
-                        isr = new InputStreamReader(new FileInputStream(file), "GB2312");
+                        fis = new FileInputStream(file);
+                        isr = new InputStreamReader(fis, "GB2312");
                         br = new BufferedReader(isr);
                         String lineTxt = null; // 读取文件的方法
                         while (!StringUtil.isEmpty(lineTxt = br.readLine())) {
@@ -104,6 +106,9 @@ public class DatReadUtils {
                         try {
                             if (br != null) {
                                 br.close();
+                            }
+                            if (fis != null){
+                                fis.close();
                             }
                         } catch (Exception e) {
                             logger.error("", e);
@@ -170,8 +175,10 @@ public class DatReadUtils {
                     index++;
                     InputStreamReader isr = null;
                     BufferedReader br = null;
+                    FileInputStream fis = null;
                     try {
-                        isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+                        fis = new FileInputStream(file);
+                        isr = new InputStreamReader(fis, "UTF-8");
                         br = new BufferedReader(isr);
                         String lineTxt = null; // 读取文件的方法
                         boolean flag = false; //下一行是否 是字段名，截取长度等信息
@@ -214,12 +221,11 @@ public class DatReadUtils {
                             if (br != null) {
                                 br.close();
                             }
-                        } catch (Exception e) {
-                            logger.error("", e);
-                        }
-                        try {
                             if (isr != null) {
                                 isr.close();
+                            }
+                            if (fis != null){
+                                fis.close();
                             }
                         } catch (Exception e) {
                             logger.error("", e);

@@ -6,7 +6,9 @@ import java.util.List;
 import com.joyintech.tams.common.base.entity.ChbPrdPeriodYield;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthPrdPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthPrdPositionMapper {
     int deleteByPrimaryKey(String posuuid);
 

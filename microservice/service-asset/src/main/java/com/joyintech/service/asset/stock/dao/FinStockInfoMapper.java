@@ -48,6 +48,8 @@ public interface FinStockInfoMapper {
     List<SuggestDto> getTradeOpponent(@Param("counterType") String counterType);
     
     List<SuggestDto> getCalendarId(@Param("tradeMarket") String tradeMarket);
+
+    List<SuggestDto> getShOrZhCalendarId();
     
     List<SuggestDto> getCustomerName();
     /**

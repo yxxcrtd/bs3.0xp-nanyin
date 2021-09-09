@@ -106,18 +106,17 @@ public class DtoChangeUtil {
         return fields;
     }
 
-        public static void main(String[] args) {
-        ChbAssetInfo dto = new ChbAssetInfo();
-        dto.setPartyType1("01");
-        dto.setPartyGrade("02");
-        dto.setPartyType2("02");
-
-        SvrBussFinBondRepInfoDto dto2= new SvrBussFinBondRepInfoDto();
-        try {
-            SetChbToRep(dto, dto2,"rep",false);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+//        public static void main(String[] args) {
+//        ChbAssetInfo dto = new ChbAssetInfo();
+//        dto.setPartyType1("01");
+//        dto.setPartyGrade("02");
+//        dto.setPartyType2("02");
+//
+//        SvrBussFinBondRepInfoDto dto2= new SvrBussFinBondRepInfoDto();
+//        try {
+//            SetChbToRep(dto, dto2,"rep",false);
+//        }catch(Exception e){
+//        }
+//    }
 
 }

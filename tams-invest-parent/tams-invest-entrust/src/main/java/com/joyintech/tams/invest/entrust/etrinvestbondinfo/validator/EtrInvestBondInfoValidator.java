@@ -10,11 +10,6 @@
 
 package com.joyintech.tams.invest.entrust.etrinvestbondinfo.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -26,6 +21,8 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
+import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -33,6 +30,11 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.service.EtrInvestBondInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 债券投资委托校验 〈功能详细描述〉
@@ -50,6 +52,14 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
      */
     @Autowired
     private EtrInvestBondInfoService etrInvestBondInfoService;
+    // 行权方式check add by renping 20191020 start
+    /**
+     * 行权计划共通service
+     */
+    @Autowired
+    private BusiFinExercisePlanService busiFinExercisePlanService;
+    // 行权方式check add by renping 20191020 end
+
     @Autowired
     private FinProductMapper finProductMapper;
     
@@ -144,6 +154,35 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
             				|| StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs()))) {
                 ValidMessage validMessage = new ValidMessage("非行权债不可做行权交易！");
                     errorList.add(validMessage);
+            } else {
+                if (StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
+                        || StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())) {
+                    Map<String, Object> p = new HashMap<>();
+                    p.put("finprodId", dto.getFinprodId());
+                    p.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+                    p.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+                    p.put("execType01", DictCodeList.行权状态_未行权.getValue());
+                    p.put("execType02", DictCodeList.行权状态_已行权.getValue());
+                    List<FinExercisePlan> planList = busiFinExercisePlanService.getfinExercisePlanByProductId(p);
+                    boolean checkFlag = true;
+                    if (!StringUtil.isEmptyList(planList)) {
+                        for (FinExercisePlan planDto : planList) {
+                            if (planDto.getExerciseDate().compareTo(dto.getVdate()) >= 0 && planDto.getExerciseDate().compareTo(dto.getMdate()) <= 0) {
+                                if ((StringUtil.equals(DictCodeList.交易方向_行权_回售.getValue(), dto.getPs())
+                                        && StringUtil.equals(DictCodeList.行权方式_回售.getValue(),
+                                        planDto.getExerciseType()))
+                                        || (StringUtil.equals(DictCodeList.交易方向_行权_赎回.getValue(), dto.getPs())
+                                        && StringUtil.equals(DictCodeList.行权方式_赎回.getValue(),
+                                        planDto.getExerciseType()))) {
+                                    checkFlag = false;
+                                }
+                            }
+                        }
+                    }
+                    if (checkFlag) {
+                        errorList.add(new ValidMessage("债券行权计划中没有满足所选交易方向和日期的行权数据！"));
+                    }
+                }
             }
             if (entrustNum != null && StringUtil.isNotEmpty(ps)) {
                 BigDecimal proAvailableCash = dto.getProAvailableCash();

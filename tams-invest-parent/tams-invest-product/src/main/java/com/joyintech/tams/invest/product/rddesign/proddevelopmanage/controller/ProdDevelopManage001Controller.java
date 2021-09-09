@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.product.rddesign.proddevelopmanage.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -83,7 +84,7 @@ public class ProdDevelopManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ProdDevelopManageDto> findPage()
-        throws Exception {
+    {
         return prodDevelopManageService.selectForPage(RequestUtil.getPageParam());
     }
 
@@ -98,7 +99,7 @@ public class ProdDevelopManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return prodDevelopManageService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -129,8 +130,7 @@ public class ProdDevelopManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ProdDevelopManageDto dto, BindingResult result)
-        throws Exception {
+        ValidateGroupDelete.class}) ProdDevelopManageDto dto, BindingResult result) throws WorkFlowException {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }

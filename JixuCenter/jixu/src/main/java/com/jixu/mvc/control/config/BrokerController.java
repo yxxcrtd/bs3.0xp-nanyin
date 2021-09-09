@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +41,7 @@ import com.orm.obj.SecAcct;
 
 @Controller
 public class BrokerController extends ExceptionControl {
+	private static final Logger logger = LoggerFactory.getLogger(BrokerController.class);
 	@Resource(name = "configService")
 	private ConfigService configService;
 
@@ -555,7 +558,8 @@ public class BrokerController extends ExceptionControl {
 			@RequestParam(value = "id", required = true) String cashAcctID,
 			@RequestParam(value = "params", required = true) String params, HttpServletResponse response) {
 		List<Object> param_list = JsonUtil.stringToList(params);
-		System.out.println(param_list);
+//		System.out.println(param_list);
+		logger.info(param_list.toString());
 		Random rand = new Random();
 		int randomNo = rand.nextInt(100 - 5) + 5;
 		JsonUtil.writeObjToResponse(response, randomNo + "");

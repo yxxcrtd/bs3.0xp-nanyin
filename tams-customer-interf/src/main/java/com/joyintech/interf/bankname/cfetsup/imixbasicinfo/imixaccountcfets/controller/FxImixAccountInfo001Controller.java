@@ -37,7 +37,7 @@ public class FxImixAccountInfo001Controller extends BaseController {
 
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FxImixAccountInfo001Dto> findPage()throws Exception{
+    public Page<FxImixAccountInfo001Dto> findPage(){
         Page<FxImixAccountInfo001Dto> pageInfo = fxImixAccountInfo001Service.findPage(RequestUtil.getPageParam());
         return pageInfo;
     }

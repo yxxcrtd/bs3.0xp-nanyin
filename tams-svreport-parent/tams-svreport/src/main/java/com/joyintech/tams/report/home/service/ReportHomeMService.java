@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -52,6 +53,10 @@ public class ReportHomeMService extends BaseService<ITableRow>{
     	Map<String,Object> param = new HashMap<>();
     	param.put("searchDate", date);
     	param.put("reportlist", reportlist);
+        if(CommonUtil.isBAmodel()){
+            param.put("model_type", "01");
+            param.put("orgCode", CommonUtil.getTreeInstCode());
+        }
         return restTemplate.postForObject(
         		SvrServiceApplication.COMMON_SERVICE_NAME + "/ReportHome/searchReportInfo",param,
         		Map.class);

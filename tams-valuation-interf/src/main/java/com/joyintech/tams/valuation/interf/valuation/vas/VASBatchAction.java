@@ -21,6 +21,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +74,7 @@ public class VASBatchAction{
 
 	@ResponseBody
     @RequestMapping(InterfCommonConstant.组装XMl文件)
-	public void execute(String startDa,String endDa) throws Exception {
+	public void execute(String startDa,String endDa) throws ClassNotFoundException, SQLException {
 		Map<String, Object> params = new HashMap<>();
 		params.put(InterfCommonConstant.接口_对接系统ID, DictCodeInterfList.接口对接系统ID_资管.getValue());
 		List<ValRecvServerInfoEntity> recvServerList = protocolMapper.getValServerInfo(params);
@@ -83,12 +84,12 @@ public class VASBatchAction{
 			filePath = recv.getRemotePath();
 			DbUtil db = new DbUtil(recv.getServerIp(), recv.getServerPort(), recv.getServerName(), recv.getUserName(), recv.getPassword());
 	        db.init();
-			Connection conn = db.getDbConnection();
-	    	if(null==conn){
-	    		log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
-	    	}
-
+			Connection conn = null;
 			try {
+				conn = db.getDbConnection();
+				if(null==conn){
+					log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
+				}
 				if(null!=conn){
 				    Date startDate;
 				    Date endDate;
@@ -111,7 +112,12 @@ public class VASBatchAction{
 			} catch (Exception e) {
 				log.error("生成文件异常", e);
 			} finally {
-				db.release();
+				if (db != null){
+					db.release();
+				}
+				if (conn != null){
+					conn.close();
+				}
 			}
 		}else{
 			log.error("获取ValRecvServerInfo数据源异常,"+"共获取到"+recvServerList.size()+"条!");
@@ -339,7 +345,7 @@ public class VASBatchAction{
 		if (info == null) {
 			URL templateXmlURL = getClass().getClassLoader().getResource(TEMPLATE_PATH + templateId + ".xml");
 			if (templateXmlURL == null)
-				throw new RuntimeException("模板未定义: " + templateId + ".xml");
+				throw new BusinessException("模板未定义: " + templateId + ".xml");
 			info = JAXB.unmarshal(templateXmlURL, Info.class);
 			infoElementListToFieldList(info);
 			infoTemplateCache.put(templateId, info);
@@ -395,7 +401,7 @@ public class VASBatchAction{
 				infoFieldList.add(newElement(e.getName(), value));
 		}
 		if (!emptyList.isEmpty())
-			throw new RuntimeException(StringUtils.join(emptyList, ", ") + "：这些为必输项但值为空");
+			throw new BusinessException(StringUtils.join(emptyList, ", ") + "：这些为必输项但值为空");
 		return info;
 	}
 

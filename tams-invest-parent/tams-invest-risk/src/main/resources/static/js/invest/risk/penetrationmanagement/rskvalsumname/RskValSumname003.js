@@ -67,7 +67,10 @@ $(function() {
     //页面初始化
     var init = function(){
     	if(pageModel==PAGE_MODEL_EDIT){
-    		$('#sumCode').attr("disabled",true);
+    	    if(IS_MAP && IS_MAP== YES_OR_NO_Y){
+             	$('#sumCode').attr("disabled",true);
+            }
+    		//$('#sumCode').attr("disabled",true);
     		if(hasNextIndex == YES_OR_NO_Y){
     			$('#nextIndexType').attr("disabled",false);
     			star();

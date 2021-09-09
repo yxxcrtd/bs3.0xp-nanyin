@@ -91,7 +91,7 @@ public class ValAssetsAmortizeSet001Service extends CommonExportService<ValAsset
      * @since 1.0
      */
     public Page<ValAssetsAmortizeSet001Dto> findPage(Map<String, Object> map)
-        throws Exception {
+         {
         // return ValAssetsAmortizeSet001Mapper.findPage(map);
 //        return super.queryForPage(() -> ValAssetsAmortizeSet001Mapper.findPage(map));
     	return restTemplate.postForPage(

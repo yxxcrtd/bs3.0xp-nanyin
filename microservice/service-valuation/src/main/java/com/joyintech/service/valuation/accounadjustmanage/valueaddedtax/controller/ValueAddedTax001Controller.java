@@ -170,7 +170,7 @@ public class ValueAddedTax001Controller extends BaseController {
      * @throws ParseException
      */
     @PostMapping("/checkTaxDeclareSumInfo")
-    public String checkTaxDeclareSumInfo(@RequestBody Map<String, Object> params) throws Exception {
+    public String checkTaxDeclareSumInfo(@RequestBody Map<String, Object> params) throws ParseException {
         return valueAddedTax001Service.checkTaxDeclareSumInfo(params);  
     }
     
@@ -181,7 +181,7 @@ public class ValueAddedTax001Controller extends BaseController {
      * @throws ParseException
      */
     @PostMapping("/buildTaxDeclareSumInfo")
-    public String buildTaxDeclareSumInfo(@RequestBody Map<String, Object> params) throws Exception {
+    public String buildTaxDeclareSumInfo(@RequestBody Map<String, Object> params) throws ParseException {
         return valueAddedTax001Service.buildTaxDeclareSumInfo(params);  
     }
     
@@ -209,7 +209,7 @@ public class ValueAddedTax001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValueAddedTax001Dto> selectBalanceStatement(@RequestBody Map<String, Object> pageParam,
                                                             @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<ValueAddedTax001Dto> pages = valueAddedTax001Service.selectForPage(page,length,pageParam);
         return pages;
     }
@@ -222,7 +222,7 @@ public class ValueAddedTax001Controller extends BaseController {
     @PostMapping("/selectSum/{page}/{length}")
     public Page<ValueAddedTax001Dto> selectSum(@RequestBody Map<String, Object> pageParam,
                                                @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return valueAddedTax001Service.selectSum(pageParam);
     }
     
@@ -252,7 +252,7 @@ public class ValueAddedTax001Controller extends BaseController {
     
     @SuppressWarnings("unchecked")
     @PostMapping("/sigleProduct")    
-    public boolean sigleProduct(@RequestBody Map<String, Object> pageParam) throws Exception {
+    public boolean sigleProduct(@RequestBody Map<String, Object> pageParam) throws ParseException {
         String year = (String)pageParam.get("year");
         String declareDate = (String)pageParam.get("declareDate");
         String statDimen = (String)pageParam.get("statDimen");
@@ -266,7 +266,7 @@ public class ValueAddedTax001Controller extends BaseController {
     @DTXTransaction
     @SuppressWarnings("unchecked")
     @PostMapping("/statisticalDimension")    
-    public boolean statisticalDimension(@RequestBody Map<String, Object> pageParam) throws Exception {
+    public boolean statisticalDimension(@RequestBody Map<String, Object> pageParam) throws ParseException {
         String year = (String)pageParam.get("year");
         String declareDate = (String)pageParam.get("declareDate");
         String statDimen = (String)pageParam.get("statDimen");

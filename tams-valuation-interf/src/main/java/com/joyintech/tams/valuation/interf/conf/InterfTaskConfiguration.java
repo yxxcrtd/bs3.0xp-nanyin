@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.interf.conf;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.springframework.batch.core.configuration.ListableJobLocator;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -37,9 +38,16 @@ public class InterfTaskConfiguration {
     
     @Bean(value = "jobRepository")
     public JobRepository initRepository(MapJobRepositoryFactoryBean mapJobFactoryBean)
-        throws Exception {
-        return mapJobFactoryBean.getObject();
-    }
+         {
+             JobRepository jr = null;
+             try {
+                 jr = mapJobFactoryBean.getObject();
+             } catch (Exception e) {
+//                 e.printStackTrace();
+                 throw new BusinessException(e);
+             }
+             return jr;
+         }
     
     @Bean(value = "jobBuilderFactory")
     public JobBuilderFactory initJobBuilderFactory(JobRepository jobRepository) {
@@ -78,7 +86,7 @@ public class InterfTaskConfiguration {
 
     @Bean(value = "mapJobFactoryBean")
     public MapJobRepositoryFactoryBean initMapJobRepositoryFactoryBean()
-        throws Exception {
+        {
         return new MapJobRepositoryFactoryBean();
     }
 }

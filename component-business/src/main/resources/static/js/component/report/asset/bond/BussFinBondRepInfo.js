@@ -61,14 +61,14 @@
 //                getElementById("repIndustryLevel2").val('').trigger("change");
     		}
     	});
-        getElementById('repPartyType1').change(function(){
+        /*getElementById('repPartyType1').change(function(){
             if(getElementById('repPartyType1').val()==SVR_PARTY_TYPE1_01){
                 getElementById('repInstitSize_div').show();
             }else{
                 getElementById('repInstitSize_div').val('').trigger("change");
                 getElementById('repInstitSize_div').hide();
             }
-        });
+        });*/ // add by jiangpeng on 20210629 人行机构规模 字段 废弃了，页面隐藏,人行月报改成用贷款明细信息进行统计了
         /*getElementById('repAssetType').change(function(){
             if(getElementById('finprodType2').val() == FINPROD_TYPE_TG_F18){
                 if(getElementById('repAssetType').val()) {

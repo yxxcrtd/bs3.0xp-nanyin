@@ -5,26 +5,6 @@
 
 package com.joyintech.tams.invest.trade.fund.controller;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
-import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
@@ -40,21 +20,43 @@ import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.settle.BussSettleOrderCommService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeConfirmDto;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade001Service;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade003Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 基金投资交易确认 〈功能详细描述〉
@@ -379,7 +381,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
     @RequestMapping("getcarryAmt")
     @ResponseBody
     public BigDecimal getcarryAmt(@RequestBody Map<String, Object> map)
-        throws Exception {
+         {
         return trdFundInvestTrade003Service.getcarryAmt(map);
     }
 
@@ -407,7 +409,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
             if (!isAuthorizationSoftcontrol) {
                 if (authorizationvalid(dto)){
                     ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                    errorList.add(new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理")));
+                    errorList.add(new ValidMessage(getMessage("TRD_E_0016", "领导")));
                     ar.setErrorList(errorList);
                 }
             }
@@ -456,7 +458,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
         if (isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);
             } 
@@ -514,8 +516,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -582,6 +583,10 @@ public class TrdFundInvestTrade003Controller extends BaseController {
         }
 
         trdFundInvestTrade003Service.prepareEntity(dto, true);
+
+        if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+            dto.setTradePlat(dto.getTradeMarket());
+        }
 
         String msg = trdFundInvestTrade003Service.start(processParameter, dto);
         return new AjaxResult(msg);

@@ -48,7 +48,7 @@ public class ValInterestRateQuotationInfoValidator implements BeanValidator {
         // if (WorkFlowUtil.isNotFromToDoList()) {
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             // 判断是否获取到删除的项目
-            if (dto.getSelectedItem() != null || dto.getSelectedItem().size() > 0) {
+            if (dto.getSelectedItem() != null && dto.getSelectedItem().size() > 0) {
                 // 遍历选择的项目
                 for (ValInterestRateQuotationInfoDto cur : dto.getSelectedItem()) {
                     // 判断发布日是否小于平台时间

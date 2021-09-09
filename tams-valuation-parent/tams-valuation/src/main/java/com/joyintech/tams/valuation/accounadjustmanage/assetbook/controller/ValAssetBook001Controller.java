@@ -92,7 +92,7 @@ public class ValAssetBook001Controller extends BaseController {
 //    @ResponseBody
 //    @RequestMapping("/getBooksetId")
 //    public List<SuggestDto> getBooksetId()
-//        throws Exception {
+//         {
 ////        String param = super.getRequest().getParameter("param");
 //        return valAssetBook001Service.getBooksetId(RequestUtil.getPageParam());
 //    }
@@ -108,7 +108,7 @@ public class ValAssetBook001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }
@@ -122,7 +122,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @RequestMapping("ValAssetBook001search")
     @ResponseBody
-    public Page<ValAssetbook001Dto> search() throws Exception {
+    public Page<ValAssetbook001Dto> search() {
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("name",this.getParam("name"));
         params.put("type",this.getParam("type"));
@@ -153,8 +153,7 @@ public class ValAssetBook001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         
         Map<String, Object> params = new HashMap<String, Object>();
@@ -192,7 +191,7 @@ public class ValAssetBook001Controller extends BaseController {
     @RequestMapping("doDeleteCheck")
     @ResponseBody
     public AjaxResult doDeleteCheck(@RequestBody @Valid ValAssetbook001Dto dto,
-                                 BindingResult result) throws Exception {
+                                 BindingResult result)  {
     	AjaxResult wr = new AjaxResult();
 //    	int res = valAssetBook001Service.workflowCheck(dto);
 //    	valAssetBook001Service.checkBusinessDataInFlow(dto);
@@ -284,7 +283,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getBooksetId")
-    public Page<SelectOptionDto> getBooksetId() throws Exception {
+    public Page<SelectOptionDto> getBooksetId() {
         return valAssetBook001Service.getBooksetIdNew(RequestUtil.getPageParam());
     }
 
@@ -296,7 +295,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @RequestMapping("findBooksetGroup")
     @ResponseBody
-    public Page<SelectOptionDto> findBooksetGroup() throws Exception {
+    public Page<SelectOptionDto> findBooksetGroup()  {
         return valAssetBook001Service.findBooksetGroup(RequestUtil.getPageParam());
     }
 

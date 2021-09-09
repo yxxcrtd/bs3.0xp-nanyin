@@ -10,6 +10,7 @@
 package com.joyintech.tams.valuation.financemanage.balancecheck.unfairlendingquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +96,7 @@ public class ValUnfairlendingQuery001Controller extends BaseController {
 	 */
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<ValUnfairlendingQuery001Dto> findPage() throws Exception {
+	public Page<ValUnfairlendingQuery001Dto> findPage() {
 		return valUnfairlendingQuery001Service.findPage(RequestUtil.getPageParam());
 	}
 
@@ -132,11 +133,18 @@ public class ValUnfairlendingQuery001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws ParseException, IOException {
 		String datas = this.getParam("datas");
 		Map<String, Object> params = this.getRequestMap();
-		ValUnfairlendingQuery001Dto dto = (ValUnfairlendingQuery001Dto) JsonUtils.map2entity(params,
-				ValUnfairlendingQuery001Dto.class);
+		ValUnfairlendingQuery001Dto dto = null;
+		try {
+			dto = (ValUnfairlendingQuery001Dto) JsonUtils.map2entity(params,
+					ValUnfairlendingQuery001Dto.class);
+		} catch (Exception e) {
+//			e.printStackTrace();
+			getLogger().error(e.getMessage());
+			throw new ParseException(e.getMessage(),0);
+		}
 		List<ValUnfairlendingQuery001Dto> listdto;
 		if (datas == null) {
 			listdto = valUnfairlendingQuery001Service.queryUnfairlendingList(dto);

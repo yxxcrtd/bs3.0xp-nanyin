@@ -47,7 +47,7 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
      * @see
      * @since 1.0
      */
-    public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(int page,int length,Map<String,Object> params) throws Exception {
+    public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(int page,int length,Map<String,Object> params) {
         return super.queryForPage(page,length,()-> mapper.getBookSetExt(params));
     }
     
@@ -75,7 +75,7 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
      * @return
      * @throws Exception
      */
-	public List<ValAssetBookParameter002Dto> checkfornew(String booksetId) throws Exception {
+	public List<ValAssetBookParameter002Dto> checkfornew(String booksetId) {
 		List<ValAssetBookParameter002Dto>  resultList = new ArrayList<>();
 			resultList = valAssetBookParameter002Mapper.checkfornew(booksetId);
 		return resultList;

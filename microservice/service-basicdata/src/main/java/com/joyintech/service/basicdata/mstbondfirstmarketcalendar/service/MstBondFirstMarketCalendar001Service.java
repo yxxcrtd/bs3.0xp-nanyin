@@ -35,7 +35,7 @@ public class MstBondFirstMarketCalendar001Service extends BaseService<MstBondFir
      * @throws Exception 异常信息
      */
     public Page<MstBondFirstMarketCalendar001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> mstBondFirstMarketCalendar001Mapper.select(pageParam));
     }
     /**

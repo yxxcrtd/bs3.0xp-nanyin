@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.productplanning.assetclassmanagement.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class AssetClassManagement001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("selectForPage")
-	public Page<AssetClassManagement001Dto> selectAll() throws Exception {
+	public Page<AssetClassManagement001Dto> selectAll(){
 		Page<AssetClassManagement001Dto> page = assetClassManagement001Service
 				.selectForPage(RequestUtil.getParameters(getRequest()));
 		return page;
@@ -84,7 +85,7 @@ public class AssetClassManagement001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export(){
 		return assetClassManagement001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 
@@ -93,7 +94,7 @@ public class AssetClassManagement001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("delete")
-	public AjaxResult delete(@RequestBody AssetClassManagement001Dto dto) throws Exception {
+	public AjaxResult delete(@RequestBody AssetClassManagement001Dto dto) throws WorkFlowException {
 		ProcessParameter<AssetClassManagement001Dto> processParameter = new ProcessParameter<AssetClassManagement001Dto>();
 		WorkFlowParameter<AssetClassManagement001Dto> params = new WorkFlowParameter<AssetClassManagement001Dto>();
 		// BussinessCodeParameter parameter=new BussinessCodeParameter();

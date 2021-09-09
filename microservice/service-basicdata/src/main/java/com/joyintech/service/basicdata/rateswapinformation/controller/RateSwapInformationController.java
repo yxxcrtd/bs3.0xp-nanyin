@@ -106,7 +106,7 @@ public class RateSwapInformationController {
     @PostMapping("getCurveType/{page}/{length}")
     public Page<SelectOptionDto> getCurveType(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return rateSwapInformationService.getCurveType(page,length,param);
     }
 }

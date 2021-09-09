@@ -131,27 +131,17 @@ public class QuartzManager {
     /** 
      * @Description:启动所有定时任务 
      */  
-    public void startJobs() {  
-        try {  
-            scheduler.start();  
-        } catch (Exception e) {  
-        	logger.error("Error", e);
-            throw new RuntimeException(e);  
-        }  
+    public void startJobs() throws SchedulerException {
+        scheduler.start();
     }  
 
     /**
      * 关闭所有定时任务  
      */
-    public void shutdownJobs() {  
-        try {  
-            if (!scheduler.isShutdown()) {  
-                scheduler.shutdown();  
-            }  
-        } catch (Exception e) {  
-        	logger.error("Error", e);
-            throw new RuntimeException(e);  
-        }  
+    public void shutdownJobs() throws SchedulerException{
+        if (!scheduler.isShutdown()) {
+                scheduler.shutdown();
+            }
     }
 
     public Scheduler getScheduler() {

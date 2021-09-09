@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.valfxvaluztioninfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -102,7 +103,7 @@ public class ValFxValuztionInfo001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) ValFxValuztionInfo002Dto dto,
                             BindingResult bindingResult)
-            throws Exception {
+             {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
 
@@ -159,8 +160,7 @@ public class ValFxValuztionInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValFxValuztionInfo001Dto> listdto ;
 

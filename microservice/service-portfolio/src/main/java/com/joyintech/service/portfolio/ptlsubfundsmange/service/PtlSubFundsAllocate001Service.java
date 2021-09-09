@@ -126,7 +126,7 @@ public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAlloca
     }
 
     public Page<PtlSubFundsAllocateDto> getSubFundsAllocate(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("portfolioId", pageParam.get("portfolioId2"));
         //update by leipeng 20190910  按设计修改添加查询逻辑
         pageParam.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
@@ -138,7 +138,7 @@ public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAlloca
     }
 
     public Page<PtlSubFundsAllocateDto> selectOther(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         pageParam.put("hodingType", DictCodeList.持仓类型_实际.getValue());
         //update by leipeng 20190910  按设计修改添加查询逻辑
         pageParam.put("acctType", DictCodeListExt1.资金账户类型_产品托管户.getValue());
@@ -148,7 +148,7 @@ public class PtlSubFundsAllocate001Service extends BaseService<PtlSubFundsAlloca
     }
 
     public Page<PtlSubFundsAllocateDto> processSubFundsAllocate(Map<String, Object> pageParam, Page<PtlSubFundsAllocateDto> resultPage)
-            throws Exception {
+    {
         if (!StringUtil.isEmptyList(resultPage.getRoot())) {
             BigDecimal actualAmt = BigDecimal.ZERO;
             BigDecimal avaAmt = BigDecimal.ZERO;

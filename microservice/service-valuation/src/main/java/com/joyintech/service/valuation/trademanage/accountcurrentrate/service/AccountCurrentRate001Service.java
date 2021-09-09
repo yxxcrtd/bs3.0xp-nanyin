@@ -75,8 +75,7 @@ public class AccountCurrentRate001Service extends CommonExportService<AccountCur
      * @see
      * @since 1.0
      */
-    public Page<AccountCurrentRate001Dto> queryAccountCurrentRateList(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<AccountCurrentRate001Dto> queryAccountCurrentRateList(int page, int length, Map<String, Object> params){
         return super.queryForPage(page, length, () -> accountCurrentRate001Mapper.queryAccountCurrentRateList(params));
     }
 
@@ -89,8 +88,7 @@ public class AccountCurrentRate001Service extends CommonExportService<AccountCur
      * @see
      * @since 1.0
      */
-    public List<AccountCurrentRate001Dto> findAll(Map<String, Object> params)
-        throws Exception {
+    public List<AccountCurrentRate001Dto> findAll(Map<String, Object> params){
         List<AccountCurrentRate001Dto> list = accountCurrentRate001Mapper.queryAccountCurrentRateList(params);
         return list;
     }

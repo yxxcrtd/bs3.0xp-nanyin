@@ -52,7 +52,7 @@ public class RepBottomAssetService extends BaseService<RepBottomAsset>{
      * @since 1.0
      */
     public Page<RepBottomAsset> findPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> myRepBottomAssetMapper.findPage(map));
     }
     /**

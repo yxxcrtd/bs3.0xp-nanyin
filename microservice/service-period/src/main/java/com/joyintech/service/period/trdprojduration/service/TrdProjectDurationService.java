@@ -79,12 +79,18 @@ public class TrdProjectDurationService extends BaseService {
         for (TrdProjectDurationDto dto : list){
             //查询区间净投资收益率
             Map<String, Object> map = new HashMap<>();
-            map.put("busiCode", dto.getBusiCode());
+           // map.put("busiCode", dto.getBusiCode());
             map.put("vDate", dto.getvDate());
             map.put("mDate", dto.getmDate());
             map.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             map.put("finprodId", dto.getFinprodId());
             map.put("F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            map.put("ISPAYINT", DictCodeList.是否_是.getValue());
+            //判断资产还本不带息，若为还本不带息，则随付息计划。若为还本带息，则应是最接近的付息计划的利率
+            int count=trdProjectDurationMapper.getisPayInt(dto.getFinprodId());
+            if(count>0){
+                map.put("ISPAYINT", DictCodeList.是否_否.getValue());
+            }
             BigDecimal yield = trdProjectDurationMapper.selectYield(map);
             if (!StringUtils.isEmpty(yield)){
                 dto.setYield(yield);
@@ -167,8 +173,17 @@ public class TrdProjectDurationService extends BaseService {
         TrdProjectDurationDto trdProjectDurationDto=trdProjectDurationMapper.findEffectiveData(params);
         //查询资产是不是还本不带息资产
         int count=trdProjectDurationMapper.getisPayInt(trdProjectDurationDto.getFinprodId());
+        //该区间，是否仅仅还本，若仅仅还本，也无需展示累计还本未付金额
+        Map<String, Object> mapIsPayInt=new HashMap<>();
+        mapIsPayInt.put("finprodId",params.get("finprodMarketId").toString());
+        mapIsPayInt.put("mdate",params.get("mDate").toString());
+        int countt=trdProjectDurationMapper.isPayIntDate(mapIsPayInt);
         if(count<1){
             trdProjectDurationDto.setIntAmtUnpayFlag(false);//不是还本不带息的资产,不展示累计还本未付金额
+        }else{
+            if(countt<1){
+                trdProjectDurationDto.setIntAmtUnpayFlag(false);
+            }
         }
         return trdProjectDurationDto;
     }
@@ -180,6 +195,12 @@ public class TrdProjectDurationService extends BaseService {
         for (FinAssetIntInfo dto : list){                  
             params.put("C02", DictCodeListExt1.现金流二级类型_利息.getValue());
             params.put("F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+            params.put("ISPAYINT", DictCodeList.是否_是.getValue());
+            //判断资产还本不带息，若为还本不带息，则随付息计划。若为还本带息，则应是最接近的付息计划的利率
+            int count=trdProjectDurationMapper.getisPayInt(params.get("finprodId").toString());
+            if(count>0){
+                params.put("ISPAYINT", DictCodeList.是否_否.getValue());
+            }
             BigDecimal yield = trdProjectDurationMapper.selectYield(params);
             if (!StringUtils.isEmpty(yield)){
                 dto.setYield(yield);

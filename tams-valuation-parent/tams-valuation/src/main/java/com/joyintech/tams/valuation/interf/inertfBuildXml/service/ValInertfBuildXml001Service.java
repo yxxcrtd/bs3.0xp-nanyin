@@ -52,7 +52,7 @@ public class ValInertfBuildXml001Service extends CommonExportService<ValInertfLo
      * @see
      * @since 1.0
      */
-    public Page<ValInertfLog001Dto> search(String tmpName,String fileName,Date startDate,Date endDate,String check) throws Exception{
+    public Page<ValInertfLog001Dto> search(String tmpName,String fileName,Date startDate,Date endDate,String check) {
 
      	return super.queryForPage(()-> valInertfLog001Mapper.search(tmpName, fileName, startDate, endDate,check));
     }

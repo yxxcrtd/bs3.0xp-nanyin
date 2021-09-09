@@ -46,7 +46,7 @@ public class AccountDetailsQuery001Service extends CommonExportService<AccountDe
      * @since 1.0
      */
     public Page<AccountDetailsQuery001Dto> findAccountDetailsPage(Map<String, Object> params)
-        throws Exception {
+         {
 //        String subjectName = (String)params.get("subjectName");
 //        // 筛选条件-科目名称list
 //        String[] subjectNameStr = this.String2Arr(subjectName);

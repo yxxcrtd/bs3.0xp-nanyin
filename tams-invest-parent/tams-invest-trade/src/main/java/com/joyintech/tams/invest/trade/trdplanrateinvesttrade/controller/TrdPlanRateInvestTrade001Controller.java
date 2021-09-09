@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -139,13 +140,12 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
      * 画面导出功能实现
      * 
      * @return ResponseEntity 确认的实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
         // 修改导出错误 zhuyongkang
 //    	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
@@ -216,8 +216,7 @@ public class TrdPlanRateInvestTrade001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdPlanRateInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdPlanRateInvestTradeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

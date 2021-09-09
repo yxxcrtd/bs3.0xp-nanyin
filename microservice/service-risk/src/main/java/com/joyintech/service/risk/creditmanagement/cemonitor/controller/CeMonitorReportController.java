@@ -38,7 +38,7 @@ public class CeMonitorReportController {
     @PostMapping("findOrgPage/{page}/{length}")
     public Page<CreditLinesDealDto> selectOrgForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ceMonitorReportService.selectOrgForPage(page, length, param);
     }
     /**
@@ -52,7 +52,7 @@ public class CeMonitorReportController {
     @PostMapping("findAssetPage/{page}/{length}")
     public Page<CreditLinesDealDto> selectAssetForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ceMonitorReportService.selectAssetForPage(page, length, param);
     }
     /**
@@ -66,7 +66,7 @@ public class CeMonitorReportController {
     @PostMapping("findAssetGroupPage/{page}/{length}")
     public Page<CreditLinesDealDto> selectAssetGroupForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ceMonitorReportService.selectAssetGroupForPage(page, length, param);
     }
 }

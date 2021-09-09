@@ -185,8 +185,7 @@ public class EtrInstruction001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return instructionService.export(this.getPageId(),param);

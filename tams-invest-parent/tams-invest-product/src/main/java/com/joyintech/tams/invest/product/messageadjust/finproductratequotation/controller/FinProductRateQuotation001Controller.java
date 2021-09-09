@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.product.messageadjust.finproductratequotation.
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -76,11 +77,10 @@ public class FinProductRateQuotation001Controller extends BaseController{
     /**
      * 产品报价管理查询
      * @return Page<FinProductRateQuotationDto>
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductRateQuotationDto> selectForPage() throws Exception{
+    public Page<FinProductRateQuotationDto> selectForPage(){
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finProductRateQuotationService.selectForPage(param);
     }
@@ -90,7 +90,7 @@ public class FinProductRateQuotation001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getProdId() {
+    public Page<SelectOptionDto> getProdId() {
         return finProductRateQuotationService.getFinprodIds(RequestUtil.getPageParam());
     }
     
@@ -117,8 +117,7 @@ public class FinProductRateQuotation001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return finProductRateQuotationService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -145,13 +144,13 @@ public class FinProductRateQuotation001Controller extends BaseController{
      * <功能详细描述>
      * @param dto FinProductRateQuotationDto
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody FinProductRateQuotationDto dto) throws Exception{
+    public AjaxResult delete(@RequestBody FinProductRateQuotationDto dto) throws WorkFlowException {
         String code = null;
 //        if(bussGetBussinessIdService != null){
         BussinessCodeParameter param = new BussinessCodeParameter();

@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.trademanage.investtradequery.dao;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.DepositLoanTradeDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 债券交易查询
@@ -21,6 +22,7 @@ import com.joyintech.tams.valuation.trademanage.investtradequery.dto.DepositLoan
  * @see DepositLoanTrade001Mapper
  * @since 1.0
  */
+@Repository
 public interface DepositLoanTrade001Mapper {
     
     DepositLoanTradeDto selectByTradeId(Map<String, Object> params);

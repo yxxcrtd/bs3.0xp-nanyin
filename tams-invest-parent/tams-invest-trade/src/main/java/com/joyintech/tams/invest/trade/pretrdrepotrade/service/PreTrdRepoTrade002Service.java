@@ -42,6 +42,8 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -56,6 +58,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class PreTrdRepoTrade002Service extends BaseService<PreTrdRepoTrade002Dto> implements BaseProcessService<PreTrdRepoTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PreTrdRepoTrade002Service.class);
 
     @Autowired(required = false)
     private BussRepoSecService bussRepoSecService;
@@ -124,7 +130,7 @@ public class PreTrdRepoTrade002Service extends BaseService<PreTrdRepoTrade002Dto
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             // 重新insert
             this.handleBussFlowData(entity);

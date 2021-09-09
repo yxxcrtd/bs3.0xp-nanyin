@@ -289,6 +289,9 @@ public class FundSubscribeApplyDealRecService {
         }
         //通道代码 = a.通道代码
         result.setChlId(dto.getChannelId());
+        /*add by sunshuaishuai 添加交易份额 20210430 start*/
+        result.setShareAmt(dto.getPurAmt());
+        /*add by sunshuaishuai 添加交易份额 20210430 end*/
         return result;
     }
 

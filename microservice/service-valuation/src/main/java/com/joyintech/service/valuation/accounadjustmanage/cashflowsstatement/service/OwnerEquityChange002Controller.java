@@ -77,7 +77,7 @@ public class OwnerEquityChange002Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("findPage")
-	public List<OwnerEquityChange001Dto> selectCashFlowsStatement(OwnerEquityChange001Dto dto) throws Exception {
+	public List<OwnerEquityChange001Dto> selectCashFlowsStatement(OwnerEquityChange001Dto dto) throws ParseException {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为账套组
 		List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);

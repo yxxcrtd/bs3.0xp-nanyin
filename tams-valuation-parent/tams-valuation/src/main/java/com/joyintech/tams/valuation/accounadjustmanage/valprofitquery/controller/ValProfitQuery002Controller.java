@@ -81,7 +81,7 @@ public class ValProfitQuery002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public List<ValProfitQuery001Dto> selectBalanceStatement()
-        throws Exception {
+        {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为账套组
 		List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);

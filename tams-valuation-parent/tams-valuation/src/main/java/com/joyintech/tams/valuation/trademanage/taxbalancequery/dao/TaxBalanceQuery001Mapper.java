@@ -19,6 +19,7 @@ import org.apache.ibatis.annotations.Param;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.trademanage.taxbalancequery.dto.TaxBalanceQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -28,6 +29,7 @@ import com.joyintech.tams.valuation.trademanage.taxbalancequery.dto.TaxBalanceQu
  * @see TaxBalanceQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface TaxBalanceQuery001Mapper {
 
 	/**

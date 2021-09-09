@@ -49,7 +49,7 @@ public class ValProductInfoQuery005Controller extends BaseController{
 
 	@PostMapping("/findPage/{page}/{length}")
     public Page<ValProductInfoFeeDto> findPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valProductInfoQuery005Service.findFeeAdjust(page,length,params);
     }
 
