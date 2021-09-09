@@ -59,6 +59,9 @@
         <result column="EXT_TYPE7" property="type7" jdbcType="VARCHAR" />
         <result column="VALID_STATUS" property="validStatus" jdbcType="VARCHAR" />
         <result column="ISDZH" property="isDzh" jdbcType="VARCHAR" />
+		<result column="pendingPeriod" property="pendingPeriod" jdbcType="DECIMAL" />
+		<result column="grade" property="grade" jdbcType="VARCHAR" />
+		<result column="I_Q_B_REMARK" property="remark" jdbcType="VARCHAR" />
         <!-- 该ResultMap中已包含扩展字段，I_Q_B_D_开头 -->
         <collection property="ibuQuoteBondDetList" resultMap="com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper.QbDetDtoResultMap"></collection>
 	</resultMap>
@@ -196,8 +199,9 @@
 	                 a.WORKFLOW_STATUS as VALID_STATUS,
 	                 case when z.PORTFOLIO_ID IS NOT null then 'Y'
 	                 	else 'N'
-	                 	end ISDZH
-		        from (select nvl(a.QUOTE_ID, b.QUOTE_ID) QUOTE_ID,
+	                 	end ISDZH,
+					 round((c.mdate-a.QUOTE_DATE)/365,2) pendingPeriod
+		from (select nvl(a.QUOTE_ID, b.QUOTE_ID) QUOTE_ID,
 		        nvl(a.QUOTE_TYPE, b.QUOTE_TYPE) QUOTE_TYPE,
        nvl(a.QUOTE_ROLE_TYPE, b.QUOTE_ROLE_TYPE) QUOTE_ROLE_TYPE,
        nvl(a.VERSION, b.VERSION) VERSION,
@@ -348,6 +352,7 @@
 		                          f.FINPROD_ABBR,
 		                          f.FINPROD_NAME,
 		                          f.FINPROD_MARKET_ID,
+		                          f.MDATE,
 		                          g.TYPE_6,
 		                          g.TYPE_7
 		                     FROM FIN_PRODUCT f

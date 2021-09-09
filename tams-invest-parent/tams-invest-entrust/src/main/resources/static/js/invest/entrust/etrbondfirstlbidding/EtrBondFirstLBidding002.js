@@ -415,6 +415,13 @@
 	    $('#EtrBondFirstLBidding002_btn_riskcal').click(function(){
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
         	var object = $.serializeToObject('#searchForm',true);
+            var entrustNum=object.entrustNum;
+            if (entrustNum) {
+                if(entrustAmtUnit == '02' ){
+                    entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
+            object.entrustNum = entrustNum;
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
 
 	    });

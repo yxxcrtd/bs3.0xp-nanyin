@@ -1,8 +1,10 @@
 package com.joyintech.service.entrust.common.service;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
@@ -38,6 +40,13 @@ public class WFlowCommonService {
                 EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
                 entrustCommonDto.setEtrEntrust(dto.getEtrEntrust());
                 entrustCommonDto.setEtrEntrustAdd(dto.getEtrEntrustAdd());
+                // 债券扣减指令现金时，通过清算日期计算单位利息 + 交易净价  = 全价
+                // 再用全价* 券面计算金额值
+                // 所以非T+0指令金额有问题 修复
+                if(dto.getEtrEntrust()!=null&&dto.getEtrEntrustAdd()!=null&&DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getEtrEntrust().getFinprodType2())
+                    &&StringUtil.isNotEmpty(dto.getEtrEntrustAdd().getSettleSpreed())){
+                    entrustCommonDto.setSettleDate(DateUtil.addDay(dto.getEtrEntrust().getVdate(),dto.getEtrEntrustAdd().getSettleSpreed().intValue()));
+                }
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
             }
         }
@@ -57,6 +66,13 @@ public class WFlowCommonService {
                 EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
                 entrustCommonDto.setEtrEntrust(dto.getEtrEntrust());
                 entrustCommonDto.setEtrEntrustAdd(dto.getEtrEntrustAdd());
+                // 债券扣减指令现金时，通过清算日期计算单位利息 + 交易净价  = 全价
+                // 再用全价* 券面计算金额值
+                // 所以非T+0指令金额有问题 修复
+                if(dto.getEtrEntrust()!=null&&dto.getEtrEntrustAdd()!=null&&DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getEtrEntrust().getFinprodType2())
+                        &&StringUtil.isNotEmpty(dto.getEtrEntrustAdd().getSettleSpreed())){
+                    entrustCommonDto.setSettleDate(DateUtil.addDay(dto.getEtrEntrust().getVdate(),dto.getEtrEntrustAdd().getSettleSpreed().intValue()));
+                }
                 // 持仓处理
                 baseEtrCashPositionCommService.entrustStartExecute(entrustCommonDto);
             }

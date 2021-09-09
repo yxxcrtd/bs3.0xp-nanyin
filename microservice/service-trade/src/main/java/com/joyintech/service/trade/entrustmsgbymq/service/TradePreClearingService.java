@@ -4,13 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
@@ -381,6 +375,10 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
             }
         }
         positionBaseData.setEtrEntrustAddDto(etrEntrustAddDto);
+        // 首期主键为空
+        if (StringUtil.isEmpty(finprodId)) {
+            return;
+        }
         // 首期信息
         trdTempDto.setFinprodId(finprodId);
         // 查询首期交易类金融产品数据

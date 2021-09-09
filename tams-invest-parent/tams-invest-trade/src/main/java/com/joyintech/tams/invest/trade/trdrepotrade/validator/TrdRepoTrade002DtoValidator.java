@@ -387,9 +387,10 @@ public class TrdRepoTrade002DtoValidator implements TradeCommonValidator {
         ) ) {
 
             if(inputDto.getBussRepoSec() == null || inputDto.getBussRepoSec().getTotalPrinAmt()==null || StringUtil.isEmptyList(inputDto.getBussRepoSec().getPledgeBondList())){
-
-                errorList.add(new ValidMessage("","请输入质押券信息！"));
-
+                //如果是下行成交数据  逆回购质押券可为空
+                if(!StringUtil.isNotEmpty(inputDto.getfTradeId())){
+                    errorList.add(new ValidMessage("","请输入质押券信息！"));
+                }
             }else {
 
                 BigDecimal prinAmt = inputDto.getPrinAmt()==null ? BigDecimal.ZERO :inputDto.getPrinAmt() ;

@@ -19,6 +19,7 @@
 			$("#grade_org_id").show();
 		}else{
 			$("#grade_org_id").hide();
+			$("#gradeOrgId").val("");
 		}
         
     };
@@ -110,6 +111,7 @@
 				$("#grade_org_id").show();
 			}else{
 				$("#grade_org_id").hide();
+				$("#gradeOrgId").val("");
 			}
 		};
 
