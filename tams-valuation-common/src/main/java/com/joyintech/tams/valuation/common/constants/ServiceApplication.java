@@ -76,6 +76,7 @@ public class ServiceApplication {
 				VALUATION_BASICDATA_SERVICE_NAME = VALUATION_BASICDATA_SERVICE_NAME + config.getValuationBasicdataService();
 				LOSS_MODEL_SERVICE_NAME = LOSS_MODEL_SERVICE_NAME + config.getLossModelService();
 				VAL_MODEL_SERVICE_NAME = VAL_MODEL_SERVICE_NAME + config.getValModelService();
+				REPORT_SERVICE_NAME = REPORT_SERVICE_NAME + config.getReportService();
 
 			}
 			else {
@@ -84,6 +85,7 @@ public class ServiceApplication {
 				VALUATION_BASICDATA_SERVICE_NAME = config.getValuationBasicdataService();
 				LOSS_MODEL_SERVICE_NAME = config.getLossModelService();
 				VAL_MODEL_SERVICE_NAME = config.getValModelService();
+				REPORT_SERVICE_NAME = config.getReportService();
 			}
 		}
 	}
@@ -103,7 +105,7 @@ public class ServiceApplication {
 
 		private String lossModelService;
 
-
+		private String reportService;
 
 		private String valModelService;
 
@@ -153,6 +155,14 @@ public class ServiceApplication {
 
 		public void setValModelService(String valModelService) {
 			this.valModelService = valModelService;
+		}
+
+		public String getReportService() {
+			return reportService;
+		}
+
+		public void setReportService(String reportService) {
+			this.reportService = reportService;
 		}
 	}
 
