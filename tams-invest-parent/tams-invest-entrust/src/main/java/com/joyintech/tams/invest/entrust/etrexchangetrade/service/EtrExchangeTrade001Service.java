@@ -36,6 +36,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -109,6 +110,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 
     @Autowired
     FinProductAddMapper finProductAddMapper;
+
+	@Autowired
+	FinProductMapper finProductMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -3557,6 +3561,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 entrustNum = quto;
             }
         }
+		else if (DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
+
+			FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);
+			if (Objects.nonNull(finProduct.getIssueAmt()) && Objects.nonNull(finProduct.getIssuePrice())) {
+				entrustNum = ArithmeticUtil.divide(finProduct.getIssueAmt(), finProduct.getIssuePrice(), 2);
+			}
+		}
         else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
 
             List<String> othTypeList = new ArrayList<String>();

@@ -406,7 +406,13 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("tradePlat",dto.getTradePlat());
 				List<String> list = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
 				if (list.size()>0){
-					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0060")));
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0062")));
+				}
+
+				// 可转债申购下指令数量不能大于实际可转债总数量
+				BigDecimal entrustNum = etrExchangeTrade001Service.getEntrustNum(param);
+				if (entrustNum.compareTo(dto.getEntrustNum())<0) {
+					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0063")));
 				}
 			}
 
