@@ -566,6 +566,9 @@
             <if test="tradelimitdays!=null and tradelimitdays!='' ">
                 and aa.tradelimitdays = #{tradelimitdays}
             </if>
+            <if test="benfangSide!=null and benfangSide!='' ">
+                and aa.side = #{benfangSide}
+            </if>
         </where>
     </select>
 </mapper>

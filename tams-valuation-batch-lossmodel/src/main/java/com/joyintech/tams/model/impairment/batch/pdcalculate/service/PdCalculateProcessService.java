@@ -370,8 +370,6 @@ public class PdCalculateProcessService {
                     if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
                         // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
                         variablePdCalculateDto.setTwelveMonWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getTwelveMonWeightedPd(), BigDecimal.valueOf(0.7)));
-                        // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
-                        variablePdCalculateDto.setPreTwelveMonWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getPreTwelveMonWeightedPd(),BigDecimal.valueOf(0.7)));
                     }
                 }
                 if(i == variablePdCalculateDto.getYearMonList().size() -1 ){
@@ -381,10 +379,8 @@ public class PdCalculateProcessService {
                     variablePdCalculateDto.setPreMdateWeightedPd(variablePdCalculateDto.getPreCdfPd());
                     // 主体是否持有金融牌照 = 是
                     if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
-                        // 金融债加权PD = 第12个月累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
+                        // 金融债加权PD = 到期日累积加权PD * 0.7 = 乐观情景累积PD*0.7*乐观因子权重+悲观情景累积PD*0.7*悲观因子权重+基础情景累积PD*0.7*基础因子权重
                         variablePdCalculateDto.setMdateWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getMdateWeightedPd(), BigDecimal.valueOf(0.7)));
-                        // 前瞻前第12个月累积加权PD = 前瞻前第12个月累积加权PD * 0.7
-                        variablePdCalculateDto.setPreMdateWeightedPd(ArithmeticUtil.multiply(variablePdCalculateDto.getPreMdateWeightedPd(),BigDecimal.valueOf(0.7)));
                     }
                 }
             }
