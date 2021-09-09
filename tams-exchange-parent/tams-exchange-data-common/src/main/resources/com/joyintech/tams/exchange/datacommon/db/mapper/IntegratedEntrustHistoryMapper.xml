@@ -160,7 +160,7 @@
     <sql id="entrustHistory">
        ID, PARENT_ORDER_ID, INSTRUCTION_ID, PORTFOLIO_ID, USER_ID, USERNAME, ACCOUNT_ID,FINANCE_ACCOUNT,
        ACCOUNT_NAME, ASSET_TYPE, MARKET,STOCK_CODE, STOCK_NAME, ENTRUST_TYPE,ENTRUST_PROP, ENTRUST_BS,
-        BS_FLAG, ENTRUST_VOLUME, ENTRUST_PRICE, FULL_PRICE, NULL AS ENTRUST_BALANCE, NULL AS DISCOUNT, NULL AS TRANS_CODE,
+        BS_FLAG, ENTRUST_VOLUME, ENTRUST_PRICE, FULL_PRICE, ENTRUST_BALANCE, NULL AS DISCOUNT, NULL AS TRANS_CODE,
         NULL AS EXPIRE_YEAR_RATE, NULL AS PRETERM_YEAR_RATE, NULL AS LIAISON_NAME, NULL AS LIAISON_TEL,
         NULL AS PROP_SEAT_NO, NULL AS PROP_SEAT_NAME, NULL AS SELLER_NO, NULL AS CONTRACT_ID,
         NULL AS FIRST_SETTLE_DATE, NULL AS BACK_DATE, NULL AS COMPACT_TERM, NULL AS BACK_BALANCE,
@@ -198,6 +198,15 @@
             </if>
             <if test="entrustStatus != -100">
                 AND ENTRUST_STATUS = #{entrustStatus}
+            </if>
+            <if test="entrustType != null and entrustType != ''">
+                AND ENTRUST_TYPE != #{entrustType}
+            </if>
+            <if test="startDay != null and startDay != ''">
+                AND TRADING_DAY &gt;= #{startDay}
+            </if>
+            <if test="endDay != null and endDay != ''">
+                AND TRADING_DAY &lt;= #{endDay}
             </if>
             <if test="(portfolioId == null or portfolioId == '') and portfolioList != null">
                 AND PORTFOLIO_ID in
