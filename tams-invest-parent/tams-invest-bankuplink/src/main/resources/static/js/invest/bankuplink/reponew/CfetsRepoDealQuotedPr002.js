@@ -621,15 +621,6 @@
     	if(pageModel == PAGE_MODEL_NEW&&quotaPageModel === "new" && $('#CfetsRepoDealQuotedPrice002_term').val() == '0'){
     	    $('#CfetsRepoDealQuotedPrice002_term').val("");
         }
-    	if(pageModel != PAGE_MODEL_NEW){
-            var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
-            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
-            var ccy = "CNY";
-            if(portfolioId && vdate){
-                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
-            }
-            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
-        }
         /**
          * 本方和本方交易员是否可编辑
          */
@@ -755,7 +746,9 @@
             var termType = $("#CfetsRepoDealQuotedPrice002_term").val();
             var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
             var ccy = "CNY";
-            parent.CfetsRepoDealQuotedPrHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
+            if(pageModel == PAGE_MODEL_NEW){
+                parent.CfetsRepoDealQuotedPrHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
+            }
             window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
         });
         calculateActDays();
@@ -1056,7 +1049,18 @@
     var refreshFace = function(result){
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger("blur");
-    }
+    };
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
+            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
+            var ccy = "CNY";
+            if(portfolioId && vdate){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
+    },2000);
     window.CfetsRepoDealQuotedPr002 = {
         addPledgeBond: addPledgeBond,
         saveEntrustSelectData: saveEntrustSelectData,
