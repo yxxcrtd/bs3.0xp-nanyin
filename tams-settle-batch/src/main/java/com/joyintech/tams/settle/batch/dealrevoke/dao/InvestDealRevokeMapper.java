@@ -93,6 +93,14 @@ public interface InvestDealRevokeMapper {
      * @return
      */
     int deleteEtrCashPositionFlowByTrdId(Map<String, Object> param);
+    
+
+    /**
+     * 删除日间指令现金流水
+     * @param param 参数
+     * @return
+     */
+    int deleteEtrCashPositionFlowByTradeId(Map<String, Object> param);
 
     /**
      * 组合持仓流水

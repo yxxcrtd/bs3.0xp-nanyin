@@ -472,6 +472,8 @@ public class StlDataDealSzdJsmxProcessService {
 						settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 						// 到期本金
 						settleTransData.setmPrinAmt(bjje);
+						// add 计算费用时，计算基础为成交金额
+						settleTransData.setFpriceAmt(bjje);
 						// 到期金额
 						settleTransData.setmTradeAmt(ArithmeticUtil.doAdd(bjje, settleTransData.getmIntAmt()));
 						// 数据字典：金融产品类型(估值).质押式正回购 eq 变量.金融产品类型(估值)时特殊处理
@@ -624,6 +626,7 @@ public class StlDataDealSzdJsmxProcessService {
 							settleTransData.setmIntAmt(ArithmeticUtil.round(hglx, 2, RoundingMode.HALF_UP));
 							// 到期本金
 							settleTransData.setmPrinAmt(bjje);
+							settleTransData.setFpriceAmt(bjje);
 							// 到期金额
 							settleTransData.setmTradeAmt(ArithmeticUtil.doAdd(bjje, settleTransData.getmIntAmt()));
 							// 质押品信息
