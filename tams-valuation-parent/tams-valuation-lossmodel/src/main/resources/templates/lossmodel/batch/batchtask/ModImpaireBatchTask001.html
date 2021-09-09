@@ -6,43 +6,42 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <!-- 画面内容 -->
-    <div class="form-button-area" filter="false" export="false">
-        <form class="layui-form" id="searchForm" targer="_blank">
-            <div class="layui-form-item">
-                <div class="layui-form-item">
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">资产代码</label>
-                        <div class="layui-input-inline input-inline">
 
-                            <select type="text" id="finprodId" name="finprodId" multiple="true"
-                                    class="layui-input form-input input-select" placeholder="请输入内容"
-                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                    parentIds="execDate"
-                                    data-th-data-url="@{/model/impairment/batch/batchtask/ModImpaireBatchTask001/getAssetInfo?isImpairment=true}"
-                            >
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4">
-                        <label class="layui-form-label form-lable">日期</label>
-                        <div class="layui-input-inline input-inline">
-                            <input type="text" id="execDate" name="execDate"
-                                   data-th-value='${#dates.format(entity?.execDate?:iPlatformDate,"yyyy-MM-dd")}'
-                                   required="required"
-                                   class="layui-input form-input input-dateSelect" />
-                        </div>
-                    </div>
-                    <div class="layui-inline layui-col-md4">
-                        <button class="layui-btn layui-btn-sm " id="ModImpaireBatchTask001_btn_doExecBtn"><i class="iconfont icon-execute"></i>执行</button>
-                        <button class="layui-btn layui-btn-sm  btn-default" id="ModImpaireBatchTask001_btn_searchBtn"><i class="iconfont icon-search"></i>查询</button>
-                    </div>
+    <div class="layui-row layui-col-space15">
+
+        <!--        <div class="layui-col-md9">-->
+        <div class="joyin-form-wrap condition-area">
+            <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
+                <label class="layui-form-label form-lable">资产代码</label>
+                <div class="layui-input-inline input-inline">
+
+                    <select type="text" id="finprodId" name="finprodId" multiple="true"
+                            class="layui-input form-input input-select" placeholder="请输入内容"
+                            data-th-placeholder="#{SysCommon.placeholder}"
+                            parentIds="execDate"
+                            data-th-data-url="@{/model/impairment/batch/batchtask/ModImpaireBatchTask001/getAssetInfo?isImpairment=true}"
+                    >
+                    </select>
                 </div>
             </div>
-        </form>
-    </div>
-    <div>
-        <table class="layui-table" id="dataTable"></table>
+            <div class="layui-inline layui-col-md3">
+                <label class="layui-form-label form-lable">日期</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="execDate" name="execDate"
+                           data-th-value='${#dates.format(entity?.execDate?:iPlatformDate,"yyyy-MM-dd")}'
+                           required="required"
+                           class="layui-input form-input input-dateSelect" />
+                </div>
+            </div>
+            <div class="layui-inline layui-col-md-offset2">
+                <button class="layui-btn layui-btn-sm " id="ModImpaireBatchTask001_btn_doExecBtn"><i class="iconfont icon-execute"></i>执行</button>
+                <button class="layui-btn layui-btn-sm  btn-default" id="ModImpaireBatchTask001_btn_searchBtn"><i class="iconfont icon-search"></i>查询</button>
+            </div>
+        </div>
+        <div>
+            <table class="layui-table" id="dataTable"></table>
+        </div>
+        <!--        </div>-->
     </div>
 </div>
 </body>
