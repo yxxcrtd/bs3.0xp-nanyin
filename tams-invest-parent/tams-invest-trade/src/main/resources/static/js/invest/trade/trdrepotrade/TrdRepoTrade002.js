@@ -1719,7 +1719,7 @@
                         }
                     },1000);
                     if (result.facetotalamt && result.facetotalamt != ''){
-                        $('#bussRepoSec_totalPrinAmt').val(result.facetotalamt).trigger('blur');//汇总券面总额
+                        $('#bussRepoSec_totalPrinAmt').val(result.facetotalamt/10000).trigger('blur');//汇总券面总额
                         if($('#bussRepoSec_totalPrinAmt').val()){
                             $('#bussRepoSec_totalPrinAmt').attr('disabled', true);
                         }
@@ -1792,7 +1792,14 @@
                     if (_.isArray(result.pledgeBondInfoDtoList)){
                         if (result.prodtype != TARGET_BACK_TYPE_H02) {
                             if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                                window.BussRepoSec["bussRepoSec"].reloadPledgeBond(result.pledgeBondInfoDtoList);
+                                //质押券反显万元为单位
+                                var obj = [];
+                                $.each(result.pledgeBondInfoDtoList,function (index,item) {
+                                    item.avaPledgePrin = item.avaPledgePrin/10000;
+                                    item.pledgePrin = item.pledgePrin/10000;
+                                    obj.push(item);
+                                });
+                                window.BussRepoSec["bussRepoSec"].reloadPledgeBond(obj);
                             }
                         }
                     }else{
