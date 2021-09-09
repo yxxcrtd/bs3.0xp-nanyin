@@ -408,6 +408,20 @@ public class TradeHelper {
             tradeMap.remove(key);
         }
     }
+    // 处理委托主推回报  --在委托回报之前的情况
+    public void handleTradeNotifyEntrustRspBeforeOnEntrustRsp(TradeMsgReceiver msgReceiver, String key, int msgType) {
+        EntrustInterface entrustInterface = entrustNotifyMap.get(key);
+        if (Objects.nonNull(entrustInterface)) {
+            if (msgType == MsgType.NOTIFY_ENTRUST) {
+                msgReceiver.handleRtnEntrustDetail((Entrust) entrustInterface);
+                logger.info("普通委托主推先于回报返回， 补发主推消息 accountId —— brokerEntrustId {}", key);
+            } else if (msgType == MsgType.NOTIFY_INTEGRATED) {
+                msgReceiver.handleRtnIntegratedEntrust((IntegratedEntrust) entrustInterface);
+                logger.info("综合委托主推先于回报返回， 补发主推消息 accountId —— brokerEntrustId {}", key);
+            }
+            entrustNotifyMap.remove(key);
+        }
+    }
 
     //  处理成交回报 在委托回报之前的情况
     public void handleCancelTradeRspBeforeEntrustRsp(TradeMsgReceiver msgReceiver, Map<String, List<Trade>> tradeMap, CancelEntrustBean cancelEntrustBean) {
@@ -637,11 +651,11 @@ public class TradeHelper {
                 && EntrustUtils.isfairModeWithUnacceptInstructionForbid(commonManagement.getFairModeWithUnacceptInstruction())) {
             //公平交易开启
             Map<String, Instruction> instructionBeanMap = instructionService.queryInstructionByUserIdAndStockCode(order.getUserId(), order.getStockCode())
-                                                                            .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
+                    .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
                             && InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())
                             && InvestmentUtils.isNormalTradeFromInstruction(instruction.getTradePlat())
                             && !InvestmentUtils.isInstructionProcessComplete(instruction))
-                                                                            .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
+                    .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
             if (instructionBeanMap.size() > 0) {
                 logger.debug("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(instructionBeanMap));
                 order.setErrorMsg("存在公平指令未接收");
