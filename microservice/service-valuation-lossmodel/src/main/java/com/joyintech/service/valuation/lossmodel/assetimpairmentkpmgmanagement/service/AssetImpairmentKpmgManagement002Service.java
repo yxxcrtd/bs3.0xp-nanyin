@@ -12,9 +12,9 @@ package com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dao.AssetImpairmentKpmgManagement001Mapper;
-import com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dao.AssetLossResultKpmgMapper;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dto.AssetImpairmentKpmgManagement002Dto;
-import com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dto.AssetLossResultKpmg;
+import com.joyintech.tams.common.base.dao.ModEclResultMapper;
+import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.BeanUtils;
@@ -40,7 +40,7 @@ public class AssetImpairmentKpmgManagement002Service extends CommonExportService
     private AssetImpairmentKpmgManagement001Mapper assetImpairmentKpmgManagement001Mapper;
 
     @Autowired
-    private AssetLossResultKpmgMapper assetLossResultKpmgMapper;
+    private ModEclResultMapper modEclResultMapper;
 
     public int findDuplicateData(AssetImpairmentKpmgManagement002Dto dto) {
         return assetImpairmentKpmgManagement001Mapper.selectDuplicateData(dto);
@@ -48,21 +48,21 @@ public class AssetImpairmentKpmgManagement002Service extends CommonExportService
 
     @Override
     public void doComplete(AssetImpairmentKpmgManagement002Dto dto, OperationType operationType) {
+        ModEclResult modEclResult = new ModEclResult();
         if(OperationType.NEW.equals(operationType)){
-            AssetLossResultKpmg assetLossResult = new AssetLossResultKpmg();
-            BeanUtils.copyProperties(dto, assetLossResult);
-            assetLossResult.setSeqno(dto.getSeqNo());
-            assetLossResultKpmgMapper.insertSelective(assetLossResult);
+            BeanUtils.copyProperties(dto, modEclResult);
+            modEclResult.setSeqno(dto.getSeqNo());
+            modEclResultMapper.insertSelective(modEclResult);
         }else if(OperationType.MODIFY.equals(operationType)){
-            AssetLossResultKpmg assetLossResult = new AssetLossResultKpmg();
-            BeanUtils.copyProperties(dto, assetLossResult);
-            assetLossResult.setSeqno(dto.getSeqNo());
-            assetLossResultKpmgMapper.updateByPrimaryKeySelective(assetLossResult);
+            
+            BeanUtils.copyProperties(dto, modEclResult);
+            modEclResult.setSeqno(dto.getSeqNo());
+            modEclResultMapper.updateByPrimaryKeySelective(modEclResult);
         }else if(OperationType.DELETE.equals(operationType)){
             Map<String, Object> params = new HashMap<>();
             params.put("seqNo", dto.getSeqNo());
             AssetImpairmentKpmgManagement002Dto entity = assetImpairmentKpmgManagement001Mapper.findByPrimaryKey(params);
-            assetLossResultKpmgMapper.deleteByPrimaryKey(entity.getSeqNo());
+            modEclResultMapper.deleteByPrimaryKey(entity.getSeqNo());
         }
     }
 
@@ -77,6 +77,6 @@ public class AssetImpairmentKpmgManagement002Service extends CommonExportService
      * @since 1.0
      */
     public String getFirstActionType(String workflowId){
-        return assetLossResultKpmgMapper.getFirstActionType(workflowId);
+        return assetImpairmentKpmgManagement001Mapper.getFirstActionType(workflowId);
     }
 }

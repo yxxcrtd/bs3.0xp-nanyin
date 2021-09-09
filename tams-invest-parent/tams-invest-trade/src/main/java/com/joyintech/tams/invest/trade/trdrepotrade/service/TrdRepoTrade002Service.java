@@ -2744,6 +2744,9 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     finprodMarketIdList.add(pledgeBondInfoDto.getBondCode());
                 }
                 trdRepoTradeCSTPDto.setPledgeBondInfoDtoList(pledgeBondInfoDtoList);
+                trdRepoTradeCSTPDto.setZzdPrinAmt(zzdPrinAmt);
+                trdRepoTradeCSTPDto.setSqsPrinAmt(sqsPrinAmt);
+                trdRepoTradeCSTPDto.setFacetotalamt(ArithmeticUtil.doAdd(zzdPrinAmt,sqsPrinAmt));
             }
             //清算速度处理
             if(!StringUtil.equals(trdRepoTradeCSTPDto.getVdateStr(),trdRepoTradeCSTPDto.getDealdateStr())){
@@ -2751,12 +2754,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             }else{
                 trdRepoTradeCSTPDto.setSettleSpeed(DictCodeList.清算速度_T_0.getValue());
             }
-            trdRepoTradeCSTPDto.setPledgeBondInfoDtoList(pledgeBondInfoDtoList);
-            trdRepoTradeCSTPDto.setZzdPrinAmt(zzdPrinAmt);
-            trdRepoTradeCSTPDto.setSqsPrinAmt(sqsPrinAmt);
-            trdRepoTradeCSTPDto.setFacetotalamt(ArithmeticUtil.doAdd(zzdPrinAmt,sqsPrinAmt));
         }
-
         return trdRepoTradeCSTPDto;
     }
 

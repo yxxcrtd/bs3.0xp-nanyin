@@ -77,7 +77,7 @@ public class AssetImpairmentManagement002Service extends CommonExportService<Ass
      * @throws Exception
      */
     public String getFirstActionType(Map<String, Object> params){
-        return restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/interf/ModelCallOnInvest/getFirstActionType", params, String.class);
+        return restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentManagement002/getFirstActionType", params, String.class);
     }
 
     /**
