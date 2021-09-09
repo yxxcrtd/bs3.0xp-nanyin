@@ -92,7 +92,7 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/invest/trade/fund/TrdFundInvestTrade002/getFinprodId(parentPageId=${parentPageId})}"
-                                                allowClear="true" required="required"
+                                                allowClear="true" parentIds="ps" required="required"
                                                 th:initValue="${entity?.finprodMarketId}"></select>
                                         </div>
                                     </div>

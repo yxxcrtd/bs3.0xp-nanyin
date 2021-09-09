@@ -676,6 +676,9 @@
         if (pageModel == PAGE_MODEL_NEW && quotaPageModel === "new" && $('#CfetsRepoDealQuotedPrice002_term').val() == "0") {
             $('#CfetsRepoDealQuotedPrice002_term').val("");
         }
+        if(pageModel != PAGE_MODEL_NEW){
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
         $("#CfetsBondDealQuotedPrice002_dialogueRecord").hide();
         if (quotaPageModel == "edit") {
             $("#dialogueRecord_div").show();
@@ -722,7 +725,9 @@
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',true);
+                $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
             }else if(ps == '04'){
+                $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',false);
@@ -790,6 +795,12 @@
          */
         $('#CfetsRepoDealQuotedPrice002_dealAmt').change(function () {
             calculateMamt();
+            //add by chenjiaxing 202109008 输入交易金额后，按照分配模式进行交易金额拆分到组合 start
+            var distribution = $('#distribution').val();
+            if(distribution != ""){
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').click();
+            }
+            //add by chenjiaxing 202109008 输入交易金额后，按照分配模式进行交易金额拆分到组合 end
         });
 
         /**

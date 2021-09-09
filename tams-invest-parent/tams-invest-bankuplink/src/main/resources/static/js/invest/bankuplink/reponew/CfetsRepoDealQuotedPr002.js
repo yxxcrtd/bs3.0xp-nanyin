@@ -621,6 +621,15 @@
     	if(pageModel == PAGE_MODEL_NEW&&quotaPageModel === "new" && $('#CfetsRepoDealQuotedPrice002_term').val() == '0'){
     	    $('#CfetsRepoDealQuotedPrice002_term').val("");
         }
+    	if(pageModel != PAGE_MODEL_NEW){
+            var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
+            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
+            var ccy = "CNY";
+            if(portfolioId && vdate){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
         /**
          * 本方和本方交易员是否可编辑
          */

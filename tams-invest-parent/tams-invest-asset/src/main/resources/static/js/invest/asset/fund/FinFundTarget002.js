@@ -316,7 +316,7 @@
         var fundType = $('#fundType').val();
         var secondType = $('#secondType').val();
         //交易所基金类型 交易所基金类型_ETF|TRM_FUND_TYPE_01
-        var trmFundType = $("#trmFundType").val();
+        var trmFundType = $("#trmFundType_id").val();
         // 交易所基金类型是否是ETF
         var isEtf = trmFundType === TRM_FUND_TYPE_01;
 

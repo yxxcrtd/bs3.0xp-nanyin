@@ -44,6 +44,7 @@
         <!--添加分类字段9-12 lishuping 2018/7/18 end-->
         <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
         FPR.RECOMMENDER recommender,
+        A.UPDATE_USER as updateUser,
         MCP.COUNTER_NAME recommenderName
         <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         FROM
