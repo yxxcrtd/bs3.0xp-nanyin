@@ -17,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.intf.DataDictItem;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCode;
+import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +30,6 @@ import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.basicdata.constant.ServiceApplication;
 import com.joyintech.tams.common.basicdata.marketdata.mstshareprice.dto.ComSharePriceDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
@@ -309,7 +309,18 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
                 ComSharePriceDto.setFactorAdj(new BigDecimal(list.get(20).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(21))) {
-                ComSharePriceDto.setTradeStatus(list.get(21).trim().split("：")[0].trim());
+                // 获取字典值
+                String tradeStatusName = list.get(21).trim().split("：")[0].trim();
+                List<? extends DataDictItem> dataDictItem = SysDataUtil.getDataDictItem(DictCode.股票交易状态.getValue());
+                if (CollectionUtils.isNotEmpty(dataDictItem)) {
+                    String tradeStatus = dataDictItem.stream().filter(item -> {
+                        if (StringUtil.equals(item.getItemValue(), tradeStatusName)) {
+                            return true;
+                        }
+                        return false;
+                    }).map(DataDictItem::getItemCode).findFirst().orElse(null);
+                    ComSharePriceDto.setTradeStatus(tradeStatus);
+                }
             }
             // Date date = new Date();
             ComSharePriceDto.setCreateUser(CommonUtil.getUserName());

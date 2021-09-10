@@ -255,9 +255,32 @@
             </foreach>
         </if>
     </delete>
+    
+    <delete id="deleteEtrCashPositionFlowByTradeId">
+        DELETE FROM ETR_CASH_POSITION_FLOW WHERE ORDER_ID IN (
+        	SELECT
+        		A.TRADE_ID
+        	FROM
+        		TRD_PRODUCT_TEMP_DEAL A,
+        		TRD_PRODUCT_TEMP_DEAL_ADD B,
+        		STL_PAY_TEMP_ORDERS C
+        	WHERE
+        		A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE} AND A.TRADE_ID = C.TRADE_ID
+        		<if test="finprodType2List != null and finprodType2List.size() > 0">
+	                <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+	                    #{finprodType2,jdbcType=VARCHAR}
+	                </foreach>
+            	</if>
+	            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+	                <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+	                    #{portfolioId,jdbcType=VARCHAR}
+	                </foreach>
+	            </if>
+        )
+    </delete>
 
     <select id="listPtlSecPositionFlow" resultType="com.joyintech.tams.common.base.entity.PtlSecPosition">
-        SELECT PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH,SUM(AMOUNT) AMOUNT
+        SELECT PORTFOLIO_ID,HODING_TYPE,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH,SUM(NVL(AMOUNT,0)) AMOUNT
         FROM PTL_SEC_POSITION_FLOW WHERE TRADE_ID IN (
         SELECT
         A.TRADE_ID
@@ -277,7 +300,7 @@
             </foreach>
         </if>
         )
-        GROUP BY PORTFOLIO_ID,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH
+        GROUP BY PORTFOLIO_ID,HODING_TYPE,SEC_ACCT_ID,FINPROD_ID,INV_AIM,CDATE,BRANCH
     </select>
 
     <select id="listPtlCashPositionFlow" resultType="com.joyintech.tams.common.base.entity.PtlCashPosition" >
@@ -330,7 +353,7 @@
     </select>
 
     <select id="listEtrCashPositionFlow" resultType="com.joyintech.tams.common.base.entity.EtrCashPosition">
-        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,SUM(AMOUNT) AMOUNT
+        SELECT PORTFOLIO_ID,ACCT_ID,HODING_TYPE,CDATE,CCY,SUM(NVL(AMOUNT, 0)) AMOUNT
         FROM ETR_CASH_POSITION_FLOW WHERE ORDER_ID IN (
         SELECT
         C.ORDER_ID
@@ -350,6 +373,25 @@
                 #{portfolioId,jdbcType=VARCHAR}
             </foreach>
         </if>
+        UNION
+        SELECT
+       		A.TRADE_ID
+       	FROM
+       		TRD_PRODUCT_TEMP_DEAL A,
+       		TRD_PRODUCT_TEMP_DEAL_ADD B,
+       		STL_PAY_TEMP_ORDERS C
+       	WHERE
+       		A.TRADE_ID = B.TRADE_ID AND A.TRADE_DATE = #{dealDate,jdbcType=DATE} AND A.TRADE_ID = C.TRADE_ID
+       		<if test="finprodType2List != null and finprodType2List.size() > 0">
+                <foreach collection="finprodType2List" item="finprodType2" open="AND A.FINPROD_TYPE2 IN (" close=")" separator=",">
+                    #{finprodType2,jdbcType=VARCHAR}
+                </foreach>
+           	</if>
+            <if test="portfolioIdList != null and portfolioIdList.size() > 0">
+                <foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+                    #{portfolioId,jdbcType=VARCHAR}
+                </foreach>
+            </if>
         )
         <if test="trdIdList != null and trdIdList.size() > 0">
             or ORDER_ID IN

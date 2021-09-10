@@ -209,7 +209,10 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
     private  String periodType;
 
     private String pageModel;
-
+    /**
+     *  资产类型
+     */
+    private String assetType;
 
     public String getPageModel() {
         return pageModel;
@@ -676,5 +679,44 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
 
     public void setRevokeReason(String revokeReason) {
         this.revokeReason = revokeReason;
+    }
+
+    /**
+     * @return 资产类型
+     */
+    public String getAssetType() {
+        return assetType;
+    }
+
+    /**
+     * 设置 资产类型
+     *
+     * @param assetType 资产类型
+     */
+    public void setAssetType(String assetType) {
+        this.assetType = assetType;
+    }
+
+    /**
+     * 资产类型数据字典转换
+     * @return
+     */
+    public String getAssetTypeFmt(){
+        return SysDatadictUtil.getNameFromDataDict(DictCode.证券品种,this.getStage());
+    }
+
+    /**
+     * 交易场所数据字典转换
+     * @return
+     */
+    public String getTradeMarketFmt(){
+        return SysDatadictUtil.getNameFromDataDict(DictCode.交易流通场所,this.getTradeMarket());
+    }
+    /**
+     * 交易场所数据字典转换
+     * @return
+     */
+    public String getPeriodTypeFmt(){
+        return SysDatadictUtil.getNameFromDataDict(DictCode.代偿期类型,this.getPeriodType());
     }
 }

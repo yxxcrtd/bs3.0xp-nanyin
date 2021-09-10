@@ -45,6 +45,7 @@
 	        LEFT JOIN INF_CONTRACT_DETAILFILE C ON A.F_TRADE_ID = C.DEAL_NO
 	        LEFT JOIN FIN_PRODUCT D ON A.FINPROD_ID = D.FINPROD_ID
 	        LEFT JOIN FIN_PRODUCT_ADD E ON A.FINPROD_ID = E.FINPROD_ID
+		    LEFT JOIN FIN_PRODUCT_ADD E1 ON B.PORTFOLIO_ID = E1.PORTFOLIO_ID
 	        LEFT JOIN FIN_TRADE_PRODUCT F ON A.FINPROD_ID = F.FINPROD_ID AND F.BRANCH = 0
 	        LEFT JOIN FIN_PRODUCT_TYPE G ON A.FINPROD_ID = G.FINPROD_ID AND G.BRANCH = 0
 	        LEFT JOIN FIN_DEAL_PLEDGE H ON F.FINPROD_ID = H.FINPROD_ID AND F.BRANCH = H.BRANCH
@@ -56,9 +57,15 @@
         <where>
         	A.PS IN ('T01', 'T02') AND A.TRADE_DATE = #{dealDate,jdbcType=DATE}
         	<if test="portfolioIdList != null and portfolioIdList.size() > 0">
-				<foreach collection="portfolioIdList" item="portfolioId" open="AND B.PORTFOLIO_ID IN (" close=")" separator=",">
+				AND (
+				<foreach collection="portfolioIdList" item="portfolioId" open="B.PORTFOLIO_ID IN (" close=")" separator=",">
            			#{portfolioId,jdbcType=VARCHAR}
            		</foreach>
+				OR
+				<foreach collection="portfolioIdList" item="portfolioId" open="E1.FINPROD_ID IN (" close=")" separator=",">
+					#{portfolioId,jdbcType=VARCHAR}
+				</foreach>
+				)
 			</if>
         </where>
         ORDER BY A.F_TRADE_ID

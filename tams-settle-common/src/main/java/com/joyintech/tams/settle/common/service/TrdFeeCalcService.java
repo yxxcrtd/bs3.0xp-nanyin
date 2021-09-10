@@ -637,35 +637,40 @@ public class TrdFeeCalcService {
 	                // 变量.交易明细列表 = 变量.申请编号MAP.get(变量.汇总交易.交易编号)
 	                List<TrdDetailDto> trdDetailDtos1 = mapTrdDetail.get(trdDetailDto.getTradeId());
 	                List<DetailAmount> amounts = new ArrayList<>();
-	                for (TrdDetailDto detailDto : trdDetailDtos1) {
-	                    DetailAmount detailAmount = new DetailAmount();
-	                    if (feePlan.getTrdFeeConfig().getChargeBasis().equals(DictCodeListExt1.计费基数_成交金额.getValue())) {
-	                        detailAmount.setMixAmount(detailDto.getFpriceAmt());
-	                    } else if (feePlan.getTrdFeeConfig().getChargeBasis().equals(DictCodeListExt1.计费基数_券面总额.getValue())) {
-	                            detailAmount.setMixAmount(detailDto.getShareAmt());
-	                    } else {
-	                        detailAmount.setMixAmount(detailDto.getCpriceAmt());
-	                    }
-	                    detailAmount.setDetailNo(detailDto.getTradeId());
-	                    amounts.add(detailAmount);
-	                }
+	                if (!StringUtil.isEmptyList(trdDetailDtos1)) {
+						for (TrdDetailDto detailDto : trdDetailDtos1) {
+							DetailAmount detailAmount = new DetailAmount();
+							if (feePlan.getTrdFeeConfig().getChargeBasis().equals(DictCodeListExt1.计费基数_成交金额.getValue())) {
+								detailAmount.setMixAmount(detailDto.getFpriceAmt());
+							} else if (feePlan.getTrdFeeConfig().getChargeBasis().equals(DictCodeListExt1.计费基数_券面总额.getValue())) {
+								detailAmount.setMixAmount(detailDto.getShareAmt());
+							} else {
+								detailAmount.setMixAmount(detailDto.getCpriceAmt());
+							}
+							detailAmount.setDetailNo(detailDto.getTradeId());
+							amounts.add(detailAmount);
+						}
+					}
+
 	                List<BigDecimal> allAllotAmounts = new ArrayList<>();
 	                allAllotAmounts.add(commFeeAmount);
 	                // 调用共通方法【金额平均分配】
 	                List<DetailAmount> detailAmounts
 	                        = amountEvenlyDistributed(amounts, calcParamDtos.get(0).getJsje(), allAllotAmounts, retentionBit);
-	                for (DetailAmount detailAmount : detailAmounts) {
-	                    CommisionDetail commisionDetail = new CommisionDetail();
-	                    //交易编号
-	                    commisionDetail.setTradeId(detailAmount.getDetailNo());
-	                    // 费用类型
-	                    commisionDetail.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
-	                    // 是否随交易支付
-	                    commisionDetail.setIsPayWithTrade(feePlan.getTrdFeeConfig().getIsPayWithTrade());
-	                    // 费用金额
-	                    commisionDetail.setFeeAmt(detailAmount.getAllotAmountList()[0]);
-	                    commisionDetailList.add(commisionDetail);
-	                }
+	                if (!StringUtil.isEmptyList(detailAmounts)) {
+						for (DetailAmount detailAmount : detailAmounts) {
+							CommisionDetail commisionDetail = new CommisionDetail();
+							//交易编号
+							commisionDetail.setTradeId(detailAmount.getDetailNo());
+							// 费用类型
+							commisionDetail.setFeeType(DictCodeListExt1.一次性费用类型_佣金.getValue());
+							// 是否随交易支付
+							commisionDetail.setIsPayWithTrade(feePlan.getTrdFeeConfig().getIsPayWithTrade());
+							// 费用金额
+							commisionDetail.setFeeAmt(detailAmount.getAllotAmountList()[0]);
+							commisionDetailList.add(commisionDetail);
+						}
+					}
 
 	            }
 	            else if (feePlan.getTrdFeeConfig().getCommCalMethod().equals(DictCodeListExt3.佣金计算方式_按证券代码汇总.getValue())) {
@@ -1006,7 +1011,9 @@ public class TrdFeeCalcService {
         // 明细列表
         List<TrdTradeFeeDetailExtDto> trdTradeFeeDetailExtDtos = new ArrayList<>();
         for (TrdDetailDto dto : trdDetailDtos) {
-            trdTradeFeeDetailExtDtos.addAll(dto.getListTrdTradeFeeDetailExtDto());
+        	if (!StringUtil.isEmptyList(dto.getListTrdTradeFeeDetailExtDto())) {
+				trdTradeFeeDetailExtDtos.addAll(dto.getListTrdTradeFeeDetailExtDto());
+			}
         }
 
         // 分组

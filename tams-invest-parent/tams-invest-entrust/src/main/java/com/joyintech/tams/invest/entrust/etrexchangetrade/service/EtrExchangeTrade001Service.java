@@ -36,6 +36,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -109,6 +110,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 
     @Autowired
     FinProductAddMapper finProductAddMapper;
+
+	@Autowired
+	FinProductMapper finProductMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -3557,6 +3561,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 entrustNum = quto;
             }
         }
+		else if (DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
+
+			FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);
+			if (Objects.nonNull(finProduct.getIssueAmt()) && Objects.nonNull(finProduct.getIssuePrice())) {
+				entrustNum = ArithmeticUtil.divide(finProduct.getIssueAmt(), finProduct.getIssuePrice(), 2);
+			}
+		}
         else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
 
             List<String> othTypeList = new ArrayList<String>();
@@ -3598,6 +3609,18 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
                 WflEtrEntrust.class);
     }
+	/**
+	 *
+	 * @Description 查询流程及委托表中是否有同一股东下达的可转债申购指令
+	 * @Param [map]
+	 * @return java.util.List<java.lang.String>
+	 * @version 1.0
+	 * @see
+	 **/
+	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
+		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+				String.class);
+	}
 
 	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
 	/**

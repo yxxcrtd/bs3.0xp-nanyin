@@ -6,7 +6,7 @@
 		resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select
 			TRD_ASSET_LOSS.VAL_DATE valDate, 			/** 行情日 **/
-			TRD_ASSET_LOSS.Sec_Id finprodId, 			/** 市场代码 **/
+			TRD_ASSET_LOSS.FINPROD_ID finprodId, 			/** 金融产品代码 **/
 			Fin_Product.Finprod_Abbr finprodAbbr, 		/** 金融产品简称 **/
 			TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType, /** 减值测算方式 **/
 			Fin_Product.Vdate vDate,  					/** 资产起息日 **/
@@ -27,10 +27,22 @@
 			TRD_ASSET_LOSS.LOSS_RATIO * 100 lossRatio,  /** 减值比例% **/
 			TRD_ASSET_LOSS.PD_VAULE * 100 pdValue, 		/** PD违约概率% **/
 			TRD_ASSET_LOSS.Lgd_Vaule * 100 lgdValue, 	/** LGD违约损失率% **/
-			TRD_ASSET_LOSS.Trade_Id tradeId				/** 交易编号 **/
+			TRD_ASSET_LOSS.Trade_Id tradeId,				/** 交易编号 **/
+			A.TYPE_18 AS assetType,				/** 资产类型 **/
+			Fin_Product.Trade_Market,				/** 流通场所 **/
+			NVL(B.CUSTOMER_ABBR,B.CUSTOMER_NAME) AS issuerName,				/** 发行人名称/机构名称 **/
+			C.INSITITUTE_CODE AS insitituteCode,				/** 统一社会信用代码/组织机构代码 **/
+			TRD_ASSET_LOSS.Peroid_Type,				/** 待偿期类型 **/
+			TRD_ASSET_LOSS.Term_Describe AS termDescribe				/** 期限描述 **/
 		from TRD_ASSET_LOSS 	/** 资产减值流水 **/
 	  	left join Fin_Product   /** 标的类金融产品 **/
 	  	on TRD_ASSET_LOSS.Sec_Id = Fin_Product.FINPROD_MARKET_ID
+		LEFT JOIN FIN_PRODUCT_TYPE A
+		ON A.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN MST_CUSTOMER_INFO B
+		ON B.CUSTOMER_ID = FIN_PRODUCT.ISSUER
+		LEFT JOIN MST_CUSTOMER_INFO_ADD C
+		ON C.CUSTOMER_ID = C.CUSTOMER_ID
 	  	where TRD_ASSET_LOSS.Status = #{status_init_01}
 		<if test="finprodIdList != null and finprodIdList.size()>0">
 			AND TRD_ASSET_LOSS.Sec_Id in

@@ -35,8 +35,6 @@ public class ImpairmentDataLoadReaderService {
     @Autowired
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
     @Autowired
-    private ModParamsService modParamsService;
-    @Autowired
     private RateConfigCommonService rateConfigCommonService;
     @Autowired
     private RateInfoCommonService rateInfoCommonService;
@@ -48,7 +46,7 @@ public class ImpairmentDataLoadReaderService {
      */
     public List<ImpairmentDataLoadStep1ReaderDto> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        List<ModValBatchParams> listBatch = (List<ModValBatchParams>) params.get("listBatch");
         //1.读取需要进行处理的资产
         //资产代码集合
         List<String> finprodIdList = new ArrayList<String>();

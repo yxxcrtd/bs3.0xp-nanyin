@@ -222,9 +222,10 @@ public class EtrBrowDepoInfo001Controller extends BaseController {
                         BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
                 // add by yushilong 批量撤销预占 end
             }
+
             //已经有委托完成度的
             if(!StringUtil.isEmptyList(closeEntrustIdList)) {
-                EntrustCompleteUtil.doComplete(entrustIdList);
+                EntrustCompleteUtil.doComplete(closeEntrustIdList);
             }
         }
         // add by zhangrui1 批量委托关闭 end

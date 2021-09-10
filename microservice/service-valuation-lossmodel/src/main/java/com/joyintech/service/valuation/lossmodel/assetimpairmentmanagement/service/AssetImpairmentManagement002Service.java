@@ -12,9 +12,9 @@ package com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.serv
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dao.AssetImpairmentManagement001Mapper;
-import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dao.AssetLossResultMapper;
 import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.AssetImpairmentManagement002Dto;
-import com.joyintech.service.valuation.lossmodel.assetimpairmentmanagement.dto.AssetLossResult;
+import com.joyintech.tams.common.base.dao.ModEclResultMapper;
+import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.BeanUtils;
@@ -40,7 +40,7 @@ public class AssetImpairmentManagement002Service extends CommonExportService<Ass
     private AssetImpairmentManagement001Mapper assetImpairmentManagement001Mapper;
 
     @Autowired
-    private AssetLossResultMapper assetLossResultMapper;
+    private ModEclResultMapper modEclResultMapper;
 
     public int findDuplicateData(AssetImpairmentManagement002Dto dto) {
         return assetImpairmentManagement001Mapper.selectDuplicateData(dto);
@@ -48,21 +48,33 @@ public class AssetImpairmentManagement002Service extends CommonExportService<Ass
 
     @Override
     public void doComplete(AssetImpairmentManagement002Dto dto, OperationType operationType) {
+        ModEclResult modEclResult = new ModEclResult();
         if(OperationType.NEW.equals(operationType)){
-            AssetLossResult assetLossResult = new AssetLossResult();
-            BeanUtils.copyProperties(dto, assetLossResult);
-            assetLossResult.setSeqno(dto.getSeqNo());
-            assetLossResultMapper.insertSelective(assetLossResult);
+            BeanUtils.copyProperties(dto, modEclResult);
+            modEclResult.setSeqno(dto.getSeqNo());
+            modEclResultMapper.insertSelective(modEclResult);
         }else if(OperationType.MODIFY.equals(operationType)){
-            AssetLossResult assetLossResult = new AssetLossResult();
-            BeanUtils.copyProperties(dto, assetLossResult);
-            assetLossResult.setSeqno(dto.getSeqNo());
-            assetLossResultMapper.updateByPrimaryKeySelective(assetLossResult);
+            BeanUtils.copyProperties(dto, modEclResult);
+            modEclResult.setSeqno(dto.getSeqNo());
+            modEclResultMapper.updateByPrimaryKeySelective(modEclResult);
         }else if(OperationType.DELETE.equals(operationType)){
             Map<String, Object> params = new HashMap<>();
             params.put("seqNo", dto.getSeqNo());
             AssetImpairmentManagement002Dto entity = assetImpairmentManagement001Mapper.findByPrimaryKey(params);
-            assetLossResultMapper.deleteByPrimaryKey(entity.getSeqNo());
+            modEclResultMapper.deleteByPrimaryKey(entity.getSeqNo());
         }
+    }
+
+    /**
+     * 获取流程初始操作类型
+     *
+     * @param
+     * @return 产品代码：下拉框
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    public String getFirstActionType(String workflowId){
+        return assetImpairmentManagement001Mapper.getFirstActionType(workflowId);
     }
 }

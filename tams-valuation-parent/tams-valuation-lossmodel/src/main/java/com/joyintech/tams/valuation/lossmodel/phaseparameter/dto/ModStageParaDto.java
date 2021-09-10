@@ -153,7 +153,7 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 				String[] list = result.split(",");
 				result = "";
 				for (String item : list) {
-					result += SysDataUtil.getNameFromDataDict(DictCode.五级分类, item)+",";
+					result += SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, item)+",";
 		        }
 				result = result.substring(0, result.length() - 1);
 			}

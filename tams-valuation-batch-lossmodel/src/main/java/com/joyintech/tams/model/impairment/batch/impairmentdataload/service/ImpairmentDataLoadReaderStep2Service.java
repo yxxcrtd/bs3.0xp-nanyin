@@ -128,6 +128,7 @@ public class ImpairmentDataLoadReaderStep2Service {
                 item.setResultDeal(ratingInfoDto.getRating());
                 // 添加到返回结果List中
                 readerDto.setModEclResultProcess(item);
+                resultList.add(readerDto);
             }
             else{
                 // 警告：资产无对应评级信息
