@@ -190,6 +190,9 @@ public class InvestDealRevokeService {
         investDealRevokeMapper.deletePtlSecPositionFlow(param);
         investDealRevokeMapper.deleteEtrCashPositionFlow(param);
         investDealRevokeMapper.deleteEtrSecPositionFlow(param);
+        // add 日间指令流水删除 20210817 start
+        investDealRevokeMapper.deleteEtrCashPositionFlowByTradeId(param);
+        // add end
         // 删除日间委托完成度
         investDealRevokeMapper.deleteEtrFinishStatus(param);
         //更新余额
