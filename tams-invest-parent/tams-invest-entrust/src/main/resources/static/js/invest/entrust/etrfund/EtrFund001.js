@@ -77,8 +77,9 @@
         },
         dblclick:function(table, data) {
             data.pageModel=PAGE_MODEL_REFERENCE;
+            data.parentPageId = pageId;
             Joyin.dialog(JoyinUtil.getLabel("EtrFund002.detail"),
-                    JoyinUtil.getRealPath("invest/entrust/etrfund/EtrFund002/init?parentPageId=" + pageId),
+                    JoyinUtil.getRealPath("invest/entrust/etrfund/EtrFund002/init"),
                     "98%", "95%", data,
                     function(){table.reload();});
         },
@@ -165,9 +166,10 @@
     	}
         data.pageModel=PAGE_MODEL_EDIT;
         data.operateType='edit'
+        data.parentPageId = pageId;
         //Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrLendSpecInfo002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrFund002.edit"),
-                    basePath + "invest/entrust/etrfund/EtrFund002/init?parentPageId=" + pageId,
+                    basePath + "invest/entrust/etrfund/EtrFund002/init",
                     "98%", "95%",data,
                     function(){table.reload();});
         //});

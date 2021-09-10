@@ -176,6 +176,20 @@ public class EtrFundDto extends EtrEntrust implements ProcessEntity{
 
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      *
      * 获取交易对手名称
      * @return

@@ -126,7 +126,9 @@
         if(object.ps != T04){
             object.assetAvailablePosition = $('#assetAvailablePosition').val();
         }
-
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         //指令保存，不校验要素
         if (operateType === 'save') {
             WorkFlow.doSaveList(basePath+'invest/entrust/etrfund/EtrFund002/save',object,"EtrFund002_btn_save");
