@@ -33,7 +33,9 @@
 			NVL(B.CUSTOMER_ABBR,B.CUSTOMER_NAME) AS issuerName,				/** 发行人名称/机构名称 **/
 			C.INSITITUTE_CODE AS insitituteCode,				/** 统一社会信用代码/组织机构代码 **/
 			TRD_ASSET_LOSS.Peroid_Type,				/** 待偿期类型 **/
-			TRD_ASSET_LOSS.Term_Describe AS termDescribe				/** 期限描述 **/
+			TRD_ASSET_LOSS.Term_Describe AS termDescribe,				/** 期限描述 **/
+			TRD_ASSET_LOSS.REMARK,			/** 备注 **/
+			TRD_ASSET_LOSS.LOSS_INPUT_TYPE AS lossInputType 			/** 减值录入方式 **/
 		from TRD_ASSET_LOSS 	/** 资产减值流水 **/
 	  	left join Fin_Product   /** 标的类金融产品 **/
 	  	on TRD_ASSET_LOSS.Sec_Id = Fin_Product.FINPROD_MARKET_ID
@@ -61,6 +63,12 @@
 		</if>
 		<if test="stage != null and !stage.equals('')">
 			AND (TRD_ASSET_LOSS.STAGE = #{stage})
+		</if>
+		<if test="assetType != null and assetType != ''">
+			AND A.TYPE_18 = #{assetType}
+		</if>
+		<if test="lossInputType != null and lossInputType != ''">
+			AND TRD_ASSET_LOSS.LOSS_INPUT_TYPE = #{lossInputType}
 		</if>
 		order by TRD_ASSET_LOSS.VAL_DATE asc
 	</select>
