@@ -382,9 +382,16 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("finprodType2",dto.getFinprodType2());
 				param.put("othType",DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 				param.put("entrustId",dto.getEntrustId());
+				param.put("tradePlat",dto.getTradePlat());
 				List<WflEtrEntrust>  list = etrExchangeTrade001Service.selectWflEntrust(param);
 				if (list.size()>0){
 					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061")));
+				}
+
+				// 同一股东只允许下达一次同一只新股申购指令
+				List<String> strList = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
+				if (strList.size()>0){
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0064")));
 				}
 
 				BigDecimal entrustNum = etrExchangeTrade001Service.getEntrustNum(param);
@@ -392,7 +399,7 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0059")));
 				}
 			}
-			// 同一股东只允许下达一次可转债信用申购指令
+			// 可转债申购
 			if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getFinprodType2()) && DictCodeList.交易平台_竞价撮合平台.getValue().equals(dto.getTradePlat())) {
 				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("finprodId", dto.getFinprodId());//金融产品代码
@@ -404,6 +411,8 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("ps",dto.getPs());
 				param.put("finprodType2",dto.getFinprodType2());
 				param.put("tradePlat",dto.getTradePlat());
+
+				// 同一股东只允许下达一次可转债信用申购指令
 				List<String> list = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
 				if (list.size()>0){
 					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0062")));
