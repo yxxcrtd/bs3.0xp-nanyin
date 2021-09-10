@@ -168,6 +168,16 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     private String assetType;
 
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * 减值录入方式（数据来源）
+     */
+    private String lossInputType;
+
 
     public String getTermDescribe() {
         return termDescribe;
@@ -522,18 +532,50 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
     }
 
     /**
-     * @return assetType
+     * @return 资产类型
      */
     public String getAssetType() {
         return assetType;
     }
 
     /**
-     * 设置 assetType
+     * 设置 资产类型
      *
-     * @param assetType assetType
+     * @param assetType 资产类型
      */
     public void setAssetType(String assetType) {
         this.assetType = assetType;
+    }
+
+    /**
+     * @return 备注
+     */
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * 设置 备注
+     *
+     * @param remark 备注
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    /**
+     * @return 减值录入方式（数据来源）
+     */
+    public String getLossInputType() {
+        return lossInputType;
+    }
+
+    /**
+     * 设置 减值录入方式（数据来源）
+     *
+     * @param lossInputType 减值录入方式（数据来源）
+     */
+    public void setLossInputType(String lossInputType) {
+        this.lossInputType = lossInputType;
     }
 }
