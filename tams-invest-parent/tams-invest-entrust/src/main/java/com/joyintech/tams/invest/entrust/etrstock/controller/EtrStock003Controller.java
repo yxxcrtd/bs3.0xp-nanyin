@@ -225,7 +225,7 @@ public class EtrStock003Controller extends BaseController {
         }
         ProcessParameter<EtrStockDto> processParameter = new ProcessParameter<EtrStockDto>();
         WorkFlowParameter<EtrStockDto> params = new WorkFlowParameter<EtrStockDto>();
-        params.setPageId("EtrStock02");
+        params.setPageId("EtrStock002");
         params.setElementId(dtoList.get(0).getElementId());
         params.setBusinessCode(EtrStockDto::getEntrustId);
         params.setBusinessType(DictCodeListExt2.共通业务类型_股票投资委托.getValue());
