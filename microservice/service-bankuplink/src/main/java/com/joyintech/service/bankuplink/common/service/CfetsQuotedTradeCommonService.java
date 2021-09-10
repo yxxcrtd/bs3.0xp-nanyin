@@ -135,29 +135,46 @@ public class CfetsQuotedTradeCommonService{
             // 插入cstp交易表
             mapper.insertSelective(iCstpTrade);
             //自从生成交易标识
-            String flagAutoTrate = CacheUtil.getSysParam("FLAG_AUTOTRADE");
-            flagAutoTrate = StringUtil.isNotEmpty(flagAutoTrate)?flagAutoTrate:"01";
+            String flagAutoTrade = CacheUtil.getSysParam("FLAG_AUTOTRADE");
+            flagAutoTrade = StringUtil.isNotEmpty(flagAutoTrade)?flagAutoTrade:"01";
+            InterfTradSecdeal interfTradSecdeal = null;InterfOpicsTradRepo interfOpicsTradRepo = null;
             // 从cstp分发到债券和回购两张表
             if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
                 // 插入或更新债券交易表
-                InterfTradSecdeal interfTradSecdeal = insertOrUpdateSec(iCstpTrade);
+                interfTradSecdeal = insertOrUpdateSec(iCstpTrade);
                 // 交易所下行数据自动生成交易
-                getLogger().info("银行间下行自动匹配(债券)录单开关状态：" + flagAutoTrate);
-                if (StringUtil.equals(flagAutoTrate, "01")) {
-                    secAutoTradeService.secAutoTrade(iCstpTrade,interfTradSecdeal,resultBaseDto);
+                getLogger().info("银行间下行自动匹配(债券)录单开关状态：" + flagAutoTrade);
+                if (StringUtil.equals(flagAutoTrade, "01")) {
+                    //secAutoTradeService.secAutoTrade(iCstpTrade,interfTradSecdeal,resultBaseDto);
                 }else{
                     resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
             }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
                 // 插入或更新回购交易表
-                InterfOpicsTradRepo interfOpicsTradRepo = insertOrUpdateRepo(iCstpTrade,entity.getNoUnderlyings());
+                interfOpicsTradRepo = insertOrUpdateRepo(iCstpTrade,entity.getNoUnderlyings());
                 // 交易所下行数据自动生成交易
-                getLogger().info("银行间下行自动匹配(回购)录单开关状态：" + flagAutoTrate);
-                if (StringUtil.equals(flagAutoTrate, "01")) {
-                    repoAutoTradeService.repoAutoTrade(iCstpTrade,interfOpicsTradRepo,resultBaseDto);
+                getLogger().info("银行间下行自动匹配(回购)录单开关状态：" + flagAutoTrade);
+                if (StringUtil.equals(flagAutoTrade, "01")) {
+                    //repoAutoTradeService.repoAutoTrade(iCstpTrade,interfOpicsTradRepo,resultBaseDto);
                 }else{
                     resultBaseDto.setErrMsg("银行间下行自动匹配(债券)录单开关关闭!");
                 }
+            }
+            if (StringUtil.equals(flagAutoTrade, "01")) {
+                InterfTradSecdeal finalInterfTradSecdeal = interfTradSecdeal;
+                InterfOpicsTradRepo finalInterfOpicsTradRepo = interfOpicsTradRepo;
+                getLogger().info("银行间下行成交处理业务数据线程开启");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_BOND)){
+                                secAutoTradeService.secAutoTrade(iCstpTrade, finalInterfTradSecdeal,resultBaseDto);
+                        }else if(StringUtil.equals(entity.getMarketIndicator(),MarketIndicatorUtil.MARKETINDICATOR_REPO)){
+                                repoAutoTradeService.repoAutoTrade(iCstpTrade, finalInterfOpicsTradRepo,resultBaseDto);
+                        }
+                    }
+                });
+                thread.start();
             }
         }catch (Exception e){
             resultBaseDto.setErrMsg(e.getMessage());
