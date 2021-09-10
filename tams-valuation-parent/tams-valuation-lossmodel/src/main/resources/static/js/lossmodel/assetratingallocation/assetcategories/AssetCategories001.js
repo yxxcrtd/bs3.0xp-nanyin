@@ -27,9 +27,9 @@ $(function() {
                 {field : 'seqNo',title : 'seqNo',visible : false},
                 { title: "资产类别", field: 'assetTypeStr',sortField:'assetType',sort : true},
                 { title: "资产分类", field: 'assetDetailTypeStr',sortField:'assetDetailType',sort : true},
+                { title: "评级机构", field: 'gradeOrgTypeStr',sortField:'gradeOrgType',sort : true},
+                { title: "指定评级机构", field: 'gradeOrgIdStr',sortField:'gradeOrgId',sort : true},
                 { title: "评级类型", field: 'oTypeStr',sortField:'oType',sort : true},
-                { title: "评级机构类型", field: 'gradeOrgTypeStr',sortField:'gradeOrgType',sort : true},
-                { title: "评级机构", field: 'gradeOrgIdStr',sortField:'gradeOrgId',sort : true},
                 { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
                ],
         dblclick: function(table, data){
@@ -93,42 +93,6 @@ $(function() {
         Joyin.exportExcel('export',getSearchParams())
     };
 
-    // 资产类别事件
-        var assetTypeChange = function() {
-        		if ($("#assetType").val().startsWith("F01")) {
-        			var itemFwd = [];
-        			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-        			for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-        				if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-        					continue;
-        				if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "08"
-        						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "09") {
-        					itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-        				}
-        			}
-        			$('#assetDetailType').updateChosenArr({
-        				item : itemFwd,
-        				disabled : false
-        			});
-
-        		} else if ($("#assetType").val().startsWith("F18")) {
-        			var itemFwd = [];
-        			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-                    for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                        if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                            continue;
-                        if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "08"
-                                || TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "09") {
-                             itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                        }
-                    }
-        			$('#assetDetailType').updateChosenArr({
-        				item : itemFwd,
-        				disabled : false
-        			});
-        		}
-        	};
-
         /**
          * 查询
          */
@@ -144,6 +108,13 @@ $(function() {
 
          // 资产类别onchange事件
         $("#assetType").on('change',function(){
-                     assetTypeChange();
-                });
+                     // assetTypeChange();
+            if($("#assetType").val() == '07' || $("#assetType").val() == '09' ){
+                $("#assetDetailType").prop("disabled",true);
+            }
+            else{
+                $("#assetDetailType").prop("disabled",false);
+            }
+
+        });
 });

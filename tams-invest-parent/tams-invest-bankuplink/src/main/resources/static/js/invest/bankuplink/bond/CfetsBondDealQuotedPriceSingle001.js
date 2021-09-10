@@ -434,6 +434,9 @@
         if(workflowId || (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) && !(quotaPageModel && (quotaPageModel == 'dialogueResponse'))){//流程中、修改、查看
             $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.4);
         }
+        if(quotaPageModel == "new"){
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.0);
+        }
 
         /**
          * 券面总额
@@ -885,7 +888,7 @@
         $("#CfetsBondDealQuotedPriceSingle001_mySideTrader").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterId").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterTrader").val("").trigger("change");
-        $("#CfetsBondDealQuotedPriceSingle001_remark").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_remark").val("").trigger("change");
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };

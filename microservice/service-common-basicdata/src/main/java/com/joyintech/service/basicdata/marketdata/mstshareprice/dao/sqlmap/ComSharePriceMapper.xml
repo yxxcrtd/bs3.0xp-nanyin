@@ -24,6 +24,10 @@
         <result column="LOW_PRICE_ADJ" property="lowPriceAdj" jdbcType="DECIMAL" />
         <result column="CLOSE_PRICE_ADJ" property="closePriceAdj" jdbcType="DECIMAL" />
         <result column="FACTOR_ADJ" property="factorAdj" jdbcType="DECIMAL" />
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        <result column="PE" property="pe" jdbcType="DECIMAL" />
+        <result column="PB" property="pb" jdbcType="DECIMAL" />
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
         <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
@@ -53,8 +57,13 @@
         HIGH_PRICE_ADJ 		HIGH_PRICE_ADJ, 
         LOW_PRICE_ADJ 		LOW_PRICE_ADJ, 
         CLOSE_PRICE_ADJ 	CLOSE_PRICE_ADJ, 
-        FACTOR_ADJ 			FACTOR_ADJ, 
-        TRADE_STATUS 		TRADE_STATUS, 
+        FACTOR_ADJ 			FACTOR_ADJ,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        PE 			        PE,
+        PB 			        PB,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
+        <!-- 查询全部状态 -->
+        TRADE_STATUS 		TRADE_STATUS,
         INPUT_TYPE 			INPUT_TYPE, 
         CREATE_USER 		CREATE_USER, 
         CREATE_DEPT 		CREATE_DEPT, 
@@ -104,7 +113,11 @@
         a.HIGH_PRICE_ADJ 		HIGH_PRICE_ADJ, 
         a.LOW_PRICE_ADJ 		LOW_PRICE_ADJ, 
         a.CLOSE_PRICE_ADJ 		CLOSE_PRICE_ADJ, 
-        a.FACTOR_ADJ 			FACTOR_ADJ, 
+        a.FACTOR_ADJ 			FACTOR_ADJ,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add start-->
+        a.PE 			        PE,
+        a.PB 			        PB,
+        <!--ZGZGST-2340:增加市盈率、市净率字段 fuyongsheng 20210909 add end-->
         a.TRADE_STATUS 			TRADE_STATUS, 
         a.INPUT_TYPE 			INPUT_TYPE, 
         a.CREATE_USER 			CREATE_USER, 
@@ -112,7 +125,9 @@
         a.CREATE_TIME 			CREATE_TIME, 
         a.UPDATE_USER 			UPDATE_USER, 
         a.UPDATE_TIME 			UPDATE_TIME,
-        b.finprod_abbr 			finprodAbbr
+        <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit start-->
+        b.FINPROD_ABBR			FINPROD_ABBR
+        <!--ZGZGST-2340:展示资产名称 fuyongsheng 20210909 edit end-->
         from mst_share_price a 
         left join fin_product b on a.shares_id=b.finprod_market_id
         <where> 
@@ -192,6 +207,8 @@
             #{item.closePriceAdj,jdbcType=DECIMAL} CLOSE_PRICE_ADJ,
             #{item.factorAdj,jdbcType=DECIMAL} FACTOR_ADJ,
             #{item.tradeStatus,jdbcType=VARCHAR} TRADE_STATUS,
+            #{item.pe,jdbcType=DECIMAL} PE,
+            #{item.pb,jdbcType=DECIMAL} PB,
             #{item.createUser,jdbcType=VARCHAR} CREATE_USER,
             sysdate CREATE_TIME,
             #{item.updateUser,jdbcType=VARCHAR} UPDATE_USER,
@@ -227,6 +244,8 @@
         CII.CLOSE_PRICE_ADJ = TEMP.CLOSE_PRICE_ADJ,
         CII.FACTOR_ADJ = TEMP.FACTOR_ADJ,
         CII.TRADE_STATUS = TEMP.TRADE_STATUS,
+        CII.pe = TEMP.PE,
+        CII.pb = TEMP.PB,
         CII.CREATE_USER = TEMP.CREATE_USER,
         CII.CREATE_TIME = TEMP.CREATE_TIME,
         CII.UPDATE_USER = TEMP.UPDATE_USER,
@@ -237,14 +256,14 @@
         INSERT (SHARES_ID,DEAL_DATE,PRE_CLOSE_PRICE,OPEN_PRICE,HIGH_PRICE,LOW_PRICE
         ,CLOSE_PRICE,S_SHARES,C_SHARES,CHANGE,CHANGE_PERCENT,DEAL_VALUME
         ,DEAL_AMOUNT, AVG_PRICE,PRE_CLOSE_PRICE_ADJ,OPEN_PRICE_ADJ,HIGH_PRICE_ADJ
-        ,LOW_PRICE_ADJ,CLOSE_PRICE_ADJ,FACTOR_ADJ,TRADE_STATUS,CREATE_USER,
+        ,LOW_PRICE_ADJ,CLOSE_PRICE_ADJ,FACTOR_ADJ,TRADE_STATUS,PE,PB,CREATE_USER,
         CREATE_TIME,UPDATE_USER,UPDATE_TIME,CREATE_DEPT)
         values(
         TEMP.SHARES_ID,TEMP.DEAL_DATE,TEMP.PRE_CLOSE_PRICE,TEMP.OPEN_PRICE,
         TEMP.HIGH_PRICE,TEMP.LOW_PRICE,TEMP.CLOSE_PRICE,TEMP.S_SHARES,TEMP.C_SHARES,
         TEMP.CHANGE,TEMP.CHANGE_PERCENT,TEMP.DEAL_VALUME,TEMP.DEAL_AMOUNT,
         TEMP.AVG_PRICE,TEMP.PRE_CLOSE_PRICE_ADJ,TEMP.OPEN_PRICE_ADJ,TEMP.HIGH_PRICE_ADJ,
-        TEMP.LOW_PRICE_ADJ,TEMP.CLOSE_PRICE_ADJ,TEMP.FACTOR_ADJ,TEMP.TRADE_STATUS,
+        TEMP.LOW_PRICE_ADJ,TEMP.CLOSE_PRICE_ADJ,TEMP.FACTOR_ADJ,TEMP.TRADE_STATUS,TEMP.pe,TEMP.pb,
         TEMP.CREATE_USER,TEMP.CREATE_TIME,TEMP.UPDATE_USER,TEMP.UPDATE_TIME,TEMP.CREATE_DEPT
         )
     </insert>

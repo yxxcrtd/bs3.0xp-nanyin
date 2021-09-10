@@ -101,10 +101,10 @@ public class ModBintreeConfig002Controller extends BaseController {
         return commonCheck(result, dto.getOperateType());
     }
     @ResponseBody
-    @RequestMapping("getcompStockidForBintree")
-    public List<SelectOptionDto> getcompStockidForBintree(@RequestParam Map<String, Object> params) {
+    @RequestMapping("getStockAssetInfo")
+    public Page<SelectOptionDto> getStockAssetInfo(@RequestParam Map<String, Object> params) {
       
-        return modBintreeConfig002Service.getcompStockidForBintree(params);
+        return modBintreeConfig002Service.getStockAssetInfo(params);
     }
     @ResponseBody
     @RequestMapping("getMarketId")
@@ -154,5 +154,18 @@ public class ModBintreeConfig002Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = modBintreeConfig002Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+
+    /**
+     * 查询债券资产信息
+     * @param params
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("getSecAssetInfo")
+    public Page<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
+
+        return modBintreeConfig002Service.getSecAssetInfo(params);
     }
 }

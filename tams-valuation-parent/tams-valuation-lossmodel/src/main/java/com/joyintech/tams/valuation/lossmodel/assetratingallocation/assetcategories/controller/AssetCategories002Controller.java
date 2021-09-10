@@ -152,7 +152,6 @@ public class AssetCategories002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
             ValidateGroupEdit.class}) AssetCategories002Dto dto, BindingResult result) {
-
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -174,12 +173,15 @@ public class AssetCategories002Controller extends BaseController {
         List<ValidMessage> errorList = new ArrayList<>();
 
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-//            if (StringUtil.isNotEmpty(dto.getAssetType()) && StringUtil.isNotEmpty(dto.getAssetDetailType())) {
-                boolean flag = valAssetBook002Service.checkAssetTypeAndAssetDetailType(dto);
-                if (flag) {
-                    errorList.add(new ValidMessage("该数据已有重复项配置！"));
+//          if (StringUtil.isNotEmpty(dto.getAssetType()) && StringUtil.isNotEmpty(dto.getAssetDetailType())) {
+            AssetCategories002Dto  assetTto  = new AssetCategories002Dto();
+            assetTto.setAssetType(dto.getAssetType());
+            assetTto.setAssetDetailType(dto.getAssetDetailType());
+            boolean flag = valAssetBook002Service.checkAssetTypeAndAssetDetailType(assetTto);
+            if (flag) {
+                errorList.add(new ValidMessage("该数据已有重复项配置！"));
 //                    errorList.add(new ValidMessage("当前资产类别和资产分类已经存在"));
-                }
+            }
 //            }
         }
 

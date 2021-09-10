@@ -332,7 +332,7 @@
 
 
     <!-- 获取普华资产信息集合  -->
-    <select id="getLossPwcAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+    <select id="getLossPwcAssetInfo"  resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         distinct A.FINPROD_ID as finprodId,
         NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as finprodName,
@@ -342,10 +342,13 @@
         LEFT JOIN FIN_PRODUCT B  ON A.FINPROD_ID = B.FINPROD_ID
         WHERE
         A.type_18 in ('01', '13')
+        <if test="search != null and search != ''">
+            and (instr(B.FINPROD_ID, #{search}) > 0 or instr(B.FINPROD_NAME, #{search}) > 0 or instr(B.FINPROD_ABBR, #{search}) > 0)
+        </if>
     </select>
 
     <!-- 获取毕马威资产信息集合  -->
-    <select id="getLossKpmgAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+    <select id="getLossKpmgAssetInfo"  resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         distinct A.FINPROD_ID as finprodId,
         NVL(NVL(B.FINPROD_ABBR, B.FINPROD_NAME), A.FINPROD_ID) as finprodName,
@@ -358,11 +361,14 @@
           or(A.type_18 = '07' and A.type_1 in ('01', '03'))
           or (A.type_18 = '09' and A.type_1 in ('02', '04'))
         )
+        <if test="search != null and search != ''">
+            and (instr(B.FINPROD_ID, #{search}) > 0 or instr(B.FINPROD_NAME, #{search}) > 0 or instr(B.FINPROD_ABBR, #{search}) > 0)
+        </if>
     </select>
 
 
     <!-- 获取资产代码集合  -->
-    <select id="getValAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+    <select id="getValAssetInfo"  resultType="com.joyintech.framework.select.SelectOptionDto">
         SELECT
         A.FINPROD_ID as finprodId,/**金融产品代码**/
         A.FINPROD_ABBR as finprodName,/**金融产品简称**/
@@ -375,14 +381,17 @@
         1 = 1
         AND (D.TYPE_18 = '01' or D.TYPE_18 = '13')
         AND (
-        EXISTS (
-        SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+            EXISTS (
+            SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+            )
+            OR
+            EXISTS (
+            SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+            )
         )
-        OR
-        EXISTS (
-        SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
-        )
-        )
+        <if test="search != null and search != ''">
+            and (instr(A.FINPROD_ID, #{search}) > 0 or instr(A.FINPROD_NAME, #{search}) > 0 or instr(A.FINPROD_ABBR, #{search}) > 0)
+        </if>
     </select>
 
 

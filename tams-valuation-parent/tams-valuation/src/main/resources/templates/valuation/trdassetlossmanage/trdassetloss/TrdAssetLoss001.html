@@ -47,6 +47,28 @@
                     </div>
                 </div>
             </div>
+            <div class="layui-form-item">
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-lable">资产类型</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="assetType" name="assetType"
+                                class="layui-input form-input input-select" allowClear="true"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                formatoption=true
+                                data-th-data-result="${SEC_TYPE}"/>
+                    </div>
+                </div>
+                <div class="form-inline-wrap">
+                    <label class="layui-form-label form-lable">数据来源</label>
+                    <div class="layui-input-inline input-inline">
+                        <input type="text" id="lossInputType" name="lossInputType"
+                                class="layui-input form-input input-select" allowClear="true"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                formatoption=true
+                                data-th-data-result="${LOSS_INPUT_TYPE}"/>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
     <div>

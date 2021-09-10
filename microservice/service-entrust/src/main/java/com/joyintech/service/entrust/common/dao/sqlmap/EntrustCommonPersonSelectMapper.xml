@@ -11,7 +11,10 @@
 		FROM MST_COUNTER_PARTY
 		LEFT JOIN MST_CFETS_CUSTOMER_INFO
     		ON MST_COUNTER_PARTY.COUNTER_NAME = MST_CFETS_CUSTOMER_INFO.PARTY_NAME
-		where 1=1 and MST_CFETS_CUSTOMER_INFO.PARTY_ID is null
+		where 1=1
+		<!--ZGZGST-2130: MST_CFETS_CUSTOMER_INFO的PARTY_ID字段是NOT NULL,不可能为null fuyongsheng 20210906 edit start-->
+		<!--and MST_CFETS_CUSTOMER_INFO.PARTY_ID is null-->
+		<!--ZGZGST-2130: MST_CFETS_CUSTOMER_INFO的PARTY_ID字段是NOT NULL,不可能为null fuyongsheng 20210906 edit end-->
 			<if test="innerTrade != null and !innerTrade">
 				AND not exists (select 1 from PTL_PORTFOLIO p where p.PORTFOLIO_ID = MST_COUNTER_PARTY.COUNTER_ID)
 				and NOT EXISTS (SELECT 1 FROM fin_product p WHERE p.FINPROD_MARKET_ID = MST_COUNTER_PARTY.COUNTER_ID)
@@ -30,7 +33,7 @@
 				AND (MST_COUNTER_PARTY.COUNTER_ID = #{initValue} OR MST_COUNTER_PARTY.COUNTER_NAME = #{initValue})
 			</if>
 			<if test="counterIdList != null and counterIdList.size() > 0">
-                     
+
             	<if test="counterType != null and counterType != '' and counterType != 'null'">
             		AND( MST_COUNTER_PARTY.COUNTER_TYPE = #{counterType} OR(
                            MST_COUNTER_PARTY.COUNTER_ID IN
@@ -41,16 +44,16 @@
 					                #{item}
 					            </foreach>
                             ))
-           	 	</if> 
+           	 	</if>
             </if>
             <if test="counterIdList == null or counterIdList.size() == 0">
                  <if test="counterType != null and counterType != '' and counterType != 'null'">
             		AND MST_COUNTER_PARTY.COUNTER_TYPE = #{counterType}
             	</if>
             </if>
-			
+
 	</select>
-	
+
 	<select id="getCounterIdDepat" resultType="com.joyintech.framework.select.SelectOptionDto">
     	<!-- 委托交易对手的查询逻辑保持与交易的一致 modify by renping 20190925 start -->
     	SELECT

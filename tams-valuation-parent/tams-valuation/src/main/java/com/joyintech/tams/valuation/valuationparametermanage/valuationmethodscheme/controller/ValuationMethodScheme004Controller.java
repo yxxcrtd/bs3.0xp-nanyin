@@ -337,25 +337,46 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("getValuationMethod")
 	public List<SelectOptionDto> getValuationMethod() throws Exception {
+		List<SelectOptionDto> linkSelectOption = new ArrayList<>();
 		Map<String, Object> param = RequestUtil.getPageParam();
-		param.put("dict_code_parent", DictCode.投资目的.getValue());
-		param.put("dict_code_child", DictCode.估值方法.getValue());
-		param.put("item_code_parent", param.get("invAim"));
-		List<SelectOptionDto> list = valuationMethodScheme001Service.getLinkSelectOption(param);
-
-		if (StringUtil.isNotEmpty(param.get("finprodType"))){
-			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())){
-				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
-			}
-			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())){
-				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
-			}
+		//估值方法根据投资目的联动
+		if(StringUtil.isNotEmpty(param.get("invAim"))){
+			param.put("dict_code_parent", DictCode.投资目的.getValue());
+			param.put("dict_code_child", DictCode.估值方法.getValue());
+			param.put("item_code_parent", param.get("invAim"));
+			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
 		}
 
-		//投资目的联动处理start
-		list = valuationMethodScheme001Service.getResultByInvAim(list,param);
-		//投资目的联动处理end
-		return list;
+		//估值方法根据证券品种联动
+		//当证券品种为01债券时，使用投资目的进行联动
+		if(StringUtil.isNotEmpty(param.get("secType")) && !param.get("secType").toString().equals(DictCodeListExt1.证券品种_债券.getValue())){
+			param.put("dict_code_parent", DictCode.证券品种.getValue());
+			param.put("dict_code_child", DictCode.估值方法.getValue());
+			param.put("item_code_parent", param.get("secType"));
+			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
+		}
+
+
+//		Map<String, Object> param = RequestUtil.getPageParam();
+//		param.put("dict_code_parent", DictCode.投资目的.getValue());
+//		param.put("dict_code_child", DictCode.估值方法.getValue());
+//		param.put("item_code_parent", param.get("invAim"));
+//		List<SelectOptionDto> list = valuationMethodScheme001Service.getLinkSelectOption(param);
+//
+//		if (StringUtil.isNotEmpty(param.get("finprodType"))){
+//			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())){
+//				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+//			}
+//			if (StringUtil.equals(param.get("finprodType"),"F17") && StringUtil.equals(param.get("invAim"),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())){
+//				return list.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
+//			}
+//		}
+//
+//		//投资目的联动处理start
+//		list = valuationMethodScheme001Service.getResultByInvAim(list,param);
+//		//投资目的联动处理end
+//		return list;
+		return linkSelectOption;
 	}
 
 	/**

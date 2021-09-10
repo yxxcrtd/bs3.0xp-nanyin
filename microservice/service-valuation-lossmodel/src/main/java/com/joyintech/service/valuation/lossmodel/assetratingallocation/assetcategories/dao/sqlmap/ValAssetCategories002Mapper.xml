@@ -62,13 +62,27 @@
     <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.AssetCategories" >
         update MOD_ASSET_GRADE_CONFIG
         set GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR},
+        ASSET_TYPE =#{assetType,jdbcType=VARCHAR},
         O_TYPE = #{oType,jdbcType=VARCHAR},
         GRADE_ORG_TYPE =#{gradeOrgType,jdbcType=VARCHAR},
         UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
         UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
-        where ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
-        AND ASSET_DETAIL_TYPE = #{assetDetailType,jdbcType=VARCHAR}
+        where
+       <!-- ASSET_TYPE = #{assetType,jdbcType=VARCHAR}
+        AND ASSET_DETAIL_TYPE = #{assetDetailType,jdbcType=VARCHAR} -->
         AND SEQNO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+
+    <update id="updateBySeqNo" parameterType="com.joyintech.service.valuation.lossmodel.assetratingallocation.assetcategories.dto.ValAssetCategories002Dto" >
+        update MOD_ASSET_GRADE_CONFIG
+        set GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR},
+        ASSET_TYPE =#{assetType,jdbcType=VARCHAR},
+        O_TYPE = #{oType,jdbcType=VARCHAR},
+        GRADE_ORG_TYPE =#{gradeOrgType,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where
+         SEQNO = #{seqNo,jdbcType=VARCHAR}
     </update>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >

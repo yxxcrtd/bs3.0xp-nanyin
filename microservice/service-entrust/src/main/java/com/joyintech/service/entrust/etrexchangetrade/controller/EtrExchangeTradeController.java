@@ -452,4 +452,32 @@ public class EtrExchangeTradeController {
     public List<WflEtrEntrust> selectWflEntrust(@RequestBody Map<String,Object> map){
         return etrExchangeTradeService.selectWflEntrust(map);
     }
+
+    /**
+     *
+     * @Description 查询流程及委托表中是否有同一股东下达的可转债申购指令
+     * @Param [map]
+     * @return java.util.List<java.lang.String>
+     * @version 1.0
+     * @see
+     **/
+    @PostMapping("selectWflEntrustAddAndEtrEntrustAdd")
+    public List<String> selectWflEntrustAddAndEtrEntrustAdd(@RequestBody Map<String,Object> map){
+        return etrExchangeTradeService.selectWflEntrustAddAndEtrEntrustAdd(map);
+    }
+
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 start
+    /**
+     * 1.6计算偏离度
+     *
+     * @param param 画面参数
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("calcDeviationDegree")
+    public String calcDeviationDegree(@RequestBody Map<String, Object> param) {
+        return etrExchangeTradeService.calcDeviationDegree(param);
+    }
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度展示 end
 }

@@ -76,6 +76,7 @@
                 title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.portfolioName'
             }
             , {field: 'secAcctName', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId'}
+            , {field: 'secAcctId', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId',visible: false}
             , {field: 'settleSpreedStr', width: 90, title: '清算速度', sortField: "settleSpreed"}
             , {
                 field: 'psStr',
@@ -618,12 +619,13 @@
             , {field: 'acctNo', title: 'CSTPSelect001.secAccount', width: '150',visible: false}
             , {field: 'businesstypeStr', title: 'CSTPSelect001.finprodType', sortField: 'businesstype', width: '120',visible: false}
             , {field: 'securityid', title: '期限类型', width: '120',visible: false}
-            , {field: 'entrustId', width: '120',visible: true}
-            , {field: 'tradeId', width: '120',visible: true}
-            , {field: 'fTradeId', width: '120',visible: true}
-            , {field: 'rTradeId', width: '120',visible: true}
-            , {field: 'ps', sortField: 'side', visible: true}
-            , {field: 'settleSpeed', title: '清算速度', width: '100'}
+            , {field: 'entrustId', width: '120',visible: false}
+            , {field: 'tradeId', width: '120',visible: false}
+            , {field: 'fTradeId', width: '120',visible: false}
+            , {field: 'rTradeId', width: '120',visible: false}
+            , {field: 'ps', sortField: 'side', visible: false}
+            , {field: 'finprodId', sortField: 'finprodId', visible: false}
+            , {field: 'settleSpeed', title: '清算速度', width: '100', visible: false}
             , {
                 field: 'settleDate',
                 title: 'CSTPSelect001.settleDate',

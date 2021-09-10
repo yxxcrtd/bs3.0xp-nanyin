@@ -121,7 +121,7 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      * @return String
      * 机构类型(技术领域)
      */
-    @NotEmpty(fieldName = "MstMarketInstitutions002.partyType3", groups = {ValidateGroupEdit.class})
+
     public String getPartyType3Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.发行机构类型_按技术领域划分, super.getPartyType3());
     }
@@ -130,7 +130,7 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      * @return String
      * 机构类型(经济类型)
      */
-    @NotEmpty(fieldName = "MstMarketInstitutions002.partyType2", groups = {ValidateGroupEdit.class})
+
     public String getPartyType2Str(){
         return SysDataUtil.getNameFromDataDict(DictCode.企业性质, super.getPartyType2());
     }
@@ -350,7 +350,7 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      * 取得 国标二级分类
      * @return 国标二级分类
      */
-    @NotEmpty(fieldName = "MstMarketInstitutions002.industrySecondClass", groups = {ValidateGroupEdit.class})
+
     public String getIndustry2Str() {
         return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业二级分类 , super.getIndustry2());
     }
@@ -359,7 +359,7 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
      * 取得 国标一级分类
      * @return 国标一级分类
      */
-    @NotEmpty(fieldName = "MstMarketInstitutions002.industry", groups = {ValidateGroupEdit.class})
+
     public String getIndustryStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.机构所属行业一级分类 , super.getIndustry());
     }
@@ -422,5 +422,42 @@ public class MstMarketInstitutionsDto extends MstCustomerInfoAddWithBLOBs implem
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
+
+    @Override
+    @NotEmpty(fieldName = "MstMarketInstitutions002.industry", groups = {ValidateGroupEdit.class})
+    public String getIndustry(){
+        return super.getIndustry();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "MstMarketInstitutions002.partyType3", groups = {ValidateGroupEdit.class})
+    public String getPartyType3(){
+        return super.getPartyType3();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "MstMarketInstitutions002.partyType2", groups = {ValidateGroupEdit.class})
+    public String getPartyType2(){
+        return super.getPartyType2();
+    }
+    @Override
+    @NotEmpty(fieldName = "MstMarketInstitutions002.partyType1", groups = {ValidateGroupEdit.class})
+    public String getPartyType1(){
+        return super.getPartyType1();
+    }
+
+    @Override
+    @NotEmpty(fieldName = "MstMarketInstitutions002.industrySecondClass", groups = {ValidateGroupEdit.class})
+    public String getIndustry2(){
+        return super.getIndustry2();
+    }
+
+
+
+
+
+
+
+
 
 }

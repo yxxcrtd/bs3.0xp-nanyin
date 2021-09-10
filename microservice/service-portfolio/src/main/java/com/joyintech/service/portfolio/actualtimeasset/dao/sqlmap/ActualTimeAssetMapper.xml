@@ -285,7 +285,7 @@
 				null as type10,
 				null as type11,
 				null as type12,
-				#{finprodType2_F19} as type8,
+				#{finprodType2_F20} as type8,
 				null as type7,
 				null as type6,
 				SUM(cashBalance) AS actualPositionAmount,

@@ -270,19 +270,22 @@ public class ComYieldCurveInfoService extends CommonExportService<ComYieldCurveI
                 ComYieldCurveInfoDto.setCurveCode(list.get(1).trim());
             }
             if (StringUtil.isNotEmpty(list.get(2))) {
-                ComYieldCurveInfoDto.setKeyPoint(new BigDecimal(list.get(2).trim()));
+                ComYieldCurveInfoDto.setCurveName(list.get(2).trim());
             }
             if (StringUtil.isNotEmpty(list.get(3))) {
-                ComYieldCurveInfoDto.setYield(new BigDecimal(list.get(3).trim()));
+                ComYieldCurveInfoDto.setKeyPoint(new BigDecimal(list.get(3).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(4))) {
-                ComYieldCurveInfoDto.setCurveType(list.get(4).trim().split("：")[0].trim());
+                ComYieldCurveInfoDto.setYield(new BigDecimal(list.get(4).trim()));
             }
             if (StringUtil.isNotEmpty(list.get(5))) {
-                ComYieldCurveInfoDto.setN(new BigDecimal(list.get(5).trim()));
+                ComYieldCurveInfoDto.setCurveType(list.get(5).trim().split("：")[0].trim());
             }
             if (StringUtil.isNotEmpty(list.get(6))) {
-                ComYieldCurveInfoDto.setK(new BigDecimal(list.get(6).trim()));
+                ComYieldCurveInfoDto.setN(new BigDecimal(list.get(6).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(7))) {
+                ComYieldCurveInfoDto.setK(new BigDecimal(list.get(7).trim()));
             }
             // Date date = new Date();
             ComYieldCurveInfoDto.setCreateUser(CommonUtil.getUserName());
@@ -307,7 +310,7 @@ public class ComYieldCurveInfoService extends CommonExportService<ComYieldCurveI
     private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
         List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
         // 列数为7
-        if (null == list || list.size() != 7) {
+        if (null == list || list.size() != 8) {
             ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
             excelValidDtolist.add(dto);
         }
@@ -318,22 +321,22 @@ public class ComYieldCurveInfoService extends CommonExportService<ComYieldCurveI
         }
         if (StringUtil.isEmpty(list.get(1))) {
             // 验证导入曲线名称是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "曲线名称为空");
-            excelValidDtolist.add(dto);
-        }
-        if (StringUtil.isEmpty(list.get(2))) {
-            // 验证导入关键年限是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "关键年限为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "曲线代码为空");
             excelValidDtolist.add(dto);
         }
         if (StringUtil.isEmpty(list.get(3))) {
-            // 验证导入收益率%是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "收益率%为空");
+            // 验证导入关键年限是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+3), "关键年限为空");
             excelValidDtolist.add(dto);
         }
         if (StringUtil.isEmpty(list.get(4))) {
+            // 验证导入收益率%是否为空
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+4), "收益率%为空");
+            excelValidDtolist.add(dto);
+        }
+        if (StringUtil.isEmpty(list.get(5))) {
             // 验证导入曲线类型是否为空
-            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+2), "曲线类型为空");
+            ExcelValidDto dto = new ExcelValidDto(list.get(1), String.valueOf(i+5), "曲线类型为空");
             excelValidDtolist.add(dto);
         }
         return excelValidDtolist;

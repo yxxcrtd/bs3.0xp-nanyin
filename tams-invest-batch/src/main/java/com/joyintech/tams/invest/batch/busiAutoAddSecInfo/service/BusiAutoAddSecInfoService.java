@@ -34,8 +34,6 @@ import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.valuation.common.batch.finproduct.dao.FinProductCommonMapper;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -63,8 +61,8 @@ public class BusiAutoAddSecInfoService {
     private FinProductAddMapper finProductAddMapper;
     @Autowired
     private FinProductTypeMapper finProductTypeMapper;
-    @Autowired
-    private FinProductCommonMapper finProductCommonMapper;
+//    @Autowired
+//    private FinProductCommonMapper finProductCommonMapper;
     @Autowired
     private FinCashPayRuleMapper finCashPayRuleMapper;
     @Autowired
@@ -711,7 +709,7 @@ public class BusiAutoAddSecInfoService {
             // 设置sql查询参数map
             Map<String, Object> paMap = new HashMap<String, Object>();
             paMap.put("finprodId", finprodId);// 标的代码
-            paMap.put("branch", BookConstant.DEFALUT_BRANCH);
+            paMap.put("branch", new Long(0));
             // 根据传递的查询类型，获取不同的标的数据
             if(StringUtil.equals("FINPROD_ADD",queryTypeNow)){
                 FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey(finprodId);

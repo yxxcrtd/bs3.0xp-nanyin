@@ -35,8 +35,6 @@ public class ImpairmentDataLoadReaderService {
     @Autowired
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
     @Autowired
-    private ModParamsService modParamsService;
-    @Autowired
     private RateConfigCommonService rateConfigCommonService;
     @Autowired
     private RateInfoCommonService rateInfoCommonService;
@@ -48,7 +46,7 @@ public class ImpairmentDataLoadReaderService {
      */
     public List<ImpairmentDataLoadStep1ReaderDto> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        List<ModValBatchParams> listBatch = (List<ModValBatchParams>) params.get("listBatch");
         //1.读取需要进行处理的资产
         //资产代码集合
         List<String> finprodIdList = new ArrayList<String>();
@@ -114,6 +112,8 @@ public class ImpairmentDataLoadReaderService {
             // 定义 查询参数.资产信息
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, entity);
+            modAssetInfoDto.setSecType(entity.getSecTypeModel());
+            modAssetInfoDto.setSecTypeDetail(entity.getSecDetailTypeModel());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -135,9 +135,18 @@ public class ImpairmentDataLoadReaderService {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,platDate);
-            }else if(configMap.get(entity.getFinprodId()) != null){
+            }else if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null
+                || configMap.get(entity.getSecTypeModel()) != null){
                 // 一般资产评级配置
-                ModAssetGradeConfig config = configMap.get(entity.getFinprodId());
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null){
+                    config = configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(entity.getSecTypeModel());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型

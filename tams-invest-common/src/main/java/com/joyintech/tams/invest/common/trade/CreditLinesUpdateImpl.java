@@ -495,16 +495,12 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     logger.info(getMessage("==========开始处理数据,交易或指令编号: "+inputDto.getTradeId()+",释放规则：先进先出=========="));
                     // 当前释放份额(剩余释放份额)
                     BigDecimal shareAmtTotal = inputDto.getShareAmt();
-                    BigDecimal 已占用额度 = creditLinesAst.getHapCreditAmt();
-                    BigDecimal 机构释放额度 = creditLinesAst.getHapCreditAmt();
+                    BigDecimal 已占用额度 = creditLinesDealsMapper.getOccupiedQuota(inputDto);
                     CreditLinesInputDto linesInputDto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(linesInputDto,inputDto);
                     // 释放金额
                     // 资产授信占用列表
                     List<CreditUsingAst> astList = creditLinesDealsMapper.getCreditUsingAstListByFin(inputDto);
-                    if("0003".equals(creditLinesAst.getCreditMstId())){
-                        astList=creditLinesDealsMapper.getCreditUsingAstListByFin1(inputDto);
-                    }
                     for (CreditUsingAst item : astList){
                         BigDecimal releaseAmt = BigDecimal.ZERO;
                         if (shareAmtTotal.compareTo(BigDecimal.ZERO) <= 0 || 已占用额度.compareTo(BigDecimal.ZERO) <= 0){
@@ -520,7 +516,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmt);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmt.multiply(item.getNetPrice()));
                         }else {
                             // 前置交易剩余待释放份额
                             item.setShareAmt(shareAmt.subtract(shareAmtTotal));
@@ -529,7 +524,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmtTotal);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmtTotal.multiply(item.getNetPrice()));
                             // 剩余释放份额
                             shareAmtTotal = BigDecimal.ZERO;
                         }
@@ -544,6 +538,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
                     }
                     // 资产系列授信占用列表
+                    已占用额度 = creditLinesDealsMapper.getOccupiedQuota1(inputDto);
                     List<CreditUsingSeries> seriesList = creditLinesDealsMapper.findCreditUsingSeriesByFin(inputDto);
                     for (CreditUsingSeries item : seriesList){
                         BigDecimal releaseAmt;
@@ -560,7 +555,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmt);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmt.multiply(item.getNetPrice()));
                         }else {
                             // 前置交易剩余待释放份额
                             item.setShareAmt(shareAmt.subtract(shareAmtTotal));
@@ -569,7 +563,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmtTotal);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmtTotal.multiply(item.getNetPrice()));
                             // 剩余释放份额
                             shareAmtTotal = BigDecimal.ZERO;
                         }
@@ -1754,9 +1747,10 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             return outputDto;
         }
         //处理 当授信对象为金额时 申购/认购 的待释放份额为0
-        if(BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())
-                &&(DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
-                ||DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))){
+        if (creditLinesAst!=null
+                && (BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())||"03".equals(creditLinesAst.getCreditType()))
+                && (DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
+                || DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))) {
             inputDto.setShareAmt(BigDecimal.ZERO);
         }
         //处理 净值型、货币型、基金的申购/认购确认

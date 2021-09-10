@@ -1020,6 +1020,17 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if (lastPrice == null){
                     lastPrice = BigDecimal.ONE;
                 }
+                if((StringUtil.equals(DictCodeList.交易方向_申购.getValue(),inputDto.getPs())
+                        || StringUtil.equals(DictCodeList.交易方向_认购.getValue(),inputDto.getPs()))
+                        && "24".equals(inputDto.getAssetType10())){
+                    if ("01".equals(inputDto.getTrmFundType())) {
+                        lastPrice = new BigDecimal(100);
+                    }else if("05".equals(inputDto.getTrmFundType())){
+                        lastPrice = new BigDecimal(0.01);
+                    }else{
+                        lastPrice = BigDecimal.ONE;
+                    }
+                }
                 creditLinesInputDto.setNetPrice(lastPrice);
                 creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),lastPrice,2));
 
@@ -1029,6 +1040,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setTradeAmt(ArithmeticUtil.multiply(inputDto.getEntrustNum(),lastPrice));
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
                 }
+            }
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getBussEtrInvestPersonInfoDto())){
+                    creditLinesInputDto.setCounterId(inputDto.getBussEtrInvestPersonInfoDto().getCounterId());
+                }
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
+                creditLinesInputDto.setNetPrice(inputDto.getPrice());
             }
         }
         //债券借贷

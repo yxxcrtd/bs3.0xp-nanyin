@@ -136,6 +136,10 @@ public class FinPlanAssetC002Controller extends BaseController{
             dto.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
             dto.setFinprodType(DictCodeListExt1.金融产品类型_计划类资产.getValue());
             dto.setFjId("fj" + System.currentTimeMillis());
+            //新建初始化境内外和本金收益特征值
+            dto.setBlnArea(DictCodeList.境内外_境内.getValue());
+            dto.setCapiIncomeFeature(DictCodeListExt1.本金收益特征_非保本.getValue());
+
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("entity", dto);
         }
@@ -218,6 +222,8 @@ public class FinPlanAssetC002Controller extends BaseController{
             ValidateGroupEdit.class}) FinPlanAssetCDto dto, BindingResult result) {
         AjaxResult resulterr = new AjaxResult();
         ArrayList<ValidMessage> errorList = new ArrayList<>();
+
+
         // 判断是否存在资产代码一致的数据
         if (finPlanAssetCService.selectFinprodMarketId(dto.getFinprodMarketId()) > 0 && !StringUtil.equals("1",dto.getPageModel())){
             errorList.add(new ValidMessage("已经存在资产代码为："+dto.getFinprodMarketId()+"的数据！"));

@@ -123,7 +123,10 @@ $(function () {
      * 新建
      */
     function showDialog() {
-        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/init', '45%', '75%',function(){table.reload();});
+        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig002/init', '45%', '75%',
+            {pageModel:PAGE_MODEL_NEW},function(){
+            table.reload();
+        });
     }
 
     /**
@@ -137,7 +140,7 @@ $(function () {
     //导入按钮点击事件
     $('#ModGradePdConfig001_btn_import').click(function() {
 
-            Joyin.uploadFile(function(fileName) {
+            Joyin.uploadFile({pageId: 'PdDefaultManager001MTM'}, function(fileName) {
                 Joyin.ajax(basePath + 'model/impairment/pddefaultmanager/gradepdconfig/ModGradePdConfig001/checkGradePdImportData'
                     ,{fileName: fileName}, function(result) {
                       if(result.data != undefined && result.data.indexOf("数据如下") > 0){

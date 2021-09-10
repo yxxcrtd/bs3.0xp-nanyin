@@ -420,5 +420,18 @@ public class CstpSelectDto extends InterfCstpTrade{
         this.rTradeId = rTradeId;
     }
 
+    /**
+     * 金融产品代码
+     */
+    private String finprodId;
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
     //add by chenjiaxing 质押式回购改造 end
 }

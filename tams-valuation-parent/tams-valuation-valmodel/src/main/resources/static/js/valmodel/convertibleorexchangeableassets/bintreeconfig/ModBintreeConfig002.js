@@ -50,12 +50,12 @@ $(function() {
     	}
 
 	};
-	var stockidChange = function() {
-		 if($('#compStockid').val()&&$('#compStockid').val()!=""){
-		    	$("#compStockCode").val($('#compStockid').select2('data')[0].id);
-		    }
-
-	};
+	// var stockidChange = function() {
+	// 	 if($('#compStockid').val()&&$('#compStockid').val()!=""){
+	// 	    	$("#compStockCode").val($('#compStockid').select2('data')[0].id);
+	// 	    }
+    //
+	// };
 	function init(){
         if(isMain=='01'){
             setTimeout(function() {
@@ -120,10 +120,10 @@ $(function() {
         $("#stockBordsttus").on('change',function(){
         	assetTypeChange();
        });
-        stockidChange();
-        $("#compStockid").on('change',function(){
-        	stockidChange();
-       });
+       //  stockidChange();
+       //  $("#compStockid").on('change',function(){
+       //  	stockidChange();
+       // });
         $("#marketMulti").on('change',function(){
         	marketMultiChange();
        });

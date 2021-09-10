@@ -483,7 +483,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             param.put("portfolioId", dto.getPortfolioId());
             param.put("ccy", dto.getCcy());
             param.put("vdate", dto.getVdate());
-            Map<String, Object> proAvailableCash = getProAvailableCash(param);
+//            Map<String, Object> proAvailableCash = getProAvailableCash(param);
+            Map<String, Object> proAvailableCash = etrCommonService.getProAvailableCash(param);
             dto.setEtrAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
             //指令可用持仓
             EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();

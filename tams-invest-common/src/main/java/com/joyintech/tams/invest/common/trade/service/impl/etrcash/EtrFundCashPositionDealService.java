@@ -796,7 +796,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 //                    etrCashPositionFlowDto.setAcctId(
 //                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
 //                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
-                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
+                    // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit start
+                    etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
+                    // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit end
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道
@@ -863,8 +865,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、托管户）：卖出交易日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    /*etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));*/
+                    etrCashPositionFlowDto.setAcctId(
+                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道、无委托通道
@@ -907,9 +911,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户）：卖出交易日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
                     etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道、无委托通道
@@ -1065,7 +1071,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
                     // ZGZGST-1997:处理赎回无划款指令场景 shulifu 20210903 edit start
                     if(!CollectionUtils.isEmpty(finProductTradeDto.getStlPayOrdersList())){
-                        etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
+                        // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit start
+                        etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
+                        // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit end
                     }else{
                         etrCashPositionFlowDto.setAcctId(
                                 EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),

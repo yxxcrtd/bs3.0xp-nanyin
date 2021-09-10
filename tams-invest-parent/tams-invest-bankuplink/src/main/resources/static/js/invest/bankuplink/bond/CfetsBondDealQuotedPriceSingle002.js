@@ -399,6 +399,23 @@
     }
 
     var reset = function () {
+        $("#CfetsBondDealQuotedPriceSingle002_entrustId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_finprodId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_ps").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleType").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_tradeDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleMethod").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_secManageAcctId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_avaNum").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_mySide").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_mySideTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_remark").val("").trigger("change");
+        table.clear();
+        layui.form.render(); // reload layui
+        pageModel = PAGE_MODEL_NEW;
     };
 
     var getriskdata = function () {

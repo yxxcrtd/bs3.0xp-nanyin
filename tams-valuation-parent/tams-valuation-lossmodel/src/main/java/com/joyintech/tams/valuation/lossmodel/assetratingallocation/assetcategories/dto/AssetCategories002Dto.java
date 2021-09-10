@@ -4,7 +4,10 @@ package com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcatego
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.validator.AssetCategories002DtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -20,6 +23,8 @@ import java.util.List;
  * @since 1.0
  */
 @PageId("AssetCategories002")
+@ValidLogic(targetClass = AssetCategories002DtoValidator.class, groups = { ValidateGroupDelete.class,
+        ValidateGroupEdit.class })
 public class AssetCategories002Dto extends BaseEntity implements ProcessEntity{
 
     private static final long serialVersionUID = 1L;
@@ -162,6 +167,7 @@ public class AssetCategories002Dto extends BaseEntity implements ProcessEntity{
         this.isEdit = isEdit;
     }
 
+    @NotEmpty(fieldName = "评级机构类型", groups = {ValidateGroupEdit.class})
     public String getGradeOrgType() {
         return gradeOrgType;
     }

@@ -61,7 +61,7 @@
             ,{field:'fpriceAmt',sortField:'FPRICE_AMT',width:'10%',title:'TrdStockBonus001.dividAmount',type:'money'}//分红金额
             ,{field:'shareAmt',sortField:'SHARE_AMT',width:'10%',title:'TrdStockBonus001.dividShare',type:'money'}//分红股本
             // 多级法人改造 add by caiqun 20200615
-            ,{field: 'institutionName', width:150, title: '机构名称',sortField:'institutionName'}
+            ,{field: 'institutionName', visible : false}
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: []}
         ]

@@ -108,6 +108,42 @@
             and totalAdd.ENTRUST_ID =#{entrustId}
         </if>
     </sql>
+    <sql id="whereSqlWithLoginUser">
+        WHERE
+        <!--投管业务类型-->
+        total.TG_BUSI_TYPE = #{TG_BUSI_TYPE_ZZG}
+        and total.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_ZQ}
+        <!--过滤母组合-->
+        and PP.INVEST_YESORNO = #{YES_NO_YES}
+        and nvl(total.IS_CANCEL,#{YES_NO_NO}) = #{YES_NO_NO}
+        <if test="finprodIdList != null and finprodIdList.size()>0">
+            <foreach collection="finprodIdList" open="and total.FINPROD_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
+            <foreach collection="finprodMarketIdList" open="and fpzg.FINPROD_MARKET_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="portfolioIdList != null and portfolioIdList.size()>0">
+            <foreach collection="portfolioIdList" open="and total.PORTFOLIO_ID in(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tradeDateStart != null and tradeDateStart != ''">
+            and total.TRADE_DATE &gt;= to_date(#{tradeDateStart},'yyyy-MM-dd')
+        </if>
+        <if test="tradeDateEnd != null and tradeDateEnd != ''">
+            and total.TRADE_DATE &lt;= to_date(#{tradeDateEnd},'yyyy-MM-dd')
+        </if>
+        <if test="tradeMarket != null and tradeMarket != ''">
+            and total.TRADE_MARKET =#{tradeMarket}
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            and totalAdd.ENTRUST_ID =#{entrustId}
+        </if>
+    </sql>
     <select id="findPage" resultType="com.joyintech.tams.invest.trade.bondtostock.dto.TrdBondToStock001Dto">
         <trim prefixOverrides="UNION ALL">
             <if test="validStatus == null or validStatus == '' or validStatus == VALID_STATUS_YX">
@@ -168,7 +204,7 @@
         <!--金融产品交易汇总附属表-->
         LEFT JOIN TRD_DEAL_TOTAL_ADD totalAdd on total.TOTLE_TRADE_ID = totalAdd.TOTLE_TRADE_ID
         <include refid="linkTable"/>
-        <include refid="whereSql"/>
+        <include refid="whereSqlWithLoginUser"/>
         and total.TOTLE_TRADE_ID = #{busiCode}
     </select>
     <select id="getPositionInfo" resultType="java.math.BigDecimal">

@@ -1,0 +1,2 @@
+--校验表的IS_EXIST为空的默认设为1：校验；否则接口后台会报错，无法接入文件
+UPDATE VAL_TEMP_COL_CHECK_INFO T SET T.IS_EXIST='1' WHERE T.IS_EXIST IS NULL;

@@ -56,10 +56,6 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
     private String sponsorFinLicence;
 
     /**
-     * 实际授信主体是否持有金融牌照
-     */
-    private String actualCreditFinLicence;
-    /**
      * 到期日
      */
     private Date mdate;
@@ -252,14 +248,6 @@ public class ImpairmentDataLoadStep1ReaderDto extends NeedOperateEntity {
 
     public void setSponsorFinLicence(String sponsorFinLicence) {
         this.sponsorFinLicence = sponsorFinLicence;
-    }
-
-    public String getActualCreditFinLicence() {
-        return actualCreditFinLicence;
-    }
-
-    public void setActualCreditFinLicence(String actualCreditFinLicence) {
-        this.actualCreditFinLicence = actualCreditFinLicence;
     }
 
     public Date getMdate() {

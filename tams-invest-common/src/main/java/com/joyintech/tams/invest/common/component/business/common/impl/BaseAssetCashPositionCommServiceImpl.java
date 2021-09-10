@@ -385,6 +385,10 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                  && (DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs()) || DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(deal.getPs()))
                 || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                         && DictCodeList.收益类型_货币型.getValue().equals(profitType) && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
+                //add by chenjiaxing 20210909 计划类资产净值型赎回交易可用持仓错误 start
+                || (DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+                && DictCodeList.收益类型_净值型.getValue().equals(profitType) && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))
+            //add by chenjiaxing 20210909 计划类资产净值型赎回交易可用持仓错误 end
         ) {
             if (!DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs()) && !DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())){
                 resultDto.setCdate(deal.getTradeDate());
@@ -1654,7 +1658,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                         && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()))
                     || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         && DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket())
-                        && DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        && (DictCodeList.回购类型_质押式协议回购.getValue().equals(assetType2)
+                        ||DictCodeList.回购类型_质押式回购.getValue().equals(assetType2))
                         && DictCodeList.交易方向_买入.getValue().equals(deal.getPs()))
                     || (DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue().equals(deal.getFinprodType2())
                         /* && !DictCodeListExt1.交易场所_银行间.getValue().equals(deal.getTradeMarket()) */

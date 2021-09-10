@@ -74,9 +74,10 @@ public class PrimaryBiddingManage003Controller extends BaseController {
          if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
              model.addAttribute("workflowId", workflowId);
              entity= primaryBiddingManage003.getBussinessEntityByWorkflowId(workflowId);
-             if(entity.getAllBidPrinAmt() != null) {
-                 entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().multiply(new BigDecimal(10000)));//转成元
-             }
+//             不能直接在这修改，会将流程中的数据均改变
+//             if(entity.getAllBidPrinAmt() != null) {
+//                 entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().multiply(new BigDecimal(10000)));//转成元
+//             }
          } else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(bidId)){
         	 entity=primaryBiddingManage003.getBussinessEntityByBidId(bidId);
              entity.setAllBidPrinAmt(ArithmeticUtil.multiply(new BigDecimal(map.get("allBidPrinAmt").toString()),new BigDecimal(10000)));

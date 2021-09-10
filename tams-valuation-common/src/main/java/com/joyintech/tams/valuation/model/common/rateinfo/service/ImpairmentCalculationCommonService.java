@@ -135,6 +135,7 @@ public class ImpairmentCalculationCommonService extends BaseService{
 	}
 	/**
 	 * 比较评级高低，返回较高的
+	 * 例如01:AAA,20:B
 	 * @param rating1
 	 * @param rating2
 	 * @return
@@ -154,7 +155,7 @@ public class ImpairmentCalculationCommonService extends BaseService{
 				String r2 = rating2.getRating();
 				int ra = Integer.valueOf(r1.replaceAll("^(0+)", ""));
 				int rs = Integer.valueOf(r2.replaceAll("^(0+)", ""));
-				if(ra > rs){
+				if(ra < rs){
 					return rating1;
 				}else{
 					return rating2;

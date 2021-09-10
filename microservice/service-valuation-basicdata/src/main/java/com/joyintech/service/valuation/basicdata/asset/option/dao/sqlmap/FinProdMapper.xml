@@ -93,6 +93,27 @@
             and TARGET_ID = #{targetId,jdbcType=VARCHAR}
         </if>
     </select>
+    <!--根据标的代码获取标的信息-->
+    <select id="getFinprodcodebySerchInfo"  parameterType="string" resultType="com.joyintech.service.valuation.basicdata.asset.option.dto.FinOptionTargetDto">
+        select
+        TARGET_ID targetId,
+        TARGET_NAME targetName,
+        TARGET_TYPE targetType,
+        REMARK remark,
+        CREATE_USER createUser,
+        CREATE_DEPT createDept,
+        CREATE_TIME createTime,
+        UPDATE_USER updateUser,
+        UPDATE_TIME updateTime
+        from OPT_TARGET_INFO
+        where 1=1
+        <if test="serchInfo != null and serchInfo != ''">
+            and (
+                TARGET_ID = #{serchInfo,jdbcType=VARCHAR}
+                or TARGET_NAME = #{serchInfo,jdbcType=VARCHAR}
+            )
+        </if>
+    </select>
 
   <!--根据标的代码删除期权标的信息-->
     <delete id="delete">

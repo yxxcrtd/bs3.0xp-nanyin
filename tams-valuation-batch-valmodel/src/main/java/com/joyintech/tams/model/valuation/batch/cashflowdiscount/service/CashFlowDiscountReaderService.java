@@ -159,7 +159,7 @@ public class CashFlowDiscountReaderService {
                         paramCurveCode.put("curveGroupCode", modCurveConfig.getCurveGroupCode());
                         if (StringUtil.equals(modCurveConfig.getCurveType(), DictCodeList.收益率曲线类型_SP即期.getValue())) {
                             paramCurveCode.put("curveType", "SP");
-                        } else if (StringUtil.equals(modCurveConfig.getCurveType(), DictCodeList.收益率曲线类型_MA远期.getValue())) {
+                        } else if (StringUtil.equals(modCurveConfig.getCurveType(), DictCodeList.收益率曲线类型_MA到期.getValue())) {
                             paramCurveCode.put("curveType", "MA");
                         } else if (StringUtil.equals(modCurveConfig.getCurveType(), DictCodeList.收益率曲线类型_FS远期的即期.getValue())) {
                             paramCurveCode.put("curveType", "FS");

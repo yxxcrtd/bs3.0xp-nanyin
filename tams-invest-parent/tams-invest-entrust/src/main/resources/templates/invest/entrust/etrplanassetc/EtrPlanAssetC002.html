@@ -347,7 +347,9 @@
                         </div>
                     </div>
                     <!-- 风险试算 -->
-                    <div th:if="${isEleShow['EtrPlanAssetC002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
+                    <!--// ZGZGST-2045:审批页面展示流程中的风险试算结果需要workflowId fuyongsheng 20210907 add start -->
+                    <div th:if="${isEleShow['EtrPlanAssetC002_BaseRiskMathComm']} ne 'N' and ${isEleShow['BaseRiskMathComm']} ne 'N'" id="baseRiskMathComm" class="page-component" th:data-path="@{/component/common/BaseRiskMathComm/init}" th:data-params="|{entity: '${riskTrialRetDto}',entityName:'riskTrialRetDto',workflowId:'${workflowId?: ''}',tradeId:'${tradeId}'}|"></div>
+                    <!--// ZGZGST-2045:审批页面展示流程中的风险试算结果需要workflowId fuyongsheng 20210907 add end -->
                     <div class="pro-module-block">
                         <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 50px;">
                             <div class="text-center">

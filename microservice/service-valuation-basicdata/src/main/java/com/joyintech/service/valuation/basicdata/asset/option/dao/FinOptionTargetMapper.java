@@ -19,6 +19,8 @@ public interface FinOptionTargetMapper {
 
     public FinOptionTargetDto getFinprodcodebyId(@Param("targetId") String targetId);
 
+    public FinOptionTargetDto getFinprodcodebySerchInfo(@Param("serchInfo") String targetId);
+
     public int save(FinOptionTargetDto dto);
 
     public int update(FinOptionTargetDto dto);

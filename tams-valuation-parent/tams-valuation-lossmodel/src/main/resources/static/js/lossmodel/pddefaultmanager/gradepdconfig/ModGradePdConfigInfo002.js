@@ -60,11 +60,12 @@
     function　init(){
 
         //初始化评级结果
-        initGradeResult();
+        // initGradeResult();
         var operateTypeTh = $('#operateType').val();
         /*alert(pageModel+"================="+operateTypeTh);*/
         //编辑模式资产代码、估值日期、资产简称不可编辑
         //operateTypeTh != undefined
+        debugger;
         if (pageModel == PAGE_MODEL_EDIT ) {
             $('#vouchYear').attr("disabled", true);
             $('#gradeResult').attr("disabled", true);
@@ -75,22 +76,22 @@
         }
     }
 
-    function initGradeResult() {
-        var gr = $('#gradeResult').val();
-        var itemFwd = [];
-        var inArr =['AAA+','AAA','AAA-','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB','B','CCC','CC','C','D'];
-        var TEMP_MAIN_GRADE_RESULT = JSON.parse(MODEL_STANDARD_GRADE_RESULT);
-        for ( var i in TEMP_MAIN_GRADE_RESULT) {
-            if (inArr.indexOf(TEMP_MAIN_GRADE_RESULT[i].text) >-1) {
-                itemFwd.push(TEMP_MAIN_GRADE_RESULT[i].id);
-            }
-        }
-        $('#gradeResult').updateChosenArr({
-            item : itemFwd,
-            disabled : false
-        });
-        $('#gradeResult').val(gr);
-    };
+    // function initGradeResult() {
+    //     var gr = $('#gradeResult').val();
+    //     var itemFwd = [];
+    //     var inArr =['AAA+','AAA','AAA-','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB','B','CCC','CC','C','D'];
+    //     var TEMP_MAIN_GRADE_RESULT = JSON.parse(MODEL_STANDARD_GRADE_RESULT);
+    //     for ( var i in TEMP_MAIN_GRADE_RESULT) {
+    //         if (inArr.indexOf(TEMP_MAIN_GRADE_RESULT[i].text) >-1) {
+    //             itemFwd.push(TEMP_MAIN_GRADE_RESULT[i].id);
+    //         }
+    //     }
+    //     $('#gradeResult').updateChosenArr({
+    //         item : itemFwd,
+    //         disabled : false
+    //     });
+    //     $('#gradeResult').val(gr);
+    // };
 
 
 

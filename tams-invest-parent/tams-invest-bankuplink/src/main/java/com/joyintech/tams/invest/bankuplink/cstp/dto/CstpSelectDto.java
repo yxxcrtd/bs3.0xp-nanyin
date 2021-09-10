@@ -113,7 +113,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getPortfolioId() {
         return portfolioId;
     }
-    
+
     /**
      * 设置 portfolioId
      * @param portfolioId portfolioId
@@ -121,7 +121,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
-    
+
     /**
      * 获取 portfolioName
      * @return portfolioName.
@@ -129,7 +129,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getPortfolioName() {
         return portfolioName;
     }
-    
+
     /**
      * 设置 portfolioName
      * @param portfolioName portfolioName
@@ -137,7 +137,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
-    
+
     /**
      * 获取 matchStatus
      * @return matchStatus.
@@ -145,7 +145,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getMatchStatus() {
         return matchStatus;
     }
-    
+
     /**
      * 设置 matchStatus
      * @param matchStatus matchStatus
@@ -153,7 +153,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setMatchStatus(String matchStatus) {
         this.matchStatus = matchStatus;
     }
-    
+
     /**
      * 获取 acctNo
      * @return acctNo.
@@ -161,7 +161,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getAcctNo() {
         return acctNo;
     }
-    
+
     /**
      * 设置 acctNo
      * @param acctNo acctNo
@@ -169,7 +169,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public void setAcctNo(String acctNo) {
         this.acctNo = acctNo;
     }
-    
+
     /**
      * 获取 settleDate
      * @return settleDate.
@@ -177,7 +177,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public Date getSettleDate() {
         return settleDate;
     }
-    
+
     /**
      * 设置 settleDate
      * @param settleDate settleDate
@@ -186,7 +186,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         this.settleDate = settleDate;
     }
     /**
-     * 
+     *
      * <一句话功能简述>
      * <功能详细描述>
      * @return
@@ -196,7 +196,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     public String getSettleDateStr(){
         return DateUtil.format(this.getSettleDate());
     }
-    
+
     /**
      * 获取 tradelimitdaysStr
      * @return tradelimitdaysStr.
@@ -225,8 +225,8 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
-    
+
+
     /**
      * 获取 AccruedinterestamtStr
      * @return AccruedinterestamtStr.
@@ -237,7 +237,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
+
     /**
      * 获取 getLastqty
      * @return getLastqty.
@@ -249,7 +249,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
+
     /**
      * 获取 getPrice
      * @return getPrice.
@@ -260,7 +260,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
+
     /**
      * 获取 getPrice
      * @return getPrice.
@@ -271,7 +271,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
+
     /**
      * 获取 TradecashamtStr
      * @return TradecashamtStr.
@@ -283,7 +283,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         }
         return "";
     }
-    
+
  // add by etliu 20210319 银行间上下行多组合 start
     /**
      * 结算金额
@@ -386,7 +386,11 @@ public class CstpSelectDto extends InterfCstpTrade{
     }
 
     public BigDecimal getPledgeRateStr() {
-        return pledgeRate.multiply(new BigDecimal("100"));
+        if(pledgeRate != null){
+            return pledgeRate.multiply(new BigDecimal("100"));
+        }else{
+            return new BigDecimal("0").multiply(new BigDecimal("100"));
+        }
     }
 
     public void setPledgeRate(BigDecimal pledgeRate) {
@@ -596,6 +600,31 @@ public class CstpSelectDto extends InterfCstpTrade{
 
     public void setrTradeId(String rTradeId) {
         this.rTradeId = rTradeId;
+    }
+    /**
+     * 金融产品代码
+     */
+    private String finprodId;
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
+    }
+
+    /**
+     *交易品种  债券代码
+     */
+    private String securityId;
+
+    public String getSecurityId() {
+        return securityId;
+    }
+
+    public void setSecurityId(String securityId) {
+        this.securityId = securityId;
     }
 
     //add by chenjiaxing 质押式回购改造 end

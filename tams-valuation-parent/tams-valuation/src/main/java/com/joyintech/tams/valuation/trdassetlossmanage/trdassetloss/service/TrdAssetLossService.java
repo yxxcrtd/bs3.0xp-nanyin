@@ -271,7 +271,6 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             if (StringUtil.isNotEmpty(rowData.get(1))) {
                 trdAssetLoss001Dto.setLossTestType(this.getCode(rowData.get(1).toString()));
                 if (StringUtil.equals(DictCodeListExt3.减值测算方式_外部评估.getValue(), this.getCode(rowData.get(1).toString()))) {
-                    trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值录入方式_按比例减值.getValue());
                     if (!StringUtil.isNotEmpty(rowData.get(7))) {
                         trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("减值测算方式为外部评估，减值比例不能为空!"));
                         trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);

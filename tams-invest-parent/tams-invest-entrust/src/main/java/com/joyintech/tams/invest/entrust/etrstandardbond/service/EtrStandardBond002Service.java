@@ -41,7 +41,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doInsert(EtrStandardBond002Dto entity, OperationType operationType) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doInsert",
+                    entity, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**
@@ -51,7 +57,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doUpdate(EtrStandardBond002Dto input) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doUpdate",
+                    input, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**
@@ -61,7 +73,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doDelete(String workflowId) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmpty(workflowId)) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doDelete",
+                    workflowId, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**

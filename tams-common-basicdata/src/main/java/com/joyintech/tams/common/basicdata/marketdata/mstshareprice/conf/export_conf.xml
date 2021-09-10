@@ -25,6 +25,8 @@
             <Cell order="21" name="复权收盘价">closePriceAdj</Cell>
             <Cell order="22" name="复权因子">factorAdj</Cell>
             <Cell order="23" name="交易状态">tradeStatusStr</Cell>
+            <Cell order="24" name="市盈率">pe</Cell>
+            <Cell order="25" name="市净率">pb</Cell>
         </Row>
     </Worksheet>
 </Workbook>

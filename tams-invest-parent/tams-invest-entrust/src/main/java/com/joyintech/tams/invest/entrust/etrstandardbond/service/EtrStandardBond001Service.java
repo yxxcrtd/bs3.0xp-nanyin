@@ -10,9 +10,11 @@
 package com.joyintech.tams.invest.entrust.etrstandardbond.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.entrust.etrstandardbond.dto.EtrStandardBond002Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,41 @@ public class EtrStandardBond001Service extends CommonExportService<EtrStandardBo
         
         return page;
     }
+
+    //add by chenjiaixng 添加质押券流程中校验 20210906 start
+    /**
+     * {@inheritDoc}
+     */
+    public List<EtrStandardBond001Dto> selectPageDataWfl(EtrStandardBond002Dto dto) {
+        Map<String, Object> selectParam = new HashMap<String, Object>();
+        List<String> portfolioId = new ArrayList<>();
+        List<String> finProdId = new ArrayList<>();
+        List<String> secAcctId = new ArrayList<>();
+        for(int i = 0 ; i < dto.getAvaPledgeBondList().size(); i++){
+            if(StringUtil.isNotEmpty(dto.getAvaPledgeBondList().get(i).getPortfolioId())){
+                portfolioId.add(dto.getAvaPledgeBondList().get(i).getPortfolioId());
+            }
+            if(StringUtil.isNotEmpty(dto.getAvaPledgeBondList().get(i).getFinProdId())){
+                finProdId.add(dto.getAvaPledgeBondList().get(i).getFinProdId());
+            }
+            if(StringUtil.isNotEmpty(dto.getAvaPledgeBondList().get(i).getSecAcctId())){
+                secAcctId.add(dto.getAvaPledgeBondList().get(i).getSecAcctId());
+            }
+        }
+        if(!StringUtil.isEmptyList(portfolioId)){
+            selectParam.put("portfolioId",portfolioId);
+        }
+        if(!StringUtil.isEmptyList(finProdId)){
+            selectParam.put("finProdId",finProdId);
+        }
+        if(!StringUtil.isEmptyList(secAcctId)){
+            selectParam.put("secAcctId",secAcctId);
+        }
+        List<EtrStandardBond001Dto> page = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectSearchDataWfl",
+                selectParam, EtrStandardBond001Dto.class);
+        return page;
+    }
+    //add by chenjiaixng 添加质押券流程中校验 20210906 end
     
     // 出库操作
     public Long outSave(EtrStandardBond001Dto dto) {

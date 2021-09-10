@@ -734,6 +734,7 @@
     <select id="selectByKey" resultMap="BaseResultMap">
         select
             ETR_ENTRUST.ENTRUST_ID             entrustId,
+            ETR_ENTRUST.PRICE               price,
             ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
             PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
             ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,
@@ -783,6 +784,7 @@
         union all 
         select
         ETR_ENTRUST.ENTRUST_ID             entrustId,
+        ETR_ENTRUST.PRICE               price,
         ETR_ENTRUST.PORTFOLIO_ID        portfolioId,
         PTL_PORTFOLIO.PORTFOLIO_NAME    portfolioName,
         ETR_ENTRUST_ADD.ASSET_TYPE1        assetType1,

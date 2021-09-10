@@ -1095,11 +1095,11 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
             cfetsBondDealDialogueQuote.setEntrustAvaNum(cfetsBondDealDialogueQuote.getAvaNum());
             cfetsBondDealDialogueQuote.setAvaNum(null);
             if(StringUtil.equals(cfetsBondDealDialogueQuoteDto.getPs(), BussinessDictCodeList.交易方向_买入.getValue())){
-                if(price.compareTo(cfetsBondDealDialogueQuote.getPrice())>0){
+                if(StringUtil.isNotEmpty(price)&&price.compareTo(cfetsBondDealDialogueQuote.getPrice())>0){
                     price=cfetsBondDealDialogueQuote.getPrice();
                 }
             }else{
-                if(price.compareTo(cfetsBondDealDialogueQuote.getPrice())<0){
+                if(StringUtil.isNotEmpty(price)&&price.compareTo(cfetsBondDealDialogueQuote.getPrice())<0){
                     price=cfetsBondDealDialogueQuote.getPrice();
                 }
             }

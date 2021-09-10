@@ -118,30 +118,27 @@ where
 				AND T.STR_DATE <![CDATA[<=]]> #{tradeDate}
 				AND T.END_DATE <![CDATA[>=]]> #{tradeDate}
 			</if>
-			<if test="inputType != null AND inputType !=''">
-				AND T.LOSS_INPUT_TYPE = #{inputType}
-			</if>
 		ORDER BY T.LOSS_INPUT_TYPE ASC
 	</select>
 
 	<insert id="insertModEclResult">
 		insert into MOD_ECL_RESULT (SEQNO, PROD_ID, PROD_NAME,
 		ASSET_ID, ASSET_NAME, ASSET_TYPE,
-		PORTFOLIO_ID, BUSS_NO, TRADE_DATE,
-		DEC_DATE, PRIN_OVERDUE_DAY, INT_OVERDUE_DAY,
-		PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE,
+		PORTFOLIO_ID, BUSS_NO, PS,
+		TRADE_DATE, DEC_DATE, PRIN_OVERDUE_DAY,
+		INT_OVERDUE_DAY, PURCHASE_TIME_GRADE, CURRENT_TIME_GRADE,
 		PRE_PROSPECTIVE_PD, PROSPECTIVE_PD, STAGE,
 		LGD, EAD, PRE_PROSPECTIVE_ECL,
-		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE
+		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE,
 		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME,ECL_RATIO)
+		UPDATE_USER, UPDATE_TIME, ECL_RATIO)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
 			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
 			#{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR}, #{item.assetType,jdbcType=VARCHAR},
-			#{item.portfolioId,jdbcType=VARCHAR}, #{item.bussNo,jdbcType=VARCHAR}, #{item.tradeDate,jdbcType=DATE},
-			#{item.decDate,jdbcType=DATE}, #{item.prinOverdueDay,jdbcType=DECIMAL}, #{item.intOverdueDay,jdbcType=DECIMAL},
-			#{item.purchaseTimeGrade,jdbcType=VARCHAR}, #{item.currentTimeGrade,jdbcType=VARCHAR},
+			#{item.portfolioId,jdbcType=VARCHAR}, #{item.bussNo,jdbcType=VARCHAR}, #{item.ps,jdbcType=VARCHAR},
+			#{item.tradeDate,jdbcType=DATE}, #{item.decDate,jdbcType=DATE}, #{item.prinOverdueDay,jdbcType=DECIMAL},
+			#{item.intOverdueDay,jdbcType=DECIMAL}, #{item.purchaseTimeGrade,jdbcType=VARCHAR}, #{item.currentTimeGrade,jdbcType=VARCHAR},
 			#{item.preProspectivePd,jdbcType=DECIMAL}, #{item.prospectivePd,jdbcType=DECIMAL}, #{item.stage,jdbcType=VARCHAR},
 			#{item.lgd,jdbcType=DECIMAL}, #{item.ead,jdbcType=DECIMAL}, #{item.preProspectiveEcl,jdbcType=DECIMAL},
 			#{item.prospectiveEcl,jdbcType=DECIMAL}, #{item.allowModelCover,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR},

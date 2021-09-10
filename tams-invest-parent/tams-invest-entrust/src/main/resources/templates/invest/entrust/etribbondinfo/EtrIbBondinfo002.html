@@ -17,6 +17,16 @@
 		        .layui-form-radio i{
 		            font-size: 14px;
 		        }
+                .label-deviation-degree{
+                    width: 50px;
+                    height: 24px;
+                    color: red;
+                    top: 0;
+                    right: 0;
+                    position: absolute;
+                    text-align: center;
+                    line-height: 24px;
+                }
 		    </style>
             <div class="joyin-form-wrap">
                 <form class="layui-form pro-module-form" id="searchForm">
@@ -207,9 +217,8 @@
                                     class="layui-input form-input text-number"
                                     data-th-value="${entity?.price}"
                                 />
-                                <span class="input-right-show">元</span>
+                                <label class="label-deviation-degree" id="deviationDegree"></label>
                             </div>
-                            <label id ="deviationDegree"></label>
                         </div>
                          <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                             <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.fpriceAmt}">全价</label>

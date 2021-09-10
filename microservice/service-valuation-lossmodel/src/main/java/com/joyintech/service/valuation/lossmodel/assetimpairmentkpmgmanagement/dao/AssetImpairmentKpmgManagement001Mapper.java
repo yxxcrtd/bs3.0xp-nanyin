@@ -69,7 +69,7 @@ public interface AssetImpairmentKpmgManagement001Mapper {
     List<SelectOptionDto> getFinprodIdByLossResult(Map<String, Object> param);
     List<SelectOptionDto> getProdIdByLossResult(Map<String, Object> param);
     List<SelectOptionDto> getBusiNumByLossResult(Map<String, Object> param);
-
+    String getFirstActionType(String workflowId);
 
 
 }

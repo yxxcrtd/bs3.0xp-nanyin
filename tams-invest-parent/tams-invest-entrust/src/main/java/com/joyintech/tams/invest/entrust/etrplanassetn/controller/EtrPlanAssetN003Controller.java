@@ -142,7 +142,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue()))
                     && dto.getAssetAvailablePosition() != null
-                    && dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0) {
+                    && (dto.getEntrustNum()==null || dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0)) {
                 if (StringUtil.isNotBlank(confirmMessage)) {
                     confirmMessage.append("<br />");
                 }

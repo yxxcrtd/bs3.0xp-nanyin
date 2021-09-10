@@ -107,8 +107,7 @@
                  close="from dual)">
             #{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
             #{item.portfolioId,jdbcType=VARCHAR}, #{item.assetId,jdbcType=VARCHAR}, #{item.assetName,jdbcType=VARCHAR},
-            #{item.marketId,jdbcType=VARCHAR}, #{item.type8,jdbcType=VARCHAR}, #{item.type9,jdbcType=VARCHAR},
-            #{item.type10,jdbcType=VARCHAR}, #{item.type11,jdbcType=VARCHAR}, #{item.type12,jdbcType=VARCHAR},
+            #{item.marketId,jdbcType=VARCHAR},
             #{item.modelAssetType,jdbcType=VARCHAR}, #{item.modelAssetDetailType,jdbcType=VARCHAR},
             #{item.mdate,jdbcType=DATE}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.financier,jdbcType=VARCHAR},
             #{item.gradeOrgId,jdbcType=VARCHAR}, #{item.issuer,jdbcType=VARCHAR}, #{item.actualCredit,jdbcType=VARCHAR},
@@ -128,6 +127,20 @@
             #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
             #{item.updateUser,jdbcType=VARCHAR}, #{item.isContainPledge,jdbcType=VARCHAR}, #{item.gradeOrgType,jdbcType=VARCHAR},
             #{item.invAim,jdbcType=VARCHAR}, #{item.eclRatio,jdbcType=DECIMAL}
+        </foreach>
+    </insert>
+
+    <!-- 减值参数表批量入库 -->
+    <insert id="insertModValBatchParamsBatch">
+        insert into MOD_VAL_BATCH_PARAMS (SEQNO, BATCH_EXEC_SEQNO, FINPROD_ID,
+        EXEC_DATE, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME
+        )
+        <foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
+                 close="from dual)">
+            #{item.seqno,jdbcType=VARCHAR}, #{item.batchExecSeqno,jdbcType=VARCHAR}, #{item.finprodId,jdbcType=VARCHAR},
+            #{item.execDate,jdbcType=TIMESTAMP}, #{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR},
+            #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}
         </foreach>
     </insert>
 </mapper>

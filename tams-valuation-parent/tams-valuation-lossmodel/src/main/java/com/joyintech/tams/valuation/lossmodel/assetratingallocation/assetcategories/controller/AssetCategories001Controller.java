@@ -195,11 +195,13 @@ public class AssetCategories001Controller extends BaseController {
         if(StringUtil.isNotEmpty(secType)){
             if(DictCodeListExt1.证券品种_债券.getValue().equals(secType)){
                 param.put("dict_code_child", DictCode.债券类型.getValue());
-            }else if(DictCodeListExt1.证券品种_存款.getValue().equals(secType)){
-                param.put("dict_code_child", DictCode.存款类资产类型_GZ.getValue());
-            }else if(DictCodeListExt1.证券品种_回购.getValue().equals(secType)){
-                param.put("dict_code_child", DictCode.回购标的类型.getValue());
-            }else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(secType)){
+            }
+//            else if(DictCodeListExt1.证券品种_存款.getValue().equals(secType)){
+//                param.put("dict_code_child", DictCode.存款类资产类型_GZ.getValue());
+//            }else if(DictCodeListExt1.证券品种_回购.getValue().equals(secType)){
+//                param.put("dict_code_child", DictCode.回购标的类型.getValue());
+//            }
+            else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(secType)){
                 param.put("dict_code_child", DictCode.计划类资产类型.getValue());
             }
             param.put("dict_code_parent", DictCode.证券品种.getValue());

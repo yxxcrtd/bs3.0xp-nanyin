@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.writer;
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.common.base.entity.ModConfigUseage;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
@@ -37,6 +38,7 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
         List<ImpairmentDataLoadStep1ResultDto> resultList = (List<ImpairmentDataLoadStep1ResultDto>) items;
         List<ModConfigUseage> listModConfigUseage = new ArrayList<ModConfigUseage>();
         List<ModEclResultProcess> listModEclResultProcess = new ArrayList<ModEclResultProcess>();
+        List<ModValBatchParams> listModValBatchParams = new ArrayList<ModValBatchParams>();
 
         if (resultList != null && resultList.size() > 0) {
             for (ImpairmentDataLoadStep1ResultDto dto : resultList) {
@@ -46,9 +48,13 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
                 if (dto.getModConfigUseage() != null && StringUtil.isNotEmpty(dto.getModConfigUseage().getSeqno())) {
                     listModConfigUseage.add(dto.getModConfigUseage());
                 }
+                if(dto.getModValBatchParams() != null && StringUtil.isNotEmpty(dto.getModValBatchParams().getSeqno())){
+                    listModValBatchParams.add(dto.getModValBatchParams());
+                }
             }
             insertModConfigUseage(listModConfigUseage);
             insertModEclResultProcess(listModEclResultProcess);
+
         }
     }
 
@@ -86,4 +92,20 @@ public class ImpairmentDataLoadWriter extends BaseWriter<ImpairmentDataLoadStep1
         }
     }
 
+    /**
+     * 插入结果集
+     * @param listModEclResultProcess
+     */
+    private void insertModValBatchParams(List<ModValBatchParams> listModValBatchParams) {
+        if (listModValBatchParams == null || listModValBatchParams.isEmpty()) {
+            return;
+        }
+        // 定义一个固定大小插入存放集合
+        List<List<ModValBatchParams>> list = DataHandleUtil.splitList(listModValBatchParams);
+        for (List<ModValBatchParams> listInsert : list) {
+            if (CollectionUtils.isNotEmpty(listInsert)) {
+                lossCommonMapper.insertModValBatchParamsBatch(listInsert);
+            }
+        }
+    }
 }

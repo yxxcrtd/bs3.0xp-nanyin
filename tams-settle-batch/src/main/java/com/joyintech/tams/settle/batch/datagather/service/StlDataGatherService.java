@@ -2,12 +2,15 @@ package com.joyintech.tams.settle.batch.datagather.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,8 +20,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
@@ -38,23 +39,6 @@ import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
-import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -317,6 +301,11 @@ public class StlDataGatherService {
 
         // 全量基金信息获取
         Map<String, FundInfoDto> fundInfoDtoMap = settleCommonService.getAllFundInfoDto();
+        //
+        Map<String, FinTradeProductDto> finTradeProductMap = new HashMap<>();
+        if (!StringUtil.isEmptyList(tradeProductList)) {
+        	finTradeProductMap = tradeProductList.stream().collect(Collectors.toMap(FinTradeProductDto::getFinprodId, item -> item));
+        }
 
         if(CollectionUtils.isNotEmpty(finProductDealTotalList)) {
         	Map<String, List<TrdDealTotalAdd>> totleAddMap = new HashMap<String, List<TrdDealTotalAdd>>();
@@ -382,6 +371,11 @@ public class StlDataGatherService {
                 		paTrdProductDeal.setBackLendDirection(DictCodeList.回购拆借方向_逆回购.getValue());
                 	}
                 	paTrdProductDealMapper.insert(paTrdProductDeal);
+					
+                    // add 处理现金流信息 20210825 start
+                    // 写入现金流相关信息表
+                    this.cashFlowLogic(productDealDto, finTradeProductMap.get(productDealDto.getTradeId()));
+                    // add end
                 }
                 // 成交数据与投管交易关系
                 if (StringUtil.isNotEmpty(productDealDto.getDealId())) {
@@ -452,6 +446,19 @@ public class StlDataGatherService {
                 finProductType.setType10("44");
                 finProductType.setType11("092");
                 finProductType.setType12("094");
+                // add bug: GNS-363 正回购清算生成交易后，组合实时资产头寸查询结果显示为逆回购 20210827 start
+                List<TrdProductDealDto> dealList = dealMap.get(tradeProductDto.getFinprodId());
+                if (!StringUtil.isEmptyList(dealList) && dealList.get(0) != null) {
+                	TrdProductDealDto trdProductDealDto = dealList.get(0);
+                	if (StringUtil.equals(trdProductDealDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())) {
+                		finProductType.setType7("03");
+                		finProductType.setType9("12");
+                		finProductType.setType10("45");
+                		finProductType.setType11("091");
+                        finProductType.setType12("093");
+                	}
+                }
+                // add end
                 finProductTypeMapper.insert(finProductType);
             }
         }
@@ -612,5 +619,340 @@ public class StlDataGatherService {
      */
     public EtrEntrustAdd selectEtrEntrustByEntrustId(String entrustId){
     	return etrEntrustAddMapper.selectByPrimaryKey(entrustId);
+    }
+	
+    /**
+     * 写入现金流相关信息表
+     *
+     * @param input 画面参数Dto
+     * @param finTradeProductDto 
+     * @see
+     * @since 1.0
+     */
+    private void cashFlowLogic(TrdProductDealDto input, FinTradeProductDto finTradeProductDto) {
+        // 分支序号
+        String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
+        Long branchLong = Long.parseLong(branch);
+
+        BaseFinProductCashInputDto inputDto = new BaseFinProductCashInputDto();
+
+        // List<现金流信息Entity>
+        List<FinCashInfo> finCashInfoList = new ArrayList<>();
+        // 现金流信息Entity-本金
+        FinCashInfo finCashInfoPrin = new FinCashInfo();
+        // 现金流代码 = 调用【各种业务共通组件.现金流代码生成】生成现金流代码。输入参数如下
+        // 业务代码 = 金融产品交易Entity.交易编号
+        // 业务类型 = 数据字典缓存.现金流业务类型.金融产品
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        // 现金流二级类型 = 数据字典缓存.现金流二级类型.本金
+        finCashInfoPrin.setCashId(this.generateCashFlowCode(input.getTradeId(),
+                DictCodeListExt1.现金流业务类型_金融产品.getValue(), branchLong,
+                DictCodeListExt1.现金流二级类型_本金.getValue()));
+        // 现金流一级类型 = 数据字典缓存.现金流一级类型.本金
+        finCashInfoPrin.setCashType1(DictCodeListExt1.现金流一级类型_本金.getValue());
+        // 现金流二级类型 = 数据字典缓存.现金流二级类型.本金
+        finCashInfoPrin.setCashType2(DictCodeListExt1.现金流二级类型_本金.getValue());
+        // 币种 = 画面.币种
+        finCashInfoPrin.setCcy(input.getCcy());
+        // 业务代码 = 金融产品交易Entity.交易编号
+        finCashInfoPrin.setFinprodId(input.getTradeId());
+        // 业务类型 = 数据字典缓存.现金流业务类型.金融产品
+        finCashInfoPrin.setFinprodType(DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        finCashInfoPrin.setBranch(branchLong);
+        // 工作流代码
+        finCashInfoPrin.setWorkflowId(input.getWorkflowId());
+        finCashInfoList.add(finCashInfoPrin);
+
+        // 现金流信息Entity-利息
+        FinCashInfo finCashInfoInt = new FinCashInfo();
+        // 现金流代码 = 调用【各种业务共通组件.现金流代码生成】生成现金流代码。输入参数如下
+        // 业务代码 = 金融产品交易Entity.交易编号
+        // 业务类型 = 数据字典缓存.现金流业务类型.金融产品
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        // 现金流二级类型 = 数据字典缓存.现金流二级类型.利息
+        finCashInfoInt.setCashId(this.generateCashFlowCode(input.getTradeId(),
+                DictCodeListExt1.现金流业务类型_金融产品.getValue(), branchLong,
+                DictCodeListExt1.现金流二级类型_利息.getValue()));
+        // 现金流一级类型 = 数据字典缓存.现金流一级类型.利息
+        finCashInfoInt.setCashType1(DictCodeListExt1.现金流一级类型_利息.getValue());
+        // 现金流二级类型 = 数据字典缓存.现金流二级类型.利息
+        finCashInfoInt.setCashType2(DictCodeListExt1.现金流二级类型_利息.getValue());
+        // 币种 = 画面.币种
+        finCashInfoInt.setCcy(input.getCcy());
+        // 业务代码 = 金融产品交易Entity.交易编号
+        finCashInfoInt.setFinprodId(input.getTradeId());
+        // 业务类型 = 数据字典缓存.现金流业务类型.金融产品
+        finCashInfoInt.setFinprodType(DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        finCashInfoInt.setBranch(branchLong);
+        // 工作流代码
+        finCashInfoInt.setWorkflowId(input.getWorkflowId());
+        finCashInfoList.add(finCashInfoInt);
+
+        inputDto.setFinCashInfoList(finCashInfoList);
+
+        // List<现金流支付规则表Entity>
+        List<FinCashPayRule> finCashPayRuleList = new ArrayList<>();
+
+        // 现金流支付规则表Entity-利息
+        FinCashPayRule finCashPayRule = new FinCashPayRule();
+        // 现金流代码 = 现金流信息Entity-利息.现金流代码
+        finCashPayRule.setCashId(finCashInfoInt.getCashId());
+        // 生效日期 = 画面.起息日
+        finCashPayRule.setEffDate(input.getVdate());
+        // 支付频率 = 数据字典缓存.支付频率(付息频率).到期支付
+        
+     // 一体化对应etliu start
+//        finCashPayRule.setPayCycle(DictCodeList.支付频率_付息频率_到期支付.getValue());
+        finCashPayRule.setPayCycle(DictCodeList.频率_到期一次.getValue());
+     // 一体化对应etliu end
+        
+     // 一体化对应etliu
+//        finCashPayRule.setCalcRule(DictCodeList.推算方法_起息日向后.getValue());
+        finCashPayRule.setCalcRule(DictCodeList.推算方式_起息日向后.getValue());
+        
+        // 首次支付日 = 画面.到期日
+        finCashPayRule.setFirstPayDate(input.getMdate());
+        // 现金流单位 = 数据字典缓存.现金流单位.总额
+        finCashPayRule.setCashUnitType(DictCodeList.现金流单位_总额.getValue());
+        // 金融产品代码 = 金融产品交易Entity.交易编号
+        finCashPayRule.setFinprodId(input.getTradeId());
+        // 金融产品类型（估值核算） = 调用各种业务共通组件.数据字典转换（目标数据代码）
+        finCashPayRule.setFinprodType(input.getFinprodType());
+        // 金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finCashPayRule.setFinprodType2(input.getFinprodType2());
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        finCashPayRule.setBranch(branchLong);
+        // 工作流代码
+        finCashPayRule.setWorkflowId(input.getWorkflowId());
+        finCashPayRuleList.add(finCashPayRule);
+
+        inputDto.setFinCashPayRuleList(finCashPayRuleList);
+
+        // List<现金流计算规则表Entity>
+        List<FinCashCalcRule> finCashCalcRuleList = new ArrayList<>();
+
+        // 现金流计算规则表Entity-利息
+        FinCashCalcRule finCashCalcRule = new FinCashCalcRule();
+        // 现金流代码 = 现金流信息Entity-利息.现金流代码
+        finCashCalcRule.setCashId(finCashInfoInt.getCashId());
+        // 生效日期 = 画面.起息日
+        finCashCalcRule.setEffDate(input.getVdate());
+        // 公布日期 = 画面.起息日
+     // 一体化对应etliu
+//        finCashCalcRule.setRelaeseDate(dto.getVdate()); // 公布日期
+        // 计算类型 = 数据字典缓存.利率类型.固定利率
+        finCashCalcRule.setCalcType(DictCodeList.利率类型_固定利率.getValue());
+        // 基数类型 = 数据字典缓存.基数类型.本金
+        finCashCalcRule.setBaseType(DictCodeList.基数类型_实收资本.getValue());
+        // 基数日期类型 = 数据字典缓存.基数日期类型.当日
+        finCashCalcRule.setBaseDateType(DictCodeList.基数日期类型_当日.getValue());
+        // 计算基础 = 画面.计息基础
+        finCashCalcRule.setBasis(finTradeProductDto.getBasis());
+        // 生效利率 = 画面.回购利率/100
+        finCashCalcRule.setYield(finTradeProductDto.getIntRate());
+        // 是否初始利率 = 数据字典缓存.是否.是
+        finCashCalcRule.setIsInitial(DictCodeList.是否_是.getValue());
+        // 金融产品代码 = 金融产品交易Entity.交易编号
+        finCashCalcRule.setFinprodId(input.getTradeId());
+        // 金融产品类型（估值核算） = 调用各种业务共通组件.数据字典转换（目标数据代码）
+        finCashCalcRule.setFinprodType(input.getFinprodType());
+        // 金融产品类型（投管分类） = 数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finCashCalcRule.setFinprodType2(input.getFinprodType2());
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        finCashCalcRule.setBranch(branchLong);
+        // 工作流代码
+        finCashCalcRule.setWorkflowId(input.getWorkflowId());
+        finCashCalcRuleList.add(finCashCalcRule);
+
+        inputDto.setFinCashCalcRuleList(finCashCalcRuleList);
+
+        // List<现金流利率信息表Entity>
+        List<FinRateInfo> finRateInfoList = new ArrayList<>();
+
+        // 现金流利率信息表Entity-利息
+        FinRateInfo finRateInfo = new FinRateInfo();
+        // 现金流代码 = 现金流信息Entity-利息.现金流代码
+        finRateInfo.setCashId(finCashInfoInt.getCashId());
+        // 生效日 = 画面.起息日
+        finRateInfo.setEffDate(input.getVdate());
+        // 利率类型 = 数据字典缓存.利率类型.固定利率
+        // 一体化对应etliu
+//        finRateInfo.setRateType(DictCodeList.利率类型_固定利率.getValue());
+        finRateInfo.setIntType(DictCodeList.利率类型_固定利率.getValue());
+        // 计算基础 = 画面.计息基础
+        finRateInfo.setBasis(finTradeProductDto.getBasis());
+        // 初始利率 = 画面.回购利率/100
+        finRateInfo.setRate(finCashCalcRule.getYield());
+        // 金融产品代码 = 金融产品交易Entity.交易编号
+        finRateInfo.setFinprodId(input.getTradeId());
+        // 分支序号 = 系统参数.分支序号固定值（和估值核算保持一致，0）
+        finRateInfo.setBranch(branchLong);
+        // 金融产品类型（估值核算） = 调用各种业务共通组件.数据字典转换（目标数据代码）
+        finRateInfo.setFinprodType(input.getFinprodType());
+        // 金融产品类型（投管分类） = 数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finRateInfo.setFinprodType2(input.getFinprodType2());
+        // 工作流代码
+        finRateInfo.setWorkflowId(input.getWorkflowId());
+        finRateInfoList.add(finRateInfo);
+
+        inputDto.setFinRateInfoList(finRateInfoList);
+
+        // List<现金流计划表Entity>
+        List<FinCashPlan> finCashPlanList = new ArrayList<>();
+
+        // 现金流计划表Entity 到期还本
+        FinCashPlan finCashPlan = new FinCashPlan();
+        // 现金流代码 = 现金流信息Entity-本金.现金流代码
+        finCashPlan.setCashId(finCashInfoPrin.getCashId());
+        // 现金流序号 = 1
+        finCashPlan.setCashNum(1L);
+        // 现金流类型 = 数据字典缓存.现金流类型.到期还本
+        finCashPlan.setCashType(DictCodeList.现金流类型_到期还本.getValue());
+        // 未调整的计算开始日 = 画面.起息日
+        finCashPlan.setVdateUnadjust(input.getVdate());
+        // 未调整的计算结束日 = 画面.到期日
+        finCashPlan.setMdateUnadjust(input.getMdate());
+        // 未调整的计划支付日 = 画面.到期日
+        finCashPlan.setPayDateUnadjust(input.getMdate());
+        // 调整后的计算开始日 = 画面.起息日
+        finCashPlan.setVdate(input.getVdate());
+        // 调整后的计算结束日 = 画面.到期日
+        finCashPlan.setMdate(input.getMdate());
+        // 调整后的计划支付日 = 画面.到期日
+        finCashPlan.setPayDate(input.getMdate());
+        // 计算周期天数 = 画面.到期日-画面.起息日
+        finCashPlan.setTermdays(DateUtil.getBetweenDayNumber(input.getVdate(), input.getMdate()));
+        // 计划支付本金 = 画面.本金金额
+        finCashPlan.setPrinAmt(input.getPrinAmt());
+        // 计息本金 = 画面.本金金额
+        finCashPlan.setIntPrinAmt(input.getPrinAmt());
+        // 计划支付利息 = 0
+        finCashPlan.setIntAmt(BigDecimal.ZERO);
+        // 是否支付利息 = 数据字典缓存.是否.是
+        finCashPlan.setIsPayInt(DictCodeList.是否_是.getValue());
+        // 计划支付现金流 = 画面.本金金额
+        finCashPlan.setCashAmt(input.getPrinAmt());
+        // 现金流单位 = 数据字典缓存.现金流单位.总额
+        finCashPlan.setCashUnitType(DictCodeList.现金流单位_总额.getValue());
+        // 金融产品代码 = 金融产品交易Entity.交易编号
+        finCashPlan.setFinprodId(input.getTradeId());
+        // 金融产品类型（估值核算） = 调用各种业务共通组件.数据字典转换（目标数据代码）
+        finCashPlan.setFinprodType(input.getFinprodType());
+        // 金融产品类型（投管分类）= 数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finCashPlan.setFinprodType2(input.getFinprodType2());
+        // 分支序号 = 固定值，系统参数
+        finCashPlan.setBranch(branchLong);
+        // 支付方式 = 数据字典缓存.分红方式.现金分红
+        finCashPlan.setPayType(DictCodeList.分红方式_现金分红.getValue());
+        // 工作流代码
+        finCashPlan.setWorkflowId(input.getWorkflowId());
+        finCashPlanList.add(finCashPlan);
+
+        // 现金流计划表Entity 到期付息
+        finCashPlan = new FinCashPlan();
+        // 现金流代码 = 现金流信息Entity-利息.现金流代码
+        finCashPlan.setCashId(finCashInfoInt.getCashId());
+        // 现金流序号 = 2
+        finCashPlan.setCashNum(2L);
+        // 现金流类型 = 数据字典缓存.现金流类型.到期付息
+        finCashPlan.setCashType(DictCodeList.现金流类型_到期收息.getValue());
+        // 未调整的计算开始日 = 画面.起息日
+        finCashPlan.setVdateUnadjust(input.getVdate());
+        // 未调整的计算开始日 = 画面.到期日
+        finCashPlan.setMdateUnadjust(input.getMdate());
+        // 未调整的计划支付日 = 画面.到期日
+        finCashPlan.setPayDateUnadjust(input.getMdate());
+        // 调整后的计算开始日 = 画面.起息日
+        finCashPlan.setVdate(input.getVdate());
+        // 调整后的计算结束日 = 画面.到期日
+        finCashPlan.setMdate(input.getMdate());
+        // 调整后的计划支付日 = 画面.到期日
+        finCashPlan.setPayDate(input.getMdate());
+        // 计算周期天数 = 画面.到期日-画面.起息日
+        finCashPlan.setTermdays(DateUtil.getBetweenDayNumber(input.getVdate(), input.getMdate()));
+        // 计划支付本金 = 0
+        finCashPlan.setPrinAmt(BigDecimal.ZERO);
+        // 计息本金 = 画面.本金金额
+        finCashPlan.setIntPrinAmt(input.getPrinAmt());
+        // 计划支付利息 = 回购利息 ※调用业务组件.【平安银行算法组件.投资交易回购利息】，拆借算法同回购一样，可参考回购利息算法
+        finCashPlan.setIntAmt(this.calc投资交易计算回购利息(input.getPrinAmt(),finTradeProductDto.getIntRate(),
+                input.getVdate(), input.getMdate(), finTradeProductDto.getBasis()));
+        // 是否支付利息 数据字典缓存.是否.是
+        finCashPlan.setIsPayInt(DictCodeList.是否_是.getValue());
+        // 计划支付现金流 = 回购利息
+        finCashPlan.setCashAmt(finCashPlan.getIntAmt());
+        // 现金流单位 = 数据字典缓存.现金流单位.总额
+        finCashPlan.setCashUnitType(DictCodeList.现金流单位_总额.getValue());
+        // 金融产品代码 = 金融产品交易Entity.交易编号
+        finCashPlan.setFinprodId(input.getTradeId());
+        // 金融产品类型（估值核算） = 调用各种业务共通组件.数据字典转换（目标数据代码）
+        finCashPlan.setFinprodType(input.getFinprodType());
+        // 金融产品类型（投管分类） = 数据字典缓存.金融产品类型（投管用）数据字典.债券质押式正回购/逆回购
+        finCashPlan.setFinprodType2(input.getFinprodType2());
+        // 分支序号 = 固定值，系统参数
+        finCashPlan.setBranch(branchLong);
+        // 支付方式 = 数据字典缓存.分红方式.现金分红
+        finCashPlan.setPayType(DictCodeList.分红方式_现金分红.getValue());
+        // 工作流代码
+        finCashPlan.setWorkflowId(input.getWorkflowId());
+        finCashPlanList.add(finCashPlan);
+
+        inputDto.setFinCashPlanList(finCashPlanList);
+
+        if (isSingle) {
+            simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
+                            + "/common/trdcommonbase/insertFinProductCashData",
+                    inputDto, Boolean.class);
+        } else {
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
+                            + "/common/trdcommonbase/insertFinProductCashData",
+                    inputDto, Boolean.class); }
+    }
+    
+    /**
+     * 现金流代码生成
+     *
+     * @param busiNo 业务代码
+     * @param busiType 业务类型
+     * @param branch 分支序号
+     * @param busiType2 现金流二级类型
+     * @return 现金流代码
+     */
+    public String generateCashFlowCode(String busiNo, String busiType, long branch, String busiType2) {
+        return CommonUtil.generateCashFlowCode(busiNo, busiType, branch, busiType2);
+    }
+    
+    /**
+     * 投资交易计算回购利息
+     * 回购利息=本金金额*回购利率*回购期限*计息基础
+     *
+     * @param 本金金额
+     * @param 回购利率
+     * @param 起息日
+     * @param 到期日
+     * @param 计息基础
+     * @return 回购利息
+     * @see
+     * @since 1.0
+     */
+    public BigDecimal calc投资交易计算回购利息(BigDecimal 本金金额, BigDecimal 回购利率, Date 起息日, Date 到期日,
+                                     String 计息基础) {
+        BigDecimal 回购利息 = null;
+
+        int num_计息基础 = 365;
+        if (StringUtil.equals(DictCodeList.计息基础_A_360.getValue(), 计息基础)) {
+            num_计息基础 = 360;
+        }
+
+        long 回购期限 = DateUtil.getBetweenDayNumber(起息日, 到期日);
+
+        // 回购利息=本金金额*回购利率*回购期限*计息基础
+        // 小数点保留2位
+        回购利息 = ArithmeticUtil.multiply(本金金额, 回购利率, BigDecimal.valueOf(回购期限));
+        回购利息 = ArithmeticUtil.divide(回购利息, BigDecimal.valueOf(num_计息基础), 2);
+
+        return 回购利息;
     }
 }

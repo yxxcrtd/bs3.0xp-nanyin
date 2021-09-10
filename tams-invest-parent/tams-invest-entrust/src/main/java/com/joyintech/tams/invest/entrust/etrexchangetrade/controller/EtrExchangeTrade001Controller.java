@@ -28,6 +28,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -1152,6 +1153,22 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		}
 		return null;
 	}
+
+	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
+    /**
+     * 1.6计算偏离度
+     *
+     * @param params 画面参数
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("calcDeviationDegree")
+    @ResponseBody
+    public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
+        return etrExchangeTrade001Service.calcDeviationDegree(params);
+    }
+    //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
     /***
      * 初始化行情

@@ -4,6 +4,7 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -100,6 +101,16 @@ public class ImpairmentDataLoadProcessorService {
             result.setModConfigUseage(modConfigUseage);
         }
 
+        //若跑批参数表数据为空，表示全资产跑批，手动插入参数表数据
+        if(params.get("listBatch") == null){
+            ModValBatchParams batchParams = new ModValBatchParams();
+            batchParams.setSeqno(IDGenerator.generate());
+            batchParams.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+            batchParams.setFinprodId(entity.getFinprodId());
+            batchParams.setExecDate(platDate);
+            result.setModValBatchParams(batchParams);
+        }
+
         return result;
     }
 
@@ -121,6 +132,8 @@ public class ImpairmentDataLoadProcessorService {
         BeanUtil.copyPropertiesIgnoreNull(modEclResultProcess, entity);
         //序列号
         modEclResultProcess.setSeqno(IDGenerator.generate());
+        // 交易日期 = readerEntity.交割日
+        modEclResultProcess.setTradeDate(entity.getSettleDate());
 //        //交易编号
 //        modEclResultProcess.setTradeId(entity.getTradeId());
         //资产代码

@@ -337,6 +337,16 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
      */
     public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+        param.put("TRM_FUND_TYPE_01", DictCodeListExt2.交易所基金类型_ETF.getValue());
+        param.put("TRM_FUND_TYPE_03", DictCodeListExt2.交易所基金类型_分级基金.getValue());
+        param.put("TRM_FUND_TYPE_04", DictCodeListExt2.交易所基金类型_封闭式基金.getValue());
+        param.put("TRM_FUND_TYPE_05", DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue());
+        param.put("GRA_FUND_TYPE_M", DictCodeListExt2.分级基金_母基金.getValue());
+        param.put("FUND_ASSET_TYPE_F02", DictCodeList.基金类资产类型_非货币基金.getValue());
+        param.put("PS_T01", DictCodeList.交易方向_买入.getValue());
+        param.put("PS_T02", DictCodeList.交易方向_卖出.getValue());
+        param.put("PS_T04", DictCodeList.交易方向_申购.getValue());
+        param.put("PS_T06", DictCodeList.交易方向_赎回.getValue());
 //        if (StringUtil.isNotEmpty(param)&&!StringUtil.isNotEmpty(param.get("tradeDateVdate"))){
 //            param.put("tradeDateVdate", platformDateImpl.getSysDateStr());
 //        }

@@ -178,7 +178,7 @@ public class LgdSpecialConfigController{
     }
 
 
-    @RequestMapping("getFinprodIdByLossType")
+    @PostMapping("getFinprodIdByLossType")
     @ResponseBody
     public List<SelectOptionDto> getFinprodIdByLossType(@RequestBody Map<String, Object> params) {
         //lossType   01 毕马威；02 普华永道

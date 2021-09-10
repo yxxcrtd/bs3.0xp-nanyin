@@ -77,6 +77,9 @@ public class ImpairmentDataLoadReaderStep2Service {
             ModConfigUseage modConfigUseage = new ModConfigUseage();
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, item);
+            modAssetInfoDto.setSecType(item.getModelAssetType());
+            modAssetInfoDto.setFinprodId(item.getAssetId());
+            modAssetInfoDto.setSecTypeDetail(item.getModelAssetDetailType());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -92,8 +95,17 @@ public class ImpairmentDataLoadReaderStep2Service {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,item.getTradeDate());
-            }else if(configMap.get(item.getAssetId()) != null){
-                ModAssetGradeConfig config = configMap.get(item.getAssetId());
+            }else if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null
+                    || configMap.get(item.getModelAssetType()) != null){
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null){
+                    config = configMap.get(item.getModelAssetType()+item.getModelAssetDetailType());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(item.getModelAssetType());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型
@@ -116,6 +128,7 @@ public class ImpairmentDataLoadReaderStep2Service {
                 item.setResultDeal(ratingInfoDto.getRating());
                 // 添加到返回结果List中
                 readerDto.setModEclResultProcess(item);
+                resultList.add(readerDto);
             }
             else{
                 // 警告：资产无对应评级信息

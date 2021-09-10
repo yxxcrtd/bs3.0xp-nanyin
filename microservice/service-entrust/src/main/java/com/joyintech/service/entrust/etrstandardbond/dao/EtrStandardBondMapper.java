@@ -36,6 +36,16 @@ public interface EtrStandardBondMapper {
      */
     List<EtrStandardBondSearchDto> selectSearchDataList(Map<String, Object> pageParam);
 
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 start
+    /**
+     * 标准券查询画面，查询标准券信息列表
+     *
+     * @param pageParam pageParam
+     * @return List<TrdStandardBondSearchDto>
+     */
+    List<EtrStandardBondSearchDto> selectSearchDataWfl(Map<String, Object> pageParam);
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 end
+
     /**
      * 质押券入库画面，查询可质押债券列表
      *

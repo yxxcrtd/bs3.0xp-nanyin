@@ -3,6 +3,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.serv
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCode;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
@@ -110,7 +111,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     msg = "【资产减值阶段判断批处理】：无当前时点的评级";
                     impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                         finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
-                } else if (StringUtil.isNotEmpty(resultProcess.getResultCurrent()) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
+                } else if (StringUtil.isNotEmpty(resultProcess.getResultCurrent()) && getPoorRating(itemValue, resultProcess.getResultCurrent()) <= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
                     rstDto.setModEclResultProcess(resultProcess);
@@ -126,6 +127,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             msg = "【资产减值阶段判断批处理】：三阶段评级标准判断异常";
             impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                 finprodId, msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
+            e.printStackTrace();
             return null;
         }
 
@@ -213,11 +215,11 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                         }
                     }
                 }
-
+                // 利息逾期天数
+                resultProcess.setIntOverdueDay(intOverdueDay);
                 if (intOverdueDay.compareTo(BigDecimal.valueOf(Long.valueOf(itemValue))) >= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
-                    resultProcess.setIntOverdueDay(intOverdueDay);
                     rstDto.setModEclResultProcess(resultProcess);
                     return rstDto;
                 }
@@ -262,7 +264,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             return null;
         }
 
-        // 第6步骤：key：二阶段_绝对_公司评级信息低于（含）P2_01_03
+        // 第6.1步骤：key：二阶段_绝对_公司评级信息低于（含）P2_01_03
         itemKey = "P2_01_03";
         try {
             itemValue = (String) param.get(itemKey);
@@ -271,7 +273,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 msg = "【资产减值阶段判断批处理】：未配置二阶段评级标准";
                 impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                     finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
-            } else if (StringUtil.isNotEmpty(itemValue) && getPoorRating(itemValue, resultProcess.getResultCurrent()) >= 0) {
+            } else if (StringUtil.isNotEmpty(itemValue) && getPoorRating(itemValue, resultProcess.getResultCurrent()) <= 0) {
                 finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                 resultProcess.setFinStage(finStage);
                 rstDto.setModEclResultProcess(resultProcess);
@@ -388,7 +390,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
     }
 
     /**
-     * 评级差(返回值 > 0 则，r1评级高；=0则评级相同，<0，则r2评级高)
+     * 评级差(返回值 > 0 则，r2评级高；=0则评级相同，<0，则r1评级高)
      * @param r1
      * @param r2
      * @return
@@ -399,7 +401,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         }
         int ra = Integer.valueOf(r1.replaceAll("^(0+)", ""));
         int rs = Integer.valueOf(r2.replaceAll("^(0+)", ""));
-        return rs - ra;
+        return ra - rs;
     }
 
     // 组装日志上下文信息

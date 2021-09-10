@@ -3,6 +3,8 @@ package com.joyintech.service.entrust.etrstandardbond.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.dao.WflEtrEntrustPledgeMapper;
+import com.joyintech.tams.common.base.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +21,6 @@ import com.joyintech.service.entrust.etrstandardbond.dto.EtrStandardBondSearchDt
 import com.joyintech.tams.common.base.dao.EtrEntrustPledgeMapper;
 import com.joyintech.tams.common.base.dao.EtrSecPriorityDetailMapper;
 import com.joyintech.tams.common.base.dao.EtrSecPriorityMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledge;
-import com.joyintech.tams.common.base.entity.EtrEntrustPledgeKey;
-import com.joyintech.tams.common.base.entity.EtrSecPriorityDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
@@ -38,6 +37,9 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
 
     @Autowired
     private EtrEntrustPledgeMapper etrEntrustPledgeMapper;
+
+    @Autowired
+    private WflEtrEntrustPledgeMapper wflEtrEntrustPledgeMapper;
 
     @Autowired
     private EtrSecPriorityMapper etrSecPriorityMapper;
@@ -65,6 +67,22 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
         return pageResult;
     }
 
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 start
+    /**
+     * 质押券查询画面，查询标准券信息列表
+     *
+     * @param pageParam  参数
+     * @return Page<TrdStandardBondDto>
+     * @throws Exception 异常
+     * @see
+     * @since 1.0selectForPage
+     */
+    public List<EtrStandardBondSearchDto> selectSearchDataWfl(Map<String, Object> pageParam)
+            throws Exception {
+        List<EtrStandardBondSearchDto> result = etrStandardBondMapper.selectSearchDataWfl(pageParam);
+        return result;
+    }
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 end
     /**
      * 检索参数设置：
      * 标准券查询画面，查询标准券信息列表
@@ -158,6 +176,9 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
                 saveCount += etrEntrustPledgeMapper.insert(etrEntrustPledge);
             }
         }
+        /*add by chenjiaxing 20210906 入库完成之后删除流程表中数据 start*/
+        wflEtrEntrustPledgeMapper.deleteByWorkflowId(dto.getWorkflowId());
+        /*add by chenjiaxing 20210906 入库完成之后删除流程表中数据 end*/
         return saveCount;
     }
 
@@ -254,5 +275,89 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      */
     public Long selectUserRolePosList(Map<String, Object> param){
         return etrStandardBondMapper.selectUserRolePosList(param) ;
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return saveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public Long doInsert(EtrStandardBondInDto dto) throws Exception {
+        Long saveCount = 0L;
+        if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
+            for (EtrStandardBondInDto temp : dto.getPledgeBondList()) {
+                WflEtrEntrustPledge etrEntrustPledge = new WflEtrEntrustPledge();
+                etrEntrustPledge.setPortfolioId(temp.getPortfolioId());
+                etrEntrustPledge.setFinprodId(temp.getFinProdId());
+                etrEntrustPledge.setBranch(temp.getBranch());
+                etrEntrustPledge.setSecAcctId(temp.getSecAcctId());
+                etrEntrustPledge.setScale(temp.getScale());
+                etrEntrustPledge.setPledgeStockId("999999");
+                etrEntrustPledge.setWorkflowId(dto.getWorkflowId());
+                WflEtrEntrustPledgeKey etrEntrustPledgeKey = new WflEtrEntrustPledge();
+                etrEntrustPledgeKey.setPortfolioId(temp.getPortfolioId());
+                etrEntrustPledgeKey.setFinprodId(temp.getFinProdId());
+                etrEntrustPledgeKey.setBranch(temp.getBranch());
+                etrEntrustPledgeKey.setSecAcctId(temp.getSecAcctId());
+
+                // 若存在数据，则删除后，在插入。
+                WflEtrEntrustPledge count = wflEtrEntrustPledgeMapper.selectByPrimaryKey(etrEntrustPledgeKey) ;
+                if(count != null){
+                    wflEtrEntrustPledgeMapper.deleteByPrimaryKey(etrEntrustPledgeKey) ;
+                }
+                saveCount += wflEtrEntrustPledgeMapper.insert(etrEntrustPledge);
+            }
+        }
+        return saveCount;
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return saveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public Long doUpdate(EtrStandardBondInDto dto) throws Exception {
+        Long saveCount = 0L;
+        if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
+            for (EtrStandardBondInDto temp : dto.getPledgeBondList()) {
+                WflEtrEntrustPledge etrEntrustPledge = new WflEtrEntrustPledge();
+                etrEntrustPledge.setPortfolioId(temp.getPortfolioId());
+                etrEntrustPledge.setFinprodId(temp.getFinProdId());
+                etrEntrustPledge.setBranch(temp.getBranch());
+                etrEntrustPledge.setSecAcctId(temp.getSecAcctId());
+                etrEntrustPledge.setScale(temp.getScale());
+                etrEntrustPledge.setPledgeStockId("999999");
+                etrEntrustPledge.setWorkflowId(dto.getWorkflowId());
+                WflEtrEntrustPledgeKey etrEntrustPledgeKey = new WflEtrEntrustPledge();
+                etrEntrustPledgeKey.setPortfolioId(temp.getPortfolioId());
+                etrEntrustPledgeKey.setFinprodId(temp.getFinProdId());
+                etrEntrustPledgeKey.setBranch(temp.getBranch());
+                etrEntrustPledgeKey.setSecAcctId(temp.getSecAcctId());
+                saveCount += wflEtrEntrustPledgeMapper.updateByPrimaryKey(etrEntrustPledge);
+            }
+        }
+        return saveCount;
+    }
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return saveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    public Long doDelete(String workflowId) throws Exception {
+        Long saveCount = 0L;
+        saveCount += wflEtrEntrustPledgeMapper.deleteByWorkflowId(workflowId);
+        return saveCount;
     }
 }

@@ -109,6 +109,9 @@ public class EtrFund003Controller extends BaseController {
         model.addAttribute("T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("T52", DictCodeListExt2.交易方向_认购.getValue());
+        // ZGZGST-2255:T65没有赋值,导致风险试算无结果 fuyongsheng 2021090408 add atart
+        model.addAttribute("T65", DictCodeListExt2.交易方向_转换申请.getValue());
+        // ZGZGST-2255:T65没有赋值,导致风险试算无结果 fuyongsheng 2021090408 add end
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");

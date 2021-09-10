@@ -57,9 +57,14 @@ public class FinOptionTargetValidator implements BeanValidator {
 
             }else {
                 if (StringUtil.isNotEmpty(dto.getTargetName())) {
-                    FinOptionTargetDto tmp = prodService.getFinprodcodebyName(dto.getTargetName());
+                    FinOptionTargetDto tmp = prodService.getFinprodcodebyId(dto.getTargetId());
                     if (tmp != null) {
-                        resultList.add(new ValidMessage("该期权标的已存在！"));
+                        resultList.add(new ValidMessage("存在重复ID得期权标的！"));
+                    }else if (StringUtil.isNotEmpty(dto.getTargetId())){
+                        tmp = prodService.getFinprodcodebyName(dto.getTargetName());
+                        if (tmp != null) {
+                            resultList.add(new ValidMessage("存在重复名称得期权标的！"));
+                        }
                     }
                 }
             }

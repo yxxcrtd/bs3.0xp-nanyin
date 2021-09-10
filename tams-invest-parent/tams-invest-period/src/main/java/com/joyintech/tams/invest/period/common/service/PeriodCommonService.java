@@ -825,7 +825,7 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto.setShareAmt(inputDto.getTrdFinProductDealTotal().getShareAmt());
                     creditLinesInputDto.setFinprodType2(inputDto.getTrdFinProductDealTotal().getFinprodType2());
                     // 券面总额
-                    creditLinesInputDto.setTradeAmt(inputDto.getfPriceAmt());
+                    creditLinesInputDto.setTradeAmt(inputDto.getQty());
                     creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                 }
             }

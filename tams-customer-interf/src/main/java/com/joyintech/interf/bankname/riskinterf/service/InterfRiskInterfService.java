@@ -265,6 +265,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 secdto.setPriceAmt(new BigDecimal("100"));
                 secdto.setPs(BussinessDictCodeList.交易方向_卖出.getValue());
                 secdto.setEventId(secdto.getEventId()+secdto.getPs());
+
+                // add by etliu 20210907 start
+                // 债转股两笔的预占编号是 指令编号 + 交易方向
+                secdto.setPreOccupyCode(secdto.getEntrustCode() + BussinessDictCodeList.交易方向_卖出.getValue());
+                // add by etliu 20210907 end
+
                 requestList.add(secdto);
                //股票买入
                 if(entity.get("conShareId")!=null) {
@@ -281,6 +287,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     stockdto.setAssetType(BussinessDictCodeList.平安资产类型_股票.getValue());
                     stockdto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
                     stockdto.setEventId(stockdto.getEventId()+stockdto.getPs());
+
+                    // add by etliu 20210907 start
+                    // 债转股两笔的预占编号是 指令编号 + 交易方向
+                    stockdto.setPreOccupyCode(secdto.getEntrustCode() + BussinessDictCodeList.交易方向_买入.getValue());
+                    // add by etliu 20210907 end
+
                     requestList.add(stockdto);
                 }
             }else if (StringUtil.equals(CommonUtil.findValue(entity,"ps"),DictCodeList.交易方向_到期续做.getValue())){

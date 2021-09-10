@@ -361,13 +361,10 @@
                                 <label class="layui-form-label form-label"
                                        th:text="#{cfetsRepoDealQuotedPr001.zlg1.assetId}">资产代码</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select type="text" name="assetId_cjcx" id="assetId_cjcx"
-                                            class="layui-input form-input input-select" placeholder="请输入内容"
-                                            data-th-placeholder="#{SysCommon.placeholder}"
-                                            data-th-data-url="@{/invest/asset/common/getAssetId(finprodType2='F01')}"
-                                            data-idfield="code" data-keyfield="code"
-                                            data-th-data-effectivefieldsalias='|{"shortName":"#{cfetsRepoDealQuotedPr001.zlg1.assetAbbr}","code":"#{cfetsRepoDealQuotedPr001.zlg1.assetId}"}|'>
-                                    </select>
+                                    <input type="text" id="assetId_cjcx"  name="assetId_cjcx" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                                           data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-url="@{/invest/asset/common/getAssetId(finprodType2=${FINPROD_TYPE_TG_F01})}"
+                                           data-idfield="code" data-keyfield="code"
+                                           data-th-data-effectivefieldsalias='|{"shortName":"#{FinBondTargetAsset002.finprodAbbr}","code":"#{FinBondTargetAsset002.finprodId}"}|'>
                                 </div>
                             </div>
                             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">

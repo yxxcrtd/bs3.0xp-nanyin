@@ -8,6 +8,7 @@
     var entrustIdRepoNew = null;
     var riskResultdata;
     var cluflag;
+
     /**
      * 组合分配
      */
@@ -568,6 +569,7 @@
             window.CfetsRepoDealQuotedPrMain.errorShow("请选择多条指令执行的数据！");
             return;
         } else {
+            entrustIdRepoNew = entrustId;
             setEntrust(data);
             /*初始化组合分配信息*/
             Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr003/selectQuoteCrepPledgeForDzh', {entrustId: entrustId}, function (result) {
@@ -599,9 +601,9 @@
      */
     var setEntrust = function (param) {
         if (param) {
-            if (param[0].entrustId) {
+/*            if (param[0].entrustId) {
                 entrustIdRepoNew = param[0].entrustId;//委托代码
-            }
+            }*/
             if (param[0].portfolioSeries) {
                 $("#CfetsRepoDealQuotedPrice002_portfolioSeries").textSelect('setValue', param[0].portfolioSeries);//委托代码
             }
@@ -674,6 +676,9 @@
         if (pageModel == PAGE_MODEL_NEW && quotaPageModel === "new" && $('#CfetsRepoDealQuotedPrice002_term').val() == "0") {
             $('#CfetsRepoDealQuotedPrice002_term').val("");
         }
+        if(pageModel != PAGE_MODEL_NEW){
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
         $("#CfetsBondDealQuotedPrice002_dialogueRecord").hide();
         if (quotaPageModel == "edit") {
             $("#dialogueRecord_div").show();
@@ -720,7 +725,9 @@
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',true);
+                $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
             }else if(ps == '04'){
+                $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',false);
@@ -788,6 +795,12 @@
          */
         $('#CfetsRepoDealQuotedPrice002_dealAmt').change(function () {
             calculateMamt();
+            //add by chenjiaxing 202109008 输入交易金额后，按照分配模式进行交易金额拆分到组合 start
+            var distribution = $('#distribution').val();
+            if(distribution != ""){
+                $('#CfetsRepoDealQuotedPrice003_btn_cal').click();
+            }
+            //add by chenjiaxing 202109008 输入交易金额后，按照分配模式进行交易金额拆分到组合 end
         });
 
         /**
@@ -858,6 +871,12 @@
          */
         $('#CfetsRepoDealQuotedPrice003_btn_submit').click(function () {
             submitAction();
+        });
+        /**
+         * 重置按钮按下处理
+         */
+        $('#cfetsRepoDealQuotedPr002_chongzhi').click(function(){
+            document.location.reload();
         });
         /**
          * 取消按钮按下处理
@@ -1048,16 +1067,7 @@
         object.operation = "CfetsRepoDealQuotedPrice001.save"
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
-            if (result.data) {
-                Joyin.confirm(result.data, function () {
-                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_save", null, function (result) {
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Save(object);
     };
     /**
      * 提交
@@ -1072,16 +1082,7 @@
         handlepledgeBondList(object);
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
-            if (result.data) {
-                Joyin.confirm(result.data, function () {
-                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_submit", null, function (result) {
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Sumbit(object);
     };
 
     /**

@@ -77,6 +77,8 @@ public class TrdAssetLoss001Controller extends BaseController {
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.减值阶段);
+        this.setSelectOptionToModel(model, DictCode.减值数据来源);
+        this.setSelectOptionToModel(model, DictCode.证券品种);
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return super.init(model);
     }

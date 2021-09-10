@@ -502,8 +502,7 @@ public class EadCalCulationBatchProcessorService {
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<ModCashFlowDto> intSchList = new ArrayList<ModCashFlowDto>();
         for (ModCashFlowDto item : entity.getCashFlowList()) {
-            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())
-                    && item.getVdateUnadjust() != null) {
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())) {
                 SecIntSchedule schedule = new SecIntSchedule();
                 schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
                 schedule.setTheoryCutoffDate(toLocalDate(item.getMdateUnadjust()));
@@ -579,33 +578,33 @@ public class EadCalCulationBatchProcessorService {
 
     public static boolean isNotFomartSec(List<ModCashFlowDto> secIntScheduleList, ModCashFlowPayRulesDto modCashFlowPayRule) {
         // 根据【实际起始日】排序付息计划
-        Collections.sort(secIntScheduleList, (o1, o2) -> o1.getVdateUnadjust().compareTo(o2.getVdateUnadjust()));
+        Collections.sort(secIntScheduleList, (o1, o2) -> o1.getVdate().compareTo(o2.getVdate()));
 
         if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 1);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 1);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else if (StringUtil.equals(DictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 3);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 3);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else if (StringUtil.equals(DictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 6);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 6);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addYear(she.getVdateUnadjust(), 1);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addYear(she.getVdate(), 1);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }

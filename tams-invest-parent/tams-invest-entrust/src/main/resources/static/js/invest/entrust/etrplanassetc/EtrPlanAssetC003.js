@@ -156,9 +156,9 @@
 											function() {
 												if (operateType === 'submit') {
                                                     // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit start
-													WorkFlow.doSaveList(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/save',allDto,"EtrPlanAssetC002_btn_save");
+													WorkFlow.doSubmitList(basePath+ 'invest/entrust/etrplanassetc/EtrPlanAssetC003/save',allDto,"EtrPlanAssetC002_btn_submit", "EtrPlanAssetC002");
                                                 }else {
-                                                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetC003/save', allDto, "EtrPlanAssetC002_btn_submit", "EtrPlanAssetR002");
+                                                    WorkFlow.doSaveList(basePath + 'invest/entrust/etrplanassetr/EtrPlanAssetC003/save', allDto, "EtrPlanAssetC002_btn_save");
                                                     // ZGZGST-1938: 合并投资交易代码 fuyongsheng 20210902 edit end
 												}
 											});

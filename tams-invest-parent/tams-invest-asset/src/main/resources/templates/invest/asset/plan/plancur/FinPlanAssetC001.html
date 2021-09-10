@@ -172,34 +172,33 @@
                                        data-th-placeholder="#{SysCommon.placeholder}">
                             </div>
                         </div>
-                        <!-- add by  2019/9/29 张普裕 查询条件新增发行人 ，托断人   start-->
-                        <div class=" form-inline-wrap">
+						<div class=" form-inline-wrap">
 							<label class="layui-form-label form-label-wrap"
-								   data-th-text="#{FinPlanAssetC002.trusteeId}">托管人</label>
+								   data-th-text="#{FinPlanAssetC002.issuer}">发行人</label>
 							<div class="layui-input-inline input-inline">
-								 <select type="text" id="trusteeId" name="trusteeId"
-									    class="layui-input form-input input-select"
-										data-th-data-url="@{/invest/asset/plan/plancur/FinPlanAssetC002/getTrusteeId}"
+								<select type="text" id="issuer" name="issuer"
+										class="layui-input form-input input-select"
+										data-th-data-url="@{/invest/asset/plan/plancur/FinPlanAssetC002/getIssuerId}"
 										formatoption="true" allowClear="true" placeholder="请输入内容"
 										data-th-placeholder="#{SysCommon.placeholder}">
-								 </select>
+								</select>
 							</div>
-					   </div>
-                    </div>
-                    <div class="layui-form-item">
-                    <div class=" form-inline-wrap">
-						<label class="layui-form-label form-label-wrap"
-							data-th-text="#{FinPlanAssetC002.issuer}">发行人</label>
-						 <div class="layui-input-inline input-inline">
-						<select type="text" id="issuer" name="issuer"
-								class="layui-input form-input input-select"
-								data-th-data-url="@{/invest/asset/plan/plancur/FinPlanAssetC002/getIssuerId}"
-								formatoption="true" allowClear="true" placeholder="请输入内容"
-								data-th-placeholder="#{SysCommon.placeholder}">
-						</select>
 						</div>
-					</div>
                     </div>
+<!--                    <div class="layui-form-item">-->
+<!--                    <div class=" form-inline-wrap">-->
+<!--						<label class="layui-form-label form-label-wrap"-->
+<!--							data-th-text="#{FinPlanAssetC002.issuer}">发行人</label>-->
+<!--						 <div class="layui-input-inline input-inline">-->
+<!--						<select type="text" id="issuer" name="issuer"-->
+<!--								class="layui-input form-input input-select"-->
+<!--								data-th-data-url="@{/invest/asset/plan/plancur/FinPlanAssetC002/getIssuerId}"-->
+<!--								formatoption="true" allowClear="true" placeholder="请输入内容"-->
+<!--								data-th-placeholder="#{SysCommon.placeholder}">-->
+<!--						</select>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--                    </div>-->
                     <!-- add by  2019/9/29 张普裕 查询条件新增发行人 ，托断人   end-->
 				</form>
 			</div>

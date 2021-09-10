@@ -37,8 +37,8 @@
         if(!object.finprodId){
             object.finprodId = $("#CfetsBondDealQuotedPriceMuti002_hidden_finprodId").val();
         }
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         var orgList = table.getAllRows();
         if(orgList != null && orgList.length>0){
@@ -85,8 +85,8 @@
         object.isDzh = 'Y';
         object.operatorType = 'submit';
         object.pageId = "CfetsBondDealQuotedPriceMuti002";
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/check', object, function(result) {
             if (result.data){
@@ -161,8 +161,8 @@
         object.operatorType = "done";
         object.isDzh = 'Y';
         object.pageId = "CfetsBondDealQuotedPriceMuti002";
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/clinchDealCheck', object, function(result) {
             if (result.data){
@@ -238,16 +238,16 @@
         //组合分配列表
         if (entrustList.length>0){
             $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
-            $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', true);
+            $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
             $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         }
         else{
-            $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', false);
+            $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', false);
             $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', false);
-            $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', false);
+            $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', false);
             $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', false);
         }
     }
@@ -263,9 +263,9 @@
         }
         // 初始化页面
         $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);
-        $('#CfetsBondDealQuotedPriceMuti002_portfolioName').attr('disabled', true);
+        $('#CfetsBondDealQuotedPriceMuti002_portfolioId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_ps').attr('disabled', true);
-        $('#CfetsBondDealQuotedPriceMuti002_finprodName').attr('disabled', true);
+        $('#CfetsBondDealQuotedPriceMuti002_finprodId').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_settleSpreed').attr('disabled', true);
         $('#CfetsBondDealQuotedPriceMuti002_mySide').attr('disabled', true);
         // 判断本方交易员是否可改
@@ -522,6 +522,9 @@
     var getriskdata = function () {
         let dataList = [];
         let portfolioIdList = $.serializeToObject('#submitForm').cfetsBondDealRequestQuoteDtoList;
+        if (!portfolioIdList) {
+            portfolioIdList = $.serializeToObject('#submitForm').cfetsBondDealDialogueQuoteDtoList;
+        }
         if (portfolioIdList.length > 0) {
             for (var index in portfolioIdList) {
                 let item = portfolioIdList[index];
@@ -584,6 +587,23 @@
     }
 
     var reset = function () {
+        $("#CfetsBondDealQuotedPriceMuti002_hidden_entrustId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_portfolioSeries").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_finprodId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_ps").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleType").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_tradeDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_settleMethod").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_avaNum").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_mySide").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_mySideTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceMuti002_remark").val("").trigger("change");
+        window.CfetsQuotedCommon001.clearTable();
+        table.clear();
+        layui.form.render(); // reload layui
+        pageModel = PAGE_MODEL_NEW;
     };
 
     function saveRiskResultdata(paraRiskResultdata) {

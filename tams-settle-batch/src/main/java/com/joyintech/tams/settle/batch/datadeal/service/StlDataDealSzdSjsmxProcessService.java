@@ -296,7 +296,7 @@ public class StlDataDealSzdSjsmxProcessService {
             // 交收方式
             settleTransData.setSettleMode(stlDataDealProcessCommonService.getSettleMode(szdSjsmx.getMxjsfs()));
             // 成交编号
-            settleTransData.setTradeId(szdSjsmx.getMxywlsh());
+            settleTransData.setTradeId(szdSjsmx.getMxzxbh());// modify 成交编号变更 20210825
 			// 执行日期
 			settleTransData.setDealDate(stlDownDataDealOperatorDto.getDealDate());
 			// 证券品种

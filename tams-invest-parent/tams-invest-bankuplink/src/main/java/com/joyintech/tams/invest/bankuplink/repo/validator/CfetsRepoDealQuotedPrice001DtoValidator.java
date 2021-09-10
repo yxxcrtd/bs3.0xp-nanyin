@@ -176,7 +176,7 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                 //委托基本信息判断
                 for(PtlAllocationDto ptlAllocationDto : newestPtlAllocations){
                     委托基本信息(validList,ptlAllocationDto.getEntrustStatus(),ptlAllocationDto.getVdate(),ptlAllocationDto.getMdate());
-                    委托完成度(validList,dto.getEntrustId(),dto.getQuoteId());
+                    委托完成度(validList,ptlAllocationDto.getEntrustId(),dto.getQuoteId());
                     if(null!=validList&&validList.size()>0){return validList;}
                 }
                 if (StringUtil.equals("01",CacheUtil.getSysParam("ibuFlag_repoOverEntrustAvaAmt"))) {
@@ -310,6 +310,10 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
             }
         }
 
+        //add by chenjiaxing 相关校验用到重新赋值 20210908 start
+        cfetsRepoDealQuotedPrice001Dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(
+                dto.getEntrustId(), null);
+        //add by chenjiaixng 相关校验用到重新赋值 20210908 end
         // 6) 交易方向为正回购，需校验交易金额需小于等于折后金额，若不满足，提示：“交易金额需小于等于折后金额；”
         if (StringUtil.equals(ps, BussinessDictCodeList.回购拆借方向_正回购.getValue())) {
             if (dto.getDealAmt() != null && dto.getShareCtAmt() != null

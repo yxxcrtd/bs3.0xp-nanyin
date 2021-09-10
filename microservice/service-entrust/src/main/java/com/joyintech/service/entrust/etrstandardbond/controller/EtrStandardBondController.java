@@ -50,6 +50,25 @@ public class EtrStandardBondController {
         return etrStandardBondService.selectSearchDataList(page, length, param);
     }
 
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 start
+    /**
+     * 质押券管理查询画面，查询质押券信息列表
+     * 质押券入库画面，查询可质押债券列表
+     *
+     * @param page   page
+     * @param length length
+     * @param param  参数
+     * @return Page<TrdStandardBondDto>
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("selectSearchDataWfl")
+    public List<EtrStandardBondSearchDto> selectSearchDataWfl(@RequestBody Map<String, Object> param)
+            throws Exception {
+        return etrStandardBondService.selectSearchDataWfl(param);
+    }
+    //add by chenjiaxing 质押券入库校验流程中数据 20210906 end
     /**
      * 质押券入库画面，查询可质押债券列表
      *
@@ -165,5 +184,52 @@ public class EtrStandardBondController {
     @RequestMapping("selectUserRolePosList")
     public Long selectUserRolePosList(@RequestBody Map<String, Object> param){
         return etrStandardBondService.selectUserRolePosList(param) ;
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return inSaveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("doInsert")
+    public Long doInsert(@RequestBody EtrStandardBondInDto dto) throws Exception {
+        return etrStandardBondService.doInsert(dto);
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @param dto 参数
+     * @return inSaveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("doUpdate")
+    public Long doUpdate(@RequestBody EtrStandardBondInDto dto) throws Exception {
+        return etrStandardBondService.doUpdate(dto);
+    }
+
+    /**
+     * 质押券入库画面，保存处理
+     *
+     * @return inSaveCount
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @RequestMapping("doDelete")
+    public Long doDelete(@RequestBody String workflowId) throws Exception {
+        return null;
     }
 }

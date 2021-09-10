@@ -106,7 +106,7 @@ $(function() {
             ,{field:'mdate', title: 'FinPlanNetAsset001.mDate',type:'date',width:150}
             ,{field:'manager',title: 'FinPlanNetAsset002.manager',width:150}
             // add by 张普裕  2019/9/27  增加托管人、实际管理人、发行人字段 资产推荐方 start
-            ,{field:'trusteeId',title: 'FinPlanNetAsset002.trusteeId',width:150}
+            ,{field:'trusteeId',visible :false}
             ,{field:'actualManager',title: 'FinPlanNetAsset002.actualManager',width:150}
             ,{field:'issuer',title: 'FinPlanNetAsset002.issuer',width:150} 
             // add by 张普裕  2019/9/27  增加托管人、实际管理人、发行人字段 资产推荐方 end

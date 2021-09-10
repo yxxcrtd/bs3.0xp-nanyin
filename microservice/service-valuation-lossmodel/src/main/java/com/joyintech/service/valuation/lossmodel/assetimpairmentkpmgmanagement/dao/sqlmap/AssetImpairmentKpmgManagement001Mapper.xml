@@ -4,14 +4,14 @@
 	<select id="queryList" resultType="com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dto.AssetImpairmentKpmgManagement001Dto">
 		SELECT
 		A.SEQNO seqNo,
-		FP1.FINPROD_MARKET_ID prodId,
+		A.Prod_Id prodId,
    		A.PROD_NAME prodName,
-		FP2.FINPROD_MARKET_ID assetId,
+		A.ASSET_ID assetId,
    		A.ASSET_NAME assetName,
    		A.ASSET_TYPE assetType,
 		A.PORTFOLIO_ID portfolioId,
    		A.BUSS_NO bussNo,
-   		'T01' ps,
+   		A.PS ps,
    		A.TRADE_DATE tradeDate,
    		A.DEC_DATE decDate,
    		A.PRIN_OVERDUE_DAY prinOverdueDay,
@@ -27,9 +27,7 @@
    		A.PROSPECTIVE_ECL prospectiveEcl,
    		A.ALLOW_MODEL_COVER allowModelCover,
    		A.DATA_SOURCE dataSource
-   		FROM ASSET_LOSS_RESULT A
-		LEFT JOIN FIN_PRODUCT FP1 ON A.PROD_ID = FP1.FINPROD_ID
-		LEFT JOIN FIN_PRODUCT FP2 ON A.ASSET_ID = FP2.FINPROD_ID
+   		FROM MOD_ECL_RESULT A
    		WHERE 1=1
 		<if test="finprodId!=null and !''.equals(finprodId.trim())">
 			AND A.PROD_ID in
@@ -78,7 +76,7 @@
 
 	<select id="getBusiNum" resultType="com.joyintech.framework.select.SelectOptionDto">
 		SELECT DISTINCT A.BUSS_NO id,A.BUSS_NO text
-		from ASSET_LOSS_RESULT A
+		from MOD_ECL_RESULT A
 		WHERE 1=1
 		<if test="search != null and search != ''">
 			and A.BUSS_NO like concat(concat('%',#{search}),'%')
@@ -87,36 +85,36 @@
 	<select id="findByPrimaryKey"
 			resultType="com.joyintech.service.valuation.lossmodel.assetimpairmentkpmgmanagement.dto.AssetImpairmentKpmgManagement002Dto">
 		SELECT
-		A.SEQNO seqNo,
-		A.PROD_ID prodId,
-		A.PROD_NAME prodName,
-		A.ASSET_ID assetId,
-		A.ASSET_NAME assetName,
-		A.ASSET_TYPE assetType,
-		A.PORTFOLIO_ID portfolioId,
-		A.BUSS_NO bussNo,
-		'T01' ps,
-		A.TRADE_DATE tradeDate,
-		A.DEC_DATE decDate,
-		A.PRIN_OVERDUE_DAY prinOverdueDay,
-		A.INT_OVERDUE_DAY intOverdueDay,
-		A.PURCHASE_TIME_GRADE purchaseTimeGrade,
-		A.CURRENT_TIME_GRADE currentTimeGrade,
-		A.PRE_PROSPECTIVE_PD preProspectivePd,
-		A.PROSPECTIVE_PD prospectivePd,
-		A.STAGE stage,
-		A.LGD lgd,
-		A.EAD ead,
-		A.PRE_PROSPECTIVE_ECL preProspectiveEcl,
-		A.PROSPECTIVE_ECL prospectiveEcl,
-		A.ALLOW_MODEL_COVER allowModelCover,
-		A.DATA_SOURCE dataSource
-		FROM ASSET_LOSS_RESULT A
+			A.SEQNO seqno,
+			A.Prod_Id prodId,
+			A.PROD_NAME prodName,
+			A.ASSET_ID assetId,
+			A.ASSET_NAME assetName,
+			A.ASSET_TYPE assetType,
+			A.PORTFOLIO_ID portfolioId,
+			A.BUSS_NO bussNo,
+			A.PS ps,
+			A.TRADE_DATE tradeDate,
+			A.DEC_DATE decDate,
+			A.PRIN_OVERDUE_DAY prinOverdueDay,
+			A.INT_OVERDUE_DAY intOverdueDay,
+			A.PURCHASE_TIME_GRADE purchaseTimeGrade,
+			A.CURRENT_TIME_GRADE currentTimeGrade,
+			A.PRE_PROSPECTIVE_PD preProspectivePd,
+			A.PROSPECTIVE_PD prospectivePd,
+			A.STAGE stage,
+			A.LGD lgd,
+			A.EAD ead,
+			A.PRE_PROSPECTIVE_ECL preProspectiveEcl,
+			A.PROSPECTIVE_ECL prospectiveEcl,
+			A.ALLOW_MODEL_COVER allowModelCover,
+			A.DATA_SOURCE dataSource
+		FROM MOD_ECL_RESULT A
 		WHERE A.SEQNO = #{seqNo}
 	</select>
 	<select id="selectDuplicateData" resultType="java.lang.Integer">
 		SELECT COUNT(1)
-		FROM ASSET_LOSS_RESULT A
+		FROM MOD_ECL_RESULT A
 		WHERE PROD_ID = #{prodId}
 		AND DEC_DATE = #{decDate}
 	</select>
@@ -335,6 +333,14 @@
         </where>
     </select>
 
+	<select id="getFirstActionType" resultType="java.lang.String" parameterType="java.lang.String">
+		select
+			STATUS
+		from SYS_DATA_PROCESS_MARK
+		where
+			WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR}
+		  and HIS_NO = (select MIN(HIS_NO) from SYS_DATA_PROCESS_MARK where WORKFLOW_ID = #{workflowId,jdbcType=VARCHAR})
+	</select>
 
 
 

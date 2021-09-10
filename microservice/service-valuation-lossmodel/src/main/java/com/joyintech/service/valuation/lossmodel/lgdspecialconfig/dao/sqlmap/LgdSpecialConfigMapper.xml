@@ -202,6 +202,11 @@
 			<if test="secType != null and !''.equals(secType)">
                 AND A.type_18 = #{secType,jdbcType=VARCHAR}
 			</if>
+			<if test="search != null and !search.equals('')">
+				and (A.FINPROD_ID like concat('%',concat(#{search},'%'))
+				or B.FINPROD_NAME like concat('%',concat(#{search},'%'))
+				or B.FINPROD_ABBR like concat('%',concat(#{search},'%')))
+			</if>
 		</where>
 	</select>
 
@@ -222,6 +227,11 @@
 				AND (B.FINPROD_ABBR LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
 				OR B.FINPROD_NAME LIKE CONCAT('%',CONCAT(#{finprodName},'%'))
 				)
+			</if>
+			<if test="search != null and !search.equals('')">
+				and (A.FINPROD_ID like concat('%',concat(#{search},'%'))
+				or B.FINPROD_NAME like concat('%',concat(#{search},'%'))
+				or B.FINPROD_ABBR like concat('%',concat(#{search},'%')))
 			</if>
 		</where>
 	</select>

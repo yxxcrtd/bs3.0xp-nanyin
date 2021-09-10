@@ -315,9 +315,7 @@
                         query('#availableNum').val(result);
                     });
                 checkFinMdate();
-                if (query('#price').val()) {
-                    calData('price');
-                }
+                calData();
             } else {
                 // 为空
                 query('#finprodIdhid').val('').trigger('change');
@@ -575,13 +573,10 @@
 
 
     var init = function () {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        table.reload();
+        query("#calculateField_price").prop('checked', true);
         if(calculateField){
             query("#calculateField_" + calculateField).attr("checked", true);
         }
-
         if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
             $('#EtribBondInfo003_btn_reset').css('display', 'none');
         }
@@ -694,9 +689,7 @@
         } else {
             query("#secAcctId").val('999999');
         }
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
         //左下行情信息联动
         var chlFinprodId = query("#chlFinprodId").val();
         var finprodIdhid = query("#finprodIdhid").val();
@@ -864,20 +857,14 @@
      */
     query("#mdate").change(function () {
         checkFinMdate();
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
     });
 
     /**
      * 清算速度
      */
     query("#settleSpeed").change(function () {
-        if (query("#price").val() || query("#exerYield").val() || query("#matureYield").val()) {
-            if (query("#price").val()) {
-                calData("price");
-            }
-        }
+        calData();
     });
 
     /**
@@ -1214,26 +1201,29 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
-            return;
-        }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: query("#price").val(),
-                finprodId: query("#finprodId").val(),
-                vdate:query('#vdate').val()
-            }, function (result) {
-                if (result ) {
-                    document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-                            JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-                }
+        if (query("#finprodIdhid").val() && query("#price").val()) {
+            var paramObj = {};
+            paramObj.finprodId = query("#finprodIdhid").val();
+            if(query("#finprodId").val()){
+                paramObj.finprodMarketId = query("#finprodId").val();
+            }
+            paramObj.unitCprice = query("#price").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
             });
+        } else {
+            $("#deviationDegree").text("");
+        }
     }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
+        if(!calflag){
+            calflag =  query("input[name=calculateField]:checked").val();
+        }
+        if (!query("#"+calflag).val()) {
+            return;
+        }
         if (!initFlag) {
             let finvdate = query("#vdate").val();
             let finmdate = query("#mdate").val();

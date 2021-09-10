@@ -739,7 +739,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
  	名单主体明细类型_交易对手(DictCode.名单主体明细类型, "10", "交易对手"),
  	管理方式_发行登记_集合管理(DictCode.管理方式_发行登记,"01","集合管理"),
  	管理方式_发行登记_单独管理(DictCode.管理方式_发行登记,"02","单独管理"),
- 	价格模式_加权价格BP(DictCode.价格模式,"PRM04","加权价格+BP"),
+// 	价格模式_加权价格BP(DictCode.价格模式,"PRM04","加权价格+BP"),
  	资产计量方式_公允价值(DictCode.资产计量方式,"01","公允价值"),
  	资产计量方式_摊余成本(DictCode.资产计量方式,"02","摊余成本"),
  	对手方类型_住户(DictCode.对手方类型,"01","住户"),

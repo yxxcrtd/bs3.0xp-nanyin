@@ -98,7 +98,7 @@ $(function() {
              ,{field:'vdate', title: 'FinPlanProfitAsset001.vDate',type:'date'}
              ,{field:'mdate', title: 'FinPlanProfitAsset001.mDate',type:'date'}
              ,{field:'manager',title: 'FinPlanProfitAsset001.manager'}
-             ,{field:'trusteeId',title: 'FinPlanProfitAsset002.trusteeId'}
+             ,{field:'trusteeId',visible :false}
              ,{field:'issuer',title: 'FinPlanProfitAsset002.issuer'}
              // 增加推荐方与推荐费率 add by renping 20191014 start
              ,{field:'recommenderName',  title: 'FinPlanProfitAsset002.recommender', width:150,  sortField:'recommender'}

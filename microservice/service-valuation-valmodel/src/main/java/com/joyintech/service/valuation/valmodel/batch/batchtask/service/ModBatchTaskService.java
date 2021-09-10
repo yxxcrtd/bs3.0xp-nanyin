@@ -89,7 +89,7 @@ public class ModBatchTaskService extends BaseService {
         params.put("page", page);
         params.put("length", length);
 
-        Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
+        Page<SelectOptionDto> assetInfoPages = new Page<>();
         String isImpairment = (String)params.get("isImpairment");
         String lossType =(String)params.get("lossType");
         if (isImpairment != null && "true".equals(isImpairment)) {
@@ -101,20 +101,7 @@ public class ModBatchTaskService extends BaseService {
         } else {
               assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getValAssetInfo(params));
         }
-
-        Page<SelectOptionDto> res = new Page<>();
-        BeanUtils.copyProperties(assetInfoPages, res);
-        if (CollectionUtils.isNotEmpty(assetInfoPages.getRoot())) {
-            List<SelectOptionDto> root = new ArrayList<>(assetInfoPages.getRoot().size());
-            for (BatchAssetInfoDto batchAssetInfoDto : assetInfoPages.getRoot()) {
-                SelectOptionDto select = new SelectOptionDto();
-                select.setId(batchAssetInfoDto.getFinprodId());
-                select.setText(batchAssetInfoDto.getFinprodName());
-                root.add(select);
-            }
-            res.setRoot(root);
-        }
-        return res;
+        return assetInfoPages;
     }
 
     /**

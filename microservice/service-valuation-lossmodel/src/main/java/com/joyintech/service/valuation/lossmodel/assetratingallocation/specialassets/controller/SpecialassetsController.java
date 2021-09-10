@@ -145,6 +145,19 @@ public class SpecialassetsController {
         return specialassetsService.getSecTypeByFinprodId(param);
     }
 
+    /**
+     * @Description:根据资产代码查询条数
+     * @auther: yuzj
+     * @date: 2021/9/8
+     * @param:
+     * @return:
+     */
+    @PostMapping("getSpecialCountByFinprodId")
+    public Integer getSpecialCountByFinprodId(@RequestBody ModAssetGradeSpecialConfigDto dto) throws Exception {
+        return specialassetsService.getSpecialCountByFinprodId(dto);
+    }
+
+
 
 
 

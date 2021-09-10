@@ -129,6 +129,9 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
         if(StringUtil.isNotEmpty((String)map.get("ps"))){
             map.replace("ps", StringUtil.splitToList(",", (String)map.get("ps")));
         }
+        if(StringUtil.isNotEmpty((String)map.get("benfangSide")) && StringUtil.equals((String)map.get("benfangSide"),"01")){
+            map.put("benfangSide","");
+        }
         map.put("TRADE_STATUS", BussinessDictCodeList.交易状态_初始.getValue());
         map.put("PARTMATCH", BussinessDictCodeList.匹配状态_部分匹配.getValue());
         map.put("acctType",BussinessDictCodeList.资金账户类型_托管账户.getValue());

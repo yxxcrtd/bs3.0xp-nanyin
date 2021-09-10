@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -350,6 +351,15 @@ public class EntrustCompleteUtil extends BaseService<EtrEntrust> {
      */
     public static final Map<String, Boolean> getEtrCompletedMap(List<String> etrList) {
         return getService().getEtrCompletedMap(etrList);
+    }
+
+    /**
+     * 取得指令完成状况
+     * @param etrList
+     * @return
+     */
+    public static final Map<String, BigDecimal> getEtrFinishAmtList(List<String> etrList) {
+        return getService().getEtrFinishAmtList(etrList);
     }
 
     /**

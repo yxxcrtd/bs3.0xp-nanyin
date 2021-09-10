@@ -99,7 +99,16 @@
             left: 0!important;
             width: 160px!important;
         }
-
+        .label-deviation-degree{
+            width: 50px;
+            height: 24px;
+            color: red;
+            top: 0;
+            right: -50px;
+            position: absolute;
+            text-align: center;
+            line-height: 24px;
+        }
         .price {
             width: -webkit-fill-available;
             /* position: absolute; */
@@ -187,35 +196,35 @@
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">托管户可用现金:</label>
-                    <span id="tgAcctCash_jj" style="font-size: 12px;"></span>
+                    <label id="tgAcctCash_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">证券户可用现金:</label>
-                    <span id="secAcctCash_jj" style="font-size: 12px;"></span>
+                    <label id="secAcctCash_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">T1可用现金:</label>
-                    <span id="t1Cash_jj" style="font-size: 12px;"></span>
+                    <label id="t1Cash_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可买数量:</label>
-                    <span id="canBuyAmount_jj" style="font-size: 12px;"></span>
+                    <label id="canBuyAmount_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">持仓数量:</label>
-                    <span id="positionAmount_jj" style="font-size: 12px;"></span>
+                    <label id="positionAmount_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">可卖数量:</label>
-                    <span id="canSellAmount_jj" style="font-size: 12px;"></span>
+                    <label id="canSellAmount_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="form-inline-wrap">
                     <label class="layui-form-label" style="font-size: 12px;">成本价:</label>
-                    <span id="costPrice_jj" style="font-size: 12px;"></span>
+                    <label id="costPrice_jj" class="layui-form-label" style="font-size: 12px;"></label>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -317,6 +326,9 @@
                                data-th-value="${entity?.price}" required="required" autocomplete="off" maxlength=9>
                         <span class="input-right-show priceTitle">元</span>
                         <button type="button" class="increase-button">+</button>
+                        <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 start-->
+                        <label class="label-deviation-degree" id="deviationDegree"></label>
+                        <!--add by chenjiaixng 20210907 债券净价交易添加偏离度展示 end-->
                     </div>
                 </div>
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;" id="fprice_div_jj">

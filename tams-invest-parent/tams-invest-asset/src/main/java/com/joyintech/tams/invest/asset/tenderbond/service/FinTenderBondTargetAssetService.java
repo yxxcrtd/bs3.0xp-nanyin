@@ -292,6 +292,14 @@ implements BaseProcessService<FinTenderBondTargetAssetDto>{
         //金融产品附属表entity
         FinProductAdd finProductAdd = new FinProductAdd();
         BeanUtil.copyPropertiesIgnoreNull(finProductAdd, dto);
+        //----add by jjpei 20190727 添加投资性质----start----
+        if(StringUtil.isNotBlank(dto.getType4())&&DictCodeList.WIND一级分类_含债券一级分类等_优先股.getValue().equals(dto.getType4())){
+            finProductAdd.setInvestNature(DictCodeList.投资性质_权益类.getValue());
+        }
+        else{
+            finProductAdd.setInvestNature(DictCodeList.投资性质_固定收益类.getValue());
+        }
+        //----add by jjpei 20190727 添加投资性质----end----
         //现金流信息Entity-本金
 //        FinCashInfo finCashInfoPrincipal = encapFinCashInfo(dto,DictCodeListExt1.现金流一级类型_本金.getValue(),DictCodeListExt1.现金流二级类型_本金.getValue(),branch);
         //现金流信息Entity-利息

@@ -434,10 +434,10 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.handleRthTerminalId(terminalId);
             // 处理主推委托 在回报之前的情况, 通知补发
-            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId());
+            String key = terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId();
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(key);
             if (Objects.nonNull(entrustInterface)) {
-                logger.info("普通委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}", terminalId.getAccountId(), terminalId.getBrokerEntrustId());
-                onRtnEntrust((Entrust) entrustInterface);
+                tradeHelper.handleTradeNotifyEntrustRspBeforeOnEntrustRsp(msgReceiver, key, MsgType.NOTIFY_ENTRUST);
             }
 
             //  处理成交回报 在委托回报之前的情况
@@ -459,10 +459,10 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_INTEGRATED, terminalId);
             // 处理主推委托 在回报之前的情况, 通知补发
-            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId());
+            String key = terminalId.getAccountId() + "_" + terminalId.getBrokerEntrustId();
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(key);
             if (Objects.nonNull(entrustInterface)) {
-                logger.info("综合委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}", terminalId.getAccountId(), terminalId.getBrokerEntrustId());
-                onRtnIntegratedEntrust((IntegratedEntrust) entrustInterface);
+                tradeHelper.handleTradeNotifyEntrustRspBeforeOnEntrustRsp(msgReceiver, key, MsgType.NOTIFY_INTEGRATED);
             }
 
             //  处理成交回报 在委托回报之前的情况
@@ -483,10 +483,10 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_CANCEL, cancelEntrustBean);
             // 处理主推委托 在回报之前的情况, 通知补发
-            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId());
+            String key = cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId();
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(key);
             if (Objects.nonNull(entrustInterface)) {
-                logger.info("普通委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {} CancelBrokerEntrustId {}", cancelEntrustBean.getAccountId(), cancelEntrustBean.getBrokerEntrustId(), cancelEntrustBean.getCancelBrokerEntrustId());
-                onRtnEntrust((Entrust) entrustInterface);
+                tradeHelper.handleTradeNotifyEntrustRspBeforeOnEntrustRsp(msgReceiver, key, MsgType.NOTIFY_ENTRUST);
             }
 
             //  处理成交回报 在委托回报之前的情况
@@ -508,10 +508,10 @@ public class TradeAgent extends Agent implements IAgentCommand, IAgentMsgHandler
         if (Objects.nonNull(msgReceiver)) {
             msgReceiver.addMsg(MsgType.RESP_CANCEL, cancelEntrustBean);
             // 处理主推委托 在回报之前的情况, 通知补发
-            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId());
+            String key = cancelEntrustBean.getAccountId() + "_" + cancelEntrustBean.getCancelBrokerEntrustId();
+            EntrustInterface entrustInterface = tradeHelper.getEntrustNotifyByAccountIdAndBrokerEntrustId(key);
             if (Objects.nonNull(entrustInterface)) {
-                logger.info("综合委托主推先于回报返回， 补发主推消息 accountId {}  brokerEntrustId {}  CancelBrokerEntrustId {}", cancelEntrustBean.getAccountId(), cancelEntrustBean.getBrokerEntrustId(), cancelEntrustBean.getCancelBrokerEntrustId());
-                onRtnIntegratedEntrust((IntegratedEntrust) entrustInterface);
+                tradeHelper.handleTradeNotifyEntrustRspBeforeOnEntrustRsp(msgReceiver, key, MsgType.NOTIFY_INTEGRATED);
             }
             //  处理成交回报 在委托回报之前的情况
             if (tradeHelper.getTradeMap().size() > 0) {
