@@ -168,7 +168,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete",tradeId: data.tradeId,valDate:data.valDate};
+        var object = {selectedItem: [data], operateType:"delete",tradeId: data.finprodId,valDate:data.valDate};
         Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss001/deleteCheck', object, function(result) {
             Joyin.confirm("是否确认删除？", function () {
                 WorkFlow.doDeleteList(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/save', object, "TrdAssetLoss001_btn_delete", "TrdAssetLoss002", function () {
@@ -245,7 +245,7 @@
             }
 
             var checkObj = {};
-            checkObj.tradeId = selArr[0].tradeId;
+            checkObj.tradeId = selArr[0].finprodId;
             checkObj.finprodId = selArr[0].finprodId;
             checkObj.valDate = selArr[0].valDate;
             checkObj.invalidDate = selArr[0].invalidDate;

@@ -385,7 +385,9 @@ $(function () {
 	                });
 	            }
 	        }
-	
+	        if(parentPageId){
+	            object.parentPageId = parentPageId;
+            }
 	        if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
 	            object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;
 	            object.counterId=$('#trdInvestPersonInfo_counterId').select2('data')[0].id;

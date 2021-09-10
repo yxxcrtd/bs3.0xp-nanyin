@@ -6,8 +6,8 @@
             <Cell order="2" name="业务编号">busiCode</Cell>
             <Cell order="3" name="组合代码">portfolioId</Cell>
             <Cell order="4" name="组合名称">portfolioName</Cell>
-            <Cell order="5" name="通道代码">chlId</Cell>
-            <Cell order="6" name="回购类型">type6String</Cell>
+<!--            <Cell order="5" name="通道代码">chlId</Cell>-->
+            <Cell order="5" name="回购类型">type6String</Cell>
             <Cell order="6" name="回购类型">psStr</Cell>
             <Cell order="7" name="交易方向">finprodType2String</Cell>
             <Cell order="8" name="交易日">tradeDate</Cell>

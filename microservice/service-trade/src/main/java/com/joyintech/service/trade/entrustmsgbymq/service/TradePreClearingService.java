@@ -2127,7 +2127,9 @@ public class TradePreClearingService extends BaseService<InfContractDetailfile>{
         if(DictCodeListExt1.交易场所_上海证券交易所.getValue().equals(tradeMarket)){
             termStr =  finprodMarketId.replace("GC", "");
         }else if(DictCodeListExt1.交易场所_深圳证券交易所.getValue().equals(tradeMarket)){
-            termStr =  finprodMarketId.replace("R-", "");
+            if (finprodMarketId.contains("-")) {
+                termStr = finprodMarketId.substring(finprodMarketId.indexOf("-") + 1);
+            }
         }
         return termMap.get(termStr);
     }

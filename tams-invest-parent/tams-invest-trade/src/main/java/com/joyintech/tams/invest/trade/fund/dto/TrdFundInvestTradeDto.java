@@ -225,6 +225,21 @@ public class TrdFundInvestTradeDto extends TrdProductDeal implements ProcessEnti
     private TrdFinProductDealTotal trdFinProductDealTotal;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+
+    /**
      * 获取 trdTradeFeeDetail
      * 
      * @return trdTradeFeeDetail.
