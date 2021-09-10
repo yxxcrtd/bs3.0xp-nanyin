@@ -313,6 +313,11 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     private String isVirtual;
 
+    /**
+     * 机构代码
+     */
+    private String issuerCode;
+
     public BigDecimal getTdyAssetValue() {
         return tdyAssetValue;
     }
@@ -1179,5 +1184,13 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     public void setNotCalcAmount(Boolean notCalcAmount) {
         this.notCalcAmount = notCalcAmount;
+    }
+
+    public String getIssuerCode() {
+        return issuerCode;
+    }
+
+    public void setIssuerCode(String issuerCode) {
+        this.issuerCode = issuerCode;
     }
 }
