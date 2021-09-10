@@ -269,6 +269,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         dto.setPrinAmt(eedto.getEntrustAmt());
                         dto.setTradeAmt(eedto.getEntrustAmt());
                         dto.setShareAmt(proavailablecash.compareTo(BigDecimal.ZERO) != 0? proavailablecash:eedto.getEntrustNum());
+                        if("T01".equals(eedto.getPs()))dto.setShareAmt(eedto.getEntrustNum());
                         dto.setFinprodMarketId(entrustDto.getFinprodMarketId());
                         dto.setUnitCprice(eedto.getPrice());
                         dto.setrFinprodId(entrustDto.getEtrEntrustAdd().getrFinprodId());
