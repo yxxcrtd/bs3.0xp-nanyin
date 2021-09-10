@@ -214,6 +214,11 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     private String assetType;
 
+    /**
+     * 减值录入方式（数据来源）
+     */
+    private String lossInputType;
+
     public String getPageModel() {
         return pageModel;
     }
@@ -718,5 +723,29 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      */
     public String getPeriodTypeFmt(){
         return SysDatadictUtil.getNameFromDataDict(DictCode.代偿期类型,this.getPeriodType());
+    }
+
+    /**
+     * @return 减值录入方式（数据来源）
+     */
+    public String getLossInputType() {
+        return lossInputType;
+    }
+
+    /**
+     * 设置 减值录入方式（数据来源）
+     *
+     * @param lossInputType 减值录入方式（数据来源）
+     */
+    public void setLossInputType(String lossInputType) {
+        this.lossInputType = lossInputType;
+    }
+
+    /**
+     *  数据字典转换
+     * @return 减值录入方式（数据来源）
+     */
+    public String getLossInputTypeFmt(){
+        return SysDatadictUtil.getNameFromDataDict(DictCode.减值数据来源, this.getLossInputType());
     }
 }
