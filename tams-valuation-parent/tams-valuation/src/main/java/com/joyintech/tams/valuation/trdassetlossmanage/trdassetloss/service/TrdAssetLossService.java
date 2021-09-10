@@ -877,11 +877,11 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
         List<SelectOptionDto> linkSelectOptionList = new ArrayList<>();
         //1D、1M、2M、3M、4M、5M、6M、7M、8M、9M、10M、11M、1Y
         String[] termDescribeArr = {"1D","1M","2M","3M","4M","5M","6M","7M","8M","9M","10M","11M","1Y"};
-        String[] termDescribeNameArr = {"一天","一个月","两个月","三个月","四个月","五个月","六个月","七个月","八个月","九个月","十个月","十一个月","一年"};
+//        String[] termDescribeNameArr = {"一天","一个月","两个月","三个月","四个月","五个月","六个月","七个月","八个月","九个月","十个月","十一个月","一年"};
         for(int i=0;i<termDescribeArr.length;i++){
             SelectOptionDto selectOptionDto = new SelectOptionDto();
             selectOptionDto.setId(termDescribeArr[i]);
-            selectOptionDto.setText(termDescribeNameArr[i]);
+            selectOptionDto.setText(termDescribeArr[i]);
             linkSelectOptionList.add(selectOptionDto);
         }
         return linkSelectOptionList;
@@ -891,6 +891,10 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
     public  FinExercisePlan queryFinExercisePlan(Map<String, Object> param){
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/queryFinExercisePlan",
                 param, FinExercisePlan.class);
+    }
+
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
     }
 
 

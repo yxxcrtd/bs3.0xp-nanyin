@@ -90,6 +90,18 @@
 		Fin_Product.Mdate ,
 		Fin_Product.finprod_id
 		from Fin_Product /** 标的类金融产品 **/
+		INNER JOIN FIN_PRODUCT_TYPE prodType
+		ON prodType.FINPROD_ID = Fin_Product.FINPROD_ID
+		where 1=1
+		  AND
+		<if test="search != null and !search.equals('')">
+			and (Fin_Product.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
+			or Fin_Product.Finprod_Abbr like concat('%',concat(#{search},'%')))
+		</if>
+		<if test="initValue != null and !initValue.equals('')">
+			and (Fin_Product.FINPROD_MARKET_ID like concat('%',concat(#{initValue},'%'))
+			or Fin_Product.Finprod_Abbr like concat('%',concat(#{initValue},'%')))
+		</if>
 		<include refid="getfinprodIdForAddWhere"></include>
 	</select>
 	<sql id="getfinprodIdForAddWhere">
@@ -97,18 +109,8 @@
 <!-- 			估值不接入finprod_type2，使用finprod_type做判断 -->
 	     	(Fin_Product.Finprod_Type in (#{TYPE_GUZHI_F01},#{TYPE_GUZHI_F07})
 			OR (Fin_Product.Finprod_Type = #{TYPE_GUZHI_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02})))
-<!-- 			(Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01},#{TYPE_TOUGUAN_F07},#{TYPE_TOUGUAN_F18})
-			OR (Fin_Product.Finprod_Type2 = #{TYPE_TOUGUAN_F17} AND Fin_Product.Profit_Type in (#{PROFITTYPE_VALUE_02}))) -->
-			/**Fin_Product.Profit_Type in ('02')  收益类型_收益型 **/
-			/**AND Fin_Product.FINPROD_TYPE in ('F01','F07','F17')  (金融产品类型_债券,金融产品类型_存款,金融产品类型_计划类资产) **/
-			<if test="search != null and !search.equals('')">
-				and (Fin_Product.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
-				or Fin_Product.Finprod_Abbr like concat('%',concat(#{search},'%')))
-			</if>
-			<if test="initValue != null and !initValue.equals('')">
-				and (Fin_Product.FINPROD_MARKET_ID like concat('%',concat(#{initValue},'%'))
-				or Fin_Product.Finprod_Abbr like concat('%',concat(#{initValue},'%')))
-			</if>
+
+
 		</where>
 	</sql>
 	<select id="getAssetInfo" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
@@ -530,7 +532,7 @@
 	</select>
 
 	<select id="selectTrdAssetLossByFinprodId" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
-		SELECT A.FINPROD_MARKET_ID finprodId,
+		SELECT A.FINPROD_ID finprodId,
 		A.Finprod_Abbr finprodAbbr,
 		A.TRADE_MARKET tradeMarket,
 		A.ISSUER as issuer,
@@ -539,12 +541,13 @@
 		A.Vdate vDate,
 		A.Mdate mDate,
 		A.FINPROD_TYPE assetType1,
-		A.IS_RIGHT as isRight
-
+		A.IS_RIGHT as isRight,
+		D.TYPE_18 AS assetType
 		FROM Fin_Product A
-		LEFT JOIN MST_CUSTOMER_INFO B  ON A.ISSUER = B.CUSTOMER_ID  AND B.IS_ISSUER = 'Y'
+		LEFT JOIN MST_CUSTOMER_INFO B  ON A.ISSUER = B.CUSTOMER_ID
 		LEFT JOIN MST_CUSTOMER_INFO_ADD C  ON C.CUSTOMER_ID = B.CUSTOMER_ID
-		WHERE A.FINPROD_MARKET_ID = #{finprodId,jdbcType=VARCHAR}
+		LEFT JOIN FIN_PRODUCT_TYPE D ON D.FINPROD_ID = A.FINPROD_ID
+		WHERE A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 		UNION
 		SELECT A.FINPROD_ID   finprodId,
 		A.FINPROD_ID   finprodAbbr,
@@ -555,8 +558,10 @@
 		A.Vdate        vDate,
 		A.Mdate        mDate,
 		A.FINPROD_TYPE as assetType1,
-		NULL           as isRight
+		NULL           as isRight,
+	   	D.TYPE_18 AS assetType
 		FROM FIN_TRADE_PRODUCT A
+		LEFT JOIN FIN_PRODUCT_TYPE D ON D.FINPROD_ID = A.FINPROD_ID
 		WHERE A.FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
 	</select>
 
