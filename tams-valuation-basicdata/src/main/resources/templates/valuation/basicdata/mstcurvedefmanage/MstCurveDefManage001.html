@@ -14,16 +14,18 @@
 <body>
      <div layout:fragment="content">
 
-         <div class="form-button-area">
+         <div class="form-button-area" filter="false" export="false">
              <!-- add by yanya on 20210701 去除曲线管理界面生失效按钮 start-->
              <!--
              <a id="MstCurveDefManage001_btn_eff" class="layui-btn layui-btn-sm">生效</a>
              <a id="MstCurveDefManage001_btn_inEff" class="layui-btn layui-btn-sm">失效</a>
              -->
              <!-- add by yanya on 20210701 去除曲线管理界面生失效按钮 end-->
+             <a id="MstCalendarType001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
         </div>
 
        <div class="joyin-form-wrap joyin-filter-form condition-area">
+
         <form class="layui-form"  id="submitForm">
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
