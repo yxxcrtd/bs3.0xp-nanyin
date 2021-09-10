@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,8 +20,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.JoyinRestTemplate;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrFinishStatusMapper;
 import com.joyintech.tams.common.base.dao.FinDealPledgeMapper;
@@ -38,23 +39,6 @@ import com.joyintech.tams.common.base.dao.TrdProductDealAddMapper;
 import com.joyintech.tams.common.base.dao.TrdProductDealMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeDetailMapper;
 import com.joyintech.tams.common.base.dao.TrdTradeFeeTotalMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.EtrFinishStatus;
-import com.joyintech.tams.common.base.entity.FinDealPledge;
-import com.joyintech.tams.common.base.entity.FinProductType;
-import com.joyintech.tams.common.base.entity.FinTradeProductAdd;
-import com.joyintech.tams.common.base.entity.PaTrdFinProductDealTotal;
-import com.joyintech.tams.common.base.entity.PaTrdProductDeal;
-import com.joyintech.tams.common.base.entity.PtlTrade;
-import com.joyintech.tams.common.base.entity.SettleTransTgMapping;
-import com.joyintech.tams.common.base.entity.StlPayOrders;
-import com.joyintech.tams.common.base.entity.TrdDealTotalAdd;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarter;
-import com.joyintech.tams.common.base.entity.TrdFinProductBarterTotal;
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.tams.common.base.entity.TrdProductDealAdd;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
-import com.joyintech.tams.common.base.entity.TrdTradeFeeTotal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
@@ -645,7 +629,7 @@ public class StlDataGatherService {
      * @see
      * @since 1.0
      */
-    private void cashFlowLogic(TrdProductDealDto input, FinTradeProductDto finTradeProductDto) {
+    private void cashFlowLogic(TrdProductDealDto input, FinTradeProductDto finTradeProductDto) {/*
         // 分支序号
         String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
         Long branchLong = Long.parseLong(branch);
@@ -920,7 +904,7 @@ public class StlDataGatherService {
         // 调用共通登录现金流相关数据
         simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
                         + "/common/trdcommonbase/insertFinProductCashData",
-                inputDto, Boolean.class);
+                inputDto, Boolean.class);*/
     }
     
     /**
