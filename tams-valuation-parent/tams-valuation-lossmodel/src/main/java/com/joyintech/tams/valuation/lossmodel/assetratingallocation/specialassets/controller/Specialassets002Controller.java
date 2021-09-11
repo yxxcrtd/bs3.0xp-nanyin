@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -200,4 +201,16 @@ public class Specialassets002Controller extends BaseController{
         return selectOptionList;
     }
 
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  specialassets002Service.getAssetInfoSelectOption(RequestUtil.getPageParam());
+    }
 }
