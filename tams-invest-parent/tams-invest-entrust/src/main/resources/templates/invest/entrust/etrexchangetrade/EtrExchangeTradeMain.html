@@ -4,6 +4,9 @@
 	  layout:decorator="~{layout/default}">
 <head>
 	<title data-th-text="#{EtrExchangeTradeMain}">场内交易指令</title>
+</head>
+<body>
+<div id="main_body" layout:fragment="content">
 	<style type="text/css">
 		html,body,div.layui-fluid,#main_body{
 			height: 100%;
@@ -58,9 +61,6 @@
 			margin-left: 2px;
 		}
 	</style>
-</head>
-<body>
-<div id="main_body" layout:fragment="content">
 	<div class="top_panel" id = "top_panel_dev">
 		<div style="height: 100%">
 			<iframe th:src="@{/invest/entrust/etrexchangetrade/EtrExchangeTrade002/init}" width="100%"
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 			<div class="layui-form-item">
-				<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin: 5px;">
+				<div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin-top: 1%;">
 					<div class="text-center">
 						<a id="EtrExchangeTrade001_btn_riskcal" class="layui-btn layui-btn-sm"
 						   data-th-text="#{EtrIbBondinfoMain.riskcal}">风险试算</a>
