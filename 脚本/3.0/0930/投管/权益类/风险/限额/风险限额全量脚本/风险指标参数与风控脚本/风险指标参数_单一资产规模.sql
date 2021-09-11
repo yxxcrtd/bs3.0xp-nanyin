@@ -181,6 +181,12 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
       -nvl(sum(decode(n.PS,''T23'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T38'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T39'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T54'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T55'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T56'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T93'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T95'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T96'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT,n.FINPROD_ID as ASSETCODE, t2.FINPROD_NAME as ASSETNAME
       from TRD_PRODUCT_TEMP_DEAL n
       left join FIN_PRODUCT t2  on n.FINPROD_ID = t2.FINPROD_ID
@@ -188,7 +194,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
       where n1.PORTFOLIO_ID in ${portfolioCode} and  n.TRADE_DATE = date''${valDate}''
       and ((t3.FINPROD_TYPE2 is null and t2.FINPROD_TYPE is not null) or (t3.FINPROD_TYPE2 not in (''F02'',''F04'',''F08'',''F11'',''F12'',''F13'',''F14'',''F15'',''F25'',''F29'',''F30'') AND t3.BRANCH=0))
-      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
+      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'') group by n.FINPROD_ID, t2.FINPROD_NAME
     union ALL
        select
      nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
