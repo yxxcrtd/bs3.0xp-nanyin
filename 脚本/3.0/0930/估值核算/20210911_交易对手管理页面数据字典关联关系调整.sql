@@ -1,34 +1,34 @@
 delete from SYS_PAGE_DICTLIST where page_id = 'ComTradeOpponent001' and dict_id = 'COUNTER_TYPE';
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '01', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '01', null, null, 'system', null, Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '02', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '02', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '03', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '03', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '04', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '04', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '05', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent001', '999999', 'COUNTER_TYPE', '05', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 
 delete from SYS_PAGE_DICTLIST where page_id = 'ComTradeOpponent002' and dict_id = 'COUNTER_TYPE';
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '01', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '01', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '02', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '02', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '03', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '03', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '04', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '04', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
 
 insert into SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '05', null, null, 'system', null, '31-AUG-21 03.53.23.000000 PM', 'system', '31-AUG-21 03.53.23.000000 PM', null);
+values ('ComTradeOpponent002', '999999', 'COUNTER_TYPE', '05', null, null, 'system', null,  Date '2021-09-11', 'system',  Date '2021-09-11', null);
