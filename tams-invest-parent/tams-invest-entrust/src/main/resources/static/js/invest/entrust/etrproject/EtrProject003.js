@@ -133,6 +133,15 @@
             });
     });
 
+
+    function getSettleSpeed(settleSpeedStr) {
+        var settleSpeed = 0;
+        if(settleSpeedStr) {
+            settleSpeed = settleSpeedStr.replace("T+","");
+        }
+        return settleSpeed
+    }
+
     /**
      * 保存或提交
      * 
@@ -176,7 +185,7 @@
             temp.entrustNum  = item.entrustNum;
             temp.counterId  = item.counterId;
             temp.prinAmt  = item.prinAmt;
-            temp.settleSpeed  = item.settleSpeed;
+            temp.settleSpeed  = getSettleSpeed(item.settleSpeed);
             temp.investRate  = item.investRate;
             temp.chlId =item.chlId;
             temp.assetAvailablePosition  = item.assetAvailablePosition;
