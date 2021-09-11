@@ -148,4 +148,16 @@ public class Specialassets001Controller extends BaseController{
                 outFile, true);
     }
 
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  specialassets001Service.getAssetInfoSelectOption(RequestUtil.getPageParam());
+    }
 }

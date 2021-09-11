@@ -769,7 +769,7 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
                 new BigDecimal(100));// 券面总额/100
             BigDecimal usedShareAmt = this.checkUsedShareAmt(dto);// 已占用额度
             if (usedShareAmt.add(dto.getAvaNum().multiply(new BigDecimal(10000)).divide(
-                new BigDecimal(100))).compareTo(entrustAmt) > 0) {
+                new BigDecimal(100))).compareTo(entrustAmt.subtract(usedShareAmt)) > 0) {
                 if (sysParam) {
                     validList.add(
                         new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_010")));

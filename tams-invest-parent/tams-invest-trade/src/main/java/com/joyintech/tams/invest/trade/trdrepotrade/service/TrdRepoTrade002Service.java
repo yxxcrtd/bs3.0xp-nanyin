@@ -1326,7 +1326,7 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
         }
 //        // 撤销委托/回购交易时，删除回购质押品信息
         // 转仓卖出无抵押品
-        if(!"T02".equals(entity.getPs())){
+        if(!"T02".equals(entity.getPs()) && Objects.nonNull(entity.getBussRepoSec())){
             bussRepoSecService.deletePledgeBond(entity.getTradeId(), entity.getBussRepoSec().getPageFrom());
         }
         bussRepoSecService.insert(entity.getBussRepoSec(), entity.getTradeId()+ BussinessConstant.TRADE_REVOKE_TRADE_ID_SPLIT_STR);

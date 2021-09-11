@@ -123,6 +123,8 @@ public class FinPlanAssetC002Controller extends BaseController{
                 }
                 finPlanAssetCDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
                 finPlanAssetCDto.setFjId(finPlanAssetCDto.getFinprodId());
+                finPlanAssetCDto.setRedSpeed("0"+finPlanAssetCDto.getRedSpeed());
+                finPlanAssetCDto.setPurSpeed("0"+finPlanAssetCDto.getPurSpeed());
             }
             model.addAttribute("entity",finPlanAssetCDto);
         }
