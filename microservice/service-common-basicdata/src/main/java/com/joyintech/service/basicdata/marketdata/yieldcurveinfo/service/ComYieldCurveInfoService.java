@@ -75,6 +75,7 @@ public class ComYieldCurveInfoService extends BaseService<ComYieldCurveInfoDto>{
      * @since 1.0
      */
     public List<ComYieldCurveInfoDto> selectAllList(Map<String, Object> pageParam) {
+        pageParam.put("CURVE_CLASS", DictCodeListExt2.曲线类别_收益率曲线.getValue());
         return comYieldCurveInfo001Mapper.select(pageParam);
     }
     /**

@@ -32,7 +32,7 @@
 			MY.CURVE_CODE as curveCode,
 			MY.KEY_POINT as keyPoint,
 			MY.YIELD*100 as yield,
-			MY.CURVE_TYPE as curveType,
+			MC.INT_CURVE_TYPE as curveType,
 			MC.N as n,
 			MC.K as k
 		from  MST_YIELD_CURVE_INFO MY
