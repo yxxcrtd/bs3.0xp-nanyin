@@ -151,8 +151,9 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             itemValue = (String) param.get(itemKey);
             if (StringUtil.isNotEmpty(itemValue)) {
                 for (ModCashFlowDto cashFlowDto : item.getModCashFlowList()) {
-                    if (DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getTradeDate()) > 0 &&
-                        DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getDecDate()) < 0
+                    if (DictCodeListExt1.现金流二级类型_本金.getValue().equals(cashFlowDto.getCashType2()) &&
+                            DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getTradeDate()) > 0 &&
+                            DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getDecDate()) < 0
                     ) {
                         boolean flag = false; // 是否已支付
                         for (ModRepayAndInterestDto hb : hbList) {
@@ -169,11 +170,10 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                         }
                     }
                 }
-
+                resultProcess.setPrinOverdueDay(prinOverdueDay);
                 if (prinOverdueDay.compareTo(BigDecimal.valueOf(Long.valueOf(itemValue))) >= 0) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
-                    resultProcess.setPrinOverdueDay(prinOverdueDay);
                     rstDto.setModEclResultProcess(resultProcess);
                     return rstDto;
                 }
@@ -197,8 +197,9 @@ public class AssetImpairmentStageJudgeModelProcessorService {
             itemValue = (String) param.get(itemKey);
             if (StringUtil.isNotEmpty(itemValue)) {
                 for (ModCashFlowDto cashFlowDto : item.getModCashFlowList()) {
-                    if (DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getTradeDate()) > 0 &&
-                        DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getDecDate()) < 0
+                    if (DictCodeListExt1.现金流二级类型_利息.getValue().equals(cashFlowDto.getCashType2()) &&
+                            DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getTradeDate()) > 0 &&
+                            DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getDecDate()) < 0
                     ) {
                         boolean flag = false; // 是否已支付
                         for (ModRepayAndInterestDto hb : fxList) {
