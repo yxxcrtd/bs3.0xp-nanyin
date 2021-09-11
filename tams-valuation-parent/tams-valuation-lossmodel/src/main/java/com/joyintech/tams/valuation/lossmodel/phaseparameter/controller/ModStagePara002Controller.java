@@ -75,7 +75,7 @@ public class ModStagePara002Controller extends BaseController{
         this.setSelectOptionToModel(model, DictCode.要素绝对性);
         this.setSelectOptionToModel(model, DictCode.减值要素);
         this.setSelectOptionToModel(model, DictCode.风险五级分类);
-        this.setSelectOptionToModel(model, DictCode.评级结果);
+        this.setSelectOptionToModel(model, DictCode.内部评级);
         this.setSelectOptionToModel(model, DictCode.使用状态);
         return super.init(model);
     }

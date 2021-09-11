@@ -548,6 +548,10 @@
             <if test="entrustTradelimitdays !=null and entrustTradelimitdays !='' ">
                 and I.TRADELIMITDAYS = #{entrustTradelimitdays}
             </if>
+            and tpd.FINPROD_TYPE2 IN ('F02', 'F03')
+            AND tpd.TRADE_STATUS = '01'
+            AND tpd.TRADE_MARKET in ('01')
+            AND (tpd.IS_CANCEL is null or tpd.IS_CANCEL = 'N')
         </where>
         ) aa
         <where>
