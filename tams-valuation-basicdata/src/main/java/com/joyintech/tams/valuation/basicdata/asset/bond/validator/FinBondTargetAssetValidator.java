@@ -115,9 +115,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         //校验金融产品代码是否重复
         if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
             if(StringUtil.isNotEmpty(dto.getFinprodMarketId())){
-                if(finBondTargetAssetService.selectCountByfinprodId(dto.getFinprodMarketId())>0){
+                if(finBondTargetAssetService.selectCountByfinprodMarketId(dto.getFinprodMarketId())>0){
                     resultList.add(new ValidMessage("finprodMarketId",
-                            getMessage("BUSS_COM_E_0006", getMessage("FinBondTargetAsset002.finprodId"),
+                            getMessage("SEC_ERR_0001", getMessage("FinBondTargetAsset002.finprodId"),
                                     dto.getFinprodMarketId())));
                 }
             }
