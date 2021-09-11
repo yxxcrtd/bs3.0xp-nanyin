@@ -15,6 +15,7 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
@@ -22,6 +23,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto;
 import com.joyintech.tams.valuation.trdassetlossmanage.trdassetloss.service.TrdAssetLossService;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
@@ -78,7 +80,7 @@ public class TrdAssetLoss002Controller extends BaseController {
     public String init(Model model) {
         Date sysDate = DateUtil.platDateFromCache();
         this.setSelectOptionToModel(model, DictCode.减值阶段);
-        this.setSelectOptionToModel(model,DictCode.金融产品类型);
+        this.setSelectOptionToModel(model,DictCode.证券品种);
         this.setSelectOptionToModel(model, DictCode.减值测算方式);
         this.setSelectOptionToModel(model, DictCode.减值录入方式);
         this.setSelectOptionToModel(model, DictCode.交易流通场所);
@@ -88,12 +90,10 @@ public class TrdAssetLoss002Controller extends BaseController {
 
         model.addAttribute("outValue", DictCodeListExt3.减值测算方式_外部评估.getValue());
         model.addAttribute("expectedCreditLossModel", DictCodeListExt3.减值测算方式_预期信用损失模型.getValue());
-        model.addAttribute("rateLossValue", DictCodeListExt3.减值录入方式_按比例减值.getValue());
-        model.addAttribute("SYS_DATE", DateUtil.format(DateUtil.platDateFromCache()));
+        model.addAttribute("SYS_DATE", DateUtil.format(new Date()));
 
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         String finprodId = getParam("finprodId");
-        String tradeId = getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             TrdAssetLoss001Dto dto = trdAssetLossService.getBussinessEntityByWorkflowId(
@@ -101,14 +101,14 @@ public class TrdAssetLoss002Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("businessId",workflowId);
-        }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(tradeId)) {
-            TrdAssetLoss001Dto dto = trdAssetLossService.selectByKey(tradeId);
+        }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(finprodId)) {
+            TrdAssetLoss001Dto dto = trdAssetLossService.selectByKey(finprodId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
-            model.addAttribute("tradeId", dto.getTradeId());
-            model.addAttribute("businessId",tradeId);
+            model.addAttribute("finprodId", dto.getFinprodId());
+            model.addAttribute("businessId",finprodId);
         }
         //新建初始化
-        if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(tradeId)) {
+        if (WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(finprodId)) {
             TrdAssetLoss001Dto entity = new TrdAssetLoss001Dto();
             entity.setvDate(sysDate);
             entity.setmDate(sysDate);
@@ -207,7 +207,7 @@ public class TrdAssetLoss002Controller extends BaseController {
                     errorList.add(new ValidMessage("endDate","新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间"));
                 }
             }
-            if (!StringUtil.isNotEmpty(dto.getAssetType1())){
+            if (!StringUtil.isNotEmpty(dto.getAssetType())){
                 errorList.add(new ValidMessage("assetType1","资产类型不能为空"));
             }
             if (!StringUtil.isNotEmpty(dto.getvDate())){
@@ -239,7 +239,7 @@ public class TrdAssetLoss002Controller extends BaseController {
             if (!StringUtil.isNotEmpty(dto.getLossTestType())){
                 errorList.add(new ValidMessage("lossTestType","减值测算方式不能为空"));
             }
-            if (StringUtil.isNotEmpty(dto.getLossInputPattern()) && StringUtil.equals(dto.getLossInputPattern(),DictCodeListExt3.减值录入方式_按比例减值.getValue())){
+            if (StringUtil.isNotEmpty(dto.getLossTestType()) && StringUtil.equals(dto.getLossTestType(),DictCodeListExt3.减值测算方式_外部评估.getValue())){
                 if (!StringUtil.isNotEmpty(dto.getLossRatio())){
                     errorList.add(new ValidMessage("lossRatio","减值比例%不能为空"));
                 }else {
@@ -414,6 +414,18 @@ public class TrdAssetLoss002Controller extends BaseController {
         return trdAssetLossService.queryFinExercisePlan(param);
     }
 
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  trdAssetLossService.getAssetInfoSelectOption(RequestUtil.getPageParam());
+    }
 
 
 }

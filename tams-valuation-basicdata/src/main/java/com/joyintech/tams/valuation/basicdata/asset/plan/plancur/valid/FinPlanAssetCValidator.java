@@ -124,15 +124,23 @@ public class FinPlanAssetCValidator implements BeanValidator {
 //                }
 //            }
 //        }
+        if (StringUtil.equals(dto.getOperateType(), "submit")||StringUtil.equals(dto.getOperateType(), "save")) {
+            if(DictCodeList.收益类型_货币型.getValue().equals(dto.getProfitType())){
+                if(dto.getBussFinIntPayDto() == null){
+                    errorList.add(new ValidMessage(getMessage("分红计划不能为空")));
+                }
+                else{
+                    if(StringUtil.isEmpty(dto.getBussFinIntPayDto().getPayType())){
+                        errorList.add(new ValidMessage("bussFinIntPayDto.payType",getMessage("请输入分红方式")));
+                    }
+                    if(StringUtil.isEmpty(dto.getBussFinIntPayDto().getPayCycle())){
+                        errorList.add(new ValidMessage("bussFinIntPayDto.payCycle",getMessage("请输入分红频率")));
+                    }
+                }
 
-        if(DictCodeList.收益类型_货币型.getValue().equals(dto.getProfitType())){
-            if(StringUtil.isEmpty(dto.getBussFinIntPayDto().getPayType())){
-                errorList.add(new ValidMessage("bussFinIntPayDto.payType",getMessage("请输入分红方式")));
-            }
-            if(StringUtil.isEmpty(dto.getBussFinIntPayDto().getPayCycle())){
-                errorList.add(new ValidMessage("bussFinIntPayDto.payCycle",getMessage("请输入分红频率")));
             }
         }
+
 
 
         return errorList;
