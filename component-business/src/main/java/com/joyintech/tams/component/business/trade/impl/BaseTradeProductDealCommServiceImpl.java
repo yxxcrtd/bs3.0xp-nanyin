@@ -426,6 +426,7 @@ public class BaseTradeProductDealCommServiceImpl extends BaseService implements 
                     || StringUtil.equals(DictCodeList.交易方向_认购确认.getValue(), baseTradeProductDealDto.getTrdFinProductDealTotal().getPs()))
                 )
                   || StringUtil.equals(DictCodeList.交易方向_申购确认.getValue(), baseTradeProductDealDto.getTrdProductDeal().getPs())
+                  || StringUtil.equals(DictCodeList.交易方向_赎回到账.getValue(), baseTradeProductDealDto.getTrdProductDeal().getPs())
                   || StringUtil.equals(DictCodeList.交易方向_赎回确认.getValue(), baseTradeProductDealDto.getTrdProductDeal().getPs())
                   || StringUtil.equals(DictCodeList.交易方向_认购确认.getValue(), baseTradeProductDealDto.getTrdProductDeal().getPs())
             ) {
