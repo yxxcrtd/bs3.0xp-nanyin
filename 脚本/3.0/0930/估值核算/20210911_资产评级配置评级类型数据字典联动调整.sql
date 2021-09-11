@@ -6,10 +6,10 @@ insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINK
 values ('MODEL_MAIN_GRADE_TYPE', '01', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
+values ('MODEL_MAIN_GRADE_TYPE', '02', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('MODEL_MAIN_GRADE_TYPE', '04', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
+values ('MODEL_MAIN_GRADE_TYPE', '06', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
 
 insert into SYS_DATADICT_LIST_LINK (DICT_CODE, ITEM_CODE, LINKED_DICT_CODE, LINKED_ITEM_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('MODEL_MAIN_GRADE_TYPE', '05', 'SEC_TYPE', '01', 'system', null, sysdate, 'system', sysdate);
