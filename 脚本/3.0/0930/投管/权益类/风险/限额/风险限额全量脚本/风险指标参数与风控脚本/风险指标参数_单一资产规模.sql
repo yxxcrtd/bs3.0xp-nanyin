@@ -181,6 +181,12 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
       -nvl(sum(decode(n.PS,''T23'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T38'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T39'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T54'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T55'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T56'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T93'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T95'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+      -nvl(sum(decode(n.PS,''T96'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
       -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT,n.FINPROD_ID as ASSETCODE, t2.FINPROD_NAME as ASSETNAME
       from TRD_PRODUCT_TEMP_DEAL n
       left join FIN_PRODUCT t2  on n.FINPROD_ID = t2.FINPROD_ID
@@ -188,7 +194,7 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,t.FINPROD_ID as ASSETCODE, t2.F
        LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
       where n1.PORTFOLIO_ID in ${portfolioCode} and  n.TRADE_DATE = date''${valDate}''
       and ((t3.FINPROD_TYPE2 is null and t2.FINPROD_TYPE is not null) or (t3.FINPROD_TYPE2 not in (''F02'',''F04'',''F08'',''F11'',''F12'',''F13'',''F14'',''F15'',''F25'',''F29'',''F30'') AND t3.BRANCH=0))
-      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'') group by n.FINPROD_ID, t2.FINPROD_NAME
+      and n.PS in (''T01'',''04'',''T02'',''T03'',''T04'',''T19'',''T07'',''T08'',''T09'',''T11'',''T52'',''T38'',''T22'',''T23'',''T39'',''T93'',''T95'',''T96'',''T54'',''T55'',''T56'') group by n.FINPROD_ID, t2.FINPROD_NAME
     union ALL
        select
      nvl(sum(decode(n.PS,''T01'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -284,16 +290,20 @@ INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_03','03','+','am
 
 ----单一资产规模-卖出实占（不算指标）
 DELETE FROM RSK_EVENT WHERE EVENT_CODE ='EVENT_ID_DYZCGM_04';
-INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_04','单一资产规模-卖出实占（不算指标）','N','','jq','',sysdate,'jjpei',sysdate);
+INSERT INTO RSK_EVENT VALUES ('EVENT_ID_DYZCGM_04','单一资产规模-卖出实占（不算指标）','N','','jq','',sysdate,'cdj',sysdate);
          
  
 DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_04';
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType','6be3a3b1b4f741a197d156158959168b','','F07,F08,F10,F11','NO','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','ps','6be3a3b1b4f741a197d156158959168b','','T07,T08,T09,T11,T38,T39,T54,T55','IN','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','eventType','6be3a3b1b4f741a197d156158959168b','','1,2','IN','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType','fe33388998434a27a76969f8ef050647','','F11','=','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','eventType','fe33388998434a27a76969f8ef050647','','1,2','IN','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','ps','fe33388998434a27a76969f8ef050647','','T07,T08,T09,T38,T39,T54','IN','','','','cdjjyy','2222222',SYSDATE,'qq1',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType','3b503f581c264a50911fa872f917fb14','','F07,F08,F10','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','ps','3b503f581c264a50911fa872f917fb14','','T07,T93,T95,T96,T54,T55,T56','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','eventType','3b503f581c264a50911fa872f917fb14','','1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType2','3b503f581c264a50911fa872f917fb14','','02,04,06','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType','6f1d4a711d6048478c223ef0a86802ae','','F11','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','ps','6f1d4a711d6048478c223ef0a86802ae','','T07,T08,T09,T38,T39,T54','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','eventType','6f1d4a711d6048478c223ef0a86802ae','','1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','assetType','a571f0ec7ff340e8a798d383e72ce3e2','','F07,F08,F10,F11','NO','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','eventType','a571f0ec7ff340e8a798d383e72ce3e2','','1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_DYZCGM_04','ps','a571f0ec7ff340e8a798d383e72ce3e2','','T07,T08,T09,T11,T38,T39,T54,T55','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
 
 DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_DYZCGM_04';
 INSERT INTO RSK_EVENT_PARA_REL VALUES('DYZCGM','EVENT_ID_DYZCGM_04','01','-','amount','','yh1','jsadjflsajfsdkl',SYSDATE,'yh1',SYSDATE,'','');

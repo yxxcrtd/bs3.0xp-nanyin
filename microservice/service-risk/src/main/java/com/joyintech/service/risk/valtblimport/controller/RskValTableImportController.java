@@ -143,5 +143,8 @@ public class RskValTableImportController {
     public List<ValTableImpRiskDto> queryImpRiskInfo(@RequestBody RskValtblAssetSubDto dto){
     	return rskValTableImportService.queryImpRiskInfo(dto);
     }
-    
+    @PostMapping("selectId")
+    public String selectId(@RequestBody String id){
+        return rskValTableImportService.selectId(id);
+    }
 }
