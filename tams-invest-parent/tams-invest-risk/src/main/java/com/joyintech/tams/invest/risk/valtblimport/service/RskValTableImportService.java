@@ -1430,6 +1430,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            }
            creditLinesInputDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
            creditLinesInputDto.setIsBottom("Y");
+           String id = restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/selectId",
+                   dto.getWwPortfolioid(),String.class);
+           creditLinesInputDto.setpFinprodId(id);
 		   inputDtoList.add(creditLinesInputDto);
 	   }
 	   return inputDtoList;

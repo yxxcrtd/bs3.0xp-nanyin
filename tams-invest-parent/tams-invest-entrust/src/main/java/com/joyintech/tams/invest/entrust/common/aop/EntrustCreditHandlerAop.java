@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddingDto;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -91,6 +92,8 @@ public class EntrustCreditHandlerAop {
                 }
                 AjaxResult ar;
                 Class<?> clazz = args[0].getClass();
+                //债券一级指令不影响授信
+                if(args[0] instanceof EtrBondFirstLBiddingDto)return;
                 if (!(args[0] instanceof EtrAutoManagementAccountDto) && mapTrd != null && mapTrd.get("selectedItem") != null && mapTrd.get("selectedItem") instanceof List<?> && ((List) mapTrd.get("selectedItem")).size() > 0){
                     List<Object> list = new ArrayList<>();
                     for (Object obj : (List<?>)mapTrd.get("selectedItem")){

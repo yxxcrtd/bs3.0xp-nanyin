@@ -135,4 +135,8 @@
 			WHERE WW_PORTFOLIOID= #{ptlId,jdbcType=VARCHAR}
 			AND EVENTDATE       <![CDATA[<=]]> TO_DATE(#{valDate},'YYYY-MM-DD')
 	</select>
+
+	<select id="selectId" resultType="string">
+		select FINPROD_ID from FIN_PRODUCT where FINPROD_MARKET_ID=#{id}
+	</select>
 </mapper>

@@ -72,7 +72,6 @@ public class TrdAssetLoss003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.减值录入方式);
         model.addAttribute("outValue", DictCodeListExt3.减值测算方式_外部评估.getValue());
         model.addAttribute("expectedCreditLossModel", DictCodeListExt3.减值测算方式_预期信用损失模型.getValue());
-        model.addAttribute("rateLossValue", DictCodeListExt3.减值录入方式_按比例减值.getValue());
 
         String finprodId = this.getParam("finprodId");
         String valDate = this.getParam("valDate");

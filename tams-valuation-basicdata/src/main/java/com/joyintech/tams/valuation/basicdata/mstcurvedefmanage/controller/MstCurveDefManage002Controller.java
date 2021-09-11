@@ -37,9 +37,10 @@ public class MstCurveDefManage002Controller extends BaseController{
     public String init(Model model) {
         this.setSelectOptionToModel(model, DictCode.收益率曲线类型);
         this.setSelectOptionToModel(model, DictCode.估值来源);
-        Map<String,Object> queryParam = new HashMap<>();
-        queryParam.put("curveCode",this.getParam("curveCode"));
-        MstCurveDefManageDto dto = mstCurveDefManage001Service.selectByKey(queryParam);
+        MstCurveDefManageDto dto = new MstCurveDefManageDto();
+//        Map<String,Object> queryParam = new HashMap<>();
+//        queryParam.put("curveCode",this.getParam("curveCode"));
+//        MstCurveDefManageDto dto = mstCurveDefManage001Service.selectByKey(queryParam);
         model.addAttribute("entity",dto);
         return super.init(model);
     }

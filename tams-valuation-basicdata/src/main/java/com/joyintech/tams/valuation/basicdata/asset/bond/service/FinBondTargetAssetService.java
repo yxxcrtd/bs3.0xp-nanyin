@@ -10,10 +10,12 @@
 
 package com.joyintech.tams.valuation.basicdata.asset.bond.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -22,6 +24,8 @@ import com.joyintech.tams.valuation.basicdata.asset.bond.dto.FinBondTargetAssetD
 import com.joyintech.tams.valuation.basicdata.asset.common.service.ValAssetCommonService;
 import com.joyintech.tams.valuation.basicdata.base.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.tams.valuation.component.asset.dto.BusiFinExercisePlanDto;
 import com.joyintech.tams.valuation.component.asset.dto.BussFinRepaymentDto;
 import com.joyintech.tams.valuation.component.asset.dto.FinInterestFactorDto;
@@ -34,6 +38,7 @@ import com.joyintech.tams.valuation.component.business.service.CommonBusinessSer
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +70,12 @@ implements BaseProcessService<FinBondTargetAssetDto>{
      */
     @Autowired
     private ValAssetCommonService assetCommonService;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
 
     /**
      * 业务组件--计息要素
@@ -486,4 +497,50 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                         +circulationCode+"&finprodId=" + finprodId,
                 Integer.class);
     }
+
+    /**
+     * @Description:删除/批量删除流程中数据校验
+     * @auther: yuzj
+     * @date: 2021/9/10
+     * @param:
+     * @return:
+     */
+    public AjaxResult  deleteCheck(FinBondTargetAssetDto dto,AjaxResult checkResult){
+        ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
+        if(dto.getOperateType() != null && "delete".equals(dto.getOperateType())){
+            //单条删除
+            if(StringUtil.isNotEmpty(dto.getFinprodMarketId())){
+                WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+                wflValidInputParameter.setPageId("FinBondTargetAsset002");
+                wflValidInputParameter.setBusinessDataPk1(dto.getFinprodMarketId());
+                if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                    errorList.add(new ValidMessage("该条数据处于流程中，无法删除！"));
+                    checkResult.setErrorList(errorList);
+                    return checkResult;
+                }
+            }
+            //批量删除
+            if(dto.getSelectedItem()!=null||dto.getSelectedItem().size()>0){
+                WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
+                String msg ="";
+                StringBuilder msgBuilder = new StringBuilder();
+                for(FinBondTargetAssetDto selectDto:dto.getSelectedItem()){
+                    wflValidInputParameter.setPageId("FinBondTargetAsset002");
+                    wflValidInputParameter.setBusinessDataPk1(selectDto.getFinprodMarketId());
+                    if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
+                        msgBuilder.append(selectDto.getFinprodId()+"、");
+                    }
+                }
+                if(StringUtil.isNotEmpty(msgBuilder.toString())){
+                    msg=msgBuilder.toString().substring(0,msgBuilder.toString().length()-1);
+                    errorList.add(new ValidMessage(msg+"数据处于流程中，无法删除！"));
+                    checkResult.setErrorList(errorList);
+                    return checkResult;
+                }
+            }
+        }
+        return checkResult;
+    }
+
+
 }

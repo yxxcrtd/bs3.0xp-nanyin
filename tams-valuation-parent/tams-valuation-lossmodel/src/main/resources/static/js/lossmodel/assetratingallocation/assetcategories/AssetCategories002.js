@@ -77,6 +77,7 @@ $(function () {
 
     // 资产类别onchange事件
     $("#assetType").on('change',function(){
+        $("#assetDetailType").val('').trigger('change');
         // assetTypeChange();
         if($("#assetType").val() == '07' || $("#assetType").val() == '09' ){
             $("#assetDetailType").prop("disabled",true);

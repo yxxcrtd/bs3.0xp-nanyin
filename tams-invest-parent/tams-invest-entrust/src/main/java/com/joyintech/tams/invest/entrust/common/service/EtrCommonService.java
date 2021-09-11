@@ -1041,6 +1041,22 @@ public class EtrCommonService extends BaseService<ITableRow> {
                     creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
                 }
             }
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())){
+                creditLinesInputDto = new CreditLinesInputDto();
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
+                creditLinesInputDto.setTradeId(inputDto.getEntrustId());
+                creditLinesInputDto.setFinprodId(inputDto.getFinprodId());
+                creditLinesInputDto.setTradeDate(inputDto.getVdate());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+                creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getBussEtrInvestPersonInfoDto())){
+                    creditLinesInputDto.setCounterId(inputDto.getBussEtrInvestPersonInfoDto().getCounterId());
+                }
+                creditLinesInputDto.setTradeAmt(inputDto.getEntrustAmt());
+                creditLinesInputDto.setShareAmt(inputDto.getEntrustNum());
+                creditLinesInputDto.setNetPrice(inputDto.getPrice());
+            }
         }
         //债券借贷
         if(object instanceof EtrSecLendDto){

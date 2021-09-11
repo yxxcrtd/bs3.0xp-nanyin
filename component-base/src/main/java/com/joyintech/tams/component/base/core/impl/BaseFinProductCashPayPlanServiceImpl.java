@@ -61,7 +61,7 @@ public class BaseFinProductCashPayPlanServiceImpl  implements BaseFinProductCash
         if(list!=null&&list.size()>0){
             for(FinCashPlan dto:list){
                 //新增数据前根据现金流代码和结束日删除已有数据
-               // finCashPlanMapper.deleteByPrimaryKey(dto);
+                finCashPlanMapper.deleteByPrimaryKey(dto);
                 finCashPlanMapper.insert(dto);
             }
             return true;

@@ -98,6 +98,13 @@ public class Specialassets002Service extends CommonExportService<ModAssetGradeSp
                 Integer.class);
     }
 
-    
-    
+
+    /**
+     * 查询资产代码下拉框
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
+    }
 }
