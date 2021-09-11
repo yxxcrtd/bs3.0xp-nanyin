@@ -322,6 +322,12 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
                     ComSharePriceDto.setTradeStatus(tradeStatus);
                 }
             }
+            if (StringUtil.isNotEmpty(list.get(22))) {
+                ComSharePriceDto.setPe(new BigDecimal(list.get(22).trim()));
+            }
+            if (StringUtil.isNotEmpty(list.get(23))) {
+                ComSharePriceDto.setPb(new BigDecimal(list.get(23).trim()));
+            }
             // Date date = new Date();
             ComSharePriceDto.setCreateUser(CommonUtil.getUserName());
             ComSharePriceDto.setCreateDept(CommonUtil.getDeptCode());
@@ -345,7 +351,7 @@ public class ComSharePriceService extends CommonExportService<ComSharePriceDto> 
     private List<ExcelValidDto> checkExcelCow(int i, List<String> list) {
         List<ExcelValidDto> excelValidDtolist = new ArrayList<ExcelValidDto>();
         // 列数为22
-        if (null == list || list.size() != 22) {
+        if (null == list || list.size() != 24) {
             ExcelValidDto dto = new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i), "数据列数错误");
             excelValidDtolist.add(dto);
         }

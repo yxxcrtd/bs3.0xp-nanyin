@@ -1067,16 +1067,7 @@
         object.operation = "CfetsRepoDealQuotedPrice001.save"
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
-            if (result.data) {
-                Joyin.confirm(result.data, function () {
-                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_save", null, function (result) {
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Save(object);
     };
     /**
      * 提交
@@ -1091,16 +1082,7 @@
         handlepledgeBondList(object);
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
-            if (result.data) {
-                Joyin.confirm(result.data, function () {
-                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_submit", null, function (result) {
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Sumbit(object);
     };
 
     /**

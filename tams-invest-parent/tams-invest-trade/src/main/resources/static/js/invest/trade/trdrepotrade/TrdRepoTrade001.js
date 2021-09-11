@@ -171,6 +171,9 @@
      * 画面加载完成
      */
     $(function () {
+        if (pageId == 'TrdRepoTradeEx001') {
+            $('#fTradeIdDiv').hide();
+        }
         if(fTradeId||cstpEntrustId){
             $('.form-button-area').hide();
             $('.curr-form').hide();

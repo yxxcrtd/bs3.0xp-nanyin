@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -323,7 +324,11 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 		return super.getTradeStatus();
 	}
 
-
+	@Override
+	@NotEmpty(fieldName = "币种", groups = {ValidateGroupEdit.class})
+	public String getCcy() {
+		return super.getCcy();
+	}
 	/**
 	 * 取得 币种
 	 * @return 币种
@@ -334,11 +339,29 @@ public class ComSharePriceDto extends MstSharePrice implements ITableRow,Process
 	/**
 	 *
 	 */
+	@NotEmpty(fieldName = "资产名称", groups = {ValidateGroupEdit.class})
 	public String getFinprodAbbr() {
-		return finprodAbbr;
+		String finprodAbbrStr="";
+		finprodAbbrStr=finprodAbbr;
+		if(StringUtil.isEmpty(finprodAbbrStr)){
+			finprodAbbrStr=super.getSharesId();
+		}
+		return finprodAbbrStr;
 	}
 
 	public void setFinprodAbbr(String finprodAbbr) {
 		this.finprodAbbr = finprodAbbr;
+	}
+
+	@Override
+	@NotEmpty(fieldName = "市盈率", groups = {ValidateGroupEdit.class})
+	public BigDecimal getPe() {
+		return super.getPe();
+	}
+
+	@Override
+	@NotEmpty(fieldName = "市净率", groups = {ValidateGroupEdit.class})
+	public BigDecimal getPb() {
+		return super.getPb();
 	}
 }

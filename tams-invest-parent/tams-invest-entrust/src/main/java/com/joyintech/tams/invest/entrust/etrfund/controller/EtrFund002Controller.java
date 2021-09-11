@@ -105,19 +105,21 @@ public class EtrFund002Controller extends BaseController{
         String entrustId = getParam("entrustId");
         String finprodId = getParam("finprodId");
         String portfolioId = getParam("portfolioId");
-        
         EtrFundDto etrFundDto = new EtrFundDto();
-        
         etrFundDto.setPs(DictCodeList.交易方向_申购.getValue());
         etrFundDto.setAssetType1(DictCodeList.基金类资产类型_货币基金.getValue());
         etrFundDto.setCcy("CNY");
         etrFundDto.setTradeMarket("08");
         etrFundDto.setVdate(sysDate);
         etrFundDto.setMdate(sysDate);
+        etrFundDto.setParentPageId(this.getParam("parentPageId"));
         model.addAttribute(GlobalConstant.ENTITY, etrFundDto);
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
-            
             EtrFundDto dto = etrFundService.getBussinessEntityByWorkflowId(
                 workflowId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
@@ -127,6 +129,10 @@ public class EtrFund002Controller extends BaseController{
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getBussEtrInvestPersonInfoDto()));
             model.addAttribute("businessId", workflowId);
+            // add by yeming 20210910 场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210910 场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(entrustId) && WorkFlowUtil.isNotFromToDoList()) {
             EtrFundDto dto = etrFundService.selectByKey(entrustId,finprodId,portfolioId);
@@ -188,10 +194,6 @@ public class EtrFund002Controller extends BaseController{
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         return super.init(model);
     }

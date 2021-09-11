@@ -166,8 +166,12 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         }
         model.addAttribute("COUNTER_PARTY_ID_SHANGHAI",counterPartyIdShangHai);
         model.addAttribute("COUNTER_PARTY_ID_SHENZHEN",counterPartyIdShenZhen);
-        
-        
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_06", DictCodeListExt1.交易场所_OTC场外.getValue());
@@ -254,6 +258,11 @@ public class TrdFundInvestTrade002Controller extends BaseController {
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
             model.addAttribute("businessId", workflowId);
             model.addAttribute("workflowId", workflowId);
+
+            // add by yeming 20210910 场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210910 场内场外拆分 end
         }
         else {
             String entrustId = this.getParam("entrustId");
@@ -269,6 +278,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         dto.setPrinAmt(eedto.getEntrustAmt());
                         dto.setTradeAmt(eedto.getEntrustAmt());
                         dto.setShareAmt(proavailablecash.compareTo(BigDecimal.ZERO) != 0? proavailablecash:eedto.getEntrustNum());
+                        if("T01".equals(eedto.getPs()))dto.setShareAmt(eedto.getEntrustNum());
                         dto.setFinprodMarketId(entrustDto.getFinprodMarketId());
                         dto.setUnitCprice(eedto.getPrice());
                         dto.setrFinprodId(entrustDto.getEtrEntrustAdd().getrFinprodId());
@@ -285,6 +295,18 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         }
                         model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(trdInvestPersonInfo));
                         model.addAttribute("entrustId", entrustId);
+                        //交易录单进来根据交易场所添加parentPageId
+                        if(StringUtil.isNotEmpty(eedto.getTradeMarket())){
+                            if(StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                            ||StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                                model.addAttribute("parentPageId", "TrdFundInvestTradeEx001");
+                                PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, "TrdFundInvestTradeEx001");
+                            }else if(StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_OTC场外.getValue())){
+                                model.addAttribute("parentPageId", "TrdFundInvestTradeOff001");
+                                PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, "TrdFundInvestTradeOff001");
+                            }
+                        }
+
                     }
                     // 场内基金改造 add by renping 20191117 start
                     EtrEntrustAdd addDto = entrustDto.getEtrEntrustAdd();
@@ -313,11 +335,6 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         return super.init(model);
     }

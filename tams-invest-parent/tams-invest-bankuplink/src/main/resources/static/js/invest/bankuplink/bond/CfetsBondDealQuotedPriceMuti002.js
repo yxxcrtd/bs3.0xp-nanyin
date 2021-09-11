@@ -37,8 +37,8 @@
         if(!object.finprodId){
             object.finprodId = $("#CfetsBondDealQuotedPriceMuti002_hidden_finprodId").val();
         }
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         var orgList = table.getAllRows();
         if(orgList != null && orgList.length>0){
@@ -85,8 +85,8 @@
         object.isDzh = 'Y';
         object.operatorType = 'submit';
         object.pageId = "CfetsBondDealQuotedPriceMuti002";
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/check', object, function(result) {
             if (result.data){
@@ -161,8 +161,8 @@
         object.operatorType = "done";
         object.isDzh = 'Y';
         object.pageId = "CfetsBondDealQuotedPriceMuti002";
-        if(object.cfetsBondDealRequestQuoteDtoList){
-            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealRequestQuoteDtoList;
+        if(object.cfetsBondDealDialogueQuoteDtoList){
+            object.cfetsBondDealRequestQuoteDtoList = object.cfetsBondDealDialogueQuoteDtoList;
         }
         Joyin.ajaxJson(basePath + 'invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/clinchDealCheck', object, function(result) {
             if (result.data){

@@ -39,7 +39,7 @@
         cols:[
             {field:'eventCode',title: 'RskEvent001.eventCode'}
             ,{field:'eventName',title: 'RskEvent001.eventName'}
-            ,{field:'updateTimeStr',title:'RskEvent001.updateDate',type:'date'}
+            ,{field:'updateTimeStr',sortField : 'UPDATE_TIME',title:'RskEvent001.updateDate',type:'date'}
             ,{field:'remark', title: 'RskEvent001.remark'}
             ,{field:'relateParam',width:120,title: 'RskEvent001.relPara',sortable:false, render:function(d, type, row, meta){
                 return '<a title="RskEvent001.setRelPara" class="relParamEdit" style="font-size:12px;">设置</a>' +

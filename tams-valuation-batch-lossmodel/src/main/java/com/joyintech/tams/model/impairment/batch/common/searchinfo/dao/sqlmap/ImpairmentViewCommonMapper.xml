@@ -88,6 +88,7 @@
                 #{item}
             </foreach>
             )
+            AND deal.SETTLE_DATE <![CDATA[<=]]> #{searchDate}
         </if>
 
     </select>
@@ -365,7 +366,7 @@
         AND VAL.Portfolio_Id IS NULL
         AND DEAL.PS IN ('T01','T35')
         AND ACC.INV_AIM != 'FVTPL'
-        AND DEAL.TRADE_DATE = #{searchDate}
+        AND DEAL.SETTLE_DATE = #{searchDate}
         AND (
         typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
         OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
@@ -385,19 +386,19 @@
 
     <!-- 查询资产首次买入日期 -->
     <select id="queryFirstBuyDate" resultType="java.util.Date">
-		SELECT MIN(A.TRADE_DATE)
+		SELECT MIN(A.SETTLE_DATE)
 		FROM TRD_PRODUCT_DEAL A
 		INNER JOIN BOK_DEAL_ACCOUNTING ACC
 		 ON ACC.BUSI_NO = A.TRADE_ID
 		WHERE A.PS='T01'
 			AND A.FINPROD_ID=#{finprodId}
-		  	AND A.TRADE_DATE <![CDATA[>=]]> NVL(
+		  	AND A.SETTLE_DATE <![CDATA[>=]]> NVL(
 				(
 						SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
 						WHERE B.DSC_COST_AMT = 0
 							AND B.FINPROD_ID=#{finprodId}
 						  	AND B.PORTFOLIO_ID=#{portfolioId}
-				),A.TRADE_DATE
+				),A.SETTLE_DATE
 			)
 			AND ACC.BOOKSET_ID = #{prodId}
 	</select>

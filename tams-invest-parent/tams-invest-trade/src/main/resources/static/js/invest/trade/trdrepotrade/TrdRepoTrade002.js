@@ -1795,7 +1795,7 @@
                                 //质押券反显万元为单位
                                 var obj = [];
                                 $.each(result.pledgeBondInfoDtoList,function (index,item) {
-                                    item.avaPledgePrin = item.avaPledgePrin/100;
+                                    item.avaPledgePrin = item.avaPledgePrin/10000;
                                     item.pledgePrin = item.pledgePrin/100;
                                     obj.push(item);
                                 });

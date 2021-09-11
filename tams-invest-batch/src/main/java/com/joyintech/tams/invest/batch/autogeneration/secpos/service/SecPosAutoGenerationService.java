@@ -351,7 +351,12 @@ public class SecPosAutoGenerationService {
                         item.setAssetRiskType(underlyingAssetsSumDto.getAssetRiskType());
                     }
                 }
-                assetTargetDbMapper.insert(item);  
+                try{
+                    assetTargetDbMapper.insert(item);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
         }

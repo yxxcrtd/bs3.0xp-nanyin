@@ -9,7 +9,9 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.validator.AssetCategories002DtoValidator;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.validator.Specialassets002Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -23,7 +25,8 @@ import com.joyintech.tams.constant.DictCode;
  * @创建时间: 2021-06-24
  */
 @PageId("Specialassets002")
-@ValidLogic(targetClass = Specialassets002Validator.class)
+@ValidLogic(targetClass = Specialassets002Validator.class, groups = { ValidateGroupDelete.class,
+        ValidateGroupEdit.class })
 public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableRow, ProcessEntity{
     /**
 	 * s
@@ -116,7 +119,7 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
      * @return FINPROD_ID 金融产品代码
      */
     @PrimaryKey(Field.PK_1)
-    @NotEmpty(fieldName = "Specialassets.MESG001", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "资产代码", groups = {ValidateGroupEdit.class})
     public String getFinprodId() {
         return finprodId;
     }
@@ -133,7 +136,7 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
      * 金融产品名称
      * @return FINPROD_NAME 金融产品名称
      */
-    @NotEmpty(fieldName = "Specialassets.MESG002", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "资产名称", groups = {ValidateGroupEdit.class})
     public String getFinprodName() {
         return finprodName;
     }
@@ -167,7 +170,7 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
      * 评级类型（数据字典 评级类型）
      * @return O_TYPE 评级类型（数据字典 评级类型）
      */
-    @NotEmpty(fieldName = "Specialassets.MESG004", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "评级类型", groups = {ValidateGroupEdit.class})
     public String getoType() {
         return oType;
     }
@@ -268,6 +271,7 @@ public class ModAssetGradeSpecialConfigDto extends BaseEntity implements ITableR
         return SysDataUtil.getNameFromDataDict(DictCode.评级类型_减值, this.getoType());
     }
 
+    @NotEmpty(fieldName = "评级机构", groups = {ValidateGroupEdit.class})
     public String getGradeOrgType() {
         return gradeOrgType;
     }

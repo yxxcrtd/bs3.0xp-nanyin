@@ -955,17 +955,8 @@
         object.operatorType = 'save';
         //构造质押券list
         handlepledgeBondList(object);
-        object.operation = "CfetsRepoDealQuotedPrice001.save"
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
-            if (result.data){
-                Joyin.confirm(result.data, function() {
-                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        object.operation = "CfetsRepoDealQuotedPrice001.save";
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre002Save(object);
     };
     /**
      * 提交
@@ -978,16 +969,7 @@
         object.operatorType = 'submit';
         //构造质押券list
         handlepledgeBondList(object);
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
-            if (result.data){
-                Joyin.confirm(result.data, function() {
-                	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", null, function(result){
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
-                    })
-                })
-            }
-        });
+        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre002Sumbit(object);
     };
 
     /**

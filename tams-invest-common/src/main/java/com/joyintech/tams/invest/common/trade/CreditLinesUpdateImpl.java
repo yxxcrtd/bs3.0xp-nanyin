@@ -1743,7 +1743,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         creditLinesOutputDtoList.add(outputDto);
         // STEP  1 处理基础数据（资产授信数据，额度校验规则、机构授信数据）
         findBasicData(inputDto);
-        if (creditLinesAst == null && oneStepInfo != null && oneStepInfo.getDeductObj() == null){
+        if (creditLinesAst == null && (oneStepInfo != null && oneStepInfo.getDeductObj() == null || oneStepInfo == null)){
             return outputDto;
         }
         //处理 当授信对象为金额时 申购/认购 的待释放份额为0
