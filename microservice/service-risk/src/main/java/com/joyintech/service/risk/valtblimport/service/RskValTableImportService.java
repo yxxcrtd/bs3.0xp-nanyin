@@ -115,7 +115,13 @@ public class RskValTableImportService {
 		// 自主管理资产 投管类型
 		paramMap.put("FINPROD_TYPE_TG_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
 		BigDecimal totalAmout = preOccupationChangeMapper.getSelfManagerTotal(paramMap);
-
+		for(RskValtblAssetSubDto d :dto.getSelectedItem()){
+			if("601".equals(d.getSubCode())){
+				//实收资本
+				totalAmout=d.getSecurityQuantity();
+				break;
+			}
+		}
 		//2.计算估值表文件中各资产的分配明细 
 		List<PreOccupationChangeDto> list = preOccupationChangeMapper.getSelfManagerByOne(paramMap);
 		if (!StringUtil.isEmptyList(list) && StringUtil.isNotEmpty(totalAmout)) {
@@ -227,5 +233,9 @@ public class RskValTableImportService {
 
 	public int selectGoalCount(Map<String, Object> paramMap) {
 		return rskValTableImportMapper.selectGoalCount(paramMap);
+	}
+
+	public String selectId(String id){
+		return preOccupationChangeMapper.selectId(id);
 	}
 }

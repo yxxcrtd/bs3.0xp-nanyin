@@ -4,17 +4,16 @@
 
     <!-- 资产代码下拉框 -->
  	<select id="getAssetInfoOption" resultType="com.joyintech.framework.select.SelectOptionDto">
-        <!--标的类金融产品代码 -->
         select
         fin.FINPROD_ID as id,
-        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) as text,
+        NVL(NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME),finType.FINPROD_ID) as text,
         finType.TYPE_18 as object
-        from FIN_PRODUCT fin /** 标的类金融产品 **/
-        LEFT JOIN FIN_PRODUCT_TYPE finType
+        from FIN_PRODUCT_TYPE finType /** 标的类金融产品 **/
+        LEFT JOIN FIN_PRODUCT fin
         ON finType.FINPROD_ID = fin.FINPROD_ID
         where 1=1
         <if test="search != null and search != ''">
-            and (fin.FINPROD_ID like concat('%',concat(#{search},'%'))
+            and (finType.FINPROD_ID like concat('%',concat(#{search},'%'))
             or fin.FINPROD_ABBR like concat('%',concat(#{search},'%'))
             or fin.FINPROD_NAME like concat('%',concat(#{search},'%')))
         </if>
@@ -27,28 +26,12 @@
                 #{item}
             </foreach>
         </if>
-
-        UNION
-        <!-- 交易类金融产品代码 -->
-        select
-        fin.FINPROD_ID as id,
-        fin.FINPROD_ID as text,
-        finType.TYPE_18 as object
-        from FIN_TRADE_PRODUCT fin /** 标的类金融产品 **/
-        LEFT JOIN FIN_PRODUCT_TYPE finType
-        ON finType.FINPROD_ID = fin.FINPROD_ID
-        where 1=1
-        <if test="search != null and search != ''">
-            AND fin.FINPROD_ID like concat('%',concat(#{search},'%'))
+        <if test="assetType != null and assetType != ''">
+            and finType.TYPE_18 = #{assetType}
         </if>
-        <if test="finprodId != null and finprodId != ''">
-            and fin.FINPROD_ID = #{finprodId}
-        </if>
-        <if test="secTypeList != null and secTypeList.size > 0">
-            AND finType.TYPE_18 IN
-            <foreach collection="secTypeList" item="item" open="(" separator="," close=")">
-                #{item}
-            </foreach>
+        <!-- 下拉框有初始值时，需要带initValue查询 -->
+        <if test="initValue != null and initValue != ''">
+            and fin.FINPROD_ID = #{initValue}
         </if>
 	</select>
 
@@ -74,6 +57,10 @@
         </if>
         <if test="assetType != null and assetType != ''">
             and finType.TYPE_18 = #{assetType}
+        </if>
+        <!-- 下拉框有初始值时，需要带initValue查询 -->
+        <if test="initValue != null and initValue != ''">
+            and fin.FINPROD_ID = #{initValue}
         </if>
     </select>
 
@@ -104,6 +91,11 @@
         <if test="assetType != null and assetType != ''">
             and finType.TYPE_18 = #{assetType}
         </if>
+        <!-- 下拉框有初始值时，需要带initValue查询 -->
+        <if test="initValue != null and initValue != ''">
+            and fin.FINPROD_ID = #{initValue}
+        </if>
+
     </select>
 
 

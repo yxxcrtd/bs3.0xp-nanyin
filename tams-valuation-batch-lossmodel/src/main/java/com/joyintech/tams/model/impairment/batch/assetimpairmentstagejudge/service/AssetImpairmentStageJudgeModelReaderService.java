@@ -63,7 +63,7 @@ public class AssetImpairmentStageJudgeModelReaderService {
         for (ModEclResultProcess item : eclList) {
             AssetImpairmentStageJudgeModelReaderEntity entity = new AssetImpairmentStageJudgeModelReaderEntity();
             entity.setModEclResultProcess(item);
-            entity.setModCashFlowList(getCashFlowPlanInfoByFinprodId(item.getProdId()));
+            entity.setModCashFlowList(getCashFlowPlanInfoByFinprodId(item.getAssetId()));
             list.add(entity);
         }
 

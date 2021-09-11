@@ -154,6 +154,9 @@
     from MOD_LGD_CONFIG
     <where>
       1=1
+      <if test="assetType != null and assetType !=''" >
+            and ASSET_TYPE = #{assetType}
+      </if>
       <if test="assetType != null and assetType=='13'" >
         and ASSET_DETAIL_TYPE is null
       </if>

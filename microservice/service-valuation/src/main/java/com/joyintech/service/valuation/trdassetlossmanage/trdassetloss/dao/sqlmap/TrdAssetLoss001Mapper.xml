@@ -312,7 +312,7 @@
 				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
 		</set>
-		where TRD_ASSET_LOSS.Trade_Id = #{tradeId,jdbcType=VARCHAR}
+		where TRD_ASSET_LOSS.FINPROD_ID = #{finprodId}
 	</update>
 	<select id="selectByKey" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select
@@ -341,8 +341,8 @@
 		  left join Fin_Product    /** 标的类金融产品 **/
 		  on TRD_ASSET_LOSS.SEC_ID = Fin_Product.FINPROD_MARKET_ID
 		  where 1 = 1
-		<if test="tradeId != null and !tradeId.equals('')">
-			AND (TRD_ASSET_LOSS.Trade_Id = #{tradeId})
+		<if test="finprodId != null and !finprodId.equals('')">
+			AND (TRD_ASSET_LOSS.FINPROD_ID = #{finprodId})
 		</if>
 	</select>
 	<select id="selectForPagePreView" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
@@ -518,7 +518,7 @@
 				UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
 			</if>
 		</set>
-		where TRD_ASSET_LOSS.Trade_Id = #{tradeId,jdbcType=VARCHAR}
+		where TRD_ASSET_LOSS.FINPROD_ID = #{finprodId}
 	</update>
 	<select id="selectAssetExerciseDate" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select
@@ -579,7 +579,7 @@
     <!--根据交易编码删除交易信息-->
 	<delete id="deleteByTradeId" parameterType="java.lang.String" >
         delete from TRD_ASSET_LOSS
-        where TRADE_ID = #{tradeId,jdbcType=VARCHAR}
+        where FINPROD_ID = #{finprodId}
     </delete>
 
 

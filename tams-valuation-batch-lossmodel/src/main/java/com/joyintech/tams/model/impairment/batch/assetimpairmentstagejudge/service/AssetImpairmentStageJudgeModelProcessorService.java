@@ -162,10 +162,10 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                                 flag = true;
                                 continue;
                             }
-                            if (flag == false) {
-                                BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
-                                prinOverdueDay = ArithmeticUtil.subtract(daynum, prinOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : prinOverdueDay;
-                            }
+                        }
+                        if (flag == false) {
+                            BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
+                            prinOverdueDay = ArithmeticUtil.subtract(daynum, prinOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : prinOverdueDay;
                         }
                     }
                 }
@@ -201,17 +201,17 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                         DateUtil.compareDate(cashFlowDto.getPayDate(), resultProcess.getDecDate()) < 0
                     ) {
                         boolean flag = false; // 是否已支付
-                        for (ModRepayAndInterestDto hb : hbList) {
+                        for (ModRepayAndInterestDto hb : fxList) {
                             if (DateUtil.compareDate(hb.getPlanEndDate(), cashFlowDto.getMdate()) == 0) {
                                 BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), hb.getTradeDate()));
                                 intOverdueDay = ArithmeticUtil.subtract(daynum, intOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : intOverdueDay;
                                 flag = true;
                                 continue;
                             }
-                            if (flag == false) {
-                                BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
-                                intOverdueDay = ArithmeticUtil.subtract(daynum, intOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : intOverdueDay;
-                            }
+                        }
+                        if (flag == false) {
+                            BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
+                            intOverdueDay = ArithmeticUtil.subtract(daynum, intOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : intOverdueDay;
                         }
                     }
                 }
