@@ -31,7 +31,7 @@ $(function () {
             data.pageModel=PAGE_MODEL_REFERENCE;
             Joyin.dialog(JoyinUtil.getLabel("特殊资产LGD详情"),
                 JoyinUtil.getRealPath("model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/init"),
-                "98%", "95%", data,
+                "95%", "90%", data,
                 function(){table.reload();});
         },
         cols: [

@@ -28,7 +28,7 @@
                         <label class="layui-form-label form-lable">资产名称</label>
                         <div class="layui-input-inline input-inline">
                             <select id="finprodName" name="finprodName"
-                                    data-th-data-url='@{/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/getFinprodIdByLossType}'
+                                    data-th-data-url='@{/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/getAssetInfoSelectOption}'
                                     data-th-data-formatoption=true class="layui-input form-input input-select"
                                     placeholder="请选择"
                                     data-th-placeholder="#{SysCommon.selectplaceholder}"
@@ -59,29 +59,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-inline layui-col-md6">
-
+                </div>
+                <div class="layui-col-md12" style="margin: 30px 0;">
+                    <div class="text-center">
+                        <!--           <a id="LgdSpecialConfig002_btn_save" class="layui-btn layui-btn-sm btn-save"
+                                      data-th-text="#{SysCommon.save}">保存</a>-->
+                        <a id="LgdSpecialConfig002_btn_submit"
+                           class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
+                        <a id="LgdSpecialConfig_btn_cancel"
+                           class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
                     </div>
-
                 </div>
-
-
-
             </form>
-            <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="position: fixed;bottom: 30px;">
-                <div class="text-center">
-         <!--           <a id="LgdSpecialConfig002_btn_save" class="layui-btn layui-btn-sm btn-save"
-                       data-th-text="#{SysCommon.save}">保存</a>-->
-                    <a id="LgdSpecialConfig002_btn_submit"
-                       class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
-                    <a id="LgdSpecialConfig_btn_cancel"
-                       class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
-                </div>
-            </div>
         </div>
     </div>
     <div layout:fragment="script">
-        <script data-th-src="@{/js/lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfigInfo002.js}"
+        <script data-th-src="@{/js/lossmodel/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002.js}"
             type="text/javascript"></script>
     </div>
 </body>
