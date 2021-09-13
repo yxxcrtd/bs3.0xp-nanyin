@@ -363,37 +363,6 @@ var importEtr = function() {
 }
 
 $(function() {
-
-	var init = function() {
-
-        if(pageModel==PAGE_MODEL_NEW){
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [48, 44],
-                minSize: 100,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [25, 75],
-                minSize: [200, 700],
-                direction: "horizontal"
-            });
-        }else{
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [0, 90],
-                minSize: 0,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [0, 100],
-                minSize: [0, 0],
-                direction: "horizontal"
-            });
-        }
-	}
-	
-	init();
 	
 	 // 绑定提交按钮
     $('#EtrExchangeTrade001_btn_submit').click(function() {

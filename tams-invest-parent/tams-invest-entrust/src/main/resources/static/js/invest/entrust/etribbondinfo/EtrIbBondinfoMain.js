@@ -39,24 +39,6 @@ $(
             });
         });
 
-        var init = function () {
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [48, 44],
-                minSize: 100,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [35, 65],
-                minSize: [300, 600],
-                direction: "horizontal"
-            });
-            // //窗口容器的高度，设置为页面左右容器的高度
-            // var height = window.innerHeight - 50;
-            // $('.right_panel').css('height', height);
-            // $('.left_panel').css('height', height);
-        };
-
         /**
          * 风险试算
          * @returns
@@ -314,7 +296,6 @@ $(
          * 绑定事件
          */
         $(function () {
-            init();
             /**
              * 附件上传
              */

@@ -156,6 +156,9 @@ var calculateField;
                 object.ownIntAmt = object.intAmt;
             }
             object.calculateField = calculateField;
+            if(parentPageId){
+                object.parentPageId = parentPageId;
+            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
                 if(isautobond == true){
                     Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
