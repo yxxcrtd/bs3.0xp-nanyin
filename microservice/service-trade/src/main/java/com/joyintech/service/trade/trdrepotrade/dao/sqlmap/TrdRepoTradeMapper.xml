@@ -268,7 +268,7 @@
                         )) = 0)
                     </if>
                     <if test="entrustId != null and entrustId != ''">
-                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                        AND tpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
@@ -403,7 +403,7 @@
                     )) = 0)
                 </if>
                     <if test="entrustId != null and entrustId != ''">
-                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                        AND tpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
