@@ -747,6 +747,7 @@
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
+        $('.wtcxdh-transfer-form .btn-select-wrapper').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
