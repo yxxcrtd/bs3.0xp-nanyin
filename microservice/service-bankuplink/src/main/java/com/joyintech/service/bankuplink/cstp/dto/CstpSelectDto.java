@@ -401,5 +401,79 @@ public class CstpSelectDto extends InterfCstpTrade{
         this.finprodId = finprodId;
     }
 
+    /*重新取本方，对手方，本方交易员，对手方交易员*/
+
+    private String ouPartyId;
+    private String ouTraderId;
+    private String cpPartyId;
+    private String cpTraderId;
+    private String exeOuPartyId;
+    private String exeOuTraderId;
+    private String exeCpPartyId;
+    private String exeCpTraderId;
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public String getOuTraderId() {
+        return ouTraderId;
+    }
+
+    public void setOuTraderId(String ouTraderId) {
+        this.ouTraderId = ouTraderId;
+    }
+
+    public String getCpPartyId() {
+        return cpPartyId;
+    }
+
+    public void setCpPartyId(String cpPartyId) {
+        this.cpPartyId = cpPartyId;
+    }
+
+    public String getCpTraderId() {
+        return cpTraderId;
+    }
+
+    public void setCpTraderId(String cpTraderId) {
+        this.cpTraderId = cpTraderId;
+    }
+
+    public String getExeOuPartyId() {
+        return exeOuPartyId;
+    }
+
+    public void setExeOuPartyId(String exeOuPartyId) {
+        this.exeOuPartyId = exeOuPartyId;
+    }
+
+    public String getExeOuTraderId() {
+        return exeOuTraderId;
+    }
+
+    public void setExeOuTraderId(String exeOuTraderId) {
+        this.exeOuTraderId = exeOuTraderId;
+    }
+
+    public String getExeCpPartyId() {
+        return exeCpPartyId;
+    }
+
+    public void setExeCpPartyId(String exeCpPartyId) {
+        this.exeCpPartyId = exeCpPartyId;
+    }
+
+    public String getExeCpTraderId() {
+        return exeCpTraderId;
+    }
+
+    public void setExeCpTraderId(String exeCpTraderId) {
+        this.exeCpTraderId = exeCpTraderId;
+    }
     //add by chenjiaxing 质押式回购改造 end
 }
