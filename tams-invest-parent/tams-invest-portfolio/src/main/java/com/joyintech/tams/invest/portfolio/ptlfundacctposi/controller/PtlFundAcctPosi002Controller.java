@@ -60,7 +60,9 @@ public class PtlFundAcctPosi002Controller extends BaseController{
         model.addAttribute("CDATE", getParam("cdate"));
         List<SelectOptionDto> psList = makeAllFloatRate();
         model.addAttribute("PS", JsonUtils.objectArray2Json(psList.toArray()));
-//        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用, DictCode.交易方向);
+        // ZGZGST-2524:添加金融产品类型字典查询 fuyongsheng 20210913 edit start
+        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
+        // ZGZGST-2524:添加金融产品类型字典查询 fuyongsheng 20210913 edit end
         return super.init(model);
     }
 

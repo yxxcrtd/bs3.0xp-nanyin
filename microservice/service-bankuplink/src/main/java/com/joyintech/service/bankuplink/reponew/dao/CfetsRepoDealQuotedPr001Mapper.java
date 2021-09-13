@@ -2,6 +2,7 @@ package com.joyintech.service.bankuplink.reponew.dao;
 
 import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteExtDto;
 import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteSearchDto;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001Dto;
 import org.springframework.stereotype.Repository;
@@ -54,4 +55,14 @@ public interface CfetsRepoDealQuotedPr001Mapper {
      * @since 1.0
      */
     List<CstpSelectDto> getCstpQryTableList(Map<String,Object> map);
+
+    /**
+     * 查询本方交易员列表
+     *
+     * @param map 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryMySideTraderList(Map<String, Object> map);
 }

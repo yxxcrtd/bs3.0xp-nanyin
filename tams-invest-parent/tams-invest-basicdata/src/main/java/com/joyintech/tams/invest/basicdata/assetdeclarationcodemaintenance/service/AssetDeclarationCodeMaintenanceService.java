@@ -63,6 +63,14 @@ public class AssetDeclarationCodeMaintenanceService extends CommonExportService<
             SelectOptionDto.class);
     }
     // add by zhangrui1 2020-07-25 资产分页查询 end
+
+
+	public Page<SelectOptionDto> getFinprodList(Map<String, Object> map) {
+		return restTemplate.postForPage(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/AssetDeclarationCodeMaintenance/getFinprodList", map,
+				SelectOptionDto.class);
+	}
+
 	/**
 	 * 根据资产类型获取申报代码类型
 	 *
