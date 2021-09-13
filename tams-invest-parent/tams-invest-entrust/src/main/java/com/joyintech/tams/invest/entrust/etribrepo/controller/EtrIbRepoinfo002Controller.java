@@ -8,6 +8,7 @@ import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -295,6 +296,25 @@ public class EtrIbRepoinfo002Controller extends BaseController {
                 DictCodeList.清算速度_T_1.getValue())) {
             dto.setSettleSpeed((long) 1);
         }
+
+        //万元转换 add  by yeming 20210817 start
+        if(dto.getBussRepoSec() != null){
+            if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
+                dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
+            }
+            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                if (pledgeBond.getAvaPledgePrin() != null) {
+                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPledgePrin() != null) {
+                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                }
+                if (pledgeBond.getPrin() != null) {
+                    pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+                }
+            }
+        }
+        //万元转换 add  by yeming 20210817 end
 
         if(!StringUtil.isNotEmpty(dto.getEntrustId())){
             BussinessCodeParameter param = new BussinessCodeParameter();
