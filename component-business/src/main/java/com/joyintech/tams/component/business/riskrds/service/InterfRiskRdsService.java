@@ -1791,7 +1791,22 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             
 
         }
-        
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+                || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)) {
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                    DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
+            }
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())){
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
+        }
         //股票
         if(StringUtil.equals(DictCodeListExt2.平安资产类型_股票.getValue(),v.getAssetType())) {
             if(StringUtil.equals(finDto.getPs(), DictCodeListExt2.交易方向_配股.getValue())) {
@@ -2285,6 +2300,22 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+        }
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_买断式回购)
+                || CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_质押式回购)) {
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                    DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
+            }
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())){
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
         }
         //产品端除这些交易方向的排除在外不调实占
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_理财产品.getValue(),finDto.getFinprodType2())){
