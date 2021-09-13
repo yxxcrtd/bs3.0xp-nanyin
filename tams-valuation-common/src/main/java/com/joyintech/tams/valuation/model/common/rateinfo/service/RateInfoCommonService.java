@@ -107,7 +107,6 @@ public class RateInfoCommonService {
             }
             else if (ModelDictCodeList.模型_评级类型_主体评级.getValue().equals(otype)) {
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
@@ -117,7 +116,6 @@ public class RateInfoCommonService {
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
@@ -129,7 +127,6 @@ public class RateInfoCommonService {
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
