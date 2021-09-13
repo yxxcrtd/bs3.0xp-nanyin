@@ -10,16 +10,8 @@
  
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.nmngasset;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductClass;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.constant.DictCodeList;
@@ -32,6 +24,14 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValMngAssetInfoN;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 计划类资产（净值型）基础信息模板处理
@@ -79,10 +79,12 @@ public class NPlannedBaseInfoTemplateRecService {
         // 判断返回结果不为空
         if (resultMap != null) {
             List<FinProduct> listValFinProduct = (List<FinProduct>)resultMap.get("ValFinProduct");
-            List<FinProductType> ValFinProductType = (List<FinProductType>)resultMap.get("ValFinProductType"); 
+            List<FinProductType> ValFinProductType = (List<FinProductType>)resultMap.get("ValFinProductType");
+            List<FinProductAdd> ValFinProductAdd = (List<FinProductAdd>)resultMap.get("ValFinProductAdd");
             result.setListValFinProduct(listValFinProduct);
-            result.setListValFinProductType(ValFinProductType);             
-            }
+            result.setListValFinProductType(ValFinProductType);
+            result.setListValFinProductAdd(ValFinProductAdd);
+        }
         // 添加日志
         result.setValInterflog(returnResult.getValInterflog());
         return result;
@@ -100,7 +102,7 @@ public class NPlannedBaseInfoTemplateRecService {
         Map<String, Object> resultMap = new HashMap<>();
         List<FinProduct> valFinProductList = new ArrayList<FinProduct>();
         List<FinProductType> valFinProductTypeList = new ArrayList<FinProductType>();
-        
+        List<FinProductAdd> valFinProductAddList = new ArrayList<FinProductAdd>();
         // 获取基础信息
         for (ValMngAssetInfoN dto : listValMngAssetInfoN) {
             // 标的类金融产品 处理
@@ -109,11 +111,14 @@ public class NPlannedBaseInfoTemplateRecService {
             // 金融产品分类 处理   
             FinProductType valFinProductType = getValFinProductType(dto);
             valFinProductTypeList.add(valFinProductType);
-            
+
+            // 标的类金融产品附属表 处理
+            FinProductAdd valFinProductAdd = getValFinProductAdd(dto);
+            valFinProductAddList.add(valFinProductAdd);
         }
         resultMap.put("ValFinProduct", valFinProductList);
         resultMap.put("ValFinProductType", valFinProductTypeList);
-
+        resultMap.put("ValFinProductAdd", valFinProductAddList);
         return resultMap;
     }
     
@@ -220,5 +225,22 @@ public class NPlannedBaseInfoTemplateRecService {
         valFinProductType.setBranch(InterfCommonConstant.分支序号_默认);
         return valFinProductType;
         
+    }
+
+    /**
+     * 标的类金融产品附属表 接收
+     *
+     * @param dto 01-基础信息
+     * @return 标的类金融产品附属表
+     * @see
+     * @since 1.0
+     */
+    private FinProductAdd getValFinProductAdd(ValMngAssetInfoN dto) {
+
+        FinProductAdd valFinProductAdd = new FinProductAdd();
+        // 金融产品代码 = A.资产代码
+        valFinProductAdd.setFinprodId(dto.getAssetId());
+        valFinProductAdd.setProfitFlag(dto.getProfitFlag());
+        return valFinProductAdd;
     }
 }

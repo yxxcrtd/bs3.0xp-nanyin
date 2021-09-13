@@ -72,6 +72,19 @@ public class ValMngAssetInfoN extends BaseEntity {
     private String capiProfFeature;
 
     /**
+     * 收益标识，非保本浮动收益型、保本浮动、保证收益型
+     */
+    private String profitFlag;
+
+    public String getProfitFlag() {
+        return profitFlag;
+    }
+
+    public void setProfitFlag(String profitFlag) {
+        this.profitFlag = profitFlag;
+    }
+
+    /**
      * 取得 资产代码
      * @return 资产代码
      */

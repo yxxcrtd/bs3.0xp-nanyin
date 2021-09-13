@@ -3,6 +3,7 @@ package com.joyintech.service.bankuplink.reponew.service;
 import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteExtDto;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
@@ -211,5 +212,19 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
 
 
         return bondQuoteInfoDto;
+    }
+
+    /**
+     * 查询本方交易员列表
+     *
+     * @param param 入参
+     * @return 交易员列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> queryMySideTraderPage(int page, int length,
+                                                       Map<String, Object> param) {
+        return this.queryForPageForSelectReturn(page, length,
+                () -> cfetsRepoDealQuotedPr001Mapper.queryMySideTraderList(param));
     }
 }

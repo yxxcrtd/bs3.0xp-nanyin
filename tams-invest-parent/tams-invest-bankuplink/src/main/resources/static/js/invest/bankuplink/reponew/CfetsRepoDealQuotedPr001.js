@@ -551,8 +551,8 @@
             , {field: 'portfolioName', title: 'CSTPSelect001.portfolioName', width: '100', visible: false}
             , {field: 'execid', title: 'CSTPSelect001.execid', width: '200'}
             , {field: 'psStr', title: '本方方向', sortField: 'side', width: '100'}
-            , {field: 'ourinstitutioncode', title: '本方', width: '100'}
-            , {field: 'counterinstitutioncode', title: '对手方', width: '100'}
+            , {field: 'exeOuPartyId', title: '本方', width: '100'}
+            , {field: 'exeCpPartyId', title: '对手方', width: '100'}
             , {field: 'cpPartyName', title: '对手方机构', width: '100'}
             , {field: 'tradecashamt', title: 'CSTPSelect001.tradecashamt', width: '170', type: 'money'}
             , {field: 'tradelimitdaysStr', title: 'CSTPSelect001.tradelimitdays', width: '150'}
@@ -561,9 +561,9 @@
             , {field: 'symbol', title: '名称', width: '150'}
             , {field: 'pledgeRateStr', title: '折算比例(%)', width: '120'}
             , {field: 'lastqty', title: '券面总计（万元）', width: '210', type: 'money', digit: 2}
-            , {field: 'ourTradeName', title: '本方交易员', width: '100'}
+            , {field: 'exeOuTraderId', title: '本方交易员', width: '100'}
             , {field: 'ourinstitutionchineseshortname', title: '本方代理机构', width: '100'}
-            , {field: 'counterTraderName', title: '对手方交易员', width: '100'}
+            , {field: 'exeCpTraderId', title: '对手方交易员', width: '100'}
             , {field: 'institutionchineseshortname', title: '对手方代理机构', width: '100'}
             , {field: 'settleSpeedStr', title: '清算速度', width: '100'}
             , {
@@ -623,6 +623,10 @@
             , {field: 'tradeId', width: '120',visible: false}
             , {field: 'fTradeId', width: '120',visible: false}
             , {field: 'rTradeId', width: '120',visible: false}
+            , {field: 'ouPartyId', width: '120',visible: false}
+            , {field: 'ouTraderId', width: '120',visible: false}
+            , {field: 'cpPartyId', width: '120',visible: false}
+            , {field: 'cpTraderId', width: '120',visible: false}
             , {field: 'ps', sortField: 'side', visible: false}
             , {field: 'finprodId', sortField: 'finprodId', visible: false}
             , {field: 'settleSpeed', title: '清算速度', width: '100', visible: false}
@@ -743,6 +747,7 @@
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
+        $('.wtcxdh-transfer-form .btn-select-wrapper').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
