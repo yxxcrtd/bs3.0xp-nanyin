@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.common.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
 
@@ -90,7 +91,7 @@ public class XmlParseUtil {
             //------end---------
             dbf.setExpandEntityReferences(false);
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document document = db.parse(xml);
+            Document document = db.parse(new ByteArrayInputStream(xml.getBytes()));
             t = (T)unmarshaller.unmarshal(document);
         }
         catch (Exception e) {
