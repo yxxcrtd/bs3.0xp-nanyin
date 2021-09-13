@@ -351,7 +351,7 @@
         if($("#tradeMarket").val()&&($("#tradeMarket").val()==TRADE_PLACE_03 ||$("#tradeMarket").val()==TRADE_PLACE_04)
                 &&$("#secAcctId").val()){
             $("#tradeMarketCash_div").show();
-            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val()}
+            var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),acctId:$("#secAcctId").val()}
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getProAvailableCash',data,
                     function(result) {
                 $('#tradeMarketCash').val(result.cashT4).trigger('blur');
@@ -626,6 +626,7 @@
         if($("#ps").val()==T01 || $("#ps").val()==T02){
             if($('#finprodMarketId').val() != null && $('#finprodMarketId').val() != ''&&$('#finprodMarketId').select2('data')[0].object){
                 if($('#bussEtrInvestPersonInfoDto_counterId').select2('data') && $('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0]
+                    // N:内部交易对手 Y:上交所，深交所
                     &&$('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='N'){
                     var data = {finprodId:$('#finprodMarketId').select2('data')[0].object.finprodId}
                     Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/getPrice',data,

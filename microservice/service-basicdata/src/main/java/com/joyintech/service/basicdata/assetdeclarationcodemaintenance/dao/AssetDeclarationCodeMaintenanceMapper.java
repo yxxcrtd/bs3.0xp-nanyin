@@ -89,4 +89,7 @@ public interface AssetDeclarationCodeMaintenanceMapper {
 	 */
 	List<AssetDeclarationCodeMaintenanceDto> selectAssetDeclarationList(Map<String, Object> param);
 
+	List<SelectOptionDto> getFinprodList(Map<String, Object> map);
+
+
 }

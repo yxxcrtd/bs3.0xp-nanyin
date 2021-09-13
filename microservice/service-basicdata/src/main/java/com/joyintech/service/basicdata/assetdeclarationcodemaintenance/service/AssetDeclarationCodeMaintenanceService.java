@@ -61,6 +61,32 @@ public class AssetDeclarationCodeMaintenanceService extends BaseService<AssetDec
     }
     // add by zhangrui1 2020-07-25 资产分页查询 end
 
+	public Page<SelectOptionDto> getFinprodListPage(int page, int length, Map<String, Object> map) {
+		return queryForPageForSelectReturn(page, length, () -> getFinprodList(map));
+	}
+
+
+	/**
+	 * 资产代码联想
+	 *
+	 * @param map
+	 *            检索参数
+	 * @return SelectOptionDto
+	 */
+	public List<SelectOptionDto> getFinprodList(Map<String, Object> map) {
+		List<? extends DataDictItem> dictlist = SysDataUtil.getDataDictItem(DictCode.平安资产类型.getValue());
+		List<String> PinAn_Asset_Type = new ArrayList<>();
+		if (!dictlist.isEmpty()) {
+			for (DataDictItem d : dictlist) {
+				PinAn_Asset_Type.add(d.getItemCode());
+			}
+		}
+		map.put("Asset", PinAn_Asset_Type);
+
+		return assetDeclarationCodeMaintenanceMapper.getFinprodList(map);
+	}
+
+
 	/**
 	 * 资产代码联想
 	 *
