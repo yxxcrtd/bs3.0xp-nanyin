@@ -345,11 +345,10 @@
         </if>
     </select>
 
-    <select id="getCstpQryTableList" resultType="com.joyintech.service.trade.cstp.dto.CstpSelectDto">
+    <select id="getCstpQryTableList" resultType="com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto">
         select distinct aa.* from(
         SELECT
         /*add by chenjiaxing 质押式回购改造 20210819*/
-        I.COUNTERTRADERNAME counterTraderName,/*对方交易员*/
         I.SETTLDATE settldate, /*首次结算日*/
         I.SETTLDATE2 settldate2,/*到期结算日*/
         ptl_portfolio.Portfolio_Id portfolioId,/*组合代码*/
@@ -359,8 +358,6 @@
         I.TRADEMETHOD tradeMethod,/*交易方式*/
         I.SETTLCURRENCY settlcurrency,/*结算币种*/
         I.EXECTYPE execType,/*成交状态*/
-        I.OURINSTITUTIONCODE ourinstitutioncode, /*本方*/
-        I.COUNTERINSTITUTIONCODE counterinstitutioncode,/*对手方*/
         I.OURCAPITALBANKNAME ourcapitalbankname, /*资金开户行*/
         I.OURCAPITALACCOUNTNAME ourcapitalaccountname, /*资金账户户名*/
         I.OURCAPITALACCOUNTNUMBER ourcapitalaccountnumber, /*资金账号*/
@@ -384,9 +381,15 @@
         tpd.TRADE_ID tradeId,
         tpd.F_TRADE_ID fTradeId,
         tpd.R_TRADE_ID rTradeId,
-        mcci2.PARTY_NAME cpPartyName,/*对手方机构*/
-        /*add by chenjiaxing 质押式回购改造 20210819 end*/
-        I.OURTRADERNAME ourTradeName,/*本方交易员*/
+        iqcc.CP_PARTY_ID cpPartyId,
+        iqcc.CP_TRADER_ID cpTraderId,
+        iqcc.OU_PARTY_ID ouPartyId,
+        iqcc.OU_TRADER_ID ouTraderId,
+        iqcc.EXT_CPTRADER_NAME exeCpTraderId,
+        iqcc.EXT_OUTRADER_NAME exeOuTraderId,
+        iqcc.EXT_CPPARTY_NAME exeCpPartyId,
+        iqcc.EXT_OUPARTY_NAME exeOuPartyId,
+         /*add by chenjiaxing 质押式回购改造 20210819 end*/
         decode(I.BUSINESSTYPE,'BOND',
         (select TRADE_MARKET from fin_product where FINPROD_market_ID = ts.SECID),
         'REPO',decode(tr.market, 'IB', '01', 'SH', '03', 'SZ', '04')) market,
@@ -479,12 +482,25 @@
                     from IBU_QUOTE_CREP_PLEDGE a
                     left join FIN_PRODUCT b
                     on b.FINPROD_ID = a.PLEDGE_FINPROD_ID)iqcp ON iqcp.QUOTE_ID = QUOTE.QUOTEID
-        LEFT JOIN( SELECT C.PARTY_CUSTOMER_ID,
-                    C.PARTY_NAME,
-                    A.PARTY_ID
-                    FROM MST_CFETS_CUSTOMER_INFO A
-                    LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
-                    LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID) mcci2 on mcci2.PARTY_ID = I.COUNTERINSTITUTIONCODE
+        left join (Select A.EXECID,
+                    A.OU_PARTY_ID,
+                    A.OU_TRADER_ID,
+                    A.CP_PARTY_ID,
+                    A.CP_TRADER_ID,
+                    M1.TRADER_NAME AS EXT_OUTRADER_NAME,
+                    M2.TRADER_NAME AS EXT_CPTRADER_NAME,
+                    N1.PARTY_ABBR  AS EXT_OUPARTY_NAME,
+                    N2.PARTY_ABBR  AS EXT_CPPARTY_NAME
+                    from IBU_QUOTE_CREP A
+                    left join SYS_USER f on A.OU_TRADER_ID = f.USER_NAME
+                    left join SYS_USER_ADD fa on fa.USER_ID = f.USER_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_TRADER M1
+                    ON M1.TRADER_ID = NVL(fa.IBU_TRADER, A.OU_TRADER_ID)
+                    LEFT JOIN MST_CFETS_CUSTOMER_TRADER M2 ON M2.TRADER_ID = A.CP_TRADER_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_INFO N1 ON N1.PARTY_ID = A.OU_PARTY_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_INFO N2 ON N2.PARTY_ID = A.CP_PARTY_ID
+                    WHERE NOT EXISTS(SELECT 1 FROM WFL_IBU_QUOTE_CREP WIQC WHERE WIQC.QUOTE_ID = A.QUOTE_ID)) iqcc
+                    on iqcc.EXECID = i.EXECID
         <where>
             AND I.BUSINESSTYPE in ('BOND','REPO')
             <if test="finprodType != null and !''.equals(finprodType)">
@@ -574,5 +590,33 @@
                 and aa.side = #{benfangSide}
             </if>
         </where>
+    </select>
+
+    <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
+        FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+        FROM MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN(
+        SELECT nvl(t2.mparty_id,t1.party_id) PARTY_ID from MST_CFETS_CUSTOMER_INFO t1 LEFT JOIN MST_CFETS_CUSTOMER_RELA t2
+        on t1.party_id = t2.sparty_id
+        WHERE 1 = 1
+        ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
+        ) MST_CFETS_CUSTOMER_TRADER
+        WHERE 1 = 1
+        <if test="param != null and !param.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{param},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{param},'%')))
+        </if>
+        <if test="search != null and !search.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+        </if>
+        <if test="initValue != null and initValue != ''">
+            AND MST_CFETS_CUSTOMER_TRADER.TRADER_ID = #{initValue}
+        </if>
     </select>
 </mapper>
