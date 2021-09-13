@@ -101,7 +101,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 账户来源
      */
     private String secAcctSource;
-    
+
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
     /**
      * 取得 金融产品类型（投管分类），债券、理财产品、基金、理财产品模板、理财产品分层
      *
