@@ -69,7 +69,7 @@
         cfetsRepoDealQuotedPre002Save: cfetsRepoDealQuotedPre002Save,
         cfetsRepoDealQuotedPre002Sumbit: cfetsRepoDealQuotedPre002Sumbit,
         cfetsRepoDealQuotedPre003Save: cfetsRepoDealQuotedPre003Save,
-        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre002Sumbit
+        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre003Sumbit
     };
     CfetsRepoDealQuotedPrMain = {
         clickPortfolioId: clickPortfolioId,
@@ -77,6 +77,6 @@
         cfetsRepoDealQuotedPre002Save: cfetsRepoDealQuotedPre002Save,
         cfetsRepoDealQuotedPre002Sumbit: cfetsRepoDealQuotedPre002Sumbit,
         cfetsRepoDealQuotedPre003Save: cfetsRepoDealQuotedPre003Save,
-        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre002Sumbit
+        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre003Sumbit
     };
 })();
