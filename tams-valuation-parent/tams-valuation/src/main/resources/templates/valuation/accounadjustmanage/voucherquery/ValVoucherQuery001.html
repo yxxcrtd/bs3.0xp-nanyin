@@ -64,17 +64,17 @@
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">原始业务编号</label>
+                    <label class="layui-form-label form-lable">记账日期</label>
                     <div class="layui-input-inline input-inline">
-                      <input type="text" id="pTradeId" name="pTradeId" class="layui-input form-input" placeholder="请输入" value="">
+                        <input type="text" id="bookDate" name="bookDate" data-th-value="${sysDate}" placeholder="请选择、支持区间" class="layui-input form-input input-dateRangeSelect" allowClear="true">
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-inline layui-col-md4">
-                    <label class="layui-form-label form-lable">记账日期</label>
+                    <label class="layui-form-label form-lable">原始业务编号</label>
                     <div class="layui-input-inline input-inline">
-                      <input type="text" id="bookDate" name="bookDate" data-th-value="${sysDate}" placeholder="请选择、支持区间" class="layui-input form-input input-dateRangeSelect" allowClear="true">
+                        <input type="text" id="pTradeId" name="pTradeId" class="layui-input form-input" placeholder="请输入" value="">
                     </div>
                 </div>
                 <div class="layui-inline layui-col-md4">
