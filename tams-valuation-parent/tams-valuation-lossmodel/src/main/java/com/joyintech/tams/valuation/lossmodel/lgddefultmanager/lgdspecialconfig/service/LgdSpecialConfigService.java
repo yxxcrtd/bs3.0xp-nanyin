@@ -198,6 +198,10 @@ public class LgdSpecialConfigService extends  CommonExportService<LgdSpecialConf
                 params,SelectOptionDto.class);
     }
 
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
+    }
+
 
 
 

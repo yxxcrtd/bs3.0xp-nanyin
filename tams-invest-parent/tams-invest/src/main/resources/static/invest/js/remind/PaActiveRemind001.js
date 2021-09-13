@@ -12,12 +12,6 @@
     };
 
     $(function() {
-        // 使主动提醒画面自适应高度
-        $(window.parent.document).find("iframe").load(function(){
-            var main = $(window.parent.document).find("iframe");
-            var thisheight = $(window.parent.document).height() - 90;
-            main.height(thisheight);
-        });
 
         // 平台日更新
         SocketClient.subscribe('/sys/updateSysDate', function(msg) {

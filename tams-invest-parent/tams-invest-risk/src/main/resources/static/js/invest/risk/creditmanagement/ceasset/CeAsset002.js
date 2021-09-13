@@ -145,7 +145,7 @@
      */
     var initElements = function (){
         // initFirstLendingIntervalDiv();
-        initApproveDateDiv();
+        // initApproveDateDiv();
         initAmt();
     }
     // 资产授信新建增加字段  add by yufei 20200630 end

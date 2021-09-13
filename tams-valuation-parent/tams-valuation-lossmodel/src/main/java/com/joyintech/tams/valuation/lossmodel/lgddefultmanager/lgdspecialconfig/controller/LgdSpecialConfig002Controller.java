@@ -13,6 +13,7 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
@@ -204,8 +205,17 @@ public class LgdSpecialConfig002Controller extends BaseController {
         return  suggestDtoList;
     }
 
-
-
-
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  lgdSpecialConfigService.getAssetInfoSelectOption(RequestUtil.getPageParam());
+    }
 
 }

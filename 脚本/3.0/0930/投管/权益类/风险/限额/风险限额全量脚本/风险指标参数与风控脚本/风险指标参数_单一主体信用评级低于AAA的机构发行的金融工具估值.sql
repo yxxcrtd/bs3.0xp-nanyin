@@ -76,9 +76,10 @@ V_CONTENT_04 CLOB := 'WITH finTemp AS (select FINPROD_ID ,case  FINPROD_TYPE2 WH
                 WHEN ''F37'' THEN financier
                 ELSE null end as ISSUER from  FIN_PRODUCT
     union all
-    SELECT FINPROD_ID,COUNTER_ID as ISSUER
-    FROM FIN_TRADE_PRODUCT
-    WHERE BRANCH=0 AND FINPROD_TYPE2 IN(''F03'',''F05''))
+    SELECT T.FINPROD_ID,M.LINK_ID as ISSUER
+    FROM FIN_TRADE_PRODUCT T
+    INNER JOIN  MST_COUNTER_PARTY M ON M.COUNTER_ID=T.COUNTER_ID
+    WHERE T.BRANCH=0 AND T.FINPROD_TYPE2 IN(''F03'',''F05''))
  SELECT SUM(TRADE_AMT) as RVALUE, RKEY, RKEYCN FROM (
     SELECT
         NVL(SUM(NVL(VAL.MARKET_VALUE,0)+nvl(VAL.TDY_INTINCEXP, 0)),0) TRADE_AMT, PRD.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
@@ -206,11 +207,11 @@ SELECT NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT,T2.ISSUER RKEY,CST.CUSTOMER_NAM
       - nvl(sum(decode(n.PS, ''T23'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       - nvl(sum(decode(n.PS, ''T38'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       - nvl(sum(decode(n.PS, ''T39'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
-      - nvl(sum(decode(n.PS, ''T54'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) 
-      - nvl(sum(decode(n.PS, ''T93'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) 
-      - nvl(sum(decode(n.PS, ''T95'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) 
-      - nvl(sum(decode(n.PS, ''T96'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) 
-      - nvl(sum(decode(n.PS, ''T55'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) 
+      - nvl(sum(decode(n.PS, ''T54'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
+      - nvl(sum(decode(n.PS, ''T93'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
+      - nvl(sum(decode(n.PS, ''T95'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
+      - nvl(sum(decode(n.PS, ''T96'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
+      - nvl(sum(decode(n.PS, ''T55'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)
       - nvl(sum(decode(n.PS, ''T56'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0)   AS TRADE_AMT, t2.ISSUER RKEY, CST.CUSTOMER_NAME RKEYCN
     FROM TRD_PRODUCT_TEMP_DEAL_ADD m
     INNER JOIN TRD_PRODUCT_TEMP_DEAL n ON m.TRADE_ID = n.TRADE_ID

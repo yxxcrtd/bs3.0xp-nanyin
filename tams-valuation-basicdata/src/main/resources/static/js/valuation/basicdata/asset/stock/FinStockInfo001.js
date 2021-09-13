@@ -45,7 +45,7 @@ cols: [
             ,{field:'vdate',  width:120, title: 'FinStockInfo001.IpoDate',type:'date'}//上市日期
             ,{field:'sShares',  width:120, title: 'FinStockInfo001.allStock',sortField:"sShares"} //总股本
             ,{field:'cShares',  width:120, title: 'FinStockInfo001.currentCapital',sortField:"cShares"} //流通股本
-            ,{field:'shOrZhName',  width:150, title: 'FinStockInfo001.shOrZh',sortField:"shOrZh"}//是否沪港通或深港通
+            // ,{field:'shOrZhName',  width:150, title: 'FinStockInfo001.shOrZh',sortField:"shOrZh"}//是否沪港通或深港通
             ,{field:'isMarginFinprodName',width:150, title:'FinStockInfo001.isMarginFinprod',sortField:"isMarginFinprod"}//是否沪港通或深港通
             // ,{field:'ccy',  title: 'FinStockInfo001.ccy', sortField:'ccy'}//币种
             ,{field:'ccyAbbr', sortField:"ccy",width:150, title: 'FinStockInfo001.ccy'}//币种

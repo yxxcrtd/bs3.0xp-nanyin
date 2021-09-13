@@ -56,6 +56,7 @@
 	, {field : 'mdate',title : 'EtrPlanAssetR002.mdate',width : '10%',type : 'date',sortField : "mdate",id : 'mdate', sortable: false}// 委托结束日
 	, {field : 'finprodId',title : 'EtrPlanAssetR002.finprodId',visible: false, sortable: false}// 资产代码
 	, {field : 'finprodMarketId',title : 'EtrPlanAssetR002.finprodId',width : '10%',id : "finprodMarketId", sortable: false}
+    , {field : 'finprodName', title: 'EtrPlanAssetR001.finprodName', width:'10%', sortable: false}
 	, {field : 'ps', visible:false, sortable: false}// 交易方向
     , {field : 'busPs', title: 'EtrPlanAssetC001.ps', width:'10%',sortField:"ps", sortable: false}// 交易方向
     , {field : 'ccy',visible:false, sortable: false}// 币种
@@ -63,7 +64,6 @@
 	, {field : 'entrustAmtShow',title : 'EtrPlanAssetR003.entrustAmt',type : 'number',width : '10%', sortable: false}// 委托金额
 	, {field : 'entrustNumShow',title : 'EtrPlanAssetR003.entrustNum',type : 'number',width : '10%', sortable: false}// 委托份额
 	, {field : 'price',title : 'TrdPlanCcyInvestTrade003.carryAmt',width : '10%',id : 'price', sortable: false}// 待结转份额
-	, {field : 'finprodName', title: 'EtrPlanAssetR001.finprodName', width:'10%', sortable: false}
     , {field : 'assetType1',visible:false, sortable: false}// 资产二级分类
     , {field : 'busAssetType1', title: 'EtrPlanAssetC001.type9', width:'10%', sortable: false}// 资产二级分类
     , {field : 'assetType10',visible:false, sortable: false}// 资产三级分类
@@ -73,6 +73,8 @@
 	, {field : 'etrAvailableCash',title : 'EtrPlanAssetR003.proAvailableCash',width : '10%',id : 'etrAvailableCash', sortable: false}// 指令可用现金
 	, {field : 'assetAvailablePosition',title : 'EtrPlanAssetR003.assetAvailablePosition',width : '10%',id : 'assetAvailablePosition', sortable: false}// 指令可用持仓
     , {field : 'invManagerId',width : 150,id :'invManagerId',title:'投资经理',visible : false, sortable: false}
+    , {field : 'counterId',width : 150,id :'counterId',title:'交易对手ID',visible : false, sortable: false}
+    , {field : 'counterIdName',width : '10%',id :'counterIdName',title:'EtrPlanAssetC003.counterId', sortable: false}
 	, {field : 'remark',title : 'EtrPlanAssetR003.remark',width : '10%', sortable: false}// 备注
 	, {field : 'fileArray',title : 'EtrBondFirstLBidding003.fileArray',width : 150,visible : false, sortable: false}
 	, {field : 'businessId',width : 150,visible : false, sortable: false}

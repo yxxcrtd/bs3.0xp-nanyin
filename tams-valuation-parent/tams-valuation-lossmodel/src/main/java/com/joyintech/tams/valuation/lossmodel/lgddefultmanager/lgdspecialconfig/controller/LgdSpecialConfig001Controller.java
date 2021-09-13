@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.system.constant.SystemGlobalConstant;
@@ -173,6 +174,19 @@ public class LgdSpecialConfig001Controller extends BaseController {
                 this.getMessage(DateUtil.format(new Date())+"_特殊资产LGD维护记录")
                         + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
+    }
+
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  lgdSpecialConfigService.getAssetInfoSelectOption(RequestUtil.getPageParam());
     }
 
 }

@@ -161,5 +161,14 @@ public class Specialassets001Service extends CommonExportService<ModAssetGradeSp
            ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/Specialassets/getFinprodIdForImpairment", map,
            SelectOptionDto.class);
    }
+
+    /**
+     * 查询资产代码下拉框
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
+    }
     
 }
