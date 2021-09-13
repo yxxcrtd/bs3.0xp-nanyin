@@ -211,6 +211,20 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
     private String counterIdName;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * 获取 counterIdName
      * 
      * @return counterIdName.
