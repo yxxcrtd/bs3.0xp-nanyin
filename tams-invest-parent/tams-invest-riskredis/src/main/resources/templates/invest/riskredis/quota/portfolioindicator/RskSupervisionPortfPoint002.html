@@ -11,19 +11,19 @@
                <input type="hidden" id="portfolioCode" name="portfolioId"  data-th-value="${entity?.portfolioId}" >
                 <input type="hidden" id="portfolioLevel" name="portfolioLevel"  data-th-value="${entity?.portfolioLevel}" >
              <div class="layui-form-item" style="margin-left: 20px">
-                <label class="layui-form-label line24" data-th-text="#{RskSupervisionPortfPoint002.portfolioName}">组合名称</label>
+                <label class="layui-form-label line24" style="width: 80px;" data-th-text="#{RskSupervisionPortfPoint002.portfolioName}">组合名称</label>
                 <div class="layui-input-inline input-inline" style="width:85%!important">
                    <input class="layui-input form-input" id="portfolioName" name="portfolioName"  data-th-value="${entity?.portfolioName}" disabled>					          
                 </div>
             </div>
            <div class="layui-form-item" id="portfMixDiv" style="margin-left: 20px;display: none">
-                <label class="layui-form-label line24" data-th-text="#{RskSupervisionPortfPoint002.portfolioMix}">组合成分</label>
+                <label class="layui-form-label line24" style="width: 80px;" data-th-text="#{RskSupervisionPortfPoint002.portfolioMix}">组合成分</label>
                 <div class="layui-input-inline input-inline" style="width:85%!important">
                    <input class="layui-input form-input" id="portfolioMix"   data-th-value="${portfolioMixName}" disabled>					          
                 </div>
             </div>
             <div class="layui-form-item"  style="margin-bottom:8px;margin-left: 20px">
-					<label class="layui-form-label line24"
+					<label class="layui-form-label line24" style="width: 80px;"
 						data-th-text="#{RskSupervisionPortfPoint002.startDate}">有效区间</label>
 					<div class="layui-input-inline input-inline" style="width:85%!important">
 						<input style="float: left;margin-right:5px" type="text" id="startDate" name="startDate" data-th-value='${#dates.format(entity?.startDate,"yyyy-MM-dd")}' 
@@ -31,7 +31,7 @@
 					</div>
 			</div>
 			<div class="layui-form-item"  style="margin-bottom:8px;margin-left: 20px">
-					<label class="layui-form-label line24"
+					<label class="layui-form-label line24" style="width: 80px;"
 						data-th-text="#{RskSupervisionPortfPoint002.endDate}">有效区间</label>
 					<div class="layui-input-inline input-inline" style="width:85%!important">
 						 <input style="float: right" type="text" id="endDate" name="endDate" data-th-value='${#dates.format(entity?.endDate,"yyyy-MM-dd")}' 

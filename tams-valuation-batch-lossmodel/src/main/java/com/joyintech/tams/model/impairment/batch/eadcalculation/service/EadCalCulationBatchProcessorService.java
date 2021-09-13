@@ -205,7 +205,7 @@ public class EadCalCulationBatchProcessorService {
                                 dto.setPortfolioId(readerDto.getPortfolioId());
                                 dto.setAssetId(readerDto.getAssetId());
                                 dto.setModelAssetType(readerDto.getModelAssetType());
-                                dto.setCashType(DictCodeListExt1.现金流二级类型_利息.getValue());
+                                dto.setCashType(DictCodeListExt1.现金流二级类型_本金.getValue());
                                 dto.setPlanEndDate(itemdebt.getMdate());
                                 dto.setAmtReceived(isNullBigDecimal(item23.getTradeAmt()));
                                 dto.setAccountAmt(isNullBigDecimal(itemdebt.getIntAmt()));
@@ -219,7 +219,7 @@ public class EadCalCulationBatchProcessorService {
                             dto.setPortfolioId(readerDto.getPortfolioId());
                             dto.setAssetId(readerDto.getAssetId());
                             dto.setModelAssetType(readerDto.getModelAssetType());
-                            dto.setCashType(DictCodeListExt1.现金流二级类型_利息.getValue());
+                            dto.setCashType(DictCodeListExt1.现金流二级类型_本金.getValue());
                             dto.setPlanEndDate(itemdebt.getMdate());
                             dto.setAccountAmt(isNullBigDecimal(itemdebt.getIntAmt()));
                             AssetLimitsList.add(dto);
@@ -304,9 +304,10 @@ public class EadCalCulationBatchProcessorService {
                         //定义变量： 每百元应收金额  = 资产逾期交易.应收金额 / 资产发行规模 * 100
                         BigDecimal perhandrudAmt = BigDecimal.ZERO;
                         if (assetIntAmt.compareTo(BigDecimal.ZERO) != 0) {
-                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), ArithmeticUtil.multiply(assetIntAmt, BigDecimal.valueOf(100)), 2, RoundingMode.HALF_UP);
+//                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), ArithmeticUtil.multiply(assetIntAmt, BigDecimal.valueOf(100)));
+                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), assetIntAmt);
                         }
-                        receivableAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply(limitTradeInMobileNum, perhandrudAmt)), NumberEnum.MONEY);
+                        receivableAmt = ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply( NumberEnum.MONEY.getCode(),null, limitTradeInMobileNum, perhandrudAmt));
                     } else {
                         receivableAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply(limitTradeInMobileNum, item.getAccountAmt())), NumberEnum.MONEY);
                     }

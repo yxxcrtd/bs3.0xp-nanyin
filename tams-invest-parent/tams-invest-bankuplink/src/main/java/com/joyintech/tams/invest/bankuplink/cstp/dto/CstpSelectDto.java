@@ -539,7 +539,10 @@ public class CstpSelectDto extends InterfCstpTrade{
         if(StringUtil.equals(this.getDeliveryType().toString(),"5")){
             return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "01");
         }
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType().toString());
+        if(StringUtil.isNotEmpty(this.getDeliveryType())){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType().toString());
+        }
+        return "";
     }
     public String getDeliveryType2Str() {
         if(StringUtil.equals(this.getDeliveryType2().toString(),"0")){
@@ -551,7 +554,10 @@ public class CstpSelectDto extends InterfCstpTrade{
         if(StringUtil.equals(this.getDeliveryType2().toString(),"5")){
             return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "01");
         }
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType2().toString());
+        if(StringUtil.isNotEmpty(this.getDeliveryType2())) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType2().toString());
+        }
+        return "";
     }
     public String getExecTypeStr() {
         if(StringUtil.equals(this.getExecType(),"F")){

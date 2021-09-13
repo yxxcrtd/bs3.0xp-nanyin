@@ -382,8 +382,6 @@
                 if(data.index == 0) {
                 	refreshPositionsTable();
                 }else if(data.index == 1) {
-                	var width = $("#date_zqzy").parent().width();
-                	$("#select2-portfolioId_zqzy-container").parent().css("max-width", width);
                 	refreshZqzyPositionsTable();
                 }
             });

@@ -1,25 +1,4 @@
 (function(){
-
-    var init = function () {
-
-        Split(["#top_panel_dev", "#bottom_panel_dev"], {
-            sizes: [48, 44],
-            minSize: 100,
-            direction: "vertical"
-        });
-
-        Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-            sizes: [35, 65],
-            minSize: [300, 600],
-            direction: "horizontal"
-        });
-        // Split(["#top_panel_dev", "#bottom_panel_dev"], {
-        //     sizes: [46, 44],
-        //     minSize: 100,
-        //     direction: "vertical"
-        // });
-    };
-
     var changeFlg = "01";
     var DHOrQQ = "DH";
 
@@ -37,8 +16,6 @@
     });
     
     $(function () {
-    	init();
-
         /**
          * 对话
          */

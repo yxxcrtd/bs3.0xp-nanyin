@@ -1527,7 +1527,7 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
             param.remove("keywords");
         }
         param.put("loginUserId", LoginUserUtil.getUserName());
-        List<CstpSelectDto>list = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/getCstpQryTableList",
+        List<CstpSelectDto>list = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/getCstpQryTableList",
                 param, CstpSelectDto.class);
         if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
             list = (List<CstpSelectDto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));

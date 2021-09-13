@@ -138,6 +138,13 @@ TrdBondInvestTrade002Controller extends BaseController {
         String bondFirstSign = this.getParam("bondFirstSign");
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         //配置单位 add by yeming 20210723 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
@@ -156,6 +163,12 @@ TrdBondInvestTrade002Controller extends BaseController {
             if (StringUtil.isNotEmpty(dto.getBondFirstSign())){
                 model.addAttribute("bondFirstSign",dto.getBondFirstSign());
             }
+
+            // add by yeming 20210913 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, dto.getParentPageId());
+            // add by yeming 20210913 银行间场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
@@ -324,12 +337,6 @@ TrdBondInvestTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         model.addAttribute("userId", LoginUserUtil.getUserName());
         //查看交易方向添加清理核销 add by wp 20210427 start
