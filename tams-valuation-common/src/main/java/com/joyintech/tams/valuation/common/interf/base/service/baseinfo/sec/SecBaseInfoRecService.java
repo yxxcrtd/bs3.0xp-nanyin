@@ -177,7 +177,7 @@ public class SecBaseInfoRecService {
         // 交易场所 = A.交易场所
         result.setTradeMarket(dto.getTradePlace());
         // 发行人 = A.发行人
-//        result.setIssuer(dto.getPublisher()); //暂时不解析，后续再确认
+        result.setIssuer(dto.getPublisher()); //暂时不解析，后续再确认
         // 发行日 = A.起息日
         result.setIdate(dto.getVdate());
         // 起息日 = A.起息日

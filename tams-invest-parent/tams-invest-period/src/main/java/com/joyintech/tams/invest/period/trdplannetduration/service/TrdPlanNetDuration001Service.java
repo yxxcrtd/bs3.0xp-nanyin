@@ -164,6 +164,10 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
         // 插入Entity对应的业务流程DB中, 并删除流程表中的数据
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdPlanNetDuration/doComplete", entity,
             String.class);
+
+        if(StringUtil.equals(CacheUtil.getSysParam("ISChongQing"),DictCodeList.是否_是.getValue())) {
+            return;
+        }
         // 除权登记生成总集复核数据
         if (!(StringUtil.equals(entity.getMode(), "revoke")||StringUtil.equals(entity.getMode(), "REVOKE")) && StringUtil.equals(entity.getType(), "02")) {
             // 设置工作流代码

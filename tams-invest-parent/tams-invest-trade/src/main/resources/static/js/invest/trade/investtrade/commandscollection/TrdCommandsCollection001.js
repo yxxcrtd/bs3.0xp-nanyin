@@ -1247,7 +1247,7 @@ $(function() {
                             return getPageParams(assetType);
                         }
                     },
-                    dblclick: function (table, data) {
+                    click: function (table, data) {
                         Joyin.ajax(basePath + 'invest/trade/investtrade/commandscollection/TrdCommandsCollection002/selectEntrustList', 
                                 {assetType: assetType, entity: JSON.stringify(data)}, function(result) {
                             entrustTableF11.reload({data: result});
@@ -1292,9 +1292,9 @@ $(function() {
                     searchOnInit: true,
                     height:150,
                     cols:[
-                        {field:'entrustId', width:'13%', title: 'TrdBondInvestTrade001.entrustId',sortable:false}
+                        {field:'entrustId', width:'13%', title: 'TrdBondInvestTrade001.entrustIdF11',sortable:false}
                         ,{field:'vdate', visible:false}
-                        ,{field:'mdateStr', width:'10%', title: 'TrdCommandReceive001.mdate', type: 'date', sortable:false}
+                        ,{field:'mdateStr', width:'10%', title: 'TrdCommandReceive001.mdateF11', type: 'date', sortable:false}
                         ,{field:'portfolioId', width:'10%', title: 'TrdCommandReceive001.portfolioId',sortable:false}
                         ,{field:'priceModelStr',  width:'10%', title: 'TrdCommandsCollection002.priceMode',sortable:false}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF11', type: 'number', sortable:false}

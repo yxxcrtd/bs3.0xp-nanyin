@@ -303,11 +303,15 @@
 
     <!--产品代码查询-减值结果管理-->
     <select id="getProdIdByLossResult" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
-          SELECT A.BOOKSET_ID AS id,
-                 nvl(A.BOOKSET_NAME, A.BOOKSET_FULLNAME) AS text
-          FROM BOK_BOOKSET A
-          WHERE A.BOOKSET_TYPE = '02'
-                and A.ACCT_MODE = '03'
+		SELECT A.BOOKSET_ID AS id,
+			nvl(A.BOOKSET_NAME, A.BOOKSET_FULLNAME) AS text
+		FROM BOK_BOOKSET A
+		WHERE A.BOOKSET_TYPE = '02'
+			and A.ACCT_MODE != '03'
+			<if test="search != null and search !=''">
+				AND (A.BOOKSET_ID LIKE concat(concat('%',#{search}),'%')
+				OR (A.BOOKSET_NAME LIKE concat(concat('%',#{search}),'%') OR A.BOOKSET_FULLNAME LIKE concat(concat('%',#{search}),'%')))
+			</if>
     </select>
 
     <!--有效业务编号查询-减值结果管理-->

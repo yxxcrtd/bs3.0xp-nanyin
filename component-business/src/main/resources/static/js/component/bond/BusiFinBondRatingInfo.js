@@ -13,7 +13,7 @@
     var cols = [
             {field:'oType', sortable:false, title: 'BusiFinBondRatingInfo.gradeType',editOption:{type:'select', multiple: false,result: MAIN_GRADE_TYPE},edit:true}
             ,{field:'shortLongTerm', sortable:false, title: 'BusiFinBondRatingInfo.shortLongTerm',editOption:{type:'select', multiple: false,result: LONG_SHORT_TERM},edit:true}
-            ,{field:'gradeResult', sortable:false, title: 'BusiFinBondRatingInfo.gradeResult',editOption:{type:'select', multiple: false,result: MAIN_GRADE_RESULT},edit:true}
+            ,{field:'gradeResult', sortable:false, title: 'BusiFinBondRatingInfo.gradeResult',editOption:{type:'select', multiple: false, autosort:false, result: MAIN_GRADE_RESULT},edit:true}
             ,{field:'gradeDate', sortable:false, title: 'BusiFinBondRatingInfo.gradeDate',edit:true,type:'date'}
             ,{field:'gradeOrgId', sortable:false, title: 'BusiFinBondRatingInfo.gradeOrgId',editOption:{type:'select', multiple: false,result: GRADE_PARTY},edit:true}
             ,{field:'operation', sortable:false, title: 'SysCommon.operation', type:'action', buttons: ['delt']}//编辑和删除事件
