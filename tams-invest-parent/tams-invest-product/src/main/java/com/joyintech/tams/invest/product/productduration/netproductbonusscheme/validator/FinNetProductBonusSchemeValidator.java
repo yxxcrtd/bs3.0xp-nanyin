@@ -272,6 +272,16 @@ public class FinNetProductBonusSchemeValidator implements BeanValidator {
             	if(dto.getConfirmDate()!=null && dto.getConfirmDate().compareTo(DateUtil.platDateFromCache())<0){
                     errorList.add(new ValidMessage("仅允许撤销确认日大于等于平台日期的交易！"));
                 }
+                if (WorkFlowUtil.isNotFromToDoList()) {
+                    ProcessMark processMark = new ProcessMark();
+                    processMark.setBusinessDataPk1(dto.getBonusPlanId());
+                    processMark.setBusinessDataPk2(dto.getFinprodId());
+                    List<String> resultList = leaveMarkProcessService.getBusinessDataInFlow(processMark);
+                    if (!StringUtil.isEmptyList(resultList)) {
+                        errorList.add(new ValidMessage(this.getMessage("COMMON_E_0012", dto.getBonusPlanId())));
+                    }
+
+                }
             	//产品红利再投撤销时，确认日不能小于平台日 yzg 20191210 end
             	return errorList;
             }
