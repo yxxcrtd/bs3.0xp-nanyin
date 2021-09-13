@@ -1073,7 +1073,7 @@
     <!--通过成交编号和委托编号查找匹配的质押券-->
     <select id="getMatchpledgeBondInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto">
         SELECT
-            T1.MATCH_NUM facetotalamt ,
+            T1.MATCH_NUM*100 facetotalamt ,
             T2.SECID secid,
             T2.CONVRATE convrate,
             T3.FINPROD_ABBR secname,

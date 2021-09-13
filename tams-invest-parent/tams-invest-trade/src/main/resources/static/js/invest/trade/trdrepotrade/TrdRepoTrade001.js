@@ -89,7 +89,7 @@
             , {field: 'tradeDate', width:120, sortField:'tradeDate', title: 'TrdRepoTrade001.colModel.tradeDate', type: 'date'}
             , {field: 'prinAmt', width:120, sortField:'prinAmt', title: 'TrdRepoTrade001.colModel.prinAmt', type: 'money'}
             , {field: 'ccyText', width:120, sortField:'ccy', title: 'TrdRepoTrade001.colModel.ccy'}
-            , {field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号'}
+            , {field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号', visible:pageId != 'TrdRepoTradeEx001'}
             , {field: 'remark', width:120, sortable:false, title: 'TrdRepoTrade001.colModel.remark'}
             , {field: 'ps', visible: false}
             , {field: 'repoType', visible: false}

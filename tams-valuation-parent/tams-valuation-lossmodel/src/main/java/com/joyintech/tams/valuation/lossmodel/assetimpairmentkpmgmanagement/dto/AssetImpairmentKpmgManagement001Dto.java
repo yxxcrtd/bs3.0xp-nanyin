@@ -233,8 +233,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getPurchaseTimeGradeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.评级结果, purchaseTimeGrade))?
-                SysDataUtil.getNameFromDataDict(DictCode.评级结果, purchaseTimeGrade):purchaseTimeGrade;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.内部评级, purchaseTimeGrade))?
+                SysDataUtil.getNameFromDataDict(DictCode.内部评级, purchaseTimeGrade):purchaseTimeGrade;
     }
 
     public void setPurchaseTimeGrade(String purchaseTimeGrade) {
@@ -246,8 +246,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getCurrentTimeGradeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.评级结果, currentTimeGrade))?
-                SysDataUtil.getNameFromDataDict(DictCode.评级结果, currentTimeGrade):currentTimeGrade;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.内部评级, currentTimeGrade))?
+                SysDataUtil.getNameFromDataDict(DictCode.内部评级, currentTimeGrade):currentTimeGrade;
     }
 
     public void setCurrentTimeGrade(String currentTimeGrade) {

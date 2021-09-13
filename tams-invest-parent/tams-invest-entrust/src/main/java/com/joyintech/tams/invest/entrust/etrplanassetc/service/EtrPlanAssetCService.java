@@ -710,53 +710,26 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                     map.put("initValue", rowData.get(10).toString());
                     map.put("page", 1);
                     map.put("length", 20);
-                    map.put("counterType", null);
+                    if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())
+                            || StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())) {
+                        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
+                    } else if (StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())
+                            || StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
+                        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
+                    } else {
+                        map.put("counterType", null);
+                    }
                     Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
                             ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
                             map, SelectOptionDto.class);
                     if (selectOptionDtoPage.getRoot().isEmpty()) {
-                        confirmMsg1 = etrCommonService.StringAddByBr(confirmMsg1, getMessage(
+                        // modify by wanshiwei 2021-09-11 ZGZGST-2043 交易对手填写错误时，期望导入失败 start
+                        confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                                 "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
+                        // modify by wanshiwei 2021-09-11 ZGZGST-2043 交易对手填写错误时，期望导入失败 end
                     }
                 }
-                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
-                    if ( StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())
-                        || StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())) {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("initValue", rowData.get(10).toString());
-                        map.put("page", 1);
-                        map.put("length", 20);
-                        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
-                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                            ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                            map, SelectOptionDto.class);
-                        if (selectOptionDtoPage.getRoot().isEmpty()) {
-                            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                getMessage("ETR_E_0017",
-                                    getMessage("etrInvestPersonInfo.counterId"), lineNo));
-                        }
 
-                    }
-                }
-                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
-                    if (StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())
-                            || StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("initValue", rowData.get(10).toString());
-                        map.put("page", 1);
-                        map.put("length", 20);
-                        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
-                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                                map, SelectOptionDto.class);
-                        if (!selectOptionDtoPage.getRoot().isEmpty()) {
-                            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                    getMessage("ETR_E_0017",
-                                            getMessage("etrInvestPersonInfo.counterId"), lineNo));
-                        }
-
-                    }
-                }
                 if (StringUtil.isBlank(confirmMsg)) {
                     jsonArrays.add(rowData);
                 }

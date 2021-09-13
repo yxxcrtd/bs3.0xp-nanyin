@@ -307,8 +307,8 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      * @return 市场代码，可以按规则生成，或者手输，不校验唯一。对于理财产品分层，同母金融产品代码对应的市场代码。
      */
     @Override
-//    @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]\\.*[a-zA-Z]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
+    @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^[a-zA-z0-9]*\\.[a-zA-z]*$",message = "FinStockInfo002.finprodMarketId.CHECKERR_001",groups={ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();

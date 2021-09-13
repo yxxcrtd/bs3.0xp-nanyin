@@ -140,6 +140,13 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         model.addAttribute("aim02", DictCodeListExt1.投资目的_摊余成本类.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));        String entrustId = getParam("entrustId");
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         String finprodId = getParam("finprodId");
         String portfolioId = getParam("portfolioId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -167,6 +174,12 @@ public class EtrInvestBondInfo002Controller extends BaseController {
                 }
             }
             //配置单位 edit by yeming 20210721 end
+            // add by yeming 20210913 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, dto.getParentPageId());
+            // add by yeming 20210913 银行间场内场外拆分 end
+
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
@@ -235,12 +248,6 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         return super.init(model);
     }

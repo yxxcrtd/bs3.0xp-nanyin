@@ -1755,20 +1755,18 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         }
         //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
-            if(creditLinesAst!=null) {
-                if (BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
-                    BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
-                    BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
-                    inputDto.setShareAmt(objShareAmt.abs());
-                    inputDto.setTradeAmt(BigDecimal.ZERO);
-                    occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
-                }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
-                    inputDto.setTradeAmt(BigDecimal.ZERO);
-                }else{
-                    return outputDto;
-                }
-                inputDto.setEntrustId(null);
+            if (creditLinesAst!=null && BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
+                BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
+                BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
+                inputDto.setShareAmt(objShareAmt.abs());
+                inputDto.setTradeAmt(BigDecimal.ZERO);
+                occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
+            }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
+                inputDto.setTradeAmt(BigDecimal.ZERO);
+            }else{
+                return outputDto;
             }
+            inputDto.setEntrustId(null);
         }
         // STEP  2 计算占用额度
         cal占用额度(inputDto);

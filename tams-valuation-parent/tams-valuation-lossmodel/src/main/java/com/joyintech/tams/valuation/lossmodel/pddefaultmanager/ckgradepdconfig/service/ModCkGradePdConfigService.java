@@ -52,13 +52,6 @@ public class ModCkGradePdConfigService extends  CommonExportService<ModGradePdCo
      */
     public Page<ModGradePdConfigDto> selectForPage(Map<String, Object> pageParam) throws Exception {
         Page<ModGradePdConfigDto> pageList = restTemplate.postForPage(ServiceApplication.LOSS_MODEL_SERVICE_NAME+"/ModCkGradePdConfig/findPage", pageParam, ModGradePdConfigDto.class);
-        for(ModGradePdConfigDto mpd:pageList.getRoot()){
-            //组装数据
-            if(StringUtils.isNotBlank(mpd.getGradeResult())){
-                mpd.setGradeOrgName(SysDataUtil.getNameFromDataDict(DictCode.评级结果,mpd.getGradeResult()));//组装评级机构名称
-            }
-
-        }
         return pageList;
     }
 

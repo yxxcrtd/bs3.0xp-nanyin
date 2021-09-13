@@ -21,12 +21,12 @@
         <table class="layui-table" id="flowLeftTable"></table>
     </div>
     <div class="flow-right-contain">
-        <div class="flow-right-top" style="width: 59%">
+        <div class="flow-right-top layui-col-lg6">
             <div class="flow-top-wrap">
                 <form class="layui-form flow-form" id="form_right_top">
                     <div class="layui-form-item">
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">组合代码</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">组合代码</label>
                             <div class="layui-input-inline input-inline">
                                 <select  type="text" id="portfolioId" name="portfolioId" multiple
                                         class="layui-input form-input input-select"
@@ -34,8 +34,8 @@
                                 </select>                                
                             </div>
                         </div>
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">状态</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">状态</label>
                             <div class="layui-input-inline input-inline">
                                 <select id="statusValid" name="statusValid" multiple
                                         class="layui-input form-input input-select"
@@ -45,8 +45,8 @@
                         </div>                        
                     </div>
                     <div class="layui-form-item flow-inline-show">
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">
                                 <div class="flow-left-icon"><i class="iconfont icon-triangle-left"></i></div>业务类型</label>
                             <div class="layui-input-inline input-inline">
                                 <select type="text" class="layui-input form-input input-select" id="paBizType" name="paBizType" multiple
@@ -54,8 +54,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">产品/资产代码</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">产品/资产代码</label>
                             <div class="layui-input-inline input-inline">
                                 <select id="finprodId" name="finprodId"
                                         class="layui-input form-input input-select" formatoption="false" multiple
@@ -66,15 +66,15 @@
                         </div>
                     </div>
                     <div class="layui-form-item flow-inline-show">
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">现金流日期</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">现金流日期</label>
                             <div class="layui-input-inline input-inline">
                                 <input type="text" class="layui-input form-input input-dateRangeSelect" id="cashDate" name="cashDate" data-th-value="|${sysDate} - ${sysDate}|"
                                        placeholder="请选择(支持区间)"/>
                             </div>
                         </div>
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 90px;">是否匹配</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">是否匹配</label>
                             <div class="layui-input-inline input-inline" style="">
                                 <select type="text" class="layui-input form-input input-select" id="isMatched" name="isMatched"
                                         placeholder="请输入内容" data-th-data-result='${YES_OR_NO}' data-th-initvalue="${NO}">
@@ -84,7 +84,6 @@
 
                     </div>
                     <div class="layui-form-item flow-inline-show">
-                        
                          <div class="flow-btn-wrap" style="margin-right: 38px;">
                             <a class="layui-btn layui-btn-sm btn-search" id="InflowFundsCheckManagement001_btn_sysSearch">查询</a>
                             <a class="layui-btn layui-btn-sm btn-confirm" id="InflowFundsCheckManagement001_btn_confirmData">确认</a>
@@ -101,12 +100,12 @@
                 <table class="layui-table" id="flowTopTable"></table>
             </div>
         </div>
-        <div class="flow-right-top" style="width: 41%;">
+        <div class="flow-right-top layui-col-lg6">
             <div class="flow-top-wrap">
                 <form class="layui-form flow-form" id="form_right_bot">
                     <div class="layui-form-item">
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 30%;">对手方账户</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">对手方账户</label>
                             <div class="layui-input-inline input-inline">
                                 <select id="counterAcctNo" name="counterAcctNo"
                                         class="layui-input form-input input-select" formatoption="false"
@@ -115,27 +114,25 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="flow-inline">
-                            <label class="layui-form-label form-lable" style="width: 20%;">到账日</label>
-                            <div class="layui-input-inline input-inline" style="width: 69% !important;">
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">到账日</label>
+                            <div class="layui-input-inline input-inline">
                                 <input type="text" class="layui-input form-input input-dateRangeSelect" id="arriveDate" name="arriveDate" data-th-value="|${sysDate} - ${sysDate}|"
                                        placeholder="请选择(支持区间)"/>
                             </div>
                         </div>
                     </div>
-                    <div class="layui-form-item" style="padding-top: 8px;">
-                        <div class="flow-inline" style="width: 90%;">
-                            <label class="layui-form-label form-lable" style="width: 16.5%;">到账金额</label>
-                            <input type="text" class="layui-input form-input text-number" id="arriveAmtMin" name="arriveAmtMin" style="width: 33%; display: inline-block;"
-                                   placeholder="请输入最小金额">
-                            -
-                            <input type="text" class="layui-input form-input text-number" id="arriveAmtMax" name="arriveAmtMax" style="width: 33%; display: inline-block;"
-                                   placeholder="请输入最大金额">
-                        </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label form-lable" style="width: 19%">到账金额</label>
+                        <input type="text" class="layui-input form-input text-number" id="arriveAmtMin" name="arriveAmtMin" style="width: 33%; display: inline-block;"
+                               placeholder="请输入最小金额">
+                        -
+                        <input type="text" class="layui-input form-input text-number" id="arriveAmtMax" name="arriveAmtMax" style="width: 33%; display: inline-block;"
+                               placeholder="请输入最大金额">
                     </div>
                     <div class="layui-form-item flow-inline-show">
-                        <div class="flow-inline" style="">
-                            <label class="layui-form-label form-lable" style="width: 30%;">是否匹配</label>
+                        <div class="layui-col-lg6">
+                            <label class="layui-form-label form-lable">是否匹配</label>
                             <div class="layui-input-inline input-inline" style="">
                                 <select type="text" class="layui-input form-input input-select" id="enIsMatch" name="enIsMatch"
                                         placeholder="请输入内容" data-th-data-result='${YES_OR_NO}' data-th-initvalue="${NO}">
@@ -144,7 +141,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item flow-inline-show">                        
-                        <div class="flow-btn-wrap" style="margin-right: 15px;">
+                        <div class="flow-btn-wrap">
     <!--                    <a class="layui-btn layui-btn-sm btn-search btn-more-bot"><i class="iconfont icon-more"></i><span>更多</span></a>-->
                             <a class="layui-btn layui-btn-sm btn-search" id = "InflowFundsCheckManagement001_btn_cashInfSel"><i class="iconfont"></i><span>流水更新</span></a>
                             <a class="layui-btn layui-btn-sm btn-search" id="InflowFundsCheckManagement001_btn_enSearch">查询</a>
@@ -228,20 +225,6 @@
             width: 73%;*/
         }
 
-        .flow-inline {
-            float: left;
-            width: 50%;
-        }
-
-        .flow-inline .form-lable {
-            width: 26%;
-        }
-
-        .flow-inline .input-inline {
-            /*width: 61% !important;*/
-            display: inline-block;
-        }
-
         .flow-btn-wrap {
             float: right;
             /*width: 26%;*/
@@ -270,18 +253,11 @@
             font-size: 8px;
             color: #007fff;
         }
-        .flow-right-top{
-            float: left;
-            width: 49%;
-        }
         .flow-left-contain .layui-table .layui-table-view .layui-table-box .layui-table-body table tbody tr{
             background-color: #d9ecff;
         }
         .max-width {
             width: 100%;
-        }
-        .layui-form-item {
-            padding-top: 7px;
         }
         .laytable-cell-1-unmatchedNum {
             width: 80px;

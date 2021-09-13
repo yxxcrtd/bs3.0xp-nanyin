@@ -133,6 +133,15 @@
             });
     });
 
+
+    function getSettleSpeed(settleSpeedStr) {
+        var settleSpeed = 0;
+        if(settleSpeedStr) {
+            settleSpeed = settleSpeedStr.replace("T+","");
+        }
+        return settleSpeed
+    }
+
     /**
      * 保存或提交
      * 
@@ -176,7 +185,7 @@
             temp.entrustNum  = item.entrustNum;
             temp.counterId  = item.counterId;
             temp.prinAmt  = item.prinAmt;
-            temp.settleSpeed  = item.settleSpeed;
+            temp.settleSpeed  = getSettleSpeed(item.settleSpeed);
             temp.investRate  = item.investRate;
             temp.chlId =item.chlId;
             temp.assetAvailablePosition  = item.assetAvailablePosition;
@@ -210,9 +219,9 @@
                 function(result) {
                     Joyin.confirm(result.data,function() {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_save");
+                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_save");
                         } else {
-                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_submit","EtrProject002");
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_submit","EtrProject003");
                         }
                     });
                 });

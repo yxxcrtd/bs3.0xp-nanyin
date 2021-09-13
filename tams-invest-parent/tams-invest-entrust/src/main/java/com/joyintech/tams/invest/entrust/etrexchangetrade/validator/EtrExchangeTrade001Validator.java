@@ -267,8 +267,10 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			}
 
 			// etr_check_cash_switch 01 不提示 02 提示 禁止交易
-			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue()) && (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
-					|| DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs()))) {
+			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())
+					&& (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
+					|| DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())
+					|| DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs()))) {
 				Map<String,Object> param = new HashMap<String,Object>();
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
@@ -356,7 +358,9 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			}
 			
 			//正回购、质押券出库
-			if ((DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs())) && CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
+			// 委托指令组合的可用持仓不足时  01 提醒 02 禁止
+			if ((DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs()))
+					&& CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
 				Map<String,Object> param = new HashMap<String,Object>();
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("finprodId","XN_PRODID999");
