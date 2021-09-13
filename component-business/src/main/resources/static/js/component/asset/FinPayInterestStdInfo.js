@@ -1006,6 +1006,14 @@
                 msg = JoyinUtil.getMessage('BUSS_COM_E_0004',[JoyinUtil.getLabel("FinInterestFactor.investRate"), JoyinUtil.getLabel("FinInterestFactor.buyOutRate")]);
                 msgArray.push(msg);errorClassArray.push(referRate);
             }
+            if(newParam.vdate!=null && newParam.vdate!=''&&newParam.mdate!=null && newParam.mdate!=''){
+               var vdateDate = new Date(newParam.vdate);
+               var mdateDate = new Date(newParam.mdate);
+               if (vdateDate.DateDiff('d', mdateDate) <= 0) {
+                    msg = JoyinUtil.getMessage("终止日期必须大于成立日期");
+                    msgArray.push(msg);
+               }
+            }
         }else if(INT_ASSET_TYPE==FINPROD_TYPE_TG_F18){
             if(newParam.vdate==''||typeof newParam.vdate == 'undefined'){
                 msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.vdate"));
