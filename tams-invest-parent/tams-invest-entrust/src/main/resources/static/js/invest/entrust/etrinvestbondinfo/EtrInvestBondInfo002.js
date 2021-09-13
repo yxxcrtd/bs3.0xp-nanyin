@@ -127,6 +127,9 @@
                 object.closePrice = result;
             }, false);
         }*/
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         if (operateType === 'save') {// 指令暂存，去掉校验项  add by xxg 20210805
             WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
         }else{

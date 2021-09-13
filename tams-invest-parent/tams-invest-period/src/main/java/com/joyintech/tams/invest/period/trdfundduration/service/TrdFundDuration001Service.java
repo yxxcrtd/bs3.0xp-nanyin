@@ -237,6 +237,9 @@ implements BaseProcessService<TrdFundDuration001Dto>{
         // 新建交易撤销数据 或 插入Entity到对应的业务DB中, 并删除流程表中的数据
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdFundDuration/doComplete", entity,
             String.class);
+        if(StringUtil.equals(CacheUtil.getSysParam("ISChongQing"),DictCodeList.是否_是.getValue())) {
+            return;
+        }
 //    除权登记生成总集复核数据
     if(OperationType.REVOKE != type&&(StringUtil.equals(entity.getType(),"02")||StringUtil.equals(entity.getType(),"05"))){
 //        设置工作流代码

@@ -311,7 +311,7 @@
                 and A.ACCT_MODE != '03'
 				<if test="search != null and search !=''">
 					AND (A.BOOKSET_ID LIKE concat(concat('%',#{search}),'%')
-					OR (B.BOOKSET_NAME LIKE concat(concat('%',#{search}),'%') OR B.BOOKSET_FULLNAME LIKE concat(concat('%',#{search}),'%')))
+					OR (A.BOOKSET_NAME LIKE concat(concat('%',#{search}),'%') OR A.BOOKSET_FULLNAME LIKE concat(concat('%',#{search}),'%')))
 				</if>
     </select>
 
