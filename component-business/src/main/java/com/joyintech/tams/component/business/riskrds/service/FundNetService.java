@@ -108,6 +108,8 @@ public class FundNetService {
             return valLsit.stream().collect(Collectors.toMap(ImplFundValuation::getAssetCode,
                 ImplFundValuation::getValuation));
         }
-        return null;
+        // ZGZGST-2530:无最新基金估值返回空map,不返回null,否则会引起空指针异常 fuyongsheng 20210913 edit start
+         return new HashMap<>();
+        // ZGZGST-2530:无最新基金估值返回空map,不返回null,否则会引起空指针异常 fuyongsheng 20210913 edit end
     }
 }
