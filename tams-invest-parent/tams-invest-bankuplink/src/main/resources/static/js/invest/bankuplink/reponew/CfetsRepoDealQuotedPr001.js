@@ -34,7 +34,6 @@
                 return genzlzxTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -263,7 +262,6 @@
                 return genzyqglTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -309,7 +307,6 @@
                 return genwtdhbjTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -541,7 +538,6 @@
                 return gencjcxTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
