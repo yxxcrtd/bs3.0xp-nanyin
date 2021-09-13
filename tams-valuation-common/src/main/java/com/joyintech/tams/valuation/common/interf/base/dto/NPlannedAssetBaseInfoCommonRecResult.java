@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.ValInterflog;
 
@@ -38,6 +39,11 @@ public class NPlannedAssetBaseInfoCommonRecResult extends BaseEntity {
      * 标的类金融产品表
      */
     private List<FinProductType> listValFinProductType = new ArrayList<FinProductType>();
+
+    /**
+     * 标的类金融产品附属表
+     */
+    private List<FinProductAdd> listValFinProductAdd = new ArrayList<FinProductAdd>();
 
     /*
      * 账套信息初始化Result
@@ -88,6 +94,14 @@ public class NPlannedAssetBaseInfoCommonRecResult extends BaseEntity {
      */
     public List<FinProductType> getListValFinProductType() {
         return listValFinProductType;
+    }
+
+    public List<FinProductAdd> getListValFinProductAdd() {
+        return listValFinProductAdd;
+    }
+
+    public void setListValFinProductAdd(List<FinProductAdd> listValFinProductAdd) {
+        this.listValFinProductAdd = listValFinProductAdd;
     }
 
     /**
