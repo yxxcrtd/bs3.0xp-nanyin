@@ -219,9 +219,9 @@
                 function(result) {
                     Joyin.confirm(result.data,function() {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_save");
+                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_save");
                         } else {
-                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_submit","EtrProject002");
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_submit","EtrProject003");
                         }
                     });
                 });
