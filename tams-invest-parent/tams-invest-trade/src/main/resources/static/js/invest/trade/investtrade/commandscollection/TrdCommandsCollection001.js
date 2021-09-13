@@ -1621,11 +1621,13 @@ $(function() {
         ps01Selections.push(PS_SELECTIONS[1].id);
         psF01Selections.push(PS_SELECTIONS[0].id);
         psF01Selections.push(PS_SELECTIONS[1].id);
-        psF02Selections.push(PS_SELECTIONS[0].id);
+        // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 start
+        psF02Selections.push(PS_SELECTIONS[6].id);
+        psF02Selections.push(PS_SELECTIONS[11].id);
         psF02Selections.push(PS_SELECTIONS[1].id);
         psF02Selections.push(PS_SELECTIONS[3].id);
-        psF02Selections.push(PS_SELECTIONS[5].id);
-        psF02Selections.push(PS_SELECTIONS[85].id);
+        psF02Selections.push(PS_SELECTIONS[91].id);
+        // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 end
         psF04Selections.push(PS_SELECTIONS[0].id);
         psF04Selections.push(PS_SELECTIONS[1].id);
         psF04Selections.push(PS_SELECTIONS[3].id);
@@ -1692,9 +1694,11 @@ $(function() {
         $('#tradeMarketF01').updateChosenArr({
             item: tradeMarket02345Selections
         });
+        // modify by wanshiwei ZGZGST-2586 基金tab交易场所枚举值为上海证券交易所/深圳证券交易所 20210912 start
         $('#tradeMarketF02').updateChosenArr({
-            item: tradeMarket124Selections
+            item: tradeMarket12Selections
         });
+        // modify by wanshiwei ZGZGST-2586 基金tab交易场所枚举值为上海证券交易所/深圳证券交易所 20210912 end
         $('#tradeMarketF07').updateChosenArr({
             item: tradeMarket012Selections
         });
