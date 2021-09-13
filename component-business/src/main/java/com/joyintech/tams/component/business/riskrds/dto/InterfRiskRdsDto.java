@@ -1180,4 +1180,31 @@ public class InterfRiskRdsDto implements IRiskRds {
     public void setNotCalcAmount(Boolean notCalcAmount) {
         this.notCalcAmount = notCalcAmount;
     }
+
+    /**
+     * 期限金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal termAmount;
+
+    public BigDecimal getTermAmount() {
+        return termAmount;
+    }
+
+    public void setTermAmount(BigDecimal termAmount) {
+        this.termAmount = termAmount;
+    }
+
+    /**
+     * 交易对手是否为空
+     */
+    private String isNullCounter;
+
+    public String getIsNullCounter() {
+        return isNullCounter;
+    }
+
+    public void setIsNullCounter(String isNullCounter) {
+        this.isNullCounter = isNullCounter;
+    }
 }

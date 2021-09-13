@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import com.fasterxml.jackson.databind.type.ArrayType;
+import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
@@ -23,6 +24,7 @@ import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +109,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     @Autowired
     private FinProductAddMapper finProductAddMapper;
 
+    @Autowired
+    private IPlatformDate iPlatformDate;
 
     private List<String> 申购确认_赎回申请 = Arrays.asList(DictCodeList.交易方向_赎回.getValue(),
         DictCodeList.交易方向_申购确认.getValue(), DictCodeList.交易方向_赎回到账.getValue());
@@ -1618,6 +1622,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
                 DateUtil.parse(infRiskRdsDto.getMdate()));
             infRiskRdsDto.setOneDay(oneDay);
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
+            }
+            if (StringUtil.isNotEmpty(finDto.getCounterId())){
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
         }
         // add by zhangrui1 画面到期日是mdateAdd end
         // add by zhangrui1 基金申购使用净值1 start
@@ -1992,6 +2006,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
                 DateUtil.parse(infRiskRdsDto.getMdate()));
             infRiskRdsDto.setOneDay(oneDay);
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
+            }
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())){
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
         }
         if (StringUtil.isEmpty(infRiskRdsDto.getEventDate())) {
             infRiskRdsDto.setEventDate(
