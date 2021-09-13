@@ -32,7 +32,7 @@
 								</select>		
 							</div>
 						</div>
-						<div class="form-inline-wrap">
+						<div class="layui-inline layui-col-md4  layui-col-sm4 layui-col-lg4 layui-col-xs4">
                             <label class="layui-form-label form-lable"
                             data-th-text="#{FinFloatMgtExpQuotation002.prodStyle}">适用款型</label>
                             <div class="layui-input-inline input-inline" id="prodStyleDIV">
@@ -44,7 +44,7 @@
                                 </select>
                             </div>
                         </div>
-						<div class="layui-inline layui-col-md4  layui-col-xs4 layui-col-sm4 layui-col-lg4">
+						<div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
 							<label class="layui-form-label form-lable"
 								data-th-text="#{FinFloatMgtExpQuotation001.effDate}">生效日</label>
 							<div class="layui-input-inline input-inline">
@@ -65,9 +65,8 @@
 							</div>
 						</div> -->
 					</div>
-					<div class="layui-form-item">
-						<div th:if="${isEleShow['FinFloatMgtExpQuotation001_sendStatus']} ne 'N'"
-							class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+					<div class="layui-form-item" th:if="${isEleShow['FinFloatMgtExpQuotation001_sendStatus']} ne 'N'">
+						<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 							<label class="layui-form-label form-lable"
 								data-th-text="#{FinFloatMgtExpQuotation001.sendStatus}">发送状态</label>
 							<div class="layui-input-inline input-inline">
@@ -80,7 +79,6 @@
 								</select>
 							</div>
 						</div>
-						<div class="layui-input-inline input-inline" style="height:30px;"></div>
 					</div>
 				</form>
 			</div>

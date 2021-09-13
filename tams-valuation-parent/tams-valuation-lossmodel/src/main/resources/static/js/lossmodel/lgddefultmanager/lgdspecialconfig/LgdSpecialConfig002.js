@@ -35,6 +35,7 @@
         if (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT) {
             object.seqNo = $('#seqNo').val();
         }
+        debugger;
         object.operateType = operateType;
         Joyin.ajaxJson(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/check', object, function(result) {
             if(result.data.indexOf("影响历史")>0){
