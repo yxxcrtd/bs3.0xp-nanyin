@@ -598,18 +598,18 @@
             , {field: 'settlcurramt', title: '结算金额', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinterestamt', title: '应计利息', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinteresttotalamt', title: '应计利息总额', width: '170', type: 'money', digit: 2}
-            // , {
-            //     field: 'settldate',
-            //     title: '首次结算日',
-            //     sortField: 'settldate',
-            //     width: '110',
-            //     type: 'date'
-            // },
+            , {
+                field: 'settldate',
+                title: '首次结算日',
+                sortField: 'settldate',
+                width: '110',
+                type: 'date'
+            },
             // , {field: 'settleSpeedStr', title: '清算速度', width: '150'}
             // , {field: 'settTypeStr', title: '清算类型', sortField: 'settType', width: '110'}
             // , {field: 'deliveryTypeStr', title: '结算方式', sortField: 'deliveryType', width: '110'}
             // , {field: 'tradeDateStr', title: 'CSTPSelect001.tradedate1', sortField: 'tradedate', width: '110'}
-            // // , {field: 'quoteTypeStr', title: '报价类型', sortField: 'tradedate', width: '110'}// TODO
+            // // // , {field: 'quoteTypeStr', title: '报价类型', sortField: 'tradedate', width: '110'}// TODO
             // , {field: 'reference', title: '报价/订单编号', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '债券类型', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '债券币种', sortField: 'tradedate', width: '110'}

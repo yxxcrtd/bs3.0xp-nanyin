@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrstock.dto.EtrStockDto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -23,7 +24,7 @@ import com.joyintech.service.entrust.etrstock.dto.EtrStockDto;
  * @see EtrAssetConfigTransferMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrAssetConfigTransferMapper {
 
     /**
