@@ -6,38 +6,42 @@
 	<select id="select" resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
 		select t.value_source as valueSource,
 		       t.curve_code as curveCode,
-		       t.remark as curveName,
+		       t.CURVE_NAME as curveName,
+		       t.remark as remark,
 		       t.int_curve_type as intCurveType,
-		       'CNY' as ccy,
+		       t.CCY as ccy,
 		       '线性插值' as interMethod,
 		       'A/365' as dayRules,
 		       '银行间交易日历' as calender,
 				'起息日向后' as interestDateRule,
 				'按年复利' as  interestCalMethod,
-				'年付' as interestFreq/*,
-		        eff_status as effStatus*/
+				'年付' as interestFreq
 		from MST_CURVE_DEF t
 		<where>
 		    1=1
 			<if test="curveCode != null and curveCode != ''">
-				and t.curve_code = #{curveCode}
+				and t.CURVE_CODE = #{curveCode}
 			</if>
 			<if test="curve_type != null and curve_type != ''">
-				and t.curve_type = #{curve_type}
+				and t.CURVE_TYPE = #{curve_type}
 			</if>
 			<if test="intCurveType != null and intCurveType != ''">
-				and t.int_curve_type = #{intCurveType}
+				and t.INT_CURVE_TYPE = #{intCurveType}
 			</if>
+			<if test="curveName != null and curveName != ''">
+				and t.CURVE_NAME LIKE CONCAT('%', CONCAT(#{curveName}, '%'))
+			</if>
+			<if test="curveSource != null and curveSource != ''">
+				and t.CURVE_SOURCE = #{curveSource}
+			</if>
+
 		</where>
 	</select>
 
 	<select id="getCurveCode" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		CURVE_CODE id,
-		<!--I9 add by changqifei SNSGZ-6 20210703  start-->
-		/*CURVE_CODE || ':' || INT_CURVE_TYPE text,*/
-		remark text,
-		<!--I9 add by changqifei SNSGZ-6 20210703  end-->
+		CURVE_NAME text,
 		INT_CURVE_TYPE object
 		from   MST_CURVE_DEF
 		<where>
@@ -48,7 +52,7 @@
 					OR
 					INT_CURVE_TYPE LIKE CONCAT('%', CONCAT(#{search}, '%'))
 					OR
-					remark LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				    curveName LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
 			<if test="curve_type != null and curve_type != ''">
@@ -63,7 +67,7 @@
 			resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
 		select
 		CURVE_CODE curveCode,
-		remark curveName,
+		remark remark,
 		INT_CURVE_TYPE as curveType
 		from MST_CURVE_DEF
 		<where>
@@ -79,20 +83,181 @@
 	</select>
 
 	<select id="selectByKey" resultType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto">
-		select t.value_source as valueSource,
-			   t.curve_code as curveCode,
-			   t.remark as curveName,
+		select t.curve_code as curveCode,
+			   t.curve_name as curveName,
+			   t.value_source as valueSource,
+			   t.remark as remark,
 			   t.int_curve_type as intCurveType,
-			   'CNY' as ccy,
+			   t.CCY as ccy,
+
 			   '线性插值' as interMethod,
 			   'A/365' as dayRules,
 			   '银行间交易日历' as calender,
 			   '起息日向后' as interestDateRule,
 			   '按年复利' as  interestCalMethod,
-			   '年付' as interestFreq/*,
-			   eff_status as effStatus*/
+			   '年付' as interestFreq
 		from MST_CURVE_DEF t
 		where	t.curve_code = #{curveCode}
 				and rownum=1
+	</select>
+
+
+	<insert id="insertSelective" parameterType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto" >
+		insert into MST_CURVE_DEF
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+			<if test="curveCode != null" >
+				CURVE_CODE,
+			</if>
+			<if test="n != null" >
+				N,
+			</if>
+			<if test="k != null" >
+				K,
+			</if>
+			<if test="curveName != null" >
+				CURVE_NAME,
+			</if>
+			<if test="curveGroupType != null" >
+				CURVE_GROUP_TYPE,
+			</if>
+			<if test="valueSource != null" >
+				VALUE_SOURCE,
+			</if>
+			<if test="intCurveType != null" >
+				INT_CURVE_TYPE,
+			</if>
+			<if test="remark != null" >
+				REMARK,
+			</if>
+			<if test="curveGroupCode != null" >
+				CURVE_GROUP_TYPE,
+			</if>
+			<if test="gradeResult != null" >
+				GRADE_RESULT,
+			</if>
+			<if test="curveGroupCode != null" >
+				CURVE_GROUP_CODE,
+			</if>
+			<if test="ccy != null" >
+				CCY,
+			</if>
+
+			<if test="createUser != null" >
+				CREATE_USER,
+			</if>
+			<if test="createDept != null" >
+				CREATE_DEPT,
+			</if>
+			<if test="createTime != null" >
+				CREATE_TIME,
+			</if>
+			<if test="updateUser != null" >
+				UPDATE_USER,
+			</if>
+			<if test="updateTime != null" >
+				UPDATE_TIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides="," >
+			<if test="curveCode != null" >
+				#{curveCode,jdbcType=VARCHAR},
+			</if>
+			<if test="n != null" >
+				#{n,jdbcType=DECIMAL},
+			</if>
+			<if test="k != null" >
+				#{k,jdbcType=DECIMAL},
+			</if>
+			<if test="curveName != null" >
+				#{curveName,jdbcType=VARCHAR},
+			</if>
+			<if test="curveGroupType != null" >
+				#{curveGroupType,jdbcType=VARCHAR},
+			</if>
+
+			<if test="valueSource != null" >
+				#{valueSource,jdbcType=VARCHAR},
+			</if>
+			<if test="intCurveType != null" >
+				#{intCurveType,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null" >
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="curveGroupCode != null" >
+				#{curveGroupCode,jdbcType=VARCHAR},
+			</if>
+			<if test="gradeResult != null" >
+				#{gradeResult,jdbcType=VARCHAR},
+			</if>
+			<if test="curveGroupCode != null" >
+				#{curveGroupCode,jdbcType=VARCHAR},
+			</if>
+			<if test="ccy != null" >
+				#{ccy,jdbcType=VARCHAR},
+			</if>
+
+			<if test="createUser != null" >
+				#{createUser,jdbcType=VARCHAR},
+			</if>
+			<if test="createDept != null" >
+				#{createDept,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null" >
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="updateUser != null" >
+				#{updateUser,jdbcType=VARCHAR},
+			</if>
+			<if test="updateTime != null" >
+				#{updateTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKey" parameterType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto" >
+        update MST_CURVE_DEF
+        set INT_CURVE_TYPE = #{intCurveType,jdbcType=VARCHAR},
+            N = #{n,jdbcType=DECIMAL},
+            K = #{k,jdbcType=DECIMAL},
+			CURVE_NAME = #{curveName,jdbcType=VARCHAR},
+            VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            CURVE_GROUP_TYPE = #{curveGroupCode,jdbcType=VARCHAR},
+            GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR},
+            CURVE_GROUP_CODE = #{curveGroupCode,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where  CURVE_CODE= #{curveCode,jdbcType=VARCHAR}
+    </update>
+
+	<delete id="deleteByPrimaryKey" parameterType="com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto" >
+        delete from MST_CURVE_DEF
+        where CURVE_CODE = #{curveCode,jdbcType=VARCHAR}
+    </delete>
+
+	<!--获取曲线族下拉框-->
+	<select id="getCurveGroupSelect" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		CURVE_CODE id,
+		CURVE_NAME text,
+		INT_CURVE_TYPE object
+		from   MST_CURVE_DEF
+		<where>
+			1=1
+			<if test="search != null and search != ''">
+				AND	(
+				CURVE_CODE LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				OR
+				CURVE_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
+				)
+			</if>
+			<if test="initValue != null and initValue != ''">
+				and CURVE_CODE = #{initValue}
+			</if>
+			and CURVE_GROUP_TYPE='Y'
+		</where>
+
 	</select>
 </mapper>
