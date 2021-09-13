@@ -125,11 +125,29 @@ $(function () {
     };
 
 
+    /**
+     * 新建
+     */
+    function showDialog() {
+        Joyin.dialog('新建收益率曲线', basePath +'valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/init', '85%', '75%',
+            {pageModel:PAGE_MODEL_NEW},function(){
+                table.reload();
+            });
+    }
+
+
     $(function () {
 
         // 绑定按钮事件
         $('#MstCurveDefManage001_btn_search').click(function () {
             table.load();
+        });
+
+        //新建按钮
+
+        //绑定新增按钮事件
+        $('#MstCalendarType001_btn_add').click(function() {
+            showDialog();
         });
 
         $('#MstCurveDefManage001_btn_export').click(function () {

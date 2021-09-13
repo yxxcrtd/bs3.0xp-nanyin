@@ -26,6 +26,8 @@
         <result column="FACTOR_ADJ" property="factorAdj" jdbcType="DECIMAL" />
         <result column="TRADE_STATUS" property="tradeStatus" jdbcType="VARCHAR" />
         <result column="INPUT_TYPE" property="inputType" jdbcType="VARCHAR" />
+        <result column="PE" property="pe" jdbcType="DECIMAL" />
+        <result column="PB" property="pb" jdbcType="DECIMAL" />
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
@@ -55,7 +57,9 @@
         CLOSE_PRICE_ADJ 	CLOSE_PRICE_ADJ, 
         FACTOR_ADJ 			FACTOR_ADJ, 
         TRADE_STATUS 		TRADE_STATUS, 
-        INPUT_TYPE 			INPUT_TYPE, 
+        INPUT_TYPE 			INPUT_TYPE,
+        PE                  pe,
+        PB                  pb,
         CREATE_USER 		CREATE_USER, 
         CREATE_DEPT 		CREATE_DEPT, 
         CREATE_TIME 		CREATE_TIME, 
@@ -105,7 +109,9 @@
         a.LOW_PRICE_ADJ 		LOW_PRICE_ADJ, 
         a.CLOSE_PRICE_ADJ 		CLOSE_PRICE_ADJ, 
         a.FACTOR_ADJ 			FACTOR_ADJ, 
-        a.TRADE_STATUS 			TRADE_STATUS, 
+        a.TRADE_STATUS 			TRADE_STATUS,
+        a.PE                    pe,
+        a.PB                    pb,
         a.INPUT_TYPE 			INPUT_TYPE, 
         a.CREATE_USER 			CREATE_USER, 
         a.CREATE_DEPT 			CREATE_DEPT, 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.valuation.lossmodel.assetratingallocation.assetcategories.dto.AssetCategories002Dto;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
 import com.joyintech.tams.valuation.lossmodel.assetratingallocation.specialassets.service.Specialassets002Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,14 @@ public class Specialassets002Validator implements BeanValidator{
 	
 	@Override
 	public List<ValidMessage> valid(Object value) {
-		ArrayList<ValidMessage> errorList = new ArrayList<>();
+		ArrayList<ValidMessage> resultList = new ArrayList<>();
 		ModAssetGradeSpecialConfigDto dto=(ModAssetGradeSpecialConfigDto)value;
-		Map<String,Object> map=new HashMap<String,Object>();
-		if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-			map.put("finprodId", dto.getFinprodId());
-			String ss=specialassets002Service.check(map);
-			if("Y".equals(ss)){
-				errorList.add(new ValidMessage("数据库中已存在该资产代码"));
+		if (StringUtil.equals("02",dto.getGradeOrgType())){
+			if (StringUtil.isEmpty(dto.getGradeOrgId())){
+				resultList.add(new ValidMessage("请输入指定评级机构。"));
 			}
 		}
-			
-		return errorList;
+		return resultList;
 	}
 
 }

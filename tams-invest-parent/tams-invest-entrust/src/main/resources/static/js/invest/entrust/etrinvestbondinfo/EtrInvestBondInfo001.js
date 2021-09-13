@@ -164,6 +164,7 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
+        data.parentPageId=pageId;
         //走check会校验dto，所以抽出一个新的editCheck方法
         Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkEdit', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo002.edit"),

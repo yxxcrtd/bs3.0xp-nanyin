@@ -240,7 +240,7 @@ public class TrdCommandReceive001Controller{
                 if(StringUtil.isNotEmpty(dto.getTrader())){
                     User user=trdCommandReceive001Service.getRealNameByUserName(dto.getTrader());
                     if(StringUtil.isNotEmpty(user)){
-                        dto.setTrader(user.getRealName());
+                        dto.setTrader(user.getUserName());
                     }
                 }
                 if(StringUtil.equals(DictCodeList.平安资产类型_买断式回购.getValue(), dto.getFinprodType2())){

@@ -643,7 +643,26 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setNetPrice(lastPrice);
                 creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),lastPrice,2));
             }
-
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                List<CreditLinesInputDto> list = new ArrayList<>();
+                CreditLinesInputDto dto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto,creditLinesInputDto);
+                dto.setPs(DictCodeList.交易方向_申购.getValue());
+                list.add(dto);
+                CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                dto1.setPs(DictCodeList.交易方向_申购确认.getValue());
+                dto1.setIsSpecial("true");
+                list.add(dto1);
+                creditLinesInputDto.setInputDtoList(list);
+            }
             if (StringUtil.equals(DictCodeListExt2.交易方向_转换赎回申请.getValue(),inputDto.getPs())
                     || StringUtil.equals(DictCodeListExt2.交易方向_转换申请.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
@@ -682,7 +701,8 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setIsSpecial("true");
             }
             if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回确认.getValue())
-                    || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())) {
+                    || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())
+                    || StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),inputDto.getPs())) {
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());

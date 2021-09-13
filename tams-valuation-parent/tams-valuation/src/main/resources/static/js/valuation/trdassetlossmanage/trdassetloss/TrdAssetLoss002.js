@@ -121,14 +121,6 @@
          * 预览
          */
         $('#TrdAssetLoss002_btn_preview').click(function () {
-            //提交前将资产类型、资产起息日、资产到期日的disabled放开,避免表单提交的时候不传值
-            $('#assetType1').removeAttr("disabled");
-            $('#vDate').removeAttr("disabled");
-            $('#mDate').removeAttr("disabled");
-            $('#lossInputPattern').removeAttr("disabled");
-            $('#valDate').removeAttr("disabled");
-            $('#overDays').removeAttr("disabled");
-            $('#residualMaturity').removeAttr("disabled");
             /**
              * 获取列表参数
              */
@@ -187,8 +179,8 @@
                 Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetInfo', data,
                     function (resultObj) {
                         if (resultObj) {
-                            if (resultObj.assetType1) {
-                                $("#assetType1").val(resultObj.assetType1).trigger('change');
+                            if (resultObj.assetType) {
+                                $("#assetType").val(resultObj.assetType).trigger('change');
                             }
                             if (resultObj.vDate) {
                                 $("#vDate").val(resultObj.vDateStr);
@@ -213,9 +205,6 @@
                 Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/selectTrdAssetLossByFinprodId', data,
                     function (resultObj) {
                         if (resultObj) {
-                            if (resultObj.assetType1) {
-                                $("#assetType1").val(resultObj.assetType1).trigger('change');
-                            }
                             if (resultObj.vDate) {
                                 $("#vDate").val(resultObj.vDateStr);
                             }
@@ -227,6 +216,9 @@
                             }
                             if (resultObj.insitituteCode) {
                                 $("#insitituteCode").val(resultObj.insitituteCode);
+                            }
+                            if (resultObj.tradeMarket) {
+                                $("#tradeMarket").val(resultObj.tradeMarket).trigger('change');
                             }
                             //当资产类型为债券，且资产属于含权债可选择  代偿期类型
                             if(resultObj.isRight && resultObj.isRight==='Y'){
@@ -248,7 +240,7 @@
                                 $("#peroid").val(JoyinMath.doDiv(days1, 365, 4, JoyinMath.ROUND_HALF_UP));
                             }
 
-                            /*if(resultObj.assetType1 && resultObj.isRight && resultObj.assetType1==='01' && resultObj.isRight==='Y'){
+                            /*if(resultObj.assetType && resultObj.isRight && resultObj.assetType==='01' && resultObj.isRight==='Y'){
                                 $("#period_type").show();
                             }*/
 
@@ -354,5 +346,10 @@
             $("#expected_loss_div").show();
         }
 
+    });
+
+    //代偿期类型改变事件
+    $("#assetType").change(function () {
+        $('#finprodId').val('').trigger('change');
     });
 }());

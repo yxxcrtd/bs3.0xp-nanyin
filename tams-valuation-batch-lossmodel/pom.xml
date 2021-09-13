@@ -15,7 +15,7 @@
 
 
     <properties>
-        <framework.version>2.1.11.3</framework.version>
+        <framework.version>0.0.4</framework.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -41,7 +41,6 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>batch-framework</artifactId>
-            <version>2.1.6.2</version>
             <exclusions>
                 <exclusion>
                     <artifactId>framework-data</artifactId>
@@ -67,7 +66,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>tams-model-impairment-batch</finalName>
+        <finalName>tams-valuation-batch-lossmodel</finalName>
         <plugins>
             <!-- 打包源代码插件 -->
             <plugin>
@@ -87,21 +86,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>1.5.9.RELEASE</version>
-                <configuration>
-                    <mainClass>com.joyintech.tams.model.impairment.batch.LossModelBatchApplication</mainClass>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
         <resources>
             <resource>

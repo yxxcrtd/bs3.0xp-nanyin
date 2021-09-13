@@ -19,8 +19,7 @@ import com.fasterxml.jackson.databind.type.ArrayType;
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
-import com.joyintech.tams.common.base.dao.FinProductAddMapper;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.risktrialrds.util.Const;
@@ -108,6 +107,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 
     @Autowired
     private FinProductAddMapper finProductAddMapper;
+
+    @Autowired
+    private MstCounterPartyMapper mstCounterPartyMapper;
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -1748,6 +1750,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 }
                 infRiskRdsDto.setMdate(DateUtil.addDay(finDto.getMdate(),CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).intValue()));
                 infRiskRdsDto.setOneDay(CommonUtil.getBigDecimal(dataMap, "term",BigDecimal.ZERO).longValue());
+                infRiskRdsDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
+                //获取交易对手的市场机构代码
+                if(StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())) {
+                    MstCounterParty mstCounterParty =  mstCounterPartyMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                    if(StringUtil.isNotEmpty(mstCounterParty)) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }
+                }
                 return infRiskRdsDto;
             }
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());

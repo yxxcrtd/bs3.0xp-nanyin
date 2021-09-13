@@ -48,9 +48,10 @@ var parenPage = function () {
             // $("#arriveDate").val("").trigger("change");
             // $("#arriveAmtMin").val("").trigger("change");
             // $("#arriveAmtMax").val("").trigger("change");
-
-            flowTopTable.reload();
-            flowBtTable.reload();
+            setTimeout(function() {
+                flowTopTable.reload();
+                flowBtTable.reload();
+            }, 100);
         },
         height: 'full-' + 50,
         searchOnInit: true,
@@ -103,7 +104,6 @@ var parenPage = function () {
             }
         },
         searchOnInit: true,
-        height: 'full-' + 200,
         cols: [
             {field: 'statusValidString', title: '状态', width: 80, sortable: false}//有效状态
             , {field: 'matchStatusStr', title: '是否匹配', width: 80, sortable: false, render: function (data, type, row, meta) {
@@ -199,7 +199,6 @@ var parenPage = function () {
                 return getSearchParamsEn();
             }
         },
-        height: 'full-' + 200,
         searchOnInit: true,
         cols: [{field: 'settleDate', title: '到账日', width: 120, sortField: 'settleDate' }//到账日
             , {field: 'settleAmt', title: '金额', width: 180, type: 'number',sortField: 'settleAmt'}//金额

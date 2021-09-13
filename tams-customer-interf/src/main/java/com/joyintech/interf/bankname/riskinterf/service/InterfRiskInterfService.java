@@ -16,10 +16,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.core.BaseRiskRdsService;
@@ -116,6 +114,9 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      */
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
+
+    @Autowired
+    private MstCounterPartyMapper mstCounterPartyMapper;
 
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
@@ -536,6 +537,15 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     }
                 }
                 finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                finDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
+                //获取交易对手的市场机构代码
+                if(StringUtil.isNotEmpty(finDto.getCounterId())) {
+                    MstCounterParty mstCounterParty =  mstCounterPartyMapper.selectByPrimaryKey(finDto.getCounterId());
+                    if(StringUtil.isNotEmpty(mstCounterParty)) {
+                        finDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }
+                }
+
                 return finDto;
             }
 

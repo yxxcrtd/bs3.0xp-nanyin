@@ -1071,7 +1071,8 @@
 	<!-- 根据用户名得到真实姓名 -->
 	<select id="getRealNameByUserName" resultType="com.joyintech.tams.common.base.entity.User">
 		SELECT
-			T1.REAL_NAME realName
+			T1.REAL_NAME realName,
+			T1.USER_NAME userName
 		FROM 
 			SYS_USER T1
 		where 

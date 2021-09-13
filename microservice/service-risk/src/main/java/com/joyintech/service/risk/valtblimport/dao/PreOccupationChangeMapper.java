@@ -69,5 +69,6 @@ public interface PreOccupationChangeMapper {
 	 * @return
 	 */
 	List<ValTableImpRiskDto> queryImpRiskInfo(Map<String,Object> paramMap);
- 
+
+	String selectId (String id);
 }

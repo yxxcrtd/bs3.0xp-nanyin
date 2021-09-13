@@ -10,41 +10,7 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.service;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListRsk;
-import com.joyintech.tams.invest.common.client.ClientData;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.service.InvestInterfCommService;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
-import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
-
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.calculation.util.ArithmeticUtil;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -52,21 +18,26 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExcelUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.tams.component.business.common.dto.BaseFinProductBaseInfoDto;
 import com.joyintech.tams.component.business.common.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.tams.component.business.common.dto.InterfPayhsrcsecinfoDto;
 import com.joyintech.tams.component.business.common.service.CommonAutoCouponService;
-import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.constant.PageFieldToInterfFactory;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListRsk;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.common.service.InvestInterfCommService;
+import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
+import com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.dto.RskValtblPrtBotassetMapDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasset.service.RskValtblPrtBotassetService;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDtlDto;
@@ -76,16 +47,18 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.dto.RskValSumnameDto;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.service.RskValSumname001Service;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ColumnMapEntry;
-import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupActualDetailDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.PreOccupationChangeDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.RskValtblAssetSubDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.SubCodeEntry;
-import com.joyintech.tams.invest.risk.valtblimport.dto.SumNameCodeEntry;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ValDataType;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ValTableImpRiskDto;
-import com.joyintech.tams.invest.risk.valtblimport.dto.ValType;
+import com.joyintech.tams.invest.risk.valtblimport.dto.*;
+import com.joyintech.tams.invest.risk.valtblimport.filtertools.filter.Filter;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *  估值表导入
@@ -152,6 +125,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();
         //查找底层资产映射表
         List<RskValtblPrtBotassetMapDto> botAssetMapList = rskValtblPrtBotassetService.selectBotAssetMapByPtlId(dto.getPtlId());
+        List<String> finprodIds = new ArrayList<>();
         List<String> subNameList = new ArrayList<String>();
         Map<String,Object> paramMap = new HashMap<String,Object>();
         dto.getSelectedItem().forEach(item->{
@@ -317,6 +291,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             rskValtblPrtBotassetMapDto2.setIsAdd(DictCodeList.是否_是.getValue());
                         }
                         botAssetMapList.add(rskValtblPrtBotassetMapDto2);
+                        finprodIds.add(rskValtblPrtBotassetMapDto2.getFinprodId());
                     }
                 }
             }
@@ -331,7 +306,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         // 调用接口发送数据 add by yufei 20200818 end
         
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 start
-        preOccupationChange(dto);
+        preOccupationChange(dto,finprodIds);
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 end
     }
 
@@ -1248,7 +1223,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * 20201222
  * @throws Exception 
     */
-   private AjaxResult preOccupationChange(RskValtblAssetSubDto dto){
+   private AjaxResult preOccupationChange(RskValtblAssetSubDto dto,List<String> finprodIds){
 	   AjaxResult result=new AjaxResult();
 
 	   //1.估值表文件中各资产的分配明细
@@ -1319,11 +1294,11 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
 		}
 		
 	   //3.指令状态变更
-	   if(!StringUtil.isEmptyList(needFreeList)){
+       //更新估值表导入存在的资产的委托状态为已完成
+	   if(!StringUtil.isEmptyList(needFreeList)&&!StringUtil.isEmptyList(finprodIds)){
+           needFreeList = needFreeList.stream().filter(item -> finprodIds.contains(item.getBottomAssetId())).collect(Collectors.toList());
 		   updateEntrustStatus(needFreeList);
 	   }
-	   
-	   
 	   return result;
    }
    
@@ -1430,6 +1405,9 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
            }
            creditLinesInputDto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
            creditLinesInputDto.setIsBottom("Y");
+           String id = restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME +"/RskValTableImport/selectId",
+                   dto.getWwPortfolioid(),String.class);
+           creditLinesInputDto.setpFinprodId(id);
 		   inputDtoList.add(creditLinesInputDto);
 	   }
 	   return inputDtoList;

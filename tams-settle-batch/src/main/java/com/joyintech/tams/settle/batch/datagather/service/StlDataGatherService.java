@@ -2,14 +2,14 @@ package com.joyintech.tams.settle.batch.datagather.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
+import com.joyintech.tams.invest.common.dto.BaseFinProductCashInputDto;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -629,7 +629,7 @@ public class StlDataGatherService {
      * @see
      * @since 1.0
      */
-    private void cashFlowLogic(TrdProductDealDto input, FinTradeProductDto finTradeProductDto) {/*
+    private void cashFlowLogic(TrdProductDealDto input, FinTradeProductDto finTradeProductDto) {
         // 分支序号
         String branch = CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE);
         Long branchLong = Long.parseLong(branch);
@@ -901,10 +901,14 @@ public class StlDataGatherService {
 
         inputDto.setFinCashPlanList(finCashPlanList);
 
-        // 调用共通登录现金流相关数据
-        simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
-                        + "/common/trdcommonbase/insertFinProductCashData",
-                inputDto, Boolean.class);*/
+        if (isSingle) {
+            simpleRestTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
+                            + "/common/trdcommonbase/insertFinProductCashData",
+                    inputDto, Boolean.class);
+        } else {
+            restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME
+                            + "/common/trdcommonbase/insertFinProductCashData",
+                    inputDto, Boolean.class); }
     }
     
     /**

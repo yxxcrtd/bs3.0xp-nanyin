@@ -10,7 +10,9 @@
             finprodId: $('#finprodId').val(),
             vDate: $('#queryDate').startDate(),
             mDate: $('#queryDate').endDate(),
-            stage: $('#stage').val()
+            stage: $('#stage').val(),
+            assetType: $('#assetType').val(),
+            lossInputType: $('#lossInputType').val()
         };
         if(object.finprodId){
             object.finprodId = object.finprodId.join(',');
@@ -123,6 +125,8 @@
             , {field: 'pdValue', title: 'PD违约概率%', width: '10%', sortField: "pdValue"}
             , {field: 'lgdValue', title: 'LGD违约损失率%', width: '10%', sortField: "lgdValue"}
             , {field: 'eclVaule', title: 'ECL预期信用损失比例%', width: '10%', sortField: "eclVaule"}
+            , {field: 'remark', title: '备注', width: '10%', sortField: "remark"}
+            , {field: 'lossInputTypeFmt', title: '数据来源', width: '10%', sortField: "lossInputType"}
             , {field: 'tradeId', title: '交易编号', width: '10%', sortField: "tradeId", visible: false}
             ,{field:'operation', width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ],
@@ -164,7 +168,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete",tradeId: data.tradeId,valDate:data.valDate};
+        var object = {selectedItem: [data], operateType:"delete",finprodId: data.finprodId,valDate:data.valDate};
         Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss001/deleteCheck', object, function(result) {
             Joyin.confirm("是否确认删除？", function () {
                 WorkFlow.doDeleteList(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/save', object, "TrdAssetLoss001_btn_delete", "TrdAssetLoss002", function () {
@@ -241,7 +245,7 @@
             }
 
             var checkObj = {};
-            checkObj.tradeId = selArr[0].tradeId;
+            checkObj.finprodId = selArr[0].finprodId;
             checkObj.finprodId = selArr[0].finprodId;
             checkObj.valDate = selArr[0].valDate;
             checkObj.invalidDate = selArr[0].invalidDate;
