@@ -1,5 +1,5 @@
 DELETE FROM SYS_MENU;
-insert into SYS_MENU values ('ACCOUTING_001','VAL','icon-daily-operate','','','11','1','核算管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('ACCOUTING_001','VAL','jyicon-bnsaccount-manage','','','11','1','核算管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_001','VAL','','ACCOUTING_001','','1','1','账套管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_001_001','VAL','','ACCOUTING_001_001','ValAssetBook001','1','1','账套管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_001_002','VAL','','ACCOUTING_001_001','ValSubjectSet001','2','1','科目查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -34,7 +34,7 @@ insert into SYS_MENU values ('ACCOUTING_001_005_003','VAL','','ACCOUTING_001_005
 insert into SYS_MENU values ('ACCOUTING_001_005_004','VAL','','ACCOUTING_001_005','ValAccountEncryption001','4','1','账务明细代码加密','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_005_005','VAL','','ACCOUTING_001_005','ValBasicSubAdjust001','5','1','基础科目性质调整(慎用)','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ACCOUTING_001_005_006','VAL','','ACCOUTING_001_005','SelectBokdetailCurrent001','6','1','账务明细查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('ASSET_MANAGEMENT_001','MST','icon-business-maintain','','','7','2','资产管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('ASSET_MANAGEMENT_001','MST','jyicon-assets-manage','','','7','2','资产管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002','MST','','ASSET_MANAGEMENT_001','','2','2','资产信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_001','VAL','','ASSET_MANAGEMENT_001_002','FinBondTargetAsset001','1','2','债券信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_002_002','VAL','','ASSET_MANAGEMENT_001_002','FinFundTarget001','2','2','基金信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -70,7 +70,7 @@ insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_004','MST','','ASSET_MANA
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_005','MST','','ASSET_MANAGEMENT_001_005','AssetRatingAllocation001','5','2','资产评级配置','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_007','MST','','ASSET_MANAGEMENT_001_005','ComMarketCalendarInfo001','7','2','交易日历管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('ASSET_MANAGEMENT_001_005_008','MST','','ASSET_MANAGEMENT_001_005','MstCalendarType001','8','2','自定义日历','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('DEAL_001','VAL','icon-business-maintain','','','3','2','交易管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('DEAL_001','VAL','jyicon-trade-manage','','','3','2','交易管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('DEAL_001_001','VAL','','DEAL_001','','1','2','投资交易','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('DEAL_001_001_010','VAL','','DEAL_001_001','InvestTradeQuery001','10','2','投资交易查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('DEAL_001_001_013','VAL','','DEAL_001_001','ValFinprodTradeQuery001','13','2','金融交易查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -78,7 +78,7 @@ insert into SYS_MENU values ('DEAL_001_002','VAL','','DEAL_001','','2','2','TA�
 insert into SYS_MENU values ('DEAL_001_002_011','VAL','','DEAL_001_002','ProductTradeDealQuery001','11','2','TA交易查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('DEAL_001_002_014','VAL','','DEAL_001_002','ValBokClawbackInfoQuery001','14','2','回补信息查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('DEAL_001_002_018','VAL','','DEAL_001_002','TradeCostManagement001','18','2','交易费用管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('INFOSEARCH_001','FIN','icon-business-maintain','','','12','2','查询统计','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('INFOSEARCH_001','FIN','jyicon-query-statistics','','','12','2','查询统计','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('INFOSEARCH_001_001','VAL','','INFOSEARCH_001','','1','2','日常报表','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('INFOSEARCH_001_001_003','VAL','','INFOSEARCH_001_001','ValueAddedTaxQuery001','3','1','增值税台账','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('INFOSEARCH_001_001_004','VAL','','INFOSEARCH_001_001','BokBalanceStatementQuery001','4','1','余额表','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -91,7 +91,7 @@ insert into SYS_MENU values ('INFOSEARCH_001_002_004','VAL','','INFOSEARCH_001_0
 insert into SYS_MENU values ('INFOSEARCH_001_002_005','VAL','','INFOSEARCH_001_002','ValBatchExport001','5','1','三表批量导出','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('INFOSEARCH_001_004','VAL','','INFOSEARCH_001','','4','2','信息查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('INFOSEARCH_001_004_017','VAL','','INFOSEARCH_001_004','AccountsReceivableInfoQuery001','17','2','应收款项信息查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('PRODUCT_001','VAL','icon-business-maintain','','','1','2','产品管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('PRODUCT_001','VAL','jyicon-product-manage','','','1','2','产品管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('PRODUCT_001_001','VAL','','PRODUCT_001','','2','1','产品信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('PRODUCT_001_001_001','VAL','','PRODUCT_001_001','ValProductInfoQuery001','1','2','产品信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('PRODUCT_001_002','VAL','','PRODUCT_001','','2','1','账户信息','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -162,7 +162,7 @@ insert into SYS_MENU values ('REPORT_001_002_006_005','REP','','REPORT_001_002_0
 insert into SYS_MENU values ('REPORT_001_002_006_006','REP','','REPORT_001_002_006','RegTimePoints001','6','1','监管报送时点维护','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('REPORT_001_002_007','SYS','','REPORT_001_002','','7','1','机构登记银行代码管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('REPORT_001_002_007_001','SYS','','REPORT_001_002_007','SysInstRegBankCode001','1','1','机构登记银行代码管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('SYSTEM_001','SYS','icon-system','','','17','2','系统参数管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('SYSTEM_001','SYS','jyicon-system-config','','','17','2','系统参数管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('SYSTEM_001_001','SYS','','SYSTEM_001','','1','2','用户角色管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('SYSTEM_001_001_001','SYS','','SYSTEM_001_001','SysInstitution001','1','2','机构管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('SYSTEM_001_001_002','SYS','','SYSTEM_001_001','SysUser001','2','2','用户管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
@@ -187,7 +187,7 @@ insert into SYS_MENU values ('SYSTEM_001_004_002','SYS','','SYSTEM_001_004','Sys
 insert into SYS_MENU values ('SYSTEM_001_005','SYS','','SYSTEM_001','','5','2','工作流配置','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('SYSTEM_001_005_001','SYS','','SYSTEM_001_005','Workflow001','1','2','工作流配置','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('SYSTEM_001_005_002','SYS','','SYSTEM_001_005','SysWflBusinessModule001','2','2','工作流管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
-insert into SYS_MENU values ('VALUATION_001','VAL','icon-daily-operate','','','10','1','估值管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+insert into SYS_MENU values ('VALUATION_001','VAL','jyicon-valuation-manage','','','10','1','估值管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_001','VAL','','VALUATION_001','','2','2','净值管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_001_001','VAL','','VALUATION_001_001','ValNetValueConfirm001','1','2','净值确认下发','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_001_002','VAL','','VALUATION_001_001','ValTableGenerate001','2','2','估值表导出','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
