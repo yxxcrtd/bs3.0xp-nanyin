@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.valuation.component.batch.dao.ModAssetInfoMapper">
 
-	<select id="selectIncomeMethodAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+	<select id="selectIncomeMethodAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -40,7 +40,7 @@
 			</if>
 	</select>
 
-	<select id="selectBinaryTreeAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+	<select id="selectBinaryTreeAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -52,21 +52,41 @@
 			C.CON_PRICE CON_PRICE,/**转股价格**/
 			A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
 			D.TYPE_18 AS SEC_TYPE,/**证券品种**/
-			D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
+			D.TYPE_1 AS SEC_TYPE_DETAIL, /**证券细分类**/
+			A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
+			F.TRADE_DATE AS lastTradeInDate,
+			SUM(G.UNIT_FPRICE * G.SHARE_AMT)/SUM(G.SHARE_AMT) AS lastTradeAvgFullPrice,/**最近买入交易日全价**/
+			SUM(CPRICE_AMT)/SUM(G.SHARE_AMT) AS lastTradeAvgClearPrice/**最近买入交易日净价**/
 		FROM
 			FIN_PRODUCT A /**标的类金融产品表**/
 			LEFT JOIN FIN_PRODUCT_CONVERTIBLE C ON A.FINPROD_ID = C.FINPROD_ID/**转股信息表**/
 			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
+			LEFT JOIN (
+				select FINPROD_ID,MAX(TRADE_DATE) AS TRADE_DATE from TRD_PRODUCT_DEAL E
+				where
+				1=1
+				<if test="finprodIdList != null and finprodIdList.size()>0 ">
+					AND E.FINPROD_ID IN(
+					<foreach item="item" index="index" collection="finprodIdList" separator=",">
+						#{item}
+					</foreach>
+					)
+				</if>
+				AND E.PS IN ('T01','T05')/**买入、申购**/
+				AND E.TRADE_DATE <![CDATA[ <= ]]>  #{searchDate,jdbcType=DATE}
+				GROUP BY FINPROD_ID
+			) F ON A.FINPROD_ID = F.FINPROD_ID
+			LEFT JOIN TRD_PRODUCT_DEAL G ON G.FINPROD_ID = F.FINPROD_ID AND G.TRADE_DATE = F.TRADE_DATE
 		WHERE
 			1 = 1
 			AND D.TYPE_18 = '01' AND (D.TYPE_1 = '028' OR D.TYPE_1 = '029')/**可转债、可交换债**/
 			AND (
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
+			SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
 			)
 			OR
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+			SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
 			)
 			)
 			<if test="finprodIdList != null and finprodIdList.size()>0 ">
@@ -80,10 +100,23 @@
 				AND A.VDATE <![CDATA[ <= ]]> #{searchDate,jdbcType=DATE}/**起息日**/
 				AND A.MDATE <![CDATA[ >= ]]> #{searchDate,jdbcType=DATE}/**到期日**/
 			</if>
+		GROUP BY 	A.FINPROD_ID ,
+			A.FINPROD_ABBR ,
+			A.FINPROD_MARKET_ID ,
+			A.VDATE ,
+			A.MDATE ,
+			C.CON_FINPROD_ID ,
+			C.CON_VDATE ,
+			C.CON_PRICE ,
+			A.ISSUE_PRICE,
+			D.TYPE_18,
+			D.TYPE_1,
+			A.COUPON_SPECIES,
+			F.TRADE_DATE
 	</select>
 
     <!-- 获取现金流贴现法资产信息集合  -->
-    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 		A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 		A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -250,15 +283,13 @@
     </select>
     <!-- 股票行情查询 -->
     <select id="getStockMarketInfo"  resultType="com.joyintech.tams.common.base.entity.MstSharePrice">
-    	SELECT A.CON_FINPROD_ID CON_FINPROD_ID,
-		       A.FINPROD_MARKET_ID FINPROD_MARKET_ID,
-		       A.DEAL_DATE DEAL_DATE,
-		       A.CLOSE_PRICE CLOSE_PRICE,
-		       A.PB PB,
-		       A.PE PE
-		  FROM
-			FIN_PRODUCT A
-			INNER JOIN  MST_SHARE_PRICE B ON A.FINPROD_MARKET_ID = B.SHARES_ID
+    	SELECT B.SHARES_ID sharesId,
+		       B.DEAL_DATE DEAL_DATE,
+		       B.CLOSE_PRICE CLOSE_PRICE,
+		       B.PB PB,
+		       B.PE PE
+		FROM
+			MST_SHARE_PRICE B INNER JOIN  FIN_PRODUCT A  ON A.FINPROD_MARKET_ID = B.SHARES_ID
 	    where 1=1
 	    <if test="stockIdList != null and stockIdList.size()>0 ">
 		   AND A.FINPROD_ID IN(

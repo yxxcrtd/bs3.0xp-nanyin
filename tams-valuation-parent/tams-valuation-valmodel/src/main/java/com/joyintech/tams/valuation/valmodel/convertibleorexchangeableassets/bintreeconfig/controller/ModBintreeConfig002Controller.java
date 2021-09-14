@@ -164,7 +164,7 @@ public class ModBintreeConfig002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getSecAssetInfo")
-    public Page<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
+    public List<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
 
         return modBintreeConfig002Service.getSecAssetInfo(params);
     }

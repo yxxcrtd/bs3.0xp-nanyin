@@ -63,6 +63,21 @@ public class ModAssetInfoDto extends FinProduct {
      */
     private String actualCreditFinLicence;
 
+	/**
+	 * 最近买入交易发生日
+	 */
+	private Date lastTradeInDate;
+
+	/**
+	 * 最近买入交易日交易均价-全价
+	 */
+	private BigDecimal lastTradeAvgFullPrice;
+	/**
+	 * 最近买入交易日交易均价-净价
+	 */
+	private BigDecimal lastTradeAvgClearPrice;
+
+
 	public String getConFinprodId() {
 		return conFinprodId;
 	}
@@ -133,5 +148,29 @@ public class ModAssetInfoDto extends FinProduct {
 
 	public void setActualCreditFinLicence(String actualCreditFinLicence) {
 		this.actualCreditFinLicence = actualCreditFinLicence;
+	}
+
+	public Date getLastTradeInDate() {
+		return lastTradeInDate;
+	}
+
+	public void setLastTradeInDate(Date lastTradeInDate) {
+		this.lastTradeInDate = lastTradeInDate;
+	}
+
+	public BigDecimal getLastTradeAvgFullPrice() {
+		return lastTradeAvgFullPrice;
+	}
+
+	public void setLastTradeAvgFullPrice(BigDecimal lastTradeAvgFullPrice) {
+		this.lastTradeAvgFullPrice = lastTradeAvgFullPrice;
+	}
+
+	public BigDecimal getLastTradeAvgClearPrice() {
+		return lastTradeAvgClearPrice;
+	}
+
+	public void setLastTradeAvgClearPrice(BigDecimal lastTradeAvgClearPrice) {
+		this.lastTradeAvgClearPrice = lastTradeAvgClearPrice;
 	}
 }
