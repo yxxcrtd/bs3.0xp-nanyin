@@ -159,6 +159,19 @@ public class TrdRepoTrade002Dto extends TrdProductDeal implements ProcessEntity 
     private CreditAmtSelDto creditList;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * 获取 channelFee
      *
      * @return channelFee
