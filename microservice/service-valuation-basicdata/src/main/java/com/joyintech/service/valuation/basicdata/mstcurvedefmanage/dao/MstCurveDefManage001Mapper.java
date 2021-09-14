@@ -39,4 +39,14 @@ public interface MstCurveDefManage001Mapper {
     List<MstCurveDefManageDto> getCurveDefCount(MstCurveDefManageDto dto);
 
     MstCurveDefManageDto selectByKey(Map<String,Object> param);
+
+    int insertSelective(MstCurveDefManageDto dto);
+
+    int updateByPrimaryKey(MstCurveDefManageDto dto);
+
+    int deleteByPrimaryKey(MstCurveDefManageDto dto);
+
+    List<SelectOptionDto> getCurveGroupSelect(Map<String, Object> param);
+
+
 }

@@ -78,7 +78,7 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
                 entrustNum = entrustNum.multiply(new BigDecimal(100));
                 if (entrustNum != null && StringUtil.isNotEmpty(ps)) {
                     BigDecimal proAvailableCash = dto.getProAvailableCash();
-                    BigDecimal assetAvailablePosition = dto.getAssetAvailablePosition();
+                    BigDecimal assetAvailablePosition =  ArithmeticUtil.multiply(dto.getAssetAvailablePosition(),new BigDecimal(100));
                     BigDecimal zero = new BigDecimal(0);
                     if (StringUtil.equals(
                             CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH),

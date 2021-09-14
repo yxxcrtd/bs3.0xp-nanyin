@@ -6,8 +6,18 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.systemtools.util.SysDatadictUtil;
+import com.joyintech.tams.valuation.basicdata.comtradeopponent.validator.FinCashDtoValidator;
+import com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.validator.MstCurveDefManageDtoValidator;
+import com.joyintech.workflow.engine.annotation.PrimaryKey;
+import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,8 +30,9 @@ import java.util.List;
  * @see MstCurveDefManageDto
  * @since 1.0
  */
-@PageId("MstYieldCurveInfoManage001")
-public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
+@PageId("MstCurveDefManage002")
+@ValidLogic(targetClass = MstCurveDefManageDtoValidator.class, groups = {ValidateGroupEdit.class, ValidateGroupDelete.class})
+public class MstCurveDefManageDto extends BaseEntity implements ITableRow , ProcessEntity {
 
     /**
      * 曲线代码
@@ -75,7 +86,7 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
     /**
      * K
      */
-    private BigDecimal K;
+    private BigDecimal k;
     /**
      * 基准曲线资产类型，国债，中央票据,短期融资债（aaa）
      */
@@ -142,6 +153,25 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
     private String interestFreq;
 
     /**
+     * 是否曲线族
+     */
+    private String curveGroupType;
+
+    /**
+     * 评级
+     */
+    private String gradeResult;
+
+    /**
+     * 所属曲线族
+     */
+    private String curveGroupCode;
+
+
+
+
+
+    /**
      * 操作类型
      */
     private String operateType;
@@ -159,6 +189,8 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
 
     private List<MstCurveDefManageDto> selectedItem;
 
+    @PrimaryKey(PrimaryKey.Field.PK_1)
+    @NotBlank(message = "曲线代码不能为空!", groups = ValidateGroupEdit.class)
     public String getCurveCode() {
         return curveCode;
     }
@@ -248,11 +280,11 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
     }
 
     public BigDecimal getK() {
-        return K;
+        return k;
     }
 
     public void setK(BigDecimal k) {
-        K = k;
+        this.k = k;
     }
 
     public String getBaseAssetType() {
@@ -303,6 +335,7 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
         this.effStatus = effStatus;
     }
 
+    @NotBlank(message = "曲线名称不能为空!", groups = ValidateGroupEdit.class)
     public String getCurveName() {
         return curveName;
     }
@@ -399,8 +432,9 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
         this.intCurveTypeName = intCurveTypeName;
     }
 
+    @NotBlank(message = "曲线来源不能为空!", groups = ValidateGroupEdit.class)
     public String getValueSourceName() {
-        return SysDataUtil.getNameFromDataDict(DictCode.估值来源, this.getValueSource());
+        return SysDataUtil.getNameFromDataDict(DictCode.曲线来源, this.getValueSource());
     }
 
     public void setValueSourceName(String valueSourceName) {
@@ -415,7 +449,31 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow  {
         this.selectedItem = selectedItem;
     }
 
-//    public String getEffStatusName() {
+    public String getCurveGroupType() {
+        return curveGroupType;
+    }
+
+    public void setCurveGroupType(String curveGroupType) {
+        this.curveGroupType = curveGroupType;
+    }
+
+    public String getGradeResult() {
+        return gradeResult;
+    }
+
+    public void setGradeResult(String gradeResult) {
+        this.gradeResult = gradeResult;
+    }
+
+    public String getCurveGroupCode() {
+        return curveGroupCode;
+    }
+
+    public void setCurveGroupCode(String curveGroupCode) {
+        this.curveGroupCode = curveGroupCode;
+    }
+
+    //    public String getEffStatusName() {
 //        return SysDatadictUtil.getNameFromDataDict(DictCode.收益率曲线生效状态,this.getEffStatus());
 //    }
 

@@ -420,6 +420,16 @@
         	    //获取质押券列表原数据
         		var oldData =  pledgeBondTotalTbl.getAllRows();
         		var newData = [];
+                //add by chenjiaxing ZGZGST-2567 质押式回购指令，指令新建自动导入质押券信息错误 202100914 start
+                for(var i = 0 ; i < result.data.length ; i++){
+                    if(result.data[i].avaPledgePrin){
+                        result.data[i].avaPledgePrin = JoyinMath.doDiv(result.data[i].avaPledgePrin, "10000", 4);
+                    }
+                    if(result.data[i].pledgePrin){
+                        result.data[i].pledgePrin = JoyinMath.doDiv(result.data[i].pledgePrin, "10000", 4);
+                    }
+                }
+                //add by chenjiaxing ZGZGST-2567 质押式回购指令，指令新建自动导入质押券信息错误 202100914 start
         		if(oldData != undefined){
         		    var map = new Map();
         		    var resultData = oldData.concat(result.data);

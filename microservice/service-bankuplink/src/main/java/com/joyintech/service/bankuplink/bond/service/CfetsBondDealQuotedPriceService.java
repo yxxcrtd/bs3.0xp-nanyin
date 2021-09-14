@@ -1185,8 +1185,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(settleDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
+		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
+		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
 
 		// 插入持仓流水
 		if (ptlPositionHoldDto.getPtlSecPositionFlows().size() > 0) {
@@ -1502,8 +1502,8 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
 
 		ptlPositionHoldDto.setPtlCashPositionFlows(ptlCashPositionFlows);
 		ptlPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
-		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(settleDate));
-		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(platDate));
+		ptlPositionHoldDto.getPtlCashPositionFlows().forEach(etrCashPositionFlowDto -> etrCashPositionFlowDto.setCdate(platDate));
+		ptlPositionHoldDto.getPtlSecPositionFlows().forEach(etrSecPositionFlowDto -> etrSecPositionFlowDto.setCdate(settleDate));
 
 		// 插入持仓流水
 		if(ptlPositionHoldDto.getPtlSecPositionFlows().size() > 0){

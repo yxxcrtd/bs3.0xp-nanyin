@@ -1449,6 +1449,15 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     // 增加评级机构类型
     评级机构类型_最新(DictCode.评级机构类型,"01","最新"),
     评级机构类型_指定(DictCode.评级机构类型,"02","指定"),
+
+    // 添加曲线来源
+    曲线来源_自定义曲线(DictCode.曲线来源,"01","自定义曲线"),
+    曲线来源_第三方曲线(DictCode.曲线来源,"02","第三方曲线"),
+
+    共通业务类型_收益率曲线管理(DictCode.共通业务类型,"MOD13","收益率曲线管理"),
+
+
+
     ;
     /**
      * 对应于数据字典code
