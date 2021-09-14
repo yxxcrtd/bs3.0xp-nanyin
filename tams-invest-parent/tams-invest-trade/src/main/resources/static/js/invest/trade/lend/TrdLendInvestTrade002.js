@@ -90,7 +90,9 @@ $(function() {
             object.calendarId = object.finTradeProduct.calendarId;
         }
         // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 start
-
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
        Joyin.ajaxJson(basePath + 'invest/trade/lend/TrdLendInvestTrade002/check', object, function(result) {
            Joyin.confirm(result.data, function() {
                if(operateType === 'save') {

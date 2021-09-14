@@ -106,6 +106,19 @@ public class TrdLendInvestTradeDto extends TrdProductDeal {
     private Long settleSpreed;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * 获取 bussTrdTransferOrder
      *
      * @return bussTrdTransferOrder
