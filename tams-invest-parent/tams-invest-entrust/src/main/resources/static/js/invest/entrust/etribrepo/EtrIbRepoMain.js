@@ -226,10 +226,11 @@ $(function() {
 
                        });
                    });
-           }else{
-               Joyin.warn("请添加组合分配！");
-               return;
            }
+           // else{
+           //     Joyin.warn("请添加组合分配！");
+           //     return;
+           // }
        })
 
    }
