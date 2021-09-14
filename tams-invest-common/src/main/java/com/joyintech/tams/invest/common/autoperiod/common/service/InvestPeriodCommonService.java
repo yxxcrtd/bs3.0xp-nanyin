@@ -151,7 +151,9 @@ public class InvestPeriodCommonService {
 	            map.put("tableId", "TRD_FIN_PRODUCT_DEAL_TOTAL");
 	            flowTradeId = periodCommonMapper.findFollowDeal(map);
 	            // 登录反向交易
-	            revoke汇总和交易相关表(flowTradeId, updateUser, revokeReason, null, actPortfolio);
+                if(StringUtil.isNotEmpty(flowTradeId)){
+                    revoke汇总和交易相关表(flowTradeId, updateUser, revokeReason, null, actPortfolio);
+                }
 	   }
         
     }

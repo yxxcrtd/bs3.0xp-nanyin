@@ -271,7 +271,7 @@ public class CfetsRepoDealQuotedPrice003Controller extends BaseController {
         }
         ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
         WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> params = cfetsRepoDealQuotedPrice002Service.getWorkFlowParameter(cfetsRepoDealQuotedPrice001Dto);
-        params.setPageId("CfetsRepoDealQuotedPrice003");
+        params.setPageId("CfetsRepoDealQuotedPr003");
         params.setElementId(cfetsRepoDealQuotedPrice001Dto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
         params.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());
