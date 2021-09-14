@@ -274,7 +274,11 @@ var outOk = function () {
 
         //先将选入列表中的数据先添加到最终列表中
         var resultArrlist = [];//最终质押列表中bondCode list
-
+        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 start
+        for(var k = 0 ; k < inSelectedAllRows.length ; k++){
+            inSelectedAllRows[k].pledgePrin = inSelectedAllRows[k].pledgePrin * 10000;
+        }
+        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 end
         for (var k = resultTable.getAllRows().length - 1; k >= 0; k--) {
             resultArrlist.push(resultTable.getAllRows()[k].bondCode);
         }
@@ -325,7 +329,7 @@ var outOk = function () {
     if (resultTable.getAllRows() != null && resultTable.getAllRows().length > 0) {
         var sumAmtValue = 0;
         for (var i = resultTable.getAllRows().length - 1; i >= 0; i--) {
-            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin * resultTable.getAllRows()[i].pledgeRatio/100);
+            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin * resultTable.getAllRows()[i].pledgeRatio/100 * 10000);
 
         }
         $("#sumAmt").val(sumAmtValue);

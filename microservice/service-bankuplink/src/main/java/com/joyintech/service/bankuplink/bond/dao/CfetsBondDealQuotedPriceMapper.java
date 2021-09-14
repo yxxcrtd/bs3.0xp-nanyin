@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -125,5 +126,13 @@ public interface CfetsBondDealQuotedPriceMapper {
 	List<CfetsBondDealRequestQuoteDto> getCfetsBondDealRequestQuoteDtoList(Map<String, Object> param);
 
     List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
-    
+
+    /**
+     * 分页查询结果
+     * @param map 查询参数
+     * @return 分页查询结果
+     * @see
+     * @since 1.0
+     */
+    List<CstpSelectDto> getCstpQryTableList(Map<String,Object> map);
 }

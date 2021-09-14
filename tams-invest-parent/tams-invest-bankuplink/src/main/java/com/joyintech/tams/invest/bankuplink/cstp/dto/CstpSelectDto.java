@@ -389,7 +389,7 @@ public class CstpSelectDto extends InterfCstpTrade{
         if(pledgeRate != null){
             return pledgeRate.multiply(new BigDecimal("100"));
         }else{
-            return new BigDecimal("0").multiply(new BigDecimal("100"));
+            return null;
         }
     }
 
@@ -527,10 +527,37 @@ public class CstpSelectDto extends InterfCstpTrade{
      * @return settleSpeedStr
      */
     public String getDeliveryTypeStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType().toString());
+        //0-券款对付 03
+        //4-见券付款 02
+        //5-见款付券 01
+        if(StringUtil.equals(this.getDeliveryType().toString(),"0")){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "03");
+        }
+        if(StringUtil.equals(this.getDeliveryType().toString(),"4")) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "02");
+        }
+        if(StringUtil.equals(this.getDeliveryType().toString(),"5")){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "01");
+        }
+        if(StringUtil.isNotEmpty(this.getDeliveryType())){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType().toString());
+        }
+        return "";
     }
     public String getDeliveryType2Str() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType2().toString());
+        if(StringUtil.equals(this.getDeliveryType2().toString(),"0")){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "03");
+        }
+        if(StringUtil.equals(this.getDeliveryType2().toString(),"4")) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "02");
+        }
+        if(StringUtil.equals(this.getDeliveryType2().toString(),"5")){
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, "01");
+        }
+        if(StringUtil.isNotEmpty(this.getDeliveryType2())) {
+            return SysDataUtil.getNameFromDataDict(BussinessDictCode.结算方式, this.getDeliveryType2().toString());
+        }
+        return "";
     }
     public String getExecTypeStr() {
         if(StringUtil.equals(this.getExecType(),"F")){
@@ -625,6 +652,81 @@ public class CstpSelectDto extends InterfCstpTrade{
 
     public void setSecurityId(String securityId) {
         this.securityId = securityId;
+    }
+
+    /*重新取本方，对手方，本方交易员，对手方交易员*/
+
+    private String ouPartyId;
+    private String ouTraderId;
+    private String cpPartyId;
+    private String cpTraderId;
+    private String exeOuPartyId;
+    private String exeOuTraderId;
+    private String exeCpPartyId;
+    private String exeCpTraderId;
+
+    public String getOuPartyId() {
+        return ouPartyId;
+    }
+
+    public void setOuPartyId(String ouPartyId) {
+        this.ouPartyId = ouPartyId;
+    }
+
+    public String getOuTraderId() {
+        return ouTraderId;
+    }
+
+    public void setOuTraderId(String ouTraderId) {
+        this.ouTraderId = ouTraderId;
+    }
+
+    public String getCpPartyId() {
+        return cpPartyId;
+    }
+
+    public void setCpPartyId(String cpPartyId) {
+        this.cpPartyId = cpPartyId;
+    }
+
+    public String getCpTraderId() {
+        return cpTraderId;
+    }
+
+    public void setCpTraderId(String cpTraderId) {
+        this.cpTraderId = cpTraderId;
+    }
+
+    public String getExeOuPartyId() {
+        return exeOuPartyId;
+    }
+
+    public void setExeOuPartyId(String exeOuPartyId) {
+        this.exeOuPartyId = exeOuPartyId;
+    }
+
+    public String getExeOuTraderId() {
+        return exeOuTraderId;
+    }
+
+    public void setExeOuTraderId(String exeOuTraderId) {
+        this.exeOuTraderId = exeOuTraderId;
+    }
+
+    public String getExeCpPartyId() {
+        return exeCpPartyId;
+    }
+
+    public void setExeCpPartyId(String exeCpPartyId) {
+        this.exeCpPartyId = exeCpPartyId;
+    }
+
+    public String getExeCpTraderId() {
+        return exeCpTraderId;
+    }
+
+    public void setExeCpTraderId(String exeCpTraderId) {
+        this.exeCpTraderId = exeCpTraderId;
     }
 
     //add by chenjiaxing 质押式回购改造 end

@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -1108,5 +1110,20 @@ public class CfetsBondDealQuotedPriceController {
             throws Exception {
         Page<SelectOptionDto> temp = cfetsBondDealQuotedPriceService.getfinprodIdForAdd(page,length,param);
         return temp;
+    }
+
+
+    /**
+     * 成交查询
+     * @param map 查询
+     * @return 分页查询结果
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @PostMapping("getCstpQryTableList")
+    public List<CstpSelectDto> getCstpQryTableList(@RequestBody Map<String,Object> map) throws Exception{
+        return cfetsBondDealQuotedPriceService.getCstpQryTableList(map);
     }
 }

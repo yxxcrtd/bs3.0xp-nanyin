@@ -81,7 +81,9 @@ V_CONTENT_04 CLOB := 'select sum(amount) AS amount from
     from TRD_PRODUCT_DEAL_ADD m
     inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID
     left join PTL_PORTFOLIO t2  on t2.portfolio_id =  m.portfolio_id
-    where m.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}'' group by m.PORTFOLIO_ID
+    where m.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}'' 
+	    AND n.TRADE_STATUS = ''01'' AND n.IS_CANCEL = ''N''
+	group by m.PORTFOLIO_ID
     union all
     select
      nvl(sum(decode(n.PS,''C1'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)

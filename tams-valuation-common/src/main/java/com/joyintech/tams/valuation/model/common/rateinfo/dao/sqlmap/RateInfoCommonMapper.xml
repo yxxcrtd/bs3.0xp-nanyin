@@ -29,11 +29,15 @@
 			<if test="gradeorgid !=null">
 				AND MBCR.GRADE_ORG_ID = #{gradeorgid,jdbcType=VARCHAR}
 			</if>
-			group by O_CODE, O_TYPE, GRADE_ORG_ID, GRADE_DATE
+			<if test="queryDate !=null">
+				AND MBCR.GRADE_DATE <![CDATA[<=]]> #{queryDate}
+			</if>
+			group by O_CODE, O_TYPE, GRADE_ORG_ID
 		) maxdata
 		on fulldata.O_CODE = maxdata.O_CODE
 		and fulldata.O_TYPE = maxdata.O_TYPE
 		and fulldata.GRADE_ORG_ID = maxdata.GRADE_ORG_ID
+		AND fulldata.GRADE_DATE = maxdata.GRADE_DATE
 		inner join MOD_STANDARD_GRADE_MAPPING MAPP
 		ON fulldata.GRADE_ORG_ID = MAPP.GRADE_INST /**评级机构**/
 		AND fulldata.O_TYPE = MAPP.O_TYPE /**评级类型**/

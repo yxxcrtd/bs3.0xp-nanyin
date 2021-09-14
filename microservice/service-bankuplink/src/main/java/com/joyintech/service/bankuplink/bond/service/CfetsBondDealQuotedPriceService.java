@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1727,6 +1728,59 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         param.put("TRADE_PLACE_10",DictCodeListExt1.交易场所_境外交易场所.getValue());
 //        param.put("TRADE_PLACE_11", DictCodeListExt3.交易场所_北京金融资产交易所.getValue());
         return this.queryForPageForSelectReturn(page, length,()->cfetsBondDealQuotedPriceMapper.getfinprodIdForAdd(param));
+    }
+
+    /**
+     * 分页查询
+     * @param map 请求参数
+     * @return 分页查询结果
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    public List<CstpSelectDto> getCstpQryTableList(Map<String,Object> map) throws Exception{
+        if(StringUtil.isNotEmpty((String)map.get("finprodType"))){
+            switch ((String)map.get("finprodType")){
+                case "T01": map.replace("finprodType", "BOND");
+                    break;
+                case "T02": {
+                    map.put("marketindicator", "9");
+                    map.remove("finprodType");
+                };
+                break;
+                case "T03":
+                {
+                    map.put("marketindicator", "10");
+                    map.remove("finprodType");
+                }
+                ;
+                break;
+                case "T04":
+                {
+                    map.put("marketindicator", "8");
+                    map.remove("finprodType");
+                }
+                ;
+                break;
+                case "T05":
+                {
+                    map.put("marketindicator", "2");
+                    map.remove("finprodType");
+                }
+                ;
+                break;
+            }
+        }
+        if(StringUtil.isNotEmpty((String)map.get("ps"))){
+            map.replace("ps", StringUtil.splitToList(",", (String)map.get("ps")));
+        }
+        if(StringUtil.isNotEmpty((String)map.get("benfangSide")) && StringUtil.equals((String)map.get("benfangSide"),"01")){
+            map.put("benfangSide","");
+        }
+        map.put("TRADE_STATUS", BussinessDictCodeList.交易状态_初始.getValue());
+        map.put("PARTMATCH", BussinessDictCodeList.匹配状态_部分匹配.getValue());
+        map.put("acctType",BussinessDictCodeList.资金账户类型_托管账户.getValue());
+        return cfetsBondDealQuotedPriceMapper.getCstpQryTableList(map);
     }
     
 }

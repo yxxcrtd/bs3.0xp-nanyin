@@ -110,8 +110,16 @@ public class BussRepoSecController extends BaseController {
                 if( entity.getTotalPrinAmt()  != null){
                     entity.setTotalPrinAmt(ArithmeticUtil.divide(entity.getTotalPrinAmt(),new BigDecimal(10000),4));
                 }
-                //add by chenjiaxing 质押券回购初始化报错,报价界面回复初始化时质押券多除了10000  ，ZGZGST-2401
-                if(!(entity.getPledgeBondList() == null) && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice002")){
+                //add by chenjiaxing 质押券回购初始化报错,报价界面回复初始化时质押券多除了10000  ，ZGZGST-2401 CfetsRepoDealQuotedPr006
+                if(StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006")){
+                    entity.setTotalPrinAmt(ArithmeticUtil.multiply(entity.getTotalPrinAmt(),new BigDecimal(10000)));
+                }
+                if(!(entity.getPledgeBondList() == null) && (!StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice002")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice002")
+                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice003")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice003")
+                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPr006"))){
                     for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
                         if (dto.getAvaPledgePrin() != null) {
                             dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));

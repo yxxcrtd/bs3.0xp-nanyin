@@ -5,6 +5,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -12,6 +13,7 @@ import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001Dto;
 import com.joyintech.tams.invest.bankuplink.reponew.dto.CfetsRepoDealQuotedPr006Dto;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
@@ -587,4 +589,16 @@ public class CfetsRepoDealQuotedPr006Service extends BaseService<CfetsRepoDealQu
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdRepoTrade/getChlId", tradeId, String.class);
     }
 
+    /**
+     * 查询本方交易员列表
+     *
+     * @param param 入参
+     * @return 本方交易员列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> queryMySideTraderPage(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/queryMySideTraderPage",
+                param, SelectOptionDto.class);
+    }
 }
