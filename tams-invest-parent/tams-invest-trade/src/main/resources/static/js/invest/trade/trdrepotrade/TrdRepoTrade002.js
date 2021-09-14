@@ -21,7 +21,6 @@
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
     function getTermType(date,repoterm) {
-    debugger
     	if(repoterm&&repoterm<=21){
     		//期限品种小于21天
     		if(repoterm==1){
@@ -687,7 +686,6 @@
      * 计算费用
      */
     var calFee = function(){
-//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -1335,7 +1333,6 @@
 	 * 期限品种联动期限
 	 */
 	var termTypeChangeAction = function(){
-	debugger
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
@@ -2201,7 +2198,6 @@
         });
         // 期限品种改变时
         $("#termTypeReback").on("keyup blur",function(){
-        debugger;
                 calFee();
                 changeTradeAmtAndFee();
                 termTypeChangeAction();

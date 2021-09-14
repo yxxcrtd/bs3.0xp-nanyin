@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -245,7 +246,7 @@ public class TrdRepoTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
+        model.addAttribute("userId", LoginUserUtil.getUserName());
         return super.init(model);
     }
 
