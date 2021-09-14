@@ -81,7 +81,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init', '98%', '95%',{parentPageId:pageId},function(){table.reload();});
     }
     /**
      * 定义数据表格

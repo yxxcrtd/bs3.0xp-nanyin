@@ -113,7 +113,18 @@ public class EtrLendSpecInfoDto extends EtrEntrust {
      */
     private String elementId;
     //产品化_SNSTZJY-2384_拆借，交易方向是拆出,指令金额没有改变 add by zhangpei 20201209 end
-    
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
     /**
      * 获取 fileArray
      * @return fileArray.

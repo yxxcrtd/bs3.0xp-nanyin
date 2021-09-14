@@ -201,7 +201,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrFund002'), basePath +'invest/entrust/etrfund/EtrFund002/init?parentPageId=' + pageId, '98%', '95%');
+        Joyin.dialog(JoyinUtil.getLabel('EtrFund002'), basePath +'invest/entrust/etrfund/EtrFund002/init', '98%', '95%',{parentPageId:pageId});
     }
 
     /**

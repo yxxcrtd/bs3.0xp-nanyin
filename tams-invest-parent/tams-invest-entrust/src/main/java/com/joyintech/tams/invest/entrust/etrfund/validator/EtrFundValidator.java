@@ -373,7 +373,7 @@ public class EtrFundValidator implements EtrCommonValidator {
                     errorList.add(new ValidMessage("entrustNum", getMessage("ETR_X_012", getMessage("EtrFund001.entrustNum"))));
                 }
               //委托价格，当交易方向为买入/卖出，且交易场所和交易对手都是交易所时显示，且必填
-                if(!StringUtil.isNotEmpty(etrFundDto.getPrice())){
+                if(!StringUtil.isNotEmpty(etrFundDto.getPrice()) &&!etrFundDto.getPs().equals(DictCodeListExt2.交易方向_转换申请.getValue())){
                 	if(!StringUtil.equals(etrFundDto.getCounterType(), DictCodeList.是否_否.getValue())){
                 		errorList.add(new ValidMessage("price", getMessage("ETR_X_012", getMessage("EtrFund002.price"))));
                 	}
