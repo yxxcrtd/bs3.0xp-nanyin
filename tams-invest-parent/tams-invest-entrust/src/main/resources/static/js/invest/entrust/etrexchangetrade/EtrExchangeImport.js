@@ -355,7 +355,7 @@
                     item.data.portfolioCode = object[index].portfolioId;
                     item.data.finprodId = object[index].finprodId;
                     item.data.assetCode = object[index].finprodId;
-                    item.data.entrustAmt = item.data.tradeAmount;
+                    item.data.entrustAmt = object[index].entrustAmt;
                     if (item.data.ps == PS_03) {
                         item.data.assetType = FINPROD_TYPE_TG_F02;
                         object[index].finprodType2 = FINPROD_TYPE_TG_F02;
