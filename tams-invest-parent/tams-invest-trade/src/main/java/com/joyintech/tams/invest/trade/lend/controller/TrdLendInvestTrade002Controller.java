@@ -83,6 +83,12 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
         TrdLendInvestTradeDto dto = new TrdLendInvestTradeDto();
 
+        this.setSelectOptionToModel(model, DictCode.交易场所);
+        // add by wangpeng 20210525 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
+
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdLendInvestTrade002Service.getBussinessEntityByWorkflowId(
@@ -108,6 +114,10 @@ public class TrdLendInvestTrade002Controller extends BaseController {
                 // 根据工作流代码查询交易编号
                 dto.setTradeId(trdLendInvestTrade002Service.selectTradeIdByWorkflowId(workflowId));
             }
+            // add by yeming 20210914 银行间场内场外拆分 start
+            model.addAttribute("parentPageId",dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210914 银行间场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(tradeId);
@@ -155,14 +165,8 @@ public class TrdLendInvestTrade002Controller extends BaseController {
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
         model.addAttribute("PINAN_ASSET_TYPE_F08",DictCodeList.平安资产类型_拆借.getValue());
 
-        this.setSelectOptionToModel(model, DictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.期限品种_内部拆借);
         this.setSelectOptionToModel(model, DictCode.清算速度);
-
-        // add by wangpeng 20210525 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by wangpeng 20210525 银行间场内场外拆分 end
         
         return super.init(model);
     }

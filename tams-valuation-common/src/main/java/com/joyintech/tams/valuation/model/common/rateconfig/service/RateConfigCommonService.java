@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.model.common.rateconfig.service;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
 import com.joyintech.tams.valuation.model.common.rateconfig.dao.RateConfigCommonMapper;
@@ -31,7 +32,7 @@ public class RateConfigCommonService {
         List<ModAssetGradeConfig> list = rateConfigCommonMapper.listAssetGradeConfigs();
         Map<String, ModAssetGradeConfig> result = new HashedMap<>();
         if (CollectionUtils.isNotEmpty(list)) {
-            result = list.stream().collect(Collectors.toMap(x->x.getAssetType()+x.getAssetDetailType(), y -> y));
+            result = list.stream().collect(Collectors.toMap(x-> StringUtil.isNotEmpty(x.getAssetDetailType())?x.getAssetType()+x.getAssetDetailType():x.getAssetType(), y -> y));
         }
         return result;
     }

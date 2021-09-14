@@ -850,8 +850,8 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                     }
                     dto.setPtlAllocationList(ptlAllocationList);
                 }
-
             }
+			ps = dto.getPs();
 		}
 		PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();// 组合持仓流水、组合现金流水
 		List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();// 现金流水
@@ -898,6 +898,9 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                     }
                     // 待分配投资目的的质押券面总额
                     BigDecimal pledgePrin = cfetsRepoDealQuotedPrice003Dto.getPledgePrin();
+                    //add by chenjiaxing ZGZGST-2611 正回购组合持仓更新不对 20210913 start
+                    pledgePrin = ArithmeticUtil.multiply(pledgePrin,new BigDecimal(10000));
+                    //add by chenjiaxing ZGZGST-2611 正回购组合持仓更新不对 20210913 end
                     List<PledgeBondInfoDto> tempList = avaMap.get(cfetsRepoDealQuotedPrice003Dto.getBondCode());
                     if (!StringUtil.isEmptyList(tempList)) {
                         for (PledgeBondInfoDto avaBond : tempList) {

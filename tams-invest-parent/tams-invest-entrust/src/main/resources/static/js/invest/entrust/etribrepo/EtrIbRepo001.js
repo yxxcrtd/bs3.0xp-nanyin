@@ -87,7 +87,7 @@
             ,{field:'mdateStr', title: 'EtrInvestBondInfo001.mdate', width:100,/*type:'date',*/sortField:"mdate"}
             ,{field:'finishAmt',type:'money', title: 'EtrIbRepo001.finishAmt', width:100,sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrInvestBondInfo001.transactioncom',render : function(data, type, row, meta){
-                    return "<div class='layui-progress layui-progress-big' style='margin-top:15px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
+                    return "<div class='layui-progress layui-progress-big' style='margin-top: 3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";
                 }, width:100,sortable:false}
             ,{field:'remark', title: 'EtrInvestBondInfo001.remark', width:180,sortable:false}
         ]

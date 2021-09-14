@@ -9,6 +9,7 @@
  */
 package com.joyintech.tams.valuation.lossmodel.lgddefultmanager.lgdspecialconfig.controller;
 
+import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -18,6 +19,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.entity.CreditTagInfo;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.interf.invest.constant.BussinessJixuConstant;
@@ -31,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -87,6 +90,10 @@ public class LgdSpecialConfig002Controller extends BaseController {
             dto = lgdSpecialConfigService.selectByPrimaryKey(pddto);
         }else if (StringUtil.isNotEmpty(workflowId)) {// 流程页面
             dto = lgdSpecialConfigService.getBussinessEntityByWorkflowId(workflowId);
+        }
+        // 界面显示LGD值应*100显示
+        if(dto.getLgd() != null){
+            dto.setLgd(ArithmeticUtil.multiply(dto.getLgd(), new BigDecimal(100)));
         }
         model.addAttribute(GlobalConstant.ENTITY,dto);
         return super.init(model);

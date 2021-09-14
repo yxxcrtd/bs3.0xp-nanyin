@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,6 +127,21 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
             //多组合
             Map<String,Object> map = new HashMap<>();
             map.put("quoteId", quoteId);
+            //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
+            List<PtlAllocationDto> ptlAllocationList = cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map);
+            if(ptlAllocationList.size() > 0){
+                CfetsRepoDealQuotedPrice001Dto dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(
+                        ptlAllocationList.get(0).getEntrustId(), null);
+                cfetsRepoDealQuotedPrice001Dto.setTradeDate(dto.getVdate());
+                cfetsRepoDealQuotedPrice001Dto.setPortfolioSeries(dto.getPortfolioSeries());
+            }
+            if(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt() != null){
+                cfetsRepoDealQuotedPrice001Dto.setZzTotalAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt(), new BigDecimal("10000"), 2));
+            }
+            if(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt() != null){
+                cfetsRepoDealQuotedPrice001Dto.setSqTotalAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt(), new BigDecimal("10000"), 2));
+            }
+            //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
             model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
             //组合分配列表初始化
             cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map));
@@ -272,7 +288,7 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
         }
         ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
         WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> params = cfetsRepoDealQuotedPrice002Service.getWorkFlowParameter(cfetsRepoDealQuotedPrice001Dto);
-        params.setPageId("CfetsRepoDealQuotedPrice003");
+        params.setPageId("CfetsRepoDealQuotedPr003");
         params.setElementId(cfetsRepoDealQuotedPrice001Dto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
         params.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());

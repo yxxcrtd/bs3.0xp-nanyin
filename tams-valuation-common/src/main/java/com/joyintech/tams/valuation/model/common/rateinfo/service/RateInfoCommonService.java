@@ -100,36 +100,29 @@ public class RateInfoCommonService {
         //债券的处理逻辑
         if (DictCodeListExt1.证券品种_债券.getValue().equals(sectype)) {
             isFinLicence = DictCodeList.是否_否.getValue();
+            //评级主体代码设置为债券市场代码
+            ocode=modAssetInfoDto.getFinprodMarketId();
             if (ModelDictCodeList.模型_评级类型_债项评级.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_主体评级.getValue().equals(otype)) {
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
             }
             else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);

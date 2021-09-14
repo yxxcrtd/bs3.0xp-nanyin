@@ -95,6 +95,16 @@ public class ComRateAssetQuotationInfo001Dto extends FinProductValuation impleme
     }
 
     /**
+     * 取得 全价估值(每百元)
+     *
+     * @return 全价估值(每百元)
+     */
+    @NotEmpty(fieldName = "ComRateAssetQuotationInfo001.fullValuation", groups = {ValidateGroupEdit.class})
+    public BigDecimal getFullValuation() {
+        return super.getFullValuation();
+    }
+
+    /**
      * 获取 finProdMarketId
      * 
      * @return finProdMarketId.

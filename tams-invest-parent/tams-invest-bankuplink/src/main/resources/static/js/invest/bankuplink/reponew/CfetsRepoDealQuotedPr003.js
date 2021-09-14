@@ -1067,7 +1067,20 @@
         object.operation = "CfetsRepoDealQuotedPrice001.save"
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Save(object);
+        if(pageModel != PAGE_MODEL_NEW){
+            Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
+                if (result.data) {
+                    Joyin.confirm(result.data, function () {
+                        WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_save", 'CfetsRepoDealQuotedPr003', function (result) {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                    })
+                }
+            });
+        }else{
+            parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Save(object);
+        }
     };
     /**
      * 提交
@@ -1082,7 +1095,20 @@
         handlepledgeBondList(object);
         object.isDzh = isDzh;
         object.isKtg = showAmtOrg ? "Y" : "N";
-        parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Sumbit(object);
+        if(pageModel != PAGE_MODEL_NEW){
+            Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function (result) {
+                if (result.data) {
+                    Joyin.confirm(result.data, function () {
+                        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_submit", 'CfetsRepoDealQuotedPr003', function (result) {
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
+                    })
+                }
+            });
+        }else{
+            parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre003Sumbit(object);
+        }
     };
 
     /**

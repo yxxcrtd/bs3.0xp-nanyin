@@ -289,20 +289,24 @@
             }, false);
 
             queryJJHQXX(secId);
+            if(window.EtrInitAmount)
             window.EtrInitAmount.queryAmountInfo(secId,finprodAbbr,finprodId,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
             return rs;
         }
     }
 
     var queryAmountInfoMuti = function(finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId) {
+        if(window.EtrInitAmount)
         window.EtrInitAmount.queryAmountInfoMuti(secId,finprodAbbr,finprodId,portfolioIds,chlFinprodId,ccy,sysDateT1,calId);
     }
 
     var calCanBuyAmount = function(portfolioId,ccy,sysDate,price) {
+        if(window.EtrInitAmount)
         window.EtrInitAmount.calCanBuyAmount(portfolioId,ccy,sysDate,price);
     }
 
     var changeElement = function(changeFlg) {
+        if(window.EtrInitAmount)
         window.EtrInitAmount.changeElement(changeFlg);
     }
 

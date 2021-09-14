@@ -4,19 +4,6 @@
       layout:decorator="~{layout/default}">
 <head>
     <style type="text/css">
-        .layui-tab-title li {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 12px;
-            position: relative;
-            line-height: 30px;
-            min-width: 55px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease 0s;
-            padding: 0px 10px;
-        }
-
         .form-lable {
             width: 35%;
             padding: 0px 10px 0px 0px;
@@ -76,12 +63,13 @@
             display: inline-block;
         }
 
-        .layui-form-radio>i{
-            margin-right: 1px;
-            font-size: 18px;
-        }
-        .layui-form-radio *{
-            font-size:8px;
+        .form-label-wrap-radio {
+            color: #444;
+            padding: 0 10px 0 0;
+            float: left;
+            display: block;
+            font-weight: 400;
+            text-align: right;
         }
 
         .keywords {
@@ -150,6 +138,8 @@
                                             data-th-data-result='${PS}' allowClear="true" formatoption="true"></select>
                                 </div>
                             </div>
+                        </div>
+                        <div class="layui-form-item">
                             <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
                                 <label class="layui-form-label form-label"
                                        th:text="#{CfetsBondDealQuotedPr001.zlgl.invManagerId}">投资经理</label>
@@ -163,24 +153,16 @@
                                 </div>
                             </div>
                             <!-- 单选框 -->
-                            <div class="form-inline-wrap-radio" style="padding-top: 3px;margin-left:20px">
-                                <label class="layui-form-label form-label"
+                            <div class="layui-inline layui-col-xs8 layui-col-md8 layui-col-sm8 layui-col-lg8">
+                                <label class="layui-form-label form-label" style="width: 19%"
                                        th:text="#{CfetsBondDealQuotedPr001.zlgl.zlglStatus}">指令状态</label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="01" title="全部" checked>
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="02"
-                                           th:title="#{CfetsRepoDealQuotedPr001.zlgl.two}">
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPrice001.zlgl.three}">
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="04"
-                                           th:title="#{CfetsRepoDealQuotedPrice001.zlgl.four}">
-                                </label>
+                                <input type="radio" name="zlglStatus" value="01" title="全部" checked>
+                                <input type="radio" name="zlglStatus" value="02"
+                                       th:title="#{CfetsRepoDealQuotedPr001.zlgl.two}">
+                                <input type="radio" name="zlglStatus" value="03"
+                                       th:title="#{CfetsRepoDealQuotedPrice001.zlgl.three}">
+                                <input type="radio" name="zlglStatus" value="04"
+                                       th:title="#{CfetsRepoDealQuotedPrice001.zlgl.four}">
                             </div>
                         </div>
                     </form>
@@ -244,24 +226,22 @@
                     <div class='joyin-form-wrap joyin-filter-form condition-area curr-form wtcxdh-transfer-form'>
                         <form class="layui-form" id="searchForm_wtcxdh">
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">回购期限(天)</label>
-                                        <div class="layui-input-inline" style=" width: 20%; padding:0px;">
-                                            <input type="text" id="termStart_wtdh" name="term"
-                                                   class="layui-input form-input"
-                                                   placeholder="请输入内容"
-                                                   data-fixtype="2" data-textrange="2"
-                                                   th:placeholder="#{SysCommon.placeholder}">
-                                        </div>
-                                        <div class="layui-form-mid" style=" width: 5%; padding:0px;">-</div>
-                                        <div class="layui-input-inline" style=" width: 20%; padding:0px;">
-                                            <input type="text" id="termend_wtdh" name="term"
-                                                   class="layui-input form-input"
-                                                   placeholder="请输入内容"
-                                                   data-fixtype="2" data-textrange="2"
-                                                   th:placeholder="#{SysCommon.placeholder}">
-                                        </div>
+                                <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
+                                    <label class="layui-form-label">回购期限(天)</label>
+                                    <div class="layui-input-inline" style="width: 25%;">
+                                        <input type="text" id="termStart_wtdh" name="term"
+                                               class="layui-input form-input"
+                                               placeholder="请输入内容"
+                                               data-fixtype="2" data-textrange="2"
+                                               th:placeholder="#{SysCommon.placeholder}">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline" style="width: 25%;">
+                                        <input type="text" id="termend_wtdh" name="term"
+                                               class="layui-input form-input"
+                                               placeholder="请输入内容"
+                                               data-fixtype="2" data-textrange="2"
+                                               th:placeholder="#{SysCommon.placeholder}">
                                     </div>
                                 </div>
                                 <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
@@ -298,41 +278,26 @@
                                                 allowClear="true" formatoption="true"></select>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm3 layui-col-lg4">
-                                    <div class="form-inline-wrap-radio">
-                                        <label class="layui-form-label form-label"
-                                               th:text="交易状态">交易状态</label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="dayOfferStatus" value="whole" title="全部" checked>
-                                        </label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="dayOfferStatus" value="undo"
-                                                   th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.unDeal}">
-                                        </label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="dayOfferStatus" value="done"
-                                                   th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.done}">
-                                        </label>
-                                    </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-inline layui-col-sm5 layui-col-lg5">
+                                    <label class="layui-form-label form-label"
+                                           th:text="交易状态">交易状态</label>
+                                    <input type="radio" name="dayOfferStatus" value="whole" title="全部" checked>
+                                    <input type="radio" name="dayOfferStatus" value="undo"
+                                           th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.unDeal}">
+                                    <input type="radio" name="dayOfferStatus" value="done"
+                                           th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.done}">
                                 </div>
-                                <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                                    <div class="form-inline-wrap-radio">
-                                        <label class="layui-form-label form-label"
-                                               th:text="本方方向">本方方向</label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="benfangSide" value="whole" title="全部" checked>
-                                        </label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="benfangSide" value="03"
-                                                   th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
-                                        </label>
-                                        <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                            <input type="radio" name="benfangSide" value="04"
-                                                   th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
-                                        </label>
-                                    </div>
+                                <div class="layui-inline layui-col-sm5 layui-col-lg5">
+                                    <label class="layui-form-label form-label" th:text="本方方向">本方方向</label>
+                                    <input type="radio" name="benfangSide" value="whole" title="全部" checked>
+                                    <input type="radio" name="benfangSide" value="03"
+                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
+                                    <input type="radio" name="benfangSide" value="04"
+                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
                                 </div>
-                                <div class="form-inline-wrap-btn">
+                                <div class="layui-col-sm2 layui-col-lg2">
                                     <a id="cfetsRepoDealQuotedPr001_wtdh_chenxiao"
                                        class="layui-btn layui-btn-sm layui-btn-warm">撤销</a>
                                     <a id="cfetsRepoDealQuotedPrice001_wtdh_xiugai"
@@ -394,36 +359,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-form-item" style="padding-top: 0px;">
-                            <div class="form-inline-wrap-radio layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="交易方式">交易方式</label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="tradeMode" value="01" title="全部" checked>
-                                </label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="tradeMode" value="02"
-                                           th:title="#{CfetsRepoDealQuotedPr001.cjcx.two}">
-                                </label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="tradeMode" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPr001.cjcx.three}">
-                                </label>
+                        <div class="layui-form-item">
+                            <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                                <label class="layui-form-label form-label">交易方式</label>
+                                <input type="radio" name="tradeMode" value="01" title="全部" checked>
+                                <input type="radio" name="tradeMode" value="02" th:title="#{CfetsRepoDealQuotedPr001.cjcx.two}">
+                                <input type="radio" name="tradeMode" value="03" th:title="#{CfetsRepoDealQuotedPr001.cjcx.three}">
                             </div>
-                            <div class="form-inline-wrap-radio layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="本方方向">本方方向</label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="benfangSide" value="01" title="全部" checked>
-                                </label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="benfangSide" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
-                                </label>
-                                <label class="form-label-wrap-radio" style=" width: 24%; padding:0px;">
-                                    <input type="radio" name="benfangSide" value="04"
-                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
-                                </label>
+                            <div class="layui-col-sm8 layui-col-lg8">
+                                <label class="layui-form-label form-label" style="width: 19%">本方方向</label>
+                                <input type="radio" name="benfangSide" value="01" title="全部" checked>
+                                <input type="radio" name="benfangSide" value="03" th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
+                                <input type="radio" name="benfangSide" value="04" th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
                             </div>
                         </div>
                     </form>

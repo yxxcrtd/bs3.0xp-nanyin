@@ -5,14 +5,12 @@
 <head>
 	<title data-th-text="#{CfetsBondDealQuotedPrice001}">CFETS现券买卖报价</title>
 	<style type="text/css">
-		html,body,div.layui-fluid,#main_body{
-			height: 100%;
+		html {
+			overflow: hidden;
 		}
 		.top_panel {
 			width:100%;
 			float: right;
-			height:45.5%;
-			margin:1px;
 			border: 1px solid #aaaaaa;
 			display: inline-block;
 		}
@@ -58,11 +56,6 @@
 			margin-left: 2px;
 		}
 		/* 单个控件按钮长度 */
-		.form-inline-wrap-btn {
-			display: inline-block;
-			float: left;
-			width: 30%;
-		}
 		.form-label-wrap-radio {
 			color: #444;
 			line-height: 28px;
@@ -83,7 +76,7 @@
 </head>
 <body>
 <div id="main_body" layout:fragment="content">
-		<div style="height:90%;margin-bottom:3%;" class="layui-tab"  lay-filter="TopPlatform">
+		<div class="layui-tab"  lay-filter="TopPlatform">
 			<ul class="layui-tab-title">
 				<li id="ZLZX" class="layui-this">指令执行</li>
 				<li id="WTCX">委托查询</li>
@@ -92,34 +85,25 @@
 			<div class="layui-tab-content">
 				<!-- 指令执行 -->
 				<div id="zlzx_tab" class="layui-tab-item layui-show">
-					<div class='layui-fluid'>
 						<form class="layui-form" id="cfetsBondDealQuotedPrice001_entrustOrder_form">
-							<div class="layui-col-md12" style="background: #f5f5f5;">
-								<div class="form-inline-wrap-btn">
+							<div class="layui-row layui-col-space10" style="background: #f5f5f5;">
+								<div class="layui-inline layui-col-md3 layui-col-lg3">
 									<a id="cfetsBondDealQuotedPrice001_accept" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.accept}">接收</a>
 									<a id="cfetsBondDealQuotedPrice001_giveup" class="layui-btn layui-btn-sm"  data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.giveup}">放弃</a>
 								</div>
-								<div class="form-inline-wrap" style="width:30%">
-									<div class="layui-input-inline input-inline keywords-inline">
+								<div class="layui-inline layui-col-md3 layui-col-lg3">
+									<div class="input-btn-append">
 										<input type="text" id="keywords-entrustOrder" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
-										<a id='CfetsBondDealQuotedPrice001_entrustOrder_search' class="input-right-show" href='javascript:;' style='color: #4893e6; left: 92%;padding-top: 4px;'><i class='iconfont icon-search'></i></a>
+										<a id='CfetsBondDealQuotedPrice001_entrustOrder_search' class="iconinput" href='javascript:;'><i class='iconfont icon-search'></i></a>
 									</div>
 								</div>
-								<div class="form-inline-wrap-radio" style="padding-left: 20px;padding-top: 3px;">
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="entrustStatus" value="whole" title="全部" checked>
-									</label>
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="entrustStatus" value="unAccept" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.unAcceptRadio}">
-									</label>
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="entrustStatus" value="unComplete" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.unComplete}">
-									</label>
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="entrustStatus" value="completed" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.completed}">
-									</label>
+								<div class="layui-inline layui-col-md4 layui-col-lg4 layui-col-md-offset1 layui-col-lg-offset1">
+									<input type="radio" name="entrustStatus" value="whole" title="全部" checked>
+									<input type="radio" name="entrustStatus" value="unAccept" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.unAcceptRadio}">
+									<input type="radio" name="entrustStatus" value="unComplete" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.unComplete}">
+									<input type="radio" name="entrustStatus" value="completed" th:title="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.completed}">
 								</div>
-								<div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+								<div class="layui-inline layui-col-md1 layui-col-lg1">
 									<!----start-->
 									<div  style="display: inline-block;float: left;">
 										<a class="layui-btn layui-btn-sm "  id="CfetsBondDealQuotedPrice001_entrustOrder_btn_seach">查询</a>
@@ -213,22 +197,30 @@
 						<div>
 							<table class="layui-table" id="CfetsBond001_entrust_table"></table>
 						</div>
-					</div>
 				</div>
 				<!-- 委托查询 -->
 				<div id="wtcx_tab" class="layui-tab-item">
-					<div class='layui-fluid'>
 						<form class="layui-form" id="cfetsBondDealQuotedPrice001_dayOffer_form">
 							<input type="hidden" class="layui-input form-input" name="loginTraderId" th:value="${loginTraderId}"/>
-							<div class="layui-col-md12" style="background: #f5f5f5;">
-								<div class="form-inline-wrap-btn">
+							<div class="layui-row layui-col-space10" style="background: #f5f5f5;">
+								<div class="layui-inline layui-col-md3 layui-col-lg3">
 									<a id="CfetsBondDealQuotedPrice001_dayOffer_recall" class="layui-btn layui-btn-sm layui-btn-warm" data-th-text="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.revokeBtn}">撤回</a>
 <!--									<a id="CfetsBondDealQuotedPrice001_dayOffer_copy" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.copyBtn}">复制</a>-->
 									<a id="cfetsRepoDealQuotedPrice001_dayOffer_edit" class="layui-btn layui-btn-sm" >修改</a><!-- data-th-text="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.copyBtn}" -->
 									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_dayOffer_btn_export" >导出</a>
 								</div>
-
-								<div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+								<div class="layui-inline layui-col-md3 layui-col-lg3">
+									<div class="input-btn-append">
+										<input type="text" id="keywords-dayOffer" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
+										<a id='CfetsBondDealQuotedPrice001_dayOffer_search' class="iconinput" href='javascript:;'><i class='iconfont icon-search'></i></a>
+									</div>
+								</div>
+								<div class="layui-inline layui-col-md4 layui-col-lg4 layui-col-md-offset1 layui-col-lg-offset1">
+									<input type="radio" name="dayOfferStatus" value="whole" title="全部" checked>
+									<input type="radio" name="dayOfferStatus" value="undo" th:title="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.unDeal}">
+									<input type="radio" name="dayOfferStatus" value="done" th:title="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.done}">
+								</div>
+								<div class="layui-inline layui-col-md1 layui-col-lg1">
 									<div style="display: inline-block;float: left;">
 										<div id="dayOfferSelectorConditionFilter001" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; right:100px;background: #fff;z-index: 100 ;width:400px;">
 											<div class="sgePortDiv">
@@ -319,41 +311,22 @@
 										<a id="CfetsBondDealQuotedPrice001_quote_import" class="layui-btn layui-btn-sm" >导入</a>
 									</div>
 								</div>
-								<div class="form-inline-wrap" style="width: 30%">
-									<div class="layui-input-inline input-inline keywords-inline">
-										<input type="text" id="keywords-dayOffer" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
-										<a id='CfetsBondDealQuotedPrice001_dayOffer_search' class="input-right-show" href='javascript:;' style='color: #4893e6; left: 92%; padding-top: 3px;'><i class='iconfont icon-search'></i></a>
-									</div>
-								</div>
-								<div class="form-inline-wrap-radio" style="padding-left: 20px;padding-top: 3px;">
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="dayOfferStatus" value="whole" title="全部" checked>
-									</label>
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="dayOfferStatus" value="undo" th:title="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.unDeal}">
-									</label>
-									<label class="form-label-wrap-radio">
-										<input type="radio" name="dayOfferStatus" value="done" th:title="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.done}">
-									</label>
-								</div>
 							</div>
 						</form>
 						<div>
 							<table class="layui-table" id="CfetsBond001_dayOffer_table"></table>
 						</div>
-					</div>
 				</div>
 
 				<!-- 成交查询-->
 				<div id="cjcx_tab" class="layui-tab-item">
-					<div class='layui-fluid'>
 						<form class="layui-form" id="searchFormCstp">
-							<div class="layui-col-md12" style="background: #f5f5f5;">
-								<div class="form-inline-wrap-btn">
+							<div class="layui-row layui-col-space10" style="background: #f5f5f5;">
+								<div class="layui-inline layui-col-sm3 layui-col-lg3">
 									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_CSTPSelect_btn_export" >导出</a>
 									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_CSTPSelect_btn_exportPDF" >导出PDF</a>
 								</div>
-								<div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+								<div class="layui-inline layui-col-sm1 layui-col-lg1 layui-col-sm-offset8 layui-col-lg-offset8">
 									<!----start-->
 									<div  style="display: inline-block;float: left;">
 										<div id="CSTPselectorConditionFilter001" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; right:100px;background: #fff;z-index: 100 ;width:400px;">
@@ -415,7 +388,6 @@
 						<div>
 							<table class="layui-table" id="CfetsBond001_cstp_table"></table>
 						</div>
-					</div>
 				</div>
 			</div>
 		</div>

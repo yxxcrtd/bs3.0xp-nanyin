@@ -22,7 +22,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
-import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice003Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice004Service;
@@ -278,7 +277,13 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
         }
         // 处理质押品信息
         this.handlePledgeList(cfetsRepoDealQuotedPrice001Dto);
-
+        //可质押券和质押券  以万元为单位显示
+        if (!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())&&null!=operation) {
+            cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().forEach(obj -> {
+                obj.setPledgePrin(ArithmeticUtil.divide(obj.getPledgePrin(),new BigDecimal(10000),2));
+                obj.setAvaPledgePrin(ArithmeticUtil.divide(obj.getAvaPledgePrin(),new BigDecimal(10000),2));
+            });
+        }
         return cfetsRepoDealQuotedPrice001Dto;
     }
 

@@ -90,7 +90,11 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         model.addAttribute("T33", DictCodeList.回购拆借方向_拆出.getValue());
         model.addAttribute("T33name", DictCodeList.回购拆借方向_拆出.getCodeName());
 
-        
+        // add by wangpeng 20210525 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
+
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
@@ -107,6 +111,10 @@ public class EtrLendSpecInfo002Controller extends BaseController {
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",dto.getWorkflowId());
+            // add by yeming 20210913 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210913 银行间场内场外拆分 end
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             EtrLendSpecInfoDto dto = etrLendSpecInfoService.selectByKey(entrustId);
@@ -134,11 +142,7 @@ public class EtrLendSpecInfo002Controller extends BaseController {
         model.addAttribute("fintype_cr", DictCodeListExt1.金融产品类型_投管用_拆入.getValue());
         model.addAttribute("fintype_cc", DictCodeListExt1.金融产品类型_投管用_拆出.getValue());
         model.addAttribute("fintype_tccr", DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue());
-        
-        // add by wangpeng 20210525 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by wangpeng 20210525 银行间场内场外拆分 end
+
         
         return super.init(model);
     }

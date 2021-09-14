@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -108,7 +109,7 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
         Map<String, Object> map = RequestUtil.getPageParam();
 	// modify by zhangrui1 2020-07-25 资产分页查询 end
 		String assetsType = super.getRequest().getParameter("assetsType");
-		String param = super.getRequest().getParameter("search");
+ 		String param = super.getRequest().getParameter("search");
 		if (StringUtils.isNotEmpty(assetsType)) {
 			map.put("assetsType", assetsType);
 		}
@@ -247,4 +248,54 @@ public class AssetDeclarationCodeMaintenance001Controller extends BaseController
 	public ResponseEntity<byte[]> export() throws Exception {
 		return assetDeclarationCodeMaintenanceService.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
+
+
+	@ResponseBody
+	@RequestMapping("getFinprodList")
+	public Page<SelectOptionDto> getFinprodList() throws Exception {
+		Map<String, Object> map = RequestUtil.getPageParam();
+		// modify by zhangrui1 2020-07-25 资产分页查询 end
+		String assetsType = super.getRequest().getParameter("assetsType");
+		String assetsType1 = super.getRequest().getParameter("assetsType");
+		assetsType1 = "";
+		String param = super.getRequest().getParameter("search");
+		if (StringUtils.isNotEmpty(assetsType)) {
+			String[] args = assetsType.split(",");
+			String[] temp = new String[args.length];
+			for(int i=0;i<args.length;i++){
+				if(!StringUtil.equals(args[i],"F17")){
+				   temp[i] = args[i];
+				}else{
+					assetsType1 = "F17";
+				}
+			}
+			assetsType = "";
+			for(int i=0;i<temp.length;i++){
+				if(StringUtil.isNotEmpty(temp[i])){
+					assetsType = assetsType+","+temp[i];
+				}
+			}
+			if(StringUtil.isNotEmpty(assetsType)&&StringUtil.equals(assetsType.substring(1),",")){
+				assetsType = assetsType.split(",",1)[1];
+			}
+		}
+		if(StringUtil.isEmpty(super.getRequest().getParameter("assetsType").toString())) {
+			assetsType1 = "F17";
+			assetsType = "F01,F07,F18";
+		}
+		map.put("assetsType", assetsType);
+		map.put("assetsType1", assetsType1);
+
+		if (StringUtils.isNotEmpty(param)) {
+			map.put("finprodId", param);
+		}
+		// modify by zhangrui1 2020-07-25 资产分页查询 start
+		/**
+		 List<SelectOptionDto> temp = assetDeclarationCodeMaintenanceService.getFinprodIds(map);
+		 */
+		Page<SelectOptionDto> temp = assetDeclarationCodeMaintenanceService.getFinprodList(map);
+		// modify by zhangrui1 2020-07-25 资产分页查询 end
+		return temp;
+	}
+
 }

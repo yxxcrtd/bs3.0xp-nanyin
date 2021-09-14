@@ -352,7 +352,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
                         finprodId, msg,ModelDictCodeList.批处理执行结果_警告.getValue(), LOG_KEY);
                 }else if (resultProcess.getResultDeal() != null && resultProcess.getResultCurrent() != null &&
-                          getPoorRating(resultProcess.getResultDeal(), resultProcess.getResultCurrent()) > Integer.valueOf(itemValue)
+                          getPoorRating(resultProcess.getResultCurrent(), resultProcess.getResultDeal()) > Integer.valueOf(itemValue)
                 ) {
                     finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                     resultProcess.setFinStage(finStage);

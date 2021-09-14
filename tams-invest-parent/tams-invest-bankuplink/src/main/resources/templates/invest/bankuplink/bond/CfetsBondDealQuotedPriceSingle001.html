@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html style="height:80%;" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="~{layout/default}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorator="~{layout/default}">
 <meta charset="UTF-8" />
 <head>
 </head>
 <body>
-<div layout:fragment="content" id="CfetsBondDealQuotedPriceSingle001_bodydiv">
+<div layout:fragment="content" id="CfetsBondDealQuotedPriceSingle001_bodydiv" style="margin: 0 -10px;">
     <style type="text/css">
         .layui-form-radio {
             line-height: 24px;
@@ -34,7 +34,7 @@
             line-height: 24px;
         }
     </style>
-    <div class="joyin-form-wrap">
+    <div class="joyin-form-wrap" style="padding: 0">
         <form class="layui-form pro-module-form" id="submitForm">
             <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle001_hidden_entrustId" th:value="${entity?.entrustId}" />

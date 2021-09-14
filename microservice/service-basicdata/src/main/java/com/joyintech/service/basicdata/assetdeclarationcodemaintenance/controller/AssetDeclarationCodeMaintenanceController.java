@@ -62,6 +62,20 @@ public class AssetDeclarationCodeMaintenanceController {
     }
     // add by zhangrui1 2020-07-25 资产分页查询 end
 
+
+	/**
+	 * 资产代码联想
+	 *
+	 * @return 查询结果集
+	 * @throws Exception 异常
+	 */
+	@PostMapping("/getFinprodList/{page}/{length}")
+	public Page<SelectOptionDto> getFinprodList(@RequestBody Map<String, Object> map,
+												  @PathVariable("page") int page,
+												  @PathVariable("length") int length) {
+		return assetDeclarationCodeMaintenanceService.getFinprodListPage(page, length, map);
+	}
+
 	/**
 	 * 资产代码联想
 	 * 

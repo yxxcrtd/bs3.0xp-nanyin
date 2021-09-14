@@ -1,18 +1,5 @@
 (function () {
     $(".layui-tab").show();
-    var init = function() {
-        Split(['#top_panel_dev', '#bottom_panel_dev'], {
-            sizes: [48, 44],
-            minSize: 100,
-            direction: 'vertical',
-        });
-
-        Split(['#left_bottom_panel_dev', '#right_bottom_panel_dev'], {
-            sizes: [35, 65],
-            minSize: [300,600],
-            direction: 'horizontal',
-        });
-    };
     var clickPortfolioId = function (data) {
         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
             basePath + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init",
@@ -82,7 +69,7 @@
         cfetsRepoDealQuotedPre002Save: cfetsRepoDealQuotedPre002Save,
         cfetsRepoDealQuotedPre002Sumbit: cfetsRepoDealQuotedPre002Sumbit,
         cfetsRepoDealQuotedPre003Save: cfetsRepoDealQuotedPre003Save,
-        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre002Sumbit
+        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre003Sumbit
     };
     CfetsRepoDealQuotedPrMain = {
         clickPortfolioId: clickPortfolioId,
@@ -90,14 +77,6 @@
         cfetsRepoDealQuotedPre002Save: cfetsRepoDealQuotedPre002Save,
         cfetsRepoDealQuotedPre002Sumbit: cfetsRepoDealQuotedPre002Sumbit,
         cfetsRepoDealQuotedPre003Save: cfetsRepoDealQuotedPre003Save,
-        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre002Sumbit
+        cfetsRepoDealQuotedPre003Sumbit: cfetsRepoDealQuotedPre003Sumbit
     };
-        /**
-         * 绑定事件
-         */
-        $(function () {
-
-            init();
-
-        });
-    })();
+})();
