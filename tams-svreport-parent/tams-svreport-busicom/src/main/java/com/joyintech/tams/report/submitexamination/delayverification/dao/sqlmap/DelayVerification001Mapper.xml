@@ -1572,6 +1572,162 @@
                     </foreach>
                 </if>
             </where>
+
+            <!-- 10.新人行单产品报表-产品基本信息 -->
+            union all
+            select
+            count(temp.SEND_STATUS) as total,
+            nvl(sum(temp.lateNums),0) as unSubmitNum,
+            '10' as pageType
+            from(
+            select
+            case when ces.SEND_STATUS != #{nosubmit}
+            and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+            when ces.SEND_STATUS = #{nosubmit}
+            and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+            else 0 end lateNums,  <!-- 统计延时数据 -->
+            ces.SEND_STATUS,
+            ces.ORG_CODE,
+            ces.CREATE_DEPT
+            from PBC_PRD_BASEINFO_SUB_NEW ces
+            /* add by songyawei 20200702 start */
+            <if test="flag">
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            /* add by songyawei 20200702 end */
+            where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+            <!--and ces.STATUS = '01'-->
+            /* add by songyawei 20200702 start */
+            <if test="flag">
+                and inst.institution_code IN
+                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            /* add by songyawei 20200702 end */
+            <choose>
+                <when test="hisTableId != null and hisTableId != ''">
+                    union all
+                    <!-- 履历表数据 -->
+                    select
+                    case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                    else 0 end lateNums, <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                    from PBC_PRD_BASEINFO_SUB_NEW_HIS ces
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ces.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    /* add by songyawei 20200702 end */
+                    where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                    and ces.STATUS = '01'
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                </when>
+            </choose>
+            )temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+
+
+
+            <!-- 11.新人行单产品报表-产品终止信息 -->
+            union all
+            select
+            count(temp.SEND_STATUS) as total,
+            nvl(sum(temp.lateNums),0) as unSubmitNum,
+            '11' as pageType
+            from(
+            select
+            case when ces.SEND_STATUS != #{nosubmit}
+            and ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1  <!-- 已报送数据，且延时报送数量 -->
+            when ces.SEND_STATUS = #{nosubmit}
+            and ces.PBC_SUBMIT_DEADLINE &lt; #{sysTime} then 1 <!-- 未报送数据，且延时报送数量 -->
+            else 0 end lateNums,  <!-- 统计延时数据 -->
+            ces.SEND_STATUS,
+            ces.ORG_CODE,
+            ces.CREATE_DEPT
+            from PBC_PRD_BASEINFO_END_SUB_NEW ces
+            /* add by songyawei 20200702 start */
+            <if test="flag">
+                Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = ces.PBC_PROD_ID
+                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.Prod_Id  AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+            </if>
+            /* add by songyawei 20200702 end */
+            where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+            and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}
+            <!--and ces.STATUS = '01'-->
+            /* add by songyawei 20200702 start */
+            <if test="flag">
+                and inst.institution_code IN
+                <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item,jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            /* add by songyawei 20200702 end */
+            <choose>
+                <when test="hisTableId != null and hisTableId != ''">
+                    union all
+                    <!-- 履历表数据 -->
+                    select
+                    case when ces.PBC_SUBMIT_DEADLINE &lt; ces.SUBMIT_TIME then 1 <!-- 已报送数据，且延时报送数量 -->
+                    else 0 end lateNums, <!-- 统计延时数据 -->
+                    ces.SEND_STATUS,
+                    ces.ORG_CODE,
+                    ces.CREATE_DEPT
+                    ,FP.FINPROD_ID /* add by songyawei 20200702 */
+                    from PBC_PRD_BASEEND_SUB_NEW_HIS ces
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        Left join PBC_PRD_ACCOUNT_SUB_NEW ppas on ppas.PBC_PROD_ID = ces.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID =  ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    /* add by songyawei 20200702 end */
+                    where ces.PBC_SUBMIT_DEADLINE &gt;= #{searchDateStart}
+                    and ces.PBC_SUBMIT_DEADLINE &lt; #{searchDateEnd}  <!-- 中债报送截止日落在查询日期范围 -->
+                    and ces.STATUS = '01'
+                    /* add by songyawei 20200702 start */
+                    <if test="flag">
+                        and inst.institution_code IN
+                        <foreach collection="listCode" index="index" item="item" open="(" separator="," close=")">
+                            #{item,jdbcType=VARCHAR}
+                        </foreach>
+                    </if>
+                    /* add by songyawei 20200702 end */
+                </when>
+            </choose>
+            )temp
+            <where>
+                <if test="isNotCount !=null and isNotCount=='01'">
+                    <!-- 如果不统计手工处理数据标志为是则添加筛选条件 -->
+                    temp.SEND_STATUS != #{manualSub}
+                </if>
+                <if test="createDeptList != null and createDeptList.size>0">
+                    <foreach collection="createDeptList" item = "item" open="and temp.CREATE_DEPT in(" separator="," close=")">
+                        #{item,jdbcType=VARCHAR}
+                    </foreach>
+                </if>
+            </where>
+
         )
 </select>
 <select id="countUnquaData">
@@ -2098,6 +2254,16 @@ SELECT
 	                    info.reporttype ||'|'|| info.TERMID  as code,
 	                    info.CHB_SUBMIT_DEADLINE as submitDeadline,
 	                </when>
+                    <!-- 10. 新人行单产品月报-产品基本信息 -->
+                    <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                        '理财产品代码:'||info.PBC_PROD_ID as code,
+                        info.PBC_SUBMIT_DEADLINE as submitDeadline,
+                    </when>
+                    <!-- 11. 新人行单产品月报-产品终止信息 -->
+                    <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                        '理财产品代码:'||info.PBC_PROD_ID as code,
+                        info.PBC_SUBMIT_DEADLINE as submitDeadline,
+                    </when>
                 </choose>
                 info.SEND_STATUS as submitStatus,
                 <!-- sdl2.ITEM_VALUE as submitStatus, -->
@@ -2138,6 +2304,16 @@ SELECT
                     <if test="tableId != null and tableId == 'PBC_PROD_RAISING_SUB'">
                         Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
 	                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+
+                    <!-- 7. 新人行单产品月报-产品基本信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                    </if>
+                    <!-- 8. 新人行单产品月报-产品终止信息 -->
+                    <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                        Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = info.PBC_PROD_ID
+                        LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
                     </if>
                 </if>
 	            /* add by songyawei 20200702 end */
@@ -2238,6 +2414,16 @@ SELECT
                                 info.reporttype ||'|'|| info.TERMID  as code,
                                 info.CHB_SUBMIT_DEADLINE as submitDeadline,
                             </when>
+                            <!-- 10. 新人行单产品月报-产品基本信息 -->
+                            <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                                '理财产品代码:'||info.PBC_PROD_ID as code,
+                                info.PBC_SUBMIT_DEADLINE as submitDeadline,
+                            </when>
+                            <!-- 11. 新人行单产品月报-产品终止信息 -->
+                            <when test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                                '理财产品代码:'||info.PBC_PROD_ID as code,
+                                info.PBC_SUBMIT_DEADLINE as submitDeadline,
+                            </when>
                         </choose>
                         info.SUBMIT_TIME as submitTime,
                         info.CHB_SUBMIT_DEADLINE as submitDeadline,
@@ -2278,6 +2464,15 @@ SELECT
 		                        Left join PBC_PRD_ACCOUNT_SUB ppas on ppas.PBC_ACCOUNT_ID = info.PBC_PROD_ID
 			                 	LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.ACCOUNT_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
 		                    </if>
+                            <!-- 7. 新人行单产品月报-产品基本信息 -->
+                            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_SUB_NEW'">
+                                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = info.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                            </if>
+                            <!-- 8. 新人行单产品月报-产品终止信息 -->
+                            <if test="tableId != null and tableId == 'PBC_PRD_BASEINFO_END_SUB_NEW'">
+                                Left join PBC_PRD_BASEINFO_SUB_NEW ppas on ppas.PBC_PROD_ID = info.PBC_PROD_ID
+                                LEFT JOIN DATA_AUTH_NOTIFY_INST INST ON INST.BUSINESS_ID = ppas.PROD_ID AND INST.MODEL_TYPE = 02 AND INST.DATA_TYPE = 'PTL01'
+                            </if>
 		                </if>
 			            /* add by songyawei 20200702 end */
                         WHERE 1 =1 

@@ -430,7 +430,7 @@ public class PbcPrdInfoEndSubNewService extends PbcClassicsSubService<PbcPrdBase
 		// 报送截止日生成
 		// 当前批次报送时点集合
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-		List<Date> dateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品终止信息.getValue(), 
+		List<Date> dateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),
                 DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
                 arg0.getMdate(),SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
 		// 循环币种Map(同一产品按币种维度出值)

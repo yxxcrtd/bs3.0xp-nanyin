@@ -115,7 +115,7 @@ public class PbcClassicsDataFileHelper {
     	String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
     	// 手工生成的文件存入temporary文件夹
     	if (manualFlag) {
-    		rootdir += "temporary/";
+    		rootdir += "temporary" +File.separator;
     	}
     	List<String> result = new ArrayList<String>();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -148,7 +148,7 @@ public class PbcClassicsDataFileHelper {
             File file = null;
 
             
-            file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
+            file = new SafelyFile(fullPath + File.separator + dataType + ".dat");
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
             
             for (LinkedHashMap<String,String> data:datas ) {
@@ -163,8 +163,7 @@ public class PbcClassicsDataFileHelper {
                         fullPath = rootdir + filePath+"_"+seq;
                         result.add(fullPath);
                         createFolder(fullPath,type);
-//                        file = new File(fullPath + "/"+type + ".dat");
-                        file = new SafelyFile(fullPath + "/"+dataType + ".dat");
+                        file = new SafelyFile(fullPath + File.separator+dataType + ".dat");
                         writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
                         // 【dat文件生成留痕】如果创建新的文件，则需要创建新的数据的key集合 
                         dataValueList = new ArrayList<String>();
@@ -193,8 +192,8 @@ public class PbcClassicsDataFileHelper {
                 fileSize = file.length();
                 
                 // 【dat文件生成留痕】key=目录名文件名，value=数据的key集合 
-				if (!pathfilenameDatakeylistMap.containsKey(fullPath + "/"+ dataType + ".dat")) {
-					pathfilenameDatakeylistMap.put(fullPath + "/"+ dataType + ".dat", dataValueList);
+				if (!pathfilenameDatakeylistMap.containsKey(fullPath + File.separator+ dataType + ".dat")) {
+					pathfilenameDatakeylistMap.put(fullPath + File.separator+ dataType + ".dat", dataValueList);
 				}
             }
         } catch (IOException e) {
@@ -221,7 +220,7 @@ public class PbcClassicsDataFileHelper {
         init();
         DATAMAP.get(type);
         for(String dataType:DATAMAP.get(type)){
-        	File file = new SafelyFile(folderName + "/"+dataType + ".dat");
+        	File file = new SafelyFile(folderName + File.separator+dataType + ".dat");
         	if(!file.exists()){
 				try {
 					file.createNewFile();

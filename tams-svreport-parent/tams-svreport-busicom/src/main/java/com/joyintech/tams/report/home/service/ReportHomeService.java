@@ -69,6 +69,8 @@ public class ReportHomeService{
 	private static final String 产品终止信息_PAGEID = "PbcPrdBaseinfoEndSub";
 	private static final String 产品募集信息_PAGEID = "PbcPrdCashRaiseSub";
 	private static final String 资产负债信息_PAGEID = "PbcPrdAssetDebtSub";
+	private static final String 新人行产品基本信息_PAGEID = "PbcPrdBaseinfoSubNew001";
+	private static final String 新人行产品终止信息_PAGEID = "PbcPrdBaseinfoEndSubNew001";
 	
     
     public Map<String, SubmitInformationRegistrationDto> searchReportInfo(Map<String, Object> parmMap) {
@@ -127,7 +129,11 @@ public class ReportHomeService{
         			dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoEndSub(parmMap));
         		} else if (DictCodeListExt2.报表名称_资产负债信息.getValue().equals(report)){
         			dtoList.addAll(reportHomeMapper.selectPbcReportAsset(parmMap));
-        		} else if ("25".equals(report)){
+        		}else if (DictCodeListExt2.报表名称_新人行产品基本信息.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoSubNew(parmMap));
+				}else if (DictCodeListExt2.报表名称_新人行产品终止信息.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoEndSubNew(parmMap));
+				} else if ("25".equals(report)){
         			dtoList.addAll(reportHomeMapper.selectChbG06(parmMap));
         		}
         	}
@@ -300,6 +306,10 @@ public class ReportHomeService{
     			break;
     			case 产品终止信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品终止信息.getValue());
     			break;
+				case 新人行产品基本信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_新人行产品基本信息.getValue());
+					break;
+				case 新人行产品终止信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_新人行产品终止信息.getValue());
+					break;
     			case 产品募集信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品资金募集信息.getValue());
     			break;
     			case 资产负债信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_资产负债信息.getValue());

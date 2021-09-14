@@ -198,6 +198,15 @@ public interface ReportHomeMapper {
 	 * @version 1.7 2019年6月22日
 	 */
 	List<SubmitInformationRegistrationDto> selectPbcPrdBaseinfoSub(Map<String, Object> parmMap);
+
+	/**
+	 * @Description 产品信息统计信息
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectPbcPrdBaseinfoSubNew(Map<String, Object> parmMap);
 	
 	/**
 	 * @Description 产品起始募集信息统计
@@ -234,6 +243,15 @@ public interface ReportHomeMapper {
 	 * @version 1.7 2019年6月22日
 	 */
 	List<SubmitInformationRegistrationDto> selectPbcPrdBaseinfoEndSub(Map<String, Object> parmMap);
+
+	/**
+	 * @Description 人行产品终止信息统计
+	 * @param parmMap
+	 * @return
+	 * @return List<SubmitInformationRegistrationDto>
+	 * @version 1.7 2019年6月22日
+	 */
+	List<SubmitInformationRegistrationDto> selectPbcPrdBaseinfoEndSubNew(Map<String, Object> parmMap);
 	
 	/**
 	 * @Description 资产负债信息统计

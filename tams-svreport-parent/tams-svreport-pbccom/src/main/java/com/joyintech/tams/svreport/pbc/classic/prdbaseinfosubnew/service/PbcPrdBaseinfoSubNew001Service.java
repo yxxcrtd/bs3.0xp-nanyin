@@ -721,8 +721,8 @@ public class PbcPrdBaseinfoSubNew001Service extends CommonExportService<PbcPrdBa
                  JoyinCollectors.groupingBy(x -> x.getProdId()));
         //检查数据
         List<CheckReport001Dto> resultList =new ArrayList<CheckReport001Dto>();
-        resultList.addAll(pbcBeforeSubErrorCheck.checkPrdBaseInfoSub(checkdate,null,mapRuleout));
-        resultList.addAll(pbcBeforeSubCheck.checkPbcProdBaseInfoSub(checkdate, mapRuleout));
+        resultList.addAll(pbcBeforeSubErrorCheck.checkPrdBaseInfoSubNew(checkdate,null,mapRuleout));
+        resultList.addAll(pbcBeforeSubCheck.checkPbcProdBaseInfoSubNew(checkdate, mapRuleout));
         //报错检查异常数据
         int batchCount = Integer.parseInt( null == SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT)?"100" : SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_INSERT_COUNT));// 每批commit的个数
 		int batchLastIndex = batchCount;// 每批最后一个的下标
