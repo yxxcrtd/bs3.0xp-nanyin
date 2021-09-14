@@ -1139,7 +1139,7 @@
                 item.bondCode = val.bondCode;
                 item.bondAbbrName = val.bondAbbrName;
                 if (!flag) {
-                    item.avaPledgePrin = val.avaPledgePrin;
+                    item.avaPledgePrin = JoyinMath.doMul(val.avaPledgePrin, 10000);
                 }
                 item.pledgePrin = JoyinMath.doMul(val.pledgePrin, 10000);
                 item.pledgeRate = val.pledgeRatio;

@@ -11,6 +11,7 @@
 package com.joyintech.interf.bankname.riskinterf.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
@@ -545,10 +546,18 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                         finDto.setIssuerCode(mstCounterParty.getLinkId());
                     }
                 }
-
+                //wangyang1 add by 增加期限金额 2021年9月10日 start
+                if (StringUtil.isNotEmpty(finDto.getAmount()) && StringUtil.isNotEmpty(finDto.getOneDay())){
+                    finDto.setTermAmount(ArithmeticUtil.multiply(finDto.getAmount(),new BigDecimal(finDto.getOneDay())));
+                }
+                if (StringUtil.isNotEmpty(finDto.getCounterId())){
+                    finDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+                }else{
+                    finDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+                }
+                //wangyang1 add by 增加期限金额 2021年9月10日 end
                 return finDto;
             }
-
 
             finDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             finDto.setAssetType2(finDto.getPs());
@@ -610,7 +619,16 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     }
                 }
             }
-
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(finDto.getAmount()) && StringUtil.isNotEmpty(finDto.getOneDay())){
+                finDto.setTermAmount(ArithmeticUtil.multiply(finDto.getAmount(),new BigDecimal(finDto.getOneDay())));
+            }
+            if (StringUtil.isNotEmpty(finDto.getCounterId())){
+                finDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                finDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
         }
         return finDto;
     }
