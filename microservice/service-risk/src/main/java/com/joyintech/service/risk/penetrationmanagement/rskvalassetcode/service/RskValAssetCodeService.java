@@ -13,7 +13,9 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalassetcode.service
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +57,14 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
     private RskValtblAssetSubMapDtlMapper   rskValtblAssetSubMapDtlMapper;
     
     public List<RskValtblAssetSubMapDto> selectAll(Map<String,Object> map){
-        return rskValAssetCodeMapper.selectForPage(map);
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<RskValtblAssetSubMapDto> list=rskValAssetCodeMapper.selectForPage(map);
+            List<RskValtblAssetSubMapDto> listDefault=rskValAssetCodeMapper.selectForPageDefault(map);
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValAssetCodeMapper.selectForPage(map);
+        }
     }
     /**
      * 初始化查询
@@ -230,6 +239,17 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      */
     public List<RskValtblAssetSubMapDtlDto> findListDtl(Map<String, Object> pageParam) {
            return rskValAssetCodeMapper.selectDtl(pageParam);
+    }
+    /**
+     * 估值表资产科目映射默认数
+     * <功能详细描述>
+     * @param assetSubMapId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public int getAssetSubInfoIsDefault(String assetSubMapId){
+        return rskValAssetCodeMapper.getAssetSubInfoIsDefault(assetSubMapId);
     }
 
 }

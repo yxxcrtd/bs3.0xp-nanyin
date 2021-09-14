@@ -139,4 +139,9 @@ public class RskValAssetCode001Service extends CommonExportService<RskValtblAsse
                 ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/findListDtl",
                 param,RskValtblAssetSubMapDtlDto.class);
     }
+    public int getAssetSubInfoIsDefault(String assetSubMapId){
+        return restTemplate.getForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/getAssetSubInfoIsDefault?assetSubMapId="+assetSubMapId,
+                Integer.class);
+    }
 }
