@@ -40,12 +40,14 @@
         object.operateType = operateType;
         Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig002/check', object, function(result) {
             if(result.data.indexOf("影响历史")>0){
-                Joyin.confirm("修改后需手工跑历史批处理！", function () {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig002/save', object, "ModCkGradePdConfig002_btn_save");
-                    } else if(operateType === 'submit'){
-                        WorkFlow.doSubmitList(basePath + 'model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig002/save', object, "ModCkGradePdConfig002_btn_submit");
-                    }
+                Joyin.confirm("本次修改是否影响历史数据？", function () {
+                    Joyin.confirm("修改后需手工跑历史批处理！", function () {
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig002/save', object, "ModCkGradePdConfig002_btn_save");
+                        } else if(operateType === 'submit'){
+                            WorkFlow.doSubmitList(basePath + 'model/impairment/pddefaultmanager/ckgradepdconfig/ModCkGradePdConfig002/save', object, "ModCkGradePdConfig002_btn_submit");
+                        }
+                    });
                 });
             }else{
                 if (operateType === 'save') {
