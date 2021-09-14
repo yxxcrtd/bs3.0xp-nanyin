@@ -112,12 +112,10 @@ public class ActualTimeAsset001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<ActualTimeAssetDto> selectAll()
-            throws Exception {
+    public Page<ActualTimeAssetDto> selectAll() {
         Map<String,Object> map = RequestUtil.getPageParam();
         return actualTimeAsset001Service.selectForPage(map);
     }
@@ -126,15 +124,13 @@ public class ActualTimeAsset001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("exportCheck")
     @ResponseBody
-    public AjaxResult exportCheck()
-            throws Exception {
+    public AjaxResult exportCheck(){
         Page<ActualTimeAssetDto> result = actualTimeAsset001Service.selectForPage(RequestUtil.getPageParam());
         if (result.getRoot().isEmpty()) {
             return new AjaxResult(getMessage("PTL_COM_E_0012"), MessageType.错误消息);
@@ -143,8 +139,7 @@ public class ActualTimeAsset001Controller extends BaseController {
     }
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return actualTimeAsset001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

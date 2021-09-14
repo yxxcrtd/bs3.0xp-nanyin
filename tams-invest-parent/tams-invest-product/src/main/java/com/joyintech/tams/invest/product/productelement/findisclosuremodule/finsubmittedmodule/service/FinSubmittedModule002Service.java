@@ -76,8 +76,7 @@ public class FinSubmittedModule002Service extends CommonExportService<FinSubmitt
      * @see
      * @since 1.0
      */
-    public Page<FinSubmittedModule002Dto> selectForPage(Map<String, Object> map) 
-        throws Exception {
+    public Page<FinSubmittedModule002Dto> selectForPage(Map<String, Object> map) {
         return restTemplate.postForPage(
                 ServiceApplication.PRODUCT_SERVICE_NAME +
                         "/FinSubmittedModuleDetail/selectForPage",

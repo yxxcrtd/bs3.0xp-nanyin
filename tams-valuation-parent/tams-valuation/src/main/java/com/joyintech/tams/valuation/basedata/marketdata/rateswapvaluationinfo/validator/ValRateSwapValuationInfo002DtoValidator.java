@@ -12,8 +12,7 @@ package com.joyintech.tams.valuation.basedata.marketdata.rateswapvaluationinfo.v
 
 import java.util.*;
 
-import com.google.common.collect.Maps;
-import com.jixu.common.util.DateUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.valuation.basedata.marketdata.rateswapvaluationinfo.service.ValRateSwapValuationInfo002Service;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
@@ -79,11 +78,11 @@ public class ValRateSwapValuationInfo002DtoValidator implements BeanValidator{
 
             if(GlobalConstant.DETAIL_PAGE_MODEL_EDIT.equals(dto.getPageModel())){
                 String valDate = dto.getValDate();
-                Date valTime = DateUtil.convertStr2Date2(valDate);
+                Date valTime = DateUtil.parse(valDate);
 
                 Date platDate = platformDateImpl.getSysDate();
 
-                if(DateUtil.compareTime(valTime,platDate)==-1){
+                if(DateUtil.compareDate(valTime,platDate)==-1){
                     //如果 估值日期 小于平台日 则提醒。
                     errorList.add(new ValidMessage(getMessage("VAL_COMMON_E_0072")));
                 }

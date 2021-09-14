@@ -44,7 +44,7 @@ public class PtlFundAcctPosiController {
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<PtlFundAcctPosiDto> selectAll(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlFundAcctPosiService.selectForPage(page,length,param);
     }
 	
@@ -57,7 +57,7 @@ public class PtlFundAcctPosiController {
     @PostMapping("/selectForPage1/{page}/{length}")
     public Page<PtlFundAcctPosiDto> selectAll1(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlFundAcctPosiService.selectForPage1(page,length,param);
     }
     
@@ -70,7 +70,7 @@ public class PtlFundAcctPosiController {
     @PostMapping("/selectForPage2/{page}/{length}")
     public Page<PtlFundAcctPosiDto> selectAll2(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlFundAcctPosiService.selectForPage2(page,length,param);
     }
     
@@ -86,7 +86,7 @@ public class PtlFundAcctPosiController {
     @PostMapping("/getPortfolioId/{page}/{length}")
     public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> pageParam,
                                                 @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return ptlFundAcctPosiService.getPortfolioId(pageParam,page,length);
     }
     

@@ -60,8 +60,7 @@ public class InvestTradeQuery001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<InvestTradeDto> findPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                         @PathVariable("length") int length)
-        throws Exception {
+                                         @PathVariable("length") int length){
         return investTradeQuery001Service.findPage(page, length, param);
     }
 
@@ -75,8 +74,7 @@ public class InvestTradeQuery001Controller extends BaseController {
      */
     @SuppressWarnings("unchecked")
     @PostMapping("/findList")
-    public List<InvestTradeDto> findList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<InvestTradeDto> findList(@RequestBody Map<String, Object> param){
         return investTradeQuery001Service.findList(param);
     }
 

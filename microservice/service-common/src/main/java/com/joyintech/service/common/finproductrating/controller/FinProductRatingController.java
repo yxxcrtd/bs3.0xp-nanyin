@@ -37,7 +37,7 @@ public class FinProductRatingController {
      */
     @PostMapping("/getProductBondRating/{page}/{length}")
     public Page<FinProductRatingDto> getProductBondInnerRating(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductRatingService.getProductBondInnerRating(page,length,map);
     }
     /**
@@ -48,7 +48,7 @@ public class FinProductRatingController {
      */
     @PostMapping("/getProductBondRatingList")
     public List<CommonProductRatingDto> getProductBondRatingList(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return finProductRatingService.getProductBondInnerRatingList(map);
     }
     /**
@@ -58,7 +58,7 @@ public class FinProductRatingController {
      */
     @PostMapping("getBestProductRatingRule")
     public Map<String, Object> getBestProductRatingRule(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return finProductRatingService.getBestProductRatingRule(map);
     }
     /**
@@ -68,7 +68,7 @@ public class FinProductRatingController {
      */
     @PostMapping("getMstDisType")
     public String getMstDisType(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return finProductRatingService.getMstDisType(map);
     }
     /**
@@ -78,7 +78,7 @@ public class FinProductRatingController {
      */
     @PostMapping("getBestProductRating")
     public List<CommonProductRatingDto> getBestProductRating(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return finProductRatingService.getBestProductRating(map);
     }
     

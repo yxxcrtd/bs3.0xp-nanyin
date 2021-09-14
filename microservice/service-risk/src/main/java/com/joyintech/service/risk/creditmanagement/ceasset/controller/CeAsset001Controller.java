@@ -61,7 +61,7 @@ public class CeAsset001Controller {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<CreditLinesAstDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return ceAsset001Service.selectForPage(page, length, param);
     }
 

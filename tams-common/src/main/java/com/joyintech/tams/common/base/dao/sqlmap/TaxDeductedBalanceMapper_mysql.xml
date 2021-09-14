@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.TaxDeductedBalanceMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        <id column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOK_SEQNO" property="bokSeqno" jdbcType="VARCHAR" />
+        <result column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="BOOK_ID" property="bookId" jdbcType="VARCHAR" />
+        <result column="BOOK_ORDER" property="bookOrder" jdbcType="DECIMAL" />
+        <result column="O_CCY" property="oCcy" jdbcType="VARCHAR" />
+        <result column="CB_AMT" property="cbAmt" jdbcType="DECIMAL" />
+        <result column="CB_BALANCE" property="cbBalance" jdbcType="DECIMAL" />
+        <result column="TAX_AMT" property="taxAmt" jdbcType="DECIMAL" />
+        <result column="BAL_AMT" property="balAmt" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO SEQ_NO, BOOKSET_ID BOOKSET_ID, BOOKSET_DATE BOOKSET_DATE, BOK_SEQNO BOK_SEQNO, 
+        BOK_DETAIL_ID BOK_DETAIL_ID, HAPPEN_DATE HAPPEN_DATE, BOOK_DATE BOOK_DATE, BOOK_ID BOOK_ID, 
+        BOOK_ORDER BOOK_ORDER, O_CCY O_CCY, CB_AMT CB_AMT, CB_BALANCE CB_BALANCE, TAX_AMT TAX_AMT, 
+        BAL_AMT BAL_AMT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxDeductedBalanceMapper.Base_Column_List" />
+        from TAX_DEDUCTED_BALANCE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxDeductedBalanceMapper.Base_Column_List" />
+        from TAX_DEDUCTED_BALANCE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.TaxDeductedBalanceMapper.Base_Column_List" />
+        from TAX_DEDUCTED_BALANCE
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from TAX_DEDUCTED_BALANCE
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        insert into TAX_DEDUCTED_BALANCE (SEQ_NO, BOOKSET_ID, BOOKSET_DATE, 
+            BOK_SEQNO, BOK_DETAIL_ID, HAPPEN_DATE, 
+            BOOK_DATE, BOOK_ID, BOOK_ORDER, 
+            O_CCY, CB_AMT, CB_BALANCE, 
+            TAX_AMT, BAL_AMT, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{booksetDate,jdbcType=DATE}, 
+            #{bokSeqno,jdbcType=VARCHAR}, #{bokDetailId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE}, 
+            #{bookDate,jdbcType=DATE}, #{bookId,jdbcType=VARCHAR}, #{bookOrder,jdbcType=DECIMAL}, 
+            #{oCcy,jdbcType=VARCHAR}, #{cbAmt,jdbcType=DECIMAL}, #{cbBalance,jdbcType=DECIMAL}, 
+            #{taxAmt,jdbcType=DECIMAL}, #{balAmt,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        insert into TAX_DEDUCTED_BALANCE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bokSeqno != null" >
+                BOK_SEQNO,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID,
+            </if>
+            <if test="bookOrder != null" >
+                BOOK_ORDER,
+            </if>
+            <if test="oCcy != null" >
+                O_CCY,
+            </if>
+            <if test="cbAmt != null" >
+                CB_AMT,
+            </if>
+            <if test="cbBalance != null" >
+                CB_BALANCE,
+            </if>
+            <if test="taxAmt != null" >
+                TAX_AMT,
+            </if>
+            <if test="balAmt != null" >
+                BAL_AMT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokSeqno != null" >
+                #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="bookId != null" >
+                #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookOrder != null" >
+                #{bookOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="oCcy != null" >
+                #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cbAmt != null" >
+                #{cbAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cbBalance != null" >
+                #{cbBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmt != null" >
+                #{taxAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmt != null" >
+                #{balAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        insert into TAX_DEDUCTED_BALANCE(SEQ_NO, BOOKSET_ID, BOOKSET_DATE, BOK_SEQNO, BOK_DETAIL_ID, 
+        HAPPEN_DATE, BOOK_DATE, BOOK_ID, BOOK_ORDER, O_CCY, CB_AMT, CB_BALANCE, TAX_AMT, 
+        BAL_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, BOOKSET_ID, BOOKSET_DATE, BOK_SEQNO, BOK_DETAIL_ID, 
+            HAPPEN_DATE, BOOK_DATE, BOOK_ID, BOOK_ORDER, O_CCY, CB_AMT, CB_BALANCE, TAX_AMT, 
+            BAL_AMT, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from TAX_DEDUCTED_BALANCE
+             where 1 = 1 and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        update TAX_DEDUCTED_BALANCE
+        <set >
+            <if test="booksetId != null" >
+                BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokSeqno != null" >
+                BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE = #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="bookId != null" >
+                BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookOrder != null" >
+                BOOK_ORDER = #{bookOrder,jdbcType=DECIMAL},
+            </if>
+            <if test="oCcy != null" >
+                O_CCY = #{oCcy,jdbcType=VARCHAR},
+            </if>
+            <if test="cbAmt != null" >
+                CB_AMT = #{cbAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="cbBalance != null" >
+                CB_BALANCE = #{cbBalance,jdbcType=DECIMAL},
+            </if>
+            <if test="taxAmt != null" >
+                TAX_AMT = #{taxAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="balAmt != null" >
+                BAL_AMT = #{balAmt,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.TaxDeductedBalance" >
+        update TAX_DEDUCTED_BALANCE
+        set BOOKSET_ID = #{booksetId,jdbcType=VARCHAR},
+            BOOKSET_DATE = #{booksetDate,jdbcType=DATE},
+            BOK_SEQNO = #{bokSeqno,jdbcType=VARCHAR},
+            BOK_DETAIL_ID = #{bokDetailId,jdbcType=VARCHAR},
+            HAPPEN_DATE = #{happenDate,jdbcType=DATE},
+            BOOK_DATE = #{bookDate,jdbcType=DATE},
+            BOOK_ID = #{bookId,jdbcType=VARCHAR},
+            BOOK_ORDER = #{bookOrder,jdbcType=DECIMAL},
+            O_CCY = #{oCcy,jdbcType=VARCHAR},
+            CB_AMT = #{cbAmt,jdbcType=DECIMAL},
+            CB_BALANCE = #{cbBalance,jdbcType=DECIMAL},
+            TAX_AMT = #{taxAmt,jdbcType=DECIMAL},
+            BAL_AMT = #{balAmt,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

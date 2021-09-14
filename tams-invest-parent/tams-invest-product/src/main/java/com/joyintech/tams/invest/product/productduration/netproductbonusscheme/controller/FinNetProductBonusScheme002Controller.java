@@ -10,6 +10,9 @@ import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.workflow.engine.WorkflowContext;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +59,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("FinNetProductBonusScheme002")
 @RequestMapping("/invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme002")
 public class FinNetProductBonusScheme002Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetProductBonusScheme002Controller.class);
+
     /**
      * 净值型分红方案service
      */
@@ -133,7 +141,7 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
                     processMark.setPageId("FinNetProductBonusScheme002");
                     finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
 
             }
@@ -166,7 +174,7 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
                     processMark.setPageId("FinNetProductBonusScheme002");
                     finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
             model.addAttribute("entity", finNetProductBonusSchemeInfo);
@@ -237,15 +245,14 @@ public class FinNetProductBonusScheme002Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FinNetProductBonusSchemeDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

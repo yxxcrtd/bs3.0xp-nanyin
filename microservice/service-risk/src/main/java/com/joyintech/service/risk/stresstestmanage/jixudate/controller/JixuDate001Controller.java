@@ -45,7 +45,7 @@ public class JixuDate001Controller {
      * @since 1.0
      */
     @PostMapping("getJixuDate")
-    public Date getJixuDate() throws Exception {
+    public Date getJixuDate() {
           
         return jixuDate001Service.getJixuDate();
     }
@@ -61,7 +61,7 @@ public class JixuDate001Controller {
      * @since 1.0
      */
     @PostMapping("updateJixuDate")
-    public int updateJixuDate(@RequestBody Date newDate) throws Exception {
+    public int updateJixuDate(@RequestBody Date newDate) {
           
         return jixuDate001Service.updateJixuDate(newDate);
     }

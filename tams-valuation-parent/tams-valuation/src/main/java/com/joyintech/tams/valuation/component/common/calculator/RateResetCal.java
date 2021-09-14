@@ -55,7 +55,7 @@ public class RateResetCal {
      * @since 1.0
      */
     public static <T extends FinCashCalcRule> List<T> cal(List<? extends FinCashPlanDto> lis, FinCashPayRule isr, FinRateInfo irr, List<T> lyield, 
-                                                          AssetCommonInfoDto scai, int createType, List<String> holidayList, Class<T> class1) {
+                                                          AssetCommonInfoDto scai, int createType, List<String> holidayList, Class<T> class1) throws InstantiationException, IllegalAccessException {
         // 返回结果
         List<T> result = new ArrayList<T>();
         // 初始报价处理
@@ -151,7 +151,7 @@ public class RateResetCal {
      * @see
      * @since 1.0
      */
-    private static <T extends FinCashCalcRule> T getYield(FinRateInfo irr, FinCashCalcRule yield, Date date, AssetCommonInfoDto scai, Class<T> class1) {
+    private static <T extends FinCashCalcRule> T getYield(FinRateInfo irr, FinCashCalcRule yield, Date date, AssetCommonInfoDto scai, Class<T> class1) throws InstantiationException, IllegalAccessException {
         
         T res = InstanceOfClass.createInstance(class1);;
         // 资产代码

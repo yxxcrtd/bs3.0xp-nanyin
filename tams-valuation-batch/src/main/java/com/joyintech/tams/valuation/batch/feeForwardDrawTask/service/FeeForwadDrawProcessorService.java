@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.batch.core.dto.SysBatchTaskDto;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.valuation.batch.common.accountingmethod.entity.BookGenerateResultWithBokStatFeePosition;
 import com.joyintech.tams.valuation.batch.feeForwardDrawTask.dto.FeeForwadDrawConfigDto;
 import com.joyintech.tams.valuation.batch.feeForwardDrawTask.dto.FeeForwadDrawReaderResult;
 import com.joyintech.tams.valuation.common.constants.*;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.common.utils.ValDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -225,6 +225,7 @@ public class FeeForwadDrawProcessorService {
             //应付费用  <- 变量.当日预提费用
             accountAmountMap.put(BookConstant.INTAMT, ytFeeAmt);
             //add jinmaodong 正常部需要生成，但是此处为了避免一个产品配置多个登记托管机构的预提费用计提出现的凭证被合并问题，故手动设置BOOK_ID
+
             accountSceneMap.put(BookConstant.BOOK_ID, generateBookId(
                     dto.getBooksetId(),DictCodeListTableId.会计场景代码_交易费用计提.getValue(),happenDateNow,dto.getBokDetailId(),
 null,dto.getRegistOrg()
@@ -302,7 +303,7 @@ null,dto.getRegistOrg()
 
         // 费用预提：场景代码 + 发生日 + 账务明细代码 + 冲销标识 + 登记托管机构
         String bookId = booksetId + tableId + happenDate + bookDetailId + offsetFlag + registOrg;
-        bookId = MD5Util.string2MD5(bookId);
+        bookId = EncryptUtil.getInstance().md5(bookId);
         return bookId;
     }
 

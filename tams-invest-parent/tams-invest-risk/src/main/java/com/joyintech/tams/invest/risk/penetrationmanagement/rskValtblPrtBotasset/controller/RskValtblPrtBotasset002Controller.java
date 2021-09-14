@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskValtblPrtBotasse
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class RskValtblPrtBotasset002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectAllAsset")
-    public List<SelectOptionDto> selectAllAsset(){
+    public Page<SelectOptionDto> selectAllAsset(){
         Map<String,Object> param = RequestUtil.getPageParam();
         return rskValtblPrtBotassetService.selectAllAsset(param);
     }

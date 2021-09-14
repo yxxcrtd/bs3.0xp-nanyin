@@ -1,7 +1,9 @@
 package com.joyintech.tams.svreport.chbsd.prdraisetotsub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,15 +43,15 @@ public class SdProdRaisetotBatchServiceOneService extends AutoSendCBBaseService 
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbPrdRaisetotSubDto> msgRstList,
-    		                         List<ChbPrdRaisetotSubDto> sendResult)  throws Exception{
+    		                         List<ChbPrdRaisetotSubDto> sendResult, SendDataCheckType sendDataCheckType) {
         logger.info("【产品募集总量登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
         try {
-            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList);
+            	 msgSend.sendChbPrdRaisendotSubMsgs(msgRstList, sendDataCheckType);
             	 sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【产品募集总量登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
-	        throw e;
+	        throw new BusinessException(e);
 		}
         logger.info("【产品募集总量登记】直连报送处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         return true;

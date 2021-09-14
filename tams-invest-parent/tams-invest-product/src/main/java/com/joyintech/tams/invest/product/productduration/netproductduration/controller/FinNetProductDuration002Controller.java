@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -406,8 +407,7 @@ public class FinNetProductDuration002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinNetProductDurationDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinNetProductDurationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }    
@@ -466,7 +466,7 @@ public class FinNetProductDuration002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIdList")
-    public List<SelectOptionDto> getFinprodMarketIdList(String pageModel){
+    public Page<SelectOptionDto> getFinprodMarketIdList(String pageModel){
         Map<String,Object> map = RequestUtil.getPageParam();
         map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         List<String> profitTypeList = new ArrayList<String>();
@@ -485,7 +485,7 @@ public class FinNetProductDuration002Controller extends BaseController{
             map.put("userName", LoginUserUtil.getUserName());
         }
 
-        return finNetProductDurationService.getFinprodMarketIdList(map);
+        return finNetProductDurationService.getFinprodMarketIdListForPgae(map);
     }
     
     /**
@@ -546,8 +546,7 @@ public class FinNetProductDuration002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("doRevoke")
-    public AjaxResult doRevoke(@RequestBody @Validated({ValidateGroupDelete.class}) FinNetProductDurationDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult doRevoke(@RequestBody @Validated({ValidateGroupDelete.class}) FinNetProductDurationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         } 
@@ -894,6 +893,7 @@ public class FinNetProductDuration002Controller extends BaseController{
     	Map<String, Object> map = RequestUtil.getPageParam();
     	map.put("finprodId", dto.getFinprodId());
     	map.put("cDate", dto.getRedNetValueDate());
+    	map.put("dealType", dto.getDealType());
         return finNetProductDurationService.getTrdValueByCdate(map);
     }
     /**

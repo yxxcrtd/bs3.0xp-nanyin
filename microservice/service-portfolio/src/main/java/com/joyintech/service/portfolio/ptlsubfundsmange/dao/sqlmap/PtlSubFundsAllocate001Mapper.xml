@@ -112,26 +112,26 @@
 	<!-- 新建页面画面联动 -->
 	<select id="selectOther2" resultMap="BaseResultMap">
 		select
-				FIN_PRODUCT.FINPROD_ABBR,
-				FIN_PRODUCT.FINPROD_MARKET_ID,
-				FIN_CASH_INFO.CASH_ID CASH_ID_STR,
-				MST_FEEINFO.FEE_NAME,
-				MST_FEEINFO.FEE_TYPE,
-    		    PRD_LAYER_PARAM.PROD_STYLE
-  			FROM FIN_CASH_INFO, MST_FEEINFO,FIN_PRODUCT
-			LEFT JOIN PRD_LAYER_PARAM 
-			  ON FIN_PRODUCT.FINPROD_ID = PRD_LAYER_PARAM.FINPROD_ID
+				FP.FINPROD_ABBR,
+				FP.FINPROD_MARKET_ID,
+				FCI.CASH_ID CASH_ID_STR,
+				MF.FEE_NAME,
+				MF.FEE_TYPE,
+    		    PLP.PROD_STYLE
+  			FROM FIN_CASH_INFO FCI, MST_FEEINFO MF,FIN_PRODUCT FP
+			LEFT JOIN PRD_LAYER_PARAM PLP
+			  ON FP.FINPROD_ID = PLP.FINPROD_ID
 		where
-				FIN_PRODUCT.FINPROD_ID	=	#{finprodId,jdbcType=VARCHAR}	
-		AND		FIN_PRODUCT.FINPROD_TYPE	=	#{finprodType2,jdbcType=VARCHAR}	
-		AND		FIN_PRODUCT.FINPROD_ID	=	FIN_CASH_INFO.FINPROD_ID	
-		AND 	MST_FEEINFO.CHARGE_TYPE = #{chargeType01,jdbcType=VARCHAR}
-		AND		FIN_CASH_INFO.CASH_TYPE_1	=	#{cashType1,jdbcType=VARCHAR}	
-		AND		FIN_CASH_INFO.CASH_TYPE_2	IN		
+				FP.FINPROD_ID	=	#{finprodId,jdbcType=VARCHAR}	
+		AND		FP.FINPROD_TYPE	=	#{finprodType2,jdbcType=VARCHAR}	
+		AND		FP.FINPROD_ID	=	FIN_CASH_INFO.FINPROD_ID	
+		AND 	MF.CHARGE_TYPE = #{chargeType01,jdbcType=VARCHAR}
+		AND		FCI.CASH_TYPE_1	=	#{cashType1,jdbcType=VARCHAR}	
+		AND		FCI.CASH_TYPE_2	IN		
 			<foreach collection="listCashType2" index="index" item="item" open="(" separator="," close=")">  
 		    	#{item,jdbcType=VARCHAR}
 	        </foreach>	
-		AND		FIN_CASH_INFO.FEE_ID	=	MST_FEEINFO.FEE_ID	
+		AND		FCI.FEE_ID	=	MF.FEE_ID	
 	</select>
 	
 	<select id="getSubFundsAllocate"

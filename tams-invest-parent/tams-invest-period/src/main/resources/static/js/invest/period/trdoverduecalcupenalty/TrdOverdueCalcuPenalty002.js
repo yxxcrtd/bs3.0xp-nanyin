@@ -146,16 +146,6 @@
                 return;
             }
         }
-        if($('#isAccrPenaltyInt').val()=='Y'){
-            if(!$('#penaltyBaseType').val()){
-                Joyin.error("是否计提罚息为是的时候，罚息计息本金不能为空！");
-                return;
-            }
-            if(!$('#yield').val()){
-                Joyin.error("是否计提罚息为是的时候，罚息利率不能为空！");
-                return;
-            }
-        }
         /**
          * 获取列表参数
          */
@@ -225,6 +215,11 @@
     }
 
     function penaltyBaseTypeInvalue(value) {
+        $('#penaltyBaseType').parent().parent().find('.layui-form-label').find('.must').remove();
+        $('#yield').parent().parent().find('.layui-form-label').find('.must').remove();
+        $('#fxvdate').parent().parent().find('.layui-form-label').find('.must').remove();
+        $('#fxmdate').parent().parent().find('.layui-form-label').find('.must').remove();
+        $('#isRushBack').parent().parent().find('.layui-form-label').find('.must').remove();
         if (value == 'Y') {
             $('#penaltyBaseType').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
             $('#penaltyBaseType').attr('disabled', false);
@@ -236,14 +231,19 @@
             }
             $('#yield').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
             $('#yield').attr('disabled', false);
+            $('#fxvdate').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
             $('#fxvdate').attr('disabled', false);
+            $('#fxmdate').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
+            $('#fxmdate').attr('disabled', false);
+            $('#isRushBack').parent().parent().find('.layui-form-label').append('<i class="must">*</i>');
+            $('#isRushBack').attr('disabled', false);
             changeFxVDate();
         } else {
-            $('#penaltyBaseType').parent().parent().find('.layui-form-label').find('.must').remove();
             $('#penaltyBaseType').val('').attr('disabled', true).trigger('change');
-            $('#yield').parent().parent().find('.layui-form-label').find('.must').remove();
             $('#yield').val('').attr('disabled', true).trigger('change');
             $('#fxvdate').val('').attr('disabled', true);
+            $('#fxmdate').val('').attr('disabled', true).trigger('change');
+            $('#isRushBack').val('').attr('disabled', true).trigger('change');
         }
     }
 

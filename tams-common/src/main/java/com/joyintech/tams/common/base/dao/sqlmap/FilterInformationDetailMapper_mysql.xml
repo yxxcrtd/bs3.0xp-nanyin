@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+        namespace="com.joyintech.tams.common.base.dao.FilterInformationDetailMapper_mysql">
+    <resultMap id="BaseResultMap"
+               type="com.joyintech.tams.common.base.entity.FilterInformationDetailDto">
+        <id column="FILTERDETAILID" property="filterDetailId"
+            jdbcType="VARCHAR" />
+        <result column="FILTERID" property="filterId"
+                jdbcType="VARCHAR" />
+        <result column="BASEINFORMATIONID" property="baseInformationId"
+                jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="insertFilterInfoDetail" parameterType="com.joyintech.tams.common.base.entity.FilterInformationDetailDto">
+		INSERT INTO CHB_INFOMGR_FILTER_DETAIL
+		(FILTERDETAILID, FILTERID, BASEINFORMATIONID)
+		VALUES
+		(#{filterDetailId,jdbcType=VARCHAR}, #{filterId,jdbcType=VARCHAR}, #{baseInformationId,jdbcType=VARCHAR})
+	</insert>
+
+    <delete id="deleteFilterInfoDetail" parameterType="java.lang.String">
+        <if test="filterId != null">
+            DELETE FROM CHB_INFOMGR_FILTER_DETAIL WHERE FILTERID = #{filterId,jdbcType=VARCHAR}
+        </if>
+    </delete>
+
+    <select id="queryFilterInfoDetailByFilterId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        <if test="filterId != null">
+            SELECT FILTERDETAILID, FILTERID, BASEINFORMATIONID
+            FROM CHB_INFOMGR_FILTER_DETAIL
+            WHERE FILTERID = #{filterId,jdbcType=VARCHAR}
+        </if>
+    </select>
+</mapper>

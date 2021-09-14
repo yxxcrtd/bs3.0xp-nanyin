@@ -42,7 +42,7 @@ public class FinProductLedgerController {
 	
 	@PostMapping("selectForLedger/{page}/{length}")
 	public Page<FinProductBuild001Dto> selectForLedger(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return finProductLedgerService.selectForLedger(page, length, param);
 	}
 

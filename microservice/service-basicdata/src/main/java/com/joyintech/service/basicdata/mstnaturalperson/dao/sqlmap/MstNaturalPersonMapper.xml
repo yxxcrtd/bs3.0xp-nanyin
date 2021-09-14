@@ -48,7 +48,7 @@
 		select count(*) count from MST_CUSTOMER_INFO T3
 		,FIN_PRODUCT T4
 		where
-		T3.CUSTOMER_ID=T4.ISSUER
+		(T3.CUSTOMER_ID=T4.ISSUER or T3.CUSTOMER_ID=T4.SPONSOR)
 		and T3.CUSTOMER_ID=#{customerId}
 		<!-- union all
 		select count(*) count from MST_CUSTOMER_INFO T5 ,FIN_PRODUCT_ADD T6
@@ -76,7 +76,7 @@
 		union all select count(*) count from MST_CUSTOMER_INFO T3
 		,FIN_PRODUCT
 		T4
-		where T3.CUSTOMER_ID=T4.ISSUER
+		where (T3.CUSTOMER_ID=T4.ISSUER or T3.CUSTOMER_ID=T4.SPONSOR)
 		and T3.CUSTOMER_ID in
 		<foreach collection="list" index="index" item="item" open="("
 			separator="," close=")">

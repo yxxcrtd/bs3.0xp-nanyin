@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.basicdata.mstindexquotationinfo.controller;
 import java.util.Date;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,8 +120,7 @@ public class MstIndexQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstIndexQuotationInfo001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstIndexQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

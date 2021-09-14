@@ -37,7 +37,7 @@ public class NonLggalFinancialDataSubReport001Service  extends CommonExportServi
 	private NonLggalFinancialDataSubReport001Mapper NonLggalFinancialDataSubReport001Mapper;
 
 	public Page<NonLggalFinancialDataSubReport001Dto> selectForPage(int page,int length,NonLggalFinancialDataSubReport001Dto dto)
-			 throws Exception {
+	{
 		 return super.queryForPage(page,length,() -> NonLggalFinancialDataSubReport001Mapper.queryList(dto));
 	}
 	
@@ -80,7 +80,7 @@ public class NonLggalFinancialDataSubReport001Service  extends CommonExportServi
 	 * @return
 	 * @throws Exception
 	 */
-	 public List<NonLggalFinancialDataSubReport001Dto> findPageout(NonLggalFinancialDataSubReport001Dto dto) throws Exception {
+	 public List<NonLggalFinancialDataSubReport001Dto> findPageout(NonLggalFinancialDataSubReport001Dto dto) {
 	       
 	        return  NonLggalFinancialDataSubReport001Mapper.queryList(dto);
 	    }

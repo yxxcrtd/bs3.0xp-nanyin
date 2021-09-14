@@ -172,14 +172,15 @@ public class EntrustRdsCommonAop {
     public static final <T> AjaxResult doListPreOccupy(List<T> dtoList, String busiType,
                                                        String infCode, boolean isSingleCounter,
                                                        BussEtrInvestPersonInfoDto etrInvestPersonInfo)
-        throws Exception {
+            throws Exception {
         if (!isNeedPreoccupy()) {
             return null;
         }
         // 接口组件Service
         InterfRiskRdsService<InterfRiskRdsDto> service = getInterfRiskRdsService();
         // 执行预占
-        AjaxResult ar = service.checkRiskRds(new InterfRiskRdsDto(),
+        AjaxResult ar = null;
+        /*        service.checkRiskRds(new InterfRiskRdsDto(),
             BussinessDictCodeListRds.事件类型_投资委托.getValue(), infCode,
             busiType, en -> service.sendRiskRdsListData(en, dtoList, map -> {
                 // 个别处理
@@ -188,7 +189,7 @@ public class EntrustRdsCommonAop {
                     map.put(PageFieldToInterfFactory.INF_COUNTERID,
                         etrInvestPersonInfo.getCounterId());
                 }
-            }));
+            }));*/
         // 判断结果，若正常则缓存数据，后面执行异常时使用缓存数据进行预占释放
         if (ar == null) {
             setLocalCache(dtoList);

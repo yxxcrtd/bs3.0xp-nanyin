@@ -15,6 +15,8 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.report.asset.project.validator.BussRepOtherInvestTargetInfoValidator;
 
+import java.math.BigDecimal;
+
 /**
  * 其他资产报送信息Dto
  * 〈功能详细描述〉
@@ -88,6 +90,24 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
      * 是否政府出资产业投资基金
      */
     private String isUnlisted;
+    /**
+     * 抵质押物类型
+     */
+    private String repPledgeType;
+
+    /**
+     * 抵质押物价值（元）
+     */
+    private BigDecimal repPledgeValue;
+    /**
+     * 担保性质
+     */
+    private String repNatureGuarantee;
+
+    /**
+     * 担保人与融资人关系
+     */
+    private String repRelationFinan;
 
     /**
      * 获取 repAssetType
@@ -245,4 +265,44 @@ public class BussRepOtherInvestTargetInfoDto extends RepOtherInvestTarget{
 	public void setIsUnlisted(String isUnlisted) {
 		this.isUnlisted = isUnlisted;
 	}
+
+    @Override
+    public String getRepRelationFinan() {
+        return repRelationFinan;
+    }
+
+    @Override
+    public void setRepRelationFinan(String repRelationFinan) {
+        this.repRelationFinan = repRelationFinan;
+    }
+
+    @Override
+    public String getRepPledgeType() {
+        return repPledgeType;
+    }
+
+    @Override
+    public void setRepPledgeType(String repPledgeType) {
+        this.repPledgeType = repPledgeType;
+    }
+
+    @Override
+    public BigDecimal getRepPledgeValue() {
+        return repPledgeValue;
+    }
+
+    @Override
+    public void setRepPledgeValue(BigDecimal repPledgeValue) {
+        this.repPledgeValue = repPledgeValue;
+    }
+
+    @Override
+    public String getRepNatureGuarantee() {
+        return repNatureGuarantee;
+    }
+
+    @Override
+    public void setRepNatureGuarantee(String repNatureGuarantee) {
+        this.repNatureGuarantee = repNatureGuarantee;
+    }
 }

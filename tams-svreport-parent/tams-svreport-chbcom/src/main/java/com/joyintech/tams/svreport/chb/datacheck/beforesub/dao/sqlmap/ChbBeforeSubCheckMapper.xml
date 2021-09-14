@@ -250,11 +250,11 @@
 	)
 	
 	select 
-	pm.termid
-	,pm.reportuuid registseqno
-	,nvl(pp.bank_profit1,0) bankprofit1
-	,nvl(pm.bank_profit2,0) bankprofit2
-	from pp,pm
-	where pp.termid=pm.termid
+	B.termid
+	,B.reportuuid registseqno
+	,nvl(A.bank_profit1,0) bankprofit1
+	,nvl(B.bank_profit2,0) bankprofit2
+	from pp A,pm B
+	where A.termid=B.termid
   </select>
 </mapper>

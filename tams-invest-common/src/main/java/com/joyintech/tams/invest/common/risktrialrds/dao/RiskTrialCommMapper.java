@@ -66,4 +66,6 @@ public interface RiskTrialCommMapper {
 	void deleteRiskValDetBatchData(List<RiskTrialRetDto> list);
 
 	String getPortfolioInstCode(@Param(value = "portfolioId") String portfolioId);
+
+    List<Map<String, Object>> selectImportValTableProdList(Map<String, Object> param);
 }

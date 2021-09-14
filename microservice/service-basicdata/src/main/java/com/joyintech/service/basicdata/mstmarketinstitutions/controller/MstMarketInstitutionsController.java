@@ -81,7 +81,8 @@ public class MstMarketInstitutionsController {
      * @throws Exception 异常信息
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstMarketInstitutionsDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstMarketInstitutionsDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstMarketInstitutionsService.selectForPage(page,length,pageParam);
     }
     /**
@@ -162,7 +163,8 @@ public class MstMarketInstitutionsController {
      * @since 1.0
      */
     @PostMapping("selectMstBondCreditPage/{page}/{length}")
-    public Page<MstBondCreditRating> selectMstBondCreditPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstBondCreditRating> selectMstBondCreditPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstBondCreditRatingService.selectMstBondCreditPage(page,length,pageParam);
     }
     /**

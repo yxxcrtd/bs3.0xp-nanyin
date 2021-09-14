@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,12 +74,10 @@ public class MstFeeVarieties001Controller extends BaseController {
      * 查询费用名称
      * 
      * @return list 结果集
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("/getFeeName")
-    public List<SuggestDto> getFeeNameOption()
-        throws Exception {
+    public List<SuggestDto> getFeeNameOption(){
         Map<String, Object> param = new HashMap<String, Object>();
         // 获取前台输入的值
         param.put("feeName", super.getRequest().getParameter("param"));
@@ -89,12 +88,10 @@ public class MstFeeVarieties001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 所有数据
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstFeeVarietiesDto> selectAll()
-        throws Exception {
+    public Page<MstFeeVarietiesDto> selectAll() {
         return mstFeeVarietiesService.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -119,13 +116,12 @@ public class MstFeeVarieties001Controller extends BaseController {
      * @param dto 费用品种
      * @param br br
      * @return 删除结果
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstFeeVarietiesDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstFeeVarietiesDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -149,14 +145,12 @@ public class MstFeeVarieties001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstFeeVarietiesService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

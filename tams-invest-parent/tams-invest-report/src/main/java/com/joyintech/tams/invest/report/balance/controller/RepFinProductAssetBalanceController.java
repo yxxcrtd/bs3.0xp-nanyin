@@ -11,7 +11,9 @@
 package com.joyintech.tams.invest.report.balance.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -208,7 +210,7 @@ public class RepFinProductAssetBalanceController extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepFinProductAssetBalanceDto> selectAll()
-        throws Exception {
+    {
         Page<RepFinProductAssetBalanceDto> page = repFinProductAssetBalanceService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -223,8 +225,7 @@ public class RepFinProductAssetBalanceController extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         List<RepFinProductAssetBalanceDto> sumList = new ArrayList<RepFinProductAssetBalanceDto>();
         List<RepFinProductAssetBalanceDto> detailList = new ArrayList<RepFinProductAssetBalanceDto>();
         sumList= repFinProductAssetBalanceService.selectAllListSum(RequestUtil.getParameters(getRequest()));
@@ -256,16 +257,22 @@ public class RepFinProductAssetBalanceController extends BaseController{
      * @see
      * @since 1.0
      */
-    public File fileMerge(File outFile,File outFile2) throws Exception{
+    public File fileMerge(File outFile,File outFile2) throws IOException {
+        FileOutputStream fileOut = null;
         XSSFWorkbook newExcelCreat = new XSSFWorkbook();
         FileMergeUtil fileMergeUtil = new FileMergeUtil();
         fileMergeUtil.handle(outFile, newExcelCreat);
         fileMergeUtil.handle(outFile2, newExcelCreat);
         String allFileName = outFile.getPath();    //定义新生成的xlx表格文件
-        FileOutputStream fileOut = new FileOutputStream(allFileName);
-        newExcelCreat.write(fileOut);
-        fileOut.flush();
-        fileOut.close();
+        try{
+            fileOut = new FileOutputStream(allFileName);
+            newExcelCreat.write(fileOut);
+        }finally {
+            if(fileOut != null){
+                fileOut.flush();
+                fileOut.close();
+            }
+        }
         return new File(allFileName);
     }
     

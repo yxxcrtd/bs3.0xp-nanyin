@@ -36,7 +36,7 @@ public class TrdOptionTradeController {
     public Page<TrdOptionTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                 @PathVariable("page") int page,
                                                 @PathVariable("length") int length)
-            throws Exception {
+    {
         return trdOptionTradeService.selectForPage(page, length, param);
     }
 

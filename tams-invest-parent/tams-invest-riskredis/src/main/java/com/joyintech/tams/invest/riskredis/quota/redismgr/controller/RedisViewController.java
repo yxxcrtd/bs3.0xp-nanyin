@@ -810,7 +810,8 @@ public class RedisViewController extends RedisBaseController {
     }
 
     protected String getParam(String paramName) {
-        String result = this.request.getParameter(paramName);
+        String result = this.request.getParameter(paramName)==null?"":this.request.getParameter(paramName);
+//      result = StringUtil.delHTMLTag(result);
         result = StringUtil.trimHtmlTag(result);
         if (!StringUtil.strPos(paramName, "inputSql")) {
             result = StringUtil.StringFilter(result);

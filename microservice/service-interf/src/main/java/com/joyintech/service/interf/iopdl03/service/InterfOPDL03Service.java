@@ -57,7 +57,7 @@ public class InterfOPDL03Service extends SendEsbService<InterfOPDL03InEntity, In
      */
     @Override
     public InterfOPDL03InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         TradeClearDto dto = (TradeClearDto)param;
         key = dto.getOrderOrTradeNo();
         InterfSendOpics sendOpicsInfo = sendOpicsMapper.selectByPrimaryKey(key);
@@ -87,7 +87,7 @@ public class InterfOPDL03Service extends SendEsbService<InterfOPDL03InEntity, In
      */
     @Override
     public int saveInterfData(InterfOPDL03OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -96,7 +96,7 @@ public class InterfOPDL03Service extends SendEsbService<InterfOPDL03InEntity, In
      */
     @Override
     public int saveBusinessData(InterfOPDL03OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

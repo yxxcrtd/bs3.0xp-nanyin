@@ -61,7 +61,8 @@ public class ReportHomeController extends BaseController {
     */
     @PostMapping("/searchReportInfo")
     public Map<String,SubmitInformationRegistrationDto> searchReportInfo(@RequestBody Map<String, Object> param) {
-        return reportHomeService.searchReportInfo((String)param.get("searchDate"),(List<String>) param.get("reportlist"));
+        return reportHomeService.searchReportInfo(param);
+
     }
     /**
     *

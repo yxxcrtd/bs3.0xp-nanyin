@@ -42,7 +42,7 @@ public class CommonSelectController {
      */
     @RequestMapping("getAssetIdBond")
     public List<SuggestDto> getAssetIdBond(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return commonSelectService.getAssetIdCommon(param);
     }
@@ -56,7 +56,7 @@ public class CommonSelectController {
      */
     @RequestMapping("getFinprodAbbr")
     public List<SuggestDto> getFinprodAbbr(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return commonSelectService.getFinprodAbbr(param);
     }
@@ -464,7 +464,7 @@ public class CommonSelectController {
      */
     @RequestMapping("getAssetIdPrimaryBond")
     public List<SuggestDto> getAssetIdPrimaryBond(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         param.put("FINPROD_TYPE_TG", BussinessDictCodeList.金融产品类型_投管用_一级投标债券.getValue());
         return commonSelectService.getAssetIdCommon(param);
     }

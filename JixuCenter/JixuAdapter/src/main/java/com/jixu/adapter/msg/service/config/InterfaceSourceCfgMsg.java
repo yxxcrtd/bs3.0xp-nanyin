@@ -224,9 +224,10 @@ public class InterfaceSourceCfgMsg extends MsgExecuteService{
 				BeanUtils.copyProperties(is, oldsource,new String[]{"sourceID", "expSourceClass", "msg", "customBeforeExecute", "customAfterExecute"});
 				
 				interfaceSourceDao.updateEntityBean(oldsource);
-				msgcontainer.setObjID(oldsource.getSourceID());
+				if (oldsource != null){
+					msgcontainer.setObjID(oldsource.getSourceID());
+				}
 				msgcontainer.setEntityObj(oldsource);
-				
 				if(is.isAutoFlag()){
 					modifyAutoJob(oldsource);
 				}else{

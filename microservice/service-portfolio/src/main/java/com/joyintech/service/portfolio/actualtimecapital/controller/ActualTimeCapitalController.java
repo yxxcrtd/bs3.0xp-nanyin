@@ -72,7 +72,7 @@ public class ActualTimeCapitalController {
     @PostMapping("findPage/{page}/{length}")
     public Page<ActualTimeCapitalDto> selectAll(@RequestBody Map<String, Object> param,
                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return actualTimeCapitalService.selectForPage(page, length, param);
     }
     
@@ -87,7 +87,8 @@ public class ActualTimeCapitalController {
     @Transactional
     @DTXTransaction
     @PostMapping("insertAdjustmentBalance")
-    public void insertAdjustmentBalance(@RequestBody CashArtDealDto cashArtDealDto) throws Exception{
+    public void insertAdjustmentBalance(@RequestBody CashArtDealDto cashArtDealDto)
+    {
         actualTimeCapitalService.insertAdjustmentBalance(cashArtDealDto);
     }
 }

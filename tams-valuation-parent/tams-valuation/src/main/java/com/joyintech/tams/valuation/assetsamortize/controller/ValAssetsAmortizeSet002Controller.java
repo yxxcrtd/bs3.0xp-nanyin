@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,7 +107,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public List<ValAssetsAmortizeSet001Dto> findPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getPageParam();
         String workflowId = (String)map.get("workflowIdNow");
         if (StringUtil.isNotEmpty(workflowId)) {
@@ -135,7 +136,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getRecalType")
     public List<SelectOptionDto> getRecalType()
-        throws Exception {
+         {
         return valAssetsAmortizeSet002Service.getRecalType();
     }
 
@@ -153,7 +154,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     @RequestMapping("doCommitCheck")
     public AjaxResult check(@Valid @RequestBody ValAssetsAmortizeSet001Dto dto,
                             BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -171,8 +172,7 @@ public class ValAssetsAmortizeSet002Controller extends BaseController {
     @RequestMapping("doCommit")
     @ResponseBody
     public AjaxResult doCommit(@RequestBody @Valid ValAssetsAmortizeSet001Dto dto,
-                               BindingResult br)
-        throws Exception {
+                               BindingResult br) throws WorkFlowException {
 
         // 启动流程
         ProcessParameter<ValAssetsAmortizeSet001Dto> proParam = new ProcessParameter<>();

@@ -94,7 +94,11 @@ public class ManualVoucher implements ImportManualService{
 			cooa.setVoucher(voucher);
 			
 			if(!JixuUserUtil.jixuUserSystemFlag() && JixuUserUtil.isJoyinTablesFlag()){
-				String tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.MANNUAL+","+sec.getIssueType()+","+tranType);
+				String tableID = "";
+				if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null) {
+					tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.MANNUAL + "," + sec.getIssueType() + "," + tranType);
+					tableID = tableID == null ? "" : tableID;
+				}
 				cooa.setTableID(tableID);	//业务场景
 				List<VoucherDetails> voucherDetailsList=cooa.getVoucherDetails();
 				for (VoucherDetails voucherDetails : voucherDetailsList) {

@@ -53,7 +53,8 @@ public class EtrBondToStockController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrBondToStockDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrBondToStockDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return etrBondToStockService.selectForPage(page,length,param);
     }
     
@@ -71,7 +72,8 @@ public class EtrBondToStockController {
      */
     @ResponseBody
     @PostMapping("findOtherPage/{page}/{length}")
-    public Page<EtrBondToStockDto> selectOtherPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrBondToStockDto> selectOtherPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
     	Page<EtrBondToStockDto> pagelist= etrBondToStockService.selectOtherPage(page,length,param);
     	return pagelist;
     }

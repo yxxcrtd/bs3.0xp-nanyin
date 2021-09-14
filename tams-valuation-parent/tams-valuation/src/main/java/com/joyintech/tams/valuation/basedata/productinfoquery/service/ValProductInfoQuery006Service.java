@@ -29,7 +29,7 @@ public class ValProductInfoQuery006Service extends BaseService<ValProductInfoFee
      * @return
 	 * @throws Exception 
      */
-	public Page<ValProductInfoAcctDto> findBankdesc(Map<String, Object> pageParam) throws Exception {
+	public Page<ValProductInfoAcctDto> findBankdesc(Map<String, Object> pageParam) {
 		return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValProductInfoQuery006/findBankdesc",
                 pageParam, ValProductInfoAcctDto.class);

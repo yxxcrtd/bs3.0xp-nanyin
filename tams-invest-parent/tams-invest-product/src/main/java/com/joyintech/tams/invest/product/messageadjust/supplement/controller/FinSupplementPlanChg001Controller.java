@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.product.messageadjust.supplement.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -147,14 +148,14 @@ public class FinSupplementPlanChg001Controller extends BaseController {
      * @param br
      *            AjaxResult
      * @return AjaxResul
-     * @throws Exception
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated FinSupplementPlanChg001Dto dto,
-            BindingResult br) throws Exception {
+            BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

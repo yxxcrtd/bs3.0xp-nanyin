@@ -20,7 +20,7 @@ public interface ValExcelImpBaseService {
      * @see
      * @since 1.0
      */
-    void formatRowData(Map<String, Object> rowDataMap) throws Exception;
+    void formatRowData(Map<String, Object> rowDataMap) ;
 
     /**
      * 主表数据录入前的特殊处理逻辑
@@ -32,7 +32,7 @@ public interface ValExcelImpBaseService {
      * @see
      * @since 1.0
      */
-    void beforeHandleRowDataToDb(boolean insertFlg, boolean revokeFlag, Object dataObj) throws Exception;
+    void beforeHandleRowDataToDb(boolean insertFlg, boolean revokeFlag, Object dataObj) ;
 
     /**
      * 主表数据录入后的特殊处理逻辑
@@ -44,5 +44,5 @@ public interface ValExcelImpBaseService {
      * @see
      * @since 1.0
      */
-    void afterHandleRowDataToDb(boolean insertFlg, boolean revokeFlag, Object dataObj) throws Exception;
+    void afterHandleRowDataToDb(boolean insertFlg, boolean revokeFlag, Object dataObj) ;
 }

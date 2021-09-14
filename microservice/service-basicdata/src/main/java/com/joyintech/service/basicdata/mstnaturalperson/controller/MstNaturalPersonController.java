@@ -50,7 +50,8 @@ public class MstNaturalPersonController  {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstNaturalPerson001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstNaturalPerson001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstNaturalPerson001Service.selectForPage(page,length,pageParam);
     }
     /**

@@ -47,7 +47,7 @@ public class ValProductInfoQuery005Controller extends BaseController{
 
 	@RequestMapping("findPage")
     @ResponseBody
-    public Page<ValProductInfoFeeDto> findPage() throws Exception{
+    public Page<ValProductInfoFeeDto> findPage() {
         return valProductInfoQuery005Service.findFeeAdjust(RequestUtil.getPageParam());
     }
 

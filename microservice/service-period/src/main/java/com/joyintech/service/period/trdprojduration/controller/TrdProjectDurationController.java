@@ -173,7 +173,7 @@ public class TrdProjectDurationController {
     @PostMapping("getFinprodMarketId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-            throws Exception {
+    {
         return trdProjectDurationService.getFinprodMarketId(page, length, param);
     }
     //add by liupengfei for多级法人 E

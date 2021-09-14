@@ -2,6 +2,7 @@ package com.joyintech.tams.batch.svreport.feebasis.service;
 
 import java.util.Date;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class ChbPrdFeeBasisImpMainService extends AutoSendCBBaseService{
                 logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
             }
     	}catch(Exception e){
-    		throw e;
+    		throw new BusinessException(e);
     	}
     	logger.debug("产品费用交易头寸接口数据接入批处理");
 		logInfoBatchEnd();

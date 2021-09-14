@@ -155,6 +155,34 @@ public class RepOtherInvestTarget extends BaseEntity {
      * 是否为债转股   中债新增字段 20200407
      */
     private String repDeptEquity;
+    /**
+     * 担保方式
+     */
+    private String repGuaType;
+
+    /**
+     * 担保方式说明
+     */
+    private String repGuaTypeRemark;
+    /**
+     * 抵质押物类型
+     */
+    private String repPledgeType;
+
+    /**
+     * 抵质押物价值（元）
+     */
+    private BigDecimal repPledgeValue;
+    /**
+     * 担保性质
+     */
+    private String repNatureGuarantee;
+
+    /**
+     * 担保人与融资人关系
+     */
+    private String repRelationFinan;
+
 
     /**
      * 取得 金融产品代码
@@ -620,4 +648,52 @@ public class RepOtherInvestTarget extends BaseEntity {
 	public void setRepDeptEquity(String repDeptEquity) {
 		this.repDeptEquity = repDeptEquity;
 	}
+
+    public String getRepGuaType() {
+        return repGuaType;
+    }
+
+    public void setRepGuaType(String repGuaType) {
+        this.repGuaType = repGuaType == null ? null : repGuaType.trim();
+    }
+
+    public String getRepGuaTypeRemark() {
+        return repGuaTypeRemark;
+    }
+
+    public void setRepGuaTypeRemark(String repGuaTypeRemark) {
+        this.repGuaTypeRemark = repGuaTypeRemark == null ? null : repGuaTypeRemark.trim();
+    }
+
+    public String getRepPledgeType() {
+        return repPledgeType;
+    }
+
+    public void setRepPledgeType(String repPledgeType) {
+        this.repPledgeType = repPledgeType;
+    }
+
+    public BigDecimal getRepPledgeValue() {
+        return repPledgeValue;
+    }
+
+    public void setRepPledgeValue(BigDecimal repPledgeValue) {
+        this.repPledgeValue = repPledgeValue;
+    }
+
+    public String getRepNatureGuarantee() {
+        return repNatureGuarantee;
+    }
+
+    public void setRepNatureGuarantee(String repNatureGuarantee) {
+        this.repNatureGuarantee = repNatureGuarantee;
+    }
+
+    public String getRepRelationFinan() {
+        return repRelationFinan;
+    }
+
+    public void setRepRelationFinan(String repRelationFinan) {
+        this.repRelationFinan = repRelationFinan;
+    }
 }

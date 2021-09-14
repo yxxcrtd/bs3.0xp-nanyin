@@ -59,7 +59,7 @@ public class AssetsTransferController {
     @PostMapping("/findUnTransPage/{page}/{length}")
     public Page<AssetsTransferDto> findUnTransPage(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return assetsTransferService.findUnTransPage(page, length, param);
     }
 
@@ -71,7 +71,7 @@ public class AssetsTransferController {
     @PostMapping("/findTransPage/{page}/{length}")
     public Page<AssetsTransferDto> findTransPage(@RequestBody Map<String, Object> param,
                                                    @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception{
+    {
         return assetsTransferService.findTransPage(page, length, param);
     }
 

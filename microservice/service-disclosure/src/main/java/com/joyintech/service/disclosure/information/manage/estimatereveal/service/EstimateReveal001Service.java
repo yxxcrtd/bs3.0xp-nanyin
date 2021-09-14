@@ -25,7 +25,7 @@ public class EstimateReveal001Service extends CommonExportService<EstimateReveal
      * @return 表格信息
      * @throws Exception 
      */
-	public Page<EstimateReveal001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception{
+	public Page<EstimateReveal001Dto> findPage(int page, int length, Map<String, Object> params) {
 
 		String prodId = (String)params.get("prodId");
         String[] prodIdArr = null;

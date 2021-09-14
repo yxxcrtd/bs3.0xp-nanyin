@@ -41,7 +41,7 @@ public class RskSupervisionIndicatorParamController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskSupervisionIndicatorParamDto> selectAll(@RequestBody Map<String, Object> param,
-                                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                           @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionIndicatorParamService.selectForPage(page, length, param);
     }
 

@@ -10,6 +10,7 @@
  
 package com.joyintech.service.product.productduration.netproductduration.controller;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinCashPlanDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinNetProductDurationDto;
@@ -17,10 +18,7 @@ import com.joyintech.service.product.productduration.netproductduration.dto.FinN
 import com.joyintech.service.product.productduration.netproductduration.service.FinNetProductDurationService;
 import com.joyintech.tams.common.base.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -51,6 +49,20 @@ public class FinNetProductDurationController{
     @PostMapping("getFinprodMarketIdList")
     public List<SelectOptionDto> getFinprodMarketIdList(@RequestBody Map<String,Object> map){
         return finNetProductDurationService.getFinprodMarketIdList(map);
+    }
+
+    /**
+     * 产品代码的联想下拉框事件
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("getFinprodMarketIdListForPgae/{page}/{length}")
+    public Page<SelectOptionDto> getFinprodMarketIdListForPgae(@PathVariable("page") int page,
+                                                        @PathVariable("length") int length,
+                                                        @RequestBody Map<String, Object> map) {
+        return finNetProductDurationService.getFinprodMarketIdListForPgae(page, length, map);
     }
     
     /**

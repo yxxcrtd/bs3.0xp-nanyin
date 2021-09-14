@@ -74,8 +74,7 @@ public class VatDealInfoRecRunner extends InterfBaseService {
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void execute()
-        throws Exception {
+    public void execute() throws InterfException {
         logger.info(getInterfExecuteInfo().getTaskName() + "开始！");
         // setp1的参数设置-接收定时任务
         Map<String, Object> params1 = getParams();

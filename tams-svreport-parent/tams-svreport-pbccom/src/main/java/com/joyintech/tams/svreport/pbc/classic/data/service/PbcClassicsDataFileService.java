@@ -26,7 +26,11 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -90,7 +94,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 public class PbcClassicsDataFileService {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcClassicsDataFileService.class);
+
     public static final String APPLY_TYPE_1="1-产品基本信息";
     public static final String APPLY_TYPE_2="2-产品终止信息";
     public static final String APPLY_TYPE_3="3-资金池基本信息";
@@ -166,7 +174,7 @@ public class PbcClassicsDataFileService {
     
     /**
      * 删除上日及本日未处理（未发送）业务数据
-     * @param genDate 跑批日期
+     * @param batchDate 跑批日期
      * @return
      */
 	public String deleteUnSendDataFile(Date batchDate) {
@@ -340,7 +348,7 @@ public class PbcClassicsDataFileService {
     	
     	// 【dat文件生成留痕】文件和数据的主键集合map（key="pathfilenameDatakeylist"，value=文件全名和文件内数据主键list）
     	Map<String,Object> fileDataMap = new HashMap<String,Object>();
-    	
+
     	//记录序列号
     	Map<String,List<String>> seqMap = new HashMap<String,List<String>>();
     	//生成dat文件
@@ -2234,8 +2242,8 @@ public class PbcClassicsDataFileService {
     	for(String folderPath : files){
     		  String zipFileName = folderPath.replace("_", "")+".zip";
     		  zipFileList.add(zipFileName);
-    		  File outFile =  new File(zipFileName);
-    		  File[] allFiles = new File(folderPath).listFiles();
+    		  File outFile =  new SafelyFile(zipFileName);
+    		  File[] allFiles = new SafelyFile(folderPath).listFiles();
     		  if(outFile.exists()){
     			  outFile.delete();
     		  }
@@ -2245,13 +2253,13 @@ public class PbcClassicsDataFileService {
     				  //压缩删除文件
     				  ZipFileUtil.compressZip(outFile, true, allFiles);
     				  //删除文件夹
-    				  new File(folderPath).delete();
+    				  new SafelyFile(folderPath).delete();
     			  } else {
     				  ZipFileUtil.compressZip(outFile, false, allFiles);//压缩文件
     			  }
 //                new File(folderPath).delete();//删除文件夹
               }catch (Exception e) {
-            	  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     		  try {
     			  if(StringUtil.equals("open", switchs)){
@@ -2267,8 +2275,7 @@ public class PbcClassicsDataFileService {
     			  }
               }
               catch (Exception e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     	}
     	return zipFileList;
@@ -2301,6 +2308,7 @@ public class PbcClassicsDataFileService {
     		fileInfo.setFileid(fileid);
     		fileInfo.setFilecode(dataInfo.get(0));
     		fileInfo.setHeadOrgcode(dataInfo.get(1));
+			fileInfo.setOrgCode(CommonUtil.selectPbcBankCodeBack(dataInfo.get(1)));
     		fileInfo.setCdate(genDate);
     		fileInfo.setFileseqno(fileseqno);
     		fileInfo.setFilepath(folderPath.replace("_", "")+".zip");
@@ -2380,18 +2388,18 @@ public class PbcClassicsDataFileService {
         if (size < 1) {
         	return "";
         }
-        File[] allFiles = new File[size];
+        File[] allFiles = new SafelyFile[size];
         // 最终文件路径
-    	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary/" + "手工生成人行数据文件" + dateStr + ".zip";
-    	File outFile =  new File(finalZipPath);
+    	String finalZipPath = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH") + "temporary" + File.separator + "手工生成人行数据文件" + dateStr + ".zip";
+    	File outFile =  new SafelyFile(finalZipPath);
     	for (int i = 0; i < size; i ++) {
-    		allFiles[i] = new File(zipFileName.get(i));
+    		allFiles[i] = new SafelyFile(zipFileName.get(i));
     	}
     	// 压缩文件并删除原文件
     	try {
 			ZipFileUtil.compressZip(outFile, true, allFiles);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
     	
     	return finalZipPath;

@@ -56,7 +56,7 @@ public class CePreOccupancyManagementService extends BaseService<CePreOccupancyM
      * @since 1.0
      */
     public Page<CePreOccupancyManagementDto> selectForPage(int page, int length,Map<String, Object> param) 
-        throws Exception {
+	{
         return super.queryForPage(page, length, () -> cePreOccupancyManagementMapper.selectForPage(param));
     }
 

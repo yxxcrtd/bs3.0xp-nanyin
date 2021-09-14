@@ -31,4 +31,6 @@ public interface ValBatchCronJobMapper {
     List<String> findAllProdbyGroup(@Param("prodGrpId")String prodGrpId);
 
     Date getSysDate();
+
+    Date getCommonSysDate();
 }

@@ -73,7 +73,7 @@ public class PoiReportModelManage001Service extends CommonExportService<PoiRepor
 
  
         
-    	public Page<DisPoiTab> findByPage(Map<String, Object> pageParam) throws Exception {
+    	public Page<DisPoiTab> findByPage(Map<String, Object> pageParam) {
 //    		return super.queryForPage(() -> reportModelManage001Mapper.searchReports(pageParam));
     		
     		return restTemplate.postForPage(

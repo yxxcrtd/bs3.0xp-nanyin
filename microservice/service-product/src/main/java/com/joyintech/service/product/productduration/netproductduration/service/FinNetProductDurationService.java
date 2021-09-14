@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ import com.joyintech.tams.common.base.entity.TrdFinProductDealTotal;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -84,6 +86,19 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
     public List<SelectOptionDto> getFinprodMarketIdList(Map<String, Object> map) {
         return finNetProductDurationMapper.getFinprodMarketIdList(map);
     }
+
+	/**
+	 * <一句话功能简述>
+	 * <功能详细描述>
+	 *
+	 * @param map
+	 * @return
+	 * @see
+	 * @since 1.0
+	 */
+	public Page<SelectOptionDto> getFinprodMarketIdListForPgae(int page, int length, Map<String, Object> map) {
+		return this.queryForPageForSelectReturn(page, length, () -> finNetProductDurationMapper.getFinprodMarketIdList(map));
+	}
 
     /**
      * <一句话功能简述>
@@ -384,20 +399,40 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
 		for(FinNetProductDurationDto finNetProductDurationDto : list) {
 			Map<String, Object> requestMap = new HashMap<>();
 			requestMap.put("finprodId", map.get("finprodId"));	//产品代码
-			requestMap.put("cDate", finNetProductDurationDto.getmDate());	//到期日
+			if(StringUtil.equals((String)map.get("dealMode"),"10")) {
+				requestMap.put("cDate", DateUtil.addDay(finNetProductDurationDto.getmDate(), -1));    //到期日
+			}else{
+				requestMap.put("cDate", finNetProductDurationDto.getmDate());    //到期日
+			}
 			requestMap.put("branch", 0L);	//到期日
 			BokPositionPrd bokPositionPrd = finNetProductDurationMapper.getBokPositionPrd(requestMap);
 			if(StringUtil.isNotEmpty(bokPositionPrd)){
 				if(DictCodeList.交易方向_产品赎回.getValue().equals(map.get("dealType"))
 	                    || DictCodeList.交易方向_产品提前赎回.getValue().equals(map.get("dealType"))
 	                    || DictCodeList.交易方向_产品违约赎回.getValue().equals(map.get("dealType"))) {
-					finNetProductDurationDto.setRedNetValueDate(bokPositionPrd.getCdate());
-					finNetProductDurationDto.setRedUnitNetValue(bokPositionPrd.getTdyUnitValue());
+					//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 start
+					bokPositionPrd = finNetProductDurationMapper.getBokValbalTableStatusAdd(requestMap);
+					if(bokPositionPrd==null){
+						bokPositionPrd = finNetProductDurationMapper.getBokValbalTableStatus(requestMap);
+					}
+					if(StringUtil.isNotEmpty(bokPositionPrd)){
+						finNetProductDurationDto.setRedNetValueDate(bokPositionPrd.getCdate());
+						finNetProductDurationDto.setRedUnitNetValue(bokPositionPrd.getTdyUnitValue());
+					}
+					//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 end
 				}
 				else if(DictCodeList.交易方向_产品到期.getValue().equals(map.get("dealType"))
 	                    || DictCodeList.交易方向_提前终止.getValue().equals(map.get("dealType"))) {
-					finNetProductDurationDto.setExpireNetValueDate(bokPositionPrd.getCdate());
-					finNetProductDurationDto.setExpireUnitNetValue(bokPositionPrd.getTdyUnitValue());
+					//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 start
+					bokPositionPrd = finNetProductDurationMapper.getBokValbalTableStatusAdd(requestMap);
+					if(bokPositionPrd==null){
+						bokPositionPrd = finNetProductDurationMapper.getBokValbalTableStatus(requestMap);
+					}
+					if(StringUtil.isNotEmpty(bokPositionPrd)){
+						finNetProductDurationDto.setExpireNetValueDate(bokPositionPrd.getCdate());
+						finNetProductDurationDto.setExpireUnitNetValue(bokPositionPrd.getTdyUnitValue());
+					}
+					//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 end
 				}
 				else {
 					finNetProductDurationDto.setAddReduceNetValueDate(bokPositionPrd.getCdate());
@@ -486,6 +521,20 @@ public class FinNetProductDurationService extends BaseService<FinNetProductDurat
 			Date date = new Date(Long.valueOf(map.get("cDate").toString()));
 			map.put("cDate", date);
 		}
+		//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 start
+		if(DictCodeList.交易方向_产品赎回.getValue().equals(map.get("dealType"))
+				|| DictCodeList.交易方向_产品提前赎回.getValue().equals(map.get("dealType"))
+				|| DictCodeList.交易方向_产品违约赎回.getValue().equals(map.get("dealType"))
+				||DictCodeList.交易方向_产品到期.getValue().equals(map.get("dealType"))
+				|| DictCodeList.交易方向_提前终止.getValue().equals(map.get("dealType"))
+		) {
+			BokPositionPrd bokPositionPrd = finNetProductDurationMapper.getBokValbalTableStatusAdd(map);
+			if(StringUtil.isNotEmpty(bokPositionPrd)){
+				return  bokPositionPrd;
+			}
+			return finNetProductDurationMapper.getBokValbalTableStatus(map);
+		}
+		//add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 end
 		return finNetProductDurationMapper.getTrdValueByCdate(map);
 	}
 

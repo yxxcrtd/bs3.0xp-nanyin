@@ -92,7 +92,7 @@ public class ProRegistCodeManageMService extends BaseService<ProRegistCodeManage
     	param.put("tempList", ExcelUtil.getTempList1(fileName));
     	param.put("orgCode", CommonUtil.getOrgCode());
     	param.put("deptCode", CommonUtil.getDeptCode());
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	return restTemplate.postForList(
 	       		SvrServiceApplication.COMMON_SERVICE_NAME + "/ProRegistCodeManage/importData", 
 	       		param,

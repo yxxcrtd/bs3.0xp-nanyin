@@ -483,9 +483,9 @@
                       #{item}
                   </foreach>
               </if>
-              <if test="tableId != null and tableId != ''">
+              <if test="tableIds != null and tableIds != ''">
                   AND TBC.table_id in
-                  <foreach collection="tableId.split(',')" item="item" open="(" separator="," close=")">
+                  <foreach collection="tableIds.split(',')" item="item" open="(" separator="," close=")">
                       #{item}
                   </foreach>
               </if>
@@ -497,6 +497,12 @@
                   </foreach>
               </if>
               <!--update by caiqun 20200921 TISHKBS-1252 end-->
+              <if test="seqNo != null and seqNo != ''">
+                  AND TSBC.seq_no in
+                  <foreach collection="seqNo.split(',')" item="item" open="(" separator="," close=")">
+                      #{item}
+                  </foreach>
+              </if>
               <if test="owner != null and owner != ''">
                   AND TSBC.seq_no != #{owner}
               </if>

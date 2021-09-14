@@ -43,14 +43,12 @@ public class TaxBalanceQuery001Controller extends BaseController {
 
     @PostMapping("/findPage/{page}/{length}")
     public Page<TaxBalanceQuery001Dto> findPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                @PathVariable("length") int length)
-        throws Exception {
+                                                @PathVariable("length") int length){
         return taxBalanceQuery001Service.findByPage(page, length, param);
     }
 
     @PostMapping("/findAll")
-    public List<TaxBalanceQuery001Dto> findAll(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<TaxBalanceQuery001Dto> findAll(@RequestBody Map<String, Object> param) {
         return taxBalanceQuery001Service.findByList(param);
     }
 

@@ -19,13 +19,13 @@ public interface CommonCodeCheckMapper {
      * 不同产品之间，产品名称与产品期次不得同时重复
      */
     
-    List<String>  genChbPrdDeclareSub1ByProdInsId(@Param("prodInsId")String  prodInsId);
+    List<String>  genChbPrdDeclareSub1ByProdInsId(@Param("tableName")String tableName, @Param("prodInsId")String  prodInsId, @Param("prodName")String  prodName, @Param("prodStage")String prodStage);
 
     /**
      * 不同产品之间，产品名称与产品期次不得同时重复
      */
     
-    List<String>  genChbPrdDeclareSub2ByProdInsId(@Param("prodInsId")String  prodInsId);
+    List<String>  genChbPrdDeclareSub2ByProdInsId(@Param("prodInsId")String  prodInsId, @Param("prodName")String  prodName, @Param("prodStage")String prodStage);
 
     /**
      *  根据产品代码查询产品申报登记信息

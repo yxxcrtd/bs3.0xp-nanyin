@@ -42,7 +42,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
      * @since 1.0
      */
     public Page<InvestTradeDto> findPage(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/InvestTradeQuery001/findPage",
             params, InvestTradeDto.class);
     }
@@ -58,7 +58,7 @@ public class InvestTradeQuery001Service extends CommonExportService<InvestTradeD
      */
     @SuppressWarnings("rawtypes")
     public List<InvestTradeDto> findList(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/InvestTradeQuery001/findList",
             params, InvestTradeDto.class);
     }

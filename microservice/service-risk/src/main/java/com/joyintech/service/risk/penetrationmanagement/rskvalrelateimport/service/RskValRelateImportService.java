@@ -15,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +46,11 @@ import com.joyintech.service.risk.penetrationmanagement.rskvalrelateimport.dto.R
  */
 @Service
 public class RskValRelateImportService extends BaseService<RskValRelateImportDto> {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValRelateImportService.class);
+
     /**
      * RskValRelateImportMapper
      */
@@ -67,7 +75,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public Page<RskValRelateImportDto> selectForPage(int page, int length,
-                                                     Map<String, Object> param) throws Exception{
+                                                     Map<String, Object> param) {
         return super.queryForPage(page, length, () ->rskValRelateImportMapper.selectForPage(param));
     }
     
@@ -181,7 +189,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
             }
         }
         catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         //查询组合名称
         dto.setName(rskValRelateImportMapper.selectGroupName(ptlId));
@@ -216,5 +224,10 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
     public int checkGroupName(RskValRelateImportDto dto) {
         return rskValRelateImportMapper.checkGroupName(dto);
     }
-
+    /**
+     * 查询所有资产要素完整信息
+     */
+    public List<FinProduct> selectAllAsset() {
+        return rskValRelateImportMapper.selectAllAsset();
+    }
 }

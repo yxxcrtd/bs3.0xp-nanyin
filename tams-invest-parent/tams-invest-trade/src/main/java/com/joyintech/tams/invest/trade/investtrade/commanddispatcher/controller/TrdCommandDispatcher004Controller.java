@@ -105,7 +105,7 @@ public class TrdCommandDispatcher004Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("getTraderAuthList")
-	public List<TrdCommandDispatcher004Dto> selectAllCommonChar() throws Exception{
+	public List<TrdCommandDispatcher004Dto> selectAllCommonChar() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 		List<TrdCommandDispatcher001Dto> traderAuthList = trdCommandDispatcher001Service.getTraderAuthList(param);
 		List<TrdCommandDispatcher004Dto> returnList=new ArrayList<>();

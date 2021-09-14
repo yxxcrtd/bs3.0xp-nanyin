@@ -36,17 +36,17 @@ public class RskPortAutoRelatePointController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskPortAutoRelatePointDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskPortAutoRelatePointService.selectForPage(page, length, param);
     }
     @PostMapping("/selectAllRule/{page}/{length}")
     public Page<RskPortAutoRelatePoint002Dto> selectAllRule(@RequestBody Map<String, Object> param,
-                                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskPortAutoRelatePointService.selectAllRule(page, length, param);
     }
     @PostMapping("/findAllInt/{page}/{length}")
     public Page<RskPortAutoRelatePointDto> findAllInt(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskPortAutoRelatePointService.findAllInt(page, length, param);
     }
     /**

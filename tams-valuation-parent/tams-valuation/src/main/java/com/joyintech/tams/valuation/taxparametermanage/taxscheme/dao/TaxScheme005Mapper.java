@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme005Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 资产应税信息
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme00
  * @see TaxScheme005Mapper
  * @since 1.0
  */
+@Repository
 public interface TaxScheme005Mapper {
 
 	int insertSelective(TaxScheme005Dto dto);

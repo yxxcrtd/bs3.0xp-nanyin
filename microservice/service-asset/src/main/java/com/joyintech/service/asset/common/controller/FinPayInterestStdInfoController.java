@@ -33,7 +33,7 @@ public class FinPayInterestStdInfoController {
     private FinPayInterestStdInfoService finPayInterestStdInfoService;
     
     @GetMapping("getFinPayInterestStdInfoByProductId")
-    public FinPayInterestStdInfoDto getFinInterestFactorByProductId(String finprodId,String vdate,String cashType,String finprodType) throws Exception {
+    public FinPayInterestStdInfoDto getFinInterestFactorByProductId(String finprodId,String vdate,String cashType,String finprodType) {
     	return finPayInterestStdInfoService.getFinPayInterestStdInfoByProductId(finprodId, vdate,cashType,finprodType);
     }
 }

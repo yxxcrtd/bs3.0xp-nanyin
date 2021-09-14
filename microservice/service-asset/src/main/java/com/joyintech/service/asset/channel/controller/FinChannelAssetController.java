@@ -49,7 +49,7 @@ public class FinChannelAssetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ChannelAssetDto> selectAll(@RequestBody Map<String, Object> param, 
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length)  {
         return channelAssetService.selectForPage(page,length,param);
     }
     
@@ -64,7 +64,7 @@ public class FinChannelAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody ChannelAssetDto dto) throws Exception {
+    public void insert(@RequestBody ChannelAssetDto dto) {
         channelAssetService.insert(dto);
     }
     
@@ -78,7 +78,7 @@ public class FinChannelAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody ChannelAssetDto dto) throws Exception{
+    public void update(@RequestBody ChannelAssetDto dto) {
         channelAssetService.update(dto);
     }
     
@@ -92,7 +92,7 @@ public class FinChannelAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody ChannelAssetDto dto) throws Exception{
+    public void delete(@RequestBody ChannelAssetDto dto) {
         channelAssetService.delete(dto);
     }
     
@@ -105,7 +105,7 @@ public class FinChannelAssetController {
      * @since 1.0
      */
     @PostMapping("getBasicInfo")
-    public ChannelAssetDto getBasicInfo(@RequestBody Map<String,Object> parm) throws Exception {
+    public ChannelAssetDto getBasicInfo(@RequestBody Map<String,Object> parm){
         return channelAssetService.getBasicInfo(parm);
     }
     

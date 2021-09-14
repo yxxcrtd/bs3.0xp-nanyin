@@ -3,6 +3,7 @@ package com.joyintech.service.riskrds.limitmanagement.portfolioindicator.service
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao.RskSupervisionPortfPoint002Mapper;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dao.RskSupervisionPortfPointMapper;
 import com.joyintech.service.riskrds.limitmanagement.portfolioindicator.dto.RskPortfolioIndicator002Dto;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -34,7 +36,8 @@ public class RskSupervisionPortfPoint002Service extends BaseService<RskSupervisi
     @Autowired
     private RskSupervisionPortfPointMapper rskSupervisionPortfPointMapper;
 
-
+    @Autowired
+    private PlatformDate platformDateService;
     /**
      * 组合关联查询监督指标
      * 
@@ -43,7 +46,7 @@ public class RskSupervisionPortfPoint002Service extends BaseService<RskSupervisi
      */
     public Page<RskSupervisionIndicator002Dto> queryRelatedIndList(int page, int length,
                                                                    Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPoint002Mapper.queryRelatedIndList(param));
     }
@@ -55,7 +58,9 @@ public class RskSupervisionPortfPoint002Service extends BaseService<RskSupervisi
      * @return
      */
     public String getPortfolioConst(String portfolioCode) {
-        return rskSupervisionPortfPoint002Mapper.getPortfolioConst(portfolioCode);
+        Date sysDate = platformDateService.getSysDate();
+
+        return rskSupervisionPortfPoint002Mapper.getPortfolioConst(portfolioCode,sysDate);
     }
 
     /**

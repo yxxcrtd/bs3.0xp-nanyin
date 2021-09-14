@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.svreport.chb.assetinfodetail.service;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
@@ -28,6 +29,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.common.constant.SvrServiceApplication;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dao.AssetInfoDetailMapper;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinforeg.dao.AssetInfoRegist001Mapper;
@@ -56,7 +58,7 @@ import java.util.stream.Collectors;
 /**
  * 资产基本信息维护Service
  */
-@Service(value="svrAssetInfoDetailService")
+@Service(value="svrAssetInfoDetailService_dtx")
 @Transactional(rollbackFor = Exception.class)
 public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDetailDto> {
 
@@ -120,25 +122,26 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
         return page;
 	}
 
-	/**
-	 * 数据赋值 marge模式
-	 * @param dto
-	 * @return
-	 */
-	public Integer doSave(AssetInfoDetailDto dto){
+	@Transactional
+	@DTXTransaction
+	public Integer doComplete(AssetInfoDetailDto dto){
 		int  flag = 0;
-		List<ChbAssetInfo> assetInfo = new ArrayList<>();
-		//数据保存.使用marge模式.避免出现老数据仍然出现的问题
-		if(StringUtil.isNotEmpty(dto)){
-			assetInfo.add(dto);
-			flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
-		}
-		/**
-		 * 如果是待处理数据,则将错误信息表里面的数据删除
-		 */
-		if(DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())){
-			assetInfoDetailMapper.deleteErrorMsg(dto.getAssetCode());
+		if (StringUtil.equals(dto.getOperateType(), "DELETE")) {//删除操作
+			flag = this.doDelete(dto);
+		}else {
+			List<ChbAssetInfo> assetInfo = new ArrayList<>();
+			//数据保存.使用marge模式.避免出现老数据仍然出现的问题
+			if (StringUtil.isNotEmpty(dto)) {
+				assetInfo.add(dto);
+				flag = assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			}
+			/**
+			 * 如果是待处理数据,则将错误信息表里面的数据删除
+			 */
+			if (DictCodeListExt3.中债_处理状态_待处理.getValue().equals(dto.getDataStatus())) {
+				assetInfoDetailMapper.deleteErrorMsg(dto.getAssetCode());
 
+			}
 		}
 
 		return flag;
@@ -173,5 +176,48 @@ public class AssetInfoDetail001Service extends CommonExportService<AssetInfoDeta
 	public AssetInfoDetailDto getAssetInfoByUUid(String UUid){
 		return assetInfoDetailMapper.getAssetInfoDetail(UUid);
 	}
+	
+	public List<ExcelValidDto> importData(List<AssetInfoDetailDto> dataList){
+		List<ExcelValidDto> checkResult = new ArrayList<>();
+		if(!StringUtil.isEmptyList(dataList)){
+	/*		List<AssetInfoDetailDto> existAsset = assetInfoDetailMapper.selectKeyListData(dataList);
+			List<ChbAssetInfo> insertList = new ArrayList<>();
+			List<ChbAssetInfo> updateList = new ArrayList<>();
+			if (StringUtil.isEmptyList(existAsset)){
+				insertList.addAll(dataList);
+			}else {
+				List<String> assetCodes = new ArrayList<>();
+				Map<String,String> keyMap = new HashMap<>();
+				existAsset.forEach(assetInfoDetailDto -> {
+                    assetCodes.add(assetInfoDetailDto.getAssetCode());
+                    keyMap.put(assetInfoDetailDto.getAssetCode(),assetInfoDetailDto.getAssetUuid());
+				});
+				dataList.forEach(assetInfoDetailDto -> {
+					if (assetCodes.contains(assetInfoDetailDto.getAssetCode())){
+						assetInfoDetailDto.setAssetUuid(keyMap.get(assetInfoDetailDto.getAssetCode()));
+						updateList.add(assetInfoDetailDto);
+					}else {
+						insertList.add(assetInfoDetailDto);
+					}
+				});
+			}
+			if(!StringUtil.isEmptyList(insertList)){
+				assetInfoDetailMapper.insertBatch(insertList);
+			}
+			if(!StringUtil.isEmptyList(updateList)){
+				assetInfoDetailMapper.updateBatchNotCheckNull(updateList);
+			}*/
+			List<ChbAssetInfo> assetInfo = new ArrayList<>();
+			dataList.forEach(assetInfoDetailDto -> {
+				assetInfo.add(assetInfoDetailDto);				
+			});
+			assetInfoDetailMapper.mergeInfoListEx(assetInfo);
+			return checkResult;
+		}
+		checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(0),
+				this.getMessage("REPORT_COMMON_FILE_E_0016")));
+		return  checkResult;
+	}
+
 
 }

@@ -55,24 +55,19 @@ public class ValBondRealRate001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValBondRealRate001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
-//        Map<String, Object> reqMap = RequestUtil.getPageParam();
+			@PathVariable("page") int page, @PathVariable("length") int length){
         return valBondRealRate001Service.findPage(page, length, param);
     }
     
     
     @PostMapping("findAll")
-    public List<ValBondRealRate001Dto> findAll(@RequestBody Map<String, Object> param)
-        throws Exception {
-//        Map<String, Object> reqMap = RequestUtil.getPageParam();
+    public List<ValBondRealRate001Dto> findAll(@RequestBody Map<String, Object> param){
         return valBondRealRate001Service.findAll(param);
     }
 
     /**
      * 账套获取
      * 
-     * @param request HttpServletRequest
      * @return Page<SelectOptionDto>
      * @see
      * @since 1.0
@@ -85,8 +80,6 @@ public class ValBondRealRate001Controller extends BaseController {
 
     /**
      * 债券获取
-     * 
-     * @param request HttpServletRequest
      * @return Page<SelectOptionDto>
      * @see
      * @since 1.0

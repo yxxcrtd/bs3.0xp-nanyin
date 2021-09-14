@@ -60,7 +60,7 @@ public class FundSecuritiesAccountController {
     @PostMapping("findPage/{page}/{length}")
     public Page<FundSecuritiesAccountDto> selectAll(@RequestBody Map<String, Object> param,
         @PathVariable("page")int page,@PathVariable("length")int length)
-        throws Exception {
+    {
         return fundSecuritiesAccountService.selectForPage(page,length,param);
     }
     
@@ -74,7 +74,7 @@ public class FundSecuritiesAccountController {
          */
     @GetMapping("selectBySecAcctId")
         public StlSecAcctInfo selectBySecAcctId(String secAcctId)
-            throws Exception {
+    {
             return fundSecuritiesAccountService.selectBySecAcctId(secAcctId);
         }
 
@@ -88,7 +88,7 @@ public class FundSecuritiesAccountController {
      */
     @GetMapping("getSecAcctId")
     public List<SuggestDto> getSecAcctId(String secAcctId)
-        throws Exception {
+    {
         List<SuggestDto> temp = fundSecuritiesAccountService.getSecAcctId(secAcctId);
         return temp;
     }
@@ -103,7 +103,7 @@ public class FundSecuritiesAccountController {
      */
     @GetMapping("getSecManager")
     public List<SuggestDto> getSecManager(String manager)
-        throws Exception {
+    {
         List<SuggestDto> temp = fundSecuritiesAccountService.getSecManager(manager);
         return temp;
     }
@@ -117,7 +117,7 @@ public class FundSecuritiesAccountController {
      */
     @GetMapping("getSecManagerSelect")
     public List<SelectOptionDto> getSecManagerSelect(String manager)
-        throws Exception {
+    {
         List<SelectOptionDto> tempList = fundSecuritiesAccountService.getSecManagerSelect(manager);
         
         return tempList ;
@@ -137,7 +137,7 @@ public class FundSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody StlSecAcctInfo dto) throws Exception {
+    public int delete(@RequestBody StlSecAcctInfo dto) {
         return fundSecuritiesAccountService.delete(dto);
     }
     /**
@@ -154,7 +154,7 @@ public class FundSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody FundSecuritiesAccountDto dto) throws Exception {
+    public int insert(@RequestBody FundSecuritiesAccountDto dto) {
         return fundSecuritiesAccountService.insert(dto);
     }
     /**
@@ -171,7 +171,7 @@ public class FundSecuritiesAccountController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody FundSecuritiesAccountDto dto) throws Exception {
+    public int update(@RequestBody FundSecuritiesAccountDto dto) {
         return fundSecuritiesAccountService.update(dto);
     }
     /**
@@ -185,7 +185,7 @@ public class FundSecuritiesAccountController {
      */
     @PostMapping("checkBySecAcctId")
     public int checkBySecAcctId(@RequestBody FundSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = fundSecuritiesAccountService.checkBySecAcctId(dto);
         return count;
     }
@@ -200,7 +200,7 @@ public class FundSecuritiesAccountController {
      */
     @PostMapping("checkBySecAcctName")
     public int checkBySecAcctName(@RequestBody FundSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = fundSecuritiesAccountService.checkBySecAcctName(dto);
         return count;
     }
@@ -215,7 +215,7 @@ public class FundSecuritiesAccountController {
      */
     @PostMapping("checkByTrdAcctId")
     public int checkByTrdAcctId(@RequestBody FundSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = fundSecuritiesAccountService.checkByTrdAcctId(dto);
         return count;
     }
@@ -230,7 +230,7 @@ public class FundSecuritiesAccountController {
      */
     @PostMapping("checkCodeIsUse")
     public int checkCodeIsUse(@RequestBody FundSecuritiesAccountDto dto)
-        throws Exception {
+    {
         int count = fundSecuritiesAccountService.checkCodeIsUse(dto);
         return count;
     }
@@ -245,7 +245,7 @@ public class FundSecuritiesAccountController {
      */
     @PostMapping("checkAllCodeIsUse")
     public List<FundSecuritiesAccountDto> checkAllCodeIsUse(@RequestBody List<FundSecuritiesAccountDto> item)
-        throws Exception {
+    {
         return fundSecuritiesAccountService.checkAllCodeIsUse(item);
     }
 

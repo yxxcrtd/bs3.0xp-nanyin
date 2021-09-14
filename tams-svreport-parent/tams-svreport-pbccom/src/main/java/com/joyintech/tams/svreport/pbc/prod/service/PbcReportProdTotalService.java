@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,6 @@ import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.system.base.entity.SysInstitution;
 import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.ChbCcyConvertUtil;
@@ -102,9 +99,10 @@ public abstract class PbcReportProdTotalService extends PbcExportService  {
     @SuppressWarnings("unchecked")
 	@Override
     public Map<Object, Object> createDataMS(Map<String,Object> param){
-    	return restTemplate.postForObject(
+		Map<Object, Object> map= restTemplate.postForObject(
         		SvrServiceApplication.PBC_SERVICE_NAME + "/PbcMonthReportProd/createDataProd",param,
         		Map.class);
+		return map;
     }
 
     

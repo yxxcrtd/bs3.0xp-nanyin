@@ -12,9 +12,11 @@
     
     <update id="updatePlateDate" parameterType="date">
         UPDATE SYS_DATE SET CUR_DATE = #{date}, UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP
+        WHERE 1=1
     </update>
     <update id="updateSysdate">
         UPDATE SYS_DATE SET CUR_DATE = CUR_DATE + 1, UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP
+        WHERE 1=1
     </update>
     
     <select id="getSequenceIndexData" parameterType="java.util.Map"
@@ -78,5 +80,23 @@
             AND ACCT_TYPE = #{acctType,jdbcType=VARCHAR}
             and rownum = 1
 	</select>
-	
+    <!-- 是否节假日 -->
+    <select id="getIsHoliday" parameterType="java.util.Map" resultType="String">
+        SELECT
+        IS_HOLIDAY
+        FROM
+        VAL_VW_MST_HOLIDAY
+        WHERE CDATE = #{cdate}
+        AND TRADE_CALENDAR_ID = #{calendarId}
+    </select>
+
+    <!-- 查询上一工作日 -->
+    <select id="getLastWorkDate" parameterType="java.util.Map" resultType="java.util.Date">
+        SELECT MAX(CDATE)
+        FROM VAL_VW_MST_HOLIDAY
+        WHERE CDATE <![CDATA[<]]> #{cdate}
+        AND IS_HOLIDAY = #{isHoliday}
+        AND TRADE_CALENDAR_ID = #{calendarId}
+    </select>
+
 </mapper>

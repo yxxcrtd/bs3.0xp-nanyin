@@ -48,7 +48,7 @@ public class ValProductInfoQuery006Controller extends BaseController{
 
 	@RequestMapping("findPage")
     @ResponseBody
-    public Page<ValProductInfoAcctDto> findPage() throws Exception{
+    public Page<ValProductInfoAcctDto> findPage()  {
         return valProductInfoQuery006Service.findBankdesc(RequestUtil.getPageParam());
     }
 

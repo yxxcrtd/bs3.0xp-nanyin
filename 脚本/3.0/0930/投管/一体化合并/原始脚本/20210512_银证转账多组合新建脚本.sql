@@ -1,0 +1,24 @@
+/*银证转账多组合脚本 add by zhuruqing 20201104 start*/
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'PtlFundAllocation003';
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('PtlFundAllocation003', 'PTL', '/invest/portfolio/ptlfundallocation/PtlFundAllocation003', 'invest/portfolio/ptlfundallocation/PtlFundAllocation003', null, null, null, '03', '01', '银证转账多组合新建', 'system', null, sysdate, 'system', sysdate);
+
+DELETE FROM SYS_WFL_BUSINESS_MODULE WHERE PAGE_ID = 'PtlFundAllocation003';
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, INSTITUTION_CODE, IS_SEND_UORG, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('PtlFundAllocation003', 'PtlFundAllocation003_btn_save', 'ALL', '02', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate);
+INSERT INTO SYS_WFL_BUSINESS_MODULE (PAGE_ID, ELEMENT_ID, INSTITUTION_CODE, IS_SEND_UORG, MODULE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('PtlFundAllocation003', 'PtlFundAllocation003_btn_submit', 'ALL', '02', 'oneApproval', 'system', '0001', sysdate, 'system', sysdate);
+/*银证转账多组合脚本 add by zhuruqing 20201104 end*/
+
+
+/*银证转账下拉框枚举 by caizhi  20201105 start*/
+DELETE FROM SYS_PAGE_DICTLIST WHERE PAGE_ID='PtlFundAllocation003';
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE) VALUES ('PtlFundAllocation003', '999999', 'ORDER_TYPE', '1001', '银证转账', null, 'admin', null, sysdate, 'admin', sysdate,'');
+INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,INSTITUTION_CODE) VALUES ('PtlFundAllocation003', '999999', 'ORDER_TYPE', '1002', '证银转账', null, 'admin', null, sysdate, 'admin', sysdate,'');
+/*银证转账下拉框枚举 by caizhi  20201105 end*/ 
+
+--画面要素
+delete from sys_page_element where PAGE_ID ='PtlFundAllocation001' and ELEMENT_ID='PtlFundAllocation001_btn_add_dzh';
+insert into sys_page_element (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADMIN_FLAG)
+values ('PtlFundAllocation001', 'PtlFundAllocation001_btn_add_dzh', '01', '01', '', '多组合新建', 'system', '', sysdate, 'system', sysdate, 'C');
+
+--草稿箱模式非对象画面表
+delete from SYS_TRASH_NOT_TARGET_PAGE where SEQ_NO = 'A6986B98361453A7E08553CAA8C081D0';
+insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO, PAGE_ID) values ('A6986B98361453A7E08553CAA8C081D0', 'PtlFundAllocation003');

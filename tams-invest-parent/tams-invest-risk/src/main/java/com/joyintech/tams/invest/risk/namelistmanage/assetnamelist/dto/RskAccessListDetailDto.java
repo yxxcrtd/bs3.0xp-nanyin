@@ -94,4 +94,14 @@ public class RskAccessListDetailDto extends RskAccessListDetail {
     public void setListLevel(String listLevel) {
         this.listLevel = listLevel;
     }
+
+    private String operatePsStr;
+
+    public String getOperatePsStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.名单操作方向, this.getOperatePs());
+    }
+
+    public void setOperatePsStr(String operatePsStr) {
+        this.operatePsStr = operatePsStr;
+    }
 }

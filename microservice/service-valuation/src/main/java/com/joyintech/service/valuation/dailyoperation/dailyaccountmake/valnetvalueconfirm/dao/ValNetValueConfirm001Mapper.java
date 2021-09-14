@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -30,7 +31,7 @@ import com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valnetval
  * @see ValNetValueConfirm001Mapper
  * @since 1.0
  */
-@RestController(value="serviceValNetValueConfirm001Mapper")
+@Repository(value="serviceValNetValueConfirm001Mapper")
 public interface ValNetValueConfirm001Mapper {
     
     /**

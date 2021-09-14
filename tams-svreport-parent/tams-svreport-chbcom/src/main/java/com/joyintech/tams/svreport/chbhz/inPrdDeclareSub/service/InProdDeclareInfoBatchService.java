@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
@@ -140,10 +141,18 @@ public class InProdDeclareInfoBatchService extends FileImpService {
 		// 3.2.1查询已经在登记表中存在的数据
 		// 定义已经在登记表存在的数据
 		List<PerProDeclareRegDto> chbPrdDeclareSubListin = new ArrayList<>();
-		chbPrdDeclareSubListin = inprodDeclareInfoSvrMapper.genChbPrdDeclareSubList(keylist);
+		List<PerProDeclareRegDto> chbPrdDeclareSubListUnSend = new ArrayList<>();
+
+		List<PerProDeclareRegDto> chbPrdDeclareSubListAll = inprodDeclareInfoSvrMapper.genChbPrdDeclareSubList(keylist);
+		if(!StringUtil.isEmptyList(chbPrdDeclareSubListAll)){
+			chbPrdDeclareSubListin = chbPrdDeclareSubListAll.stream().filter(x -> StringUtil.equals(x.getSendStatus(), "02") || StringUtil.equals(x.getSendStatus(), "03")).collect(Collectors.toList());
+			chbPrdDeclareSubListUnSend = chbPrdDeclareSubListAll.stream().filter(x -> StringUtil.equals(x.getSendStatus(), "01")).collect(Collectors.toList());
+		}
 
 		// 3.2.2 将已存在报送中的数据放入map中
 		Map<String, PerProDeclareRegDto> mapSub = chbPrdDeclareSubListin.stream().collect(
+				Collectors.toMap(PerProDeclareRegDto::getProdInsId, perProDeclareRegDto -> perProDeclareRegDto, (v1, v2) -> v1));
+		Map<String, PerProDeclareRegDto> mapUnSendSub = chbPrdDeclareSubListUnSend.stream().collect(
 				Collectors.toMap(PerProDeclareRegDto::getProdInsId, perProDeclareRegDto -> perProDeclareRegDto, (v1, v2) -> v1));
 
 		// 报送时点
@@ -178,6 +187,15 @@ public class InProdDeclareInfoBatchService extends FileImpService {
 			sub.setIssuePartyId(CommonUtil.selectBankCode());
             //报送流水号
 			sub.setSumitSeq(CommonUtil.getSequenceIndexData(DataIndexSequenceType.中债登记管理));
+
+			// add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 start
+			if (mapUnSendSub.containsKey(sub.getProdInsId())){
+				sub.setNineFile(mapUnSendSub.get(sub.getProdInsId()).getNineFile());
+				sub.setFileNo(mapUnSendSub.get(sub.getProdInsId()).getFileNo());
+				sub.setFileNum(mapUnSendSub.get(sub.getProdInsId()).getFileNum());
+			}
+			// add by zhangliang 20210306 先上传九大附件，然后修改了申报基本信息，重新执行“产品发行申报登记报送”批处理，已上传的附件在前台无法下载 备注：CHB_PRD_DECLARE_SUB表的NINE_FILE、FILE_NO、FILE_NUM字段变成空了 end
+
 			// 业务表不存在数据：
 			if (!mapSub.containsKey(sub.getProdInsId())) {
 				deleteList.add(sub);
@@ -338,7 +356,7 @@ public class InProdDeclareInfoBatchService extends FileImpService {
 	public boolean compareRegData(PerProDeclareRegDto dto, PerProDeclareRegDto regdto) {
 		PerProDeclareRegDto compare1 = genDeclareDto(dto);
 		PerProDeclareRegDto compare2 = genDeclareDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;
@@ -660,8 +678,10 @@ public class InProdDeclareInfoBatchService extends FileImpService {
         	   info.setCreateUser("system");
         	   //状态
         	   info.setStatus("E");
-        	   System.out.println(info.getProduuid());
-        	   System.out.println(info.getProdId());
+//        	   System.out.println(info.getProduuid());
+        	   logger.info(info.getProduuid());
+//        	   System.out.println(info.getProdId());
+        	   logger.info(info.getProdId());
         	   insertInfo.add(info);
            }
     	   }

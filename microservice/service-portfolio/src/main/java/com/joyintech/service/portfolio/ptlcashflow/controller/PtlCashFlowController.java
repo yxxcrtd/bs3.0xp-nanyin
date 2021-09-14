@@ -126,7 +126,7 @@ public class PtlCashFlowController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlCashFlowDto> selectAll(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+         @PathVariable("page") int page, @PathVariable("length") int length)  {
 
         param.put("validStatus_02", DictCodeListExt1.交易流程状态_有效.getValue());
         param.put("validStatus_01", DictCodeListExt1.交易流程状态_流程中.getValue());

@@ -33,8 +33,8 @@
         <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
-        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="DATE" />
-        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="DATE" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
         <result column="SUBMIT_FEEDBACK_STATUS" property="submitFeedbackStatus" jdbcType="VARCHAR" />
         <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
         <result column="STATUS_DATE" property="statusDate" jdbcType="DATE" />
@@ -165,7 +165,8 @@
 			SEND_STATUS,
 			STATUS_DATE,
 			SUBMIT_TIME,
-			REMARK
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
       )
       SELECT  
             EMPLOYEEINFO_SEQUENCE.NEXTVAL,
@@ -206,7 +207,8 @@
 			SEND_STATUS,
 			STATUS_DATE,
 			SUBMIT_TIME,
-			REMARK
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
       FROM CHB_EMPLOYEE_INFO_SUB
       WHERE 1 =1
        <if test="registList !=null and registList.size()>0">
@@ -284,7 +286,8 @@
 			SEND_STATUS,
 			STATUS_DATE,
 			SUBMIT_TIME,
-			REMARK
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
       )
       select   
 			EMPLOYEE_TYPE,
@@ -324,7 +327,8 @@
 			SEND_STATUS,
 			STATUS_DATE,
 			SUBMIT_TIME,
-			REMARK
+			REMARK,
+			SUBMIT_FEEDBACK_MSG
       from (
         select HIS_NO,
 			EMPLOYEE_TYPE,
@@ -365,6 +369,7 @@
 			STATUS_DATE,
 			SUBMIT_TIME,
 			REMARK,
+			SUBMIT_FEEDBACK_MSG,
             rank() over (partition by  EMPLOYEE_TYPE,IDENTIFY_NUMBER order by nvl(update_time,create_time) desc) ranknum
          from CHB_EMPLOYEE_INFO_SUB_HIS 
          where 1=1
@@ -436,8 +441,13 @@
 		FROM CHB_EMPLOYEE_INFO_SUB
 		WHERE 1=1
 		<if test="keyList != null and keyList.size()>0">
+		<!--  
 		    <foreach collection="keyList" item="item" open="AND (EMPLOYEE_TYPE||IDENTIFY_NUMBER||STATUS) IN (" separator="," close=")">
 		        #{item.employeeType,jdbcType=VARCHAR}||#{item.identifyNumber,jdbcType=VARCHAR}||#{item.status,jdbcType=VARCHAR}
+		    </foreach>
+		 add by zhangweiqi   HYXXDJZL-131 从业人员登记页面导出中债excel，导出的压缩包是空的-->
+		      <foreach collection="keyList" item="item" open="AND SUMIT_SEQ IN (" separator="," close=")">
+		        #{item.sumitSeq,jdbcType=VARCHAR}
 		    </foreach>
 		</if>
 		ORDER BY SUBMIT_DEADLINE

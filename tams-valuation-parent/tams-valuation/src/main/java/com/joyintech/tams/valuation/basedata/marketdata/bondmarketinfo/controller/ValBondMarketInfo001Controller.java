@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.bondmarketinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +83,7 @@ public class ValBondMarketInfo001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValBondMarketInfo001Dto> queryPageList() throws Exception{
+    public Page<ValBondMarketInfo001Dto> queryPageList() {
         Map<String, Object> params= RequestUtil.getPageParam();
         params.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
 //        ValBondMarketInfo001SearchDto dto = (ValBondMarketInfo001SearchDto)JsonUtils.map2entity(params, ValBondMarketInfo001SearchDto.class);
@@ -125,8 +126,7 @@ public class ValBondMarketInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= RequestUtil.getPageParam();
         params.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());

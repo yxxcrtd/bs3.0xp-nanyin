@@ -39,7 +39,7 @@ public class OutflowFundsCheckManagementController {
     @PostMapping("getPortfolioId/{page}/{length}")
     public Page<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                 @PathVariable("length") int length)
-        throws Exception {
+    {
         return outflowFundsCheckManagementService.getPortfolioId(page, length, param);
     }
 

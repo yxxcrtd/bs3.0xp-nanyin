@@ -79,6 +79,19 @@ public class ChbAssetInfoErrodata extends BaseEntity {
     private String assetName;
 
     /**
+     * 交易流通场所
+     */
+    private String tradeMarket;
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
+    }
+
+    /**
      * 取得 uuid主键
      * @return uuid主键
      */

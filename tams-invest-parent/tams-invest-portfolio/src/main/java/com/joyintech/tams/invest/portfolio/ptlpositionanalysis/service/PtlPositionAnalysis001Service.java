@@ -41,7 +41,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -63,7 +62,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -85,7 +83,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -99,7 +96,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -146,7 +142,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -170,7 +165,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -201,6 +195,16 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
                         + "/PtlPositionAnalysis/getPortFolioInfo" , map,
                 SelectOptionDto.class);
     }
-    
-    
+
+    /**
+     * 剩余金额的信息
+     * @param map
+     * @return
+     */
+    public List<PtlPositionAnalysis002Dto> selectRemain(Map<String,Object> map ){
+        List<PtlPositionAnalysis002Dto> typelist = simpleRestTemplate.postForList(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/selectPeiZhiRemain",
+                map, PtlPositionAnalysis002Dto.class);
+        return typelist;
+    }
 }

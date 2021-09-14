@@ -98,22 +98,24 @@ public class BankInterestMsg extends MsgExecuteService{
 			msgcontainer.setObjID(bkInteAcct.getId());
 			msgcontainer.setEntityObj(bkInteAcct);
 		}else{
-			oldBkInteAcct.setIntperiodconv(bkInteAcct.getIntperiodconv());
-			oldBkInteAcct.setMasterrecname(bkInteAcct.getMasterrecname());
-			oldBkInteAcct.setBkinfo(bkInteAcct.getBkinfo());
-			bkInteAcctDao.updateEntity(oldBkInteAcct);
-			
-			CashFlowCfg oldCashFlowCfg=oldBkInteAcct.getCashFlowCfg();
-			oldCashFlowCfg.setCpnDelayDateNum(cashFlowCfg.getCpnDelayDateNum());
-			oldCashFlowCfg.setCpnDelayDateType(cashFlowCfg.getCpnDelayDateType());
-			oldCashFlowCfg.setIntCode(cashFlowCfg.getIntCode());
-			oldCashFlowCfg.setCpnFreq(cashFlowCfg.getCpnFreq());
-			oldCashFlowCfg.setCpnMo(cashFlowCfg.getCpnMo());
-			oldCashFlowCfg.setCpnDate(cashFlowCfg.getCpnDate());
-			cashFlowCfgDao.updateEntity(oldCashFlowCfg);
-			
-			msgcontainer.setObjID(oldBkInteAcct.getId());
-			msgcontainer.setEntityObj(oldBkInteAcct);
+			if (oldBkInteAcct != null){
+				oldBkInteAcct.setIntperiodconv(bkInteAcct.getIntperiodconv());
+				oldBkInteAcct.setMasterrecname(bkInteAcct.getMasterrecname());
+				oldBkInteAcct.setBkinfo(bkInteAcct.getBkinfo());
+				bkInteAcctDao.updateEntity(oldBkInteAcct);
+
+				CashFlowCfg oldCashFlowCfg=oldBkInteAcct.getCashFlowCfg();
+				oldCashFlowCfg.setCpnDelayDateNum(cashFlowCfg.getCpnDelayDateNum());
+				oldCashFlowCfg.setCpnDelayDateType(cashFlowCfg.getCpnDelayDateType());
+				oldCashFlowCfg.setIntCode(cashFlowCfg.getIntCode());
+				oldCashFlowCfg.setCpnFreq(cashFlowCfg.getCpnFreq());
+				oldCashFlowCfg.setCpnMo(cashFlowCfg.getCpnMo());
+				oldCashFlowCfg.setCpnDate(cashFlowCfg.getCpnDate());
+				cashFlowCfgDao.updateEntity(oldCashFlowCfg);
+
+				msgcontainer.setObjID(oldBkInteAcct.getId());
+				msgcontainer.setEntityObj(oldBkInteAcct);
+			}
 		}
 	}
 

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.tams.valuation.basedata.marketdata.valshareprice.dto.ValSharePriceDto;
 import com.joyintech.tams.valuation.basedata.marketdata.valshareprice.service.ValSharePriceService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -115,7 +116,7 @@ public class ValSharePrice002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValSharePriceDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValSharePriceDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -148,7 +149,7 @@ public class ValSharePrice002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
     public Page<SelectOptionDto> getFinprodIdForAdd() 
-        throws Exception {
+         {
         Page<SelectOptionDto> temp = ValSharePriceService.getFinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -161,7 +162,7 @@ public class ValSharePrice002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getLatelyShareById")
     public ValSharePriceDto getLatelyShareById() 
-        throws Exception {
+         {
     	ValSharePriceDto temp = ValSharePriceService.getLatelyShareById(RequestUtil.getPageParam());
         return temp;
     }

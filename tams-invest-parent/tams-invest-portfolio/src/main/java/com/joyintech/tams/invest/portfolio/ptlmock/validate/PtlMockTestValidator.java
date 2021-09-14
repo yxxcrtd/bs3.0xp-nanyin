@@ -92,7 +92,7 @@ public class PtlMockTestValidator implements BeanValidator {
                 List<PtlMockTestTradeDto> list = inputDto.getPageMockDealList();
                 Map<String, List<PtlMockTestTradeDto>> 买入map = list.stream().filter(x->
                         StringUtil.equals(DictCodeList.交易方向_买入.getValue(),x.getPs())&&StringUtil.isNotEmpty(x.getFinprodId()))
-                        .collect(Collectors.groupingBy(PtlMockTestTradeDto::getFinprodId));
+                        .collect(Collectors.groupingBy(score -> score.getPortfolioId() + '_' + score.getFinprodId()));
                 Map<String,BigDecimal> 卖出map = new HashMap<>();
                 String tableName = "模拟交易";
                 for (int i = 0; i < list.size(); i++ ) {
@@ -188,13 +188,14 @@ public class PtlMockTestValidator implements BeanValidator {
                                     tradeDto.getType8())) {
                                 amount = ArithmeticUtil.divide(amount,new BigDecimal(100),2);
                             }
-                            String key = tradeDto.getFinprodId();
+                            String keyTemp = tradeDto.getPortfolioId() + "_" + tradeDto.getFinprodId();
+                            String key = tradeDto.getPortfolioId() + "_" + tradeDto.getFinprodId();
                             if (StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),
                                     tradeDto.getType8())) {
                                 key = key +"_"+tradeDto.getInvAim();
                             }
-                            if(买入map.get(tradeDto.getFinprodId())!=null)
-                            买入数量 = 买入map.get(tradeDto.getFinprodId()).stream().filter(x->!StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),
+                            if(买入map.get(keyTemp)!=null)
+                            买入数量 = 买入map.get(keyTemp).stream().filter(x->!StringUtil.equals(DictCodeList.平安资产类型_债券.getValue(),
                                     tradeDto.getType8())||StringUtil.equals(tradeDto.getInvAim(),x.getInvAim()))
                                     .map(PtlMockTestTradeDto::getAmount).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
                             BigDecimal 已经卖出数量 = 卖出map.get(key) ==null ?BigDecimal.ZERO:卖出map.get(key);

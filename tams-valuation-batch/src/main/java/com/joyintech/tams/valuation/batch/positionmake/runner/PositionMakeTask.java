@@ -1,11 +1,20 @@
 package com.joyintech.tams.valuation.batch.positionmake.runner;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.joyintech.batch.batchbase.baseclass.*;
+import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
+import com.joyintech.batch.batchbase.exception.BatchException;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookCommonLogic;
 import com.joyintech.tams.valuation.batch.positionmake.processor.PositionMakeInterfProcessor;
+import com.joyintech.tams.valuation.batch.positionmake.processor.PositionMakeProcessor;
 import com.joyintech.tams.valuation.batch.positionmake.reader.PositionMakeInterfReader;
+import com.joyintech.tams.valuation.batch.positionmake.reader.PositionMakeReader;
 import com.joyintech.tams.valuation.batch.positionmake.writer.PositionMakeInterfWriter;
+import com.joyintech.tams.valuation.batch.positionmake.writer.PositionMakeWriter;
+import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,21 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
-import com.joyintech.batch.batchbase.baseclass.BaseReader;
-import com.joyintech.batch.batchbase.baseclass.BaseWriter;
-import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.batch.batchbase.baseclass.BatchBuilder;
-import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
-import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
-import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.valuation.batch.common.accountingmethod.accounting.BookCommonLogic;
-import com.joyintech.tams.valuation.batch.positionmake.processor.PositionMakeProcessor;
-import com.joyintech.tams.valuation.batch.positionmake.reader.PositionMakeReader;
-import com.joyintech.tams.valuation.batch.positionmake.writer.PositionMakeWriter;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 头寸生成批处理
@@ -105,7 +101,7 @@ public class PositionMakeTask extends BatchBaseService {
 		params.put(BookConstant.BOOKSET_DATE, DateUtil.parse(dimValueMap.get(BookConstant.BOOKSET_DATE)));
 		params.put(BookConstant.BOOK_DATE, DateUtil.parse(dimValueMap.get(BookConstant.BOOKSET_DATE)));
 		params.put(BookConstant.HAPPEN_DATE, DateUtil.parse(dimValueMap.get(BookConstant.BOOKSET_DATE)));
-		params.put("seqNo", this.getBatchExecuteDetail().getSeqNo());
+		params.put("seqNo", IDGenerator.generate());
 		params.put("taskId", this.getBatchExecuteInfo().getTaskId());
 		params.put(GlobalConstant.BOOKSETS, this.getProductIdList());
         params.put(BookConstant.IS_SUB_BOOKSET, dimValueMap.get(BookConstant.IS_SUB_BOOKSET));

@@ -1,0 +1,8 @@
+--当前数据库为GBK
+UPDATE CHB_DATACHECK_RULE_INV SET CHECKMETHOD = 'lessThanCharLength' where CHECKMETHOD in ('lessThanCharLengthUTF8');
+UPDATE CHB_DATACHECK_CONDITION_INV SET CHECKMETHOD = 'lessThanCharLength' where CHECKMETHOD in ('lessThanCharLengthUTF8');
+
+
+--当前数据库为UTF8
+UPDATE CHB_DATACHECK_RULE_INV SET CHECKMETHOD = 'lessThanCharLengthUTF8' where CHECKMETHOD in ('lessThanCharLength');
+UPDATE CHB_DATACHECK_CONDITION_INV SET CHECKMETHOD = 'lessThanCharLengthUTF8' where CHECKMETHOD in ('lessThanCharLength');

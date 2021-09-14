@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.productplanning.tacticconfig.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,7 @@ public class TacticConfig001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export(){
 		return tacticConfig001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 	
@@ -77,7 +78,7 @@ public class TacticConfig001Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("/delete")
 	public AjaxResult delete(@RequestBody @Validated({ ValidateGroupEdit.class }) TacticConfig001Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

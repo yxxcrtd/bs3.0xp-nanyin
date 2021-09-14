@@ -79,7 +79,9 @@ public class SocketThreadHandler implements Runnable {
                 int reciveLent = 0;
                 // 先截取报文前长度=length的内容
                 char cbuf1[] = new char[Integer.parseInt(length)];
-                inputStreamReader.read(cbuf1);
+                if(inputStreamReader!=null) {
+                    inputStreamReader.read(cbuf1);
+                }
                 String reciveLentTmp = "";
                 for (int i = 0; i < cbuf1.length; i++) {
                     reciveLentTmp += cbuf1[i];
@@ -88,7 +90,9 @@ public class SocketThreadHandler implements Runnable {
                 // 读取前length位以外的报文信息
 //                char cbuf2[] = new char[reciveLent - Integer.parseInt(length)];
                 char cbuf2[] = new char[reciveLent];
-                inputStreamReader.read(cbuf2);// 报文去除前length位后剩余的部分
+                if(inputStreamReader!=null) {
+                    inputStreamReader.read(cbuf2);// 报文去除前length位后剩余的部分
+                }
                 for (int i = 0; i < cbuf2.length; i++ ) {
                     reciveStr += cbuf2[i];
                 }

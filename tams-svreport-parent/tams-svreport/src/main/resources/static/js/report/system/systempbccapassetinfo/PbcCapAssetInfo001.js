@@ -43,6 +43,7 @@
             }
         },
         cols: [
+             { title: "assetUuid", field:'assetUuid',visible:false},
             { title: "行内资产/负债编码", field:'assetCode',width:180},
             { title: "资产名称", field:'assetName'},
             { title: "*人行资金信托代码", field:'pobcassetid'},

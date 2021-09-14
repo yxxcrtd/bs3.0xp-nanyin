@@ -216,16 +216,8 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
 
     // add by xuzhihao start
     public BigDecimal findUnitCprice(Map<String, Object> param) {
-        // 参数.资产代码(市场代码)
-//        String 市场代码 = (String) param.get("finprodMarketId");
-        // 参数.净价
-//        String 净价 = (String) param.get("unitCprice");
-//        if (StringUtil.isBlank(市场代码) || StringUtil.isBlank(净价)) {
-//            return null;
-//        }
-
-//        String sysDate = (String) param.get("sysDate");
-//        param.put("sysDate", DateUtil.getSysDate());
+        
+        
 
         // 查询债券登记托管机构
         FinProduct finProduct = finProductMapper.selectByPrimaryKey((String) param.get("finprodId"));
@@ -250,6 +242,16 @@ public class SecTransferService extends BaseService<SecTransfer001Dto> {
             param.put("VALUATION_SOURCE", DictCodeList.估值来源_中债登_CBC.getValue());
         }
 
+        //获取债券是否上市流通信息
+        param.put("NO",DictCodeList.是否_否.getValue());
+        param.put("TRADE_STATUS01",DictCodeListExt1.交易状态_初始.getValue());
+        FinProduct apperFinProduct = secTransferMapper.selectApperInfo(param);
+        
+        //如果是转仓日当天进行的上市流通交易，查询净值时查询发行标的的净值
+        if (apperFinProduct != null && StringUtil.isNotEmpty(apperFinProduct.getFinprodId())){
+            param.put("finprodId",apperFinProduct.getFinprodId());    
+        }
+        
         // 查询上一估值日的净价
         return secTransferMapper.getLastNetPrice(param);
     }

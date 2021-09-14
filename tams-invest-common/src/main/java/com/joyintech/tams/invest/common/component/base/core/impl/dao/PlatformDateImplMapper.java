@@ -10,10 +10,12 @@
  
 package com.joyintech.tams.invest.common.component.base.core.impl.dao;
 
-import java.util.Date;
-
+import com.joyintech.framework.security.data.InstitutionDate;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * 系统日期工具类
@@ -35,6 +37,8 @@ public interface PlatformDateImplMapper {
      */
     Date getSysDate();
 
+    Date getSysDateByIns(@Param("institutionCode")String institutionCode);
+
     /**
      * 获取DB日期
      * @return 返回值
@@ -49,4 +53,14 @@ public interface PlatformDateImplMapper {
      * @return 更新结果
      */
 	int updateSysDate(@Param("newDate") Date newDate);
+
+    Date getCommonSysDate();
+
+    int insertInstitutionDate(InstitutionDate date);
+
+    int updateSysDateByIns(@Param("newDate") Date newDate, @Param("institutionCode") String institutionCode);
+
+    int updateAllSysDate(@Param("institutionCode") String institutionCode);
+
+    List<InstitutionDate> getAllSysDate(@Param("institutionCode") String institutionCode);
 }

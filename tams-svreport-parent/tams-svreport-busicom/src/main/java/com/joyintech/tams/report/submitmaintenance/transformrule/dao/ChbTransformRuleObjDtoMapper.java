@@ -3,8 +3,9 @@ package com.joyintech.tams.report.submitmaintenance.transformrule.dao;
 import java.util.List;
 
 import com.joyintech.tams.report.submitmaintenance.transformrule.dto.ChbTransformRuleObjDto;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface ChbTransformRuleObjDtoMapper {
     int deleteByPrimaryKey(String seqno);
 

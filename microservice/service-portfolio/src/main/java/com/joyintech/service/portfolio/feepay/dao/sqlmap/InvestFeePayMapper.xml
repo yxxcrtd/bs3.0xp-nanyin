@@ -58,6 +58,14 @@
 		WHERE 1=1
 		AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{effectStatus}
 		AND WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
+		<if test="secAcctIdList != null and secAcctIdList.size() >0">
+			<foreach collection="secAcctIdList" index="index" item="item" separator=",">
+				<if test="(index % 998) == 0">
+					and WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
 	 	<if test="secAcctId != null and secAcctId != ''">
 			and WFL_TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID = #{secAcctId}
 	 	</if>
@@ -110,6 +118,14 @@
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{effectStatus}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{yesFlag}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
+		<if test="secAcctIdList != null and secAcctIdList.size() >0">
+			<foreach collection="secAcctIdList" index="index" item="item" separator=",">
+				<if test="(index % 998) == 0">
+					and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
 	 	<if test="secAcctId != null and secAcctId != ''">
 			and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID = #{secAcctId}
 	 	</if>
@@ -162,9 +178,17 @@
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{effectStatus}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
-	 	<if test="secAcctId != null and secAcctId != ''">
+		<if test="secAcctIdList != null and secAcctIdList.size() >0">
+			<foreach collection="secAcctIdList" index="index" item="item" separator=",">
+				<if test="(index % 998) == 0">
+					and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
+		<if test="secAcctId != null and secAcctId != ''">
 			and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID = #{secAcctId}
-	 	</if>
+		</if>
 		<if test="mdate != null and mdate != ''">
 		  	and TRD_FIN_PRODUCT_DEAL_TOTAL.MDATE = to_date(#{mdate}, 'yyyy-MM-dd')
 		</if>	
@@ -213,6 +237,14 @@
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TRADE_STATUS=#{processedStatus}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.IS_CANCEL=#{noFlag}
 		AND TRD_FIN_PRODUCT_DEAL_TOTAL.TG_BUSI_TYPE=#{TG_BUSI_TYPE}
+		<if test="secAcctIdList != null and secAcctIdList.size() >0">
+			<foreach collection="secAcctIdList" index="index" item="item" separator=",">
+				<if test="(index % 998) == 0">
+					and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID in (
+				</if>
+				#{item,jdbcType=VARCHAR}
+			</foreach>)
+		</if>
 		<if test="secAcctId != null and secAcctId != ''">
 			and TRD_FIN_PRODUCT_DEAL_TOTAL.SEC_MANAGE_ACCT_ID = #{secAcctId}
 		</if>

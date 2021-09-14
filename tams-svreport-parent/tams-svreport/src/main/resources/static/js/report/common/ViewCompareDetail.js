@@ -17,7 +17,7 @@
 		    }
 		    $.each(columns, function(i, col) {
                 if((col.field)) {
-                    fields.push({title:col.title, data: col.field, type: col.type, fixed: col.digit,currentValue:rowArr[col.field]});
+                    fields.push({title:col.title, data: col.field, type: col.type, fixed: col.digit,currentValue:rowArr[col.field],visibleFlag:col.visible});
                 }
             });
 			param.fields = JSON.stringify(fields);
@@ -89,12 +89,12 @@
 					$tr = $('<tr></tr>').append($field).append($current);
 					if(showOldValue) {
 						$tr.append($old);
-						if(d.hasOldValue) {
-							$old.text(oldVal).attr('title',oldVal);
-							if(d.currentValue !== d.oldValue) {
-								$tr.addClass('different');
-							}
-						}
+//						if(d.hasOldValue) {
+                        $old.text(oldVal).attr('title',oldVal);
+                        if(d.currentValue !== d.oldValue) {
+                            $tr.addClass('different');
+                        }
+//						}
 					}
 					trs.push($tr);
 				});

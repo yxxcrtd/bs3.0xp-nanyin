@@ -1,22 +1,20 @@
 package com.jixu.adapter.custom.service;
 
-import java.util.HashMap;
-
+import com.alibaba.fastjson.JSONObject;
+import com.jixu.adapter.common.util.JixuRestTemplate;
+import com.jixu.adapter.types.CallBackResult;
+import com.jixu.adapter.types.CustomParams;
+import com.jixu.adapter.types.ExeRecordInfo;
+import com.jixu.common.type.ResultContainer;
+import com.jixu.config.ServiceApplication;
+import com.orm.obj.InterfaceLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.fastjson.JSONObject;
-import com.jixu.adapter.common.util.JixuRestTemplate;
-import com.jixu.adapter.service.export.ExpAssembleOutput;
-import com.jixu.adapter.types.CallBackResult;
-import com.jixu.adapter.types.CustomParams;
-import com.jixu.adapter.types.ExeRecordInfo;
-import com.jixu.common.type.ResultContainer;
-import com.jixu.common.util.ServiceApplication;
-import com.orm.obj.InterfaceLog;
+import java.util.HashMap;
 
 @Component
 public class CutomCallBackSaleService implements CustomExecuteService{

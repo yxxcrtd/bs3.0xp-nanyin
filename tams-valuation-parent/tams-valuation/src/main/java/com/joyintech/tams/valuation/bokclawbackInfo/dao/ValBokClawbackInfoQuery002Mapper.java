@@ -18,6 +18,7 @@ import org.apache.ibatis.annotations.Param;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.bokclawbackInfo.dto.ValBokClawbackInfoQuery001Dto;
 import com.joyintech.tams.valuation.bokclawbackInfo.dto.ValBokClawbackInfoQuery002Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 凭证信息
@@ -27,6 +28,7 @@ import com.joyintech.tams.valuation.bokclawbackInfo.dto.ValBokClawbackInfoQuery0
  * @see ValBokClawbackInfoQuery002Mapper
  * @since 1.0
  */
+@Repository
 public interface ValBokClawbackInfoQuery002Mapper {
 
     ValBokClawbackInfoQuery002Dto selectBokVouch(Map<String, Object> map);

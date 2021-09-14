@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +67,9 @@ import com.orm.obj.UserPortfolioMap;
 
 @Controller
 public class PortfolioController extends ExceptionControl{
+
+	private static final Logger logger = LoggerFactory.getLogger(PortfolioController.class);
+
 	@Resource(name="basicinfoService")
 	private FetchBasicInfoService basicinfoService;	
 	
@@ -324,10 +329,11 @@ public class PortfolioController extends ExceptionControl{
 									 @RequestParam(value = "params", required = true) String params,
 								     HttpServletResponse response) {
 		List<Object> param_list = JsonUtil.stringToList(params);
-		System.out.println(param_list);
+//		System.out.println(param_list);
+		logger.info(param_list.toString());
 		JsonUtil.writeObjToResponse(response, "");
 	}
-	
+
 	@RequestMapping(value="/port/portfolioExpenseUpdate.do", method = RequestMethod.POST, name="投资组合-费用配置更新")
 	public void portfolioExpenseUpdate(@RequestParam(value = "json", required = true) String json,
 								     HttpServletRequest request,
@@ -507,7 +513,8 @@ public class PortfolioController extends ExceptionControl{
 	public void portfolioAccountRemove(@RequestParam(value = "pid", required = true) String portID,
 									   @RequestParam(value = "id", required = true) int id,
 								       HttpServletResponse response) {
-		System.out.println(portID + " 's account - " + id + " has been removed.");
+//		System.out.println(portID + " 's account - " + id + " has been removed.");
+		logger.info(portID + " 's account - " + id + " has been removed.");
 		JsonUtil.writeObjToResponse(response, "");
 	}
 	
@@ -532,7 +539,8 @@ public class PortfolioController extends ExceptionControl{
 							   @RequestParam(value = "params", required = true) String params,
 							   HttpServletResponse response){
 		List<Object> param_list = JsonUtil.stringToList(params);
-		System.out.println(param_list);
+//		System.out.println(param_list);
+		logger.info(param_list.toString());
 		//int CashAcctNum=Integer.valueOf(param_list.get(1).toString());
 		Random rand = new Random();
 		int randomNo = rand.nextInt(100 - 5) + 5;
@@ -665,7 +673,8 @@ public class PortfolioController extends ExceptionControl{
 									@RequestParam(value = "params", required = true) String params,
 							   	    HttpServletResponse response){
 		List<Object> param_list = JsonUtil.stringToList(params);
-		System.out.println(param_list);
+//		System.out.println(param_list);
+		logger.info(param_list.toString());
 		Random rand = new Random();
 		int randomNo = rand.nextInt(100 - 5) + 5;
 		JsonUtil.writeObjToResponse(response, randomNo + "");
@@ -677,9 +686,11 @@ public class PortfolioController extends ExceptionControl{
 									   @RequestParam(value = "params", required = true) String params,
 								       HttpServletResponse response) {
 		List<Object> param_list = JsonUtil.stringToList(params);
-		System.out.println(portID + " interface save. Interface info below- interface number - " + id);
+//		System.out.println(portID + " interface save. Interface info below- interface number - " + id);
+		logger.info(portID + " interface save. Interface info below- interface number - " + id);
 		for (Object param : param_list){
-			System.out.println(param);
+//			System.out.println(param);
+			logger.info(param.toString());
 		}
 		JsonUtil.writeObjToResponse(response, "");
 	}
@@ -688,7 +699,8 @@ public class PortfolioController extends ExceptionControl{
 	public void portfolioCustomiseRemove(@RequestParam(value = "pid", required = true) String portID,
 									     @RequestParam(value = "id", required = true) int id,
 								         HttpServletResponse response) {
-		System.out.println(portID + " interface delete. Interface info below- interface number - " + id);
+//		System.out.println(portID + " interface delete. Interface info below- interface number - " + id);
+		logger.info(portID + " interface delete. Interface info below- interface number - " + id);
 		JsonUtil.writeObjToResponse(response, "");
 	}
 	

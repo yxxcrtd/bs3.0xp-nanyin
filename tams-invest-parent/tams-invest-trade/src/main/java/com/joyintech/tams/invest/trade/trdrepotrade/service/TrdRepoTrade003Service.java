@@ -65,6 +65,8 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -76,6 +78,10 @@ import java.util.*;
 
 @Service
 public class TrdRepoTrade003Service extends BaseService<TrdRepoTrade003Dto> implements BaseProcessService<TrdRepoTrade003Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdRepoTrade003Service.class);
 
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
@@ -2123,7 +2129,7 @@ public class TrdRepoTrade003Service extends BaseService<TrdRepoTrade003Dto> impl
                     interfComponentService.sendMurexRequest(OrderCaller.REPO002, sendData);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

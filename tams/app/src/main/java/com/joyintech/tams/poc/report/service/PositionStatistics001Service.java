@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +57,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
    * @return 表格信息
    * @throws Exception 
    */
- public Page<PositionStatistics001Dto> findPage(Map<String, Object> params) throws Exception {  
+ public Page<PositionStatistics001Dto> findPage(Map<String, Object> params){
       if (StringUtil.isNotEmpty(params.get("manager"))) {
          params.put("manager", StringUtil.splitToList(null, params.get("manager").toString()));
       }
@@ -86,8 +87,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
          return exportReportExcel(data,exceltemplate,fileName);
      }
      catch (IOException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         logger.error(e.getMessage(),e);
      }
      return null;
  }
@@ -102,6 +102,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      String flieName = exceltemplate+".xlsx";
      File depositfile = null;
      FileOutputStream fos=null;
+     InputStream fis = null;
      try{          
      // 关联模板
      XLSTransformer transformer = new XLSTransformer();
@@ -110,7 +111,7 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      String depositfilePath = SvrDataUtil.getSysParam(
              GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
      
-     depositfile = new File(depositfilePath + File.separator + flieName);
+     depositfile = new SafelyFile(depositfilePath + File.separator + flieName);
      if (!depositfile.getParentFile().exists()) {
          depositfile.getParentFile().mkdirs();
      }
@@ -118,10 +119,10 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      byte[] buffer = new byte[1024];
      String temp = depositfilePath + "ptl.xlsx";
      // 原文件
-     File srcFile = new File(template);
+     File srcFile = new SafelyFile(template);
      // 目标文件
-     File destFile = new File(temp);
-     InputStream fis = null;
+     File destFile = new SafelyFile(temp);
+
      if (srcFile.exists()) {
          fis = new FileInputStream(srcFile);
      } else {
@@ -140,13 +141,20 @@ public class PositionStatistics001Service extends CommonExportService<PositionSt
      transformer.transformXLS(temp, data, depositfilePath + File.separator +flieName);
      }catch(Exception e){
          logger.info(exceltemplate+"生成失败！");
-         throw new RuntimeException(e);
+//         throw new RuntimeException(e);
      }finally{
          if(fos !=null){
              try {
                  fos.close();
              } catch (IOException e) {
-                 e.printStackTrace();
+                 logger.error(e.getMessage(),e);
+             }
+         }
+         if(fis !=null){
+             try {
+                 fis.close();
+             } catch (IOException e) {
+                 logger.error(e.getMessage(),e);
              }
          }
      }

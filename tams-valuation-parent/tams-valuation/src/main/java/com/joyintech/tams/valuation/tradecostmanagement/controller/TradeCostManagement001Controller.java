@@ -1,6 +1,7 @@
 package com.joyintech.tams.valuation.tradecostmanagement.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -107,7 +108,7 @@ public class TradeCostManagement001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TradeCostManagement001Dto> findPage()
-        throws Exception {
+          {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         String feeTypes = (String)param.get("feeTypes");
         feeTypes = feeTypes.replaceAll(" ", "");
@@ -223,7 +224,7 @@ public class TradeCostManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBookSetId2")
     public List<SuggestDto> getBookSetId2()
-        throws Exception {
+         {
         return valAssetBook001Service.getBooksetId2(RequestUtil.getPageParam());
     }
 
@@ -238,7 +239,7 @@ public class TradeCostManagement001Controller extends BaseController {
     @SuppressWarnings("unchecked")
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws IOException {
         String datas = this.getParam("datas");
         List<TradeCostManagement001Dto> dtoList;
         if (datas == null) {

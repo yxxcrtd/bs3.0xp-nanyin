@@ -43,7 +43,7 @@ public class RepFinProductRenewalRegistController {
     
     @PostMapping("findPage/{page}/{length}")
     public Page<RepDuration> findPage(@RequestBody Map<String,Object> map,
-                                      @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+                                      @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductRenewalRegistService.findPage(page,length,map);
     }
     /**

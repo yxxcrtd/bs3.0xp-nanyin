@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.valuation.trademanage.finprodtradequery.dto.ValFinprodTradeQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 金融产品交易查询
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.trademanage.finprodtradequery.dto.ValFinprod
  * @see ValFinprodTradeQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValFinprodTradeQuery001Mapper {
 
     /**

@@ -69,7 +69,7 @@ public class RiskFactorConfigController extends BaseController {
     @ResponseBody
     @RequestMapping("CellSql")
     public List<String> selectForPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
 
         return RiskFactorConfigService.selectAll(map);

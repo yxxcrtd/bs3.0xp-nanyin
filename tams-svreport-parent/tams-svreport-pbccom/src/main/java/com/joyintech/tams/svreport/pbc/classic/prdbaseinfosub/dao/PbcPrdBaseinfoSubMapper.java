@@ -7,8 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.classic.prdacccountsub.dto.PbcPrdAccountSub;
 import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosub.dto.PbcPrdBaseinfoSub;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface PbcPrdBaseinfoSubMapper {
     int deleteByPrimaryKey(String registSeqno);
 
@@ -50,8 +51,21 @@ public interface PbcPrdBaseinfoSubMapper {
 	 * @return 所有不是删除状态的人行产品信息
 	 */
 	List<PbcPrdBaseinfoSub> queryAllPbcPrdBaseInfo(Map<String, Object> param);
+
+
+
+	/**
+	 * 查询所有不是删除状态的人行产品信息
+	 * @param param
+	 * @return 所有不是删除状态的人行产品信息
+	 */
+	List<PbcPrdBaseinfoSub> selectDatAccountData(Map<String, Object> param);
 	
 	List<PbcPrdAccountSub> selectAllRegisteAccountData(@Param("reglist")List<PbcPrdBaseinfoSub> reglist);
 	
 	List<String> selectRegistSeqnoList(@Param("list")List<PbcPrdBaseinfoSub> registList,@Param("flag")String flag);
+
+	int updateByProdIds(@Param("list")List<String> list);
+
+	int countByProdId(@Param("prodId")String prodId);
 }

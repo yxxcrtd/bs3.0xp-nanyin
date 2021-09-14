@@ -71,7 +71,7 @@ public class PositionStatistics001Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<PositionStatistics001Dto> findPage() throws Exception{
+    public Page<PositionStatistics001Dto> findPage(){
         return positionStatistics001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -85,8 +85,7 @@ public class PositionStatistics001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return positionStatistics001Service.export("头寸统计表.xlsx",
             RequestUtil.getParameters(getRequest()));
     }

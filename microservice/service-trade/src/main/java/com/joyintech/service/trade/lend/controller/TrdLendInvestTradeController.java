@@ -43,14 +43,14 @@ public class TrdLendInvestTradeController {
     public Page<TrdLendInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdLendInvestTradeService.selectForPage(page, length, param);
     }
 
     @RequestMapping("getTrdLendInvestTradeDto/{tradeId}/{BRANCH_0}")
     public TrdLendInvestTradeDto getTrdBondInvestTradeDto(@PathVariable("tradeId") String tradeId,
                                                           @PathVariable("BRANCH_0") String BRANCH_0)
-        throws Exception {
+    {
         return trdLendInvestTradeService.getTrdBondInvestTradeDto(tradeId, BRANCH_0);
     }
 

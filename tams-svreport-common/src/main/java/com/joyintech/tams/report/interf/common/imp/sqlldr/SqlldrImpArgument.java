@@ -92,7 +92,7 @@ public class SqlldrImpArgument implements ImpArgument {
     /**
      * 允许出错的次数
      */
-    private long errors;
+    private long errors = 10000;
 
     /**
      * 缓冲区大小
@@ -118,6 +118,11 @@ public class SqlldrImpArgument implements ImpArgument {
      * 被导入的表名
      */
     private ImpTable table;
+    
+    /**
+     * 错误信息文件目录
+     */
+    private String badFileDir;
 
     /**
      * 获取 username
@@ -443,7 +448,15 @@ public class SqlldrImpArgument implements ImpArgument {
         this.table = table;
     }
 
-    /**
+    public String getBadFileDir() {
+		return badFileDir;
+	}
+
+	public void setBadFileDir(String badFileDir) {
+		this.badFileDir = badFileDir;
+	}
+
+	/**
      * 
      */
     public SqlldrImpArgument() {

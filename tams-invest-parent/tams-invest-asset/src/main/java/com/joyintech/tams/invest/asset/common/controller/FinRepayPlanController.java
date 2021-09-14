@@ -10,14 +10,12 @@
  
 package com.joyintech.tams.invest.asset.common.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
 import com.joyintech.tams.invest.common.asset.dto.FinCashPlanDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -129,6 +127,37 @@ public class FinRepayPlanController extends BaseController{
                 return rst;
             }
         }
+        if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())){
+            List<FinCashPlanDto>  cashPlans=dto.getBussFinRepaymentDto().getFinCashPlanList();
+            for(FinCashPlanDto it:cashPlans){
+                if(null==it.getPrinAmt()){
+                    ValidMessage addRst = new ValidMessage("存在还款金额为空的数据，不能提交。");
+                    List<ValidMessage> errorList = new ArrayList<>();
+                    errorList.add(addRst);
+                    rst.setErrorList(errorList);
+                    return rst;
+                }
+            }
+        }
+        //最后一条的还本日不能大于资产到期日
+        if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())) {
+            List<FinCashPlanDto> cashPlanslist = dto.getBussFinRepaymentDto().getFinCashPlanList();
+            Collections.sort(cashPlanslist, new Comparator<FinCashPlanDto>() {
+                @Override
+                public int compare(FinCashPlanDto o1, FinCashPlanDto o2) {
+                    return o2.getPayDate().compareTo(o1.getPayDate());
+                }
+            });
+            //获取最后一条开放计划的还款日
+            Date lastpayDate = cashPlanslist.get(0).getPayDate();
+            if (lastpayDate.compareTo(dto.getMdate()) > 0) {
+                ValidMessage addRst = new ValidMessage("最后一条的还款日不能大于资产到期日");
+                List<ValidMessage> errorList = new ArrayList<>();
+                errorList.add(addRst);
+                rst.setErrorList(errorList);
+                return rst;
+            }
+        }
         StringBuffer sb = new StringBuffer();
         //校验还本计划最后一条数据的支付日是否等于付息计划最后一条数据的支付日
         if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())){
@@ -179,8 +208,7 @@ public class FinRepayPlanController extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinPayPlanDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinPayPlanDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

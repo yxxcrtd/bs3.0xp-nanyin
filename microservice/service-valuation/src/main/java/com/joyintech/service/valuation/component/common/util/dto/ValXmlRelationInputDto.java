@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.component.common.util.dto;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.joyintech.framework.util.StringUtil;
 
@@ -90,5 +91,10 @@ public class ValXmlRelationInputDto extends Object implements Serializable {
         }
 
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(paraDtoList);
     }
 }

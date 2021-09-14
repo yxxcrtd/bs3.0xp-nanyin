@@ -46,14 +46,12 @@ public class ProductTradeDealQuery001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ProductTradeDealQuery001Dto> findPage(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
-                                                      @PathVariable("length") int length)
-        throws Exception {
+                                                      @PathVariable("length") int length){
         return productTradeDealQuery001Service.findByPage(page, length, param);
     }
 
     @PostMapping("/findAll")
-    public List<ProductTradeDealQuery001Dto> findAll(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<ProductTradeDealQuery001Dto> findAll(@RequestBody Map<String, Object> param){
         return productTradeDealQuery001Service.findAll(param);
     }
 
@@ -66,8 +64,7 @@ public class ProductTradeDealQuery001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("getAssets")
-    public List<SelectOptionDto> getAssets(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> getAssets(@RequestBody Map<String, Object> param) {
         return productTradeDealQuery001Service.getAssets(param);
     }
 

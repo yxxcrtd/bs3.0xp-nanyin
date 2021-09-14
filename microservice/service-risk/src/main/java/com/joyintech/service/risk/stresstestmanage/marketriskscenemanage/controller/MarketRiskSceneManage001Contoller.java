@@ -56,7 +56,7 @@ public class MarketRiskSceneManage001Contoller {
     public Page<MarketRiskSceneManage001Dto> selectForPage(@RequestBody Map<String, Object> param,
                                                          @PathVariable("page") int page,
                                                          @PathVariable("length") int length)
-        throws Exception {
+    {
         return marketRiskSceneManage001Service.selectForPage(page, length, param);
     }
     
@@ -67,7 +67,7 @@ public class MarketRiskSceneManage001Contoller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("/updateScenesEffStatus")
-    public Integer updateScenesEffStatus(@RequestBody Map<String, Object> param) throws Exception {
+    public Integer updateScenesEffStatus(@RequestBody Map<String, Object> param) {
         List<String> sceneIdList = null;
         String effStatus = null;
         
@@ -90,7 +90,7 @@ public class MarketRiskSceneManage001Contoller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("/deleteScene")
-    public void deleteScene(@RequestBody Map<String, Object> param) throws Exception {
+    public void deleteScene(@RequestBody Map<String, Object> param) {
         Object sceneIdObj = param.get("sceneId");
 
         if (sceneIdObj != null && StringUtils.isNotBlank(sceneIdObj.toString())) {
@@ -99,7 +99,7 @@ public class MarketRiskSceneManage001Contoller {
     }
     
     @PostMapping("fuzzySelectScene")
-    public List<SelectOptionDto> fuzzySelectScene(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> fuzzySelectScene(@RequestBody Map<String, Object> param) {
         //CommonUtil.hasChinese(fuzzyText)
         List<SelectOptionDto> resultList = new ArrayList<>();
         List<SttScene> dataList = null;

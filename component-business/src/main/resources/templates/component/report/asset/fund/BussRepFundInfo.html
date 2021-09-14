@@ -233,7 +233,7 @@
 						<div class="layui-input-inline input-inline">
 							<select th:id="|${entityName}_repTradeMarket|"
 								th:name="|${entityName}.repTradeMarket|"
-								data-th-data-result="${TRADE_MARKET}"
+								data-th-data-result="${SVR_TRADE_MARKET}"
 								th:initValue="${entity?.repTradeMarket}" required="required"
 								class="layui-input form-input input-select" placeholder="请输入内容"
 								data-th-placeholder="#{SysCommon.placeholder}">
@@ -317,6 +317,16 @@
 							<input type="checkbox" th:id="|${entityName}_repFinancialComissue|" th:name="|${entityName}.repFinancialComissue|"
 								   lay-skin="switch" data-th-value="${SVR_YES_OR_NO_default}" lay-text="是|否"
 								   data-th-checked="${SVR_YES_OR_NO_default} ==${entity?.repFinancialComissue}" required="required">
+						</div>
+					</div>
+					<div class="form-inline-wrap">
+						<label class="layui-form-label form-lable"
+							   data-th-utext="#{BussRepFundInfo.repMngPartyName}">基金管理机构名称</label>
+						<div class="layui-input-inline input-inline">
+							<input type="text" th:id="|${entityName}_repMngPartyName|"
+								   th:name="|${entityName}.repMngPartyName|" required
+								   th:value="${entity?.repMngPartyName}"
+								   data-fixtype="2" class="layui-input form-input" />
 						</div>
 					</div>
 				</div>

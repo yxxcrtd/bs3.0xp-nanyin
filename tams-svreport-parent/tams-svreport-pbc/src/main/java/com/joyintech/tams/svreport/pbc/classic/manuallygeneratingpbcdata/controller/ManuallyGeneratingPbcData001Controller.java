@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.pbc.classic.manuallygeneratingpbcdata.contro
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -65,7 +66,7 @@ public class ManuallyGeneratingPbcData001Controller extends BaseController{
     @RequestMapping("/createZipFile")
     public String createZipFile() {
     	Map<String, Object> param = RequestUtil.getPageParam();
-    	return manuallyGeneratingpbcDataMService.createZipFile(param);
+    	return StringUtil.trimHtmlTag(manuallyGeneratingpbcDataMService.createZipFile(param));
     }
     
     /**

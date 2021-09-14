@@ -242,22 +242,6 @@ public class FinBondTargetAssetDto extends FinProduct{
     public String isIssueAsset;
 	
 	/**
-     * 获取 isIssueAsset
-     * @return isIssueAsset.
-     */
-    public String getIsIssueAsset() {
-        return isIssueAsset;
-    }
-
-    /**
-     * 设置 isIssueAsset
-     * @param isIssueAsset isIssueAsset
-     */
-    public void setIsIssueAsset(String isIssueAsset) {
-        this.isIssueAsset = isIssueAsset;
-    }
-	
-    /**
      * 上市代码
      */
     public String appearMarketId;
@@ -274,6 +258,22 @@ public class FinBondTargetAssetDto extends FinProduct{
      */
     public void setAppearMarketId(String appearMarketId) {
         this.appearMarketId = appearMarketId;
+    }
+    
+    /**
+     * 获取 isIssueAsset
+     * @return isIssueAsset.
+     */
+    public String getIsIssueAsset() {
+        return isIssueAsset;
+    }
+
+    /**
+     * 设置 isIssueAsset
+     * @param isIssueAsset isIssueAsset
+     */
+    public void setIsIssueAsset(String isIssueAsset) {
+        this.isIssueAsset = isIssueAsset;
     }
 	
     /**

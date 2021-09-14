@@ -6,6 +6,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbondduration.service.TrdBondDuration003Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -149,8 +150,7 @@ public class TrdBondDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return trdBondDuration001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 
@@ -161,8 +161,7 @@ public class TrdBondDuration001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdBondDuration002ProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@Validated({ValidateGroupDelete.class}) TrdBondDuration002ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

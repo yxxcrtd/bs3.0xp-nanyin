@@ -83,8 +83,7 @@ public class InterfCusdep1020service extends SendEsbService<InterfCusdep1020InEn
      * {@inheritDoc}
      */
     @Override
-    public InterfCusdep1020InEntity preparedLocalData(Object param)
-        throws Exception {
+    public InterfCusdep1020InEntity preparedLocalData(Object param) throws InterfException {
         CusdepOrderDto dto = (CusdepOrderDto)param;
         // 参数为空时
         if (dto == null || StringUtil.isEmpty(dto.getOrderNo())) {
@@ -248,7 +247,7 @@ public class InterfCusdep1020service extends SendEsbService<InterfCusdep1020InEn
      */
     @Override
     public int saveInterfData(InterfCusdep1020OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -257,7 +256,7 @@ public class InterfCusdep1020service extends SendEsbService<InterfCusdep1020InEn
      */
     @Override
     public int saveBusinessData(InterfCusdep1020OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

@@ -1,8 +1,7 @@
 package com.joyintech.tams.report.system.proregistcodemanage.dto;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
 import com.joyintech.framework.util.DateUtil;
@@ -15,6 +14,9 @@ import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
+import java.util.Date;
+
+@PageId("ProRegistCodeManage003")
 public class ProRegistCodeManage002Dto extends BaseEntity implements ProcessEntity {
     
 	 /**

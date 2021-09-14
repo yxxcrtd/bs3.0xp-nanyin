@@ -8,6 +8,7 @@ package com.joyintech.tams.invest.product.messageadjust.finproductquotation.cont
 import java.util.Collections;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -151,13 +152,13 @@ public class FinProductQuotation002Controller extends BaseController {
      * @param dto 保存对象
      * @param br 验证信息
      * @return 操作结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated FinProductQuotation002Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated FinProductQuotation002Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

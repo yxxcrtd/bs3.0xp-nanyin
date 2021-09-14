@@ -29,7 +29,7 @@ public class CalFuncABS extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String str=genConvertFormula(inputValue, colcfgMap);
 		double count=Math.abs(Double.parseDouble(str));
 		return String.valueOf(count);
@@ -41,7 +41,7 @@ public class CalFuncABS extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			 {
 		// TODO Auto-generated method stub
 		return null;
 	}

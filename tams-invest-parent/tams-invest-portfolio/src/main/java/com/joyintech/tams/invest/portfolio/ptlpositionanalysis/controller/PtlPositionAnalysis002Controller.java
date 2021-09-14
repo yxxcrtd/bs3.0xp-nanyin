@@ -2,12 +2,11 @@
  
 package com.joyintech.tams.invest.portfolio.ptlpositionanalysis.controller;
 
+import com.google.common.collect.Lists;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.TargetDetail;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,50 +67,62 @@ public class PtlPositionAnalysis002Controller extends BaseController {
     /**
      * 组合持仓明细查询
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlPositionAnalysis003Dto> selectAll()
-            throws Exception {
+    public Page<PtlPositionAnalysis003Dto> selectAll(){
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis003Dto> list = ptlPositionAnalysis002Service.selectForPage(map);
-
-        if(list.getRoot().size()>0){
-            list.getRoot().forEach(item->{
-                if(item.getRate()!=null){
-                    item.setRate(item.getRate().multiply(BigDecimal.valueOf(100)));
-                }
-            });
-        }
+        list.setRoot(formatFindPageResult(list.getRoot()));
 
         return list;
+    }
+
+    private List<PtlPositionAnalysis003Dto> formatFindPageResult(List<PtlPositionAnalysis003Dto> root) {
+        //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示
+        List<PtlPositionAnalysis003Dto> ptlPositionAnalysis003Dtos = Lists.newArrayList();
+        if (root.size() > 0) {
+            root.forEach(item -> {
+                // 票面利率 百分比化
+                if (item.getRate() != null) {
+                    item.setRate(ArithmeticUtil.round(item.getRate().multiply(BigDecimal.valueOf(100)), 2, RoundingMode.HALF_UP));
+                }
+                // 综合成本收益率 百分比化
+                if (item.getCostRate() != null) {
+                    item.setCostRate(ArithmeticUtil.round(item.getCostRate().multiply(BigDecimal.valueOf(100)), 4, RoundingMode.HALF_UP));
+                }
+                // 资产的持仓市值为0时不显示
+                 if (item.getPosValue() != null) {
+                      if (BigDecimal.ZERO.compareTo(item.getPosValue()) != 0) {
+                                ptlPositionAnalysis003Dtos.add(item);
+                      }
+                 }
+            });
+        }
+        //modify by jiangpeng on 20210528 ZGBSSE-173 资产的持仓市值为0时不显示
+        return ptlPositionAnalysis003Dtos;
     }
 
     /**
      * 获取动态列结果
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("getTableCols")
-    public String getTableCols()
-            throws Exception {
+    public String getTableCols() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
-      return ptlPositionAnalysis002Service.getDataTableCols(map);
+      return StringUtil.trimHtmlTag(ptlPositionAnalysis002Service.getDataTableCols(map));
 
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("/export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlPositionAnalysis002Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()),"searchDate");
     }

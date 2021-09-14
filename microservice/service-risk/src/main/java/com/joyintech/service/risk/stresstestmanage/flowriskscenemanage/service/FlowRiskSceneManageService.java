@@ -36,7 +36,7 @@ public class FlowRiskSceneManageService extends BaseService<SttScene> {
     private FlowRiskSceneManageMapper flowRiskSceneManageMapper;
 
     /** 根据条件查询情景列表，无分页 */
-    public List<SttScene> querycheck(Map<String, Object> paramMap) throws Exception {
+    public List<SttScene> querycheck(Map<String, Object> paramMap) {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         List<SttScene> dataList = flowRiskSceneManageMapper.querycheck(paramMap);
         DynamicDataSourceHolder.clearDataSource();
@@ -44,7 +44,7 @@ public class FlowRiskSceneManageService extends BaseService<SttScene> {
     }
     
     /** 查询所有情景，无分页 */
-    public List<SttScene> selectAll() throws Exception {
+    public List<SttScene> selectAll() {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         List<SttScene> dataList = flowRiskSceneManageMapper.selectAll();
         DynamicDataSourceHolder.clearDataSource();

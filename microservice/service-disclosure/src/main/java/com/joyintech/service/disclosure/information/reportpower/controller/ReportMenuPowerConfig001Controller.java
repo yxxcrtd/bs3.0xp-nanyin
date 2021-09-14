@@ -66,14 +66,14 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
     @PostMapping("findPage/{page}/{length}")
     public Page<ReportMenuPowerConfig001Dto> findPage(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return reportMenuPowerConfig001Service.findPage(page, length, param);
     }
     
     
     @PostMapping("/findAll")
     public List<ReportMenuPowerConfig001Dto> findAll(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return reportMenuPowerConfig001Service.findAll(param);
     }
     /**

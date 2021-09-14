@@ -105,8 +105,7 @@ public class ValRateSwapInformationController {
      */
     @PostMapping("getCurveType/{page}/{length}")
     public Page<SelectOptionDto> getCurveType(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
-                                                    @PathVariable("length") int length)
-        throws Exception {
+                                                    @PathVariable("length") int length) {
         return valRateSwapInformationService.getCurveType(page,length,param);
     }
 }

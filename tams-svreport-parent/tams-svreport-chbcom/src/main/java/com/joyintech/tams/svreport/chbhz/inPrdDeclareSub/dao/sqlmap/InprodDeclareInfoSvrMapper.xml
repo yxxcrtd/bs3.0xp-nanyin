@@ -192,7 +192,9 @@
  <select id="genChbPrdDeclareSubList"  resultMap="PerProDeclareRegDtoRM">
     select * from CHB_PRD_DECLARE_SUB 
     where 1=1
-    and  SEND_STATUS  in ('02','03')
+    <!-- add by zhangliang 20210507 先全量查询，代码去处理 目的是为了获取九大附件相关信息 start -->
+    <!-- and  SEND_STATUS  in ('02','03') -->
+    <!-- add by zhangliang 20210507 先全量查询，代码去处理 目的是为了获取九大附件相关信息 end -->
     <if test="keylist != null and keylist.size() > 0">
 	AND PROD_INS_ID IN
 	<trim suffixOverrides=" OR PROD_INS_ID IN ()">

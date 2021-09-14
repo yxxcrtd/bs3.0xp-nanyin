@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -91,8 +92,7 @@ public class MstPerformanceBenchMark001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstPerformanceBenchMarkDto> selectAll()
-        throws Exception {
+    public Page<MstPerformanceBenchMarkDto> selectAll(){
         Map<String, Object> param = RequestUtil.getPageParam();
         //多选基准类型的值在js中就已经是数组了，直接取出来
         String performBenchmarkindexType = (String)param.get("indexType");
@@ -114,8 +114,7 @@ public class MstPerformanceBenchMark001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getIndexName")
-    public List<SuggestDto> getIndexName()
-        throws Exception {
+    public List<SuggestDto> getIndexName() {
         String param = super.getRequest().getParameter("param");
         Map<String, String> map = new HashMap<String, String>();
         map.put("param", param);
@@ -150,8 +149,7 @@ public class MstPerformanceBenchMark001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstPerformanceBenchMarkDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstPerformanceBenchMarkDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -185,8 +183,7 @@ public class MstPerformanceBenchMark001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstPerformanceBenchMarkService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

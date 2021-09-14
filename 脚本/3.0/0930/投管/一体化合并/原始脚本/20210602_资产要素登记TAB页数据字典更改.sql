@@ -1,0 +1,1 @@
+update sys_datadict_list set ITEM_VALUE='非标准化债权类资产/新增可投资资产' where DICT_CODE='SVR_ASSETDEBT_TYPE' and ITEM_CODE='04';

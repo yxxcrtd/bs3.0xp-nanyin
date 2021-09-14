@@ -220,7 +220,8 @@
 			SUBMIT_TIME,
 			REMARK,
 			SHARE_AMT_WAN,
-			CASH_AMT_WAN
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG
       )
       select  
          REGIST_SEQNO,
@@ -260,7 +261,8 @@
 			SUBMIT_TIME,
 			REMARK,
 			SHARE_AMT_WAN,
-			CASH_AMT_WAN
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG
       from CHB_PRD_DEAL_SUB
       where 1 =1
        <if test="registList !=null and registList.size()>0">
@@ -321,7 +323,8 @@
 			SUBMIT_TIME,
 			REMARK,
 			SHARE_AMT_WAN,
-			CASH_AMT_WAN
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG
       )
       select   
          HIS_NO,
@@ -361,7 +364,8 @@
 			SUBMIT_TIME,
 			REMARK,
 			SHARE_AMT_WAN,
-			CASH_AMT_WAN
+			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG
       from (
         select HIS_NO,
 			PROD_ID,
@@ -401,6 +405,7 @@
 			REMARK,
 			SHARE_AMT_WAN,
 			CASH_AMT_WAN,
+			SUBMIT_FEEDBACK_MSG,
             rank() over (partition by PROD_ID order by nvl(update_time,create_time) desc) ranknum
          from CHB_PRD_DEAL_SUB_HIS  his
          <where>

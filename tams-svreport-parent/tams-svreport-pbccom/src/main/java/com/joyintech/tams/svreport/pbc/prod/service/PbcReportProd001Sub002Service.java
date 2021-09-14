@@ -374,7 +374,7 @@ public class PbcReportProd001Sub002Service extends PbcReportProdTotalService  {
 		 }
 		 
 		// 数据先删后插
-		insertReportAndDetails(reportStartDate,reportEndDate,pbcMonthReport,result,PbcReportType.PBC_REPORT_1_2,true);
+		insertReportAndDetails(reportStartDate,reportEndDate,pbcMonthReport,null,result,PbcReportType.PBC_REPORT_1_2,true);
 		
 		//add by leipeng 20200319  各法人生成数据
 		for (Map.Entry<String,Map<String,PbcReportProdDetailDto>> map : deptMap.entrySet()) {

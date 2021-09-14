@@ -138,7 +138,9 @@
 		 where t1.ftr_id = t2.ftr_id
 		   and t1.ftr_id = t3.ftr_id(+)
 		   and t2.dict_code = #{ftrType2, jdbcType=VARCHAR}
+		   <if test="ftrType2Str !=null  and ftrType2Str !=''">
 		   and t2.tips_value in ${ftrType2Str}
+		   </if>
 		   and t3.dict_code = #{ftrType, jdbcType=VARCHAR}
 		   and t1.ftr_id = t4.fac_id(+)
 		   and (t2.tips_value != 'Mrk0101' or (t2.tips_value = 'Mrk0101' and t4.ref_id is not null))		<!-- 利率类必须要匹配资产类型，汇率类和指数类的不需要 -->

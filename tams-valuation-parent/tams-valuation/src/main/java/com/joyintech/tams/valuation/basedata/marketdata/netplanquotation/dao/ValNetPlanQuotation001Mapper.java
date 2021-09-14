@@ -18,7 +18,9 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.dto.ValNetPlanQuotation001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.dto.ValNetPlanQuotation001SearchDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ValNetPlanQuotation001Mapper {
 	/**
 	 * 计划类资产净值信息查询

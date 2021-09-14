@@ -13,6 +13,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Scope;
@@ -144,7 +145,7 @@ public class XmlUtil{
 		Info info = null;
 		URL templateXmlURL = getClass().getClassLoader().getResource(TEMPLATE_PATH + templateId + ".xml");
 		if (templateXmlURL == null)
-			throw new RuntimeException("模板未定义: " + templateId + ".xml");
+			throw new BusinessException("模板未定义: " + templateId + ".xml");
 		info = JAXB.unmarshal(templateXmlURL, Info.class);
 		infoElementListToFieldList(info);
 		return info;
@@ -206,7 +207,7 @@ public class XmlUtil{
 				infoFieldList.add(newElement(e.getName(), value));
 		}
 		if (!emptyList.isEmpty())
-			throw new RuntimeException(StringUtils.join(emptyList, ", ") + "：这些为必输项但值为空");
+			throw new BusinessException(StringUtils.join(emptyList, ", ") + "：这些为必输项但值为空");
 		return info;
 	}
 

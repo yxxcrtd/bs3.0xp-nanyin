@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.interf.inertfStartUp.service;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -188,7 +189,7 @@ public class ValInertfStartUp001Service extends CommonExportService<ValInterfTas
      * @see
      * @since 1.0
      */
-	public List<ValInertfBuildXml001Dto> runInterf(Map<String, String> map) throws Exception {
+	public List<ValInertfBuildXml001Dto> runInterf(Map<String, String> map) throws SQLException, ClassNotFoundException {
 		//主题逻辑
 		List<ValInertfBuildXml001Dto> list = service.execute(map.get(InterfCommonConstant.接口_开始日),map.get(InterfCommonConstant.接口_结束日));
 		return list;

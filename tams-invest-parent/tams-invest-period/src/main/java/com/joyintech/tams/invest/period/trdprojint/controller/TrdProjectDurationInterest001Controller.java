@@ -58,13 +58,11 @@ public class TrdProjectDurationInterest001Controller extends BaseController {
      * 导出
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return TrdProjectDurationInterest001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 }

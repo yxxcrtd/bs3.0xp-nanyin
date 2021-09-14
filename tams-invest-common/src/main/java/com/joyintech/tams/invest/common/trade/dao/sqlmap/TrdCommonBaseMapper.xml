@@ -168,7 +168,11 @@
             and INV_AIM != 'SELL'  <!-- 取不是卖空的本方券 -->
         </if>
   		UNION ALL
-        SELECT
+        select
+        FINISH_AMT
+        from ETR_FINISH_STATUS
+        where ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
+        <!--SELECT
         <choose>
             <when test="shareAmt !=null and shareAmt != ''">
                 SHARE_AMT
@@ -196,8 +200,8 @@
             and INV_AIM = #{invAim}
         </if>
         <if test="invAim == null or invAim.isEmpty()">
-            and INV_AIM != 'SELL'  <!-- 取不是卖空的本方券 -->
-        </if>
+            and INV_AIM != 'SELL'  /* 取不是卖空的本方券 */
+        </if> -->
     </select>
     
     <select id="queryEntrustAmtByEntrustId" resultType="java.math.BigDecimal">

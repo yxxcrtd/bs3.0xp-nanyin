@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -185,7 +186,7 @@ public class SvrProdOpenschFileImpService extends FileImpService {
 			}
 			// 任务结束，停止线程池的所有线程
 			service.shutdown();
-			Collection<File> files = FileUtils.listFiles(new File(tmpPath+"/CHB_PRD_OPENSCH/"), new String[] { "tmp" }, false);
+			Collection<File> files = FileUtils.listFiles(new SafelyFile(tmpPath+"/CHB_PRD_OPENSCH/"), new String[] { "tmp" }, false);
 			logger.debug("获取开放计划sqlloder文件个数"+files.size());
 			List<String> content = new ArrayList<>(openSchList.size());
 			String result = "";

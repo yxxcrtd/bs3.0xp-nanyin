@@ -69,8 +69,6 @@ public class BathchStartListener extends StartupConfiguration {
                     Thread.sleep(1000*30);
                 }
                 catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    //e.printStackTrace();
                 	logger.error("error:", e);
                 }
                 logger.info("进入线程：重启定时扫描功能");
