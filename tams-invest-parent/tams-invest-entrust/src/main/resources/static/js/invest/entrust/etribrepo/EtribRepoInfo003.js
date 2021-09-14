@@ -923,6 +923,10 @@
      * @returns
      */
     function doReset() {
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 starts
+        $('#portfolioSeries').val("").trigger('change');
+        $('#trader').val("").trigger('change');
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 end
         $("#ps").val('').trigger('change');
         $("#tradeAmt").val('').trigger('change');
         $("#settleSpeed").val('').trigger('change');

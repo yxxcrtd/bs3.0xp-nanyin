@@ -466,4 +466,19 @@ public class EtribRepoInfo003Dto extends EtrEntrust implements ProcessEntity {
     public void setPortfolioSeries(String portfolioSeries) {
         this.portfolioSeries = portfolioSeries;
     }
+
+    //add by chenjiaxing 多组合本方交易员字段未添加 20210914 start
+    /**
+     * 本方交易员
+     */
+    private String trader;
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
+    //add by chenjiaxing 多组合本方交易员字段未添加 20210914 end
 }
