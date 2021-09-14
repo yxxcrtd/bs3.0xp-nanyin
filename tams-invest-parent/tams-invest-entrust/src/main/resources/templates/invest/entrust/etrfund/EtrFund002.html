@@ -227,11 +227,11 @@
                                     </div>
                                 </div>
                                 <div class="layui-form-item changein">
-                                    <div class="form-inline-wrap">
+                                    <div class="form-inline-wrap" id="changeToFinprodMarketId_div">
                                         <label class="layui-form-label form-lable">转入资产代码</label>
                                         <div class="layui-input-inline input-inline">
                                             <select type="text" id="changeToFinprodMarketId" name="changeToFinprodMarketId" class="layui-input form-input input-select"
-                                                    allowClear="true" placeholder="请输入内容" parentIds="finprodMarketId"
+                                                    allowClear="true" placeholder="请输入内容" parentIds="finprodMarketId" required="required"
                                                     data-th-data-url="@{/invest/entrust/etrfund/EtrFund002/getSelectFinprodMarketId}"
                                                     data-th-initValue="${entity?.changeToFinprodMarketId}">
                                             </select>

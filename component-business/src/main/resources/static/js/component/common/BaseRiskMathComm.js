@@ -1138,6 +1138,21 @@
                                 ["风险生成要素", "生成风险试算"]));
                             return true;
                         }
+                        // ZGZGST-2518:质押式回购指令组合系列指令风险试算元素变化check fuyongsheng 20210914 add start
+                        else if (typeof currentCalcConditionObj[key] == "object") {
+                            for (var i in currentCalcConditionObj[key]) {
+                                if (i == "createTime" || i == "updateTime" || i == 'index') {
+                                    continue;
+                                }
+                                if (typeof currentCalcConditionObj[key][i] != "object"
+                                    && calcConditionObjBackUp[key][i] != currentCalcConditionObj[key][i]) {
+                                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                                        ["风险生成要素", "生成风险试算"]));
+                                    return true;
+                                }
+                            }
+                        }
+                        // ZGZGST-2518:质押式回购指令组合系列指令风险试算元素变化check fuyongsheng 20210914 add end
                     }
                 }
                 // 组合风险试算参数更改检验	王贵奇	2019/8/19	开始

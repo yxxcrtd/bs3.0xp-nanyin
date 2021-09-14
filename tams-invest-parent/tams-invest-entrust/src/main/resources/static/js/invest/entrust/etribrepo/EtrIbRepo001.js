@@ -64,7 +64,7 @@
         checkbox:true,
         searchOnInit:true,
         cols:[
-            {field:'entrustId', title: 'EtrIbBondinfo001.entrustId', sortField:'entrustId',width : 100}//指令编号
+            {field:'entrustId', title: 'EtrIbBondinfo001.entrustId', sortField:'entrustId',width : 200}//指令编号
             ,{field:'entrustStatusName', title: 'EtrIbBondinfo001.entrustStatus', sortField:'entrustStatus',width : 100}//有效状态
             ,{field:'invManagerId', title: 'EtrInvestBondInfo001.invManagerId', sortField:"invManagerId", width : 100}
             ,{field:'parentPortfolioId', title: '组合代码', width: 100, sortField:"parentPortfolioId",visible:false}
@@ -83,8 +83,8 @@
             ,{field:'priceModelName', title: 'EtrInvestBondInfo001.priceModel', width:100,sortField:"priceModel"}
             ,{field:'price', title: 'EtrIbRepo001.price',type:'number', digit:4, width : 100}
             ,{field:'settleSpreedName', title: 'EtrInvestBondInfo002.settleSpreed', width : 100,sortField:"settleSpreed"}
-            ,{field:'vdateStr', title: 'EtrInvestBondInfo001.vdate', width:100,/*type:'date',*/sortField:"vdate"}
-            ,{field:'mdateStr', title: 'EtrInvestBondInfo001.mdate', width:100,/*type:'date',*/sortField:"mdate"}
+            ,{field:'vdateStr', title: 'EtrInvestBondInfo001.vdate', width:200,/*type:'date',*/sortField:"vdate"}
+            ,{field:'mdateStr', title: 'EtrInvestBondInfo001.mdate', width:200,/*type:'date',*/sortField:"mdate"}
             ,{field:'finishAmt',type:'money', title: 'EtrIbRepo001.finishAmt', width:100,sortField:"finishAmt"}
             ,{field:'transactioncom', title: 'EtrInvestBondInfo001.transactioncom',render : function(data, type, row, meta){
                     return "<div class='layui-progress layui-progress-big' style='margin-top: 3px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.transactioncom+"%'><span class='layui-progress-text'>"+row.transactioncom+"%</span></div></div>";

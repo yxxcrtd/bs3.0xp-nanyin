@@ -176,7 +176,18 @@
                 sortable: false, type: 'number',
                 digit: 2,
                 visible: getElementById("ps").val() != BACK_LEND_DIRECTION_04
-            }
+            },
+            //add by chenjiaxing 质押式回购指令，选择质押券，首次净价为空 20210914 start
+            {
+                field: 'firstNetPrice',
+                width: 150,
+                title: '首次净价',
+                sortable: false, type: 'number',
+                digit: 2,
+                visible: false
+            },
+            //add by chenjiaxing 质押式回购指令，选择质押券，首次净价为空 20210914 end
+
             // 可质押列表增加“债项评级”、“到期日”、“登记托管机构”、“剩余期限”字段 add by renping 20191012 end
         ],
         done:function () {

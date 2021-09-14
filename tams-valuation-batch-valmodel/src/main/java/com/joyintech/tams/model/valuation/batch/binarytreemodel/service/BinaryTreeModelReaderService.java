@@ -110,8 +110,9 @@ public class BinaryTreeModelReaderService {
         //9.遍历待处理资产，构间reader返回结果
         for (ModAssetInfoDto modAssetInfoDto : listAsset) {
             BinaryTreeModelReaderEntity model = new BinaryTreeModelReaderEntity();
-            BeanUtil.copyPropertiesIgnoreNull(model, modAssetInfoDto);
-            String finProdId = model.getFinprodId();
+//            BeanUtil.copyPropertiesIgnoreNull(model, modAssetInfoDto);
+            model.setModAssetInfoDto(modAssetInfoDto);
+            String finProdId = model.getModAssetInfoDto().getFinprodId();
 
             //9.1待处理资产设置二叉树配置信息，如无配置，则出警告信息
             if(configMap.containsKey(finProdId)){
@@ -138,7 +139,12 @@ public class BinaryTreeModelReaderService {
             // 此处逻辑存在问题，没有考虑标的公司、可比公司配置
             ModStockMarketParamsDto modStockMarketParamsDto = new ModStockMarketParamsDto();
             List<String> listStockId = new ArrayList<>();
-            listStockId.add(modAssetInfoDto.getConFinprodId());
+            if(modAssetInfoDto.getConFinprodId()!=null){
+                listStockId.add(modAssetInfoDto.getConFinprodId());
+            }else{
+                modLogsService.error(finProdId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：债券的转股代码为空，无法继续.");
+                return list;
+            }
             modStockMarketParamsDto.setStockIdList(listStockId);
             //查询开始日	= 跑批日-（明细.到期日-跑批日）
             long lastQx = DateUtil.getBetweenDayNumber(platDate, modAssetInfoDto.getMdate());
