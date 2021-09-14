@@ -1,6 +1,7 @@
 
 package com.joyintech.service.valuation.basicdata.mstcurvedefmanage.controller;
 
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto;
@@ -8,6 +9,7 @@ import com.joyintech.service.valuation.basicdata.mstcurvedefmanage.service.MstCu
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,7 +44,6 @@ public class MstCurveDefManageController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<MstCurveDefManageDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
-        pageParam.put("curve_type", DictCodeListExt2.曲线类别_收益率曲线.getValue());
         return mstCurveDefManageService.selectForPage(page,length,pageParam);
     }
 
@@ -51,7 +52,7 @@ public class MstCurveDefManageController {
      */
     @RequestMapping("/getCurveCode/{page}/{length}")
     public Page<SelectOptionDto> getCurveCode(@RequestBody  Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length){
-        param.put("curve_type", DictCodeListExt2.曲线类别_收益率曲线.getValue());
+        //param.put("curve_type", DictCodeListExt2.曲线类别_收益率曲线.getValue());
         return  mstCurveDefManageService.getCurveCode(page, length,param);
     }
 
@@ -78,4 +79,60 @@ public class MstCurveDefManageController {
     public MstCurveDefManageDto selectByKey(@RequestBody Map<String,Object> param){
         return  mstCurveDefManageService.selectByKey(param);
     }
+
+
+    /**
+     * 插入
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insert")
+    public int insert(@RequestBody MstCurveDefManageDto dto) throws Exception {
+        return mstCurveDefManageService.insert(dto);
+    }
+
+    /**
+     * 更新数据
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public int update(@RequestBody MstCurveDefManageDto dto) throws Exception {
+        return mstCurveDefManageService.update(dto);
+    }
+
+    /**
+     *
+     * 删除
+     * @param dto
+     * @return
+     * @throws Exception
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("delete")
+    public int delete(@RequestBody MstCurveDefManageDto dto) throws Exception {
+        return mstCurveDefManageService.delete(dto);
+    }
+
+    /**
+     * 获取资产代码下来框
+     *
+     * @param param 过滤参数
+     * @return 下拉框列表
+     * @throws Exception
+     */
+    @PostMapping("getCurveGroupSelect/{page}/{length}")
+    public Page<SelectOptionDto> getCurveGroupSelect(@RequestBody Map<String, Object> param,
+                                                       @PathVariable("page") int page,
+                                                       @PathVariable("length") int length) {
+        return mstCurveDefManageService.getCurveGroupSelect(page, length, param);
+    }
+
 }

@@ -41,7 +41,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrLendSpecInfo002'), basePath +'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrLendSpecInfo002'), basePath +'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init' , '98%', '95%',{parentPageId:pageId},function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -115,6 +115,7 @@
         data.valueDate = new Date(data.valueDate).format();
         data.pageModel=PAGE_MODEL_EDIT;
         data.operateType='edit'
+        data.parentPageId = pageId;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrlendspecinfo/EtrLendSpecInfo001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrLendSpecInfo002.edit"),
                     basePath + "invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/init",

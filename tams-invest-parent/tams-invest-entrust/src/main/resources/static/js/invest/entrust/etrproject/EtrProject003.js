@@ -202,7 +202,7 @@
             if (operateType === 'submit') {
                 //     temp.elementId = 'EtrPlanAssetN003_btn_save';
                 // }else {
-                temp.elementId = 'EtrProject002_btn_submit';
+                temp.elementId = 'EtrProject003_btn_submit';
             }
             if(object.riskTrialRetDto[index])
                 temp.riskTrialRetDto = [object.riskTrialRetDto[index]];

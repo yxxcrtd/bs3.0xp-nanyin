@@ -16,7 +16,6 @@ import java.util.List;
  * @see MstCurveDefManageDto
  * @since 1.0
  */
-@PageId("MstCurveDefManage001")
 public class MstCurveDefManageDto extends BaseEntity implements ITableRow{
     /**
      * <意义，目的和功能，以及可能被用到的地方>
@@ -76,7 +75,7 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow{
     /**
      * K
      */
-    private BigDecimal K;
+    private BigDecimal k;
     /**
      * 基准曲线资产类型，国债，中央票据,短期融资债（aaa）
      */
@@ -135,6 +134,22 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow{
      * 付息频率
      */
     private String interestFreq;
+
+    /**
+     * 是否曲线族
+     */
+    private String curveGroupType;
+
+    /**
+     * 评级
+     */
+    private String gradeResult;
+
+    /**
+     * 所属曲线族
+     */
+    private String curveGroupCode;
+
 
     /**
      * 操作类型
@@ -243,11 +258,11 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow{
     }
 
     public BigDecimal getK() {
-        return K;
+        return k;
     }
 
     public void setK(BigDecimal k) {
-        K = k;
+        this.k = k;
     }
 
     public String getBaseAssetType() {
@@ -392,5 +407,29 @@ public class MstCurveDefManageDto extends BaseEntity implements ITableRow{
 
     public void setSelectedItem(List<MstCurveDefManageDto> selectedItem) {
         this.selectedItem = selectedItem;
+    }
+
+    public String getCurveGroupType() {
+        return curveGroupType;
+    }
+
+    public void setCurveGroupType(String curveGroupType) {
+        this.curveGroupType = curveGroupType;
+    }
+
+    public String getGradeResult() {
+        return gradeResult;
+    }
+
+    public void setGradeResult(String gradeResult) {
+        this.gradeResult = gradeResult;
+    }
+
+    public String getCurveGroupCode() {
+        return curveGroupCode;
+    }
+
+    public void setCurveGroupCode(String curveGroupCode) {
+        this.curveGroupCode = curveGroupCode;
     }
 }

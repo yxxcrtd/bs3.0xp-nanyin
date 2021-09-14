@@ -923,6 +923,10 @@
      * @returns
      */
     function doReset() {
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 starts
+        $('#portfolioSeries').val("").trigger('change');
+        $('#trader').val("").trigger('change');
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 end
         $("#ps").val('').trigger('change');
         $("#tradeAmt").val('').trigger('change');
         $("#settleSpeed").val('').trigger('change');
@@ -976,6 +980,12 @@
                 obj.price = $('#price').val();
                 obj.ccy = 'CNY';
                 // add by zhangrui1 交易对手影响风险试算 end
+                //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
+                if(!obj.repoTerm){
+                    Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
+                    return;
+                }
+                //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add end
                 var object = {
                     tradeDirection: ['ps', 'EtribRepoInfo003.ps'],
                     portfolioCode: ['portfolioId', 'EtribRepoInfo003.portfolioId'],

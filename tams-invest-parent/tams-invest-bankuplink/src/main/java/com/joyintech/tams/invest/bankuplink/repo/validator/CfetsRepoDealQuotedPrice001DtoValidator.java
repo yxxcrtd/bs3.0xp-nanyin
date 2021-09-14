@@ -209,7 +209,7 @@ public class CfetsRepoDealQuotedPrice001DtoValidator implements BeanValidator {
                         for(PtlAllocationDto ptlAllocationDto : ptlAllocations) {
                             if(StringUtil.equals(entry.getKey(),ptlAllocationDto.getPortfolioId())&&pledgePrinTotal.compareTo(ptlAllocationDto.getFpriceAmt())<0){
                                 isBreak = true;
-                                validList.add(new ValidMessage("",getMessage("组合分配中各指令的交易金额小于等于对应组合的质押券折算总金额!组合代码:"+item.getPortfolioId()+";折算总额度:"+pledgePrinTotal)));
+                                validList.add(new ValidMessage("",getMessage("组合分配中各指令的交易金额小于等于对应组合的质押券折算总金额!组合代码:"+ptlAllocationDto.getPortfolioId()+";折算总额度:"+pledgePrinTotal)));
                                 break;
                             }
                         }
