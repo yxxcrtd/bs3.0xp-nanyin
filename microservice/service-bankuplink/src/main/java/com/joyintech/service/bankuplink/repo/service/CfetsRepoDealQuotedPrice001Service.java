@@ -850,8 +850,8 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                     }
                     dto.setPtlAllocationList(ptlAllocationList);
                 }
-
             }
+			ps = dto.getPs();
 		}
 		PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();// 组合持仓流水、组合现金流水
 		List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();// 现金流水
