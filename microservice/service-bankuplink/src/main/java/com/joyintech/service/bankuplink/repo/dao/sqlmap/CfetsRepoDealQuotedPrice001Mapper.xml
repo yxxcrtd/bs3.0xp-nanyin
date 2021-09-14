@@ -79,7 +79,8 @@
             MST_CFETS_CUSTOMER_RELA.SPARTY_ID = nvl(G.PARTY_ID, GG.PARTY_ID))
             )                                                       mySideTraderName,
                C.TERM_TYPE,
-               A.VDATE vdate
+               A.VDATE vdate,
+        pp.PORTFOLIO_SERIES portfolioSeries
         FROM
             ETR_ENTRUST A
         INNER JOIN
@@ -141,6 +142,7 @@
 	    <!--交易对手对应交易员信息 start-->
 	    left join  MST_CFETS_CUSTOMER_TRADER T2 ON T2.TRADER_ID = A.COUNTER_TRADER
 	    left join MST_CFETS_CUSTOMER_INFO T1 ON T1.PARTY_ID = T2.PARTY_ID
+        LEFT JOIN PA_PTL_PORTFOLIO pp ON B.PORTFOLIO_ID = pp.PORTFOLIO_ID
         <!--交易对手对应交易员信息 end-->
         where
             A.ENTRUST_STATUS IN (#{entrustStatusUnAccept}, #{entrustStatusAccept}, #{entrustStatusComple})

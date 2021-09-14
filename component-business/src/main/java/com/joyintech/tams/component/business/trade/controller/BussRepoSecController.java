@@ -115,8 +115,11 @@ public class BussRepoSecController extends BaseController {
                     entity.setTotalPrinAmt(ArithmeticUtil.multiply(entity.getTotalPrinAmt(),new BigDecimal(10000)));
                 }
                 if(!(entity.getPledgeBondList() == null) && (!StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice002")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice002")
                         && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice003")
-                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006"))){
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice003")
+                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPr006"))){
                     for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
                         if (dto.getAvaPledgePrin() != null) {
                             dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));

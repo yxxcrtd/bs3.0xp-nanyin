@@ -27,6 +27,12 @@
         obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         // add by zhangrui1 交易对手影响风险试算 end
         obj.repoTerm = $('#repoTerm').val();
+        //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
+        if(!obj.repoTerm){
+            Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
+            return;
+        }
+        //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add end
         var object = {tradeDirection:['ps','EtrIbRepoinfo002.ps'],portfolioCode:['portfolioId','EtrIbRepoinfo002.portfolioId'],tradeAmount:['entrustAmt','EtrIbRepoinfo002.entrustAmt'],assetType:['assetType1','EtrIbRepoinfo002.assetType1'],data:obj}
         // add by zhangrui1 交易对手影响风险试算 start
         object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];

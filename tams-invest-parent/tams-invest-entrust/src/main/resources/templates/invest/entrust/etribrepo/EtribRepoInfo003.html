@@ -39,19 +39,24 @@
                         <select id="portfolioSeries" name="portfolioSeries"
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 data-th-placeholder="#{SysCommon.placeholder}"
+                                allowClear="true"
+                                formatoption="true"
                                 required data-th-data-result="${PORTFOLIO_SERIES}"
                                 data-th-initvalue="${entity?.portfolioSeries}">
                         </select>
                     </div>
                 </div>
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
-                    <label class="layui-form-label" style="width: 100px;" data-th-text="#{EtrIbBondinfo002.trader}">本方交易员</label>
-                    <div class="layui-input-inline input-inline" style=" margin: 5px; margin-left: auto;">
+                    <label class="layui-form-label" style="width: 95px;" data-th-text="#{EtrIbBondinfo002.trader}">本方交易员</label>
+                    <div class="layui-input-inline input-inline">
                         <select type="text" id="trader" name="trader"
                                 class="layui-input form-input input-select"
                                 data-th-placeholder="#{SysCommon.placeholder}"  placeholder="请输入内容"
+                                allowClear="true"
+                                formatoption="true"
                                 data-th-data-url="@{/component/trade/BussEtrInvestPersonInfo/getTrader}"
-                                data-th-initvalue="${entity?.termType}" ></select>
+                                data-th-initvalue="${entity?.trader}">
+                        </select>
                     </div>
                 </div>
             </div>
@@ -165,11 +170,13 @@
                     <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label" style="width: 95px;" data-th-text="#{EtrRepo002.termType}">期限品种</label>
                             <div class="layui-input-inline input-inline">
-                                <input type="text" id="termType" name="termType"
+                                <select type="text" id="termType" name="termType"
                                                     class="layui-input form-input input-select"
+                                                    placeholder="请输入内容"
                                                     data-th-placeholder="#{SysCommon.placeholder}"
                                                     data-th-data-result='${TERM_TYPE_REBACK}'
                                                     allowClear="true" disabled="disabled"
+                                                    formatoption="true"
                                                     data-th-initvalue="${entity?.termType}" ></select>
                             </div>
                     </div>
@@ -177,16 +184,22 @@
                      <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                         <label class="layui-form-label" style="width: 95px;" data-th-text="#{EtrIbRepoinfo002.counterId}">交易对手</label>
                             <div class="layui-input-inline input-inline">
-                                <select
-                                    id="counterId"
-                                    name="counterId"
-                                    class="layui-input form-input input-select"
-                                    data-th-placeholder="#{SysCommon.placeholder}"
-                                    formatoption="false"
-                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"
-                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&callPageId=EtrInvestBondInfo002|"
-                                    th:initValue="${entity?.counterId}"
-                                ></select>
+<!--                                <select-->
+<!--                                    id="counterId"-->
+<!--                                    name="counterId"-->
+<!--                                    class="layui-input form-input input-select"-->
+<!--                                    data-th-placeholder="#{SysCommon.placeholder}"-->
+<!--                                    formatoption="false"-->
+<!--                                    parentIds="ps,finprodType2,profitType,tradeMarket,finprodId,pinanAssetType"-->
+<!--                                    data-th-data-url="|@{/component/trade/BussEtrInvestPersonInfo/getCounterId}?innerTrade=${innerTrade}&counterType=${counterType}&callPageId=EtrInvestBondInfo002|"-->
+<!--                                    th:initValue="${entity?.counterId}"-->
+<!--                                ></select>-->
+                                <select type="text" id="counterId" name="counterId"
+                                        class="layui-input form-input input-select"
+                                        th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                        th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
+                                        formatoption="true"
+                                        th:initValue="${entity?.counterId}"></select>
                             </div>
                     </div>
                     

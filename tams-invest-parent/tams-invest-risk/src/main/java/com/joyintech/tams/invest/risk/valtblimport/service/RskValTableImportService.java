@@ -125,7 +125,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         List<String> isAutoCouponFundfInfoWindcodeList = new ArrayList<String>();
         //查找底层资产映射表
         List<RskValtblPrtBotassetMapDto> botAssetMapList = rskValtblPrtBotassetService.selectBotAssetMapByPtlId(dto.getPtlId());
-        List<String> finprodIds = new ArrayList<>();
         List<String> subNameList = new ArrayList<String>();
         Map<String,Object> paramMap = new HashMap<String,Object>();
         dto.getSelectedItem().forEach(item->{
@@ -291,7 +290,6 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
                             rskValtblPrtBotassetMapDto2.setIsAdd(DictCodeList.是否_是.getValue());
                         }
                         botAssetMapList.add(rskValtblPrtBotassetMapDto2);
-                        finprodIds.add(rskValtblPrtBotassetMapDto2.getFinprodId());
                     }
                 }
             }
@@ -306,7 +304,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         // 调用接口发送数据 add by yufei 20200818 end
         
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 start
-        preOccupationChange(dto,finprodIds);
+        preOccupationChange(dto);
         //上农商个性化_估值表导入预占实占变更  add by zhangpei 20201224 end
     }
 
@@ -1223,7 +1221,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
     * 20201222
  * @throws Exception 
     */
-   private AjaxResult preOccupationChange(RskValtblAssetSubDto dto,List<String> finprodIds){
+   private AjaxResult preOccupationChange(RskValtblAssetSubDto dto){
 	   AjaxResult result=new AjaxResult();
 
 	   //1.估值表文件中各资产的分配明细
@@ -1294,9 +1292,7 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
 		}
 		
 	   //3.指令状态变更
-       //更新估值表导入存在的资产的委托状态为已完成
-	   if(!StringUtil.isEmptyList(needFreeList)&&!StringUtil.isEmptyList(finprodIds)){
-           needFreeList = needFreeList.stream().filter(item -> finprodIds.contains(item.getBottomAssetId())).collect(Collectors.toList());
+	   if(!StringUtil.isEmptyList(needFreeList)){
 		   updateEntrustStatus(needFreeList);
 	   }
 	   return result;
