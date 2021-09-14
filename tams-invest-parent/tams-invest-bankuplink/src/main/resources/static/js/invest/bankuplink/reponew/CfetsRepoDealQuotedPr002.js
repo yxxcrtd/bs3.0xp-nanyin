@@ -1028,9 +1028,9 @@
                 item.bondCode = val.bondCode;
                 item.bondAbbrName =val.bondAbbrName;
                 if(!flag){
-                	item.avaPledgePrin =val.avaPledgePrin;
+                	item.avaPledgePrin =JoyinMath.doMul(val.avaPledgePrin,10000);
                 }
-                item.pledgePrin =val.pledgePrin;
+                item.pledgePrin = JoyinMath.doMul(val.pledgePrin, 10000);
                 item.pledgeRate = val.pledgeRatio;
                 item.netPrice = val.firstNetPrice;
                 item.repRegistOrgStr = val.repRegistOrgStr;

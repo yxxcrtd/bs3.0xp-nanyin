@@ -16,7 +16,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrRepo002'), basePath +'invest/entrust/etrrepo/EtrRepo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrRepo002'), basePath +'invest/entrust/etrrepo/EtrRepo002/init', '98%', '95%',{parentPageId:pageId},function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -83,6 +83,7 @@
         data.calendarId="01";
         data.settleSpreed="01";
         data.tradeMarket="01";
+        data.parentPageId = pageId;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrRepo002.edit"),
                     JoyinUtil.getRealPath("invest/entrust/etrrepo/EtrRepo002/init"),
