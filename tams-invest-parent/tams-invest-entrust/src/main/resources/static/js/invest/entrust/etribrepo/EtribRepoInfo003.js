@@ -981,6 +981,7 @@
                 obj.ccy = 'CNY';
                 // add by zhangrui1 交易对手影响风险试算 end
                 //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
+                obj.repoTerm = $('#repoTerm').val();
                 if(!obj.repoTerm){
                     Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
                     return;
