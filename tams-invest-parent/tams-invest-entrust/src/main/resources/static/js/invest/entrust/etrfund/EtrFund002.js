@@ -456,6 +456,8 @@
             $("#entrustAmt").attr("disabled",false);
             $("#entrustNum").val('')
             $('#assetAvailablePosition').val('').trigger('blur');
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodMarketId').val('');
             getProAvailableCash();
             getProAvailableCash1();
             if($("#assetType1").val() != F02){
@@ -503,6 +505,11 @@
             }
             if ($("#ps").val() == T65) {
                 $(".changein").show();
+                $("#changeToFinprodMarketId_div").show();
+            }
+            if ($("#ps").val() == T06) {
+                $('#changeToFinprodMarketId_div').hide();
+                $('#changeToFinprodMarketId').val('');
             }
         }
         else if($("#ps").val()==T52){
@@ -514,6 +521,8 @@
             $("#entrustAmt").attr("disabled",false);
             $("#entrustNum").val('')
             $('#assetAvailablePosition').val('').trigger('blur');
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodMarketId').val('');
             getProAvailableCash();
             getProAvailableCash1();
             if($("#assetType1").val() != F02){
@@ -536,6 +545,8 @@
             $("#pschange2").hide();
             $("#entrustAmt0").show();
             $("#entrustNum0").show();
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodMarketId').val('');
             if(pageModel === PAGE_MODEL_REFERENCE) {
             	$("#entrustNum").attr("disabled",false);
             } else {
@@ -565,6 +576,8 @@
             $("#entrustNum0").show();
             $("#entrustNum").attr("disabled",false);
             $("#entrustAmt").val('').attr("disabled",true);
+            $('#changeToFinprodMarketId_div').hide();
+            $('#changeToFinprodMarketId').val('');
             getAssetAvailablePosition();
             getEntrustAmt();
             if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data') && $('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0]) {
