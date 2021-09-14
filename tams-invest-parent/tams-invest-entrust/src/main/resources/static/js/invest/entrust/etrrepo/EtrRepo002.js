@@ -180,6 +180,9 @@
         object.inputValue1 = PINAN_ASSET_TYPE_F07;
         object.inputValue2 = $('#assetType1').val();
         object.inputValue3 = $('#ps').val();
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
         	Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/checkAuthorization', object, function(result2) {
 	            Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/check',object,

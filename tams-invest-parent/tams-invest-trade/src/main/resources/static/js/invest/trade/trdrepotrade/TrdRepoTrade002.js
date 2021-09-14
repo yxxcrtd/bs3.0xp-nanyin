@@ -241,6 +241,9 @@
 	        // 委托的期限品种
 	        object.entrustTermType = entrustTermType;
 	        object.preTradeId = preTradeId;
+            if(parentPageId){
+                object.parentPageId = parentPageId;
+            }
 	        if(object.trdInvestPersonInfo && $("#fTradeId").val()){
 	        	object.trdInvestPersonInfo.counterTrader = $('select#trdInvestPersonInfo_counterTrader').val();
 	        }else{

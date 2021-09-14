@@ -147,6 +147,19 @@ public class EtrRepoDto extends EtrEntrust {
     private BigDecimal minAmt;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * 取得 最低成交金额
      * 
      * @return 最低成交金额

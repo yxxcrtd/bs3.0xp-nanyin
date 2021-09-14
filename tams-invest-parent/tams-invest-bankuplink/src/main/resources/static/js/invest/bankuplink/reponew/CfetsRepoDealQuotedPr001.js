@@ -495,7 +495,8 @@
                 quoteId: data.quoteId,
                 workflowStatus: data.validStatus,
                 workflowId: data.workflowId,
-                quotaPageModel: 'edit'  //add by zhangnian 20210116  双击进去默认做修改操作
+                quotaPageModel: 'edit', //add by zhangnian 20210116  双击进去默认做修改操作
+                operation: object.operation
             }, function () {
                 wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
             });
