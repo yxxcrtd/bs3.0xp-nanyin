@@ -229,14 +229,14 @@
 
             $sells.forEach(($item, level_no) => {
             	var $price = tick_data.sells[ sellIndex] || 0;
-                $item.$price.textContent = parent.EtrExchangeTrade001.formatPrice($price);
-                $item.$volume.textContent = Math.floor((tick_data.sellVolumes[sellIndex--] || 0) * countNum);
+                $item.$price.textContent = parent.EtrExchangeTrade001.formatPrice($price) == 0 ? '--' : parent.EtrExchangeTrade001.formatPrice($price);
+                $item.$volume.textContent = Math.floor((tick_data.sellVolumes[sellIndex--] || 0) * countNum) == 0 ? '--' : Math.floor((tick_data.sellVolumes[sellIndex--] || 0) * countNum);
             });
 
             $buys.forEach(($item, level_no) => {
             	var $price = tick_data.buys[level_no] || 0;
-                $item.$price.textContent = parent.EtrExchangeTrade001.formatPrice($price);
-                $item.$volume.textContent = Math.floor((tick_data.buyVolumes[level_no] || 0) * countNum);
+                $item.$price.textContent = parent.EtrExchangeTrade001.formatPrice($price) == 0 ? '--' : parent.EtrExchangeTrade001.formatPrice($price);
+                $item.$volume.textContent = Math.floor((tick_data.buyVolumes[level_no] || 0) * countNum) == 0 ? '--' : Math.floor((tick_data.buyVolumes[level_no] || 0) * countNum);
             });
         };
 
@@ -245,8 +245,8 @@
          */
 
         if (!tick_data) {
-
-            const zero = '0.00'
+            // const zero = '0.00'
+            const zero = '--';
             $header.textContent='-----';
             $lastPrice.textContent = zero;
             $lastPrice.className = 'price-anchor';
@@ -265,13 +265,13 @@
             $sells.forEach(($item, level_no) => {
 
                 $item.$price.textContent = zero;
-                $item.$volume.textContent = 0;
+                $item.$volume.textContent = zero;
             });
 
             $buys.forEach(($item, level_no) => {
 
                 $item.$price.textContent = zero;
-                $item.$volume.textContent = 0;
+                $item.$volume.textContent = zero;
             });
             _last_tick_data = null;
             //delete _last_tick_data;

@@ -305,6 +305,7 @@
         psChange(true);
         getProAvailableCash1();
         getAssetAvailablePosition();
+        getPrice();
         getEntrustAmt();
     })
     $("#portfolioId").change(function(){
@@ -622,38 +623,105 @@
     }
     
     function getPrice(){
-        if(($("#ps").val()==T01 || $("#ps").val()==T02)&&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)
-                &&($('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000001||$('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000002)){
+        if (($("#ps").val()==T01 || $("#ps").val()==T02)
+            &&($("#tradeMarket").val()==TRADE_PLACE_03||$("#tradeMarket").val()==TRADE_PLACE_04)
+            &&($('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000001||$('#bussEtrInvestPersonInfoDto_counterId').val()==JYDSJYS000000002)) {
             $("#price").prop("disabled", false).attr("required",true);
+            var data = {finprodId:$('#finprodMarketId').select2('data')[0].object.finprodId}
+            if (data !== '') {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/getPrice',data,
+                    function(result) {
+                        $("#price").val(result).trigger('blur');
+                    });
+            }
         }else{
-        	if(pageModel === PAGE_MODEL_REFERENCE) {
-        		$("#price").prop("disabled", true).removeAttr("required");
-        	} else {
-        		$("#price").val('').prop("disabled", true).removeAttr("required");
-        	}
+            if(pageModel === PAGE_MODEL_REFERENCE) {
+                $("#price").prop("disabled", true).removeAttr("required");
+            } else {
+                $("#price").val('').prop("disabled", true).removeAttr("required");
+            }
         }
-        
     }
     
     function getEntrustAmt(){
-        if($("#ps").val()==T01 || $("#ps").val()==T02){
-            if($('#finprodMarketId').val() != null && $('#finprodMarketId').val() != ''&&$('#finprodMarketId').select2('data')[0].object){
-                if($('#bussEtrInvestPersonInfoDto_counterId').select2('data') && $('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0]
+        const price = $("#price").val();
+        const entrustNum = $("#entrustNum").val();
+        const entrustAmt = $("#entrustAmt").val();
+        const ps = $("#ps").val();
+        const finprodMarketId = $('#finprodMarketId').val();
+        if (price == null || price.length === 0 || ps == null || ps.length === 0) {
+            return;
+        }
+        //买入
+        if (ps === T01 || ps === T02){
+            if (finprodMarketId != null && finprodMarketId.length > 0 && $('#finprodMarketId').select2('data')[0].object) {
+                if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')
+                    && $('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0]) {
+                    // 交易对手不是内部交易对手时，应该是指令价格 能输，指令金额 or 指令份额能输入，不能同时输入
                     // N:内部交易对手 Y:上交所，深交所
-                    &&$('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='N'){
-                    var data = {finprodId:$('#finprodMarketId').select2('data')[0].object.finprodId}
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etrfund/EtrFund002/getPrice',data,
-                            function(result) {
-                        $("#entrustAmt").val($("#entrustNum").val()*result).trigger('blur');
-                    });
+                    if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='Y') {
+                        // 指令份额为空
+                        if (entrustNum == null || entrustNum.length === 0) {
+                            $("#entrustNum").prop("disabled", false);
+                            $("#entrustAmt").prop("disabled", false);
+                            return;
+                        }
+                        $("#entrustAmt").val(entrustNum * price).trigger('blur');
+                        $("#entrustAmt").prop("disabled", true).removeAttr("required");
+                    }
+                    // 交易对手是内部交易对手时 指令份额输入，指令金额不能输入，价格可以输
+                    else if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='N') {
+                        $("#entrustNum").prop("disabled", false);
+                        $("#entrustAmt").prop("disabled", true);
+                    }
                 }
             }
             else{
                 $("#entrustNum").val('');
                 $('#finprodMarketId').attr("required",true);
                 star();
-                /*Joyin.error("请输入市场代码");*/
-                return;
+            }
+        }
+    }
+
+    function getEntrustNum(){
+        const price = $("#price").val();
+        const entrustNum = $("#entrustNum").val();
+        const entrustAmt = $("#entrustAmt").val();
+        const ps = $("#ps").val();
+        const finprodMarketId = $('#finprodMarketId').val();
+        if (price == null || price.length === 0 || ps == null || ps.length === 0) {
+            return;
+        }
+        //买入
+        if (ps === T01 || ps === T02){
+            if (finprodMarketId != null && finprodMarketId.length > 0 && $('#finprodMarketId').select2('data')[0].object) {
+                if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')
+                    && $('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0]) {
+                    // 交易对手不是内部交易对手时，应该是指令价格 能输，指令金额 or 指令份额能输入，不能同时输入
+                    // N:内部交易对手 Y:上交所，深交所
+                    if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='Y') {
+                        // 指令金额为空
+                        if (entrustAmt == null || entrustAmt.length === 0) {
+                            $("#entrustNum").prop("disabled", false);
+                            $("#entrustAmt").prop("disabled", false);
+                            return;
+                        }
+
+                        $("#entrustNum").val(entrustAmt / price).trigger('blur');
+                        $("#entrustNum").prop("disabled", true).removeAttr("required");
+                    }
+                    // 交易对手是内部交易对手时 指令份额输入，指令金额不能输入，价格可以输
+                    else if ($('#bussEtrInvestPersonInfoDto_counterId').select2('data')[0].object=='N') {
+                        $("#entrustNum").prop("disabled", false);
+                        $("#entrustAmt").prop("disabled", true);
+                    }
+                }
+            }
+            else{
+                $("#entrustNum").val('');
+                $('#finprodMarketId').attr("required",true);
+                star();
             }
         }
     }
@@ -828,8 +896,27 @@
         })
 
         $("#entrustNum").change(function(){
+            if ($("#ps").val() == T01 || $("#ps").val() == T02) {
+                $("#entrustAmt").prop("disabled", true);
+            }
             getEntrustAmt();
+
         });
+
+        $("#entrustAmt").change(function(){
+            if ($("#ps").val() == T01 || $("#ps").val() == T02) {
+                $("#entrustNum").prop("disabled", true);
+            }
+            getEntrustNum();
+        })
+
+        $("#price").change(function(){
+            if ($("#entrustNum").prop("disabled") == true) {
+                getEntrustNum();
+            } else if ($("#entrustAmt").prop("disabled") == true) {
+                getEntrustAmt();
+            }
+        })
 
         //交易市场联动
         $("#tradeMarket").change(function(){
