@@ -130,7 +130,11 @@ public class EtrRepo002Controller extends BaseController {
         model.addAttribute("R6M", DictCodeList.回购期限品种_R6M.getValue());
         model.addAttribute("R9M", DictCodeList.回购期限品种_R9M.getValue());
         model.addAttribute("R1Y", DictCodeList.回购期限品种_R1Y.getValue());
-
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
@@ -144,6 +148,11 @@ public class EtrRepo002Controller extends BaseController {
             model.addAttribute("entity_bussRepoSecDto", JsonUtils.object2Json(dto.getBussRepoSec()));
             model.addAttribute("businessId",dto.getWorkflowId());
 
+            // add by yeming 20210914 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所,  dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型,  dto.getParentPageId());
+            // add by yeming 20210914 银行间场内场外拆分 end
             queryChlCash(model, dto);
         }
         else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
@@ -194,11 +203,6 @@ public class EtrRepo002Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         return super.init(model);
     }
