@@ -3,7 +3,6 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.writ
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.tams.constant.ModelDictCodeList;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelResultDto;
 import com.joyintech.tams.model.impairment.batch.common.utils.DataHandleUtil;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
@@ -55,7 +54,7 @@ public class AssetImpairmentStageJudgeModelWriter extends BaseWriter<AssetImpair
                 logrst.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
                 logrst.setTaskId(batchExecuteInfo.getTaskId());
                 logrst.setMsg("【资产减值阶段判断批处理】:执行批处理【" + item.getAssetId()+ "】成功结束！");
-                logrst.setType(ModelDictCodeList.批处理执行结果_正常结束.getValue());
+                logrst.setType(ModelDictCodeList.模型计算结果_成功.getValue());
                 editLogContextInfo(stepExecution,logrst);
             }
 
@@ -66,7 +65,7 @@ public class AssetImpairmentStageJudgeModelWriter extends BaseWriter<AssetImpair
                 logrst.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
                 logrst.setTaskId(batchExecuteInfo.getTaskId());
                 logrst.setMsg("计算错误");
-                logrst.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                logrst.setType(ModelDictCodeList.模型计算结果_失败.getValue());
                 editLogContextInfo(stepExecution,logrst);
             }
         }

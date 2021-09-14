@@ -107,7 +107,7 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
                         batchParam.setFinprodId(resultDto.getProdId());
                         batchParam.setTaskId(taskId);
                         batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                        batchParam.setType(ModelDictCodeList.批处理执行结果_正常结束.getValue());
+                        batchParam.setType(ModelDictCodeList.模型计算结果_成功.getValue());
                         batchParam.setMsg("执行批处理【" + resultDto.getProdId()+ "】成功结束！");
                         bBatchLogResultList.add(batchParam);
                     }
@@ -122,7 +122,7 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
                 batchParam.setFinprodId(resultDto.getProdId());
                 batchParam.setTaskId(taskId);
                 batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());
                 batchParam.setMsg("【PD计算批处理】：计算错误");
                 bBatchLogResultList.add(batchParam);
             }
