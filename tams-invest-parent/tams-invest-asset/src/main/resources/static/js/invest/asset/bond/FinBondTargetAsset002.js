@@ -626,6 +626,16 @@ $(function() {
         var customerId = $('#issuer').val();
         if(customerId){
             AssetCommon.getRepInfoByIssuer(customerId);
+            if (typeof pageModel !== 'undefined' && pageModel !== PAGE_MODEL_REFERENCE){
+                Joyin.ajax(basePath + 'invest/asset/bond/FinBondTargetAsset002/getFinBondRatingDto?issuer='+customerId, '' ,function(result){
+                    if (result) {
+                        $('#busiFinBondRatingInfoTable').data('joyintable').reload({
+                            data : result,
+                            url : null
+                        });
+                    }
+                });
+            }
         }
     }
     window.componentLoadCallback = function(isDone, pagePath, params){
