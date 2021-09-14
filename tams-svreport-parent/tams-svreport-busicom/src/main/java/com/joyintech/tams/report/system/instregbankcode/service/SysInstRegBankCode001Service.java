@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -257,6 +259,20 @@ public class SysInstRegBankCode001Service extends CommonExportService<SysInstReg
             if (StringUtil.isEmpty(insitituteCode)) {
                 messageList.add(this.getMessage("REPORT_COMMON_E_0057", "社会信用代码"));
             }
+
+            //TISHKBS-2372 社会信用代码要求只能是18位的数字或大写英文组合 add by wangyaning 20210625 start
+            if (insitituteCode.length() != 18){
+                messageList.add(this.getMessage("REPORT_COMMON_E_0056", "社会信用代码"));
+            }
+            else {
+                Pattern p = Pattern.compile("[^A-Z 0-9]");
+                Matcher m = p.matcher(insitituteCode);
+                boolean match = m.find();
+                if(match){
+                    messageList.add(this.getMessage("REPORT_COMMON_E_0060", "社会信用代码"));
+                }
+            }
+            //TISHKBS-2372 社会信用代码要求只能是18位的数字或大写英文组合 add by wangyaning 20210625 end
 
             if (CollectionUtils.isNotEmpty(messageList)) {
                 checkResult.add(new ExcelValidDto(StringUtil.EMPTY, String.valueOf(i + 2),

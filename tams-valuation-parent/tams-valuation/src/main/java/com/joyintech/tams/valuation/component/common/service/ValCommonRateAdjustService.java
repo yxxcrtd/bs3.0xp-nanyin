@@ -61,7 +61,7 @@ public class ValCommonRateAdjustService extends BaseService<ValFinPayInterestStd
      * @see
      * @since 1.0
      */
-    public List<AssetCommonInvRateAdjustDto> escapRateAdjust(AssetCommonInfoDto scai,FinCashPayRule is,List<FinCashPlanDto> scheList,List<String> holidayList){
+    public List<AssetCommonInvRateAdjustDto> escapRateAdjust(AssetCommonInfoDto scai,FinCashPayRule is,List<FinCashPlanDto> scheList,List<String> holidayList) throws IllegalAccessException, InstantiationException {
         List<AssetCommonInvRateAdjustDto> rateList = new ArrayList<AssetCommonInvRateAdjustDto>();
         //固定利率
      // 一体化对应etliu start

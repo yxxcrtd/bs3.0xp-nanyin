@@ -15,6 +15,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.entrust.etrconbond.dto.EtrConBondDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @see EtrConBondMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrConBondMapper {
 
     /**

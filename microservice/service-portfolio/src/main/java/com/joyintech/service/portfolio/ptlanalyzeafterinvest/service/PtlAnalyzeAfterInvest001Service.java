@@ -44,7 +44,7 @@ public class PtlAnalyzeAfterInvest001Service extends BaseService<PtlAnalyzeAfter
      * @return
      * @throws Exception
      */
-    public Page<PtlAnalyzeAfterInvest001Dto> selectForPage(int page, int length, Map<String,Object> map) throws Exception{
+    public Page<PtlAnalyzeAfterInvest001Dto> selectForPage(int page, int length, Map<String,Object> map) {
         map.put("PINAN_ASSET_TYPE_F06", DictCodeList.平安资产类型_项目类资产.getValue());
         map.put("PLEDGE_SHARES_STATUS_01", DictCodeListExt3.质押券状态_正常.getValue());
         map.put("PLEDGE_SHARES_STATUS_02", DictCodeListExt3.质押券状态_触发预警.getValue());

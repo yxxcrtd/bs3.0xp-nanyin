@@ -80,7 +80,11 @@ public interface IEvent extends Serializable {
                     mapData.getOrDefault(epr.formulaRelItem(), BigDecimal.ZERO).toString()));
             // add by zhangrui1 公式配置 end
             }else {
-                epr.setRelValue(new BigDecimal(mapData.getOrDefault(epr.getRelItem(), BigDecimal.ZERO).toString()));
+            	Object object = mapData.get(epr.getRelItem());
+            	if(object==null) {
+            		object = BigDecimal.ZERO;
+            	}
+                epr.setRelValue(new BigDecimal(object.toString()));
             }
         });
     }

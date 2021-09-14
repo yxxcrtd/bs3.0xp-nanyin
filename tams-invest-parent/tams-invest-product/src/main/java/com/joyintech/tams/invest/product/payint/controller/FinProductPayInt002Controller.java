@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,13 +132,12 @@ public class FinProductPayInt002Controller extends BaseController {
      * 查询利息明细信息
      *
      * @return 利息明细信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findIntDetailInfo")
     @ResponseBody
-    public Page<ReduceInfoDto> findIntDetailInfo() throws Exception {
+    public Page<ReduceInfoDto> findIntDetailInfo() {
         FinProductPayInt002Dto inputDto = BeanUtil.mapToObject(RequestUtil.getPageParam(), FinProductPayInt002Dto.class);
         return finProductPayInt002Service.findIntDetailInfo(inputDto);
     }
@@ -149,12 +149,10 @@ public class FinProductPayInt002Controller extends BaseController {
      *
      * @param inputDto 参数
      * @return 画面联动结果
-     * @throws Exception Exception
      */
     @RequestMapping("calcCusProfit")
     @ResponseBody
-    public FinProductPayInt002Dto calcCusProfit(@RequestBody FinProductPayInt002Dto inputDto)
-            throws Exception {
+    public FinProductPayInt002Dto calcCusProfit(@RequestBody FinProductPayInt002Dto inputDto){
         return finProductPayInt002Service.calcCusProfit(inputDto);
     }
     
@@ -168,8 +166,7 @@ public class FinProductPayInt002Controller extends BaseController {
      */
     @RequestMapping("calcActYield")
     @ResponseBody
-    public FinProductPayInt002IntDetailDto calcActYield(@RequestBody FinProductPayInt002IntDetailDto inputDto)
-            throws Exception {
+    public FinProductPayInt002IntDetailDto calcActYield(@RequestBody FinProductPayInt002IntDetailDto inputDto){
         return finProductPayInt002Service.calcActYield(inputDto);
     }
 
@@ -193,13 +190,13 @@ public class FinProductPayInt002Controller extends BaseController {
      *
      * @param dto 画面参数
      * @return 保存提交结果
-     * @throws Exception Exception
+     * @throws WorkFlowException 
      * @see
      * @since 1.0
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody FinProductPayInt002Dto dto) throws Exception {
+    AjaxResult save(@RequestBody FinProductPayInt002Dto dto) throws WorkFlowException {
         if (StringUtil.isBlank(dto.getBussId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();

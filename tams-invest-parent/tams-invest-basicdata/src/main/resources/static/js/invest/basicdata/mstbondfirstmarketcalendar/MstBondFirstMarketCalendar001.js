@@ -140,13 +140,15 @@
         });
     	//导出
     	 $('#MstBondFirstMarketCalendar001_btn_export').click(function() {
-    		 Joyin.confirm(JoyinUtil.getMessage("MST_FIRSTBOND_001"), function(){
-    			    console.log('确认');
-    			    exportExcel();
-    			}, {}, function() {
-    			    console.log('取消');
-    			});
-             
+//    		 Joyin.confirm(JoyinUtil.getMessage("MST_FIRSTBOND_001"), function(){
+//    			    console.log('确认');
+//    			    exportExcel();
+//    			}, {}, function() {
+//    			    console.log('取消');
+//    			});
+                // 后续获取点击事件获取targetId 时出错 获取的是确认的点击事件。
+                exportExcel();
+
          });
     	 //重置
     	 $('#MstBondFirstMarketCalendar001_btn_reset').click(function(){

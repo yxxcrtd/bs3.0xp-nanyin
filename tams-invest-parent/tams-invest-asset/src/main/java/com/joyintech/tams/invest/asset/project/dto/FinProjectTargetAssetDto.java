@@ -253,6 +253,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
     /**
      * 投资性质
      */
+    @NotEmpty(fieldName = "FinProjectTargetAsset002.investNature",groups={ValidateGroupEdit.class})
     private String investNature;
 
     /**

@@ -980,4 +980,21 @@ public class TrdPlanNetInvestTradeDto extends TrdProductDeal implements ProcessE
     public void setAccAvailableCash(BigDecimal accAvailableCash) {
         this.accAvailableCash = accAvailableCash;
     }
+
+    private Date confirmDate;
+
+    public Date getConfirmDate() {
+        return confirmDate;
+    }
+
+    public void setConfirmDate(Date confirmDate) {
+        this.confirmDate = confirmDate;
+    }
+
+    /**
+     * 确认日期 文本
+     */
+    public String getConfirmDateStr() {
+        return DateUtil.format(this.getConfirmDate());
+    }
 }

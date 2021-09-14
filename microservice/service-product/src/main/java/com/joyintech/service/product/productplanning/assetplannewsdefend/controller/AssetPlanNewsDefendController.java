@@ -34,7 +34,8 @@ public class AssetPlanNewsDefendController {
      */
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<AssetPlanNewsDefend> selectForPage(@RequestBody Map<String,Object> params,
-                                                   @PathVariable("page") int page, @PathVariable("length") int length)throws Exception{
+                                                   @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return assetPlanNewsDefendService.selectForPage(page,length,params);
     }
 

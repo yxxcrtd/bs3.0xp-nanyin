@@ -94,7 +94,7 @@ public class PbcBeforeSubErrorCheck {
             chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
             chbReportCheck.setRepCode(DictCodeListExt2.报表名称_产品基本信息.getValue());
             chbReportCheck.setRepName(DictCodeListExt2.报表名称_产品基本信息.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.get("PBC_PROD_ID"));
+            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID"));
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
                 DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
             chbReportCheck.setDataTime(checkdate);

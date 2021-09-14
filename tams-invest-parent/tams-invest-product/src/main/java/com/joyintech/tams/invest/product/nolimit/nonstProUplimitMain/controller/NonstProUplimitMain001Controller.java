@@ -42,21 +42,17 @@ public class NonstProUplimitMain001Controller extends BaseController {
 	 */
 	@RequestMapping("selectPrdFamily")
 	@ResponseBody
-	public Page<SelectOptionDto> selectPrdFamily() throws Exception {
+	public Page<SelectOptionDto> selectPrdFamily() {
 		return nonstProUplimitMain001Service.selectPrdFamily(RequestUtil.getPageParam());
 
 	}
 	/**
 	 * 	画面查询方法
-	 * @param page
-	 * @param length
-	 * @param param
 	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping("/selectForPage")
 	@ResponseBody
-	public Page<NonstProUplimitMain001Dto> selectForPage() throws Exception{
+	public Page<NonstProUplimitMain001Dto> selectForPage(){
 		return nonstProUplimitMain001Service.selectForPage(RequestUtil.getPageParam());
 		
 	}
@@ -64,14 +60,12 @@ public class NonstProUplimitMain001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return nonstProUplimitMain001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

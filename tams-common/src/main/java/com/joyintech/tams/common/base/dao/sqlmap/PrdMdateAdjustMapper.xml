@@ -195,4 +195,12 @@
         where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
           and ADJUST_NUM = #{adjustNum,jdbcType=DECIMAL}
     </update>
+    <select id="selectMdate" resultType="java.util.Date" parameterType="Map" >
+        select MDATE
+        from (select MDATE, row_number() over ( order by ADJUST_NUM desc ) num
+              from PRD_MDATE_ADJUST
+              where FINPROD_ID =  #{finprodId,jdbcType=VARCHAR}
+                and ADJUST_TYPE =  #{adjustType,jdbcType=VARCHAR})
+        where num = 1
+    </select>
 </mapper>

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.taxparametermanage.taxscheme.dao;
 
 import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme004Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 附加税则表
@@ -19,6 +20,7 @@ import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme00
  * @see TaxScheme004Mapper
  * @since 1.0
  */
+@Repository
 public interface TaxScheme004Mapper {
 
 	int insertSelective(TaxScheme004Dto dto);

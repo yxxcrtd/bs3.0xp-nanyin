@@ -7,7 +7,7 @@
  * 修改内容：新建
  * 系统名称：中债报送子系统
  */
- 
+
 package com.joyintech.tams.report.submitmaintenance.businessdetailed.dao;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import com.joyintech.tams.report.submitmanagement.equitybusiinforegist.dto.Equit
 
 /**
  * 权益业务明细查询Mapper文件
- * 
+ *
  * @author 何阳阳
  * @version 1.0 2017年9月15日
  * @see EquityBusiDetails001Mapper
@@ -43,32 +43,32 @@ public interface EquityBusiDetails001Mapper {
      * @return 查询结果列表
      */
     List<EquiteBusiDetails001Dto> queryForPage(Map<String, Object> param);
-    
+
     /**
      * 根据主键查询投资者明细信息
      * @param key
      * @return
      */
     EquiteBusiDetails001Dto selectByPrimaryKey(EquiteBusiDetails001Dto key);
-    
+
     /**
      * 根据主键更新投资者明细信息状态
      * --批量逻辑删除
      */
     void updateByKeyList(@Param("stautsD")String stautsD, @Param("keyList")List<EquiteBusiDetails001Dto> keyList);
-    
+
     /**
      * 根据产品登记编码获取产品代码
      */
     String queryProdidByRegCode(String prdRegistCode);
-    
+
     /**
      * 根据主键更新投资者明细信息
      * @param equiteBusiDetails001Dto
      * @return
      */
     int updateByPrimaryKeySelective(EquiteBusiDetails001Dto equiteBusiDetails001Dto);
-    
+
     /**
      * 通过主键批量获取维护表中数据
      * --查询导入文件中的数据在维护表中已经存在的数据
@@ -90,41 +90,41 @@ public interface EquityBusiDetails001Mapper {
     List<EquityBusiInfoRegist001Dto> selectAllChbEqudetSubData(@Param("keyList") List<EquiteBusiDetails001Dto> keyList);
 
     /**
-	 * 批量删除投资者明细信息登记表中未报送数据
-	 * @param subList list
-	 * @return
-	 */
-	int deleteByPrimaryBatch(@Param("subList") List<EquityBusiInfoRegist001Dto> subList);
-    
-	/**
-	 * 批量更新删除投资者明细信息登记表数据
-	 * @param subList list
-	 * @return
-	 */
-	int updateByPrimaryKeySelectedBatch(@Param("status") String status, @Param("subList") List<EquityBusiInfoRegist001Dto> subList);
-	
-	/**
+     * 批量删除投资者明细信息登记表中未报送数据
+     * @param subList list
+     * @return
+     */
+    int deleteByPrimaryBatch(@Param("subList") List<EquityBusiInfoRegist001Dto> subList);
+
+    /**
+     * 批量更新删除投资者明细信息登记表数据
+     * @param subList list
+     * @return
+     */
+    int updateByPrimaryKeySelectedBatch(@Param("status") String status, @Param("subList") List<EquityBusiInfoRegist001Dto> subList);
+
+    /**
      * 查出所有有效的产品登记编码
      */
     List<Map<String,String>> queryAllRegCode();
-    
+
     /**
      * 通过主键获取投资者身份登记信息
      * @param equityInfo001Dto
      * @return
      */
     EquityInfo001Dto selectEquityInfoByPrimaryKey(EquityInfo001Dto dto);
-    
+
     /**
      * 通过主键获取权益人信息检查表数据
      * @param dto
      * @return
      */
     ChbEquHoldCheckDto selectChbEquHoldCheckByPrimaryKey(ChbEquHoldCheckDto dto);
-	
-    
-    
-    
+
+
+
+
 //    old：
 //    /**
 //     * 画面中的产品名称下拉框数据获取
@@ -140,7 +140,7 @@ public interface EquityBusiDetails001Mapper {
      * @return 返回结果
      */
     SelectOptionDto queryPrdIdAndName(Map<String, Object> param);
-    
+
     /**
      * 插入导入数据
      * <一句话功能简述>
@@ -151,7 +151,7 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     int insertSelective(EquiteBusiDetails001Dto equiteBusiDetails001Dto);
-    
+
     /**
      * 根据产品代码和产品名称查出对应的产品登记编码
      * @param param 存储了查询状态的map
@@ -160,24 +160,24 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     String queryRegCode(Map<String, Object> param);
-    
+
     /**
-     * 
+     *
      * @param list 数据列表
      * @see
      * @since 1.0
      */
     void insertIntoImportTable(List<Map<String, String>> list);
-    
+
     /**
      * 删除临时表
      * @see
      * @since 1.0
      */
     void deleteTmpTable();
-    
+
     long selectTmpCount();
-    
+
     /**
      * 检查是否存在已报送数据
      * @return 报送数据dto
@@ -185,7 +185,7 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     List<EquityBusiInfo001Dto> checkBusiInfoExist();
-    
+
     /**
      * 查询投资者列表（导入专用）
      * @return 投资者列表
@@ -211,7 +211,7 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     int isExistPeo(Map<String, Object> paramMap);
-    
+
     /**
      * 批量登录业务明细数据
      *
@@ -220,7 +220,7 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     void insertChbEqudetData(@Param("dataList") List<EquiteBusiDetails001Dto> dataList);
-    
+
     /**
      * 批量登录业务明细登记数据
      *
@@ -229,7 +229,7 @@ public interface EquityBusiDetails001Mapper {
      * @since 1.0
      */
     void insertChbEqudetSubData(@Param("dataList") List<ChbEqudetSub> dataList);
-    
+
     /**
      * 识别标识在投资者信息表中是否已存在
      * @return 结果集
@@ -241,16 +241,23 @@ public interface EquityBusiDetails001Mapper {
     /**
      * 币种是否在汇率行情中维护
      * @param ccy 币种代码
-     * @return 
+     * @return
      * @see
      * @since 1.0
      */
     Integer isDefend(String ccy);
-    
-    
+
+
     List<EquityInfo001Dto> getAllChbEquInfoOneTime();
-    
+
     List<EquiteBusiDetails001Dto> selectEquiteBusiDetailsForTrans();
     List<EquiteBusiDetails001Dto>selectBusiFeedBackData(Map<String, Object> map);
     List<EquiteBusiDetails001Dto>selectAllBusiFeedBackData(Map<String, Object> map);
+    //add by dengyu20201022 投资者明细监管部门要求整改内容 begin
+    int updateInfoRegCodeByProdid(Map<String, Object> map);
+
+    int updateRegistRegCodeByProdid(Map<String, Object> map);
+
+    List<EquiteBusiDetails001Dto> selectStatusAEqudetData(Map<String, Object> map);
+    //add by dengyu20201022 投资者明细监管部门要求整改内容 end
 }

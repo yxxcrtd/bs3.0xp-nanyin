@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductType;
+import org.springframework.stereotype.Repository;
 
 /**
  * 存款类资产查询
@@ -20,6 +21,7 @@ import com.joyintech.tams.common.base.entity.FinProductType;
  * @see ValDespositAssetQuery002Mapper
  * @since 1.0
  */
+@Repository
 public interface ValDespositAssetQuery002Mapper {
 
 	/**

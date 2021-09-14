@@ -1,0 +1,4 @@
+--业绩比较基准
+delete from CHB_DATACHECK_RULE_INV where CHECKRULEID ='FINPRODUCTBUILD002-de4E4A50-6813-5A9E-E050-007F01006A66';
+insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
+values ('FINPRODUCTBUILD002-de4E4A50-6813-5A9E-E050-007F01006A66', 'FinProductBuild002', 'isNumber2', 'bussRepFinProductInfoDto.repYield', '', '8,5', 'Y', '业绩比较基准%必须为n..(8,5)格式', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');

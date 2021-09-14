@@ -101,7 +101,9 @@ public class TaxFeeMsg extends MsgExecuteService{
 				BeanUtils.copyProperties(expense, oldExpense, "portFeeID");
 				
 				portExpenseCfgDao.updateEntity(oldExpense);
-				msgcontainer.setObjID(oldExpense.getPortFeeID());
+				if (oldExpense != null){
+					msgcontainer.setObjID(oldExpense.getPortFeeID());
+				}
 				msgcontainer.setEntityObj(oldExpense);
 			}
 		}

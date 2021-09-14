@@ -3,6 +3,7 @@ package com.joyintech.service.pbc.classic.prdbaseinfosub.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,6 +44,16 @@ public class PbcPrdBaseinfoSubController {
        Page<PbcPrdBaseinfoSub> page = pbcPrdBaseinfoSubService001.searchPage(param);
        return page;
    }
+
+    /**
+     * 产品代码下拉框初始值
+     *
+     * @return 产品代码下拉框初始值
+     */
+    @PostMapping("getPbcProdId")
+    public List<SelectOptionDto> getPbcProdId(@RequestBody Map<String, Object> param) {
+        return pbcPrdBaseinfoSubService001.getPbcProdId(param);
+    }
    /**
     * 手工处理功能
     *

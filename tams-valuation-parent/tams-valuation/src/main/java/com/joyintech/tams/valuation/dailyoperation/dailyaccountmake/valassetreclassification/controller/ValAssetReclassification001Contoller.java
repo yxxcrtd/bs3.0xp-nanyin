@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valassetreclassification.dto.ValAssetReclassification001Dto;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valassetreclassification.dto.ValAssetReclassification001ValidDto;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valassetreclassification.service.ValAssetReclassification001Service;
@@ -116,7 +116,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-        throws Exception {
+          {
         return valAssetReclassification001Service.getBookSetId(RequestUtil.getPageParam());
     }
     
@@ -172,7 +172,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "doSave", method=RequestMethod.POST)
-    public AjaxResult doAdd(@RequestBody @Valid ValAssetReclassification001ValidDto dto, BindingResult br) throws Exception {
+    public AjaxResult doAdd(@RequestBody @Valid ValAssetReclassification001ValidDto dto, BindingResult br) {
 
         if(br.hasErrors()){
             return new AjaxResult(br);
@@ -180,7 +180,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
         
         ProcessParameter<ValAssetReclassification001ValidDto> proParam = new ProcessParameter<ValAssetReclassification001ValidDto>();
         WorkFlowParameter<ValAssetReclassification001ValidDto> params = new WorkFlowParameter<ValAssetReclassification001ValidDto>();
-        MD5Util.string2MD5(dto.getBooksetId()+dto.getBooksetId()+dto.getBooksetId());
+        EncryptUtil.getInstance().md5(dto.getBooksetId()+dto.getBooksetId()+dto.getBooksetId());
         params.setBusinessCode(dto.getBooksetId());
         params.setBusinessType(DictCodeList.共通业务类型_债券重分类.getValue());
         params.setPageId(this.getPageId());

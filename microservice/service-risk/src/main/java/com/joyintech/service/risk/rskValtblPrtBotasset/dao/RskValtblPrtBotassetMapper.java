@@ -13,6 +13,7 @@ package com.joyintech.service.risk.rskValtblPrtBotasset.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -49,4 +50,25 @@ public interface RskValtblPrtBotassetMapper {
     void cancleValmapped(@Param("ptlId") String ptlId,@Param("subCode") String subCode);
 
     void deletePrtBotassetMap(Map<String,Object> paramMap);
+    List<SelectOptionDto> selectUnTargetAsset(Map<String,Object> paramMap);
+
+
+    List<RskValtblPrtBotassetMapDto> selectUnMapSubject(Map<String, Object> paramMap);
+
+    List<RskValtblPrtBotassetMapDto> selectMapSubjectInfoForPage(Map<String, Object> paramMap);
+
+    int applyMapForSubject(RskValtblPrtBotassetMapDto dto);
+
+    int cancelApplyMapForSubject(RskValtblPrtBotassetMapDto dto);
+
+    List<String> selectIntSubjectByCostSubject(@Param("costSubject")String costSubject);
+
+    int updateLinkMap(Map<String, Object> upMap);
+
+    int applyMapForSubjectLink(Map<String, Object> upMap);
+
+    List<SelectOptionDto> selectRskAsset(Map<String, Object> paramMap);
+
+    int cancelApplyMapForIntSubject(RskValtblPrtBotassetMapDto dto);
+    void cancleIntValmapped(@Param("ptlId") String ptlId,@Param("subCode") String subCode);
 }

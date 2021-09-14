@@ -68,7 +68,7 @@ public class ValuationMethodScheme002Controller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("insert")
-	public void insert(@RequestBody ValuationMethodScheme002Dto dto) throws Exception {
+	public void insert(@RequestBody ValuationMethodScheme002Dto dto) {
 		valuationMethodScheme002Service.doComplete(dto, OperationType.NEW);
 	}
 
@@ -83,7 +83,7 @@ public class ValuationMethodScheme002Controller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("update")
-	public void update(@RequestBody ValuationMethodScheme002Dto dto) throws Exception {
+	public void update(@RequestBody ValuationMethodScheme002Dto dto) {
 		valuationMethodScheme002Service.doComplete(dto, OperationType.MODIFY);
 	}
 
@@ -98,7 +98,7 @@ public class ValuationMethodScheme002Controller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("delete")
-	public void delete(@RequestBody ValuationMethodScheme002Dto dto) throws Exception {
+	public void delete(@RequestBody ValuationMethodScheme002Dto dto) {
 		valuationMethodScheme002Service.doComplete(dto, OperationType.DELETE);
 	}
 

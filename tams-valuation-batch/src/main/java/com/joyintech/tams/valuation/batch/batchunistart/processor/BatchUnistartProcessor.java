@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,8 +53,7 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
     private BatchUnistartCommonService batchUnistartCommonService;
 
     @Override
-    public BatchUnistartDto process(NeedOperateEntity item)
-        throws Exception {
+    public BatchUnistartDto process(NeedOperateEntity item) throws UnsupportedEncodingException {
         // 读取需要处理的任务模块
         SysParaKey key = new SysParaKey();
         key.setSystemCode("SYS");
@@ -73,6 +73,12 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
                 && DictCodeList.是否_否.getValue().equals(this.getBatchExecuteDetail().getOtherParam1())) {
                 continue;
             }
+            //add by yjp ZGBSEI-4 批处理统一启动_不日切不跑日切的批 20210729 start
+            if (DictCodeListExt3.批处理任务组类型_日切.getValue().equals(entity.getGrpType())
+                    && StringUtil.equals(this.getBatchExecuteInfo().getTaskId(),"999998")) {
+                continue;
+            }
+            //add by yjp ZGBSEI-4 批处理统一启动_不日切不跑日切的批 20210729 end
             /* 统一批处理 监控页面 名称显示优化 shengqiqiang start */
 /*            List<SysBatchJob> jobList = batchUnistartCommonService.selectBatchJob(entity.getBatchgrpSeqNo());
             if (CollectionUtils.isEmpty(jobList)) {
@@ -136,6 +142,12 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
                     && DictCodeList.是否_否.getValue().equals(this.getBatchExecuteDetail().getOtherParam1())) {
                     continue;
                 }
+                //add by yjp ZGBSEI-4 批处理统一启动_不日切不跑日切的批 20210729 start
+                if (DictCodeListExt3.批处理任务组类型_日切.getValue().equals(entity.getGrpType())
+                        && StringUtil.equals(this.getBatchExecuteInfo().getTaskId(),"999998")) {
+                    continue;
+                }
+                //add by yjp ZGBSEI-4 批处理统一启动_不日切不跑日切的批 20210729 end
                 SysBatchUnistartDetail e = new SysBatchUnistartDetail();
                 e.setSeqNo(seqno);
                 e.setDetailSeqNo(IDGenerator.generate());
@@ -181,7 +193,7 @@ public class BatchUnistartProcessor extends BaseProcessor<NeedOperateEntity, Bat
         }
     }
 
-    public String subStrByBytes(String s, int num)throws Exception{
+    public String subStrByBytes(String s, int num) throws UnsupportedEncodingException {
         if (StringUtil.isEmpty(s)) {
             return "";
         }

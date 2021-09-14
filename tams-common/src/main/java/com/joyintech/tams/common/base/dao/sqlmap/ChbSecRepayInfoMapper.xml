@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSecRepayInfoMapper" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        <id column="SEC_ID" property="secId" jdbcType="VARCHAR" />
+        <id column="REPAY_DT" property="repayDt" jdbcType="TIMESTAMP" />
+        <result column="SEC_NM" property="secNm" jdbcType="VARCHAR" />
+        <result column="REPAY_RATE" property="repayRate" jdbcType="DECIMAL" />
+        <result column="REPAY_NET" property="repayNet" jdbcType="DECIMAL" />
+        <result column="TRADE_MARKET" property="tradeMarket" jdbcType="VARCHAR" />
+        <result column="REPAY_CYCLE_DAY" property="repayCycleDay" jdbcType="TIMESTAMP" />
+        <result column="REPAY_MODE" property="repayMode" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEC_ID SEC_ID, REPAY_DT REPAY_DT, SEC_NM SEC_NM, REPAY_RATE REPAY_RATE, REPAY_NET REPAY_NET, 
+        TRADE_MARKET TRADE_MARKET, REPAY_CYCLE_DAY REPAY_CYCLE_DAY, REPAY_MODE REPAY_MODE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecRepayInfoMapper.Base_Column_List" />
+        from CHB_SEC_REPAY_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecRepayInfoMapper.Base_Column_List" />
+        from CHB_SEC_REPAY_INFO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfoKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.ChbSecRepayInfoMapper.Base_Column_List" />
+        from CHB_SEC_REPAY_INFO
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and REPAY_DT = #{repayDt,jdbcType=TIMESTAMP}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfoKey" >
+        delete from CHB_SEC_REPAY_INFO
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and REPAY_DT = #{repayDt,jdbcType=TIMESTAMP}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        insert into CHB_SEC_REPAY_INFO (SEC_ID, REPAY_DT, SEC_NM, 
+            REPAY_RATE, REPAY_NET, TRADE_MARKET, 
+            REPAY_CYCLE_DAY, REPAY_MODE)
+        values (#{secId,jdbcType=VARCHAR}, #{repayDt,jdbcType=TIMESTAMP}, #{secNm,jdbcType=VARCHAR}, 
+            #{repayRate,jdbcType=DECIMAL}, #{repayNet,jdbcType=DECIMAL}, #{tradeMarket,jdbcType=VARCHAR}, 
+            #{repayCycleDay,jdbcType=TIMESTAMP}, #{repayMode,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        insert into CHB_SEC_REPAY_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secId != null" >
+                SEC_ID,
+            </if>
+            <if test="repayDt != null" >
+                REPAY_DT,
+            </if>
+            <if test="secNm != null" >
+                SEC_NM,
+            </if>
+            <if test="repayRate != null" >
+                REPAY_RATE,
+            </if>
+            <if test="repayNet != null" >
+                REPAY_NET,
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET,
+            </if>
+            <if test="repayCycleDay != null" >
+                REPAY_CYCLE_DAY,
+            </if>
+            <if test="repayMode != null" >
+                REPAY_MODE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secId != null" >
+                #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="repayDt != null" >
+                #{repayDt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="secNm != null" >
+                #{secNm,jdbcType=VARCHAR},
+            </if>
+            <if test="repayRate != null" >
+                #{repayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repayNet != null" >
+                #{repayNet,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeMarket != null" >
+                #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="repayCycleDay != null" >
+                #{repayCycleDay,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repayMode != null" >
+                #{repayMode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        insert into CHB_SEC_REPAY_INFO(SEC_ID, REPAY_DT, SEC_NM, REPAY_RATE, REPAY_NET, TRADE_MARKET, 
+        REPAY_CYCLE_DAY, REPAY_MODE)
+        select SEC_ID, REPAY_DT, SEC_NM, REPAY_RATE, REPAY_NET, TRADE_MARKET, 
+            REPAY_CYCLE_DAY, REPAY_MODE
+             from CHB_SEC_REPAY_INFO
+             where 1 = 1 and SEC_ID = #{secId,jdbcType=VARCHAR} and REPAY_DT = #{repayDt,jdbcType=TIMESTAMP}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        update CHB_SEC_REPAY_INFO
+        <set >
+            <if test="secNm != null" >
+                SEC_NM = #{secNm,jdbcType=VARCHAR},
+            </if>
+            <if test="repayRate != null" >
+                REPAY_RATE = #{repayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="repayNet != null" >
+                REPAY_NET = #{repayNet,jdbcType=DECIMAL},
+            </if>
+            <if test="tradeMarket != null" >
+                TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            </if>
+            <if test="repayCycleDay != null" >
+                REPAY_CYCLE_DAY = #{repayCycleDay,jdbcType=TIMESTAMP},
+            </if>
+            <if test="repayMode != null" >
+                REPAY_MODE = #{repayMode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and REPAY_DT = #{repayDt,jdbcType=TIMESTAMP}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSecRepayInfo" >
+        update CHB_SEC_REPAY_INFO
+        set SEC_NM = #{secNm,jdbcType=VARCHAR},
+            REPAY_RATE = #{repayRate,jdbcType=DECIMAL},
+            REPAY_NET = #{repayNet,jdbcType=DECIMAL},
+            TRADE_MARKET = #{tradeMarket,jdbcType=VARCHAR},
+            REPAY_CYCLE_DAY = #{repayCycleDay,jdbcType=TIMESTAMP},
+            REPAY_MODE = #{repayMode,jdbcType=VARCHAR}
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and REPAY_DT = #{repayDt,jdbcType=TIMESTAMP}
+    </update>
+</mapper>

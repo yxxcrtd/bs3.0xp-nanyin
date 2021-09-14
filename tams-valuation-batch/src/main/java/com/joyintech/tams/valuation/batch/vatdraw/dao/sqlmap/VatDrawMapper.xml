@@ -125,7 +125,7 @@
             INT_REPAY_HANDLE
         FROM TAX_BOK_CONFIG
         where CONFIG_ID IN (
-            select BOK_CONFIG_ID
+            select c.BOK_CONFIG_ID
             from TAX_SCHA_BOK_CONFIG c, BOK_BOOKSET_PLAN p
             where p.scheme_id = c.scheme_id
             and p.bookset_id = #{booksetId}

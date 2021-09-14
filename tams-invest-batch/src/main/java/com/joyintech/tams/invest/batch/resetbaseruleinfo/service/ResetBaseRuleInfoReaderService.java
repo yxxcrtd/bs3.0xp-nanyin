@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 @Service
 @Scope("prototype")
 public class ResetBaseRuleInfoReaderService extends BaseService{
-
+    private static final Logger logger = LoggerFactory.getLogger(ResetBaseRuleInfoReaderService.class);
     @Autowired
     private ResetBaseRuleInfoMapper resetBaseRuleInfoMapper;
     
@@ -90,7 +92,8 @@ public class ResetBaseRuleInfoReaderService extends BaseService{
         List<ResetBaseRuleInfoDto> resetBaseRuleInfoDtoList = resetBaseRuleInfoMapper.selectAllBaseRuleInfo(paramMap);
         if (!StringUtil.isEmptyList(resetBaseRuleInfoDtoList)) {
             for (ResetBaseRuleInfoDto resetBaseRuleInfoDto : resetBaseRuleInfoDtoList) {
-                System.out.println(resetBaseRuleInfoDto.getBaseRuleId());
+//                System.out.println(resetBaseRuleInfoDto.getBaseRuleId());
+                logger.info(resetBaseRuleInfoDto.getBaseRuleId());
                 ResetBaseRuleInfoReaderResult resultDto = new ResetBaseRuleInfoReaderResult();
                 resultDto.setResetBaseRuleInfoDto(resetBaseRuleInfoDto);
                 resultList.add(resultDto);

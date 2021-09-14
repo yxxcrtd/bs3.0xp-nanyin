@@ -155,7 +155,7 @@ public class RiskRefreshRedisServiceImpl extends BaseService implements RiskRefr
      * @param cond 传递参数
      * @since 1.0
      */
-    public void refreshParamRedis(IParaRds cond) throws Exception {
+    public void refreshParamRedis(IParaRds cond){
         //共通业务类型必填
         if(!StringUtil.isNotEmpty(cond.getCommonBusinessType())){
             return;

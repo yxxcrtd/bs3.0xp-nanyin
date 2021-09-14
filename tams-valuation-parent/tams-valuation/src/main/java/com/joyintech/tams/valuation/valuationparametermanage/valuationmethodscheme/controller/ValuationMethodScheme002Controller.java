@@ -100,7 +100,7 @@ public class ValuationMethodScheme002Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme002Dto dto, BindingResult bindingResult)
-			throws Exception {
+			{
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 

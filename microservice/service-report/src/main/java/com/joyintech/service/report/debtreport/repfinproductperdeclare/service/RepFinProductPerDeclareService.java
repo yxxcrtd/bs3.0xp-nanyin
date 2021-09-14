@@ -77,7 +77,7 @@ public class RepFinProductPerDeclareService extends BaseService<RepFinProductPer
      * @since 1.0
      */
     public Page<RepFinProductPerDeclareDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         String finprodId = (String)pageParam.get("finprodId");
         if(StringUtil.isNotEmpty(finprodId)){
             pageParam.put("finprodIdList", StringUtil.splitToList(GlobalConstant.COMMA,finprodId));
@@ -108,7 +108,7 @@ public class RepFinProductPerDeclareService extends BaseService<RepFinProductPer
      * @since 1.0
      */
     public Page<RepFinProductPerDeclareDto> selectForExport(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
     	 String repFinprodId = (String)pageParam.get("repFinprodId");
          if(StringUtil.isNotEmpty(repFinprodId)){
         	 pageParam.put("repFinprodId", StringUtil.splitToList(GlobalConstant.COMMA,repFinprodId));

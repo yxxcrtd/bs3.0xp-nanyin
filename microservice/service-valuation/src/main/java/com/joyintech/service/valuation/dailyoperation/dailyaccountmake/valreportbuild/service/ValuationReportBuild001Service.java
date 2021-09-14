@@ -40,7 +40,7 @@ public class ValuationReportBuild001Service extends CommonExportService<BaseEnti
      * @see
      * @since 1.0
      */
-    public Page<BaseEntity> findPage(Map<String, Object> params) throws Exception {
+    public Page<BaseEntity> findPage(Map<String, Object> params) {
         return new Page<>();
 //        return super.queryForPage(()-> valuationReportBuild001Mapper.selectList(params));
     }

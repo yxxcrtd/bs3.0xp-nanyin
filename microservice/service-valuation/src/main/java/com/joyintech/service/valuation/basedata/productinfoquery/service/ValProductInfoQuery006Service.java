@@ -36,7 +36,7 @@ public class ValProductInfoQuery006Service extends BaseService<ValProductInfoFee
      * @return
 	 * @throws Exception 
      */
-	public Page<ValProductInfoAcctDto> findBankdesc(int page,int length,Map<String, Object> pageParam) throws Exception {
+	public Page<ValProductInfoAcctDto> findBankdesc(int page,int length,Map<String, Object> pageParam) {
 		return super.queryForPageForSelectReturn(page,length,()->mapper.findBankdesc(pageParam));
 	}
 	

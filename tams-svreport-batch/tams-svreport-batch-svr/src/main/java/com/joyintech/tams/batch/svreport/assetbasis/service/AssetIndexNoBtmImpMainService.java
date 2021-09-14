@@ -2,6 +2,7 @@ package com.joyintech.tams.batch.svreport.assetbasis.service;
 
 import java.util.Date;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +62,7 @@ public class AssetIndexNoBtmImpMainService extends AutoSendCBBaseService{
                 logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
             }
     	}catch(Exception e){
-    		throw e;
+    		throw new BusinessException(e);
     	}
     	logger.debug("资产基础指标表上游数据接入批处理");
 		logInfoBatchEnd();

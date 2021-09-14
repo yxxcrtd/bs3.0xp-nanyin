@@ -89,14 +89,12 @@ public class MstCalendarType004Controller extends BaseController {
      * 查询交易日历名称明细
      * 
      * @return 查询结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCalendarType002Dto> selectCanlendarDetail()
-        throws Exception {
+    public Page<MstCalendarType002Dto> selectCanlendarDetail(){
         Map<String, Object> map = RequestUtil.getPageParam();
         return mstCalendarType002service.selectCanlendarDetail(map);
     }
@@ -105,13 +103,11 @@ public class MstCalendarType004Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstCalendarType002service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

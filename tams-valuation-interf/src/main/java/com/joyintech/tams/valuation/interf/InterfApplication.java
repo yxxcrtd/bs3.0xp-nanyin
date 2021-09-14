@@ -10,11 +10,14 @@
 
 package com.joyintech.tams.valuation.interf;
 
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 import com.joyintech.framework.JoyinApplication;
 import com.joyintech.framework.config.WebApplication;
 import com.joyintech.tams.valuation.interf.conf.InterfTaskConfiguration;
+
+import java.util.Locale;
 
 /**
  * 接口启动进程
@@ -24,6 +27,7 @@ import com.joyintech.tams.valuation.interf.conf.InterfTaskConfiguration;
  * @see InterfApplication
  * @since 1.0
  */
+@ComponentScan(basePackages = "com.jixu")
 @Import({InterfTaskConfiguration.class})
 public class InterfApplication extends WebApplication {
 
@@ -33,6 +37,8 @@ public class InterfApplication extends WebApplication {
      * @param args 入口参数
      */
     public static void main(String[] args) {
+        Locale local = new Locale("zh", "CN");
+        Locale.setDefault(local);
         JoyinApplication.run(InterfApplication.class, args);
     }
 }

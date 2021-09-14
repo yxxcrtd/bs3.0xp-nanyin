@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.accounadjustmanage.bussceneleconf.controlle
 
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,8 +70,6 @@ public class AccountsAdjustBusScenEleConf002Controller extends BaseController {
     /**
      * 保存check
      * 
-     * @param dto 页面参数dto
-     * @param result check验证结果
      * @return 初始化路径
      * @see
      * @since 1.0
@@ -79,7 +78,7 @@ public class AccountsAdjustBusScenEleConf002Controller extends BaseController {
     @RequestMapping("saveCheck")
     public String saveCheck() {
         Map<String, Object> params = RequestUtil.getPageParam();
-        return accountsAdjustBusScenEleConf002Service.saveCheck(params);
+        return StringUtil.trimHtmlTag(accountsAdjustBusScenEleConf002Service.saveCheck(params));
 //    	String msg = "";
 //    	String tableId = this.getParam("tableId");
 //    	AccountsAdjustBusScenEleConf001Dto dto = new AccountsAdjustBusScenEleConf001Dto();
@@ -101,8 +100,6 @@ public class AccountsAdjustBusScenEleConf002Controller extends BaseController {
     /**
      * 保存
      * 
-     * @param dto 页面参数dto
-     * @param result check验证结果
      * @return 初始化路径
      * @see
      * @since 1.0

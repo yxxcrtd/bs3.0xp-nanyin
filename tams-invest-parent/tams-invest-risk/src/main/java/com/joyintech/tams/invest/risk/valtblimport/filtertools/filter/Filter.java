@@ -18,7 +18,7 @@ public interface Filter {
 	 * @return
 	 * @throws Exception
 	 */
-	Workbook doFilter(Workbook workbook, int sheetIndex) throws Exception;
+	Workbook doFilter(Workbook workbook, int sheetIndex);
 	
 	/**
 	 * 
@@ -27,5 +27,5 @@ public interface Filter {
 	 * @return
 	 * @throws Exception
 	 */
-	Workbook doFilter(Workbook workbook, int sheetIndex,String param) throws Exception;
+	Workbook doFilter(Workbook workbook, int sheetIndex,String param);
 }

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +71,7 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
     @Autowired
     private BaseCommonService baseCommonService;
     
-    @Value("${application.valuation.maxReportIOnceTime:100000}")
+    @Value("${application.valuation.maxReportIOnceTime:1000000000}")
     private Integer maxReportIOnceTime;
     
     
@@ -106,7 +107,7 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValSubjectBalanceQuery001Dto> findPage() throws Exception{
+    public Page<ValSubjectBalanceQuery001Dto> findPage() {
         return valSubjectBalanceQuery001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -162,7 +163,7 @@ public class ValSubjectBalanceQuery001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<ValSubjectBalanceQuery001Dto> listdto;

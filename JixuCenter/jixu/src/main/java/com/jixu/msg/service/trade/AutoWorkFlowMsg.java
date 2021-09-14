@@ -157,7 +157,10 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 					}
 					
 					// 打印做账结果到interfacelog
-					List<ResultContainer> containerList=(List<ResultContainer>)mainContainer.getEntityObj();
+					List<ResultContainer> containerList= null;
+					if (mainContainer != null){
+						containerList = (List<ResultContainer>)mainContainer.getEntityObj();
+					}
 					if(containerList!=null){
 						for(ResultContainer container:containerList){
 							PortfolioHdr portfolio=(PortfolioHdr)container.getEntityObj();
@@ -170,13 +173,15 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 							}
 						}
 					}
-					if(mainContainer.isCorrectFlag()){
-						// 更新工作流状态
-						wfService.updateWorkFlowStep(jobID, ports_list, start, WorkFlowStatus.finish);
-					}else{
-						msgcontainer.setCorrectFlag(false);
-						msgcontainer.setErrorMsg("做账失败,详情请查看日志");
-						return;
+					if (mainContainer != null){
+						if(mainContainer.isCorrectFlag()){
+							// 更新工作流状态
+							wfService.updateWorkFlowStep(jobID, ports_list, start, WorkFlowStatus.finish);
+						}else{
+							msgcontainer.setCorrectFlag(false);
+							msgcontainer.setErrorMsg("做账失败,详情请查看日志");
+							return;
+						}	
 					}
 				}
 				//比较当天凭证  
@@ -237,7 +242,10 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 					}
 					
 					// 输出执行结果到interfacelog
-					List<ResultContainer> containerList=(List<ResultContainer>)mainContainer.getEntityObj();
+					List<ResultContainer> containerList= null;
+					if (mainContainer != null){
+						containerList = (List<ResultContainer>)mainContainer.getEntityObj();
+					}
 					if(containerList!=null){
 						for(ResultContainer container:containerList){
 							PortfolioHdr portfolio=(PortfolioHdr)container.getEntityObj();
@@ -250,13 +258,15 @@ public class AutoWorkFlowMsg extends MsgExecuteService{
 							}
 						}
 					}
-					// 更新工作流状态
-					if(mainContainer.isCorrectFlag()){
-						wfService.updateWorkFlowStep(jobID, ports_list, end, WorkFlowStatus.process);
-					}else{
-						msgcontainer.setCorrectFlag(false);
-						msgcontainer.setErrorMsg("撤账失败,详情请查看日志");
-						return;
+					if (mainContainer != null){
+						// 更新工作流状态
+						if(mainContainer.isCorrectFlag()){
+							wfService.updateWorkFlowStep(jobID, ports_list, end, WorkFlowStatus.process);
+						}else{
+							msgcontainer.setCorrectFlag(false);
+							msgcontainer.setErrorMsg("撤账失败,详情请查看日志");
+							return;
+						}	
 					}
 				}
 				

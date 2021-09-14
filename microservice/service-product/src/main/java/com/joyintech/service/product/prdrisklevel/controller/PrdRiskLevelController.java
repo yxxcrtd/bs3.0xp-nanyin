@@ -10,6 +10,7 @@
 
 package com.joyintech.service.product.prdrisklevel.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,7 @@ public class PrdRiskLevelController {
     public Page<PrdRiskLevelDto> queryForPagePrdRiskLevel(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return prdRiskLevelService.selectForPagePrdRiskLevel(page, length, pageParam);
     }
     
@@ -86,7 +87,7 @@ public class PrdRiskLevelController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody PrdRiskLevelDto dto) throws Exception {
+    public int insert(@RequestBody PrdRiskLevelDto dto) throws InvocationTargetException, IllegalAccessException {
         return prdRiskLevelService.insertPrdRiskLevel(dto);
     }
     
@@ -96,7 +97,7 @@ public class PrdRiskLevelController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody PrdRiskLevelDto dto) throws Exception {
+    public int delete(@RequestBody PrdRiskLevelDto dto) throws InvocationTargetException, IllegalAccessException {
         return prdRiskLevelService.deletePrdRiskLevel(dto);
     }
     
@@ -106,14 +107,13 @@ public class PrdRiskLevelController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody PrdRiskLevelDto dto) throws Exception {
+    public int update(@RequestBody PrdRiskLevelDto dto) throws InvocationTargetException, IllegalAccessException {
         return prdRiskLevelService.updatePrdRiskLevel(dto);
     }
 
     /**
-     * 主键查询一条记录
-     */
-    @PostMapping("selectByPk")
+     * 主键查询一条记录R
+     */    @PostMapping("selectByPk")
     public PrdRiskLevelDto selectByPk(@RequestBody String pk){
         return prdRiskLevelService.selectByPk(pk);
     }

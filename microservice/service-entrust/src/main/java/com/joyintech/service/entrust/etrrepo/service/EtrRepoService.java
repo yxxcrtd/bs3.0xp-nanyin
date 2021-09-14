@@ -114,7 +114,7 @@ public class EtrRepoService extends BaseService<EtrRepoDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrRepoDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrRepoDto> selectForPage(int page, int length, Map<String, Object> param)  {
         param.put("FINPROD_TYPE2_Z", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         param.put("FINPROD_TYPE2_N", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         String portfolioId = (String)param.get("portfolioId");

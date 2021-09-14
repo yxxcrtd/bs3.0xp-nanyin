@@ -89,7 +89,7 @@ $(function () {
     	var srartDate = $('#startDate').val();
     	//投资周期
     	var investCycle = $('#investCycle2').val();
-    	if(srartDate != "" && investCycle !=""){
+    	if(srartDate != "" && investCycle !="" && pageModel != PAGE_MODEL_REFERENCE){
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		if($('#operateType').val() != 'look' && $('#operateType').val() != 'edit'){
@@ -110,7 +110,7 @@ $(function () {
     	var srartDate = $('#startDate').val();
     	//投资周期
     	var investCycle = $('#investCycle').val();
-    	if(srartDate !="" && investCycle !=""){
+    	if(srartDate !="" && investCycle !="" && pageModel != PAGE_MODEL_REFERENCE){
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		$("#endDate").val(endDate).trigger('change');
@@ -297,7 +297,7 @@ $(function () {
     	}else{
     		investCycle = $('#investCycle2').val();
     	}
-    	if(srartDate && investCycle){
+    	if(srartDate && investCycle && pageModel != PAGE_MODEL_EDIT && pageModel != PAGE_MODEL_REFERENCE){
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		$("#endDate").val(endDate).trigger('change');
@@ -382,6 +382,8 @@ $(function () {
     		}
     	//期限开始日
     	var srartDate = $('#startDate').val();
+		//期限结束日
+		var endDateInit = $('#endDate').val();
     	//期限品种
     	var termType = $('#termType').val();
     	//投资周期
@@ -391,7 +393,7 @@ $(function () {
     	}else{
     		investCycle = $('#investCycle2').val();
     	}
-    	if(srartDate && investCycle){
+		if (srartDate && investCycle && !endDateInit && pageModel != PAGE_MODEL_REFERENCE) {
     		//期限结束日 = 期限开始日 + 投资周期
     		var endDate= DateUtil.parse(srartDate).DateAdd('d', investCycle).Format('yyyy-MM-dd');
     		$("#endDate").val(endDate).trigger('change');

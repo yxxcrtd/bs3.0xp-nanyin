@@ -302,7 +302,7 @@
 
 	<select id="loadCashAcctByPortnumCur" resultMap="BaseResultMap">
 		<![CDATA[
-			select * from bk_cash_acct  bt ,fx_currency fy  where fy.curr_ID=bt.currencycode and fy.curr_code=#{cur} and portfolio=#{portnum}
+			select * from bk_cash_acct  bt ,fx_currency fy  where fy.curr_ID=bt.currencycode and fy.curr_code=#{cur} and bt.portfolio=#{portnum}
 		]]>
 	</select>
 

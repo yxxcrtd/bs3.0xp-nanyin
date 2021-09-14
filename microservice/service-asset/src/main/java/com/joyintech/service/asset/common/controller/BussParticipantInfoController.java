@@ -39,12 +39,12 @@ public class BussParticipantInfoController {
     private BussParticipantInfoService bussParticipantInfoService;
     
     @PostMapping("queryBussParticipantInfo")
-    public List<BussParticipantInfoDto> queryBussParticipantInfo(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public List<BussParticipantInfoDto> queryBussParticipantInfo(@RequestBody Map<String,Object> paramMap) {
         return bussParticipantInfoService.queryBussParticipantInfo(paramMap);
     }
     
     @PostMapping("queryAllinfoByfinprodId")
-    public BussParticipantInfoDto queryAllinfoByfinprodId(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public BussParticipantInfoDto queryAllinfoByfinprodId(@RequestBody Map<String,Object> paramMap)  {
         return bussParticipantInfoService.queryAllinfoByfinprodId(paramMap);
     }
     

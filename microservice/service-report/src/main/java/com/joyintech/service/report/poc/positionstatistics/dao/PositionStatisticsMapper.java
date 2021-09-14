@@ -13,6 +13,8 @@ package com.joyintech.service.report.poc.positionstatistics.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.report.poc.positionstatistics.dto.PositionStatisticsDto; 
 /**
@@ -23,6 +25,7 @@ import com.joyintech.service.report.poc.positionstatistics.dto.PositionStatistic
  * @see PositionStatisticsMapper
  * @since 1.0
  */
+@Repository
 public interface PositionStatisticsMapper {
     
     /**

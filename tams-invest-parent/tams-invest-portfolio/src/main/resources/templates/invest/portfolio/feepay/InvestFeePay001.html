@@ -21,9 +21,14 @@
 						<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
 							<label class="layui-form-label form-lable" data-th-text="#{InvestFeePay001.secAcctId}">证券账户</label>
 							<div class="layui-input-inline input-inline">
-								<input  type="text" id="secAcctId" name="secAcctId" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" 
-		                       		data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctId}" 
-		                      		data-idfield="code" data-keyfield="name" data-th-data-effectivefieldsalias='|{"code":"#{InvestFeePay001.secAcctCode}","shortName":"#{InvestFeePay001.secAcctName}"}|'>
+								<select  type="text" id="secAcctId" name="secAcctId" class="layui-input form-input input-select"
+										 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+										 data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctIdS}"
+										 multiple=”true” allowClear="true" >
+								</select>
+								<!--<input  type="text" id="secAcctId" name="secAcctId" class="layui-input form-input input-lenovoselect" placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+		                       		data-th-data-url="@{/invest/portfolio/feepay/InvestFeePay001/getSecAcctId}"
+		                      		data-idfield="code" data-keyfield="name" data-th-data-effectivefieldsalias='|{"code":"#{InvestFeePay001.secAcctCode}","shortName":"#{InvestFeePay001.secAcctName}"}|'>-->
 							</div>
 						</div>
 						<div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">

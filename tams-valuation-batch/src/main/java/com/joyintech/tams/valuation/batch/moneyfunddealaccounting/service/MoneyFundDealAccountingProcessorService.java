@@ -11,6 +11,7 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrentExt;
 import com.joyintech.tams.common.base.entity.BokDetailId;
+import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -33,10 +34,8 @@ import com.joyintech.tams.valuation.batch.common.fund.service.FundCommonService;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.CurrencyMarketDto;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetFinProduct;
 import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchDto;
-import com.joyintech.tams.valuation.common.constants.BookConstant;
-import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.constants.*;
+import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.apache.commons.lang.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -93,6 +92,12 @@ public class MoneyFundDealAccountingProcessorService {
     @Autowired
     private  FundCommonService fundCommonService;
     /**ADD BY WUJIE ON 20191120 END**/
+
+    /**
+     * DBUtil
+     */
+    @Autowired
+    private DBUtil dBUtil;
 
     /**
      * process 数据处理
@@ -1624,6 +1629,73 @@ public class MoneyFundDealAccountingProcessorService {
             // 因为当前属于同一个维度，故将生成的账务名中的账务明细（当前表）数据，累加到返回数据中
             rtnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
         }
+
+        //4.统计分析账务明细汇总信息赋值
+        // 调用共通：统计分析账务明细汇总查询
+        // 变量.当日统计分析账务明细汇总信息
+        BokStatDetPosiiton bokSummaryTableNew = accountingCommonService
+                .getCountAnalysis(acctEntity.getHappenDate(), acctEntity.getHappenDate(), acctEntity.getBookDate(), acctEntity.getBooksetId(), acctEntity.getBokDetailId(), null, null);
+        if(bokSummaryTableNew == null) {
+            bokSummaryTableNew = new BokStatDetPosiiton();
+            // 变量.当日统计分析账务明细汇总信息.账套代码 = 交易类账务处理结果.账套代码
+            bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId());
+            // 变量.当日统计分析账务明细汇总信息.发生日期 = 交易类账务处理结果.发生日期
+            bokSummaryTableNew.setHappenDate(acctEntity.getHappenDate());
+            // 变量.当日统计分析账务明细汇总信息.入账日期 = 交易类账务处理结果.入账日期
+            bokSummaryTableNew.setBookDate(acctEntity.getBookDate());
+            // 变量.当日统计分析账务明细汇总信息.账务明细代码 = 交易类账务处理结果.账务明细代码
+            bokSummaryTableNew.setBokDetailId(acctEntity.getBokDetailId());
+            // 变量.当日统计分析账务明细汇总信息.处理序列 = 调用序列生成共通
+            bokSummaryTableNew.setBookSummaryOrder(
+                    new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.账务汇总表_处理序列)));
+            // 变量.当日统计分析账务明细汇总信息.账套日期 = 交易类账务处理结果.账套日期
+            bokSummaryTableNew.setBooksetDate(acctEntity.getBooksetDate());
+            // 变量.当日统计分析账务明细汇总信息.币种 = 变量.标的信息.币种
+            bokSummaryTableNew.setCcy(targetFinProduct.getCcy());
+            // 变量.当日统计分析账务明细汇总信息.业务明细代码 = 变量.标的信息.金融产品代码
+            bokSummaryTableNew.setBusiId(targetFinProduct.getFinprodId());
+            // 变量.当日统计分析账务明细汇总信息.本位币 = 交易类账务处理结果.本位币
+            bokSummaryTableNew.setbCcy(acctEntity.getStandardCcy());
+            // 变量.当日统计分析账务明细汇总信息.金融产品类型 = 变量.标的信息.金融产品类型
+            bokSummaryTableNew.setFinprodType(targetFinProduct.getFinprodType());
+            // 变量.当日统计分析账务明细汇总信息.起息日 = 变量.标的信息.起息日
+            bokSummaryTableNew.setVdate(targetFinProduct.getVdate());
+            // 变量.当日统计分析账务明细汇总信息.到期日 = 变量.标的信息.实际到期日
+            bokSummaryTableNew.setMdate(targetFinProduct.getActmdate());
+        }
+
+        // 汇率
+        BigDecimal changeRate = BigDecimal.ONE;
+        if (StringUtil.isNotEmpty(targetFinProduct.getCcy())
+                && !targetFinProduct.getCcy().equals(acctEntity.getStandardCcy())) {
+            List<CurrencyMarketDto> currencyMarketList = finProductCommonService.getCurrencyMarket(
+                    bookDateNow, acctEntity.getBooksetId(), acctEntity.getStandardCcy(), targetFinProduct.getCcy());
+            if (!StringUtil.isEmptyList(currencyMarketList) && currencyMarketList.get(0) != null) {
+                changeRate = currencyMarketList.get(0).getClosePrice();
+            }
+        }
+
+        // 变量.当日统计分析账务明细汇总信息.当前持仓 = 变量.成本科目数量
+        bokSummaryTableNew.setPosAmt(glb_subjectNum);
+        // 变量.当日统计分析账务明细汇总信息.当日份额 = 变量.成本科目数量
+        bokSummaryTableNew.setTdyPosition(glb_subjectNum);
+        // 变量.当日统计分析账务明细汇总信息.当日成本 = 变量.成本科目余额
+        bokSummaryTableNew.setTdyCostAmt(glb_subjectAmt);
+        // 变量.当日统计分析账务明细汇总信息.当日成本_本位币 = 变量.成本科目余额*变量.汇率
+        bokSummaryTableNew.setTdyCostAmtB(calculationCommonService.doMultiply(
+                NumberEnum.MONEY.getCode(), null, glb_subjectAmt, changeRate));
+        // 变量.当日统计分析账务明细汇总信息.当日累计应计利息余额 = 变量.应收红利科目余额
+        bokSummaryTableNew.setTdyIntincexp(glb_subjectProfit);
+        // 变量.当日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 =	变量.应收红利科目余额*变量.汇率
+        bokSummaryTableNew.setTdyIntincexpB(calculationCommonService.doMultiply(
+                NumberEnum.MONEY.getCode(), null, glb_subjectProfit, changeRate));
+        // 变量.当日统计分析账务明细汇总信息.当日累计公允价值变动 =	变量.公允价值变动科目
+        bokSummaryTableNew.setTdyFloatIngplExp(glb_varGyjzxbdSubject);
+        // 变量.当日统计分析账务明细汇总信息.当日累计公允价值变动_本位币 =	变量.公允价值变动科目*变量.汇率
+        bokSummaryTableNew.setTdyFloatIngplExpB(calculationCommonService.doMultiply(
+                NumberEnum.MONEY.getCode(), null, glb_varGyjzxbdSubject, changeRate));
+
+        rtnResult.getValBokStatDetPosiitonBatch().add(bokSummaryTableNew);
 
         return rtnResult;
     }

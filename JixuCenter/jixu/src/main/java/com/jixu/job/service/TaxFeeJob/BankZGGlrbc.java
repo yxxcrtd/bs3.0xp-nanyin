@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -90,13 +91,13 @@ public class BankZGGlrbc  implements TaxFeeJobService{
 					diffvalue=RoundUtil.roundMoney2Dec(gl.getDr_func()-gl.getCr_func());
 				}
 				
-				if(entry.getKey().matches(tzsyAcct)){
+				if(entry.getKey().matches(Pattern.quote(tzsyAcct))){
 					tzsy=tzsy+diffvalue;
-				}else if(entry.getKey().matches(fzcbAcct)){
+				}else if(entry.getKey().matches(Pattern.quote(fzcbAcct))){
 					fzcb=fzcb+diffvalue;
-				}else if(entry.getKey().matches(jtfyAcct)){
+				}else if(entry.getKey().matches(Pattern.quote(jtfyAcct))){
 					jyfy=jyfy+diffvalue;
-				}else if(entry.getKey().matches(jtdfkfsyAcct)){
+				}else if(entry.getKey().matches(Pattern.quote(jtdfkfsyAcct))){
 					jtdfkfsy=jtdfkfsy+diffvalue;
 				}
 			}

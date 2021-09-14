@@ -133,14 +133,16 @@ public class FinPlanNetAssetService extends CommonExportService<FinPlanNetAssetD
       UploadFile file = null;
 //      List<SysUploadFileInfo> syfiList = entity.getFileArray();
       List<String> fileNo = new ArrayList<>();
-      for(FileCommonDto sufi : files){
-          file = fileAttachmentProcess.fetch(sufi.getFileNo());
-          if (file != null) {
-              String generateId = IDGenerator.generate();
-              file.setFileNo(generateId);
-              fileAttachmentProcess.upload(file);
-              sufi.setFileNo(generateId);
-              fileNo.add(generateId);
+      if(files!=null) {
+          for (FileCommonDto sufi : files) {
+              file = fileAttachmentProcess.fetch(sufi.getFileNo());
+              if (file != null) {
+                  String generateId = IDGenerator.generate();
+                  file.setFileNo(generateId);
+                  fileAttachmentProcess.upload(file);
+                  sufi.setFileNo(generateId);
+                  fileNo.add(generateId);
+              }
           }
       }
       fileAttachmentProcess.updateBussinessNo(fileNo, entity.getFjId());

@@ -42,7 +42,7 @@ public class PrimaryBiddingManage001Controller {
     @RequestMapping("findPage/{page}/{length}")
     public Page<PrimaryBiddingManageDto> findPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return primaryBiddingManage001Service.selectForPage(page, length, param);
     }
 

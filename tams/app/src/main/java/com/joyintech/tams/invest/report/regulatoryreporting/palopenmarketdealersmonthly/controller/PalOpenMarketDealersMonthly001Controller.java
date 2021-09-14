@@ -10,6 +10,7 @@
     
 package com.joyintech.tams.invest.report.regulatoryreporting.palopenmarketdealersmonthly.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -60,7 +61,7 @@ public class PalOpenMarketDealersMonthly001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException {
         return palOpenMarketDealersMonthlyService.export(RequestUtil.getParameters(getRequest()));
     }
 }

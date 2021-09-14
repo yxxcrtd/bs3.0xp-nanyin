@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.atomic.LongAdder;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -197,7 +198,6 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdAccountSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}
@@ -396,13 +396,13 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
                     GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 //                String zipFileName = FileNameUtil.createFileName("zip");
                 String zipFileName = "PbocAssetPoolinfo("+DateUtil.format(new Date())+").zip";
-                outFile = new File(exportFilePath + File.separator + zipFileName);
+                outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
                 // 导出路径不存在则重新生成
                 if (!outFile.getParentFile().exists()) {
                     outFile.getParentFile().mkdirs();
                 }
                 try {
-                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                    ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
                 }
                 catch (Exception e) {
                     // 压缩文件失败后，删除所有临时文件
@@ -453,28 +453,34 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
         }
         // 从配置文件中获取模板文件  以及文件类型
         String tempFilePath = fileName + fileType;
-        File templeteFile = new File(buildTempleteFilePath(tempFilePath));
+        File templeteFile = new SafelyFile(buildTempleteFilePath(tempFilePath));
         reportConfig.setTempleteFile(fileName + fileType);
         // 模板输入流
         InputStream stream = null;
-        if (templeteFile.exists()) {
-            stream = new FileInputStream(templeteFile);
-        }
-        else {
-            stream = CommonExportService.class.getResourceAsStream(
-                TMP_DIR + tempFilePath);
-        }
-        // 工作表对象初始化
-        if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
-            wb = new HSSFWorkbook(stream);
-        }
-        else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
-            wb = new XSSFWorkbook(stream);
-        }
-        else {
-            stream.close();
-            throw new BusinessException("不是一个有效的Excel文件");
-        }
+        try{
+			if (templeteFile.exists()) {
+				stream = new FileInputStream(templeteFile);
+			}
+			else {
+				stream = CommonExportService.class.getResourceAsStream(
+						TMP_DIR + tempFilePath);
+			}
+			// 工作表对象初始化
+			if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLS)) {
+				wb = new HSSFWorkbook(stream);
+			}
+			else if (StringUtil.equals(fileType, GlobalConstant.FILE_POSTFIX_XLSX)) {
+				wb = new XSSFWorkbook(stream);
+			}
+			else {
+				throw new BusinessException("不是一个有效的Excel文件");
+			}
+		}finally {
+        	if(stream != null){
+				stream.close();
+			}
+		}
+
         return wb;
     }
     
@@ -620,12 +626,21 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
         }
         // 从系统配置参数中获取文件存放路径
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
-        File file = new File(exportFilePath + File.separator + outFileName);
+        File file = new SafelyFile(exportFilePath + File.separator + outFileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        wb.write(new FileOutputStream(file));
-        return file;
+        FileOutputStream fileOutputStream = null;
+        try{
+			fileOutputStream = new FileOutputStream(file);
+			wb.write(fileOutputStream);
+			return file;
+		}finally {
+        	if (fileOutputStream != null){
+        		fileOutputStream.close();
+			}
+		}
+
     }
     
     /**
@@ -677,7 +692,6 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             fileList.add(makeSingleFile(wb, reportConfig, null, fileType, contents, new LongAdder(), 0L, count,isHasName));
         }
         catch (Exception e) {
-            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally {
@@ -698,9 +712,9 @@ public class PbcPrdAccountSubService001 extends CommonExportService<PbcPrdAccoun
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            targetFile = new File(exportFilePath + File.separator + zipFileName);
+            targetFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             try {
-                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new File[] {}));
+                ZipFileUtil.compressZip(targetFile, true, fileList.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

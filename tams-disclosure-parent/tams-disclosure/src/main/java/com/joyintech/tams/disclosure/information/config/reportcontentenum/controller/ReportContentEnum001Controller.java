@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.information.config.reportcontentenum.contr
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class ReportContentEnum001Controller  extends BaseController{
      */
     @ResponseBody
 	@RequestMapping("findIndexId")
-	public Page<ReportContentEnum001Dto> findIndexId() throws Exception {
+	public Page<ReportContentEnum001Dto> findIndexId() {
 		Page<ReportContentEnum001Dto> page = reportContentEnum001Service
 				.findIndexByPage(RequestUtil.getPageParam());
 		return page;
@@ -97,7 +98,7 @@ public class ReportContentEnum001Controller  extends BaseController{
      */
     @ResponseBody
 	@RequestMapping("findIndexIdDetail")
-	public Page<ReportContentEnum002Dto> findIndexIdDetail() throws Exception {
+	public Page<ReportContentEnum002Dto> findIndexIdDetail() {
 		Page<ReportContentEnum002Dto> page = reportContentEnum002Service
 				.findIndexDetailByPage(RequestUtil.getPageParam());
 		return page;
@@ -157,7 +158,7 @@ public class ReportContentEnum001Controller  extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		String datas = this.getParam("datas");		
 		List<ReportContentEnum002Dto> listdto = null;
@@ -192,7 +193,7 @@ public class ReportContentEnum001Controller  extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody ReportContentEnum001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ReportContentEnum001Dto dto, BindingResult result) {
 	    //检查是否被引用
 		List<ReportContentEnum002Dto> checkResult = reportContentEnum002Service.checkIsQuote(dto);
 		if(StringUtil.isEmptyList(checkResult)){

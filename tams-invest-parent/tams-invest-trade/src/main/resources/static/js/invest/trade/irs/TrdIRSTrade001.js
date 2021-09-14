@@ -69,6 +69,7 @@
         	,{field:'counterId', sortField:'counterId',width:100, title: 'TrdIRSTrade.counterId'}
         	,{field:'remark', sortField:'remark',width:100, title: 'TrdIRSTrade.remark'}
         ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
   
     var exportExcel = function(){

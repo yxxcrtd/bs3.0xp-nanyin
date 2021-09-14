@@ -21,7 +21,6 @@
      * 获取期限品种  date(yyyy-MM-dd),repoterm
      */
     function getTermType(date,repoterm) {
-    debugger
     	if(repoterm&&repoterm<=21){
     		//期限品种小于21天
     		if(repoterm==1){
@@ -346,8 +345,12 @@
         // 2) 当回购类型为质押式竞价回购和买断式回购时，期限品种为文本框，文本框支持输入联想，期限品种枚举值为：
         {
             if (!isInit && !isTodoList) {
-                $("#termTypeReback").val("");
-                $("#term").val("").trigger("change");
+                //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
+                if (pageModel != PAGE_MODEL_REFERENCE){
+                    $("#termTypeReback").val("");
+                    $("#term").val("").trigger("change");    
+                }
+                //modify by mashukai ZGBSSE-185 审批后双击查看交易，回购期限不显示 20210429 start
             }
             /*$("#termTypeReback").attr("data-url", $("#termTypeReback").attr("data-url-hidden")).associateInput();
             $("#termTypeReback").attr("data-url-hidden", "");*/
@@ -542,7 +545,7 @@
             }
 
         }
-            };
+    };
 
 
     /**
@@ -610,7 +613,7 @@
                         checkAndAssign("#avaStandardStockPosition", data);
                     }
                     else {
-                        $("#avaStandardStockPosition").val('');
+                        $("#avaStandardStockPosition").val('0');
                     }
                 });
         }
@@ -687,7 +690,6 @@
      * 计算费用
      */
     var calFee = function(){
-//    	debugger;
         if(!$("#tradeDate").val()){
             return;
         }
@@ -868,7 +870,7 @@
                         if (!$("#prinAmt").val()) {
                             //委托金额大于cstp的劵面总额
                             //委托金额大于cstp的劵面总额
-                            if(etrEntrust.entrustAmt<=repoamt){
+                            if (repoamt == null || etrEntrust.entrustAmt <= repoamt) {
                                 checkAndAssign("#prinAmt", etrEntrust.entrustAmt, true); // 券面总额
                             }else{
                                 checkAndAssign("#prinAmt",repoamt, true); // 券面总额
@@ -1054,7 +1056,15 @@
                 }else if(settleSpeed === SETTLESPEED_2){
                     num = 2;
                 }
-                $('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
+                //
+               Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getNextWorkDay', {
+                     'calendarId': $("#calendarId").val(),
+                      'tradeDate': tradeDate,
+                      'settleSpeed': num
+                }, function (date) {
+                      $("#vdate").val(date).trigger('change');;
+                 });
+               // $('#vdate').val(DateUtil.parse(tradeDate).DateAdd('d', num).Format('yyyy-MM-dd')).trigger('change');
                 vmdateOnChangeCalcDate($('#vdate').val(),$('#vpayDate'));
             }
         }
@@ -1296,16 +1306,20 @@
     			$("#calendarId").textSelect('setValue', '04');
     			//默认回购类型质押式竞价回购
             	if(pageModel!=PAGE_MODEL_REFERENCE){
-            	    $("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
-                    $('#repoType').attr('disabled',false);
-                    //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
-                    var $repoType = $('#repoType');
-                    if($("#tradeMarket").val() == TRADE_PLACE_02){
-                        $repoType.updateChosenArr({
-                            item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
-                            chosen: TARGET_BACK_TYPE_H02,
-                            disabled: false
-                        });
+                    // modify by jiangpeng on 20210511 ZGBSSE-347
+                    // 【质押式协议回购】新建一笔质押式协议逆回购，点击保存按钮，在待办事项中查看到该笔交易的期限品种、质押券信息丢失
+                    if($("#repoType").val()!=TARGET_BACK_TYPE_H01 &&!$('#entrustId').val()){
+                        $("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
+                        $('#repoType').attr('disabled',false);
+                        //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
+                        var $repoType = $('#repoType');
+                        if($("#tradeMarket").val() == TRADE_PLACE_02){
+                            $repoType.updateChosenArr({
+                                item: [TARGET_BACK_TYPE_H01,TARGET_BACK_TYPE_H02],
+                                chosen: TARGET_BACK_TYPE_H02,
+                                disabled: false
+                            });
+                        }
                     }
                     //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 end
             	}
@@ -1313,7 +1327,7 @@
     			//深交所
     			$("#calendarId").textSelect('setValue', '05');
     			//默认回购类型质押式竞价回购
-            	if(pageModel!=PAGE_MODEL_REFERENCE){
+            	if(pageModel!=PAGE_MODEL_REFERENCE && !$('#entrustId').val()){
             	$("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
                     $('#repoType').attr('disabled',false);
                     var $repoType = $('#repoType');
@@ -1335,7 +1349,6 @@
 	 * 期限品种联动期限
 	 */
 	var termTypeChangeAction = function(){
-	debugger
 		var termType = $('#termTypeReback').val();
 //		if($("#repoType").val()&&$("#repoType").val()==TARGET_BACK_TYPE_H02){
 			if ($('#termTypeReback').val()){
@@ -2201,7 +2214,6 @@
         });
         // 期限品种改变时
         $("#termTypeReback").on("keyup blur",function(){
-        debugger;
                 calFee();
                 changeTradeAmtAndFee();
                 termTypeChangeAction();

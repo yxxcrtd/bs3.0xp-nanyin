@@ -1,6 +1,7 @@
 package com.joyintech.service.chb.assetinfodetail.controller;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.report.common.dto.ExcelValidDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetail001Service;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,12 +51,16 @@ public class AssetInfoDetailController {
 	}
 
 	/**
-	 * 数据维护
-	 * @return
+	 *
+	 * 工作流完成操作
+	 * <功能详细描述>
+	 * @param map 业务实体
+	 * @see
+	 * @since 1.0
 	 */
-	@PostMapping("doSave")
-	public Integer doSave(@RequestBody AssetInfoDetailDto dto) {
-		return assetInfoDetail001Service.doSave(dto);
+	@RequestMapping("/doComplete")
+	public Integer doComplete(@RequestBody AssetInfoDetailDto dto) {
+		return assetInfoDetail001Service.doComplete(dto);
 	}
 
 	/**
@@ -64,6 +70,12 @@ public class AssetInfoDetailController {
 	@PostMapping("doDelete")
 	public Integer doDelete(@RequestBody AssetInfoDetailDto dto) {
 		return assetInfoDetail001Service.doDelete(dto);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PostMapping("importData")
+	public List<ExcelValidDto> importData(@RequestBody List<AssetInfoDetailDto> dataList ){
+		return this.assetInfoDetail001Service.importData(dataList);
 	}
 
 }

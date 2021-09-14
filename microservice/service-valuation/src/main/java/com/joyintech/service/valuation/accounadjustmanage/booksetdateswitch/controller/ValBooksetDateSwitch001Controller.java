@@ -78,7 +78,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValBooksetDateSwitch001Dto> findPage(@RequestBody Map<String, Object> pageParam,
-                                                     @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                     @PathVariable("page") int page, @PathVariable("length") int length) {
 //        Map<String, Object> params = RequestUtil.getPageParam();
         if (DictCodeListExt2.批处理账套类型_账套组.getValue().equals(pageParam.get("booksetDimension"))) {
           List<SysBatchGrpPrdlink> list = ValBooksetDateSwitch001Service.findAllProduct(pageParam);
@@ -97,7 +97,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
      */
     @PostMapping("/findBooksetGroup/{page}/{length}")
     public Page<SelectOptionDto> findBooksetGroup(@RequestBody Map<String, Object> pageParam,
-                                                  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                  @PathVariable("page") int page, @PathVariable("length") int length) {
         return ValBooksetDateSwitch001Service.findBooksetGroup(page,length,pageParam);
     }
     
@@ -112,7 +112,7 @@ public class ValBooksetDateSwitch001Controller extends BaseController {
     @PostMapping("/getBooksetId/{page}/{length}")
     public Page<SelectOptionDto> getBooksetId2(@RequestBody Map<String, Object> pageParam,
                                                @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return ValBooksetDateSwitch001Service.getBooksetId(page,length,pageParam);
     }
 }

@@ -793,14 +793,14 @@ public class IncomeExpenseCal {
 						floatTodayStartDate=floatinteDates.getLastInteEndDate();
 					}
 					
-					if(floatTodayStartDate.after(todayStartDate)) {
+					if(floatTodayStartDate != null && floatTodayStartDate.after(todayStartDate)) {
 						//如果浮动利率日期更近，采用浮动利率的开始日期
 						todayStartDate=floatTodayStartDate;
 					}
 				}
 			}
 			
-			if(adjustCycleStartDate!=null){
+			if(adjustCycleStartDate!=null && todayStartDate != null){
 				//获取最大值,max(todayStartDate,adjustCycleStartDate)
 				todayStartDate=todayStartDate.compareTo(adjustCycleStartDate)==1?todayStartDate:adjustCycleStartDate;
 			}

@@ -56,7 +56,7 @@ public class ValOptInfo001Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValOptInfo001Dto> findPage(@RequestBody Map<String, Object> params,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valOptInfo001Service.findPage(page,length,params);
     }
     
@@ -69,7 +69,7 @@ public class ValOptInfo001Contoller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/findByTargetId")
-    public List<ValOptInfo001Dto> findByTargetId(@RequestBody Map<String, Object> params) throws Exception{
+    public List<ValOptInfo001Dto> findByTargetId(@RequestBody Map<String, Object> params) {
         return valOptInfo001Service.findByTargetId(params);
     }
     
@@ -95,7 +95,7 @@ public class ValOptInfo001Contoller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("insert")
-	public void insert(@RequestBody ValOptInfo001Dto dto) throws Exception {
+	public void insert(@RequestBody ValOptInfo001Dto dto) {
 		valOptInfo001Service.doComplete(dto, OperationType.NEW);
 	}
 
@@ -110,7 +110,7 @@ public class ValOptInfo001Contoller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("update")
-	public void update(@RequestBody ValOptInfo001Dto dto) throws Exception {
+	public void update(@RequestBody ValOptInfo001Dto dto) {
 		valOptInfo001Service.doComplete(dto, OperationType.MODIFY);
 	}
 
@@ -125,7 +125,7 @@ public class ValOptInfo001Contoller extends BaseController {
 	@Transactional
     @DTXTransaction
 	@PostMapping("delete")
-	public void delete(@RequestBody ValOptInfo001Dto dto) throws Exception {
+	public void delete(@RequestBody ValOptInfo001Dto dto) {
 		valOptInfo001Service.doComplete(dto, OperationType.DELETE);
 	}
     

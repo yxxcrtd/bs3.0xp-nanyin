@@ -24,6 +24,7 @@ import com.joyintech.tams.valuation.common.dto.ApiTrdCommDto;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.*;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
+import com.joyintech.tams.valuation.common.interf.base.dao.InterfCommonMapper;
 import com.joyintech.tams.valuation.common.interf.base.dao.ValInterfCommonMapper;
 import com.joyintech.tams.valuation.common.interf.base.dto.*;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
@@ -195,7 +196,8 @@ public class ValInterfCommonServiceApi {
      */
     @Autowired
     private MultilevelDataAuthorityService multilevelDataAuthorityService;
-    
+    @Autowired
+    private InterfCommonMapper interfCommonMapper;
     /**
      * 日志
      */
@@ -247,6 +249,11 @@ public class ValInterfCommonServiceApi {
      */
     @Autowired
     private ValInvest2JixuServiceImpl valInvest2JixuService;
+    /**
+     * PrdValParamMapper
+     */
+    @Autowired
+    private PrdValParamMapper prdValParamMapper;
     /**
      * 产品其他信息初始化
      *
@@ -589,7 +596,9 @@ public class ValInterfCommonServiceApi {
                 // 定义 变量.产品对应账套Dto ValBooksetInfoDto
                 ValBooksetInfoDto dto = new ValBooksetInfoDto();
                 // 变量.产品对应账套Dto.账套代码 = 变量.入库账套DTO.账套代码
-                dto.setBooksetId(bokBookset.getBooksetId());
+                if (bokBookset != null){
+                    dto.setBooksetId(bokBookset.getBooksetId());
+                }
                 // 变量.本次新增产品对应账套List.add（变量.产品对应账套Dto）
                 listValBooksetInfoDto.add(dto);
             }
@@ -701,33 +710,49 @@ public class ValInterfCommonServiceApi {
         // IF 变量.入库账套配置List IS NOT NULL AND 变量.入库账套配置List.SIZE()>0
         if (CollectionUtils.isNotEmpty(listBokBooksetExt)) {
         	Map<String,String> qtMap = new HashMap<String,String>();
-        	for(String key :mapBooksetParam.keySet()){
-        		if("VAL_DEC_DIGITS".equals(key)){
-        			qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
-        			qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
-                    qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
-        		}
-        		else if("VAL_DEC_TYPE".equals(key)){
-        			qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
-        			qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
-                    qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
-        		}
-        		else if("YEILD_DEC_DIGITS".equals(key)){
-        			qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));
-        		}
-        		else if("YEILD_DEC_TYPE".equals(key)){
-        			qtMap.put("DAY7_YEILD_DEC_TYPE", mapBooksetParam.get(key));
-        		}
-        		else{
-        			qtMap.put(key, mapBooksetParam.get(key));
-        		}
-        	}
-            // LOOP 变量.入库账套配置List L
-            for (BokBooksetExt item : listBokBooksetExt) {
-                // IF 变量.账套参数Map.get(L.参数项) != null
-                if (qtMap.get(item.getParamCode()) != null) {
-                    // L.参数值 = 变量.账套参数Map.get(L.参数项)
-                    item.setParamValue(qtMap.get(item.getParamCode()));
+            //当产品发行成功时,账套参数不随着产品界面修改
+            boolean isUpdate=true;
+            String finId = prodInfoDto.getFinprodId();
+            if (StringUtil.equals(prodInfoDto.getProfitType(),DictCodeList.收益类型_收益型.getValue())) {
+                finId = "F16_".concat(finId);
+            }
+            FinProductAdd prodInfo=finProductAddMapper.selectByPrimaryKey(finId);
+            if(null!=prodInfo && StringUtil.equals(prodInfo.getIssueStatus(),DictCodeListExt1.发行状态_发行成功.getValue())){
+                isUpdate=false;
+            }
+            if(isUpdate){
+                for(String key :mapBooksetParam.keySet()){
+                    if("VAL_DEC_DIGITS".equals(key)){
+                        qtMap.put("SHOW_BEFORE_DEC_DIGITS", mapBooksetParam.get(key));
+                        qtMap.put("SHOW_AFTER_DEC_DIGITS", mapBooksetParam.get(key));
+                        qtMap.put("SHOW_TOTBOUNS_DEC_DIGITS", mapBooksetParam.get(key));
+                        qtMap.put(key, mapBooksetParam.get(key));
+                    }
+                    else if("VAL_DEC_TYPE".equals(key)){
+                        qtMap.put("SHOW_BEFORE_DEC_TYPE", mapBooksetParam.get(key));
+                        qtMap.put("SHOW_AFTER_DEC_TYPE", mapBooksetParam.get(key));
+                        qtMap.put("SHOW_TOTBOUNS_DEC_TYPE", mapBooksetParam.get(key));
+                        qtMap.put(key, mapBooksetParam.get(key));
+                    }
+                    else if("YEILD_DEC_DIGITS".equals(key)){
+                        qtMap.put("TDY_YEILD_DEC_DIGITS", mapBooksetParam.get(key));
+                        qtMap.put(key, mapBooksetParam.get(key));
+                    }
+                    else if("YEILD_DEC_TYPE".equals(key)){
+                        qtMap.put("DAY7_YEILD_DEC_TYPE", mapBooksetParam.get(key));
+                        qtMap.put(key, mapBooksetParam.get(key));
+                    }
+                    else{
+                        qtMap.put(key, mapBooksetParam.get(key));
+                    }
+                }
+                // LOOP 变量.入库账套配置List L
+                for (BokBooksetExt item : listBokBooksetExt) {
+                    // IF 变量.账套参数Map.get(L.参数项) != null
+                    if (qtMap.get(item.getParamCode()) != null) {
+                        // L.参数值 = 变量.账套参数Map.get(L.参数项)
+                        item.setParamValue(qtMap.get(item.getParamCode()));
+                    }
                 }
             }
 
@@ -1226,7 +1251,8 @@ public class ValInterfCommonServiceApi {
         // TISHKBS-2046 CLONE - 场内货币基金-存续期-基金份额折算交易审批报错
         // 基金份额折算不生成指令
         if (DictCodeListExt1.金融产品类型_基金.getValue().equals(trdProductDeal.getFinprodType())
-                && DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())) {
+                && (DictCodeList.交易方向_份额强增.getValue().equals(trdProductDeal.getPs())
+                    ||DictCodeList.交易方向_份额强减.getValue().equals(trdProductDeal.getPs()))) {
             dealOrdersBuild = false;
         }
         // add by jiangpeng on 20210426 end
@@ -3905,7 +3931,6 @@ public class ValInterfCommonServiceApi {
      * @param apiTrdCommDto
      * @return
      */
-    @Transactional(value = "jixuTXManager", rollbackFor = Exception.class)
 	public ResultContainer runValInvest2Jixu(ApiTrdCommDto apiTrdCommDto) throws BusinessException{
 
 	    String 子组合前缀 = "ZZH_";

@@ -79,7 +79,6 @@ public class InfoDiscPreReadAndGenMainService extends AutoSendCBBaseService{
 				try {
 					infoDisclosureReadAndGenDetailService.preReadAndGenDetail(repJob, dateMap, DateUtil.parse(preGenDate));
 				} catch (Exception e) {
-//					e.printStackTrace();
 					logger.error("error:", e);
 					logger.info("作业id为:"+repJob.getJobId()+",作业name为:"+repJob.getJobName()+"的作业生成失败");
 				}

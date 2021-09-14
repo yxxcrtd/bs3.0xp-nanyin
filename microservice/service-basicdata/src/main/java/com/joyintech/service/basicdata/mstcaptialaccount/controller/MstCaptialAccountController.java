@@ -54,8 +54,7 @@ public class MstCaptialAccountController {
      * @throws Exception 异常信息
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstCaptialAccountDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    public Page<MstCaptialAccountDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length){
         return mstCaptialAccountService.selectForPage(page,length,pageParam);
     }
     /**

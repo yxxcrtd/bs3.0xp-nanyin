@@ -47,7 +47,7 @@ public class FinFundTargetController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<FinFundTargetDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finFundTargetService.selectForPage(page, length, param);
     }
     
@@ -60,7 +60,7 @@ public class FinFundTargetController {
      */
     @GetMapping("/getFinprodMarketIdList")
     public List<SuggestDto> getFinprodMarketIdList(String finprodMarketId) 
-        throws Exception {
+    {
         return finFundTargetService.getFinprodMarketIdList(finprodMarketId);
     }
     /**
@@ -73,7 +73,7 @@ public class FinFundTargetController {
      */
     @GetMapping("/getIssuer")
     public List<SelectOptionDto> getIssuer()
-        throws Exception {
+    {
         return finFundTargetService.getIssuer();
     }
     /**
@@ -106,7 +106,7 @@ public class FinFundTargetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody FinFundTargetDto dto) throws Exception {
+    public int delete(@RequestBody FinFundTargetDto dto) {
         return finFundTargetService.delete(dto);
     }
     
@@ -124,7 +124,7 @@ public class FinFundTargetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody FinFundTargetDto dto) throws Exception {
+    public int insert(@RequestBody FinFundTargetDto dto) throws IllegalAccessException, InvocationTargetException {
         return finFundTargetService.insert(dto);
     }
 
@@ -142,7 +142,7 @@ public class FinFundTargetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody FinFundTargetDto dto) throws Exception {
+    public int update(@RequestBody FinFundTargetDto dto) throws IllegalAccessException, InvocationTargetException {
         return finFundTargetService.update(dto);
     }
     /**
@@ -157,7 +157,7 @@ public class FinFundTargetController {
      */
     @GetMapping("selectByFinprodId")
     public FinFundTargetDto selectByFinprodId(String finprodId) 
-        throws Exception {
+    {
         return finFundTargetService.selectByFinprodId(finprodId);
     }
     /**
@@ -171,7 +171,7 @@ public class FinFundTargetController {
      */
     @PostMapping("findEntity")
     public FinFundTargetDto findEntity(@RequestBody Map<String,Object> param) 
-        throws Exception {
+    {
         return finFundTargetService.findEntity(param);
     }
     /**
@@ -186,7 +186,7 @@ public class FinFundTargetController {
      */
      @GetMapping("/getIntPayByFinprodId")
      public BussFinIntPayDto getIntPayByFinprodId(String finprodId) 
-         throws Exception {
+     {
          return finFundTargetService.getIntPayByFinprodId(finprodId);
      }   
      /**
@@ -200,8 +200,8 @@ public class FinFundTargetController {
       * @since 1.0
       */
       @GetMapping("/getFundInfoByFinprodId")
-      public BussRepFundInfoDto getFundInfoByFinprodId(String finprodId) 
-          throws Exception {
+      public BussRepFundInfoDto getFundInfoByFinprodId(String finprodId)
+       throws IllegalAccessException, InvocationTargetException  {
           return finFundTargetService.getFundInfoByFinprodId(finprodId);
       } 
       @PostMapping("getInfoByIssuer")

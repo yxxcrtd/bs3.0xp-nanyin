@@ -33,8 +33,10 @@ public class ProductReportRegisterService extends BaseService<ProductReportRegis
 	 * @see
 	 * @since 1.0
 	 */
-    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param){
-    	return productReportRegisterMapper.queryProdIdInfo(param);
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param,int page,int length){
+		return queryForPageForSelectReturn(page, length, () -> {
+			productReportRegisterMapper.queryProdIdInfo(param);
+		});
     }
     
     /**

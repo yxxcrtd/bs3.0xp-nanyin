@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.finncproductbuild.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,7 +105,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FinNCProductBuild001Dto> findPage() throws Exception{
+    public Page<FinNCProductBuild001Dto> findPage() {
         return finNCProductBuild001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -187,7 +188,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      */
     @RequestMapping("queryFeeList")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryFeeList() throws Exception{
+    public List<ValProductInfoFeeDto> queryFeeList() {
     	Map<String, Object> map = RequestUtil.getPageParam();
     	String workflowId = (String) map.get("workflowId");
     	List<ValProductInfoFeeDto> resultList = new ArrayList<>();
@@ -210,7 +211,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> para= RequestUtil.getPageParam();
         List<FinNCProductBuild001Dto> dtoList;
@@ -241,7 +242,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList() {
         return finNCProductBuild001Service.queryfloatFeeList(RequestUtil.getPageParam());
     }
     
@@ -255,7 +256,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList1")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList1() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList1() {
     	Map<String, Object> map = RequestUtil.getPageParam();
     	String workflowId = (String) map.get("workflowId");
     	List<ValProductInfoFeeDto> resultList = new ArrayList<>();
@@ -278,7 +279,7 @@ public class FinNCProductBuild001Controller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList2")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList2() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList2() {
     	Map<String, Object> map = RequestUtil.getPageParam();
     	String workflowId = (String) map.get("workflowId");
     	List<ValProductInfoFeeDto> resultList = new ArrayList<>();
@@ -302,7 +303,7 @@ public class FinNCProductBuild001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) FinNCProductBuild001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) FinNCProductBuild001Dto dto, BindingResult result) {
 		String operateType = dto.getOperateType();
         List<FinNCProductBuild001Dto> list = dto.getListFinNCProductBuildDto();
         List<FinNCProductBuild001Dto> checkList = new ArrayList<>();

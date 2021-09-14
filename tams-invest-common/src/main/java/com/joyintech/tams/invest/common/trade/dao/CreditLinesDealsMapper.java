@@ -60,9 +60,13 @@ public interface CreditLinesDealsMapper {
 
 	BigDecimal getPledgeNum(@Param("finprodId") String finprodId);
 
+	BigDecimal getPledgeAmt(TrdProductDeal model);
+
 	FinProductCredit getAssetInfoByFinId(@Param("finprodId")String finprodId, @Param("tradedate")Date tradedate, @Param("execmode")String execmode);
 	String getMstName(@Param("creditMstId") String creditMstId);
 	BigDecimal getPrehapamtForPingan(Map<String, Object> map);
+
+	BigDecimal getPierceTradeAmt(Map<String, Object> map);
 
 	List<CreditLines> getCeLinesInfoforVariety(Map<String, Object> map);
 
@@ -73,6 +77,9 @@ public interface CreditLinesDealsMapper {
 	
 	//撤销时根据交易编号查找授信交易
 	List<CreditLinesDeal> selectCreditDealByTradeId(@Param("tradeId") String tradeId);
+
+	//到期根据交易编号查找首期授信交易
+	List<CreditLinesDeal> selectCreditOriginDealByTradeId(@Param("tradeId") String tradeId);
 	
 	CreditLines selectCeLinesInfoBySeqno(@Param("seqno") String seqno);
 	
@@ -125,7 +132,7 @@ public interface CreditLinesDealsMapper {
 	String getCustomerid(Map<String,Object> model);
 
 	List<CreditLines> getCeLinesInfoforassetPierce(Map<String,Object> model);
-
+    List<CreditMstInfo> selectCreditMstInfo(String seqno);
 	BigDecimal getLastPrice(@Param("finprodId")String finprodId,@Param("sysDate")Date sysDate);
 
 	FinProductType selectByPrimaryKey(FinProductTypeKey key);

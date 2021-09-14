@@ -99,8 +99,7 @@ public class FinSubmittedModule001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinSubmittedModule002Dto> select()
-        throws Exception {  
+    public Page<FinSubmittedModule002Dto> select(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return finSubmittedModule002Service.selectForPage(map);
     }

@@ -105,7 +105,6 @@ public class MstCalendarType001Service extends CommonExportService<MstCalendarTy
      * 通过输入的数据进行查询
      * @param pageParam 页面参数
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -167,7 +166,6 @@ public class MstCalendarType001Service extends CommonExportService<MstCalendarTy
      * 
      * @param map 查询参数
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

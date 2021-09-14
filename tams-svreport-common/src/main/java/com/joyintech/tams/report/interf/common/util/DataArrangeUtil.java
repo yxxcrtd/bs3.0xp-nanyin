@@ -87,7 +87,6 @@ public class DataArrangeUtil {
                 }
                 catch (IllegalAccessException | IllegalArgumentException
                     | InvocationTargetException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
                 return null;
@@ -116,7 +115,6 @@ public class DataArrangeUtil {
             DBConnect.insertData(tableName, sqlList, basicDataSource, true);
         }
         catch (NoSuchMethodException | SecurityException e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
     }

@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class RskValAssetCode001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskValtblAssetSubMapDto> selectForPage() throws Exception{
+    public Page<RskValtblAssetSubMapDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return rskValAssetCode001Service.selectForPage(param);
     }
@@ -99,8 +100,8 @@ public class RskValAssetCode001Controller extends BaseController{
         if(StringUtil.isNotEmpty(this.getParam("assetSubMapId"))){
             param.put("id", this.getParam("assetSubMapId"));
         }
-        if(param.containsKey("id")){
-            return rskValAssetCode001Service.findPageDtl(param);
+        if(param.containsKey("id") && StringUtil.isNotEmpty(param.get("id"))){
+                return rskValAssetCode001Service.findPageDtl(param);
         }
         return new Page<RskValtblAssetSubMapDtlDto>();
     }
@@ -149,6 +150,20 @@ public class RskValAssetCode001Controller extends BaseController{
     public AjaxResult deleteDtl(@RequestBody RskValtblAssetSubMapDtlDto dto) {
         rskValAssetCode001Service.deleteDtl(dto);
         return new AjaxResult(getMessage("RSK_W_0026"));
+    }
+
+    /**
+     * 获取所有已配置科目
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("findListDtl")
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(@RequestBody Map<String, Object> param){
+        if(param.containsKey("id")){
+            return rskValAssetCode001Service.findListDtl(param);
+        }else{
+            return null;
+        }
     }
     
 }

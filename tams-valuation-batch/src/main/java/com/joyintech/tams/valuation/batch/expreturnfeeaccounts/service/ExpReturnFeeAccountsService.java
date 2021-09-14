@@ -90,7 +90,7 @@ public class ExpReturnFeeAccountsService {
      * @since 1.0
      */
     public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params)
-        throws Exception {
+         {
         // 获取reader返回值
         PrdCashEntity acctEntity = (PrdCashEntity)params.get(GlobalConstant.READER_RESULT);
 

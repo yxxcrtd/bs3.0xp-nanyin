@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.period.trdoverduecalcupenalty.service.TrdOverdu
 import com.joyintech.tams.invest.period.trdsecoverdueduration.dto.TrdSecOverdueDuration001Dto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -97,8 +98,7 @@ public class TrdOverdueCalcuPenaltyController002 extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdOverdueCalcuPenaltyDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdOverdueCalcuPenaltyDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

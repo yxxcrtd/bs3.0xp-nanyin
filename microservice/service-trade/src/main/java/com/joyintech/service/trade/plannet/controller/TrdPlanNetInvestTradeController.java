@@ -65,7 +65,7 @@ public class TrdPlanNetInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdPlanNetInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdPlanNetInvestTradeService.selectForPage(page, length, param);
     }
     
@@ -414,5 +414,19 @@ public class TrdPlanNetInvestTradeController {
     @GetMapping("queryIssueAmt")
 	public BigDecimal queryIssueAmt(String finprodId) {
         return trdPlanNetInvestTradeService.queryIssueAmt(finprodId);
+    }
+
+    /**
+     *
+     * 获取最原始留痕表創建人
+     * <功能详细描述>
+     * @param workflowId
+     * @return 最原始留痕表創建人getSysDateMark
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getSysDateMark")
+    public String getSysDateMark(String workflowId){
+        return trdPlanNetInvestTradeService.getSysDateMark(workflowId);
     }
 }

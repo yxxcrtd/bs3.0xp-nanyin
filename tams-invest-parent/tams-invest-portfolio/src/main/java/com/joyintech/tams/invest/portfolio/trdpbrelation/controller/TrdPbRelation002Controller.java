@@ -107,13 +107,11 @@ public class TrdPbRelation002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdPbRelation001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdPbRelation001Dto dto, BindingResult br){
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

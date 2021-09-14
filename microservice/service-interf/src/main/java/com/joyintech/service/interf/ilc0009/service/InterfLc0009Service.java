@@ -42,7 +42,7 @@ public class InterfLc0009Service extends ReceivedEsbService<InterfLc0009InEntity
      */
     @Override
     public InterfLc0009InEntity selectResponseData(InterfLc0009InEntity entity)
-        throws Exception {
+    {
         // Lc0009无输出结果
         return null;
     }
@@ -52,7 +52,7 @@ public class InterfLc0009Service extends ReceivedEsbService<InterfLc0009InEntity
      */
     @Override
     public int saveInterfData(InterfLc0009InEntity entity)
-        throws Exception {
+    {
         // 登录接口表
         entity.setCdate(getSysDate());
         return interfLc0009Mapper.insert(entity);
@@ -63,7 +63,7 @@ public class InterfLc0009Service extends ReceivedEsbService<InterfLc0009InEntity
      */
     @Override
     public int saveBusinessData(InterfLc0009InEntity entity)
-        throws Exception {
+    {
         // 不登录业务表
         return 0;
     }

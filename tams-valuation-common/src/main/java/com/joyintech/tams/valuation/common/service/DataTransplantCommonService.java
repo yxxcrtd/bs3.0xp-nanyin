@@ -22,6 +22,8 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +56,7 @@ import com.joyintech.tams.valuation.common.interf.base.dto.BalanceTransplantDto;
  */
 @Service
 public class DataTransplantCommonService {
-
+    private static final Logger logger = LoggerFactory.getLogger(DataTransplantCommonService.class);
     @Autowired
     private DataTransplantCommonMapper dataTransplantCommonMapper;
 
@@ -500,7 +502,8 @@ public class DataTransplantCommonService {
      * add by wujie on 20181228
      */
     public void insertTrsBalanceTransplant(List<BalanceTransplantDto> balanceList){
-    	System.out.println("转换后数据大小："+balanceList.size());
+//    	System.out.println("转换后数据大小："+balanceList.size());
+    	logger.info("转换后数据大小："+balanceList.size());
         // 入库
         if (CollectionUtils.isNotEmpty(balanceList)) {
             // 定义一个固定大小插入存放集合

@@ -57,7 +57,7 @@ public class EtrWtSpotexController {
     public Page<EtrWtSpotexDto> selectForPage(@RequestBody Map<String, Object> param,
                                               @PathVariable("page") int page,
                                               @PathVariable("length") int length)
-        throws Exception {
+    {
         return wtSpotexService.selectForPage(page, length, param);
     }
 

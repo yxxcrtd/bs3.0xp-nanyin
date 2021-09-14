@@ -202,4 +202,19 @@
 		</if>
 		order by t.customer_id
 	</select>
+
+	<select id="findTable" resultType="com.joyintech.tams.common.base.entity.TrdFeeConfigDetail">
+		SELECT
+		tfcd.SEQ_NO seqNo,
+		tfcd.CHARGE_VALUE chargeValue,
+		tfcd.FEE_MAXI feeMaxi,
+		tfcd.FEE_MINI feeMini,
+		tfcd.CHARGE_RATE chargeRate,
+		tfcd.CONFIG_SEQ_NO configSeqNo,
+		tfcd.GRADE_AMOUNT gradeAmount,
+		tfcd.IS_CLUDE_STARTAMT isCludeStartamt
+		FROM TRD_FEE_CONFIG_DETAIL tfcd
+		join (select * from TRD_FEE_CONFIG where BATCH_SEQ=#{batchSeq,jdbcType=VARCHAR} and rownum=1) tfc on tfcd.CONFIG_SEQ_NO=tfc.SEQ_NO
+		order by tfcd.GRADE_AMOUNT
+	</select>
 </mapper>

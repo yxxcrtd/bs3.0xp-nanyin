@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -144,14 +145,12 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      * 回款账户以及资金账户联想下拉框 <功能详细描述>
      * @param search String
      * @return List
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getBusiAcctNo")
-    public List<SelectOptionDto> getBusiAcctNo(String search)
-        throws Exception {
+    public List<SelectOptionDto> getBusiAcctNo(String search){
         List<SelectOptionDto> temp = mstSecuritiesAccountService.getBusiAcctNo(search);
         return temp;
     }
@@ -190,13 +189,13 @@ public class MstSecuritiesAccount002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSecuritiesAccountDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -242,7 +241,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * @param request 请求
 //     * @param response 响应
 //     * @param model ModelAndView
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -263,7 +261,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 查询上传的文件
 //     *
 //     * @param businessId String
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -277,7 +274,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 插入附件文件
 //     *
 //     * @param dto MstSecuritiesAccountDto
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0
@@ -291,7 +287,6 @@ public class MstSecuritiesAccount002Controller extends BaseController{
 //     * 删除上传的附件文件
 //     *
 //     * @param businessId String
-//     * @throws Exception 异常
 //     * @return String
 //     * @see
 //     * @since 1.0

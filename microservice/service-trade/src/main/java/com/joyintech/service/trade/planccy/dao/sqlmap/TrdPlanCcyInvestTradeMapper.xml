@@ -69,6 +69,8 @@
                 	 SELECT W1.* FROM WFL_TRD_PRODUCT_DEAL W1 INNER JOIN WFL_TRD_PRODUCT_DEAL W2 ON W1.B_TRADE_ID = W2.TRADE_ID WHERE W1.PS = #{PS24}) T1
 				LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD T2 ON T1.TRADE_ID = T2.TRADE_ID
 				LEFT JOIN PTL_PORTFOLIO pp ON pp.PORTFOLIO_ID = T2.PORTFOLIO_ID
+				/*过滤流程已结束的数据*/
+				inner join sys_wfl_business_list list on list.seq_no = t1.workflow_id and list.process_state !='END'
 				<where>
 					(T1.IS_CANCEL is null or T1.IS_CANCEL = #{YES_NO_NO})
 					and T1.TRADE_STATUS = #{TRADESTATUS_NEW}
@@ -552,6 +554,7 @@
 	</select>
 
 	<select id="selectAccountTrdIdinwfl" resultType="java.util.Map">
+		select * from(
 		SELECT
 		TRADE_ID tradId,
 		'0' workflowId
@@ -560,6 +563,9 @@
 		<where>
 			B_TRADE_ID = #{tradId}
 		</where>
+		order by update_time desc
+		)where rownum =1 
+		
 	</select>
 
 	<select id="selectAccountTrdId" resultType="java.util.Map">

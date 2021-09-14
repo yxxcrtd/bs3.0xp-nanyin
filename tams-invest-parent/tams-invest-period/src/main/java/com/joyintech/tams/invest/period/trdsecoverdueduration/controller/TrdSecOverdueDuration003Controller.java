@@ -21,6 +21,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,7 @@ public class TrdSecOverdueDuration003Controller extends BaseController {
         String pageModel = getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY);
         String type8 = getParam("finprodType2");
         Map<String,Object> map = RequestUtil.getPageParam();
-        TrdSecOverdueDuration003Dto entity = null;
+        TrdSecOverdueDuration003Dto entity = new TrdSecOverdueDuration003Dto();
 //        流程中
         if(StringUtil.isNotEmpty(workflowId)){
             entity = trdSecOverdueDuration003Service.getBussinessEntityByWorkflowId(workflowId);
@@ -144,8 +145,7 @@ public class TrdSecOverdueDuration003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecOverdueDuration003Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecOverdueDuration003Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

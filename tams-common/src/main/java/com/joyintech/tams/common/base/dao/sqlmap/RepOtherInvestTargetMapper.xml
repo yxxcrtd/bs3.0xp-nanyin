@@ -36,6 +36,12 @@
         <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
         <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
         <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="REP_GUA_TYPE" property="repGuaType" jdbcType="VARCHAR" />
+        <result column="REP_GUA_TYPE_REMARK" property="repGuaTypeRemark" jdbcType="VARCHAR" />
+        <result column="REP_PLEDGE_TYPE" property="repPledgeType" jdbcType="VARCHAR" />
+        <result column="REP_PLEDGE_VALUE" property="repPledgeValue" jdbcType="DECIMAL" />
+        <result column="REP_NATURE_GUARANTEE" property="repNatureGuarantee" jdbcType="VARCHAR" />
+        <result column="REP_RELATION_FINAN" property="repRelationFinan" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         REP_FINPROD_ID REP_FINPROD_ID, REP_BANK_ASSET_TYPE REP_BANK_ASSET_TYPE, REP_BANK_ASSET_TYPR_EXPLAIN REP_BANK_ASSET_TYPR_EXPLAIN,
@@ -49,7 +55,8 @@
         REP_INDUSTRY_FLAG REP_INDUSTRY_FLAG, REP_MONIT_TYPE REP_MONIT_TYPE, REP_MON_TYPE_COMM REP_MON_TYPE_COMM,
         REP_OUT_GRADE REP_OUT_GRADE, REP_REMARK REP_REMARK, REP_DEPT_EQUITY REP_DEPT_EQUITY, REP_ASSET_REG_DATE REP_ASSET_REG_DATE,
         CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
-        UPDATE_TIME UPDATE_TIME
+        UPDATE_TIME UPDATE_TIME, REP_GUA_TYPE REP_GUA_TYPE, REP_GUA_TYPE_REMARK REP_GUA_TYPE_REMARK,REP_PLEDGE_TYPE REP_PLEDGE_TYPE, REP_PLEDGE_VALUE REP_PLEDGE_VALUE,
+        REP_NATURE_GUARANTEE REP_NATURE_GUARANTEE,REP_RELATION_FINAN REP_RELATION_FINAN
     </sql>
     <sql id="Sql_All_Data" >
         select
@@ -83,7 +90,7 @@
             REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM,
             REP_OUT_GRADE, REP_REMARK, REP_DEPT_EQUITY, REP_ASSET_REG_DATE,
             CREATE_USER, CREATE_DEPT, CREATE_TIME,
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME,REP_GUA_TYPE, REP_GUA_TYPE_REMARK,REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,REP_NATURE_GUARANTEE,REP_RELATION_FINAN)
         values (#{repFinprodId,jdbcType=VARCHAR}, #{repBankAssetType,jdbcType=VARCHAR}, #{repBankAssetTyprExplain,jdbcType=VARCHAR},
             #{repMoney,jdbcType=DECIMAL}, #{repValueDate,jdbcType=DATE}, #{repExpiringDate,jdbcType=DATE},
             #{repProjectDuration,jdbcType=DECIMAL}, #{repCountryArea,jdbcType=VARCHAR}, #{repContainExpectedYield2,jdbcType=VARCHAR},
@@ -95,7 +102,9 @@
             #{repIndustryFlag,jdbcType=VARCHAR}, #{repMonitType,jdbcType=VARCHAR}, #{repMonTypeComm,jdbcType=VARCHAR},
             #{repOutGrade,jdbcType=VARCHAR}, #{repRemark,jdbcType=VARCHAR}, #{repDeptEquity,jdbcType=VARCHAR}, #{repAssetRegDate,jdbcType=DATE},
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{repGuaType,jdbcType=VARCHAR}, #{repGuaTypeRemark,jdbcType=VARCHAR},
+            #{repPledgeType,jdbcType=VARCHAR}, #{repPledgeValue,jdbcType=DECIMAL},#{repNatureGuarantee,jdbcType=VARCHAR}, #{repRelationFinan,jdbcType=VARCHAR}
+        )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepOtherInvestTarget" >
         insert into REP_OTHER_INVEST_TARGET
@@ -202,6 +211,24 @@
             <if test="updateTime != null" >
                 UPDATE_TIME,
             </if>
+            <if test="repGuaType != null" >
+                REP_GUA_TYPE,
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                REP_GUA_TYPE_REMARK,
+            </if>
+            <if test="repPledgeType != null" >
+                REP_PLEDGE_TYPE,
+            </if>
+            <if test="repPledgeValue != null" >
+                REP_PLEDGE_VALUE,
+            </if>
+            <if test="repNatureGuarantee != null" >
+                REP_NATURE_GUARANTEE,
+            </if>
+            <if test="repRelationFinan != null" >
+                REP_RELATION_FINAN,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="repFinprodId != null" >
@@ -306,6 +333,24 @@
             <if test="updateTime != null" >
                 #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="repGuaType != null" >
+                #{repGuaType,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                #{repGuaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeType != null" >
+                #{repPledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeValue != null" >
+                #{repPledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repNatureGuarantee != null" >
+                #{repNatureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRelationFinan != null" >
+                #{repRelationFinan,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepOtherInvestTarget" >
@@ -316,7 +361,7 @@
         REP_FINANCIER_TYPE3, REP_FINANCE_PROJ, REP_INDUSTRY1, REP_INDUSTRY_LEVEL2, REP_PRO_INDUSTRY,
         REP_PRO_INDUSTRY_LEVEL2, REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM, REP_OUT_GRADE,
         REP_REMARK, REP_DEPT_EQUITY, REP_ASSET_REG_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
-        UPDATE_TIME)
+        UPDATE_TIME,REP_GUA_TYPE, REP_GUA_TYPE_REMARK,REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,REP_NATURE_GUARANTEE,REP_RELATION_FINAN)
         select REP_FINPROD_ID, REP_BANK_ASSET_TYPE, REP_BANK_ASSET_TYPR_EXPLAIN,
             REP_MONEY, REP_VALUE_DATE, REP_EXPIRING_DATE, REP_PROJECT_DURATION, REP_COUNTRY_AREA,
             REP_CONTAIN_EXPECTED_YIELD2, REP_PROJECT_YIELD_RATE, REP_INTPAY_CYCLE, REP_FINANCIER,
@@ -324,7 +369,7 @@
             REP_FINANCIER_TYPE3, REP_FINANCE_PROJ, REP_INDUSTRY1, REP_INDUSTRY_LEVEL2, REP_PRO_INDUSTRY,
             REP_PRO_INDUSTRY_LEVEL2, REP_INDUSTRY_FLAG, REP_MONIT_TYPE, REP_MON_TYPE_COMM, REP_OUT_GRADE,
             REP_REMARK, REP_DEPT_EQUITY, REP_ASSET_REG_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
-            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,REP_GUA_TYPE, REP_GUA_TYPE_REMARK,REP_PLEDGE_TYPE, REP_PLEDGE_VALUE,REP_NATURE_GUARANTEE,REP_RELATION_FINAN
              from REP_OTHER_INVEST_TARGET
              where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </insert>
@@ -421,6 +466,24 @@
             <if test="updateTime != null" >
                 UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             </if>
+            <if test="repGuaType != null" >
+                REP_GUA_TYPE = #{repGuaType,jdbcType=VARCHAR},
+            </if>
+            <if test="repGuaTypeRemark != null" >
+                REP_GUA_TYPE_REMARK = #{repGuaTypeRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeType != null" >
+                REP_PLEDGE_TYPE = #{repPledgeType,jdbcType=VARCHAR},
+            </if>
+            <if test="repPledgeValue != null" >
+                REP_PLEDGE_VALUE = #{repPledgeValue,jdbcType=DECIMAL},
+            </if>
+            <if test="repNatureGuarantee != null" >
+                REP_NATURE_GUARANTEE = #{repNatureGuarantee,jdbcType=VARCHAR},
+            </if>
+            <if test="repRelationFinan != null" >
+                REP_RELATION_FINAN = #{repRelationFinan,jdbcType=VARCHAR},
+            </if>
         </set>
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
@@ -455,7 +518,13 @@
             REP_DEPT_EQUITY = #{repDeptEquity,jdbcType=VARCHAR},
             REP_ASSET_REG_DATE = #{repAssetRegDate,jdbcType=DATE},
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
-            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            REP_GUA_TYPE = #{repGuaType,jdbcType=VARCHAR},
+            REP_GUA_TYPE_REMARK = #{repGuaTypeRemark,jdbcType=VARCHAR},
+            REP_PLEDGE_TYPE = #{repPledgeType,jdbcType=VARCHAR},
+            REP_PLEDGE_VALUE = #{repPledgeValue,jdbcType=DECIMAL},
+            REP_NATURE_GUARANTEE = #{repNatureGuarantee,jdbcType=VARCHAR},
+            REP_RELATION_FINAN = #{repRelationFinan,jdbcType=VARCHAR},
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>
 </mapper>

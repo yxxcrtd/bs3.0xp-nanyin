@@ -1,5 +1,37 @@
 (function(){
 	/**
+	 * 画星星
+	 */
+	function star() {
+		// 加红星星
+		// 查找label
+		var _findPrevLabel = function (element, level) {
+			var $el = element.prev();
+			if (!$el.is('label') && level > 0) {
+				$el = $el.find('label');
+				if ($el.length === 0) {
+					return _findPrevLabel(element.parent(), level - 1);
+				}
+			}
+			return $el;
+		};
+
+		// 非查看模式
+		if (typeof pageModel !== 'undefined'
+			&& (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+			$('.must').each(function () {
+				$(this).remove();
+			});
+			$('*[required]').each(function () {
+				var $el = $(this);
+				var $target = _findPrevLabel($el, 3);
+				if ($target.find('> .must').length === 0) {
+					$target.append($('<i class="must">*</i>'));
+				}
+			});
+		}
+	}
+	/**
 	 * 初始化方法
 	 */
 	var finProductBuildInit = function(){
@@ -678,9 +710,11 @@
             //OPEX-572 产品端-浮动管理费首次计提日应为-1日 guyunfei end
 			//end
 			//封闭式置灰 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） start yjm 20190807
+			$('#bussRepFinProductInfoDto_isShortTerm').removeAttr('required');
 			$('#bussRepFinProductInfoDto_isShortTerm').val('').trigger('change').attr('disabled',true);
             //封闭式置灰 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） end yjm 20190807
             //封闭式置灰 基本信息的 是否现金管理类产品 start yjm 20190828
+			$('#FinNetValueProductBuild002_isCashManage').removeAttr('required');
             $('#FinNetValueProductBuild002_isCashManage').val('').trigger('change').attr('disabled',true);
             //封闭式置灰 基本信息的 是否现金管理类产品 end yjm 20190828
 		}else{
@@ -712,14 +746,17 @@
 //				chk.checked = true;
 	    		FinProductCommon.isSus();
                 //开放式 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） 必输 start yjm 20190807
+				$('#bussRepFinProductInfoDto_isShortTerm').attr('required', true);
                 $('#bussRepFinProductInfoDto_isShortTerm').attr('disabled', false);
                 //开放式 中债报送tab的 是否设置最短持有期限 和 最短持有期限（天） 必输 end yjm 20190807
                 //开放式必输 基本信息的 是否现金管理类产品 start yjm 20190828
+				$('#FinNetValueProductBuild002_isCashManage').attr('required',true);
                 $('#FinNetValueProductBuild002_isCashManage').attr('disabled', false);
                 //开放式必输 基本信息的 是否现金管理类产品 end yjm 20190828
 			}
 			//add by yejiejie 2019-3-7 end
 		}
+		star();
 	};
 	//add by yejiejie 2019-03-05 end
 	//add by yejiejie 2019-3-8 start
@@ -768,13 +805,13 @@
 			FinProductCommon.openModeSelect();
 		});*/
 		
-		/**add by taoran 20200317*/
-		//产品代码修改事件 不允许中文
-		$('#FinNetValueProductBuild002_finprodMarketId').bind("change", function(){
-			$('#FinNetValueProductBuild002_finprodMarketId').val(
-					$('#FinNetValueProductBuild002_finprodMarketId').val().replace(/[^\a-\z\A-\Z0-9]/g,''));
-		});
-		/**add by taoran 20200317*/
+		// /**add by taoran 20200317*/
+		// //产品代码修改事件 不允许中文
+		// $('#FinNetValueProductBuild002_finprodMarketId').bind("change", function(){
+		// 	$('#FinNetValueProductBuild002_finprodMarketId').val(
+		// 			$('#FinNetValueProductBuild002_finprodMarketId').val().replace(/[^\a-\z\A-\Z0-9]/g,''));
+		// });
+		// /**add by taoran 20200317*/
 		
 		//行内标识码联动
 		
@@ -915,50 +952,55 @@
 			var operationType2 =  $('#FinNetValueProductBuild002_operationType').val();
 			var termDays2 =  $('#FinNetValueProductBuild002_termDays').val();	
 			var openMode =  $('#bussFinProductOpenPlanDto_openMode').val();
-			if($('#FinNetValueProductBuild002_dealMode').val() != '10' && $('#bussFinProductOpenPlanDto_openType').val() !='03'){//申赎不同频
-				 if(( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false' ) &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02"){
-				    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
-				    		if(!draftoption && operationType2 == "01" && termDays2 <90){
-								Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-									onSaveOrSubmitAction('submit');
-				                },null);
-							}else{
-								onSaveOrSubmitAction('submit');
-							}
-		                },null);
-				    }
-				    else{	
-					if(!draftoption && operationType2 == "01" && termDays2 <90){
-						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-							onSaveOrSubmitAction('submit');
-		                },null);
-					}else{
-						onSaveOrSubmitAction('submit');
-					}
-				    }
-			}
-			else{//申赎同频
-		    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02" ){
-		    	Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
-		    		if(!draftoption && operationType2 == "01" && termDays2 <90){
-						Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-							onSaveOrSubmitAction('submit');
-		                },null);
-					}else{
-						onSaveOrSubmitAction('submit');
-					}
-                },null);
-		    }
-		    else{	
-			if(!draftoption && operationType2 == "01" && termDays2 <90){
-				Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
-					onSaveOrSubmitAction('submit');
-                },null);
+
+			if(draftoption){
+			    onSaveOrSubmitAction('submit');
 			}else{
-				onSaveOrSubmitAction('submit');
-			}
+                if($('#FinNetValueProductBuild002_dealMode').val() != '10' && $('#bussFinProductOpenPlanDto_openType').val() !='03'){//申赎不同频
+                     if(( $('#isClick').val() == 'false' || $('#isClickRed').val() == 'false' ) &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02"){
+                            Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+                                if(!draftoption && operationType2 == "01" && termDays2 <90){
+                                    Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                        onSaveOrSubmitAction('submit');
+                                    },null);
+                                }else{
+                                    onSaveOrSubmitAction('submit');
+                                }
+                            },null);
+                        }
+                        else{
+                        if(!draftoption && operationType2 == "01" && termDays2 <90){
+                            Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                onSaveOrSubmitAction('submit');
+                            },null);
+                        }else{
+                            onSaveOrSubmitAction('submit');
+                        }
+                        }
+                }
+                else{//申赎同频
+                    if($('#isClick').val() == 'false' &&  quickInput == true && operationType2!=ISSUE_MODE_01 && openMode != "02" ){
+                        Joyin.confirm(JoyinUtil.getMessage('未重新生成开放计划，是否继续操作?'),function(){
+                            if(!draftoption && operationType2 == "01" && termDays2 <90){
+                                Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                    onSaveOrSubmitAction('submit');
+                                },null);
+                            }else{
+                                onSaveOrSubmitAction('submit');
+                            }
+                        },null);
+                    }
+                    else{
+                        if(!draftoption && operationType2 == "01" && termDays2 <90){
+                            Joyin.confirm(JoyinUtil.getMessage('封闭式产品产品期限小于90天?'),function(){
+                                onSaveOrSubmitAction('submit');
+                            },null);
+                        }else{
+                            onSaveOrSubmitAction('submit');
+                        }
+                    }
+                }
 		    }
-		}
 			
 		});
 		//update zhangweiqi 增加目标客户类型一级分类和二级分类对于中债的目标客户类型的联动事件  begin
@@ -1000,6 +1042,12 @@
 		}
 		//唤醒change事件
 		$("#FinNetValueProductBuild002_period").trigger('change');
+		// add by jiangpeng on 20210708 TISHKBS-2404 start
+		// 封闭式产品修改页面“是否永续”置灰状态
+		if ($("#FinNetValueProductBuild002_operationType").val() == ISSUE_MODE_01) {
+			$("#FinNetValueProductBuild002_isSus").prop('disabled',true);
+		}
+		// add by jiangpeng on 20210708 TISHKBS-2404 end
 	});
 }());
 

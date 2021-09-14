@@ -78,8 +78,7 @@ public class MaintainProductRedemtionDataController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findMaintainProductRedemptionData")
-    public Page<FinFlowForecastDealAmontDto> findMaintainProductRedemptionData()
-        throws Exception {
+    public Page<FinFlowForecastDealAmontDto> findMaintainProductRedemptionData(){
         Map<String, Object> params= RequestUtil.getPageParam();
         List<String> accountList = new ArrayList<String>();
         String localAccounts = (String)params.get("localAccount");

@@ -78,7 +78,7 @@ public class ValVoucherQuery001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValVoucherQuery001Dto> findPage(@RequestBody Map<String , ValVoucherQuery001SearchDto> param,
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length) {
         ValVoucherQuery001SearchDto dto = param.get("dto");
         return valVoucherQuery001Service.findPage(page,length,dto);
 

@@ -110,7 +110,7 @@ public class ValSubjectWaterQuery001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValSubjectWaterQuery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+			@PathVariable("page") int page, @PathVariable("length") int length) throws ParseException {
         return valSubjectWaterQuery001Service.findPage(page, length, param);
     }
     
@@ -146,13 +146,12 @@ public class ValSubjectWaterQuery001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/getSubjectWater")
-    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) throws Exception {
+    public List<ValSubjectWaterQuery001Dto> getSubjectWater(ValSubjectWaterQuery001SearchDto dto) {
 		return valSubjectWaterQuery001Service.getSubjectWater(dto);
     }
   
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return valSubjectWaterQuery001Service.export(this.getPageId(), RequestUtil.getPageParam());
 
     }

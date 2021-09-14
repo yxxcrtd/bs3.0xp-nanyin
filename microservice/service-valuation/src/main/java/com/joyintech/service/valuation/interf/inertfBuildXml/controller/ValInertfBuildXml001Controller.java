@@ -10,6 +10,7 @@
 
 package com.joyintech.service.valuation.interf.inertfBuildXml.controller;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,8 +51,7 @@ public class ValInertfBuildXml001Controller extends BaseController {
      * @since 1.0
      */
 	@PostMapping(value="runAs",produces="text/html;charset=UTF-8")
-    public String runAs()
-        throws Exception {
+    public String runAs() throws SQLException, ClassNotFoundException {
         String json = "";
 		Map<String,String> map = new HashMap<String,String>();
 		map.put(InterfCommonConstant.接口_开始日, this.getParam("startDate"));

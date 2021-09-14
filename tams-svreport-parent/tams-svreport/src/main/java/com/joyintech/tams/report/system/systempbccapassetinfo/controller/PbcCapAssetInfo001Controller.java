@@ -7,10 +7,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
@@ -101,7 +98,7 @@ public class PbcCapAssetInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getAssetCode")
-    public List<SelectOptionDto> queryInsideProdIdList(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryInsideProdIdList(@RequestParam Map<String, Object> param) {
         return pbcCapAssetInfo001MService.queryInsideProdIdList(param);
     }
 
@@ -115,7 +112,7 @@ public class PbcCapAssetInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getPobCasSeTidList")
-    public List<SelectOptionDto> queryPobCasSeTidList(@RequestParam Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryPobCasSeTidList(@RequestParam Map<String, Object> param) {
         return pbcCapAssetInfo001MService.queryPobCasSeTidList(param);
     }
 
@@ -144,9 +141,10 @@ public class PbcCapAssetInfo001Controller extends BaseController {
         List<PbcCapAssetInfo001Dto> dtoList = this.pbcCapAssetInfo001MService.queryReportList(RequestUtil.getPageParam());
         File outFile = pbcCapAssetInfo001Service.makeFile(
                 "/com/joyintech/tams/report/system/systempbccapassetinfo/conf/export_conf.xml", dtoList);
+
         return ExportUtil.export("人行资金信托代码管理" + GlobalConstant.OPEN_PARENTHESIS
                 + DateUtil.format(new Date()) + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
-                + "xlsx", outFile, true);
+                + FileNameUtil.getFileExtName(outFile), outFile, true);
     }
 
 

@@ -67,7 +67,7 @@ public class ValBatchLog002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "findPage")
-    public Page<BokBatchMarketwarningInfoDto> findPage() throws Exception {
+    public Page<BokBatchMarketwarningInfoDto> findPage()  {
         return valBatchLog002Service.findWarnLogDetail(RequestUtil.getPageParam());
     }
     
@@ -79,7 +79,7 @@ public class ValBatchLog002Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export()  {
         List<BokBatchMarketwarningInfoDto> dtoList = valBatchLog002Service.selectForExport(RequestUtil.getPageParam());
         File outFile = valBatchLog002Service.makeFile(
             "/com/joyintech/tams/valuation/system/log/conf/export_valBatchLog002query.xml", dtoList);

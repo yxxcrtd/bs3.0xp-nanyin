@@ -19,7 +19,10 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
-import com.joyintech.tams.constant.*;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -33,8 +36,8 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -226,14 +229,12 @@ public class EtrRepo002Controller extends BaseController {
      * 获取组合代码联想文本框信息 <功能详细描述>
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrRepo002Service.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -326,12 +327,11 @@ public class EtrRepo002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrRepoDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrRepoDto dto, BindingResult br) throws Exception {
         //万元转换 add  by yeming 20210817 start
         if(dto.getBussRepoSec() != null){
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){

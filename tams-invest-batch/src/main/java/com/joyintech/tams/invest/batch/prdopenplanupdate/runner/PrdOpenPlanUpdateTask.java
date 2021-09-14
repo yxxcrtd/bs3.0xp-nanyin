@@ -89,7 +89,7 @@ public class PrdOpenPlanUpdateTask extends BatchBaseService{
         }
         
         
-        String platYear = DateUtil.format(platformDateService.getSysDate()).substring(0, 4);
+        String platYear = DateUtil.format(platformDateService.getSysDate(batchExecuteInfo.getCreateUser())).substring(0, 4);
         //改为从表中获取
         String sysYear = prdOpenPlanUpdateMapper.getLastUpdateYear();
 //        		CacheUtil.getSysParam("openplan_update_year");
@@ -102,7 +102,7 @@ public class PrdOpenPlanUpdateTask extends BatchBaseService{
             Map<String, Object> params = new HashMap<>();
 
             params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
-            params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate());
+            params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
 
             // 各步骤设置参数
             stepReader.setParams(params);

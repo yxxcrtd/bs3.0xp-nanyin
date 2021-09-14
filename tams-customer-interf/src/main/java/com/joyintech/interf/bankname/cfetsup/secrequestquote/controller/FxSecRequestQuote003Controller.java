@@ -33,7 +33,7 @@ public class FxSecRequestQuote003Controller extends BaseController {
 
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FxSecRequestQuoteCounterDto> findPage()throws Exception{
+    public Page<FxSecRequestQuoteCounterDto> findPage(){
         Page<FxSecRequestQuoteCounterDto> pageInfo =fxSecRequestQuoteCounterService.findCounterPage(RequestUtil.getPageParam());
         return pageInfo;
     }

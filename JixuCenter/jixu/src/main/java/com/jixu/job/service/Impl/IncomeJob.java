@@ -113,7 +113,11 @@ public class IncomeJob extends JNLJob {
 				if(JixuUserUtil.isJoyinTablesFlag()){
 					IssueInfo sec=secIncomeWrpObj.getSecurity();
 					//secIncomeWrpObj.getClo().getLsindicator()是利息的多空方向
-					String tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.INCOME+","+sec.getIssueType()+","+secIncomeWrpObj.getClo().getLsindicator());
+					String tableID = "";
+					if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null && secIncomeWrpObj.getClo()!=null) {
+					 	tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.INCOME + "," + sec.getIssueType() + "," + secIncomeWrpObj.getClo().getLsindicator());
+						tableID = tableID == null ? "" : tableID;
+					}
 					incomeCooa.setTableID(tableID);
 					
 					List<VoucherDetails> voucherDetailsList=incomeCooa.getVoucherDetails();

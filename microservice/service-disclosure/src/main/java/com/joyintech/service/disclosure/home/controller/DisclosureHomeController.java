@@ -65,7 +65,7 @@ public class DisclosureHomeController extends BaseController {
      */
     @PostMapping("getdataTableCols")
     public List<RepFtpPath> getdataTableCols()
-        throws Exception {
+    {
         List<RepFtpPath> pathList = reportHomeService.getdataTableCols();
         return pathList;
     }
@@ -79,7 +79,8 @@ public class DisclosureHomeController extends BaseController {
      * @since 1.0
      */
     @PostMapping("queryPageListDpl")
-    public List<RepFtpPathDto> queryPageListDpl(@RequestBody Map<String, Object> param)throws Exception {
+    public List<RepFtpPathDto> queryPageListDpl(@RequestBody Map<String, Object> param)
+    {
 //        Map<String, Object> parmMap = new HashMap<String, Object>();
 ////        parmMap.put("searchDate",this.getParam("searchDate"));
 //        parmMap.put("searchDateStart",this.getParam("searchDateStart"));
@@ -95,7 +96,8 @@ public class DisclosureHomeController extends BaseController {
      * @since 1.0
      */
     @PostMapping("queryListYpl")
-    public List<RepFtpPathDto> queryPageListYpl(@RequestBody Map<String, Object> param)throws Exception {
+    public List<RepFtpPathDto> queryPageListYpl(@RequestBody Map<String, Object> param)
+    {
 //        Map<String, Object> parmMap = new HashMap<String, Object>();
 //        parmMap.put("sysDate",DateUtil.format(DateUtil.now(), "yyyy-MM-dd"));
         return reportHomeService.queryListYpl(param);
@@ -103,7 +105,8 @@ public class DisclosureHomeController extends BaseController {
 
     
     @PostMapping("queryYplFail")
-    public List<RepFtpPathDto> queryYplFail(@RequestBody Map<String, Object> param)throws Exception {
+    public List<RepFtpPathDto> queryYplFail(@RequestBody Map<String, Object> param)
+    {
 //        Map<String, Object> parmMap = new HashMap<String, Object>();
 //        parmMap.put("sysDate",DateUtil.format(DateUtil.now(), "yyyy-MM-dd"));
         return reportHomeService.queryYplFail(param);
@@ -117,7 +120,8 @@ public class DisclosureHomeController extends BaseController {
      * @since 1.0
      */
     @PostMapping("queryPageListYjpl")
-    public List<RepFtpPathDto> queryPageListYjpl(@RequestBody Map<String, Object> param)throws Exception {
+    public List<RepFtpPathDto> queryPageListYjpl(@RequestBody Map<String, Object> param)
+    {
         return reportHomeService.queryPageListYjpl(param);
     }
     
@@ -129,7 +133,8 @@ public class DisclosureHomeController extends BaseController {
     * @throws Exception Exception
     */
     @PostMapping("searchInfoArea")
-    public List<InfoAreaDto> searchInfoArea(@RequestBody Map<String, Object> param) throws Exception {
+    public List<InfoAreaDto> searchInfoArea(@RequestBody Map<String, Object> param)
+    {
         return reportHomeService.searchInfoArea(param);
     }
     /**
@@ -140,7 +145,8 @@ public class DisclosureHomeController extends BaseController {
     * @throws Exception Exception
     */
     @PostMapping("searchReportInfo")
-    public List<SubmitInformationRegistrationDto> searchReportInfo(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SubmitInformationRegistrationDto> searchReportInfo(@RequestBody Map<String, Object> param)
+    {
         return reportHomeService.searchReportInfo(param);
     }
     /**
@@ -151,7 +157,8 @@ public class DisclosureHomeController extends BaseController {
     * @throws Exception Exception
     */
     @PostMapping("searcheBatchxportTemplates")
-    public List<InfoAreaDto> searcheBatchxportTemplates(@RequestBody Map<String, Object> param) throws Exception {
+    public List<InfoAreaDto> searcheBatchxportTemplates(@RequestBody Map<String, Object> param)
+    {
         return reportHomeService.searcheBatchxportTemplates(param);
     }
     /**

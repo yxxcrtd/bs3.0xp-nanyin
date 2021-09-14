@@ -30,15 +30,14 @@ public class ChannelInterface001Service extends CommonExportService<ChannelInter
 //	private ChannelInterface001Mapper channelInterface001Mapper;
 
 
-	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList(Map<String, Object> params) throws Exception {
+	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList(Map<String, Object> params) {
 
 		return restTemplate.postForPage(
 	               ServiceApplication.VALUATION_SERVICE_NAME + "/ChannelInterface/queryChannelInterfacePageList",
 	               params, ChannelInterfaceNew001Dto.class);
 	}
 
-	public Page<ChannelInterfaceNew001Dto> queryAllInstitutionPageList(Map<String, Object> params) 
-     throws Exception {
+	public Page<ChannelInterfaceNew001Dto> queryAllInstitutionPageList(Map<String, Object> params) {
      	 return restTemplate.postForPage(
                ServiceApplication.VALUATION_SERVICE_NAME + "/ChannelInterface/findPage",
                params, ChannelInterfaceNew001Dto.class);

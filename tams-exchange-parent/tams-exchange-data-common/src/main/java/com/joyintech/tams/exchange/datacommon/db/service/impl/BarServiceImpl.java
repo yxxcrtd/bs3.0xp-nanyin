@@ -1,7 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.joyintech.tams.exchange.common.db.domain.Bar;
-import com.joyintech.tams.exchange.datacommon.db.mapper.BarMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.BarMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.BarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

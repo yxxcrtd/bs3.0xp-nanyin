@@ -18,6 +18,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -133,13 +134,11 @@ public class TrdDepoDuration001Controller extends BaseController{
      * 导出
      *
      * @return 文件流
-     * @throws Exception 异常
      * @since 1.0
      */
     /* add by zhangpuyu 2019/12/9 start */
    @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return trdDepoDuration001Service.export(this.getPageId(),
             map);
@@ -153,8 +152,7 @@ public class TrdDepoDuration001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdDepoDuration001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdDepoDuration001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

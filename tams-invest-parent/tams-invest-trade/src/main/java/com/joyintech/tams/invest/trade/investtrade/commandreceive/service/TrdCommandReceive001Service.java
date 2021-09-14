@@ -535,6 +535,9 @@ public class TrdCommandReceive001Service extends CommonExportService<TrdCommandR
         if(StringUtil.equals("entrustAmt", propName) || StringUtil.equals("proAvailableCash", propName) || StringUtil.equals("finshAmt", propName)) {
             cell.setCellValue(value.toString());
         }
+        if(StringUtil.equals(propName,"dealPercent")){
+            cell.setCellValue(value+"%");
+        }
     }
     
 	/**

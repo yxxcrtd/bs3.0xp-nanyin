@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.netplanquotation.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 */
 	@RequestMapping("ValNetPlanQuotation001Search")
 	@ResponseBody
-	public Page<ValNetPlanQuotation001Dto> queryPageList() throws Exception {
+	public Page<ValNetPlanQuotation001Dto> queryPageList() {
 		Map<String, Object> params = RequestUtil.getPageParam();
 //		ValNetPlanQuotation001SearchDto dto = (ValNetPlanQuotation001SearchDto) JsonUtils.map2entity(params,
 //				ValNetPlanQuotation001SearchDto.class);
@@ -142,7 +143,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 * public List<SelectOptionDto> getFinprodId(){ return
 	 * valNetPlanQuotation001Service.getFinprodId(); }
 	 */
-	public List<SuggestDto> getFinprodId() throws Exception {
+	public List<SuggestDto> getFinprodId() {
 		String param = super.getRequest().getParameter("param");
 		return valNetPlanQuotation001Service.getFinprodId(param);
 	}
@@ -157,7 +158,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException, ParseException {
 		Map<String, Object> paraMap = this.getRequestMap();
 		String datas = this.getParam("datas");
 //		ValNetPlanQuotation001SearchDto dto = (ValNetPlanQuotation001SearchDto) JsonUtils.map2entity(paraMap,
@@ -187,7 +188,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Valid ValNetPlanQuotation001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody @Valid ValNetPlanQuotation001Dto dto, BindingResult result) {
 		String finproId = dto.getFinprodId();
 		String valueDate = DateUtil.format(DateUtil.parse(dto.getValueDate()), "yyyy-MM-dd");
 		// 获取当前系统时间
@@ -236,7 +237,7 @@ public class ValNetPlanQuotation001Controller extends BaseController {
 	
 	    @ResponseBody
 	    @RequestMapping(ACTION_DELETE)
-	    public AjaxResult delete(@RequestBody @Valid ValNetPlanQuotation001Dto dto, BindingResult br) throws Exception{
+	    public AjaxResult delete(@RequestBody @Valid ValNetPlanQuotation001Dto dto, BindingResult br) {
 	        
 	        if(br.hasErrors()){
 	            return new AjaxResult(br);

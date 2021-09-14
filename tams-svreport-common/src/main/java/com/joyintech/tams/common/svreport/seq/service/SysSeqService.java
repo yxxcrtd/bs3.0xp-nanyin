@@ -96,6 +96,57 @@ public class SysSeqService {
         }
         return sysSeqModel.getSeqvalue();
     }
+
+    /**
+     * 根据系统编码和当日日期查询系统序列
+     *
+     * @param seqCode 序列编码
+     * @param seqDate 日期
+     * @param seqType 取值类型 Y:年  M:月    D:日
+     * @return
+     * @return String
+     */
+    public synchronized long getSysSeqNew(String seqCode,Date seqDate,String seqType){
+        SysSeqModel sysSeqModel = new SysSeqModel();
+        sysSeqModel.setSeqcode(seqCode);
+
+        if(seqType == null||seqType==""){
+            //默认按日
+            seqType = "D";
+        }
+        if(seqDate == null){
+            seqDate = new Date();
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(seqDate);
+
+        String strDate = "";
+        if("Y".equals(seqType)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            strDate = sdf.format(seqDate);
+        }else if("M".equals(seqType)){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+            strDate = sdf.format(seqDate);
+        }else if ( "D".equals(seqType)) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+            strDate = sdf.format(seqDate);
+        }
+        sysSeqModel.setSeqdate(strDate);
+        //查询序列
+        SysSeqModel seqModel = sysSeqMapper.selectByPrimaryKey(sysSeqModel);
+        if(seqModel == null) {
+            //添加序列
+            sysSeqModel.setSeqvalue(1L);
+            sysSeqModel.setRemark("1");
+            sysSeqMapper.insertSelective(sysSeqModel);
+        } else {
+            sysSeqModel.setSeqvalue(seqModel.getSeqvalue()+1);
+            sysSeqModel.setSeqdate(seqModel.getSeqdate());
+            //更新序列
+            sysSeqMapper.updateByPrimaryKeySelective(sysSeqModel);
+        }
+        return sysSeqModel.getSeqvalue();
+    }
     
     /**
      * 根据sequence的名称，获取sequence的值

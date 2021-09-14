@@ -79,7 +79,7 @@ public class TrdCommandsCollection002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectEntrustList")
-    public List<TrdCommandsCollection002Dto> selectEntrustList() throws Exception {
+    public List<TrdCommandsCollection002Dto> selectEntrustList() {
         String assetType = super.getRequest().getParameter("assetType");
         String entityStr = super.getRequest().getParameter("entity");
         TrdCommandsCollection001Dto dto = StringUtil.isNotEmpty(entityStr
@@ -97,7 +97,7 @@ public class TrdCommandsCollection002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("selectPledgeList")
-    public List<TrdCommandsCollection003Dto> selectPledgeList() throws Exception {
+    public List<TrdCommandsCollection003Dto> selectPledgeList() {
         String entityStr = super.getRequest().getParameter("entity");
         TrdCommandsCollection001Dto dto = StringUtil.isNotEmpty(entityStr
             ) ? JsonUtils.json2Object(entityStr, TrdCommandsCollection001Dto.class) : null;
@@ -116,7 +116,7 @@ public class TrdCommandsCollection002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/initData")
-    public TrdCommandsCollection001Dto initData() throws Exception {
+    public TrdCommandsCollection001Dto initData() {
         String assetType = this.getParam("assetType");
         String entityStr = this.getParam("entity");
         TrdCommandsCollection001Dto dto = StringUtil.isNotEmpty(entityStr

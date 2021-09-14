@@ -75,7 +75,7 @@ public class RepFinProductPerDeclareController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RepFinProductPerDeclareDto> selectAll(@RequestBody Map<String, Object> pageParam,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductPerDeclareService.selectForPage(page, length, pageParam);
     }
     
@@ -93,7 +93,7 @@ public class RepFinProductPerDeclareController {
      */
     @PostMapping("selectForExport/{page}/{length}")
     public Page<RepFinProductPerDeclareDto> selectForExport(@RequestBody Map<String, Object> pageParam,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductPerDeclareService.selectForExport(page, length, pageParam);
     }
     

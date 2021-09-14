@@ -52,7 +52,7 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
      * @throws Exception 异常信息
      */
     public Page<MstCommissionSetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+	{
 //    	pageParam.put("feeType", BussinessDictCodeList.费用类型_佣金.getValue());
     	pageParam.put("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
     	pageParam.put("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
@@ -222,5 +222,9 @@ public class MstCommissionSetService extends BaseService<MstCommissionSetDto>{
 	public List<SelectOptionDto> getMstCustomerInfo(Map<String, Object> param) {
 		return mstCommissionSetMapper.getMstCustomerInfo(param);
 	}
-    
+
+	public List<TrdFeeConfigDetail> findTable(Map<String, Object> param) {
+//		Page<TrdFeeConfigDetail> resutList= super.queryForPage(page, length, () -> mstCommissionSetMapper.findTable(param));
+		return mstCommissionSetMapper.findTable(param);
+	}
 }

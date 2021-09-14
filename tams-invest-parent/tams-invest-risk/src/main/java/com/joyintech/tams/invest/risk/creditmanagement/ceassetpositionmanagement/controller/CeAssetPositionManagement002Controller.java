@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.risk.creditmanagement.ceassetpositionmanagement.controller;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -102,8 +103,7 @@ public class CeAssetPositionManagement002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception{
+    public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException {
         return ceAssetPositionManagement002Service.importData(fileName);
     }
     
@@ -117,7 +117,7 @@ public class CeAssetPositionManagement002Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return ceAssetPositionManagement002Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

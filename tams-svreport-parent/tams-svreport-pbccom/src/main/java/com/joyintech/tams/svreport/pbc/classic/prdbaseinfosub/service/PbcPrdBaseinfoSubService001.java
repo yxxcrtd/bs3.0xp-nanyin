@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.svreport.pbc.classic.prdbaseinfosubnew.dto.PbcPrdBaseinfoSubNew;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,6 +59,9 @@ import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubC
 import com.joyintech.tams.svreport.pbc.datacheck.beforesub.service.PbcBeforeSubErrorCheck;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tools.collectors.JoyinCollectors;
+
+import static java.util.stream.Collectors.toList;
+
 /**
  * 	产品基本信息service
  * @author liuyu
@@ -110,6 +116,40 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 		dealResult(page);
 		return page;
 		
+	}
+
+
+	public List<PbcPrdBaseinfoSub> searchByExcel(Map<String, Object> searchParam) {
+		deaSearchParam(searchParam);
+		List<PbcPrdBaseinfoSub> reportList = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
+		//数据去除多法人字段
+		reportList = reportList.stream().map(item -> {
+			item.setBelongInstitutionCode(null);
+			return item;
+		}).collect(toList());
+		dealResult(reportList);
+
+		return reportList;
+
+	}
+
+
+	/**
+	 * 人行产品代码下拉框初始值
+	 * @param param
+	 *
+	 * @return 人行产品代码下拉框初始值
+	 */
+	public List<SelectOptionDto> getPbcProdId(Map<String, Object> param) {
+		List<PbcPrdBaseinfoSub> bcPrdBaseinfoSubList = pbcPrdBaseinfoSubMapper.queryAllPbcPrdBaseInfo(param);
+		List<SelectOptionDto> resultList = new ArrayList<>();
+		for (PbcPrdBaseinfoSub pbcPrdBaseinfoSub : bcPrdBaseinfoSubList) {
+			SelectOptionDto resultDto = new SelectOptionDto();
+			resultDto.setId(pbcPrdBaseinfoSub.getPbcProdId());
+			resultDto.setText(pbcPrdBaseinfoSub.getProdName());
+			resultList.add(resultDto);
+		}
+		return resultList;
 	}
 	/**
 	 * 查询结果处理
@@ -432,7 +472,6 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcPrdBaseinfoSub.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}
@@ -588,7 +627,7 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 						checkResult.add(exc);
 					} else {
 						ExcelValidDto exc=new ExcelValidDto();
-						exc.setValidKey("产品代码:"+repmap.get(key).getPbcProdId());
+						exc.setValidKey("产品代码:"+repmap.get(key).getProdId());
 						exc.setCheckResult("01");
 						checkResult.add(exc);
 					}
@@ -639,6 +678,9 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
 	public List<PbcPrdBaseinfoSub> searchByCondition(Map<String, Object> searchParam) {
 		deaSearchParam(searchParam);
 		//searchParam.put("sendStatus", DictCodeListExt2.报送状态_未报送.getValue());
+		/**TISHKBS-2373  CLONE - UAT-人行产品基本信息,不勾选数据导出，导出全部数据，应该只导出有起始募集的数据***/
+		/**当全选时.直接连接查询起始募集信息.如果没有.则不导出***/
+		searchParam.put("allExport","01");
 		List<PbcPrdBaseinfoSub> reportList = pbcPrdBaseinfoSubMapper.searchPage(searchParam);
 		return reportList;
 		
@@ -769,13 +811,13 @@ public class PbcPrdBaseinfoSubService001 extends CommonExportService<PbcPrdBasei
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             //压缩包命名规范
             String zipFileName = "PbocPrdinfo("+DateUtil.format(new Date(), "yyyy-MM-dd")+").zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+            outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, true, sourceFiles.toArray(new SafelyFile[] {}));
             }
             catch (Exception e) {
                 // 压缩文件失败后，删除所有临时文件

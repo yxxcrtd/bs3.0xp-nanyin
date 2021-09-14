@@ -15,6 +15,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,19 +50,18 @@ public class DocumentManagement002Service {
 	 * 读取文件并上传到文件服务器
 	 * 
 	 * @param request
-	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName1");
+		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
 		//上传文件名称
 		String name = request.getParameter("fileName");*/
 		// 文件名称
 		String fileName = FileNameUtil.formatFileName(filePath);
 
-		File file = new File(filePath);
-		boolean rec = file.renameTo(new File(fileName));
+		File file = new SafelyFile(filePath);
+		boolean rec = file.renameTo(new SafelyFile(fileName));
 		if (rec) {
 			logger.info("处理成功");
 		}
@@ -79,9 +79,8 @@ public class DocumentManagement002Service {
 	 * 
 	 * @param dto2
 	 * @return
-	 * @throws Exception
 	 */
-	public int insertFileTransferInfo(DocumentManagement001Dto dto2) throws Exception {
+	public int insertFileTransferInfo(DocumentManagement001Dto dto2) {
 		DocumentManagement001Dto dto = new DocumentManagement001Dto();
 		// 系统时间
 		String Sysdate = baseCommonService.getSysDateString();

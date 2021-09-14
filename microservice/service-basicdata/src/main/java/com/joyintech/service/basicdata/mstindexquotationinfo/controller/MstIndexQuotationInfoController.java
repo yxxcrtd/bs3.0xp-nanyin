@@ -50,7 +50,7 @@ public class MstIndexQuotationInfoController  {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<MstIndexQuotationInfo001Dto> selectPage(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstIndexQuotationInfo001Service.selectForPage(page,length,map);
     }
     /**

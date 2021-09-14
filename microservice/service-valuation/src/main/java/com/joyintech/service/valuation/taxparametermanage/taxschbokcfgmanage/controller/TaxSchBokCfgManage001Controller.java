@@ -45,8 +45,7 @@ public class TaxSchBokCfgManage001Controller extends BaseController {
     @PostMapping("/findTaxSchaBokConfig/{page}/{length}")
     public Page<TaxSchBokCfgManage001Dto> findTaxSchaBokConfig(@RequestBody Map<String, Object> param,
                                                                @PathVariable("page") int page,
-                                                               @PathVariable("length") int length)
-        throws Exception {
+                                                               @PathVariable("length") int length){
         return taxSchBokCfgManage001Service.findTaxSchaBokConfigByPage(page, length, param);
     }
 

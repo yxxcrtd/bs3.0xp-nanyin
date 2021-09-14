@@ -33,7 +33,6 @@ public class PtlMockTest003Service extends CommonExportService<PtlMockTest003Dto
      *
      * @param pageParam pageParam
      * @return Page类 Page
-     * @throws Exception 异常信息
      */
     public Page<PtlMockTest003Dto> selectForPage(Map<String, Object> pageParam) {
         return restTemplate.postForPage(

@@ -69,7 +69,7 @@ public class ChannelAssetQueryService  extends BaseService<ChannelAssetDto> {
      * @since 1.0
      */
     public Page<ChannelAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("PINAN_ASSET_TYPE_F01", DictCodeList.平安资产类型_债券.getValue());
         if (StringUtil.isNotEmpty(pageParam.get(SECACCTID))) {
             pageParam.put(SECACCTID, StringUtil.splitToList(null,  pageParam.get(SECACCTID).toString())); 

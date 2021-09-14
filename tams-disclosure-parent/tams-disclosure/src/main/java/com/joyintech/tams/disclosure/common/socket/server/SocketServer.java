@@ -57,7 +57,7 @@
 //            }
 //        }
 //        catch (IOException e) {
-////            e.printStackTrace();
+////            logger.error(e.getMessage(),e);
 //        	logger.error("error:",e);
 //            logger.error("Socket服务端异常: " + e.getMessage());
 //        }

@@ -45,7 +45,7 @@ public class FinOptionTargetController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<FinOptionTargetDto> findPage(@RequestBody Map<String, Object> param,
-                                             @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                             @PathVariable("page") int page, @PathVariable("length") int length) {
         return finProdService.selectForPage(page, length, param);
     }
 
@@ -57,7 +57,7 @@ public class FinOptionTargetController {
      */
     @GetMapping("getFinprodcodebyId")
     public FinOptionTargetDto getFinprodcodebyId(String code)
-        throws Exception {
+    {
         return finProdService.getFinprodcodebyId(code);
     }
 

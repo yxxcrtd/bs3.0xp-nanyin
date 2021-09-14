@@ -9,6 +9,7 @@
  */
  
 package com.joyintech.service.disclosure.information.config.reporttree.service;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +93,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public AjaxResult checkData(Map<String, Object> map) throws Exception{
+    public AjaxResult checkData(Map<String, Object> map) throws IOException {
         String datas = (String)map.get("datas");
         List<RepInfo> listdto= JsonUtils.json2List(datas, RepInfo.class);
         if(listdto.size()==0){
@@ -257,7 +258,7 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
      * @since 1.0
      */
     public Page<RepInfo> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    {
         return super.queryForPageForSelectReturn(page, length, () -> reportTreeMenuConfiguration001Mapper.queryPageList(params));
     }
     
@@ -458,7 +459,6 @@ public class ReportTreeMenuConfiguration001Service extends CommonExportService<R
         try {
             roleIdList = reportTreeMenuConfiguration001Mapper.getRoleIdList(dto);
         } catch (Exception e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
         } finally {
             DynamicDataSourceHolder.clearDataSource();

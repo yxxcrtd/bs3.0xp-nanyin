@@ -11,6 +11,7 @@
 package com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 投资者持有信息
@@ -32,6 +34,7 @@ import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.In
  * @since 1.0
  */
 @Mapper
+@Repository
 public interface InvestorsHoldInfo001Mapper {
 
     /**
@@ -106,6 +109,7 @@ public interface InvestorsHoldInfo001Mapper {
      */
     void insertChbHoldInfoData(@Param("newDataList")List<InvestorsHoldInfo001Dto> newDataList);
 
+    void insertChbHoldInfoDataMerge(@Param("newDataList")List<InvestorsHoldInfo001Dto> newDataList);
     /**
      * 批量插入登记表数据
      * <功能详细描述>
@@ -114,6 +118,8 @@ public interface InvestorsHoldInfo001Mapper {
      * @since 1.0
      */
     void insertChbSubHoldInfoData(@Param("subList")List<ChbInvestholdInfoSub> subList);
+
+    void insertChbSubHoldInfoDataMerge(@Param("subList")List<ChbInvestholdInfoSub> subList);
 
     /**
      * 删除中间表
@@ -320,7 +326,7 @@ public interface InvestorsHoldInfo001Mapper {
      * @see
      * @since 1.0
      */
-    Integer selectInvestHoldInfoDataCount(Map<String, Object> map);
+    int selectInvestHoldInfoDataCount(Date date);
     /**
      * 通过主键批量获取登记表中的数据
      * @param keyList 传入参数

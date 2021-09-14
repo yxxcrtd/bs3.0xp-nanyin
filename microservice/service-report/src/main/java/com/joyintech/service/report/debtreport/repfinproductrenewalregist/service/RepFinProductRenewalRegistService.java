@@ -40,7 +40,7 @@ public class RepFinProductRenewalRegistService extends BaseService<RepDuration>{
     @Autowired
     private RepFinProductRenewalRegistMapper repFinProductRenewalRegistMapper;
     
-    public Page<RepDuration> findPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<RepDuration> findPage(int page,int length,Map<String,Object> map) {
         return super.queryForPage(page, length, () -> repFinProductRenewalRegistMapper.selectForPage(map));
     }
     /**

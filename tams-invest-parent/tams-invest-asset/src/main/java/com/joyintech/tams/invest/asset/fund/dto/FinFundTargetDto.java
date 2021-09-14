@@ -217,6 +217,7 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
     /**
      * 投资性质
      */
+    @NotEmpty(fieldName = "FinBondTargetAsset002.investNature",groups={ValidateGroupEdit.class})
     private String investNature;
 
     

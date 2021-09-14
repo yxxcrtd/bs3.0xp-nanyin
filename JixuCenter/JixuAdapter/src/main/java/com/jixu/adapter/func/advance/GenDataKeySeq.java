@@ -37,7 +37,7 @@ public class GenDataKeySeq extends AdditionFunc{
 		return funcname;
 	}
 	
-	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String newValue=genConvertFormula(inputValue, colcfgMap);
 		String[] results=newValue.split(",");
 		String key=results[0];
@@ -68,7 +68,7 @@ public class GenDataKeySeq extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

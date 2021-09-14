@@ -30,9 +30,8 @@
 	 	TGT_INDEX tgtIndex,
 	 	MEMO memo
 	  FROM RSK_VALTBL_STRUCT_MAP_DTL
-	  WHERE
-    		ID = #{structId,jdbcType=VARCHAR}
-    ORDER BY CREATE_TIME DESC
+	  WHERE ID = #{structId,jdbcType=VARCHAR}
+      ORDER BY to_number(SRC_COL_INDEX)
 	  </select>
 	  
 	  <select id="selectForList" resultType="com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto">

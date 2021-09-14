@@ -43,7 +43,7 @@ public class EtrInstructionController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrInstructionDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
-                                                 @PathVariable("length") int length)throws Exception {
+                                                 @PathVariable("length") int length) {
         return etrInstructionService.selectForPage(page,length,pageParam);
     }
 

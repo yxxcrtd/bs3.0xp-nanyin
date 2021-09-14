@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbInvestholdInfoSubSumMapper" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSubSum" >
+    <result column="PRODID" property="prodid" jdbcType="VARCHAR" />
+    <result column="PRD_REGIST_CODE" property="prdRegistCode" jdbcType="VARCHAR" />
+    <result column="HOLD_DATE" property="holdDate" jdbcType="TIMESTAMP" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+    <result column="QTY" property="qty" jdbcType="DECIMAL" />
+    <result column="CNY_AMT" property="cnyAmt" jdbcType="DECIMAL" />
+    <result column="SINGLE_TOTAL" property="singleTotal" jdbcType="DECIMAL" />
+    <result column="LEGAL_TOTAL" property="legalTotal" jdbcType="DECIMAL" />
+    <result column="UNLEGAL_TOTAL" property="unlegalTotal" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSubSum" >
+    insert into CHB_INVESTHOLD_INFO_SUB_SUM (PRODID, PRD_REGIST_CODE, HOLD_DATE, 
+      CCY, AMOUNT, QTY, CNY_AMT, 
+      SINGLE_TOTAL, LEGAL_TOTAL, UNLEGAL_TOTAL, 
+      REMARK, CREATE_USER, CREATE_TIME, 
+      UPDATE_USER, UPDATE_TIME)
+    values (#{prodid,jdbcType=VARCHAR}, #{prdRegistCode,jdbcType=VARCHAR}, #{holdDate,jdbcType=TIMESTAMP}, 
+      #{ccy,jdbcType=VARCHAR}, #{amount,jdbcType=DECIMAL}, #{qty,jdbcType=DECIMAL}, #{cnyAmt,jdbcType=DECIMAL}, 
+      #{singleTotal,jdbcType=DECIMAL}, #{legalTotal,jdbcType=DECIMAL}, #{unlegalTotal,jdbcType=DECIMAL}, 
+      #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbInvestholdInfoSubSum" >
+    insert into CHB_INVESTHOLD_INFO_SUB_SUM
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="prodid != null" >
+        PRODID,
+      </if>
+      <if test="prdRegistCode != null" >
+        PRD_REGIST_CODE,
+      </if>
+      <if test="holdDate != null" >
+        HOLD_DATE,
+      </if>
+      <if test="ccy != null" >
+        CCY,
+      </if>
+      <if test="amount != null" >
+        AMOUNT,
+      </if>
+      <if test="qty != null" >
+        QTY,
+      </if>
+      <if test="cnyAmt != null" >
+        CNY_AMT,
+      </if>
+      <if test="singleTotal != null" >
+        SINGLE_TOTAL,
+      </if>
+      <if test="legalTotal != null" >
+        LEGAL_TOTAL,
+      </if>
+      <if test="unlegalTotal != null" >
+        UNLEGAL_TOTAL,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="prodid != null" >
+        #{prodid,jdbcType=VARCHAR},
+      </if>
+      <if test="prdRegistCode != null" >
+        #{prdRegistCode,jdbcType=VARCHAR},
+      </if>
+      <if test="holdDate != null" >
+        #{holdDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ccy != null" >
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DECIMAL},
+      </if>
+      <if test="qty != null" >
+        #{qty,jdbcType=DECIMAL},
+      </if>
+      <if test="cnyAmt != null" >
+        #{cnyAmt,jdbcType=DECIMAL},
+      </if>
+      <if test="singleTotal != null" >
+        #{singleTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="legalTotal != null" >
+        #{legalTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="unlegalTotal != null" >
+        #{unlegalTotal,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

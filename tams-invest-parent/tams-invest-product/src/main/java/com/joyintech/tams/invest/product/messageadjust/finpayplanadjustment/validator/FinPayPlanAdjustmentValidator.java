@@ -98,11 +98,11 @@ public class FinPayPlanAdjustmentValidator implements BeanValidator{
                         DateUtil.format(selectedItem.get(0).getVdate()),
                         "产品信息","起息日："+DateUtil.format(finPayPlanAdjustmentDto.getVdateCheck()))));
                 }
-                if(selectedItem.get(selectedItem.size()-1).getMdate().compareTo(finPayPlanAdjustmentService.getMdate(param).getMdate()) != 0){
-                    erroList.add(new ValidMessage("",getMessage("BUSS_COM_E_0012","最后一个区间的计提结束日："+
-                        DateUtil.format(selectedItem.get(selectedItem.size()-1).getMdate()),
-                        "产品信息","到期日："+DateUtil.format(finPayPlanAdjustmentService.getMdate(param).getMdate()))));
-                }
+//                if(selectedItem.get(selectedItem.size()-1).getMdate().compareTo(finPayPlanAdjustmentService.getMdate(param).getMdate()) != 0){
+//                    erroList.add(new ValidMessage("",getMessage("BUSS_COM_E_0012","最后一个区间的计提结束日："+
+//                        DateUtil.format(selectedItem.get(selectedItem.size()-1).getMdate()),
+//                        "产品信息","到期日："+DateUtil.format(finPayPlanAdjustmentService.getMdate(param).getMdate()))));
+//                }
             }
         }
         //}

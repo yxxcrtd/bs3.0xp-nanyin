@@ -27,8 +27,8 @@ public class ProdIssueAndDecalreCBMainService  extends AutoSendCBBaseService{
     @Autowired
     private ProdIssueAndDecalreRegBatchService prodIssueAndDecalreRegBatchService;
     
-    public void generateIssueData(Date batchTime,List<String> prodIds,boolean isSynchronizeTask) {
-        prodIssueAndDecalreRegBatchService.generateIssueData(batchTime, prodIds, isSynchronizeTask);
+    public void generateIssueData(Date batchTime,List<String> prodIds,boolean isSynchronizeTask,String InstitutionCode) {
+        prodIssueAndDecalreRegBatchService.generateIssueData(batchTime, prodIds, isSynchronizeTask,InstitutionCode);
 	}
     
 

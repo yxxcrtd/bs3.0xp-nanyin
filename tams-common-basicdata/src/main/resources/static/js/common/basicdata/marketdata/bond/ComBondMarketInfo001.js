@@ -91,6 +91,7 @@ $(function() {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
+        debugger;
         var object = {
             finprodId:data.finprodId,
             secId:data.secId,
@@ -100,7 +101,7 @@ $(function() {
         };
         Joyin.ajaxJson(basePath + 'common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo001/check', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo001/delete', object, "ValBondMarketInfo001_btn_delete", "ValBondMarketInfo002",function(){
+                WorkFlow.doDeleteList(basePath + 'common/basicdata/marketdata/bondmarketinfo/ComBondMarketInfo001/delete', object, "ComBondMarketInfo001_btn_delete", "ComBondMarketInfo002",function(){
                     table.reload();
                 });
             });
@@ -119,6 +120,7 @@ $(function() {
      * 删除
      */
     $('#ComBondMarketInfo001_btn_delete').click(function () {
+        debugger;
         if(table!=null && table!=''){
             var selArr = table.getAllCheckedRows();
         }

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstRatingMatchMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        <id column="GRADE_RESULT_OR" property="gradeResultOr" jdbcType="VARCHAR" />
+        <id column="GRADE_RESULT_ST" property="gradeResultSt" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        GRADE_RESULT_OR GRADE_RESULT_OR, GRADE_RESULT_ST GRADE_RESULT_ST, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingMatchMapper.Base_Column_List" />
+        from MST_RATING_MATCH
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingMatchMapper.Base_Column_List" />
+        from MST_RATING_MATCH
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatchKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstRatingMatchMapper.Base_Column_List" />
+        from MST_RATING_MATCH
+        where GRADE_RESULT_OR = #{gradeResultOr,jdbcType=VARCHAR}
+          and GRADE_RESULT_ST = #{gradeResultSt,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatchKey" >
+        delete from MST_RATING_MATCH
+        where GRADE_RESULT_OR = #{gradeResultOr,jdbcType=VARCHAR}
+          and GRADE_RESULT_ST = #{gradeResultSt,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        insert into MST_RATING_MATCH (GRADE_RESULT_OR, GRADE_RESULT_ST, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{gradeResultOr,jdbcType=VARCHAR}, #{gradeResultSt,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        insert into MST_RATING_MATCH
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="gradeResultOr != null" >
+                GRADE_RESULT_OR,
+            </if>
+            <if test="gradeResultSt != null" >
+                GRADE_RESULT_ST,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="gradeResultOr != null" >
+                #{gradeResultOr,jdbcType=VARCHAR},
+            </if>
+            <if test="gradeResultSt != null" >
+                #{gradeResultSt,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        insert into MST_RATING_MATCH(GRADE_RESULT_OR, GRADE_RESULT_ST, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select GRADE_RESULT_OR, GRADE_RESULT_ST, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_RATING_MATCH
+             where 1 = 1 and GRADE_RESULT_OR = #{gradeResultOr,jdbcType=VARCHAR} and GRADE_RESULT_ST = #{gradeResultSt,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        update MST_RATING_MATCH
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where GRADE_RESULT_OR = #{gradeResultOr,jdbcType=VARCHAR}
+          and GRADE_RESULT_ST = #{gradeResultSt,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstRatingMatch" >
+        update MST_RATING_MATCH
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where GRADE_RESULT_OR = #{gradeResultOr,jdbcType=VARCHAR}
+          and GRADE_RESULT_ST = #{gradeResultSt,jdbcType=VARCHAR}
+    </update>
+</mapper>

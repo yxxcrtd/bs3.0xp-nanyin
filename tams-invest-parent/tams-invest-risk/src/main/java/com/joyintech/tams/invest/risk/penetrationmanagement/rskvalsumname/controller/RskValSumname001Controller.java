@@ -77,7 +77,7 @@ public class RskValSumname001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskValSumnameDto> selectForPage() throws Exception{
+    public Page<RskValSumnameDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         //估值表导入汇总科目映射初始化 
         if(StringUtil.isNotEmpty(this.getParam("sumsubMapId"))){

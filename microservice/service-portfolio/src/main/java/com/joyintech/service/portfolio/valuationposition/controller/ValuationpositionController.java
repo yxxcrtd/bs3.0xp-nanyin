@@ -46,7 +46,7 @@ public class ValuationpositionController {
      */
     @PostMapping("selectPtlValuationPositionAllData")
     public MockPtlValuationPositionDto selectPtlValuationPositionAllData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return valuationpositionService.selectPtlValuationPositionAllData(param);
     }
 
@@ -61,7 +61,7 @@ public class ValuationpositionController {
      */
     @PostMapping("selectPtlSecValuationData")
     public List<MockPtlSecValuationDto> selectPtlSecValuationData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return valuationpositionService.selectPtlSecValuationData(param);
     }
 
@@ -76,7 +76,7 @@ public class ValuationpositionController {
      */
     @PostMapping("selectPtlPortfolioValuationData")
     public List<MockPtlPortfolioValuationDto> selectPtlPortfolioValuationData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return valuationpositionService.selectPtlPortfolioValuationData(param);
     }
 
@@ -91,7 +91,7 @@ public class ValuationpositionController {
      */
     @PostMapping("selectPtlFeePositionData")
     public List<MockPtlFeePositionDto> selectPtlFeePositionData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return valuationpositionService.selectPtlFeePositionData(param);
     }
 
@@ -106,7 +106,7 @@ public class ValuationpositionController {
      */
     @PostMapping("selectPtlCashPositionData")
     public List<MockPtlCashPositionDto> selectPtlCashPositionData(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return valuationpositionService.selectPtlCashPositionData(param);
     }
 }

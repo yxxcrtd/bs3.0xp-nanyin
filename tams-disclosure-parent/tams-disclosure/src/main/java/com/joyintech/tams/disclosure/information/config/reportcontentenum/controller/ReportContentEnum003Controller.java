@@ -118,8 +118,7 @@ public class ReportContentEnum003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult)
-			throws Exception {
+	public AjaxResult check(@RequestBody @Valid ReportContentEnum002Dto dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 		//新建的时候为提交，修改的时候为保存
@@ -206,8 +205,7 @@ public class ReportContentEnum003Controller extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
-	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 		AjaxResult res = new AjaxResult();
 		try {
 			reportContentEnum002Service.readFile(request);

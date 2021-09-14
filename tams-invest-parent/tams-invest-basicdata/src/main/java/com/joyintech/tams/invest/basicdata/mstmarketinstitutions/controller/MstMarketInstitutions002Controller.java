@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +65,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("MstMarketInstitutions002")
 @RequestMapping("/invest/basicdata/mstmarketinstitutions/MstMarketInstitutions002")
 public class MstMarketInstitutions002Controller extends BaseController{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstMarketInstitutions002Controller.class);
+
     /**
      * 客户评级service注入
      */
@@ -163,8 +171,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstBondCreditRating> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<MstBondCreditRating> selectAllMstCaptialAccount(){
         Page<MstBondCreditRating> page = mstBondCreditRatingService.selectMstBondCreditPage(RequestUtil.getPageParam());
         return page;
     }
@@ -196,7 +203,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstMarketInstitutionsDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstMarketInstitutionsDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -208,7 +215,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
                 dto.setCustomerId(customerId);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         ProcessParameter<MstMarketInstitutionsDto> processParameter = new ProcessParameter<MstMarketInstitutionsDto>();
@@ -237,8 +244,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCity")
-    public List<SelectOptionDto> getCity()
-        throws Exception {
+    public List<SelectOptionDto> getCity() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",SystemDictCode.行政区划_省.getValue());
         param.put("item_code_child", param.get("province"));
@@ -255,8 +261,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCounties")
-    public List<SelectOptionDto> getCounties()
-        throws Exception {
+    public List<SelectOptionDto> getCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",SystemDictCode.行政区划_市.getValue());
         param.put("item_code_child", param.get("city"));

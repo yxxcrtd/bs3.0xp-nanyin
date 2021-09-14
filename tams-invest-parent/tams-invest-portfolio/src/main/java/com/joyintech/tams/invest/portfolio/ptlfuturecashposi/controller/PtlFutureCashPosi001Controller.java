@@ -75,8 +75,7 @@ public class PtlFutureCashPosi001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<PtlFutureCashPosiDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public List<PtlFutureCashPosiDto> selectAllMstCaptialAccount(){
         return ptlFutureCashPosiService.selectData(RequestUtil.getPageParam());
     }
 
@@ -90,8 +89,7 @@ public class PtlFutureCashPosi001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlFutureCashPosiService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

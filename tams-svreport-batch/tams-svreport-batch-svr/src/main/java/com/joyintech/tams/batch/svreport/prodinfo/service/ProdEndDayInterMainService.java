@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class ProdEndDayInterMainService extends AutoSendCBBaseService{
     @Autowired
 	private ChbPrdEndDayYieldInterf chbPrdEndDayYieldInterf;
     
-	public Map<String, List<String>> generatePrdPeriodyieldData(Date batchDate,List<String> prodidList) throws Exception {
+	public Map<String, List<String>> generatePrdPeriodyieldData(Date batchDate,List<String> prodidList) {
 		Map<String, List<String>> mapPara = new HashMap<String, List<String>>();
 		// 设置批处理bean
 		setBatchBeanName(BatchBeanName.每日日终接取收益信息接口数据接入);
@@ -61,7 +62,7 @@ public class ProdEndDayInterMainService extends AutoSendCBBaseService{
 //			}
 		} catch (Exception e) {
 			logger.error("每日日终接取收益信息接口数据接入Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

@@ -50,7 +50,7 @@ public class PtlAnalyzeAfterInvest001Controller {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlAnalyzeAfterInvest001Dto> selectAll(@RequestBody Map<String, Object> param,
                                                        @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlAnalyzeAfterInvest001Service.selectForPage(page,length,param);
     }
     /**
@@ -63,7 +63,7 @@ public class PtlAnalyzeAfterInvest001Controller {
      */
     @PostMapping("/getSourceData")
     public List<PtlAnalyzeAfterInvest002Dto> getCurveType(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return ptlAnalyzeAfterInvest001Service.getSourceData(param);
     }
 }

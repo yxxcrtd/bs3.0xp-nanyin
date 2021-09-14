@@ -66,13 +66,13 @@ public class AgencyDetailsInf002Service extends CommonExportService<SeniorExecut
 				pageParam, SelectOptionDto.class);
 	}
 
-	public List<MstCustomerInfoAddDto> getMstCustomerInfoAdd(Map<String, Object> map) throws Exception {
+	public List<MstCustomerInfoAddDto> getMstCustomerInfoAdd(Map<String, Object> map) {
 		return restTemplate.postForList(
 				ServiceApplication.RISK_SERVICE_NAME + "/AgencyDetailsInf002/getMstCustomerInfoAdd", map,
 				MstCustomerInfoAddDto.class);
 	}
 
-	public List<SeniorExecutiveInfDto> getCorrelationInf(Map<String, Object> map) throws Exception {
+	public List<SeniorExecutiveInfDto> getCorrelationInf(Map<String, Object> map) {
 		return restTemplate.postForList(
 				ServiceApplication.RISK_SERVICE_NAME + "/AgencyDetailsInf002/getCorrelationInf", map,
 				SeniorExecutiveInfDto.class);

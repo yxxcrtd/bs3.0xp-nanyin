@@ -73,7 +73,7 @@ public class MstNaturalPersonService extends BaseService<MstNaturalPerson001Dto>
      * @since 1.0
      */
     public Page<MstNaturalPerson001Dto> selectForPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("customerType", DictCodeList.客户类型_自然人.getValue());
         return super.queryForPage(page,length,() -> mstNaturalPerson001Mapper.selectForPage(pageParam));
     }

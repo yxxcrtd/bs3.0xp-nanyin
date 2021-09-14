@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,15 +107,14 @@ public class MstExchangeQuotationInfo002Controller extends BaseController {
      * @param dto 传入参数
      * @param br 传入的报错参数
      * @return 返回结果
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstExchangeQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstExchangeQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

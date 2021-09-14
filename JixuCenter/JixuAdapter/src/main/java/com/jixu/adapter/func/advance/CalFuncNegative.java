@@ -60,7 +60,7 @@ public class CalFuncNegative extends AdditionFunc{
      */
     @Override
     public Object calFunc(String inputValue, HashMap<String, Object> colcfgMap)
-        throws Exception {
+         {
     	String fieldsStr=genConvertFormula(inputValue, colcfgMap);
     	if(StringUtil.isNotEmpty(fieldsStr) && fieldsStr.contains("-")){
         	return fieldsStr.substring(fieldsStr.indexOf("-"),fieldsStr.length());
@@ -82,7 +82,7 @@ public class CalFuncNegative extends AdditionFunc{
      */
     @Override
     public boolean filterField(Object field, String compareField)
-        throws Exception {
+         {
         return false;
     }
 
@@ -91,7 +91,7 @@ public class CalFuncNegative extends AdditionFunc{
      */
     @Override
     public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-        throws Exception {
+        {
         return null;
     }
 

@@ -56,6 +56,8 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,6 +76,10 @@ import java.util.*;
  */
 @Service
 public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInvestTradeDto> implements BaseProcessService<TrdPlanNetInvestTradeDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetInvestTrade002Service.class);
 
     /**
      * 划款指令业务组件service
@@ -197,11 +203,17 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
 	                confirmDto.setTradeDate(entity.getPurCfmDate());
                     //确认交易的确认日根据申请交易的实际确认日（申请交易确认日允许修改）生成交易 add by xueying 20200723 end
 	                ProcessParameter<TrdPlanNetInvestTradeConfirmDto> workFlowPatameter = getWorkFlowPatameter(confirmDto);
-                    confirmDto.setCreateUser(entity.getCreateUser());
+//                    confirmDto.setCreateUser(dto.getTrdProductDeal().getCreateUser());
+                    //获取最原始留痕表数据
+                    String createUser = restTemplate.getForObject(
+                        ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/getSysDateMark?workflowId="+ entity.getWorkflowId(),
+                        String.class);
+                    confirmDto.setCreateUser(createUser);
+
 	                try {
 	                    WorkFlowUtil.startProcess(workFlowPatameter.getWorkFlowParameter(),"","", confirmDto.getCreateUser(),OperationType.NEW,false,confirmDto);
 	                }catch (Exception e) {
-	                    e.printStackTrace();
+                        logger.error(e.getMessage(),e);
 	                }
 //            	}
             }
@@ -219,12 +231,11 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
            		 try {
 					WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
 				} catch (WorkFlowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
            	 }
             }
-            
+
             //删除授信占用
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
@@ -648,15 +659,16 @@ public class TrdPlanNetInvestTrade002Service extends BaseService<TrdPlanNetInves
         // 组合交易表
         List<PtlTrade> ptlTrades = new ArrayList<>();
         // 组合交易表
-        PtlTrade ptlTrade = new PtlTrade();
-        ptlTrade.setPortfolioId(dto.getPortfolioId());
-        ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-        ptlTrade.setBusiId(dto.getFinprodId());
-        ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        ptlTrade.setSettleDate(dto.getSettleDate());
-        ptlTrades.add(ptlTrade);
-        if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            PtlTrade ptlTrade = new PtlTrade();
+            ptlTrade.setPortfolioId(dto.getPortfolioId());
+            ptlTrade.setBusiNo(dto.getTradeId());
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            ptlTrade.setBusiId(dto.getFinprodId());
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+            ptlTrade.setSettleDate(dto.getSettleDate());
+            ptlTrades.add(ptlTrade);
+        }else{
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
             ptlTrade1.setPortfolioId(dto.getActPortfolioId());

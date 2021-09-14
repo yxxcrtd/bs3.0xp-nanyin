@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.trade.buyoutrepo.service.TrdOutRightRepoTrade00
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -99,8 +100,7 @@ public class TrdOutRightRepoTrade001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdOutRightRepoTrade001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -142,8 +142,7 @@ public class TrdOutRightRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdOutRightRepoTrade002Dto inputDto)
-            throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdOutRightRepoTrade002Dto inputDto) throws WorkFlowException {
     	
     	//转仓交易无法从留痕表中获取对应数据
     	inputDto = trdOutRightRepoTrade002Service

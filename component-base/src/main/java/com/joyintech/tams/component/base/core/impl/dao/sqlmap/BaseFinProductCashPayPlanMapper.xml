@@ -31,7 +31,7 @@
         TERMDAYS_TERM termDaysTerm, PRIN_AMT prinAmt, INT_PRIN_AMT intPrinAmt, INT_AMT intAmt, 
         IS_PAY_INT isPayInt, CASH_AMT cashAmt, CASH_BASEAMT cashBaseAmt, CASH_UNIT_TYPE cashUnitType, 
         CALC_FUNCTION calcFunction, FREQUENCY frequence, FINPROD_ID finprodId, FINPROD_TYPE finprodType, 
-        FINPROD_TYPE2 finprodType2, BRANCH branch, PAY_TYPE payType, CREATE_USER createUser, 
+        FINPROD_TYPE2 finprodType2, BRANCH branch, PAY_TYPE payType,RANGE_YIELD rangeYield, CREATE_USER createUser,
         CREATE_DEPT createDept, CREATE_TIME createTime, UPDATE_USER updateUser, UPDATE_TIME updateTime
         	from FIN_CASH_PLAN
         	<where>

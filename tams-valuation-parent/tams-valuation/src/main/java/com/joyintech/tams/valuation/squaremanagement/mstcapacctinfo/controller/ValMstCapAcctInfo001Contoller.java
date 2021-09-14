@@ -47,7 +47,7 @@ public class ValMstCapAcctInfo001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValMstCapAcctInfoDto> queryPage()
-        throws Exception {
+         {
         Page<ValMstCapAcctInfoDto> page = valMstCapAcctInfoService.findPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -55,7 +55,7 @@ public class ValMstCapAcctInfo001Contoller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody ValMstCapAcctInfoDto dto) 
-		throws Exception{
+		 {
     	String msg = "";
     	boolean flag = valMstCapAcctInfoService.deleteValMatAcctInfoByAcctno(dto);
     	if(flag){

@@ -185,16 +185,20 @@ public final class TxtParseUtil {
                 String fileEncoding = StringUtil.getOrElse(reportInterfFileEncoding, "UTF-8");
 
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, fileEncoding));
-                //第一行开始标识 BTATOGZDAT
-                String line = reader.readLine();
-                //第二行 10
-                 line = reader.readLine();
-                //第三行 数据日期
-                 line = reader.readLine();
-                //第三行 数据条数
-                 line = reader.readLine();
-                //第四行 正式数据
-                 line = reader.readLine();
+                String line = "";
+                if(reader!=null) {
+                    //第一行开始标识 BTATOGZDAT
+                    line = reader.readLine();
+                    //第二行 10
+                    line = reader.readLine();
+                    //第三行 数据日期
+                    line = reader.readLine();
+                    //第三行 数据条数
+                    line = reader.readLine();
+                    //第四行 正式数据
+                    line = reader.readLine();
+                    line = line == null? "":line;
+                }
                 Map<String, String> result = null;
                 do{
                     //List<String> columns = StringUtil.splitToList(SPLIT_STR, line);

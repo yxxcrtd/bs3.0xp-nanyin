@@ -57,7 +57,8 @@ public class EtrLendSpecInfoController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrLendSpecInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrLendSpecInfoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return etrLendSpecInfoService.selectForPage(page, length, param);
     }
     

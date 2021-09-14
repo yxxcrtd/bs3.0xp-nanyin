@@ -1,5 +1,6 @@
 package com.joyintech.tams.batch.svreport.chb.sdprddeclaresub.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class SdProdDeclareMainService {
      * @see
      * @since 1.0
      */
-    public void SendDurationRegMsg(Date batchDate,List<String> prodIdList) throws Exception {
+    public void SendDurationRegMsg(Date batchDate,List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
     	sdProDeclareBatchService.sendDeclareInfoMsg(batchDate, prodIdList);
     }
 

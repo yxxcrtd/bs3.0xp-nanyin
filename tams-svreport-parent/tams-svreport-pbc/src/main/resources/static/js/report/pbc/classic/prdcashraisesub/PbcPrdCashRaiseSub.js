@@ -46,7 +46,7 @@ $(function(){
 //              { title: "产品代码(内部)", field: 'pbcProdIdShow',width:150,sortField:''},
 //              { title: "产品代码(外部)", field: 'pbcCode',width:150,sortField:''},
               { title: "产品代码", field: 'pbcProdIdShow',width:150,sortField:'pbcProdIdShow'},
-              { title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode'},
+              { title: "反馈产品代码", field: 'pbcCode',width:150,sortField:'pbcCode',visible: false},
               { title: "内部产品代码", field: 'prodId',width:150,sortField:'prodId'},
               { title: "地区", field: 'buyPlace',width:150,sortField:'buyPlace'},
               { title: "客户类型", field: 'customerType1',width:150,sortField:'customerType1'},

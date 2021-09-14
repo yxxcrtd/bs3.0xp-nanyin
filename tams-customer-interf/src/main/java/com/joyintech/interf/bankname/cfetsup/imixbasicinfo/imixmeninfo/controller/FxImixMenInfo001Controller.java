@@ -52,8 +52,7 @@ public class FxImixMenInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return fxImixMenInfo001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 

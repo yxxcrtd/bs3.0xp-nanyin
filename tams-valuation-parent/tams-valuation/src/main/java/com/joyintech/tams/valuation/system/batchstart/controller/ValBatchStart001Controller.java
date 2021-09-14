@@ -2,7 +2,9 @@ package com.joyintech.tams.valuation.system.batchstart.controller;
 
 import java.util.Map;
 
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,14 @@ public class ValBatchStart001Controller extends BaseController {
     @ResponseBody
     public AjaxResult executeBatch(String selectedBatchGroup, String selectedProductGroup, String startDate, String endDate,
                                    String batchGroupType, String prodGroupType) {
+
+        String errormsg = sysBatchStart001Service.checkPrebatchResult();
+        if(StringUtil.isNotEmpty(errormsg)){
+            AjaxResult ajax = new AjaxResult();
+            ajax.setMessage(errormsg, MessageType.错误消息);
+            return ajax;
+        }
+
         sysBatchStart001Service.executeBatch();
         return new AjaxResult("批处理启动成功，可通过监控页面查看");
     }

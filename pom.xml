@@ -45,6 +45,7 @@
         <module>tams-exchange-parent</module>
 
         <!-- 批处理  -->
+        <module>tams-batch-common</module>
         <module>tams-disclosure-batch</module>
         <module>tams-valuation-batch</module>
         <module>tams-settle-batch</module>
@@ -100,14 +101,17 @@
         <module>microservice/service-common-basicdata</module>
 
         <!-- 组件  -->
+        <module>background-component/component-check</module>
         <module>background-component/component-common</module>
         <module>background-component/inter-bank-uplink</module>
         <module>background-component/exchange-order</module>
+        <module>background-component/msg-generate</module>
         <module>microservice/service-valuation-valmodel</module>
         <module>microservice/service-valuation-lossmodel</module>
         <module>tams-valuation-batch-valmodel</module>
         <module>tams-valuation-batch-lossmodel</module>
         <module>microservice/tams-service-container-touguan</module>
-        <module>microservice/tams-service-container-yunying</module>
+        <module>microservice/tams-service-container-yunyin</module>
+        <module>microservice/tams-service-system</module>
     </modules>
 </project>

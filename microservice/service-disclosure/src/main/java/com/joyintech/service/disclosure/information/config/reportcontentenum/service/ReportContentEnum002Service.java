@@ -84,7 +84,8 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
      * @return
      * @throws Exception
      */
-	public Page<ReportContentEnum002Dto> findIndexDetailByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<ReportContentEnum002Dto> findIndexDetailByPage(int page, int length, Map<String, Object> pageParam)
+	{
 		return super.queryForPageForSelectReturn(page, length, () -> reportContentEnum002Mapper.selectIndexDetail(pageParam));
 	}
 	
@@ -162,7 +163,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 	 * @param request
 	 * @throws JSchException 
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
         // 文件本地路径
 //		String filePath = request.getParameter("fileName");
 //		/*
@@ -229,10 +230,10 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 		}
 		
 		//生效日期
-		String indexDate = request.getParameter("indexDate");
+		String indexDate = request.getParameter("indexDate")==null?"":request.getParameter("indexDate");
 		dto.setIndexDate(DateUtil.parse(indexDate));
 		//指标名称
-		String indexName = request.getParameter("fileNameOnly");
+		String indexName = request.getParameter("fileNameOnly")==null?"":request.getParameter("fileNameOnly");
 		dto.setIndexName(indexName);
 		
 		String priId =request.getParameter("priId");
@@ -243,7 +244,7 @@ public class ReportContentEnum002Service  extends CommonExportService<ReportCont
 				+ DateUtil.format(DateUtil.parse(Sysdate), DateUtil.DEFAULT_OTHER_FORMAT);
 		dto.setIndexValue(indexValue);
 		//指标类型
-		String indexType = request.getParameter("indexType");
+		String indexType = request.getParameter("indexType")==null?"":request.getParameter("indexType");
 		dto.setIndexType(indexType);
 		
 		return repIndexSubMapper.insert(dto);

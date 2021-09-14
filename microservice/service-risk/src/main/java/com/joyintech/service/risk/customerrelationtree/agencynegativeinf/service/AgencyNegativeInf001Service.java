@@ -45,7 +45,7 @@ public class AgencyNegativeInf001Service extends BaseService<AgencyNegativeInf00
      * @throws Exception
      */
     @DataSource(DataSourceType.STRESSTEST)
-    public Page<AgencyNegativeInf001Dto> queryForPage(int page, int length, Map<String, Object> pageParam)throws Exception{
+    public Page<AgencyNegativeInf001Dto> queryForPage(int page, int length, Map<String, Object> pageParam) {
         Page<AgencyNegativeInf001Dto> pageDate = super.queryForPage(page, length, () -> agencyNegativeInf001Mapper.queryForPage(pageParam));
         return pageDate;
     }

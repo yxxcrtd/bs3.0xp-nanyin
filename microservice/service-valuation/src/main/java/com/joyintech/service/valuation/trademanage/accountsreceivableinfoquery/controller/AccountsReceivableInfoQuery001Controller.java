@@ -44,14 +44,12 @@ public class AccountsReceivableInfoQuery001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<AccountsReceivableInfoQuery001Dto> findPage(@RequestBody Map<String, Object> param,
                                                             @PathVariable("page") int page,
-                                                            @PathVariable("length") int length)
-        throws Exception {
+                                                            @PathVariable("length") int length){
         return accountsReceivableInfoQuery001Service.findByPage(page, length, param);
     }
 
     @PostMapping("/findPageout")
-    public List<AccountsReceivableInfoQuery001Dto> findPageout(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<AccountsReceivableInfoQuery001Dto> findPageout(@RequestBody Map<String, Object> param) {
         return accountsReceivableInfoQuery001Service.findPageout(param);
     }
 
@@ -63,8 +61,7 @@ public class AccountsReceivableInfoQuery001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/getBdFinprodId")
-    public List<SelectOptionDto> getBdFinprodId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> getBdFinprodId(@RequestBody Map<String, Object> param){
         return accountsReceivableInfoQuery001Service.getBdFinprodId(param);
     }
 

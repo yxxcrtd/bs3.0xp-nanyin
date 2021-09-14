@@ -96,7 +96,7 @@ public class SvrMstCalendarType004Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<SvrMstCalendarType002Dto> selectCanlendarDetail()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getPageParam();
         return mstCalendarType002service.selectCanlendarDetail(map);
     }
@@ -111,7 +111,7 @@ public class SvrMstCalendarType004Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return mstCalendarType002service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

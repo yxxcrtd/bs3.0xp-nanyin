@@ -344,7 +344,7 @@
 		DATA_SOURCE, RAISE_TYPE, MANAGE_TYPE,
 		UPDATE_USER, UPDATE_TIME, CREATE_USER,
 		CREATE_TIME, AGENT,FIDUCIARY_DUTY,TRANSFER_TYPE,IS_MARKET_FUND,
-		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE
+		EXC_FIN_SECTOR,IS_SHORT_TERM,SHORT_TERM,IS_FREE_REDEM,CASH_MANA_CATE,YIELD,INVEST_FEE_RATE,CUSTOMER_TYPE,IS_YLLCCP,IS_FHXGCP
 		)
 		values (#{produuid,jdbcType=CHAR}, #{fprodId,jdbcType=VARCHAR},
 		#{prodId,jdbcType=VARCHAR},
@@ -412,7 +412,8 @@
 		#{isMarketFund,jdbcType=VARCHAR},
 		#{excFinSector,jdbcType=VARCHAR},#{isShortTerm,jdbcType=VARCHAR},#{shortTerm,jdbcType=DECIMAL},
 		#{isFreeRedem,jdbcType=VARCHAR}, #{cashManaCate,jdbcType=VARCHAR},
-		#{yield,jdbcType=DECIMAL},#{investFeeRate,jdbcType=DECIMAL},#{customerType,jdbcType=VARCHAR})
+		#{yield,jdbcType=DECIMAL},#{investFeeRate,jdbcType=DECIMAL},#{customerType,jdbcType=VARCHAR}
+		,#{isYllccp,jdbcType=VARCHAR},#{isFhxgcp,jdbcType=VARCHAR})
 	</insert>
 
 	<delete id="deleteBymodel"

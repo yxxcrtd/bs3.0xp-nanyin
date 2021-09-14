@@ -76,7 +76,7 @@
         	,{field:'finprodName', sortField:'FINPROD_NAME',width:140, title: 'TrdBondInvestTrade001.finprodName'}
         	// ,{field:'chlFinprodId', sortField:'CHL_NAME',width:140, title: 'TrdBondInvestTrade001.chlFinprodId'}
         	,{field:'psText', sortField:'ps',width:100, title: 'TrdBondInvestTrade001.ps'}
-        	,{field:'tradeMarketText', sortField:'',width:130, title: 'TrdBondInvestTrade001.tradeMarket'}
+        	,{field:'tradeMarketText', sortField:'TRADE_MARKET',width:130, title: 'TrdBondInvestTrade001.tradeMarket'}
         	,{field:'tradeMarketModeText',sortField:'TRADE_MARKET_MODE', width:120, title: 'TrdBondInvestTrade001.tradeMarketMode'}
         	,{field:'tradePlatText',sortField:'TRADE_PLAT', width:120, title: 'TrdBondInvestTrade001.tradePlat'}
         	,{field:'tradeAmt',sortField:'TRADE_AMT', width:150, digit: 4 , title: 'TrdBondInvestTrade001.tradeAmt1', type: 'money'}
@@ -104,6 +104,7 @@
             ,{field:'ccy', visible: false}
             ,{field:'systemFinprodId', visible: false}
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
         //loadonce:true
     });
   

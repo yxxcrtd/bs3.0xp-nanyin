@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepProdFileProdInfoDtoMapper_mysql" >
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepProdFileProdInfoDto" >
+    <id column="PRODUUID" property="produuid" jdbcType="VARCHAR" />
+    <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+    <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+    <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+    <result column="PROD_SERIES" property="prodSeries" jdbcType="VARCHAR" />
+    <result column="PROFIT_TYPE" property="profitType" jdbcType="VARCHAR" />
+    <result column="DEAL_MODE" property="dealMode" jdbcType="VARCHAR" />
+    <result column="ISSUE_TYPE" property="issueType" jdbcType="VARCHAR" />
+    <result column="OPERATE_MODE" property="operateMode" jdbcType="VARCHAR" />
+    <result column="PROFIT_FLAG" property="profitFlag" jdbcType="VARCHAR" />
+    <result column="IVSTORIENTATION" property="ivstorientation" jdbcType="VARCHAR" />
+    <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+    <result column="RAISE_TYPE" property="raiseType" jdbcType="VARCHAR" />
+    <result column="RISK_LEVEL" property="riskLevel" jdbcType="VARCHAR" />
+    <result column="RISK_TYPE" property="riskType" jdbcType="VARCHAR" />
+    <result column="PAY_TYPE" property="payType" jdbcType="VARCHAR" />
+    <result column="BEFOREEND_FLAG" property="beforeendFlag" jdbcType="VARCHAR" />
+    <result column="RAISE_VDATE" property="raiseVdate" jdbcType="TIMESTAMP" />
+    <result column="RAISE_ENDDATE" property="raiseEnddate" jdbcType="TIMESTAMP" />
+    <result column="VDATE" property="vdate" jdbcType="TIMESTAMP" />
+    <result column="MDATE" property="mdate" jdbcType="TIMESTAMP" />
+    <result column="TERM" property="term" jdbcType="DECIMAL" />
+    <result column="INVESTCLOSE_FLAG" property="investcloseFlag" jdbcType="VARCHAR" />
+    <result column="INVESTCLOSE_STRDATE" property="investcloseStrdate" jdbcType="TIMESTAMP" />
+    <result column="INVESTCLOSE_ENDDATE" property="investcloseEnddate" jdbcType="TIMESTAMP" />
+    <result column="LIQUIDATION_DATE" property="liquidationDate" jdbcType="TIMESTAMP" />
+    <result column="TERMTYPE" property="termtype" jdbcType="VARCHAR" />
+    <result column="INVESTMENT_CYCLE" property="investmentCycle" jdbcType="VARCHAR" />
+    <result column="AUTOCONTINUE_FLAG" property="autocontinueFlag" jdbcType="VARCHAR" />
+    <result column="YIELD" property="yield" jdbcType="DECIMAL" />
+    <result column="BASIC" property="basic" jdbcType="VARCHAR" />
+    <result column="INVEST_MANAGER" property="investManager" jdbcType="VARCHAR" />
+    <result column="TRUSTEE" property="trustee" jdbcType="VARCHAR" />
+    <result column="INVESTMENT_SCOPE" property="investmentScope" jdbcType="VARCHAR" />
+    <result column="PUR_OPEN_DATE" property="purOpenDate" jdbcType="VARCHAR" />
+    <result column="RED_OPEN_DATE" property="redOpenDate" jdbcType="VARCHAR" />
+    <result column="SUBS_RATE" property="subsRate" jdbcType="VARCHAR" />
+    <result column="PUR_RATE" property="purRate" jdbcType="VARCHAR" />
+    <result column="RED_RATE" property="redRate" jdbcType="VARCHAR" />
+    <result column="TRU_FEE" property="truFee" jdbcType="VARCHAR" />
+    <result column="SALE_FEE" property="saleFee" jdbcType="VARCHAR" />
+    <result column="MANAGE_FEE" property="manageFee" jdbcType="VARCHAR" />
+    <result column="REP_YIELD" property="repYield" jdbcType="VARCHAR" />
+    <result column="FLOAT_FEE" property="floatFee" jdbcType="VARCHAR" />
+    <result column="RAISE_AMT_PLAN" property="raiseAmtPlan" jdbcType="DECIMAL" />
+    <result column="SALE_MAX" property="saleMax" jdbcType="DECIMAL" />
+    <result column="SALE_MIN" property="saleMin" jdbcType="DECIMAL" />
+    <result column="STARTAMT" property="startamt" jdbcType="DECIMAL" />
+    <result column="LOWESTAMT" property="lowestamt" jdbcType="DECIMAL" />
+    <result column="SUBSAMT_MAX" property="subsamtMax" jdbcType="DECIMAL" />
+    <result column="CUST_SUBSAMT_MAX" property="custSubsamtMax" jdbcType="DECIMAL" />
+    <result column="SUBS_CANCEL_FLAG" property="subsCancelFlag" jdbcType="VARCHAR" />
+    <result column="MIN_RED_QTY" property="minRedQty" jdbcType="DECIMAL" />
+    <result column="MIN_RETAIN_QTY" property="minRetainQty" jdbcType="DECIMAL" />
+    <result column="HUGE_RED_RATIO" property="hugeRedRatio" jdbcType="DECIMAL" />
+    <result column="RED_PRINCIPLE" property="redPrinciple" jdbcType="VARCHAR" />
+    <result column="PUR_CDATE" property="purCdate" jdbcType="VARCHAR" />
+    <result column="RED_CDATE" property="redCdate" jdbcType="VARCHAR" />
+    <result column="INVEST_PRIN_DATE" property="investPrinDate" jdbcType="VARCHAR" />
+    <result column="INVEST_PROF_DATE" property="investProfDate" jdbcType="VARCHAR" />
+    <result column="SALE_CHANNEL" property="saleChannel" jdbcType="VARCHAR" />
+    <result column="DATA_STATUS" property="dataStatus" jdbcType="VARCHAR" />
+    <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+    <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+    <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PRODUUID, PROD_ID, PROD_NAME, REG_CODE, PROD_SERIES, PROFIT_TYPE, DEAL_MODE, ISSUE_TYPE, 
+    OPERATE_MODE, PROFIT_FLAG, IVSTORIENTATION, CCY, RAISE_TYPE, RISK_LEVEL, RISK_TYPE, 
+    PAY_TYPE, BEFOREEND_FLAG, RAISE_VDATE, RAISE_ENDDATE, VDATE, MDATE, TERM, INVESTCLOSE_FLAG, 
+    INVESTCLOSE_STRDATE, INVESTCLOSE_ENDDATE, LIQUIDATION_DATE, TERMTYPE, INVESTMENT_CYCLE, 
+    AUTOCONTINUE_FLAG, YIELD, BASIC, INVEST_MANAGER, TRUSTEE, INVESTMENT_SCOPE, PUR_OPEN_DATE, 
+    RED_OPEN_DATE, SUBS_RATE, PUR_RATE, RED_RATE, TRU_FEE, SALE_FEE, MANAGE_FEE, REP_YIELD, 
+    FLOAT_FEE, RAISE_AMT_PLAN, SALE_MAX, SALE_MIN, STARTAMT, LOWESTAMT, SUBSAMT_MAX, 
+    CUST_SUBSAMT_MAX, SUBS_CANCEL_FLAG, MIN_RED_QTY, MIN_RETAIN_QTY, HUGE_RED_RATIO, 
+    RED_PRINCIPLE, PUR_CDATE, RED_CDATE, INVEST_PRIN_DATE, INVEST_PROF_DATE, SALE_CHANNEL, 
+    DATA_STATUS, ORG_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from REP_PROD_FILE_PRODINFO
+    where PRODUUID = #{produuid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from REP_PROD_FILE_PRODINFO
+    where PRODUUID = #{produuid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepProdFileProdInfoDto" >
+    insert into REP_PROD_FILE_PRODINFO (PRODUUID, PROD_ID, PROD_NAME, 
+      REG_CODE, PROD_SERIES, PROFIT_TYPE, 
+      DEAL_MODE, ISSUE_TYPE, OPERATE_MODE, 
+      PROFIT_FLAG, IVSTORIENTATION, CCY, 
+      RAISE_TYPE, RISK_LEVEL, RISK_TYPE, 
+      PAY_TYPE, BEFOREEND_FLAG, RAISE_VDATE, 
+      RAISE_ENDDATE, VDATE, MDATE, 
+      TERM, INVESTCLOSE_FLAG, INVESTCLOSE_STRDATE, 
+      INVESTCLOSE_ENDDATE, LIQUIDATION_DATE, 
+      TERMTYPE, INVESTMENT_CYCLE, AUTOCONTINUE_FLAG, 
+      YIELD, BASIC, INVEST_MANAGER, 
+      TRUSTEE, INVESTMENT_SCOPE, PUR_OPEN_DATE, 
+      RED_OPEN_DATE, SUBS_RATE, PUR_RATE, 
+      RED_RATE, TRU_FEE, SALE_FEE, 
+      MANAGE_FEE, REP_YIELD, FLOAT_FEE, 
+      RAISE_AMT_PLAN, SALE_MAX, SALE_MIN, 
+      STARTAMT, LOWESTAMT, SUBSAMT_MAX, 
+      CUST_SUBSAMT_MAX, SUBS_CANCEL_FLAG, MIN_RED_QTY, 
+      MIN_RETAIN_QTY, HUGE_RED_RATIO, RED_PRINCIPLE, 
+      PUR_CDATE, RED_CDATE, INVEST_PRIN_DATE, 
+      INVEST_PROF_DATE, SALE_CHANNEL, DATA_STATUS, 
+      ORG_CODE, CREATE_USER, CREATE_DEPT, 
+      CREATE_TIME, UPDATE_USER, UPDATE_TIME
+      )
+    values (#{produuid,jdbcType=VARCHAR}, #{prodId,jdbcType=VARCHAR}, #{prodName,jdbcType=VARCHAR}, 
+      #{regCode,jdbcType=VARCHAR}, #{prodSeries,jdbcType=VARCHAR}, #{profitType,jdbcType=VARCHAR}, 
+      #{dealMode,jdbcType=VARCHAR}, #{issueType,jdbcType=VARCHAR}, #{operateMode,jdbcType=VARCHAR}, 
+      #{profitFlag,jdbcType=VARCHAR}, #{ivstorientation,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+      #{raiseType,jdbcType=VARCHAR}, #{riskLevel,jdbcType=VARCHAR}, #{riskType,jdbcType=VARCHAR}, 
+      #{payType,jdbcType=VARCHAR}, #{beforeendFlag,jdbcType=VARCHAR}, #{raiseVdate,jdbcType=TIMESTAMP}, 
+      #{raiseEnddate,jdbcType=TIMESTAMP}, #{vdate,jdbcType=TIMESTAMP}, #{mdate,jdbcType=TIMESTAMP}, 
+      #{term,jdbcType=DECIMAL}, #{investcloseFlag,jdbcType=VARCHAR}, #{investcloseStrdate,jdbcType=TIMESTAMP}, 
+      #{investcloseEnddate,jdbcType=TIMESTAMP}, #{liquidationDate,jdbcType=TIMESTAMP}, 
+      #{termtype,jdbcType=VARCHAR}, #{investmentCycle,jdbcType=VARCHAR}, #{autocontinueFlag,jdbcType=VARCHAR}, 
+      #{yield,jdbcType=DECIMAL}, #{basic,jdbcType=VARCHAR}, #{investManager,jdbcType=VARCHAR}, 
+      #{trustee,jdbcType=VARCHAR}, #{investmentScope,jdbcType=VARCHAR}, #{purOpenDate,jdbcType=VARCHAR}, 
+      #{redOpenDate,jdbcType=VARCHAR}, #{subsRate,jdbcType=VARCHAR}, #{purRate,jdbcType=VARCHAR}, 
+      #{redRate,jdbcType=VARCHAR}, #{truFee,jdbcType=VARCHAR}, #{saleFee,jdbcType=VARCHAR}, 
+      #{manageFee,jdbcType=VARCHAR}, #{repYield,jdbcType=VARCHAR}, #{floatFee,jdbcType=VARCHAR}, 
+      #{raiseAmtPlan,jdbcType=DECIMAL}, #{saleMax,jdbcType=DECIMAL}, #{saleMin,jdbcType=DECIMAL}, 
+      #{startamt,jdbcType=DECIMAL}, #{lowestamt,jdbcType=DECIMAL}, #{subsamtMax,jdbcType=DECIMAL}, 
+      #{custSubsamtMax,jdbcType=DECIMAL}, #{subsCancelFlag,jdbcType=VARCHAR}, #{minRedQty,jdbcType=DECIMAL}, 
+      #{minRetainQty,jdbcType=DECIMAL}, #{hugeRedRatio,jdbcType=DECIMAL}, #{redPrinciple,jdbcType=VARCHAR}, 
+      #{purCdate,jdbcType=VARCHAR}, #{redCdate,jdbcType=VARCHAR}, #{investPrinDate,jdbcType=VARCHAR}, 
+      #{investProfDate,jdbcType=VARCHAR}, #{saleChannel,jdbcType=VARCHAR}, #{dataStatus,jdbcType=VARCHAR}, 
+      #{orgCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepProdFileProdInfoDto" >
+    insert into REP_PROD_FILE_PRODINFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="produuid != null" >
+        PRODUUID,
+      </if>
+      <if test="prodId != null" >
+        PROD_ID,
+      </if>
+      <if test="prodName != null" >
+        PROD_NAME,
+      </if>
+      <if test="regCode != null" >
+        REG_CODE,
+      </if>
+      <if test="prodSeries != null" >
+        PROD_SERIES,
+      </if>
+      <if test="profitType != null" >
+        PROFIT_TYPE,
+      </if>
+      <if test="dealMode != null" >
+        DEAL_MODE,
+      </if>
+      <if test="issueType != null" >
+        ISSUE_TYPE,
+      </if>
+      <if test="operateMode != null" >
+        OPERATE_MODE,
+      </if>
+      <if test="profitFlag != null" >
+        PROFIT_FLAG,
+      </if>
+      <if test="ivstorientation != null" >
+        IVSTORIENTATION,
+      </if>
+      <if test="ccy != null" >
+        CCY,
+      </if>
+      <if test="raiseType != null" >
+        RAISE_TYPE,
+      </if>
+      <if test="riskLevel != null" >
+        RISK_LEVEL,
+      </if>
+      <if test="riskType != null" >
+        RISK_TYPE,
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE,
+      </if>
+      <if test="beforeendFlag != null" >
+        BEFOREEND_FLAG,
+      </if>
+      <if test="raiseVdate != null" >
+        RAISE_VDATE,
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE,
+      </if>
+      <if test="vdate != null" >
+        VDATE,
+      </if>
+      <if test="mdate != null" >
+        MDATE,
+      </if>
+      <if test="term != null" >
+        TERM,
+      </if>
+      <if test="investcloseFlag != null" >
+        INVESTCLOSE_FLAG,
+      </if>
+      <if test="investcloseStrdate != null" >
+        INVESTCLOSE_STRDATE,
+      </if>
+      <if test="investcloseEnddate != null" >
+        INVESTCLOSE_ENDDATE,
+      </if>
+      <if test="liquidationDate != null" >
+        LIQUIDATION_DATE,
+      </if>
+      <if test="termtype != null" >
+        TERMTYPE,
+      </if>
+      <if test="investmentCycle != null" >
+        INVESTMENT_CYCLE,
+      </if>
+      <if test="autocontinueFlag != null" >
+        AUTOCONTINUE_FLAG,
+      </if>
+      <if test="yield != null" >
+        YIELD,
+      </if>
+      <if test="basic != null" >
+        BASIC,
+      </if>
+      <if test="investManager != null" >
+        INVEST_MANAGER,
+      </if>
+      <if test="trustee != null" >
+        TRUSTEE,
+      </if>
+      <if test="investmentScope != null" >
+        INVESTMENT_SCOPE,
+      </if>
+      <if test="purOpenDate != null" >
+        PUR_OPEN_DATE,
+      </if>
+      <if test="redOpenDate != null" >
+        RED_OPEN_DATE,
+      </if>
+      <if test="subsRate != null" >
+        SUBS_RATE,
+      </if>
+      <if test="purRate != null" >
+        PUR_RATE,
+      </if>
+      <if test="redRate != null" >
+        RED_RATE,
+      </if>
+      <if test="truFee != null" >
+        TRU_FEE,
+      </if>
+      <if test="saleFee != null" >
+        SALE_FEE,
+      </if>
+      <if test="manageFee != null" >
+        MANAGE_FEE,
+      </if>
+      <if test="repYield != null" >
+        REP_YIELD,
+      </if>
+      <if test="floatFee != null" >
+        FLOAT_FEE,
+      </if>
+      <if test="raiseAmtPlan != null" >
+        RAISE_AMT_PLAN,
+      </if>
+      <if test="saleMax != null" >
+        SALE_MAX,
+      </if>
+      <if test="saleMin != null" >
+        SALE_MIN,
+      </if>
+      <if test="startamt != null" >
+        STARTAMT,
+      </if>
+      <if test="lowestamt != null" >
+        LOWESTAMT,
+      </if>
+      <if test="subsamtMax != null" >
+        SUBSAMT_MAX,
+      </if>
+      <if test="custSubsamtMax != null" >
+        CUST_SUBSAMT_MAX,
+      </if>
+      <if test="subsCancelFlag != null" >
+        SUBS_CANCEL_FLAG,
+      </if>
+      <if test="minRedQty != null" >
+        MIN_RED_QTY,
+      </if>
+      <if test="minRetainQty != null" >
+        MIN_RETAIN_QTY,
+      </if>
+      <if test="hugeRedRatio != null" >
+        HUGE_RED_RATIO,
+      </if>
+      <if test="redPrinciple != null" >
+        RED_PRINCIPLE,
+      </if>
+      <if test="purCdate != null" >
+        PUR_CDATE,
+      </if>
+      <if test="redCdate != null" >
+        RED_CDATE,
+      </if>
+      <if test="investPrinDate != null" >
+        INVEST_PRIN_DATE,
+      </if>
+      <if test="investProfDate != null" >
+        INVEST_PROF_DATE,
+      </if>
+      <if test="saleChannel != null" >
+        SALE_CHANNEL,
+      </if>
+      <if test="dataStatus != null" >
+        DATA_STATUS,
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE,
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER,
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="produuid != null" >
+        #{produuid,jdbcType=VARCHAR},
+      </if>
+      <if test="prodId != null" >
+        #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodName != null" >
+        #{prodName,jdbcType=VARCHAR},
+      </if>
+      <if test="regCode != null" >
+        #{regCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSeries != null" >
+        #{prodSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="profitType != null" >
+        #{profitType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealMode != null" >
+        #{dealMode,jdbcType=VARCHAR},
+      </if>
+      <if test="issueType != null" >
+        #{issueType,jdbcType=VARCHAR},
+      </if>
+      <if test="operateMode != null" >
+        #{operateMode,jdbcType=VARCHAR},
+      </if>
+      <if test="profitFlag != null" >
+        #{profitFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="ivstorientation != null" >
+        #{ivstorientation,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null" >
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseType != null" >
+        #{raiseType,jdbcType=VARCHAR},
+      </if>
+      <if test="riskLevel != null" >
+        #{riskLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="riskType != null" >
+        #{riskType,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeendFlag != null" >
+        #{beforeendFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseVdate != null" >
+        #{raiseVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vdate != null" >
+        #{vdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="term != null" >
+        #{term,jdbcType=DECIMAL},
+      </if>
+      <if test="investcloseFlag != null" >
+        #{investcloseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="investcloseStrdate != null" >
+        #{investcloseStrdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="investcloseEnddate != null" >
+        #{investcloseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liquidationDate != null" >
+        #{liquidationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="termtype != null" >
+        #{termtype,jdbcType=VARCHAR},
+      </if>
+      <if test="investmentCycle != null" >
+        #{investmentCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="autocontinueFlag != null" >
+        #{autocontinueFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yield != null" >
+        #{yield,jdbcType=DECIMAL},
+      </if>
+      <if test="basic != null" >
+        #{basic,jdbcType=VARCHAR},
+      </if>
+      <if test="investManager != null" >
+        #{investManager,jdbcType=VARCHAR},
+      </if>
+      <if test="trustee != null" >
+        #{trustee,jdbcType=VARCHAR},
+      </if>
+      <if test="investmentScope != null" >
+        #{investmentScope,jdbcType=VARCHAR},
+      </if>
+      <if test="purOpenDate != null" >
+        #{purOpenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="redOpenDate != null" >
+        #{redOpenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="subsRate != null" >
+        #{subsRate,jdbcType=VARCHAR},
+      </if>
+      <if test="purRate != null" >
+        #{purRate,jdbcType=VARCHAR},
+      </if>
+      <if test="redRate != null" >
+        #{redRate,jdbcType=VARCHAR},
+      </if>
+      <if test="truFee != null" >
+        #{truFee,jdbcType=VARCHAR},
+      </if>
+      <if test="saleFee != null" >
+        #{saleFee,jdbcType=VARCHAR},
+      </if>
+      <if test="manageFee != null" >
+        #{manageFee,jdbcType=VARCHAR},
+      </if>
+      <if test="repYield != null" >
+        #{repYield,jdbcType=VARCHAR},
+      </if>
+      <if test="floatFee != null" >
+        #{floatFee,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseAmtPlan != null" >
+        #{raiseAmtPlan,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMax != null" >
+        #{saleMax,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMin != null" >
+        #{saleMin,jdbcType=DECIMAL},
+      </if>
+      <if test="startamt != null" >
+        #{startamt,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestamt != null" >
+        #{lowestamt,jdbcType=DECIMAL},
+      </if>
+      <if test="subsamtMax != null" >
+        #{subsamtMax,jdbcType=DECIMAL},
+      </if>
+      <if test="custSubsamtMax != null" >
+        #{custSubsamtMax,jdbcType=DECIMAL},
+      </if>
+      <if test="subsCancelFlag != null" >
+        #{subsCancelFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="minRedQty != null" >
+        #{minRedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="minRetainQty != null" >
+        #{minRetainQty,jdbcType=DECIMAL},
+      </if>
+      <if test="hugeRedRatio != null" >
+        #{hugeRedRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="redPrinciple != null" >
+        #{redPrinciple,jdbcType=VARCHAR},
+      </if>
+      <if test="purCdate != null" >
+        #{purCdate,jdbcType=VARCHAR},
+      </if>
+      <if test="redCdate != null" >
+        #{redCdate,jdbcType=VARCHAR},
+      </if>
+      <if test="investPrinDate != null" >
+        #{investPrinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="investProfDate != null" >
+        #{investProfDate,jdbcType=VARCHAR},
+      </if>
+      <if test="saleChannel != null" >
+        #{saleChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="dataStatus != null" >
+        #{dataStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepProdFileProdInfoDto" >
+    update REP_PROD_FILE_PRODINFO
+    <set >
+      <if test="prodId != null" >
+        PROD_ID = #{prodId,jdbcType=VARCHAR},
+      </if>
+      <if test="prodName != null" >
+        PROD_NAME = #{prodName,jdbcType=VARCHAR},
+      </if>
+      <if test="regCode != null" >
+        REG_CODE = #{regCode,jdbcType=VARCHAR},
+      </if>
+      <if test="prodSeries != null" >
+        PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
+      </if>
+      <if test="profitType != null" >
+        PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+      </if>
+      <if test="dealMode != null" >
+        DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+      </if>
+      <if test="issueType != null" >
+        ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+      </if>
+      <if test="operateMode != null" >
+        OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+      </if>
+      <if test="profitFlag != null" >
+        PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="ivstorientation != null" >
+        IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null" >
+        CCY = #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseType != null" >
+        RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+      </if>
+      <if test="riskLevel != null" >
+        RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="riskType != null" >
+        RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+      </if>
+      <if test="payType != null" >
+        PAY_TYPE = #{payType,jdbcType=VARCHAR},
+      </if>
+      <if test="beforeendFlag != null" >
+        BEFOREEND_FLAG = #{beforeendFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseVdate != null" >
+        RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="raiseEnddate != null" >
+        RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="vdate != null" >
+        VDATE = #{vdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mdate != null" >
+        MDATE = #{mdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="term != null" >
+        TERM = #{term,jdbcType=DECIMAL},
+      </if>
+      <if test="investcloseFlag != null" >
+        INVESTCLOSE_FLAG = #{investcloseFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="investcloseStrdate != null" >
+        INVESTCLOSE_STRDATE = #{investcloseStrdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="investcloseEnddate != null" >
+        INVESTCLOSE_ENDDATE = #{investcloseEnddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="liquidationDate != null" >
+        LIQUIDATION_DATE = #{liquidationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="termtype != null" >
+        TERMTYPE = #{termtype,jdbcType=VARCHAR},
+      </if>
+      <if test="investmentCycle != null" >
+        INVESTMENT_CYCLE = #{investmentCycle,jdbcType=VARCHAR},
+      </if>
+      <if test="autocontinueFlag != null" >
+        AUTOCONTINUE_FLAG = #{autocontinueFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="yield != null" >
+        YIELD = #{yield,jdbcType=DECIMAL},
+      </if>
+      <if test="basic != null" >
+        BASIC = #{basic,jdbcType=VARCHAR},
+      </if>
+      <if test="investManager != null" >
+        INVEST_MANAGER = #{investManager,jdbcType=VARCHAR},
+      </if>
+      <if test="trustee != null" >
+        TRUSTEE = #{trustee,jdbcType=VARCHAR},
+      </if>
+      <if test="investmentScope != null" >
+        INVESTMENT_SCOPE = #{investmentScope,jdbcType=VARCHAR},
+      </if>
+      <if test="purOpenDate != null" >
+        PUR_OPEN_DATE = #{purOpenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="redOpenDate != null" >
+        RED_OPEN_DATE = #{redOpenDate,jdbcType=VARCHAR},
+      </if>
+      <if test="subsRate != null" >
+        SUBS_RATE = #{subsRate,jdbcType=VARCHAR},
+      </if>
+      <if test="purRate != null" >
+        PUR_RATE = #{purRate,jdbcType=VARCHAR},
+      </if>
+      <if test="redRate != null" >
+        RED_RATE = #{redRate,jdbcType=VARCHAR},
+      </if>
+      <if test="truFee != null" >
+        TRU_FEE = #{truFee,jdbcType=VARCHAR},
+      </if>
+      <if test="saleFee != null" >
+        SALE_FEE = #{saleFee,jdbcType=VARCHAR},
+      </if>
+      <if test="manageFee != null" >
+        MANAGE_FEE = #{manageFee,jdbcType=VARCHAR},
+      </if>
+      <if test="repYield != null" >
+        REP_YIELD = #{repYield,jdbcType=VARCHAR},
+      </if>
+      <if test="floatFee != null" >
+        FLOAT_FEE = #{floatFee,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseAmtPlan != null" >
+        RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMax != null" >
+        SALE_MAX = #{saleMax,jdbcType=DECIMAL},
+      </if>
+      <if test="saleMin != null" >
+        SALE_MIN = #{saleMin,jdbcType=DECIMAL},
+      </if>
+      <if test="startamt != null" >
+        STARTAMT = #{startamt,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestamt != null" >
+        LOWESTAMT = #{lowestamt,jdbcType=DECIMAL},
+      </if>
+      <if test="subsamtMax != null" >
+        SUBSAMT_MAX = #{subsamtMax,jdbcType=DECIMAL},
+      </if>
+      <if test="custSubsamtMax != null" >
+        CUST_SUBSAMT_MAX = #{custSubsamtMax,jdbcType=DECIMAL},
+      </if>
+      <if test="subsCancelFlag != null" >
+        SUBS_CANCEL_FLAG = #{subsCancelFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="minRedQty != null" >
+        MIN_RED_QTY = #{minRedQty,jdbcType=DECIMAL},
+      </if>
+      <if test="minRetainQty != null" >
+        MIN_RETAIN_QTY = #{minRetainQty,jdbcType=DECIMAL},
+      </if>
+      <if test="hugeRedRatio != null" >
+        HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=DECIMAL},
+      </if>
+      <if test="redPrinciple != null" >
+        RED_PRINCIPLE = #{redPrinciple,jdbcType=VARCHAR},
+      </if>
+      <if test="purCdate != null" >
+        PUR_CDATE = #{purCdate,jdbcType=VARCHAR},
+      </if>
+      <if test="redCdate != null" >
+        RED_CDATE = #{redCdate,jdbcType=VARCHAR},
+      </if>
+      <if test="investPrinDate != null" >
+        INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="investProfDate != null" >
+        INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+      </if>
+      <if test="saleChannel != null" >
+        SALE_CHANNEL = #{saleChannel,jdbcType=VARCHAR},
+      </if>
+      <if test="dataStatus != null" >
+        DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="orgCode != null" >
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDept != null" >
+        CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where PRODUUID = #{produuid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepProdFileProdInfoDto" >
+    update REP_PROD_FILE_PRODINFO
+    set PROD_ID = #{prodId,jdbcType=VARCHAR},
+      PROD_NAME = #{prodName,jdbcType=VARCHAR},
+      REG_CODE = #{regCode,jdbcType=VARCHAR},
+      PROD_SERIES = #{prodSeries,jdbcType=VARCHAR},
+      PROFIT_TYPE = #{profitType,jdbcType=VARCHAR},
+      DEAL_MODE = #{dealMode,jdbcType=VARCHAR},
+      ISSUE_TYPE = #{issueType,jdbcType=VARCHAR},
+      OPERATE_MODE = #{operateMode,jdbcType=VARCHAR},
+      PROFIT_FLAG = #{profitFlag,jdbcType=VARCHAR},
+      IVSTORIENTATION = #{ivstorientation,jdbcType=VARCHAR},
+      CCY = #{ccy,jdbcType=VARCHAR},
+      RAISE_TYPE = #{raiseType,jdbcType=VARCHAR},
+      RISK_LEVEL = #{riskLevel,jdbcType=VARCHAR},
+      RISK_TYPE = #{riskType,jdbcType=VARCHAR},
+      PAY_TYPE = #{payType,jdbcType=VARCHAR},
+      BEFOREEND_FLAG = #{beforeendFlag,jdbcType=VARCHAR},
+      RAISE_VDATE = #{raiseVdate,jdbcType=TIMESTAMP},
+      RAISE_ENDDATE = #{raiseEnddate,jdbcType=TIMESTAMP},
+      VDATE = #{vdate,jdbcType=TIMESTAMP},
+      MDATE = #{mdate,jdbcType=TIMESTAMP},
+      TERM = #{term,jdbcType=DECIMAL},
+      INVESTCLOSE_FLAG = #{investcloseFlag,jdbcType=VARCHAR},
+      INVESTCLOSE_STRDATE = #{investcloseStrdate,jdbcType=TIMESTAMP},
+      INVESTCLOSE_ENDDATE = #{investcloseEnddate,jdbcType=TIMESTAMP},
+      LIQUIDATION_DATE = #{liquidationDate,jdbcType=TIMESTAMP},
+      TERMTYPE = #{termtype,jdbcType=VARCHAR},
+      INVESTMENT_CYCLE = #{investmentCycle,jdbcType=VARCHAR},
+      AUTOCONTINUE_FLAG = #{autocontinueFlag,jdbcType=VARCHAR},
+      YIELD = #{yield,jdbcType=DECIMAL},
+      BASIC = #{basic,jdbcType=VARCHAR},
+      INVEST_MANAGER = #{investManager,jdbcType=VARCHAR},
+      TRUSTEE = #{trustee,jdbcType=VARCHAR},
+      INVESTMENT_SCOPE = #{investmentScope,jdbcType=VARCHAR},
+      PUR_OPEN_DATE = #{purOpenDate,jdbcType=VARCHAR},
+      RED_OPEN_DATE = #{redOpenDate,jdbcType=VARCHAR},
+      SUBS_RATE = #{subsRate,jdbcType=VARCHAR},
+      PUR_RATE = #{purRate,jdbcType=VARCHAR},
+      RED_RATE = #{redRate,jdbcType=VARCHAR},
+      TRU_FEE = #{truFee,jdbcType=VARCHAR},
+      SALE_FEE = #{saleFee,jdbcType=VARCHAR},
+      MANAGE_FEE = #{manageFee,jdbcType=VARCHAR},
+      REP_YIELD = #{repYield,jdbcType=VARCHAR},
+      FLOAT_FEE = #{floatFee,jdbcType=VARCHAR},
+      RAISE_AMT_PLAN = #{raiseAmtPlan,jdbcType=DECIMAL},
+      SALE_MAX = #{saleMax,jdbcType=DECIMAL},
+      SALE_MIN = #{saleMin,jdbcType=DECIMAL},
+      STARTAMT = #{startamt,jdbcType=DECIMAL},
+      LOWESTAMT = #{lowestamt,jdbcType=DECIMAL},
+      SUBSAMT_MAX = #{subsamtMax,jdbcType=DECIMAL},
+      CUST_SUBSAMT_MAX = #{custSubsamtMax,jdbcType=DECIMAL},
+      SUBS_CANCEL_FLAG = #{subsCancelFlag,jdbcType=VARCHAR},
+      MIN_RED_QTY = #{minRedQty,jdbcType=DECIMAL},
+      MIN_RETAIN_QTY = #{minRetainQty,jdbcType=DECIMAL},
+      HUGE_RED_RATIO = #{hugeRedRatio,jdbcType=DECIMAL},
+      RED_PRINCIPLE = #{redPrinciple,jdbcType=VARCHAR},
+      PUR_CDATE = #{purCdate,jdbcType=VARCHAR},
+      RED_CDATE = #{redCdate,jdbcType=VARCHAR},
+      INVEST_PRIN_DATE = #{investPrinDate,jdbcType=VARCHAR},
+      INVEST_PROF_DATE = #{investProfDate,jdbcType=VARCHAR},
+      SALE_CHANNEL = #{saleChannel,jdbcType=VARCHAR},
+      DATA_STATUS = #{dataStatus,jdbcType=VARCHAR},
+      ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+      CREATE_USER = #{createUser,jdbcType=VARCHAR},
+      CREATE_DEPT = #{createDept,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where PRODUUID = #{produuid,jdbcType=VARCHAR}
+  </update>
+</mapper>

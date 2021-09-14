@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -117,8 +118,7 @@ public class MstMarketInstitutions001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstMarketInstitutionsDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<MstMarketInstitutionsDto> selectAllMstCaptialAccount() {
         Page<MstMarketInstitutionsDto> page = mstMarketInstitutionsService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -134,8 +134,7 @@ public class MstMarketInstitutions001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCustomerId")
-    public List<SuggestDto> getCustomerId()
-        throws Exception {
+    public List<SuggestDto> getCustomerId() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("customerType", DictCodeList.客户类型_法人.getValue());
         //List<SuggestDto> list = new ArrayList<SuggestDto>();
@@ -156,8 +155,7 @@ public class MstMarketInstitutions001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getCustomerName")
-    public List<SuggestDto> getCustomerName()
-        throws Exception {
+    public List<SuggestDto> getCustomerName(){
         Map<String, Object> map = new HashMap<String, Object>();
         String param = super.getRequest().getParameter("param");
         map.put("customerType", DictCodeList.客户类型_法人.getValue());
@@ -194,7 +192,7 @@ public class MstMarketInstitutions001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstMarketInstitutionsDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) MstMarketInstitutionsDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -229,7 +227,7 @@ public class MstMarketInstitutions001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstMarketInstitutionsService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

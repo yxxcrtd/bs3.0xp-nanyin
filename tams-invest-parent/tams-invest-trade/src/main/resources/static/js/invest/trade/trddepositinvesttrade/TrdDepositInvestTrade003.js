@@ -128,7 +128,7 @@
         if (checkData.ps == 'T01' && checkData.finprodId != null && checkData.ccy != null && checkData.tradeDate != null){
             ajaxJsonSync(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade003/getIssueAmt', checkData, function(resultc) {
                 if(resultc.data != null && resultc.data != ''){
-                    if(resultc.data <= checkData.prinAmt){
+                    if(Number(resultc.data) <= Number(checkData.prinAmt)){
                         isOver = true;
                     }
                 }
@@ -163,6 +163,11 @@
 	                return;
 	            }
 	        }
+            }
+            //在检查指令参数是否变化之前增加对组合分配是否为空的判断
+            if(table.getAllRows().length == 0){
+                Joyin.error(JoyinUtil.getMessage("FIN_PROD_E_0123","组合分配"));
+                return ;
             }
 	        // 检查生成划款指令参数是否发生变化
 	        if (window.BussTrdTransferOrder['bussTrdTransferOrder'].isCalcConditionChanged()) {
@@ -347,18 +352,17 @@
 	    	}
 	    	
 	    	//授权额度检查已完成，不在检查   把总本金金额置为0
-	    	object.prinAmt = 0;
 	    	object.entrustId = '';
 	    	object.maxTradeamt = maxTradeamt;
 	    	object.counterType = object.trdInvestPersonInfo002Dto.isOutTrade;
 			object.counterId = object.trdInvestPersonInfo002Dto.counterId;
 			object.finprodType2 = 'F07';
+            object.prinAmt = $('#prinAmt').val();
 	    	Joyin.ajaxJson(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/check', object, function(result) {
 	            message = s+message;
 	            if (result.data && message != result.data) {
 	                message += result.data;
 	            }
-	            object.prinAmt = $('#prinAmt').val();
 	            Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            	object.prinAmt = 0;
 		            if(operateType === 'save') {
@@ -626,20 +630,6 @@
                     }
                     
 //                    $('#assetProvider').val(result.assetProvider).trigger('change');
-                  //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-                    if('D03' == result.finprodType){
-                        if($('#ps').val() && $('#ps').val() != buy){          
-                            $("#intAmt_div").hide();
-                            table.showColumns([{field:'intAmt',visible: false}]); 
-                        }else{
-                        	$("#intAmt_div").show();
-                        	table.showColumns([{field:'intAmt',visible: true}]); 
-                        }
-                    }else {
-                        $("#intAmt_div").show();       
-                        table.showColumns([{field:'intAmt',visible: true}]); 
-                    }
-                 //add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
                     $('#basis').val(result.basis).trigger('change');
                     available();
                 }else{
@@ -709,23 +699,12 @@
             $('.channel_cash').css('display','none');
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->
             $('#Sale').css('display','');
-    // add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏start
-            if ($('#finprodType').val() == 'D03'){
-                $("#intAmt_div").hide();
-                table.showColumns([{field:'intAmt',visible: false}]); 
-            }else{
-            	$("#intAmt_div").show();
-            	table.showColumns([{field:'intAmt',visible: true}]); 
-            }
-   // add by yujiaping 2020-12-8 BS-1598 '活期存放'交易方向选择'卖出'时，将'应计利息总额'去掉必填并隐藏end
         }else{
             $('#Buy').css('display','');
             // <!-- 通道交易 新增 强成西 2019/03/26 start -->
             $('.channel_cash').css('display','');
             // <!-- 通道交易 新增 强成西 2019/03/26 end -->
             $('#Sale').css('display','none');
-            $("#intAmt_div").show();
-            table.showColumns([{field:'intAmt',visible: true}]); 
         }
         //卖出 且选择通道时 显示通道费
 //        if(ps==PS_T02&&$("#chlId").val()){

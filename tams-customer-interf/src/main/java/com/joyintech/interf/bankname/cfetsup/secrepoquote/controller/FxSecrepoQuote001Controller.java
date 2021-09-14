@@ -18,6 +18,7 @@ import com.joyintech.interf.bankname.cfetsup.secrepoquote.entity.FxSecrepoQuote;
 import com.joyintech.interf.bankname.cfetsup.secrepoquote.service.FxSecrepoQuote001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -139,8 +140,7 @@ public class FxSecrepoQuote001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupEdit.class}) FxSecrepoQuote001Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupEdit.class}) FxSecrepoQuote001Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<FxSecrepoQuote001Dto> processParameter = new ProcessParameter<FxSecrepoQuote001Dto>();
         WorkFlowParameter<FxSecrepoQuote001Dto> params = new WorkFlowParameter<FxSecrepoQuote001Dto>();
         params.setPageId(this.getPageId());

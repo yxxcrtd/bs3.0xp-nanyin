@@ -261,4 +261,22 @@
                    and t1.ps='T02'
              )
     </select>
+
+    <select id="selectApperInfo" resultType="com.joyintech.tams.common.base.entity.FinProduct">
+        SELECT DISTINCT
+            FP2.FINPROD_ID     
+        FROM FIN_PRODUCT FP
+        INNER JOIN FIN_PRODUCT_ADD FPA
+            ON FP.FINPROD_MARKET_ID = FPA.APPEAR_MARKET_ID
+        LEFT JOIN FIN_PRODUCT FP2 
+            ON FP2.FINPROD_ID = FPA.FINPROD_ID
+        LEFT JOIN TRD_FIN_PRODUCT_DEAL_TOTAL TFPDT
+            ON TFPDT.FINPROD_ID = FP.FINPROD_ID
+        <where>
+            FP.FINPROD_ID = #{finprodId}
+            AND TFPDT.TRADE_DATE = TO_DATE(#{searchDate,jdbcType=DATE},'YYYY-MM-DD')
+            AND TFPDT.TRADE_STATUS = #{TRADE_STATUS01}
+            AND TFPDT.IS_CANCEL = #{NO}
+        </where>
+    </select>
 </mapper>

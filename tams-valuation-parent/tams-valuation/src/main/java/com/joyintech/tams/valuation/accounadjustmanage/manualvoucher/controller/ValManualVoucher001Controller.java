@@ -161,9 +161,16 @@ public class ValManualVoucher001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValManualVoucher001Dto> findPage() throws Exception {
+    public Page<ValManualVoucher001Dto> findPage() throws ParseException {
         Map<String, Object> params= this.getRequestMap();
-        ValManualVoucher001SearchDto dto = (ValManualVoucher001SearchDto)JsonUtils.map2entity(params, ValManualVoucher001SearchDto.class);
+        ValManualVoucher001SearchDto dto = null;
+        try {
+            dto = (ValManualVoucher001SearchDto) JsonUtils.map2entity(params, ValManualVoucher001SearchDto.class);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger().error(e.getMessage());
+            throw new ParseException(e.getMessage(),0);
+        }
         // 凭证类型固定为手工
         dto.setBookType(DictCodeList.凭证类型_手工.getValue());
         return valManualVoucher001Service.findPage(dto);
@@ -180,10 +187,17 @@ public class ValManualVoucher001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         Map<String, Object> params= this.getRequestMap();
         String datas = this.getParam("datas");
-        ValManualVoucher001SearchDto dto = (ValManualVoucher001SearchDto)JsonUtils.map2entity(params, ValManualVoucher001SearchDto.class);
+        ValManualVoucher001SearchDto dto = null;
+        try {
+            dto = (ValManualVoucher001SearchDto) JsonUtils.map2entity(params, ValManualVoucher001SearchDto.class);
+        } catch (Exception e) {
+//            e.printStackTrace();
+            getLogger().error(e.getMessage());
+            throw new ParseException(e.getMessage(),0);
+        }
         dto.setBookType(DictCodeList.凭证类型_手工.getValue());
         List<ValManualVoucher001Dto> dtoList;
         if (datas == null) {
@@ -264,7 +278,7 @@ public class ValManualVoucher001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Valid ValManualVoucher001Dto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody @Valid ValManualVoucher001Dto dto, BindingResult br) {
         
         if(br.hasErrors()){
             return new AjaxResult(br);

@@ -51,14 +51,12 @@
             ,{field:'vatTaxRate', width:130, title: 'BussParticipantInfo.vatTaxRate', type:'number', sortable: false, digit:4}
             ,{field:'adtTaxRate', width:130, title: 'BussParticipantInfo.adtTaxRate', type:'number', sortable: false, digit:4}
             // 通道增加“增值税税率，附加税率字段” add by renping 20191019 end
-            ,{field:'busiAcctNo', width:100, title: 'BussParticipantInfo.busiAcctNo', sortable: false}
+            ,{field:'busiAcctNo', width:150, title: 'BussParticipantInfo.busiAcctNo', sortable: false}
             /*,{field:'busiAcctNo', width:100, title: 'BussParticipantInfo.busiAcctNo', sortable: false,
                 edit:true,editOption:{type:'select',parentIds:'counterId',id:"busiAcctNo",url:JoyinUtil.getRealPath('component/project/BussParticipantInfo/selectAcctNoByCounterId')}
             }*/
-            ,{field:'clientCustomerName', width:100, title: 'BussParticipantInfo.clientCustomerName', sortable: false}
-            ,{field:'contactWay', width:100, title: 'BussParticipantInfo.contactWay', sortable: false}
-            ,{field:'contact', width:100, title: 'BussParticipantInfo.contact', sortable: false}
-            ,{field:'remark', width:75, title: 'BussParticipantInfo.remark',edit:true, sortable: false}
+            ,{field:'clientCustomerName', width:150, title: 'BussParticipantInfo.clientCustomerName', sortable: false}
+            ,{field:'remark', width:175, title: 'BussParticipantInfo.remark',edit:true, sortable: false}
             ,{field:'finprodId', width:100, title: 'BussParticipantInfo.finprodId',edit:true,visible:false,sortable: false}
             ,{field:'basis', width:100, title: '',edit:true,visible:false,sortable: false}
             ,{field:'payType', width:100, title: '',edit:true,visible:false,sortable: false}

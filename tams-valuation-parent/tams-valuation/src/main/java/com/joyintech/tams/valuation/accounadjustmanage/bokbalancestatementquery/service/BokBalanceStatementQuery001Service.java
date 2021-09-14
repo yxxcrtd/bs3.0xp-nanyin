@@ -79,7 +79,7 @@ public class BokBalanceStatementQuery001Service extends CommonExportService<BokB
     
 
     public Page<BokBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+         {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/BokBalanceStatementQuery001/findPage", pageParam, BokBalanceStatementQuery001Dto.class);  
 //        return super.queryForPage(() -> bokBalanceStatementQuery001Mapper.selectAll(pageParam));
     }

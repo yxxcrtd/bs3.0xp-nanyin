@@ -60,7 +60,7 @@ public class DataFileUpload002Controller extends BaseController {
     DataFileUpload002Service dataFileUpload002Service;
 
     @PostMapping("/insertFileTransferInfo")
-    public int insertFileTransferInfo(@RequestBody Map<String, Object> map) throws Exception {
+    public int insertFileTransferInfo(@RequestBody Map<String, Object> map) {
         return dataFileUpload002Service.insertFileTransferInfo(map);
     }
 

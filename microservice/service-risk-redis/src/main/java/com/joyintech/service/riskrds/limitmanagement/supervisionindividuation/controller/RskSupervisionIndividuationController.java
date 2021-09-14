@@ -40,7 +40,7 @@ public class RskSupervisionIndividuationController {
      */
     @PostMapping("/findPageForCondition")
     public List<RskIndividConditionDto> findPageForCondition(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.findPageForCondition(param);
     }
 
@@ -52,7 +52,7 @@ public class RskSupervisionIndividuationController {
      */
     @PostMapping("/findPageForUnite")
     public List<RskIndividUniteDto> findPageForUnite(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.findPageForUnite(param);
     }
 
@@ -64,7 +64,7 @@ public class RskSupervisionIndividuationController {
      */
     @PostMapping("/findPageForAssetDel")
     public List<RskIndividAssetDelDto> findPageForAssetDel(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.findPageForAssetDel(param);
     }
 
@@ -76,7 +76,7 @@ public class RskSupervisionIndividuationController {
      */
     @PostMapping("/findPageForSpecial")
     public List<RskIndividSpecialStageDto> findPageForSpecial(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.findPageForSpecial(param);
     }
 
@@ -88,7 +88,7 @@ public class RskSupervisionIndividuationController {
      */
     @PostMapping("/findPageForSpecialAsset")
     public List<RskIndividSpecialAssetDto> findPageForSpecialAsset(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.findPageForSpecialAsset(param);
     }
     /**
@@ -127,13 +127,13 @@ public class RskSupervisionIndividuationController {
 
     @PostMapping("/queryUniteIndIdList")
     public List<SelectOptionDto> queryUniteIndIdList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.queryUniteIndIdList(param);
     }
 
     @PostMapping("/queryFinprodIdList/{page}/{length}")
     public Page<SelectOptionDto> queryFinprodIdList(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return rskSupervisionIndividuationService.queryFinprodIdList(page,length,param);
     }
     @PostMapping("/queryConditionList/{page}/{length}")

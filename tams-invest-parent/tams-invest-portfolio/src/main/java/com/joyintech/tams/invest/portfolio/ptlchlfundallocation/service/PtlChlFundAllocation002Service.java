@@ -138,8 +138,7 @@ public class PtlChlFundAllocation002Service extends BaseService<PtlChlFundAlloca
         return restTemplate.postForList(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlChlFundAllocation/getMyAcctNo", map, SelectOptionDto.class);
     }
 
-    public Page<SelectOptionDto> selectPagePortfolioId(Map<String, Object> param)
-            throws Exception {
+    public Page<SelectOptionDto> selectPagePortfolioId(Map<String, Object> param){
         param.put("loginUserName", SecurityUtil.getLoginUser().getUserName());
         param.put("portfolioType", DictCodeListExt1.组合类型_投资类组合.getValue());
         return restTemplate.postForPage(

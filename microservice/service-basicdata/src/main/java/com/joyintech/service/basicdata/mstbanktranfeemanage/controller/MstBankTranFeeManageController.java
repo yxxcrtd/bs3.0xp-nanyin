@@ -10,6 +10,7 @@
  
 package com.joyintech.service.basicdata.mstbanktranfeemanage.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ public class MstBankTranFeeManageController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<MstBankTranFeeManageDto> selectForPage(@RequestBody Map<String, Object> map,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstBankTranFeeManageService.selectForPage(page,length,map);
     }
     /**
@@ -64,7 +65,7 @@ public class MstBankTranFeeManageController {
      */
     @PostMapping("/getEntity")
     public MstBankTranFeeManageDto getEntity(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         return mstBankTranFeeManageService.getEntity(map);
     }
     /**
@@ -81,7 +82,7 @@ public class MstBankTranFeeManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody MstBankTranFeeManageDto dto) throws Exception {
+    public int delete(@RequestBody MstBankTranFeeManageDto dto) {
         return mstBankTranFeeManageService.delete(dto);
     }
     
@@ -99,7 +100,7 @@ public class MstBankTranFeeManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody MstBankTranFeeManageDto dto) throws Exception {
+    public int insert(@RequestBody MstBankTranFeeManageDto dto) throws IllegalAccessException, InvocationTargetException {
         return mstBankTranFeeManageService.insert(dto);
     }
 
@@ -117,7 +118,7 @@ public class MstBankTranFeeManageController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody MstBankTranFeeManageDto dto) throws Exception {
+    public int update(@RequestBody MstBankTranFeeManageDto dto) throws IllegalAccessException, InvocationTargetException{
         return mstBankTranFeeManageService.update(dto);
     }
     /**
@@ -170,13 +171,13 @@ public class MstBankTranFeeManageController {
      */
     @PostMapping("/selExistCnt")
     public Integer selExistCnt(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return mstBankTranFeeManageService.selExistCnt(param);
     }
     
     @PostMapping("/selExistCnt1")
     public Integer selExistCnt1(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return mstBankTranFeeManageService.selExistCnt1(param);
     }
 }

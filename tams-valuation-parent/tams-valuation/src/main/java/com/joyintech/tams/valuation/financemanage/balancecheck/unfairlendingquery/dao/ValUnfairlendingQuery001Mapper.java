@@ -18,6 +18,7 @@ import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterque
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001SearchDto;
 import com.joyintech.tams.valuation.financemanage.balancecheck.unfairlendingquery.dto.ValUnfairlendingQuery001Dto;
 import com.joyintech.tams.common.base.entity.BokSubject;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -27,6 +28,7 @@ import com.joyintech.tams.common.base.entity.BokSubject;
  * @see ValUnfairlendingQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValUnfairlendingQuery001Mapper {
     
     
