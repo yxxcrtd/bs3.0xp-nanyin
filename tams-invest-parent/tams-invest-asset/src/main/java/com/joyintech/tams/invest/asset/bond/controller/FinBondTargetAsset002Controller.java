@@ -24,6 +24,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.MstBondCreditRating;
+import com.joyintech.tams.component.business.bond.BusiFinBondRatingInfoService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
@@ -79,7 +81,10 @@ public class FinBondTargetAsset002Controller extends BaseController{
     
     @Autowired
     private CommonBusinessService commonBusinessService;
-    
+
+    @Autowired
+    private BusiFinBondRatingInfoService busiFinBondRatingInfoService;
+
     /**
      * 初始化数据字典下拉框
      */
@@ -386,6 +391,26 @@ public class FinBondTargetAsset002Controller extends BaseController{
             }
         }
         return false;
+    }
+
+    /**
+     * 初始化评级信息
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("/getFinBondRatingDto")
+    @ResponseBody
+    public List<MstBondCreditRating> getFinBondRatingDto(@RequestParam("issuer") String issuer) {
+        List<MstBondCreditRating> mstBondCreditRatingList = new ArrayList<MstBondCreditRating>();
+        Map<String,Object> ztparam = new HashMap<String,Object>();
+        //主体为发行人（债券类资产）
+        if(StringUtil.isNotEmpty(issuer)) {
+            ztparam.put("oCode", issuer);
+            mstBondCreditRatingList.addAll(busiFinBondRatingInfoService.getmstBondCreditRatingByOcode(ztparam));
+        }
+        return mstBondCreditRatingList;
     }
 
 }
