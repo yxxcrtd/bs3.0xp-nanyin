@@ -12,12 +12,12 @@ public class GenerateXMLUtil {
 			//投管请求资管的验证用户名
 		String userName = "";
 		if(prop!=null) {
-			userName = prop.getProperty("userName");
+			userName = prop.getProperty("userName")== null? "":prop.getProperty("userName");
 		}
 		    //投管请求资管的验证密码
 		String word = "";
 		if(prop!=null) {
-			word = prop.getProperty("word");
+			word = prop.getProperty("word")== null? "":prop.getProperty("word");
 		}
 		
 		// 把json串中的双引号转换为%

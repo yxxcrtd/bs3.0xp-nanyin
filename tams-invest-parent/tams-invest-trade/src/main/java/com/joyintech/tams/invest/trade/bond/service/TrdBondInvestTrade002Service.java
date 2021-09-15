@@ -25,6 +25,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -286,6 +287,10 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Autowired
     private TrdCommonBaseService trdCommonBaseService;
+
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
+
     // 交易份额小数保留位数
     private int decimalPlaces_4 = 4;
 
@@ -705,7 +710,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
      */
     private void handleBussFlowData(TrdBondInvestTradeDto entity) {
         // 多组合交易时对附件进行处理
-        setDzhUploadFileList(entity);
+        //setDzhUploadFileList(entity);
 
         if (!StringUtil.equals("submit", entity.getOperateType())) {
             return;
@@ -1335,6 +1340,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 				else {
 					tempDto.setTotleTradeId(IDGenerator.generate());
 				}
+                // 将附件和当前业务对象绑定（更新附件的业务代码）
+                fileAttachmentProcess.updateBussinessNo(
+                        dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                                Collectors.toList()),
+                        tempDto.getTotleTradeId());
     			dtoList.add(tempDto);
     		}
     		
@@ -2997,6 +3007,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                                 //add by liuwenjuan 银证转账未提示问题改修 20200325 start
                                 tempDto.setBussTrdTransferOrder(inputDto.getBussTrdTransferOrder());
                                 //add by liuwenjuan 银证转账未提示问题改修 20200325 end
+                                tempDto.setTradeAmtAndFee(inputDto.getBussTrdTransfenpeiDto().get(i).getTradeAmtAndFee());
                                 confirmMsg = checkTradeMarket(tempDto, confirmMsg, changeLineMark, bussTrdTransferOrder);
                             }
                         }
@@ -3024,6 +3035,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                                 tempDto.setTradeAmt(inputDto.getBussTrdTransfenpeiDto().get(i).getTradeAmt());
                                 tempDto.setCcy(inputDto.getCcy());
                                 tempDto.setChlId(inputDto.getChlId());
+                                tempDto.setTradeAmtAndFee(inputDto.getBussTrdTransfenpeiDto().get(i).getTradeAmtAndFee());
                                 confirmMsg = getYcxhk(tempDto, confirmMsg, changeLineMark);
                             }
                         }
@@ -3057,6 +3069,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                                 tempDto.setChlId(inputDto.getChlId());
                                 tempDto.setBussTrdAvailableCashQueryavalibleCash(
                                     inputDto.getBussTrdTransfenpeiDto().get(i).getBussTrdAvailableCashQueryavalibleCash());
+                                tempDto.setTradeAmtAndFee(inputDto.getBussTrdTransfenpeiDto().get(i).getTradeAmtAndFee());
                                 confirmMsg = getPortfolioCanUserMoney(tempDto, confirmMsg, changeLineMark);
                             }
                         }
@@ -3066,9 +3079,9 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
             else {
                 // 单组合
                 if (StringUtil.isNotEmpty(inputDto.getBussTrdAvailableCashQuery())
-                    && StringUtil.isNotEmpty(inputDto.getTradeAmt())) {
+                    && StringUtil.isNotEmpty(inputDto.getTradeAmtAndFee())) {
                     if (StringUtil.isNotEmpty(inputDto.getBussTrdAvailableCashQuery().getAvalibleCash())
-                        && inputDto.getTradeAmt().compareTo(inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) > 0) {
+                        && inputDto.getTradeAmtAndFee().compareTo(inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) > 0) {
                         if (StringUtil.isNotBlank(confirmMsg)) {
                             confirmMsg += changeLineMark;
                         }
@@ -3091,8 +3104,8 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
     }
 
     private String getPortfolioCanUserMoney(TrdBondInvestTradeDto inputDto, String confirmMsg, String changeLineMark) {
-        if (inputDto.getBussTrdAvailableCashQueryavalibleCash() != null && StringUtil.isNotEmpty(inputDto.getTradeAmt())) {
-            if (inputDto.getTradeAmt().compareTo(inputDto.getBussTrdAvailableCashQueryavalibleCash()) > 0) {
+        if (inputDto.getBussTrdAvailableCashQueryavalibleCash() != null && StringUtil.isNotEmpty(inputDto.getTradeAmtAndFee())) {
+            if (inputDto.getTradeAmtAndFee().compareTo(inputDto.getBussTrdAvailableCashQueryavalibleCash()) > 0) {
                 PtlPortfolio ptlPortfolio = ptlPortfolioMapper.selectByPrimaryKey(inputDto.getPortfolioId());
                 if (StringUtil.isNotBlank(confirmMsg)) {
                     confirmMsg += changeLineMark;
@@ -3118,7 +3131,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         Map<String, String> resultMap = bussTrdAvailableCashQueryService.getAvailableCash(paramMap);
         BigDecimal 余额 = new BigDecimal(resultMap.get("T_2"));
 
-        if (inputDto.getTradeAmt() != null && inputDto.getTradeAmt().compareTo(余额) > 0) {
+        if (inputDto.getTradeAmtAndFee() != null && inputDto.getTradeAmtAndFee().compareTo(余额) > 0) {
             if (StringUtil.isNotBlank(confirmMsg)) {
                 confirmMsg += changeLineMark;
             }
@@ -3131,7 +3144,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                                     BussTrdTransferOrderDto bussTrdTransferOrder) {
         // 交易方向为买入时校验交易所证券账户（券商存管账户）余额是否足够，如不足，提醒进行银证转账
         if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), inputDto.getPs())
-            && StringUtil.isNotBlank(inputDto.getSecManageAcctId()) && inputDto.getTradeAmt() != null
+            && StringUtil.isNotBlank(inputDto.getSecManageAcctId()) && inputDto.getTradeAmtAndFee() != null
             && bussTrdAvailableCashQueryService != null && !StringUtil.isEmptyList(inputDto.getBussTrdTransferOrder())) {
             // 查询网点账号
             StlSecAcctInfo stlSecAcctInfo = stlSecAcctInfoMapper.selectByPrimaryKey(inputDto.getSecManageAcctId());
@@ -3152,7 +3165,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
                 BigDecimal 余额 = bussTrdAvailableCashQueryService.getSecManageAvailableCash(paramMap);
 
-                if (inputDto.getTradeAmt().compareTo(余额) > 0) {
+                if (inputDto.getTradeAmtAndFee().compareTo(余额) > 0) {
 //                    if (StringUtil.isNotBlank(confirmMsg)) {
 //                        confirmMsg += changeLineMark;
 //                    }
@@ -3772,4 +3785,21 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 ServiceApplication.ASSET_SERVICE_NAME + "/TrdBondMarketTrade/selectIssueAsset?finprodId="+finprodId,
                 Integer.class);
     }
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastNetAmortizationPrice(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastNetAmortizationPrice", paramMap,
+                BigDecimal.class);
+    }
+
 }

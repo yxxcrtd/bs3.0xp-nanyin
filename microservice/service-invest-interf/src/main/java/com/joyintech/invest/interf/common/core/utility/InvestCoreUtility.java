@@ -45,7 +45,7 @@ public class InvestCoreUtility {
  			//读取配置文件，获取请求资管的接口地址
  			Properties prop = WebserviceIntefUtil.getProperties("webservice.properties");
  			if(prop!=null) {
-				webserviceUrl = prop.getProperty("webseviceUrl");
+				webserviceUrl = prop.getProperty("webseviceUrl") == null? "":prop.getProperty("webseviceUrl");
 			}
  		} catch (IOException e) {
 			logger.error(e.getMessage(),e);

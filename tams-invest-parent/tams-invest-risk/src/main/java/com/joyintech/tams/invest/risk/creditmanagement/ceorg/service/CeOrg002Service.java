@@ -1,7 +1,9 @@
 package com.joyintech.tams.invest.risk.creditmanagement.ceorg.service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.TreeNode;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 机构授信
@@ -35,6 +38,9 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 	
 	@Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
+
+	@Autowired
+	private FileAttachmentProcess fileAttachmentProcess;
 	
 	/**
 	 * {@inheritDoc}
@@ -173,5 +179,16 @@ public class CeOrg002Service extends CommonExportService<CreditLinesOrgDto>
 		return restTemplate.postForList(
 				ServiceApplication.RISK_SERVICE_NAME + "/CeOrg002/selectCreditLines",map,
 				CreditLines.class);
+	}
+
+	@Override
+	public void doUpdate(CreditLinesOrgDto entity) {
+		if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+			// 将附件和当前业务对象绑定（更新附件的业务代码）
+			fileAttachmentProcess.updateBussinessNo(
+					entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+							Collectors.toList()),
+					entity.getSeqno());
+		}
 	}
 }

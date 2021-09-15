@@ -216,6 +216,16 @@ $(function () {
                     });
                 });
             }
+            Joyin.exportExcel("export",param);
+            if (isHaveData){
+	            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+	            	layui.layer.open({type:3});
+	                Joyin.ajaxJson('doManual', param, function() {
+	                    table.load();
+	                    layui.layer.closeAll();
+	                });
+	            });
+            }
         } else {
 //        	Joyin.error("请选择导出数据！");
 //			return;

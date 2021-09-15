@@ -294,6 +294,12 @@
 		FROM PTL_PORTFOLIO A
 		LEFT JOIN PA_PTL_PORTFOLIO B
 		ON A.PORTFOLIO_ID = B.PORTFOLIO_ID
+		LEFT JOIN FIN_PRODUCT_ADD
+		ON A.PORTFOLIO_ID = FIN_PRODUCT_ADD.PORTFOLIO_ID
+		<if test="FINPROD_TYPE_TG_F16 != null and FINPROD_TYPE_TG_F16 != ''">
+			LEFT JOIN BOK_BOOKSET
+			ON A.PORTFOLIO_ID = regexp_replace(BOK_BOOKSET.BOOKSET_ID,#{FINPROD_TYPE_TG_F16},'',1,1,'c')
+		</if>
 		<where> 1=1
 		    AND A.PARENT_PORTFOLIO_ID IS NULL
 			<if test="search != null and search != ''">
@@ -304,6 +310,12 @@
 			</if>
 			<if test="initValue != null and initValue != ''">
 				AND A.PORTFOLIO_ID = #{initValue}
+			</if>
+			<if test="issueStatus !=null and issueStatus !=''">
+				AND FIN_PRODUCT_ADD.ISSUE_STATUS = #{issueStatus}
+			</if>
+			<if test="pltDate != null and pltDate !=''">
+				AND  BOK_BOOKSET.END_DATE  <![CDATA[>=]]>  to_date(#{pltDate},'yyyy-MM-dd')
 			</if>
 		</where>
 	</select>

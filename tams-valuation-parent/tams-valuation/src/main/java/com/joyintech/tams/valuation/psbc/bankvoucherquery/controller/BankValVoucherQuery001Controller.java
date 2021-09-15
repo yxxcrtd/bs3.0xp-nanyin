@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.psbc.bankvoucherquery.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -192,10 +194,15 @@ public class BankValVoucherQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= this.getRequestMap();
-        BankValVoucherQuery001SearchDto dto = (BankValVoucherQuery001SearchDto)JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        BankValVoucherQuery001SearchDto dto = null;
+        try {
+            dto = (BankValVoucherQuery001SearchDto) JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
         List<BankValVoucherQuery001Dto> listdto;
         if (datas == null) {
             listdto = valVoucherQuery001Service.selectAll(dto);

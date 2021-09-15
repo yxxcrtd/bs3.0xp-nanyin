@@ -197,6 +197,7 @@ public final class TxtParseUtil {
                     line = reader.readLine();
                     //第四行 正式数据
                     line = reader.readLine();
+                    line = line == null? "":line;
                 }
                 Map<String, String> result = null;
                 do{

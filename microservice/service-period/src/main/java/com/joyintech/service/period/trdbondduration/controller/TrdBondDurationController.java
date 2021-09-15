@@ -232,7 +232,7 @@ public class TrdBondDurationController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length){
         return trdBondDurationService.getFinprodId(page, length, param);
     }
 }

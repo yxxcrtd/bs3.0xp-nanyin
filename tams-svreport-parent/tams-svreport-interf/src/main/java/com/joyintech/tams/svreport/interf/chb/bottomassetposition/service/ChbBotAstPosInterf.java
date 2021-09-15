@@ -423,7 +423,8 @@ public class ChbBotAstPosInterf extends BaseService{
 														  Map<String,List<ChbBotAstPosition>> botTotalNumMap) {
 
 		//剩余现金
-		List<ChbBotAstPosition> cashList = chbBotAstPosInterfMapper.getCashBotDataFromRsk(date);
+		String monthReport=SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_CHBMONTH_REPORT);
+		List<ChbBotAstPosition> cashList = chbBotAstPosInterfMapper.getCashBotDataFromRsk(date,monthReport);
 		//排除当前资管计划没有底层资产只有剩余现金
 		List<ChbBotAstPosition> noBotAstCashList = chbBotAstPosInterfMapper.getNoBotAstCashDataFromRsk(date);
 		Map<String,List<ChbBotAstPosition>> map = noBotAstCashList.stream().collect(JoyinCollectors.groupingBy(ChbBotAstPosition::getPlanAssetId));

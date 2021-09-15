@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -62,7 +64,15 @@ public class SvrAssetInfoInterfTaskService extends BatchBaseService {
 //            if (StringUtil.isNotEmpty(batchExecuteDetail.getPrdGroupSeqNo())) {
 //                prodList = this.getProductIdList();
 //            }
-        	assetInfoImpMainService.generateAssetInfoData(batchExecuteInfo.getExecuteDate(),prodList,false);
+            String  institutionCode = null;
+            if(CommonUtil.isBAmodel()){
+                //判断当前是否是总行机构
+                if(!DictCodeListExt3.联社机构类型_省级机构.getValue().equals(CommonUtil.getInsitutionTypeByUserName(batchExecuteInfo.getCreateUser()))){
+                    //如果是非总行则将批处理启动用户所属的机构传入后台调用
+                    institutionCode=CommonUtil.getInsitutionCodeByUserName(batchExecuteInfo.getCreateUser());
+                }
+            }
+        	assetInfoImpMainService.generateAssetInfoData(batchExecuteInfo.getExecuteDate(),prodList,false,institutionCode);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

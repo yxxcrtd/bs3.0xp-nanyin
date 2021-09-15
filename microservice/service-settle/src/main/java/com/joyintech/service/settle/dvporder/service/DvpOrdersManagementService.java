@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,9 @@ public class DvpOrdersManagementService extends BaseService<DvpOrdersManagementD
         }
         if (param.get("paBusinessType") != null) {
             param.put("paBusinessType", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("paBusinessType")));
+            if(param.get("paBusinessType").toString().contains(BussinessDictCodeList.平安业务类型_DVP划款.getValue())){
+                param.put("paBusinessType1",BussinessDictCodeList.平安业务类型_DVP划款.getValue() );
+            }
         }
         else {
             param.put("paBusinessType", null);
@@ -78,6 +82,14 @@ public class DvpOrdersManagementService extends BaseService<DvpOrdersManagementD
         param.put("PINAN_BUSINESS_TYPE_77", DictCodeListExt1.平安业务类型_买断式逆回购到期.getValue());
         param.put("PINAN_BUSINESS_TYPE_76", DictCodeListExt1.平安业务类型_买断式正回购到期.getValue());
         param.put("PINAN_BUSINESS_TYPE_11", DictCodeListExt1.平安业务类型_债券类资产行权.getValue());
+        //DVP清算划款新增 DVP资金调拨中业务类型
+        param.put("PINAN_BUSINESS_TYPE_81", BussinessDictCodeList.平安业务类型_DVP划款.getValue());
+        param.put("PINAN_BUSINESS_TYPE_88", BussinessDictCodeList.平安业务类型_DVP资金调拨_托管户_上清DVP.getValue());
+        param.put("PINAN_BUSINESS_TYPE_89", BussinessDictCodeList.平安业务类型_DVP资金调拨_托管户_中债DVP.getValue());
+        param.put("PINAN_BUSINESS_TYPE_90", BussinessDictCodeList.平安业务类型_DVP资金调拨_上清DVP_托管户.getValue());
+        param.put("PINAN_BUSINESS_TYPE_91", BussinessDictCodeList.平安业务类型_DVP资金调拨_中债DVP_托管户.getValue());
+        param.put("PINAN_BUSINESS_TYPE_92", BussinessDictCodeList.平安业务类型_DVP资金调拨_上清DVP_中债DVP.getValue());
+        param.put("PINAN_BUSINESS_TYPE_93", BussinessDictCodeList.平安业务类型_DVP资金调拨_中债DVP_上清DVP.getValue());
         param.put("F29", DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue());
         param.put("F30", DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue());
     }

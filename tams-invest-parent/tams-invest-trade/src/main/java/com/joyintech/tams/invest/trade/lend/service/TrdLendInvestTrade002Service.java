@@ -329,7 +329,7 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         dto.getFinTradeProduct().setIntRate(
             ArithmeticUtil.divide(dto.getFinTradeProduct().getIntRate(), BigDecimal.valueOf(100))); // 固定利率
         // 本金收益特征 = 拆出：保本，拆入不存
-        if (DictCodeList.回购拆借方向_拆出.getValue().equals(dto.getPs())) {
+        if (DictCodeList.回购拆借方向_拆出.getValue().equals(dto.getBusiPs())) {
             // ※若画面联动1.7查询出的组合为保本
             dto.getFinTradeProduct().setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
         }

@@ -74,7 +74,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
             if("valDate".equals(key)&& StringUtil.isNotEmpty(request.getParameter(key))){
                 model.addAttribute(key,DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN)+" - "+DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN));
             }else {
-                model.addAttribute(key, request.getParameter(key));
+                model.addAttribute(key, request.getParameter(key)==null?"":request.getParameter(key));
             }
         }
         this.setSelectOptionToModel(model, BussinessDictCodeRds.监督类型,BussinessDictCodeRds.单位,BussinessDictCodeRds.监督状态);

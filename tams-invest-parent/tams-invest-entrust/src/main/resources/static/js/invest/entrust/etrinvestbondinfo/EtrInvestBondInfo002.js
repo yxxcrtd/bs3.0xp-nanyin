@@ -223,6 +223,7 @@
         }
         // 交易对手没有选择内部投资组合
         if (counterType !== 'N') {
+            $('#price').val('');
             return;
         }
         var finprodMarketId = $('#finprodId').val();

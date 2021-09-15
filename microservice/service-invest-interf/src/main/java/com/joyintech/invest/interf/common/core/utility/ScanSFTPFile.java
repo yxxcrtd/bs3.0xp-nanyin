@@ -47,10 +47,10 @@ public class ScanSFTPFile implements Runnable{
 			}
 			if (prop != null){
 				if(prop!=null) {
-					sftpUserName = prop.getProperty("sftpUserName");
-					sftpWord = prop.getProperty("sftpWord");
-					sftpIp = prop.getProperty("sftpIp");
-					sftpPort = prop.getProperty("sftpPort");
+					sftpUserName = prop.getProperty("sftpUserName")== null? "":prop.getProperty("sftpUserName");
+					sftpWord = prop.getProperty("sftpWord")== null? "":prop.getProperty("sftpWord");
+					sftpIp = prop.getProperty("sftpIp")== null? "":prop.getProperty("sftpIp");
+					sftpPort = prop.getProperty("sftpPort")== null? "":prop.getProperty("sftpPort");
 				}
 				int port = Integer.parseInt(sftpPort);
 

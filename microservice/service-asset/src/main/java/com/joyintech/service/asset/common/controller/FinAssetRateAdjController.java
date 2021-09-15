@@ -127,4 +127,19 @@ public class FinAssetRateAdjController {
     public AssetCommonInfoDto getAssetBasicInfoByFinprodId(@RequestBody Map<String,Object> map){
         return finAssetRateAdjService.getAssetBasicInfoByFinprodId(map);
     }
+
+    /**
+     * 入库
+     * <功能详细描述>
+     * @param dto
+     * @throws Exception
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("update")
+    public void update(@RequestBody RateAdjDto dto) throws Exception {
+        finAssetRateAdjService.insert(dto);
+    }
 }

@@ -2,12 +2,16 @@ package com.joyintech.tams.common.base.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.validation.annotation.NotEmpty;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+
 import java.math.BigDecimal;
 
 public class MstExchargeQuote extends MstExchargeQuoteKey {
     /**
      * 数据来源
      */
+    @NotEmpty(fieldName = "MstExchangeQuotationInfo001.datasourceType", groups = {ValidateGroupEdit.class})
     private String datasourceType;
 
     /**

@@ -54,7 +54,7 @@ public class AssetInfoImpMainService extends AutoSendCBBaseService{
      * @prodList 产品代码
      * void
      */
-    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask){
+    public Map<String,List<String>> generateAssetInfoData(Date batchDate,List<String> prodList,boolean isSynchronizeTask,String institutionCode){
     	Map<String,List<String>> mapPara = new HashMap<String,List<String>>();
     	List<String> tradenoList = new ArrayList<String>();   	
     	List<String> prodAddList = new ArrayList<String>(); 	
@@ -72,7 +72,7 @@ public class AssetInfoImpMainService extends AutoSendCBBaseService{
             // 资产交易信息
             Map<String,List<String>> mapParaAssetInfo = new HashMap<String,List<String>>();
             if (InterfConstants.CONTENTSRC_DB.equals(contentSrc)){
-                mapParaAssetInfo = chbAssetInfoInterf.generateAssetInfoData(batchDate,prodList,isSynchronizeTask);
+                mapParaAssetInfo = chbAssetInfoInterf.generateAssetInfoData(batchDate,prodList,isSynchronizeTask,institutionCode);
             } else if (InterfConstants.CONTENTSRC_FILE_XML.equals(contentSrc)
                     ||InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
                 String result = assetInfoFileImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.资产要素信息接口数据.getCode());

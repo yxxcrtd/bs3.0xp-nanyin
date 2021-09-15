@@ -7,8 +7,8 @@ package com.joyintech.tams.valuation.report.common.util;
 import java.io.*;
 import java.util.List;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -41,22 +41,14 @@ public class OfficeMergeUtil {
         CTBody srcBody = null;
         XWPFDocument srcDocumentTmp = null;
         CTBody srcBodyTmp = null;
+        try{
         for (int i = 0; i < srcFile.size(); i++ ) {
-            if(i==0){
-                try {
-                    srcDocumentTmp = new XWPFDocument(OPCPackage.open(new FileInputStream(srcFile.get(i))));
-                    srcBodyTmp= srcDocumentTmp.getDocument().getBody();
-                }
-                catch (IOException | InvalidFormatException e) {
-                    throw e;
-                }
-                finally {
-                    if (srcDocumentTmp != null) {
-                        srcDocumentTmp.close();
-                    }
-                }
+            if (i == 0) {
+                srcDocumentTmp = new XWPFDocument(OPCPackage.open(new FileInputStream(srcFile.get(i))));
+                srcBodyTmp = srcDocumentTmp.getDocument().getBody();
                 continue;
             }
+
             FileInputStream fileInputStream = null;
             try {
                 fileInputStream = new FileInputStream(srcFile.get(i));
@@ -64,11 +56,9 @@ public class OfficeMergeUtil {
                 srcDocument = new XWPFDocument(srcPackage);
                 srcBody = srcDocument.getDocument().getBody();
                 appendBody(srcBodyTmp, srcBody);
-            }
-            catch (IOException | InvalidFormatException | XmlException e) {
-                throw e;
-            }
-            finally {
+            } catch (IOException | InvalidFormatException | XmlException e) {
+                throw new BusinessException(e);
+            } finally {
                 if (srcDocument != null) {
                     try {
                         srcDocument.close();
@@ -85,24 +75,28 @@ public class OfficeMergeUtil {
                     } catch (Exception e) {
                         logger.error("", e);
                     }
-
+                }
+            }
+            OutputStream dest = null;
+            try {
+                dest = new FileOutputStream(new SafelyFile(destFile));
+                if (dest != null) {
+                    srcDocumentTmp.write(dest);
+                }
+            } catch (IOException e) {
+                throw e;
+            } finally {
+                if (dest != null) {
+                    dest.close();
                 }
             }
         }
-        OutputStream dest = null;
-        try {
-            dest = new FileOutputStream(new SafelyFile(destFile));
-            if (dest != null){
-                srcDocumentTmp.write(dest);
-            }
-        }
-        catch (IOException e) {
-            throw e;
-        }
-        finally {
-            if (dest != null) {
-                dest.close();
-            }
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }finally {
+            if (srcDocumentTmp != null){
+                srcDocumentTmp.close();
+    }
         }
     }
 

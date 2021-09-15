@@ -442,10 +442,6 @@ public class ExecuteService {
                 sftpTools.login(username, password, ip, port, sftpLoginType);// sftp登录
                 sftpTools.getFile(null, remoteFile, localdir);// 从ftp中拿到文件到服务器中
             }
-            catch (Exception e) {
-                logger.error("产品估值表余额表对账文件获取失败", e);
-                throw e;
-            }
             finally {
                 sftpTools.close();// 关闭登录
             }
@@ -461,10 +457,6 @@ public class ExecuteService {
             // 读取excel文件转换为list
             try {
                 contentList = ExcelUtilForValuareconcy.readToList(file, sheetIndex, skipRows);
-            }
-            catch (Exception e) {
-                logger.error("产品估值表余额表对账-excel内容读取失败", e);
-                throw e;
             }
             finally {
                 // 删除存放在服务器上的临时文件

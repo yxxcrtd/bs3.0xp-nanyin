@@ -10,11 +10,13 @@
 
 package com.joyintech.tams.invest.period.trddepoduration.service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -42,6 +44,7 @@ import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.period.common.service.PeriodCommonService.setWorkflowId;
 
@@ -87,6 +91,9 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
      */
     @Autowired
     private PeriodCommonService periodCommonService;
+
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
     
     @Autowired
     private BasePtlSecPositionInfoService basePtlSecPositionInfoService;
@@ -110,7 +117,13 @@ implements BaseProcessService<TrdDepoDuration001Dto>{
 //        baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
 //        防止生成错误的ps
         entity.setPs("");
-        
+
+        if (CollectionUtils.isNotEmpty(entity.getUploadFileList()) && StringUtil.isNotEmpty(entity.getBusiCode())) {
+            // 将附件和当前业务对象绑定（更新附件的业务代码）
+            fileAttachmentProcess.updateBussinessNo(
+                    entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getBusiCode());
+        }
+
         //删除持仓流水 start
         if(entity.getBaseTotalTradeInfoDto()!=null&&entity.getBaseTotalTradeInfoDto().getBaseTradeInfoDtoList()!=null) {
         	PtlSecPositionFlowDto pFlowDto = new PtlSecPositionFlowDto();

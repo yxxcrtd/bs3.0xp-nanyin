@@ -708,6 +708,7 @@ $(function() {
                     //股票一级市场  则显示  是否债转股
                     	$('#bussRepEquityInfoDto_repDeptEquity_div').show();
                     	$('#repDeptEquity').attr('required',true);
+                    	$('#bussRepEquityInfoDto_repInvestStage').parent().parent().find('i.must').remove();
                 }
                 
             }else {

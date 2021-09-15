@@ -17,9 +17,11 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -76,6 +78,10 @@ public class EtrStock002Controller extends BaseController {
      */
     @Autowired
     private EtrStockService etrStockService;
+
+    @Autowired
+    private PlatformDate platformDate;
+
     /**
      * {@inheritDoc}
      */
@@ -91,7 +97,8 @@ public class EtrStock002Controller extends BaseController {
         model.addAttribute("PRICEMODEL_01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute("PRICEMODEL_02", DictCodeListExt2.价格模式_限价指令.getValue());
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
         //-----add by jjpei 20190718 委托风险试算----start---------

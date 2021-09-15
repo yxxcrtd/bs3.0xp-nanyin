@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.controller;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -198,8 +199,7 @@ public class PtlFundAllocation001Controller extends BaseController {
      */
     @RequestMapping("importFile")
     @ResponseBody
-    public AjaxResult importData(String fileName)
-            throws Exception{
+    public AjaxResult importData(String fileName) throws FileNotFoundException {
         AjaxResult result = new AjaxResult();
         result.setStatuCode(HttpStatus.OK.value());
         Map<String,Object> map = ptlFundAllocation001Service.importData(fileName);

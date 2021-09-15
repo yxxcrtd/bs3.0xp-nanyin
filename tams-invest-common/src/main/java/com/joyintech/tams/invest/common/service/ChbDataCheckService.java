@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,9 +41,14 @@ public class ChbDataCheckService {
             }
         }
 
-//        restTemplate.postForObject(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, entity, ValidMessage.class);
-        Map<String, Object> param = BeanUtil.object2Map(entity);
-        param.put("entityClass", entity.getClass().getName());
+        Map<String, Object> param =  new HashMap<>();
+        //从批处理传入的map则不走原有的校验逻辑
+        if(StringUtil.equals(repType,"batch")){
+            param.put("batchMap",entity);
+        }else{
+            param = BeanUtil.object2Map(entity);
+            param.put("entityClass", entity.getClass().getName());
+        }
 
         checkResultList.addAll(restTemplate.postForList(ServiceApplication.CHB_SERVICE_NAME + "/openapi/chbDataCheck?"+tailStr, param, ValidMessage.class));
         return checkResultList;

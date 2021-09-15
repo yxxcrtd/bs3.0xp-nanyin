@@ -33,9 +33,9 @@ public class ZipUtils {
 				if (out != null) {
 					out.close();
 				}
-			}
-			if (is != null) {
+				if (is != null) {
 					is.close();
+				}
 			}
 	}
 }

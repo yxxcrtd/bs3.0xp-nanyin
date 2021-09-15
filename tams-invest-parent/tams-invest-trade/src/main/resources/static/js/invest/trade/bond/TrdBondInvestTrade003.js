@@ -3393,6 +3393,7 @@ var table;
 				table = $("#bussTrdTransfenpeiTable").joyintable({
 			          data:[],
 			          searchOnInit:true,
+			          page:false,
 			          height:'225px',
 			          cols:[
 			                // {field:'busiId', title: 'TrdInvestFenPeiInfo.busiId',sortable:false, edit:true, editOption:{type:'select',formatoption:true,parentIds:'secManageAcctId',url: JoyinUtil.getRealPath('/business/common/CommonSelect/selectPortfolioId?act=true')}}

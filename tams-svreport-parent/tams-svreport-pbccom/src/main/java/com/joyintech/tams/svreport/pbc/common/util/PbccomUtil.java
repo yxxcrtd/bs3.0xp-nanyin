@@ -37,7 +37,7 @@ public class PbccomUtil {
 				String key2 = it.next();
 				if (key.equals(key2)) {
 					if(prop!=null) {
-						ret = prop.getProperty(key);
+						ret = prop.getProperty(key)==null?"":prop.getProperty(key);
 					}
 					in.close();
 					return ret.trim();

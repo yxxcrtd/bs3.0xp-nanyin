@@ -13,7 +13,9 @@ package com.joyintech.tams.invest.period.trddepoduration.controller;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -41,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 活期存放结息
@@ -62,6 +65,9 @@ public class TrdDepoDuration004Controller extends BaseController {
 
     @Autowired
     private BaseGetBusinessId baseGetBusinessId;
+
+    @Autowired(required = false)
+    private FileAttachmentProcess fileAttachmentProcess;
     /**
      * {@inheritDoc}
      */
@@ -103,6 +109,7 @@ public class TrdDepoDuration004Controller extends BaseController {
             dto = new TrdDepoDuration001Dto();
         }
         dto.setCashType(DictCodeListExt1.平安业务类型_存款中间付息.getValue());
+        model.addAttribute("tradeId",dto.getBusiCode());
         model.addAttribute("deal", JsonUtils.object2Json(dto));
         model.addAttribute(GlobalConstant.ENTITY,dto);
         model.addAttribute("entity_bussTrdTransferOrderDto", JsonUtils.object2Json(CollectionUtils.isNotEmpty(dto.getBussTrdTransferOrder())?dto.getBussTrdTransferOrder().get(0):""));
@@ -211,6 +218,13 @@ public class TrdDepoDuration004Controller extends BaseController {
         params.setBusinessCode(dto.getBusiCode());
         params.setBusinessType(DictCodeList.共通业务类型_存款类资产存续期.getValue());
 
+        if (CollectionUtils.isNotEmpty(dto.getUploadFileList())
+                && StringUtil.isNotEmpty(dto.getBusiCode())){
+            fileAttachmentProcess.updateBussinessNo(
+                    dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                            Collectors.toList()),
+                    dto.getBusiCode());
+        }
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> WorkFlowUtil.concatComment(
                 this.getMessage("TrdDepoDuration001.finprodName"),

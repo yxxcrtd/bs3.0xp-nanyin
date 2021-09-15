@@ -452,6 +452,10 @@ public class FinProductCommonService {
                                 // 直接取中债全价
                                 marketPriceDto.setPrice(marketPriceDto.getAllPrice());
                             }
+                            if(marketPriceDto.getPrice() ==null || marketPriceDto.getPrice().compareTo(BigDecimal.ZERO)==0){
+                                marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+                            }
+
                         }
                         //modify by mashukai 合并修改 TISHKBS-1631 20201123	start
                         //理论估值日期
@@ -580,6 +584,9 @@ public class FinProductCommonService {
                     BigDecimal day = ArithmeticUtil.divide(new BigDecimal(day1), new BigDecimal(day2));
                     BigDecimal priceAdd = ArithmeticUtil.multiply(day,
                         ArithmeticUtil.subtract(new BigDecimal(100), targetFinProduct.getIssuePrice()));
+                    if(marketPrice ==null || marketPrice.compareTo(BigDecimal.ZERO)==0){
+                        marketPrice =targetFinProduct.getIssuePrice();
+                    }
                     marketPrice = ArithmeticUtil.doAdd(marketPrice, priceAdd);
                     // 市价Dto.市价净价 = 变量.市价净价
                 }
@@ -613,11 +620,24 @@ public class FinProductCommonService {
 
         /** add by yanya on 20200116 市价查询-债券 价格等于"全价"处理 stat**/
         //if(变量.价格类型 = “全价“)
-        if(DictCodeListExt3.价格类别_全价.getValue().equals(schemeDetailDto.getPriceClass())
-                && marketPriceDto.getPrice() != null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) != 0) {
-            BigDecimal 本日应计利息余额 = this.getBondFullPriceInterestBalance(finProdId, happenDate);
-            //出参.市价净价 - 变量.本日应计利息余额
-            marketPriceDto.setPrice(ArithmeticUtil.subtract(marketPriceDto.getPrice(), 本日应计利息余额));
+        if(DictCodeListExt3.价格类别_全价.getValue().equals(schemeDetailDto.getPriceClass())) {
+            if (marketPriceDto.getPrice() != null && marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal 本日应计利息余额 = this.getBondFullPriceInterestBalance(finProdId, happenDate);
+                //出参.市价净价 - 变量.本日应计利息余额
+                marketPriceDto.setPrice(ArithmeticUtil.subtract(marketPriceDto.getPrice(), 本日应计利息余额));
+            }
+            else{
+                if(DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
+                        || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies())){
+                    marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+                }
+            }
+        }else{
+            if ((DictCodeList.息票品种_零息.getValue().equals(targetFinProduct.getCouponSpecies())
+                    || DictCodeList.息票品种_贴现.getValue().equals(targetFinProduct.getCouponSpecies()))
+                    && (marketPriceDto.getPrice() == null || marketPriceDto.getPrice().compareTo(BigDecimal.ZERO) == 0)) {
+                marketPriceDto.setPrice(targetFinProduct.getIssuePrice());
+            }
         }
         /** add by yanya on 20200116 市价查询-债券 价格等于"全价"处理 end**/
 

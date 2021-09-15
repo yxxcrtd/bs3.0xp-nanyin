@@ -84,6 +84,10 @@ public class EntrustCommonPersonSelectService extends BaseService<ITableRow> {
     public Page<SelectOptionDto> getCounterIdDepat(int page,int length,Map<String, Object> param) {
         return this.queryForPageForSelectReturn(page, length,() ->entrustCommonPersonSelectMapper.getCounterIdDepat(param));
     }
+
+    public Page<SelectOptionDto> getMarketInsCounterId(int page,int length,Map<String, Object> param) {
+        return this.queryForPageForSelectReturn(page, length,() ->entrustCommonPersonSelectMapper.getMarketInsCounterId(param));
+    }
     /**
      * 查询本方交易员
      * <功能详细描述>

@@ -148,7 +148,7 @@ public class ProRegistCodeManage003Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("checkInsertData1")
-    public AjaxResult checkInsertData1(String regCode)  {
-        return proRegistCodeManage003Service.checkInsertData1(regCode);
+    public AjaxResult checkInsertData1(String prodId,String regCode)  {
+        return proRegistCodeManage003Service.checkInsertData1(prodId,regCode);
     }
 }

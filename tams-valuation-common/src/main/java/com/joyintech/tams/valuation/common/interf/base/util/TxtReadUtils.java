@@ -65,7 +65,7 @@ public class TxtReadUtils {
      * @since 1.0
      */
     public <T> TemplateCheckReturnResult readTxt(TemplateOrderInfoReaderResult acctEntity) {
-        
+
         TemplateCheckReturnResult result = new TemplateCheckReturnResult();
         //文件路径
         String filePath= acctEntity.getFilePath();
@@ -80,10 +80,12 @@ public class TxtReadUtils {
             List list = new ArrayList();
             InputStreamReader isr = null;
             BufferedReader br =null;
-            try {          	
+            FileInputStream fis = null;
+            try {
                 File file = new File(path);
+                fis = new FileInputStream(file);
                 if (file.isFile() && file.exists()) {
-					isr = new InputStreamReader( new FileInputStream(file), "utf-8");
+					isr = new InputStreamReader( fis, "utf-8");
                     br = new BufferedReader(isr);
                     String lineTxt = null; // 读取文件的方法
 //                    int num=0;
@@ -107,7 +109,7 @@ public class TxtReadUtils {
                                 date = arrStrings[6].trim().substring(0, 8);
                             }
                             String s2 = arrStrings[1].trim();
-                            if(!"HEADER".equals(s1) && !"TRAILER".equals(s1) && 
+                            if(!"HEADER".equals(s1) && !"TRAILER".equals(s1) &&
                                 ("01".equals(s2.substring(0,2)) || "1".equals(s2.substring(0,1)))){
                                 info.setSecId(arrStrings[1].trim());
                                 info.setValueSource(DictCodeListExt1.估值交易市场_上交所.getValue());
@@ -154,24 +156,31 @@ public class TxtReadUtils {
                         }
                     }else {
                         //预留其他txt接口文件处理
-                    } 
+                    }
                 }
             }
             catch (Exception e) {
             	logger.error("",e);
-            }finally{
-            	if(br!=null){
-            		try {
-						br.close();
-					} catch (IOException e) {
-						logger.error("",e);
-					} 
-            	}
-            	if (isr != null){
+            }finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        logger.error("", e);
+                    }
+                }
+                if (isr != null) {
                     try {
                         isr.close();
                     } catch (IOException e) {
-                        logger.error("",e);
+                        logger.error("", e);
                     }
                 }
             }
@@ -180,11 +189,11 @@ public class TxtReadUtils {
         result.setT(listAll);
         return result;
     }
-    
+
     /**
-     * 
+     *
      * 读取中证债券估值行情
-     * 
+     *
      * @param line
      * @return
      */
@@ -234,9 +243,9 @@ public class TxtReadUtils {
         }
         return list;
     }
-    
+
     /**
-     * 
+     *
      * 利率行情信息读取
      *
      * @param line
@@ -256,3 +265,4 @@ public class TxtReadUtils {
         return info;
     }
 }
+

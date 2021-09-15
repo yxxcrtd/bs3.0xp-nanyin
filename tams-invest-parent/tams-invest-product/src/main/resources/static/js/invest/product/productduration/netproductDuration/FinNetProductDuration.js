@@ -2130,6 +2130,7 @@ $(function() {
                     	data.tradeAmt = $('#expireDealAmt').val();
                     	data.tradeDate = $('#expirePayDate').val();                	
                     }else if("C3"==dealType || "C6"==dealType){
+                        var repPageId = 'FinNetProductDuration';
                     	data.tradeAmt = $('#addReduceDealAmt').val();
                     	data.tradeDate = $('#addReduceConfirmDate').val();                	
                     }
@@ -2173,6 +2174,7 @@ $(function() {
                     ,'portfolioId':$("#portfolioId").val()
                     ,'deal':data
                     ,'isLiquidation':true
+                    , 'repPageId': repPageId
                 };
             });
         }

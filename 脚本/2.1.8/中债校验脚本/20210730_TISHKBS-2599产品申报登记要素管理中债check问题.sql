@@ -1,0 +1,7 @@
+--申报登记页面中债校验
+--产品名称
+update CHB_DATACHECK_RULE_INV set OBJVALUE ='[\u4e00-\u9fa5 || \d || a-z || A-Z]{0,}' where CHECKRULEID ='de294A49-6813-5A9E-E050-007F01006B11';
+--起点销售金额校验
+update CHB_DATACHECK_RULE_INV set status ='E' where CHECKRULEID ='de314A58-6813-5A9E-E050-007F01006A66';
+--计划募集金额
+update CHB_DATACHECK_RULE_INV set status ='E' where CHECKRULEID ='de314A60-6813-5A9E-E050-007F01006A66';

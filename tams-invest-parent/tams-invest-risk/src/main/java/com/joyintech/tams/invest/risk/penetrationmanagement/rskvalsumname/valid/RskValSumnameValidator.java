@@ -73,6 +73,9 @@ public class RskValSumnameValidator implements BeanValidator{
                 if(rskValSumname001Service.getCountById(dto)){
                     errorList.add(new ValidMessage(this.getMessage("RSK_W_0001",getMessage("RskValSumname001.id"),dto.getId())));
                 }
+                if (rskValSumname001Service.getAssetSumInfoIsDefault(dto)) {
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0074", getMessage("RskValStructure001.id"), dto.getId())));
+                }
             }
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&!StringUtil.equals(dto.getOperateType(), "save")) {
                 if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&StringUtil.equals(dto.getOperateType(), "submit")){
@@ -162,6 +165,15 @@ public class RskValSumnameValidator implements BeanValidator{
                     if(listDto.size() != 1 || !StringUtil.equals(listDto.get(0).getId(), dto.getId())){
                         errorList.add(new ValidMessage(getMessage("RSK_W_0025",getMessage("RskValSumname002.name"))));
                     }
+                }
+            }
+            if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)) {
+                //选中记录在业务表中已关联组合时
+                if(rskValSumname001Service.getCountById(dto)){
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0073",getMessage("RskValSumname001.id"),dto.getId())));
+                }
+                if (rskValSumname001Service.getAssetSumInfoIsDefault(dto)) {
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0074",getMessage("RskValSumname001.id"),dto.getId())));
                 }
             }
         }

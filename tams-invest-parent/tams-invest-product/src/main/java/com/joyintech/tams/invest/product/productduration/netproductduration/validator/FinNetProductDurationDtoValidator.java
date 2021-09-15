@@ -409,7 +409,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             	if(dto.getRedConfirmDate() ==null){
                     errorList.add(new ValidMessage("redConfirmDate",getMessage("确认日不能为空！")));
             	}
-            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<=0){
+            	else if(dto.getRedPayDate()==null || dto.getRedPayDate().compareTo(dto.getRedConfirmDate())<0){
                     errorList.add(new ValidMessage("redPayDate",getMessage("支付日不能为空且必须大于等于确认日！")));
             	}
             	if(!DictCodeList.是否_是.getValue().equals(dto.getIsCycle())) {
@@ -1052,8 +1052,8 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 }
             	//add  by wm 确认日要不小于起息日 end 2019-06-29
             	//强增强减 交易金额、交易份额校验
-            	if(dto.getAddReduceDealNum03()==null&&dto.getAddReduceDealAmt03()==null){
-                    errorList.add(new ValidMessage("交易金额与交易份额至少填写一个，且填写数值必须大于0"));
+            	if(dto.getAddReduceDealNum03()==null || dto.getAddReduceDealAmt03()==null){
+                    errorList.add(new ValidMessage("货币型产品强增强减必须同时输入金额和份额，且填写数值必须大于0"));
             	}
             	if(dto.getAddReduceDealNum03()!=null && dto.getAddReduceDealNum03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("addReduceDealNum03","输入的交易份额必须大于0"));
@@ -1114,7 +1114,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             		errorList.add(new ValidMessage("bonusShareEndDate03","计息结束日不能为空"));
             	}
             	//再投确认日不能为空
-            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<=0){
+            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<0){
                     errorList.add(new ValidMessage("bonusShareConfirmDate03","再投确认日不能为空，且必须大于等于平台日！"));
                 }
             	//modify by wm 2019-06-19 start 根据需求去除红利再投金额为负的限制

@@ -1291,7 +1291,7 @@
             	if(pageModel!=PAGE_MODEL_REFERENCE){
                     // modify by jiangpeng on 20210511 ZGBSSE-347
                     // 【质押式协议回购】新建一笔质押式协议逆回购，点击保存按钮，在待办事项中查看到该笔交易的期限品种、质押券信息丢失
-                    if($("#repoType").val()!=TARGET_BACK_TYPE_H01){
+                    if($("#repoType").val()!=TARGET_BACK_TYPE_H01 &&!$('#entrustId').val()){
                         $("#repoType").textSelect('setValue', TARGET_BACK_TYPE_H02);
                         $('#repoType').attr('disabled',false);
                         //上交所:回购类型去掉质押式回购  add by yujiaping 2020-11-25 start
@@ -1310,7 +1310,7 @@
     			//深交所
     			$("#calendarId").textSelect('setValue', '05');
     			//默认回购类型质押式竞价回购
-            	if(pageModel!=PAGE_MODEL_REFERENCE){
+            	if(pageModel!=PAGE_MODEL_REFERENCE && !$('#entrustId').val()){
             	    $("#repoType").textSelect('setValue',TARGET_BACK_TYPE_H02);
                     $('#repoType').attr('disabled',false);
                     var $repoType = $('#repoType');

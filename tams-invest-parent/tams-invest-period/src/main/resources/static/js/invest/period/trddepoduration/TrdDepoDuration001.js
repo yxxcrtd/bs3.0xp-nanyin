@@ -72,7 +72,7 @@ $(function() {
                 JoyinUtil.getRealPath(url),
                 "98%", "95%",data,function(){table.reload();});
         },
-        sortfont:true,
+        sortfont:false,
         cols:[
             {field:'statusValidStr',width:'8%',sortField:"statusValid", title: 'TrdDepoDuration001.pageDataStatus'}
             ,{field:'busiCode',width:'12%', title: 'TrdDepoDuration001.busiCode'}
@@ -87,7 +87,7 @@ $(function() {
             ,{field:'remainPrinAmt',width:'20%', title: 'TrdDepoDuration001.remainPrinAmt',type:'money'}
             ,{field:'fpriceAmt',width:'20%', title: 'TrdDepoDuration001.fpriceAmt',type:'money'}
             ,{field:'pTradeId',  title: 'TrdDepoDuration001.pTradeId',visible:false} //金融产品代码
-            ,{field:'tradeAmt',width:'20%', title: 'TrdDepoDuration001.tradeAmt',type:'money'}
+            ,{field:'tradeAmt',width:'20%', sortField:'TRADE_AMT',title: 'TrdDepoDuration001.tradeAmt',type:'money'}
             ,{field:'assetType',visible: false}
             ,{field:'assetType',visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']

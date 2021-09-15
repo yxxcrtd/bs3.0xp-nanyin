@@ -52,17 +52,20 @@
 				$('#'+bussFinProductSaleParamDto + '_sameOrg').prop('disabled',false);
 				//客户类型仅有金融同业时，中债报送的 是否同业专属字段 才为是 必输 可编辑 yjm start 20190807 
 				if (pageModel != PAGE_MODEL_REFERENCE) {
-                    if (repInArr.length == 1){
-                        getElementById('excFinSector').val('01').trigger('change');                        
-                    } else {
-                        getElementById('excFinSector').val('02').trigger('change');
-                    }
+                     if (repInArr.length == 1){
+                         //getElementById('excFinSector').val('01').trigger('change');
+                         $('#bussRepFinProductInfoDto_excFinSector').val('01').trigger('change');
+                     } else {
+                         //getElementById('excFinSector').val('02').trigger('change');
+                         $('#bussRepFinProductInfoDto_excFinSector').val('02').trigger('change');
+                     }
 				}               
 				break;
 			}else {
-                getElementById('excFinSector').val('02').trigger('change');
+                // getElementById('excFinSector').val('02').trigger('change');
+                $('#bussRepFinProductInfoDto_excFinSector').val('02').trigger('change');
 			}
-            //客户类型仅有金融同业时，中债报送的 是否同业专属字段 才为是 必输 可编辑 yjm end 20190807 
+            //客户类型仅有金融同业时，中债报送的 是否同业专属字段 才为是 必输 可编辑 yjm end 20190807
 			if(i == repInArr.length - 1){
 				$('#'+bussFinProductSaleParamDto + '_sameOrg').val('').trigger('change').prop('disabled',true);
 			}

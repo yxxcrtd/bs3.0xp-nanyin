@@ -48,4 +48,27 @@
 		FROM
 			FIN_PRODUCT
 	</select>
+
+	<!-- 日历信息用于wind 自动加券 -->
+	<select id="getMstCalendarInfo" resultType="com.joyintech.tams.common.base.entity.MstCalendarInfo">
+	SELECT
+		CALENDAR_ID,
+		OTHER_ID
+	FROM
+		MST_CALENDAR_INFO
+	</select>
+
+	<select id="selectBotAssetMap" resultType="com.joyintech.tams.invest.batch.valbatchimport.dto.RskValtblPrtBotassetMapDto">
+		SELECT
+		PTL_ID,
+		SUB_CODE,
+		FINPROD_ID
+		FROM
+		RSK_VALTBL_PRT_BOTASSET_MAP
+		<where>
+			<if test="ptlId !=null and ptlId !=''">
+				AND	PTL_ID = #{ptlId,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
 </mapper>

@@ -68,9 +68,9 @@ public class ReportRevealManage003Service extends CommonExportService<BokFileTra
 	public void readFile(HttpServletRequest request) throws JSchException {
 		// 文件本地路径
 		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
-		request.getParameter("id");
-		request.getParameter("fileNo");
-		request.getParameter("fileNameOnly");
+//		request.getParameter("id");
+//		request.getParameter("fileNo");
+//		request.getParameter("fileNameOnly");
 		
 		//产品id
 		String finprodId = request.getParameter("finprodId")==null?"":request.getParameter("finprodId");

@@ -189,6 +189,12 @@ public class AssetInfoDetailRiskUtil {
             }else {
                 messages.add(new ValidMessage("币种数据不能为空。"));
             }
+            if(StringUtil.isNotEmpty(list.get(headList.indexOf("*资产一级分类")))){
+                entity.setOrgAssetType1(SysDataUtil.getZZDictCodeFromName(DictCode.中债_上游资产一级分类,
+                        list.get(headList.indexOf("*资产一级分类"))));
+            }else{
+                messages.add(new ValidMessage("资产一级分类数据不能为空。"));
+            }
 
            if (DictCodeListExt2.资产_负债类别_权益类资产.getValue().equals(entity.getAssetType())){
                 /**维护信息-权益类资产*/
@@ -429,7 +435,6 @@ public class AssetInfoDetailRiskUtil {
             messages.add(new ValidMessage("发行机构所属行业数据不能为空。"));
         }
         dto.setIndustry(dict.get("industry"+dto.getIndustryLevel2()));
-        dto.setIndustryLevel2(null);
         if (StringUtil.isNotEmpty(list.get(headList.indexOf("*起息日")))) {
             if (CommonUtil.isEnDateStr(list.get(headList.indexOf("*起息日")))){
                 dto.setVdate(DateUtil.parse(list.get(headList.indexOf("*起息日"))));
@@ -660,6 +665,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*资产/负债类别");
         headList.add("*交易流通场所");
         headList.add("*币种");
+        headList.add("*资产一级分类");
     }
 
     private void getHeadList_06(List<String> headList){
@@ -668,6 +674,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*资产/负债类别");
         headList.add("*交易流通场所");
         headList.add("*币种");
+        headList.add("*资产一级分类");
         headList.add("股票代码");
         headList.add("*股票/企业名称");
         headList.add("股票类型");
@@ -688,6 +695,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*资产/负债类别");
         headList.add("*交易流通场所");
         headList.add("*币种");
+        headList.add("*资产一级分类");
         headList.add("*名称");
         headList.add("*名义本金");
         headList.add("*标的类别");
@@ -703,6 +711,7 @@ public class AssetInfoDetailRiskUtil {
         headList.add("*资产/负债类别");
         headList.add("*交易流通场所");
         headList.add("*币种");
+        headList.add("*资产一级分类");
         headList.add("*所属国家或地区");
         headList.add("*债券名称");
         headList.add("*债券代码");

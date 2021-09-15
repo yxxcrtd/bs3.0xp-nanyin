@@ -330,7 +330,7 @@ public class TisUtil {
 	/**
 	 * txt生成调用此方法即可
 	 * @param list
-	 * @param path
+	 * @param fpath
 	 * @throws IOException
 	 */
 	public static void writeDataToTxtFile(List list,String fpath) throws IOException {
@@ -344,8 +344,8 @@ public class TisUtil {
 
 	/**
 	 * txt生成调用此方法即可
-	 * @param list
-	 * @param path
+	 * @param newStr
+	 * @param fpath
 	 * @throws IOException
 	 */
 	public static void writeDataToTxtFile(String newStr,String fpath) {
@@ -633,8 +633,8 @@ public class TisUtil {
 			if (!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-			outputStream = new FileOutputStream(file);
 
+			outputStream = new FileOutputStream(file);
 			wb.write(outputStream);
 
 			return file;
@@ -650,7 +650,7 @@ public class TisUtil {
 				if(inputStream != null) {
 					inputStream.close();
 				}
-				if (outputStream != null){
+				if (outputStream != null) {
 					outputStream.flush();
 					outputStream.close();
 				}
@@ -695,7 +695,7 @@ public class TisUtil {
 	/**
 	 * 删除指定的Sheet
 	 * @param targetFile  目标文件
-	 * @param sheetName   Sheet名称
+	 * @param sheetNameList   Sheet名称
 	 */
 	public static void deleteSheet(File targetFile,List<String> sheetNameList) {
 		try (FileInputStream fis = new FileInputStream(targetFile);

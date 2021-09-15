@@ -80,6 +80,7 @@
             ,{field:'systemFinprodId', visible: false}
             ,{field:'exchangePledge', visible: false}
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
     });
   
     var exportExcel = function(){

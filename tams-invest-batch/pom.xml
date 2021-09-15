@@ -27,12 +27,12 @@
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>joyintech-system</artifactId>
-            <version>0.0.3-BOOTVIS</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
             <artifactId>framework-core</artifactId>
-            <version>0.0.3-BOOTVIS</version>
+            <version>0.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
@@ -73,6 +73,12 @@
                     <artifactId>joyintech-workflow</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.joyintech.component</groupId>
+            <artifactId>msg-generate-1.0.1</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

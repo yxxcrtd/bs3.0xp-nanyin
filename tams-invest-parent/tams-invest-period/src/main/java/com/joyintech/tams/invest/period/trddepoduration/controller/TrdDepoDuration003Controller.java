@@ -96,6 +96,7 @@ public class TrdDepoDuration003Controller extends BaseController{
             }
             opType = "edit";
         }
+        model.addAttribute("tradeId",dto.getBusiCode());
         model.addAttribute("opType",opType);
         model.addAttribute(GlobalConstant.ENTITY,dto);
         model.addAttribute("FINPRODTYPE_DEFAULT",DictCodeListExt1.金融产品类型_投管用_存款.getValue());

@@ -53,7 +53,7 @@ import java.util.Map;
  * 〈功能详细描述〉
  * @author jiangsucheng
  * @version 1.0 2018年11月6日
- * @see ReportPageManage002Controller
+ * @see AssetInfoDetail002Controller
  * @since 1.0BussFinBondRepInfo
  */
 @PageId("AssetInfoDetail002")
@@ -155,7 +155,6 @@ public class AssetInfoDetail002Controller extends BaseController {
 
     /**
      * 根据界面选择获取二级资产类型
-     * @param param
      * @return
      */
     @ResponseBody

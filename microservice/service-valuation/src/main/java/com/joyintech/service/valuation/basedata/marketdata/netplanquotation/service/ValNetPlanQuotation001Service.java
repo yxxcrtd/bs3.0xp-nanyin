@@ -113,7 +113,7 @@ public class ValNetPlanQuotation001Service extends CommonExportService<ValNetPla
  	 * @return
  	 * @throws Exception
  	 */
- 	 public List<ValNetPlanQuotation001Dto> findPageout(Map<String, Object> params) throws Exception {
+ 	 public List<ValNetPlanQuotation001Dto> findPageout(Map<String, Object> params){
  	       
  	        return  valNetPlanQuotation001Mapper.queryPageList(params);
  	    }

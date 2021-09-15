@@ -71,6 +71,21 @@ public class EntrustCommonPersonSelectController {
                                                    @PathVariable("page") int page, @PathVariable("length") int length){
         return entrustCommonPersonSelectService.getCounterIdDepat(page, length,param);
     }
+
+    /**
+     * 交易对手(市场机构)  initValue 为 组织机构代码或统一社会信用代码
+     * BSXQHD-2257
+     * 【计划类净值型指令】多对多指令导入，交易对手一直报必填报错
+     * @param param 过滤参数
+     * @return 下拉框列表
+     * @throws Exception
+     */
+    @RequestMapping("getMarketInsCounterId/{page}/{length}")
+    public Page<SelectOptionDto> getMarketInsCounterId(@RequestBody Map<String, Object> param,
+                                                   @PathVariable("page") int page, @PathVariable("length") int length){
+        return entrustCommonPersonSelectService.getMarketInsCounterId(page, length,param);
+    }
+
     /**
      * 
      * 查询本方交易员

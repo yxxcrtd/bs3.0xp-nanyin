@@ -126,7 +126,7 @@ public class ResoluteRiskMathCommController extends BaseController {
         } else {
             model.addAttribute("entityName", "riskTrialRetDto");
         }
-        if (!StringUtil.equals(map.get("tradeId"), "null") && map.get("tradeId") != null && (map.get("entity") == null || "null".equals(map.get("entity"))) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
+        if (map.get("tradeId") != null && !StringUtil.equals(map.get("tradeId"), "null") && (map.get("entity") == null || "null".equals(map.get("entity"))) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
             li = basRiskMathCommService.select(map.get("tradeId").toString());
             // 一体化对应etliu start
 //        }else if(map.get("entity") != null){

@@ -77,6 +77,10 @@ public class RskValStructureValidator implements BeanValidator{
                 if(rskValStructureService.getCountById(dto)){
                     errorList.add(new ValidMessage(this.getMessage("RSK_W_0001",getMessage("RskValStructure001.id"),dto.getId())));
                 }
+                //选中记录是默认配置时
+                if (rskValStructureService.getStructInfoIsDefault(dto)) {
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0075", getMessage("RskValStructure001.id"), dto.getId())));
+                }
             }
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&!StringUtil.equals(dto.getOperateType(), "save")) {
                 if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&StringUtil.equals(dto.getOperateType(), "submit")){
@@ -161,6 +165,15 @@ public class RskValStructureValidator implements BeanValidator{
                 if(dto.getStructName() == null || "".equals(dto.getStructName())){
                     errorList.add(new ValidMessage(getMessage("FW_E_0006",getMessage("RskValStructure002.structName"))));
                 }
+            }
+        }
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            //选中记录在业务表中已关联组合时
+            if(rskValStructureService.getCountById(dto)){
+                errorList.add(new ValidMessage(this.getMessage("RSK_W_0073",getMessage("RskValStructure001.id"),dto.getId())));
+            }
+            if (rskValStructureService.getStructInfoIsDefault(dto)) {
+                errorList.add(new ValidMessage(this.getMessage("RSK_W_0074", getMessage("RskValStructure001.id"), dto.getId())));
             }
         }
         return errorList;

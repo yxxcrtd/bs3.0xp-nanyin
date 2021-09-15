@@ -15,10 +15,12 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
@@ -71,6 +73,10 @@ public class EtrPlanAssetC002Controller extends BaseController {
      */
     @Autowired
     private EtrPlanAssetCService etrPlanAssetCService;
+
+    @Autowired
+    private PlatformDate platformDate;
+
     /**
      * {@inheritDoc}
      */
@@ -82,7 +88,8 @@ public class EtrPlanAssetC002Controller extends BaseController {
                 DictCode.行内资产三级分类, DictCode.行内资产四级分类);
         /*添加二-四级分类数据字典 lishuping 2019/7/29 end*/
         this.setSelectOptionToModel(model, DictCode.币种);
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());

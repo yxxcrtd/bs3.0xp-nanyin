@@ -111,14 +111,14 @@
                 field : 'mdate',
                 title : 'BussFinRepayment.mdate',
                 width : 250,
-                edit : true,
+                edit : false,
                 sortable : false,
                 type : 'date'
             }, {
                 field : 'payDate',
                 title : 'BussFinRepayment.payDateOther',
                 width : 200,
-                edit : false,
+                edit : true,
                 sortable : false,
                 type : 'date'
             }, {

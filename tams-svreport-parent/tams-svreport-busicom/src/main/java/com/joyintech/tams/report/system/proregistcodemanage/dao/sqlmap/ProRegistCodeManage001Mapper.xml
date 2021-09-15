@@ -346,4 +346,12 @@
          cpc.PRODID = #{prodId}
         </where>
     </select>
+	<select id="selectInfoByProdId" resultType="com.joyintech.tams.svreport.interf.chb.proddeclare.dto.ChbPrdDeclareInfoDto">
+		select
+		prod_ins_id prodInsId,
+		raise_type　raiseType
+		from chb_prd_declare_info
+		where prod_ins_id = #{prodId}
+		and rownum=1
+	</select>
 </mapper>

@@ -116,6 +116,7 @@ public class IncomeJob extends JNLJob {
 					String tableID = "";
 					if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null && secIncomeWrpObj.getClo()!=null) {
 					 	tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.INCOME + "," + sec.getIssueType() + "," + secIncomeWrpObj.getClo().getLsindicator());
+						tableID = tableID == null ? "" : tableID;
 					}
 					incomeCooa.setTableID(tableID);
 					

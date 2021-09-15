@@ -94,7 +94,7 @@
                     <label class="layui-form-label form-label-wrap"
                            th:text="#{SvrBussRepPlacementInfo.checkCode}">对应资管计划代码</label>
                     <div class="layui-input-inline input-inline">
-                        <select type="text" id="checkCode" name="checkCode"  required
+                        <select type="text" th:id="|${entityName}_checkCode|"  th:name="|${entityName}.checkCode|"   required
                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                 th:placeholder="#{SysCommon.placeholder}" th:initValue="${entity?.checkCode}"
                                 th:data-url="@{/invest/risk/penetrationmanagement/rskvalrelateimport/RskValRelateImport001/queryGroupIdInfo}"

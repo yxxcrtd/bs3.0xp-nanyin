@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrad
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -101,8 +102,7 @@ public class TrdBondMarketTrade001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<TrdBondMarketTradeDto> findPage()
-            throws Exception {
+    public Page<TrdBondMarketTradeDto> findPage(){
         Page<TrdBondMarketTradeDto> page = trdBondMarketTrade001Service.findPage(RequestUtil.getPageParam());
         List<TrdBondMarketTradeDto> root = page.getRoot();
         int i = 0;
@@ -123,8 +123,7 @@ public class TrdBondMarketTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdBondMarketTradeDto inputDto)
-            throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdBondMarketTradeDto inputDto) throws WorkFlowException {
         String operateType = inputDto.getOperateType();
         String totleTradeId = inputDto.getTotleTradeId();
 

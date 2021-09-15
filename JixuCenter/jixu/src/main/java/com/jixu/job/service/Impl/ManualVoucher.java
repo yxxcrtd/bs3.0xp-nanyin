@@ -97,6 +97,7 @@ public class ManualVoucher implements ImportManualService{
 				String tableID = "";
 				if(SecurityCoreFactory.getTableIDProperties()!=null && sec.getIssueType()!=null) {
 					tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.MANNUAL + "," + sec.getIssueType() + "," + tranType);
+					tableID = tableID == null ? "" : tableID;
 				}
 				cooa.setTableID(tableID);	//业务场景
 				List<VoucherDetails> voucherDetailsList=cooa.getVoucherDetails();

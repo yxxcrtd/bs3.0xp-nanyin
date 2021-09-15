@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -34,6 +35,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * 资产应税信息
@@ -148,20 +150,9 @@ public class TaxScheme005Service extends CommonExportService<TaxScheme005Dto> im
      * @return
      * @throws Exception
      */
-    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) {
+    public Page<SelectOptionDto> findAsset(int page, int length, Map<String, Object> pageParam) {
         pageParam.put("InstCode", LoginUserUtil.getInstCode());
-        List<TaxScheme005Dto> resultList = taxScheme005Mapper.selectAsset(pageParam);
-        List<SelectOptionDto> selectOptionList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(resultList)) {
-            for (TaxScheme005Dto item : resultList) {
-                SelectOptionDto selectOptionDto = new SelectOptionDto();
-                selectOptionDto.setId(item.getAssetId() + "(" + item.getFinprodType()); // 主键是 finprod_id + finprod_type： finprod_id(finprod_type
-                selectOptionDto.setText(item.getAssetId() + "(" + item.getAssetName() + ")");
-                selectOptionDto.setObject(item.getOriginalFinprodId());//add by yanya on 20191031 原资产代码
-                selectOptionList.add(selectOptionDto);
-            }
-        }
-        return selectOptionList;
+        return super.queryForPageForSelectReturn(page,length,() -> taxScheme005Mapper.selectAsset(pageParam));
     }
 
     /**

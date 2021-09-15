@@ -4,6 +4,7 @@
     	data:[],
         searchOnInit:true,
         height:'225px',
+        page:false,
         cols:[
               {field:'entrustId',  width:100,title: 'TrdInvestFenPeiInfo.entrustId', sortable:false,type:'text'} //委托代码
               ,{field:'doEntrustMoney',  width:100,title: 'TrdInvestFenPeiInfo.remainEntrustAmt', sortable:false,edit:false,type:'number', digit:2} //剩余委托额度

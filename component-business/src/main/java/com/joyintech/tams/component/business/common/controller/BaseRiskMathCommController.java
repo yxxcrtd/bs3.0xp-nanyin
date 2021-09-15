@@ -165,7 +165,7 @@ public class BaseRiskMathCommController extends BaseController {
 
         }
         //--------2020年7月13日 wangyang1 start ------------------
-        if (!StringUtil.equals(map.get("tradeId"), "null") && map.get("tradeId") != null && StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
+        if (map.get("tradeId") != null && !StringUtil.equals(map.get("tradeId"), "null")&& StringUtil.isEmptyList(li) && StringUtil.isNotEmpty(map.get("tradeId").toString())) {
             if (map.get("tradeId").toString().lastIndexOf('R') == map.get("tradeId").toString().length() - 1) {
                 li = basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1)+DictCodeList.交易方向_买入.getValue());
                 li.addAll(basRiskMathCommService.select( map.get("tradeId").toString().substring(0, map.get("tradeId").toString().length() - 1)+DictCodeList.交易方向_卖出.getValue()));

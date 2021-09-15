@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.service.product.feepay.dao.FinProductFeePayMapper">
 
     <select id="selectForPage" resultType="com.joyintech.service.product.feepay.dto.FinProductFeePayDto">
-        select * from (
+        select distinct * from (
         <choose>
             <when test="status != null and status == effectStatus">
                 <!-- modify by mashukai 20201203 TISHKBS-1209 start -->

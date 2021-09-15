@@ -743,11 +743,10 @@ public class InfoDisclosureReadAndGenDetailService{
 	/**
 	 * 重新读取错误作业信息并生成待处理信息具体方法
 	 * @param executeDateStr 跑批日期
-	 * @throws Exception 异常  
 	 * @return 01 无满足条件的规则   02 无满足条件的产品  03 操作成功 04 失败
 	 */  
 	public String readAndGenErrorAgain(RepJob repJob, Map<String,Date> dateMap, 
-			Date executeDateStr,String jobSeq) throws Exception{
+			Date executeDateStr,String jobSeq) throws ParseException {
 		String flag = "04";
 		//规则表信息
 		RepRuleEntity repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());

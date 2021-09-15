@@ -1038,6 +1038,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
 //        转换
 
+        wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
+
         ////update by wangpeng 通道信息不登表
         String chlid = wflTrdProductDeal.getChlId();
         wflTrdProductDeal.setChlId(null);
@@ -1738,9 +1740,9 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         if (StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_买入.getValue())
             && inputDto.getBussTrdAvailableCashQuery() != null && StringUtil.isEmpty(inputDto.getWorkflowId())) {
             //退回的流程重新提交的时候不用再进行金额校验 yjm  20190725
-            if (inputDto.getPrinAmt() != null
+            if (inputDto.getTradeAmt() != null
                 && inputDto.getBussTrdAvailableCashQuery().getAvalibleCash() != null
-                && inputDto.getPrinAmt().compareTo(
+                && inputDto.getTradeAmt().compareTo(
                     inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) == 1) {
 //               AjaxResult ar = new AjaxResult();
 //               ar.setData(this.getMessage("TRD_C_0002"));

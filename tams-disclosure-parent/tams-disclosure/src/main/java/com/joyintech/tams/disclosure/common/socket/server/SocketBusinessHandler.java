@@ -15,8 +15,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.joyintech.framework.util.SpringContextUtil;
+import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.reportDeal.service.ReportDealService;
 
 /**
@@ -38,7 +38,7 @@ public class SocketBusinessHandler {
      * @since 1.0
      */
     public String doBusiness(String reciveStr) {
-        Map<String, Object> jsonMap = JSON.parseObject(reciveStr);
+        Map<String, Object> jsonMap = JacksonUtil.toMap(reciveStr);
         Map<String, Object> paraMap = new HashMap<String, Object>();
         paraMap.put("Method", jsonMap.get("Method") == null ? "" : jsonMap.get("Method").toString());
         paraMap.put("data", jsonMap.get("data") == null ? "" : jsonMap.get("data").toString());

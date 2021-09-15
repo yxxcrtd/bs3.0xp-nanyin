@@ -250,8 +250,8 @@
             t2.int_amt,
             t2.cash_id,
             t2.cash_type,
-            t2.pay_date,
-            rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank
+            t2.pay_date
+<!--            ,rank() over(partition BY t1.finprod_id ORDER BY t2.mdate) rank-->
             FROM PTL_SEC_POSITION T1 INNER JOIN FIN_CASH_PLAN T2 ON T1.FINPROD_ID = T2.FINPROD_ID
             AND T2.FINPROD_TYPE2 = #{FINPROD_TYPE_TGF01} AND t1.CDATE &lt; t2.MDATE
             LEFT JOIN PTL_PORTFOLIO pp on pp.PORTFOLIO_ID = T1.PORTFOLIO_ID
@@ -260,6 +260,7 @@
                 INNER JOIN DATA_AUTH_NOTIFY_INST dani
                 on dani.BUSINESS_ID = T1.PORTFOLIO_ID
                 AND dani.DATA_TYPE ='PTL01'
+                AND dani.model_type ='02'
                 AND dani.INSTITUTION_CODE=#{institutionCode}
             </if>
             <!-- 多级法人改造 add by caiqun 20200615 -->
@@ -277,6 +278,13 @@
                     (#{CASH_CLASS_TYPE01},#{CASH_CLASS_TYPE02},#{CASH_CLASS_TYPE03},#{CASH_CLASS_TYPE04})
                 </if>
                 and (t2.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                and t2.mdate = (select min(tt.mdate) from FIN_CASH_PLAN tt where tt.finprod_id =t1.finprod_id
+                    and Tt.FINPROD_TYPE2 = 'F01'
+                    AND tt.MDATE > t1.CDATE
+                    AND Tt.PAY_DATE >= #{PLATEFORM_DATE}
+                    and Tt.CASH_TYPE IN ('01', '02', '03', '04')
+                    and (tt.INT_AMT > 0 or t2.PRIN_AMT > 0)
+                )
                 <!-- and t2.MDATE &lt;=#{PLATEFORM_DATE} -->
                 /*不存在生效的交易*/
                 and NOT EXISTS (SELECT 1 FROM TRD_FIN_PRODUCT_DEAL_TOTAL TPDA
@@ -343,7 +351,8 @@
                     AND T1.SEC_ACCT_ID = #{secManageAcctId}
                 </if>
             </where>
-            ) where rank = 1
+            )
+<!--            where rank = 1-->
             ) T6
             <where>
                 <if test="mdateStart != null and !mdateStart.isEmpty()">
@@ -683,7 +692,7 @@
             T3.THEORY_PRIN prinAmtTheory/*理论还本金额*/,
             T1.INT_AMT intAmt/*实收利息总额*/,
             DEAL.CANCEL_REMARK revokeReason,
-            to_char(T1.TRADE_DATE, 'yyyy-MM-dd') TRADE_DATE/*资金到账日*/,
+            to_char(T1.SETTLE_DATE, 'yyyy-MM-dd') TRADE_DATE/*资金到账日*/,
             T1.TRADE_MARKET_MODE tradeMarket,
             T1.SHARE_AMT*100 qty,
             T3.THEORY_AMT fpriceAmt/*理论本息总额*/,

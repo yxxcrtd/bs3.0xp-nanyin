@@ -10,10 +10,7 @@
  
 package com.joyintech.tams.invest.asset.common.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.component.business.asset.FinPayInterestStdInfoService;
@@ -140,6 +137,25 @@ public class FinRepayPlanController extends BaseController{
                     rst.setErrorList(errorList);
                     return rst;
                 }
+            }
+        }
+        //最后一条的还本日不能大于资产到期日
+        if(StringUtil.isNotEmpty(dto) && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto())) {
+            List<FinCashPlanDto> cashPlanslist = dto.getBussFinRepaymentDto().getFinCashPlanList();
+            Collections.sort(cashPlanslist, new Comparator<FinCashPlanDto>() {
+                @Override
+                public int compare(FinCashPlanDto o1, FinCashPlanDto o2) {
+                    return o2.getPayDate().compareTo(o1.getPayDate());
+                }
+            });
+            //获取最后一条开放计划的还款日
+            Date lastpayDate = cashPlanslist.get(0).getPayDate();
+            if (lastpayDate.compareTo(dto.getMdate()) > 0) {
+                ValidMessage addRst = new ValidMessage("最后一条的还款日不能大于资产到期日");
+                List<ValidMessage> errorList = new ArrayList<>();
+                errorList.add(addRst);
+                rst.setErrorList(errorList);
+                return rst;
             }
         }
         StringBuffer sb = new StringBuffer();

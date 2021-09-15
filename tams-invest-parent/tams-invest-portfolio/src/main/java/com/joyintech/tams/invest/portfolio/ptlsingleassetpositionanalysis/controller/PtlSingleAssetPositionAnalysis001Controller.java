@@ -55,6 +55,7 @@ public class PtlSingleAssetPositionAnalysis001Controller extends BaseController 
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectAll(){
         Map<String, Object> map = RequestUtil.getPageParam();
         Page<PtlSingleAssetPositionAnalysis001Dto> page = ptlSingleAssetPositionAnalysis001Service.selectForPage(map);
+
         return page;
     }
 

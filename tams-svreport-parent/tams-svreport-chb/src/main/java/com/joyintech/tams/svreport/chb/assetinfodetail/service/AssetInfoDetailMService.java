@@ -167,7 +167,9 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		}
 		/***【资产基本信息维护】-新建或修改页面（债券类资产），“具体类别”字段未保存至CHB_ASSET_INFO表**/
 		if(DictCodeListExt2.资产_负债类别_债券类资产_理财直接融资工具_同业存单.getValue().equals(dto.getAssetType())){
-			dto.setChbSectype(dto.getSvrBussFinBondRepInfoDto().getRepSectype());
+			if(dto.getSvrBussFinBondRepInfoDto()!=null) {
+				dto.setChbSectype(dto.getSvrBussFinBondRepInfoDto().getRepSectype());
+			}
 		}
 
 		restTemplate.postForObject(
@@ -313,7 +315,7 @@ public class AssetInfoDetailMService extends CommonExportService<AssetInfoDetail
 		List<List<String>> data = ExcelUtil.getDataList2(fileName);
 		List<AssetInfoDetailDto> list = new ArrayList<>();
 		List<ExcelValidDto> checkResult = assetInfoDetailUtil.convertToBean(list,data);
-		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list)){
+		if (StringUtil.isEmptyList(checkResult) && StringUtil.isNotEmpty(list) && list.size()>0 ){
 			int dataCount = this.assetInfoDetailMapper.selectDataCount(list);
 			if (dataCount > 0) {
 				webResult.setMessage(this.getMessage("REPORT_ASSET_C_0003"), MessageType.确认消息);

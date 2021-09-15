@@ -118,6 +118,7 @@
             //     }
             // }
         ],
+        initSort: {field: 'tradeDate',type: 'desc'}
         //loadonce:true
     });
 

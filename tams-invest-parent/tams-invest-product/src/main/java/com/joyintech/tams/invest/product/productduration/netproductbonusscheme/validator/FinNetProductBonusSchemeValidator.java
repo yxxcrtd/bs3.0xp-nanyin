@@ -133,7 +133,11 @@ public class FinNetProductBonusSchemeValidator implements BeanValidator {
                         getMessage("FinNetProductBonusScheme002.delDate"), DateUtil.getSysDate())));
                     }
                     if(dto.getBonuScalcFlag().equals(DictCodeList.分红方案_按单位分红.getValue())){
-                    	if(StringUtil.equals(dto.getIsNetMormalize(), "Y") 
+                        if(StringUtil.isBlank(dto.getIsNetMormalize())){
+                            errorList.add(new ValidMessage("",
+                                    getMessage("COMMON_E_0057", getMessage("FinNetProductBonusScheme002.netValueNormalize"))));
+                        }
+                        if(StringUtil.equals(dto.getIsNetMormalize(), "Y")
                     			&& (dto.getTdyUnitValue() == null || dto.getTdyUnitValue().compareTo(BigDecimal.ZERO)<=0)){
                     		//单位分红，净值归一，判断当日参考净值是否大于1，否则给出提示不予保存
                     		 errorList.add(new ValidMessage("净值小于1，不能净值归1,请重新选择!"));

@@ -5,6 +5,7 @@ $(function() {
 	var table = $("#bussTrdTransfenpeiTable").joyintable({
         data:[],
         searchOnInit:true,
+        page:false,
         height:'225px',
         cols:[
             {field:'entrustId',  width:200, title: 'TrdInvestFenPeiInfo.entrustId', sortable:false, type:'text'}

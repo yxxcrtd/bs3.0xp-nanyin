@@ -28,6 +28,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -527,11 +528,9 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @see
      * @since 1.0
      */
-    public List<TargetDetail> getAllTreeNode(String param) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("userId", param);
-        map.put("isDefault", DictCodeList.是否_是.getValue());
-        return ptlPositionAnalysisMapper.getAllTreeNode(map);
+    public List<TargetDetail> getAllTreeNode(@RequestBody Map<String, Object> param) {
+        param.put("isDefault", DictCodeList.是否_是.getValue());
+        return ptlPositionAnalysisMapper.getAllTreeNode(param);
     }
 
     /**

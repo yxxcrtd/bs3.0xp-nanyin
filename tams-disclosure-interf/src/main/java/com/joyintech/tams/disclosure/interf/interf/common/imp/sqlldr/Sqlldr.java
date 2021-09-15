@@ -85,7 +85,7 @@ public class Sqlldr implements ImpExcutor {
             LOGGER.warn("不支持的参数类型:" + args.getClass().getName());
         }
         String command = ((SqlldrImpArgument)args).toString();
-        LOGGER.info("执行命令：" + sh + command);
+//        LOGGER.info("执行命令：" + sh + command);
         Process process = Runtime.getRuntime().exec(sh + command);
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(process.getInputStream()));

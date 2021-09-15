@@ -120,6 +120,9 @@ public class CeOrgValidator implements BeanValidator{
 				Map<String,List<CreditMstInfoDto>>  mapmap = new HashMap<>();
 				Map<String,BigDecimal>  maptwo = new HashMap<>();
 				for (CreditLines item:dto.getCreditQuoteItem()){
+					if(!StringUtil.isNotEmpty(item.getCreditAmt())){
+						continue;
+					}
 					for (CreditMstInfoDto dto1:sssMap.get("root")) {
 						if (dto1.getCreditMstId().equals(item.getCreditMstId())) {
 							creditAmt = ArithmeticUtil.doAdd(creditAmt, item.getCreditAmt());
@@ -141,7 +144,7 @@ public class CeOrgValidator implements BeanValidator{
 						BigDecimal creditAmtsum1 = BigDecimal.ZERO;
 						for (CreditLines item : dto.getCreditQuoteItem()) {
 						     for (CreditMstInfoDto dto2:listlist) {
-								if (dto2.getCreditMstId().equals(item.getCreditMstId())) {
+								if (dto2.getCreditMstId().equals(item.getCreditMstId()) && StringUtil.isNotEmpty(item.getCreditAmt())) {
 									creditAmtsum1 = ArithmeticUtil.doAdd(creditAmtsum1, item.getCreditAmt());
 								}
 							}

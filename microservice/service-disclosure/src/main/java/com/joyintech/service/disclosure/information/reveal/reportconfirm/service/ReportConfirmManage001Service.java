@@ -404,7 +404,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 											}
 										}
 										//存在系统生成文件
-										if(StringUtil.isNotEmpty(downloadFile) && downloadFile != null){
+										if(downloadFile != null && StringUtil.isNotEmpty(downloadFile) ){
 											String sysFileName=downloadFile.getName();
 											//报表类型
 											String sysFileType=sysFileName.substring(sysFileName.lastIndexOf("."),sysFileName.length());
@@ -487,10 +487,11 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 				}
 				//不需要层级
 				else{
+					FileOutputStream fos = null;
 					try {
-						zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+						fos = new FileOutputStream(zipFile);
+						zipOut = new ZipOutputStream(fos);
 						for(RepReveal report : reportList){
-						    // TODO
                             String reportName=report.getReportName();
                             if(report.getEndDate()!=null && StringUtil.isNotEmpty(report.getEndDate())){
                                 reportName=DateUtil.format(report.getEndDate(),DateUtil.DEFAULT_DATE_FORMAT_EN)+GlobalConstant.UNDER_LINE+reportName;
@@ -596,7 +597,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 								}
 								//没有人工上传，下载系统文件
 								else{
-									if(StringUtil.isNotEmpty(downloadFile) && downloadFile != null){
+									if(downloadFile != null && StringUtil.isNotEmpty(downloadFile) ){
 										String sysFileName=downloadFile.getName();
 										//文件类型
 										String sysFileType=sysFileName.substring(sysFileName.lastIndexOf("."),sysFileName.length());
@@ -633,6 +634,9 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 			        }finally {
 						if (zipOut != null){
 							zipOut.close();
+						}
+						if (fos != null){
+							fos.close();
 						}
 					}
 					

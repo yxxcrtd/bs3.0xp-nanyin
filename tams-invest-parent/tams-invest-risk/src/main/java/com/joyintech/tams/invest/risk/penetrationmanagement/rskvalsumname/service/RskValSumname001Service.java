@@ -102,5 +102,18 @@ public class RskValSumname001Service extends CommonExportService<RskValSumnameDt
             ServiceApplication.RISK_SERVICE_NAME +"/RskValSumname001/getCountById",dto,
             boolean.class);
     }
+    /**估值表汇总科目默认映射数
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public boolean getAssetSumInfoIsDefault(RskValSumnameDto dto) {
+        return restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValSumname001/getAssetSumInfoIsDefault",dto,
+                boolean.class);
+    }
 
 }

@@ -573,6 +573,9 @@ $(function() {
                             ,'deal':data
                         };
                     });
+                    if (TodoList) {
+                        window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition();
+                    }
                 });
 //                if(entrustId != ''){
 //                    if(etrEntrust){

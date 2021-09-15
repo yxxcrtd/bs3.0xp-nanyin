@@ -142,7 +142,7 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
                 FileInputStream inputStream = null;
-                try {
+                try{
                     inputStream = new FileInputStream(file);
                     excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
                     arrFile.add(new SafelyFile(exportPath+"/"+fileName));
@@ -179,12 +179,20 @@ public class RepFinProductEstablishService extends CommonExportService<RepFinPro
                 ExcelTools excelTools = new ExcelTools();
                 String exportPath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
                 File file = new SafelyFile(sysUploadFileInfoList.get(0).getPath());
-                FileInputStream inputStream = new FileInputStream(file);
-                excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
-                arrFile.add(new SafelyFile(exportPath+"/"+fileName));
-                i++;
+                FileInputStream inputStream = null;
+                try{
+                    inputStream = new FileInputStream(file);
+                    excelTools.writeExcel(inputStream, sysUploadFileInfoList.get(0).getFileName(), excleMap, exportPath+"/"+fileName);
+                    arrFile.add(new SafelyFile(exportPath+"/"+fileName));
+                }finally {
+                    if (inputStream != null){
+                        inputStream.close();
+                    }
+                }
+                    i++;
+                }
             }
-        }
+
         ZipFileUtil.compressZip(new SafelyFile(CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH)+"/"+strFile+".zip"), 
             false, arrFile.toArray(new SafelyFile[arrFile.size()]));
         return ExportUtil.export(strFile+".zip", 

@@ -1,9 +1,8 @@
-package com.joyintech.tams.component.business.common.dto;
+package com.joyintech.tams.invest.batch.valbatchimport.common.dto;
 
 import java.util.List;
 
 import com.joyintech.tams.common.base.entity.InterfStockInfo;
-import com.joyintech.tams.invest.batch.valbatchimport.common.dto.BaseFinProductBaseInfoDto;
 
 /**
  * wind股票资产DTO

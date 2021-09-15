@@ -78,5 +78,23 @@ public interface RskValStructureMapper {
      * @since 1.0
      */
     int getCountById(RskValStructureDto dto);
+    /**
+     * 查询估值表结构映射信息,默认配置
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<RskValStructureDto> getStructNameDefault(Map<String, Object> map);
+    /**
+     * 选中记录是否是默认模板
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    int getStructInfoIsDefault(RskValStructureDto dto);
 
 }

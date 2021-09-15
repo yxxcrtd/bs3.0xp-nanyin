@@ -30,6 +30,7 @@
         height : 200,
         checkbox:false,
         addbtn:true,
+        page :false,
         addclick : function(rowData) {
         	//rowData.floatBaseLevel = floatManageFeeTable.getAllRows().length;
         	

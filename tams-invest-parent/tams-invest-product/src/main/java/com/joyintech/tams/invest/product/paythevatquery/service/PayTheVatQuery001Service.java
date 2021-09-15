@@ -61,10 +61,10 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
      * @param param 过滤参数
      * @return 下拉框列表
      */
-    public List<SelectOptionDto> queryProdIdInfo(Map<String, Object> param){
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param){
         //收益型产品 下拉选项过滤净值型产品 lijun add SHBS-518
         //param.put("PROFIT_TYPE", BussinessDictCodeList.收益类型_预期收益.getValue());
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductDurDeal/queryProdIdInfo", param,
             SelectOptionDto.class);
     }

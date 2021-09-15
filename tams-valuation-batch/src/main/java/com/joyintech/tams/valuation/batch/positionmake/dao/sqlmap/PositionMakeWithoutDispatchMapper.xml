@@ -929,4 +929,38 @@
 			#{item.updateUser,jdbcType=VARCHAR},#{item.updateTime,jdbcType=TIMESTAMP}
 		</foreach>
 	</insert>
+
+	<select id="getManualList" resultType="com.joyintech.tams.common.base.entity.BokPositionPrdfee"  parameterType="java.util.Map" >
+		select tvd.bookset_id finprodId,
+			tvd.branch,
+			tvd.book_date cdate,
+			tvd.finprod_type feeType,
+			0 tdy_position,
+			0 tdy_fee_rate,
+			sum(decode(tvdd.cd_flag,#{cdFlag},tvdd.b_happen_amt * -1, tvdd.b_happen_amt)) tdy_intincexp_add,
+			0 tdy_interval_unpaid_inc,
+			0 tdy_unpaid_intincexp,
+			'' p_finprod_id,
+			'' chl_id
+		from TRD_VOUCH_DEAL tvd
+		inner join trd_vouch_deal_detail tvdd on tvd.trade_id = tvdd.trade_id
+		INNER JOIN BOK_BOOKSET C ON tvd.BOOKSET_ID = C.BOOKSET_ID
+		inner join bok_subject bs on bs.bookset_id = c.bookset_id_tmpl
+		and bs.subject_no = tvdd.subject_no and bs.subject_type = #{subjectType02}
+		where NVL(C.ACCT_SUBJECT_TYPE, '') != #{finprodTypeF26}
+			and tvd.finprod_type in (#{C03}, #{C04}, #{C05}, #{C06}, #{C09}, #{C10})
+			and tvd.BOOK_TYPE = #{bookType03}
+			and C.BOOKSET_TYPE = #{booksetType02}
+		<if test="booksetIds != null and booksetIds.size > 0">
+			AND (tvd.BOOKSET_ID IN
+			<foreach collection="booksetIds" item="item" index="index" open="( " close=" )" separator=",">
+				<if test="(index % 998) == 0">
+					null) OR tvd.BOOKSET_ID in (
+				</if>
+				#{item}
+			</foreach>
+			)
+		</if>
+		group by tvd.bookset_id, tvd.branch, tvd.book_date, tvd.finprod_type
+	</select>
 </mapper>

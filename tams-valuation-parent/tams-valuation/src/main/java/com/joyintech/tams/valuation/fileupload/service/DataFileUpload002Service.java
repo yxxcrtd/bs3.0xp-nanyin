@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.jcraft.jsch.SftpException;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,6 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      * 读取文件并上传到文件服务器
      * 
      * @param request
-     * @throws Exception
      */
     public void readFile(HttpServletRequest request) throws JSchException, SftpException {
         // 文件本地路径（应用服务器路径，同名添加）
@@ -122,7 +122,7 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
             progressBarService.updatePercent("DocumentManagement002", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
         } catch (JSchException | SftpException e) {
             logger.error(e.getMessage(), e);
-            throw e;
+            throw new BusinessException(e);
         } finally {
             File file = new SafelyFile(fileName);
             if(file !=  null && file.isFile()) {
@@ -139,7 +139,6 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
      * 
      * @param request
      * @return
-     * @throws Exception
      */
     public int insertFileTransferInfo(HttpServletRequest request) {
     	Map<String, Object> params = new HashMap<String, Object>();

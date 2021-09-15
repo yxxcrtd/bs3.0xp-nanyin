@@ -424,7 +424,7 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
         	}
         }
         //证券托管户 与通道二选一
-        if((inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
+        if((StringUtil.isBlank(inputDto.getBondFirstSign())) && (inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
         	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
         	
         	errorList.add(validMessage);

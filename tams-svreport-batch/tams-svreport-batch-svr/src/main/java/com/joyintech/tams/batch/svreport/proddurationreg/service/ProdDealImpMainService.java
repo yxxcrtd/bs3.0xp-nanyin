@@ -64,7 +64,7 @@ public class ProdDealImpMainService extends AutoSendCBBaseService{
                 || InterfConstants.CONTENTSRC_FILE_TXT.equals(contentSrc)) {
         	if(dealFileType.equals(SVReportGlobalConstant.CHB_PRD_DEAL_FILE_TYPE_02)) {
         		// 阜新投资交易文件接入，直接从SALE_CUST_SVRREPORT抽取交易数据入中债CHB_PRD_DEAL表
-        		prodDealInterfService.generatePrdDealDataFx(batchDate);
+        		prodDealInterfService.generatePrdDealDataFx(batchDate,prodIdList);
         	}else {
         		String result = prodDealInterfImpService.execute(batchDate,com.joyintech.tams.common.InterfDefine.投资者交易信息接口数据.getCode());
             	if ("fail".equals(result)){

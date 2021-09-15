@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.joyintech.calculation.shell.PriceByYieldCalculator;
 import com.joyintech.calculation.shell.param.PriceYieldOutParameter;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.common.base.entity.FinBaseRuleInfo;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
@@ -2808,7 +2809,7 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
     public ResponseEntity<byte[]> chartExport(HttpServletRequest request, String picinfo, HttpServletResponse response) {
         //类型
         String type = request.getParameter("type");
-
+        FileOutputStream fos = null;
         try {
             //decodeBase64();
             List<MockTestNetTrend> dataList = JsonUtils.json2List(
@@ -2854,13 +2855,23 @@ public class PtlMockTest002Service extends BaseService<PtlMockTest002Dto> implem
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
-            wb.write(new FileOutputStream(outFile));
+            fos =  new FileOutputStream(outFile);
+            wb.write(fos);
             outStream.flush();
             outStream.close();
 
             return ExportUtil.export(exportFileName, outFile, true);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
+        } finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    throw new BusinessException(e);
+        }
+            }
+
         }
 
         return null;

@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.interf.valuation.send.common.service;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.valuation.interf.valuation.send.utils.SendFtpUtil;
 import com.joyintech.tams.valuation.common.interf.base.util.SftpUtil;
@@ -30,7 +31,7 @@ import java.util.Date;
  * 〈功能详细描述〉
  * @author wangqidong
  * @version 1.0 2019年4月25日
- * @see InterfSendService
+ * @see InterfSendFtpService
  * @since 1.0
  */
 @Service
@@ -61,7 +62,7 @@ public class InterfSendFtpService {
                 sftpUtil.close();// 关闭登录
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
-                throw e;
+                throw new BusinessException(e);
             }
     }
     
@@ -86,7 +87,7 @@ public class InterfSendFtpService {
                 sftpUtil.close();// 关闭登录
                 String errorInfo = executeInfo.getTaskName()+"  数据文件回传失败";
                 logger.error(errorInfo + "   错误信息：" + e.getMessage());
-                throw e;
+                throw new BusinessException(e);
             }
     }
     

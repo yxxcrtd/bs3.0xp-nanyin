@@ -424,8 +424,11 @@ public class RepoNBookDetailProcessDealService {
                         PaTrdFinProductDealTotal paTrdFinProductDealTotal = paTrdFinProductDealTotalMapper.selectByPrimaryKey(trdProductDeal.getTotleTradeId());
                         intAmt = paTrdFinProductDealTotal.getTheoryInt();
                         if(dealFeeType.equals(DictCodeList.回购费用处理方式_计入成本.getValue())){
-                            if(trdTradeFeeDetail != null){
+                            if(trdTradeFeeDetail != null && dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式正回购.getValue())){
+                                //正回购增加佣金
                                 intAmt = intAmt.add(trdTradeFeeDetail.getFeeAmt());
+                            }else if (trdTradeFeeDetail != null && dealDto.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())){
+                                intAmt = intAmt.subtract(trdTradeFeeDetail.getFeeAmt());
                             }
                         }
                         if(orgtrdProductDeal.getMdate().compareTo(dealDto.getTradeDate()) > 0){

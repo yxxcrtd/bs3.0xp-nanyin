@@ -42,10 +42,11 @@ package com.joyintech.tams.invest.product.productelement.build.validator;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.stereotype.Component;
 
- import java.util.ArrayList;
- import java.util.HashMap;
- import java.util.List;
- import java.util.Map;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 产品新建管理验证类
@@ -115,12 +116,6 @@ public class FinProductBuild002Validator implements BeanValidator {
         }
 
         if (entity != null && entity.getBussRepFinProductInfoDto() != null) {
-
-            //报送信息页面托管费率和销售费率必填
-            if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepSaleFeeRate())) {
-                validList.add(new ValidMessage("bussRepFinProductInfoDto.repSaleFeeRate", this.getMessage("BUSS_COM_E_0038",
-                        this.getMessage("BussRepFinProductInfo.repSaleFeeRate"))));
-            }
 
             if (!StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepTruFeeRate())) {
                 validList.add(new ValidMessage("bussRepFinProductInfoDto.repTruFeeRate", this.getMessage("BUSS_COM_E_0038",
@@ -1130,6 +1125,9 @@ public class FinProductBuild002Validator implements BeanValidator {
         if(!StringUtil.isNotEmpty(entity.getBussFinProductSaleParamDto().getToffStart())) {
         	validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart", getMessage("BUSS_COM_E_0038",
                     getMessage("BussFinProductSaleParam.toffStart"))));
+        }else if(entity.getBussFinProductSaleParamDto().getToffStart().compareTo(BigDecimal.ZERO)==0){
+            validList.add(new ValidMessage("bussFinProductSaleParamDto.toffStart",
+                    getMessage("BUSS_COM_E_0036", getMessage("BussFinProductSaleParam.toffStart"),"0")));
         }
         //收益型产品运作模式不可选净值型 add by yzg 20200309
         if(StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto()) && StringUtil.isNotEmpty(entity.getBussRepFinProductInfoDto().getRepOperateMode())) {

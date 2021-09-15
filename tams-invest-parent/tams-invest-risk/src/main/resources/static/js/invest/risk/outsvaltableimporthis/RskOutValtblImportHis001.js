@@ -41,9 +41,15 @@ $(function() {
                 else if(row.importType == 'F')
                     return  '<a  href="javascript:;" style="cursor: pointer;"><span style="color: red">'+data+'</span></a>';
             }}
-            ,{field:'errorCodeStr',sortable: false, width:400 ,title: 'RskOutValtblImportHis001.errorCode',sortField:"errorCode",render:function(data,type, row, meta){
+            ,{field:'errorCodeStr',sortable: false, width:240 ,title: 'RskOutValtblImportHis001.dealResult',sortField:"errorCode",render:function(data,type, row, meta){
                     return  '<a  href="javascript:;" style="cursor: pointer;"><span style="color: red">'+data+'</span></a>';
             }}
+            ,{field:'resultInfo',  visible : false}
+            ,{field:'resultInfoStr', width:90 , title: 'RskOutValtblImportHis001.resultInfo',sortField:"resultInfo",
+                render : function(data, type, row, meta) {
+                    return "<a class='resultInfo-link' style='cursor: pointer;'>"+row.resultInfoStr +"</a>";
+                }
+            }
             ,{field:'valdate',  visible : false}
             ,{field:'valdateStr',  visible : false}
             ,{field:'impdate',  visible : false}
@@ -101,6 +107,13 @@ $(function() {
                     }
                 });
         });
+    });
+
+    /**
+     * 点击详情链接弹出提示框
+     */
+    table.bind('click','.resultInfo-link', function(row) {
+        Joyin.alert(row.resultInfo);
     });
 
     /**

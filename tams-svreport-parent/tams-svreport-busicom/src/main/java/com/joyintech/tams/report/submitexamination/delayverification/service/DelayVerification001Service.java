@@ -186,7 +186,7 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
                 resultPage =super.queryForPage(pagenum,legth,()->delayVerification001Mapper.searchTablePbc(pageParam));
             }else{
                 // HIS表赋值  2019-05-31 高健
-                pageParam.put("hisTableId",tableId+"_HIS");
+               // pageParam.put("hisTableId",tableId+"_HIS");
                 resultPage =super.queryForPage(pagenum,legth,()->delayVerification001Mapper.searchTable(pageParam));
             }
         }

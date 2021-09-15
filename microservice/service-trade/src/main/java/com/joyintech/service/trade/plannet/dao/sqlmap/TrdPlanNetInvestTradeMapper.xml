@@ -486,6 +486,21 @@
 		</where>
 	</select>
 
+	<select id="selectConfirmTradeList" resultType="com.joyintech.service.trade.plannet.dto.TrdPlanNetInvestTradeDto">
+		select * from TRD_PRODUCT_DEAL
+		<where>
+			<if test="bTradeId != null and bTradeId != ''">
+				and B_TRADE_ID = #{bTradeId}
+			</if>
+			<if test="yes != null and yes != ''">
+				and IS_CANCEL != #{yes}
+			</if>
+			<if test="tradeStatus != null and tradeStatus != ''">
+				and TRADE_STATUS=#{tradeStatus}
+			</if>
+		</where>
+	</select>
+
 	<select id="selectConfirmInfoWfl" resultType="java.lang.Integer">
 		select count(*) from WFL_TRD_PRODUCT_DEAL
 		<where>

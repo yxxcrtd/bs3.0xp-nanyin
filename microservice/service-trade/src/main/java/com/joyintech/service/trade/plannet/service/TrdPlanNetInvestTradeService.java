@@ -238,7 +238,14 @@ public class TrdPlanNetInvestTradeService extends BaseService<TrdPlanNetInvestTr
                 param.put("bTradeId", tfitDto.getTradeId());
                 param.put("tradeStatus", DictCodeListExt1.交易状态_初始.getValue());
                 param.put("yes", DictCodeList.是否_是.getValue());
-                int flg1 = trdPlanNetInvestTradeMapper.selectConfirmInfo(param);
+                //int flg1 = trdPlanNetInvestTradeMapper.selectConfirmInfo(param);
+                List<TrdPlanNetInvestTradeDto> tempList = trdPlanNetInvestTradeMapper.selectConfirmTradeList(param);
+                int flg1 = 0;
+                if(CollectionUtils.isNotEmpty(tempList)){
+                    flg1 = tempList.size();
+                    tfitDto.setConfirmDate(tempList.get(0).getTradeDate());
+                }
+
                 int flg2 = trdPlanNetInvestTradeMapper.selectWflConfirmInfo(tfitDto.getTradeId());
                 if (flg1 == 0 && flg2 == 0) {
                     tfitDto.setFlg("01");

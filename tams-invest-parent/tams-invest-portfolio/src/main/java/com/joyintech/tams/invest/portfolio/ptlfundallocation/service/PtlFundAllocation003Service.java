@@ -397,7 +397,7 @@ public class PtlFundAllocation003Service extends CommonExportService<PtlFundAllo
         PtlCashPositionFlow ptlCashPositionFlow = new PtlCashPositionFlow();
         ptlCashPositionFlow.setPortfolioId(dto.getPortfolioId());
         ptlCashPositionFlow.setAcctId(dto.getMyAcctNo());//付款账户
-        if("".equals(ptlCashPositionFlow.getAcctId())||ptlCashPositionFlow.getAcctId()==null){
+        if(ptlCashPositionFlow.getAcctId()==null||"".equals(ptlCashPositionFlow.getAcctId())){
             ptlCashPositionFlow.setAcctId(dto.getCounterAcctNo());
         }
 /*        if (BussinessDictCodeList.指令类型_银证转账_银转证.getValue().equals(dto.getPayType())) {

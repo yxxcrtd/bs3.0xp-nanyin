@@ -453,8 +453,7 @@ public class ReportConfirmManage001Contoller extends BaseController {
      */
 	@ResponseBody
     @RequestMapping("downLoad")
-    public ResponseEntity<byte[]> download()
-        throws Exception {
+    public ResponseEntity<byte[]> download() throws IOException {
     	String sysFilepath = RequestUtil.getParam("sysFilepath");
         if(null == fileAttachmentProcess) {
             throw new BusinessException("FileAttachmentProcess接口未实现，系统无法获取附件 " + sysFilepath);

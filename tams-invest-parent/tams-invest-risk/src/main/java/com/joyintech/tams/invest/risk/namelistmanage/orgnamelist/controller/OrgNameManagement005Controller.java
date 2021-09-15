@@ -2,19 +2,23 @@ package com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.controller;
 
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
+import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDto;
+import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementDetailService;
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
 import com.joyintech.tools.collectors.JoyinCollectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,9 @@ import java.util.Map;
 public class OrgNameManagement005Controller extends BaseController {
     @Autowired
     private OrgNameManagementService assetNameManagementService;
+
+    @Autowired
+    private OrgNameManagementDetailService orgNameManagementDetailService;
 
     @Override
     public String init(Model model) {
@@ -77,6 +84,38 @@ public class OrgNameManagement005Controller extends BaseController {
         unhandleRskAccessListDetailDtoList.removeAll(unhandleRskAccessListDetailDtoList2);
         handleRskAccessListDetailList.addAll(unhandleRskAccessListDetailDtoList); 
         return handleRskAccessListDetailList;
+    }
+
+    @RequestMapping(ACTION_EXPORT)
+    public ResponseEntity<byte[]> export() throws IOException {
+
+
+
+        Map<String, Object> param = RequestUtil.getParameters(getRequest());
+        //处理过的名单明细
+        List<RskAccessListDetailDto> handleRskAccessListDetailList= JsonUtils.json2List(this.getParam("rskAccessListLogDtoList"), RskAccessListDetailDto.class);
+        param.put("handleRskAccessListDetailList",handleRskAccessListDetailList);
+        List<RskAccessListDetailDto> unhandleRskAccessListDetailDtoList = assetNameManagementService.getAdjPriview(param);
+        Map<String, List<RskAccessListDetailDto>> handleRskAccessListDetailMap = handleRskAccessListDetailList.stream().collect(JoyinCollectors.groupingBy(item->item.getListDetailId()));
+        List<RskAccessListDetailDto> unhandleRskAccessListDetailDtoList2 = new ArrayList<RskAccessListDetailDto>();
+        for (RskAccessListDetailDto rskAccessListDetailDto : unhandleRskAccessListDetailDtoList) {
+            if (handleRskAccessListDetailMap.containsKey(rskAccessListDetailDto.getListDetailId())) {
+                unhandleRskAccessListDetailDtoList2.add(rskAccessListDetailDto);
+            }
+        }
+        unhandleRskAccessListDetailDtoList.removeAll(unhandleRskAccessListDetailDtoList2);
+        handleRskAccessListDetailList.addAll(unhandleRskAccessListDetailDtoList);
+
+        File outFile = orgNameManagementDetailService.makeFile(
+                "/com/joyintech/tams/invest/risk/namelistmanage/orgnamelist/conf/export_conf_preview.xml",
+                handleRskAccessListDetailList);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 
 }
