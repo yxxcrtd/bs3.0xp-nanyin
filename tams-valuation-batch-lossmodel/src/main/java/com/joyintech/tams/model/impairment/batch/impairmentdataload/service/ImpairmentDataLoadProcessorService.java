@@ -134,6 +134,8 @@ public class ImpairmentDataLoadProcessorService {
         modEclResultProcess.setSeqno(IDGenerator.generate());
         // 交易日期 = readerEntity.交割日
         modEclResultProcess.setTradeDate(entity.getSettleDate());
+        // 平均移动份额 = readerEntity.交易份额 (初始化值)
+        modEclResultProcess.setEmaShareAmt(entity.getShareAmt());
 //        //交易编号
 //        modEclResultProcess.setTradeId(entity.getTradeId());
         //资产代码
