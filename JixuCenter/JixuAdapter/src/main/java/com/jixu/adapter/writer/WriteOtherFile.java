@@ -6,6 +6,8 @@ import com.jixu.common.type.InterfaceConfig;
 import com.jixu.common.pojo.InterfaceSource;
 import com.jixu.common.type.DataReadResult;
 
+import java.io.IOException;
+
 /** 
  * @ClassName 		WriteCSVFile
  * @author  		Pan Wei 
@@ -21,7 +23,7 @@ public class WriteOtherFile extends WriteFileBasic{
 	}
 	
 	@Override
-	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws Exception {
+	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws IOException {
 		return writeFileResult(interfaceSource, dataSet, getFileType());
 	}
 }

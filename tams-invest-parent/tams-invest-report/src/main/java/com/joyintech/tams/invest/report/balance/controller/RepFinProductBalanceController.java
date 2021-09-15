@@ -75,7 +75,7 @@ public class RepFinProductBalanceController extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepFinProductBalanceDto> selectAll()
-        throws Exception {
+    {
         Page<RepFinProductBalanceDto> page = repFinProductBalanceService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -90,7 +90,7 @@ public class RepFinProductBalanceController extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repFinProductBalanceService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

@@ -179,4 +179,14 @@ public class PtlMockTestTradeDto extends MockProductDeal {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
+    private String data;
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
 }

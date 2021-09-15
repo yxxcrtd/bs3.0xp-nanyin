@@ -65,4 +65,18 @@ public interface TrdProjectDurationMapper {
     // add by etliu 20210426 权益类资产相关代码合并 start
     List<StlPayOrdersDto> getGroupPayByList(Map<String,Object> param);
     // add by etliu 20210426 权益类资产相关代码合并 end
+
+    /**
+     * 还本不带息资产，还本日是否是付息日
+     * @param map
+     * @return
+     */
+    int isPayIntDate(Map<String, Object> map);
+
+    /**
+     * 是否是还本不带息资产
+     * @param map
+     * @return
+     */
+    int isNoPayInt(Map<String, Object> map);
 }

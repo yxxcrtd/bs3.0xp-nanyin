@@ -49,6 +49,14 @@ public class BussRepOtherInvestTargetInfoController extends BaseController{
     public String init(Model model) {
         setSelectOptionToModel(model, bussRepOtherInvestTargetInfoService.getInitDictCode());
         setSelectOptionToModel(model, DictCode.是否_中债);
+        setSelectOptionToModel(model, DictCode.抵质押物类型);
+        setSelectOptionToModel(model, DictCode.担保方式);
+        setSelectOptionToModel(model, DictCode.担保人与融资人关系);
+        setSelectOptionToModel(model, DictCode.担保性质);
+        model.addAttribute("SVR_GUA_TYPE_01", DictCodeListExt2.担保方式_信用担保.getValue());
+        model.addAttribute("SVR_GUA_TYPE_02", DictCodeListExt2.担保方式_第三方保证.getValue());
+        model.addAttribute("SVR_GUA_TYPE_03", DictCodeListExt2.担保方式_抵押.getValue());
+        model.addAttribute("SVR_GUA_TYPE_04", DictCodeListExt2.担保方式_质押.getValue());
         model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
         //中债报送关联上级页面数据字典
         if (StringUtil.isNotEmpty(this.getParam("svr_asset_type_second_level"))){

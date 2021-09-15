@@ -79,7 +79,7 @@ public class PtlAccountCurrentInterest001Validator implements BeanValidator {
             }
         }
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-            if (dto.getBusiAcctNo() != "" && dto.getBusiAcctNo() != null && dto.getEffDate() != null
+            if (dto.getBusiAcctNo() != null && dto.getEffDate() != null && dto.getBusiAcctNo() != ""
                 && ptlAccountCurrentInterest002Service.getLastEffDate(dto.getBusiAcctNo()) != null
                 && dto.getEffDate().compareTo(ptlAccountCurrentInterest002Service.getLastEffDate(dto.getBusiAcctNo())) < 0) {
                 errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0004",

@@ -54,7 +54,7 @@ public class ProductelementdesController {
     public Page<Productelementdes002Dto> queryForPage(@RequestBody Map<String, Object> pageParam,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+    {
         return productelementdesService.selectForPage(page, length, pageParam);
     }
     
@@ -70,14 +70,14 @@ public class ProductelementdesController {
     public Page<Productelementdes001Dto> queryForDetailPage(@RequestBody Map<String, Object> pageParam,
                                                             @PathVariable("page") int page,
                                                             @PathVariable("length") int length)
-    	throws Exception {
+    {
 
     	return productelementdesService.findDetailPage(page, length, pageParam);
     }
     @Transactional
     @DTXTransaction
     @RequestMapping("/insertProductelementdes")
-    public void insertProductelementdes(@RequestBody Productelementdes002Dto productelementdes002Dto) throws Exception{
+    public void insertProductelementdes(@RequestBody Productelementdes002Dto productelementdes002Dto) {
         productelementdesService.insertProductelementdes(productelementdes002Dto);
     }
     /**

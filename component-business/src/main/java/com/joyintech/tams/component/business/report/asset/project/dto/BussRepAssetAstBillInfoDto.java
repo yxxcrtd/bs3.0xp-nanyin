@@ -174,13 +174,14 @@ public class BussRepAssetAstBillInfoDto extends RepAssetAstBill{
     }
     
     //加权剩余期限(天)
-    @Amount(fieldName = "BussRepAssetAstBillInfo.repRemainTerm", maxIntBit = 5,maxDecBit = 2, groups = {ValidateGroupEdit.class})
+//    @Amount(fieldName = "BussRepAssetAstBillInfo.repRemainTerm", maxIntBit = 5,maxDecBit = 2, groups = {ValidateGroupEdit.class})
     public BigDecimal getRepRemainTerm(){
         return super.getRepRemainTerm();
     }
     
     //贴现利率
-    @Amount(fieldName = "BussRepAssetAstBillInfo.repDiscRate", maxIntBit = 3,maxDecBit = 5  , groups = {ValidateGroupEdit.class})
+    /**ZGBSSE-626 【中债直连check】新建项目类资产，当资产负债类别为1201、1210时，“贴现利率”字段check不符合中债规范****/
+//    @Amount(fieldName = "BussRepAssetAstBillInfo.repDiscRate", maxIntBit = 3,maxDecBit = 5  , groups = {ValidateGroupEdit.class})
     public BigDecimal getRepDiscRate(){
         return super.getRepDiscRate();
     }

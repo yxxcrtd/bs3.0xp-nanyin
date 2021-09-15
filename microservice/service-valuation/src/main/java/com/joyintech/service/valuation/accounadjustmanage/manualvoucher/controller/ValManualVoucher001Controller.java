@@ -179,7 +179,7 @@ public class ValManualVoucher001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValManualVoucher001Dto> findPage(@RequestBody Map<String, ValManualVoucher001SearchDto> map,
-                                                 @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                 @PathVariable("page") int page, @PathVariable("length") int length) {
         ValManualVoucher001SearchDto dto = map.get("dto");
 //        Map<String, Object> params= this.getRequestMap();
 //        ValManualVoucher001SearchDto dto = (ValManualVoucher001SearchDto)JsonUtils.map2entity(params, ValManualVoucher001SearchDto.class);

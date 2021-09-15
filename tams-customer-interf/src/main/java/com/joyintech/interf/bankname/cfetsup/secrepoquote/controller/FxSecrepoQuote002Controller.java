@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,8 +192,7 @@ public class FxSecrepoQuote002Controller extends BaseController{
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FxSecrepoQuote002Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FxSecrepoQuote002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

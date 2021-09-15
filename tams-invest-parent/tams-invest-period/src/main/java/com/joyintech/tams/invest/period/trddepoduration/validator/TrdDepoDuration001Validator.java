@@ -184,7 +184,9 @@ public class TrdDepoDuration001Validator implements BeanValidator{
             }
             if(mstWorkflowCommonService != null) {
                 WflValidInputParameter param =new WflValidInputParameter();
-                param.setPageId("TrdDepoDuration002");
+                //更改pageId使得在点击确认按钮时进行校验流程中是否存在数据，防止重复确认中保存/提交
+//                param.setPageId("TrdDepoDuration002");
+                param.setPageId("TrdDepoDuration003");
                 param.setBusinessDataPk2(dto.getFinprodMarketId());
                 param.setBusinessDataPk3(dto.getPortfolioId());
                 param.setBusinessDataPk4(DateUtil.format(dto.getMdateProd()));

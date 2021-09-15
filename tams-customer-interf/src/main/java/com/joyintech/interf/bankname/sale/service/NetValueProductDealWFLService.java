@@ -45,7 +45,7 @@ public class NetValueProductDealWFLService {
 			res.put("massage", "插入流程成功"+params.getComment());
 		}catch(Exception d){
 			logger.error("插入流程失败:{}",params.getComment());
-			d.printStackTrace();
+			logger.error(d.getMessage(),d);
 			res.put("status", "0");
 			res.put("massage", "插入流程失败"+params.getComment());
 	   	}
@@ -92,7 +92,7 @@ public class NetValueProductDealWFLService {
 			res.put("massage", "插入流程成功"+params.getComment());
 		}catch(Exception d){
 			logger.error("插入流程失败:{}",params.getComment());
-			d.printStackTrace();	
+			logger.error(d.getMessage(),d);	
 			res.put("status", "0");
 			res.put("massage", "插入流程失败"+params.getComment());
 	   	}

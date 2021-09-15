@@ -11,24 +11,16 @@ spring:
     exclude: org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration  
   datasource:
     validationQuery: SELECT 1 FROM DUAL
-    maxWaitMillis: -1
-    defaultAutoCommit: true
-    defaultReadOnly: false
-    defaultTransactionIsolation: -1
-    defaultCatalog:
     testOnBorrow: true
-    testOnReturn: false
-    testOnCreate: false
-    testWhileIdle: false
+    testOnReturn: true
+    testOnCreate: true
+    testWhileIdle: true
     minEvictableIdleTimeMillis: 1800000
-    poolPreparedStatements: false
-    maxOpenPreparedStatements: -1
     removeAbandonedTimeout: 300
     initialSize: 10
     maxTotal: 50
     maxIdle: 50
     minIdle: 20
-    connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000 # 批处理不加该配置
     timeBetweenEvictionRunsMillis: 60000  # 默认是-1
     numTestsPerEvictionRun: 10
     removeAbandonedOnBorrow: true
@@ -41,6 +33,8 @@ spring:
 jixu:
   user:
     type: 1
+  aesKey: 123456789012jixu
+  aesEndKey: _%^&*)wWw(*&^%  
   #用户组
   project:
     group: Interface-Auto
@@ -111,9 +105,9 @@ tx-lcn:
 spring:
   profiles: yitihua-jicheng
   datasource:
-    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: yitihua1_212
-    password: yitihua1_212
+    url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
+    username: zgtams0810
+    password: zgtams0810_123
 #注册中心配置
 eureka:
   client:
@@ -125,3 +119,7 @@ application:
     contextPath:
       single: true
       customerInterfService: http://127.0.0.1:28080
+
+log:
+  path: /home/tiam/jixu/logs
+  level: INFO

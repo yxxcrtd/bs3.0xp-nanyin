@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -86,7 +87,7 @@ public class TrdIRSTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdIRSTradeDto> findPage()
-        throws Exception {
+         {
         Page<TrdIRSTradeDto> pageRet = trdIRSTrade001Service.findPage(RequestUtil.getPageParam());
         return pageRet;
     }
@@ -102,7 +103,7 @@ public class TrdIRSTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+        {
         return trdIRSTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -132,8 +133,7 @@ public class TrdIRSTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdIRSTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdIRSTradeDto inputDto) throws WorkFlowException {
 
         ProcessParameter<TrdIRSTradeDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdIRSTradeDto> workFlowParameter = new WorkFlowParameter<>();

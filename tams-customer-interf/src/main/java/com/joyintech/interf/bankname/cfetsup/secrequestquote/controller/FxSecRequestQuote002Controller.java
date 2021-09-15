@@ -21,6 +21,7 @@ import com.joyintech.interf.bankname.cfetsup.secrequestquote.service.FxSecReques
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fop.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -148,8 +149,7 @@ public class FxSecRequestQuote002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/save", method = POST)
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FxSecRequestQuoteDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) FxSecRequestQuoteDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -186,7 +186,7 @@ public class FxSecRequestQuote002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/confirm", method = POST)
    public AjaxResult confirm(@RequestBody @Validated({
-            ValidateGroupEdit.class}) FxSecRequestQuoteDto dto, BindingResult br)throws Exception{
+            ValidateGroupEdit.class}) FxSecRequestQuoteDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

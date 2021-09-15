@@ -52,7 +52,7 @@ public class DisReportProdIndexService  extends AutoSendCBBaseService{
      * @see
      * @since 1.0
      */
-    public DisReportProdIndexIntoResult execute(Map<String, Object> param1) throws Exception {
+    public DisReportProdIndexIntoResult execute(Map<String, Object> param1) {
     	// 获取reader返回值
     	DisReportProdIndexResult disReportProdIndexEntity = (DisReportProdIndexResult)param1.get(
             ReportGlobalConstant.REP_READER_RESULT);
@@ -81,7 +81,7 @@ public class DisReportProdIndexService  extends AutoSendCBBaseService{
      * @return
      * @throws Exception
      */
-    public DisReportProdIndexIntoResult processDto(DisReportProdIndexResult acctEntity) throws Exception { 
+    public DisReportProdIndexIntoResult processDto(DisReportProdIndexResult acctEntity) {
 
     	// 若reader读取的值为空，直接返回空
     	if (acctEntity == null) {

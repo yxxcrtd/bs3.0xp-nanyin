@@ -142,5 +142,15 @@ public interface BussSettleOrderCommMapper {
 
     List<StlCapacctInfo> selectProdCapacctInfoListForProd(@Param("finprodId") String finprodId, @Param("ccy") String ccy, @Param("capacctType") String value);
 
+    /**
+     * 查询通道资金账户
+     * add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+     * @param chlId
+     * @param ccy
+     * @param value
+     * @return
+     */
+    List<StlCapacctInfo> selectChlAcctNoInfoList(@Param("chlId") String chlId, @Param("ccy") String ccy, @Param("capacctType") String value);
+
     List<BussTrdTransferOrderBase> selectOrdersByBizCodeByBTradeId(@Param("bizCode")String bizCode, @Param("IE_FLAG_02") String value);
 }

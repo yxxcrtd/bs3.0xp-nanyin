@@ -10,50 +10,29 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.nprd;
 
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
+import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
+import com.joyintech.tams.valuation.common.interf.base.dto.*;
+import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
+import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
+import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
+import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdInfoN;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.apache.commons.collections.CollectionUtils;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.BokAcctLayeringInfo;
-import com.joyintech.tams.common.base.entity.BokAcctSubjectInfo;
-import com.joyintech.tams.common.base.entity.BokBookset;
-import com.joyintech.tams.common.base.entity.BokBooksetPlan;
-import com.joyintech.tams.common.base.entity.BokDetailId;
-import com.joyintech.tams.common.base.entity.FinCashCalcRule;
-import com.joyintech.tams.common.base.entity.FinCashInfo;
-import com.joyintech.tams.common.base.entity.FinProduct;
-import com.joyintech.tams.common.base.entity.FinProductAdd;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
-import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
-import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
-import com.joyintech.tams.valuation.common.interf.base.dto.BooksetInitResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.LayerPrdInfo;
-import com.joyintech.tams.valuation.common.interf.base.dto.NPrdBaseInfoValCommonResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.OtherParamsDto;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateCheckReturnResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateOrderInfoReaderResult;
-import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
-import com.joyintech.tams.valuation.common.interf.base.dto.ValFinProductExt;
-import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
-import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
-import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
-import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdInfoN;
 
 /**
  * 净值型产品基础信息模板处理 (VAL_PRD_BASEINFO_INFO_N)
@@ -176,7 +155,6 @@ public class NPrdBaseinfoTemplateRecService {
         List<BokAcctLayeringInfo> acctalyeringInfos = new ArrayList<BokAcctLayeringInfo>();
         //已有产品信息查询
         Map<String,LayerPrdInfo> mapLayerPrdInfo = interfCommonService.getExistPrdInfo();
-        
         //待处理计税产品信息
         List<String> taxInitPrdList = new ArrayList<>();
         // 获取基础信息Dto
@@ -452,7 +430,13 @@ public class NPrdBaseinfoTemplateRecService {
         // 市场代码=  A.产品代码
         valFinProduct.setFinprodMarketId(dto.getProdId());
         // 发行方式 = A.发行方式
-        valFinProduct.setIssueType(dto.getIssueType());
+//        valFinProduct.setIssueType(dto.getIssueType());
+        // tis传的是开放类型，接收的数据字典为发行方式，增加数据字典
+        if(DictCodeList.开放类型_开放式.getValue().equals(dto.getIssueType())){
+            valFinProduct.setIssueType(DictCodeList.发行方式_公开发行.getValue());
+        }else{
+            valFinProduct.setIssueType(DictCodeList.发行方式_非公开发行.getValue());
+        }
         // 起息日= A.起息日
         valFinProduct.setVdate(dto.getVdate());
         // 到期日= A.到期日
@@ -470,6 +454,9 @@ public class NPrdBaseinfoTemplateRecService {
         
         // 所属机构 = A.所属机构   add by tanxuan on 20210310 多级法人权限控制改造
 		valFinProduct.setBelongInstitutionCode(dto.getBelongInstitutionCode());
+        /*add by sunshuaishuai 20210429 增加托管机构 start*/
+        valFinProduct.setRegistOrg(dto.getTruInstitut());
+        /*add by sunshuaishuai 20210429 增加托管机构 start*/
         return valFinProduct;
     }
 
@@ -541,7 +528,6 @@ public class NPrdBaseinfoTemplateRecService {
         //是否对账 = A.是否对账
 //        finProductExt.setIsReconciliation(dto.getIsReconciliation());
         
-        /**modify by dongxiangyang on 20190221 end**/        
         return finProductAdd;
     }
     

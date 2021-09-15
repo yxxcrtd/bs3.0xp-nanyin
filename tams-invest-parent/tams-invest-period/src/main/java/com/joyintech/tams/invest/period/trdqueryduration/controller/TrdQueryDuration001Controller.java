@@ -125,7 +125,7 @@ public class TrdQueryDuration001Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<TrdQueryDuration001Dto> selectForPage() throws Exception{
+	public Page<TrdQueryDuration001Dto> selectForPage() {
 		Map<String,Object> param = RequestUtil.getParameters(getRequest());
 		return trdQueryDuration001Service.selectForPage(param);
 	}
@@ -137,20 +137,18 @@ public class TrdQueryDuration001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getPortfolioIds")
-    public Page<SelectOptionDto> getPortfolioId() throws Exception {
+    public Page<SelectOptionDto> getPortfolioId() {
         return trdQueryDuration001Service.getPortfolioId(RequestUtil.getPageParam());
     }
 
     /**
      * 证券账户联想文本框
      *
-     * @param portfolioId
      * @return
      * @throws Exception
      */
     @GetMapping("/getSecAcctIdAndChlIds")
-    public Page<SelectOptionDto> getSecAcctIdAndChlIds()
-            throws Exception {
+    public Page<SelectOptionDto> getSecAcctIdAndChlIds(){
         Page<SelectOptionDto> page = trdQueryDuration001Service.getSecAcctIdAndChlIds(RequestUtil.getPageParam());
         return page;
     }
@@ -163,8 +161,7 @@ public class TrdQueryDuration001Controller extends BaseController{
      * @throws Exception
      */
     @GetMapping("/getFinprodMarketIds")
-    public List<SuggestDto> getFinprodMarketIds(String finprodMarketId)
-            throws Exception {
+    public List<SuggestDto> getFinprodMarketIds(String finprodMarketId){
         return trdQueryDuration001Service.getFinprodMarketIds(finprodMarketId);
     }
 
@@ -175,7 +172,7 @@ public class TrdQueryDuration001Controller extends BaseController{
 	 * @throws Exception
 	 */
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 	 	return trdQueryDuration001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 	}
 

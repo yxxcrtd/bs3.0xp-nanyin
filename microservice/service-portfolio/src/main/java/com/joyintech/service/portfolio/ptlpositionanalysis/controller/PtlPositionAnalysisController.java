@@ -62,7 +62,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectAll(@RequestBody Map<String, Object> param,
                                                                 @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectForPage(page,length,param);
     }
     /**
@@ -75,7 +75,7 @@ public class PtlPositionAnalysisController {
      */
     @PostMapping("findList")
     public List<PtlPositionAnalysis001Dto> selectAllData(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectAllData(param);
     }
     /**
@@ -104,7 +104,7 @@ public class PtlPositionAnalysisController {
      */
     @PostMapping("findListForAsset")
     public List<PtlPositionAnalysis002Dto> findListForAsset(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlPositionAnalysisService.selectAssetForList(param);
     }
     /**
@@ -131,7 +131,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPageForExport/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectForExport(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+    {
     	return ptlPositionAnalysisService.selectForExport(page, length, param);	
     }
     
@@ -147,7 +147,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("findPageForExportNew/{page}/{length}")
     public Page<PtlPositionAnalysis001Dto> selectForExportNew(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+    {
     	return ptlPositionAnalysisService.selectForExportNew(page, length, param);	
     }
 
@@ -180,7 +180,7 @@ public class PtlPositionAnalysisController {
      * @since 1.0
      */
     @PostMapping("getAllTreeNode")
-    public List<TargetDetail> getAllTreeNode(@RequestBody String param){
+    public List<TargetDetail> getAllTreeNode(@RequestBody Map<String, Object> param){
         return ptlPositionAnalysisService.getAllTreeNode(param);
     }
 
@@ -197,7 +197,7 @@ public class PtlPositionAnalysisController {
     @PostMapping("secReportPage/{page}/{length}")
     public Page<PtlPositionAnalysis003Dto> secReportPage(@RequestBody Map<String, Object> param,
                                                          @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
 
         return ptlPositionReportService.secReportPage(page,length,param);
     }
@@ -212,5 +212,27 @@ public class PtlPositionAnalysisController {
     @PostMapping("getFinpordType")
     public List<PtlPositionAnalysis003Dto> getFinpordType(@RequestBody  Map<String, Object> pageParam) {
         return ptlPositionAnalysisService.getFinpordType(pageParam);
+    }
+
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectRemain")
+    public List<PtlPositionAnalysis003Dto> selectRemain(@RequestBody  Map<String, Object> pageParam) {
+        return ptlPositionAnalysisService.selectRemain(pageParam);
+    }
+
+    /**
+     * 查询组合对应的剩余现金
+     * @return 查询结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectPeiZhiRemain")
+    public List<PtlPositionAnalysis002Dto> selectPeiZhiRemain(@RequestBody  Map<String, Object> pageParam) {
+        return ptlPositionAnalysisService.selectPeiZhiRemain(pageParam);
     }
 }

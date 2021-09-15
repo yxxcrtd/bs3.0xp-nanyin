@@ -79,7 +79,8 @@ public class MstNetAssetQuotationInfo001Service extends BaseService<MstNetAssetQ
      * @see
      * @since 1.0
      */
-    public Page<MstNetAssetQuotationInfo001Dto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception {
+    public Page<MstNetAssetQuotationInfo001Dto> selectForPage(int page,int length,Map<String, Object> pageParam)
+    {
         pageParam.put("PROFITTYPE_VALUE_01", BussinessDictCodeList.收益类型_净值.getValue());
         pageParam.put("PROFITTYPE_VALUE_03", BussinessDictCodeList.收益类型_货币.getValue());
         pageParam.put("TYPE_TOUGUAN_F17", BussinessDictCodeList.金融产品类型_投管用_计划类资产.getValue());

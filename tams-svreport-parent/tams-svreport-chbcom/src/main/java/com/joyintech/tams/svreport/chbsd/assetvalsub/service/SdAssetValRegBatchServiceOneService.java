@@ -10,8 +10,10 @@
 
 package com.joyintech.tams.svreport.chbsd.assetvalsub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbAstValueSubDto;
 import com.joyintech.component.svrreport.chb.service.MsgSendService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.batch.report.autosendcb.common.service.AutoSendCBBaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,15 +52,15 @@ public class SdAssetValRegBatchServiceOneService extends AutoSendCBBaseService{
     */
     public boolean handleDataPerTime(int handleIndex, 
     		                         int dataCountPerTime,List<ChbAstValueSubDto> msgRstList,
-    		                         List<ChbAstValueSubDto> sendResult) throws Exception {
+    		                         List<ChbAstValueSubDto> sendResult, SendDataCheckType sendDataCheckType)  {
         logger.info("【资产估值信息登记】直连报送处理开始，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         boolean hasData = true;
         try {
-        	msgSendServiceImpl.sendChbAstValueSubMsgs(msgRstList);
+        	msgSendServiceImpl.sendChbAstValueSubMsgs(msgRstList, sendDataCheckType);
        	    sendResult.addAll(msgRstList);
         } catch (Exception e) {
 	        logger.error("【资产估值信息登记】直连报送处理异常，批次：" + handleIndex + e.getMessage());
-	        throw e;
+	        throw new BusinessException(e);
 		}
         logger.info("【资产估值信息登记】直连报送处理结束，批次：" + handleIndex + "  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         return hasData;

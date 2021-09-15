@@ -14,6 +14,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +63,8 @@ public class UpLoadFileService extends InterfBaseService {
      * 发送通知EntityKEY
      */
     private static final String NOTICE_ENTITY = "NOTICE_ENTITY";
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 初始化变量
@@ -207,17 +211,27 @@ public class UpLoadFileService extends InterfBaseService {
     /**
      * {@inheritDoc}
      */
-    public synchronized boolean loadFile(String srcFile, String dstFile)
-        throws Exception {
+    public synchronized boolean loadFile(String srcFile, String dstFile) throws InterfException, IllegalAccessException {
         if (config == null) {
             throw new InterfException("连接初始化失败");
         }
         // 建立连接
         IAccess acc = FileClient.createFileClient(config);
         // 打开连接
-        acc.open();
+        try {
+            acc.open();
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new IllegalAccessException ();
+        }
         // 文件上传
-        Object ob = acc.copy(srcFile, dstFile);
+        Object ob = null;
+        try {
+            ob = acc.copy(srcFile, dstFile);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new IllegalAccessException ();
+        }
 
         boolean result = Reply.isOK(ob);
         getLogger().info("文件上传成功:{}; 本地文件:{}; 上传路径:{}", result, srcFile, dstFile);

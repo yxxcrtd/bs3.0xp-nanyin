@@ -13,6 +13,8 @@ package com.joyintech.tams.valuation.basedata.marketdata.valoptinfo.controller;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +40,11 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 @PageId("ValOptInfo002")
 @RequestMapping("/valuation/basedata/marketdata/valoptinfo/ValOptInfo002")
 public class ValOptInfo002Controller extends BaseController {
-	
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ValOptInfo002Controller.class);
+
     /**
      * ValOptInfo001Service
      */
@@ -61,8 +67,7 @@ public class ValOptInfo002Controller extends BaseController {
         	try {
 				dto = valOptInfo001Service.findByTargetId(params).get(0);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}else if(StringUtil.isNotEmpty(workflowId)) { // 流程查看页面
 		    dto = valOptInfo001Service.getBussinessEntityByWorkflowId(workflowId);

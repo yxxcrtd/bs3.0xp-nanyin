@@ -27,6 +27,8 @@ import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementIn
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,6 +52,11 @@ import java.util.Map;
 @Transactional(rollbackFor = Exception.class)
 public class PtlManagementInfo004Service extends CommonExportService<PtlManagementInfo004Dto>
         implements BaseProcessService<PtlManagementInfo004Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlManagementInfo004Service.class);
+
     /**
      * 注入资金账户业务组件Service
      */
@@ -100,9 +107,9 @@ public class PtlManagementInfo004Service extends CommonExportService<PtlManageme
             try {
                 BeanUtil.copyProperties(ptlManagementInfoDto, entity);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             ptlManagementInfo001Service.doComplete(ptlManagementInfoDto,type);
         } else {

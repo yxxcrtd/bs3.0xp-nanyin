@@ -114,8 +114,7 @@ public class TrdBondMarketTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto) throws Exception {
         dto.setTotleTradeId(trdBondMarketTrade002Service.genTradeId());
         dto.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         ProcessParameter<TrdBondMarketTradeDto> processParameter = new ProcessParameter<>();

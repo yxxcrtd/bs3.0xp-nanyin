@@ -73,7 +73,7 @@ public class ValBondMarketInfo001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValBondMarketInfo001Dto> queryPageList(@RequestBody Map<String, Object> params, 
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
 //        Map<String, Object> params= this.getRequestMap();
 //        ValBondMarketInfo001SearchDto dto = (ValBondMarketInfo001SearchDto)JsonUtils.map2entity(params, ValBondMarketInfo001SearchDto.class);
         return valBondMarketInfo001Service.queryPageList(page,length,params);
@@ -115,7 +115,7 @@ public class ValBondMarketInfo001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/queryAllList")
-    public List<ValBondMarketInfo001Dto> queryAllList(@RequestBody Map<String, Object> params) throws Exception{
+    public List<ValBondMarketInfo001Dto> queryAllList(@RequestBody Map<String, Object> params){
             return valBondMarketInfo001Service.queryAllList(params);
     }
     

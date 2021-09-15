@@ -1,5 +1,6 @@
 package com.joyintech.tams.valuation.component.batch.service;
 
+import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 模型 日志服务
@@ -86,6 +88,7 @@ public class ModLogsService {
         log.setFinprodId(finprodId);
         log.setBatchExecSeqno(batchExeDetailSeqno);
         log.setTaskId(taskId);
+        log.setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
         return log;
     }
     /**
@@ -135,11 +138,11 @@ public class ModLogsService {
         ModBatchLogs modBatchLog = modBatchLogs.get(0);
         String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
         modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.批处理执行结果_警告.getValue());
+        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_警告.getValue());
         modBatchLog.setUpdateTime(new Date());
         List<String> execResult = new ArrayList<>(2);
-        execResult.add(ModelDictCodeList.批处理执行结果_正常结束.getValue());
-        execResult.add(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+        execResult.add(ModelDictCodeList.模型计算结果_成功.getValue());
+        execResult.add(ModelDictCodeList.模型计算结果_失败.getValue());
         criteria.andExecStatusNotIn(execResult);
         ModBatchLogsExample.Criteria orCriteria = example.createCriteria();
         orCriteria.andExecStatusIsNull();
@@ -176,7 +179,7 @@ public class ModLogsService {
         ModBatchLogs modBatchLog = modBatchLogs.get(0);
         String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
         modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_失败.getValue());
         modBatchLog.setUpdateTime(new Date());
         modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
     }
@@ -207,11 +210,56 @@ public class ModLogsService {
         ModBatchLogs modBatchLog = modBatchLogs.get(0);
         String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
         modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.批处理执行结果_正常结束.getValue());
+        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
         modBatchLog.setUpdateTime(new Date());
 
         // 只能对未修改状态的进行更新
         criteria.andExecStatusIsNull();
         modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
     }
+
+    /**
+     *
+     * @param logsMap
+     * @param finProdId
+     * @param msg
+     */
+    public synchronized void success(Map<String,ModBatchLogs> logsMap,String finProdId,String msg) {
+        if(logsMap.containsKey(finProdId)){
+            logsMap.get(finProdId).setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
+            logsMap.get(finProdId).setExecDetail(msg);
+        }else{
+            logger.error("资产代码："+finProdId+" 未初始化执行日志.");
+        }
+    }
+
+    /**
+     *
+     * @param logsMap
+     * @param finProdId
+     * @param msg
+     */
+    public synchronized void error(Map<String,ModBatchLogs> logsMap,String finProdId,String msg) {
+        if(logsMap.containsKey(finProdId)){
+            logsMap.get(finProdId).setExecStatus(ModelDictCodeList.模型计算结果_失败.getValue());
+            logsMap.get(finProdId).setExecDetail(msg);
+        }else{
+            logger.error("资产代码："+finProdId+" 未初始化执行日志.");
+        }
+    }
+    /**
+     *
+     * @param logsMap
+     * @param finProdId
+     * @param msg
+     */
+    public synchronized void warn(Map<String,ModBatchLogs> logsMap,String finProdId,String msg) {
+        if(logsMap.containsKey(finProdId)){
+            logsMap.get(finProdId).setExecStatus(ModelDictCodeList.模型计算结果_警告.getValue());
+            logsMap.get(finProdId).setExecDetail(logsMap.get(finProdId).getExecDetail()+";"+msg);
+        }else{
+            logger.error("资产代码："+finProdId+" 未初始化执行日志.");
+        }
+    }
+
 }

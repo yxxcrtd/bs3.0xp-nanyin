@@ -65,7 +65,7 @@ public class FinDisclosureModuleController {
      */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinDisclosureModuleDto> selectForPage(@RequestBody Map<String, Object> param,
-         @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+         @PathVariable("page") int page, @PathVariable("length") int length) {
     	Page<FinDisclosureModuleDto> pageList = finDisclosureModuleService.selectAll(page, length, param);
     	return pageList;
     }
@@ -95,7 +95,7 @@ public class FinDisclosureModuleController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody FinDisclosureModuleDto dto) throws Exception {
+    public int delete(@RequestBody FinDisclosureModuleDto dto) {
         return finDisclosureModuleService.delete(dto);
     }
     
@@ -113,7 +113,7 @@ public class FinDisclosureModuleController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody FinDisclosureModuleDto dto) throws Exception {
+    public int insert(@RequestBody FinDisclosureModuleDto dto) {
         return finDisclosureModuleService.insert(dto);
     }
 

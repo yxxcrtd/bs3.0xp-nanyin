@@ -66,9 +66,18 @@
         ],
     });
 
+    var exportExcel = function(){
+         var paramObj = searchform();
+         Joyin.exportExcel('export', paramObj);
+    }
+
     /**
      * 画面加载完成
      */
     $(function () {
+        //导出
+        $('#AssetNameManagement005_btn_export').click(function() {
+            exportExcel();
+        });
     });
 }());

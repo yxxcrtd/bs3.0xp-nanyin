@@ -52,7 +52,8 @@ public class EtrWtFxswapController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrWtFxswapDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrWtFxswapDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return etrWtFxswapService.selectForPage(page,length,param);
     }
     

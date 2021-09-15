@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -75,8 +76,7 @@ public class FinPlanAssetC001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinPlanAssetCDto> selectAll()
-        throws Exception {
+    public Page<FinPlanAssetCDto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<FinPlanAssetCDto> page = finPlanAssetCService.selectForPage(map);
         return page;
@@ -106,8 +106,7 @@ public class FinPlanAssetC001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-            ValidateGroupDelete.class}) FinPlanAssetCDto dto, BindingResult br)
-        throws Exception {
+            ValidateGroupDelete.class}) FinPlanAssetCDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -138,8 +137,7 @@ public class FinPlanAssetC001Controller extends BaseController{
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return finPlanAssetCService.export(this.getPageId(),param);

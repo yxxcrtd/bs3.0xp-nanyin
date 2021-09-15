@@ -12,6 +12,7 @@ package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.ass
 
 
 
+import com.joyintech.tams.valuation.interf.core.exception.InterfException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,7 @@ public class CurrentDepositRecRunner extends InterfBaseService {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public void execute()
-        throws Exception {
+    public void execute() throws InterfException {
         // TODO Auto-generated method stub
         logger.info(getInterfExecuteInfo().getTaskName() + "开始！");
         // setp1的参数设置
@@ -71,7 +71,7 @@ public class CurrentDepositRecRunner extends InterfBaseService {
                 (InterfBaseProcessor)step1Processor, (InterfBaseWriter)step1Writer).builder(
                     "currentDepositRecRunner").run();
         }
-        catch (Exception e) {
+        catch (InterfException e) {
             // TODO: handle exception
             logger.error("", e);
             logger.error(getInterfExecuteInfo().getTaskName() + "异常结束！");

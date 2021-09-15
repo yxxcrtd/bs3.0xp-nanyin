@@ -64,14 +64,13 @@ public class ValSztInterfBalance001Controller extends BaseController{
      * 深圳通科目余额对账页面查询方法
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
 	@RequestMapping("findPage")
     @ResponseBody
     public Page<ValSztInterfBalance001Dto> findPage()
-            throws Exception {
+             {
 		Page<ValSztInterfBalance001Dto> page = valSztInterfBalance001Service.findPage(RequestUtil.getPageParam());
 		return page;
 	}

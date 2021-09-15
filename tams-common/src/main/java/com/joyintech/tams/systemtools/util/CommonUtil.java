@@ -26,6 +26,7 @@ import com.joyintech.tams.common.base.entity.ChbOrgRegistBankCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -52,6 +53,7 @@ import com.joyintech.tams.systemtools.listener.TamsAuthorizationListener;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 
+@Lazy(false)
 @Component
 public class CommonUtil {
 	
@@ -217,17 +219,19 @@ public class CommonUtil {
 	 * @see
 	 * @since 1.0
 	 */
-	public static String getUserBankCode() {
-		User userInfo = SecurityUtil.getLoginUser();
-		// if(userInfo.isAdmin()){
-		// return null;
-		// }
-		if (StringUtil.isEmpty(userInfo.getOrgCode())) {
-			return null;
+	public static String getUserBankCode(String orgCode) {
+		if(StringUtil.isBlank(orgCode)){
+			User userInfo = SecurityUtil.getLoginUser();
+			if (StringUtil.isEmpty(userInfo.getOrgCode())) {
+				return null;
+			}
+			orgCode = userInfo.getOrgCode();
 		}
-		String bankCode = baseMapper.selectBankCode(userInfo.getOrgCode());
+		String bankCode = baseMapper.selectBankCode(orgCode);
 		return bankCode;
 	}
+
+
 
 
 
@@ -289,6 +293,58 @@ public class CommonUtil {
 		return sequenceResult;
 	}
 	
+	/**
+	 * 获取批量序列值
+	 * @param sequenceType
+	 * @param size
+	 * @return
+	 */
+	public  static  List<String> getBatchSequenceIndexData(DataIndexSequenceType sequenceType, int size) {
+		if(size <= 0) {
+			return new ArrayList<>();
+		}
+
+		List<String> list = new ArrayList<>();
+		Map<String, String> param = new HashMap<>();
+		
+		String databaseType = CacheUtil.getAppParamCache(GlobalConstant.SYS_DEPARTMENT_KEY, "database_type_code");
+
+		databaseType = StringUtil.defaultString(databaseType, "Oracle");
+		
+		param.put("databaseType", databaseType);
+		param.put("sequenceName", sequenceType.getSequenceName());
+		
+		synchronized(CommonUtil.class){
+     	Long result = baseMapper.getSequenceIndexData(param);
+		// 加在採番后结果的前缀，以保证各个sequence的採番结果不会出现重复的情况
+		String shortName = sequenceType.getShortName();
+		for(int i = 0;i<size;i++) {
+			Long data = result + i;//i*步长，默认步长为1
+			String sequenceResult = String.format("%018d", data);
+			sequenceResult = shortName + sequenceResult;
+			list.add(sequenceResult);
+		}
+		param.put("incrNum", size+"");
+		baseMapper.updateSequenceIndexData(param);
+	}
+		return list;
+	}
+	
+	
+    /**
+     * 获取序列
+     * @param list
+     * @param index
+     * @return
+     */
+    public  static String getSequenceStr(List<String> list, int index) {
+        if(StringUtil.isEmptyList(list) || index >= list.size()) {
+            return null;
+        }
+        else {
+            return list.get(index);
+        }
+    }
 	/**
 	 * 根据採番名採番
 	 *
@@ -560,7 +616,7 @@ public class CommonUtil {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return false;
@@ -832,6 +888,34 @@ public class CommonUtil {
 		}
 		return null!=codeName?codeName:"";
 	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCode(String orgCode){
+		if(StringUtil.isEmpty(orgCode)){
+			if(MultilevelDataAuthorityUtil.isEnabled()){
+				orgCode = getInstitutionCodeByLoginUser_ms();
+			}else{
+				// 银行模式下 只有一个总行  直接查总行对应的 code
+				orgCode = baseCommonService.getYHGeneralBankCode();
+			}
+		}
+		String code = baseCommonService.selectPbcBankCode(orgCode);
+		return null!=code?code:"";
+	}
+
+	/**
+	 * 根据登录用户获取当前机构的登记编码
+	 * “机构登记银行代码管理”模块没有维护当前机构机构代码时，也为空，提交时提醒，现在这种情况还是展示默认值只C1111； update by leipeng 20200727
+	 * @return
+	 */
+	public static String selectPbcBankCodeBack(String pbcBankCode){
+		String code = baseCommonService.selectPbcBankCodeBack(pbcBankCode);
+		return null!=code?code:"";
+	}
 	
 	
 	// 微服务版本获取登录用户的机构类型
@@ -899,6 +983,24 @@ public class CommonUtil {
 	 */
 	public static String getYHGeneralBankCode(){
 		return baseCommonService.getYHGeneralBankCode();
+	}
+	
+	/**
+	 * 主要功能:判断字符串是否为日期 注意事项:无
+	 *
+	 * @param str
+	 *            日期字符串 yyyy-MM-dd
+	 * @return 是否
+	 */
+	public static boolean isEnDateStr(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(DateUtil.DEFAULT_DATE_FORMAT_EN);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

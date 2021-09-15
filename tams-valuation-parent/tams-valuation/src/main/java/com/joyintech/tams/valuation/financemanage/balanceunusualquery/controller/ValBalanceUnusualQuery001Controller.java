@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.financemanage.balanceunusualquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +98,7 @@ public class ValBalanceUnusualQuery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public List<ValBalanceUnusualQuery001Dto> findPage()
-        throws Exception {
+         {
         return valBalanceUnusualQuery001Service.getAllList(RequestUtil.getPageParam());
     }
     
@@ -112,7 +113,7 @@ public class ValBalanceUnusualQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             List<ValBalanceUnusualQuery001Dto> listdto;
             if (datas == null) {

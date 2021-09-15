@@ -391,7 +391,20 @@ public interface PaActiveRemind001Mapper {
      * @see
      * @since 1.0
      */
-    Map<String, Object> searchCountR10S1(Map<String, Object> param);
+    Map<String, Object> searchCountR11S1(Map<String, Object> param);
     //add by chenjiaxing 分销缴款提醒 20210728
-    
+
+    /**
+     查询数据修改 R10S1数量
+     * @param param
+     * @return
+     */
+    Map<String, Object> searchCountR10S1(Map<String, Object> param);
+
+    /**
+     查询数据修改 R10S2数量
+     * @param param
+     * @return
+     */
+    Map<String, Object> searchCountR10S2(Map<String, Object> param);
 }

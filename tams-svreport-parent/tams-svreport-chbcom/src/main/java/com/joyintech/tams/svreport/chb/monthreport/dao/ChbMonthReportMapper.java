@@ -7,7 +7,9 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReport;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthReportMapper {
     int deleteByPrimaryKey(String reportuuid);
 

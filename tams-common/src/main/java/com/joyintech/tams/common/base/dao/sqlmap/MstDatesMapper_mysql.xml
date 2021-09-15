@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstDatesMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstDates" >
+        <id column="DATES" property="dates" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        DATES DATES, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstDatesMapper.Base_Column_List" />
+        from MST_DATES
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstDatesMapper.Base_Column_List" />
+        from MST_DATES
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.util.Date" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstDatesMapper.Base_Column_List" />
+        from MST_DATES
+        where DATES = #{dates,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.util.Date" >
+        delete from MST_DATES
+        where DATES = #{dates,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstDates" >
+        insert into MST_DATES (DATES, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{dates,jdbcType=DATE}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstDates" >
+        insert into MST_DATES
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="dates != null" >
+                DATES,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="dates != null" >
+                #{dates,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstDates" >
+        insert into MST_DATES(DATES, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select DATES, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from MST_DATES
+             where 1 = 1 and DATES = #{dates,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstDates" >
+        update MST_DATES
+        <set >
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where DATES = #{dates,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstDates" >
+        update MST_DATES
+        set UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where DATES = #{dates,jdbcType=DATE}
+    </update>
+</mapper>

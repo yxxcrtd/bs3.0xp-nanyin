@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.valuationparametermanage.shadowpricescheme.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 	     */
 	    @ResponseBody
 		@RequestMapping("findShadowPrice")
-		public Page<ShadowPriceScheme001Dto> findShadowPrice() throws Exception {
+		public Page<ShadowPriceScheme001Dto> findShadowPrice() {
 			Page<ShadowPriceScheme001Dto> page = shadowPriceScheme001Service
 					.findShadowPrice(RequestUtil.getPageParam());
 			return page;		
@@ -113,7 +114,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 	     */
         @ResponseBody
   		@RequestMapping("findShadowPriceDetial")
-  		public Page<ShadowPriceScheme002Dto> findShadowPriceDetial() throws Exception {
+  		public Page<ShadowPriceScheme002Dto> findShadowPriceDetial() {
   			Page<ShadowPriceScheme002Dto> page = shadowPriceScheme002Service
   					.findShadowPriceDetial(RequestUtil.getPageParam());
   			return page;
@@ -131,7 +132,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 		 */
 		@ResponseBody
 		@RequestMapping("check")
-		public AjaxResult check(@RequestBody ShadowPriceScheme001Dto dto, BindingResult result) throws Exception {
+		public AjaxResult check(@RequestBody ShadowPriceScheme001Dto dto, BindingResult result) {
 			Map<String, Object> params = Maps.newHashMap();
 			params.put("schId", dto.getSchId());
 			if (StringUtils.isNotEmpty(dto.getSchId())) {// 删除影子定价方案验证
@@ -181,7 +182,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 		 */
 	    @ResponseBody
 	    @RequestMapping(value = "deleteShadowPriceSch", method = RequestMethod.POST)
-	    public AjaxResult deleteShadowPriceSch(@RequestBody @Valid ShadowPriceScheme001Dto dto, BindingResult br) throws Exception{
+	    public AjaxResult deleteShadowPriceSch(@RequestBody @Valid ShadowPriceScheme001Dto dto, BindingResult br){
 	        
 	        if(br.hasErrors()){
 	            return new AjaxResult(br);
@@ -231,7 +232,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 	     */
 	    @ResponseBody
 	    @RequestMapping(value = "setDefaultScheme", method = RequestMethod.POST)
-	    public AjaxResult setDefaultScheme(@RequestBody @Valid ShadowPriceScheme001Dto dto, BindingResult br) throws Exception{
+	    public AjaxResult setDefaultScheme(@RequestBody @Valid ShadowPriceScheme001Dto dto, BindingResult br) {
 	        
 	        if(br.hasErrors()){
 	            return new AjaxResult(br);
@@ -308,7 +309,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 		 */
 		@ResponseBody
 		@RequestMapping("deleteCheck")
-		public AjaxResult deleteCheck(@RequestBody @Validated({ValidateGroupDelete.class}) ShadowPriceScheme002Dto dto, BindingResult result) throws Exception {
+		public AjaxResult deleteCheck(@RequestBody @Validated({ValidateGroupDelete.class}) ShadowPriceScheme002Dto dto, BindingResult result){
 //			 //判断当前流程是否存在
 //			 ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
 //			 List<String> resultList = shadowPriceScheme001Service.getBusinessDataInFlow(processMark);
@@ -358,7 +359,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 		 */
 	    @ResponseBody
 	    @RequestMapping(value = "deleteShadowPriceDetailBatch", method = RequestMethod.POST)
-	    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ShadowPriceScheme002Dto dto, BindingResult br) throws Exception{
+	    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) ShadowPriceScheme002Dto dto, BindingResult br){
 	        
 	        if(br.hasErrors()){
 	            return new AjaxResult(br);
@@ -406,7 +407,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 		 * @throws Exception
 		 */
 		@RequestMapping(ACTION_EXPORT)
-		public ResponseEntity<byte[]> exportTypeAssets() throws Exception {
+		public ResponseEntity<byte[]> exportTypeAssets() throws IOException {
 			Map<String, Object> paraMap = RequestUtil.getPageParam();
 			String datas = this.getParam("datas");
 			List<ShadowPriceScheme002Dto> listdto;

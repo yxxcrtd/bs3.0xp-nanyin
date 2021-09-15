@@ -108,7 +108,7 @@ public class PdCalculateProcessService {
                 String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, variablePdCalculateDto.getGradeOrgId());
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                    readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
+                    readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
                 //=====记录计算错误日志=====end=====
                 return null;
             }
@@ -122,7 +122,7 @@ public class PdCalculateProcessService {
                 //=====记录计算错误日志=====start=====
                 logMsg ="【PD计算批处理】：Z值权重未维护";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                    readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
+                    readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
                 //=====记录计算错误日志=====end=====
                 return null;
             }
@@ -154,7 +154,7 @@ public class PdCalculateProcessService {
                         //=====记录计算错误日志=====start=====
                         logMsg ="【PD计算批处理】：【"+yearStr+"】年PD未维护";
                         impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                            readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+                            readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_警告.getValue(), BATCH_LOG_RESULTS);
                         //=====记录计算错误日志=====end=====
                     }
                 }
@@ -187,7 +187,7 @@ public class PdCalculateProcessService {
                     //=====记录计算错误日志=====start=====
                     logMsg ="【PD计算批处理】：无法判断【机构名称】是否金融机构";
                     impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
+                        readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
                     //=====记录计算错误日志=====end=====
                     return null;
                 }
@@ -265,7 +265,7 @@ public class PdCalculateProcessService {
                         //=====记录计算错误日志=====start=====
                         logMsg ="【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度Z值未维护";
                         impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                            readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+                            readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_警告.getValue(), BATCH_LOG_RESULTS);
                          //=====记录计算错误日志=====end=====
                     }
                 }
@@ -445,7 +445,7 @@ public class PdCalculateProcessService {
             //=====记录计算错误日志=====start=====
             logMsg ="【PD计算批处理】：计算异常";
             impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+                readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_警告.getValue(), BATCH_LOG_RESULTS);
             e.printStackTrace();
             //=====记录计算错误日志=====end=====
             return null;
@@ -474,6 +474,8 @@ public class PdCalculateProcessService {
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
+        // 初始日期设为本月1号
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         for (long d = cal.getTimeInMillis(); d <= endDate.getTime(); d = getYearMonAddOne(cal,type)) {
             yearList.add(sdf.format(d));
         }

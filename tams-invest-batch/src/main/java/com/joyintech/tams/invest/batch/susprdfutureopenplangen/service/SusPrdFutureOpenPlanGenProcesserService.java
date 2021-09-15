@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,11 @@ import com.joyintech.tams.invest.common.CommonUtil;
 @Service
 @Scope("prototype")
 public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(SusPrdFutureOpenPlanGenProcesserService.class);
+
 	@Autowired
 	private SusPrdFutureOpenPlanGenMapper susPrdFutureOpenPlanGenMapper;
 
@@ -55,8 +61,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	 * @param susprdfutureopenplangendto
 	 * @param years 推迟年数
 	 */
-	public BussFinProductOpenPlanDto executeDto(SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto,int years)
-			throws Exception {
+	public BussFinProductOpenPlanDto executeDto(SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto,int years){
 
 		BussFinProductOpenPlanDto bussFinProductOpenPlanDto = new BussFinProductOpenPlanDto();
 		BeanUtil.copyPropertiesIgnoreNull(bussFinProductOpenPlanDto, susprdfutureopenplangendto);
@@ -101,7 +106,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	}
 
 	public List<FinOpenPlan> executeList(List<FinOpenPlan> finOpenPlanList,
-			SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto) throws Exception {
+			SusPrdFutureOpenPlanGenDto susprdfutureopenplangendto) {
 		// 经过处理的List<开放计划>
 		List<FinOpenPlan> newFinOpenPlanList = new ArrayList<FinOpenPlan>();
 
@@ -159,7 +164,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, SusPrdFutureOpenPlanGenDto popuDto) throws Exception {
+	public List<FinCashPlan> executePayList(List<FinCashPlan> finCashPlanList, SusPrdFutureOpenPlanGenDto popuDto) {
 		// 经过处理的List<付息计划>
 		List<FinCashPlan> newFinCashPlanList = new ArrayList<FinCashPlan>();
 
@@ -199,7 +204,7 @@ public class SusPrdFutureOpenPlanGenProcesserService extends BaseService {
 		try {
 			twoYearLaterDate = new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(nowDate)).plus(years, ChronoUnit.YEARS).toString());
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return twoYearLaterDate;
 	}

@@ -15,6 +15,7 @@ import java.util.Date;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.report.common.base.annotate.BusinessKey;
 import com.joyintech.tams.report.common.base.annotate.DictFormat;
 import com.joyintech.tams.report.common.base.annotate.TableName;
@@ -23,7 +24,7 @@ import com.joyintech.tams.constant.DictCode;
 
 /**
  * 投资者持有信息登记dto
- * 
+ *
  * @author zuoyinyi
  * @version 1.0 2018年5月8日
  * @see InvestorsHoldInfoRegist001Dto
@@ -107,51 +108,51 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
      * 是否有逻辑校验
      */
     private String isLogicCheck;
-    
+
     /**
      * 持有金额 导出中债excel用
      */
     private String amountExportExcel;
-    
+
     /**
      * 持有份额 导出中债excel用
      */
     private String qtyExportExcel;
-    
+
     /**
      * 转换人民币金额 导出中债excel用
      */
     private String cnyAmtExportExcel;
-    
-    
+
+
 
     public String getAmountExportExcel() {
-		return amountExportExcel;
-	}
+        return amountExportExcel;
+    }
 
-	public void setAmountExportExcel(String amountExportExcel) {
-		this.amountExportExcel = amountExportExcel;
-	}
+    public void setAmountExportExcel(String amountExportExcel) {
+        this.amountExportExcel = amountExportExcel;
+    }
 
-	public String getQtyExportExcel() {
-		return qtyExportExcel;
-	}
+    public String getQtyExportExcel() {
+        return qtyExportExcel;
+    }
 
-	public void setQtyExportExcel(String qtyExportExcel) {
-		this.qtyExportExcel = qtyExportExcel;
-	}
+    public void setQtyExportExcel(String qtyExportExcel) {
+        this.qtyExportExcel = qtyExportExcel;
+    }
 
-	public String getCnyAmtExportExcel() {
-		return cnyAmtExportExcel;
-	}
+    public String getCnyAmtExportExcel() {
+        return cnyAmtExportExcel;
+    }
 
-	public void setCnyAmtExportExcel(String cnyAmtExportExcel) {
-		this.cnyAmtExportExcel = cnyAmtExportExcel;
-	}
+    public void setCnyAmtExportExcel(String cnyAmtExportExcel) {
+        this.cnyAmtExportExcel = cnyAmtExportExcel;
+    }
 
-	/**
+    /**
      * 获取 flag
-     * 
+     *
      * @return flag.
      */
     public String getFlag() {
@@ -160,7 +161,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 flag
-     * 
+     *
      * @param flag flag
      */
     public void setFlag(String flag) {
@@ -169,7 +170,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 statusCode
-     * 
+     *
      * @return statusCode.
      */
     public String getStatusCode() {
@@ -178,7 +179,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 statusCode
-     * 
+     *
      * @param statusCode statusCode
      */
     public void setStatusCode(String statusCode) {
@@ -187,7 +188,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 ccyCode
-     * 
+     *
      * @return ccyCode.
      */
     public String getCcyCode() {
@@ -196,7 +197,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 ccyCode
-     * 
+     *
      * @param ccyCode ccyCode
      */
     public void setCcyCode(String ccyCode) {
@@ -205,7 +206,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 sendStatusCode
-     * 
+     *
      * @return sendStatusCode.
      */
     public String getSendStatusCode() {
@@ -214,7 +215,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 sendStatusCode
-     * 
+     *
      * @param sendStatusCode sendStatusCode
      */
     public void setSendStatusCode(String sendStatusCode) {
@@ -223,16 +224,20 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 submitFeedbackStatus
-     * 
+     *
      * @return submitFeedbackStatus.
      */
     public String getSubmitFeedbackStatus() {
         return submitFeedbackStatus;
     }
 
+    public String getSubmitFeedbackStatusStr() {
+        return submitFeedbackStatus==null?null:SysDataUtil.getNameFromDataDict(DictCode.报送反馈状态, this.submitFeedbackStatus);
+    }
+
     /**
      * 设置 submitFeedbackStatus
-     * 
+     *
      * @param submitFeedbackStatus submitFeedbackStatus
      */
     public void setSubmitFeedbackStatus(String submitFeedbackStatus) {
@@ -241,7 +246,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 registBankCode
-     * 
+     *
      * @return registBankCode.
      */
     @Override
@@ -251,7 +256,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 registBankCode
-     * 
+     *
      * @param registBankCode registBankCode
      */
     @Override
@@ -261,7 +266,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 prdRegistCode
-     * 
+     *
      * @return prdRegistCode.
      */
     @Override
@@ -271,7 +276,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 prdRegistCode
-     * 
+     *
      * @param prdRegistCode prdRegistCode
      */
     @Override
@@ -281,7 +286,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 indentifyMark
-     * 
+     *
      * @return indentifyMark.
      */
     @Override
@@ -291,7 +296,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 indentifyMark
-     * 
+     *
      * @param indentifyMark indentifyMark
      */
     @Override
@@ -301,7 +306,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 ccy
-     * 
+     *
      * @return ccy.
      */
     @Override
@@ -311,7 +316,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 ccy
-     * 
+     *
      * @param ccy ccy
      */
     @Override
@@ -321,7 +326,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 holdDate
-     * 
+     *
      * @return holdDate.
      */
     @Override
@@ -331,7 +336,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 holdDate
-     * 
+     *
      * @param holdDate holdDate
      */
     @Override
@@ -359,7 +364,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 holdDateForExportCBExcel
-     * 
+     *
      * @return holdDateForExportCBExcel.
      */
     public String getHoldDateForExportCBExcel() {
@@ -369,7 +374,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 holdDateForExportCBExcel
-     * 
+     *
      * @param holdDateForExportCBExcel holdDateForExportCBExcel
      */
     public void setHoldDateForExportCBExcel(String holdDateForExportCBExcel) {
@@ -378,7 +383,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 holdDateForExport
-     * 
+     *
      * @return holdDateForExport.
      */
     public String getHoldDateForExport() {
@@ -388,7 +393,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 holdDateForExport
-     * 
+     *
      * @param holdDateForExport holdDateForExport
      */
     public void setHoldDateForExport(String holdDateForExport) {
@@ -397,7 +402,7 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 获取 isLogicCheck
-     * 
+     *
      * @return isLogicCheck.
      */
     public String getIsLogicCheck() {
@@ -406,25 +411,57 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
 
     /**
      * 设置 isLogicCheck
-     * 
+     *
      * @param isLogicCheck isLogicCheck
      */
     public void setIsLogicCheck(String isLogicCheck) {
         this.isLogicCheck = isLogicCheck;
     }
-    
+
     /**
      * @Fields submitSendStatus : (发送状态)
      */
-     private String submitSendStatus;
+    private String submitSendStatus;
 
 
 
- 	public String getSubmitSendStatus() {
- 		return submitSendStatus;
- 	}
+    public String getSubmitSendStatus() {
+        return submitSendStatus;
+    }
 
- 	public void setSubmitSendStatus(String submitSendStatus) {
- 		this.submitSendStatus = submitSendStatus;
- 	}
+    public void setSubmitSendStatus(String submitSendStatus) {
+        this.submitSendStatus = submitSendStatus;
+    }
+
+    // 导出报错新添加的 （徽商） njl  start
+    public String getHoldDateStr() {
+        if(StringUtil.isNotEmpty(this.getHoldDate())){
+            return DateUtil.formatDateTime(this.getHoldDate());
+        }
+        return null;
+    }
+
+    public String getUpdateTimeStr() {
+        return DateUtil.formatDateTime(super.getUpdateTime());
+    }
+
+
+    /**
+     * 取得 报送日期
+     * @return 报送日期
+     */
+    public String getSubmitTimeStr() {
+        return DateUtil.formatDateTime(super.getSubmitTime());
+    }
+
+
+    /**
+     * 取得 中债报送截止日
+     * @return 中债报送截止日
+     */
+    public String getChbSubmitDeadlineStr() {
+        return DateUtil.formatDateTime(super.getChbSubmitDeadline());
+    }
+
+    // 导出报错新添加的 （徽商） njl  end
 }

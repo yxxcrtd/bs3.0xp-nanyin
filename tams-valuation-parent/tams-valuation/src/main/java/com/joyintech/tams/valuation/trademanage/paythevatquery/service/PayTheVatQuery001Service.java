@@ -47,7 +47,7 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<PayTheVatQuery001Dto> findByPage(Map<String, Object> params) throws Exception {
+	public Page<PayTheVatQuery001Dto> findByPage(Map<String, Object> params) {
 
 		// 产品代码多选
 		if (StringUtil.isNotEmpty(params.get("booksetId"))) {
@@ -82,7 +82,7 @@ public class PayTheVatQuery001Service extends CommonExportService<PayTheVatQuery
 	 * @return
 	 * @throws Exception
 	 */
-	public List<PayTheVatQuery001Dto> findByList(Map<String, Object> params) throws Exception {
+	public List<PayTheVatQuery001Dto> findByList(Map<String, Object> params) {
 
 		// 产品编号多选
 		if (StringUtil.isNotEmpty(params.get("booksetId"))) {

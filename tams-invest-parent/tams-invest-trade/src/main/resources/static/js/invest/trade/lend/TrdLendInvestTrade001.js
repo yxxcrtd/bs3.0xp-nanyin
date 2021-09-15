@@ -61,6 +61,7 @@
         	,{field:'workflowId', visible: false}
         	,{field:'workflowStatus', visible: false}
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
         //loadonce:true
     });
   

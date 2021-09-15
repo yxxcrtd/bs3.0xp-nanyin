@@ -67,7 +67,7 @@ public class RepFinProductPerIssRegistService extends BaseService<RepFinProductP
      * @since 1.0
      */
     public Page<RepFinProductPerIssRegistDto> selectForPage(int page, int length,
-                                                            Map<String, Object> pageParam) throws Exception {
+                                                            Map<String, Object> pageParam) {
         pageParam.put("recruitmentSDate", pageParam.get("recruitmentSDate"));
         pageParam.put("recruitmentEDate", pageParam.get("recruitmentEDate"));
         pageParam.put("dateSDate", pageParam.get("dateSDate"));
@@ -95,7 +95,7 @@ public class RepFinProductPerIssRegistService extends BaseService<RepFinProductP
      * @since 1.0
      */
     public Page<RepFinProductPerIssRegistDto> selectForExport(int page, int length,
-                                                              Map<String, Object> param) throws Exception {
+                                                              Map<String, Object> param) {
         String repFinprodId = (String)param.get("repFinprodId");
         if(StringUtil.isNotEmpty(repFinprodId)){
             param.put("repFinprodId", StringUtil.splitToList(GlobalConstant.COMMA,repFinprodId));

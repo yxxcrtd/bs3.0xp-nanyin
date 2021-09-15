@@ -93,7 +93,7 @@ public class SendFtpUtil {
      *            端口
      * @throws JSchException
      */
-    public void loginById(String userName, String identity, String host, int port) throws Exception {
+    public void loginById(String userName, String identity, String host, int port) throws JSchException {
         try {
             // 接口 SFTP 服务配置
             JSch jsch = new JSch();
@@ -110,7 +110,7 @@ public class SendFtpUtil {
             sftp = (ChannelSftp) channel;
         } catch (JSchException e) {
             logger.error("", e);
-            throw new Exception("登录文件服务器失败");
+            throw new JSchException("登录文件服务器失败");
         }
     }
 
@@ -347,9 +347,11 @@ public class SendFtpUtil {
         catch (SftpException e) {
             logger.error("未找到文件:" + pathname, e);
         }
-        for (LsEntry lsEntry : vector) {
-            if (!".".equals(lsEntry.getFilename()) && !"..".equals(lsEntry.getFilename())) {
-                res.add(lsEntry.getFilename());
+        if (vector != null){
+            for (LsEntry lsEntry : vector) {
+                if (!".".equals(lsEntry.getFilename()) && !"..".equals(lsEntry.getFilename())) {
+                    res.add(lsEntry.getFilename());
+                }
             }
         }
         return res;

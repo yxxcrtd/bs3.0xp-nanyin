@@ -101,7 +101,7 @@ public class RepFinProductRenewalRegist001Controller extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repFinProductRenewalRegist001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

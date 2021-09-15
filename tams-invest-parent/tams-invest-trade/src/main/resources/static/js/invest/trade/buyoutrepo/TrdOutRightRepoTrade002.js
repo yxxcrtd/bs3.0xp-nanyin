@@ -797,7 +797,7 @@
             var calendarId = $("#TrdOutRightRepoTrade002_dealCalId").val();
             var dealBussId = $('#dealBussId').val();
             if(vdate&&calendarId){
-                Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/isDealCalendarHoliday', {
+                /*Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/isDealCalendarHoliday', {
                     calendarId: calendarId,
                     mpayDate: vdate
                 }, function (date) {
@@ -809,7 +809,15 @@
                             $("#TrdOutRightRepoTrade002_vdate").val(date).trigger('change');
                         });
                     }
-                },false);
+                },false);*/
+                //
+               Joyin.ajaxSync(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getNextWorkDay', {
+                     'calendarId': calendarId,
+                      'tradeDate': tradeDate,
+                      'settleSpeed': num
+                }, function (date) {
+                      $("#TrdOutRightRepoTrade002_vdate").val(date).trigger('change');;
+                 });
             }
     	}
 

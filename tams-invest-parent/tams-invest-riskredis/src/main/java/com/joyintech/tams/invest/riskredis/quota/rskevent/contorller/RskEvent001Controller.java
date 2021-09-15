@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.riskredis.quota.rskevent.contorller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -71,12 +72,11 @@ public class RskEvent001Controller extends BaseController {
 	 * 画面查询方法
 	 * 
 	 * @return 所有数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<RskEvent001Dto> selectAll() throws Exception {
+	public Page<RskEvent001Dto> selectAll() {
 		Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		Object eventCode = map.get("eventCode");
 		if (StringUtil.isNotEmpty(eventCode)) {
@@ -94,12 +94,11 @@ public class RskEvent001Controller extends BaseController {
 	 * 查询画面风险事件名称联想框内容
 	 * 
 	 * @return 检索数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectMultiOptionEvent", method = RequestMethod.GET)
-	public Page<SelectOptionDto> selectMultiOptionEvent() throws Exception {
+	public Page<SelectOptionDto> selectMultiOptionEvent() {
 		Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		if(StringUtil.isNotEmpty(map.get("search"))&&StringUtil.byteLength(map.get("search").toString())>200){
 			return null;
@@ -128,13 +127,12 @@ public class RskEvent001Controller extends BaseController {
 	 * 
 	 * @param dto
 	 * @return
-	 * @throws Exception
 	 */
 	@DTXTransaction
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
 	public AjaxResult delete(@RequestBody @Validated({ ValidateGroupDelete.class }) RskEvent002Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
@@ -163,12 +161,11 @@ public class RskEvent001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 */
 //	@RequestMapping(ACTION_EXPORT)
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return rskEvent001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 

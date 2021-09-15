@@ -47,7 +47,7 @@ public class PaRskCustomerRatingService extends BaseService<PaRskCustomerRatingD
      * @since 1.0
      */
     public Page<PaRskCustomerRatingDto> selectPaRskCustomerPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
        /* return super.queryForPage(
             () -> mstMarketInstitutionsMapper.selectPaRskCustomerPage(pageParam));*/
         return super.queryForPage(page,length,() -> mstMarketInstitutionsMapper.selectMstBondCreditPage(pageParam));

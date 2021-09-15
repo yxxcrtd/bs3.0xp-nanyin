@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,7 +82,7 @@ public class ValInterestRateQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValInterestRateQuotationInfoDto> selectAllMstInterestRate()
-        throws Exception {
+         {
         Map<String, Object> pageParam = RequestUtil.getParameters(getRequest());
         SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.利率行情, null);
         List<String> intRateIdList = new ArrayList<String>();
@@ -107,7 +108,7 @@ public class ValInterestRateQuotationInfo001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return valInterestRateQuotationInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -137,8 +138,7 @@ public class ValInterestRateQuotationInfo001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValInterestRateQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValInterestRateQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

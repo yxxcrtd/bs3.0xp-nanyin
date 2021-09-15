@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.text.ParseException;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public abstract class AbstractFileImpService extends InterfService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	//文件接口，入口方法定义
-	public abstract String getInfoByInterf(String currentDate);
+	public abstract String getInfoByInterf(String currentDate) throws ParseException;
 
     /**
      * 上游接口轮询任务
@@ -104,7 +105,6 @@ public abstract class AbstractFileImpService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                     //return "fail";
                 }
@@ -116,7 +116,6 @@ public abstract class AbstractFileImpService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                    // return "fail";
                 }

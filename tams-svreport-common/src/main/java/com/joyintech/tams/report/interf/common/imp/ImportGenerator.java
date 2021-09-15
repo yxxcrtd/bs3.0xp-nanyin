@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -79,6 +80,11 @@ public final class ImportGenerator {
             if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.CHAR.name())) {
                 column.setType(JDBCType.CHAR);
                 column.setLength(col.getDataLength());
+            }
+            if(StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.VARCHAR.name())||
+            		col.getDataLength()>255){
+            	column.setType(JDBCType.CHAR);
+            	column.setLength(col.getDataLength());
             }
             // DATE
             else if (StringUtil.equalsIgnoreCase(col.getDataType(), JDBCType.DATE.name())) {
@@ -237,10 +243,10 @@ public final class ImportGenerator {
     public static boolean importToDB(ImpTable table, String path, String dataFileName,
                                      List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (!path.endsWith("/")) {
-            path = path + "/";
+            path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
-        File tmpFile = new File(absoultPath);
+        File tmpFile = new SafelyFile(absoultPath);
         FileUtils.writeLines(tmpFile, "UTF-8", content);
 
         // 系统是否使用的db2数据库
@@ -259,10 +265,18 @@ public final class ImportGenerator {
                 ReportGlobalConstant.SYS_PARA_REP_DB2_SERVER_FTP_FILEPATH);
 
             int ftpPort = Integer.valueOf(repDb2ServerFtpProt);
+            FileInputStream fileInputStream = null;
+            try{
+                fileInputStream = new FileInputStream(tmpFile);
+                FtpUtil.uploadFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
+                        repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName,
+                        fileInputStream);
+            }finally {
+                if(fileInputStream != null){
+                    fileInputStream.close();
+                }
+            }
 
-            FtpUtil.uploadFile(repDb2ServerFtpIp, ftpPort, repDb2ServerFtpUser,
-            		repDb2ServerFtpPassword, repDb2ServerFtpFilepath, dataFileName,
-                new FileInputStream(tmpFile));
 
             String importFullPath = repDb2ServerFtpFilepath;
             if (!StringUtil.endsWith(importFullPath, "/")) {
@@ -294,6 +308,9 @@ public final class ImportGenerator {
             param.setLog(path + StringUtil.lowerCase(table.getName()) + ".log");
             param.setTable(table);
             param.setRows(reportInterfOneTimeSqlLdrCommitCount);
+            
+            param.setBadFileDir(CacheUtil.getSysParam(
+                ReportGlobalConstant.SVR_BAD_FILE_PATH));
 
             // add by etliu 20180926 start
 //            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());

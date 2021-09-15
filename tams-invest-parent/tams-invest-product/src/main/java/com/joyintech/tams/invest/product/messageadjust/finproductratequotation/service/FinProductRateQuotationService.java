@@ -48,10 +48,10 @@ public class FinProductRateQuotationService extends CommonExportService<FinProdu
      * @param param Map<String,Object>
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String,Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String,Object> param) {
         User user = SecurityUtil.getLoginUser();
         param.put("userId", user.getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinProductRateQuotation/getFinprodId",param,SelectOptionDto.class);      
     }
     
@@ -109,12 +109,12 @@ public class FinProductRateQuotationService extends CommonExportService<FinProdu
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getSelectFinprodId(Map<String,Object> param){
+    public Page<SelectOptionDto> getSelectFinprodId(Map<String,Object> param){
         if(!StringUtil.isNotEmpty(param.get("initValue"))){
             User user = SecurityUtil.getLoginUser();
             param.put("userId", user.getUserName()); 
         }
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/FinProductRateQuotation/getSelectFinprodId",param,SelectOptionDto.class); 
     }
     /**

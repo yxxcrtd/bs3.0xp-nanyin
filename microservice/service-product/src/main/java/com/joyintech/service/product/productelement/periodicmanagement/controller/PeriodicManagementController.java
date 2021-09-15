@@ -33,9 +33,10 @@ public class PeriodicManagementController {
 	@Autowired
 	private PeriodicManagementService periodicManagementService;
 	
-	@PostMapping("getFinprodIds")
-	public List<SelectOptionDto> getFinprodIds(@RequestBody Map<String, Object> param){
-		return periodicManagementService.getFinprodIds(param);
+	@PostMapping("getFinprodIds/{page}/{length}")
+	public Page<SelectOptionDto> getFinprodIds(@RequestBody Map<String, Object> param,
+											   @PathVariable("page") int page, @PathVariable("length") int length){
+		return periodicManagementService.getFinprodIds(page, length, param);
 	}
 	
 	/**
@@ -47,13 +48,13 @@ public class PeriodicManagementController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<PeriodicManagement001Dto> selectForPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return periodicManagementService.selectForPage(page, length, param);
 	}
 
 	@PostMapping("getInvestCycle/{page}/{length}")
 	public Page<SelectOptionDto> getInvestCycle(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return periodicManagementService.getInvestCycle(page, length, param);
 	}
 	

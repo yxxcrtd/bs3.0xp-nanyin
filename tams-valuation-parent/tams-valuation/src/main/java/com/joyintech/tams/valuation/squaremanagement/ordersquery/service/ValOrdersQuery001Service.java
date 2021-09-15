@@ -45,7 +45,7 @@ public class ValOrdersQuery001Service extends CommonExportService<ValOrdersQuery
 //     * @return 表格信息
 //     * @throws Exception 
 //     */
-//    public Page<ValOrdersQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+//    public Page<ValOrdersQuery001Dto> findPage(Map<String, Object> params)   {
 //        //关联入账信息表的业务编号和业务表--对应金融产品表
 //        params.put("busiTable", DictCodeList.业务表_结算指令表.getValue());
 //        return super.queryForPage(()-> mapper.queryPageList(params));
@@ -58,7 +58,7 @@ public class ValOrdersQuery001Service extends CommonExportService<ValOrdersQuery
       * @return 表格信息
       * @throws Exception 
       */
-     public Page<ValOrdersQuery001Dto> findPage(Map<String, Object> params) throws Exception {
+     public Page<ValOrdersQuery001Dto> findPage(Map<String, Object> params)  {
          return restTemplate.postForPage(
              ServiceApplication.VALUATION_SERVICE_NAME + "/ValOrdersQuery001/findPage",
              params, ValOrdersQuery001Dto.class);

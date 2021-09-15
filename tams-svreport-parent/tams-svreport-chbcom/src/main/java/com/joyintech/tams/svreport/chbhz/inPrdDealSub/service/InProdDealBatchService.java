@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.chbreport.codecheck.service.CommonCodeCheckTmpBatchService;
@@ -284,7 +285,7 @@ public class InProdDealBatchService extends FileImpService {
 				dateList = submitDateMap.get(key);
 			} else {
 				dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail,
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, DateUtil.parse(sub.getMdate()));
+						sub.getStatus(), dateMap, DateUtil.parse(sub.getMdate()));
 				submitDateMap.put(key, dateList);
 			}
 
@@ -331,7 +332,7 @@ public class InProdDealBatchService extends FileImpService {
 	public boolean compareDealRegData(ChbPrdDealSub dto, ChbPrdDealSub regdto) {
 		ChbPrdDealSub compare1 = genIssueDto(dto);
 		ChbPrdDealSub compare2 = genIssueDto(regdto);
-		if (JSON.toJSONString(compare1).equals(JSON.toJSONString(compare2))) {
+		if (JSON.toJSONString(compare1,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(compare2,SerializerFeature.WriteNullStringAsEmpty))) {
 			return true;
 		} else {
 			return false;
@@ -482,7 +483,7 @@ public class InProdDealBatchService extends FileImpService {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(sub.getProdId());
 		buffer.append("|");
-		buffer.append(sub.getMdate());
+		buffer.append(DateUtil.format(DateUtil.parse(sub.getMdate()),"yyyy-MM-dd"));
 		return buffer.toString();
 	}
 

@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prdendsub.service;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdEndSubDto;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,7 +54,7 @@ public class SdProdTerminationBatchService {
 	@Autowired
 	private ProdTerminationRegist001Service prodTerminationRegist001Service;
 	
-	public void sendTerminationInfoMsg(Date batchDate, List<String> prodIdList) throws Exception {
+	public void sendTerminationInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品终止信息登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		List<SdProdTerminationSvrDto> listSub = sdProdTerminationSvrMapper.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
@@ -85,18 +87,18 @@ public class SdProdTerminationBatchService {
 		List<ChbPrdEndSubDto> dataList = new ArrayList<ChbPrdEndSubDto>();
 		for(SdProdTerminationSvrDto sdDto : listSub){
 			ChbPrdEndSubDto target = new ChbPrdEndSubDto();
-			BeanUtils.copyProperties(target, sdDto); 
+			BeanUtils.copyProperties(target, sdDto);
 			dataList.add(target);
 		}
 
-		this.sendBatchCommon(dataList);
+		this.sendBatchCommon(dataList, SendDataCheckType.报送);
 	}
 
 	/**
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdEndSubDto> dataList) throws Exception{
+	public void sendBatchCommon(List<ChbPrdEndSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		//3、调用【产品终止信息登记】报送组件
 		logger.debug("产品终止信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数
@@ -112,14 +114,14 @@ public class SdProdTerminationBatchService {
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
 			sdProdTerminationBatchServiceOneService
-					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult);
+					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult, sendDataCheckType);
 		}else{
 			// 分批次数
 			int part = dataCount / dataCountPerTime;
 			for (int i = 0; i < part; i++ ) {
 				sdProdTerminationBatchServiceOneService
 						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList.subList(0, dataCountPerTime),
-								sendResult);
+								sendResult, sendDataCheckType);
 				newDataList.subList(0, dataCountPerTime).clear();
 				handleIndex ++;
 
@@ -127,7 +129,7 @@ public class SdProdTerminationBatchService {
 			// 最后剩下的数据
 			if (!StringUtil.isEmptyList(newDataList)) {
 				sdProdTerminationBatchServiceOneService
-						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult);
+						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult, sendDataCheckType);
 			}
 		}
 		//ChbMsgReturnInfoDto returnMsg = msgSend.sendChbPrdEndSubMsgs(dataList);

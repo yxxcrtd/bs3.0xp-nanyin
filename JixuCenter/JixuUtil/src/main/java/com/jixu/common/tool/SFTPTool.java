@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +65,7 @@ public class SFTPTool {
 	 * @throws Exception
 	 * @throws JSchException
 	 */
-	public void login(String userName, String password, String host, int port, String sftpLoginType) throws Exception {
+	public void login(String userName, String password, String host, int port, String sftpLoginType) throws JSchException {
 
 		// 私钥登录ssh服务
 		if ("02".equals(sftpLoginType)) {
@@ -110,7 +112,7 @@ public class SFTPTool {
 	 * @param port     端口
 	 * @throws JSchException
 	 */
-	public void loginById(String userName, String identity, String host, int port) throws Exception {
+	public void loginById(String userName, String identity, String host, int port) {
 		try {
 			// 接口 SFTP 服务配置
 			JSch jsch = new JSch();
@@ -127,7 +129,7 @@ public class SFTPTool {
 			sftp = (ChannelSftp) channel;
 		} catch (JSchException e) {
 			logger.error("", e);
-			throw new Exception("登录文件服务器失败");
+			throw new ServiceException("登录文件服务器失败");
 		}
 	}
 
@@ -189,7 +191,8 @@ public class SFTPTool {
 			try {
 				sftp.ls(dir);
 			} catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + dir);
+//				System.out.println("服务器上没有该目录：" + dir);
+				logger.info("服务器上没有该目录：" + dir);
 				sftp.mkdir(dir);
 			}
 			sftp.cd(dir);
@@ -234,22 +237,22 @@ public class SFTPTool {
 	 * @param remote
 	 * @param localDir
 	 */
-	public void getFile(String remotePath, String remoteFile, String localDir) throws Exception {
+	public void getFile(String remotePath, String remoteFile, String localDir) throws SftpException {
 		/**
 		 * 本地文件夹
 		 */
-		File temp = new File(localDir);
+		File temp = new SafelyFile(localDir);
 		if (!temp.exists()) {
 			temp.mkdirs();
 		}
-		File file = new File(remoteFile);
+		File file = new SafelyFile(remoteFile);
 		try {
 			sftp.ls(remoteFile);
 		} catch (SftpException e) {
 			logger.error("服务器上没有该目录：" + remoteFile);
 			return;
 		}
-		File localfile = new File(localDir + File.separator + file.getName());
+		File localfile = new SafelyFile(localDir + File.separator + file.getName());
 		String localfileName = localDir + File.separator + file.getName();
 		if (!localfile.exists()) {
 			sftp.get(remoteFile, localfileName);
@@ -259,7 +262,7 @@ public class SFTPTool {
 				logger.debug("文件已经删除");
 				sftp.get(remoteFile, localfileName);
 			} else {
-				throw new Exception("无法删除本地文件: " + localfileName);
+				throw new ServiceException("无法删除本地文件: " + localfileName);
 			}
 		}
 	}
@@ -296,9 +299,9 @@ public class SFTPTool {
 	 */
 	private void lsBackup(String backupPath, String oldFileName, String backupPathName) {
 
-		File temp = new File(backupPath);
-		File backupName = new File(backupPathName);
-		File oldName = new File(oldFileName);
+		File temp = new SafelyFile(backupPath);
+		File backupName = new SafelyFile(backupPathName);
+		File oldName = new SafelyFile(oldFileName);
 		if (!temp.exists()) {
 			temp.mkdirs();
 		}
@@ -312,11 +315,11 @@ public class SFTPTool {
 	 * @param localDir
 	 * @param backupPath
 	 */
-	public void downFileOrDir(String remoteFileName, String localDir, String backupPath) throws Exception {
+	public void downFileOrDir(String remoteFileName, String localDir, String backupPath) {
 		try {
 			String curDir = "";
-			File file = new File(remoteFileName);
-			File temp = new File(localDir);
+			File file = new SafelyFile(remoteFileName);
+			File temp = new SafelyFile(localDir);
 			if (!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -339,7 +342,7 @@ public class SFTPTool {
 						downFileOrDir(remoteFileName + '/' + names.get(i), localDir + '/' + names.get(i), backupPath);
 					} else {
 						String localfileName = localDir + File.separator + fileName;
-						File localfile = new File(localfileName);
+						File localfile = new SafelyFile(localfileName);
 						if (!localfile.exists()) {
 							sftp.get(names.get(i), localfileName);
 							downLoadNums++;
@@ -362,7 +365,7 @@ public class SFTPTool {
 											backupPath + '/' + names.get(i));
 								}
 							} else {
-								throw new Exception("无法删除本地文件: " + localfileName);
+								throw new ServiceException("无法删除本地文件: " + localfileName);
 							}
 						}
 					}
@@ -374,7 +377,7 @@ public class SFTPTool {
 					logger.info("服务器没有该目录" + remoteFileName);
 					return;
 				}
-				File localfile = new File(localDir + File.separator + file.getName());
+				File localfile = new SafelyFile(localDir + File.separator + file.getName());
 				String localfileName = localDir + File.separator + file.getName();
 				if (!localfile.exists()) {
 					sftp.get(file.getName(), localfileName);
@@ -396,7 +399,7 @@ public class SFTPTool {
 									backupPath + '/' + file.getName());
 						}
 					} else {
-						throw new Exception("无法删除本地文件: " + localfileName);
+						throw new ServiceException("无法删除本地文件: " + localfileName);
 					}
 				}
 				sftp.cd("..");
@@ -520,7 +523,7 @@ public class SFTPTool {
 	 */
 	public File getFileTransfer(String remote, String fileName, String localDir, String prodName) throws IOException {
 		String curDir = "";
-		File temp = new File(localDir);
+		File temp = new SafelyFile(localDir);
 		File localfile = null;
 		FileOutputStream output = null;
 		if (!temp.exists()) {
@@ -530,7 +533,8 @@ public class SFTPTool {
 			try {
 				sftp.ls(remote);
 			} catch (SftpException e) {
-				System.out.println("服务器上没有该目录：" + remote);
+//				System.out.println("服务器上没有该目录：" + remote);
+				logger.info("服务器上没有该目录：" + remote);
 				mkdir(remote);
 				return null;
 			}
@@ -538,7 +542,7 @@ public class SFTPTool {
 			curDir = sftp.pwd();
 			sftp.cd(curDir);
 			try {
-				localfile = new File(localDir + File.separator + fileName);
+				localfile = new SafelyFile(localDir + File.separator + fileName);
 				output = new FileOutputStream(localfile);
 				sftp.get(fileName, output);
 			} catch (SftpException e) {
@@ -571,7 +575,7 @@ public class SFTPTool {
 	 * @param backupPath
 	 */
 	public void putFileOrDir(String localDir, String remoteDir, String backupPath, String fileNameWild)
-			throws Exception {
+			 {
 		WildcardMatch wildcardMatch = new WildcardMatch();
 		try {
 			try {

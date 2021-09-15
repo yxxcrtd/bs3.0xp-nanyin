@@ -20,6 +20,9 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.portfolio.ptlanalyzeafterinvest.service.PtlAnalyzeAfterInvest003Service;
+
+import java.io.IOException;
+
 /**
  * 触发统计
  * @author 王贵奇
@@ -53,12 +56,11 @@ public class PtlAnalyzeAfterInvest003Controller extends BaseController{
     /**
      * 导出
      * @return ResponseEntity<byte[]>
-     * @throws Exception
+     * @throws IOException
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         return ptlAnalyzeAfterInvest003Service.export(RequestUtil.getParameters(getRequest()));
     }
 }

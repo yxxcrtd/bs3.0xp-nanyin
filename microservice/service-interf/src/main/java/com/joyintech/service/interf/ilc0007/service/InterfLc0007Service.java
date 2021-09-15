@@ -49,8 +49,7 @@ public class InterfLc0007Service extends ReceivedEsbService<InterfLc0007OutEntit
      * {@inheritDoc}
      */
     @Override
-    public InterfLc0007OutEntity selectResponseData(InterfLc0007InEntity entity)
-        throws Exception {
+    public InterfLc0007OutEntity selectResponseData(InterfLc0007InEntity entity) throws InterfException {
         // 判断 放款指令编号 与 业务品种编号 是否正确
         if (interfLc0007Mapper.selectCmsInfoCnt(entity) < 1) {
             throw new InterfException("放款指令编号（" + entity.getPutoutorderno() + "）或业务品种编号（"
@@ -99,7 +98,7 @@ public class InterfLc0007Service extends ReceivedEsbService<InterfLc0007OutEntit
      */
     @Override
     public int saveInterfData(InterfLc0007InEntity entity)
-        throws Exception {
+    {
         // 查询接口无登录操作
         return 0;
     }
@@ -109,7 +108,7 @@ public class InterfLc0007Service extends ReceivedEsbService<InterfLc0007OutEntit
      */
     @Override
     public int saveBusinessData(InterfLc0007InEntity entity)
-        throws Exception {
+    {
         // 查询接口无登录操作
         return 0;
     }

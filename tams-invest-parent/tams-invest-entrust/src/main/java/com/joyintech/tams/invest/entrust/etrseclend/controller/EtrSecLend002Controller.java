@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.entrust.etrseclend.dto.EtrSecLendDto;
 import com.joyintech.tams.invest.entrust.etrseclend.service.EtrSecLendService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -262,12 +263,11 @@ public class EtrSecLend002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrSecLendDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrSecLendDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

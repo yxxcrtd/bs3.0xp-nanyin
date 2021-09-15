@@ -33,7 +33,7 @@ public class TotalMaintainService extends CommonExportService {
      */
     public Page<TotalMaintain001Dto> findPage(int page, int length,
                                               Map<String, Object> pageParam)
-            throws Exception {
+    {
 
 
         return this.queryForPage(page, length,

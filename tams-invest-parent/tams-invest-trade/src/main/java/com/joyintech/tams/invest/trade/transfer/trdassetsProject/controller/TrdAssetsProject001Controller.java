@@ -18,6 +18,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.assign.dto.TrdAssetAssignDto;
 import com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService;
 import com.joyintech.tams.invest.trade.transfer.trdassetsProject.dto.TrdAssetsProject001Dto;
@@ -28,6 +29,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,6 +81,9 @@ public class TrdAssetsProject001Controller extends BaseController {
     
     @Autowired
     private TrdAssetAssignService trdAssetAssignService;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     
     @Override
     public String init(Model model){
@@ -279,6 +284,26 @@ public class TrdAssetsProject001Controller extends BaseController {
 			result.setMessage("转仓列表信息不能空", MessageType.错误消息);
 			return result;
 		}
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (TrdSplitProject001Dto ptl : dto.getProjectListInfoList()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                result.setMessage(str, MessageType.错误消息);
+                return result;
+            }
+        }
 
 		//查询项目类资产存续期交易 状态为 01-待处理、03-流程中 的数据  2020-10-22 start
 		/*Map<String, Object> params = new HashMap<String,Object>();
@@ -322,8 +347,7 @@ public class TrdAssetsProject001Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdAssetsProject001Dto dto)
-            throws Exception {
+    public AjaxResult save(@RequestBody TrdAssetsProject001Dto dto) throws WorkFlowException {
         ProcessParameter<TrdAssetsProject001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdAssetsProject001Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());

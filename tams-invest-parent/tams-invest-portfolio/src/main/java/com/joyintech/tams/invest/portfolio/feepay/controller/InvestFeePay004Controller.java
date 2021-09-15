@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.portfolio.feepay.service.InvestFeePay003Service
 import com.joyintech.tams.invest.portfolio.feeprovisionsetting.dto.FeeProvisionSetting001Dto;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -111,8 +112,7 @@ public class InvestFeePay004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<InvestFeePay003Dto> selectDetail()
-            throws Exception {
+    public Page<InvestFeePay003Dto> selectDetail(){
         Page<InvestFeePay003Dto> page = investFeePay003Service.selectDetail(RequestUtil.getPageParam());
         return page;
     }
@@ -146,8 +146,7 @@ public class InvestFeePay004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody InvestFeePay002Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody InvestFeePay002Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<InvestFeePay002Dto> processParameter = new ProcessParameter<InvestFeePay002Dto>();
         WorkFlowParameter<InvestFeePay002Dto> params = new WorkFlowParameter<InvestFeePay002Dto>();
         params.setElementId(dto.getElementId());

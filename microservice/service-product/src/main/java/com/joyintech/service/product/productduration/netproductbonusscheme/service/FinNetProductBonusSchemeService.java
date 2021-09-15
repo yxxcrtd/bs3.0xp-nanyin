@@ -58,10 +58,10 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketId(Map<String,Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketId(int page, int length, Map<String,Object> map) {
         map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("PROFIT_TYPE_01",DictCodeList.收益类型_净值型.getValue());
-        return finNetProductBonusSchemeMapper.getFinprodMarketId(map);
+        return this.queryForPageForSelectReturn(page, length, () -> finNetProductBonusSchemeMapper.getFinprodMarketId(map));
     }
 
     /**
@@ -73,7 +73,7 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
      * @throws Exception 异常信息
      */
     public Page<FinNetProductBonusSchemeDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {        
+    {
         return super.queryForPage(page, length, () -> finNetProductBonusSchemeMapper.select(pageParam));
     }
 
@@ -94,10 +94,10 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> getFinprodMarketIdList(Map<String,Object> map) {
+    public Page<SelectOptionDto> getFinprodMarketIdList(int page, int length, Map<String,Object> map) {
         map.put("FINPROD_TYPE_TG_F16", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         map.put("PROFIT_TYPE_01",DictCodeList.收益类型_净值型.getValue());
-        return finNetProductBonusSchemeMapper.getFinprodMarketIdList(map);
+        return this.queryForPageForSelectReturn(page, length, () -> finNetProductBonusSchemeMapper.getFinprodMarketIdList(map));
     }
 
     /**
@@ -327,7 +327,7 @@ public class FinNetProductBonusSchemeService extends BaseService<FinNetProductBo
     }
     
     public List<FinNetProductBonusSchemeDto> findCycleDataTableInfo(Map<String, Object> param) 
-    		throws Exception {
+    {
     	
     	String tradeId  = (String) param.get("tradeId");
     	List<FinNetProductBonusSchemeDto> list = new ArrayList<FinNetProductBonusSchemeDto>();

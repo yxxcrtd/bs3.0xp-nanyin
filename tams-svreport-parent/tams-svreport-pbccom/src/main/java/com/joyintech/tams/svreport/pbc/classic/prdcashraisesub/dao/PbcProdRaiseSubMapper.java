@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import com.joyintech.tams.svreport.pbc.classic.prdcashraisesub.dto.PbcProdRaiseSub;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSub;
 import com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.dto.PbcInitProdRaisingSubVo;
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface PbcProdRaiseSubMapper {
     int deleteByPrimaryKey(String registSeqno);
 

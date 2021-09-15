@@ -47,6 +47,10 @@
                     <artifactId>joyintech-tools</artifactId>
                     <groupId>com.joyintech</groupId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.joyintech</groupId>
+                    <artifactId>framework-core</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>

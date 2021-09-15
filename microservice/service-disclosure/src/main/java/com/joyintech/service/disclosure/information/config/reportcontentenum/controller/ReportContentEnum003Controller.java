@@ -143,7 +143,7 @@ public class ReportContentEnum003Controller extends BaseController {
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
 	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	{
 		AjaxResult res = new AjaxResult();
 		try {
 			reportContentEnum002Service.readFile(request);

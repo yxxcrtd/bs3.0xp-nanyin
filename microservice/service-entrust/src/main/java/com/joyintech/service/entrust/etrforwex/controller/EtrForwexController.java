@@ -48,7 +48,7 @@ public class EtrForwexController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrForwexDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page,
-                                          @PathVariable("length") int length)throws Exception {
+                                          @PathVariable("length") int length) {
         return etrForwexService.selectForPage(page,length,pageParam);
     }
     

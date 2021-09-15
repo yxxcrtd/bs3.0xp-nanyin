@@ -17,5 +17,7 @@ public interface ChbInvestTradeMapper {
 
     int updateByPrimaryKeySelective(ChbInvestTrade record);
 
+    int updateByPrimaryKeyWithBLOBs(ChbInvestTrade record);
+
     int updateByPrimaryKey(ChbInvestTrade record);
 }

@@ -40,7 +40,7 @@ public class ExBlockBondController {
     @PostMapping("getfinprodIdForAdd")
     @ResponseBody
     public List<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> map)
-        throws Exception {
+	{
         List<SelectOptionDto> temp = exBlockBondService.getfinprodIdForAdd(map);
         return temp;
     }

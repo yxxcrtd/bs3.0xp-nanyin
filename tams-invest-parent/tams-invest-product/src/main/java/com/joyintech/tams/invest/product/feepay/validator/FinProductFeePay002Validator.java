@@ -118,6 +118,17 @@ public class FinProductFeePay002Validator implements BeanValidator {
                     }
                 }
             }
+
+            if(finProductFeePay002Dto.getBussTrdTransferOrder() != null){
+                for (BussTrdTransferOrderDto bussTrdTransferOrderDto : finProductFeePay002Dto.getBussTrdTransferOrder()) {
+                    if (StringUtil.equals(bussTrdTransferOrderDto.getIsNeedSend(),DictCodeList.是否_否.getValue())){
+                        if (StringUtil.isBlank(bussTrdTransferOrderDto.getRecAcctNo())) {
+                            validList.add(new ValidMessage("bussTrdTransferOrder", getMessage("FW_E_0006",
+                                    getMessage("BussTrdTransferOrder.recAcctNo"))));
+                        }
+                    }
+                }
+            }
         }
         
         if(StringUtil.equals(finProductFeePay002Dto.getChargeType(),

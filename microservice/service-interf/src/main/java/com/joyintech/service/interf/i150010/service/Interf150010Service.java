@@ -50,7 +50,7 @@ public class Interf150010Service extends SendEsbService<Interf150010InEntity, In
      */
     @Override
     public Interf150010InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         InterfFinProdDto dto = (InterfFinProdDto)param;
         List<Interf150010InArrEntity> arrList = selectFeeInfo(dto.getFinProdId());
         // 如果费用信息不存在时则返回空
@@ -83,7 +83,7 @@ public class Interf150010Service extends SendEsbService<Interf150010InEntity, In
      */
     @Override
     public int saveInterfData(Interf150010InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -92,7 +92,7 @@ public class Interf150010Service extends SendEsbService<Interf150010InEntity, In
      */
     @Override
     public int saveBusinessData(Interf150010InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

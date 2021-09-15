@@ -84,7 +84,7 @@ public class FinProductPayIntController {
     public Page<FinProductPayIntDto> queryForPage(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductPayIntService.selectForPage(page, length, pageParam);
     }
 

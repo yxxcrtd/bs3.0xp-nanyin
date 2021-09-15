@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbBatchParaMapper_mysql" >
+    <select id="selectAllData" resultType="com.joyintech.tams.common.base.entity.ChbBatchPara" >
+        select *    from CHB_BATCH_PARA
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_BATCH_PARA
+        where PARA_ID = #{paraId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbBatchPara" >
+        insert into CHB_BATCH_PARA (PARA_ID, TASK_ID, PARAS      )
+        values (#{paraId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{paras,jdbcType=CLOB})
+    </insert>
+</mapper>

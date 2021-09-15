@@ -350,9 +350,23 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      */
     private String counterIdName;
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * finprodAbbr
      * @return finprodAbbr
      */
+
     public String getFinprodAbbr() {
         return finprodAbbr;
     }

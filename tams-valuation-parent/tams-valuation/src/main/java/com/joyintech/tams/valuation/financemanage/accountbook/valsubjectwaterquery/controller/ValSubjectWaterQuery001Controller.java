@@ -10,6 +10,7 @@
 package com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -128,7 +129,7 @@ public class ValSubjectWaterQuery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValSubjectWaterQuery001Dto> findPage() throws Exception{
+    public Page<ValSubjectWaterQuery001Dto> findPage() {
         return valSubjectWaterQuery001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -196,8 +197,7 @@ public class ValSubjectWaterQuery001Controller extends BaseController {
 //    }
     
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValSubjectWaterQuery001Dto> listdto;
         if (datas == null) {

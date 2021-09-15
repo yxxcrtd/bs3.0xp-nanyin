@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.fundmarketinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -84,7 +85,7 @@ public class ValFundMarketInfo001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValFundMarketInfo001dto> tableLoad()
-        throws Exception {
+         {
         Map<String, Object> params = RequestUtil.getPageParam();
         params.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
         return valFundMarketInfo001Service.findPage(params);
@@ -97,12 +98,14 @@ public class ValFundMarketInfo001Controller extends BaseController {
      * @throws Exception Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
 
         String datas = this.getParam("datas");
         Map<String, Object> params = RequestUtil.getPageParam();
         List<ValFundMarketInfo001dto> listdto;
+        //TISHKBS-2342 每日基金行情导出字段（基金类型）为空 add by wangyaning 20210623 start
+        params.put("finprodType", DictCodeListExt1.金融产品类型_基金.getValue());
+        //TISHKBS-2342 每日基金行情导出字段（基金类型）为空 add by wangyaning 20210623 end
 
         if (datas == null) {
             listdto = valFundMarketInfo001Service.tableLoad(params);

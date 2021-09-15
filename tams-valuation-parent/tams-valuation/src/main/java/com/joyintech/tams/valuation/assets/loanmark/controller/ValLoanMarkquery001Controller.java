@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assets.loanmark.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class ValLoanMarkquery001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValLoanMarkquery001Dto> findPage()
-        throws Exception {
+         {
         return valLoanMarkquery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -82,8 +83,7 @@ public class ValLoanMarkquery001Controller extends BaseController {
      * @throws Exception Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ValLoanMarkquery001Dto> listdto;
         if (datas == null) {

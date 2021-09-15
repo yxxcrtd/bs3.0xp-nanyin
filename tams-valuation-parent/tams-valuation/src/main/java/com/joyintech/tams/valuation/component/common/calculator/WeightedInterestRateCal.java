@@ -75,20 +75,20 @@ public class WeightedInterestRateCal {
         return ArithmeticUtil.divide(R, new BigDecimal(DateUtil.getBetweenDayNumber(sdate, edate)), 12);
     }
     
-    public static void main(String[] arg) throws ParseException{
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        ArrayList<FinCashCalcRule> temp = new ArrayList<FinCashCalcRule>();
-        FinCashCalcRule entity1 = new FinCashCalcRule();
-        FinCashCalcRule entity2 = new FinCashCalcRule();
-        FinCashCalcRule entity3 = new FinCashCalcRule();
-        entity1.setYield(new BigDecimal("0.12"));
-        entity2.setYield(new BigDecimal("0.11"));
-        entity3.setYield(new BigDecimal("0.15"));
-        entity1.setEffDate(sdf.parse("2018-12-30"));
-        entity2.setEffDate(sdf.parse("2019-01-03"));
-        entity3.setEffDate(sdf.parse("2018-01-13"));
-        temp.add(entity1);temp.add(entity2);temp.add(entity3);
-        BigDecimal R = cal(temp,sdf.parse("2018-12-30"),sdf.parse("2019-01-30"));
-        System.out.println(R);
-    }
+//    public static void main(String[] arg) throws ParseException{
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        ArrayList<FinCashCalcRule> temp = new ArrayList<FinCashCalcRule>();
+//        FinCashCalcRule entity1 = new FinCashCalcRule();
+//        FinCashCalcRule entity2 = new FinCashCalcRule();
+//        FinCashCalcRule entity3 = new FinCashCalcRule();
+//        entity1.setYield(new BigDecimal("0.12"));
+//        entity2.setYield(new BigDecimal("0.11"));
+//        entity3.setYield(new BigDecimal("0.15"));
+//        entity1.setEffDate(sdf.parse("2018-12-30"));
+//        entity2.setEffDate(sdf.parse("2019-01-03"));
+//        entity3.setEffDate(sdf.parse("2018-01-13"));
+//        temp.add(entity1);temp.add(entity2);temp.add(entity3);
+//        BigDecimal R = cal(temp,sdf.parse("2018-12-30"),sdf.parse("2019-01-30"));
+//        System.out.println(R);
+//    }
 }

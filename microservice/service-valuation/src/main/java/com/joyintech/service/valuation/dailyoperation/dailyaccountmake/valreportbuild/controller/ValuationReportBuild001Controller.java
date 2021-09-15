@@ -55,7 +55,7 @@ public class ValuationReportBuild001Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BaseEntity> findPage() throws Exception{
+    public Page<BaseEntity> findPage() {
         return valuationReportBuild001Service.findPage(RequestUtil.getPageParam());
     }
     

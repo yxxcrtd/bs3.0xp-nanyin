@@ -12,6 +12,7 @@
     <version>2.0</version>
     <properties>
         <jackson.version>2.9.2</jackson.version>
+        <framework.version>0.0.4</framework.version>
     </properties>
     <dependencies>
         <dependency>
@@ -30,13 +31,13 @@
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
-            <artifactId>framework-core</artifactId>
-            <version>0.0.4</version>
+            <artifactId>tams-invest-common</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>
-            <artifactId>tams-invest-common</artifactId>
-            <version>1.0.0</version>
+            <artifactId>tams-valuation-common</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <!--<dependency>
             <groupId>com.joyintech</groupId>

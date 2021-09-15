@@ -6,7 +6,8 @@
 package com.joyintech.tams.invest.common.autoperiod.bond;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.*;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 债券资产存续期共通Service 批处理自动存续期和存续期画面共用逻辑
@@ -50,6 +52,8 @@ public class AutoPeriodBondCommonService {
      */
     @Autowired
     private AutoPeriodCommonService autoPeriodCommonService;
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 //
 //    private BigDecimal result;
 
@@ -303,6 +307,15 @@ public class AutoPeriodBondCommonService {
                 });
             }
         });
+
+        // 将附件和当前业务对象绑定（更新附件的业务代码）
+        if(entity.getUploadFileList() !=null){
+            fileAttachmentProcess.updateBussinessNo(
+                    entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                            Collectors.toList()),
+                    entity.getBusiCode());
+        }
+
         return result;
     }
 
@@ -414,10 +427,12 @@ public class AutoPeriodBondCommonService {
         }
         deal.setCcy(entity.getCcy());
         deal.setStatus(交易方向);
-        deal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //deal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        deal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         deal.setVdate(DateUtil.parse(entity.getvDate()));
         deal.setMdate(DateUtil.parse(entity.getmDate()));
-        deal.setSettleDate(deal.getTradeDate());
+        //deal.setSettleDate(deal.getTradeDate());
+        deal.setSettleDate(DateUtil.parse(entity.getTradeDate()));
         deal.setShareAmt(ArithmeticUtil.divide(finAssetIntInfo.getQty(), new BigDecimal(100), 2, RoundingMode.HALF_UP));
         if (DictCodeList.交易方向_收息.getValue().equals(交易方向)) {
             deal.setIntAmt(finAssetIntInfo.getIntAmt());
@@ -484,7 +499,8 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setPs(AutoPeriodCommonService.change现金流类型To交易方向(entity.getCashType()));
         trdFinProductDealTotal.setBranch(
             AutoPeriodCommonService.changePsToBranch(entity.getmDate(), trdFinProductDealTotal.getPs()));
-        trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
         trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getTradeDate()));
@@ -579,7 +595,8 @@ public class AutoPeriodBondCommonService {
         trdFinProductDealTotal.setPs(AutoPeriodCommonService.change现金流类型To交易方向(entity.getCashType()));
         trdFinProductDealTotal.setBranch(
             AutoPeriodCommonService.changePsToBranch(entity.getmDate(), trdFinProductDealTotal.getPs()));
-        trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        //trdFinProductDealTotal.setTradeDate(DateUtil.parse(entity.getTradeDate()));
+        trdFinProductDealTotal.setTradeDate(DateUtil.parse(DateUtil.getSysDate()));
         trdFinProductDealTotal.setVdate(DateUtil.parse(entity.getvDate()));
         trdFinProductDealTotal.setMdate(DateUtil.parse(entity.getmDate()));
         trdFinProductDealTotal.setSettleDate(DateUtil.parse(entity.getTradeDate()));

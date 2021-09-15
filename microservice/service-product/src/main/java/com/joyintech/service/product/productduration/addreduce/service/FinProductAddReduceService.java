@@ -60,7 +60,7 @@ public class FinProductAddReduceService extends BaseService<FinProductAddReduceD
      */
     @Transactional(readOnly = true)
     public Page<FinProductAddReduceDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
 //        pageParam.put("N", DictCodeList.是否_否.getValue());
         pageParam.put("发行成功", DictCodeListExt1.发行状态_发行成功.getValue());
         pageParam.put("FINPROD15", DictCodeList.共通业务类型_收益型产品提前赎回管理.getValue());

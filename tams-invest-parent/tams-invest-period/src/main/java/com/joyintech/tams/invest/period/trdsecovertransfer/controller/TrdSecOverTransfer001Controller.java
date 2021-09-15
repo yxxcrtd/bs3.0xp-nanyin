@@ -22,6 +22,7 @@ import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -74,8 +75,7 @@ public class TrdSecOverTransfer001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdSecOverTransfer001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
     /**
@@ -106,8 +106,7 @@ public class TrdSecOverTransfer001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("doRevoke")
     public AjaxResult revoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) TrdSecOverdueDuration003Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) TrdSecOverdueDuration003Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

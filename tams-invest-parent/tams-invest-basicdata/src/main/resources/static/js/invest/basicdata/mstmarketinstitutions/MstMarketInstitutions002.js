@@ -8,7 +8,7 @@ $(function() {
         for(var i=0; i<mstBondCreditRating.length; i++){
         	if(typeof mstBondCreditRating[i].noticeDate != 'undefined' )
         		mstBondCreditRating[i].noticeDate=new Date(mstBondCreditRating[i].noticeDate).format();
-        	if(typeof mstBondCreditRating[i].gradeDate != 'undefined' )
+        	if(typeof mstBondCreditRating[i].gradeDate != 'undefined' && mstBondCreditRating[i].gradeDate !=null)  // update by zoujiamin  TISHKBS-2137  增加非空判断
         		mstBondCreditRating[i].gradeDate=new Date(mstBondCreditRating[i].gradeDate).format();
         	mstBondCreditRating[i].createTime=new Date().format();
         	mstBondCreditRating[i].updateTime=new Date().format();

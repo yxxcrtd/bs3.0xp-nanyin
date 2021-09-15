@@ -50,6 +50,8 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -71,6 +73,10 @@ import java.util.Map;
  */
 @Service
 public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInvestTradeConfirmDto> implements BaseProcessService<TrdPlanNetInvestTradeConfirmDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetInvestTrade003Service.class);
 
     /**
      * 附件信息共通Service
@@ -238,8 +244,7 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
            		 try {
 					WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
 				} catch (WorkFlowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
            	 }
             }
@@ -538,7 +543,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
      * @since 1.0
      */
     private void prepareEntity(TrdPlanNetInvestTradeConfirmDto dto) {
-        dto.setActPortfolioId(dto.getPortfolioId());
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            dto.setActPortfolioId(dto.getPortfolioId());
+        }
         dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
 
         // 一体化对应etliu start
@@ -605,15 +612,16 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
         // 组合交易表
         List<PtlTrade> ptlTrades = new ArrayList<>();
         // 组合交易表
-        PtlTrade ptlTrade = new PtlTrade();
-        ptlTrade.setPortfolioId(dto.getPortfolioId());
-        ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-        ptlTrade.setBusiId(dto.getFinprodId());
-        ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        ptlTrade.setSettleDate(dto.getSettleDate());
-        ptlTrades.add(ptlTrade);
-        if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            PtlTrade ptlTrade = new PtlTrade();
+            ptlTrade.setPortfolioId(dto.getPortfolioId());
+            ptlTrade.setBusiNo(dto.getTradeId());
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            ptlTrade.setBusiId(dto.getFinprodId());
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+            ptlTrade.setSettleDate(dto.getSettleDate());
+            ptlTrades.add(ptlTrade);
+        } else {
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
             ptlTrade1.setPortfolioId(dto.getActPortfolioId());

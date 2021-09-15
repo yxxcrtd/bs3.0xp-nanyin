@@ -50,12 +50,12 @@ public class FinStockInfoController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinStockInfoDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length){
         return finStockInfoService.selectForPage(page, length, param);
     }
     @PostMapping("getShares")
     public FinStockInfoDto getShares(@RequestBody Map<String,Object> Param)
-            throws Exception {
+    {
         return finStockInfoService.getShares(Param);
     }
     /**
@@ -83,7 +83,7 @@ public class FinStockInfoController {
      */
     @GetMapping("/getFinprodMarketIdList")
     public List<SuggestDto> getFinprodMarketIdList(String finprodMarketId)
-        throws Exception {
+    {
         return finStockInfoService.getFinprodMarketIdList(finprodMarketId);
     }
     
@@ -98,14 +98,14 @@ public class FinStockInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinStockInfoDto dto) throws Exception {
+    public void insert(@RequestBody FinStockInfoDto dto) {
          finStockInfoService.insert(dto);
     }
 
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinStockInfoDto dto) throws Exception{
+    public void update(@RequestBody FinStockInfoDto dto){
         finStockInfoService.update(dto);
     }
     /**
@@ -118,7 +118,7 @@ public class FinStockInfoController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinStockInfoDto dto) throws Exception{
+    public void delete(@RequestBody FinStockInfoDto dto) {
         finStockInfoService.delete(dto);
     }
 
@@ -134,7 +134,7 @@ public class FinStockInfoController {
      */
     @GetMapping("selectByFinprodId")
     public FinStockInfoDto selectByFinprodId(String finprodId)
-        throws Exception {
+    {
         return finStockInfoService.selectByFinprodId(finprodId);
     }
     /**
@@ -160,7 +160,7 @@ public class FinStockInfoController {
      */
     @PostMapping("findEntity")
     public FinStockInfoDto findEntity(@RequestBody Map<String,Object> param)
-        throws Exception {
+    {
         return finStockInfoService.findEntity(param);
     }
     /**
@@ -187,6 +187,18 @@ public class FinStockInfoController {
     @RequestMapping("getIsInWorkFlowReturnUser")
     public String getIsInWorkFlowReturnUser(@RequestBody Map<String,Object> param){
         return finStockInfoService.getIsInWorkFlowReturnUser(param);
+    }
+
+    /**
+     * 沪港通&深港通交易日历
+     * @param //counterType
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getShOrZhCalendarId")
+    public List<SuggestDto> getShOrZhCalendarId(){
+        return finStockInfoService.getShOrZhCalendarId();
     }
 
 }

@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.period.trdfundobversion.dto.TrdFundObversionDto
 import com.joyintech.tams.invest.period.trdfundobversion.service.TrdFundObversion001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,8 +126,10 @@ public class TrdFundObversion002Controller extends BaseController {
                 dto.setFinAssetIntInfoList(trdFundDuration001Service.findAssetIntInfo(pageParam));
             }
 //            处理类型及交易员
-            type=dto==null?null:dto.getType();
-            trader = dto.getTrader();
+            if (dto != null){
+                type=dto==null?null:dto.getType();
+                trader = dto.getTrader();
+            }
         }
 //        有效及撤销处理
         else if(StringUtil.isNotEmpty(statusValid)){
@@ -150,7 +153,9 @@ public class TrdFundObversion002Controller extends BaseController {
             dto = new TrdFundObversionDto();
         }
         model.addAttribute("type",type);
-        model.addAttribute("busiCode", dto.getTotleTradeId());
+        if (dto != null){
+            model.addAttribute("busiCode", dto.getTotleTradeId());    
+        }
         model.addAttribute("trader",trader);
 //      画面的业务类型，用于判断画面处于何种模式
         model.addAttribute(GlobalConstant.ENTITY,dto);
@@ -209,8 +214,7 @@ public class TrdFundObversion002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdFundObversionDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdFundObversionDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

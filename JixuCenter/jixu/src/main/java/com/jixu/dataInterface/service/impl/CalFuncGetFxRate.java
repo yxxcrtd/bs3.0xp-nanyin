@@ -30,12 +30,12 @@ public class CalFuncGetFxRate extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) {
 		String inputLine=genConvertFormula(inputValue, colcfgMap);
 		String[] lines=inputLine.split(",");
 		String date=lines[0].replaceAll("-", "");
-		String portCur=lines[1].toString();
-		String fxCur=lines[2].toString();
+		String portCur=lines[1];
+		String fxCur=lines[2];
 		String portnum=lines[3];
 		double fxrate=comService.loadFxrate(portnum,portCur, fxCur, DateUtil.convertStr2Date(date));
 		return String.valueOf(fxrate);
@@ -47,7 +47,7 @@ public class CalFuncGetFxRate extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			 {
 		// TODO Auto-generated method stub
 		return null;
 	}

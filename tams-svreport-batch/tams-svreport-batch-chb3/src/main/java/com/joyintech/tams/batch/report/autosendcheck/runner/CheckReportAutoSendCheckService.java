@@ -7,8 +7,10 @@
  * 修改内容：新建
  * 系统名称：理财资管业务监管报送平台
  */
- 
+
 package com.joyintech.tams.batch.report.autosendcheck.runner;
+
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +51,14 @@ public class CheckReportAutoSendCheckService extends BatchBaseService{
         JobExecution result = new JobExecution(1l);
         result.setStatus(BatchStatus.FAILED);
         SysBatchExecInfo batchExecuteInfo = this.getBatchExecuteInfo();
+        Date executeDate = batchExecuteInfo.getExecuteDate();
         if (batchExecuteInfo == null) {
             logger.info("无启动参数，批处理退出。");
             return result;
         }
-        
+
         try {
-            mainService.autoSendCB();
+            mainService.autoSendCB(executeDate);
         }
         catch (Exception e) {
             logger.error("报送前检查自动检查Error",e);

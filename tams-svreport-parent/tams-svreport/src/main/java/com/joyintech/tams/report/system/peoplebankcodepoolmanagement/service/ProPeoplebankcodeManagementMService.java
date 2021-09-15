@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -27,6 +28,8 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @Service
 public class ProPeoplebankcodeManagementMService extends BaseService<ProPeoplebankcodeManagement001Dto> {
 
+	@Autowired
+	private ProPeoplebankcodeManagement001Service peoplebankcodeManagement001Service;
 	/**
 	 * 内部产品代码下拉框
 	 * 
@@ -89,10 +92,12 @@ public class ProPeoplebankcodeManagementMService extends BaseService<ProPeopleba
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("orgCode", CommonUtil.getOrgCode());
     	param.put("deptCode", CommonUtil.getDeptCode());
-        return restTemplate.postForObject(
-	       		SvrServiceApplication.COMMON_SERVICE_NAME + "/ProPeoplebankcodeManagement/checkConfirmMsgForImportData", 
-	       		param,
-	       		SvrAjaxResult.class);
+		//通过微服务获取转换异常.永远都是200.修改直接获取
+		return peoplebankcodeManagement001Service.checkConfirmMsgForImportData(ExcelUtil.getDataList(fileName),CommonUtil.getOrgCode(),CommonUtil.getDeptCode());
+//        return restTemplate.postForObject(
+//	       		SvrServiceApplication.COMMON_SERVICE_NAME + "/ProPeoplebankcodeManagement/checkConfirmMsgForImportData",
+//	       		param,
+//	       		SvrAjaxResult.class);
     }
     
     

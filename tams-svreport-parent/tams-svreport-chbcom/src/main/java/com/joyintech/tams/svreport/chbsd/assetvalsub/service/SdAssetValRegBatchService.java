@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -52,7 +53,7 @@ public class SdAssetValRegBatchService{
     @Autowired
 	private ChbAstValueRegist001Service chbAstValueRegist001Service;
 	
-	public void sdAssetValRegData(Date batchDate) throws Exception {
+	public void sdAssetValRegData(Date batchDate)  {
 		//1、报送数据检索,取得 List
 		logger.info("【资产估值信息登记】未报送数据检索开始------" +  df.format(new Date()));
 		List<ChbAstValueRegist001Dto> list = sdAssetValSvrMapper.selcteUnRegData(DateUtil.format(batchDate));
@@ -85,7 +86,7 @@ public class SdAssetValRegBatchService{
 		//2、进行数据结构转化，把[1]中取得的List，转化为报文拼接组件中调用方法的数据结构类
 		List<ChbAstValueSubDto> msgRstList = transformModelToMsg(list);
 		
-		this.sendBatchCommon(msgRstList);
+		this.sendBatchCommon(msgRstList, SendDataCheckType.报送);
 	}
 
 	/**
@@ -107,7 +108,7 @@ public class SdAssetValRegBatchService{
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbAstValueSubDto> dataList) throws Exception{
+	public void sendBatchCommon(List<ChbAstValueSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));
 
@@ -124,21 +125,21 @@ public class SdAssetValRegBatchService{
 		//分批处理数据报送
 		if (dataCount <= dataCountPerTime) {
 			sdAssetValRegBatchServiceOneService
-					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult);
+					.handleDataPerTime(handleIndex, dataCountPerTime,dataList,sendResult, sendDataCheckType);
 		}else{
 			// 分批次数
 			int part = dataCount / dataCountPerTime;
 			for (int i = 0; i < part; i++ ) {
 				sdAssetValRegBatchServiceOneService
 						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList.subList(0, dataCountPerTime),
-								sendResult);
+								sendResult, sendDataCheckType);
 				newDataList.subList(0, dataCountPerTime).clear();
 				handleIndex ++;
 			}
 			// 最后剩下的数据
 			if (!StringUtil.isEmptyList(newDataList)) {
 				sdAssetValRegBatchServiceOneService
-						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult);
+						.handleDataPerTime(handleIndex, dataCountPerTime,newDataList,sendResult, sendDataCheckType);
 			}
 		}
 

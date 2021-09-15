@@ -4,9 +4,7 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.ModConfigUseage;
@@ -212,7 +210,7 @@ public class EclCalculationProcessorService {
                 commonErrorParams.setErrorMsg(
                         "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
                                 + "】计算异常");
-                commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
                 errors.add(commonErrorParams);
                 stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
                 e.printStackTrace();
@@ -357,7 +355,7 @@ public class EclCalculationProcessorService {
             commonErrorParams.setFinprodId(processEntity.getAssetId());
             commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
             commonErrorParams.setErrorMsg("【ECL计算批处理】：资产【" + processEntity.getAssetId() + "】未配置LGD参数");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
             errors.add(commonErrorParams);
             stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
         }

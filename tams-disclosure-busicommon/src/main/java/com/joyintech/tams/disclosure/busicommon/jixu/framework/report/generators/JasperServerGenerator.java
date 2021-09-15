@@ -20,8 +20,15 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.ReportGlob
 import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.ReportInfo;
 
 import net.sf.jasperreports.engine.JRException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JasperServerGenerator implements ReportGenerator{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(JasperServerGenerator.class);
+
 	private DataSource dataSource = null;
 	
 	@Override
@@ -42,23 +49,25 @@ public class JasperServerGenerator implements ReportGenerator{
 	@Override
 	public String genReport(ReportInfo report, Map<String, Object> params) throws JRException {
 		String strUrl = getJasperUrl(report.getRepository(), report.getUser(), report.getPassword(), report.getFolder(), report.getUri(), params, "html");
+		InputStream inputStream = null;
 		try{
 			URL connUrl = new URL(strUrl);
-			System.out.println("Connecting to server: " + strUrl);
 			URLConnection conn = connUrl.openConnection();
 	        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
-	
-	        InputStream inputStream = conn.getInputStream();
-	        
+	        inputStream = conn.getInputStream();
 	        String getData = readInputStreamToString(inputStream);
-	        if (inputStream != null) {
-	            inputStream.close();
-	        }
 	        return getData;
 		}catch (Exception e){
 			return null;
+		}finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
 		}
-		
 	}
 
 	@Override
@@ -69,7 +78,6 @@ public class JasperServerGenerator implements ReportGenerator{
 		InputStream inputStream = null;
 		try {
 			URL connUrl = new URL(strUrl);
-			System.out.println("Connecting to server: " + strUrl);
 			URLConnection conn = connUrl.openConnection();
 			conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
@@ -93,14 +101,14 @@ public class JasperServerGenerator implements ReportGenerator{
 				try {
 					fos.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 			if (inputStream != null) {
 				try {
 					inputStream.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		}
@@ -118,14 +126,14 @@ public class JasperServerGenerator implements ReportGenerator{
 	}	
 	
     public String getJasperUrl(String serverUrl, String serverUser, String serverPwd, String folder, String uri, Map<String, Object> params, String type){
-    	String url= serverUrl + ReportGlobalConstant.MID_URL + folder + ReportGlobalConstant.OBLIQUE_LINE + uri + "." + type ;
-    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + "=" + serverUser + ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + "=" + serverPwd;
-    	
-    	for (Map.Entry<String, Object> entry : params.entrySet()) {
-    		paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + entry.getKey() + "=" + entry.getValue().toString();
-    	}
-    	url = url+ paramStr;
-    	return url;
+//    	String url= serverUrl + ReportGlobalConstant.MID_URL + folder + ReportGlobalConstant.OBLIQUE_LINE + uri + "." + type ;
+//    	String paramStr = ReportGlobalConstant.QUESTION_MARK + ReportGlobalConstant.J_USERNAME + "=" + serverUser + ReportGlobalConstant.AMPERS_AND + ReportGlobalConstant.J_PASSWORD + "=" + serverPwd;
+//
+//    	for (Map.Entry<String, Object> entry : params.entrySet()) {
+//    		paramStr = paramStr + ReportGlobalConstant.AMPERS_AND + entry.getKey() + "=" + entry.getValue().toString();
+//    	}
+//    	url = url+ paramStr;
+    	return "";
     }
     
     public static String readInputStreamToString(InputStream inputStream) throws IOException {
@@ -133,7 +141,7 @@ public class JasperServerGenerator implements ReportGenerator{
     	 
         StringBuffer tStringBuffer = new StringBuffer();
 
-        String sTempOneLine = new String("");
+        String sTempOneLine = "";
 
         while ((sTempOneLine = tBufferedReader.readLine()) != null){
 

@@ -36,7 +36,8 @@ public class PriceinfoController{
      * @throws Exception 异常
      */
     @PostMapping("selectPriceinfo")
-    public List<MockQuotationInfoDto> selectPriceinfo(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockQuotationInfoDto> selectPriceinfo(@RequestBody Map<String, Object> param)
+    {
         return priceinfoService.selectPriceinfo(param);
     }
     /**
@@ -46,13 +47,15 @@ public class PriceinfoController{
      * @throws Exception 异常
      */
     @PostMapping("selectQuotationofrate")
-    public List<MockMstExchargeQuoteDto> selectQuotationofrate(@RequestBody Map<String, Object> param) throws Exception {
+    public List<MockMstExchargeQuoteDto> selectQuotationofrate(@RequestBody Map<String, Object> param)
+    {
         return priceinfoService.selectQuotationofrate(param);
     }
 
 
     @PostMapping("AutoPrice")
-    public int AutoPrice(@RequestBody Map<String, Object> param) throws Exception {
+    public int AutoPrice(@RequestBody Map<String, Object> param)
+    {
         autoAssetPriceServiceImpl.autoProcess(param);
         return 0;
     }

@@ -103,8 +103,7 @@ public class ReportContentEnum002Controller  extends BaseController{
      */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Valid ReportContentEnum001Dto  dto, BindingResult bindingResult)
-			throws Exception {
+	public AjaxResult check(@RequestBody @Valid ReportContentEnum001Dto  dto, BindingResult bindingResult) {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 

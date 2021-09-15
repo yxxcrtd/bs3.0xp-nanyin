@@ -22,6 +22,7 @@ import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
+import org.springframework.stereotype.Repository;
 
 /**
  * 基金类资产查询
@@ -31,6 +32,7 @@ import com.joyintech.tams.common.base.entity.FinProductType;
  * @see ValAssetsFundQuery002Mapper
  * @since 1.0
  */
+@Repository
 public interface ValAssetsFundQuery002Mapper {
 
     /**

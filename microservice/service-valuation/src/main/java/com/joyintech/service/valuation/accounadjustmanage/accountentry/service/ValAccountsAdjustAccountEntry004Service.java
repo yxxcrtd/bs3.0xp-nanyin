@@ -96,7 +96,7 @@ public class ValAccountsAdjustAccountEntry004Service extends CommonExportService
     public String  getAllSceneNodeId(String booksetId,
                              String sceneNodeId, String allSceneNodeId){
         String fsceneNodeid =mapper.getAllSceneNodeId(booksetId, sceneNodeId);
-        if(StringUtils.isEmpty(fsceneNodeid)||"".equals(fsceneNodeid)||fsceneNodeid==null
+        if(fsceneNodeid==null || StringUtils.isEmpty(fsceneNodeid)||"".equals(fsceneNodeid)
         ){
            return  allSceneNodeId;
         }else{

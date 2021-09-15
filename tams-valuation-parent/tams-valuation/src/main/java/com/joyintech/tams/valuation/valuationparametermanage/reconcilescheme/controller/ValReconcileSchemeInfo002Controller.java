@@ -90,7 +90,7 @@ public class ValReconcileSchemeInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId()
-        throws Exception {
+         {
         String param = super.getRequest().getParameter("param");
         return reconcileSchemeInfo002Service.getBooksetId(param);
     }

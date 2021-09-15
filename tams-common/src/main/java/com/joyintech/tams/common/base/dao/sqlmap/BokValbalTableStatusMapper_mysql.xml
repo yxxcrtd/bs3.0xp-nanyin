@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        <id column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <id column="VAL_DATE" property="valDate" jdbcType="DATE" />
+        <id column="VAL_BAL_FLAG" property="valBalFlag" jdbcType="VARCHAR" />
+        <result column="FINPROD_NAME" property="finprodName" jdbcType="VARCHAR" />
+        <result column="CAPITAL" property="capital" jdbcType="DECIMAL" />
+        <result column="ASSET_VALUE" property="assetValue" jdbcType="DECIMAL" />
+        <result column="TOTAL_NET_VALUE" property="totalNetValue" jdbcType="DECIMAL" />
+        <result column="SEVEN_DAY_RATE" property="sevenDayRate" jdbcType="DECIMAL" />
+        <result column="PAY_PROFIT" property="payProfit" jdbcType="DECIMAL" />
+        <result column="FILE_ID" property="fileId" jdbcType="VARCHAR" />
+        <result column="NET_UNIT_VALUE" property="netUnitValue" jdbcType="DECIMAL" />
+        <result column="CHECK_STATUS" property="checkStatus" jdbcType="VARCHAR" />
+        <result column="CHECK_RESULT" property="checkResult" jdbcType="VARCHAR" />
+        <result column="CONFIRM_STATUS" property="confirmStatus" jdbcType="VARCHAR" />
+        <result column="NOTICE_STATUS" property="noticeStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="TDY_YIELD" property="tdyYield" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_ID FINPROD_ID, VAL_DATE VAL_DATE, VAL_BAL_FLAG VAL_BAL_FLAG, FINPROD_NAME FINPROD_NAME,
+        CAPITAL CAPITAL, ASSET_VALUE ASSET_VALUE, TOTAL_NET_VALUE TOTAL_NET_VALUE, SEVEN_DAY_RATE SEVEN_DAY_RATE,
+        PAY_PROFIT PAY_PROFIT, FILE_ID FILE_ID, NET_UNIT_VALUE NET_UNIT_VALUE, CHECK_STATUS CHECK_STATUS,
+        CHECK_RESULT CHECK_RESULT, CONFIRM_STATUS CONFIRM_STATUS, NOTICE_STATUS NOTICE_STATUS,
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, TDY_YIELD TDY_YIELD
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper.Base_Column_List" />
+        from BOK_VALBAL_TABLE_STATUS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper.Base_Column_List" />
+        from BOK_VALBAL_TABLE_STATUS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatusKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokValbalTableStatusMapper.Base_Column_List" />
+        from BOK_VALBAL_TABLE_STATUS
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and VAL_DATE = #{valDate,jdbcType=DATE}
+        and VAL_BAL_FLAG = #{valBalFlag,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatusKey" >
+        delete from BOK_VALBAL_TABLE_STATUS
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+          and VAL_BAL_FLAG = #{valBalFlag,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        insert into BOK_VALBAL_TABLE_STATUS (FINPROD_ID, VAL_DATE, VAL_BAL_FLAG,
+            FINPROD_NAME, CAPITAL, ASSET_VALUE,
+            TOTAL_NET_VALUE, SEVEN_DAY_RATE, PAY_PROFIT,
+            FILE_ID, NET_UNIT_VALUE, CHECK_STATUS,
+            CHECK_RESULT, CONFIRM_STATUS, NOTICE_STATUS,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, TDY_YIELD
+            )
+        values (#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{valBalFlag,jdbcType=VARCHAR},
+            #{finprodName,jdbcType=VARCHAR}, #{capital,jdbcType=DECIMAL}, #{assetValue,jdbcType=DECIMAL},
+            #{totalNetValue,jdbcType=DECIMAL}, #{sevenDayRate,jdbcType=DECIMAL}, #{payProfit,jdbcType=DECIMAL},
+            #{fileId,jdbcType=VARCHAR}, #{netUnitValue,jdbcType=DECIMAL}, #{checkStatus,jdbcType=VARCHAR},
+            #{checkResult,jdbcType=VARCHAR}, #{confirmStatus,jdbcType=VARCHAR}, #{noticeStatus,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{tdyYield,jdbcType=DECIMAL}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        insert into BOK_VALBAL_TABLE_STATUS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="valDate != null" >
+                VAL_DATE,
+            </if>
+            <if test="valBalFlag != null" >
+                VAL_BAL_FLAG,
+            </if>
+            <if test="finprodName != null" >
+                FINPROD_NAME,
+            </if>
+            <if test="capital != null" >
+                CAPITAL,
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE,
+            </if>
+            <if test="totalNetValue != null" >
+                TOTAL_NET_VALUE,
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE,
+            </if>
+            <if test="payProfit != null" >
+                PAY_PROFIT,
+            </if>
+            <if test="fileId != null" >
+                FILE_ID,
+            </if>
+            <if test="netUnitValue != null" >
+                NET_UNIT_VALUE,
+            </if>
+            <if test="checkStatus != null" >
+                CHECK_STATUS,
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT,
+            </if>
+            <if test="confirmStatus != null" >
+                CONFIRM_STATUS,
+            </if>
+            <if test="noticeStatus != null" >
+                NOTICE_STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="tdyYield != null" >
+                TDY_YIELD,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="valDate != null" >
+                #{valDate,jdbcType=DATE},
+            </if>
+            <if test="valBalFlag != null" >
+                #{valBalFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="finprodName != null" >
+                #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="capital != null" >
+                #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValue != null" >
+                #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="totalNetValue != null" >
+                #{totalNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="payProfit != null" >
+                #{payProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="fileId != null" >
+                #{fileId,jdbcType=VARCHAR},
+            </if>
+            <if test="netUnitValue != null" >
+                #{netUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="checkStatus != null" >
+                #{checkStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmStatus != null" >
+                #{confirmStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="noticeStatus != null" >
+                #{noticeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyYield != null" >
+                #{tdyYield,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        insert into BOK_VALBAL_TABLE_STATUS(FINPROD_ID, VAL_DATE, VAL_BAL_FLAG, FINPROD_NAME,
+        CAPITAL, ASSET_VALUE, TOTAL_NET_VALUE, SEVEN_DAY_RATE, PAY_PROFIT, FILE_ID, NET_UNIT_VALUE,
+        CHECK_STATUS, CHECK_RESULT, CONFIRM_STATUS, NOTICE_STATUS, CREATE_USER, CREATE_DEPT,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, TDY_YIELD)
+        select FINPROD_ID, VAL_DATE, VAL_BAL_FLAG, FINPROD_NAME,
+            CAPITAL, ASSET_VALUE, TOTAL_NET_VALUE, SEVEN_DAY_RATE, PAY_PROFIT, FILE_ID, NET_UNIT_VALUE,
+            CHECK_STATUS, CHECK_RESULT, CONFIRM_STATUS, NOTICE_STATUS, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, TDY_YIELD
+             from BOK_VALBAL_TABLE_STATUS
+             where 1 = 1 and FINPROD_ID = #{finprodId,jdbcType=VARCHAR} and VAL_DATE = #{valDate,jdbcType=DATE} and VAL_BAL_FLAG = #{valBalFlag,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        update BOK_VALBAL_TABLE_STATUS
+        <set >
+            <if test="finprodName != null" >
+                FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            </if>
+            <if test="capital != null" >
+                CAPITAL = #{capital,jdbcType=DECIMAL},
+            </if>
+            <if test="assetValue != null" >
+                ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="totalNetValue != null" >
+                TOTAL_NET_VALUE = #{totalNetValue,jdbcType=DECIMAL},
+            </if>
+            <if test="sevenDayRate != null" >
+                SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            </if>
+            <if test="payProfit != null" >
+                PAY_PROFIT = #{payProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="fileId != null" >
+                FILE_ID = #{fileId,jdbcType=VARCHAR},
+            </if>
+            <if test="netUnitValue != null" >
+                NET_UNIT_VALUE = #{netUnitValue,jdbcType=DECIMAL},
+            </if>
+            <if test="checkStatus != null" >
+                CHECK_STATUS = #{checkStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="checkResult != null" >
+                CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            </if>
+            <if test="confirmStatus != null" >
+                CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="noticeStatus != null" >
+                NOTICE_STATUS = #{noticeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="tdyYield != null" >
+                TDY_YIELD = #{tdyYield,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+        and VAL_DATE = #{valDate,jdbcType=DATE}
+        and VAL_BAL_FLAG = #{valBalFlag,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokValbalTableStatus" >
+        update BOK_VALBAL_TABLE_STATUS
+        set FINPROD_NAME = #{finprodName,jdbcType=VARCHAR},
+            CAPITAL = #{capital,jdbcType=DECIMAL},
+            ASSET_VALUE = #{assetValue,jdbcType=DECIMAL},
+            TOTAL_NET_VALUE = #{totalNetValue,jdbcType=DECIMAL},
+            SEVEN_DAY_RATE = #{sevenDayRate,jdbcType=DECIMAL},
+            PAY_PROFIT = #{payProfit,jdbcType=DECIMAL},
+            FILE_ID = #{fileId,jdbcType=VARCHAR},
+            NET_UNIT_VALUE = #{netUnitValue,jdbcType=DECIMAL},
+            CHECK_STATUS = #{checkStatus,jdbcType=VARCHAR},
+            CHECK_RESULT = #{checkResult,jdbcType=VARCHAR},
+            CONFIRM_STATUS = #{confirmStatus,jdbcType=VARCHAR},
+            NOTICE_STATUS = #{noticeStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            TDY_YIELD = #{tdyYield,jdbcType=DECIMAL}
+        where FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
+          and VAL_DATE = #{valDate,jdbcType=DATE}
+          and VAL_BAL_FLAG = #{valBalFlag,jdbcType=VARCHAR}
+    </update>
+</mapper>

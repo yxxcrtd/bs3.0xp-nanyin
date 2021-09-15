@@ -47,7 +47,7 @@ public class RiskLevelRatingController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<RiskLevelRating001Dto> findPage(@RequestBody Map<String, Object> paramMap,
                                                 @PathVariable("page") int page,
-                                                @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("length") int length) {
         return riskLevelRatingService.findPage(page, length, paramMap);
     }
 
@@ -63,7 +63,7 @@ public class RiskLevelRatingController {
     @RequestMapping("findId/{page}/{length}")
     public Page<SelectOptionDto> findId(@RequestBody Map<String, Object> paramMap,
                                         @PathVariable("page") int page,
-                                        @PathVariable("length") int length) throws Exception {
+                                        @PathVariable("length") int length) {
         return riskLevelRatingService.findId(page, length, paramMap);
     }
 
@@ -76,7 +76,7 @@ public class RiskLevelRatingController {
      */
     @RequestMapping("findList")
     public RiskLevelRating002Dto findList(@RequestBody Map<String, Object> paramMap
-    ) throws Exception {
+    )  {
         return riskLevelRatingService.findList(paramMap);
     }
 
@@ -99,7 +99,7 @@ public class RiskLevelRatingController {
     @Transactional
     @DTXTransaction
     @RequestMapping("insertRisk")
-    public void insertRisk(@RequestBody RiskLevelRating001Dto dto) throws Exception {
+    public void insertRisk(@RequestBody RiskLevelRating001Dto dto) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat sdf1= new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat sdf2= new SimpleDateFormat("yyyy-MM-dd");

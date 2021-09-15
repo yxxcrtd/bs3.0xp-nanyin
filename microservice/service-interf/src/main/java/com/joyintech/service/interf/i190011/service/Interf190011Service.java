@@ -56,7 +56,7 @@ public class Interf190011Service extends SendEsbService<Interf190011InEntity, In
      */
     @Override
     public Interf190011InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         dto = (SendBonusDto)param;
         return dto == null ? null : new Interf190011InEntity(dto);
     }
@@ -66,7 +66,7 @@ public class Interf190011Service extends SendEsbService<Interf190011InEntity, In
      */
     @Override
     public int saveInterfData(Interf190011OutEntity entity)
-        throws Exception {
+    {
         int result = 0;
         deleteMapper.deleteBonusInfo(dto);
         for (Interf190011OutEntity item : entity.getArrList()) {
@@ -98,7 +98,7 @@ public class Interf190011Service extends SendEsbService<Interf190011InEntity, In
      */
     @Override
     public int saveBusinessData(Interf190011OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.config.reportpage.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +108,7 @@ public class ReportPageManage001Controller extends BaseController {
      * @throws Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export(Map<String, Object> param) throws Exception{
+    public ResponseEntity<byte[]> export(Map<String, Object> param) throws IOException {
     	String datas = this.getParam("datas");
     	List<ReportPageManage001Dto> dtoList;
         if (datas == null) {

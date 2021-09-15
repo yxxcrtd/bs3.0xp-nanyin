@@ -14,10 +14,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.trade.lend.dto.TrdLendInvestTradeDto;
 import com.joyintech.tams.invest.trade.option.dto.TrdOptionTrade002Dto;
-import com.joyintech.tams.invest.trade.option.service.TrdOptionTrade001Service;
 import com.joyintech.tams.invest.trade.option.service.TrdOptionTrade002Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
@@ -170,8 +167,7 @@ public class TrdOptionTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdOptionTrade002Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdOptionTrade002Dto dto) throws Exception {
         if (StringUtil.isBlank(dto.getTotleTradeId())) {
             dto.setTotleTradeId(trdOptionTrade002Service.gen交易编号());
         }

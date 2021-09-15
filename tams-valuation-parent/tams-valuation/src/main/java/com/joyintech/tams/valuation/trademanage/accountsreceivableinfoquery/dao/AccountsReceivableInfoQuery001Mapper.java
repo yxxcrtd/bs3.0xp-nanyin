@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.trademanage.accountsreceivableinfoquery.dto.AccountsReceivableInfoQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.trademanage.accountsreceivableinfoquery.dto.
  * @see AccountsReceivableInfoQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface AccountsReceivableInfoQuery001Mapper {
 
 	/**

@@ -14,6 +14,7 @@ import com.joyintech.tams.invest.common.dto.etr.EtrCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.etr.EtrSecPositionFlowDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCom
  * @create: 2019-10-12 15:06
  **/
 @Service
+@Lazy(false)
 public class EtrBuyoutCashPositionDealService extends EtrCashPositionBaseService {
     
     static BigDecimal 债券面值 = new BigDecimal(100);

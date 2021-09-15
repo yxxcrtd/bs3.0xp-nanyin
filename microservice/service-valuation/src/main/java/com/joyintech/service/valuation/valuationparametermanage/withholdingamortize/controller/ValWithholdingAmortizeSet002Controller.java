@@ -38,8 +38,7 @@ public class ValWithholdingAmortizeSet002Controller extends BaseController {
      * @return 返回的数据
      */
     @PostMapping("/getFinprodId")
-    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param){
 
         return valWithholdingAmortizeSet002Service.getFinprodId(param);
     }

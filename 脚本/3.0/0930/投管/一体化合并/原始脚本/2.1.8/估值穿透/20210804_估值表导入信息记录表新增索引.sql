@@ -1,0 +1,2 @@
+--200210804_估值表导入信息记录表新增索引
+create index searchIndex ON VALTBL_IMPORT_HIS_TRACE(FILE_NAME,PORTFOLIO_NAME,VALDATE);

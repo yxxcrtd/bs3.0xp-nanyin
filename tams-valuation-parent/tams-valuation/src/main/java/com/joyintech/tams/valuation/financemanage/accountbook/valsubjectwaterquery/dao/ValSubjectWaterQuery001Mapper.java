@@ -17,6 +17,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001Dto;
 import com.joyintech.tams.valuation.financemanage.accountbook.valsubjectwaterquery.dto.ValSubjectWaterQuery001SearchDto;
 import com.joyintech.tams.common.base.entity.BokSubject;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -26,6 +27,7 @@ import com.joyintech.tams.common.base.entity.BokSubject;
  * @see ValSubjectWaterQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValSubjectWaterQuery001Mapper {
     
     /**

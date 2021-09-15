@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.PrimaryBiddingPortfolioDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -191,8 +192,7 @@ public class PrimaryBiddingManage002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) PrimaryBiddingManageDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) PrimaryBiddingManageDto dto) throws WorkFlowException {
 
         // 投标编码自动生成：YJTB+YYYYMMDD+8位自增序数
         if (StringUtil.isBlank(dto.getBidId())) {

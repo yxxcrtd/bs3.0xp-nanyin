@@ -406,7 +406,7 @@ public class TrdSecLendDurationService extends BaseService<TrdRepoDurationDto> {
             ptlTrade2.setBusiId(entity.getFinprodId());
             ptlTrade2.setBusiType(DictCodeListExt2.共通业务类型_债券借贷存续期.getValue());
             ptlTrade2.setSecManageAcctId(entity.getSecManageAcctId());
-            ptlTrade2.setSettleDate(entity.getMdate());
+            ptlTrade2.setSettleDate(entity.getSettleDate());
             result.add(ptlTrade2);
         });
         return result;

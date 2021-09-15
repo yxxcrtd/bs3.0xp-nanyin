@@ -90,7 +90,7 @@ public class BMWPdCalculateProcessService {
                 String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, variablePdCalculateDto.getGradeOrgId());
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                    readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_警告.getValue(), BATCH_LOG_RESULTS);
+                    readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_警告.getValue(), BATCH_LOG_RESULTS);
                 //=====记录计算警告日志=====end=====
 
                 // 国债、政策性金融债、地方政府债兜底评级
@@ -148,7 +148,7 @@ public class BMWPdCalculateProcessService {
                     //=====记录计算错误日志=====start=====
                     logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+variablePdCalculateDto.getGradeResult()+"】的PD未维护";
                     impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
+                        readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
                     //=====记录计算错误日志=====end=====
                     return resultDto;
             }
@@ -245,7 +245,7 @@ public class BMWPdCalculateProcessService {
             //=====记录计算错误日志=====start=====
             logMsg ="【PD计算批处理】：计算异常";
             impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                readerDto.getAssetId(), logMsg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), BATCH_LOG_RESULTS);
+                readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
             //=====记录计算错误日志=====end=====
             return resultDto;
         }

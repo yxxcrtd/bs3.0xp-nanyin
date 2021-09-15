@@ -30,7 +30,7 @@ public class TbCpValueConfigRepository {
 	 * @return
 	 * @throws Exception 
 	 */
-	public  static List<Map<String,Object>> getTableData(Date startDate, Date endDate, String prodId,Connection conn) throws Exception {
+	public  static List<Map<String,Object>> getTableData(Date startDate, Date endDate, String prodId,Connection conn) {
 		//定义返回值
 		List<Map<String,Object>> list=new ArrayList<>();
 		

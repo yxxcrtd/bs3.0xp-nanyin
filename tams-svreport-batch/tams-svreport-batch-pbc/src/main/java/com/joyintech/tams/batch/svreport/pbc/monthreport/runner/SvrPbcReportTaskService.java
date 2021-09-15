@@ -1,10 +1,14 @@
 package com.joyintech.tams.batch.svreport.pbc.monthreport.runner;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
+import com.joyintech.batch.batchbase.exception.BatchException;
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.batch.svreport.pbc.monthreport.service.PbcMonthReportCBMainService;
+import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
@@ -13,13 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
-import com.joyintech.batch.batchbase.exception.BatchException;
-import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.batch.svreport.pbc.monthreport.service.PbcMonthReportCBMainService;
-import com.joyintech.tams.common.svreport.chb.util.ToolsUtil;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service(value = "svrPbcReportTaskService")
 @Scope("prototype")
@@ -58,8 +59,16 @@ public class SvrPbcReportTaskService extends BatchBaseService {
             		prodListex.add(prodStr);
             	}
             }
+            String  InstitutionCode = null;
+            if(CommonUtil.isBAmodel()){
+                //判断当前是否是总行机构
+                if(!DictCodeListExt3.联社机构类型_省级机构.getValue().equals(CommonUtil.getInsitutionTypeByUserName(batchExecuteInfo.getCreateUser()))){
+                    //如果是非总行则将批处理启动用户所属的机构传入后台调用
+                    InstitutionCode=CommonUtil.getInsitutionCodeByUserName(batchExecuteInfo.getCreateUser());
+                }
+            }
             pbcMonthReportCBMainService.generateReport(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate()),
-            		prodListex,false);
+            		prodListex,false,InstitutionCode);
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

@@ -38,7 +38,7 @@ public class FinProductAddReduceController {
     @PostMapping("selectForPage/{page}/{length}")
     public Page<FinProductAddReduceDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductAddReduceService.selectForPage(page, length, param);
     }
 
@@ -51,7 +51,7 @@ public class FinProductAddReduceController {
     @PostMapping("getProdId/{page}/{length}")
     public Page<SelectOptionDto> getProdId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                            @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductAddReduceService.getProdId(page, length, param);
     }
 

@@ -102,7 +102,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
             }
             
             if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(inputDto.getSecAcctId())) {
-                errorList.add(new ValidMessage("chlId", "通道代码和证券账户不能同时为空！"));
+                errorList.add(new ValidMessage("chlId", "合作资产和证券账户不能同时为空！"));
             }
         }else{
             List<TrdOutRightRepoTradePtl> dtoList = inputDto.getTrdOutRightRepoTradePtl();
@@ -113,7 +113,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
                }
                
                if (StringUtil.isEmpty(inputDto.getChlId()) && StringUtil.isEmpty(dtoList.get(i).getSecManageAcctId())) {
-                   errorList.add(new ValidMessage("chlId", "通道代码和证券账户不能同时为空！"));
+                   errorList.add(new ValidMessage("chlId", "合作资产和证券账户不能同时为空！"));
                    break;
                }
             }
@@ -407,7 +407,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+        if(inputDto.getChlId()!=null&&!"".equals(inputDto.getChlId())){
             Map<String,Object> sMap= new HashMap<String ,Object>();
             sMap.put("chlId",inputDto.getChlId());
             sMap.put("finprodId",inputDto.getPortfolioId());

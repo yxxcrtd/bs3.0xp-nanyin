@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.json.JsonSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -126,7 +127,7 @@ public class OneKeyMakeAccount001Controller extends BaseController{
     
     @RequestMapping("/findLogPage")
     @ResponseBody
-    public List<ValAccountHandle001Dto> findLogPage () throws Exception{
+    public List<ValAccountHandle001Dto> findLogPage () {
         Map<String,Object> map =RequestUtil.getPageParam();
         return oneKeyMakeAccount001Services.findLogPage(map);
     }
@@ -149,7 +150,7 @@ public class OneKeyMakeAccount001Controller extends BaseController{
         int check = 0;
         Map<String,Object> map = new HashMap<String,Object>();
         if(valPublicDataImport001Service.checkInterLog(map)==0){
-            return  oneKeyMakeAccount001Services.doComplete(selectedBatchGroup, selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType,detailName);
+            return  JsonSanitizer.sanitize(oneKeyMakeAccount001Services.doComplete(selectedBatchGroup, selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType,detailName));
               
         }else{
             

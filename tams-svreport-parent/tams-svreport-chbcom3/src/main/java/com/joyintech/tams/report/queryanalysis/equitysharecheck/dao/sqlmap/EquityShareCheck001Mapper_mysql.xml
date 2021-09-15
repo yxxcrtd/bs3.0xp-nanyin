@@ -120,6 +120,7 @@
 		end )) shares /*当日变动份额*/
 		from chb_equdet t
 		where t.STATUS != 'D'
+		and t.busi_type not in ('06','07','08','09') /*徽商个性化,冻结，不影响份额。不纳入计算*/
 		group by t.REGIST_BANK_CODE,
 		t.account,
 		t.ccy,

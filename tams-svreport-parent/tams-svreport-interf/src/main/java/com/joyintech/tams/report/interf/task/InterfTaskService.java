@@ -95,7 +95,7 @@ public class InterfTaskService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
+//                    logger.error(e.getMessage(),e);
                     logger.error(e.getMessage(),e);
                 }
             }
@@ -106,7 +106,7 @@ public class InterfTaskService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
+//                    logger.error(e.getMessage(),e);
                     logger.error(e.getMessage(),e);
                 }
             }

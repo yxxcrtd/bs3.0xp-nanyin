@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,6 +91,7 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
             String finprodMarketId = finOpenPlanMaintenanceService.getFinprodMarketIdByFinprodId(dto.getFinprodId());
             dto.setFinprodMarketId(finprodMarketId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
+            model.addAttribute("scheduletype", dto.getOpenType());
         }
         // 画面元素是否显示
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
@@ -115,13 +117,12 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * 根据产品代码查询数据
      * <功能详细描述>
      * @return Page<FinPayPlanAdjustmentDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<FinOpenPlanMaintenanceDto> selectForPage() throws Exception{
+    public List<FinOpenPlanMaintenanceDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finOpenPlanMaintenanceService.selectForPage(param);
     }
@@ -147,13 +148,13 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenanceDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinOpenPlanMaintenanceDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -184,14 +185,11 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finOpenPlanMaintenanceService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -199,7 +197,7 @@ public class FinOpenPlanMaintenance001Controller extends BaseController{
     /**
      * 发送销售接口状态
      *
-     * @param FinMdateAdjustment001Dto
+     * @param finOpenPlanMaintenanceDto
      * @return 发送结果
      * @see
      * @since 1.0

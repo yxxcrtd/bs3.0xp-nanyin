@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.trade.service.PreTrdCommonBaseService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -88,8 +89,7 @@ public class PtlActivityPeriod001Controller extends BaseController{
    */
   @ResponseBody
   @RequestMapping("findPage")
-  public Page<PtlActivityPeriod001Dto> findPage()
-      throws Exception {
+  public Page<PtlActivityPeriod001Dto> findPage(){
       return ptlActivityPeriod001Service.selectForPage(RequestUtil.getParameters(getRequest()));
   }
   /**
@@ -182,8 +182,7 @@ public class PtlActivityPeriod001Controller extends BaseController{
   @ResponseBody
   @RequestMapping("delete")
   public AjaxResult delete(@RequestBody @Validated({
-      ValidateGroupDelete.class}) PtlActivityPeriod001Dto dto, BindingResult br)
-      throws Exception {
+      ValidateGroupDelete.class}) PtlActivityPeriod001Dto dto, BindingResult br) throws WorkFlowException {
       if (br.hasErrors()) {
           return new AjaxResult(br);
       }
@@ -215,8 +214,7 @@ public class PtlActivityPeriod001Controller extends BaseController{
    */
 
   @RequestMapping("export")
-  public ResponseEntity<byte[]> export()
-      throws Exception {
+  public ResponseEntity<byte[]> export(){
       return ptlActivityPeriod001Service.export(this.getPageId(),
           RequestUtil.getParameters(getRequest()));
 

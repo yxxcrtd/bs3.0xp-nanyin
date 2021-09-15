@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.disclosure.system.systemsqlquery.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -93,8 +94,7 @@ public class DisSystemSqlQuery001Controller extends BaseController {
     }
     @RequestMapping("search")
     @ResponseBody
-    public List<ExportEntity> search()
-        throws Exception {
+    public List<ExportEntity> search(){
         String sqlText = this.getRequest().getParameter("sqlText");
         List<ExportEntity> allData = new ArrayList<>();
         try {
@@ -159,8 +159,7 @@ public class DisSystemSqlQuery001Controller extends BaseController {
         }
         return allData;
     }
-    private ExportEntity listToEntity(List<String> allColumns)
-        throws Exception {
+    private ExportEntity listToEntity(List<String> allColumns) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ExportEntity entity = new ExportEntity();
         int index = 0;
         while (index < 100 && index < allColumns.size()) {

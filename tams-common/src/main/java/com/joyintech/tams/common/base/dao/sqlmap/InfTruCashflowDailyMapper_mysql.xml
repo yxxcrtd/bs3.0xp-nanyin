@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InfTruCashflowDailyMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        <id column="SEQNO" property="seqno" jdbcType="VARCHAR" />
+        <result column="NUMNO" property="numno" jdbcType="DECIMAL" />
+        <result column="CDATE" property="cdate" jdbcType="DATE" />
+        <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+        <result column="PS" property="ps" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="PRINAMT" property="prinamt" jdbcType="DECIMAL" />
+        <result column="REPRINAMT" property="reprinamt" jdbcType="DECIMAL" />
+        <result column="SELLER" property="seller" jdbcType="VARCHAR" />
+        <result column="SELLERNAME" property="sellername" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="USAGE" property="usage" jdbcType="VARCHAR" />
+        <result column="POST_SCRIPT" property="postScript" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQNO SEQNO, NUMNO NUMNO, CDATE CDATE, ACCOUNT ACCOUNT, PS PS, CCY CCY, PRINAMT PRINAMT, 
+        REPRINAMT REPRINAMT, SELLER SELLER, SELLERNAME SELLERNAME, REMARK REMARK, USAGE USAGE, 
+        POST_SCRIPT POST_SCRIPT, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashflowDailyMapper.Base_Column_List" />
+        from INF_TRU_CASHFLOW_DAILY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashflowDailyMapper.Base_Column_List" />
+        from INF_TRU_CASHFLOW_DAILY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InfTruCashflowDailyMapper.Base_Column_List" />
+        from INF_TRU_CASHFLOW_DAILY
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from INF_TRU_CASHFLOW_DAILY
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        insert into INF_TRU_CASHFLOW_DAILY (SEQNO, NUMNO, CDATE, 
+            ACCOUNT, PS, CCY, 
+            PRINAMT, REPRINAMT, SELLER, 
+            SELLERNAME, REMARK, USAGE, 
+            POST_SCRIPT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqno,jdbcType=VARCHAR}, #{numno,jdbcType=DECIMAL}, #{cdate,jdbcType=DATE}, 
+            #{account,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, 
+            #{prinamt,jdbcType=DECIMAL}, #{reprinamt,jdbcType=DECIMAL}, #{seller,jdbcType=VARCHAR}, 
+            #{sellername,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{usage,jdbcType=VARCHAR}, 
+            #{postScript,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        insert into INF_TRU_CASHFLOW_DAILY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                SEQNO,
+            </if>
+            <if test="numno != null" >
+                NUMNO,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="account != null" >
+                ACCOUNT,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT,
+            </if>
+            <if test="reprinamt != null" >
+                REPRINAMT,
+            </if>
+            <if test="seller != null" >
+                SELLER,
+            </if>
+            <if test="sellername != null" >
+                SELLERNAME,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="usage != null" >
+                USAGE,
+            </if>
+            <if test="postScript != null" >
+                POST_SCRIPT,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqno != null" >
+                #{seqno,jdbcType=VARCHAR},
+            </if>
+            <if test="numno != null" >
+                #{numno,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=DATE},
+            </if>
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="prinamt != null" >
+                #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="reprinamt != null" >
+                #{reprinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="seller != null" >
+                #{seller,jdbcType=VARCHAR},
+            </if>
+            <if test="sellername != null" >
+                #{sellername,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="usage != null" >
+                #{usage,jdbcType=VARCHAR},
+            </if>
+            <if test="postScript != null" >
+                #{postScript,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        insert into INF_TRU_CASHFLOW_DAILY(SEQNO, NUMNO, CDATE, ACCOUNT, PS, CCY, PRINAMT, 
+        REPRINAMT, SELLER, SELLERNAME, REMARK, USAGE, POST_SCRIPT, CREATE_USER, CREATE_DEPT, 
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEQNO, NUMNO, CDATE, ACCOUNT, PS, CCY, PRINAMT, 
+            REPRINAMT, SELLER, SELLERNAME, REMARK, USAGE, POST_SCRIPT, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INF_TRU_CASHFLOW_DAILY
+             where 1 = 1 and SEQNO = #{seqno,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        update INF_TRU_CASHFLOW_DAILY
+        <set >
+            <if test="numno != null" >
+                NUMNO = #{numno,jdbcType=DECIMAL},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=DATE},
+            </if>
+            <if test="account != null" >
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                PS = #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="prinamt != null" >
+                PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="reprinamt != null" >
+                REPRINAMT = #{reprinamt,jdbcType=DECIMAL},
+            </if>
+            <if test="seller != null" >
+                SELLER = #{seller,jdbcType=VARCHAR},
+            </if>
+            <if test="sellername != null" >
+                SELLERNAME = #{sellername,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="usage != null" >
+                USAGE = #{usage,jdbcType=VARCHAR},
+            </if>
+            <if test="postScript != null" >
+                POST_SCRIPT = #{postScript,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InfTruCashflowDaily" >
+        update INF_TRU_CASHFLOW_DAILY
+        set NUMNO = #{numno,jdbcType=DECIMAL},
+            CDATE = #{cdate,jdbcType=DATE},
+            ACCOUNT = #{account,jdbcType=VARCHAR},
+            PS = #{ps,jdbcType=VARCHAR},
+            CCY = #{ccy,jdbcType=VARCHAR},
+            PRINAMT = #{prinamt,jdbcType=DECIMAL},
+            REPRINAMT = #{reprinamt,jdbcType=DECIMAL},
+            SELLER = #{seller,jdbcType=VARCHAR},
+            SELLERNAME = #{sellername,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            USAGE = #{usage,jdbcType=VARCHAR},
+            POST_SCRIPT = #{postScript,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQNO = #{seqno,jdbcType=VARCHAR}
+    </update>
+</mapper>

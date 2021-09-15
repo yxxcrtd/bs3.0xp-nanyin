@@ -63,7 +63,7 @@ public class ValBooksetDateSwitch003Controller extends BaseController {
      * @see
      */
     @PostMapping("/findList")
-    public List<ValBooksetDateSwitch003Dto> findList(@RequestBody Map<String , Object> parmars) throws Exception {
+    public List<ValBooksetDateSwitch003Dto> findList(@RequestBody Map<String , Object> parmars) {
         return valBooksetDateSwitch003Service.findList(parmars);
 
     }
@@ -71,7 +71,7 @@ public class ValBooksetDateSwitch003Controller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/modify")
-    public int modify(@RequestBody ValBooksetDateSwitch003Dto entity) throws Exception {
+    public int modify(@RequestBody ValBooksetDateSwitch003Dto entity) {
         return valBooksetDateSwitch003Service.modify(entity);
 
     }

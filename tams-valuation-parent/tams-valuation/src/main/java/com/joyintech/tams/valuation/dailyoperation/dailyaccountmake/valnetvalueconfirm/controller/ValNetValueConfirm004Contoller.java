@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalue
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,7 +93,7 @@ public class ValNetValueConfirm004Contoller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValNetValueConfirm004Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValNetValueConfirm004Dto dto, BindingResult br) throws WorkFlowException {
     	if(br.hasErrors()){
             return new AjaxResult(br);
         }

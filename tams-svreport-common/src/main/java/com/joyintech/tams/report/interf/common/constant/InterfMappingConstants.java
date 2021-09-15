@@ -68,4 +68,32 @@ public final class InterfMappingConstants {
    * 交易对手二级类型  非银行业金融机构
    */
   public static final String BS_ASSETTYPE3_C0402="C0402";
+
+	// 理财子新增 新增理财子公司月报资产头寸字段设置 start
+	/**
+	 * 对理财子公司资产类型映射关系KEY
+	 */
+	public static final String MAPPINGCODE_SUBASSETTYPE = "MAPPINGCODE_SUBASSETTYPE";
+	/**
+	 * 理财子公司资产类型映射关系-商业银行二级资本债
+	 */
+	public static final String SUBASSETTYPE_SECONDBOND = "SUBASSETTYPE_SECONDBOND";
+	/**
+	 * 理财子公司资产类型映射关系-商业银行永续债
+	 */
+	public static final String SUBASSETTYPE_CAPSEC = "SUBASSETTYPE_CAPSEC";
+	/**
+	 * 理财子公司资产类型映射关系-资产四级分类
+	 */
+	public static final String SUBASSETTYPE_ASSET = "SUBASSETTYPE_ASSET";
+	/**
+	 * 理财子公司资产类型映射关系-首层资产二级类型
+	 */
+	public static final String SUBASSETTYPE_SECONDASSET = "SUBASSETTYPE_SECONDASSET";
+
+	/**
+	 * 商业银行优先股
+	 */
+	public static final String SUBASSETTYPE_ORSTOCK = "SUBASSETTYPE_ORSTOCK";
+	// 理财子新增 新增理财子公司月报资产头寸字段设置 end
 }

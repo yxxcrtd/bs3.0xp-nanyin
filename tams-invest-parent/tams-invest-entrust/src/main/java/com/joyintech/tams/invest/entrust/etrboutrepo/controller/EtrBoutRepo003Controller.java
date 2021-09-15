@@ -16,8 +16,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,7 +77,8 @@ public class EtrBoutRepo003Controller extends BaseController {
 
     @Autowired
     private EtrBoutRepoService etrBoutRepoService;
-
+    @Autowired
+    private PlatformDate platformDate;
     /**
      * {@inheritDoc}
      */
@@ -88,7 +92,9 @@ public class EtrBoutRepo003Controller extends BaseController {
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         model.addAttribute("ps_03", DictCodeList.回购拆借方向_正回购.getValue());
         model.addAttribute("ps_04", DictCodeList.回购拆借方向_逆回购.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String operateType = getParam("operateType");
         if (StringUtil.equals(operateType, "import")) {
@@ -195,12 +201,11 @@ public class EtrBoutRepo003Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrBoutRepoDto> dtoList, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody List<EtrBoutRepoDto> dtoList, BindingResult br) throws WorkFlowException {
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

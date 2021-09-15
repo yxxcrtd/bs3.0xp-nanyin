@@ -159,6 +159,19 @@
         if(CHANNEL){
         	$('#channelFee_div').show();
         }
+        if(FINPRODMARKETID &&　CASH_TYPE　&& (CASH_TYPE=='02'||CASH_TYPE=='03') && mdate){
+          var objectPayInt = {
+            finprodId: FINPRODMARKETID,
+            mdate: mdate
+          }
+          Joyin.ajaxJson(basePath+ "invest/period/trdprojduration/TrdProjectDuration002/isPayIntDate",objectPayInt,function(result){
+            if(!result){
+              //若针对，还本带息，返回 true，针对还本不带息，若有付息日=还本日，返回true
+              $("#isClean").attr("disabled",true);
+              $("#isClean").val('N').trigger('change');
+            }
+        });
+      }
     }
     /**
      * 定义数据表格

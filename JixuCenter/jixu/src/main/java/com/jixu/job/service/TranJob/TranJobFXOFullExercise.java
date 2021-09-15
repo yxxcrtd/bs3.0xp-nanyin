@@ -68,77 +68,79 @@ public class TranJobFXOFullExercise extends TranJobBasic{
 			tranFXOption=transList.get(1);
 		}
 		//多方应收款
-		double longGcost=tranFXOption.getgCost();
-		double longGcostFunc=tranFXOption.getgCostFunc();
-		//空方应付款
-		double shortGcost=tranFXOption.getgCost2();
-		double shortGcostFunc=tranFXOption.getgCostFunc2();
-		double diff_func=RoundUtil.roundMoney2Dec(longGcostFunc-shortGcostFunc-tranFXExercise.getgCostFunc());
-		
-		//多方应收款
-		saveGL(pursaleCooa,
-				DBCR.DEBIT, 
-				longGcostFunc,
-				longGcost, 
-				jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.INVEST_REC_BANK),
-				commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency2()),
-				localCur,
-				tranFXOption.getIncFxrate());
-		//空方应付款
-		saveGL(pursaleCooa,
-				DBCR.CREDIT, 
-				shortGcostFunc,
-				shortGcost, 
-				jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.INVEST_PAY_BANK),
-				commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
-				localCur,
-				tranFXOption.getIncFxrate2());
-		//外汇期权-成本
-		if(tranFXExercise.getgCost()>0){
+		if (tranFXOption != null && tranFXExercise != null){
+			double longGcost=tranFXOption.getgCost();
+			double longGcostFunc=tranFXOption.getgCostFunc();
+			//空方应付款
+			double shortGcost=tranFXOption.getgCost2();
+			double shortGcostFunc=tranFXOption.getgCostFunc2();
+			double diff_func=RoundUtil.roundMoney2Dec(longGcostFunc-shortGcostFunc-tranFXExercise.getgCostFunc());
+
+			//多方应收款
 			saveGL(pursaleCooa,
-					DBCR.CREDIT, 
-					tranFXExercise.getgCostFunc(),
-					tranFXExercise.getgCost(), 
-					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.ACCRUED_INT_EXP_PAY_SHORT),
+					DBCR.DEBIT,
+					longGcostFunc,
+					longGcost,
+					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.INVEST_REC_BANK),
+					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency2()),
+					localCur,
+					tranFXOption.getIncFxrate());
+			//空方应付款
+			saveGL(pursaleCooa,
+					DBCR.CREDIT,
+					shortGcostFunc,
+					shortGcost,
+					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.INVEST_PAY_BANK),
 					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
 					localCur,
-					tranBasic.getFxrate());
-		}else{
-			saveGL(pursaleCooa,
-					DBCR.DEBIT, 
-					Math.abs(tranFXExercise.getgCostFunc()),
-					Math.abs(tranFXExercise.getgCost()), 
-					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.ACCRUED_INT_EXP_PAY_SHORT),
-					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
-					localCur,
-					tranBasic.getFxrate());
+					tranFXOption.getIncFxrate2());
+			//外汇期权-成本
+			if(tranFXExercise.getgCost()>0){
+				saveGL(pursaleCooa,
+						DBCR.CREDIT,
+						tranFXExercise.getgCostFunc(),
+						tranFXExercise.getgCost(),
+						jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.ACCRUED_INT_EXP_PAY_SHORT),
+						commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
+						localCur,
+						tranBasic.getFxrate());
+			}else{
+				saveGL(pursaleCooa,
+						DBCR.DEBIT,
+						Math.abs(tranFXExercise.getgCostFunc()),
+						Math.abs(tranFXExercise.getgCost()),
+						jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.ACCRUED_INT_EXP_PAY_SHORT),
+						commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
+						localCur,
+						tranBasic.getFxrate());
+			}
+			//投资收益
+			if(diff_func>0){ // 赚了
+				saveGL(pursaleCooa,
+						DBCR.CREDIT,
+						diff_func,
+						diff_func,
+						jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CAPITAL_GAIN),
+						commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
+						localCur,
+						tranBasic.getFxrate());
+			}else{ //亏了
+				saveGL(pursaleCooa,
+						DBCR.DEBIT,
+						Math.abs(diff_func),
+						Math.abs(diff_func),
+						jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CAPITAL_LOSS),
+						commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
+						localCur,
+						tranBasic.getFxrate());
+			}
+
+			//------------------------写voucherdetails
+			String desc=SecurityCoreFactory.getAllTranTypeHM().get(tran.getTrantype()) + ": " +
+					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency())+"/"+commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency2());
+			pursaleCooa.getVoucher().setDescription(desc);
+			jobCom.genVoucherDetailsFX(pursaleCooa, tran, "", chartnum);
 		}
-		//投资收益
-		if(diff_func>0){ // 赚了
-			saveGL(pursaleCooa,
-					DBCR.CREDIT, 
-					diff_func,
-					diff_func, 
-					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CAPITAL_GAIN),
-					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
-					localCur,
-					tranBasic.getFxrate());
-		}else{ //亏了
-			saveGL(pursaleCooa,
-					DBCR.DEBIT, 
-					Math.abs(diff_func),
-					Math.abs(diff_func), 
-					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CAPITAL_LOSS),
-					commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency()),
-					localCur,
-					tranBasic.getFxrate());
-		}
-		
-		//------------------------写voucherdetails
-		String desc=SecurityCoreFactory.getAllTranTypeHM().get(tran.getTrantype()) + ": " + 
-				commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency())+"/"+commfuncService.loadFxCurrencyCode(tranBasic.getFxcurrency2());
-		pursaleCooa.getVoucher().setDescription(desc);
-		jobCom.genVoucherDetailsFX(pursaleCooa, tran, "", chartnum);
 	}
 	
 	private void saveGL(GLCOOABase glcooa, String dbcr, double funcCash, double localCash, String acctnum, String localCur, String funcCur, double fxrate) {

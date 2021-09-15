@@ -107,7 +107,7 @@ public class TaxScheme003Service extends CommonExportService<TaxScheme003Dto> im
      * @return
      * @throws Exception
      */
-	public List<TaxScheme003Dto> checkVatTax(Map<String, Object> parameters) throws Exception {
+	public List<TaxScheme003Dto> checkVatTax(Map<String, Object> parameters) {
 		return taxScheme003Mapper.checkVatTax(parameters);
 	}
 

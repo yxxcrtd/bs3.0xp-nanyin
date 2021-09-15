@@ -198,6 +198,18 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     private String finprodAbbr;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+    /**
      * finprodAbbr
      * @return finprodAbbr
      */

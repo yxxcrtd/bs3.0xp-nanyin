@@ -90,7 +90,7 @@ public class CeAssetPositionManagement001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return ceAssetPositionManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

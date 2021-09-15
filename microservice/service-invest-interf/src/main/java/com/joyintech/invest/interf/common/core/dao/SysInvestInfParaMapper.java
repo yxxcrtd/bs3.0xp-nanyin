@@ -3,6 +3,7 @@ package com.joyintech.invest.interf.common.core.dao;
 import com.joyintech.invest.interf.common.core.entity.SysPara;
 import com.joyintech.invest.interf.common.core.entity.SysParaKey;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @author: 王波
  * @create: 2020-02-25 16:12
  */
+@Repository
 public interface SysInvestInfParaMapper {
     /**
      * 获取接口所有系统参数

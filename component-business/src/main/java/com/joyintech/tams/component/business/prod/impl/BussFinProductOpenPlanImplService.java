@@ -252,6 +252,26 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
                 List<String> dayOfWeeks = StringUtil.splitToList(",", inputDto.getDayOfWeek());
                 // 将输入的周几列表按顺序排序
                 Collections.sort(dayOfWeeks);
+
+                //选择周期为周时，在首次开放日/起息日所在周里，所选择固定周对应的有效日期。
+                for(String firstDayOfWeek : dayOfWeeks){
+                    //获得遍历中固定周几对应的周号变量
+                    int dayOfWeekparam = Integer.parseInt(firstDayOfWeek);
+                    //获得首次开放日/起息日是所在周的周几
+                    int startDateparam = DateUtil.getWeekDay(startDate);
+                    //过滤处在该周中，所选的固定周对应的有效日期，并添加到集合中
+                    if (startDateparam < dayOfWeekparam ) {
+                        //满足所选的固定周号大于首次开放日/起息日对应的周号，便做出插值
+                        int firstdayOfWeek = dayOfWeekparam-startDateparam;
+                        //用得到的差值来计算出固定周对应的有效日期
+                        Date weekDate = DateUtil.addDay(startDate, firstdayOfWeek);
+                        //若周期较短，判断出到期日之前的有效日期
+                        if (DateUtil.compareDate(weekDate, endDate) < 0){
+                            adjustBeforeNodeDateList.add(weekDate);
+                        }
+                    }
+                }
+
                 // 遍历列表节点
                 for (String dayOfWeek : dayOfWeeks) {
                     weekStartDateList.add(this.getWeekDayByDate(startDate,inputDto.getOpenCycle().intValue(), Integer.parseInt(dayOfWeek)));
@@ -333,6 +353,17 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
                 // 将输入的几号列表按顺序排序
                 Collections.sort(dayOfMonthList);
 
+                //获取选择月周期的固定几号的首次开放日/起息日的第一个周期有效日期。
+                for (String dayOfMonth : dayOfMonthList) {
+                    //以选中的几号数据进行遍历，得到首次开放日/起息日的第一个周期中，dayOfMonth几号对应的日期。
+                    Date firstDayOfMonth = DateUtil.getDateOfMonthYearByDay(startDate,
+                            StringUtil.toInt(dayOfMonth));
+                    //在第一个周期中，选中几号对应的日期应是大于起息日/首次开放日，并且小于到期日
+                    if (DateUtil.compareDate(startDate, firstDayOfMonth) < 0 && DateUtil.compareDate(firstDayOfMonth, endDate) <0) {
+                        adjustBeforeNodeDateList.add(firstDayOfMonth);
+                    }
+                }
+
                 Date nodeEndDate = startDate; // 临时变量.区间节点结束日 = 临时变量.区间开始日
                 // 3.3.1 固定开放日 != null 时
                 // 区间节点结束日 < 区间结束日时
@@ -360,6 +391,25 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 
                 // 将输入的第几工作日列表按顺序排序
                 Collections.sort(workdayOfMonthList);
+
+                //获取选择月周期的固定工作日的首次开放日/起息日所在月有效日期。
+                for (String workdayOfMonth : workdayOfMonthList) {
+                    //获得首次开放日/起息日是所在月的月初日期
+                    Date calcDate = DateUtil.getDateOfMonthYearByDay(startDate, 1);
+                    int adjustDayCount = StringUtil.toInt(workdayOfMonth);
+                    // 上述共通返回.计算后日期在输入参数.交易日历列表中不存在时 输入.固定开放工作日 - 1
+                    if (dealCalendarHolidayList.indexOf(DateUtil.format(calcDate)) < 0) {
+                        adjustDayCount = adjustDayCount - 1;
+                    }
+                    //获得固定工作日对应的日期
+                    Date firstWorkDayOfMonth = dateCalService.calculationTradingDay(calcDate,
+                            adjustDayCount, dealCalendarHolidayList,
+                            DictCodeList.是否_否.getValue());
+                    // 将获得日期进行判断，确认在首次开放日/起息日之后，在到期日之前
+                    if (DateUtil.compareDate(startDate, firstWorkDayOfMonth) < 0 && DateUtil.compareDate(firstWorkDayOfMonth, endDate) <0) {
+                        adjustBeforeNodeDateList.add(firstWorkDayOfMonth);
+                    }
+                }
 
                 // 3.3.2 固定开放工作日 != null 时
                 // 临时变量.区间节点结束日 = 临时变量.区间开始日
@@ -405,6 +455,29 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
                 Collections.sort(weekOfMonthList);
                 //对周几排序
                 Collections.sort(workdayOfWeekList);
+
+                //获得选择月周期时，固定第几周,周几的对应首次开放日/起息日所在月的日期
+                for (String weekOfMonth : weekOfMonthList) {
+                    int adjustWeekCount = StringUtil.toInt(weekOfMonth);
+                    //首次开放日/起息日所在的月的月初
+                    Date calcDate = DateUtil.getDateOfMonthYearByDay(startDate,1);
+                    //周几
+                    for(String workdayOfWeek : workdayOfWeekList){
+                        int adjustdayOfWeekCount = StringUtil.toInt(workdayOfWeek);
+                        //第几周周几的日期
+                        Date dayOfWeek = this.weekdatetodata(calcDate, adjustWeekCount, adjustdayOfWeekCount);
+                        if(dayOfWeek == null){
+                            continue;
+                        }
+                        //推算第几周周几日期
+                        Date firstWeekMonthOfDate = DateUtil.parse(AdjustedTradeDayCal.getAdjustedTradeDay(DateUtil.format(dayOfWeek),inputDto.getTradedayRule(), dealCalendarHolidayList));
+                        // 将获得日期进行判断，确认在首次开放日/起息日之后，在到期日之前
+                        if (DateUtil.compareDate(startDate, firstWeekMonthOfDate) < 0 && DateUtil.compareDate(firstWeekMonthOfDate, endDate) <0) {
+                            adjustBeforeNodeDateList.add(firstWeekMonthOfDate);
+                        }
+                    }
+                }
+
                 // 3.3.2 固定开放工作日 != null 时
                 // 临时变量.区间节点结束日 = 临时变量.区间开始日
                 Date nodeEndDate = startDate;
@@ -474,6 +547,17 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 
                 // 将输入的几号列表按顺序排序
                 Collections.sort(dayOfMonthList);
+
+                //获得选择年周期时，固定几号的对应首次开放日/起息日所在月的日期
+                for (String dayOfMonth : dayOfMonthList) {
+                    // 获得固定几号的对应首次开放日/起息日所在月的日期 ※超过当月最大天数时，按当月月末处理
+                    Date firstDayOfYear = DateUtil.getDateOfMonthYearByDay(startDate,StringUtil.toInt(dayOfMonth));
+                    // 将获得日期进行判断，确认在首次开放日/起息日之后，在到期日之前
+                    if (DateUtil.compareDate(startDate, firstDayOfYear) < 0 && DateUtil.compareDate(firstDayOfYear, endDate) <0) {
+                        adjustBeforeNodeDateList.add(firstDayOfYear);
+                    }
+                }
+
                 // 3.5.1 固定开放日 != null 时
 
                 // 当临时变量.区间节点结束日 < 临时变量.区间结束日时，循环以下操作
@@ -500,6 +584,25 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 
                 // 将输入的第几工作日列表按顺序排序
                 Collections.sort(workdayOfMonthList);
+
+                //获取选择年周期时，选择固定第几工作日的首次开放日/起息日当月日期
+                for (String workdayOfMonth : workdayOfMonthList) {
+                    //固定几号的首次开放日/起息日当月的月初
+                    Date calcDate = DateUtil.getDateOfMonthYearByDay(startDate,1);
+                    int adjustDayCount = StringUtil.toInt(workdayOfMonth);
+                    // 上述共通返回.计算后日期在输入参数.交易日历列表中不存在时 输入.固定开放工作日 - 1
+                    if (dealCalendarHolidayList.indexOf(DateUtil.format(calcDate)) < 0) {
+                        adjustDayCount = adjustDayCount - 1;
+                    }
+                    // 固定几号的首次开放日/起息日当月的日期
+                    Date firstWorkDayOfMonthYear = dateCalService.calculationTradingDay(calcDate,
+                            adjustDayCount, dealCalendarHolidayList,
+                            DictCodeList.是否_否.getValue());
+                    // 将获得日期进行判断，确认在首次开放日/起息日之后，在到期日之前
+                    if (DateUtil.compareDate(startDate, firstWorkDayOfMonthYear) < 0 && DateUtil.compareDate(firstWorkDayOfMonthYear, endDate) <0) {
+                        adjustBeforeNodeDateList.add(firstWorkDayOfMonthYear) ;
+                    }
+                }
 
                 // 3.5.2 固定开放工作日 != null 时
                 // 当临时变量.区间节点结束日 < 临时变量.区间结束日时，循环以下操作
@@ -705,6 +808,13 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 
             // 5.开放周期开始日列表、投资周期开始日列表生成
             // 遍历临时变量.调整后结束日区间列表
+            //不调整的“开放结束日”-开放天数来推开放开始日
+            if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
+                for (Date currentNodeDate : adjustBeforeNodeDateList) {
+                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
+                    openCycleStartDateList.add(tempOpenCycleStartDate);
+                }
+            }
             for (Date currentNodeDate : openCycleEndDateList) {
                 // 5.1 开放周期开始日生成
                 // 临时变量.调整后结束日区间列表.节点日期 - 输入.开放天数 + 1
@@ -713,11 +823,11 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
 //                        DateUtil.format(DateUtil.addDay(currentNodeDate,
 //                            1 - inputDto.getOpenDays().intValue())),
 //                        inputDto.getTradedayRule(), dealCalendarHolidayList));
-                if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
-                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
-                    // TODO 开放周期开始日如果比起息日小如何处理（=currentNodeDate？）
-                    openCycleStartDateList.add(tempOpenCycleStartDate);
-                }
+//                if(StringUtil.equals(DictCodeList.开放天数类型_固定天数.getValue(), inputDto.getOpenDaysType())){
+//                    Date tempOpenCycleStartDate = DateUtil.addDay(currentNodeDate, 1 - inputDto.getOpenDays().intValue());
+//                    // TODO 开放周期开始日如果比起息日小如何处理（=currentNodeDate？）
+//                    openCycleStartDateList.add(tempOpenCycleStartDate);
+//                }
 
                 // 5.2 投资周期开始日生成
                 // 交易日推算
@@ -819,6 +929,13 @@ public class BussFinProductOpenPlanImplService extends BaseService<BussFinProduc
             resultDto = new FinOpenPlan();
             Date openCycleStartDate = openCycleStartDateList.get(i);
             Date openCycleEndDat = openCycleEndDateList.get(i);
+            Date openCycleEndDatTemp = null;
+            if(i>0){
+                openCycleEndDatTemp = openCycleEndDateList.get(i-1);
+            }
+            if(DateUtil.compareTo(openCycleStartDate,openCycleEndDatTemp) <= 0){
+                openCycleStartDate = DateUtil.addDay(openCycleEndDatTemp,1);
+            }
             //前五条数据比较
             if(i <= 5){
                 //开放周期开始日 与产品起息日比较

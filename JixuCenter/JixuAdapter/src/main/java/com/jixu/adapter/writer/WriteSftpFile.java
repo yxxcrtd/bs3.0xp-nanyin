@@ -2,6 +2,8 @@ package com.jixu.adapter.writer;
 
 import java.util.HashMap;
 
+import com.jcraft.jsch.JSchException;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Component;
 
 import com.jixu.common.pojo.InterfaceSource;
@@ -21,7 +23,7 @@ import com.jixu.common.util.AESUtil;
 @Component("adptWriteSftpFile")
 public  class WriteSftpFile extends WriteFileBasic{
 	
-	public boolean writeFile(InterfaceSource source, DataCounter dataCounter) throws Exception {
+	public boolean writeFile(InterfaceSource source, DataCounter dataCounter) throws JSchException {
 		if(source.getChannelType()==InterfaceConfig.SftpType){
 			String backupPath=parseDateFolder(source.getBackupPath());
 			String fileNameWild=source.getFileName();
@@ -31,7 +33,7 @@ public  class WriteSftpFile extends WriteFileBasic{
 	    	String[] urlsArr=urlStr.split(":");
 	    	if(urlsArr.length!=3) {
 	    		String errormsg="FTP连接地址不正确(Host:Port:FilePath): " + urlStr;
-	    		throw new Exception(errormsg);
+	    		throw new ServiceException(errormsg);
 	    	}
 	    	
 	    	String host=urlsArr[0];
@@ -69,7 +71,7 @@ public  class WriteSftpFile extends WriteFileBasic{
 	}
 
 	@Override
-	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet) throws Exception {
+	public boolean writeFile(InterfaceSource interfaceSource, DataReadResult dataSet)  {
 		// TODO Auto-generated method stub
 		return false;
 	}

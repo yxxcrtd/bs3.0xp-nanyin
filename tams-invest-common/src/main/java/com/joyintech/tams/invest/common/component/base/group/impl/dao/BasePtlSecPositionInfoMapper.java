@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.component.base.group.impl.dao;
 
+import com.joyintech.tams.common.base.entity.PtlSecPosition;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import org.springframework.stereotype.Repository;
 
@@ -116,4 +117,14 @@ public interface BasePtlSecPositionInfoMapper {
      */
     int updatePositionDetail(Map<String, Object> params);
     //华兴银行：组合持仓融入融出明细共通 added by liuwei 2020/1/9 E
+
+    // add by etliu 汇总表更新并发问题解决 20210511 start
+    /**
+     * 针对一笔流水，将该笔流水的数值加到组合持仓的主表
+     * @param record 一笔流水的数据
+     * @return 更新条数
+     */
+    int updateByPrimaryKeySelectiveForFlow(PtlSecPosition record);
+    // add by etliu 汇总表更新并发问题解决 20210511 end
+
 }

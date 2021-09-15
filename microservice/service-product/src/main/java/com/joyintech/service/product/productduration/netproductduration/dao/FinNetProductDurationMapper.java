@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinCashPlanDto;
 import com.joyintech.service.product.productduration.netproductduration.dto.FinNetProductDurationDto;
@@ -36,6 +38,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
  * @see FinNetProductDurationMapper
  * @since 1.0
  */
+@Repository
 public interface FinNetProductDurationMapper {
 
     /**
@@ -201,6 +204,22 @@ public interface FinNetProductDurationMapper {
      * @return 
      */
     BokPositionPrd getBokPositionPrd(Map<String, Object> map);
+    //add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 start
+    /**
+     * 获取期次子产品最新净值日、单位净值
+     * @param map
+     * @return
+     */
+    BokPositionPrd getBokValbalTableStatusAdd(Map<String, Object> map);
+
+    /**
+     * 获取期次子产品最新净值日、单位净值
+     * @param map
+     * @return
+     */
+    BokPositionPrd getBokValbalTableStatus(Map<String, Object> map);
+    //add by jianxx 周期型产品赎回、提前赎回、到期、提前终止单位净值取值不对 HFZG-79 end
+
     /**
      * 获取已完成交易期次子产品
      * @param map 

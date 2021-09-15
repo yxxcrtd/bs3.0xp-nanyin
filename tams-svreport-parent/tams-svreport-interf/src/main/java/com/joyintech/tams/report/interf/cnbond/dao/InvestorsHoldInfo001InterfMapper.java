@@ -22,6 +22,8 @@ import com.joyintech.tams.common.base.entity.ChbInvestholdInfoSub;
 import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfo001InterfDto;
 import com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfoRegist001InterfDto;
+import org.springframework.stereotype.Repository;
+
 /**
  * 投资者持有信息
  * 〈功能详细描述〉
@@ -31,6 +33,7 @@ import com.joyintech.tams.report.interf.cnbond.dto.InvestorsHoldInfoRegist001Int
  * @since 1.0
  */
 @Mapper
+@Repository
 public interface InvestorsHoldInfo001InterfMapper {
 
     /**

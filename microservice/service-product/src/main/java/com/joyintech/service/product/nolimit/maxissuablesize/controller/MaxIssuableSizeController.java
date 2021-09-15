@@ -44,7 +44,7 @@ public class MaxIssuableSizeController {
 	 */
     @PostMapping("selectForPage/{page}/{length}")
     public Page<MaxIssuableSizeDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page, 
-    		@PathVariable("length") int length) throws Exception{
+    		@PathVariable("length") int length) {
         return maxIssuableSizeSevice.selectForPage(page, length, pageParam);
     }
     

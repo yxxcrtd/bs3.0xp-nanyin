@@ -30,11 +30,10 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
      * 
      * @param name 套帐名称
      * @return List<ValAssetBookParameter002Dto>
-     * @throws Exception 
      * @see
      * @since 1.0
      */
-    public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(Map<String,Object> params) throws Exception {
+    public Page<ValAssetBookParameter002Dto> getAllAssetbookPage(Map<String,Object> params) {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBookParameter001/getAllAssetbookPage", params, ValAssetBookParameter002Dto.class);
     }
     
@@ -62,9 +61,8 @@ public class ValAssetBookParameter001Service extends CommonExportService<ValAsse
 	/**
      * 新建check
      * @return
-     * @throws Exception
      */
-	public List<ValAssetBookParameter002Dto> checkfornew(String booksetId) throws Exception {
+	public List<ValAssetBookParameter002Dto> checkfornew(String booksetId)  {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValAssetBookParameter001/checkfornew",
                 booksetId, ValAssetBookParameter002Dto.class);

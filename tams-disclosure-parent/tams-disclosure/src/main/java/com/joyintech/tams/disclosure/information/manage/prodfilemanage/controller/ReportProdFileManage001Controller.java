@@ -1,11 +1,14 @@
 package com.joyintech.tams.disclosure.information.manage.prodfilemanage.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.ReportModelManage001Dto;
 import com.joyintech.tams.disclosure.information.config.reportmodelmanage.service.ReportModelManage001Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -37,7 +40,8 @@ import com.joyintech.tams.disclosure.information.manage.prodfilemanage.service.R
 @PageId("ReportProdFileManage001")
 @RequestMapping("disclosure/information/manage/prodfilemanage/ReportProdFileManage001")
 public class ReportProdFileManage001Controller extends BaseController{
-	
+	private Logger logger = LoggerFactory.getLogger(ReportProdFileManage001Controller.class);
+
 	@Autowired
 	private ReportProdFileManage001Service reportProdFileManage001Service;
 
@@ -63,7 +67,7 @@ public class ReportProdFileManage001Controller extends BaseController{
 	 */
 	@RequestMapping("getPrdInfoSelectPF")
 	@ResponseBody
-	public List<SelectOptionDto> getPrdInfoSelectPF() throws Exception {
+	public List<SelectOptionDto> getPrdInfoSelectPF() {
 		List<SelectOptionDto> lists = reportProdFileManage001Service.getPrdInfoSelectPF(RequestUtil.getPageParam());
 		return lists;
 	}
@@ -76,7 +80,7 @@ public class ReportProdFileManage001Controller extends BaseController{
 	 */
 	@RequestMapping("getProdSeriesSelectPF")
 	@ResponseBody
-	public List<SelectOptionDto> getProdSeriesSelectPF() throws Exception {
+	public List<SelectOptionDto> getProdSeriesSelectPF() {
 		List<SelectOptionDto> lists = reportProdFileManage001Service.getProdSeriesSelectPF(RequestUtil.getPageParam());
 		return lists;
 	}
@@ -131,10 +135,16 @@ public class ReportProdFileManage001Controller extends BaseController{
 	 * @since 1.0
 	 */
 	@RequestMapping("mergeExport")
-	public ResponseEntity<byte[]> mergeExport() throws Exception {
+	public ResponseEntity<byte[]> mergeExport() throws IOException {
 		Map<String, Object> param = RequestUtil.getPageParam();
-		ReportModelManage001Dto reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
-				ReportModelManage001Dto.class);
+		ReportModelManage001Dto reportModelManage001Dto = null;
+		try {
+			reportModelManage001Dto = (ReportModelManage001Dto) JsonUtils.map2entity(param,
+					ReportModelManage001Dto.class);
+		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
+			throw new IllegalArgumentException("转换异常");
+		}
 		reportModelManage001Dto.setParam(param);
 		return reportModelManage001Service.mergeExportSingle(reportModelManage001Dto);
 	}

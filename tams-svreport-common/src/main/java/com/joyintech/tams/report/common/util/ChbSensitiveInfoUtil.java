@@ -15,10 +15,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 中债报送信息敏感信息处理util
@@ -28,6 +32,8 @@ import com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib;
  * @since 1.0
  */
 public class ChbSensitiveInfoUtil {
+    private static Logger logger = LoggerFactory.getLogger(ChbSensitiveInfoUtil.class);
+
     /**
      * 所有汉字
      */
@@ -72,9 +78,8 @@ public class ChbSensitiveInfoUtil {
      * @param source 原字符串
      * @param idNo 身份证件号码
      * @return 处理后字符串
-     * @throws UnsupportedEncodingException 
      */
-    public static String replaceIdNoToMd5(String source, String idNo) throws UnsupportedEncodingException {
+    public static String replaceIdNoToMd5(String source, String idNo) {
         if (StringUtil.isBlank(source) || StringUtil.isBlank(idNo)) {
             return source;
         }
@@ -82,9 +87,9 @@ public class ChbSensitiveInfoUtil {
         if (StringUtil.contains(source, idNo)) {
             if(source.startsWith(idNo)){
                 source="JOYIN"+source;
-                return StringUtil.replaceAll(source, idNo, encrypByMD5(idNo.toUpperCase())).substring(5);
+                return StringUtil.replaceAll(source, idNo, EncryptUtil.getInstance().md5(idNo.toUpperCase())).substring(5);
             }else{
-                return StringUtil.replaceAll(source, idNo, encrypByMD5(idNo.toUpperCase()));
+                return StringUtil.replaceAll(source, idNo, EncryptUtil.getInstance().md5(idNo.toUpperCase()));
             }
         }
         
@@ -118,49 +123,72 @@ public class ChbSensitiveInfoUtil {
         return source;
     }
     
-    public static void main(String[] args) {
-        String str = "鿕";
-        System.out.println(unicodeEncode(str));
-        System.out.println(str.matches(CHINESE_REGEX));
-        System.out.println(str.matches(BaseCheckLib.PATTERN_ALL));
-        
-        String dataStr = "\\u9fd5";
-        System.out.println(decodeUnicode(dataStr));
-        
-        String teString = "(";
-        System.out.println(teString.matches(BaseCheckLib.PATTERN_ALL));
-        
-        String testStr = "刘二二二通";
-        System.out.println(handle汉字变形(testStr));
-        try {
-            String ss=replaceIdNoToMd5("131000000104150829XX","131000000104150829");
-            System.out.println(ss);
-        }
-        catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+    // 匹配中文字符串
+	 public static boolean hasChineseByReg(String str) {
+	        if (str == null) {
+	            return false;
+	        }
+	        Pattern pattern = Pattern.compile("[\\u4E00-\\u9FBF]+");
+	        return pattern.matcher(str).find();
+	    }
+	 
+	 //匹配空格（半角，全角）都可以匹配
+	 public static boolean containBlank(String str) {
+	        if (str == null) {
+	            return false;
+	        }
+	        Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+	        return  p.matcher(str).find();
+	    }
+	 
+	 //替换空格
+	 public static String replaceBlank(String str) {
+	        str = str.replace((char)12288, ' ');
+	        return str.replaceAll(" ", "");
+	    }
+    
+//    public static void main(String[] args) {
+//        String str = "鿕";
+//        System.out.println(unicodeEncode(str));
+//        System.out.println(str.matches(CHINESE_REGEX));
+//        System.out.println(str.matches(BaseCheckLib.PATTERN_ALL));
+//
+//        String dataStr = "\\u9fd5";
+//        System.out.println(decodeUnicode(dataStr));
+//
+//        String teString = "(";
+//        System.out.println(teString.matches(BaseCheckLib.PATTERN_ALL));
+//
+//        String testStr = "刘二二二通";
+//        System.out.println(handle汉字变形(testStr));
+//        try {
+//            String ss=replaceIdNoToMd5("131000000104150829XX","131000000104150829");
+//            System.out.println(ss);
+//        }
+//        catch (UnsupportedEncodingException e) {
+//            logger.error(e.getMessage(),e);
+//        }
+//    }
     
     
-    /***
-     * 对指定的字符串进行MD5加密
-     * @throws UnsupportedEncodingException 
-     */
-    private static String encrypByMD5(String originString) throws UnsupportedEncodingException {
-        try {
-            //创建具有MD5算法的信息摘要
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            //使用指定的字节数组对摘要进行最后更新，然后完成摘要计算
-            byte[] bytes = md.digest(originString.getBytes("UTF-8"));
-            //将得到的字节数组变成字符串返回
-            String s = byteArrayToHex(bytes);
-            return s.toLowerCase();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+//    /***
+//     * 对指定的字符串进行MD5加密
+//     * @throws UnsupportedEncodingException
+//     */
+//    private static String encrypByMD5(String originString) throws UnsupportedEncodingException {
+//        try {
+//            //创建具有MD5算法的信息摘要
+//            MessageDigest md = MessageDigest.getInstance("MD5");
+//            //使用指定的字节数组对摘要进行最后更新，然后完成摘要计算
+//            byte[] bytes = md.digest(originString.getBytes("UTF-8"));
+//            //将得到的字节数组变成字符串返回
+//            String s = byteArrayToHex(bytes);
+//            return s.toLowerCase();
+//        } catch (NoSuchAlgorithmException e) {
+//            logger.error(e.getMessage(),e);
+//        }
+//        return null;
+//    }
     /**
      * 将字节数组转换成十六进制，并以字符串的形式返回
      * 128位是指二进制位。二进制太长，所以一般都改写成16进制，

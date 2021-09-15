@@ -106,7 +106,11 @@ public class CashJob extends JNLJob {
 						if(JixuUserUtil.isJoyinTablesFlag()){
 							IssueInfo sec=tranbasic.getCusip();
 							if(cashCooa.getTableID()==null || cashCooa.getTableID().equals("")) {
-								String tableID=SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.CASH+","+sec.getIssueType()+","+tranbasic.getTrantype());
+								String tableID="";
+								if(sec!=null && SecurityCoreFactory.getTableIDProperties()!=null) {
+									tableID = SecurityCoreFactory.getTableIDProperties().getProperty(JournalTypes.CASH + "," + sec.getIssueType() + "," + tranbasic.getTrantype());
+									tableID = tableID == null ? "" : tableID;
+								}
 								cashCooa.setTableID(tableID);
 								cashCooa.setOfftableID(tableID);
 							}
@@ -131,9 +135,11 @@ public class CashJob extends JNLJob {
 									continue;
 								}else{
 									//业务明细类型
-									voucherDetails.setBusiDetailType(bbci.getAcctType());
-									//业务明细代码
-									voucherDetails.setBusiID(bbci.getAcctNo());
+									if (bbci != null){
+										voucherDetails.setBusiDetailType(bbci.getAcctType());
+										//业务明细代码
+										voucherDetails.setBusiID(bbci.getAcctNo());
+									}
 								}
 							}
 							//表外账业务明细代码

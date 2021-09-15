@@ -10,11 +10,10 @@
  
 package com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.moneyvaluationdata.dto;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+
+import java.math.BigDecimal;
 
 /**
  * 货币型产品估值数据Dto
@@ -276,5 +275,166 @@ public class MoneyProdValuationDataDto {
 	public void setYrrate(BigDecimal yrrate) {
 		this.yrrate = yrrate;
 	}
-	
+
+	/**
+	 * 产品总份额
+	 */
+	private String prodAllAmtStr;
+
+	/**
+	 * 当日万份收益
+	 */
+	private String nowDayRateStr;
+
+	/**
+	 * 累计万份收益
+	 */
+	private String totalRateStr;
+
+	/**
+	 * 当日应付利润发生值
+	 */
+	private String nowDayProfitValueStr;
+
+	/**
+	 * 七日年化收益率
+	 */
+	private String sevenDayRateStr;
+
+	/**
+	 * 每日资产总价值
+	 */
+	private String dailyAssetAllValueStr;
+
+	/**
+	 * 每日总负债
+	 */
+	private String dailyAllDebtStr;
+
+	/**
+	 * 获取 prodAllAmtStr
+	 *
+	 * @return prodAllAmtStr.
+	 */
+	public String getProdAllAmtStr() {
+		return prodAllAmtStr;
+	}
+
+	/**
+	 * 设置 prodAllAmtStr
+	 *
+	 * @param prodAllAmtStr prodAllAmtStr
+	 */
+	public void setProdAllAmtStr(String prodAllAmtStr) {
+		this.prodAllAmtStr = prodAllAmtStr;
+	}
+
+	/**
+	 * 获取 nowDayRateStr
+	 *
+	 * @return nowDayRateStr.
+	 */
+	public String getNowDayRateStr() {
+		return nowDayRateStr;
+	}
+
+	/**
+	 * 设置 nowDayRateStr
+	 *
+	 * @param nowDayRateStr nowDayRateStr
+	 */
+	public void setNowDayRateStr(String nowDayRateStr) {
+		this.nowDayRateStr = nowDayRateStr;
+	}
+
+	/**
+	 * 获取 totalRateStr
+	 *
+	 * @return totalRateStr.
+	 */
+	public String getTotalRateStr() {
+		return totalRateStr;
+	}
+
+	/**
+	 * 设置 totalRateStr
+	 *
+	 * @param totalRateStr totalRateStr
+	 */
+	public void setTotalRateStr(String totalRateStr) {
+		this.totalRateStr = totalRateStr;
+	}
+
+	/**
+	 * 获取 nowDayProfitValueStr
+	 *
+	 * @return nowDayProfitValueStr.
+	 */
+	public String getNowDayProfitValueStr() {
+		return nowDayProfitValueStr;
+	}
+
+	/**
+	 * 设置 nowDayProfitValueStr
+	 *
+	 * @param nowDayProfitValueStr nowDayProfitValueStr
+	 */
+	public void setNowDayProfitValueStr(String nowDayProfitValueStr) {
+		this.nowDayProfitValueStr = nowDayProfitValueStr;
+	}
+
+	/**
+	 * 获取 sevenDayRateStr
+	 *
+	 * @return sevenDayRateStr.
+	 */
+	public String getSevenDayRateStr() {
+		return sevenDayRateStr;
+	}
+
+	/**
+	 * 设置 sevenDayRateStr
+	 *
+	 * @param sevenDayRateStr sevenDayRateStr
+	 */
+	public void setSevenDayRateStr(String sevenDayRateStr) {
+		this.sevenDayRateStr = sevenDayRateStr;
+	}
+
+	/**
+	 * 获取 dailyAssetAllValueStr
+	 *
+	 * @return dailyAssetAllValueStr.
+	 */
+	public String getDailyAssetAllValueStr() {
+		return dailyAssetAllValueStr;
+	}
+
+	/**
+	 * 设置 dailyAssetAllValueStr
+	 *
+	 * @param dailyAssetAllValueStr dailyAssetAllValueStr
+	 */
+	public void setDailyAssetAllValueStr(String dailyAssetAllValueStr) {
+		this.dailyAssetAllValueStr = dailyAssetAllValueStr;
+	}
+
+	/**
+	 * 获取 dailyAllDebtStr
+	 *
+	 * @return dailyAllDebtStr.
+	 */
+	public String getDailyAllDebtStr() {
+		return dailyAllDebtStr;
+	}
+
+	/**
+	 * 设置 dailyAllDebtStr
+	 *
+	 * @param dailyAllDebtStr dailyAllDebtStr
+	 */
+	public void setDailyAllDebtStr(String dailyAllDebtStr) {
+		this.dailyAllDebtStr = dailyAllDebtStr;
+	}
+
 }

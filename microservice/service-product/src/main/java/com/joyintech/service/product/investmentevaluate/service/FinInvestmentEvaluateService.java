@@ -36,7 +36,7 @@ public class FinInvestmentEvaluateService extends CommonExportService {
      */
     public Page<FinInvestmentEvaluateDto> findPage2(int page, int length,
                                                         Map<String, Object> pageParam)
-            throws Exception {
+    {
 
 
         return this.queryForPage(page, length,

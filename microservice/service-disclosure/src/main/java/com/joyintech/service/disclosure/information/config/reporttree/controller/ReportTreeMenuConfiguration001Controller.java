@@ -71,7 +71,7 @@ public class ReportTreeMenuConfiguration001Controller extends BaseController{
     @PostMapping("findPage/{page}/{length}")
     public Page<RepInfo> findPage(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return reportTreeMenuConfiguration001Service.findPage(page, length, param);
     }
     /**

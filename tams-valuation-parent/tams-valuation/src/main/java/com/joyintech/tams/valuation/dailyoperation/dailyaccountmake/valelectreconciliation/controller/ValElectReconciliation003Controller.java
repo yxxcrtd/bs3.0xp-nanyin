@@ -53,7 +53,7 @@ public class ValElectReconciliation003Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValElectReconciliation002Dto> findPage()
-        throws Exception {
+          {
         Page<ValElectReconciliation002Dto> page = valElectReconciliation002Service.findPage(
             RequestUtil.getPageParam());
         return page;

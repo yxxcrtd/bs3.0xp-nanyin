@@ -54,7 +54,7 @@ public class CeMonitorReport001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<CreditLinesDealDto> selectAll()
-            throws Exception {
+    {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<CreditLinesDealDto> page = ceMonitorReportService.selectForPage(map);
         return page;
@@ -71,7 +71,7 @@ public class CeMonitorReport001Controller extends BaseController  {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+    {
         return ceMonitorReportService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

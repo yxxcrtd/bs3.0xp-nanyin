@@ -28,8 +28,10 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.calculator.Tar
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam.TargetRateOutputParameter;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
@@ -50,10 +52,11 @@ public class BinaryTreeModelProcessorService {
     @Autowired
     private BinaryTreeModelMapper binaryTreeModelMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(BinaryTreeModelProcessorService.class);
+
     @Autowired
     private ModLogsService modLogsService;
 
-    private static final Logger logger = LoggerFactory.getLogger(BinaryTreeModelProcessorService.class);
     /**
      * 二叉树模型-reader
      *
@@ -67,9 +70,9 @@ public class BinaryTreeModelProcessorService {
         ModAssetInfoDto modAssetInfoDto = binaryTreeModelReaderEntity.getModAssetInfoDto();
 
         //2.处理参数
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get(ValComponentConstant.BATCH_EXECUTEINFO);
         //变量.估值日 = 批处理任务执行信息.发生日
-        Date platDate = (Date) params.get("PLATE_DATE");
+        Date platDate = (Date) params.get(ValComponentConstant.EXECUTE_DATE);
 
 
         //3.取Job上下文的错误日志信息，并增加新得错误信息
@@ -196,37 +199,17 @@ public class BinaryTreeModelProcessorService {
         }
         //【批处理名称】：未配置二叉树模型参数
         if (entity.getModBintreeConfig() == null || StringUtil.isEmpty(entity.getModBintreeConfig().getFinprodId())) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(finprodId);
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：未配置二叉树模型参数");
-            commonErrorParams.setErrorType(DictCodeListExt2.批处理执行结果_异常结束.getValue());
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：未配置二叉树模型参数.");
             checkResult = false;
         }
         //【批处理名称】：当天无股票行情
         if (entity.getModStockMarketInfoList() == null || entity.getModStockMarketInfoList().size() == 0) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(finprodId);
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无股票行情");
-            commonErrorParams.setErrorType(DictCodeListExt2.批处理执行结果_异常结束.getValue());
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：当天无股票行情.");
             checkResult = false;
         }
         //【批处理名称】：当天无收益率曲线行情
         if (entity.getModYieldCurveInfoList() == null || entity.getModYieldCurveInfoList().size() == 0) {
-            CommonErrorParams commonErrorParams = new CommonErrorParams();
-            commonErrorParams.setFinprodId(finprodId);
-            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            commonErrorParams.setErrorMsg("【二叉树模型批处理】：当天无收益率曲线行情");
-            commonErrorParams.setErrorType(DictCodeListExt2.批处理执行结果_异常结束.getValue());
-            errors.add(commonErrorParams);
-            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：当天无收益率曲线行情.");
             checkResult = false;
         }
         return checkResult;

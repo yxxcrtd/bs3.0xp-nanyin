@@ -58,7 +58,8 @@ public class MstMarketCalendarInfoController{
      * @since 1.0
      */
     @PostMapping("selectInfo/{page}/{length}")
-    public Page<MstMarketCalendarInfo001Dto> selectInfo(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstMarketCalendarInfo001Dto> selectInfo(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstMarketCalendarInfo001Service.selectInfo(page,length,param);
     }
     /**

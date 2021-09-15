@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
@@ -33,6 +34,7 @@ import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.d
 import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.service.FinFloatMgtExpQuotation001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -201,7 +203,7 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodId")
-    public List<SelectOptionDto> getFinprodid(){
+    public Page<SelectOptionDto> getFinprodid(){
         return finFloatMgtExpQuotation001Service.getFinprodIdsByDate(RequestUtil.getPageParam());
     }
     /**
@@ -330,7 +332,7 @@ public class FinFloatMgtExpQuotation002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinFloatMgtExpQuotation001Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinFloatMgtExpQuotation001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

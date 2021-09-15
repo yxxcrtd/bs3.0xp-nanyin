@@ -61,7 +61,7 @@ public class AccountsReceivableInfoQuery001Service extends CommonExportService<A
      * @return
      * @throws Exception
      */
-    public Page<AccountsReceivableInfoQuery001Dto> findByPage(int page, int length, Map<String, Object> params) throws Exception{
+    public Page<AccountsReceivableInfoQuery001Dto> findByPage(int page, int length, Map<String, Object> params){
     	
 	    	String bdFinprodId = (String)params.get("bdFinprodId");
 	    	String[] bdFinprodIdArr = null;

@@ -80,7 +80,7 @@ public class PaActiveRemind002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("selramind")
     public List<PaActiveRemind001Dto> selramind()
-        throws Exception {
+         {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         param.put("quaryDate", DateUtil.parse((String)param.get("quaryDate")));
         List<PaActiveRemind001Dto> page = paActiveRemind002Service.selRamind(param);
@@ -138,7 +138,7 @@ public class PaActiveRemind002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("closeRemind")
     public int closeRemind()
-            throws Exception {
+             {
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         return paActiveRemind002Service.closeRemind(param);
     }

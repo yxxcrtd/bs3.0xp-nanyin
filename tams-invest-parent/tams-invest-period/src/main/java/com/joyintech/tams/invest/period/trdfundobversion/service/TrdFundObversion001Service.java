@@ -44,6 +44,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,6 +67,11 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
 @Service
 public class TrdFundObversion001Service extends CommonExportService<TrdFundObversionDto>
 implements BaseProcessService<TrdFundObversionDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFundObversion001Service.class);
+
     @Autowired
     private TrdFundObversionDealEntity dealEntityService;
     @Autowired
@@ -156,7 +163,7 @@ implements BaseProcessService<TrdFundObversionDto>{
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue());
     }

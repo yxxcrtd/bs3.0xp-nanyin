@@ -57,7 +57,6 @@ $(function() {
         },
         checkOnClickRow:false,
         cols:[
-            { title: "indentifyMark", field: 'indentifyMark',width:0,sortable:false,visible:false},
             { title: "isOrNoSubmit", field: 'isOrNoSubmit',width:0,sortable:false,visible:false},
             { title: "合并状态", field: 'operatestatusStr',sortable:false,width:110},
             { title: "数据日期", field: 'dataDate', type: 'datetime',sortable:false,width:170},

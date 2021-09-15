@@ -48,13 +48,13 @@ public class PtlSubFundsAllocate002Controller {
      * @return
      */
     @PostMapping("getPortfolioId")
-    public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> getPortfolioId(@RequestBody Map<String, Object> param) {
         return ptlSubFundsAllocate001Service.getPortfolioIds(param);
     }
 
     @PostMapping("selectOther/{page}/{length}")
     public Page<PtlSubFundsAllocateDto> selectOther(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         String portfolioId = (String) param.get("portfolioId");
         if (StringUtil.isNotEmpty(portfolioId)) {
             return ptlSubFundsAllocate001Service.selectOther(page, length, param);
@@ -64,7 +64,7 @@ public class PtlSubFundsAllocate002Controller {
 
     @PostMapping("getSubFundsAllocate/{page}/{length}")
     public Page<PtlSubFundsAllocateDto> getSubFundsAllocate(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlSubFundsAllocate001Service.getSubFundsAllocate(page, length, param);
     }
 

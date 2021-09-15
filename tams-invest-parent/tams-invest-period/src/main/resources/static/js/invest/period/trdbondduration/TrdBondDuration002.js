@@ -186,11 +186,12 @@
 //        	非最后一个
         	else {
 //        		计算占比
-        		var prop = JoyinMath.doDiv(finAssetIntInfos[i].amount, sumAmount, 12, JoyinMath.ROUND_HALF_UP);
+                debugger;
+        		// var prop = JoyinMath.doDiv(finAssetIntInfos[i].amount, sumAmount, 12, JoyinMath.ROUND_HALF_UP);
 //        		根据占比处理所有的钱
         		$.each(itemArr,function(index,val){
 //        			计算当前需要的钱
-        			var thisNum = JoyinMath.doMul(itemObj[val], prop, 2, JoyinMath.ROUND_HALF_UP);
+        			var thisNum = JoyinMath.doDiv(JoyinMath.doMul(itemObj[val], finAssetIntInfos[i].amount, 12, JoyinMath.ROUND_HALF_UP), sumAmount,2, JoyinMath.ROUND_HALF_UP);
 //        			处理已分配的钱
         			sumObj[val] = JoyinMath.doAdd(sumObj[val], thisNum);
 //        			把钱放入对应数据
@@ -338,6 +339,9 @@
          */
         var object = $.serializeToObject('#informationForm', true);
         object.operateType = operateType;
+        if(FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo();
+        }
         Joyin.ajaxJson(basePath + 'invest/period/trdbondduration/TrdBondDuration002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {

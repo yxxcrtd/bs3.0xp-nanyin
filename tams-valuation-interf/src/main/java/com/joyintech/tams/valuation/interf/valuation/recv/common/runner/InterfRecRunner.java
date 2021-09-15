@@ -83,7 +83,7 @@ public class InterfRecRunner {
     private ExecutorService executor = Executors.newCachedThreadPool() ;
 
     public void execute()
-        throws Exception {
+         {
 
         addUserToSession();
         
