@@ -80,6 +80,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             modAssetInfoDto.setSecType(item.getModelAssetType());
             modAssetInfoDto.setFinprodId(item.getAssetId());
             modAssetInfoDto.setSecTypeDetail(item.getModelAssetDetailType());
+            modAssetInfoDto.setFinprodMarketId(item.getMarketId());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
