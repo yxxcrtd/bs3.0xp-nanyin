@@ -138,8 +138,7 @@ public class EtribRepoInfo003Validator implements EtrCommonValidator  {
                 && dto.getProAvailableCash() != null && dto.getEntrustAmt() != null
                 && dto.getEntrustAmt().compareTo(dto.getProAvailableCash()) == 1) {
                 errorList.add(new ValidMessage("entrustAmt",
-                    this.getMessage("BUSS_COM_E_0003", this.getMessage("EtrRepo002.entrustAmt"),
-                        this.getMessage("EtrRepo002.proAvailableCash"))));
+                    this.getMessage("ETR_X_021", this.getMessage("EtrRepo002.entrustAmt"),dto.getPortfolioId())));
             }
             errorList.addAll(etribRepoInfo003Service.check(dto));
         }

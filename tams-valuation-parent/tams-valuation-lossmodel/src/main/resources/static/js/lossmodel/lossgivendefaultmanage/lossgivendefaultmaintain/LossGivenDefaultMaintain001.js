@@ -25,6 +25,7 @@ $(function(){
                     seqno: data.seqno
                 });
         },
+        limit:100,
         rowno: false, // 显示行号
         searchOnInit: false, //初始化的时候就请求后台数据
         cols:[	

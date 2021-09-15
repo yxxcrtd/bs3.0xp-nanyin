@@ -1575,7 +1575,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // 中标结果确认及中标结果维护
             if (CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果确认)
                 || CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果维护)) {
-                infRiskRdsDto.setIsDiffOccupy(DictCodeList.是否_是.getValue());
+//                infRiskRdsDto.setIsDiffOccupy(DictCodeList.是否_是.getValue());
                 infRiskRdsDto.setDiffOccupyFlg((String)dataMap.get("bidId") + v.getEventStatus());
                 String amountKey = CommonUtil.isType(v.getEventStatus(),
                     BussinessDictCodeList.共同业务类型_中标结果确认) ? "adjustBallotnum" : "winPrinAmt";
