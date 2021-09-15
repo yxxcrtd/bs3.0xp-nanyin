@@ -264,7 +264,7 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
 
-        if (objects.size() > 100) {
+        if (objects.size() > 101) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", getMessage("ETR_E_0021"));
             AjaxResult wr = new AjaxResult();

@@ -474,6 +474,8 @@ public class PdCalculateProcessService {
         }
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
+        // 初始日期设为本月1号
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         for (long d = cal.getTimeInMillis(); d <= endDate.getTime(); d = getYearMonAddOne(cal,type)) {
             yearList.add(sdf.format(d));
         }
