@@ -161,10 +161,9 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                                 BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), hb.getTradeDate()));
                                 prinOverdueDay = ArithmeticUtil.subtract(daynum, prinOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : prinOverdueDay;
                                 flag = true;
-                                continue;
                             }
                         }
-                        if (flag == false) {
+                        if (!flag) {
                             BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
                             prinOverdueDay = ArithmeticUtil.subtract(daynum, prinOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : prinOverdueDay;
                         }
@@ -207,10 +206,9 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                                 BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), hb.getTradeDate()));
                                 intOverdueDay = ArithmeticUtil.subtract(daynum, intOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : intOverdueDay;
                                 flag = true;
-                                continue;
                             }
                         }
-                        if (flag == false) {
+                        if (!flag) {
                             BigDecimal daynum = BigDecimal.valueOf(DateUtil.getBetweenDayNumber(cashFlowDto.getPayDate(), resultProcess.getDecDate()));
                             intOverdueDay = ArithmeticUtil.subtract(daynum, intOverdueDay).compareTo(BigDecimal.ZERO) > 0 ? daynum : intOverdueDay;
                         }
