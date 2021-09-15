@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
@@ -93,7 +94,10 @@ public class ModStockDivitrateConfigInfoDto extends BaseEntity implements Proces
 	}
 	
 	public String getSecTypeModelStr() {
-		return SysDataUtil.getNameFromDataDict(DictCode.资产类型, this.getSecTypeModel());
+	    if(StringUtil.isNotEmpty(this.getSecTypeModel())){
+            return SysDataUtil.getNameFromDataDict(DictCode.证券品种, this.getSecTypeModel());
+        }
+		return "";
 	}
 
 	public void setSecTypeModel(String secTypeModel) {
