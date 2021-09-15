@@ -1758,6 +1758,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
                     }
                 }
+                //wangyang1 add by 增加期限金额 2021年9月10日 start
+                if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(infRiskRdsDto.getOneDay())){
+                    infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(infRiskRdsDto.getOneDay())));
+                }
+                if (StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())){
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+                }else{
+                    infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+                }
+                //wangyang1 add by 增加期限金额 2021年9月10日 end
                 return infRiskRdsDto;
             }
             infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -1823,7 +1833,11 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue()); 
             }
         }
-        
+        if (CommonUtil.isType(v.getAssetType(), DictCodeList.平安资产类型_基金)) {
+            if (StringUtil.isNotEmpty(finDto.getMdate())){
+                infRiskRdsDto.setMdate(null);
+            }
+        }
         return infRiskRdsDto;
     }
 
