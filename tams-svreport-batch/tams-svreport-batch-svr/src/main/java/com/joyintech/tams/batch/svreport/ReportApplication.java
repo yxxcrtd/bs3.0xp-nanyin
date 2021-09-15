@@ -16,6 +16,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import com.joyintech.batch.config.BatchApplication;
 import com.joyintech.framework.JoyinApplication;
 
+import java.util.Locale;
+
 /**
  * @author 何阳阳
  * @version 1.0 2018年5月2日
@@ -28,6 +30,8 @@ import com.joyintech.framework.JoyinApplication;
 public class ReportApplication extends BatchApplication {
 
     public static void main(String[] args) {
+        Locale local = new Locale("zh", "CN");
+        Locale.setDefault(local);
         JoyinApplication.run(ReportApplication.class, args);
     }
 }

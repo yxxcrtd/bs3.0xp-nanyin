@@ -37,9 +37,9 @@ public class ProductReportRegisterController {
 	 * @throws Exception
 	 *             异常
 	 */
-	@PostMapping("queryProdIdInfo")
-	public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param) {
-		return productReportRegisterService.queryProdIdInfo(param);
+	@PostMapping("queryProdIdInfo/{page}/{length}")
+	public Page<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param,@PathVariable("page") int page, @PathVariable("length") int length) {
+		return productReportRegisterService.queryProdIdInfo(param,page,length);
 	}
 	
 	

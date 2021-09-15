@@ -22,6 +22,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import com.joyintech.framework.exception.BusinessException;
 import oracle.jdbc.OracleTypes;
 
 import org.apache.commons.lang.StringUtils;
@@ -82,7 +83,7 @@ public class VasInterfCommonService{
 
 	@ResponseBody
     @RequestMapping(InterfCommonConstant.组装XMl文件)
-	public  List<ValInertfBuildXml001Dto> execute(String startDa,String endDa) throws Exception {
+	public  List<ValInertfBuildXml001Dto> execute(String startDa,String endDa) throws SQLException, ClassNotFoundException {
 		Map<String, Object> params = new HashMap<>();
 		params.put(InterfCommonConstant.接口_对接系统ID, DictCodeInterfList.接口对接系统ID_资管.getValue());
 		List<com.joyintech.tams.valuation.common.interf.base.service.send.dto.ValRecvServerInfoEntity> recvServerList = mapper.getValServerInfo(params);
@@ -94,13 +95,13 @@ public class VasInterfCommonService{
 			filePath = recv.getRemotePath();
 			DbUtil db = new DbUtil(recv.getServerIp(), recv.getServerPort(), recv.getServerName(), recv.getUserName(), recv.getPassword());
 	        db.init();
-			Connection conn = db.getDbConnection();
-	    	if(null==conn){
-				strList.add("组装xml文件时数据库连接失败 请联系管理员配置相关数据库配置!");		
-	    		log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
-	    	}
-
-			try { 
+			Connection conn = null;
+			try {
+				conn = db.getDbConnection();
+				if(null==conn){
+					strList.add("组装xml文件时数据库连接失败 请联系管理员配置相关数据库配置!");
+					log.error("组装xml文件时数据库连接失败：" + startDa + "至" +endDa + "文件生成失败！");
+				}
 				if(null!=conn){
 					// 获取时间参数，默认为平台日期
 				/*	Date startDate = new Date(DateUtil.parse(startDa).getTime());
@@ -130,7 +131,12 @@ public class VasInterfCommonService{
 				strList.add("Error:-------------生成文件异常!"+e.getMessage());
 				log.error("生成文件异常", e);
 			} finally {
-				db.release();
+				if (db != null){
+					db.release();	
+				}
+				if (conn != null){
+					conn.close();
+				}
 			}
 		}else{
 			strList.add( "Error:-------------获取ValRecvServerInfo数据源异常  请联系管理员！"+"共获取到"+recvServerList.size()+"条!"+"\n");
@@ -402,7 +408,7 @@ public class VasInterfCommonService{
 				dto.setConsole("02");
 				dto.setErrorMessage("模板缺失: " + templateName+"_"+templateId + ".xml");
 				ValInertfBuildXml001DtoList.add(dto);
-				throw new RuntimeException("模板缺失: " + templateName+"_"+templateId + ".xml!");
+				throw new BusinessException("模板缺失: " + templateName+"_"+templateId + ".xml!");
 			}
 			
 			info = JAXB.unmarshal(templateXmlURL, Info.class);
@@ -468,7 +474,7 @@ public class VasInterfCommonService{
 			dto.setConsole("02");
 			dto.setErrorMessage(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
 			ValInertfBuildXml001DtoList.add(dto);
-			throw new RuntimeException(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
+			throw new BusinessException(templateName+"_"+templateId+":"+StringUtils.join(emptyList, ", ") + " 这些值为必输项但sql查询结果值为空！");
 		}
 		return info;
 	}

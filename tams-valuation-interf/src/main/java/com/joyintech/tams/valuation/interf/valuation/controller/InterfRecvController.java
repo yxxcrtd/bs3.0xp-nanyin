@@ -86,7 +86,7 @@ public class InterfRecvController {
         if(MultilevelDataAuthorityUtil.isEnabled()){
             String institutionCode = RequestUtil.getParam("INSTITUTION_CODE");
             if(StringUtil.isNotEmpty(institutionCode)){
-                params.put("INSTITUTION_CODE",institutionCode);
+//                params.put("INSTITUTION_CODE",institutionCode);
             }
         }
         //add by liupengfei for 多级法人改造 E
@@ -177,7 +177,7 @@ public class InterfRecvController {
     
     @ResponseBody
     @RequestMapping(InterfCommonConstant.组装XMl文件)
-    public void buildXml() throws Exception {
+    public void buildXml() {
     	
     	String startDa = RequestUtil.getParam(InterfCommonConstant.接口_开始日);
 

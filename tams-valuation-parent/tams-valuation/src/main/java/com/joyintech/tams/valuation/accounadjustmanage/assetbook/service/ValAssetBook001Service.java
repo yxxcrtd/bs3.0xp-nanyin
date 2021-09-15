@@ -229,7 +229,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @see
      * @since 1.0
      */
-    public Page<ValAssetbook001Dto> getAllAssetbookPage(Map<String,Object> params) throws Exception {
+    public Page<ValAssetbook001Dto> getAllAssetbookPage(Map<String,Object> params)  {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/getAllAssetbookPage", params, ValAssetbook001Dto.class);
     }
 
@@ -308,7 +308,7 @@ public class ValAssetBook001Service extends CommonExportService<ValAssetbook001D
      * @since 1.0
      */
 //	@DataSource(DataSourceType.OTHER)
-//    public int workflowCheck(ValAssetbook001Dto dto) throws Exception {
+//    public int workflowCheck(ValAssetbook001Dto dto) {
 //        //判断当前流程是否存在
 //        ProcessMark processMark = WorkflowContext.getProcessMarkService().getParameterByAnnotation(dto);
 //        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValAssetBook001/getDataInWorklow", processMark, Integer.class);

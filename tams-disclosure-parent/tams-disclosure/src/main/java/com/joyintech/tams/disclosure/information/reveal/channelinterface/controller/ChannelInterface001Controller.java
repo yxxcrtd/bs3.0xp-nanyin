@@ -86,8 +86,7 @@ public class ChannelInterface001Controller extends BaseController{
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -96,7 +95,7 @@ public class ChannelInterface001Controller extends BaseController{
 	
 	@RequestMapping("ChannelInterface001Search")
 	@ResponseBody
-	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList() throws Exception{
+	public Page<ChannelInterfaceNew001Dto> queryChannelInterfacePageList(){
 		return channelInterface001Service.queryAllInstitutionPageList(RequestUtil.getPageParam());
 	}
 	
@@ -120,7 +119,7 @@ public class ChannelInterface001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
 //         Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ChannelInterfaceNew001Dto> dtoList;

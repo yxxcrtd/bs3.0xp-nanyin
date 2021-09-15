@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.trade.bond.controller;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -19,7 +21,6 @@ import java.util.*;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -29,8 +30,8 @@ import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -62,7 +63,6 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.bond.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
@@ -229,6 +229,10 @@ TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("tradeId", dto.getTotleTradeId());
             //---------add by zxjjpei 风险试算需要交易编号 20200325 start------
             model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?this.getParam("entrustId"):dto.getTotleTradeId());
+            if(StringUtil.equals(dto.getOperateType(),"revoke")){
+                model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?null:dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length() - 1));
+
+            }
             //---------add by zxjjpei 风险试算需要交易编号 20200325 end------
         }
         if (StringUtil.isNotBlank(workflowId)) {
@@ -531,7 +535,7 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("isExerYieldDivShow")
     @ResponseBody
     public String isExerYieldDivShow(@RequestParam Map<String, Object> paramMap) {
-        return trdBondInvestTrade002Service.isExerYieldDivShow(paramMap);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.isExerYieldDivShow(paramMap));
     }
 
     /**
@@ -560,7 +564,7 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("getProfitType")
     @ResponseBody
     public String getProfitType(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.getProfitType(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.getProfitType(params));
     }
    //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
 
@@ -575,14 +579,14 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("calcDeviationDegree")
     @ResponseBody
     public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.calcDeviationDegree(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.calcDeviationDegree(params));
     }
 
     /**
      * 理论行权日取得（根据画面交割日取，取不到直接使用交割日作为理论行权日）
      *
      * @param inputDto 画面参数
-     * @return 理论行权日
+     * @return 实际行权日
      * @see
      * @since 1.0
      */
@@ -601,7 +605,7 @@ TrdBondInvestTrade002Controller extends BaseController {
         if (!StringUtil.isEmptyList(planList)) {
             for (FinExercisePlan planDto : planList) {
                 if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
-                    ajaxResult.setData(DateUtil.format(planDto.getExerciseDate()));;
+                    ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));;
                 }
             }
         }
@@ -785,8 +789,7 @@ TrdBondInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws Exception {
     	if(flag) {
 			if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
@@ -984,4 +987,16 @@ TrdBondInvestTrade002Controller extends BaseController {
     public Map<String,Object> secAutoTrade(@RequestBody TrdBondInvestTradeDto entity) {
         return trdBondInvestTrade002Service.secAutoTrade(entity);
     }
-}
+
+    /**
+     *  查询平台日前摊销净价
+     *
+     * @author yangxiaoteng
+     */
+    @ResponseBody
+    @RequestMapping("getLastNetAmortizationPrice")
+    public AjaxResult getLastNetAmortizationPrice(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(trdBondInvestTrade002Service.getLastNetAmortizationPrice(param));
+        return result;
+    }}

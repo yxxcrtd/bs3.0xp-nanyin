@@ -101,8 +101,15 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
     }
 
     public String getSrcColIndexLetter() throws Exception {
-        if(StringUtil.isNotEmpty(this.getSrcColIndex())){
+        String srcColIndexLetter="";
+        if(StringUtil.isNotEmpty(this.getSrcColIndex()) && this.getSrcColIndex().matches("\\d+")){
             return ExcelUtilForRisk.indexToColumn(Integer.parseInt(String.valueOf(this.getSrcColIndex())));
+        }else{
+            srcColIndexLetter= this.getSrcColIndex();
+        }
+        //保存时需要转换
+        if(StringUtil.isEmpty(srcColIndexLetter)){
+            srcColIndexLetter = this.srcColIndexLetter;
         }
         return srcColIndexLetter;
     }

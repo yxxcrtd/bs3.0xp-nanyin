@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.infodiscinvestgroupdetail.entity.InfoDiscInvestGroupDetailEntity;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface InfoDiscInvestGroupDetailMapper {
 
 	/**

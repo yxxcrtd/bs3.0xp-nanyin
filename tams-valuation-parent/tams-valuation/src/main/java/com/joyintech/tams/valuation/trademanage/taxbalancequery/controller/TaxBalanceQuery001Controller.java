@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.taxbalancequery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -67,7 +68,7 @@ public class TaxBalanceQuery001Controller extends BaseController {
 
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<TaxBalanceQuery001Dto> findPage() throws Exception {
+	public Page<TaxBalanceQuery001Dto> findPage() {
 		return taxBalanceQuery001Service.findByPage(RequestUtil.getPageParam());
 	}
 	
@@ -106,7 +107,7 @@ public class TaxBalanceQuery001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		 String datas = this.getParam("datas");
          List<TaxBalanceQuery001Dto> listdto;
          if (datas == null) {

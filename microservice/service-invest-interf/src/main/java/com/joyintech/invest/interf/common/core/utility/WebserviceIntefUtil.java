@@ -26,17 +26,25 @@ public class WebserviceIntefUtil {
 		
 		// 从map集合中获取配置属性
 		Properties prop = map.get(fileName);
-		// 指定配置文件没有装载的场合，重新装载
-		if (null == prop) {
-			prop = new Properties();
-			// 读取配置文件信息
-			InputStream in = WebserviceIntefUtil.class.getClassLoader().getResourceAsStream(fileName);
-			// 加载配置文件信息
-			prop.load(in);
-			// 往map集合中追加配置文件属性
-			map.put(fileName, prop);
-		} 
-		return prop;
+		InputStream in = null;
+		try {
+			// 指定配置文件没有装载的场合，重新装载
+			if (null == prop) {
+				prop = new Properties();
+				// 读取配置文件信息
+				in = WebserviceIntefUtil.class.getClassLoader().getResourceAsStream(fileName);
+				// 加载配置文件信息
+				prop.load(in);
+				// 往map集合中追加配置文件属性
+				map.put(fileName, prop);
+			}
+			return prop;
+		}finally {
+			if(in != null){
+				in.close();
+			}
+		}
+
 	}
 	/**
 	 * 不足8为补0

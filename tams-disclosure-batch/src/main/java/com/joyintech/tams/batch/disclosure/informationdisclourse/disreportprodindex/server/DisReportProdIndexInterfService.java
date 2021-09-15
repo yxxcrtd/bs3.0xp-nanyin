@@ -44,7 +44,7 @@ public class DisReportProdIndexInterfService  extends AutoSendCBBaseService{
      * @return
      * @throws Exception
      */
-    public DisReportProdIndexIntoResult processDto(DisReportProdIndexResult acctEntity) throws Exception { 
+    public DisReportProdIndexIntoResult processDto(DisReportProdIndexResult acctEntity) {
 
     	// 若reader读取的值为空，直接返回空
     	if (acctEntity == null) {

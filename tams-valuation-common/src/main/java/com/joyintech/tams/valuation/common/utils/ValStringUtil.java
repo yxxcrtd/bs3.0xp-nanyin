@@ -146,7 +146,10 @@ public class ValStringUtil extends StringUtil {
         Enumeration<?> enum1 = proper.propertyNames();
         while (enum1.hasMoreElements()) {
             String strKey = (String) enum1.nextElement();
-            String strValue = proper.getProperty(strKey);
+            String strValue = "";
+            if(proper!=null) {
+                strValue = proper.getProperty(strKey)==null?"":proper.getProperty(strKey);
+            }
             res.put(strKey, strValue);
         }
         return res;

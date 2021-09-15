@@ -17,6 +17,7 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -185,8 +186,8 @@ public class FtpUtil {
 			if (!ftpClient.isConnected()) {
 				this.connect();
 			}
-			File file = new File(remoteFile);
-			File localFile = new File(localDir);
+			File file = new SafelyFile(remoteFile);
+			File localFile = new SafelyFile(localDir);
 			if (!localFile.exists()) {
 				localFile.mkdirs();
 			} else if (!localFile.isDirectory()) {
@@ -195,7 +196,7 @@ public class FtpUtil {
 					localFile.mkdirs();
 				}
 			}
-			File localfile = new File(localDir + File.separator + file.getName());
+			File localfile = new SafelyFile(localDir + File.separator + file.getName());
 			fos = new FileOutputStream(localfile);
 			boolean flag = ftpClient.retrieveFile(remoteFile, fos);
 			if (!flag) {
@@ -216,8 +217,8 @@ public class FtpUtil {
 
 	public void downFileOrDir(String remoteFileName, String localDir) {
 		try {
-			File file = new File(remoteFileName);
-			File temp = new File(localDir);
+			File file = new SafelyFile(remoteFileName);
+			File temp = new SafelyFile(localDir);
 			if (!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -230,7 +231,7 @@ public class FtpUtil {
 						downFileOrDir(remoteFileName + '/' + names[i], localDir + File.separator + names[i]);
 						ftpClient.changeToParentDirectory();
 					} else {
-						File localfile = new File(localDir + File.separator + names[i]);
+						File localfile = new SafelyFile(localDir + File.separator + names[i]);
 						if (!localfile.exists()) {
 							fos = new FileOutputStream(localfile);
 							boolean flag = ftpClient.retrieveFile(names[i], fos);
@@ -254,7 +255,7 @@ public class FtpUtil {
 					}
 				}
 			} else {
-				File localfile = new File(localDir + File.separator + file.getName());
+				File localfile = new SafelyFile(localDir + File.separator + file.getName());
 				if (!localfile.exists()) {
 					fos = new FileOutputStream(localfile);
 					boolean flag = ftpClient.retrieveFile(remoteFileName, fos);

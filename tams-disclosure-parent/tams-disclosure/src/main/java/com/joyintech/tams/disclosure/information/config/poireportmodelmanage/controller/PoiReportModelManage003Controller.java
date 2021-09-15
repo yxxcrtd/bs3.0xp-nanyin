@@ -98,7 +98,7 @@ public class PoiReportModelManage003Controller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect() throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect() {
 	    Map<String, Object> param=RequestUtil.getPageParam();
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(param);
         return prdInfoSelect;

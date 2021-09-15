@@ -80,7 +80,7 @@ $(function () {
       // 绑定按钮事件
       $('#ValSubjectSet001_btn_search').click(function() {
           table.load();
-          $('#ValSubjectSet001_btn_delete').show();
+          //$('#ValSubjectSet001_btn_delete').show();
       });
       $('#ValSubjectSet001_btn_export').click(function() {
           exportExcel();

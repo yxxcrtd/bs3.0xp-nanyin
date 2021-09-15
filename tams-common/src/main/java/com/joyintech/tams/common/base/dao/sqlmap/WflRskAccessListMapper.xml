@@ -115,12 +115,12 @@
             LIST_TYPE, LIST_DETAIL_TYPE, EFFDATE, 
             DELDATE, WORKFLOW_ID, REMARK, 
             CREATE_USER, CREATE_DEPT, CREATE_TIME, 
-            UPDATE_USER, UPDATE_TIME)
+            UPDATE_USER, UPDATE_TIME,LIST_LEVEL)
         values (#{listId,jdbcType=VARCHAR}, #{workflowStatus,jdbcType=VARCHAR}, #{listName,jdbcType=VARCHAR}, 
             #{listType,jdbcType=VARCHAR}, #{listDetailType,jdbcType=VARCHAR}, #{effdate,jdbcType=DATE}, 
             #{deldate,jdbcType=DATE}, #{workflowId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
             #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{listLevel,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.WflRskAccessList" >
         insert into WFL_RSK_ACCESS_LIST

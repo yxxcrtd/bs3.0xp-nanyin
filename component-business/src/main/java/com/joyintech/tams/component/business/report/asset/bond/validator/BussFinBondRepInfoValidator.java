@@ -96,7 +96,7 @@ public class BussFinBondRepInfoValidator implements BeanValidator{
                 if(StringUtil.equals(dto.getRepTradeMarket(), DictCodeList.交易流通场所_其他交易流通场所.getValue())){
                     if(StringUtil.isEmpty(dto.getRepRemark())){
                         resultList.add(new ValidMessage("repRemark",
-                                getMessage("COMMON_E_0057", getMessage("BussRepAssetCreditNonstdInfo.repRemark"))));
+                                getMessage("当交易流通场所为其他交易流通场所时，备注要素不可为空", getMessage("BussRepAssetCreditNonstdInfo.repRemark"))));
                     }
 
                 }

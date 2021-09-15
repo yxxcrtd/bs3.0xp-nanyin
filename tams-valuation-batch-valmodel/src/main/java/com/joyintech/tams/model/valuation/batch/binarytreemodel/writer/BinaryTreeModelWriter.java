@@ -30,9 +30,15 @@ public class BinaryTreeModelWriter extends BaseWriter<BinaryTreeModelResultDto> 
         List<MstBondValuationInfo> listMstBondValuationInfo = new ArrayList<MstBondValuationInfo>();
         if (resultList != null && resultList.size() > 0) {
             for (BinaryTreeModelResultDto dto : resultList) {
-                listModCurveResult.add(dto.getModCurveResult());
-                listModRiskPremium.add(dto.getModRiskPremium());
-                listMstBondValuationInfo.add(dto.getMstBondValuationInfo());
+                if(dto.getModCurveResult()!=null){
+                    listModCurveResult.add(dto.getModCurveResult());
+                }
+                if(dto.getModRiskPremium()!=null){
+                    listModRiskPremium.add(dto.getModRiskPremium());
+                }
+                if(dto.getMstBondValuationInfo()!=null){
+                    listMstBondValuationInfo.add(dto.getMstBondValuationInfo());
+                }
             }
         }
 

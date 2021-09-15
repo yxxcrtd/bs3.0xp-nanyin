@@ -39,7 +39,7 @@ public class FlowRiskStressTestView001Service extends BaseService<FlowRiskStress
   
     
     public Page<FlowRiskStressTestView001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         Page<FlowRiskStressTestView001Dto> PAGE= super.queryForPage(page, length, () -> FlowRiskStressTestView001Mapper.queryForPage(pageParam));
         DynamicDataSourceHolder.clearDataSource();

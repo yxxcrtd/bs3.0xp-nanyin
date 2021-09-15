@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.portfolio.ptlaccountcurrentinterest.controller
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -94,13 +95,12 @@ public class PtlAccountCurrentInterest001Controller extends BaseController{
      * @param dto 验证的实体类
      * @param br 错误结果
      * @return 错误信息
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlAccountCurrentInterest001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) PtlAccountCurrentInterest001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -136,14 +136,12 @@ public class PtlAccountCurrentInterest001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlAccountCurrentInterest001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

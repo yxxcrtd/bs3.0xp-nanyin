@@ -62,7 +62,7 @@ public class FinProductEstablishController {
     public Page<FinProductEstablishDto> productEstablishInfoQuery(@RequestBody Map<String, Object> param,
                                                                   @PathVariable("page") int page,
                                                                   @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductEstablishService.productEstablishInfoQuery(page, length, param);
     }
 

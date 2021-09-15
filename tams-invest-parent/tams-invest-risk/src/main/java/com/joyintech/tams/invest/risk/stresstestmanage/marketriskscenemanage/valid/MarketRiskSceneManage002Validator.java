@@ -17,6 +17,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @Transactional
 @Component
 public class MarketRiskSceneManage002Validator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskSceneManage002Validator.class);
 
     /**
      * 情景新建002service注入
@@ -88,7 +94,7 @@ public class MarketRiskSceneManage002Validator implements BeanValidator {
                 	SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
                     today = format.parse(format.format(today));
 				} catch (Exception e) {
-					e.printStackTrace();
+                    logger.error(e.getMessage(),e);
 				}
                 if(dto.getStartDate() == null || dto.getEndDate() == null){
                     errorList.add(new ValidMessage("","请选择日期区间！"));

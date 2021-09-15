@@ -153,6 +153,24 @@
       order by DECODE(a.INSTITUTION_IDENTIFY_TYPE,NULL,'A','B') desc,IMARK desc,a.INDENTIFY_MARK desc
   </select>
   
+  
+   <select id="selectAllDataForHold" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT a.INDENTIFY_MARK,
+ 		   a.ORG_INDENTIFY_MARK,
+  		   a.REGIST_BANK_CODE,
+  		   a.IS_SUBMIT,
+  		   a.REMARK,
+ 		   a.STATUS,
+   		   a.WORKFLOW_ID,
+ 		   a.DEPT_CODE,
+ 		   a.DATA_SOURCE,
+           a.ORG_CODE,
+           a.CREATE_DEPT,
+           a.OPERATE_STATUS,
+           a.MERGER_INDENTIFY_MARK
+ FROM CHB_EQU_HOLD_CHECK a
+  </select>
+  
   <select id="queryAllCheckData" resultMap="BaseResultMap" parameterType="java.util.List">
   	select <include refid="Base_Column_List"/>
   	from CHB_EQU_HOLD_CHECK

@@ -131,6 +131,10 @@ public interface PayTheVatQuery002Mapper {
      * 查询币种
      */
     List<String> searchCurrency(Map<String, Object> pageParam);
+    /**
+     * 查询通道下的产品已跑批日期小于纳税结束日
+     */
+    List<String> searchChlPtlBookSet(Map<String, Object> params);
 
     /**
      * 查询附加税税则中的附加税类型

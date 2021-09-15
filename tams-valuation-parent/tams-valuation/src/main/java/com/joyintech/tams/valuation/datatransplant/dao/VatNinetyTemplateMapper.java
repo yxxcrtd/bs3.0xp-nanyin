@@ -15,6 +15,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.datatransplant.dto.BooksetTaxConfigDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.datatransplant.dto.BooksetTaxConfigDto;
  * @see VatNinetyTemplateMapper
  * @since 1.0
  */
+@Repository
 public interface VatNinetyTemplateMapper {
 
     /**

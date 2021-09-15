@@ -8,7 +8,9 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.position.dto.ChbAssetPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbAssetPositionMapper {
     int deleteByPrimaryKey(String posuuid);
 

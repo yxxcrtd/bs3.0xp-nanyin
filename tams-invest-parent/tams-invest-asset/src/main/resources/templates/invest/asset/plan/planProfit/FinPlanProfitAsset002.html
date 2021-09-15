@@ -175,7 +175,7 @@
 														placeholder="请输入内容"
 														data-th-placeholder="#{SysCommon.placeholder}" required
 														data-th-data-result="${CUSTOM_ASSET_TYPE_THREE}"
-														data-th-childrenIds="${isShowType} eq '01' ? 'type11' : 'repAssetType'"
+														data-th-childrenIds="${isShowType} eq '01' ? 'type11,repAssetType' : 'repAssetType'"
 														parentIds="type9"></select>
 											</div>
 										</div>
@@ -204,8 +204,7 @@
 												placeholder="请输入内容"
 												data-th-placeholder="#{SysCommon.placeholder}" required
 												data-th-data-result="${CUSTOM_ASSET_TYPE_FIVE}"
-													parentIds="type11"
-													data-th-childrenIds="${isShowType} eq '01' ? 'repAssetType' : ''"
+												parentIds="type11"
 										></select>
 										</div>
 									</div>

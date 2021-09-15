@@ -36,13 +36,13 @@
         <div class="layui-form-item">
             <div class="layui-inline layui-col-md4">
                 <label class="layui-form-label form-lable">选择执行产品：</label>
-                <div class="layui-input-inline input-inline" th:if="${AUTHORITY_TYPE}=='02'">
+                <!--<div class="layui-input-inline input-inline" th:if="${AUTHORITY_TYPE}=='02'">
                     <input type="radio" name="prodGroupType" value="1" title="产品" checked lay-filter="prodGroupType">
                 </div>
-                <div class="layui-input-inline input-inline" th:if="${AUTHORITY_TYPE}=='01'">
+                <div class="layui-input-inline input-inline" th:if="${AUTHORITY_TYPE}=='01'">-->
                     <input type="radio" name="prodGroupType" value="0" title="产品组" checked lay-filter="prodGroupType">
                     <input type="radio" name="prodGroupType" value="1" title="产品" lay-filter="prodGroupType">
-                </div>
+                <!--</div>-->
             </div>
             <div class="layui-inline layui-col-md2">
                 <a class="layui-btn layui-btn-sm btn-submit" id="ValBatchStart001_btn_prodGroupSelect">选择...</a>

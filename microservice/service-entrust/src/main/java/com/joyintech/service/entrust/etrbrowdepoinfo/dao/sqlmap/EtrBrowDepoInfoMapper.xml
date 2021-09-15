@@ -529,10 +529,10 @@
     <!-- 查询通道可用现金-->
     <select id="getChannelAvailableCash" resultType="java.math.BigDecimal">
         select pcp.amount
-          from ptl_cash_position pcp, sys_date sd
+          from ptl_cash_position pcp
          where pcp.portfolio_id = #{portfolio_id ,jdbcType=VARCHAR}
            and pcp.chl_finprod_id = #{chl_finprod_id ,jdbcType=VARCHAR}
-           and pcp.cdate = sd.cur_date
+           and pcp.cdate = #{platDate,jdbcType=DATE}
            and pcp.hoding_type = '03'
     </select>
     

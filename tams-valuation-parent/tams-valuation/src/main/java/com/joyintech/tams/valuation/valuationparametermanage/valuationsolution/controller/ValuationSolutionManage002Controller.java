@@ -49,7 +49,7 @@ public class ValuationSolutionManage002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValuationSolutionManage002Dto> queryPage()
-        throws Exception {
+      {
         Page<ValuationSolutionManage002Dto> page = valuationSolutionManage002Service.findPage(RequestUtil.getParameters(getRequest()));
         return page;
     }

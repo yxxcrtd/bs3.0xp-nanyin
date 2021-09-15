@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.depo.dto.FinDepositTargetDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -247,14 +248,14 @@ public class FinProjectTargetAsset002Controller extends BaseController{
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_082",DictCodeListExt2.行内资产五级分类_其他私募ABS.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_083",DictCodeListExt2.行内资产五级分类_其他产业基金股东借款.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_084",DictCodeListExt2.行内资产五级分类_其他非产业基金股东借款.getValue());
-        model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_085",DictCodeListExt2.行内资产五级分类_其他其他非标准划债券类投资.getValue());
+        model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_085",DictCodeListExt2.行内资产五级分类_其他非标准划债券类投资.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_086",DictCodeListExt2.行内资产五级分类_股权.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_087",DictCodeListExt2.行内资产五级分类_股票定向增发.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_088",DictCodeListExt2.行内资产五级分类_夹层.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_089",DictCodeListExt2.行内资产五级分类_私募股权基金.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_090",DictCodeListExt2.行内资产五级分类_风险投资.getValue());
         model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_091",DictCodeListExt2.行内资产五级分类_阳光私募.getValue());
-        model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_092",DictCodeListExt2.行内资产五级分类_其他其他权益类投资.getValue());
+        model.addAttribute("CUSTOM_ASSET_TYPE_FIVE_092",DictCodeListExt2.行内资产五级分类_其他权益类投资.getValue());
         model.addAttribute("isQuickInput",isQuickInput);
         //add by zhangnian  20191008 end
         return super.init(model);
@@ -306,8 +307,7 @@ public class FinProjectTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinProjectTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinProjectTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -64,7 +64,7 @@ public class ValPlannedassetquery001Service extends CommonExportService<ValPlann
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValPlannedassetquery001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValPlannedassetquery001Dto> findPage(Map<String, Object> params) {
         
 //        String bond = (String)params.get("bond");
 //        String profitType = (String)params.get("profitType");
@@ -103,7 +103,7 @@ public class ValPlannedassetquery001Service extends CommonExportService<ValPlann
      * @see
      * @since 1.0
      */
-    public List<ValPlannedassetquery001Dto> findPageout(Map<String, Object> params) throws Exception {
+    public List<ValPlannedassetquery001Dto> findPageout(Map<String, Object> params) {
        
 //        return mapper.queryPageList(params);
     	  return restTemplate.postForList(

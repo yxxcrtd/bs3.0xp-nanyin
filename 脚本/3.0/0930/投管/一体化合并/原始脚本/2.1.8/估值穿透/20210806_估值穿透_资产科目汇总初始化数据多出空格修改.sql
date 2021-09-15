@@ -1,0 +1,1 @@
+update RSK_VALTBL_SUBJECT set sub_code='702' where sub_code='702	';

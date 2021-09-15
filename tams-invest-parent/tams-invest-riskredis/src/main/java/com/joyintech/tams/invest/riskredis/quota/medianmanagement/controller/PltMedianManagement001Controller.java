@@ -56,13 +56,12 @@ public class PltMedianManagement001Controller extends BaseController{
     /**
      * 分页查询
      * @return Page<PltMedianManagementDto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PltMedianManagementDto> findPage() throws Exception {
+    public Page<PltMedianManagementDto> findPage() {
     	Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		Object paraCode = map.get("paraCode");
 		if (null != paraCode) {
@@ -70,7 +69,7 @@ public class PltMedianManagement001Controller extends BaseController{
 			map.put("paraCode", paraCodeList);
 		}
 		Object blank = map.get("blank");
-		if(blank != null || blank != ""){
+		if(blank != null && blank != ""){
 			map.put("blank", blank);
 		}
 		Object supDate = map.get("supDate");
@@ -85,13 +84,12 @@ public class PltMedianManagement001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0 
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return pltMedianManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -101,12 +99,11 @@ public class PltMedianManagement001Controller extends BaseController{
 	 * 查询画面风险事件名称联想框内容
 	 * 
 	 * @return 检索数据
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
 	@RequestMapping(value = "selectMedianManagement", method = RequestMethod.GET)
-	public Page<SelectOptionDto> selectMultiOptionEvent() throws Exception {
+	public Page<SelectOptionDto> selectMultiOptionEvent()  {
 		Map<String, Object> map = RequestUtil.getParameters(getRequest());
 		Page<SelectOptionDto> page = pltMedianManagement001Service.selectMedianManagement(map);
 		return page;

@@ -59,7 +59,7 @@ public class MstBondQuotationInfoService extends BaseService<MstBondQuotationInf
      * @throws Exception 异常信息
      */
     public Page<MstBondQuotationInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("FINPROD_TYPE_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         return super.queryForPage(page, length, () -> mstBondQuotationInfoMapper.select(pageParam));
     }
@@ -163,7 +163,7 @@ public class MstBondQuotationInfoService extends BaseService<MstBondQuotationInf
      * @throws InvocationTargetException 
      * @throws IllegalAccessException 
      */
-    public MstBondQuotationInfoDto selectByKey(String secId, String valueDate,String valueSource) throws IllegalAccessException, InvocationTargetException {
+    public MstBondQuotationInfoDto selectByKey(String secId, String valueDate,String valueSource){
         Map<String,Object> map = new HashMap<String,Object>();
         map.put("secId", secId);
         map.put("valueDate", valueDate);

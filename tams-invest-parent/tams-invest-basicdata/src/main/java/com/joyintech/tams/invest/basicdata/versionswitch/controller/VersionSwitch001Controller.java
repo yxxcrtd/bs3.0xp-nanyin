@@ -48,7 +48,6 @@ public class VersionSwitch001Controller extends BaseController {
      * 初始化页面信息
      *
      * @return 处理结果
-     * @throws Exception 异常
      */
     @Override
     public String init(Model model) {

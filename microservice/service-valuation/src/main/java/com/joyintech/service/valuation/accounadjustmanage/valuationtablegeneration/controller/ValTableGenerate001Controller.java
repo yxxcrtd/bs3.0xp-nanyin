@@ -10,6 +10,7 @@
 
 package com.joyintech.service.valuation.accounadjustmanage.valuationtablegeneration.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,7 +158,7 @@ public class ValTableGenerate001Controller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValTableGenerate001Dto> findPage(@RequestBody Map<String , Object> map,
-                                                 @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                 @PathVariable("page") int page, @PathVariable("length") int length) {
         return valTableGenerate001Service.findPage(page,length,map);
 
     }
@@ -171,7 +172,7 @@ public class ValTableGenerate001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/checkAccountsForHandle")
-    public HandleReturnDto checkAccountsForHandle(@RequestBody String data) throws Exception {
+    public HandleReturnDto checkAccountsForHandle(@RequestBody String data) throws IOException, ParseException {
 //        String data=this.getParam("data");
         List<HandlePaDto> paList = JsonUtils.json2List(data, HandlePaDto.class);
         //定义返回实体类
@@ -226,7 +227,7 @@ public class ValTableGenerate001Controller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/handle")
-    public HandleReturnDto handle(@RequestBody String data) throws Exception {
+    public HandleReturnDto handle(@RequestBody String data) throws IOException, ParseException {
 //        String data=this.getParam("data");
         List<HandlePaDto> paList = JsonUtils.json2List(data, HandlePaDto.class);
         //定义返回实体类

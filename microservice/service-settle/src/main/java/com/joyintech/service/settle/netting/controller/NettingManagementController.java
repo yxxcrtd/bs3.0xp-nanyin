@@ -41,7 +41,7 @@ public class NettingManagementController extends BaseController {
 
     @PostMapping("findNettingTableData/{page}/{length}")
     public Page<NettingManagementDto> findNettingTableData(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                           @PathVariable("length") int length) throws Exception {
+                                                           @PathVariable("length") int length) {
         //Page<NettingManagementDto> page2 =  nettingManagementService.findNettingTableData(page, length, param);
         return nettingManagementService.findNettingTableData(page, length, param);
     }
@@ -49,7 +49,7 @@ public class NettingManagementController extends BaseController {
 
     @PostMapping("findTransferMessage/{page}/{length}")
     public Page<TransferMessageDto> findTransferMessage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
-                                                        @PathVariable("length") int length) throws Exception {
+                                                        @PathVariable("length") int length) {
         return transferMessageService.findTransferMessage(page, length, param);
     }
 
@@ -60,22 +60,22 @@ public class NettingManagementController extends BaseController {
      * @throws Exception 异常
      */
     @PostMapping("findTradeData")
-    public List<NettingManagementDto> findTradeData(@RequestBody Map<String, Object> params) throws Exception {
+    public List<NettingManagementDto> findTradeData(@RequestBody Map<String, Object> params) {
         return nettingManagementService.findTradeData(params);
     }
 
     @PostMapping("findDvpOrdersByOrderId")
-    public NettingOrdersDto findDvpOrdersByOrderId(@RequestBody String orderId) throws Exception {
+    public NettingOrdersDto findDvpOrdersByOrderId(@RequestBody String orderId) {
         return nettingManagementService.findDvpOrdersByOrderId(orderId);
     }
 
     @PostMapping("findMatchedNum")
-    public int findMatchedNum(@RequestBody List<NettingManagementDto> tradeDatas) throws Exception {
+    public int findMatchedNum(@RequestBody List<NettingManagementDto> tradeDatas) {
         return nettingManagementService.findMatchedNum(tradeDatas);
     }
 
     @PostMapping("findOrderIdByTotleTradeId")
-    public String findOrderIdByTotleTradeId(@RequestBody String TOTLE_TRADE_ID) throws Exception
+    public String findOrderIdByTotleTradeId(@RequestBody String TOTLE_TRADE_ID)
     {
         return nettingManagementService.findOrderIdByTotleTradeId(TOTLE_TRADE_ID);
     }

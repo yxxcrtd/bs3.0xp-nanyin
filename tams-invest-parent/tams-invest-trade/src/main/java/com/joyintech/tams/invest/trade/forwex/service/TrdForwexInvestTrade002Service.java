@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.invest.common.constant.BussinessJixuConstant;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -71,7 +73,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Transactional(rollbackFor = Exception.class)
 public class TrdForwexInvestTrade002Service extends BaseService<TrdForwexInvestTradeDto>
 		implements BaseProcessService<TrdForwexInvestTradeDto> {
-
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(TrdForwexInvestTrade002Service.class);
 	/**
 	 * 附件上传类
 	 */
@@ -1491,7 +1496,7 @@ public class TrdForwexInvestTrade002Service extends BaseService<TrdForwexInvestT
 							settleDate = this.getNextWorkDay(map);
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 				} else {
 					map.put("tradeDate", DateUtil.format(tradeDate));

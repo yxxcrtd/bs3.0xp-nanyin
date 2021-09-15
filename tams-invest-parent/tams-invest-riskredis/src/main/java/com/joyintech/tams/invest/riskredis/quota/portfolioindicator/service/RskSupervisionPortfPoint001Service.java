@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -155,11 +156,11 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
         return null;
     }
-    private String transferWarnFoul(String value,String indCellType) throws Exception{
+    private String transferWarnFoul(String value,String indCellType) throws IOException {
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);

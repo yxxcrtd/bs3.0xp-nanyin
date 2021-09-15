@@ -112,7 +112,7 @@ public class ValManualVoucher001Service extends CommonExportService<ValManualVou
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValManualVoucher001Dto> findPage(ValManualVoucher001SearchDto dto) throws Exception {
+    public Page<ValManualVoucher001Dto> findPage(ValManualVoucher001SearchDto dto) {
         Map<String, ValManualVoucher001SearchDto> map = new HashMap<String, ValManualVoucher001SearchDto>();
         map.put("dto", dto);
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ValManualVoucher001/findPage",map, ValManualVoucher001Dto.class);

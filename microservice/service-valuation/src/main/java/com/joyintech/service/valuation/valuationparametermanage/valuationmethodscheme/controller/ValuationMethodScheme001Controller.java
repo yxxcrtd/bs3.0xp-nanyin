@@ -49,7 +49,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@PostMapping("findSchemeByPage/{page}/{length}")
 	public Page<ValuationMethodScheme001Dto> findScheme(@RequestBody Map<String, Object> parameters,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return valuationMethodScheme001Service.findSchemeByPage(page, length, parameters);
 	}
 
@@ -61,7 +61,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@PostMapping("findSchemeDetailByPage/{page}/{length}")
 	public Page<ValuationMethodScheme001Dto> findSchemeDetail(@RequestBody Map<String, Object> parameters,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return valuationMethodScheme001Service.findSchemeDetailByPage(page, length, parameters);
 	}
 
@@ -73,7 +73,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@PostMapping("findSpecialAssetsByPage/{page}/{length}")
 	public Page<ValuationMethodScheme001Dto> findSpecialScheme(@RequestBody Map<String, Object> parameters,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return valuationMethodScheme001Service.findSpecialAssetsByPage(page, length, parameters);
 	}
 
@@ -85,8 +85,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("findSchemeDetail")
-	public List<ValuationMethodScheme001Dto> findSchemeDetail(@RequestBody Map<String, Object> parameters)
-			throws Exception {
+	public List<ValuationMethodScheme001Dto> findSchemeDetail(@RequestBody Map<String, Object> parameters){
 		return valuationMethodScheme001Service.findSchemeDetail(parameters);
 	}
 
@@ -98,8 +97,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("findSpecialAssets")
-	public List<ValuationMethodScheme001Dto> findSpecialAssets(@RequestBody Map<String, Object> parameters)
-			throws Exception {
+	public List<ValuationMethodScheme001Dto> findSpecialAssets(@RequestBody Map<String, Object> parameters){
 		return valuationMethodScheme001Service.findSpecialAssets(parameters);
 	}
 
@@ -110,7 +108,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("findFinprod")
-	public List<SelectOptionDto> findFinprod(@RequestBody Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findFinprod(@RequestBody Map<String, Object> parameters) {
 		return valuationMethodScheme001Service.findFinprod(parameters);
 	}
 
@@ -134,7 +132,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@PostMapping("findScheme")
-	public List<SelectOptionDto> findScheme(@RequestBody Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findScheme(@RequestBody Map<String, Object> parameters) {
 		return valuationMethodScheme001Service.findScheme(parameters);
 	}
 	

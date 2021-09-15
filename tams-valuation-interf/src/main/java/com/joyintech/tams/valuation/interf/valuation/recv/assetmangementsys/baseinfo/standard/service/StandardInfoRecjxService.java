@@ -1,16 +1,8 @@
 package com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.standard.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.jixu.common.type.ResultInterface;
 import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
 import com.jixu.msg.dto.JJBkCashAcctDto;
-import com.jixu.msg.dto.JJPortfolioDto;
 import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAcctBatchMapper;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
@@ -18,6 +10,13 @@ import com.joyintech.tams.valuation.common.interf.base.dto.ValBooksetInfoDto;
 import com.joyintech.tams.valuation.common.interf.base.service.common.InterfCommonService;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValSubjectInfo;
 import com.joyintech.tams.valuation.interf.valuation.recv.assetmangementsys.baseinfo.standard.entity.StandardInfoProcessorResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -84,6 +83,14 @@ public class StandardInfoRecjxService {
     	StlCapacctInfo stlCapacctInfo = valFinProductAcctBatchMapper.getStlCapacctInfo(dto.getActNo(),dto.getCcy());
     	//银行账户名
     	jjBkCashAcctDto.setAcct_name(stlCapacctInfo==null?"":stlCapacctInfo.getAcctName());
+		//查询信息
+		StlCapacctInfo StlCapacctInfo = valFinProductAcctBatchMapper.getStlCapacctInfo(dto.getActNo(),dto.getCcy());
+		//银行账户名
+		if(StlCapacctInfo != null){
+			jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
+			jjBkCashAcctDto.setCcy(StlCapacctInfo.getCcy());
+		}
+//    	jjBkCashAcctDto.setAcct_name(StlCapacctInfo.getAcctName());
     	//账套名称
     	jjBkCashAcctDto.setBookset_id(booksetId);
     	/**modify by wujie on 20210429
@@ -91,7 +98,7 @@ public class StandardInfoRecjxService {
     	jjBkCashAcctDto.setBank_dep(stlCapacctInfo.getBankDep());
 		 **/
     	//货币
-    	jjBkCashAcctDto.setCcy(dto.getCcy());
+    	//jjBkCashAcctDto.setCcy(dto.getCcy());
         //账户   	
     	jjBkCashAcctDto.setAcc_type(dto.getActType());
     	 

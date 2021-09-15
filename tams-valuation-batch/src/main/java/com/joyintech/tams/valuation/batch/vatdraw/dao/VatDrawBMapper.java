@@ -250,4 +250,24 @@ public interface VatDrawBMapper {
 	String getStandardCcy(
         @Param("booksetId")
             String booksetId);
+
+    /**
+     * 根据发行标的组装上市标的的计税流水
+     *
+     * @param orginInfoMap
+     * @return 上市标的账务明细代码
+     * @see
+     * @since 1.0
+     */
+    String getTaxBokDetailsByOrgin(Map<String, String> orginInfoMap);
+
+    /**
+     * 判断资产是否是上市标的
+     *
+     * @param busiId
+     * @return 标的基本信息
+     * @see
+     * @since 1.0
+     */
+    Boolean getIsShbdByBusiId(@Param("busiId") String busiId);
 }

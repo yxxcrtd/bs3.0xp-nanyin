@@ -1,13 +1,20 @@
 package com.jixu.adapter.reader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import com.jcraft.jsch.JSchException;
+import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jixu.adapter.dao.intf.InterfaceColConfigDao;
@@ -46,7 +53,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 		compareFilePath=compareFilePath.replaceAll("/", "");
 		compareFilePath=compareFilePath.replaceAll("\\\\", "");
 		List<String> fileList=new ArrayList<String>();
-		File folder=new File(folderPath);
+		File folder=new SafelyFile(folderPath);
 		if(folder.isDirectory()){
 			getDirectory(folderPath, fileList, compareFilePath);
 		}
@@ -62,12 +69,12 @@ public abstract class ReadFileBasic implements ReadDataFile{
 	 */
 	private void getDirectory(String filepath, List<String> fileList, String comparePath){
 		WildcardMatch wildcardMatch = new WildcardMatch();
-		File file = new File(filepath);
+		File file = new SafelyFile(filepath);
 		if (file.isDirectory()) {
 			String[] filelist = file.list();
 			for (int i = 0; i < filelist.length; i++) {
 				String filefullname=filepath + "/" + filelist[i];
-				File readfile = new File(filefullname);
+				File readfile = new SafelyFile(filefullname);
 				if (readfile.isDirectory()) {
 					getDirectory(filefullname, fileList, comparePath);
 				}else{
@@ -104,7 +111,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 			}else{
 				String splitChar=source.getTableSpilitChar();
 				splitChar=getSplitWrite(splitChar);
-				String[] fields=line.split(splitChar);
+				String[] fields=line.split(Pattern.quote(splitChar));
 				for(String field:fields){
 					fieldsList.add(field);
 				}
@@ -115,7 +122,8 @@ public abstract class ReadFileBasic implements ReadDataFile{
 	}
 	
 	@Override
-	public DataReadResult readFileData(InterfaceSource interfaceSource, DataCounter dataCounter) throws Exception {
+	public DataReadResult readFileData(InterfaceSource interfaceSource, DataCounter dataCounter)
+			throws JSchException, IOException, FTPTool.FTPNotLoginException {
 		DataReadResult result=null;
 		if(interfaceSource.getChannelType()==InterfaceConfig.ftpType) {
 			//临时解决方案：如果配置FTP形式，适配器只提供下载文件功能
@@ -140,7 +148,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 		return result;
 	}
 	
-	protected abstract DataReadResult readFileDataResult(InterfaceSource interfaceSource,DataCounter dataCounter) throws Exception;
+	protected abstract DataReadResult readFileDataResult(InterfaceSource interfaceSource,DataCounter dataCounter) throws IOException;
 	
 	
     
@@ -178,7 +186,8 @@ public abstract class ReadFileBasic implements ReadDataFile{
      * @return
      * @throws Exception
      */
-    private DataReadResult putFilesByFTP(InterfaceSource source, DataCounter dataCounter) throws Exception{
+    private DataReadResult putFilesByFTP(InterfaceSource source, DataCounter dataCounter)
+			throws IOException, FTPTool.FTPNotLoginException, JSchException {
     	DataReadResult result=new DataReadResult();
     	String backupPath = parseDateFolder(source.getBackupPath());;
     	String username=source.getChannelAccount();
@@ -187,7 +196,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
     	String[] urlsArr=urlStr.split(":");
     	if(urlsArr.length!=3) {
     		String errormsg="FTP连接地址不正确(Host:Port:FilePath): " + urlStr;
-    		throw new Exception(errormsg);
+    		throw new ServiceException(errormsg);
     	}
     	
     	String host=urlsArr[0];

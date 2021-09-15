@@ -67,7 +67,7 @@ public class MstBankTranFeeManageService extends BaseService<MstBankTranFeeManag
      * @since 1.0
      */
     public Page<MstBankTranFeeManageDto> selectForPage(int page, int length,
-                                                       Map<String, Object> pageParam) throws Exception {
+                                                       Map<String, Object> pageParam) {
         pageParam.put("TRADE_PLACE_01", BussinessDictCodeList.交易场所_银行间.getValue());
         pageParam.put("CHARGE_KIND_02", BussinessDictCodeList.计费类型_固定金额.getValue());
         return super.queryForPage(page, length, () -> mstBankTranFeeManageMapper.selectForPage(pageParam));

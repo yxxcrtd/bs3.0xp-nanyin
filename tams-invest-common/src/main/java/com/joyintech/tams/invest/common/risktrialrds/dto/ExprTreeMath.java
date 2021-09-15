@@ -196,7 +196,7 @@ public class ExprTreeMath {
      * @return 返回计算结果
      * @throws Exception 
      */
-    public  Object calc(String expression) throws Exception {
+    public  Object calc(String expression){
         Stack<String> optStack = new Stack<>(); // 运算符栈
         Stack<BigDecimal> numStack = new Stack<>(); // 数值栈，数值以BigDecimal存储计算
         StringBuilder curNumBuilder = new StringBuilder(16); // 当前正在读取中的数值字符
@@ -219,7 +219,7 @@ public class ExprTreeMath {
 		}
         else{
         	 if(!patternOpNum.matcher(expression).find()) {
-        		throw new Exception("cannot get number from parameters for expression");
+        		throw new IllegalArgumentException("cannot get number from parameters for expression");
         	}
         	 //判断是否包含汉字
 			if(Pattern.compile("[\u4e00-\u9fa5]").matcher(expression).find()){

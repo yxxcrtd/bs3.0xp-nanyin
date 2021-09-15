@@ -4,27 +4,27 @@
 
           <!--	还本不带息利息信息	-->
    <select id="selectRepaymentUnpayInterest" resultType="com.joyintech.tams.invest.common.dto.period.trdsecoverdueduration.TrdSecOverdueDurationDto">
-		select 	VW_REPAY_WITHOUT_INT.WITHOUT_CASH_ID	cashId,
-				VW_REPAY_WITHOUT_INT.WITHOUT_BRANCH 	branch,
-				PTL_RECE_POSITION.AMOUNT				amount,
-				PTL_RECE_POSITION.REC_TYPE  			recType,
-				FIN_TRADE_PRODUCT.VDATE					vdate,
-				FIN_TRADE_PRODUCT.MDATE					mdate
-		    from VW_REPAY_WITHOUT_INT,PTL_RECE_POSITION,FIN_TRADE_PRODUCT
-		    where VW_REPAY_WITHOUT_INT.BRANCH = #{libranch}
-		    and  VW_REPAY_WITHOUT_INT.WITHOUT_BRANCH = PTL_RECE_POSITION.BRANCH
-		    and VW_REPAY_WITHOUT_INT.FINPRODID = PTL_RECE_POSITION.FINPROD_ID
-		    and VW_REPAY_WITHOUT_INT.WITHOUT_BRANCH =FIN_TRADE_PRODUCT.BRANCH
-		    AND VW_REPAY_WITHOUT_INT.FINPRODID =FIN_TRADE_PRODUCT.FINPROD_ID
-		    and PTL_RECE_POSITION.FINPROD_ID = #{finprodId}
-		    and PTL_RECE_POSITION.PORTFOLIO_ID =#{portfolioId}
-		    and PTL_RECE_POSITION.HODING_TYPE = #{POSITION_TYPE_03}
-		    and PTL_RECE_POSITION.CDATE= #{Cdate}
+		select 	VRWI.WITHOUT_CASH_ID	cashId,
+				VRWI.WITHOUT_BRANCH 	branch,
+				PRP.AMOUNT				amount,
+				PRP.REC_TYPE  			recType,
+				FTP.VDATE					vdate,
+				FTP.MDATE					mdate
+		    from VW_REPAY_WITHOUT_INT VRWI,PTL_RECE_POSITION PRP,FIN_TRADE_PRODUCT FTP
+		    where VRWI.BRANCH = #{libranch}
+		    and  VRWI.WITHOUT_BRANCH = PRP.BRANCH
+		    and VRWI.FINPRODID = PRP.FINPROD_ID
+		    and VRWI.WITHOUT_BRANCH =FTP.BRANCH
+		    AND VRWI.FINPRODID =FTP.FINPROD_ID
+		    and PRP.FINPROD_ID = #{finprodId}
+		    and PRP.PORTFOLIO_ID =#{portfolioId}
+		    and PRP.HODING_TYPE = #{POSITION_TYPE_03}
+		    and PRP.CDATE= #{Cdate}
 		    <if test="invAim != null and invAim!=''">
-    			and PTL_RECE_POSITION.INV_AIM = #{invAim}
+    			and PRP.INV_AIM = #{invAim}
     		</if>
     		<if test="secAcctId != null and secAcctId!=''">
-    			and PTL_RECE_POSITION.SEC_ACCT_ID= #{secAcctId}
+    			and PRP.SEC_ACCT_ID= #{secAcctId}
     		</if>
     		
     </select>
@@ -161,4 +161,16 @@
         PTL_RECE_POSITION.INV_AIM,
         PTL_RECE_POSITION.PAY_DATE
     </select>
+
+	<select id="selectPosition" resultType="java.math.BigDecimal">
+		select
+			sum(decode(psp.hoding_type,'06',psp.amount*-1,'11',psp.amount*-1,psp.amount))
+		from PTL_SEC_POSITION psp
+		where psp.finprod_id = #{finprodId}
+		and psp.portfolio_id = #{portfolioId}
+		and psp.sec_acct_id = #{secAcctId}
+		and psp.branch = 0
+		and psp.cdate = to_date(#{cdate},'yyyy-MM-dd')
+	</select>
+
 </mapper>

@@ -13,6 +13,7 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.reader;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.service.CashFlowDiscountReaderService;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -34,14 +35,15 @@ public class CashFlowDiscountTaskReader extends BaseReader<CashFlowDiscountReade
      */
     @Autowired
     private CashFlowDiscountReaderService cashFlowDiscountReaderService;
-    
+
+    private StepExecution stepExecution;
 
     /**
      * 读取数据 {@inheritDoc}
      */
     @Override
     public List<CashFlowDiscountReaderResult> createList() {
-        return cashFlowDiscountReaderService.execute(getParams());
+        return cashFlowDiscountReaderService.execute(getParams(),stepExecution);
     }
 
 }

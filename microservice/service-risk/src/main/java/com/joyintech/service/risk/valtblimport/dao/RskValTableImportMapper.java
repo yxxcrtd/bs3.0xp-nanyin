@@ -12,6 +12,8 @@ package com.joyintech.service.risk.valtblimport.dao;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.service.risk.valtblimport.dto.RskValtblAssetSubDto;
 
 /**
@@ -22,6 +24,7 @@ import com.joyintech.service.risk.valtblimport.dto.RskValtblAssetSubDto;
  * @see RskValTableImportMapper
  * @since 1.0
  */
+@Repository
 public interface RskValTableImportMapper {
 
     int selectCount(Map<String,Object> paramMap);

@@ -114,8 +114,7 @@ public class BokDetailIdUpdate001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check()
-            throws Exception {
+    public AjaxResult check() throws IOException {
         String message = "";
         String datas = this.getParam("datas");
         List<BokDetailIdUpdate001Dto> listdto = new ArrayList<>() ;
@@ -173,8 +172,7 @@ public class BokDetailIdUpdate001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<BokDetailIdUpdate001Dto> listdto ;
 

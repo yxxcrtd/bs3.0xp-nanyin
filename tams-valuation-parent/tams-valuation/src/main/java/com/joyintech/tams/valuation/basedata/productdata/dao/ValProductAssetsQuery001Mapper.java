@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.valuation.basedata.productdata.dto.ValProductAssetsQuery001Dto;
 import com.joyintech.tams.valuation.trademanage.finprodtradequery.dao.ValFinprodTradeQuery001Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.trademanage.finprodtradequery.dao.ValFinprod
  * @see ValFinprodTradeQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValProductAssetsQuery001Mapper {
     
     /**

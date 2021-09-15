@@ -103,14 +103,13 @@ public class ProductBalanceReconciliation001Controller extends BaseController {
      * 分页数据查询
      * 
      * @return page
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ProductBalanceReconciliation001Dto> findPage()
-        throws Exception {
+        {
 
         // 获取分页数据
         return productBalanceReconciliation001Service.findPage(RequestUtil.getPageParam());
@@ -168,7 +167,6 @@ public class ProductBalanceReconciliation001Controller extends BaseController {
 //            }
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
 //            return new AjaxResult("对账失败", MessageType.错误消息);
 //        }
 //

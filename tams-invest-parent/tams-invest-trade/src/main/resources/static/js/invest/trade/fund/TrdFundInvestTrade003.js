@@ -210,7 +210,8 @@ $(function () {
             cid: $('#calendarId').val(),
             portfolioId: $('#portfolioId').val(),
             finprodId: isChange && $('#ps').val() == ps_T66 ? $('#changeToFinprodMarketId').select2('data')[0].object.finprodId : $('#finprodId').select2('data')[0].object.finprodId,
-            secAcctId: $("#chlId").val()
+            secAcctId: $("#chlId").val(),
+            shuhuishareAmt: $("#shareAmt").val()
         }
         Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade003/getcarryAmt', param,
             function (result) {
@@ -609,7 +610,7 @@ $(function () {
                 	}
                 }
             } else if ((ps == ps_T19)) {
-                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE && !isTodoList) {
+                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE) {
                     // var tradeAmtHid = shareAmt * unitCprice;
                     // $('#tradeAmt').val(tradeAmtHid).trigger('blur');
                     // $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');

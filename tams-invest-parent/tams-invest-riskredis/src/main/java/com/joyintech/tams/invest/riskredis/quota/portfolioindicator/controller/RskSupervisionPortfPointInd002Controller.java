@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.constant.DictCodeList;
@@ -16,6 +17,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service.RskSupervisionPortfPointMainService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,7 +86,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
     	 setSelectOptionToModel(model, DICT_CODES);
          SelectDto selectZhccDto = this.getSelectDataFromDataDic(BussinessDictCodeRds.组合层次, null);
          List<SelectOptionDto> optionZhcc = selectZhccDto.getOptions();
-         Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId().toString()));
+         Map<String,List<SelectOptionDto>> mapZhcc = optionZhcc.stream().collect(JoyinCollectors.groupingBy(x->x.getId()));
          model.addAttribute("mapZhcc",mapZhcc);
          model.addAttribute("PORTFOLIO_LEVEL_01", BussinessDictCodeListRds.组合层次_单组合.getValue());
          model.addAttribute("CLASSIFY_DIMENSION_01",BussinessDictCodeListRds.分类维度_收益类型.getValue());
@@ -142,7 +144,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
             ProcessMark processMark=mstWorkflowCommonService.getDataEntityFromProcessMark(param);
             if (StringUtil.isNotEmpty(processMark)&&StringUtil.isNotEmpty(processMark.getBusinessData())){
                 try {
-                    RskSupervisionIndicator002Dto havRsk002Dto =  JsonUtils.OBJECT_MAPPER.readValue(processMark.getBusinessData(),RskSupervisionIndicator002Dto.class);
+                    RskSupervisionIndicator002Dto havRsk002Dto =  JsonUtils.OBJECT_MAPPER.readValue(JsonSanitizer.sanitize(processMark.getBusinessData()),RskSupervisionIndicator002Dto.class);
                     for(RskPortfolioIndicatorDto item:dto.getSelectedPortfIndItem()){
                         List<RskPortfolioIndicatorDto> filterList=havRsk002Dto.getSelectedPortfIndItem().stream().filter(subItem->subItem.getPortfolioId().equals(item.getPortfolioId())).collect(Collectors.toList());
                         if(filterList.size()>0){
@@ -184,8 +186,7 @@ public class RskSupervisionPortfPointInd002Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody RskSupervisionIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

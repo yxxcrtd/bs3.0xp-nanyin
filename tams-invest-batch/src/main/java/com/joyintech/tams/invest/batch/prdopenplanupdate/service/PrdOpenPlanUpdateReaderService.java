@@ -1,9 +1,6 @@
 package com.joyintech.tams.invest.batch.prdopenplanupdate.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -44,6 +41,7 @@ public class PrdOpenPlanUpdateReaderService extends BaseService{
 		if (null == batchExecuteInfo) {
 			return null;
 		}
+		Date plateDate = (Date) param.get(BatchConstant.PLATE_DATE);
 		List<PrdOpenPlanUpdateDto> lists = new ArrayList<PrdOpenPlanUpdateDto>();
 
 		//查询需要更新的开放计划
@@ -51,7 +49,7 @@ public class PrdOpenPlanUpdateReaderService extends BaseService{
 		paramMap.put("cashFinprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
 		paramMap.put("cashType1", DictCodeListExt1.现金流二级类型_本金.getValue());
 		//DateUtil.format(platformDateService.getSysDate())
-		paramMap.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
+		paramMap.put("sysDate", DateUtil.format(plateDate));
 		List<PrdOpenPlanUpdateDto> openPlanlists = prdOpenPlanUpdateMapper.queryOldOpenPlanList(paramMap);
 		lists.addAll(openPlanlists);
 		
@@ -59,7 +57,7 @@ public class PrdOpenPlanUpdateReaderService extends BaseService{
 		Map<String, Object> paramMapPay = new HashMap<String, Object>();
 		paramMapPay.put("cashType1", DictCodeListExt1.现金流一级类型_利息.getValue());
 		//DateUtil.format(platformDateService.getSysDate())
-		paramMapPay.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
+		paramMapPay.put("sysDate", DateUtil.format(plateDate));
 		List<PrdOpenPlanUpdateDto> payPlanlists = prdOpenPlanUpdateMapper.queryOldPayPlanList(paramMapPay);
 		lists.addAll(payPlanlists);
 		
@@ -67,7 +65,7 @@ public class PrdOpenPlanUpdateReaderService extends BaseService{
 		Map<String, Object> paramMapFee = new HashMap<String, Object>();
 		paramMapFee.put("cashType1", DictCodeListExt1.现金流一级类型_费用.getValue());
 		//DateUtil.format(platformDateService.getSysDate())
-		paramMapFee.put("sysDate", DateUtil.format(platformDateService.getSysDate()));
+		paramMapFee.put("sysDate", DateUtil.format(plateDate));
 		List<PrdOpenPlanUpdateDto> feePlanlists = prdOpenPlanUpdateMapper.queryOldFeePlanList(paramMapFee);
 		lists.addAll(feePlanlists);		
 		

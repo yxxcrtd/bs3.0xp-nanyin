@@ -41,7 +41,7 @@ public class FundAccountQuery001Service extends CommonExportService<FundAccountQ
      * @since 1.0
      */
     public Page<FundAccountQuery001Dto> queryFundAccountList(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/FundAccountQuery001/findPage",
             params, FundAccountQuery001Dto.class);
     }

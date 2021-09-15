@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +119,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 //					out.close();
 //				}
 //			} catch (IOException e) {
-//				e.printStackTrace();
+//				logger.error(e.getMessage(),e);
 //			}
 //		}
 //	}
@@ -142,29 +143,10 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 	}
 
 	public ResponseEntity<byte[]> exportMonthReportBB(String pageId, Map<String, Object> pageParam) {
-//				List<MonthReportFBB001Dto> report = monthReportFBB001Mapper.getMonthReportBB(pageParam);
-//				this.beforeExprot();
-//				
-//				Map<Object,Object> data = new HashMap<Object,Object>();
-//				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//				Calendar c = Calendar.getInstance();
-//				
 				FileInputStream is = null;
 				FileOutputStream out = null;
 				HSSFWorkbook wbs = null;
 				try{
-//				// 关联模板
-//		        XLSTransformer transformer = new XLSTransformer();
-//		        
-//				String template  = null;
-//				//windows环境地址
-//		        if(File.separator.equals("\\")){
-//		        	template = getXmlPath("MonthReportBB001.xls");
-//		        }
-//		        //linux环境地址
-//		        if(File.separator.equals("/")){
-//		        	
-//		        }
 		        String reportdate = pageParam.get("exportdate")==null?"":pageParam.get("exportdate").toString();//文件夹名称
 		        String reportMonth = "";
 		        if(reportdate.length()==7){
@@ -174,7 +156,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 				String depositfilePath = SvrDataUtil.getSysParam("access_monthfilepath");
 				
 				
-				File depositfile = new File(depositfilePath + File.separator + "MonthReportBB001_"+reportMonth+".xls");
+				File depositfile = new SafelyFile(depositfilePath + File.separator + "MonthReportBB001_"+reportMonth+".xls");
 				if (!depositfile.getParentFile().exists()) {
 					depositfile.getParentFile().mkdirs();
 				}
@@ -183,7 +165,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 				
 		        String outFileName = FileNameUtil.createFileName("xls");
 				String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
-				File exportFile = new File(exportFilePath + File.separator + outFileName);
+				File exportFile = new SafelyFile(exportFilePath + File.separator + outFileName);
 				
 				if (!exportFile.getParentFile().exists()) {
 					exportFile.getParentFile().mkdirs();
@@ -191,10 +173,9 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 
 		    	is = new FileInputStream(depositfile);
 				wbs = new HSSFWorkbook(is);
-				wbs.write(new FileOutputStream(exportFile));
-				is.close();
-				wbs.close();
-				
+				out = new FileOutputStream(exportFile);
+				wbs.write(out);
+
 				String exportFileName = "保本银行月度统计表(" + reportMonth + ")"
 						+ "." + FileNameUtil.getFileExtName(exportFile);
 				return ExportUtil.export(exportFileName, exportFile, true);
@@ -218,7 +199,6 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 							wbs.close();
 						}
 					} catch (IOException e) {
-//						e.printStackTrace();
 			            logger.error(e.getMessage(),e);
 					}
 				}
@@ -229,6 +209,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 			FileInputStream is = null;
 			FileOutputStream out = null;
 			HSSFWorkbook wbs = null;
+		   	FileOutputStream outputStream = null;
 			try{
 	        String reportdate = pageParam.get("exportdate")==null?"":pageParam.get("exportdate").toString();
 	        String reportMonth = "";
@@ -239,7 +220,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 			String depositfilePath = SvrDataUtil.getSysParam("access_monthfilepath");
 			
 			
-			File depositfile = new File(depositfilePath + File.separator +excelenname+"_"+reportMonth+".xls");
+			File depositfile = new SafelyFile(depositfilePath + File.separator +excelenname+"_"+reportMonth+".xls");
 			if (!depositfile.getParentFile().exists()) {
 				depositfile.getParentFile().mkdirs();
 			}
@@ -247,7 +228,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 			//下载已有文件
 	        String outFileName = FileNameUtil.createFileName("xls");
 			String exportFilePath = SvrDataUtil.getSysParam("access_exportfilepath");
-			File exportFile = new File(exportFilePath + File.separator + outFileName);
+			File exportFile = new SafelyFile(exportFilePath + File.separator + outFileName);
 			
 			if (!exportFile.getParentFile().exists()) {
 				exportFile.getParentFile().mkdirs();
@@ -255,7 +236,8 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 	
 	    	is = new FileInputStream(depositfile);
 			wbs = new HSSFWorkbook(is);
-			wbs.write(new FileOutputStream(exportFile));
+			outputStream = new FileOutputStream(exportFile);
+			wbs.write(outputStream);
 			//is.close();
 			//wbs.close();
 			
@@ -272,6 +254,9 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 		    }
 			finally{
 				try {
+					if(null!=outputStream){
+						outputStream.close();
+					}
 					if(null!=is){
 						is.close();
 					}
@@ -282,7 +267,6 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 						wbs.close();
 					}
 				} catch (IOException e) {
-//					e.printStackTrace();
 		            logger.error(e.getMessage(),e);
 				}
 			}
@@ -333,7 +317,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 			String depositfilePath = SvrDataUtil.getSysParam("access_monthfilepath");
 			
 			
-			File depositfile = new File(depositfilePath + File.separator + excelenname+"_"+reportMonth+".xls");
+			File depositfile = new SafelyFile(depositfilePath + File.separator + excelenname+"_"+reportMonth+".xls");
 			if (!depositfile.getParentFile().exists()) {
 				depositfile.getParentFile().mkdirs();
 			}
@@ -357,7 +341,6 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 						out.close();
 					}
 				} catch (IOException e) {
-//					e.printStackTrace();
 		            logger.error(e.getMessage(),e);
 				}
 			}
@@ -383,7 +366,7 @@ public class MonthReport001Service extends CommonExportService<MonthReport001Dto
 		String excelenname = pageParam.get("excelenname")==null?"":pageParam.get("excelenname").toString();
 		String reportMonth = pageParam.get("reportmonth")==null?"":pageParam.get("reportmonth").toString();
 		reportMonth = reportMonth.replace("-", "");
-		File depositfile = new File(depositfilePath + File.separator + excelenname+"_"+reportMonth+".xls");
+		File depositfile = new SafelyFile(depositfilePath + File.separator + excelenname+"_"+reportMonth+".xls");
 		if (!depositfile.exists()){
 			result.put("reportexists", "N");
 			result.put("submitstatus", "N");

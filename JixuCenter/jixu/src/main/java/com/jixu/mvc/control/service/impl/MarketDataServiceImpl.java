@@ -237,8 +237,10 @@ public class MarketDataServiceImpl implements MarketDataService{
 			stockDetail.setExchangeID(sec.getExchangeCode());
 //		stockDetail.setAssetType1(rpModel.getLevel1name());
 //		stockDetail.setAssetType2(rpModel.getLevel2name());
-		stockDetail.setAssetType1(String.valueOf(rpModel.getLevel1id()));
-		stockDetail.setAssetType2(String.valueOf(rpModel.getLevel2id()));
+		if (rpModel != null){
+			stockDetail.setAssetType1(String.valueOf(rpModel.getLevel1id()));
+			stockDetail.setAssetType2(String.valueOf(rpModel.getLevel2id()));
+		}
 		stockDetail.setOptionType(sec.getOptionType());
 		
 		if(sec.getUnderCusip()!=null && !sec.getUnderCusip().equals("") && !sec.getUnderCusip().equals("0")){

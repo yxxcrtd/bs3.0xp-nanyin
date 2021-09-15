@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.svreport.pbc.assetposition.dto.PbcMonthAssetPositionDto;
 import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 功能:人行报表-资产头寸
@@ -17,6 +18,7 @@ import com.joyintech.tams.svreport.pbc.prod.dto.PbcMonthPrdPostionDto;
  * @创建时间：2019年3月11日
  * @修改记录：
  */
+@Repository
 public interface PbcMonthAssetReportMapper {
     int deleteByPrimaryKey(String posuuid);
 

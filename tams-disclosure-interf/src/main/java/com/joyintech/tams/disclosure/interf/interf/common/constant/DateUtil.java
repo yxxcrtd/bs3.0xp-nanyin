@@ -116,7 +116,7 @@ public class DateUtil extends DateUtils {
                             "yyyy-MM","yyyy/MM/dd HH:mm","yyyy-MM-dd HH:mm","yyyyMMdd HH:mm","yyyyMMddHHmm"});
         }
         catch (ParseException e) {
-            throw new RuntimeException("Date ParseException");
+            throw new IllegalArgumentException("Date ParseException");
         }
     }
 

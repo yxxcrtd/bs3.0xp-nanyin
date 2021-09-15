@@ -285,7 +285,7 @@ public class ValBondassetquery002Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("doUpdateCheck")
-    public AjaxResult doUpdateCheck(ValBondassetquery002Dto dto, BindingResult result,String operateType) throws Exception {
+    public AjaxResult doUpdateCheck(ValBondassetquery002Dto dto, BindingResult result,String operateType) throws IOException {
     	Map<String, Object> paramMap = RequestUtil.getParameters(getRequest());
         int res = valBondassetquery002Service.workflowCheck(dto);
         if (res > 0) {
@@ -316,7 +316,7 @@ public class ValBondassetquery002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getExerciseType")
     public List<SelectOptionDto> getExerciseType()
-        throws Exception {
+         {
         return getSelectDataFromDataDic(DictCode.行权方式, null).getOptions();
     }
 

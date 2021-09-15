@@ -10,6 +10,7 @@
  
 package com.joyintech.service.asset.plan.plancur.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class FinPlanAssetCController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinPlanAssetCDto> selectAll(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return finPlanAssetCService.selectForPage(page, length, param);
     }
     /**
@@ -62,7 +63,7 @@ public class FinPlanAssetCController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody FinPlanAssetCDto dto) throws Exception {
+    public int delete(@RequestBody FinPlanAssetCDto dto) {
         return finPlanAssetCService.delete(dto);
     }
     
@@ -80,7 +81,7 @@ public class FinPlanAssetCController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody FinPlanAssetCDto dto) throws Exception {
+    public int insert(@RequestBody FinPlanAssetCDto dto)  throws IllegalAccessException, InvocationTargetException {
         return finPlanAssetCService.insert(dto);
     }
 
@@ -98,7 +99,7 @@ public class FinPlanAssetCController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody FinPlanAssetCDto dto) throws Exception {
+    public int update(@RequestBody FinPlanAssetCDto dto) throws IllegalAccessException, InvocationTargetException{
         return finPlanAssetCService.update(dto);
     }
     /**
@@ -109,7 +110,7 @@ public class FinPlanAssetCController {
      * @throws Exception 异常
      */
     @PostMapping("getBasicInfoByFinprodId")
-    public FinPlanAssetCDto getBasicInfoByFinprodId(@RequestBody Map<String, Object> param) throws Exception {
+    public FinPlanAssetCDto getBasicInfoByFinprodId(@RequestBody Map<String, Object> param){
         return finPlanAssetCService.getBasicInfoByFinprodId(param);
     }
     /* 增加快捷录入 add by zhuyongkang 2019/10/12 start*/

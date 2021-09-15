@@ -58,7 +58,7 @@ public class ValSubjectBalanceQuery003Contoller extends BaseController {
      * @see
      */
     @PostMapping("/searchList")
-    public List<ValSubjectWaterQuery001Dto> searchList(ValSubjectWaterQuery001SearchDto dto) throws Exception {
+    public List<ValSubjectWaterQuery001Dto> searchList(ValSubjectWaterQuery001SearchDto dto) {
         return valSubjectBalanceQuery003Service.getSubjectWater(dto);
     }
 

@@ -11,6 +11,7 @@
 package com.joyintech.tams.svreport.interf.dis.common;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +94,6 @@ public class DisFileInterfCommonService {
                     }
                 } catch (FileNotFoundException e) {
                 	logger.error(e.getMessage(),e);
-                    e.printStackTrace();
                     success = "fail";
                 }
                 if(!StringUtil.equals("fail", success)) {

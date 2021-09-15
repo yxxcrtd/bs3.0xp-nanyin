@@ -3,15 +3,11 @@ package com.joyintech.tams.svreport.pbc.common.util;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.jcraft.jsch.*;
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
 
 /**
  * @author liushuai
@@ -21,6 +17,10 @@ import com.jcraft.jsch.SftpException;
  */
 @Service
 public class SftpUtil {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(SftpUtil.class);
 
 	    private static ChannelSftp sftp = new ChannelSftp();
 	    
@@ -76,7 +76,7 @@ public class SftpUtil {
 	     * @return
 	     * @throws Exception
 	     */
-	    public static void SFTPconnect(String userName, String ftpIp, int ftpPort, String password) throws Exception {
+	    public static void SFTPconnect(String userName, String ftpIp, int ftpPort, String password) {
 	        // 接口 SFTP 服务配置
 	        try {
 	            JSch jsch = new JSch();
@@ -91,9 +91,9 @@ public class SftpUtil {
 	            channel.connect();
 	            sftp = (ChannelSftp) channel;
 	            // log.info("成功登录SFTP:" + config.getFtpIp() + ".");
-	        } catch (Exception e) {
+	        } catch (JSchException e) {
 	            log.error("登录SFTP:" + ftpIp + "失败.");
-	            throw new Exception("登录SFTP失败!!!");
+	            throw new BusinessException("登录SFTP失败!!!");
 	        }
 	    }
 	    /**
@@ -107,7 +107,7 @@ public class SftpUtil {
 	            sftp.cd(dirName);
 	            return true;
 	        } catch (SftpException e) {
-	            e.printStackTrace();
+				logger.error(e.getMessage(),e);
 	            return false;
 	        }
 	    }

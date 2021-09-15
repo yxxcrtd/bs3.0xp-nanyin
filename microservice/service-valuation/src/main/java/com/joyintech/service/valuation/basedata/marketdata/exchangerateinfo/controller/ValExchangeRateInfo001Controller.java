@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.basedata.marketdata.exchangerateinfo.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +75,7 @@ public class ValExchangeRateInfo001Controller extends BaseController {
      * @throws Exception Exception
      */
     @PostMapping("/tableLoad")
-    public List<ValExchangeRateInfo001Dto> tableLoad(@RequestBody Map<String, Object> map) throws Exception {
+    public List<ValExchangeRateInfo001Dto> tableLoad(@RequestBody Map<String, Object> map){
 //        Map<String, Object> params = getRequestMap();
         //ValExchangeRateInfo001Dto valExchangeRateInfo001Dto = (ValExchangeRateInfo001Dto)JsonUtils.map2entity(params, ValExchangeRateInfo001Dto.class);
         return valExchangeRateInfo001Service.tableLoad(map);
@@ -82,7 +83,7 @@ public class ValExchangeRateInfo001Controller extends BaseController {
     
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValExchangeRateInfo001Dto> findPage(@RequestBody Map<String, Object> map,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length){
 //        Map<String, Object> params = getRequestMap();
         //ValExchangeRateInfo001Dto valExchangeRateInfo001Dto = (ValExchangeRateInfo001Dto)JsonUtils.map2entity(params, ValExchangeRateInfo001Dto.class);
         return valExchangeRateInfo001Service.findPage(page,length,map);
@@ -119,8 +120,7 @@ public class ValExchangeRateInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params = this.getRequestMap();
 //        ValExchangeRateInfo001Dto valExchangeRateInfo001Dto = (ValExchangeRateInfo001Dto)JsonUtils.map2entity(

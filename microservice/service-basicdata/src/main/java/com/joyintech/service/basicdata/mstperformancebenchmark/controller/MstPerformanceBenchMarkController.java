@@ -57,7 +57,8 @@ public class MstPerformanceBenchMarkController  {
      * @throws Exception 异常
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstPerformanceBenchMarkDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstPerformanceBenchMarkDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return mstPerformanceBenchMarkService.selectForPage(page,length,pageParam);
     }
     /**
@@ -67,7 +68,8 @@ public class MstPerformanceBenchMarkController  {
      * @throws Exception 异常
      */
     @PostMapping("/selectComponentInfoPage")
-    public List<MstIndexComponent> selectComponentInfoPage(@RequestBody Map<String, Object> pageParam) throws Exception{
+    public List<MstIndexComponent> selectComponentInfoPage(@RequestBody Map<String, Object> pageParam)
+    {
         return mstPerformanceBenchMarkService.selectComponentInfoPage(pageParam);
     }
     /**

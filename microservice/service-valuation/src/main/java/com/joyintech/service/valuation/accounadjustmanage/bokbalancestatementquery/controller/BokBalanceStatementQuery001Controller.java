@@ -70,7 +70,7 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<BokBalanceStatementQuery001Dto> selectBalanceStatement(@RequestBody Map<String, Object> pageParam,
                                                                        @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return bokBalanceStatementQuery001Service.selectForPage(page,length,pageParam);
     }
 //    /**
@@ -101,7 +101,7 @@ public class BokBalanceStatementQuery001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2(@RequestBody Map<String,Object> map)
-        throws Exception {
+    {
         String param = (String) map.get("param");
         return valAssetBook001Service.getBooksetId2(param);
     }

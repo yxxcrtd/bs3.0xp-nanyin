@@ -57,8 +57,7 @@ public class FinCreditProject001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<InterfCreditItemInfoDto> selectAll()
-        throws Exception {
+    public Page<InterfCreditItemInfoDto> selectAll() {
         Page<InterfCreditItemInfoDto> page = finCreditProjectService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -88,8 +87,7 @@ public class FinCreditProject001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finCreditProjectService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

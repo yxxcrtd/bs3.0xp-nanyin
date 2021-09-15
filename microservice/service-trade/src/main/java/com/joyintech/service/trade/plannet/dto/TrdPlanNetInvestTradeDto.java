@@ -702,4 +702,15 @@ public class TrdPlanNetInvestTradeDto extends TrdProductDeal {
     public void setCalendarId(String calendarId) {
         this.calendarId = calendarId;
     }
+
+
+    private Date confirmDate;
+
+    public Date getConfirmDate() {
+        return confirmDate;
+    }
+
+    public void setConfirmDate(Date confirmDate) {
+        this.confirmDate = confirmDate;
+    }
 }

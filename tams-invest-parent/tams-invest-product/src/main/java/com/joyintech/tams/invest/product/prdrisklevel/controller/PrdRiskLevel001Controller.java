@@ -56,7 +56,7 @@ public class PrdRiskLevel001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("productDesignCode")
-    public Page<SelectOptionDto> productDesignCode() throws Exception {
+    public Page<SelectOptionDto> productDesignCode(){
     	return prdRiskLevel001Service.productDesignCode(RequestUtil.getPageParam());
     }
     
@@ -65,7 +65,7 @@ public class PrdRiskLevel001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("finProductName")
-    public List<SelectOptionDto> finProductName() throws Exception {
+    public List<SelectOptionDto> finProductName(){
     	return prdRiskLevel001Service.selectFinProductName(RequestUtil.getPageParam());
     }
 
@@ -73,13 +73,12 @@ public class PrdRiskLevel001Controller extends BaseController {
      * 分页查询
      *
      * @return Page<FinProductPayInt001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<PrdRiskLevel001Dto> findPage() throws Exception {
+    public Page<PrdRiskLevel001Dto> findPage() {
     	
     	Map<String,Object> map = RequestUtil.getPageParam();
     	
@@ -104,15 +103,12 @@ public class PrdRiskLevel001Controller extends BaseController {
      * 导出
      *
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return prdRiskLevel001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
-    
     
 }

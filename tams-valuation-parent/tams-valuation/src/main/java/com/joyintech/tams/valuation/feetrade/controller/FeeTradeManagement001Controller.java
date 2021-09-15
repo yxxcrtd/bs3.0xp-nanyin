@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.feetrade.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -90,7 +91,7 @@ public class FeeTradeManagement001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<FeeTradeManagementDto> findPage() throws Exception {
+    public Page<FeeTradeManagementDto> findPage() {
     	return feeTradeManagement001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -104,7 +105,7 @@ public class FeeTradeManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) FeeTradeManagementDto dto
-    		, BindingResult br) throws Exception{
+    		, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -131,7 +132,7 @@ public class FeeTradeManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	return feeTradeManagement001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
 }

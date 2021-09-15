@@ -1,0 +1,4 @@
+--估值表估值日期与导入平台日最大相差天数
+delete from SYS_PARA where PARA_CODE='MAX_SUB_VALDATE';
+INSERT INTO SYS_PARA(SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+VALUES('VAL', 'MAX_SUB_VALDATE', '16', '01', '整数', '估值日期与导入平台日最大相差天数', 'system', NULL, sysdate, 'system', sysdate);

@@ -41,6 +41,7 @@ $(function(){
         },
         cols:[
             { title: "文件编号", field: 'fileid', visible:false, width:0},
+			{ title: "文件代码", field: 'filecode', visible:false, width:0 },
             { title: '压缩包名称', field: 'zipName', sortable:false,  width:900},
             { title: "生成日期", field: 'cDateStr', sortable:false}
         ]

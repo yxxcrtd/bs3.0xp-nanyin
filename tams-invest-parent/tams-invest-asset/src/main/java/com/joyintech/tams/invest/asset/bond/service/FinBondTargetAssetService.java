@@ -469,12 +469,12 @@ implements BaseProcessService<FinBondTargetAssetDto>{
                     BaseRepBondAssetInfoDto baseRepBondAssetInfoDto = assetCommonService.encapBaseRepBondAssetInfoDto(finProduct, dto.getBussFinBondRepInfoDto());
                     //负债
                     BaseRepAssetDeptInfoDto baseRepAssetDeptInfoDto = assetCommonService.encapbaseRepAssetDeptInfoDto(finProduct,dto.getBussFinBondRepInfoDto().getRepAssetType(),dto.getBussFinBondRepInfoDto().getRepTradeMarket());
-                    if(StringUtil.equals(dto.getBussFinBondRepInfoDto().getRepPartyType1(), DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue())){
+//                    if(StringUtil.equals(dto.getBussFinBondRepInfoDto().getRepPartyType1(), DictCodeListExt3.发行机构类型_按规模划分_中小微企业.getValue())){
                         RepAssetOther repAssetOther = new RepAssetOther();
                         BeanUtil.copyPropertiesIgnoreNull(repAssetOther,dto.getBussFinBondRepInfoDto());
                         BaseRepOtherDto baseRepOtherDto = assetCommonService.encapBaseRepOtherDto(finProduct, repAssetOther);
                         dto.setBaseRepOtherDto(baseRepOtherDto);
-                    }
+//                    }
                     //主体评级
                     if (StringUtil.isNotEmpty(baseRepBondAssetInfoDto.getRepAssetBondList())){
                         for (RepAssetBond r : baseRepBondAssetInfoDto.getRepAssetBondList()){

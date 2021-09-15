@@ -56,10 +56,10 @@ public class PtlFundAllocationDto extends StlPayOrders implements ITableRow,Proc
      * 实体投资组合代码
      */
     private String actPortfolioId;
-//    /**
-//     * 账户余额
-//     */
-//    private BigDecimal amount;
+    /**
+     * 账户余额
+     */
+    private BigDecimal amount;
     /**
      * 付款账户余额
      */
@@ -141,21 +141,21 @@ public class PtlFundAllocationDto extends StlPayOrders implements ITableRow,Proc
         this.busiNo = busiNo;
     }
     
-//    /**
-//     * 获取 amount
-//     * @return amount.
-//     */
-//    public BigDecimal getAmount() {
-//        return amount;
-//    }
-//    
-//    /**
-//     * 设置 amount
-//     * @param amount amount
-//     */
-//    public void setAmount(BigDecimal amount) {
-//        this.amount = amount;
-//    }
+    /**
+     * 获取 amount
+     * @return amount.
+     */
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    /**
+     * 设置 amount
+     * @param amount amount
+     */
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
     /**
      * 获取 ptlCashPositionFlow

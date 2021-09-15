@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.product.productelement.module.service;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -36,6 +38,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 public class FinProductModule001Service extends CommonExportService<FinProductModuleInfoDto>  
     implements BaseProcessService<FinProductModuleInfoDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductModule001Service.class);
 
     /**
      * {@inheritDoc}
@@ -92,7 +98,7 @@ public class FinProductModule001Service extends CommonExportService<FinProductMo
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

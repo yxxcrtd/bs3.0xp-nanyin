@@ -14,9 +14,7 @@ import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.Impai
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
-import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
@@ -167,7 +165,7 @@ public class ImpairmentDataLoadReaderService {
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                        entity.getFinprodId(), msg, ModelDictCodeList.模型计算结果_失败.getValue(), "ERRORS");
                 listErrorDto.add(entity);
                 continue;
             }
@@ -183,7 +181,7 @@ public class ImpairmentDataLoadReaderService {
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果";
                 impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                        entity.getFinprodId(), msg, ModelDictCodeList.模型计算结果_失败.getValue(), "ERRORS");
                 listErrorDto.add(entity);
             }
         }

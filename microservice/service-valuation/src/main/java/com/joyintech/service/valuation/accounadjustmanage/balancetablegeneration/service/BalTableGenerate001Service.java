@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 	 * @return 表格信息
 	 * @throws Exception
 	 */
-	public Page<BalTableGenerate001Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+	public Page<BalTableGenerate001Dto> findPage(int page,int length,Map<String, Object> params) {
 		// 获取交易类型
 //		String[] prodTypeArr = (String[]) params.get("prodTypes");
 		 //获取交易类型
@@ -173,13 +174,19 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 		if (StringUtil.isNotEmpty(buildStatus)) {
 			buildStatusArr = buildStatus.split(",");
 		}
-		BalTableGenerate001SearchDto dto = (BalTableGenerate001SearchDto) JsonUtils.map2entity(params,
-				BalTableGenerate001SearchDto.class);
+		BalTableGenerate001SearchDto dto = null;
+		try {
+			dto = (BalTableGenerate001SearchDto) JsonUtils.map2entity(params,
+					BalTableGenerate001SearchDto.class);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("数据转换异常");
+		}
 		dto.setProdIds(prodIdArr);
 		dto.setProdTypes(prodTypeArr);
 		dto.setBuildStatuses(buildStatusArr);
 		dto.setFileType(DictCodeList.文件类型_余额表.getValue());
-		return super.queryForPage(page,length,() -> mapper.queryPageList(dto));
+		BalTableGenerate001SearchDto finalDto = dto;
+		return super.queryForPage(page,length,() -> mapper.queryPageList(finalDto));
 	}
 
 	/**
@@ -364,12 +371,12 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 				try {
 					String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 					String zipFileName = FileNameUtil.createFileName("zip");
-					File zipFile = new File(exportFilePath + File.separator + zipFileName);
+					File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
 					zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
 					InputStream input = null;
 					for (ExportFileDto item : listFileDto) {
 						try {
-							File file = new File(item.getFilePath());
+							File file = new SafelyFile(item.getFilePath());
 							input = new FileInputStream(file);
 							zipOut.putNextEntry(new ZipEntry(file.getName()));
 							int tmp = 0;
@@ -402,7 +409,7 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 			}
 			// 一条时单个文件导出
 			else {
-				File file = new File(listFileDto.get(0).getFilePath());
+				File file = new SafelyFile(listFileDto.get(0).getFilePath());
 				return ExportUtil.export(listFileDto.get(0).getFileName(), file, true);
 			}
 		} else {

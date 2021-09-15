@@ -83,7 +83,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getFSubjectId")
     public List<SuggestDto> getFSubjectId()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valSubjectSet001Service.getFSubjectId2(RequestUtil.getPageParam());
     }
@@ -99,7 +99,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getSubjectId")
     public List<SuggestDto> getSubjectId()
-        throws Exception {
+         {
         String param = super.getRequest().getParameter("param");
         return valSubjectSet001Service.getSubjectId(param);
     }
@@ -130,7 +130,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getSubjectId2")
     public List<SelectOptionDto> getSubjectId2()
-        throws Exception {
+         {
         return valSubjectSet001Service.getSubjectId2(RequestUtil.getPageParam());
     }
 
@@ -145,7 +145,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getSubjectLevel")
     public List<SelectOptionDto> getSubjectLevel()
-        throws Exception {
+         {
         List<SelectOptionDto> list = Lists.newArrayList();
         String subjectNo = getParam("subjectNo");
         if (StringUtils.isEmpty(subjectNo)) {
@@ -173,7 +173,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public List<SuggestDto> getBooksetId()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valSubjectSet001Service.getBooksetId(RequestUtil.getPageParam());
 //        return valAssetBook001Service.getBooksetIdByBooksetType(param);
@@ -204,7 +204,7 @@ public class ValSubjectSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValBokSubjectDto> selectAllSubject()
-        throws Exception {
+         {
         Page<ValBokSubjectDto> page = valSubjectSet001Service.selectForPage(RequestUtil.getPageParam());
         return page;
     }

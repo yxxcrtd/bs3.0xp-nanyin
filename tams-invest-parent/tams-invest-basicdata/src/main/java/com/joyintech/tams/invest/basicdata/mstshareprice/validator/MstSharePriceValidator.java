@@ -28,6 +28,10 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.basicdata.mstshareprice.dto.MstSharePriceDto;
 import com.joyintech.tams.invest.basicdata.mstshareprice.service.MstSharePriceService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 /**
  * 股票行情管理校验

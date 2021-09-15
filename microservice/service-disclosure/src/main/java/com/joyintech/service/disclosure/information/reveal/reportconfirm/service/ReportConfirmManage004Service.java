@@ -135,7 +135,7 @@ public class ReportConfirmManage004Service {
 	 * @param request
 	 * @return
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		progressBarService.updatePercent("ReportConfirmManage004", ProgressBarService.FILE_UPLOAD_ID, 1D, false);
 	}
 	
@@ -287,7 +287,7 @@ public class ReportConfirmManage004Service {
 	 * @param request
 	 * @return
 	 */
-	public void removePercent(HttpServletRequest request) throws Exception {
+	public void removePercent(HttpServletRequest request) {
 		progressBarService.removePercent("ReportConfirmManage004", ProgressBarService.FILE_UPLOAD_ID);
 	}
     

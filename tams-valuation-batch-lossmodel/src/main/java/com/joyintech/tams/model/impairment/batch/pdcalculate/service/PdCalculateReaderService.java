@@ -3,7 +3,6 @@ package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
@@ -111,7 +110,7 @@ public class PdCalculateReaderService {
                 batchParam.setFinprodId(modEclResultProcess.getAssetId());
                 batchParam.setTaskId(taskId);
                 batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());
                 batchParam.setMsg("【PD计算批处理】：计算错误");
                 bBatchLogResultList.add(batchParam);
             }

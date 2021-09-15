@@ -9,6 +9,8 @@
  */
 package com.joyintech.tams.invest.basicdata.mstmarketcalendarinfo.controller;
 
+import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -93,7 +95,7 @@ public class MstMarketCalendarInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryList")
-    public Page<MstMarketCalendarInfo001Dto> selectInfo() throws Exception{
+    public Page<MstMarketCalendarInfo001Dto> selectInfo() {
         Map<String,Object> param = RequestUtil.getPageParam();
         return mstMarketCalendarInfo001Service.selectInfo(param);
     }
@@ -109,7 +111,7 @@ public class MstMarketCalendarInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("sethday")
-    public AjaxResult sethday(@RequestBody List<MstMarketCalendarInfo001Dto> dto) throws Exception{
+    public AjaxResult sethday(@RequestBody List<MstMarketCalendarInfo001Dto> dto){
         ProcessParameter<MstMarketCalendarInfo001Dto> processParam = new ProcessParameter<MstMarketCalendarInfo001Dto>();
         processParam.setPageId(this.getPageId());
         processParam.setOperationType(OperationType.MODIFY);
@@ -141,7 +143,7 @@ public class MstMarketCalendarInfo001Controller extends BaseController {
     */
     @ResponseBody
     @RequestMapping("setwday")
-    public AjaxResult setwday(@RequestBody List<MstMarketCalendarInfo001Dto> dto) throws Exception{
+    public AjaxResult setwday(@RequestBody List<MstMarketCalendarInfo001Dto> dto) {
         ProcessParameter<MstMarketCalendarInfo001Dto> processParam = new ProcessParameter<MstMarketCalendarInfo001Dto>();
         processParam.setPageId(this.getPageId());
         processParam.setOperationType(OperationType.MODIFY);
@@ -170,8 +172,7 @@ public class MstMarketCalendarInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception{
+    public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException, ParseException {
         return this.mstMarketCalendarInfo001Service.importData(fileName);
     }
     /**
@@ -184,7 +185,7 @@ public class MstMarketCalendarInfo001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstMarketCalendarInfo001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     

@@ -122,7 +122,7 @@ public class TaxSchBokCfgManage002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) TaxSchBokCfgManage002Dto dto, BindingResult bindingResult)
-        throws Exception {
+         {
         String operateType = dto.getOperateType();
 
         if ((DictCodeList.增值税_计算方式_发生额计算.getValue().equals(dto.getCalcType())

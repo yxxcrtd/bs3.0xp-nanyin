@@ -19,6 +19,8 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.invest.portfolio.feepay.service.InvestFeePay002Service;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -45,6 +47,10 @@ import com.joyintech.tams.constant.DictCodeListExt1;
  */
 @Component
 public class InvestFeePay002Validator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(InvestFeePay002Validator.class);
 
     /**
      * BussTrdTransferOrderService
@@ -89,7 +95,7 @@ public class InvestFeePay002Validator implements BeanValidator {
                                 }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }
@@ -135,6 +141,17 @@ public class InvestFeePay002Validator implements BeanValidator {
                     if (StringUtil.isBlank(dataDto.getRecAcctNo())) {
                         validList.add(new ValidMessage("bussTrdTransferOrder", getMessage("FW_E_0006",
                                 getMessage("BussTrdTransferOrder.recAcctNo"))));
+                    }
+                }
+            }
+
+            if(investFeePay002Dto.getBussTrdTransferOrder() != null){
+                for (BussTrdTransferOrderDto bussTrdTransferOrderDto : investFeePay002Dto.getBussTrdTransferOrder()) {
+                    if (StringUtil.equals(bussTrdTransferOrderDto.getIsNeedSend(),DictCodeList.是否_否.getValue())){
+                        if (StringUtil.isBlank(bussTrdTransferOrderDto.getRecAcctNo())) {
+                            validList.add(new ValidMessage("bussTrdTransferOrder", getMessage("FW_E_0006",
+                                    getMessage("BussTrdTransferOrder.recAcctNo"))));
+                        }
                     }
                 }
             }

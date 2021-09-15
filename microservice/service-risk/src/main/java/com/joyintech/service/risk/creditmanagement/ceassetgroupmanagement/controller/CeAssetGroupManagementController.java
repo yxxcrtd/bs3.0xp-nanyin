@@ -62,7 +62,7 @@ public class CeAssetGroupManagementController {
     @PostMapping("selectForPage/{page}/{length}")
     public Page<CeAssetGroupManagement001Dto> selectForPage(@RequestBody Map<String, Object> param,
                                                             @PathVariable("page") int page,
-                                                            @PathVariable("length") int length) throws Exception {
+                                                            @PathVariable("length") int length) {
         return ceAssetGroupManagementService.selectForPage(page, length, param);
     }
     
@@ -231,7 +231,7 @@ public class CeAssetGroupManagementController {
     @PostMapping("getAssetDetailBySeqno/{page}/{length}")
     public Page<CeAssetGroupManagement001Dto> getAssetDetailBySeqno(@RequestBody Map<String, Object> param,
                                                                     @PathVariable("page") int page,
-                                                                    @PathVariable("length") int length) throws Exception {
+                                                                    @PathVariable("length") int length) {
         return ceAssetGroupManagementService.getAssetDetailBySeqno(page, length, param);
     }
 

@@ -39,11 +39,11 @@ public class PtlMockTest001Service extends CommonExportService<PtlMockTest001Dto
     /**
      * 组合代码下拉框选项获取
      */
-    public List<SelectOptionDto> getPtlInfo(Map<String, Object> param) {
-        List<SelectOptionDto> list = restTemplate.postForList(
-            ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlMockTest/getPtlInfo", param,
+    public Page<SelectOptionDto> getPtlInfo(Map<String, Object> param) {
+        Page<SelectOptionDto> pages = restTemplate.postForPage(
+            ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlMockTest/getPtlInfoForPage", param,
             SelectOptionDto.class);
-        return list;
+        return pages;
     }
 
     /**

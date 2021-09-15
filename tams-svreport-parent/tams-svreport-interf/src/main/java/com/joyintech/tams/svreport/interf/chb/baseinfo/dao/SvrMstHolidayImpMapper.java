@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.MstHoliday;
 import com.joyintech.tams.common.base.entity.MstHolidayKey;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface SvrMstHolidayImpMapper {
     int deleteByPrimaryKey(MstHolidayKey key);
 

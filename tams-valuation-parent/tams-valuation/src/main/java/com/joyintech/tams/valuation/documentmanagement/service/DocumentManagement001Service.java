@@ -56,7 +56,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<DocumentManagement001Dto> findPage(Map<String, Object> pageParam) throws Exception {
+	public Page<DocumentManagement001Dto> findPage(Map<String, Object> pageParam) {
 		 return restTemplate.postForPage(
 	                ServiceApplication.VALUATION_SERVICE_NAME + "/DocumentManagement001/findPage",
 	                pageParam, DocumentManagement001Dto.class);
@@ -69,7 +69,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DocumentManagement001Dto> findPageout(Map<String, Object> params) throws Exception {
+	public List<DocumentManagement001Dto> findPageout(Map<String, Object> params) {
 
 		 return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
 	                + "/DocumentManagement001/findPageout",
@@ -86,7 +86,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 */
 	public ResponseEntity<byte[]> downloadFile(HttpServletRequest request) throws IOException, JSchException {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("fileId", request.getParameter("fileId"));
+		params.put("fileId", request.getParameter("fileId")==null?"":request.getParameter("fileId"));
 		return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
 	                + "/DocumentManagement001/downloadFile",
 	                params, ResponseEntity.class);

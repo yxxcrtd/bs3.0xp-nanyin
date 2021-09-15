@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -23,6 +24,7 @@ import org.apache.ibatis.annotations.Param;
  * @see DateCalcCommonMapper
  * @since 1.0
  */
+@Repository
 public interface DateCalcCommonMapper {
 
     /**

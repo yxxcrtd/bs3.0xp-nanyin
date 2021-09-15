@@ -44,7 +44,7 @@ public class ShadowPriceScheme002Service extends CommonExportService<ShadowPrice
      * @return
      * @throws Exception 
      */
-	public Page<ShadowPriceScheme002Dto> findShadowPriceDetial(int page, int length,Map<String, Object> pageParam) throws Exception {
+	public Page<ShadowPriceScheme002Dto> findShadowPriceDetial(int page, int length,Map<String, Object> pageParam) {
 		// TODO Auto-generated method stub
 		return super.queryForPage(page, length,()-> shadowPriceScheme002Mapper.findShadowPriceDetial(pageParam)); 
 	}

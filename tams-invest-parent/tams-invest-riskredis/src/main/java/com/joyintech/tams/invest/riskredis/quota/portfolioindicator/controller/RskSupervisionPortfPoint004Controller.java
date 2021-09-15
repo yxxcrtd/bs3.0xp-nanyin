@@ -3,9 +3,11 @@ package com.joyintech.tams.invest.riskredis.quota.portfolioindicator.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.json.JsonSanitizer;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.portfolioindicator.dto.RskPortfolioIndicator002Dto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,7 +127,7 @@ public class RskSupervisionPortfPoint004Controller extends BaseController {
                 && StringUtil.isNotEmpty(processMark.getBusinessData())) {
                 try {
                     RskPortfolioIndicator002Dto havRsk002Dto = JsonUtils.OBJECT_MAPPER.readValue(
-                        processMark.getBusinessData(), RskPortfolioIndicator002Dto.class);
+                            JsonSanitizer.sanitize(processMark.getBusinessData()), RskPortfolioIndicator002Dto.class);
                     if (havRsk002Dto.getIndId().equals(dto.getIndId())) {
                         resultList.add(new ValidMessage(this.getMessage("COMMON_E_0012",
                             dto.getPortfolioName() + GlobalConstant.COLON + dto.getIndName())));
@@ -150,8 +152,7 @@ public class RskSupervisionPortfPoint004Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskPortfolioIndicator002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody RskPortfolioIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

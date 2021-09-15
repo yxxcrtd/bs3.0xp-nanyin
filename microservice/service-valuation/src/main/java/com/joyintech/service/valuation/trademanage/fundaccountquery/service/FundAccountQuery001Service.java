@@ -44,8 +44,7 @@ public class FundAccountQuery001Service extends CommonExportService<FundAccountQ
      * @see
      * @since 1.0
      */
-    public Page<FundAccountQuery001Dto> queryFundAccountList(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<FundAccountQuery001Dto> queryFundAccountList(int page, int length, Map<String, Object> params){
 
         // 获取账户类型
         String acctType = (String)params.get("acctType");

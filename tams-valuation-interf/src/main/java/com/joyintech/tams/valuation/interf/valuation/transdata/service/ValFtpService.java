@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.interf.valuation.transdata.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -48,8 +49,7 @@ public class ValFtpService {
      * @throws Exception
      */
     public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity,
-                                    List<ValInterfTemplate> tempList)
-        throws Exception {
+                                    List<ValInterfTemplate> tempList) throws IOException {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         String localDirTemp = entity.getLocalPath() + File.separator + entity.getSystemID()
                           + File.separator
@@ -158,7 +158,7 @@ public class ValFtpService {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
-            filePath = filePath.toString();
+            //filePath = filePath;
             File myFilePath = new File(filePath);
             boolean rec =myFilePath.delete(); // 删除空文件夹
             if(rec){

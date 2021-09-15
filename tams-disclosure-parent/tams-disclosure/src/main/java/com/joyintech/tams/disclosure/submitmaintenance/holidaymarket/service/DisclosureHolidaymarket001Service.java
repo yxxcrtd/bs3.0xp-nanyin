@@ -111,8 +111,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @return 权益基期信息列表
      * @throws Exception 异常
      */
-    public Page<DisclosureHolidaymarket001Dto> searchForPage(Map<String, Object> param)
-        throws Exception {
+    public Page<DisclosureHolidaymarket001Dto> searchForPage(Map<String, Object> param){
 //        Page<DisclosureHolidaymarket001Dto> pageList = super.queryForPage(DisclosureHolidaymarket001Mapper.class, "queryForPage", param);
 //        return pageList;
     	
@@ -152,10 +151,10 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
 //        return holidaymarket001Mapper.initHolid(param);
     }
 
-    public static void main(String[] args) {
-
-
-    }
+//    public static void main(String[] args) {
+//
+//
+//    }
 
     /**
      * 导入文件
@@ -167,8 +166,7 @@ public class DisclosureHolidaymarket001Service extends CommonExportService<Discl
      * @return 导入结果
      * @throws Exception 异常
      */
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String fileName){
     	
     	
     	return restTemplate.getForList(

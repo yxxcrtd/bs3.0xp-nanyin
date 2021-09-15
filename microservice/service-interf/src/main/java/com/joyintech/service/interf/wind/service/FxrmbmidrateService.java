@@ -77,7 +77,7 @@ public class FxrmbmidrateService extends WindService<InterfFxrmbmidrate> {
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfFxrmbmidrate entity) throws Exception {
+	public int insert(InterfFxrmbmidrate entity) {
 		// 删除接口表重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登录接口表

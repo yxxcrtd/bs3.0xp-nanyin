@@ -32,8 +32,8 @@ public class FlowRiskFactroRManageService extends BaseService<FlowRiskFactroRMan
 	 @Transactional
 	 @DataSource(DataSourceType.STRESSTEST)
 	 public List<FlowRiskFactroRManageDto> querycheck(Map<String, Object> pageParam)
-	        throws Exception {
+	 {
 	        return FlowRiskFactroRManageMapper.querycheck(pageParam);
-	    }
+	 }
 	
 }

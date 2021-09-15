@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.product.productelement.scheduling.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -91,8 +92,7 @@ public class FinProductScheduling001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("selectForPage")
-    public Page<PrdIssueScheduleDto> selectForPage()
-        throws Exception {
+    public Page<PrdIssueScheduleDto> selectForPage(){
         Page<PrdIssueScheduleDto> page = finProductScheduling001Service.selectForPage(
             RequestUtil.getPageParam());
         return page;
@@ -121,8 +121,7 @@ public class FinProductScheduling001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductScheduling001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -187,8 +186,7 @@ public class FinProductScheduling001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody PrdIssueScheduleDto dto)
-        throws Exception {
+    public AjaxResult delete(@RequestBody PrdIssueScheduleDto dto) throws WorkFlowException {
         ProcessParameter<PrdIssueScheduleDto> processParameter = new ProcessParameter<PrdIssueScheduleDto>();
         WorkFlowParameter<PrdIssueScheduleDto> params = new WorkFlowParameter<PrdIssueScheduleDto>();
         params.setPageId("FinProductScheduling002");

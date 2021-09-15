@@ -96,14 +96,12 @@ public class FinMdateAdjustment001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return finMdateAdjustment001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

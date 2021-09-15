@@ -21,7 +21,6 @@ public class PtlRepoPledgeSearch004Service extends CommonExportService<PtlPldgeS
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

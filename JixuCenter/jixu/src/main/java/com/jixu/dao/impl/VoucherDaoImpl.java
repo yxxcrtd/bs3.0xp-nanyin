@@ -292,7 +292,9 @@ public class VoucherDaoImpl extends CommFuncDAOImpl implements VoucherDao{
 				vlist = new ArrayList<VoucherDetails>();
 				vlist.add(vd);
 			} else {
-				vlist.add(vd);
+				if (vlist != null){
+					vlist.add(vd);
+				}
 			}
 			t = vd.getVoucher().getVouchernum();// 将凭证编号赋给t
 		}

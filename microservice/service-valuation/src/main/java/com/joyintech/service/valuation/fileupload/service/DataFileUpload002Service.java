@@ -138,12 +138,10 @@ public class DataFileUpload002Service extends BaseService<BokFileInfo> {
     /**
      * 上传并把数据插入数据库 
      * 
-     * @param (String)params
+     * @param params
      * @return
-     * @throws Exception
      */
-    public int insertFileTransferInfo(Map<String, Object> params)
-        throws Exception {
+    public int insertFileTransferInfo(Map<String, Object> params) {
         BokFileInfo bokFileInfo = new BokFileInfo(); // 文件信息表记录表
         BokValbalTableFile bokValbalTableFile = new BokValbalTableFile(); // 估值表余额表上传文件信息表
         

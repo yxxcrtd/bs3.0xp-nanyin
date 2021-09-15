@@ -89,7 +89,7 @@
 				FROM 
 					FIN_PRODUCT_VALUATION B, FIN_PRODUCT D 
 				WHERE 
-					VAL_DATE &lt;= STR_TO_DATE(#{valDate},'%Y-%m-%d') AND D.FINPROD_ID = #{finprodId} AND D.FINPROD_MARKET_ID = B.FINPROD_ID AND D.FINPROD_TYPE2 = B.FINPROD_TYPE2)
+					B.VAL_DATE &lt;= STR_TO_DATE(#{valDate},'%Y-%m-%d') AND D.FINPROD_ID = #{finprodId} AND D.FINPROD_MARKET_ID = B.FINPROD_ID AND D.FINPROD_TYPE2 = B.FINPROD_TYPE2)
 		</where>
 	</select>
 </mapper>

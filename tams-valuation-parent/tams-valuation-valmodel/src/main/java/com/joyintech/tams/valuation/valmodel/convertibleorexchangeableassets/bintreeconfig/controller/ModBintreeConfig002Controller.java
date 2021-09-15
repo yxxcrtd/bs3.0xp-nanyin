@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.CreditTagInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfig002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -71,7 +72,6 @@ public class ModBintreeConfig002Controller extends BaseController {
          }
          //修改
          else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(this.getParam("seqno"))) {
-
         	 ModBintreeConfigDto CreditTagInfo = modBintreeConfig002Service.getBussinessEntityByIndId(creditTagId);
         	 model.addAttribute("SEQNO", this.getParam("seqno"));
              model.addAttribute(GlobalConstant.ENTITY, CreditTagInfo);
@@ -164,7 +164,7 @@ public class ModBintreeConfig002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getSecAssetInfo")
-    public Page<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
+    public List<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
 
         return modBintreeConfig002Service.getSecAssetInfo(params);
     }

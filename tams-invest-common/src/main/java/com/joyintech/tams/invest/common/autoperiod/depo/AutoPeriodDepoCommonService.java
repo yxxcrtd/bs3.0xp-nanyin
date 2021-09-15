@@ -1128,6 +1128,7 @@ public class AutoPeriodDepoCommonService {
         trdFinProductDealTotal.setChlId("999999".equals(entity.getChlId()) ? null : entity.getChlId());
         // <!-- 通道交易 新增 强成西 2019/03/26 end -->
         trdFinProductDealTotal.setIsClean(entity.getIsClean());
+        trdFinProductDealTotal.setRemark(entity.getRemark());
         return trdFinProductDealTotal;
     }
 }

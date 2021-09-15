@@ -34,7 +34,7 @@ public class WriteXmlFileYouChuTemp extends WriteFileBasic {
 	}
 
 	@Override
-	public boolean writeFile(InterfaceSource source, DataReadResult dataSet) throws Exception {
+	public boolean writeFile(InterfaceSource source, DataReadResult dataSet){
 		boolean writeSuccessFlag = false;
 		OutputStream out=null;
 		XMLWriter write=null;

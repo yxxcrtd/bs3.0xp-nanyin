@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.trademanage.producttradedeal.dto.ProductTradeDealQuery002Dto;
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.trademanage.producttradedeal.dto.ProductTrad
  * @see ProductTradeDealQuery002Mapper
  * @since 1.0
  */
+@Repository
 public interface ProductTradeDealQuery002Mapper {
 
 	/**

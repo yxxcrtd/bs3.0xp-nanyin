@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.systemtools.dao.ServiceInstitutionMapper_mysql">
+	<select id="getInstitutionName" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT INSTITUTION_CODE code,
+		INSTITUTION_NAME name,
+		INSTITUTION_NAME shortName,
+		/** modify by yanya on 20210419 字段写错
+		NSTITUTION_CODE hidCode**/
+		INSTITUTION_CODE hidCode
+		FROM SYS_INSTITUTION
+	</select>
+
+	<select id="getAllInstitutionName" resultType="com.joyintech.framework.select.SuggestDto">
+		SELECT INSTITUTION_CODE code,
+		INSTITUTION_NAME name,
+		INSTITUTION_NAME shortName,
+		INSTITUTION_CODE hidCode
+		FROM SYS_INSTITUTION
+	</select>
+</mapper>

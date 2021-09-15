@@ -17,9 +17,9 @@ import java.util.List;
  * @since 1.0
  */
 public enum ModelDictCodeList implements BaseDictCodeList {
-    批处理执行结果_警告(ModelDictCode.批处理执行结果,"WARN","警告"),
-    批处理执行结果_正常结束(ModelDictCode.批处理执行结果,"NOR","成功"),
-    批处理执行结果_异常结束(ModelDictCode.批处理执行结果,"EXP","失败"),
+    模型计算结果_警告(ModelDictCode.模型计算结果,"WARN","警告"),
+    模型计算结果_成功(ModelDictCode.模型计算结果,"NOR","成功"),
+    模型计算结果_失败(ModelDictCode.模型计算结果,"EXP","失败"),
     模型_映射类型_资产分类映射(ModelDictCode.模型_映射类型,"01","资产分类映射"),
 
 

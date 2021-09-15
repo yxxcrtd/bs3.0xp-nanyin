@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -190,7 +191,7 @@ public class AdapterComFunction {
 			String dateStr=DateUtil.convertD2YYYYMMDD(new Date());
 			String targetPath=newFolder+"/"+dateStr;
 			try{
-				File targetFolder =new File(targetPath);
+				File targetFolder =new SafelyFile(targetPath);
 				
 				if(!targetFolder.exists()){
 					if(!targetFolder.mkdirs()){
@@ -201,10 +202,10 @@ public class AdapterComFunction {
 				}
 				
 				for(String sourceFilePath:fileList){
-					File sourceFile=new File(sourceFilePath);
+					File sourceFile=new SafelyFile(sourceFilePath);
 					
 					String targetFilePath=targetPath+"/"+sourceFile.getName();
-					File targetFile=new File(targetFilePath);
+					File targetFile=new SafelyFile(targetFilePath);
 					if(targetFile.exists()){
 						/*if(targetFile.delete()){
 							errormsg="删除文件夹失败: " + targetPath+"/"+sourceFile.getName();
@@ -216,7 +217,7 @@ public class AdapterComFunction {
 						String fileName=sourceFile.getName();
 						String finalFileName=fileName+"."+date;
 						targetFilePath=targetPath+"/"+finalFileName;
-						targetFile=new File(targetFilePath);
+						targetFile=new SafelyFile(targetFilePath);
 					}
 					if(!sourceFile.renameTo(targetFile)){
 						errormsg="备份文件失败("+sourceid+"): " + sourceFilePath + " | " + targetFilePath;

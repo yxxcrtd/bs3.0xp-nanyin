@@ -60,7 +60,7 @@ public class BussRepAssetMngProdInfoController extends BaseController{
      */
     @Override
     public String init(Model model) {
-        this.setSelectOptionToModel(model, new DictCode[] {DictCode.交易流通场所, DictCode.资金实际投向,
+        this.setSelectOptionToModel(model, new DictCode[] {DictCode.交易流通场所,DictCode.交易流通场所_中债, DictCode.资金实际投向,
             DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.资管计划属性,DictCode.是否_中债,
             DictCode.购买结构,DictCode.管理方式,DictCode.资产_负债二级类别,DictCode.是否});
         model.addAttribute("FLAG_YES",DictCodeList.是否_中债_是.getValue());

@@ -61,18 +61,17 @@ public class TrdStandardBond001Controller extends BaseController {
      * 分页查询
      *
      * @return Page<TrdStandardBond001Dto>泛型的page实体类
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("selectPageData")
     @ResponseBody
-    public Page<TrdStandardBond001Dto> selectPageData() throws Exception {
+    public Page<TrdStandardBond001Dto> selectPageData() {
         return trdStandardBond001Service.selectPageData(RequestUtil.getPageParam());
     }
     @RequestMapping("selectListData")
     @ResponseBody
-    public List<TrdStandardBond001Dto> selectListData(@RequestBody  Map<String,Object> param) throws Exception {
+    public List<TrdStandardBond001Dto> selectListData(@RequestBody  Map<String,Object> param) {
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         param.put("searchDate",formatDate);
@@ -84,13 +83,12 @@ public class TrdStandardBond001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return trdStandardBond001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 

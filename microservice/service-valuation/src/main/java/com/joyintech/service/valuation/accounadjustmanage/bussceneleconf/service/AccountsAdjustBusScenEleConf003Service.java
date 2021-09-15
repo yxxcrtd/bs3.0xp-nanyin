@@ -62,7 +62,7 @@ public class AccountsAdjustBusScenEleConf003Service extends BaseService<Accounts
      */
     @DataSource(DataSourceType.MASERT)
     public Page<AccountsAdjustBusScenEleConf002Dto> findPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
     	return super.queryForPage(page,length,()-> accountsAdjustBusScenEleConf003Mapper.findValBokTableDictList(pageParam));
     }
 

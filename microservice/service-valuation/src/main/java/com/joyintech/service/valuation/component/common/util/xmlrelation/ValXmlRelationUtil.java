@@ -19,6 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -42,6 +44,10 @@ import com.joyintech.service.valuation.component.common.util.dto.ValXmlRelationR
  * @since 1.0
  */
 public class ValXmlRelationUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ValXmlRelationUtil.class);
 
     /**
      * root
@@ -253,7 +259,15 @@ public class ValXmlRelationUtil {
         if (null != inStream) {
             XmlRelationSAXHandler handler = new ValXmlRelationUtil.XmlRelationSAXHandler();
             InputSource is = new InputSource(inStream);
-            SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+//          SAXParser sax = SAXParserFactory.newInstance().newSAXParser();
+            SAXParserFactory spf = SAXParserFactory.newInstance();
+            //------start---------2020-11-25 周敏 添加 
+            spf.setValidating(false);
+            spf.setFeature("http://xml.org/sax/features/validation",false);
+            spf.setFeature("http://apache.org/xml/features/disallow-doctype-decl",true);
+            spf.setFeature("http://xml.org/sax/features/use-entity-resolver2",false);
+            SAXParser sax = spf.newSAXParser();
+            //------end---------
             sax.parse(is, handler);
             return handler.getRecordList();
         }
@@ -273,21 +287,33 @@ public class ValXmlRelationUtil {
         List<ValXmlRelationRecordDto> resultList = CacheUtil.getAppCache(CACHE_KEY_XMLRELATION,
             List.class);
         if (StringUtil.isEmptyList(resultList)) {
-            InputStream xmlFileInStream = ValXmlRelationUtil.class.getClassLoader().getResourceAsStream(
-                "data_dict_convert_rule.xml");
-            try {
-                resultList = ValXmlRelationUtil.parse(xmlFileInStream);
-                CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
+            InputStream xmlFileInStream = null;
+            try{
+                xmlFileInStream = ValXmlRelationUtil.class.getClassLoader().getResourceAsStream(
+                        "data_dict_convert_rule.xml");
+                try {
+                    resultList = ValXmlRelationUtil.parse(xmlFileInStream);
+                    CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
+                }
+                catch (ParserConfigurationException e) {
+                    logger.error(e.getMessage(),e);
+                }
+                catch (SAXException e) {
+                    logger.error(e.getMessage(),e);
+                }
+                catch (IOException e) {
+                    logger.error(e.getMessage(),e);
+                }
+            }finally {
+                if (xmlFileInStream != null){
+                    try {
+                        xmlFileInStream.close();
+                    } catch (IOException e) {
+                        logger.error(e.getMessage(),e);
+                    }
+                }
             }
-            catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            }
-            catch (SAXException e) {
-                e.printStackTrace();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+
         }
 
         return resultList;
@@ -505,7 +531,7 @@ public class ValXmlRelationUtil {
 //                        field.set(para, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
+//                       logger.error(e.getMessage(),e);
 //                    }
 //                }
 //                else {
@@ -515,7 +541,7 @@ public class ValXmlRelationUtil {
 //                        field.set(result, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
+//                       logger.error(e.getMessage(),e);
 //                    }
 //                }
             }
@@ -547,7 +573,7 @@ public class ValXmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
+    // logger.error(e.getMessage(),e);
     // }
     // finally {
     // if (fis != null) {
@@ -555,7 +581,7 @@ public class ValXmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
+    // logger.error(e.getMessage(),e);
     // }
     // }
     // }
@@ -574,7 +600,7 @@ public class ValXmlRelationUtil {
         // fileWriter.close();
         // }
         // catch (IOException e) {
-        // e.printStackTrace();
+        // logger.error(e.getMessage(),e);
         // }
 
     }

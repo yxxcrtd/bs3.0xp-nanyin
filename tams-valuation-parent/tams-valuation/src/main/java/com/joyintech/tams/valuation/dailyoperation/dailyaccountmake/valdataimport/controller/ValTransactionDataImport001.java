@@ -262,7 +262,7 @@ public class ValTransactionDataImport001 extends BaseController {
      */
     @RequestMapping("findBooksetGroup")
     @ResponseBody
-    public Page<SelectOptionDto> findBooksetGroup() throws Exception {
+    public Page<SelectOptionDto> findBooksetGroup()  {
         return valAccountHandle001Service.findBooksetGroup(RequestUtil.getPageParam());
     }
     

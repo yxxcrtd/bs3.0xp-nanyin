@@ -18,6 +18,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.joyintech.framework.util.DateUtil;
 
 
@@ -30,6 +33,8 @@ import com.joyintech.framework.util.DateUtil;
  * @since 1.0
  */
 public class JoyinThreadPoolExecutor extends ThreadPoolExecutor/* implements Runnable */{
+	
+	private static final Logger logger = LoggerFactory.getLogger(JoyinThreadPoolExecutor.class);
 
     /**
      * @param arg0
@@ -59,8 +64,8 @@ public class JoyinThreadPoolExecutor extends ThreadPoolExecutor/* implements Run
      */
     @Override
     protected void beforeExecute(Thread arg0, Runnable arg1) {
-        // TODO Auto-generated method stub
-        System.err.println(arg1.hashCode() + " start time:" + DateUtil.getCurrentDateTime());
+        // TODO Auto-generated method stub      
+        logger.error(arg1.hashCode() + " start time:" + DateUtil.getCurrentDateTime());
         super.beforeExecute(arg0, arg1);
     }
 
@@ -70,7 +75,7 @@ public class JoyinThreadPoolExecutor extends ThreadPoolExecutor/* implements Run
     @Override
     protected void afterExecute(Runnable arg0, Throwable arg1) {
         // TODO Auto-generated method stub
-        System.err.println(arg0.hashCode() + " end time:" + DateUtil.getCurrentDateTime());
+        logger.error(arg0.hashCode() + " end time:" + DateUtil.getCurrentDateTime());
         super.afterExecute(arg0, arg1);
     }
 

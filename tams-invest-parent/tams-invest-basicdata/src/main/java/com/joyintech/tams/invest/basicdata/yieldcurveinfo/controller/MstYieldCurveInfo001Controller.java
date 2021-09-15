@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.basicdata.yieldcurveinfo.controller;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -70,14 +71,12 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      * <一句话功能简述>
      * <功能详细描述>
      * @return Page<MstYieldCurveInfoDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstYieldCurveInfoDto> selectAll()
-        throws Exception {
+    public Page<MstYieldCurveInfoDto> selectAll(){
         Page<MstYieldCurveInfoDto> page = mstYieldCurveInfoService.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -105,13 +104,13 @@ public class MstYieldCurveInfo001Controller extends BaseController{
      * @param dto MstYieldCurveInfoDto
      * @param br br
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  MstYieldCurveInfoDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody  @Validated({ValidateGroupDelete.class})  MstYieldCurveInfoDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -123,10 +122,12 @@ public class MstYieldCurveInfo001Controller extends BaseController{
         params.setBusinessType(DictCodeList.共通业务类型_收益率曲线信息.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(
-            entity ->"曲线名称"+"("+ SysDataUtil.getNameFromDataDict(DictCode.收益率曲线,
-                entity.getCurveCode()) +")"+"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
-                +"-"+"区线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.收益率曲线类型,
-                    entity.getCurveType())+")");
+                //修改流程中的曲线名称和曲线类型 modified by lishuping 20191008 start
+                entity ->"曲线名称"+"("+ String.format(entity.getCurveCode()) + ")"
+                        +"-"+"曲线日期" + "(" + DateUtil.format(entity.getCurveDate()) + ")"
+                        +"-"+"曲线类型"+"("+SysDataUtil.getNameFromDataDict(DictCode.曲线利率类型,
+                        entity.getCurveType())+")");
+
         processParameter.setWorkFlowParameter(params);
         String msg = mstYieldCurveInfoService.start(processParameter, 
             dto.getSelectedItem().toArray(new MstYieldCurveInfoDto[dto.getSelectedItem().size()]));
@@ -136,12 +137,11 @@ public class MstYieldCurveInfo001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() {
         return mstYieldCurveInfoService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

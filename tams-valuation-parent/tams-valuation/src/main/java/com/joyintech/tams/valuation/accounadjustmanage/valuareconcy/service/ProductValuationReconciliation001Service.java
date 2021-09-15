@@ -59,7 +59,7 @@ public class ProductValuationReconciliation001Service extends CommonExportServic
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ProductValuationReconciliation001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ProductValuationReconciliation001Dto> findPage(Map<String, Object> params)  {
         
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/ProductValuationReconciliation001/findPage", params, ProductValuationReconciliation001Dto.class);
         

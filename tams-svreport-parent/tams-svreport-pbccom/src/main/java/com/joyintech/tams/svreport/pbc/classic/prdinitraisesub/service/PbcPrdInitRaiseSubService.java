@@ -2,12 +2,15 @@ package com.joyintech.tams.svreport.pbc.classic.prdinitraisesub.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -113,18 +116,27 @@ public class PbcPrdInitRaiseSubService extends PbcClassicsSubService<PbcInitProd
 		if(CollectionUtils.isEmpty(raisingSubList)){
 			return;
 		}
+		
+		@SuppressWarnings("unchecked")
+		List<PbcInitProdRaisingSub>  listsub=raisingSubList.stream()
+         .collect(
+                 Collectors.collectingAndThen(
+                         Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(pbcInitProdRaisingSub -> pbcInitProdRaisingSub.getProdId()+ pbcInitProdRaisingSub.getVdate()))),
+                         ArrayList::new
+                 )
+         );
 		//查询产品头寸
 		List<ChbPrdPosition> positionList = new ArrayList<ChbPrdPosition>();
 		int end = 0;
-		for(int i=0;i<raisingSubList.size();){
+		for(int i=0;i<listsub.size();){
 			end = i+100;
-			if(end>raisingSubList.size()){
-				end = raisingSubList.size();
+			if(end>listsub.size()){
+				end = listsub.size();
 			}
             if(StringUtil.equals(bankCode, "001")){
-            	positionList.addAll(pbcInitProdRaisingSubMapper.selectPsbcPrdposition(raisingSubList.subList(i, end)));
+            	positionList.addAll(pbcInitProdRaisingSubMapper.selectPsbcPrdposition(listsub.subList(i, end)));
             }else{
-            	positionList.addAll(pbcInitProdRaisingSubMapper.selectPrdposition(raisingSubList.subList(i, end)));
+            	positionList.addAll(pbcInitProdRaisingSubMapper.selectPrdposition(listsub.subList(i, end)));
             }
 			i = end;
 		}

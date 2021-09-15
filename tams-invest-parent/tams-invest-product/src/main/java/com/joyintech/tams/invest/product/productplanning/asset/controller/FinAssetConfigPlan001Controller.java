@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -129,8 +130,7 @@ public class FinAssetConfigPlan001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
     	List<FinAssetConfigPlan001Dto> dtoList = finAssetConfigPlan001Service.selectForList(RequestUtil.getPageParam());
             File outFile= null;
         	PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
@@ -146,8 +146,8 @@ public class FinAssetConfigPlan001Controller extends BaseController {
     /**
      * 检查记录有效
      *
-     * @param FinAssetConfigPlan001Dto dto
-     * @param BindingResult result
+     * @param dto
+     * @param result
      * @return AjaxResult结果
      * @see
      * @since 1.0
@@ -161,16 +161,16 @@ public class FinAssetConfigPlan001Controller extends BaseController {
     /**
      * 删除记录
      *
-     * @param FinAssetConfigPlan001Dto dto
-     * @param BindingResult br
+     * @param dto
+     * @param br
      * @return AjaxResult结果
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody FinAssetConfigPlan001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody FinAssetConfigPlan001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

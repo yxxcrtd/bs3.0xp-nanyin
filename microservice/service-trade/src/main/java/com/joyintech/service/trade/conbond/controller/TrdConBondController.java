@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,7 @@ public class TrdConBondController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdConBondDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdConBondService.selectForPage(page, length, param);
     }
 
@@ -69,7 +70,7 @@ public class TrdConBondController {
      */
     @RequestMapping("getTrdConBondDto/{tradeId}")
     public TrdConBondDto getTrdConBondDto(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdConBondService.getTrdConBondDto(tradeId);
     }
     
@@ -84,7 +85,7 @@ public class TrdConBondController {
      */
     @RequestMapping("getTrdConBondDtoForAccount/{tradeId}")
     public TrdConBondDto getTrdConBondDtoForAccount(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdConBondService.getTrdConBondDtoForAccount(tradeId);
     }
     
@@ -99,7 +100,7 @@ public class TrdConBondController {
      */
     @RequestMapping("getTrdConBondDtoForTradeId/{tradeId}")
     public TrdConBondDto getTrdConBondDtoForTradeId(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdConBondService.getTrdConBondDtoForTradeId(tradeId);
     }
     
@@ -114,7 +115,7 @@ public class TrdConBondController {
      */
     @RequestMapping("getBusicode/{tradeId}")
     public Map<String, Object> getBusicode(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdConBondService.getBusicode(tradeId);
     }
     /**
@@ -204,7 +205,7 @@ public class TrdConBondController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return trdConBondService.getFinprodId(page, length, param);
     }
 
@@ -233,6 +234,10 @@ public class TrdConBondController {
      */
     @PostMapping("getTongDaoCash")
     public BigDecimal getTongDaoCash(@RequestBody Map<String, Object> map){
+        // 日期格式 long转date
+        if (map.get("platDate") instanceof Long) {
+            map.put("platDate", new Date((Long) map.get("platDate")));
+        }
         BigDecimal big = trdConBondService.getTongDaoCash(map);
         if(big!=null){
             return big;

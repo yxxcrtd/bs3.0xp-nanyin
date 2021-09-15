@@ -71,7 +71,7 @@ public class RskSupervisionRiskAnalyze002Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionRiskAnalyzeDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPageMx(map);
         return page;
@@ -84,7 +84,7 @@ public class RskSupervisionRiskAnalyze002Controller extends BaseController  {
      */
     @RequestMapping("exportMx")
     public ResponseEntity<byte[]> exportMx()
-            throws Exception {
+             {
         return rskSupervisionRiskAnalyzeService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

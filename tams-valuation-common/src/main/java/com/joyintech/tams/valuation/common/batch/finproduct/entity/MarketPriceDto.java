@@ -47,6 +47,20 @@ public class MarketPriceDto {
     private Date schemeValDate;
 
     /**
+     *  仅用于 资产行情数据 批前检查结果 校验
+     *  校验标准为  估值方案配置的日期  存在 当日的行情数据。 不能为 <= 估值方案配置的日期
+     */
+    private boolean preCheckFlag;
+
+    public boolean isPreCheckFlag() {
+        return preCheckFlag;
+    }
+
+    public void setPreCheckFlag(boolean preCheckFlag) {
+        this.preCheckFlag = preCheckFlag;
+    }
+
+    /**
      * 估值方案代码
      */
     private String schemeId;

@@ -17,6 +17,7 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -43,6 +44,8 @@ import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,6 +90,12 @@ public class BaseRiskMathCommController extends BaseController {
     private IPlatformDate iPlatformDate;
     @Autowired
     private CreditLinesDealsMapper creditLineMapper;
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * 占用、释放授信额度共通处理 类
      * 风险试算时获取授信管理中授信使用条件使用
@@ -560,4 +569,26 @@ public class BaseRiskMathCommController extends BaseController {
         return "2";
     }
     // add by caojin 吉林银行风险试算-流程控制显示 end
+    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 start
+    /**
+     * 按组合代码检查是否配置风险指标
+     * @param portfolioId 组合代码
+     * @return 结果
+     */
+    @ResponseBody
+    @RequestMapping("isSetRiskByPortfolioId")
+    public AjaxResult isSetRiskByPortfolioId(@RequestBody String portfolioId) {
+        portfolioId = portfolioId.replaceAll("\"","");
+        AjaxResult result = new AjaxResult();
+        Map<String, Object> data = new HashMap<>();
+        if (StringUtil.isEmpty(portfolioId)) {
+            logger.debug("组合代码为空,可能为 BaseRiskMathComm.js中 portfolioId 取值错误,默认取id为'portfolioId'的控件的值,该业务html页面 组合代码 控件id可能不同");
+            data.put("flag", "Y");
+        } else {
+            data.put("flag", basRiskMathCommService.isSetRiskByPortfolioId(portfolioId));
+        }
+        result.setData(data);
+        return result;
+    }
+    // add by jiangpeng ZGBUGTWO-257 未配置风险指标的行社不应提示请进行风险试算 20201214 end
 }

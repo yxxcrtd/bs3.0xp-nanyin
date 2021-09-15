@@ -100,7 +100,7 @@ public class MoneyTaFloadFeeBookService {
      */
     @SuppressWarnings("unchecked")
     public BookGenerateResultWithBokStatFeePosition execute(Map<String, Object> params)
-        throws Exception {
+         {
         // 获取reader返回值
         StayDrawSubprdEntity acctEntity = (StayDrawSubprdEntity)params.get(
             GlobalConstant.READER_RESULT);// modify by dongjun on 20190115

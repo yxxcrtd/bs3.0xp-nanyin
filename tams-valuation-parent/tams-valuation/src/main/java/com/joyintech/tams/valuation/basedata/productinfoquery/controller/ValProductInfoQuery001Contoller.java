@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.productinfoquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValProductInfoQuery001Dto> findPage() throws Exception{
+    public Page<ValProductInfoQuery001Dto> findPage() {
         return valProductInfoQuery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -151,7 +152,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      */
     @RequestMapping("queryFeeList")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryFeeList() throws Exception{
+    public List<ValProductInfoFeeDto> queryFeeList() {
         return valProductInfoQuery001Service.queryFeeList(RequestUtil.getPageParam());
     }
 
@@ -165,7 +166,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> para= RequestUtil.getPageParam();
         List<ValProductInfoQuery001Dto> dtoList;
@@ -196,7 +197,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList() {
         return valProductInfoQuery001Service.queryfloatFeeList(RequestUtil.getPageParam());
     }
     
@@ -210,7 +211,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList1")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList1() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList1() {
         return valProductInfoQuery001Service.queryfloatFeeList1(RequestUtil.getPageParam());
     }
     
@@ -224,7 +225,7 @@ public class ValProductInfoQuery001Contoller extends BaseController {
      */
     @RequestMapping("queryfloatFeeList2")
     @ResponseBody
-    public List<ValProductInfoFeeDto> queryfloatFeeList2() throws Exception{
+    public List<ValProductInfoFeeDto> queryfloatFeeList2() {
         return valProductInfoQuery001Service.queryfloatFeeList2(RequestUtil.getPageParam());
     }
     

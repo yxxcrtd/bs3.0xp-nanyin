@@ -57,8 +57,8 @@
  where linked_dict_code='PINAN_ASSET_TYPE'
  UNION ALL 
  SELECT a.dict_code,a.item_code,a.linked_item_code
- FROM SYS_DATADICT_LIST_LINK a,N
- where a.linked_dict_code=N.dict_code
+ FROM SYS_DATADICT_LIST_LINK a,N b
+ where a.linked_dict_code=b.dict_code
  ),
   temp1 as (
       SELECT T.SEQNO,T.CREDIT_MST_ID,
@@ -83,13 +83,13 @@
 		FROM FIN_PRODUCT T1
 		INNER JOIN FIN_PRODUCT_TYPE T2 ON T1.FINPROD_ID = T2.FINPROD_ID
 		WHERE T1.FINPROD_ID = #{dto.finprodId,jdbcType=VARCHAR}),#{dto.counterId,jdbcType=VARCHAR})
-		AND T.CREDIT_MST_ID IN (select seqno from CREDIT_MST_INFO T5
+		AND T.CREDIT_MST_ID IN (select T5.seqno from CREDIT_MST_INFO T5
 		where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-		(SELECT  trim(concat(dict_code, item_code)) FROM N , 
+		(SELECT  trim(concat(SDLL.dict_code, SDLL.item_code)) FROM N SDLL, 
 		(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
                 where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6 
-                where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-		and TRIM(N.linked_item_code)=TRIM(T6.TYPE_8)
+                where (SDLL.item_code=T6.TYPE_6 or SDLL.item_code=T6.TYPE_7)
+		and TRIM(SDLL.linked_item_code)=TRIM(T6.TYPE_8)
 		))
 		)
 		)
@@ -102,7 +102,7 @@
 		AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}
 		GROUP BY T.SEQNO,T.CREDIT_MST_ID,T.CREDIT_AMT,T.CUSTOMER_ID
 		)
-		select TTT.SEQNO, TTT.CREDIT_FLAG, TTT.CREDIT_MST_ID, TTT.PFLSH,(TTT.hapCreditAmt+NVL(TEMP1.hapCreditAmt,0))
+		select TTT.SEQNO, TTT.CREDIT_FLAG, TTT.CREDIT_MST_ID, TTT.PFLSH,(TTT.hapCreditAmt+NVL(TTT2.hapCreditAmt,0))
 		hapCreditAmt,TTT.creditAmt,TTT.VDATE,TTT.CUSTOMER_ID,TTT.CREDIT_CONDITION,TTT.insitituteCode
 		FROM (
 		SELECT T.SEQNO, T.CREDIT_FLAG, T.CREDIT_MST_ID, T.PFLSH,T.HAP_CREDIT_AMT hapCreditAmt,T.CREDIT_AMT
@@ -126,21 +126,21 @@
 											 <when test="dto.finprodType2 != null and dto.finprodType2 =='F10' or dto.finprodType2 ==F10">
 												 AND T. CREDIT_MST_ID IN ( SELECT A.CREDIT_MST_ID as
 												 creditMstId FROM CREDIT_LINES A left join CREDIT_MST_INFO B
-												 on a.CREDIT_MST_ID=b.seqno where PFLSH =T
-												 .PFLSH and PARENT_CUSTOMER_ID = T.CUSTOMER_ID AND
+												 on a.CREDIT_MST_ID=b.seqno where A.PFLSH =T
+												 .PFLSH and A.PARENT_CUSTOMER_ID = T.CUSTOMER_ID AND
 												 B.credit_quote_type_value=(select Type_8 from FIN_PRODUCT_TYPE where
 												 FINPROD_ID = #{dto.finprodId,jdbcType=VARCHAR}))
 											 </when>
 											 <otherwise>
-												 AND T.CREDIT_MST_ID IN (select seqno from
+												 AND T.CREDIT_MST_ID IN (select T5.seqno from
 												 CREDIT_MST_INFO T5
 												 where trim(concat(T5.
 												 credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-																								(SELECT  trim(concat(dict_code, item_code)) FROM N , 
+																								(SELECT  trim(concat(SDLL.dict_code, SDLL.item_code)) FROM N SDLL, 
 													(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
 											                where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6 
-											                where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-													and TRIM(N.linked_item_code)=TRIM(T6.TYPE_8)
+											                where (SDLL.item_code=T6.TYPE_6 or SDLL.item_code=T6.TYPE_7)
+													and TRIM(SDLL.linked_item_code)=TRIM(T6.TYPE_8)
 													))
 											 </otherwise>
 		</choose>
@@ -156,7 +156,7 @@
 						AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE} 
 					</if>
 					GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE)TTT
-					LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
+					LEFT JOIN temp1 TTT2 ON TTT.CUSTOMER_ID=TTT2.CUSTOMER_ID and TTT.CREDIT_MST_ID=TTT2.CREDIT_MST_ID
 	</select>
 	
 	<select id="getCeLinesInfoforOrg02" resultType="com.joyintech.tams.common.base.entity.CreditLines">
@@ -168,8 +168,8 @@
  where linked_dict_code='PINAN_ASSET_TYPE'
  UNION ALL 
  SELECT a.dict_code,a.item_code,a.linked_item_code
- FROM SYS_DATADICT_LIST_LINK a,N
- where a.linked_dict_code=N.dict_code
+ FROM SYS_DATADICT_LIST_LINK a,N b
+ where a.linked_dict_code=b.dict_code
  ),
  temp1(SEQNO,
        CREDIT_MST_ID,
@@ -189,16 +189,16 @@
 											   from PA_FIN_PRODUCT T1 
 											   where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})  
    						and T.credit_mst_id =  #{creditmstidJG,jdbcType=VARCHAR})
- 				OR( T.parent_customer_id = (select ACTUAL_CREDIT_PROVID 
+ 				OR( T.parent_customer_id = (select T1.ACTUAL_CREDIT_PROVID 
  											   from PA_FIN_PRODUCT T1 
  											   where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
- 					and T.credit_mst_id in (select seqno from CREDIT_MST_INFO T5
+ 					and T.credit_mst_id in (select T5.seqno from CREDIT_MST_INFO T5
  														where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-        							(SELECT  trim(concat(dict_code, item_code)) FROM N , 
+        							(SELECT  trim(concat(SDLL.dict_code, SDLL.item_code)) FROM N SDLL, 
 								(select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
                                               where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6 
-                                                       where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-                                                       and TRIM(N.linked_item_code)=TRIM(T6.TYPE_8))
+                                                       where (SDLL.item_code=T6.TYPE_6 or SDLL.item_code=T6.TYPE_7)
+                                                       and TRIM(SDLL.linked_item_code)=TRIM(T6.TYPE_8))
         							)
  				))
 					AND T.VDATE = (select max(tt.vdate)
@@ -210,23 +210,23 @@
 					AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE}  
 					GROUP BY T.SEQNO,T.CREDIT_MST_ID,T.CREDIT_AMT,T.CUSTOMER_ID
 		)
-		select TTT.SEQNO, TTT.CREDIT_FLAG, TTT.CREDIT_MST_ID, TTT.PFLSH,(TTT.hapCreditAmt+NVL(TEMP1.hapCreditAmt,0)) hapCreditAmt,TTT.creditAmt,TTT.VDATE,TTT.CUSTOMER_ID,TTT.CREDIT_CONDITION,TTT.insitituteCode
+		select TTT.SEQNO, TTT.CREDIT_FLAG, TTT.CREDIT_MST_ID, TTT.PFLSH,(TTT.hapCreditAmt+NVL(TTT2.hapCreditAmt,0)) hapCreditAmt,TTT.creditAmt,TTT.VDATE,TTT.CUSTOMER_ID,TTT.CREDIT_CONDITION,TTT.insitituteCode
     	   FROM (								
 		SELECT T.SEQNO, T.CREDIT_FLAG, T.CREDIT_MST_ID, T.PFLSH,T.HAP_CREDIT_AMT hapCreditAmt,T.CREDIT_AMT creditAmt,MAX(T.VDATE) VDATE,T.CUSTOMER_ID,T.CREDIT_CONDITION,T.INSTITUTION_CODE insitituteCode
 			FROM CREDIT_LINES T
-				WHERE (( T.CUSTOMER_ID = (select ACTUAL_CREDIT_PROVID 
+				WHERE (( T.CUSTOMER_ID = (select T1.ACTUAL_CREDIT_PROVID 
 											   from PA_FIN_PRODUCT T1 
 											   where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})  
    						and T.credit_mst_id = #{creditmstidJG,jdbcType=VARCHAR})
- 				OR( T.parent_customer_id = (select ACTUAL_CREDIT_PROVID 
+ 				OR( T.parent_customer_id = (select T1.ACTUAL_CREDIT_PROVID 
  											   from PA_FIN_PRODUCT T1 
  											   where T1.FINPROD_ID=#{dto.finprodId,jdbcType=VARCHAR})
- 					and T.credit_mst_id in (select seqno from CREDIT_MST_INFO T5
+ 					and T.credit_mst_id in (select T5.seqno from CREDIT_MST_INFO T5
  														where trim(concat(T5.credit_quote_type_code, T5.CREDIT_QUOTE_TYPE_VALUE)) in
-        							(SELECT  trim(concat(dict_code, item_code)) FROM N , (select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
+        							(SELECT  trim(concat(SDLL.dict_code, SDLL.item_code)) FROM N SDLL, (select T4.TYPE_6, T4.TYPE_7, T4.TYPE_8 from FIN_PRODUCT_TYPE T4
                                               where T4.Finprod_Id = #{dto.finprodId,jdbcType=VARCHAR}) T6 
-                                                       where (item_code=T6.TYPE_6 or item_code=T6.TYPE_7)
-                                                       and TRIM(N.linked_item_code)=TRIM(T6.TYPE_8))
+                                                       where (SDLL.item_code=T6.TYPE_6 or SDLL.item_code=T6.TYPE_7)
+                                                       and TRIM(SDLL.linked_item_code)=TRIM(T6.TYPE_8))
         							
         							)
  				))
@@ -240,7 +240,7 @@
 						AND T.MDATE >=#{dto.tradeDate,jdbcType=DATE} 
 					</if>
 					GROUP BY T.SEQNO,T.CREDIT_FLAG,T.CREDIT_MST_ID,T.PFLSH,T.HAP_CREDIT_AMT,T.CREDIT_AMT,T.CUSTOMER_ID,T.CREDIT_CONDITION)TTT
-					LEFT JOIN temp1 ON TTT.CUSTOMER_ID=temp1.CUSTOMER_ID and TTT.CREDIT_MST_ID=temp1.CREDIT_MST_ID
+					LEFT JOIN temp1 TTT2 ON TTT.CUSTOMER_ID=TTT2.CUSTOMER_ID and TTT.CREDIT_MST_ID=TTT2.CREDIT_MST_ID
 	</select>
     
     <select id="getRsk" resultType="com.joyintech.tams.common.base.entity.RiskWeight"> 

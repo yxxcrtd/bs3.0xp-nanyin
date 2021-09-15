@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinClawbackCalcRuleMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="EFF_DATE" property="effDate" jdbcType="DATE" />
+        <result column="CAWLBACK_RULE" property="cawlbackRule" jdbcType="VARCHAR" />
+        <result column="CAWLBACK_TYPE" property="cawlbackType" jdbcType="VARCHAR" />
+        <result column="BASIS" property="basis" jdbcType="VARCHAR" />
+        <result column="ACT_RULE" property="actRule" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, EFF_DATE EFF_DATE, CAWLBACK_RULE CAWLBACK_RULE, CAWLBACK_TYPE CAWLBACK_TYPE,
+        BASIS BASIS, ACT_RULE ACT_RULE, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinClawbackCalcRuleMapper.Base_Column_List" />
+        from FIN_CLAWBACK_CALC_RULE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinClawbackCalcRuleMapper.Base_Column_List" />
+        from FIN_CLAWBACK_CALC_RULE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRuleKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinClawbackCalcRuleMapper.Base_Column_List" />
+        from FIN_CLAWBACK_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and EFF_DATE = #{effDate,jdbcType=DATE}
+    </select>
+    <select id="selectListByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRuleKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinClawbackCalcRuleMapper.Base_Column_List" />
+        from FIN_CLAWBACK_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        <if test="effDate!=null">
+            and EFF_DATE = #{effDate,jdbcType=DATE}
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRuleKey" >
+        delete from FIN_CLAWBACK_CALC_RULE
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        insert into FIN_CLAWBACK_CALC_RULE (CASH_ID, EFF_DATE, CAWLBACK_RULE,
+            CAWLBACK_TYPE, BASIS, ACT_RULE,
+            CREATE_USER, CREATE_DEPT, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME,IS_INITIAL)
+        values (#{cashId,jdbcType=VARCHAR}, #{effDate,jdbcType=DATE}, #{cawlbackRule,jdbcType=VARCHAR},
+            #{cawlbackType,jdbcType=VARCHAR}, #{basis,jdbcType=VARCHAR}, #{actRule,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{isInitial,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        insert into FIN_CLAWBACK_CALC_RULE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="effDate != null" >
+                EFF_DATE,
+            </if>
+            <if test="cawlbackRule != null" >
+                CAWLBACK_RULE,
+            </if>
+            <if test="cawlbackType != null" >
+                CAWLBACK_TYPE,
+            </if>
+            <if test="basis != null" >
+                BASIS,
+            </if>
+            <if test="actRule != null" >
+                ACT_RULE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="effDate != null" >
+                #{effDate,jdbcType=DATE},
+            </if>
+            <if test="cawlbackRule != null" >
+                #{cawlbackRule,jdbcType=VARCHAR},
+            </if>
+            <if test="cawlbackType != null" >
+                #{cawlbackType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="actRule != null" >
+                #{actRule,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        insert into FIN_CLAWBACK_CALC_RULE(CASH_ID, EFF_DATE, CAWLBACK_RULE, CAWLBACK_TYPE,
+        BASIS, ACT_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select CASH_ID, EFF_DATE, CAWLBACK_RULE, CAWLBACK_TYPE,
+            BASIS, ACT_RULE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FIN_CLAWBACK_CALC_RULE
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and EFF_DATE = #{effDate,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        update FIN_CLAWBACK_CALC_RULE
+        <set >
+            <if test="cawlbackRule != null" >
+                CAWLBACK_RULE = #{cawlbackRule,jdbcType=VARCHAR},
+            </if>
+            <if test="cawlbackType != null" >
+                CAWLBACK_TYPE = #{cawlbackType,jdbcType=VARCHAR},
+            </if>
+            <if test="basis != null" >
+                BASIS = #{basis,jdbcType=VARCHAR},
+            </if>
+            <if test="actRule != null" >
+                ACT_RULE = #{actRule,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinClawbackCalcRule" >
+        update FIN_CLAWBACK_CALC_RULE
+        set CAWLBACK_RULE = #{cawlbackRule,jdbcType=VARCHAR},
+            CAWLBACK_TYPE = #{cawlbackType,jdbcType=VARCHAR},
+            BASIS = #{basis,jdbcType=VARCHAR},
+            ACT_RULE = #{actRule,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and EFF_DATE = #{effDate,jdbcType=DATE}
+    </update>
+</mapper>

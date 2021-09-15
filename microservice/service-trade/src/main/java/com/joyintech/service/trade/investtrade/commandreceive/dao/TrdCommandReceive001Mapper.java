@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto;
@@ -27,6 +28,7 @@ import com.joyintech.tams.common.base.entity.User;
  * @see TrdCommandReceive001Mapper
  * @since 1.0
  */
+@Repository
 public interface TrdCommandReceive001Mapper {
 	/**
 	 * 指令已接收查询

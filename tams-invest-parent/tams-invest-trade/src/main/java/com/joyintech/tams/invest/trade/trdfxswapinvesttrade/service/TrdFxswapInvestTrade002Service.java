@@ -12,6 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -70,6 +72,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswapInvestTrade001Dto> implements BaseProcessService<TrdFxswapInvestTrade001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFxswapInvestTrade002Service.class);
 
     /**
      * 节假日计算用和日期关联的Service
@@ -688,20 +694,22 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
 
             // 到期交易生成 start
             BaseTradeProductDealDto baseDto = new BaseTradeProductDealDto();
-            baseDto.setTrdProductDealAdd(entity2.getTrdProductDealAdd());
-            baseDto.setTrdProductDeal(entity2.getTrdProductDeal());
-            baseDto.setStlPayOrdersList(entity2.getStlPayOrdersList());
-            List<PtlTrade> ptlTradeList2 = new ArrayList<PtlTrade>();
-            ptlTradeList2.add(entity2.getPtlTrade());
+            if (entity2 != null){
+                baseDto.setTrdProductDealAdd(entity2.getTrdProductDealAdd());
+                baseDto.setTrdProductDeal(entity2.getTrdProductDeal());
+                baseDto.setStlPayOrdersList(entity2.getStlPayOrdersList());
+                List<PtlTrade> ptlTradeList2 = new ArrayList<PtlTrade>();
+                ptlTradeList2.add(entity2.getPtlTrade());
 
-            String pPortfolioId = AllTradeCommonUtil.exchangePortfolio(entity2.getPtlTrade().getPortfolioId());
-            if(StringUtil.isNotEmpty(pPortfolioId) && !pPortfolioId.equals(entity.getPtlTrade().getPortfolioId())){
-                PtlTrade ptlTrade2 = new PtlTrade();
-                BeanUtil.copyPropertiesIgnoreNull(ptlTrade2, entity2.getPtlTrade());
-                ptlTrade2.setPortfolioId(pPortfolioId);
-                ptlTradeList2.add(ptlTrade2);
+                String pPortfolioId = AllTradeCommonUtil.exchangePortfolio(entity2.getPtlTrade().getPortfolioId());
+                if(StringUtil.isNotEmpty(pPortfolioId) && !pPortfolioId.equals(entity.getPtlTrade().getPortfolioId())){
+                    PtlTrade ptlTrade2 = new PtlTrade();
+                    BeanUtil.copyPropertiesIgnoreNull(ptlTrade2, entity2.getPtlTrade());
+                    ptlTrade2.setPortfolioId(pPortfolioId);
+                    ptlTradeList2.add(ptlTrade2);
+                }
+                baseDto.setPtlTrade(ptlTradeList2);
             }
-            baseDto.setPtlTrade(ptlTradeList2);
             finProductTradeDto.getBaseTradeProductDealDtos().add(baseDto);
             // 到期交易生成end
           // jixu接口
@@ -822,7 +830,9 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     		investInterfCommDto.setStlPayOrdersList(stlPayOrdersList);
 			investInterfCommDto.setTradeFeeDetaillist(trdCommDto.getTradeFeeDetaillist());
 			investInterfCommDto.setFinTradeProduct(trdCommDto.getFinTradeProduct());
-            investInterfCommDto.setOtherTypeForConvert(finTradeProduct.getExcPs());
+			if (finTradeProduct != null){
+                investInterfCommDto.setOtherTypeForConvert(finTradeProduct.getExcPs());
+            }
     		investInterfCommService.doInvestInterf(investInterfCommDto);
         }
         if(entity2 != null ) {
@@ -1261,7 +1271,7 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     	                    	mdate = this.getNextWorkDay(map);
     	                    }
     					} catch (Exception e) {
-    						e.printStackTrace();
+                            logger.error(e.getMessage(),e);
     					}
                     }else {
                     	map.put("tradeDate", DateUtil.format(tradeDate));
@@ -1333,7 +1343,7 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     	                    	vdate = this.getNextWorkDay(map);
     	                    }
     					} catch (Exception e) {
-    						e.printStackTrace();
+                            logger.error(e.getMessage(),e);
     					}
                     }else {
                     	map.put("tradeDate", DateUtil.format(tradeDate));

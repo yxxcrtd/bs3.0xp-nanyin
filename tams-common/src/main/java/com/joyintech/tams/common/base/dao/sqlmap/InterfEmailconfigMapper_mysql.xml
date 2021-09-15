@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfEmailconfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfEmailconfig" >
+        <result column="SERIALNO" property="serialno" jdbcType="VARCHAR" />
+        <result column="BUSITYPE" property="busitype" jdbcType="VARCHAR" />
+        <result column="SENDEMAIL" property="sendemail" jdbcType="VARCHAR" />
+        <result column="SENDNAME" property="sendname" jdbcType="VARCHAR" />
+        <result column="SENDDEPART" property="senddepart" jdbcType="VARCHAR" />
+        <result column="REVEMAIL" property="revemail" jdbcType="VARCHAR" />
+        <result column="REVEMAIL2" property="revemail2" jdbcType="VARCHAR" />
+        <result column="REVEMAIL3" property="revemail3" jdbcType="VARCHAR" />
+        <result column="REVDEPART" property="revdepart" jdbcType="VARCHAR" />
+        <result column="MODELCODE" property="modelcode" jdbcType="VARCHAR" />
+        <result column="EFFECTFLAG" property="effectflag" jdbcType="VARCHAR" />
+        <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+        <result column="CREATEDATE" property="createdate" jdbcType="DATE" />
+        <result column="LSTMNTUSER" property="lstmntuser" jdbcType="VARCHAR" />
+        <result column="LSTMNTDATE" property="lstmntdate" jdbcType="DATE" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfEmailconfig" >
+        insert into INTERF_EMAILCONFIG (SERIALNO, BUSITYPE, SENDEMAIL, 
+            SENDNAME, SENDDEPART, REVEMAIL, 
+            REVEMAIL2, REVEMAIL3, REVDEPART, 
+            MODELCODE, EFFECTFLAG, CREATOR, 
+            CREATEDATE, LSTMNTUSER, LSTMNTDATE
+            )
+        values (#{serialno,jdbcType=VARCHAR}, #{busitype,jdbcType=VARCHAR}, #{sendemail,jdbcType=VARCHAR}, 
+            #{sendname,jdbcType=VARCHAR}, #{senddepart,jdbcType=VARCHAR}, #{revemail,jdbcType=VARCHAR}, 
+            #{revemail2,jdbcType=VARCHAR}, #{revemail3,jdbcType=VARCHAR}, #{revdepart,jdbcType=VARCHAR}, 
+            #{modelcode,jdbcType=VARCHAR}, #{effectflag,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+            #{createdate,jdbcType=DATE}, #{lstmntuser,jdbcType=VARCHAR}, #{lstmntdate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfEmailconfig" >
+        insert into INTERF_EMAILCONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="serialno != null" >
+                SERIALNO,
+            </if>
+            <if test="busitype != null" >
+                BUSITYPE,
+            </if>
+            <if test="sendemail != null" >
+                SENDEMAIL,
+            </if>
+            <if test="sendname != null" >
+                SENDNAME,
+            </if>
+            <if test="senddepart != null" >
+                SENDDEPART,
+            </if>
+            <if test="revemail != null" >
+                REVEMAIL,
+            </if>
+            <if test="revemail2 != null" >
+                REVEMAIL2,
+            </if>
+            <if test="revemail3 != null" >
+                REVEMAIL3,
+            </if>
+            <if test="revdepart != null" >
+                REVDEPART,
+            </if>
+            <if test="modelcode != null" >
+                MODELCODE,
+            </if>
+            <if test="effectflag != null" >
+                EFFECTFLAG,
+            </if>
+            <if test="creator != null" >
+                CREATOR,
+            </if>
+            <if test="createdate != null" >
+                CREATEDATE,
+            </if>
+            <if test="lstmntuser != null" >
+                LSTMNTUSER,
+            </if>
+            <if test="lstmntdate != null" >
+                LSTMNTDATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="serialno != null" >
+                #{serialno,jdbcType=VARCHAR},
+            </if>
+            <if test="busitype != null" >
+                #{busitype,jdbcType=VARCHAR},
+            </if>
+            <if test="sendemail != null" >
+                #{sendemail,jdbcType=VARCHAR},
+            </if>
+            <if test="sendname != null" >
+                #{sendname,jdbcType=VARCHAR},
+            </if>
+            <if test="senddepart != null" >
+                #{senddepart,jdbcType=VARCHAR},
+            </if>
+            <if test="revemail != null" >
+                #{revemail,jdbcType=VARCHAR},
+            </if>
+            <if test="revemail2 != null" >
+                #{revemail2,jdbcType=VARCHAR},
+            </if>
+            <if test="revemail3 != null" >
+                #{revemail3,jdbcType=VARCHAR},
+            </if>
+            <if test="revdepart != null" >
+                #{revdepart,jdbcType=VARCHAR},
+            </if>
+            <if test="modelcode != null" >
+                #{modelcode,jdbcType=VARCHAR},
+            </if>
+            <if test="effectflag != null" >
+                #{effectflag,jdbcType=VARCHAR},
+            </if>
+            <if test="creator != null" >
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="createdate != null" >
+                #{createdate,jdbcType=DATE},
+            </if>
+            <if test="lstmntuser != null" >
+                #{lstmntuser,jdbcType=VARCHAR},
+            </if>
+            <if test="lstmntdate != null" >
+                #{lstmntdate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfEmailconfig" >
+        insert into INTERF_EMAILCONFIG(SERIALNO, BUSITYPE, SENDEMAIL, SENDNAME, SENDDEPART, 
+        REVEMAIL, REVEMAIL2, REVEMAIL3, REVDEPART, MODELCODE, EFFECTFLAG, CREATOR, CREATEDATE, 
+        LSTMNTUSER, LSTMNTDATE)
+        select SERIALNO, BUSITYPE, SENDEMAIL, SENDNAME, SENDDEPART, 
+            REVEMAIL, REVEMAIL2, REVEMAIL3, REVDEPART, MODELCODE, EFFECTFLAG, CREATOR, CREATEDATE, 
+            LSTMNTUSER, LSTMNTDATE
+             from INTERF_EMAILCONFIG
+             where 1 = 1
+    </insert>
+</mapper>

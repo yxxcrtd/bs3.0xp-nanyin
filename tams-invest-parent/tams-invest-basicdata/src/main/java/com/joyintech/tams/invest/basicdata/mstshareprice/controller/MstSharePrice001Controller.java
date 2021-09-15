@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstshareprice.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,14 +75,12 @@ public class MstSharePrice001Controller extends BaseController{
      * 页面查询，表格分页
      * 
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstSharePriceDto> findPage()
-        throws Exception {
+    public Page<MstSharePriceDto> findPage(){
         Page<MstSharePriceDto> page = mstSharePriceService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -90,12 +89,10 @@ public class MstSharePrice001Controller extends BaseController{
     /**
      * 获取页面下拉选信息(资产代码信息）
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
-    public Page<SelectOptionDto> getFinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodIdForAdd() {
         Page<SelectOptionDto> temp = mstSharePriceService.getFinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -121,7 +118,7 @@ public class MstSharePrice001Controller extends BaseController{
      * 删除按钮点击
      * @return AjaxResult
      * @param dto MstSharePriceDto
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @param  br BindingResult
      * @see
      * @since 1.0
@@ -129,8 +126,7 @@ public class MstSharePrice001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstSharePriceDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstSharePriceDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -156,13 +152,11 @@ public class MstSharePrice001Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstSharePriceService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

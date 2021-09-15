@@ -63,9 +63,11 @@ public class FinProductAnapleroticController {
     public void insertAnapleroticInfo(@RequestBody FinProductAnapleroticInfoDto dto){
         finProductAnapleroticService.insertAnapleroticInfo(dto);
     }
-    @PostMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String,Object> param){
-       return finProductAnapleroticService.queryProdIdInfo(param);
+    @PostMapping("queryProdIdInfo/{page}/{length}")
+    public Page<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String,Object> param,
+                                                 @PathVariable("page") int page,
+                                                 @PathVariable("length") int length){
+        return finProductAnapleroticService.queryProdIdInfo(page, length, param);
     }
     @GetMapping("queryAnapAndProdInfo")
     public FinProductAnapleroticInfoDto queryAnapAndProdInfo(String finprodId, String dealMode){

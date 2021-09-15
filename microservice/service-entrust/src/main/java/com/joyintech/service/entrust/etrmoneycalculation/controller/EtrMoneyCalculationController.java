@@ -55,7 +55,8 @@ public class EtrMoneyCalculationController {
      * @since 1.0
      */
     @PostMapping("calculation/{page}/{length}")
-    public Page<EtrMoneyCalculationDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrMoneyCalculationDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return etrMoneyCalculationService.selectForPage(page, length, param);
     }
 

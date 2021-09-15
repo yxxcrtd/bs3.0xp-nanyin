@@ -43,7 +43,7 @@ public class InterfLc0006Service extends ReceivedEsbService<InterfLc0006InEntity
      */
     @Override
     public InterfLc0006InEntity selectResponseData(InterfLc0006InEntity entity)
-        throws Exception {
+    {
         // 无输出entity
         return null;
     }
@@ -53,7 +53,7 @@ public class InterfLc0006Service extends ReceivedEsbService<InterfLc0006InEntity
      */
     @Override
     public int saveInterfData(InterfLc0006InEntity entity)
-        throws Exception {
+    {
         InterfCreditItemInfo info = interfCreditItemInfoMapper.selectByPrimaryKey(
             entity.getCashOutNo());
         // 登录接口表
@@ -66,7 +66,7 @@ public class InterfLc0006Service extends ReceivedEsbService<InterfLc0006InEntity
      */
     @Override
     public int saveBusinessData(InterfLc0006InEntity entity)
-        throws Exception {
+    {
         // 无需登录业务表
         return 0;
     }

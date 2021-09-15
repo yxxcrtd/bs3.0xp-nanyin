@@ -61,7 +61,7 @@ public class LendTradeQuery001Controller extends BaseController{
     
 
     @PostMapping("/findByTradeId")
-    public LendTradeDto findByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public LendTradeDto findByTradeId(@RequestBody Map<String, Object> param) {
         return lendTradeQuery001Service.findByTradeId(param);
     }
     

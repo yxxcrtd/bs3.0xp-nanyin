@@ -90,6 +90,9 @@
         	}
         	star();
     	}
+    	if($("#finprodMarketId").val()){
+           $("#finprodAbbr").val($('#finprodMarketId').select2('data')[0].object);
+        }
     };
     //add by lizhi 2020-2-26 划款指令是否自动生成  start
     var generateOrders = function (callback) {
@@ -131,7 +134,7 @@
         	star();
         })
         $('#finprodMarketId').change(function(){
-        	var str = $('#finprodMarketId').select2('data')[0].text;
+        	var str = $('#finprodMarketId').select2('data')[0].object;
         	$("#finprodAbbr").val(str);
         	$("#finprodId").val($('#finprodMarketId').select2('data')[0].object);
         });

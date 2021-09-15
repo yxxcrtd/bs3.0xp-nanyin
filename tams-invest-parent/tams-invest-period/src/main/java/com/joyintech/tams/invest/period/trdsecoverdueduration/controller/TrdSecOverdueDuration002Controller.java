@@ -37,6 +37,7 @@ import com.joyintech.tams.invest.period.trdsecoverdueduration.service.TrdSecOver
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -178,8 +179,7 @@ public class TrdSecOverdueDuration002Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecOverdueDuration002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecOverdueDuration002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -215,8 +215,7 @@ public class TrdSecOverdueDuration002Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(TrdSecOverdueDuration002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(TrdSecOverdueDuration002Dto dto, BindingResult br) throws WorkFlowException {
         /*if (br.hasErrors()) {
             return new AjaxResult(br);
         }*/

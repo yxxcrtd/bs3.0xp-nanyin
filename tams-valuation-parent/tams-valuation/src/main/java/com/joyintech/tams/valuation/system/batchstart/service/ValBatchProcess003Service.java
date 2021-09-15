@@ -41,7 +41,7 @@ public class ValBatchProcess003Service extends BaseService<SysBatchPrdGrpDto001>
     @DataSource(DataSourceType.OTHER)
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public Page<SysBatchPrdGrpDto001> findAllPrdGroup(Map<String, Object> keyword)
-        throws Exception {
+          {
         return super.queryForPage(() -> valBatchStart001Mapper.findAllPrdGroup(keyword));
     }
 

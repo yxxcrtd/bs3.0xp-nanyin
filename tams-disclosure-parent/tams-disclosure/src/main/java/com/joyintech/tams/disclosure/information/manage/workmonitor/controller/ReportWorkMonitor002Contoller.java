@@ -11,6 +11,7 @@
 package com.joyintech.tams.disclosure.information.manage.workmonitor.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -117,8 +118,7 @@ public class ReportWorkMonitor002Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 		Page<SelectOptionDto> prdInfoSelect = getPrdInfoSelectService.getPrdInfoSelect(RequestUtil.getPageParam());
         return prdInfoSelect;
     }
@@ -133,7 +133,7 @@ public class ReportWorkMonitor002Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ReportWorkMonitor002Dto> findPage() throws Exception{
+    public Page<ReportWorkMonitor002Dto> findPage() {
         Page<ReportWorkMonitor002Dto> pageList = reportWorkMonitor002Service.findPage(RequestUtil.getPageParam());
         pageList.getRoot().forEach(dto -> {
         	dto.setExecStatusName(SysDataUtil.getNameFromDataDict(DictCode.执行结果, dto.getExecStatus()));
@@ -159,7 +159,7 @@ public class ReportWorkMonitor002Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          List<ReportWorkMonitor002Dto> dtoList;
          if (datas == null) {

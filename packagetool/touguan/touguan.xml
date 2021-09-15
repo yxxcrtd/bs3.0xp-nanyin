@@ -25,6 +25,7 @@
         <module>../../background-component/component-common</module>
         <module>../../background-component/exchange-order</module>
         <module>../../background-component/inter-bank-uplink</module>
+        <module>../../background-component/component-check</module>
 		<module>../../component-base</module>
         <module>../../component-business</module>
         <module>../../tams-common</module>

@@ -1,80 +1,116 @@
-$(function () {
-    var init = function () {
-        if (pageModel == PAGE_MODEL_EDIT) {
-            $("#secTypeModel").attr("disabled", true);
-            $("#secDetailTypeModel").attr("disabled", true);
-        }
-    };
+(function() {
 
     /**
-     * 根据操作类型显示
+     * 画面加载完成
      */
-    var initShow = function () {
-        var pageModel = $('#pageModel').val();
-        var status = $('#status').val();
-    };
+    $(function() {
+        init();
+        // 绑定按钮事件
+        $('#MstCurveDefManage002_btn_save').click(function() {
+            saveOrSubmit('save');
+        });
+        // 绑定按钮事件
+        $('#MstCurveDefManage002_btn_submit').click(function() {
+            saveOrSubmit('submit');
+        });
+
+        //是否含权债change
+        layui.form.on('switch(curveGroupType)',function(){
+            curveGroupTypeChange();
+        });
+
+
+
+
+    });
 
 
     function saveOrSubmit(operateType) {
         var object = $.serializeToObject('#submitForm');
-        object.operateType = operateType;
         object.pageModel = pageModel;
-        // 获取seqNo
         if (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT) {
-            object.seqNo = $('#seqNo').val();
+            object.curveCode = $('#curveCode').val();
+        }
+        object.operateType = operateType;
+        Joyin.ajaxJson(basePath + 'valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/check', object, function(result) {
+            if (operateType === 'save') {
+                WorkFlow.doSaveList(basePath + 'valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/save', object, "MstCurveDefManage002_btn_save");
+            } else if(operateType === 'submit'){
+                WorkFlow.doSubmitList(basePath + 'valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/save', object, "MstCurveDefManage002_btn_submit");
+            }
+        });
+    };
+
+    function　init(){
+        var curveGroupType = $('#curveGroupType')[0].checked;
+        if (curveGroupType === true) {
+            $('#intCurveType_redId').hide();
+            $('#ccy_redId').hide();
+            $('#interMethod_redId').hide();
+            $('#dayRules_redId').hide();
+            $('#calender_redId').hide();
+            $('#interestDateRule_redId').hide();
+            $('#interestCalMethod_redId').hide();
+            $('#interestFreq_redId').hide();
+            $('#remark_redId').hide();
+        }else{
+            $('#intCurveType_redId').show();
+            $('#ccy_redId').show();
+            $('#interMethod_redId').show();
+            $('#dayRules_redId').show();
+            $('#calender_redId').show();
+            $('#interestDateRule_redId').show();
+            $('#interestCalMethod_redId').show();
+            $('#interestFreq_redId').show();
+            $('#remark_redId').show();
         }
 
-        Joyin.ajaxJson(basePath + 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/check', object, function (result) {
-            Joyin.confirm(result.data, function () {
-                if (operateType === 'save') {
-                    WorkFlow.doSave(basePath + 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/doUpdate', object, "ValCashFlowDiscount002_btn_save");
-                } else {// submit
-                    WorkFlow.doSubmit(basePath + 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/doUpdate', object, "ValCashFlowDiscount002_btn_submit");
-                }
-            });
-        });
     }
 
+    function curveGroupTypeChange(operateType) {
+        var curveGroupType = $('#curveGroupType')[0].checked;
+        if (curveGroupType === true) {
+            $('#intCurveType').attr('disabled',true);  //曲线类型
+            $('#gradeResult').attr('disabled',true);   //评级
+            $('#n').attr('disabled',true);   //N
+            $('#k').attr('disabled',true);   //K
+            $('#curveGroupCode').attr('disabled',true);   //所属曲线族
+            $('#ccy').attr('disabled',true);   //币种
+            $('#interMethod').attr('disabled',true);   //币种
+            $('#remark').attr('disabled',true);   //描述
 
-    // 资产类别事件
-    var assetTypeChange = function () {
-        if ($("#secTypeModel").val().startsWith("01")) {
-            var itemFwd = [];
-            var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-            for (var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                    continue;
-                if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "08"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "09"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "011"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "013"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "023"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "033"
-                    && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "024") {
-                    itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                }
-            }
-            $('#secDetailTypeModel').updateChosenArr({
-                item: itemFwd,
-                disabled: false
-            });
+            $('#intCurveType_redId').hide();
+            $('#ccy_redId').hide();
+            $('#interMethod_redId').hide();
+            $('#dayRules_redId').hide();
+            $('#calender_redId').hide();
+            $('#interestDateRule_redId').hide();
+            $('#interestCalMethod_redId').hide();
+            $('#interestFreq_redId').hide();
+            $('#remark_redId').hide();
 
-        } else if ($("#secTypeModel").val().startsWith("13")) {
-            var itemFwd = [];
-            var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-            for (var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                    continue;
-                if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "08"
-                    || TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "09") {
-                    itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                }
-            }
-            $('#secDetailTypeModel').updateChosenArr({
-                item: itemFwd,
-                disabled: false
-            });
+        }else{
+            $('#intCurveType').attr('disabled',false);//曲线类型
+            $('#gradeResult').attr('disabled',false);   //评级
+            $('#n').attr('disabled',false);   //N
+            $('#k').attr('disabled',false);   //K
+            $('#curveGroupCode').attr('disabled',false);   //所属曲线族
+            $('#ccy').attr('disabled',false);   //币种
+            $('#interMethod').attr('disabled',false);   //币种
+            $('#remark').attr('disabled',false);   //描述
+
+            $('#intCurveType_redId').show();
+            $('#ccy_redId').show();
+            $('#interMethod_redId').show();
+            $('#dayRules_redId').show();
+            $('#calender_redId').show();
+            $('#interestDateRule_redId').show();
+            $('#interestCalMethod_redId').show();
+            $('#interestFreq_redId').show();
+            $('#remark_redId').show();
         }
     };
-}
 
+
+
+}());

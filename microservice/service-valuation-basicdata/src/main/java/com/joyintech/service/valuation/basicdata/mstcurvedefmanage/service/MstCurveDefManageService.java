@@ -79,4 +79,35 @@ public class MstCurveDefManageService extends BaseService<MstCurveDefManageDto> 
     public MstCurveDefManageDto selectByKey(Map<String,Object> param){
         return  mstCurveDefManage001Mapper.selectByKey(param);
     }
+
+
+    /**
+     * 插入数据
+     * @param dto
+     * @return
+     */
+    public int insert(MstCurveDefManageDto dto) {
+        return mstCurveDefManage001Mapper.insertSelective(dto);
+    }
+    /**
+     * 更新数据
+     * @param dto
+     * @return
+     */
+    public int update(MstCurveDefManageDto dto) {
+        return mstCurveDefManage001Mapper.updateByPrimaryKey(dto);
+    }
+    /**
+     * 删除数据
+     * @param dto
+     * @return
+     */
+    public int delete(MstCurveDefManageDto dto) {
+        return mstCurveDefManage001Mapper.deleteByPrimaryKey(dto);
+    }
+
+
+    public Page<SelectOptionDto> getCurveGroupSelect(int page,int length, Map<String, Object> param) {
+        return queryForPageForSelectReturn(page, length, () -> mstCurveDefManage001Mapper.getCurveGroupSelect(param));
+    }
 }

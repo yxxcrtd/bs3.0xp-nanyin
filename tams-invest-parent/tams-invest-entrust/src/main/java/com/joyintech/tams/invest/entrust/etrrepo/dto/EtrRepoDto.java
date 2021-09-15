@@ -208,7 +208,18 @@ public class EtrRepoDto extends EtrEntrust implements ProcessEntity {
      * 质押券信息
      */
     private List<PledgeBondInfoDto> pledgeBondList;
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
 
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
     public List<PledgeBondInfoDto> getPledgeBondList() {
         return pledgeBondList;
     }
