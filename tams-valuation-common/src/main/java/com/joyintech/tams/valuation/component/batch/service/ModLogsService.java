@@ -88,6 +88,7 @@ public class ModLogsService {
         log.setFinprodId(finprodId);
         log.setBatchExecSeqno(batchExeDetailSeqno);
         log.setTaskId(taskId);
+        log.setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
         return log;
     }
     /**
