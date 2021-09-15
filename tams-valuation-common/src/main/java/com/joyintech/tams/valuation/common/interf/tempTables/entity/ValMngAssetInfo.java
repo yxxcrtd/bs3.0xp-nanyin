@@ -159,6 +159,19 @@ public class ValMngAssetInfo extends BaseEntity {
     private String isEffPledge;
 
     /**
+     * 风险五级分类
+     */
+    private String bondRiskType;
+
+    public String getBondRiskType() {
+        return bondRiskType;
+    }
+
+    public void setBondRiskType(String bondRiskType) {
+        this.bondRiskType = bondRiskType;
+    }
+
+    /**
      * 取得 资产代码
      *
      * @return 资产代码
