@@ -134,8 +134,8 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
                 service.recallDelegate(entity);
             }
             // add by yushilong 批量撤销预占 start
-            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeListExt2.平安资产类型_一级市场债.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
+//            EntrustRdsCommonAop.doListPreOccupy(dtolist, DictCodeListExt2.平安资产类型_一级市场债.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue(), false, null);
             // add by yushilong 批量撤销预占 end
             return new AjaxResult(this.getMessage("ETR_X_001"));
         }
@@ -162,9 +162,9 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
             }
             // add by zhangrui1 批量委托关闭 start
             // 若预占下没有实占则预占信息清除，否则预占信息保留，撤销交易时可恢复原状态
-            List<String> entrustIdList = dtolist.stream().map(
-                    EtrBondFirstLBiddingDto::getEntrustId).collect(Collectors.toList());
-            EntrustCompleteUtil.doComplete(entrustIdList);
+//            List<String> entrustIdList = dtolist.stream().map(
+//                    EtrBondFirstLBiddingDto::getEntrustId).collect(Collectors.toList());
+//            EntrustCompleteUtil.doComplete(entrustIdList);
             // add by zhangrui1 批量委托关闭 end
             return new AjaxResult(this.getMessage("ETR_X_003"));
         }
