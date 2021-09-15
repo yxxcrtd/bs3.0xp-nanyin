@@ -93,8 +93,8 @@ $(function() {
         //新建事件
         $('#'+pageId+"_btn_add").click(function () {
             Joyin.dialog(JoyinUtil.getLabel("债券一级指令新建"),
-                basePath + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init?parentPageId=" + pageId,
-                "98%", "98%"); table.load(); });
+                basePath + "invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init",
+                "98%", "98%",{parentPageId:pageId}); table.load(); });
         
         //撤回事件
         $('#'+pageId+'_btn_revoke').click(function(){
@@ -201,6 +201,7 @@ $(function() {
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
+        data.parentPageId = pageId;
          Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding001/check', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrBondFirstLBidding002.edit"),
                     JoyinUtil.getRealPath("/invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/init"),
