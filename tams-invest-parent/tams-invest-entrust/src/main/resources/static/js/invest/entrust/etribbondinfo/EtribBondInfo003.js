@@ -431,16 +431,16 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }, {/*证券账户*/
-            field: 'secManageAcctId',
-            width: 100,
-            title: 'EtribBondInfo003.secAcct',
-            edit:true,
-            sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
-                multiple: false, showField:'text',searchable: true,
-                url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
-            }
+        // }, {/*证券账户*/
+        //     field: 'secManageAcctId',
+        //     width: 100,
+        //     title: 'EtribBondInfo003.secAcct',
+        //     edit:true,
+        //     sortable: false,
+        //     editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
+        //         multiple: false, showField:'text',searchable: true,
+        //         url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
+        //     }
         },  {/*投资目的*/
             field: 'invAim',
             width: 100,
@@ -776,7 +776,7 @@
             ps = temp.ps;
             temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
-            temp.secAcctId = item.secManageAcctId;
+            // temp.secAcctId = item.secManageAcctId;
             temp.proAvailableCash = item.proAvailableCash;
             temp.accAvailableCash = item.secManageAvailablePosition;
             temp.assetAvailablePosition  = item.assetAvailableEntrustAmt;

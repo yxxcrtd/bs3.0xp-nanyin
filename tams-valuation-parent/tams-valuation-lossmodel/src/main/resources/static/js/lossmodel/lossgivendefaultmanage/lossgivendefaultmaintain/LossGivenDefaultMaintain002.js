@@ -105,9 +105,9 @@ $(function() {
         param.operateType = 'submit';
         Joyin.ajaxJson("/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/check",param,function(result){
             if(result){
-            	Joyin.confirm(result.data, function () {
+            	/*Joyin.confirm(result.data, function () {*/
             		WorkFlow.doSubmitList('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/save', object, "LossGivenDefaultMaintain002_btn_submit");
-                });
+                /*});*/
             }
         })
     };
@@ -123,7 +123,7 @@ $(function() {
         	param.seqno=SEQNO;
         	Joyin.ajax('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/checkIfUsed',param,function(dataNum){
                 if(dataNum=="Y"){
-                     Joyin.confirmMulti("本条LGD违约损失率已被使用，本次修改是否影响历史数据？",['是', '否'], function() {
+                     Joyin.confirmMulti("本次修改是否影响历史数据？",['是', '否'], function() {
                     	 Joyin.confirm("修改后需手工跑历史批处理！", function() {
                     		 doSave();
                     	 });
@@ -140,7 +140,7 @@ $(function() {
         	param.seqno=SEQNO;
         	Joyin.ajax('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/checkIfUsed',param,function(dataNum){
                 if(dataNum=="Y"){
-                     Joyin.confirmMulti("本条LGD违约损失率已被使用，本次修改是否影响历史数据？",['是', '否'], function() {
+                     Joyin.confirmMulti("本次修改是否影响历史数据？",['是', '否'], function() {
                     	 Joyin.confirm("修改后需手工跑历史批处理！", function() {
                     		 doSubmit();
                     	 });

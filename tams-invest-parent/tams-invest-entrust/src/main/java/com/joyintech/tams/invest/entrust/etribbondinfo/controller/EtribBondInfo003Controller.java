@@ -37,6 +37,7 @@ import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.BussCombDistribtDto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtribBondInfo003Dto;
+import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtribBondInfo003Service;
 import com.joyintech.tams.invest.entrust.etribbondinfo.validator.EtribBondInfo003Validator;
 import com.joyintech.tams.invest.entrust.etrinvestbondinfo.dto.EtrInvestBondInfoDto;
@@ -56,6 +57,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -78,8 +80,11 @@ public class EtribBondInfo003Controller extends BaseController {
     @Autowired
     private EtribBondInfo003Validator etribBondInfo003Validator;
 
+    /**
+     * 债券投资委托service
+     */
     @Autowired
-    private EtrCommonService etrCommonService;
+    private EtrIbBondinfo002Service etrIbBondinfo002Service;
     /**
      * 附件处理接口
      */
@@ -334,6 +339,16 @@ public class EtribBondInfo003Controller extends BaseController {
                 String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
                 dto.setEntrustId(code);
 
+            }
+            //默认证券账户
+            if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", dto.getPortfolioId());
+                map.put("finprodId", dto.getFinprodId());
+                String secAcctId = etrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    dto.setSecAcctId(secAcctId); // 证券账户
+                }
             }
             dto.setEntrustOwnNum(dto.getEntrustNum());
             dto.setEntrustIntegrateNum(BigDecimal.ZERO);

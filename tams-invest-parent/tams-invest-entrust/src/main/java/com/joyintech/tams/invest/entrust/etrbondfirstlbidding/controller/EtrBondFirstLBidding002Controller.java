@@ -290,16 +290,16 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
-        // ----------add by yushilong 20200721 预占功能 start----------
-        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-                    DictCodeListExt2.平安资产类型_一级市场债.getValue());
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }
-        }
-        // ----------add by yushilong 20200721 预占功能 end----------
+//        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+//                    DictCodeListExt2.平安资产类型_一级市场债.getValue());
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();
         params.setPageId(this.getPageId());

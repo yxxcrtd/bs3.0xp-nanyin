@@ -55,8 +55,8 @@
         }
         var sysDateT1 = $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val();
         var calId = '';
-        if (parent.parent.EtrIbBondinfoHq) {
-            parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,'',chlFinprodId,ccy,sysDateT1,calId);
+        if (parent.parent.CfetsBondDealQuotedPriceHq) {
+            parent.parent.CfetsBondDealQuotedPriceHq.querySecinfo(finprodIdhid,'',chlFinprodId,ccy,sysDateT1,calId);
         }
         var calcField = $("[name=calculateField]:checked").val();
         if(calcField){
@@ -209,8 +209,8 @@
                     $('#CfetsBondDealQuotedPriceMuti001_fpriceAmt').val(result.data.fpriceAmt).trigger('blur');
                     $('#CfetsBondDealQuotedPriceMuti001_parValueAmt').val(result.data.parValueAmt).trigger('blur');
 
-                    if(parent.parent.EtrIbBondinfoHq){
-                        parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,
+                    if(parent.parent.CfetsBondDealQuotedPriceHq){
+                        parent.parent.CfetsBondDealQuotedPriceHq.calCanBuyAmount(portfolioIds,
                             $('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
                             $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
                             $('#CfetsBondDealQuotedPriceMuti001_unitCprice').val());
@@ -681,17 +681,17 @@
                     }
                 }
                 calcAmt("01");
-                if (parent.parent.EtrIbBondinfoHq) {
-                    parent.parent.EtrIbBondinfoHq.querySecinfo(
+                if (parent.parent.CfetsBondDealQuotedPriceHq) {
+                    parent.parent.CfetsBondDealQuotedPriceHq.querySecinfo(
                         $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(),'','',
                         $("#CfetsBondDealQuotedPriceMuti001_settleCcy").val(),
                         $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),'');
-                    parent.parent.EtrIbBondinfoHq.queryAmountInfoMuti(
+                    parent.parent.CfetsBondDealQuotedPriceHq.queryAmountInfoMuti(
                         $('#CfetsBondDealQuotedPriceMuti001_hidden_finprodId').val(),
                         portfolioIds,'',$('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
                         $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
                         '');
-                    parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,
+                    parent.parent.CfetsBondDealQuotedPriceHq.calCanBuyAmount(portfolioIds,
                         $('#CfetsBondDealQuotedPriceMuti001_settleCcy').val(),
                         $('#CfetsBondDealQuotedPriceMuti001_tradeDate').val(),
                         $('#CfetsBondDealQuotedPriceMuti001_unitCprice').val());

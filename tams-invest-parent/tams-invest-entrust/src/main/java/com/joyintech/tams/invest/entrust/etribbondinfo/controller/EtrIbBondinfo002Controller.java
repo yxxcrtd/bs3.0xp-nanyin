@@ -63,8 +63,6 @@ public class EtrIbBondinfo002Controller extends BaseController {
     @Autowired
     private EtrIbBondinfo002Service etrIbBondinfo002Service;
 
-    @Autowired
-    private EtrCommonService etrCommonService;
     /**
      * 附件处理接口
      */
@@ -341,6 +339,16 @@ public class EtrIbBondinfo002Controller extends BaseController {
         if (StringUtil.equals(dto.getSettleSpreed(),
                 DictCodeList.清算速度_T_1.getValue())) {
             dto.setSettleSpeed((long) 1);
+        }
+        //默认证券账户
+        if (StringUtil.isNotEmpty(dto.getPortfolioId()) && StringUtil.isNotEmpty(dto.getFinprodId())) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("portfolioId", dto.getPortfolioId());
+            map.put("finprodId", dto.getFinprodId());
+            String secAcctId = etrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+            if (StringUtil.isNotEmpty(secAcctId)) {
+                dto.setSecAcctId(secAcctId); // 证券账户
+            }
         }
 
         if (!StringUtil.isNotEmpty(dto.getEntrustId())) {

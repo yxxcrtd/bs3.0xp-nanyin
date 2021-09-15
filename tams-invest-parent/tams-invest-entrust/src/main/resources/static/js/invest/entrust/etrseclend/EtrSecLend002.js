@@ -73,21 +73,31 @@
                 });
             }
         }
-        object.inputValue1 = PINAN_ASSET_TYPE_F12; 
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrseclend/EtrSecLend002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrseclend/EtrSecLend002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrseclend/EtrSecLend002/save',object,"EtrSecLend002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrseclend/EtrSecLend002/save',object,"EtrSecLend002_btn_submit");
-	                        }
-	                    });
-	                });
-        	});
-        });
+        object.inputValue1 = PINAN_ASSET_TYPE_F12;
+        //保存跳过校验 edit by yeming 20210915 start
+        if (operateType === 'save') {
+            if (!$("#finprodId").val()) {
+                Joyin.error(JoyinUtil.getMessage("请输入标的债券"));
+                return;
+            }
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrseclend/EtrSecLend002/save',object,"EtrSecLend002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrseclend/EtrSecLend002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrseclend/EtrSecLend002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                // if (operateType === 'save') {
+                                //     WorkFlow.doSaveList(basePath+'invest/entrust/etrseclend/EtrSecLend002/save',object,"EtrSecLend002_btn_save");
+                                // } else {
+                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrseclend/EtrSecLend002/save',object,"EtrSecLend002_btn_submit");
+                                // }
+                            });
+                        });
+                });
+            });
+        }
+        //保存跳过校验 edit by yeming 20210915 end
     }
     //查询组合可用持仓
     var getPtlSecPositionInfo = function(){

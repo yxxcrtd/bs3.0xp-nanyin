@@ -206,6 +206,19 @@ public class ValSecBaseInfo extends BaseEntity {
     private BigDecimal redeemPrice;
 
     /**
+     * 是否永续
+     */
+    private String isSus;
+
+    public String getIsSus() {
+        return isSus;
+    }
+
+    public void setIsSus(String isSus) {
+        this.isSus = isSus;
+    }
+
+    /**
      * 取得 资产代码
      * @return 资产代码
      */
