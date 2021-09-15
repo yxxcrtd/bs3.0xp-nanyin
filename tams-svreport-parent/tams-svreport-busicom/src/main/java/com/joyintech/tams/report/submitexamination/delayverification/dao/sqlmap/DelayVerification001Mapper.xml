@@ -907,7 +907,7 @@
 			select
 				count(temp.SUBMIT_STATUS) as total,
 				nvl(sum(temp.lateNums),0) as unSubmitNum,
-				'15' as pageType
+				'13' as pageType
 				from(
 					select
 						case when ceqs.Submit_Status != #{nosubmit}  
@@ -1578,7 +1578,7 @@
             select
             count(temp.SEND_STATUS) as total,
             nvl(sum(temp.lateNums),0) as unSubmitNum,
-            '10' as pageType
+            '9' as pageType
             from(
             select
             case when ces.SEND_STATUS != #{nosubmit}
@@ -1655,7 +1655,7 @@
             select
             count(temp.SEND_STATUS) as total,
             nvl(sum(temp.lateNums),0) as unSubmitNum,
-            '11' as pageType
+            '10' as pageType
             from(
             select
             case when ces.SEND_STATUS != #{nosubmit}
