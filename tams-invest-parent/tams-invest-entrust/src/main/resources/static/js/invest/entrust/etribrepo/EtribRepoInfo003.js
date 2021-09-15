@@ -973,6 +973,13 @@
             JoyinUtil.showMessage("请选择交易方向","error");
             return null;
         }
+        // add by wanshiwei ZGZGST-2646:交易对手必填 20210915 start
+        let counterId = $('#counterId').val();
+        if(counterId == null || counterId === ''){
+            JoyinUtil.showMessage("请选择交易对手","error");
+            return null;
+        }
+        // add by wanshiwei ZGZGST-2646:交易对手必填 20210915 end
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
             var objects = new Array();
