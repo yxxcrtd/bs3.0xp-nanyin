@@ -256,11 +256,11 @@
                 if(row.repRegistOrg == '01'){
                     cbShareCtAmt = cbShareCtAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
                     cbDealAmt = cbDealAmt.plus(pledgePrin.multipliedBy(divd));
-                    zzTotalAmt = zzTotalAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate))
+                    zzTotalAmt = zzTotalAmt.plus(pledgePrin.multipliedBy(divd))
                 }else if(row.repRegistOrg == '02'){
                     scShareCtAmt = scShareCtAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
                     scDealAmt = scDealAmt.plus(pledgePrin.multipliedBy(divd));
-                    sqTotalAmt = sqTotalAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
+                    sqTotalAmt = sqTotalAmt.plus(pledgePrin.multipliedBy(divd));
                 }
             }
             dealAmt = cbDealAmt.plus(scDealAmt);

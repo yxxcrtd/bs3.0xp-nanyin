@@ -11,6 +11,7 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -302,15 +303,17 @@ public class EtrIbRepoinfo002Controller extends BaseController {
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
                 dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
             }
-            for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
-                if (pledgeBond.getAvaPledgePrin() != null) {
-                    pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
-                }
-                if (pledgeBond.getPledgePrin() != null) {
-                    pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
-                }
-                if (pledgeBond.getPrin() != null) {
-                    pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+            if(CollectionUtils.isNotEmpty(dto.getBussRepoSec().getPledgeBondList())){
+                for (PledgeBondInfoDto pledgeBond :  dto.getBussRepoSec().getPledgeBondList()) {
+                    if (pledgeBond.getAvaPledgePrin() != null) {
+                        pledgeBond.setAvaPledgePrin(ArithmeticUtil.multiply(pledgeBond.getAvaPledgePrin(), new BigDecimal(10000)));
+                    }
+                    if (pledgeBond.getPledgePrin() != null) {
+                        pledgeBond.setPledgePrin(ArithmeticUtil.multiply(pledgeBond.getPledgePrin(), new BigDecimal(10000)));
+                    }
+                    if (pledgeBond.getPrin() != null) {
+                        pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
+                    }
                 }
             }
         }

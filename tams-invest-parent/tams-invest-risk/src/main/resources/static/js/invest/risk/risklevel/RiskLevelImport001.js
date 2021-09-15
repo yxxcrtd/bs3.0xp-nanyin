@@ -46,31 +46,6 @@ $(function() {
             ,{field:'updateTimeStr',  sortField:"UPDATE_TIME" , title: '更新日期'}
         ]
     });
-//    /**
-//     * 绑定编辑事件
-//     */
-//    table.bind('click', '.edit', function(data, index) {
-//        data.pageModel = PAGE_MODEL_EDIT;
-//        Joyin.ajaxJson(basePath + 'invest/risk/rskauthoritymanage/RskAuthorityManage002/check', data, function(result) {
-//        		Joyin.dialog(JoyinUtil.getLabel("RskAuthorityManage002.edit"),
-//                        basePath + "invest/risk/rskauthoritymanage/RskAuthorityManage002/init",
-//                        "95%", "90%",data,function() {
-//                                            table.reload();
-//                                        });
-//
-//        });
-//        /*Joyin.ajaxJson(basePath + 'asset/depo/FinDepositTarget001/editCheck', data, function(result) {//请求路径，请求参数回调函数
-//            Joyin.dialog(JoyinUtil.getLabel("FinDepositTarget002.editTitle"),
-//                    basePath + "asset/depo/FinDepositTarget002/init",//打开新界面
-//                    "98%", "98%", {pageModel:PAGE_MODEL_EDIT,//请求的page_model
-//                                    finprodId:data.finprodId,  //金融产品代码
-//                                    valDate:data.valDate,//估值日
-//                                    finprodMarketId:data.finprodMarketId//市场代码
-//                                    },function(){
-//                                        table.reload();//回调函数，表格刷新
-//                                    });
-//        })*/
-//    });
 
     /**
      * 绑定删除事件

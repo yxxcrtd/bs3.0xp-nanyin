@@ -10,10 +10,7 @@
  
 package com.joyintech.service.risk.risklevel.risklevelimport.service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.service.risk.risklevel.risklevelimport.dao.RiskLevelImportMapper;
@@ -114,15 +111,28 @@ public class RiskLevelImportService extends BaseService<RiskLevelImportDto>{
 
 
     public void save(List<RiskLevelImportDto> equityList) {
+        List<RiskLevelImportDto> deleteList = new ArrayList<RiskLevelImportDto>();
+        for(RiskLevelImportDto riskLevelImportDto:equityList){
+            Map<String,Object> param = new HashMap<>();
+            param.put("finprodMarketId",riskLevelImportDto.getFinprodMarketId());
+            param.put("updateTime",DateUtil.format(riskLevelImportDto.getUpdateTime()));
 
+            String sinal = riskLevelImportMapper.queryIsExit(param);
+            if(StringUtil.isNotEmpty(sinal)){
+                deleteList.add(riskLevelImportDto) ;
+            }
+        }
+        //重复数据先删后插
+        delete(deleteList);
         for(RiskLevelImportDto riskLevelImportDto:equityList){
             riskLevelImportMapper.insert(riskLevelImportDto);
         }
 
-       
     }
 
-    public String queryFinprodMarketId(Map<String, Object> pageParam) {
-        return riskLevelImportMapper.queryFinprodMarketId(pageParam);
+ 
+
+    public Boolean IsInFinproduct(Map<String, Object> pageParam) {
+        return !StringUtil.isNotEmpty(riskLevelImportMapper.IsInFinproduct(pageParam));
     }
 }
