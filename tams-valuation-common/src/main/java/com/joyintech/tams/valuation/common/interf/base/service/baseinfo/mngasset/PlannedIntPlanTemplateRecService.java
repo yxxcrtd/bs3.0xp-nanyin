@@ -120,6 +120,12 @@ public class PlannedIntPlanTemplateRecService {
         valCashPlan.setCashId(cashId);
         // TODO 现金流序号= D.现金流序号
         valCashPlan.setCashNum(dto.getOrderNo().longValue());
+        // add by weipeng 减值模型计算需要：调整前开始日、结束日赋值 start
+        // 调整前的计算开始日= D.计息起始日
+        valCashPlan.setVdateUnadjust(dto.getVdate());
+        // 调整后的计算结束日= D.计息结束日
+        valCashPlan.setMdateUnadjust(dto.getMdate());
+        // add by weipeng减值模型计算需要：调整前开始日、结束日赋值 end
         // 调整后的计算开始日= D.计息起始日
         valCashPlan.setVdate(dto.getVdate());
         // 调整后的计算结束日= D.计息结束日
