@@ -83,10 +83,18 @@
     var cols = [
         {
             /* 组合代码 */
+            field: 'portfolioSeries', width: 100, title: 'EtribRepoInfo003.portfolioId', sortable: false,visible:false,edit: true,
+            editOption: {
+                childrenIds : 'portfolioId'
+            }
+        },
+        {
+            /* 组合代码 */
             field: 'portfolioId', width: 100, title: 'EtribRepoInfo003.portfolioId', edit: true, sortable: false,
             editOption: {
                 type: 'select',
                 id: 'portfolioId',
+                parentIds:'portfolioSeries',
 //                childrenIds : 'portfolioId',
                 multiple: false,
                 showField: 'text',
@@ -217,6 +225,16 @@
         },
         
         editCell: function (value, data, field, cell, column) {
+            //add by chenjiaxing 校验组合系列有没有填，组合下拉框值只取此组合系列下的 20210915 start
+            var portfolioSeries = $('#portfolioSeries').val();
+            if(portfolioSeries == "" || portfolioSeries == null){
+                Joyin.error("请输入组合系列！");
+                return;
+            }else{
+                data.portfolioSeries = $('#portfolioSeries').val();
+                table.renderRow(data.LAY_TABLE_INDEX, {"portfolioSeries": data.portfolioSeries});
+            }
+            //add by chenjiaxing 校验组合系列有没有填，组合下拉框值只取此组合系列下的 20210915 end
             if (field == "entrustAmt") {
                 refreshTradAmt();
             }
