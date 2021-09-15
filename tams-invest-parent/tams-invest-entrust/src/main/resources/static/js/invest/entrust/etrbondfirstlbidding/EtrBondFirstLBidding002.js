@@ -213,19 +213,19 @@
      */
     function saveOrSubmit(operateType) {
     	//风险试算 start
-    	 var s;
-        if(typeof(BaseRiskMathComm) != 'undefined') {
-    	 if(BaseRiskMathComm) {
-             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-             if(!s && s != ''){
-                 return;
-             }
-             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-                 return;
-                }
-             }
-         }
-    	//风险试算 end
+    	//  var s;
+        // if(typeof(BaseRiskMathComm) != 'undefined') {
+    	//  if(BaseRiskMathComm) {
+        //      s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+        //      if(!s && s != ''){
+        //          return;
+        //      }
+        //      if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+        //          return;
+        //         }
+        //      }
+        //  }
+    	// //风险试算 end
     	//校验数据  校验表格
     	var tableData  = table.getAllRows();
         if(operateType != 'save'){
@@ -416,16 +416,15 @@
 	     * 风险试算
 	     */
 	    $('#EtrBondFirstLBidding002_btn_riskcal').click(function(){
-            //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-        	var object = $.serializeToObject('#searchForm',true);
-            var entrustNum=object.entrustNum;
-            if (entrustNum) {
-                if(entrustAmtUnit == '02' ){
-                    entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
-                }
-            }
-            object.entrustNum = entrustNum;
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
+        	// var object = $.serializeToObject('#searchForm',true);
+            // var entrustNum=object.entrustNum;
+            // if (entrustNum) {
+            //     if(entrustAmtUnit == '02' ){
+            //         entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            //     }
+            // }
+            // object.entrustNum = entrustNum;
+            // window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
 
 	    });
 	    if(IS_SHOW_TYPE == '01'){

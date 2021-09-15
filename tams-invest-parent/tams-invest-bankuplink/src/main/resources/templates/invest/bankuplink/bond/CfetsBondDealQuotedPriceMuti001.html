@@ -34,7 +34,7 @@
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_entrustId" th:value="${entity?.entrustId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_finprodId" th:value="${entity?.finprodId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_quotaPageModel" name="quotaPageModel" th:value="${entity?.quotaPageModel}" />
-            <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_settleCcy" name="settleCcy" th:value="${entity?.settleCcy}"/>
+            <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_settleCcy" name="settleCcy" th:value="${entity?.settleCcy?:CCY_CNY}"/>
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_isRight" name="isRight" th:value="${entity?.isRight}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_assetTypeOne" name="assetTypeOne" th:value="${entity?.assetTypeOne}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti001_hidden_calculateField" th:value="${entity?.calculateField}" />

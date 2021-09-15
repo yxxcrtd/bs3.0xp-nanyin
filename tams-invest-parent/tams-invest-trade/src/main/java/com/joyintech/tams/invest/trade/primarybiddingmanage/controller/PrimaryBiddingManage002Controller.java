@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.PrimaryBiddingPortfolioDto;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -192,7 +193,8 @@ public class PrimaryBiddingManage002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) PrimaryBiddingManageDto dto) throws WorkFlowException {
+    AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) PrimaryBiddingManageDto dto)
+        throws Exception {
 
         // 投标编码自动生成：YJTB+YYYYMMDD+8位自增序数
         if (StringUtil.isBlank(dto.getBidId())) {
@@ -205,6 +207,14 @@ public class PrimaryBiddingManage002Controller extends BaseController {
                 dto.setBidId(IDGenerator.generate());
             }
         }
+        // add by zhangrui1 调用风险限额预占 start
+//        AjaxResult ar = TradeRdsCommonAop.doPreOccupy(dto,
+//            BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+//            BussinessDictCodeList.共同业务类型_中标结果确认.getValue());
+//        if (ar != null) {
+//            return ar;
+//        }
+        // add by zhangrui1 调用风险限额预占 end
 
         ProcessParameter<PrimaryBiddingManageDto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<PrimaryBiddingManageDto> workFlowParameter = new WorkFlowParameter<>();

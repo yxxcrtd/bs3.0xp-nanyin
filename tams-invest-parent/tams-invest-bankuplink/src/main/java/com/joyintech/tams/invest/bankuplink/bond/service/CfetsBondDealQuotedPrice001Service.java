@@ -42,6 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
@@ -84,6 +85,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * CFETS现券买卖报价
@@ -97,6 +99,12 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 public class CfetsBondDealQuotedPrice001Service extends CommonExportService<CfetsBondDealEntrustOrderDto>  {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * 外汇交易中心行情接口地址
+     */
+    @Value("${MarketInfoInterf.cmdsUrl}")
+    private String MarketInfoInterf_cmdsUrl;
 
     /**
      * {@linkplain}
@@ -1535,5 +1543,34 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
         return list;
     }
 
+
+    /**
+     * 查询债券行情信息
+     * @param pageParam
+     * @return
+     */
+    public Map<String, Object> findQuotations(Map<String, Object> pageParam) {
+        String secCode = (String) pageParam.get("seccode");
+        String url = MarketInfoInterf_cmdsUrl+"/rest/markinfo/sec/getMarkinfoBySecCode?seccode=" + secCode;
+        return getMarketInfo(url);
+    }
+
+    /**
+     * 请求市场行情数据接口
+     * @param url
+     * @return
+     */
+    public Map<String,Object> getMarketInfo(String url){
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(1000);
+        factory.setReadTimeout(1000);
+        RestTemplate template = new RestTemplate(factory);
+        try {
+            Map<String, Object> quoteMap = template.getForObject(url, Map.class);
+            return quoteMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }
