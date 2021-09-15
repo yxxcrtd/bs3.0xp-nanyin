@@ -102,7 +102,7 @@ public class LgdSpecialConfigDto extends BaseEntity implements ITableRow, Proces
         this.finprodName = finprodName;
     }
 
-    @NotNull(message = "LGD不能为空！", groups = {ValidateGroupEdit.class})
+    @NotNull(message = "LGD%不能为空！", groups = {ValidateGroupEdit.class})
     public BigDecimal getLgd() {
         return lgd;
     }
