@@ -76,7 +76,7 @@ public class ImpairmentDataLoadListener implements JobExecutionListener {
                     Collectors.toMap(CommonErrorParams::getFinprodId, Function.identity(), (e1, e2) -> e2)
             ).values().stream().collect(Collectors.toList());
             for (CommonErrorParams param : errors) {
-                if (ModelDictCodeList.批处理执行结果_异常结束.getValue().equals(param.getErrorType())) {
+                if (ModelDictCodeList.模型计算结果_失败.getValue().equals(param.getErrorType())) {
                     modLogsService.error(param.getFinprodId(), param.getBatchSeqNo(), taskId, param.getErrorMsg());
                 } else {
                     modLogsService.warn(param.getFinprodId(), param.getBatchSeqNo(), taskId, param.getErrorMsg());

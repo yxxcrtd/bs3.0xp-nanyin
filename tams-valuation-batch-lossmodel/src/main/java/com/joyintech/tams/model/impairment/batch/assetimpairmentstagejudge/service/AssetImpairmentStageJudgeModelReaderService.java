@@ -73,7 +73,7 @@ public class AssetImpairmentStageJudgeModelReaderService {
             // 取不到满足条件的数据
             for(int i=0;i<finprodIdList.size();i++){
                 impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodIdList.get(i), msg,ModelDictCodeList.批处理执行结果_异常结束.getValue(), LOG_KEY);
+                    finprodIdList.get(i), msg,ModelDictCodeList.模型计算结果_失败.getValue(), LOG_KEY);
             }
         }
         return list;

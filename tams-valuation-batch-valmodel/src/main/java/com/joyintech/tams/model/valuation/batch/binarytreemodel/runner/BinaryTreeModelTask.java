@@ -6,11 +6,11 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.valuation.batch.binarytreemodel.listener.BinaryTreeModelListener;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.processor.BinaryTreeModelProcessor;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.reader.BinaryTreeModelReader;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.writer.BinaryTreeModelWriter;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.listener.ProductAssetsIncomeMethodListener;
+import com.joyintech.tams.model.valuation.batch.common.ValModelCommonListener;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -56,7 +56,7 @@ public class BinaryTreeModelTask extends BatchBaseService {
     private BinaryTreeModelWriter binaryTreeModelWriter;
 
     @Autowired
-    private BinaryTreeModelListener binaryTreeModelListener;
+    private ValModelCommonListener valModelCommonListener;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -68,11 +68,10 @@ public class BinaryTreeModelTask extends BatchBaseService {
 
         // 设置此task的序列任务公用的params参数
         Map<String, Object> params = new HashMap<>();
-        params.put("BATCH_INFO", batchExecuteInfo);
+        params.put(ValComponentConstant.BATCH_EXECUTEINFO, batchExecuteInfo);
 
 //        把执行日期当作平台日来替换处理
-        params.put("PLATE_DATE", batchExecuteInfo.getExecuteDate());
-        params.put("TASK_ID",batchExecuteInfo.getTaskId());
+        params.put(ValComponentConstant.EXECUTE_DATE, batchExecuteInfo.getExecuteDate());
         // 各步骤设置参数
         binaryTreeModelReader.setParams(params);
         binaryTreeModelProcessor.setParams(params);
@@ -81,6 +80,6 @@ public class BinaryTreeModelTask extends BatchBaseService {
         return batchBuilder.init(this).batch("step1",
                 (BaseReader)binaryTreeModelReader,(BaseProcessor)binaryTreeModelProcessor, (BaseWriter)binaryTreeModelWriter).builder(
                 this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-                , binaryTreeModelListener).run();
+                , valModelCommonListener).run();
     }
 }

@@ -7,11 +7,13 @@ import com.joyintech.tams.common.base.entity.ModBintreeConfig;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +33,12 @@ public class BinaryTreeModelReaderService {
     @Autowired
     private BinaryTreeModelMapper binaryTreeModelMapper;
 
-
-    @Autowired
-    private ModLogsService modLogsService;
-
     @Autowired
     private ModParamsService modParamsService;
     @Autowired
     private ModValuationCommonService modValuationCommonService;
-
-    private final String BATCH_PARAMS_KEY = "params";
+    @Autowired
+    private ModLogsService modLogsService;
 
     /**
      * 二叉树模型-reader
@@ -49,7 +47,7 @@ public class BinaryTreeModelReaderService {
      */
     public List<BinaryTreeModelReaderEntity> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         List<BinaryTreeModelReaderEntity> list = new ArrayList<BinaryTreeModelReaderEntity>();
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get(ValComponentConstant.BATCH_EXECUTEINFO);
         List<ModValBatchParams> listBatchParam = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
 
 
@@ -60,7 +58,7 @@ public class BinaryTreeModelReaderService {
 
         //2.调用方法【资产基本信息查询-估值模型】取配置了模型法的并且有持仓的可转可交换债
         //跑批日
-        Date platDate = (Date)params.get("PLATE_DATE");
+        Date platDate = (Date)params.get(ValComponentConstant.EXECUTE_DATE);
 
         //3.查询配置了需要跑模型的资产
         //资产基本信息查询-估值模型
@@ -77,21 +75,21 @@ public class BinaryTreeModelReaderService {
         List<ModAssetInfoDto> listAsset = modValuationCommonService.selectBinaryTreeAssetInfo(modAssetInfoParamsDto);
 
 
-        //4'.设置job上下文参数，在监听中使用
-        List<ModValBatchParams> paralist = new ArrayList<ModValBatchParams>();
-        if(CollectionUtils.isNotEmpty(listAsset)){
-            listAsset.stream().forEach(x->{
-                ModValBatchParams modValBatchParams = new ModValBatchParams();
-                modValBatchParams.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                modValBatchParams.setFinprodId(x.getFinprodId());
-                paralist.add(modValBatchParams);
-            });
-        }
-        stepExecution.getJobExecution().getExecutionContext().put(BATCH_PARAMS_KEY, paralist);
+//        //4'.设置job上下文参数，在监听中使用
+//        List<ModValBatchParams> paralist = new ArrayList<ModValBatchParams>();
+//        if(CollectionUtils.isNotEmpty(listAsset)){
+//            listAsset.stream().forEach(x->{
+//                ModValBatchParams modValBatchParams = new ModValBatchParams();
+//                modValBatchParams.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+//                modValBatchParams.setFinprodId(x.getFinprodId());
+//                paralist.add(modValBatchParams);
+//            });
+//        }
+//        stepExecution.getJobExecution().getExecutionContext().put(BATCH_PARAMS_KEY, paralist);
 
 
-        //5.封装日志信息
-        modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),CollectionUtils.isNotEmpty(listAsset)?listAsset.stream().map((x)->x.getFinprodId()).collect(Collectors.toList()):null);
+//        //5.封装日志信息
+//        modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),CollectionUtils.isNotEmpty(listAsset)?listAsset.stream().map((x)->x.getFinprodId()).collect(Collectors.toList()):null);
 
         //6.查询二叉树模型配置
         List<ModBintreeConfig> listFin = binaryTreeModelMapper.findModBintreeConfig(finprodIdList);
@@ -99,7 +97,7 @@ public class BinaryTreeModelReaderService {
         //7.如果待处理资产找不到对应的配置，则设置错误日志信息
         if(CollectionUtils.isEmpty(listFin)&&CollectionUtils.isNotEmpty(listFin)){
             listAsset.stream().forEach((x)->{
-                modLogsService.error(x.getFinprodId(), batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：未配置二叉树模型参数");
+                modLogsService.error((Map<String,ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x.getFinprodId(), "【二叉树模型批处理】：未配置二叉树模型参数.");
             });
             return list;
         }
@@ -118,7 +116,7 @@ public class BinaryTreeModelReaderService {
             if(configMap.containsKey(finProdId)){
                 model.setModBintreeConfig(configMap.get(finProdId));
             }else{
-                modLogsService.error(finProdId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：未配置二叉树模型参数");
+                modLogsService.error((Map<String,ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：未配置二叉树模型参数.");
                 continue;
             }
 
@@ -142,7 +140,7 @@ public class BinaryTreeModelReaderService {
             if(modAssetInfoDto.getConFinprodId()!=null){
                 listStockId.add(modAssetInfoDto.getConFinprodId());
             }else{
-                modLogsService.error(finProdId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),"【二叉树模型批处理】：债券的转股代码为空，无法继续.");
+                modLogsService.error((Map<String,ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：债券的转股代码为空，无法继续.");
                 return list;
             }
             modStockMarketParamsDto.setStockIdList(listStockId);
