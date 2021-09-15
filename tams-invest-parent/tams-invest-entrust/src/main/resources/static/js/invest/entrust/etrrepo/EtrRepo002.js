@@ -152,10 +152,6 @@
         }
         }
 
-        if(!$('#securitiesCust').val()&&!$('#chlId').val()){
-            Joyin.warn("证券账户和通道不能同时为空！");
-            return;
-        }
         /**
          * 获取列表参数
          */
@@ -183,20 +179,30 @@
         if(parentPageId){
             object.parentPageId = parentPageId;
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrrepo/EtrRepo002/save',object,"EtrRepo002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrrepo/EtrRepo002/save',object,"EtrRepo002_btn_submit");
-	                        }
-	                    });
-	                });
-        	});
-        });
+        //保存跳过校验 edit by yeming 20210915 start
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrrepo/EtrRepo002/save',object,"EtrRepo002_btn_save");
+        }else{
+            if(!$('#securitiesCust').val()&&!$('#chlId').val()){
+                Joyin.warn("证券账户和通道不能同时为空！");
+                return;
+            }
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/checkAuthorization', object, function(result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo002/check',object,
+                        function(result) {
+                            Joyin.confirm(result.data,function() {
+                                // if (operateType === 'save') {
+                                //     WorkFlow.doSaveList(basePath+'invest/entrust/etrrepo/EtrRepo002/save',object,"EtrRepo002_btn_save");
+                                // } else {
+                                    WorkFlow.doSubmitList(basePath+'invest/entrust/etrrepo/EtrRepo002/save',object,"EtrRepo002_btn_submit");
+                                // }
+                            });
+                        });
+                });
+            });
+            //保存跳过校验 edit by yeming 20210915 end
+        }
     }
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
