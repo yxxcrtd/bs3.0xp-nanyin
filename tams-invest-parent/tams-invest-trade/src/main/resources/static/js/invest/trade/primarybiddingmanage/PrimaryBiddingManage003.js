@@ -65,6 +65,11 @@
         	object.finprodMarketId=entity.finprodMarketId;
         	object.tradeMarket=entity.tradeMarket;
             object.counterId=entity.counterId;
+
+            // add by zhangrui1 start
+            object.entrustId = entity.entrustId;
+            object.portfolioId = entity.bidOrderBidPriceList[0].portfolioId;
+            // add by zhangrui1 end
         }
         //万元转换 add by yeming 20210730 start
         // object.bidOrderBidPriceList=table.getAllRows();

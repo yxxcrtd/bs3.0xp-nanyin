@@ -21,6 +21,7 @@ import java.util.*;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
+import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
@@ -32,6 +33,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -63,6 +65,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.trade.bond.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.SecCpriceInfoDto;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeCSTPDto;
@@ -216,6 +219,12 @@ TrdBondInvestTrade002Controller extends BaseController {
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);
+            // add by zhangrui1 差分预占需要字段 start
+            String oFinprodId = this.getParam("oFinprodId");
+            dto.setoFinprodId(oFinprodId);
+            String bidId = this.getParam("bidId");
+            dto.setBidId(bidId);
+            // add by zhangrui1 差分预占需要字段 end
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
@@ -586,7 +595,7 @@ TrdBondInvestTrade002Controller extends BaseController {
      * 理论行权日取得（根据画面交割日取，取不到直接使用交割日作为理论行权日）
      *
      * @param inputDto 画面参数
-     * @return 实际行权日
+     * @return 理论行权日
      * @see
      * @since 1.0
      */
@@ -789,7 +798,8 @@ TrdBondInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto) throws Exception {
+    AjaxResult save(@RequestBody TrdBondInvestTradeDto dto)
+        throws Exception {
     	if(flag) {
 			if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = getBussinessCodeParameter(dto.getPs());
