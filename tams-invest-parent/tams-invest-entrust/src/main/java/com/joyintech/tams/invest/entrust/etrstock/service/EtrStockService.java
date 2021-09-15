@@ -649,6 +649,10 @@ public class EtrStockService extends CommonExportService<EtrStockDto> implements
                     "EtrStock002.mdate", lineNo);
                 confirmMsg1 = etrCommonService.StringAddByBr(confirmMsg1, message);
 
+                // 委托开始、终止日是否是平台日check
+                confirmMsg1 = etrCommonService.StringAddByBr(confirmMsg1,
+                        EtrCommonService.checkIsPlateDate(rowData.get(2).toString(), rowData.get(3).toString(),lineNo));
+
                 // 组合代码非空和是否存在check
                 message = etrCommonService.checkIsBlank(rowData.get(1).toString(),
                     "EtrStock002.portfolioId", lineNo);

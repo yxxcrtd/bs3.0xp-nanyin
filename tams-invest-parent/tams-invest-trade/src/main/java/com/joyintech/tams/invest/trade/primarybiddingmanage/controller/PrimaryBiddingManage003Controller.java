@@ -12,9 +12,13 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.dto.EtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.BidOrderBidPriceDto;
@@ -24,7 +28,6 @@ import com.joyintech.tams.invest.trade.primarybiddingmanage.service.PrimaryBiddi
 import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBidPriceValidator;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -537,10 +540,23 @@ public class PrimaryBiddingManage003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBiddingManage003Dto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBiddingManage003Dto dto, BindingResult br)
+        throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
+        // add by zhangrui1 调用风险限额预占 start
+
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = TradeRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    BussinessDictCodeList.共同业务类型_中标结果维护.getValue());
+            if (ar != null) {
+                return ar;
+            }
+        }
+
+        // add by zhangrui1 调用风险限额预占 end
         ProcessParameter<TrdBiddingManage003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBiddingManage003Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());

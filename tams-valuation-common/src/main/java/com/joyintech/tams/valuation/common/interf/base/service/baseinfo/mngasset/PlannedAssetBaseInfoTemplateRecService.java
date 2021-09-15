@@ -184,6 +184,7 @@ public class PlannedAssetBaseInfoTemplateRecService {
         valFinProductExt.setIsQtzq(dto.getIsQtzq());
         //是否包含有效抵质押物 = A.是否包含有效抵质押物
         valFinProductExt.setIsEffPledge(dto.getIsEffPledge());
+        valFinProductExt.setBondRiskType(dto.getBondRiskType());
         return valFinProductExt;
     }
     

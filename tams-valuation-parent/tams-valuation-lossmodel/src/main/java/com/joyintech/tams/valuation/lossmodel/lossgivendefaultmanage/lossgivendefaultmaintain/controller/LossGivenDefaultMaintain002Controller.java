@@ -71,8 +71,6 @@ public class LossGivenDefaultMaintain002Controller extends BaseController{
 
         	 ModLgdConfigDto creditTagInfo = lossGivenDefaultMaintain002Service.getBussinessEntityByIndId(creditTagId);
         	 model.addAttribute("SEQNO", this.getParam("seqno"));
-        	 // 界面显示LGD值应*100显示
-             creditTagInfo.setLgd(ArithmeticUtil.multiply(creditTagInfo.getLgd(), new BigDecimal(100)));
              // 界面显示LGD值应*100显示
              if(creditTagInfo.getLgd() != null){
                  creditTagInfo.setLgd(ArithmeticUtil.multiply(creditTagInfo.getLgd(), new BigDecimal(100)));

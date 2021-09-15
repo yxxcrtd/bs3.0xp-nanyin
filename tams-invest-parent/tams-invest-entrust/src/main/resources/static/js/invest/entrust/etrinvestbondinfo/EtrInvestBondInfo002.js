@@ -533,7 +533,12 @@
          */
         $('#tradeMarketMode').change(function () {
             var tradeMarketMode = $('#tradeMarketMode').val();
-            
+            if(tradeMarketMode=='')
+            {
+                //设置默认选中第一项
+                // $("#dealMode option:first").prop("selected", 'selected');
+                $('#tradeMarketMode').val('02').trigger('change');
+            }
             if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
                 if ($('#finprodId').val != null && $('#finprodId').val != ''){
                     var data = $('#finprodId').select2('data')[0].object;

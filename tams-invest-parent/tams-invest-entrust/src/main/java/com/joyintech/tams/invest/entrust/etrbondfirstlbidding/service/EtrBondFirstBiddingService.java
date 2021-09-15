@@ -596,6 +596,10 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             message = etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
 
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
+
             //组合代码
             message = etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBondFirstLBidding002.portfolioId", lineNo);
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);

@@ -109,18 +109,24 @@
         }
         object.inputValue1 = PINAN_ASSET_TYPE_F10;
         object.inputValue2 = $('#ps').val();
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/checkAuthorization', object, function(result2) {
-	        Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/check',object,
-	          function(result) {
-	              Joyin.confirm(result.data,function() {
-	                   if (operateType === 'save') {
-	                       WorkFlow.doSaveList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_save");
-	                   } else {
-	                       WorkFlow.doSubmitList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_submit");
-	                   }
-	               });
-	           });
-        });
+        //保存跳过校验 edit by yeming 20210915 start
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_save");
+        }else{
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/checkAuthorization', object, function(result2) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrboutrepo/EtrBoutRepo002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
+                            // if (operateType === 'save') {
+                            //     WorkFlow.doSaveList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_save");
+                            // } else {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrboutrepo/EtrBoutRepo002/save',object,"EtrBoutRepo002_btn_submit");
+                            // }
+                        });
+                    });
+            });
+            //保存跳过校验 edit by yeming 20210915 end
+        }
     }
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){

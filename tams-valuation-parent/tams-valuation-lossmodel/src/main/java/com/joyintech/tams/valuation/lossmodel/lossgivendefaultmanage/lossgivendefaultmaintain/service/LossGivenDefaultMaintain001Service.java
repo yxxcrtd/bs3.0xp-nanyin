@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import org.apache.poi.ss.usermodel.Cell;
@@ -35,7 +37,10 @@ public class LossGivenDefaultMaintain001Service extends CommonExportService<ModL
      * @since 1.0
      */
     public Page<ModLgdConfigDto> findPage(Map<String,Object> map){
-        
+        //根据系统方案参数展示01毕马威 全部展示，02普华不展示存款和回购
+        //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        map.put("lossType",lossType);
         return restTemplate.postForPage(
             ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/LossGivenDefaultMaintain/selectForPage",
             map, ModLgdConfigDto.class);

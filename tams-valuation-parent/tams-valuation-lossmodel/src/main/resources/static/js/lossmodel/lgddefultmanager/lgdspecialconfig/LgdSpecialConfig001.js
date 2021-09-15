@@ -116,19 +116,15 @@ $(function () {
     table.bind('click', '.delt', function(data, index) {
         var object = {selectedItem: [data], operateType:"delete",seqNo: data.seqNo};
         Joyin.ajaxJson(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig001/deleteCheck', object, function(result) {
-
-            /*Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                WorkFlow.doDeleteList(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/save', object, "LgdSpecialConfig001_btn_delete", "LgdSpecialConfig002",function(){
-                    table.reload();
-                });
-            });*/
-
             if(result.data != undefined &&  result.data.indexOf("已被使用")>0){
-                Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
-                    WorkFlow.doDeleteList(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/save', object, "LgdSpecialConfig001_btn_delete", "LgdSpecialConfig002",function(){
-                        table.reload();
+                Joyin.confirm("当前特殊资产LGD数据已被使用，是否确认删除？", function(){
+                    Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
+                        WorkFlow.doDeleteList(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/save', object, "LgdSpecialConfig001_btn_delete", "LgdSpecialConfig002",function(){
+                            table.reload();
+                        });
                     });
                 });
+
             }else{
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                     WorkFlow.doDeleteList(basePath + 'model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/save', object, "LgdSpecialConfig001_btn_delete", "LgdSpecialConfig002",function(){

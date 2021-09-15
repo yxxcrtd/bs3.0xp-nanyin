@@ -644,6 +644,15 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     
     private RiskCreditListCommonDto riskCreditListCommonDto;
 
+    /**
+     * 投标一级市场债券
+     */
+    private String oFinprodId;
+
+    /**
+     * 投标编号
+     */
+    private String bidId;
 
     public BigDecimal getBussTrdAvailableCashQueryavalibleCash() {
         return bussTrdAvailableCashQueryavalibleCash;
@@ -2333,5 +2342,21 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 
     public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
+    }
+
+    public String getoFinprodId() {
+        return oFinprodId;
+    }
+
+    public void setoFinprodId(String oFinprodId) {
+        this.oFinprodId = oFinprodId;
+    }
+
+    public String getBidId() {
+        return bidId;
+    }
+
+    public void setBidId(String bidId) {
+        this.bidId = bidId;
     }
 }

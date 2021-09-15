@@ -28,7 +28,6 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -174,7 +173,8 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto allDto, BindingResult br)
+        throws Exception {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;
@@ -189,17 +189,17 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
             }
             dto.setWorkflowParameter("new|||1|EtrBondFirstLBidding002|EtrBondFirstLBidding002_btn_submit|true");
         }
-        // ----------add by yushilong 20200721 预占功能 start----------
-        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
-                    DictCodeListExt2.平安资产类型_一级市场债.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-                    false, null);
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }
-        }
-        // ----------add by yushilong 20200721 预占功能 end----------
+//        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+//                    DictCodeListExt2.平安资产类型_一级市场债.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+//                    false, null);
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        // ----------add by yushilong 20200721 预占功能 end----------
 
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();

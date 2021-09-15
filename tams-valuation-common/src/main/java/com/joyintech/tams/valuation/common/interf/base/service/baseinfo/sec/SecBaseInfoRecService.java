@@ -201,6 +201,7 @@ public class SecBaseInfoRecService {
         result.setRegistOrg(dto.getRegistOrg());
         /** modify by dongjun on 20181017 含权债摊销日 = 系统参数.行权债摊销目标日是否为行权日 start**/
         result.setExeDate(CacheUtil.getSysParam("ISSECTOEXEDATE"));//modify by dongjun on 20181023
+        result.setIsSus(dto.getIsSus());
         /** modify by dongjun on 20181017 含权债摊销日 = 系统参数.行权债摊销目标日是否为行权日 end**/
         /** modify by dongjun on 20181017 end**/
         

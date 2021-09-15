@@ -63,16 +63,44 @@ public class RiskLevelImport001Service extends CommonExportService<RiskLevelImpo
     public List<ExcelValidDto> importData(String flieName) throws Exception {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
-            
-             if (flieName.indexOf("风险五级分类") != -1) {
                 ExcelUtil excelUtil = ExcelUtil.build(FileNameUtil.getUploadFilePath(flieName), null);
                 List<List<String>> dataList = excelUtil.readToList(0, 1, 0);
                 // 检查读出信息是否为空
+                String errorMessage = "";
+                List<ExcelValidDto> checkResult = new ArrayList<>();
+
                 if (null != dataList && dataList.size() > 0) {
+                    //校验数据(资产代码，风险五级分类)是否为空
+                    for (int i = 0; i < dataList.size(); i++ ) {
+                        List<String> list = dataList.get(i);
+                        if(!StringUtil.isNotEmpty(list.get(0))){
+                            errorMessage = errorMessage+"第"+(i+2)+"行数据资产代码为空，请填写;";
+                        }
+                        if(!StringUtil.isNotEmpty(list.get(2))){
+                            errorMessage = errorMessage+"第"+(i+2)+"行数据风险五级分类为空，请填写;";
+                        }
+                    }
+
+                    //校验数据(资产代码)是否存在
+//                    for (int i = 0; i < dataList.size(); i++ ) {
+//                        List<String> list = dataList.get(i);
+//                        Map<String,Object> map = new HashMap<>();
+//                        map.put("finprodMarketId",dataList.get(i).get(0));
+//                        Boolean sinal = restTemplate.postForObject(
+//                                ServiceApplication.RISK_SERVICE_NAME + "/RiskLevelImport/IsInFinproduct", map,
+//                                Boolean.class);
+//                        if(sinal){
+//                            errorMessage = errorMessage+"第"+(i+2)+"行数据资产代码在系统中不存在，请检查;";
+//                        }
+//                    }
+
+                    if(StringUtil.isNotEmpty(errorMessage)){
+                        checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,errorMessage));
+                        return checkResult;
+                    }
 
                     // 将excel表格中的数据转化为dto
-                    List<ExcelValidDto> checkResult = new ArrayList<>();
-                    List<RiskLevelImportDto> equityList = new ArrayList<>();
+                     List<RiskLevelImportDto> equityList = new ArrayList<>();
                     if (checkResult.isEmpty()) {
                           equityList = converToBean(dataList);
                      }
@@ -82,18 +110,12 @@ public class RiskLevelImport001Service extends CommonExportService<RiskLevelImpo
                     restTemplate.postForObject(
                     ServiceApplication.RISK_SERVICE_NAME + "/RiskLevelImport/save", equityList,
                     RiskLevelImportDto.class);
-                    
                     return checkResult;
                 } else {
-                    List<ExcelValidDto> checkResult = new ArrayList<>();
                     checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,getMessage("MST_ASSET_DECLARATION_CODE_E_0015")));
                     return checkResult;
                 }
-            } else {
-                List<ExcelValidDto> checkResult = new ArrayList<>();
-                checkResult.add(new ExcelValidDto(StringUtil.EMPTY, StringUtil.EMPTY,getMessage("BUSS_COM_E_0002", "风险五级分类导入")));
-                return checkResult;
-            }
+
         }
         return null;
     }
@@ -114,20 +136,11 @@ public class RiskLevelImport001Service extends CommonExportService<RiskLevelImpo
         for (int i = 0; i < dataList.size(); i++ ) {
             List<String> list = dataList.get(i);
             RiskLevelImportDto dto = new RiskLevelImportDto();
-            dto.setAssetsType(list.get(0).split(" ")[0]);
-            dto.setBondRiskType(list.get(2).split(" ")[0]);
+             dto.setBondRiskType(list.get(2).split(" ")[0]);
             dto.setFinprodName(list.get(1));
             dto.setUpdateTime(iPlatformDate.getSysDate());
-            Map<String,Object> map = new HashMap<>();
-            map.put("finprodName",dto.getFinprodName());
-            map.put("assetsType",dto.getAssetsType());
-            //查询资产代码
-            String str = "";
-            str = restTemplate.postForObject(
-                    ServiceApplication.RISK_SERVICE_NAME + "/RiskLevelImport/queryFinprodMarketId", map,
-                    String.class);
-            dto.setFinprodMarketId(new BigDecimal(i).toString());
-            //dto.setFinprodMarketId();
+            dto.setFinprodMarketId(list.get(0));
+
             returnInfoList.add(dto);
         }
         return returnInfoList;

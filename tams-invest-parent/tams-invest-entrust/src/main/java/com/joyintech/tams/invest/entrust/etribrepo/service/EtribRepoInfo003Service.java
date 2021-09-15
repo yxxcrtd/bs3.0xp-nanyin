@@ -31,11 +31,14 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
+import com.joyintech.tams.invest.entrust.etribrepo.dto.EtrIbRepoinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribrepo.dto.EtribRepoInfo003Dto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -238,6 +241,41 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
         restTemplate.postForObject(
                 ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepoinfo003/doInsert",entity,
                 Integer.class);
+    }
+
+    /**
+     *
+     * 流程修改时调用
+     */
+    @Override
+    public void doUpdate(EtribRepoInfo003Dto entity){
+        restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbRepoinfo002/doInsert",entity,
+                Integer.class);
+        if (!StringUtil.equals("revoke", entity.getOperateType()) && !StringUtil.equals("delete", entity.getOperateType())) {
+            // 先删除流程中数据
+            doDeleteFlow(entity.getWorkflowId());
+            if (CollectionUtils.isNotEmpty(entity.getEtrInvestRepoInfoDtos())) {
+                for (EtribRepoInfo003Dto dto : entity.getEtrInvestRepoInfoDtos()) {
+                    // 重新insert
+                    doInsertFlow(dto);
+                }
+            }
+            ProcessMark newEntity;
+            try {
+                newEntity = WorkFlowUtil.getBusinessObjectFromRequest(EtrIbRepoinfo002Dto.class, true);
+                // 工作流ID
+                newEntity.setWorkflowId(entity.getWorkflowId());
+                newEntity.setStatus(entity.getStatus());
+                newEntity.setBusinessData(JsonUtils.object2Json(entity));
+                // 更新业务表数据
+                // 操作留痕表
+                WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void doInsertFlow(EtribRepoInfo003Dto dto) {
@@ -491,4 +529,14 @@ public class EtribRepoInfo003Service extends CommonExportService<EtribRepoInfo00
 		 // add by zhangrui1 风险审批修改 end
 		 return commonBusinessService.是否需要上级审批_委托用(params);
 	}
+
+    @Override
+    public void doBack(EtribRepoInfo003Dto entity) {
+        List<EtribRepoInfo003Dto> etrInvestRepoInfoDtos = entity.getEtrInvestRepoInfoDtos();
+        if(!StringUtil.isEmptyList(etrInvestRepoInfoDtos)){
+            etrInvestRepoInfoDtos.forEach(item ->{
+                baseEtrCashPositionCommService.entrustCloseExecute(item.getEntrustId());
+            });
+        }
+    }
 }

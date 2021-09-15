@@ -15,6 +15,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -149,4 +150,6 @@ public interface CfetsRepoDealQuotedPrice001Mapper {
     List<CfetsRepoDealQuotedPrice001Dto> getQualifiedByentrustIds(Map<String,Object> map);
 
     CfetsRepoDealQuotedPrice003Dto queryPledgeBondElementForImport(Map<String, Object> param);
+
+    List<CfetsRepoDealQuotedPrice003Dto> listIbuQuoteEntCrepPledge(@Param("quoteId") String quoteId);
 }
