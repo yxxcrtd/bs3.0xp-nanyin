@@ -76,11 +76,13 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
         // 原页面id
         String pageId = (String) param.get("orgPageId");
         String exportKeys = "";
+        // 是否手工处理
         String doMannulFlag = String.valueOf(param.get("doMannulFlag"));
+        // 删除原因
         String deleteReason = (String) param.get("remark");
         // 删除信息为空则直接返回空数据
         Map<String, Object> dataParam = new HashMap<String, Object>();
-        // 导出Excel模板
+        // 导出Excel模板名称
         String excelTemplate = "";
         File outFile = null;
         if ("EquityInfoRegist001".equals(pageId)) {
@@ -101,25 +103,10 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
                 list = equityInfoRegist001Mapper.queryExportListByKeys(equiytRegistList);
             } else {
                 // 无勾选数据，根据条件查询数据
-                String paramKeys = (String)param.get("paramKeys") ;
-                Map<String,Object> searchParamMap = JsonUtils.stringToMap(paramKeys);
-                String orgCode = CommonUtil.getOrgCode();
-                List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
-                param.put("orgCodeList", orgCodeList);
-                String personalIdentifyType = (String)searchParamMap.get("personalIdentifyType");
-                String institutionIdentifyType = (String)searchParamMap.get("institutionIdentifyType");
-                String status = (String)searchParamMap.get("status");
-                String submitStatus = (String)searchParamMap.get("submitStatus");
-                String submitFeedbackStatus = (String)searchParamMap.get("submitFeedbackStatus");
-                param.put("personalIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, personalIdentifyType));
-                param.put("institutionIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, institutionIdentifyType));
-                param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
-                param.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitStatus));
-                param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
-                param.put("submitDeadLineStart", DateCalcUtil.getEndOfDay((String)searchParamMap.get("submitDeadLineStart")));
-                param.put("submitDeadLineEnd", DateCalcUtil.getEndOfDay((String)searchParamMap.get("submitDeadLineEnd")));
+                dealEquityInfoRegistSearchParam(param);
                 list = equityInfoRegist001Mapper.queryForEquityInfoRegistPage(param);
             }
+            // 遍历增加删除原因信息
             list.stream().forEach(item -> item.setDeleteReason(deleteReason));
 
             // 明细数据
@@ -165,6 +152,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
                 list = equityBusiInfoRegist001Mapper.selectAllData(searchParamMap);
             }
 
+            // 遍历构造数据
             list.stream().forEach(item -> {
                 item.setDeleteReason(deleteReason);
                 item.setSubmitStatusName(com.joyintech.tams.report.common.util.SysDataUtil.getNameFromDataDict(DictCode.报送状态, item.getSubmitStatus()));
@@ -278,6 +266,36 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
                 Integer.class);
     }
 
+    /**
+     * 构造身份查询参数
+     *
+     * @param param
+     */
+    public void dealEquityInfoRegistSearchParam(Map<String, Object> param){
+        String paramKeys = (String)param.get("paramKeys") ;
+        Map<String,Object> searchParamMap = JsonUtils.stringToMap(paramKeys);
+        String orgCode = CommonUtil.getOrgCode();
+        List<String> orgCodeList = StringUtil.splitToList(GlobalConstant.COMMA, orgCode);
+        param.put("orgCodeList", orgCodeList);
+        String personalIdentifyType = (String)searchParamMap.get("personalIdentifyType");
+        String institutionIdentifyType = (String)searchParamMap.get("institutionIdentifyType");
+        String status = (String)searchParamMap.get("status");
+        String submitStatus = (String)searchParamMap.get("submitStatus");
+        String submitFeedbackStatus = (String)searchParamMap.get("submitFeedbackStatus");
+        param.put("personalIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, personalIdentifyType));
+        param.put("institutionIdentifyTypeList", StringUtil.splitToList(GlobalConstant.COMMA, institutionIdentifyType));
+        param.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
+        param.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitStatus));
+        param.put("submitFeedbackStatusList", StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus));
+        param.put("submitDeadLineStart", DateCalcUtil.getEndOfDay((String)searchParamMap.get("submitDeadLineStart")));
+        param.put("submitDeadLineEnd", DateCalcUtil.getEndOfDay((String)searchParamMap.get("submitDeadLineEnd")));
+    }
+
+    /**
+     * 构造明细查询参数
+     *
+     * @param pageParam
+     */
     public void dealEquityBusiInfoRegistSearchParam(Map<String, Object> pageParam){
         // 数据状态
         String status = (String)pageParam.get("status");
@@ -343,6 +361,10 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
         }
     }
 
+    /**
+     * 构造持有查询参数
+     * @param pageParam
+     */
     public void dealInvestorsHoldInfoRegistSearchParam(Map<String, Object> pageParam) {
         // 查询参数条件
         // 数据状态
