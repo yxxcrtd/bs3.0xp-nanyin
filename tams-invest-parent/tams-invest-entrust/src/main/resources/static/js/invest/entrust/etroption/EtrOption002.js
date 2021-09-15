@@ -51,18 +51,24 @@
         object.entrustStatus = $('#entrustStatus').val();
         object.termDays = $('#termDays').val().split('.')[0];
         object.ps = $('#ps').val();
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-            Joyin.ajaxJson(basePath + 'invest/entrust/etroption/EtrOption002/check',object,
-                function(result) {
-                    Joyin.confirm(result.data,function() {
-                        if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etroption/EtrOption002/save',object,"EtrOption002_btn_save");
-                        } else {
-                            WorkFlow.doSubmitList(basePath+'invest/entrust/etroption/EtrOption002/save',object,"EtrOption002_btn_submit");
-                        }
+        //保存跳过校验 edit by yeming 20210915 start
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etroption/EtrOption002/save',object,"EtrOption002_btn_save");
+        }else {
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etroption/EtrOption002/check',object,
+                    function(result) {
+                        Joyin.confirm(result.data,function() {
+                            // if (operateType === 'save') {
+                            //     WorkFlow.doSaveList(basePath+'invest/entrust/etroption/EtrOption002/save',object,"EtrOption002_btn_save");
+                            // } else {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etroption/EtrOption002/save',object,"EtrOption002_btn_submit");
+                            // }
+                        });
                     });
-                });
-        });
+            });
+        }
+        //保存跳过校验 edit by yeming 20210915 end
     }
 
     //添加风险试算验证
