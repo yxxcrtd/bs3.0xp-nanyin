@@ -99,4 +99,28 @@ public interface RskValRelateImportMapper {
      * 查询资产维护界面维护的所有资产要素完整信息
      */
     List<FinProduct> selectAllAsset();
+    /**
+     * <一句话功能简述> 指标结构映射联想下拉框，初始化默认
+     *
+     * @return 指标结构映射信息
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryStructMapIdDefault();
+    /**
+     * <一句话功能简述> 汇总科目映射联想下拉框 ，初始化默认
+     *
+     * @return 汇总科目映射信息
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> querySumsubMapIdDefault();
+    /**
+     * <一句话功能简述> 资产科目映射联想下拉框
+     *
+     * @return 资产科目映射信息
+     * @see
+     * @since 1.0
+     */
+    List<SelectOptionDto> queryAssetSubMapIdDefault();
 }
