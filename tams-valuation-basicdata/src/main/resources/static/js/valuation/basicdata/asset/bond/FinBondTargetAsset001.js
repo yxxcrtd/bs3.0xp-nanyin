@@ -185,7 +185,7 @@
      * @returns
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('请至少选择一条记录进行删除！'), '../FinBondTargetAsset002/init', '98%', '98%');
+        Joyin.dialog(JoyinUtil.getLabel('债券信息新建'), '../FinBondTargetAsset002/init', '98%', '98%');
     }
 
     /**

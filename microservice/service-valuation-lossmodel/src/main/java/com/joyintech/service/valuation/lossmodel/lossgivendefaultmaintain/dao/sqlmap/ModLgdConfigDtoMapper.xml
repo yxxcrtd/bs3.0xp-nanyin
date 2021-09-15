@@ -166,6 +166,10 @@
       <if test="assetType != null and assetType=='07'" >
         and ASSET_DETAIL_TYPE in (select ITEM_CODE from sys_datadict_list where dict_code= 'DEPOSIT_TYPE')
       </if>
+      <if test="lossType != null and lossType=='02'" >
+        and ASSET_TYPE  not in ('07','09')
+      </if>
+
 
     </where>
 

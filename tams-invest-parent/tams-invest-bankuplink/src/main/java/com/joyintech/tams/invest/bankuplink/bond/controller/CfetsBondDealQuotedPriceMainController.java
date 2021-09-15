@@ -44,6 +44,7 @@ import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealDialogue
 import com.joyintech.tams.invest.bankuplink.bond.validator.CfetsBondDealRequestQuoteDtoValidator;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.tams.invest.bankuplink.cstp.dto.CstpSelectDto;
+import com.joyintech.tams.invest.bankuplink.reponew.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.common.component.base.core.BaseGetBussinessId;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -103,6 +104,11 @@ public class CfetsBondDealQuotedPriceMainController extends BaseController {
     @Autowired
     private CfetsBondDealQuotedPrice004Service cfetsBondDealQuotedPrice004Service;
 
+    /**
+     * 外汇交易中心行情接口地址
+     */
+    @Value("${MarketInfoInterf.cmdsUrl}")
+    private String MarketInfoInterf_cmdsUrl;
 
     /**
      * {@linkplain}
@@ -171,9 +177,35 @@ public class CfetsBondDealQuotedPriceMainController extends BaseController {
         model.addAttribute("bondTopic", bondTopic);
         return super.init(model);
     }
-    
+
+    /***
+     * 初始化行情
+     * @return
+     */
+    @RequestMapping(value = "/initHq")
+    public String initHq(Model model){
+        model.addAttribute("MarketInfoInterf_BaseUrl", MarketInfoInterf_cmdsUrl);
+        return "invest/bankuplink/bond/CfetsBondDealQuotedPriceHq";
+    }
+
 
     /**
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/initAmount")
+    public String initAmount(Model model){
+        return "invest/bankuplink/bond/initAmount";
+    }
+
+
+    @RequestMapping(value="findQuotations")
+    @ResponseBody
+    public Map<String, Object> findQuotations() {
+        return cfetsBondDealQuotedPrice001Service.findQuotations(RequestUtil.getPageParam());
+    }
+     /**
      * 根据查询符合条件的委托列表
      * 
      * @param param 入参
@@ -902,4 +934,29 @@ public class CfetsBondDealQuotedPriceMainController extends BaseController {
             this.fileName = fileName;
         }
     }
+
+
+    /**
+     * 计算可买数量
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("calCanBuyAmount")
+    public EtrFinProductCommonDto calCanBuyAmount(@RequestBody Map<String, Object> param){
+        return cfetsBondDealQuotedPriceSingleService.calCanBuyAmount(param);
+    }
+
+    /**
+     * 查询现金数据
+     * @param param
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("findSecAmountInfo")
+    public EtrFinProductCommonDto findSecAmountInfo(@RequestBody Map<String, Object> param){
+        return cfetsBondDealQuotedPriceSingleService.findSecAmountInfo(param);
+    }
+
+
 }

@@ -584,7 +584,9 @@ public class EtrBoutRepoService extends BaseService<EtrBoutRepoDto> {
             if(iPlatformDate != null){
                 etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             }
-            etrEntrust.setEntrustNum(etrEntrust.getEntrustAmt().divide(new BigDecimal(100)));
+            if(StringUtil.isNotEmpty(etrEntrust.getEntrustAmt())){
+                etrEntrust.setEntrustNum(etrEntrust.getEntrustAmt().divide(new BigDecimal(100)));
+            }
             etrEntrust.setEntrustAmt(null);
             if(StringUtil.isNotEmpty(etrEntrust.getPrice())){
                 etrEntrust.setPrice(etrEntrust.getPrice().divide(new BigDecimal(100)));

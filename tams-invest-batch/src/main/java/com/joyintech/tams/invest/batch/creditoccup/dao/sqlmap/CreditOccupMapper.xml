@@ -161,7 +161,7 @@
     </delete>
 
     <delete id="delCreditUsingAst">
-        delete from  FROM CREDIT_USING_AST temp
+        delete from CREDIT_USING_AST temp
         <include refid="delCommonSql"></include>
     </delete>
 
@@ -284,6 +284,7 @@
     <select id="listWwSec" resultType="com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto">
         SELECT
             rvas.FINPROD_ID finprodId,
+            fp.FINPROD_TYPE2 finprodType2,
             fp.CCY ccy,
             rvas.SECURITY_QUANTITY*temp.AMOUNT/rvsas.SECURITY_QUANTITY shareAmt,
             CASE
@@ -292,12 +293,14 @@
             END tradeAmt,
             temp.FINPROD_ID pFinprodId,
             #{YES_OR_NO_Y} isBottom,
+            to_date(#{executeDate},'yyyy-MM-dd') tradeDate,
             #{ps} ps
         FROM
             (
             SELECT
                 psp.PORTFOLIO_ID,
                 psp.FINPROD_ID,
+                fp.FINPROD_MARKET_ID,
                 psp.CDATE,
                 SUM(psp.AMOUNT) AMOUNT
             FROM
@@ -309,16 +312,21 @@
                 AND pp.PORTFOLIO_TYPE = #{PORTFOLIO_TYPE_02}
             where    psp.CDATE = to_date(#{executeDate},'yyyy-MM-dd')
             GROUP BY
-                psp.PORTFOLIO_ID,
-                psp.FINPROD_ID，psp.CDATE) temp
+                psp.PORTFOLIO_ID,psp.FINPROD_ID,
+                fp.FINPROD_MARKET_ID,psp.CDATE) temp
         INNER JOIN RSK_VALTBL_SUM_ASSET_SUB rvsas ON
-            rvsas.PTL_ID = temp.PORTFOLIO_ID
-            AND rvsas.VAL_DATE = temp.CDATE-1
+            rvsas.PTL_ID = temp.FINPROD_MARKET_ID
+            AND rvsas.VAL_DATE = temp.CDATE
+                and rvsas.SUB_CODE = '601'
         INNER JOIN RSK_VALTBL_ASSET_SUB rvas ON
             rvas.PTL_ID = rvsas.PTL_ID
             AND rvas.VAL_DATE = rvsas.VAL_DATE
             AND rvas.FINPROD_ID IS NOT NULL
         LEFT JOIN FIN_PRODUCT fp ON
             fp.FINPROD_ID = rvas.FINPROD_ID
+        left join FIN_TRADE_PRODUCT tpd
+          on rvas.FINPROD_ID=tpd.FINPROD_ID
+              and tpd.BRANCH='0'
+              and tpd.FINPROD_TYPE2 not in ('F02','F04','F08')
     </select>
 </mapper>

@@ -11,6 +11,7 @@ import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.validator.LossGivenDefaultMaintain002Validator;
@@ -25,7 +26,8 @@ import com.joyintech.workflow.engine.dto.ProcessEntity;
  * @创建时间: 2021-06-28
  */
 @PageId("LossGivenDefaultMaintain002")
-@ValidLogic(targetClass = LossGivenDefaultMaintain002Validator.class)
+@ValidLogic(targetClass = LossGivenDefaultMaintain002Validator.class, groups = {ValidateGroupEdit.class,
+        ValidateGroupDelete.class})
 public class ModLgdConfigDto extends BaseEntity implements ITableRow, ProcessEntity{
     /**
 	 * 
@@ -171,7 +173,6 @@ public class ModLgdConfigDto extends BaseEntity implements ITableRow, ProcessEnt
      * LGD(%)
      * @return LGD LGD(%)
      */
-    @Amount(fieldName = "LossGivenDefaultMaintain001.lgd", maxIntBit = 3, maxDecBit = 2, groups = {ValidateGroupEdit.class})
 	@NotEmpty(fieldName = "LossGivenDefaultMaintain001.lgd", groups = {ValidateGroupEdit.class})
     public BigDecimal getLgd() {
         return lgd;

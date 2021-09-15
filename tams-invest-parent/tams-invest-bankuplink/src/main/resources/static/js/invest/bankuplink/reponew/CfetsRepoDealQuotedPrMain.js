@@ -16,7 +16,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
             if (result.data){
                 Joyin.confirm(result.data, function() {
-                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", 'CfetsRepoDealQuotedPr002', function(result){
+                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", 'CfetsRepoDealQuotedPr002', function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })
@@ -28,7 +28,7 @@
         Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
             if (result.data){
                 Joyin.confirm(result.data, function() {
-                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", 'CfetsRepoDealQuotedPr002', function(result){
+                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", 'CfetsRepoDealQuotedPr002', function(result){
                         var index = window.parent.layer.getFrameIndex(window.name);
                         window.parent.layer.close(index);
                     })

@@ -1106,4 +1106,21 @@
             </if>
         </where>
     </select>
+
+    <select id="listIbuQuoteEntCrepPledge" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
+        SELECT
+            QUOTE_ID,
+            ENTRUST_ID,
+            PORTFOLIO_ID,
+            PLEDGE_FINPROD_ID finprodId,
+            PLEDGE_NUMBER,
+            PLEDGE_RATIO
+        FROM
+        IBU_QUOTE_ENT_CREP_PLEDGE
+        <where>
+            <if test="quoteId != null and quoteId != ''">
+                  QUOTE_ID = #{quoteId}
+            </if>
+        </where>
+    </select>
 </mapper>
