@@ -75,7 +75,7 @@ public class SystemFileUpload001Controller extends BaseController {
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
 	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+			  {
 
 		try {
 			systemFileUpload001Service.readFile(request);
@@ -102,7 +102,7 @@ public class SystemFileUpload001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
 	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+			 {
 		return null;
 	}
 }

@@ -42,17 +42,28 @@
     };
 
     function　init(){
-        /*var curveGroupType = $('#curveGroupType')[0].checked;
-        if (curveGroupType === false) {
-            $('#intCurveType').attr('required',true);
-            $('#ccy').attr('required',true);
-            $('#interMethod').attr('required',true);
-            $('#dayRules').attr('required',true);
-            $('#calender').attr('required',true);
-            $('#interestCalMethod').attr('required',true);
-            $('#interestFreq').attr('required',true);
-            $('#remark').attr('required',true);
-        }*/
+        var curveGroupType = $('#curveGroupType')[0].checked;
+        if (curveGroupType === true) {
+            $('#intCurveType_redId').hide();
+            $('#ccy_redId').hide();
+            $('#interMethod_redId').hide();
+            $('#dayRules_redId').hide();
+            $('#calender_redId').hide();
+            $('#interestDateRule_redId').hide();
+            $('#interestCalMethod_redId').hide();
+            $('#interestFreq_redId').hide();
+            $('#remark_redId').hide();
+        }else{
+            $('#intCurveType_redId').show();
+            $('#ccy_redId').show();
+            $('#interMethod_redId').show();
+            $('#dayRules_redId').show();
+            $('#calender_redId').show();
+            $('#interestDateRule_redId').show();
+            $('#interestCalMethod_redId').show();
+            $('#interestFreq_redId').show();
+            $('#remark_redId').show();
+        }
 
     }
 
@@ -68,14 +79,15 @@
             $('#interMethod').attr('disabled',true);   //币种
             $('#remark').attr('disabled',true);   //描述
 
-          /*  $('#intCurveType').prop('required',true);
-            $('#ccy').attr('required',false);
-            $('#interMethod').attr('required',false);
-            $('#dayRules').attr('required',false);
-            $('#calender').attr('required',false);
-            $('#interestCalMethod').attr('required',false);
-            $('#interestFreq').attr('required',false);
-            $('#remark').attr('required',false);*/
+            $('#intCurveType_redId').hide();
+            $('#ccy_redId').hide();
+            $('#interMethod_redId').hide();
+            $('#dayRules_redId').hide();
+            $('#calender_redId').hide();
+            $('#interestDateRule_redId').hide();
+            $('#interestCalMethod_redId').hide();
+            $('#interestFreq_redId').hide();
+            $('#remark_redId').hide();
 
         }else{
             $('#intCurveType').attr('disabled',false);//曲线类型
@@ -87,14 +99,15 @@
             $('#interMethod').attr('disabled',false);   //币种
             $('#remark').attr('disabled',false);   //描述
 
-           /* $('#intCurveType').attr('required',true).trigger('change');
-            $('#ccy').attr('required',true).trigger('change');
-            $('#interMethod').attr('required',true).trigger('change');
-            $('#dayRules').attr('required',true);
-            $('#calender').attr('required',true);
-            $('#interestCalMethod').attr('required',true);
-            $('#interestFreq').attr('required',true);
-            $('#remark').attr('required',true);*/
+            $('#intCurveType_redId').show();
+            $('#ccy_redId').show();
+            $('#interMethod_redId').show();
+            $('#dayRules_redId').show();
+            $('#calender_redId').show();
+            $('#interestDateRule_redId').show();
+            $('#interestCalMethod_redId').show();
+            $('#interestFreq_redId').show();
+            $('#remark_redId').show();
         }
     };
 

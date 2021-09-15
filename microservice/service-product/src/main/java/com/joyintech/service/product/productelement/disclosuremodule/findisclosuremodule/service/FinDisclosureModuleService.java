@@ -91,7 +91,7 @@ public class FinDisclosureModuleService extends BaseService<FinDisclosureModuleD
      * @since 1.0
      */
     public Page<FinDisclosureModuleDto> selectAll(int page, int length, Map<String, Object> pageParam)
-        throws Exception{
+    {
         Page<FinDisclosureModuleDto> pageList = super.queryForPage(page, length, () -> {
             finDisclosureModuleMapper.getFileList(pageParam);
         });
@@ -106,7 +106,7 @@ public class FinDisclosureModuleService extends BaseService<FinDisclosureModuleD
      * @throws Exception 异常
      */
     private List<FinDisclosureModuleDto> selectForPage(List<FinDisclosureModuleDto> fileList, Map<String, Object> pageParam)
-        throws Exception {
+    {
     	if(null != mstFileCommonService) {
     		List<FinDisclosureModuleDto> newList = new ArrayList<>();
     		List<SysUploadFileInfo> revealFileList = new ArrayList<>();

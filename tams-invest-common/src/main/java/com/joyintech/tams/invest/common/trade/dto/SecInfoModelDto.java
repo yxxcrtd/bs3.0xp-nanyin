@@ -75,6 +75,11 @@ public class SecInfoModelDto {
     private BigDecimal nextExercisePrice;
 
     /**
+     * 交易场所
+     */
+    private String tradeMarket;
+
+    /**
      * 获取 startDate
      *
      * @return startDate
@@ -288,5 +293,13 @@ public class SecInfoModelDto {
      */
     public void setNextExercisePrice(BigDecimal nextExercisePrice) {
         this.nextExercisePrice = nextExercisePrice;
+    }
+
+    public String getTradeMarket() {
+        return tradeMarket;
+    }
+
+    public void setTradeMarket(String tradeMarket) {
+        this.tradeMarket = tradeMarket;
     }
 }

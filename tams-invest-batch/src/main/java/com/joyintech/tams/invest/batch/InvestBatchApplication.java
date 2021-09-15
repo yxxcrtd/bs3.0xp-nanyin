@@ -18,6 +18,8 @@ import com.joyintech.batch.config.BatchApplication;
 import com.joyintech.batch.config.BatchConfiguration;
 import com.joyintech.framework.JoyinApplication;
 
+import java.util.Locale;
+
 /**
  * 批处理启动类
  *
@@ -34,6 +36,8 @@ public class InvestBatchApplication extends BatchApplication {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		Locale local = new Locale("zh", "CN");
+		Locale.setDefault(local);
 	    JoyinApplication.run(InvestBatchApplication.class, args);
 	}
 

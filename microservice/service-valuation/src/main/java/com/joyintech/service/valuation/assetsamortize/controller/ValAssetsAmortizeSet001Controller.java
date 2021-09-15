@@ -96,8 +96,7 @@ public class ValAssetsAmortizeSet001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValAssetsAmortizeSet001Dto> findPage(@RequestBody Map<String,Object> map,
-			@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
         return valAssetsAmortizeSet001Service.findPage(page,length,map);
     }
 

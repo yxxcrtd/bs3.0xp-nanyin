@@ -55,7 +55,7 @@ public class EtrSecLendController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrSecLendDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrSecLendDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
         return etrSecLendService.selectForPage(page,length,param);
     }
     
@@ -70,7 +70,7 @@ public class EtrSecLendController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return etrSecLendService.getFinprodId(page, length, param);
     }
     /**

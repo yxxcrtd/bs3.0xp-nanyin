@@ -1,0 +1,1 @@
+delete from sys_page_dictlist where page_id='FinProjectTargetAsset002' and dict_id='BASIS' and dict_item_val='A/A_D';

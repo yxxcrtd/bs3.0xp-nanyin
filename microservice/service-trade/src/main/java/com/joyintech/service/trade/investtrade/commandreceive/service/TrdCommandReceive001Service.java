@@ -82,7 +82,7 @@ public class TrdCommandReceive001Service extends BaseService<TrdCommandReceive00
      * @since 1.0
      */
 	public Page<TrdCommandReceive001Dto>  selectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception{
+	{
         Page<TrdCommandReceive001Dto> pageLimit =  super.queryForPage(page, length, () -> trdCommandReceive001Mapper.selectForPage(pageParam));
 //        List<TrdCommandReceive001Dto> list=pageLimit.getRoot();
 //        if(!list.isEmpty()){
@@ -101,7 +101,7 @@ public class TrdCommandReceive001Service extends BaseService<TrdCommandReceive00
 	 * @throws Exception
 	 */
 	public Page<TrdCommandReceive001Dto> otherSelectForPage(int page, int length,Map<String, Object> pageParam)
-			throws Exception {
+	{
 	    Page<TrdCommandReceive001Dto> pageLimit = super.queryForPage(page, length, () -> trdCommandReceive001Mapper.otherSelectForPage(pageParam));
 //		List<TrdCommandReceive001Dto> list=pageLimit.getRoot();
 //        if(!list.isEmpty()){
@@ -338,7 +338,7 @@ public class TrdCommandReceive001Service extends BaseService<TrdCommandReceive00
     * @Date: 2020/1/9 0009
     **/
     public Page<TrdCommandReceive001Dto> selectForPageFromCstp(int page, int length,Map<String, Object> pageParam)
-            throws Exception {
+	{
         Page<TrdCommandReceive001Dto> pageLimit = super.queryForPage(page, length, () -> trdCommandReceive001Mapper.selectForPageFromCstp(pageParam));
         finprodType2PinAn(pageLimit.getRoot());
         return pageLimit;

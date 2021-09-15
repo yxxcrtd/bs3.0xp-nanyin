@@ -108,7 +108,7 @@ public class ValNetPlanQuotation003Controller extends BaseController {
      @RequestMapping("/getFinprodId")
      @ResponseBody
      public List<SuggestDto> getFinprodId()
-            throws Exception {
+             {
         String param = super.getRequest().getParameter("param");
         return valNetPlanQuotation001Service.getFinprodId(param);
      }
@@ -220,7 +220,7 @@ public class ValNetPlanQuotation003Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Valid ValNetPlanQuotation003Dto dto, BindingResult bindingResult)
-			throws Exception {
+			 {
 		String msg = StringUtil.EMPTY;
 		String operateType = dto.getOperateType();
 

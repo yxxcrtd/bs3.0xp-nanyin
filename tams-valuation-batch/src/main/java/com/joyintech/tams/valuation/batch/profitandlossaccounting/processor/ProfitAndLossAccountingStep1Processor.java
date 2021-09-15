@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +46,7 @@ import com.joyintech.tams.valuation.batch.profitandlossaccounting.dto.ProfitAndL
 import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
+
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.tams.common.base.dao.BokDetailIdMapper;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
@@ -491,7 +492,7 @@ public class ProfitAndLossAccountingStep1Processor extends BaseProcessor<NeedOpe
             String bookId = x.getBooksetId() + x.getTableId()
                      + x.getHappenDate() + BookConstant.DEF_BOK_DETAIL_ID
                      + x.getOffsetFlag();
-            bookId = MD5Util.string2MD5(bookId);
+            bookId = EncryptUtil.getInstance().md5(bookId);
             x.setBookId(bookId);
             // 分支号
             x.setBranch(BookConstant.DEFALUT_BRANCH);

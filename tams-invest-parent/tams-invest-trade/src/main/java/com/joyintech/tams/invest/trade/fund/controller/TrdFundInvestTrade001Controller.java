@@ -20,6 +20,7 @@ import com.joyintech.tams.component.business.core.service.MstWorkflowCommonServi
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -154,7 +155,7 @@ public class TrdFundInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdFundInvestTradeDto> findPage()
-        throws Exception {
+         {
         return trdFundInvestTrade001Servic.findPage(RequestUtil.getPageParam());
     }
 
@@ -288,8 +289,7 @@ public class TrdFundInvestTrade001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdFundInvestTradeDto entity, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdFundInvestTradeDto entity, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -389,7 +389,7 @@ public class TrdFundInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return trdFundInvestTrade001Servic.export(this.getPageId(),

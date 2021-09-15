@@ -16,6 +16,7 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.financialstatement.assetliailitystatement.dto.AssetLiabilityStatementQuery001Dto;
 import com.joyintech.tams.valuation.financialstatement.assetliailitystatement.dto.AssetLiabilityStatementQuery001SearchDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 资产负债表
@@ -24,6 +25,7 @@ import com.joyintech.tams.valuation.financialstatement.assetliailitystatement.dt
  * @see AssetLiabilityStatementQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface AssetLiabilityStatementQuery001Mapper {
 
 	/**

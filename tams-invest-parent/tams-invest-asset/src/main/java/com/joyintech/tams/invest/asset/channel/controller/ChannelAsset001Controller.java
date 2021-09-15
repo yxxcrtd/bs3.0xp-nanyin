@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -81,7 +82,7 @@ public class ChannelAsset001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<ChannelAssetDto> findPage() throws Exception{
+    public Page<ChannelAssetDto> findPage() {
         return channelAssetService.selectForPage(RequestUtil.getPageParam());
         
     }
@@ -93,8 +94,7 @@ public class ChannelAsset001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return channelAssetService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -151,8 +151,7 @@ public class ChannelAsset001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ChannelAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ChannelAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

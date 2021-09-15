@@ -194,7 +194,9 @@ public class ExpInterfaceSourceCfgMsg extends MsgExecuteService<ExpInterfaceSour
 				BeanUtils.copyProperties(is, oldsource,new String[]{"sourceID","expSourceClass","fileMultiFlag","targeDBTable", "customBeforeExecute", "customAfterExecute"});
 				
 				interfaceSourceDao.updateEntityBean(oldsource);
-				msgcontainer.setObjID(oldsource.getSourceID());
+				if (oldsource != null){
+					msgcontainer.setObjID(oldsource.getSourceID());
+				}
 				msgcontainer.setEntityObj(oldsource);
 				
 				if(is.isAutoFlag()){

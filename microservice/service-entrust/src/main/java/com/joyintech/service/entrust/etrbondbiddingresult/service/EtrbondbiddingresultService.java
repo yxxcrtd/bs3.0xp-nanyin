@@ -33,7 +33,7 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
 	 * @return Page类
 	 * @throws Exception 异常信息
 	 */
-	public Page<EtrbondbiddingresultDto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<EtrbondbiddingresultDto> selectForPage(int page, int length, Map<String, Object> pageParam) {
 		String portfolioId = (String)pageParam.get("portfolioId");
 		if(StringUtil.isNotEmpty(portfolioId)){
 			pageParam.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));

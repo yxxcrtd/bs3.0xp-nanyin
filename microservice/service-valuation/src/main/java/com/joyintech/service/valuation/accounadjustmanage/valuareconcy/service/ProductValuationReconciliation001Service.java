@@ -45,7 +45,7 @@ public class ProductValuationReconciliation001Service extends CommonExportServic
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ProductValuationReconciliation001Dto> findPage(int page,int length, Map<String, Object> params) throws Exception {
+    public Page<ProductValuationReconciliation001Dto> findPage(int page,int length, Map<String, Object> params) {
         
         //所选产品
         String productIds = (String)params.get("productIds");

@@ -66,8 +66,7 @@ public class ValWithholdingAmortizeSet002Service extends CommonExportService<Val
      * @return 返回的数据
      */
 
-    public List<SelectOptionDto> getFinprodId(Map<String, Object> params)
-        throws Exception {
+    public List<SelectOptionDto> getFinprodId(Map<String, Object> params){
         List<SelectOptionDto> resultList = valWithholdingAmortizeSet002Mapper.getFinprodId(params);
 
         List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();

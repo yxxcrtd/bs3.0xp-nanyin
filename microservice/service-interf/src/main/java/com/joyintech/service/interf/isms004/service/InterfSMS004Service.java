@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
@@ -90,6 +92,8 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      */
     private static final String SMS004_FILE_PATH = "SMS004_FILE_PATH";
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * 服务启动
      * 
@@ -99,7 +103,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      * @since 1.0
      */
     private void executeService(List<File> fileList)
-        throws Exception {
+        {
         CountDownLatch countDown = new CountDownLatch(fileList.size());
         for (File file : fileList) {
             String fileName = file.getName();
@@ -136,8 +140,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      * @see
      * @since 1.0
      */
-    private void initService(InterfFileLog entity)
-        throws Exception {
+    private void initService(InterfFileLog entity) throws IllegalAccessException {
         entity.setBftsFlg(DictCodeList.是否_是.getValue());
         config = InterfUtil.getFileAccessConfig(entity);
         if (config == null) {
@@ -156,7 +159,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      * @since 1.0
      */
     private synchronized List<File> fileDownload(String filePath, String localpath)
-        throws Exception {
+            throws InterfException, IllegalAccessException {
         IAccess acc = null; // 连接
         String file = null; // 文件全名
         List<File> fileList = new ArrayList<>();
@@ -166,15 +169,32 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
             throw new InterfException("创建本地文件夹异常:" + localpath);
         }
         acc = FileClient.createFileClient(config); // 建立连接
-        acc.open(); // 打开连接
-        List<?> l = acc.list(filePath); // 列出所有文件
+        try {
+            acc.open(); // 打开连接
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new IllegalAccessException ();
+        }
+        List<?> l = null; // 列出所有文件
+        try {
+            l = acc.list(filePath);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            throw new IllegalAccessException ();
+        }
         if (StringUtil.isEmptyList(l)) {
             file = filePath;
             String fName = StringUtil.substring(filePath,
                 StringUtil.lastIndexOf(filePath, "/") + 1);
             String localFile = localpath + fName;
             // 文件下载
-            Object ob = acc.copy(file, localFile);
+            Object ob = null;
+            try {
+                ob = acc.copy(file, localFile);
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+                throw new IllegalAccessException ();
+            }
             if (Reply.isOK(ob)) {
                 getLogger().info("文件下载成功:{}", localFile);
                 fileList.add(new File(localpath + fName));
@@ -194,7 +214,13 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
                 }
                 String localFile = localpath + fName;
                 // 文件下载
-                Object ob = acc.copy(file, localFile);
+                Object ob = null;
+                try {
+                    ob = acc.copy(file, localFile);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    throw new IllegalAccessException ();
+                }
                 if (Reply.isOK(ob)) {
                     getLogger().info("文件下载成功:{}", localFile);
                     fileList.add(new File(localpath + fName));
@@ -215,7 +241,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      */
     @Override
     public int saveInterfData(InterfSMS004Entity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -224,7 +250,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      */
     @Override
     public int saveBusinessData(InterfSMS004Entity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -244,7 +270,7 @@ public class InterfSMS004Service extends ReceivedEsbService<InterfSMS003Entity, 
      */
     @Override
     public InterfSMS003Entity selectResponseData(InterfSMS004Entity entity)
-        throws Exception {
+            throws IllegalAccessException, InterfException {
         InterfSMS003Entity resEntity = new InterfSMS003Entity();
         Map<String, Object> interfCahe = getSysParamMap();
         // 连接参数取得

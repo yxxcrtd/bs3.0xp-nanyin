@@ -1,7 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.common.base.dao.ChbSysPageDictlistHisMapper_mysql">
-	<insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistHis" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysPageDictlistHis" >
+        <result column="C_S_P_D_H_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_H_HIS_NO" property="hisNo" jdbcType="DECIMAL" />
+        <result column="C_S_P_D_H_DICT_ID" property="dictId" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_H_DICT_ITEM_VAL" property="dictItemVal" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_H_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_P_D_H_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_H_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_P_D_H_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_P_D_H_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistHis" >
+        insert into CHB_SYS_PAGE_DICTLIST_HIS (PAGE_ID, HIS_NO, DICT_ID,
+            DICT_ITEM_VAL, STATUS, CREATE_USER,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{pageId,jdbcType=VARCHAR}, #{hisNo,jdbcType=DECIMAL}, #{dictId,jdbcType=VARCHAR},
+            #{dictItemVal,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistHis" >
+        insert into CHB_SYS_PAGE_DICTLIST_HIS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="hisNo != null" >
+                HIS_NO,
+            </if>
+            <if test="dictId != null" >
+                DICT_ID,
+            </if>
+            <if test="dictItemVal != null" >
+                DICT_ITEM_VAL,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="hisNo != null" >
+                #{hisNo,jdbcType=DECIMAL},
+            </if>
+            <if test="dictId != null" >
+                #{dictId,jdbcType=VARCHAR},
+            </if>
+            <if test="dictItemVal != null" >
+                #{dictItemVal,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertHisByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysPageDictlistHis" >
         insert into CHB_SYS_PAGE_DICTLIST_HIS(PAGE_ID, HIS_NO, DICT_ID, DICT_ITEM_VAL, STATUS, 
         CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
         select PAGE_ID, (select IFNULL(max(HIS_NO), 0) from CHB_SYS_PAGE_DICTLIST_HIS where STATUS IN('E','D')) + 1 as HIS_NO, DICT_ID, DICT_ITEM_VAL, STATUS, 

@@ -72,9 +72,9 @@ public class AssetImpairmentStageJudgeModelListener implements JobExecutionListe
         List<ModValBatchLogResult> params = (List<ModValBatchLogResult>)jobExecution.getExecutionContext().get(LOG_KEY);
         if (CollectionUtils.isNotEmpty(params)) {
             for (ModValBatchLogResult param : params) {
-                if(param.getType().equals(ModelDictCodeList.批处理执行结果_异常结束.getValue())){
+                if(param.getType().equals(ModelDictCodeList.模型计算结果_失败.getValue())){
                     modLogsService.error(param.getFinprodId(), param.getBatchExecSeqno(), taskId, param.getMsg());
-                }else if(param.getType().equals(ModelDictCodeList.批处理执行结果_警告.getValue())){
+                }else if(param.getType().equals(ModelDictCodeList.模型计算结果_警告.getValue())){
                     modLogsService.warn(param.getFinprodId(), param.getBatchExecSeqno(), taskId, param.getMsg());
                 }else{
                     modLogsService.success(param.getFinprodId(), param.getBatchExecSeqno(), taskId

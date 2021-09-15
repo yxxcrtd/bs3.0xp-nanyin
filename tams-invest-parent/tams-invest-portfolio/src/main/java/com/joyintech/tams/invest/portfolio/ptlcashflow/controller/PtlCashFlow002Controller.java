@@ -21,6 +21,7 @@ import com.joyintech.tams.component.business.common.service.BussCommonMapperDele
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -134,6 +135,12 @@ public class PtlCashFlow002Controller extends BaseController{
                 wflTrdProductDeal.setTradeId(busiNo);
                 wflTrdProductDeal = bussCommonMapperDelegateService.selectByMultiPrimaryKey(WflTrdProductDealMapper.class, wflTrdProductDeal, WflTrdProductDeal.class);
             }
+            WflTrdProductDeal wflTrdProductDeal1 = new WflTrdProductDeal();
+            if(bussCommonMapperDelegateService != null){
+                wflTrdProductDeal1.setWorkflowStatus(DictCodeList.数据状态_修改中.getValue());
+                wflTrdProductDeal1.setTradeId(busiNo);
+                wflTrdProductDeal1 = bussCommonMapperDelegateService.selectByMultiPrimaryKey(WflTrdProductDealMapper.class, wflTrdProductDeal1, WflTrdProductDeal.class);
+            }
 
             if(wflTrdProductDeal != null){
                 String workFlowId = wflTrdProductDeal.getWorkflowId();
@@ -152,7 +159,25 @@ public class PtlCashFlow002Controller extends BaseController{
                     }
                 }
 
-            }else {
+            }else if(wflTrdProductDeal1 != null){
+                String workFlowId = wflTrdProductDeal1.getWorkflowId();
+                if(workFlowId != null && !workFlowId.isEmpty()){
+                    PtlCashFlowDto entity = ptlCashFlowService.getBussinessEntityByWorkflowId(
+                            workFlowId);
+
+                    if (StringUtil.isEmpty(entity.getFinprodType2())) {
+                        entity.setFinprodType2(finprodType2);
+                    }
+
+                    model.addAttribute("entity",entity);
+
+                    if(entity.getBussTrdTransferOrder() != null && entity.getBussTrdTransferOrder().size()>0){
+                        model.addAttribute("entity_bussTrdTransferOrderDto",JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
+                    }
+                }
+
+            }
+            else {
 
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("busiNo", busiNo);
@@ -265,8 +290,7 @@ public class PtlCashFlow002Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) PtlCashFlowDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) PtlCashFlowDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

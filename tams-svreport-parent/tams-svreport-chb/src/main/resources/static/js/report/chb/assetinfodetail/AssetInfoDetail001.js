@@ -32,6 +32,20 @@
 				return getSearchParams();
 			}
 		},
+		//add by yjp ZGBSEI-188增加双击查看 20210811 start
+		/**
+		 * 双击查看
+		 */
+		dblclick: function (table, data) {
+			Joyin.dialog(JoyinUtil.getLabel("FinStockInfo002.title"),
+				basePath + "chb/assetinfodetail/AssetInfoDetail002/init",
+				"99%", "99%", {
+					pageModel: PAGE_MODEL_REFERENCE,
+					assetUuid: data.assetUuid,
+					dataStatus:data.dataStatus
+				});
+		},
+		//add by yjp ZGBSEI-188增加双击查看 20210811 end
 		rowno:false,
 		cols:[
 			{ field: 'assetUuid',width:0,sortField:'',visible:false},
@@ -65,11 +79,9 @@
 	 * 绑定删除事件
 	 */
 	table.bind('click', '.delt', function(data, index) {
-		var object = {assetUuid:data.assetUuid,dataStatus:data.dataStatus, operateType:"edit"};
+		var object = {selectedItem: [data],operateType:"delete"};
 		Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-			Joyin.ajax(basePath +'chb/assetinfodetail/AssetInfoDetail001/delete',object, function(result){
-				table.reload();
-			});
+			WorkFlow.doDeleteList(basePath + 'chb/assetinfodetail/AssetInfoDetail001/delete', object, "AssetInfoDetail001_btn_delete", "AssetInfoDetail002");
 		});
 	});
 
@@ -86,16 +98,46 @@
 				function(){table.reload();});
 		});
 
+		// 导入按钮
+		$('#AssetInfoDetail001_btn_import').click(function() {
+			Joyin.confirm("请确认是否要导入数据？", function() {
+				var options = {};
+				options.pageId = "AssetInfoDetail001_2";
+				options.exts = 'zip|xls|xlsx';
+				Joyin.uploadFile(options,function(fileName) {
+					Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/checkConfirmMsgForImportData', {fileName: fileName}, function() {
+						Joyin.ajax(basePath + 'chb/assetinfodetail/AssetInfoDetail001/importFile', {fileName: fileName},function () {
+							table.reload();
+						});
+					});
+				},function() {
+					table.reload();
+				});
+			});
+		});
 
 		// 导出按钮
 		$('#AssetInfoDetail001_btn_export').click(function(){
 			var expArr=table.getAllCheckedRows();
-			if(expArr != null && expArr.length >0){
-				Joyin.confirm('确认导出选中信息？',function(){
-					exportExcel(1);
-				})
+			//modify by yjp ZGBSEI-90 20210803 start
+			var elementId = '';
+			var event = JoyinUtil.getEvent();
+			if ((elementId || elementId === '') && event && event.currentTarget && $(event.currentTarget).attr('id') && $(event.currentTarget).attr('id') != elementId) {
+				elementId = $(event.currentTarget).attr('id');
+			}
+            //导出选中行
+			if ((elementId.indexOf("_btn_exportCheck")!=-1)) {
+				if(expArr.length == 0) {
+					Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+					return;
+				}else{
+					Joyin.confirm('确认导出选中信息？',function(){
+						exportExcel(1);
+					})
+				}
 			}else{
-				Joyin.confirm('确认导出查询结果？',function(){
+			//导出全部行
+				Joyin.confirm('确认导出全部信息？',function(){
 					exportExcel(0);
 				})
 			}
@@ -103,21 +145,21 @@
 
 		/**
 		 * 导出
-		 * flag:0 全部导出，选中导出
+		 * flag:0 全部导出，1 选中导出
 		 */
 		var exportExcel = function(flag) {
 
 			var selectedItem = table.getAllCheckedRows();
 			var paramObj={};
-			if(selectedItem.length==0){
+			if(flag==0){
 				paramObj= getSearchParams();
-			}
-			else{
+			}else{
 				//add by wm 针对特殊字符处理  jason 识别“'”字符时转换会有问题，将企转换为“&apos;” end
 				paramObj.keyList = JSON.stringify(selectedItem);
 			}
 			Joyin.exportExcel('export', paramObj);
 		};
+		//modify by yjp ZGBSEI-90 20210803 end
 	});
 }());
 

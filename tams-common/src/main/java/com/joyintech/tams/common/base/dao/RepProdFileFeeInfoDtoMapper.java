@@ -2,7 +2,9 @@ package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDto;
 import com.joyintech.tams.common.base.entity.RepProdFileFeeInfoDtoKey;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RepProdFileFeeInfoDtoMapper {
     int deleteByPrimaryKey(RepProdFileFeeInfoDtoKey key);
 

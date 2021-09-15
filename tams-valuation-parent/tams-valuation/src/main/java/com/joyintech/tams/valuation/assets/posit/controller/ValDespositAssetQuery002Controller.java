@@ -347,7 +347,7 @@ public class ValDespositAssetQuery002Controller extends BaseController {
     @RequestMapping("commitCheck")
     public AjaxResult check(@Valid @RequestBody ValDespositAssetQuery002Dto dto,
                             BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }

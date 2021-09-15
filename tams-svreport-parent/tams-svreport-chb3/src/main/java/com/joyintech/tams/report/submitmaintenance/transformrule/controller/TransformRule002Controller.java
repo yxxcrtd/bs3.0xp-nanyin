@@ -1,7 +1,17 @@
 package com.joyintech.tams.report.submitmaintenance.transformrule.controller;
 
-import java.util.Map;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.security.SecurityUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
+import com.joyintech.tams.report.submitmaintenance.transformrule.service.TransformRuleMService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,19 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.report.submitmaintenance.transformrule.dto.TransformRule001Dto;
-import com.joyintech.tams.report.submitmaintenance.transformrule.service.TransformRuleMService;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  *  变形转换规则新建界面Controller
@@ -97,6 +96,15 @@ public class TransformRule002Controller extends BaseController{
 	   transformRuleMService.doSave(dto);
 	   return new AjaxResult(this.getMessage("保存成功!"));
    }
+
+    @ResponseBody
+    @RequestMapping("ch2Unicdoe")
+    public TransformRule001Dto ch2Unicdoe(@RequestBody String Code) throws UnsupportedEncodingException {
+       String backCode = transformRuleMService.ch2Unicdoe(Code);
+        TransformRule001Dto dto = new TransformRule001Dto();
+        dto.setFieldUnicode(backCode);
+        return dto;
+    }
    
    
    /**

@@ -165,7 +165,7 @@
             UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
             UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
             SUB_NAME = #{subName,jdbcType=VARCHAR},
-            SUB_CLASS = #{subClass,jdbcType=VARCHAR},
+          <!--  SUB_CLASS = #{subClass,jdbcType=VARCHAR},-->
             ASSET_SOURCE = #{assetSource,jdbcType=VARCHAR}
         where PTL_ID = #{ptlId,jdbcType=VARCHAR}
         <if test="tblMarketId != null and tblMarketId !=''">

@@ -43,7 +43,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
 //     */
 //    @DataSource(DataSourceType.MASERT)
 //    public Page<ValMstCapAcctInfoDto> findPage(Map<String, Object> pageParam)
-//        throws Exception {
+//        {
 //    	 return super.queryForPage(()-> valMstCapAcctInfoMapper.queryPageList(pageParam));
 //    }
     
@@ -54,7 +54,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValMstCapAcctInfoDto> findPage(Map<String, Object> parameters) throws Exception {
+    public Page<ValMstCapAcctInfoDto> findPage(Map<String, Object> parameters) {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ValMstCapAcctInfo001/findPage",
             parameters, ValMstCapAcctInfoDto.class);
@@ -69,7 +69,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
 //     */
 //    @DataSource(DataSourceType.MASERT)
 //    public boolean deleteValMatAcctInfoByAcctno(ValMstCapAcctInfoDto dto)
-//        throws Exception {
+//          {
 //    	 boolean flag = false;
 //    	 String acctNo = dto.getAcctNo();
 //    	 int num = valMstCapAcctInfoMapper.deleteValMatAcctInfoByAcctno(acctNo);
@@ -88,7 +88,7 @@ public class ValMstCapAcctInfoService extends CommonExportService<ValMstCapAcctI
       */
      @DataSource(DataSourceType.MASERT)
      public boolean deleteValMatAcctInfoByAcctno(ValMstCapAcctInfoDto dto)
-         throws Exception {
+          {
         return restTemplate.postForObject(
              ServiceApplication.VALUATION_SERVICE_NAME + "/ValMstCapAcctInfo001/delete",
              dto, Boolean.class); 

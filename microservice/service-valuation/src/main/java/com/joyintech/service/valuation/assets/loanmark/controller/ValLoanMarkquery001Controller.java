@@ -54,7 +54,7 @@ public class ValLoanMarkquery001Controller extends BaseController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<ValLoanMarkquery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
         return valLoanMarkquery001Service.findPage(page, length, param);
     }
 

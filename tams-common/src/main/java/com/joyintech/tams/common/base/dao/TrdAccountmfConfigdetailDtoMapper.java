@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.TrdAccountmfConfigdetailDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TrdAccountmfConfigdetailDtoMapper {
     int deleteByPrimaryKey(String seqNo);
 

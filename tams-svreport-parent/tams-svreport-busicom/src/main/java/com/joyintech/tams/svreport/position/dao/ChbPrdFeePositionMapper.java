@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbPrdFeeDeal;
 import com.joyintech.tams.svreport.position.dto.ChbPrdFeePosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbPrdFeePositionMapper {
 	
     int insertBatch(@Param("insertDataList")List<ChbPrdFeePosition> insertDataList);

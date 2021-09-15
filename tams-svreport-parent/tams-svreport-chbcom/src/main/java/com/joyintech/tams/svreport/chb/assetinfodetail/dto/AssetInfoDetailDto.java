@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 描述:CHB_ASSET_INFO_SUB表的实体类,用于前台分类展示
@@ -46,6 +47,27 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 	private String mDateStr;
 
 	private String  errMsg;
+
+
+	/**
+	 * 操作类型
+	 */
+	private String operateType;
+
+	/**
+	 * 要素id
+	 */
+	private String elementId;
+
+	/**
+	 * 目的和意义以及可能会用到的地方
+	 */
+	private String pageModel;
+
+	/**
+	 * 选择数据
+	 */
+	private List<AssetInfoDetailDto> selectedItem;
 
 	public String getErrMsg() {
 		return errMsg;
@@ -314,5 +336,37 @@ public class AssetInfoDetailDto extends ChbAssetInfo implements ITableRow,Proces
 
 	public void setSvrBussRepPlacementInfoDto(SvrBussRepPlacementInfoDto svrBussRepPlacementInfoDto) {
 		this.svrBussRepPlacementInfoDto = svrBussRepPlacementInfoDto;
+	}
+
+	public String getOperateType() {
+		return operateType;
+	}
+
+	public void setOperateType(String operateType) {
+		this.operateType = operateType;
+	}
+
+	public String getElementId() {
+		return elementId;
+	}
+
+	public void setElementId(String elementId) {
+		this.elementId = elementId;
+	}
+
+	public List<AssetInfoDetailDto> getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(List<AssetInfoDetailDto> selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public String getPageModel() {
+		return pageModel;
+	}
+
+	public void setPageModel(String pageModel) {
+		this.pageModel = pageModel;
 	}
 }

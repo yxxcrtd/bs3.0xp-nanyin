@@ -20,6 +20,7 @@ import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvaluec
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.dto.BokFileTransfer003Dto;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.dto.BokNetValueCfmFileDto;
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.dto.ValNetValueConfirm001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -29,6 +30,7 @@ import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvaluec
  * @see ValNetValueConfirm001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValNetValueConfirm001Mapper {
     
     /**

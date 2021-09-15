@@ -47,7 +47,7 @@ public class MstBondCreditRatingService extends BaseService<MstBondCreditRating>
      * @since 1.0
      */
     public Page<MstBondCreditRating> selectMstBondCreditPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> mstMarketInstitutionsMapper.selectMstBondCreditPage(pageParam));
     }
 }

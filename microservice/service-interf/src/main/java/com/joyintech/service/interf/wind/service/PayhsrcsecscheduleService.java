@@ -63,7 +63,7 @@ public class PayhsrcsecscheduleService extends WindService<InterfPayhsrcsecsched
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfPayhsrcsecschedule entity) throws Exception {
+	public int insert(InterfPayhsrcsecschedule entity) {
 	//	insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		return insertMapper.insert(entity);
 	}

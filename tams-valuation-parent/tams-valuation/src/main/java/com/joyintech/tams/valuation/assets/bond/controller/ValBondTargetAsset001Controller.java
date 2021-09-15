@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -108,7 +109,7 @@ public class ValBondTargetAsset001Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValBondTargetAssetDto> findPage() throws Exception {
+    public Page<ValBondTargetAssetDto> findPage() {
     	Map<String,Object> reqMap = RequestUtil.getPageParam();
         return finBondTargetAssetService.findPage(reqMap);
     }
@@ -143,8 +144,7 @@ public class ValBondTargetAsset001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) ValBondTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) ValBondTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -177,7 +177,7 @@ public class ValBondTargetAsset001Controller extends BaseController{
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
     	Map<String, Object> param = RequestUtil.getParameters(getRequest());
     	param.put("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE"));
         return finBondTargetAssetService.export(this.getPageId(),param);

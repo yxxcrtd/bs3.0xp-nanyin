@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.valuation.assets.posit.dto.ValDespositAssetQuery001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 存款类资产查询
@@ -14,6 +15,7 @@ import com.joyintech.tams.valuation.assets.posit.dto.ValDespositAssetQuery001Dto
  * @see ValDespositAssetQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValDespositAssetQuery001Mapper {
 
     /**

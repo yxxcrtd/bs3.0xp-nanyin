@@ -58,8 +58,8 @@ public class SvrStartupConfiguration extends StartupConfiguration{
         
     }
 
-    @Override
-    public void run() {
-        logger.info("TAMSSVR服务不重新加载缓存222222");
-    }
+//    @Override
+//    public void run() {
+//        logger.info("TAMSSVR服务不重新加载缓存222222");
+//    }
 }

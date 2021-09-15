@@ -349,8 +349,7 @@ public class TrdPlanNetInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdPlanNetInvestTradeDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody TrdPlanNetInvestTradeDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

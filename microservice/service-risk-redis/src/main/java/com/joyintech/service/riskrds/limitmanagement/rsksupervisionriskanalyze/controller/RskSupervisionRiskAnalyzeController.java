@@ -39,35 +39,35 @@ public class RskSupervisionRiskAnalyzeController {
     @PostMapping("findPage/{page}/{length}")
     public Page<RskSupervisionRiskAnalyzeDto> selectAll(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return rskSupervisionRiskAnalyzeService.selectForPage(page, length, param);
     }
     
     @PostMapping("findPageInit/{page}/{length}")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllInit(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return rskSupervisionRiskAnalyzeService.selectForPageInit(page, length, param);
     }
     
     @PostMapping("findPageMx/{page}/{length}")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllMx(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return rskSupervisionRiskAnalyzeService.selectForPageMx(page, length, param);
     }
     
     @PostMapping("findPageNx/{page}/{length}")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllNx(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return rskSupervisionRiskAnalyzeService.selectForPageNx(page, length, param);
     }
     
     @PostMapping("findPageFu/{page}/{length}")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllFu(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return rskSupervisionRiskAnalyzeService.selectForPageFu(page, length, param);
     }
 

@@ -475,14 +475,14 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
         	}
         }
         //证券托管户 与通道二选一
-        if(("".equals(inputDto.getChlId())||inputDto.getChlId()==null)&&("".equals(inputDto.getSecManageAcctId())||inputDto.getSecManageAcctId()==null)){
+        if((StringUtil.isBlank(inputDto.getBondFirstSign())) && (inputDto.getChlId()==null||"".equals(inputDto.getChlId()))&&(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId()))){
         	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014_2"));
         	
         	errorList.add(validMessage);
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+        if(inputDto.getChlId()!=null&&!"".equals(inputDto.getChlId())){
             Integer count;
             Map<String,Object> sMap= new HashMap<String ,Object>();
 

@@ -134,7 +134,7 @@ public class FundBackgroundManagement001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return fundBackgroundManagement001Service.export(getPageId(), RequestUtil.getParameters(getRequest()));
     }
 }

@@ -13,6 +13,7 @@ import com.joyintech.calculation.shell.param.*;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 @Service
 public class BondAssetCalcService extends BaseService {
 
-    public BigDecimal 计算债券单位利息(BondAssetCalcInputDto bondAssetCalcInputDto) throws Exception {
+    public BigDecimal 计算债券单位利息(BondAssetCalcInputDto bondAssetCalcInputDto) {
         // 如果交易场所为上交所、深交所以外的情况
         boolean isJiaoYiSuo = true;
         if (!StringUtil.equals(DictCodeListExt1.交易场所_上海证券交易所.getValue(), bondAssetCalcInputDto.getTradeMarket())
@@ -248,7 +249,7 @@ public class BondAssetCalcService extends BaseService {
             // 计算利息
             SecIntSchedule secIntSche = getSecIntSchedule(accurIntCalInParameter.getCalDate(), accurIntCalInParameter.getSecIntScheduleList());
             if (secIntSche == null) {
-                throw new Exception("交易日期不属于债券的任何一个区间。");
+                throw new BusinessException("交易日期不属于债券的任何一个区间。");
             }
             AccurIntCalOutParameter accurIntCalOutParameter = calc.calculate(accurIntCalInParameter);
             accurInt = ArithmeticUtil.round(accurIntCalOutParameter.getInterest(), SCALE, RoundingMode.HALF_UP);

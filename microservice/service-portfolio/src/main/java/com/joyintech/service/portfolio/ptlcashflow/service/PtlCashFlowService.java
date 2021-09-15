@@ -214,7 +214,7 @@ public class PtlCashFlowService extends BaseService<PtlCashFlowDto>{
      * @see
      * @since 1.0
      */
-    public Page<PtlCashFlowDto> selectForPage(int page, int length,Map<String, Object> param) throws Exception {
+    public Page<PtlCashFlowDto> selectForPage(int page, int length,Map<String, Object> param)  {
         param.put("FINPROD_TYPE_TG_F23", DictCodeListExt1.金融产品类型_投管用_自定义现金流.getValue());
         if(param.get("portfolioId") != null && !param.get("portfolioId").equals("")){
             List<String> portfolioId = new ArrayList<String>();

@@ -55,7 +55,7 @@ public class SubjectBalanceImpMainService extends AutoSendCBBaseService{
                 logger.error("CHB_INTERF_CONFIG表中内容来源配置无效！");
             }
     	}catch(Exception e){
-    		throw e;
+    		throw new BusinessException(e);
     	}
     	logger.debug("资产基础指标表上游数据接入批处理");
 		logInfoBatchEnd();

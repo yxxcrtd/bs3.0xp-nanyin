@@ -40,7 +40,7 @@ public class RskSupervisionLogController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskSupervisionLogDto> selectAll(@RequestBody Map<String, Object> param,
-                                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                           @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionLogService.selectForPage(page, length, param);
     }
 

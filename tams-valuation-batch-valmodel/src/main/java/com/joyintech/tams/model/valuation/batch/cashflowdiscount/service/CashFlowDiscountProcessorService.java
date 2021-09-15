@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 
+import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
 import com.joyintech.calculation.bonds.constant.IntRateType;
@@ -39,12 +40,15 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam
 import com.joyintech.tams.model.valuation.batch.calculation.util.BasicUtil;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -76,12 +80,14 @@ public class CashFlowDiscountProcessorService {
     /**
      * 处理
      *
+     *
+     * @param items
      * @param param1
      * @return
      */
-    public CashFlowDiscountResult execute(Map<String, Object> param1) {
+    public CashFlowDiscountResult execute(NeedOperateEntity items, Map<String, Object> param1, StepExecution stepExecution) {
         // 获取reader返回值
-        CashFlowDiscountReaderResult entity = (CashFlowDiscountReaderResult) param1.get("READER_RESULT");
+        CashFlowDiscountReaderResult entity = (CashFlowDiscountReaderResult) items;
 
         // 定义返回值list
         CashFlowDiscountResult result = new CashFlowDiscountResult();
@@ -95,8 +101,8 @@ public class CashFlowDiscountProcessorService {
         ModAssetInfoDto modAssetInfoDto = entity.getModAssetInfoDto();
         //资产代码
         String finprodId = modAssetInfoDto.getFinprodId();
-        Date happenDate = (Date) param1.get("HAPPEN_DATE"); // 发生日：批处理任务执行信息.处理日（发生日）
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param1.get("BATCH_INFO");
+        Date happenDate = (Date) param1.get(ValComponentConstant.EXECUTE_DATE); // 发生日：批处理任务执行信息.处理日（发生日）
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param1.get(ValComponentConstant.BATCH_EXECUTEINFO);
         //处理业务数据
         //是否资产定价
         boolean isAssetPrice = false;
@@ -104,32 +110,27 @@ public class CashFlowDiscountProcessorService {
         Date assetPriceBaseDate = happenDate;
         try {
             if (null == entity.getModCurveConfig()) {
-                modLogsService.error(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                        "【现金流贴现模型批处理】：未配置未配置收益率曲线");
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：未配置未配置收益率曲线.");
                 return result;
             }
             if (StringUtil.isEmptyList(entity.getModCashFlows())) {
-                modLogsService.error(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                        "【现金流贴现模型批处理】：资产无未来现金流");
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：资产无未来现金流.");
                 return result;
             }
             if (!StringUtil.isEmptyList(entity.getModCashFlowPayRules())) {
                 if (StringUtil.isEmpty(entity.getModCashFlowPayRules().get(0).getPayCycle())) {
-                    modLogsService.error(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                            "【现金流贴现模型批处理】：资产无付息频率");
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：资产无付息频率.");
                     return result;
                 }
             }
             if (!StringUtil.isEmptyList(entity.getModCashFlowCalRules())) {
                 if (StringUtil.isEmpty(entity.getModCashFlowCalRules().get(0).getBasis())) {
-                    modLogsService.error(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                            "【现金流贴现模型批处理】：资产无计息基础");
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：资产无计息基础.");
                     return result;
                 }
             }
             if (null == entity.getViewRatingInfoDto()) {
-                modLogsService.warn(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                        "【现金流折现模型批处理】：资产无评级，采用最小利差法反算");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：资产无评级，采用最小利差法反算.");
             }
             //资产定价基准价格,基准日恒定为起息日
             BigDecimal assetPriceBasePrice = null;
@@ -167,8 +168,7 @@ public class CashFlowDiscountProcessorService {
                 //曲线行情处理
                 calCurveInfo = handleCurve(entity, assetPriceBaseDate);
                 if (calCurveInfo.isEmpty()) {
-                    modLogsService.warn(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                            "【现金流折现模型批处理】：当天无收益率曲线行情");
+                    modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：当天无收益率曲线行情.");
                 }
                 //处理风险溢价
                 modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo);
@@ -244,8 +244,7 @@ public class CashFlowDiscountProcessorService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("现金流贴现批处理processor相关业务处理异常:资产代码=" + modAssetInfoDto.getFinprodId() + "====" + e.getMessage());
-            modLogsService.warn(finprodId, batchExecuteInfo.getBatchExedetailSeqNo(), batchExecuteInfo.getTaskId(),
-                    "【现金流折现模型批处理】：计算错误");
+            modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：计算错误.");
         }
         return result;
 

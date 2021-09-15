@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.report.system.batchprocessing.dao.BatchProcessing001Mapper_mysql">
+    <insert id="insertBatchData" parameterType="com.joyintech.tams.report.system.batchprocessing.dto.BatchProcessing001Dto">
+        INSERT
+        INTO
+        CHB_SYS_BATCH_INFO
+        (
+        BATCH_ID,
+        BEAN_NAME,
+        JOB_ID,
+        BATCH_START_DATE,
+        BATCH_END_DATE,
+        LOG_FILE_CODE,
+        TASK_STATUS,
+        OPERATOR,
+        START_MODE,
+        STATUS,
+        CREATE_USER,
+        CREATE_TIME,
+        UPDATE_USER,
+        UPDATE_TIME
+        )
+        <foreach collection="taskList" item= "dto" separator="union all">
+            SELECT
+            #{dto.batchId},
+            #{dto.beanName},
+            #{dto.jobId},
+            #{dto.batchStartDate,jdbcType=DATE},
+            #{dto.batchEndDate,jdbcType=DATE},
+            #{dto.logFileCode},
+            #{dto.taskStatus},
+            #{dto.operator},
+            #{dto.startMode},
+            #{dto.status},
+            #{dto.createUser},
+            #{dto.createTime,jdbcType=DATE},
+            #{dto.updateUser},
+            #{dto.updateTime,jdbcType=DATE}
+            from dual
+        </foreach>
+    </insert>
+    <select id="getShowDataList" resultType="com.joyintech.tams.report.system.batchprocessing.dto.BatchProcessing001Dto">
+        SELECT
+        cst.TASK_NAME processName,
+        csbi.BATCH_ID batchId,
+        csbi.BATCH_START_DATE dealDate,
+        csbi.TASK_STATUS taskStatus
+        FROM CHB_SYS_BATCH_INFO csbi
+        <!-- 系统任务表 -->
+        left join CHB_SYS_TASK cst on csbi.JOB_ID=cst.TASK_ID and cst.STATUS = 'E'
+        <where>
+            csbi.LOG_FILE_CODE = #{fileId}
+        </where>
+    </select>
+    <select id="getBatchLogPath" resultType="java.lang.String">
+		SELECT csp.PARAM_VALUE
+			from SYS_PARA csp
+		where
+			csp.PARA_CODE='BATCH_LOGFILE_DIR'
+			and csp.MODULE_CODE='01'
+			and csp.SUBSYSTEM_CODE='02'
+	</select>
+</mapper>

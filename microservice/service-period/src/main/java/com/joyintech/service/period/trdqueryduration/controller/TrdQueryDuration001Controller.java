@@ -42,7 +42,7 @@ public class TrdQueryDuration001Controller {
     @PostMapping("findPage/{page}/{length}")
     public Page<TrdQueryDurationDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdQueryDuration001Service.findPage(page, length, param);
     }
 
@@ -55,7 +55,7 @@ public class TrdQueryDuration001Controller {
     @PostMapping("getSecAcctIdAndChlIds/{page}/{length}")
     public Page<SelectOptionDto> getSecAcctIdAndChlIds(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-            throws Exception {
+    {
         return trdQueryDuration001Service.getSecAcctIdAndChlIds(page, length, param);
     }
 
@@ -68,7 +68,7 @@ public class TrdQueryDuration001Controller {
      */
     @GetMapping("/getFinprodMarketIds")
     public List<SuggestDto> getFinprodMarketIds(String finprodMarketId)
-        throws Exception {
+    {
         return trdQueryDuration001Service.getFinprodMarketIds(finprodMarketId);
     }
 
@@ -94,7 +94,7 @@ public class TrdQueryDuration001Controller {
      */
     @GetMapping("/getType6")
     public String getType6(String finprodId)
-        throws Exception {
+    {
         return trdQueryDuration001Service.getType6(finprodId);
     }
 }

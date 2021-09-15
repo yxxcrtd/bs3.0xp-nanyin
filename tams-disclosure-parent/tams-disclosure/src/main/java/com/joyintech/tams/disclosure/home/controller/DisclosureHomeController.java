@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,8 +72,7 @@ public class DisclosureHomeController extends BaseController {
      */
     @RequestMapping(value = "/getdataTableCols", produces = "text/plain;charset=utf-8") //produces:解决json中文乱码
     @ResponseBody
-    public String getdataTableCols()
-        throws Exception {
+    public String getdataTableCols(){
         List<RepFtpPath> pathList = reportHomeService.getdataTableCols();
         String jsonStr = "";
         if (pathList != null && pathList.size() > 0) {
@@ -89,7 +89,7 @@ public class DisclosureHomeController extends BaseController {
             }
             jsonStr = JsonUtils.object2Json(colsList);
         }
-        return jsonStr;
+        return StringUtil.trimHtmlTag(jsonStr);
     }
     
     /**
@@ -102,7 +102,7 @@ public class DisclosureHomeController extends BaseController {
      */
     @RequestMapping("searchdataDpl")
     @ResponseBody
-    public List<RevalInfo> queryPageListDpl()throws Exception {
+    public List<RevalInfo> queryPageListDpl() {
         Map<String, Object> parmMap = new HashMap<String, Object>();
 //        parmMap.put("searchDate",this.getParam("searchDate"));
         parmMap.put("searchDateStart",this.getParam("searchDateStart"));
@@ -119,7 +119,7 @@ public class DisclosureHomeController extends BaseController {
      */
     @RequestMapping("/searchdataYpl")
     @ResponseBody
-    public List<RevalInfo> queryPageListYpl()throws Exception {
+    public List<RevalInfo> queryPageListYpl() {
         Map<String, Object> parmMap = new HashMap<String, Object>();
         parmMap.put("sysDate",DateUtil.format(DateUtil.now(), "yyyy-MM-dd"));
         return reportHomeService.queryListYpl(parmMap);
@@ -135,7 +135,7 @@ public class DisclosureHomeController extends BaseController {
      */
     @RequestMapping("/searchdataYjpl")
     @ResponseBody
-    public List<RevalInfo> queryPageListYjpl()throws Exception {
+    public List<RevalInfo> queryPageListYjpl() {
         return reportHomeService.queryPageListYjpl(null);
     }
     
@@ -148,7 +148,7 @@ public class DisclosureHomeController extends BaseController {
     */
     @RequestMapping("/searchInfoArea")
     @ResponseBody
-    public Map<String,InfoAreaDto> searchInfoArea() throws Exception {
+    public Map<String,InfoAreaDto> searchInfoArea() {
         return reportHomeService.searchInfoArea();
     }
     /**
@@ -160,7 +160,7 @@ public class DisclosureHomeController extends BaseController {
     */
     @RequestMapping("/searchReportInfo")
     @ResponseBody
-    public Map<String,SubmitInformationRegistrationDto> searchReportInfo() throws Exception {
+    public Map<String,SubmitInformationRegistrationDto> searchReportInfo() {
         return reportHomeService.searchReportInfo(this.getParam("searchDate"));
     }
     /**
@@ -172,7 +172,7 @@ public class DisclosureHomeController extends BaseController {
     */
     @RequestMapping("/searcheBatchexportTemplates")
     @ResponseBody
-    public Map<String,InfoAreaDto> searcheBatchxportTemplates() throws Exception {
+    public Map<String,InfoAreaDto> searcheBatchxportTemplates() {
         return reportHomeService.searcheBatchxportTemplates();
     }
     /**

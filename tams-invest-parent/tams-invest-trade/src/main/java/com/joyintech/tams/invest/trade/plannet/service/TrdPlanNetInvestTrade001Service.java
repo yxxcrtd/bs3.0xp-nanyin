@@ -133,10 +133,15 @@ public class TrdPlanNetInvestTrade001Service extends CommonExportService<TrdPlan
             }
         }
         //删除授信占用
-        if(StringUtil.equals(DictCodeList.交易方向_申购.getValue(), entity.getPs()) || 
-        		StringUtil.equals(DictCodeList.交易方向_赎回确认.getValue(), entity.getPs())) {
+        if(StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购.getValue())){
+            if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
+                riskCreditListCommonValidatorService.deleteCredit(entity.getTradeId());
+            }
+        }
+        if(StringUtil.equals(DictCodeList.交易方向_赎回确认.getValue(), entity.getPs())) {
             if (null != entity.getTradeId() && !"".equals(entity.getTradeId())){
                 List<String> tradeids = riskCreditListCommonValidatorService.selectTradeidByBTtradid(entity.getTradeId());
+                tradeids.add(entity.getTradeId());
                 if (StringUtil.isNotEmpty(tradeids)) {
                     for(String tradeid : tradeids) {
                         riskCreditListCommonValidatorService.deleteCredit(tradeid);

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,7 +78,7 @@ public class FinProductAnapleroticInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdIdInfo")
-    public List<SelectOptionDto> queryProdIdInfo() {
+    public Page<SelectOptionDto> queryProdIdInfo() {
         return finProductAnapleroticInfo001Service.queryProdIdInfo(RequestUtil.getPageParam());
     }
     /**
@@ -89,7 +90,7 @@ public class FinProductAnapleroticInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("deleteByPrimaryKey")
-    public AjaxResult deleteByPrimaryKey(@RequestBody FinProductAnapleroticInfoDto dtop) throws Exception {
+    public AjaxResult deleteByPrimaryKey(@RequestBody FinProductAnapleroticInfoDto dtop) throws WorkFlowException {
         Map<String,Object> map = new HashMap<String, Object>();
         map.put("anapleroticId", dtop.getAnapleroticId());
         map.put("effDate",dtop.getEffDateStr());
@@ -154,7 +155,7 @@ public class FinProductAnapleroticInfo001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductAnapleroticInfo001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
     }
 }

@@ -53,7 +53,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception 异常信息
      */
     public Page<RskEvent001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskEvent001Mapper.selectEventList(pageParam));
     }
@@ -69,7 +69,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      */
     public Page<SelectOptionDto> selectMultiOptionEvent(int page, int length,
                                                         Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPageForSelectReturn(page, length,
             () -> rskEvent001Mapper.selectMultiOptionEvent(pageParam));
     }
@@ -82,7 +82,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception
      */
     public List<RskEvent> selectByEventName(String eventName)
-        throws Exception {
+    {
         return rskEvent001Mapper.selectByEventName(eventName);
     }
 
@@ -95,7 +95,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception
      */
     public List<RskEvent> selectByEventNameNotEqCode(String eventName, String eventCode)
-        throws Exception {
+    {
         return rskEvent001Mapper.selectByEventNameNotEqCode(eventName, eventCode);
     }
 
@@ -107,7 +107,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception
      */
     public RskEvent002Dto selectEventDetailInfoByCode(String eventCode)
-        throws Exception {
+    {
     	RskEvent002Dto dto = rskEvent002Mapper.selectEventDetailInfoByCode(eventCode);
     	if(!StringUtil.isEmptyList(dto.getParamList())){
     		dto.setParamGroup(getGroups(dto.getParamList()));
@@ -145,7 +145,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception
      */
     public RskEvent selectByEventCode(String eventCode)
-        throws Exception {
+    {
         return rskEventMapper.selectByPrimaryKey(eventCode);
     }
 
@@ -157,7 +157,7 @@ public class RskEventService extends BaseService<RskEvent001Dto> {
      * @throws Exception
      */
     public RskEvent003Dto selectEventRelParaByCode(String eventCode)
-        throws Exception {
+    {
         return rskEvent003Mapper.selectEventRelParaByCode(eventCode);
     }
 

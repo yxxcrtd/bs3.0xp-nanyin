@@ -42,7 +42,7 @@ public class FlowRiskFactroRManageController {
 	@Autowired
 	private FlowRiskFactroRManageService FlowRiskFactroRManageService;
 	@PostMapping("querycheck")
-    public List<FlowRiskFactroRManageDto> querycheck(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskFactroRManageDto> querycheck(@RequestBody Map<String, Object> param) {
        
         return FlowRiskFactroRManageService.querycheck(param);
     }

@@ -65,18 +65,21 @@
 		and rownum=1
     </select>
     <select id="selectAssociationModeOrgGrpName" resultType="java.lang.String">
-        select distinct sysi.institution_name  
+        select to_char(wm_concat(distinct sysi.institution_name))　as institutionName
 	    from  sys_batch_prd_grp sbpg
-	    inner join sys_batch_grp_prdlink sbgpl
-	    on sbpg.seq_no=sbgpl.group_seq
 	    inner join data_auth_notify_inst dani
-	    on sbgpl.product_id=dani.business_id
+	    on sbpg.seq_no=dani.business_id
 	    inner join sys_institution sysi
 	     on dani.institution_code=sysi.institution_code
-	     where seq_no=#{booksetOrg,jdbcType=VARCHAR}    
-	     and dani.data_type=#{dataType,jdbcType=VARCHAR}
-	     and dani.model_type='02'
-	     and rownum=1
+	     where 1=1 and seq_no in
+            <foreach collection="booksetOrg.split(',')" item="item" index= "index" open="(" close=")" separator="," >
+                <if test="(index % 998) == 0">
+                    null) or seq_no in (
+                </if>
+                #{item}
+            </foreach>
+            and dani.data_type=#{dataType,jdbcType=VARCHAR}
+            and dani.model_type='02'
     </select>
     <!-- 多级法人改造end add by hxy 20200617 -->
 </mapper>

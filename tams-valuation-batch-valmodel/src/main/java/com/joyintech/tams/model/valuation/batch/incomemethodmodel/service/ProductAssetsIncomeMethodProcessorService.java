@@ -21,10 +21,12 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.*;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +72,9 @@ public class ProductAssetsIncomeMethodProcessorService {
         ProductAssetsIncomeMethodResultDto resultDto = new ProductAssetsIncomeMethodResultDto();//从reader 返回结果result
         List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
 
-        Date plateDate = (Date)mapParam.get("PLATE_DATE");//平台日
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get("BATCH_INFO");
-        String taskId =(String)mapParam.get("TASK_ID");
+        Date plateDate = (Date)mapParam.get(ValComponentConstant.EXECUTE_DATE);//平台日
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get(ValComponentConstant.BATCH_EXECUTEINFO);
+        String taskId =batchExecuteInfo.getTaskId();
 
         ModAssetInfoDto modAssetInfoDto = item.getModAssetInfoDto();
         String finprodId=modAssetInfoDto.getFinprodId();
@@ -85,7 +87,7 @@ public class ProductAssetsIncomeMethodProcessorService {
         if(item!=null && item.getFinCashCalcRuleDtoList()!=null && item.getFinCashCalcRuleDtoList().size()>0){
             issuePaperRate = item.getFinCashCalcRuleDtoList().get(0).getYield();
         }else{
-            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在票面利率，无法进行收益法估值.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券不存在票面利率.");
             return resultDto;
         }
 
@@ -117,14 +119,14 @@ public class ProductAssetsIncomeMethodProcessorService {
         //2.1取估值日中债国债收益率曲线的最大年限点的利率
         BigDecimal valuationGovernmentDebtYield = queryYieldByDate(plateDate, batchExecuteInfo, taskId, finprodId);
         if(valuationGovernmentDebtYield==null){
-            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在估值日国债曲线收益率行情，无法进行收益法估值.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券不存在估值日国债曲线收益率行情.");
             return resultDto;
         }
 
         //2.2取基准日中债国债收益率曲线的最大年限点的利率
         BigDecimal baseDateGovernmentDebtYield = queryYieldByDate(baseDate, batchExecuteInfo, taskId, finprodId);
         if(baseDateGovernmentDebtYield==null){
-            modLogsService.error(finprodId,batchExecuteInfo.getBatchExedetailSeqNo(),taskId,"债券不存在基准日国债曲线收益率行情，无法进行收益法估值.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券不存在基准日国债曲线收益率行情.");
             return resultDto;
         }
 

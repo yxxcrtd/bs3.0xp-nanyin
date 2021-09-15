@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,10 @@ import com.joyintech.service.product.productplanning.common.dao.PlanningCommonMa
  */
 @Service("finAssetConfigPlanService")
 public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(FinAssetConfigPlanService.class);
 
     @Autowired(required = false)
     private PlanningCommonMapper planningCommonMapper;
@@ -60,7 +66,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
      * @throws Exception 异常信息
      */
     public Page<FinAssetConfigPlanDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+	{
     	Page<FinAssetConfigPlanDto> rpage = super.queryForPage(page, length,() -> finAssetConfigPlanMapper.queryAssetConfigPlanList(pageParam));
     	List<FinAssetConfigPlanDto> llist = rpage.getRoot();       
         for (FinAssetConfigPlanDto dto : llist) {
@@ -76,7 +82,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
 					method = dto.getClass().getDeclaredMethod("setCurInvAmt" + mondetail.getAssetMonth(),BigDecimal.class);
 	        		method.invoke(dto,mondetail.getCurInvAmt());
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				} 
         	}
         }
@@ -92,7 +98,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
      * @since 1.0
      */
     public List<FinAssetConfigPlanDto> queryAssetConfigPlanList(Map<String, Object> pageParam)
-            throws Exception {
+	{
         	List<FinAssetConfigPlanDto> llist = finAssetConfigPlanMapper.queryAssetConfigPlanList(pageParam);      
         	for (FinAssetConfigPlanDto dto : llist) {
             	Map<String, Object> param = new HashMap<String, Object>(); 
@@ -107,7 +113,7 @@ public class FinAssetConfigPlanService extends BaseService<FinAssetConfigPlanDto
     					method = dto.getClass().getDeclaredMethod("setCurInvAmt" + mondetail.getAssetMonth(),BigDecimal.class);
     	        		method.invoke(dto,mondetail.getCurInvAmt());
     				} catch (Exception e) {
-    					e.printStackTrace();
+						logger.error(e.getMessage(),e);
     				} 
             	}
             }

@@ -60,7 +60,7 @@ public class TrdCommandReceive001Controller{
 	 * @throws Exception
 	 */
 	@PostMapping("findPage/{page}/{length}")
-	public Page<TrdCommandReceive001Dto> selectAllCommandReceive(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+	public Page<TrdCommandReceive001Dto> selectAllCommandReceive(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
         String cstpType = (String)param.get("CstpType");
         if(StringUtils.isNotBlank(cstpType)){
             param.put("cstpType","cstp");
@@ -127,7 +127,7 @@ public class TrdCommandReceive001Controller{
 	 * @throws Exception
 	 */
 	@PostMapping("otherFindPage/{page}/{length}")
-	public Page<TrdCommandReceive001Dto> otherSelectAllCommandReceive(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+	public Page<TrdCommandReceive001Dto> otherSelectAllCommandReceive(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
 	    Page<TrdCommandReceive001Dto> pageLimit = trdCommandReceive001Service.otherSelectForPage(page, length, param);
         //将交易员转为真实姓名
         List<TrdCommandReceive001Dto> list=pageLimit.getRoot();
@@ -193,7 +193,7 @@ public class TrdCommandReceive001Controller{
 	 * @throws Exception
 	 */
     @GetMapping("/getEtrInvest")
-    public List<TrdCommandReceive001Dto> getEtrInvest(String entrustId) throws Exception {
+    public List<TrdCommandReceive001Dto> getEtrInvest(String entrustId) {
     	return trdCommandReceive001Service.selectEtrInvest(entrustId);
     }
     /**
@@ -227,7 +227,7 @@ public class TrdCommandReceive001Controller{
 	}
 
     @PostMapping("selectForPageFromCstp/{page}/{length}")
-    public Page<TrdCommandReceive001Dto> selectForPageFromCstp(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<TrdCommandReceive001Dto> selectForPageFromCstp(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) {
         String cstpType = (String)param.get("CstpType");
         if(StringUtils.isNotBlank(cstpType)){
             param.put("cstpType","cstp");

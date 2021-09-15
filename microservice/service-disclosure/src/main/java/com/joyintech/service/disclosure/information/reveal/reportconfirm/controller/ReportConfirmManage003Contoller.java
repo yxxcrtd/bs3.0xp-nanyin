@@ -50,7 +50,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<BokFileTransfer003Dto> findPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                 @PathVariable("length") int length)
-        throws Exception {
+    {
         // return valNetValueConfirm003Service.findPage(param); // TODO
         return null;
     }
@@ -66,7 +66,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @PostMapping("/selectConfirmStatus")
     public boolean selectConfirmStatus(@RequestBody RepReveal repReveal)
-        throws Exception {
+    {
         return reportConfirmManage003Service.selectConfirmStatus(repReveal);
     }
 
@@ -79,7 +79,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @PostMapping("/updateRepRevealByInfo")
     public int updateRepRevealByInfo(@RequestBody RepReveal repReveal)
-        throws Exception {
+    {
         return reportConfirmManage003Service.updateRepRevealByInfo(repReveal);
     }
 

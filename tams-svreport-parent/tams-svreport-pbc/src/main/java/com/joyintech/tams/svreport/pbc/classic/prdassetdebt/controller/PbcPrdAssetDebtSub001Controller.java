@@ -5,12 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -205,6 +207,16 @@ public class PbcPrdAssetDebtSub001Controller extends BaseController {
 		String datas = this.getParam("datas");
 		return pbcPrdAssetDebtSubService001.download(this.getPageId(), RequestUtil.getPageParam(),datas);
 	}
-
+	/**
+	 * 查询列表
+	 *
+	 * @return DtPage
+	 */
+	@ResponseBody
+	@RequestMapping(value = "searchNoDxAndXt")
+	public List<PbcMonthReport> searchNoDxAndXt(@RequestBody Map<String, Object> params)throws IOException  {
+		List<PbcMonthReport> list= pbcPrdAssetDebtSubService001.searchNoDxAndXt(params);
+		return list;
+	}
 
 }

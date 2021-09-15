@@ -109,7 +109,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
      * @throws Exception 异常信息
      */
     public Page<FinProductFeePayDto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         map.put("pendingStatus", DictCodeListExt1.有效状态_待处理.getValue());
         map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());
         map.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
@@ -180,6 +180,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
         map.put("cashType", DictCodeList.现金流类型_费用支付.getValue());
         map.put("payCycle", DictCodeList.频率_不规则.getValue());
         map.put("feeType04", DictCodeList.费用品种类型_浮动差额中收.getValue());
+        map.put("feeType99", DictCodeList.费用品种类型_其他费用.getValue());
         map.put("profitType02", DictCodeList.收益类型_收益型.getValue());
         map.put("yes", DictCodeList.是否_是.getValue());
         map.put("feeType12", DictCodeList.费用品种类型_浮动管理费.getValue());

@@ -52,6 +52,9 @@
 					#{tableId}
 				</foreach>
 			</if>
+			<if test="bokDetailId != null and bokDetailId != ''">
+				AND bc.BOK_DETAIL_ID = #{bokDetailId}
+			</if>
 			/**AND 账务明细（当前表）.借贷方向 = 参数.借贷方向**/
 			and bc.CD_FLAG = #{cdFlag,jdbcType=VARCHAR}
 			/**AND 账务明细（当前表）.优先级  小于 参数.优先级**/

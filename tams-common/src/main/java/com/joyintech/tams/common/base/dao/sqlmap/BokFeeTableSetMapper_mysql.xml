@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokFeeTableSetMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        <id column="FINPROD_TYPE" property="finprodType" jdbcType="VARCHAR" />
+        <id column="PS" property="ps" jdbcType="VARCHAR" />
+        <id column="FEE_TYPE_ID" property="feeTypeId" jdbcType="VARCHAR" />
+        <id column="BASE_SUBJECT_NATURE" property="baseSubjectNature" jdbcType="VARCHAR" />
+        <result column="TABLE_ID" property="tableId" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        FINPROD_TYPE FINPROD_TYPE, PS PS, FEE_TYPE_ID FEE_TYPE_ID, BASE_SUBJECT_NATURE BASE_SUBJECT_NATURE,
+        TABLE_ID TABLE_ID, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME,
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokFeeTableSetMapper.Base_Column_List" />
+        from BOK_FEE_TABLE_SET
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokFeeTableSetMapper.Base_Column_List" />
+        from BOK_FEE_TABLE_SET
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSetKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokFeeTableSetMapper.Base_Column_List" />
+        from BOK_FEE_TABLE_SET
+        where FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+        and PS = #{ps,jdbcType=VARCHAR}
+        and FEE_TYPE_ID = #{feeTypeId,jdbcType=VARCHAR}
+        and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSetKey" >
+        delete from BOK_FEE_TABLE_SET
+        where FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+          and PS = #{ps,jdbcType=VARCHAR}
+          and FEE_TYPE_ID = #{feeTypeId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        insert into BOK_FEE_TABLE_SET (FINPROD_TYPE, PS, FEE_TYPE_ID,
+            BASE_SUBJECT_NATURE, TABLE_ID, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME)
+        values (#{finprodType,jdbcType=VARCHAR}, #{ps,jdbcType=VARCHAR}, #{feeTypeId,jdbcType=VARCHAR},
+            #{baseSubjectNature,jdbcType=VARCHAR}, #{tableId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        insert into BOK_FEE_TABLE_SET
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="finprodType != null" >
+                FINPROD_TYPE,
+            </if>
+            <if test="ps != null" >
+                PS,
+            </if>
+            <if test="feeTypeId != null" >
+                FEE_TYPE_ID,
+            </if>
+            <if test="baseSubjectNature != null" >
+                BASE_SUBJECT_NATURE,
+            </if>
+            <if test="tableId != null" >
+                TABLE_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="finprodType != null" >
+                #{finprodType,jdbcType=VARCHAR},
+            </if>
+            <if test="ps != null" >
+                #{ps,jdbcType=VARCHAR},
+            </if>
+            <if test="feeTypeId != null" >
+                #{feeTypeId,jdbcType=VARCHAR},
+            </if>
+            <if test="baseSubjectNature != null" >
+                #{baseSubjectNature,jdbcType=VARCHAR},
+            </if>
+            <if test="tableId != null" >
+                #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        insert into BOK_FEE_TABLE_SET(FINPROD_TYPE, PS, FEE_TYPE_ID, BASE_SUBJECT_NATURE,
+        TABLE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select FINPROD_TYPE, PS, FEE_TYPE_ID, BASE_SUBJECT_NATURE,
+            TABLE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from BOK_FEE_TABLE_SET
+             where 1 = 1 and FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR} and PS = #{ps,jdbcType=VARCHAR} and FEE_TYPE_ID = #{feeTypeId,jdbcType=VARCHAR} and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        update BOK_FEE_TABLE_SET
+        <set >
+            <if test="tableId != null" >
+                TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+        and PS = #{ps,jdbcType=VARCHAR}
+        and FEE_TYPE_ID = #{feeTypeId,jdbcType=VARCHAR}
+        and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokFeeTableSet" >
+        update BOK_FEE_TABLE_SET
+        set TABLE_ID = #{tableId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where FINPROD_TYPE = #{finprodType,jdbcType=VARCHAR}
+          and PS = #{ps,jdbcType=VARCHAR}
+          and FEE_TYPE_ID = #{feeTypeId,jdbcType=VARCHAR}
+          and BASE_SUBJECT_NATURE = #{baseSubjectNature,jdbcType=VARCHAR}
+    </update>
+</mapper>

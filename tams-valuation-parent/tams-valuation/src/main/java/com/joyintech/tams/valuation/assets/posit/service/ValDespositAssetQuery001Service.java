@@ -34,7 +34,7 @@ public class ValDespositAssetQuery001Service extends CommonExportService<ValDesp
      * @since 1.0
      */
     public Page<ValDespositAssetQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
 //
 //        String finprodId = (String)params.get("finprodId");
 //

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <result column="DETAIL_ID" property="detailId" jdbcType="VARCHAR" />
+        <result column="SEND_DATE" property="sendDate" jdbcType="TIMESTAMP" />
+        <result column="SEND_STATUS" property="sendStatus" jdbcType="VARCHAR" />
+        <result column="RECEIVE_DATE" property="receiveDate" jdbcType="TIMESTAMP" />
+        <result column="RECEIVE_STATUS" property="receiveStatus" jdbcType="VARCHAR" />
+        <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+        <result column="CHANNEL_CODE" property="channelCode" jdbcType="VARCHAR" />
+        <result column="ATT1" property="att1" jdbcType="VARCHAR" />
+        <result column="ATT2" property="att2" jdbcType="VARCHAR" />
+        <result column="ATT3" property="att3" jdbcType="VARCHAR" />
+        <result column="ATT4" property="att4" jdbcType="VARCHAR" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, DETAIL_ID DETAIL_ID, SEND_DATE SEND_DATE, SEND_STATUS SEND_STATUS, RECEIVE_DATE RECEIVE_DATE, 
+        RECEIVE_STATUS RECEIVE_STATUS, FILE_NAME FILE_NAME, CHANNEL_CODE CHANNEL_CODE, ATT1 ATT1, 
+        ATT2 ATT2, ATT3 ATT3, ATT4 ATT4, STATUS STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, 
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper.Base_Column_List" />
+        from REP_FTP_DETAIL_MSG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper.Base_Column_List" />
+        from REP_FTP_DETAIL_MSG
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepFtpDetailMsgMapper.Base_Column_List" />
+        from REP_FTP_DETAIL_MSG
+        where ID = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_FTP_DETAIL_MSG
+        where ID = #{id,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        insert into REP_FTP_DETAIL_MSG (ID, DETAIL_ID, SEND_DATE, 
+            SEND_STATUS, RECEIVE_DATE, RECEIVE_STATUS, 
+            FILE_NAME, CHANNEL_CODE, ATT1, 
+            ATT2, ATT3, ATT4, 
+            STATUS, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{id,jdbcType=VARCHAR}, #{detailId,jdbcType=VARCHAR}, #{sendDate,jdbcType=TIMESTAMP}, 
+            #{sendStatus,jdbcType=VARCHAR}, #{receiveDate,jdbcType=TIMESTAMP}, #{receiveStatus,jdbcType=VARCHAR}, 
+            #{fileName,jdbcType=VARCHAR}, #{channelCode,jdbcType=VARCHAR}, #{att1,jdbcType=VARCHAR}, 
+            #{att2,jdbcType=VARCHAR}, #{att3,jdbcType=VARCHAR}, #{att4,jdbcType=VARCHAR}, 
+            #{status,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        insert into REP_FTP_DETAIL_MSG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="detailId != null" >
+                DETAIL_ID,
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE,
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS,
+            </if>
+            <if test="receiveDate != null" >
+                RECEIVE_DATE,
+            </if>
+            <if test="receiveStatus != null" >
+                RECEIVE_STATUS,
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME,
+            </if>
+            <if test="channelCode != null" >
+                CHANNEL_CODE,
+            </if>
+            <if test="att1 != null" >
+                ATT1,
+            </if>
+            <if test="att2 != null" >
+                ATT2,
+            </if>
+            <if test="att3 != null" >
+                ATT3,
+            </if>
+            <if test="att4 != null" >
+                ATT4,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="detailId != null" >
+                #{detailId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendDate != null" >
+                #{sendDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="receiveDate != null" >
+                #{receiveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="receiveStatus != null" >
+                #{receiveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="channelCode != null" >
+                #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="att1 != null" >
+                #{att1,jdbcType=VARCHAR},
+            </if>
+            <if test="att2 != null" >
+                #{att2,jdbcType=VARCHAR},
+            </if>
+            <if test="att3 != null" >
+                #{att3,jdbcType=VARCHAR},
+            </if>
+            <if test="att4 != null" >
+                #{att4,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        insert into REP_FTP_DETAIL_MSG(ID, DETAIL_ID, SEND_DATE, SEND_STATUS, RECEIVE_DATE, 
+        RECEIVE_STATUS, FILE_NAME, CHANNEL_CODE, ATT1, ATT2, ATT3, ATT4, STATUS, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ID, DETAIL_ID, SEND_DATE, SEND_STATUS, RECEIVE_DATE, 
+            RECEIVE_STATUS, FILE_NAME, CHANNEL_CODE, ATT1, ATT2, ATT3, ATT4, #{status,jdbcType=VARCHAR} STATUS, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_FTP_DETAIL_MSG
+             where STATUS = 'E' and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        update REP_FTP_DETAIL_MSG
+        <set >
+            <if test="detailId != null" >
+                DETAIL_ID = #{detailId,jdbcType=VARCHAR},
+            </if>
+            <if test="sendDate != null" >
+                SEND_DATE = #{sendDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="sendStatus != null" >
+                SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="receiveDate != null" >
+                RECEIVE_DATE = #{receiveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="receiveStatus != null" >
+                RECEIVE_STATUS = #{receiveStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="fileName != null" >
+                FILE_NAME = #{fileName,jdbcType=VARCHAR},
+            </if>
+            <if test="channelCode != null" >
+                CHANNEL_CODE = #{channelCode,jdbcType=VARCHAR},
+            </if>
+            <if test="att1 != null" >
+                ATT1 = #{att1,jdbcType=VARCHAR},
+            </if>
+            <if test="att2 != null" >
+                ATT2 = #{att2,jdbcType=VARCHAR},
+            </if>
+            <if test="att3 != null" >
+                ATT3 = #{att3,jdbcType=VARCHAR},
+            </if>
+            <if test="att4 != null" >
+                ATT4 = #{att4,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepFtpDetailMsg" >
+        update REP_FTP_DETAIL_MSG
+        set DETAIL_ID = #{detailId,jdbcType=VARCHAR},
+            SEND_DATE = #{sendDate,jdbcType=TIMESTAMP},
+            SEND_STATUS = #{sendStatus,jdbcType=VARCHAR},
+            RECEIVE_DATE = #{receiveDate,jdbcType=TIMESTAMP},
+            RECEIVE_STATUS = #{receiveStatus,jdbcType=VARCHAR},
+            FILE_NAME = #{fileName,jdbcType=VARCHAR},
+            CHANNEL_CODE = #{channelCode,jdbcType=VARCHAR},
+            ATT1 = #{att1,jdbcType=VARCHAR},
+            ATT2 = #{att2,jdbcType=VARCHAR},
+            ATT3 = #{att3,jdbcType=VARCHAR},
+            ATT4 = #{att4,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+    </update>
+</mapper>

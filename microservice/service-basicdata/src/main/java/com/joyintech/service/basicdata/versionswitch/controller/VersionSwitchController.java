@@ -47,7 +47,8 @@ public class VersionSwitchController {
      * @since 1.0
      */
     @PostMapping("/selectVersionType")
-    public String selectVersionType(@RequestBody String versionType) throws Exception {
+    public String selectVersionType(@RequestBody String versionType)
+    {
     	return versionSwitchService.selectVersionType();
     }
     
@@ -61,7 +62,8 @@ public class VersionSwitchController {
      * @since 1.0
      */
     @PostMapping("/updateVersionType")
-    public void updateVersionType(@RequestBody String versionType) throws Exception {
+    public void updateVersionType(@RequestBody String versionType)
+    {
          versionSwitchService.updateVersionType(versionType);
     }
     

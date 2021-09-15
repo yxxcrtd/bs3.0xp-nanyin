@@ -57,8 +57,7 @@ public class ReportRevealManage001Service extends CommonExportService<ReportConf
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportRevealManage001/findPage",
             params, ReportConfirmManage001Dto.class);
     }

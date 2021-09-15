@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -85,7 +86,7 @@ public class LoanDetailInfoFileImpService extends AbstractFileImpService {
                 FileImpService service = serviceList.get(i);
                 tasks.add(new Callable<Boolean>(){
                     @Override
-                    public Boolean call(){
+                    public Boolean call() throws ParseException {
                         Boolean res = true;
                         if ("fail".equals(service.importDB(service.copyDataList(dataList),interfFile))){
                             res = false;

@@ -50,11 +50,9 @@ public class TaxScheme006Controller extends BaseController {
      * 下拉框 ： 项目
      * 
      * @return
-     * @throws Exception
      */
     @PostMapping("findProject")
-    public List<SelectOptionDto> findProject(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<SelectOptionDto> findProject(@RequestBody Map<String, Object> param){
         return taxScheme006Service.findProject(param);
     }
 
@@ -62,11 +60,9 @@ public class TaxScheme006Controller extends BaseController {
      * 下拉框 ： 项目
      * 
      * @return
-     * @throws Exception
      */
     @PostMapping("findValue")
-    public String findValue(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public String findValue(@RequestBody Map<String, Object> param){
         return taxScheme006Service.findValue(param);
     }
     
@@ -85,7 +81,6 @@ public class TaxScheme006Controller extends BaseController {
      * 
      * @param dto 业务实体
      * @return 画面地址
-     * @throws Exception
      * @see
      * @since 1.0
      */

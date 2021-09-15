@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBatchTaskTodoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBatchTaskTodo" >
+        <result column="SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="BOOKSET_ID" property="booksetId" jdbcType="VARCHAR" />
+        <result column="HAPPEN_DATE" property="happenDate" jdbcType="DATE" />
+        <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="BOOKSET_DATE" property="booksetDate" jdbcType="DATE" />
+        <result column="BOK_DETAIL_ID" property="bokDetailId" jdbcType="VARCHAR" />
+        <result column="BOOK_DATE" property="bookDate" jdbcType="DATE" />
+        <result column="IS_BACK_VALUE" property="isBackValue" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="IS_SUB_BOOKSET" property="isSubBookset" jdbcType="VARCHAR" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskTodo" >
+        insert into BOK_BATCH_TASK_TODO (SEQ_NO, BOOKSET_ID, HAPPEN_DATE,
+            TASK_ID, BOOKSET_DATE, BOK_DETAIL_ID,
+            BOOK_DATE, IS_BACK_VALUE, CREATE_USER,
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, IS_SUB_BOOKSET)
+        values (#{seqNo,jdbcType=VARCHAR}, #{booksetId,jdbcType=VARCHAR}, #{happenDate,jdbcType=DATE},
+            #{taskId,jdbcType=VARCHAR}, #{booksetDate,jdbcType=DATE}, #{bokDetailId,jdbcType=VARCHAR},
+            #{bookDate,jdbcType=DATE}, #{isBackValue,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{isSubBookset,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskTodo" >
+        insert into BOK_BATCH_TASK_TODO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="booksetId != null" >
+                BOOKSET_ID,
+            </if>
+            <if test="happenDate != null" >
+                HAPPEN_DATE,
+            </if>
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="booksetDate != null" >
+                BOOKSET_DATE,
+            </if>
+            <if test="bokDetailId != null" >
+                BOK_DETAIL_ID,
+            </if>
+            <if test="bookDate != null" >
+                BOOK_DATE,
+            </if>
+            <if test="isBackValue != null" >
+                IS_BACK_VALUE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="isSubBookset != null" >
+                IS_SUB_BOOKSET,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetId != null" >
+                #{booksetId,jdbcType=VARCHAR},
+            </if>
+            <if test="happenDate != null" >
+                #{happenDate,jdbcType=DATE},
+            </if>
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="booksetDate != null" >
+                #{booksetDate,jdbcType=DATE},
+            </if>
+            <if test="bokDetailId != null" >
+                #{bokDetailId,jdbcType=VARCHAR},
+            </if>
+            <if test="bookDate != null" >
+                #{bookDate,jdbcType=DATE},
+            </if>
+            <if test="isBackValue != null" >
+                #{isBackValue,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isSubBookset != null" >
+                #{isSubBookset,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskTodo" >
+        insert into BOK_BATCH_TASK_TODO(SEQ_NO, BOOKSET_ID, HAPPEN_DATE, TASK_ID, BOOKSET_DATE,
+        BOK_DETAIL_ID, BOOK_DATE, IS_BACK_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME, IS_SUB_BOOKSET)
+        select SEQ_NO, BOOKSET_ID, HAPPEN_DATE, TASK_ID, BOOKSET_DATE,
+            BOK_DETAIL_ID, BOOK_DATE, IS_BACK_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER,
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, IS_SUB_BOOKSET
+             from BOK_BATCH_TASK_TODO
+             where 1 = 1
+    </insert>
+</mapper>

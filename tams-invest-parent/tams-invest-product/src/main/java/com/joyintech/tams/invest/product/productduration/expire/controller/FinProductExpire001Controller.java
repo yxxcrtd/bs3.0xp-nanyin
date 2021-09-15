@@ -17,6 +17,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -159,8 +160,7 @@ public class FinProductExpire001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductExpire001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -204,14 +204,13 @@ public class FinProductExpire001Controller extends BaseController {
      * 
      * @param inputDto 画面输入参数dto
      * @return 撤销结果
-     * @throws Exception 异常信息
+     * @throws WorkFlowException 异常信息
      * @see
      * @since 1.0
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody FinProductExpire002Dto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody FinProductExpire002Dto inputDto) throws WorkFlowException {
     	/**流程备注，取不到FinprodMarketId add by chendijun 2019/08/19 start**/
     	inputDto.setCommentMarketId(inputDto.getFinprodMarketId());
     	/**流程备注，取不到FinprodMarketId add by chendijun 2019/08/19 end**/

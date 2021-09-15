@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.util.EncryptUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -174,7 +175,7 @@ public class UserController extends ExceptionControl{
 		Users user=new Users();
 		user.setUsername(param_list.get(0).toString());
 		//密码加密
-		String pwd=Md5Util.md5(param_list.get(1).toString());
+		String pwd= EncryptUtil.getInstance().md5(param_list.get(1).toString());
 		user.setUserpwd(pwd);
 		user.setUserRole(new UserRole(Integer.valueOf(param_list.get(2).toString())));
 		user.setRealname(param_list.get(3).toString());
@@ -212,9 +213,9 @@ public class UserController extends ExceptionControl{
 		Users user=userService.loadUserByID(userID);
 		//1判断密码有没有重复
 		List<UserHisPwd> ulist=userService.getUserHisPwdList(userID, pages);
-		if(!param_list.get(1).toString().equals(ulist.get(0).getHispwd().toString())){//更新时如果输入的密码与上一次密码一致则不修改密码
+		if(!param_list.get(1).toString().equals(ulist.get(0).getHispwd())){//更新时如果输入的密码与上一次密码一致则不修改密码
 			for (int i = 0; i < ulist.size(); i++) {
-				if(Md5Util.md5(param_list.get(1).toString()).equals(ulist.get(i).getHispwd().toString())){
+				if(EncryptUtil.getInstance().md5(param_list.get(1).toString()).equals(ulist.get(i).getHispwd())){
 					//JsonUtil.writeObjToResponse(response, "密码6次内不能重复");
 					
 					HashMap<String, Object> result = new HashMap<String, Object>();
@@ -227,7 +228,7 @@ public class UserController extends ExceptionControl{
 					return;
 				}
 			}
-			String pwd=Md5Util.md5(param_list.get(1).toString());
+			String pwd=EncryptUtil.getInstance().md5(param_list.get(1).toString());
 			user.setUserpwd(pwd);
 			//记录修改的密码
 			UserHisPwd uhp=new UserHisPwd();

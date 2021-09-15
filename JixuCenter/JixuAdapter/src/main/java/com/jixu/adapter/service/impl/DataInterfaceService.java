@@ -30,7 +30,7 @@ public class DataInterfaceService implements InitializingBean, ApplicationContex
     
 	private final Logger logger = LoggerFactory.getLogger(getClass());
     
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		logger.info("开始初始化数据接口服务...");
 		Map<String, AdditionFunc> funcMap = applicationContext.getBeansOfType(AdditionFunc.class);
 		dataFuncMap = new HashMap<String, AdditionFunc>();

@@ -60,7 +60,7 @@ public class FlowRiskFlowAssetsController {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
 	@PostMapping("update")
-    public void update(@RequestBody FlowRiskFlowAssetsDto dto) throws Exception {
+    public void update(@RequestBody FlowRiskFlowAssetsDto dto) {
         flowRiskFlowAssetsService.update(dto);
     }
 	/**

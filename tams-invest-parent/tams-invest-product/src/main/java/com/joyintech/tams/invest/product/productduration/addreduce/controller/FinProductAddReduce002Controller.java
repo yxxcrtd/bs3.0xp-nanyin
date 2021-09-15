@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -224,8 +225,7 @@ public class FinProductAddReduce002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getProdId")
-    public Page<SelectOptionDto> getProdId()
-        throws Exception {
+    public Page<SelectOptionDto> getProdId(){
         return finProductAddReduce002Service.getProdId();
     }
 
@@ -385,12 +385,11 @@ public class FinProductAddReduce002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinProductAddReduce002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FinProductAddReduce002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

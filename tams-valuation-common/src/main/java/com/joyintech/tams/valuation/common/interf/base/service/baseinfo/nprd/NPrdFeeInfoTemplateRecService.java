@@ -10,25 +10,12 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.nprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.NPrdBaseInfoValCommonResult;
@@ -38,6 +25,15 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdFeeInfoN;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 净值型产品费用基础信息表(Val_PRD_FEE_INFO_N) 〈功能详细描述〉
@@ -196,7 +192,11 @@ public class NPrdFeeInfoTemplateRecService {
         // 生效利率 = D.初始费率
         valCashCalcRule.setYield(dto.getInitRate());
         // 计算基础 = D.计费基础
-        valCashCalcRule.setBasis(dto.getChargeBase());
+        if (StringUtil.equals(dto.getChargeBase(), DictCodeList.计息基础_A_A.getValue())) {
+            valCashCalcRule.setBasis(DictCodeListExt1.计息基础_A_A_D.getValue());
+        } else {
+            valCashCalcRule.setBasis(dto.getChargeBase());
+        }
         // 基数类型 = D.计费基数
         valCashCalcRule.setBaseType(dto.getChargeBasis());
         // 基数日期类型 = D.计费基数日期类型

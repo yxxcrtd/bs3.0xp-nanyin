@@ -189,7 +189,7 @@ public class ValBatchDataBackhaulThread implements Runnable {
         Map<String, String> urlParams = new HashMap<>();
         if (!StringUtil.isEmptyList(list)) {
             for(ValAccountInfoDto dto : list) {
-                if("".equals(dto.getpTaskGrpId())||dto.getpTaskGrpId()==null){
+                if(dto.getpTaskGrpId()==null||"".equals(dto.getpTaskGrpId())){
                     
                 }else{
                     

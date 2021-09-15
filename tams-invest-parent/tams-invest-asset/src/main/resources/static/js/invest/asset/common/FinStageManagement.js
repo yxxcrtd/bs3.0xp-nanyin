@@ -33,11 +33,11 @@ $(function() {
                 ,{field:'period',title:'FinStageManagement.period',edit:true,width:150}//期次
                 ,{field:'vdate',title:'FinStageManagement.vdate',sortable: false,width:150,edit:true,type:'date'}//起息日
                 ,{field:'mdate',title:'FinStageManagement.mdate',sortable: false,width:150,edit:true,type:'date'}//到期日
-                ,{field:'issueAmt',title:'FinStageManagement.issueAmt',sortable: false,width:150,edit:true,type:'number',digit:'4'}//利率
-                ,{field:'loadRate',title:'FinStageManagement.loadRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//利率
-                ,{field:'investRate',title:'FinStageManagement.investRate',sortable: false,width:150,type:'number',digit:'4'}//利率
-                ,{field:'buyoutRate',title:'FinStageManagement.buyoutRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//利率
-                ,{field:'referRate',title:'FinStageManagement.referRate',sortable: false,width:150,type:'number',digit:'4'}//利率
+                ,{field:'issueAmt',title:'FinStageManagement.issueAmt',sortable: false,width:150,edit:true,type:'number',digit:'4'}//融资金额
+                ,{field:'loadRate',title:'FinStageManagement.loadRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//借款利率（%）
+                ,{field:'investRate',title:'FinStageManagement.investRate',sortable: false,width:150,type:'number',digit:'4'}//净投资收益率（%）
+                ,{field:'buyoutRate',title:'FinStageManagement.buyoutRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//买断利率（%）
+                ,{field:'referRate',title:'FinStageManagement.referRate',sortable: false,width:150,type:'number',digit:'4'}//资产推荐费率（%）
                 ,{field:'periodCount',visible:false,type:'number'}//利率
                 , {field: 'operation', width: 150, title: 'SysCommon.operation', type: 'action', buttons: ['delt'],
                     render: function (data, type, row, meta) {
@@ -242,7 +242,6 @@ $(function() {
                     selArr[i].finprodName = finprodName;
                 }
             }
-            debugger;
             var datas = JSON.stringify(selArr);
             Joyin.exportExcel('export', {
                 datas : datas

@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.riskredis.quota.rskportautorelatepoint.service.
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -125,7 +126,7 @@ public class RskPortAutoRelatePoint002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskPortAutoRelatePoint002Dto> selectAllRule()
-        throws Exception {
+         {
     	Page<RskPortAutoRelatePoint002Dto> page = new Page<RskPortAutoRelatePoint002Dto>();
     	String workflowId = (String)RequestUtil.getPageParam().get("workflowId");
     	if(StringUtil.isNotEmpty(workflowId)){
@@ -186,8 +187,7 @@ public class RskPortAutoRelatePoint002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskPortAutoRelatePoint002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskPortAutoRelatePoint002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -216,8 +216,7 @@ public class RskPortAutoRelatePoint002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskPortAutoRelatePoint002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskPortAutoRelatePoint002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

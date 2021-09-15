@@ -67,9 +67,9 @@ public class FinProductAnapleroticInfo001Service extends CommonExportService<Fin
      * @see
      * @since 1.0
      */
-    public List<SelectOptionDto> queryProdIdInfo (Map<String, Object> map){
+    public Page<SelectOptionDto> queryProdIdInfo (Map<String, Object> map){
         map.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForList(
+        return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductAnaplerotic/queryProdIdInfo",
             map, SelectOptionDto.class);
     }

@@ -103,7 +103,7 @@ public class AccountsAdjustBusScenEleConf004Service extends BaseService<Accounts
      * @see
      * @since 1.0
      */
-    public boolean saveData(AccountsAdjustBusScenEleConf002Dto dto) throws Exception {
+    public boolean saveData(AccountsAdjustBusScenEleConf002Dto dto) {
         if(GlobalConstant.DETAIL_PAGE_MODEL_NEW.equals(dto.getDealType())) {
             BokTabledict dict = new BokTabledict();
             BeanUtil.copyPropertiesIgnoreNull(dict, dto);

@@ -19,17 +19,20 @@ import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDis
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -77,10 +80,10 @@ public class CashFlowDiscountReaderService {
      * @see
      * @since 1.0
      */
-    public List<CashFlowDiscountReaderResult> execute(Map<String, Object> param) {
+    public List<CashFlowDiscountReaderResult> execute(Map<String, Object> param,StepExecution stepExecution) {
         List<CashFlowDiscountReaderResult> result = new ArrayList<>();
-        Date happenDate = (Date) param.get("HAPPEN_DATE"); // 发生日：批处理任务执行信息.处理日（发生日）
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
+        Date happenDate = (Date) param.get(ValComponentConstant.EXECUTE_DATE); // 发生日：批处理任务执行信息.处理日（发生日）
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get(ValComponentConstant.BATCH_EXECUTEINFO);
         List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
 
         //1.读取画面跑批选择的资产
@@ -110,19 +113,19 @@ public class CashFlowDiscountReaderService {
             return result;
         }else{
             //初始化日志
-            modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),pendingModAssetInfo.stream().map(x->x.getFinprodId()).collect(Collectors.toList()));
+//            modLogsService.batchInitLogs(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),pendingModAssetInfo.stream().map(x->x.getFinprodId()).collect(Collectors.toList()));
             Map<String, ModAssetGradeConfig> modAssetGradeConfigMap = rateConfigCommonService.listAssetGradeConfigs();
             Map<String, ModAssetGradeSpecialConfig> modAssetGradeSpecialConfigMap = rateConfigCommonService.listAssetSpecialGradeConfigs();
 
 
             if(CollectionUtils.isEmpty(allModCurve)){
                 pendingModAssetInfo.forEach(x->{
-                    modLogsService.error(x.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少配置，无法继续.");
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x.getFinprodId(), "【现金流贴现模型批处理】：现金流贴现模型缺少配置，无法继续.");
                 });
                 return result;
             }else if(modAssetGradeConfigMap ==null && modAssetGradeSpecialConfigMap==null) {
                 pendingModAssetInfo.forEach(x->{
-                    modLogsService.error(x.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少资产评级配置，无法继续.");
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x.getFinprodId(), "【现金流贴现模型批处理】：现金流贴现模型缺少资产评级配置，无法继续.");
                 });
                 return result;
             }else{
@@ -178,7 +181,7 @@ public class CashFlowDiscountReaderService {
 
                         result.add(cashFlowDiscountReaderResult);
                     }else{
-                        modLogsService.error(item.getFinprodId(),batchExecuteInfo.getBatchExedetailSeqNo(),batchExecuteInfo.getTaskId(),"现金流贴现模型缺少配置，无法继续.");
+                        modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getFinprodId(), "【现金流贴现模型批处理】：现金流贴现模型缺少配置，无法继续.");
                     }
                 });
             }

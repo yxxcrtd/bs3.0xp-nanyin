@@ -34,7 +34,7 @@
     select 
     <include refid="Base_Column_List" />
     from CHB_TYPE_MAPPING_EX
-    where MAPPINGID = #{mappingid,jdbcType=CHAR}
+    where MAPPINGID = #{mappingid}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from CHB_TYPE_MAPPING_EX
@@ -308,5 +308,21 @@
             and status='E'
             and mappingcode=#{mappingcode,jdbcType=VARCHAR} 
   </select>
-  
+
+  <select id="selectByMappingname" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from CHB_TYPE_MAPPING_EX
+    where 1=1
+    and MAPPINGNAME=#{mappingname,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectBySrcfieldSrcfield1"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from CHB_TYPE_MAPPING_EX
+    where       SRCFIELD = #{srcfield,jdbcType=VARCHAR}
+    and SRCFIELD1 = #{srcfield1,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

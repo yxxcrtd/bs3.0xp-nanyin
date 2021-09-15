@@ -142,6 +142,7 @@
 //            }]
             }
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
     });
     /**
      * 导出

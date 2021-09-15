@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -110,13 +111,13 @@ public class MstSharePrice002Controller extends BaseController{
      * 保存提交
      * @param dto MstSharePriceDto
      * @return AjaxResult
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSharePriceDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstSharePriceDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -148,8 +149,7 @@ public class MstSharePrice002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodIdForAdd")
-    public Page<SelectOptionDto> getFinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodIdForAdd() {
         Page<SelectOptionDto> temp = mstSharePriceService.getFinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -157,12 +157,10 @@ public class MstSharePrice002Controller extends BaseController{
     /**
      * 通过id获取最近指定日期的股票行情信息   
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("/getLatelyShareById")
-    public MstSharePriceDto getLatelyShareById() 
-        throws Exception {
+    public MstSharePriceDto getLatelyShareById() {
     	MstSharePriceDto temp = mstSharePriceService.getLatelyShareById(RequestUtil.getPageParam());
         return temp;
     }

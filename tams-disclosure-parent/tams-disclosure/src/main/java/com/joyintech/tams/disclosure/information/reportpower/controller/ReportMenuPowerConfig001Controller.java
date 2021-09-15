@@ -11,9 +11,12 @@
 package com.joyintech.tams.disclosure.information.reportpower.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -46,7 +49,7 @@ import com.joyintech.framework.util.CacheUtil;
 @PageId("ReportMenuPowerConfig001")
 @RequestMapping("/disclosure/information/reportpower/ReportMenuPowerConfig001")
 public class ReportMenuPowerConfig001Controller extends BaseController{
-    
+    private static final Logger logger = LoggerFactory.getLogger(ReportMenuPowerConfig001Controller.class);
     @Autowired
     private ReportMenuPowerConfig001Service reportMenuPowerConfig001Service;
      
@@ -68,8 +71,7 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
      */
     @RequestMapping("searchPage")
     @ResponseBody
-    public Page<ReportMenuPowerConfig001Dto> searchPage()
-        throws Exception {
+    public Page<ReportMenuPowerConfig001Dto> searchPage() {
         return reportMenuPowerConfig001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -101,7 +103,8 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
     @ResponseBody
     public void powerAssign(){
         String datas = this.getParam("datas");
-        System.out.println(datas);
+//        System.out.println(datas);
+        logger.info(datas);
     }
     /**
      * 导出信息excel
@@ -109,8 +112,7 @@ public class ReportMenuPowerConfig001Controller extends BaseController{
      * @throws Exception Exception
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         String datas1=datas.replace("[", "");
         String datas2=datas1.replace("]", "");

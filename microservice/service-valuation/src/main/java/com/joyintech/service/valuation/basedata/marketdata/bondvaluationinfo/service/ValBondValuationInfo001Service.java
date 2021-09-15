@@ -57,7 +57,7 @@ public class ValBondValuationInfo001Service extends CommonExportService<ValBondV
      * @see
      * @since 1.0
      */
-    public Page<ValBondValuationInfo001Dto> queryPageList(int page,int length,Map<String, Object> params) throws Exception{
+    public Page<ValBondValuationInfo001Dto> queryPageList(int page,int length,Map<String, Object> params) {
         
         return super.queryForPageForSelectReturn(page,length,()->valBondValuationInfo001Mapper.queryPageList(params));
     }
@@ -71,7 +71,7 @@ public class ValBondValuationInfo001Service extends CommonExportService<ValBondV
      * @see
      * @since 1.0
      */
-    public List<ValBondValuationInfo001Dto> queryAll(Map<String, Object> params) throws Exception{
+    public List<ValBondValuationInfo001Dto> queryAll(Map<String, Object> params) {
         
         return valBondValuationInfo001Mapper.queryPageList(params);
     }

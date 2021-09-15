@@ -52,7 +52,7 @@ public class ValSubjectBalanceQuery001Service extends CommonExportService<ValSub
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValSubjectBalanceQuery001Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ValSubjectBalanceQuery001Dto> findPage(int page, int length, Map<String, Object> params) {
         
     	
     	String booksetId = (String) params.get("booksetId");

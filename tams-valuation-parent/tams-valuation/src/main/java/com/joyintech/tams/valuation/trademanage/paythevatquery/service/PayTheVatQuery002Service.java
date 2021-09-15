@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -63,6 +65,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery002Dto> implements BaseProcessService<PayTheVatQuery002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PayTheVatQuery002Service.class);
 
     @Autowired
     private PayTheVatQuery002Mapper payTheVatQuery002Mapper;
@@ -128,7 +134,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
      * @since 1.0
      */
     public List<PayTheVatQuery002TableDto> search(Map<String, Object> pageParam)
-        throws Exception {
+         {
         // 产品多选
         if (StringUtil.isNotEmpty(pageParam.get("booksetId"))) {
             String booksetId = (String)pageParam.get("booksetId");
@@ -194,7 +200,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
             this.docommit(dto);
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -221,7 +227,7 @@ public class PayTheVatQuery002Service extends CommonExportService<PayTheVatQuery
             dto.setCreateUser(SecurityUtil.getLoginUser().getUserName());
             // 金融产品代码
             List<PayTheVatQuery002Dto> dto1 = payTheVatQuery002Mapper.findCashid(
-                dtolist.getBooksetId().toString(), dtolist.getAcctSubjectType().toString()
+                dtolist.getBooksetId(), dtolist.getAcctSubjectType()
                 ,DictCodeListExt1.现金流二级类型_税额.getValue());
             dto.setFinprodId(dto1.get(0).getCashId());
             // 交易金额 = 增值税+增值税附加

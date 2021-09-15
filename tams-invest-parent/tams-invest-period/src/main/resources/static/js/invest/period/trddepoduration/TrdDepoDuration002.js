@@ -2,6 +2,7 @@
  * 存款存续期
  */
 $(function() {
+	var uploadFileList =[];
 	function formatDateByMis(mis){
 		if(mis){
 			var tempDate = new Date(mis);
@@ -35,6 +36,9 @@ $(function() {
         object.operateType = operateType;
         object.opType = opType;
 		object.pageModel = PAGE_MODEL_NEW;
+		if(FileCommon) {
+			object.uploadFileList = FileCommon.getUploadFileInfo()
+		}
         Joyin.ajaxJson(basePath + 'invest/period/trddepoduration/TrdDepoDuration002/check', object, function(result) {
             Joyin.confirm(result.data, function() {
 				var elementId = 'TrdDepoDuration002_btn_tyjk';

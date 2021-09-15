@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.util.CacheUtil;
@@ -30,6 +31,7 @@ import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubCheck;
 import com.joyintech.tams.svreport.chb.datacheck.beforesub.service.BeforeSubErrorCheck;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
@@ -182,6 +184,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             	}
             }
             pageParam.put("assetTypeList", assetTypeList);
+			//通道投资资产管理产品是否穿透报送
+			String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+			pageParam.put("isChlBtmStr",isChlBtmStr);
             
             //add by leipeng 20200628
     		if(CommonUtil.isBAmodel()){
@@ -761,7 +766,6 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
     						AssetInfoRegist001Dto.class);
     				param.put("investList", investList);
     			} catch (IOException e) {
-//    				e.printStackTrace();
     	            logger.error(e.getMessage(),e);
     			}
     		} else {
@@ -784,6 +788,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 	            if(!StringUtil.isBlank(submitStatus)){
 	            	List<String> submitStatusList = StringUtil.splitToList(GlobalConstant.COMMA, submitStatus);
 	                param.put("submitStatusList", submitStatusList);
+	                if(submitStatusList.contains(DictCodeListExt2.报送状态_未报送.getValue())){
+						param.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
+					}
 	            }
 	            if(!StringUtil.isBlank(submitFeedbackStatus)){
 	            	List<String> submitFeedbackStatusList = StringUtil.splitToList(GlobalConstant.COMMA, submitFeedbackStatus);
@@ -869,6 +876,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		//update byleipeng  【资产要素登记】公共资产，发行机构代码根据登录人维护 机构登记银行代码管理 登记银行代码
 
     	 String issuePartyId = CommonUtil.selectBankCode();
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		param.put("isChlBtmStr",isChlBtmStr);
     	//多法人改造
 		if(CommonUtil.isBAmodel()){
 			list = assetInfoRegist001Mapper.selectAssetInfoByPageEx(param);
@@ -891,6 +901,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 
     	String issuePartyId = CommonUtil.selectBankCode();
     	List<AssetInfoRegist001Dto> list = new ArrayList<>();
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		map.put("isChlBtmStr",isChlBtmStr);
     	//多法人改造
 		if(CommonUtil.isBAmodel()){
 			list = assetInfoRegist001Mapper.selectExportSelectListSeqEx(map);
@@ -927,7 +940,11 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
         com.joyintech.framework.grid.Page<AssetInfoRegist001Dto> page = new com.joyintech.framework.grid.Page<AssetInfoRegist001Dto>();
         page.setRoot(data);
 //        page.setTotal(data.size());
-
+		if(!CollectionUtils.isEmpty(page.getRoot())){
+			for(AssetInfoRegist001Dto dto : page.getRoot()){
+				dto.setBelongInstitutionCode(null);
+			}
+		}
 		int pageSize = StringUtil.integerValueOf(pageParam.get(GlobalConstant.PARAM_LENGTH).toString(), StringUtil.integerValueOf(CacheUtil.getSysParam(GlobalConstant.EXPORT_EXCEL_ROW_COUNT),50000));
 
 		if(data!=null){
@@ -1081,6 +1098,9 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		List<AssetInfoRegist001Dto> assetInfoRegListOrg = new ArrayList<AssetInfoRegist001Dto>();
 		//选择的手动处理
 		assetInfoRegListOrg = (List<AssetInfoRegist001Dto>) map.get("investList");
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		map.put("isChlBtmStr",isChlBtmStr);
         if (StringUtil.isEmptyList(assetInfoRegListOrg)) {
         	//未选中数据
             assetInfoRegListOrg = assetInfoRegist001Mapper.selectAssetInfoByPageEx(map);
@@ -1141,7 +1161,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 }
             }
         }
-//		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,true);
+		this.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), assetInfoRegList, false,false);
 	}
 	
 	
@@ -1176,12 +1196,18 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 所有未登记的数据
         Map<String, Object> querymap = new HashMap<>();
         querymap.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, DictCodeListExt2.报送状态_未报送.getValue()));
+        querymap.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         querymap.put("orgCode", CommonUtil.getTreeInstCode());
+		//通道投资资产管理产品是否穿透报送
+		String isChlBtmStr = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_CHL_BTM);
+		querymap.put("isChlBtmStr",isChlBtmStr);
         List<AssetInfoRegist001Dto> assetInfoNotRegList = assetInfoRegist001Mapper.selectAssetInfoByPageEx(querymap);
         Map<String,String> assetInfoNotRegMap = assetInfoNotRegList.stream().collect(Collectors.toMap(AssetInfoRegist001Dto::getAssetCode,
                 AssetInfoRegist001Dto::getAssetCode,(key1,key2)->key2));
 		//选择的手动处理
 		assetInfoList = (List<AssetInfoRegist001Dto>) map.get("investList");
+		//通道投资资产管理产品是否穿透报送
+		map.put("isChlBtmStr",isChlBtmStr);
         if (StringUtil.isEmptyList(assetInfoList)) {
         	//未选中数据
         	map.put("sendStatus", "03");
@@ -1190,6 +1216,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 报送状态为接口报送且反馈状态为发送失败和中债退回的数据 该部分数据的报送流水号列表
         List<ChbAssetSubStatus> registSeqList = new ArrayList<ChbAssetSubStatus>();
 //        List<String> assetList = new ArrayList<>();
+		List<String> registSeqstatusList = new ArrayList<String>();
 		for(AssetInfoRegist001Dto m : assetInfoList){
 			ChbAssetSubStatus status = new ChbAssetSubStatus();
 			status.setAssetType("01");
@@ -1197,6 +1224,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 			status.setInstitutionCode(null!=map.get("belongOrgCode")?map.get("belongOrgCode").toString():"");
 			
 			registSeqList.add(status);
+			registSeqstatusList.add(m.getRegistSeqno());
 //            assetList.add(m.getAssetCode());
             // 如果没有该产品的数据则插入如果有则判断是否同时存在未报送和已报送
             // 只要有未报送的登记数据就不允许取消手工处理
@@ -1217,23 +1245,27 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
             	
                 assetInfoRegist001Mapper.deleteSubStausEx(registSeqList );
 //                // 删除履历表中移除数据
-//                assetInfoRegist001Mapper.deleteLastSubmitHis(assetInfoList);
-//            	assetInfoRegist001Mapper.updateAssetInfoRegist(registSeqList);
+            	assetInfoRegist001Mapper.updateAssetInfoRegist(registSeqstatusList);
             }
             else {
                 List<ChbAssetSubStatus> newDataList = new ArrayList<ChbAssetSubStatus>();
                 newDataList.addAll(registSeqList);
+				List<String> newDataStatusList = new ArrayList<String>();
+				newDataStatusList.addAll(registSeqstatusList);
 
                 // 分批处理
                 int part = dataCount / maxDataCountOneTime; // 分批数
                 for (int i = 0; i < part; i++ ) {
                     assetInfoRegist001Mapper.deleteSubStausEx(registSeqList.subList(0, maxDataCountOneTime));
+					assetInfoRegist001Mapper.updateAssetInfoRegist(newDataStatusList.subList(0, maxDataCountOneTime));
                     newDataList.subList(0, maxDataCountOneTime).clear();
+					newDataStatusList.subList(0, maxDataCountOneTime).clear();
                     assetInfoList.subList(0, maxDataCountOneTime).clear();
                 }
                 // 最后剩下的数据
                 if (CollectionUtils.isNotEmpty(newDataList)) {
                     assetInfoRegist001Mapper.deleteSubStausEx(registSeqList);
+					assetInfoRegist001Mapper.updateAssetInfoRegist(newDataStatusList);
 
                 }
             }
@@ -1255,6 +1287,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 		// 所有未登记的数据
         Map<String, Object> querymap = new HashMap<>();
         querymap.put("submitStatusList", StringUtil.splitToList(GlobalConstant.COMMA, DictCodeListExt2.报送状态_未报送.getValue()));
+		querymap.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
         List<AssetInfoRegist001Dto> assetInfoNotRegList = assetInfoRegist001Mapper.selectAssetInfoByPage(querymap);
         Map<String,String> assetInfoNotRegMap = assetInfoNotRegList.stream().collect(Collectors.toMap(AssetInfoRegist001Dto::getAssetCode,
                 AssetInfoRegist001Dto::getAssetCode,(key1,key2)->key2));
@@ -1546,7 +1579,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }
@@ -1613,7 +1646,7 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
                 } catch (Exception e) {
                 	logger.error(e.getMessage(),e);
                     session.rollback();
-                    throw e;
+                    throw new BusinessException(e);
                 } finally {
                     session.close();
                 }
@@ -1795,7 +1828,6 @@ public class AssetInfoRegist001Service extends CommonExportService<AssetInfoRegi
 						AssetInfoRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttSceneViewMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttSceneView" >
+        <id column="S_S_V_SCENE_ID" property="sceneId" jdbcType="VARCHAR" />
+        <result column="S_S_V_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="S_S_V_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_V_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_V_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_V_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_V_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SCENE_ID as S_S_V_SCENE_ID, PAGE_ID as S_S_V_PAGE_ID, CREATE_USER as S_S_V_CREATE_USER, 
+        CREATE_DEPT as S_S_V_CREATE_DEPT, CREATE_TIME as S_S_V_CREATE_TIME, UPDATE_USER as S_S_V_UPDATE_USER, 
+        UPDATE_TIME as S_S_V_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneViewMapper.Base_Column_List" />
+        from STT_SCENE_VIEW
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneViewMapper.Base_Column_List" />
+        from STT_SCENE_VIEW
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttSceneViewMapper.Base_Column_List" />
+        from STT_SCENE_VIEW
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_SCENE_VIEW
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_SCENE_VIEW
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        insert into STT_SCENE_VIEW (SCENE_ID, PAGE_ID, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{sceneId,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        insert into STT_SCENE_VIEW
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="sceneId != null" >
+                SCENE_ID,
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="sceneId != null" >
+                #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        insert into STT_SCENE_VIEW(SCENE_ID, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SCENE_ID, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_SCENE_VIEW
+             where STATUS = 'E' and SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        update STT_SCENE_VIEW
+        <set >
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        update STT_SCENE_VIEW
+        <set >
+            <if test="sceneId != null" >
+                SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        update STT_SCENE_VIEW
+        set 
+        SCENE_ID = #{sceneId,jdbcType=VARCHAR},
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttSceneView" >
+        update STT_SCENE_VIEW
+        set PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SCENE_ID = #{sceneId,jdbcType=VARCHAR}
+    </update>
+</mapper>

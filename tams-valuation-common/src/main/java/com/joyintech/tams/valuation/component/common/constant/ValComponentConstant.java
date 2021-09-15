@@ -60,4 +60,17 @@ public class ValComponentConstant {
      */
     public final static String LOSSTYPE = "LOSS_TYPE";//01 毕马威；02 普华永道
 
+    /**
+     * 参数名称：EXECUTE_DATE
+     */
+    public static final String EXECUTE_DATE = "EXECUTE_DATE";
+    /**
+     * 参数名称：BATCH_EXECUTEINFO
+     */
+    public static final String BATCH_EXECUTEINFO = "BATCH_EXECUTEINFO";
+    /**
+     * 参数名称：MODEL_LOGS
+     */
+    public static final String MODEL_LOGS = "MODEL_LOGS";
+
 }

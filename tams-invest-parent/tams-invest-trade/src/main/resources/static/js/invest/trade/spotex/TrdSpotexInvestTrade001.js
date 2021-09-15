@@ -88,7 +88,8 @@ $(function(){
             ,{field:'remark', title: 'TrdSpotexInvestTrade.remark',width:180,}
             ,{field:'workflowStatus', visible:false}
             ,{field:'workflowId', visible:false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     /**
      * 导出事件

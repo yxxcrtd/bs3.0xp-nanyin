@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.google.json.JsonSanitizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -219,7 +220,7 @@ public class ValBussFinRepaymentController extends BaseController{
      */
     @RequestMapping(value = "/initInfo")
     @ResponseBody
-    public List<FinCashPlanDto> initInfo(@RequestBody ValBussFinRepaymentDto dto) throws ParseException {
+    public List<FinCashPlanDto> initInfo(@RequestBody ValBussFinRepaymentDto dto) throws ParseException, IllegalAccessException, InstantiationException {
         List<FinCashPlanDto> finCashPlanList = new ArrayList<FinCashPlanDto>();
         List<? extends FinCashPlan> findinvList = new ArrayList<FinCashPlan>();
         //初始化--修改、查看、代办
@@ -292,6 +293,6 @@ public class ValBussFinRepaymentController extends BaseController{
     @ResponseBody
     @RequestMapping("genPayDate")
     public String genPayDate() {
-        return bussFinRepaymentService.genPayDate(RequestUtil.getPageParam());
+        return JsonSanitizer.sanitize(bussFinRepaymentService.genPayDate(RequestUtil.getPageParam()));
     }
 }

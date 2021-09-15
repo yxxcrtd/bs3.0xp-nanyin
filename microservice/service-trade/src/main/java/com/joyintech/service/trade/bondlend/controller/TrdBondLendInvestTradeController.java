@@ -67,7 +67,7 @@ public class TrdBondLendInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdBondLendInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         Page<TrdBondLendInvestTradeDto> returnPage = trdBondLendInvestTradeService.selectForPage(page, length, param);
         return returnPage;
     }
@@ -83,7 +83,7 @@ public class TrdBondLendInvestTradeController {
      */
     @RequestMapping("getTrdBondLendInvestTradeDto/{tradeId}")
     public TrdBondLendInvestTradeDto getTrdBondLendInvestTradeDto(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+     {
         return trdBondLendInvestTradeService.getTrdBondLendInvestTradeDto(tradeId);
     }
 
@@ -142,7 +142,7 @@ public class TrdBondLendInvestTradeController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return trdBondLendInvestTradeService.getFinprodId(page, length, param);
     }
 
@@ -157,7 +157,7 @@ public class TrdBondLendInvestTradeController {
      */
     @RequestMapping("getSecInfoModel")
     public SecInfoModelDto getSecInfoModel(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         String finprodId = (String) param.get("finprodId");
         return trdBondLendInvestTradeService.getSecInfoModel(finprodId);
     }
@@ -173,7 +173,7 @@ public class TrdBondLendInvestTradeController {
      */
     @RequestMapping("getFinCashPlan")
     public List<FinCashPlanDto> getFinCashPlan(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         String finprodId = (String) param.get("finprodId");
         return trdBondLendInvestTradeService.getFinCashPlan(finprodId);
     }

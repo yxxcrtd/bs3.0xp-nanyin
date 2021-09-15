@@ -30,7 +30,7 @@
                                     <input type="text" id="finprodMarketId"
                                            name="finprodMarketId" required="required"
                                            style=" width: 85%!important; display: inline-block;"
-                                           class="layui-input form-input" placeholder="" maxlength="18"
+                                           class="layui-input form-input" placeholder="" maxlength="20"
                                            data-th-placeholder="#{SysCommon.placeholder}"
                                            data-th-value="${entity?.finprodMarketId}" />
                                     <input type="text" id="tradeMarketId" name="tradeMarketId"
@@ -64,6 +64,7 @@
                                     </select>
                                 </div>
                             </div>
+                            <a id='magnifier' class="input-right-show" href='javascript:;' style='color:#4893e6;left: 32.5%; top: 42px;'><i class='iconfont icon-search'></i></a>
                         </div>
                        <!--  <a id='magnifier' class="input-right-show" href='javascript:;'
                            style='color:#4893e6;left: 33.5%; top: 43px;'><i class='iconfont icon-search'></i></a> -->
@@ -293,6 +294,7 @@
         var CE_MODEL = /*[[${CE_MODEL}]]*/'02';
         var FINPROD_TYPE_TG_F17 = /*[[${FINPROD_TYPE_TG_F17}]]*/'';
         var ASSET_TYPE_PARENTPLAN = /*[[${ASSET_TYPE_PARENTPLAN}]]*/'';
+        var shOrZh = /*[[${entity?.shOrZh}]]*/'';
     </script>
     <script data-th-src="@{/js/invest/asset/common/AssetCommon.js}" type="text/javascript"></script>
     <script data-th-src="@{/js/component/asset/BussAssetFiveType.js}" type="text/javascript"></script>

@@ -17,16 +17,16 @@ import com.joyintech.framework.config.Application;
  * @date 2020-09-30
  */
 @ComponentScan(basePackages = "com.joyintech", includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {RestController.class }))
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class }, 
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class },
                          excludeName = {"org.activiti.spring.boot.SecurityAutoConfiguration",
 		                                "org.activiti.spring.boot.JpaProcessEngineAutoConfiguration"}
                         )
 @EnableEurekaClient
 @SpringBootApplication
 public class TamsServiceSystemApplication extends Application {
-	
+
 	public static void main(String[] args) {
         JoyinApplication.run(TamsServiceSystemApplication.class, args);
     }
-	
+
 }

@@ -40,7 +40,7 @@ public class NonStandardAvailableCreditController {
 	    public Page<NonStandardAvailableCreditDto> selectAll(@RequestBody Map<String, Object> parameters,
 	                                                      @PathVariable("page") int page,
 	                                                      @PathVariable("length") int length)
-	        throws Exception {
+	    {
 	        Page<NonStandardAvailableCreditDto> pages = nonStandardAvailableCreditService.selectForPage(page,
 	            length, parameters);
 	        return pages;

@@ -899,11 +899,11 @@
   
   <select id="selectByDimension" parameterType="map" resultMap="BaseResultMap">
   	select 
-  		   PBC_PROD_ID,
-  		   CUSTOMER_TYPE1,
-  		   SUM(INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM, 
-  		   SUM(ifnull(INIT_RAISING_AMTSUMCNY,INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
-  		   SUM(INIT_RAISING_QTY) INIT_RAISING_QTY
+  		   g.PBC_PROD_ID,
+           g.CUSTOMER_TYPE1,
+  		   SUM(g.INIT_RAISING_AMTSUM) INIT_RAISING_AMTSUM,
+  		   SUM(ifnull(g.INIT_RAISING_AMTSUMCNY,g.INIT_RAISING_AMTSUM)) INIT_RAISING_AMTSUMCNY,
+  		   SUM(g.INIT_RAISING_QTY) INIT_RAISING_QTY
   		   <if test="buyPlace != null">
   		   ,#{buyPlace} BUY_PLACE
   		   </if>
@@ -911,10 +911,10 @@
   		   ,#{ccy} CCY
   		   </if>
   		   <if test="buyPlace == null">
-  		   ,BUY_PLACE 
+  		   ,g.BUY_PLACE
   		   </if>
   		   <if test="ccy == null">
-  		   ,CCY 
+  		   ,g.CCY
   		   </if>
   	from(
   		select 
@@ -1028,14 +1028,14 @@
         <!-- 手工处理传入查询日期 起息日 add by gaojian 2019-06-18 end -->
   	</where>
   	
-  	) group by 
-  	 PBC_PROD_ID
-  	 ,CUSTOMER_TYPE1
+  	) g group by
+  	 g.PBC_PROD_ID
+  	 ,g.CUSTOMER_TYPE1
   	<if test="buyPlace == null">
-  	,BUY_PLACE
+  	,g.BUY_PLACE
   	</if>
   	<if test="ccy == null">
-  	,CCY
+  	,g.CCY
   	</if>
   </select>
   

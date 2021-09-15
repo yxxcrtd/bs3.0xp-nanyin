@@ -66,23 +66,23 @@ public class FlowRiskSceneManage002Validator implements BeanValidator {
                     }else{//因子下拉框不为空
                         if(StringUtil.equals(ftr1.getFtrId(), DictCodeListRsk.流动性风险因子_申赎净流出增加比例.getValue())){
                             //申赎净流出增加比例校验
-                            if(StringUtil.isNotEmpty(ftr1.getLightValue()) && ftr1.getLightValue().intValue()<0 ){
+                            if(StringUtil.isNotEmpty(ftr1.getLightValue()) && ftr1.getLightValue().intValue()<=0 ){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0004",getMessage("FlowRiskSceneManage002.lightValue"))));
                             }
-                            if(StringUtil.isNotEmpty(ftr1.getMediumValue()) && ftr1.getMediumValue().intValue()<0 ){
+                            if(StringUtil.isNotEmpty(ftr1.getMediumValue()) && ftr1.getMediumValue().intValue()<=0 ){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0004",getMessage("FlowRiskSceneManage002.mediumValue"))));
                             }
-                            if(StringUtil.isNotEmpty(ftr1.getHeavyValue()) && ftr1.getHeavyValue().intValue()<0 ){
+                            if(StringUtil.isNotEmpty(ftr1.getHeavyValue()) && ftr1.getHeavyValue().intValue()<=0 ){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0004",getMessage("FlowRiskSceneManage002.heavyValue"))));
                             }
                         }else{//产品赎回比例校验
-                            if(StringUtil.isNotEmpty(ftr1.getLightValue()) && (ftr1.getLightValue().intValue()<0 || ftr1.getLightValue().intValue()>100)){
+                            if(StringUtil.isNotEmpty(ftr1.getLightValue()) && (ftr1.getLightValue().intValue()<=0 || ftr1.getLightValue().intValue()>=100)){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0005",getMessage("FlowRiskSceneManage002.lightValue"))));
                             }
-                            if(StringUtil.isNotEmpty(ftr1.getMediumValue()) && (ftr1.getMediumValue().intValue()<0 || ftr1.getMediumValue().intValue()>100)){
+                            if(StringUtil.isNotEmpty(ftr1.getMediumValue()) && (ftr1.getMediumValue().intValue()<=0 || ftr1.getMediumValue().intValue()>=100)){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0005",getMessage("FlowRiskSceneManage002.mediumValue"))));
                             }
-                            if(StringUtil.isNotEmpty(ftr1.getHeavyValue()) && (ftr1.getHeavyValue().intValue()<0 || ftr1.getHeavyValue().intValue()>100)){
+                            if(StringUtil.isNotEmpty(ftr1.getHeavyValue()) && (ftr1.getHeavyValue().intValue()<=0 || ftr1.getHeavyValue().intValue()>=100)){
                                 errorList.add(new ValidMessage("", getMessage("RSK_W_F_0005",getMessage("FlowRiskSceneManage002.heavyValue"))));
                             }
                         }
@@ -99,13 +99,13 @@ public class FlowRiskSceneManage002Validator implements BeanValidator {
                         if(!StringUtil.isNotEmpty(ftr2.getLightValue()) && !StringUtil.isNotEmpty(ftr2.getMediumValue()) && !StringUtil.isNotEmpty(ftr2.getHeavyValue())){
                             flag++;
                         }
-                        if(StringUtil.isNotEmpty(ftr2.getLightValue()) && (ftr2.getLightValue().intValue()<0 || ftr2.getLightValue().intValue()>100)){
+                        if(StringUtil.isNotEmpty(ftr2.getLightValue()) && (ftr2.getLightValue().intValue()<=0 || ftr2.getLightValue().intValue()>=100)){
                             errorList.add(new ValidMessage("", getMessage("RSK_W_F_0006",getMessage("FlowRiskSceneManage002.lightValue"))));
                         }
-                        if(StringUtil.isNotEmpty(ftr2.getMediumValue()) && (ftr2.getMediumValue().intValue()<0 || ftr2.getMediumValue().intValue()>100)){
+                        if(StringUtil.isNotEmpty(ftr2.getMediumValue()) && (ftr2.getMediumValue().intValue()<=0 || ftr2.getMediumValue().intValue()>=100)){
                             errorList.add(new ValidMessage("", getMessage("RSK_W_F_0006",getMessage("FlowRiskSceneManage002.mediumValue"))));
                         }
-                        if(StringUtil.isNotEmpty(ftr2.getHeavyValue()) && (ftr2.getHeavyValue().intValue()<0 || ftr2.getHeavyValue().intValue()>100)){
+                        if(StringUtil.isNotEmpty(ftr2.getHeavyValue()) && (ftr2.getHeavyValue().intValue()<=0 || ftr2.getHeavyValue().intValue()>=100)){
                             errorList.add(new ValidMessage("", getMessage("RSK_W_F_0006",getMessage("FlowRiskSceneManage002.heavyValue"))));
                         }
                     }

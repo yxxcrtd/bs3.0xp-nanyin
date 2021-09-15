@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbEqudetSubMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        <id column="BUSI_SEQNO" property="busiSeqno" jdbcType="VARCHAR" />
+        <id column="REGIST_BANK_CODE" property="registBankCode" jdbcType="VARCHAR" />
+        <id column="INDENTIFY_MARK" property="indentifyMark" jdbcType="VARCHAR" />
+        <id column="SUBMIT_STATUS" property="submitStatus" jdbcType="CHAR" />
+        <result column="ACCOUNT_NAME" property="accountName" jdbcType="VARCHAR" />
+        <result column="ACCOUNT" property="account" jdbcType="VARCHAR" />
+        <result column="EQUITY_CONF_DATE" property="equityConfDate" jdbcType="DATE" />
+        <result column="BUY_PLACE" property="buyPlace" jdbcType="VARCHAR" />
+        <result column="BUSI_TYPE" property="busiType" jdbcType="CHAR" />
+        <result column="CCY" property="ccy" jdbcType="CHAR" />
+        <result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+        <result column="CHANNEL" property="channel" jdbcType="CHAR" />
+        <result column="FUND_ACC" property="fundAcc" jdbcType="VARCHAR" />
+        <result column="FUND_ACC_BANK" property="fundAccBank" jdbcType="VARCHAR" />
+        <result column="IS_CONSIGN" property="isConsign" jdbcType="VARCHAR" />
+        <result column="TYPE" property="type" jdbcType="CHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="SUBMIT_TIME" property="submitTime" jdbcType="TIMESTAMP" />
+        <result column="SUBMIT_DEADLINE" property="submitDeadline" jdbcType="TIMESTAMP" />
+        <result column="CHB_SUBMIT_DEADLINE" property="chbSubmitDeadline" jdbcType="TIMESTAMP" />
+        <result column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="SUMIT_SEQ" property="sumitSeq" jdbcType="VARCHAR" />
+        <result column="DEPT_CODE" property="deptCode" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="CONVER_CNY_AMOUNT" property="converCnyAmount" jdbcType="DECIMAL" />
+        <result column="SHARES" property="shares" jdbcType="DECIMAL" />
+        <result column="ORG_CODE" property="orgCode" jdbcType="VARCHAR" />
+        <result column="REG_CODE" property="regCode" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BUSI_SEQNO BUSI_SEQNO, REGIST_BANK_CODE REGIST_BANK_CODE, INDENTIFY_MARK INDENTIFY_MARK,
+        SUBMIT_STATUS SUBMIT_STATUS, ACCOUNT_NAME ACCOUNT_NAME, ACCOUNT ACCOUNT, EQUITY_CONF_DATE EQUITY_CONF_DATE,
+        BUY_PLACE BUY_PLACE, BUSI_TYPE BUSI_TYPE, CCY CCY, AMOUNT AMOUNT, CHANNEL CHANNEL,
+        FUND_ACC FUND_ACC, FUND_ACC_BANK FUND_ACC_BANK, IS_CONSIGN IS_CONSIGN, TYPE TYPE,
+        REMARK REMARK, SUBMIT_TIME SUBMIT_TIME, SUBMIT_DEADLINE SUBMIT_DEADLINE, CHB_SUBMIT_DEADLINE CHB_SUBMIT_DEADLINE,
+        STATUS STATUS, SUMIT_SEQ SUMIT_SEQ, DEPT_CODE DEPT_CODE, UPDATE_USER UPDATE_USER,
+        UPDATE_TIME UPDATE_TIME, CREATE_USER CREATE_USER, CREATE_TIME CREATE_TIME, CONVER_CNY_AMOUNT CONVER_CNY_AMOUNT,
+        SHARES SHARES, ORG_CODE ORG_CODE, REG_CODE REG_CODE, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqudetSubMapper.Base_Column_List" />
+        from CHB_EQUDET_SUB
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqudetSubMapper.Base_Column_List" />
+        from CHB_EQUDET_SUB
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSubKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbEqudetSubMapper.Base_Column_List" />
+        from CHB_EQUDET_SUB
+        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+        and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+        and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+        and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSubKey" >
+        delete from CHB_EQUDET_SUB
+        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_EQUDET_SUB
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        insert into CHB_EQUDET_SUB (BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK,
+            SUBMIT_STATUS, ACCOUNT_NAME, ACCOUNT,
+            EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE,
+            CCY, AMOUNT, CHANNEL, FUND_ACC,
+            FUND_ACC_BANK, IS_CONSIGN, TYPE,
+            REMARK, SUBMIT_TIME, SUBMIT_DEADLINE,
+            CHB_SUBMIT_DEADLINE, STATUS, SUMIT_SEQ,
+            DEPT_CODE, UPDATE_USER, UPDATE_TIME,
+            CREATE_USER, CREATE_TIME, CONVER_CNY_AMOUNT,
+            SHARES, ORG_CODE, REG_CODE,
+            CREATE_DEPT)
+        values (#{busiSeqno,jdbcType=VARCHAR}, #{registBankCode,jdbcType=VARCHAR}, #{indentifyMark,jdbcType=VARCHAR},
+            #{submitStatus,jdbcType=CHAR}, #{accountName,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR},
+            #{equityConfDate,jdbcType=DATE}, #{buyPlace,jdbcType=VARCHAR}, #{busiType,jdbcType=CHAR},
+            #{ccy,jdbcType=CHAR}, #{amount,jdbcType=DECIMAL}, #{channel,jdbcType=CHAR}, #{fundAcc,jdbcType=VARCHAR},
+            #{fundAccBank,jdbcType=VARCHAR}, #{isConsign,jdbcType=VARCHAR}, #{type,jdbcType=CHAR},
+            #{remark,jdbcType=VARCHAR}, #{submitTime,jdbcType=TIMESTAMP}, #{submitDeadline,jdbcType=TIMESTAMP},
+            #{chbSubmitDeadline,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{sumitSeq,jdbcType=VARCHAR},
+            #{deptCode,jdbcType=VARCHAR}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{converCnyAmount,jdbcType=DECIMAL},
+            #{shares,jdbcType=DECIMAL}, #{orgCode,jdbcType=VARCHAR}, #{regCode,jdbcType=VARCHAR},
+            #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        insert into CHB_EQUDET_SUB
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="busiSeqno != null" >
+                BUSI_SEQNO,
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE,
+            </if>
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK,
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS,
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME,
+            </if>
+            <if test="account != null" >
+                ACCOUNT,
+            </if>
+            <if test="equityConfDate != null" >
+                EQUITY_CONF_DATE,
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE,
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="amount != null" >
+                AMOUNT,
+            </if>
+            <if test="channel != null" >
+                CHANNEL,
+            </if>
+            <if test="fundAcc != null" >
+                FUND_ACC,
+            </if>
+            <if test="fundAccBank != null" >
+                FUND_ACC_BANK,
+            </if>
+            <if test="isConsign != null" >
+                IS_CONSIGN,
+            </if>
+            <if test="type != null" >
+                TYPE,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME,
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE,
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ,
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="converCnyAmount != null" >
+                CONVER_CNY_AMOUNT,
+            </if>
+            <if test="shares != null" >
+                SHARES,
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE,
+            </if>
+            <if test="regCode != null" >
+                REG_CODE,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="busiSeqno != null" >
+                #{busiSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="indentifyMark != null" >
+                #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitStatus != null" >
+                #{submitStatus,jdbcType=CHAR},
+            </if>
+            <if test="accountName != null" >
+                #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null" >
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="equityConfDate != null" >
+                #{equityConfDate,jdbcType=DATE},
+            </if>
+            <if test="buyPlace != null" >
+                #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                #{busiType,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="amount != null" >
+                #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="channel != null" >
+                #{channel,jdbcType=CHAR},
+            </if>
+            <if test="fundAcc != null" >
+                #{fundAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccBank != null" >
+                #{fundAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="isConsign != null" >
+                #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="converCnyAmount != null" >
+                #{converCnyAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="shares != null" >
+                #{shares,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                #{regCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        insert into CHB_EQUDET_SUB(BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, SUBMIT_STATUS,
+        ACCOUNT_NAME, ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, CHANNEL,
+        FUND_ACC, FUND_ACC_BANK, IS_CONSIGN, TYPE, REMARK, SUBMIT_TIME, SUBMIT_DEADLINE,
+        CHB_SUBMIT_DEADLINE, STATUS, SUMIT_SEQ, DEPT_CODE, UPDATE_USER, UPDATE_TIME, CREATE_USER,
+        CREATE_TIME, CONVER_CNY_AMOUNT, SHARES, ORG_CODE, REG_CODE, CREATE_DEPT)
+        select BUSI_SEQNO, REGIST_BANK_CODE, INDENTIFY_MARK, SUBMIT_STATUS,
+            ACCOUNT_NAME, ACCOUNT, EQUITY_CONF_DATE, BUY_PLACE, BUSI_TYPE, CCY, AMOUNT, CHANNEL,
+            FUND_ACC, FUND_ACC_BANK, IS_CONSIGN, TYPE, REMARK, SUBMIT_TIME, SUBMIT_DEADLINE,
+            CHB_SUBMIT_DEADLINE, #{status,jdbcType=VARCHAR} STATUS, SUMIT_SEQ, DEPT_CODE, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_USER,
+            CREATE_TIME, CONVER_CNY_AMOUNT, SHARES, ORG_CODE, REG_CODE, CREATE_DEPT
+             from CHB_EQUDET_SUB
+             where STATUS = 'E' and BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR} and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR} and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR} and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        update CHB_EQUDET_SUB
+        <set >
+            <if test="accountName != null" >
+                ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null" >
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="equityConfDate != null" >
+                EQUITY_CONF_DATE = #{equityConfDate,jdbcType=DATE},
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="channel != null" >
+                CHANNEL = #{channel,jdbcType=CHAR},
+            </if>
+            <if test="fundAcc != null" >
+                FUND_ACC = #{fundAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccBank != null" >
+                FUND_ACC_BANK = #{fundAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="isConsign != null" >
+                IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="converCnyAmount != null" >
+                CONVER_CNY_AMOUNT = #{converCnyAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="shares != null" >
+                SHARES = #{shares,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                REG_CODE = #{regCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+        and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+        and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+        and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        update CHB_EQUDET_SUB
+        <set >
+            <if test="busiSeqno != null" >
+                BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR},
+            </if>
+            <if test="registBankCode != null" >
+                REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+            </if>
+            <if test="indentifyMark != null" >
+                INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitStatus != null" >
+                SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+            </if>
+            <if test="accountName != null" >
+                ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null" >
+                ACCOUNT = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="equityConfDate != null" >
+                EQUITY_CONF_DATE = #{equityConfDate,jdbcType=DATE},
+            </if>
+            <if test="buyPlace != null" >
+                BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="busiType != null" >
+                BUSI_TYPE = #{busiType,jdbcType=CHAR},
+            </if>
+            <if test="ccy != null" >
+                CCY = #{ccy,jdbcType=CHAR},
+            </if>
+            <if test="amount != null" >
+                AMOUNT = #{amount,jdbcType=DECIMAL},
+            </if>
+            <if test="channel != null" >
+                CHANNEL = #{channel,jdbcType=CHAR},
+            </if>
+            <if test="fundAcc != null" >
+                FUND_ACC = #{fundAcc,jdbcType=VARCHAR},
+            </if>
+            <if test="fundAccBank != null" >
+                FUND_ACC_BANK = #{fundAccBank,jdbcType=VARCHAR},
+            </if>
+            <if test="isConsign != null" >
+                IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null" >
+                TYPE = #{type,jdbcType=CHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="submitTime != null" >
+                SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="submitDeadline != null" >
+                SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="chbSubmitDeadline != null" >
+                CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="sumitSeq != null" >
+                SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            </if>
+            <if test="deptCode != null" >
+                DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="converCnyAmount != null" >
+                CONVER_CNY_AMOUNT = #{converCnyAmount,jdbcType=DECIMAL},
+            </if>
+            <if test="shares != null" >
+                SHARES = #{shares,jdbcType=DECIMAL},
+            </if>
+            <if test="orgCode != null" >
+                ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="regCode != null" >
+                REG_CODE = #{regCode,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        update CHB_EQUDET_SUB
+        set
+        BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR},
+        REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR},
+        INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR},
+        SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR},
+        ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+        ACCOUNT = #{account,jdbcType=VARCHAR},
+        EQUITY_CONF_DATE = #{equityConfDate,jdbcType=DATE},
+        BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+        BUSI_TYPE = #{busiType,jdbcType=CHAR},
+        CCY = #{ccy,jdbcType=CHAR},
+        AMOUNT = #{amount,jdbcType=DECIMAL},
+        CHANNEL = #{channel,jdbcType=CHAR},
+        FUND_ACC = #{fundAcc,jdbcType=VARCHAR},
+        FUND_ACC_BANK = #{fundAccBank,jdbcType=VARCHAR},
+        IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+        TYPE = #{type,jdbcType=CHAR},
+        REMARK = #{remark,jdbcType=VARCHAR},
+        SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+        SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+        CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+        STATUS = #{status,jdbcType=VARCHAR},
+        SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+        DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        CONVER_CNY_AMOUNT = #{converCnyAmount,jdbcType=DECIMAL},
+        SHARES = #{shares,jdbcType=DECIMAL},
+        ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+        REG_CODE = #{regCode,jdbcType=VARCHAR},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbEqudetSub" >
+        update CHB_EQUDET_SUB
+        set ACCOUNT_NAME = #{accountName,jdbcType=VARCHAR},
+            ACCOUNT = #{account,jdbcType=VARCHAR},
+            EQUITY_CONF_DATE = #{equityConfDate,jdbcType=DATE},
+            BUY_PLACE = #{buyPlace,jdbcType=VARCHAR},
+            BUSI_TYPE = #{busiType,jdbcType=CHAR},
+            CCY = #{ccy,jdbcType=CHAR},
+            AMOUNT = #{amount,jdbcType=DECIMAL},
+            CHANNEL = #{channel,jdbcType=CHAR},
+            FUND_ACC = #{fundAcc,jdbcType=VARCHAR},
+            FUND_ACC_BANK = #{fundAccBank,jdbcType=VARCHAR},
+            IS_CONSIGN = #{isConsign,jdbcType=VARCHAR},
+            TYPE = #{type,jdbcType=CHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            SUBMIT_TIME = #{submitTime,jdbcType=TIMESTAMP},
+            SUBMIT_DEADLINE = #{submitDeadline,jdbcType=TIMESTAMP},
+            CHB_SUBMIT_DEADLINE = #{chbSubmitDeadline,jdbcType=TIMESTAMP},
+            STATUS = #{status,jdbcType=VARCHAR},
+            SUMIT_SEQ = #{sumitSeq,jdbcType=VARCHAR},
+            DEPT_CODE = #{deptCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            CONVER_CNY_AMOUNT = #{converCnyAmount,jdbcType=DECIMAL},
+            SHARES = #{shares,jdbcType=DECIMAL},
+            ORG_CODE = #{orgCode,jdbcType=VARCHAR},
+            REG_CODE = #{regCode,jdbcType=VARCHAR},
+        where BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
+          and REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
+          and INDENTIFY_MARK = #{indentifyMark,jdbcType=VARCHAR}
+          and SUBMIT_STATUS = #{submitStatus,jdbcType=CHAR}
+    </update>
+</mapper>

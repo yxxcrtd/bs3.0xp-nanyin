@@ -31,6 +31,8 @@ import com.joyintech.tams.valuation.common.utils.CalendarUtil;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,10 @@ import java.util.stream.Collectors;
 @Service
 @Scope("prototype")
 public class VatDrawProcessorService {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(VatDrawProcessorService.class);
 
     /**
      * 增值税批处理mapper
@@ -342,8 +348,8 @@ public class VatDrawProcessorService {
             // 4'.2 根据上述查询结果,账务明细代码排重后取税则
             List<String> listBokDetailId = new ArrayList<String>();
             for (BookLatestInfoDto info : listBookLatestInfoDto) {
-                if (!listBokDetailId.contains(info.getBokDetailId())
-                    && info.getBokDetailId() != null) {
+                if (info.getBokDetailId() != null
+                    && !listBokDetailId.contains(info.getBokDetailId())) {
                     listBokDetailId.add(info.getBokDetailId());
                 }
             }
@@ -486,8 +492,8 @@ public class VatDrawProcessorService {
         for (
 
             BookLatestInfoDto info : listBookLatestInfo) {
-            if (!listBokDetailId.contains(info.getBokDetailId())
-                && info.getBokDetailId() != null) {
+            if (info.getBokDetailId() != null
+                && !listBokDetailId.contains(info.getBokDetailId())) {
                 listBokDetailId.add(info.getBokDetailId());
             }
         }
@@ -1143,7 +1149,7 @@ public class VatDrawProcessorService {
                                     BeanUtil.copyProperties(balance, entity);
                                 }
                                 catch (Exception e) {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage(),e);
                                 }
                             }
                             else {

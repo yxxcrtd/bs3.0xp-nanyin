@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.dao.MockTest002Mapper;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.ptlrealtimevaluation.RealTimeValCommonUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,8 +106,36 @@ public class PtlMockTestService extends BaseService<PtlMockTestDto> {
         map.put("PTL_ISSUE_MODE_GPKF", DictCodeListExt3.组合开放类型_高频开放.getValue());
         map.put("PORTFOLIO_TYPE_CPZH", DictCodeListExt1.组合类型_投资类组合.getValue());
         map.put("PORTFOLIO_TYPE_XNZH", DictCodeListExt3.组合类型_虚拟组合.getValue());
+        map.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());
+        map.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        map.put("OPEN_MODE_DQKF", BussinessDictCodeList.开放模式_定期开放.getValue());
+        map.put("OPEN_TYPE_KFS", BussinessDictCodeList.开放类型_开放式.getValue());
 
         return testMapper.getPtlInfo(map);
+    }
+
+    /**
+     * 组合代码下拉框选项获取
+     *
+     * @param map 参数map
+     * @return 组合代码下拉框选项
+     */
+    public Page<SelectOptionDto> getPtlInfoForPage(int page, int length,Map<String, Object> map) {
+        map.put("PROFIT_TYPE_HBX", DictCodeList.收益类型_货币型.getValue());
+        map.put("PROFIT_TYPE_JZX", DictCodeList.收益类型_净值型.getValue());
+        map.put("PTL_ISSUE_MODE_FBS", DictCodeListExt3.组合开放类型_封闭式.getValue());
+        map.put("PTL_ISSUE_MODE_DQKF", DictCodeListExt3.组合开放类型_定期开放.getValue());
+        map.put("PTL_ISSUE_MODE_GPKF", DictCodeListExt3.组合开放类型_高频开放.getValue());
+        map.put("PORTFOLIO_TYPE_CPZH", DictCodeListExt1.组合类型_投资类组合.getValue());
+        map.put("PORTFOLIO_TYPE_XNZH", DictCodeListExt3.组合类型_虚拟组合.getValue());
+        map.put("cashType1", DictCodeListExt1.现金流一级类型_本金.getValue());
+        map.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        map.put("finprodType", DictCodeListExt1.现金流业务类型_金融产品.getValue());
+        map.put("OPEN_MODE_DQKF", BussinessDictCodeList.开放模式_定期开放.getValue());
+        map.put("OPEN_TYPE_KFS", BussinessDictCodeList.开放类型_开放式.getValue());
+
+        return this.queryForPageForSelectReturn(page, length, () -> testMapper.getPtlInfo(map));
     }
 
     /**

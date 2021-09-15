@@ -45,7 +45,10 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub{
     private BigDecimal cost;
     
     private ValType valType;
-    
+    /**
+     * 是否关联上内部科目
+     */
+    private String isMatch;
     
     private List<RskValtblAssetSubDto>  selectedItem;
     
@@ -124,5 +127,12 @@ public class RskValtblAssetSubDto extends RskValtblAssetSub{
         this.valType = valType;
     }
 
-    
+
+    public String getIsMatch() {
+        return isMatch;
+    }
+
+    public void setIsMatch(String isMatch) {
+        this.isMatch = isMatch;
+    }
 }

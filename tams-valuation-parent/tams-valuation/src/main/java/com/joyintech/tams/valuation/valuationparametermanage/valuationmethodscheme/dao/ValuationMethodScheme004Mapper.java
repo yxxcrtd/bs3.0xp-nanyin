@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme004Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -23,6 +24,7 @@ import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodsche
  * @see ValuationMethodScheme004Mapper
  * @since 1.0
  */
+@Repository
 public interface ValuationMethodScheme004Mapper {
 
 	ValuationMethodScheme004Dto selectByPrimaryKey(String schemeDetailId);

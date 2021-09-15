@@ -76,7 +76,7 @@ public class FinNCProductBuild003Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
 	public AjaxResult save(@RequestBody ValProductInfoFeeDto dto, BindingResult bindingResult)
-			throws Exception {
+			 {
 		finNCProductBuild003Service.adjustRate(dto);
 		return new AjaxResult();
 	}
@@ -84,7 +84,7 @@ public class FinNCProductBuild003Controller extends BaseController{
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Valid ValProductInfoFeeDto dto, BindingResult bindingResult)
-			throws Exception {
+			 {
 		String operateType = dto.getOperateType();
 		return commonCheck(bindingResult, operateType);
 	}

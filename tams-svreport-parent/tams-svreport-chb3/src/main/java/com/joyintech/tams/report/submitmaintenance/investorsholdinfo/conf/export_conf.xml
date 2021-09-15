@@ -5,9 +5,9 @@
 			<Cell order="1" name="登记银行代码">registBankCode</Cell><!-- 登记银行代码 -->
 			<Cell order="3" name="产品代码">prodid</Cell><!-- 产品代码 -->
 			<Cell order="2" name="识别标识">indentifyMark</Cell><!-- 识别标识-->
-			<Cell order="4" name="持有日期">holdDate</Cell><!-- 持有日期 -->
+			<Cell order="4" name="持有日期">holdDStr</Cell><!-- 持有日期 -->
 			<Cell order="5" name="币种">ccyCodeForExport</Cell><!-- 币种 -->
-			<Cell order="6" name="持有份额">qty</Cell><!-- 份额 -->
+			<Cell order="6" name="持有份额">qqtyStr</Cell><!-- 份额 -->
 			<Cell order="7" name="持有金额">amount</Cell><!-- 金额 -->
 			<Cell order="8" name="折算人民币金额（元）">cnyAmt</Cell><!-- 折算人民币金额（元） -->
 			<Cell order="9" name="经办人">agent</Cell><!-- 经办人 -->

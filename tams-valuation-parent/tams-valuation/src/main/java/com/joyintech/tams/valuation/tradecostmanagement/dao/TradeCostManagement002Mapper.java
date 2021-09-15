@@ -2,12 +2,14 @@ package com.joyintech.tams.valuation.tradecostmanagement.dao;
 
 import com.joyintech.tams.common.base.entity.StlOrders;
 import com.joyintech.tams.valuation.tradecostmanagement.dto.TradeCostFinProductDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 交易费用管理 新建
  * @Author wangXiaoYong
  * @create 2019/11/19
  */
+@Repository
 public interface TradeCostManagement002Mapper {
 
     // 根据交易编号更新指令表

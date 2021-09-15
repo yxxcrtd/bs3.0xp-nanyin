@@ -1085,8 +1085,9 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      * 资产名称
      * {@inheritDoc}
      */
+    //ZGBSSE-571 【中债直连】债券标的新建页面，资产名称文本框可输入长度控制不正确
     @Override
-    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
+//    @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 100, groups = {ValidateGroupEdit.class})
   //  @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
     public String getFinprodName(){
         return super.getFinprodName();

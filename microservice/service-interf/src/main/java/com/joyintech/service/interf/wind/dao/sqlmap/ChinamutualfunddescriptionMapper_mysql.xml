@@ -9,7 +9,7 @@
         <include refid="com.joyintech.tams.common.base.dao.InfChinamutualfunddescriptionMapper.Blob_Column_List" />
         from (
             select t.*, @rownum:=@rownum+1 num from (SELECT @rownum:=0) r,CHINAMUTUALFUNDDESCRIPTION t
-            where DATE_FORMAT(OPDATE, '%Y%m%d') = '${sysDate}'
+            where DATE_FORMAT(t.OPDATE, '%Y%m%d') = '${sysDate}'
             order by num
         )
         where num &gt; ${startNum} and num &lt;= ${endNum}

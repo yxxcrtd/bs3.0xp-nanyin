@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepCheckRelationMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        <id column="ID" property="id" jdbcType="VARCHAR" />
+        <id column="STATUS" property="status" jdbcType="VARCHAR" />
+        <result column="REP_ID" property="repId" jdbcType="VARCHAR" />
+        <result column="CHECK_ID" property="checkId" jdbcType="VARCHAR" />
+        <result column="CHECK_FOR" property="checkFor" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        ID ID, STATUS STATUS, REP_ID REP_ID, CHECK_ID CHECK_ID, CHECK_FOR CHECK_FOR, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckRelationMapper.Base_Column_List" />
+        from REP_CHECK_RELATION
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckRelationMapper.Base_Column_List" />
+        from REP_CHECK_RELATION
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelationKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepCheckRelationMapper.Base_Column_List" />
+        from REP_CHECK_RELATION
+        where ID = #{id,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelationKey" >
+        delete from REP_CHECK_RELATION
+        where ID = #{id,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        insert into REP_CHECK_RELATION (ID, STATUS, REP_ID, 
+            CHECK_ID, CHECK_FOR, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+            UPDATE_TIME)
+        values (#{id,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{repId,jdbcType=VARCHAR}, 
+            #{checkId,jdbcType=VARCHAR}, #{checkFor,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, 
+            #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
+            #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        insert into REP_CHECK_RELATION
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                ID,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="repId != null" >
+                REP_ID,
+            </if>
+            <if test="checkId != null" >
+                CHECK_ID,
+            </if>
+            <if test="checkFor != null" >
+                CHECK_FOR,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="repId != null" >
+                #{repId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkId != null" >
+                #{checkId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFor != null" >
+                #{checkFor,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        insert into REP_CHECK_RELATION(ID, STATUS, REP_ID, CHECK_ID, CHECK_FOR, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select ID, #{status,jdbcType=VARCHAR} STATUS, REP_ID, CHECK_ID, CHECK_FOR, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_CHECK_RELATION
+             where STATUS = 'E' and ID = #{id,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        update REP_CHECK_RELATION
+        <set >
+            <if test="repId != null" >
+                REP_ID = #{repId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkId != null" >
+                CHECK_ID = #{checkId,jdbcType=VARCHAR},
+            </if>
+            <if test="checkFor != null" >
+                CHECK_FOR = #{checkFor,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepCheckRelation" >
+        update REP_CHECK_RELATION
+        set REP_ID = #{repId,jdbcType=VARCHAR},
+            CHECK_ID = #{checkId,jdbcType=VARCHAR},
+            CHECK_FOR = #{checkFor,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where ID = #{id,jdbcType=VARCHAR}
+          and STATUS = #{status,jdbcType=VARCHAR}
+    </update>
+</mapper>

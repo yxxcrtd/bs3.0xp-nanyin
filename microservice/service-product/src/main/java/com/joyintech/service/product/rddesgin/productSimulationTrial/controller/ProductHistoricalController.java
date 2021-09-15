@@ -36,7 +36,7 @@ public class ProductHistoricalController {
 	 */
 	@RequestMapping("findPage")
 	public List<ProductHistoricalDto> queryForPage(@RequestBody Map<String, Object> pageParam)
-			throws Exception {
+	{
 		if(pageParam.get("assetTypeOne")!=null){
 			return productHistoricalService.findPage(pageParam);
 		}

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.joyintech.framework.util.StringUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -26,6 +28,10 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceassetgroup.dto.CreditLi
  */
 @Service
 public class CeAssetGroup001Service extends CommonExportService<CreditLinesAstGrpDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(CeAssetGroup001Service.class);
 
 	 /**
      * 系列代码联想文本框
@@ -83,7 +89,7 @@ public class CeAssetGroup001Service extends CommonExportService<CreditLinesAstGr
 			Page<CreditLinesAstGrpDto> pageList=selectForPage(selectParam);
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

@@ -64,11 +64,11 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     /**
      * 提醒类型_大分类_分销缴款提醒
      */
-    提醒类型_大分类_分销缴款提醒(BussinessDictCode.提醒类型_大分类,"R10","分销缴款提醒"),
+    提醒类型_大分类_分销缴款提醒(BussinessDictCode.提醒类型_大分类,"R11","分销缴款提醒"),
     /**
      * 提醒类型_小分类_债券借贷融出的券还本收息
      */
-    提醒类型_小分类_分销缴款提醒(BussinessDictCode.提醒类型_小分类,"R10S1","分销缴款提醒"),
+    提醒类型_小分类_分销缴款提醒(BussinessDictCode.提醒类型_小分类,"R11S1","分销缴款提醒"),
     //add by chenjiaxing 分销缴款提醒 20210727 end
     /**
      * 提醒类型_小分类_债券借贷融出的券还本收息
@@ -271,6 +271,16 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     提醒类型_小分类_计划类净值型赎回确认(BussinessDictCode.提醒类型_小分类,"S17","计划类净值型赎回确认"),
 
     /**
+     * 债券上市流通操作
+     */
+    提醒类型_小分类_债券上市流通操作(BussinessDictCode.提醒类型_小分类,"R10S1","债券上市流通操作"),
+
+    /**
+     * 资产要素登记修改
+     */
+    提醒类型_小分类_资产要素登记修改(BussinessDictCode.提醒类型_小分类,"R10S2","资产要素登记修改"),
+
+    /**
      * 入库
      */
     出入库方向_入库(BussinessDictCode.出入库方向,"01","入库"),
@@ -357,6 +367,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 委外组合
      */
     组合类型_委外组合(BussinessDictCode.组合类型,"02","委外组合"),
+    /**
+     * 自主组合
+     */
+    组合类型_自主组合(BussinessDictCode.组合类型, "06", "自主组合"),
     /**
      * 基准类型
      */
@@ -4734,6 +4748,11 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 池类型_机构池
      */
     池类型_机构池(BussinessDictCode.池类型,"02" , "机构池"),
+
+    /**
+     * 机构类型_总行
+     */
+    机构类型_省联社(BussinessDictCode.机构类型, "01", "省联社"),
     /**
      * 出入项类型_资产
      */
@@ -5139,6 +5158,8 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     行内资产三级分类_私募股权投资基金(BussinessDictCode.行内资产三级分类, "66", "私募股权投资基金"),
     行内资产三级分类_即期(BussinessDictCode.行内资产三级分类, "67", "即期"),
     行内资产三级分类_掉期(BussinessDictCode.行内资产三级分类, "68", "掉期"),
+    指令业务类型_银证转账(BussinessDictCode.指令业务类型, "49", "银证转账"),
+    指令业务类型_证银转账(BussinessDictCode.指令业务类型, "50", "证银转账"),
 
     /**
      * 行权方式_回售
@@ -5451,6 +5472,7 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
     //add by chenjiaxing 固定值参数更新提醒 20210726
     提醒类型_小分类_固定值参数更新提醒(BussinessDictCode.提醒类型_小分类,"R5S3","固定值参数更新提醒"),
     //add by chenjiaxing 固定值参数更新提醒 20210726
+    提醒类型_大分类_债券上市流通(BussinessDictCode.提醒类型_大分类,"R10","债券上市流通"),
   ;
 	//add by gaopeng 20191024 start
 	//add by gaopeng 20191024 end

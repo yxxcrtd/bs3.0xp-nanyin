@@ -64,7 +64,7 @@ public class DataPushEclResultReaderService {
                 batchParam.setFinprodId(finprodId);
                 batchParam.setTaskId(taskId);
                 batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());//EXP 失败
+                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());//EXP 失败
                 batchParam.setMsg("【数据推送批处理】：计算错误");
                 bBatchLogResultList.add(batchParam);
             }

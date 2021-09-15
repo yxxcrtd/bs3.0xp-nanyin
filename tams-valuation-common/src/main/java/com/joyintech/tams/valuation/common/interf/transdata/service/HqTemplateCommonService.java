@@ -163,7 +163,8 @@ public class HqTemplateCommonService {
         }
 		/** add by dongjun on 20181011 title:债券行权计划 end**/
 		else{
-			System.out.println("模板"+tmpEName+"目前功能不支持...");
+//			System.out.println("模板"+tmpEName+"目前功能不支持...");
+			logger.info("模板"+tmpEName+"目前功能不支持...");
 		}
 		return result;
 	}
@@ -218,7 +219,8 @@ public class HqTemplateCommonService {
         }
 		/** add by dongjun on 20181011 title:债券行权计划 end**/
 		else{
-			System.out.println("模板"+tmpEName+"目前功能不支持...");
+//			System.out.println("模板"+tmpEName+"目前功能不支持...");
+			logger.info("模板"+tmpEName+"目前功能不支持...");
 		}
 		return result;
 	}
@@ -290,7 +292,8 @@ public class HqTemplateCommonService {
             }
 			/** add by dongjun on 20181011 title:债券行权计划 end**/
 			else{
-				System.out.println("模板"+key+"目前功能不支持...");
+//				System.out.println("模板"+key+"目前功能不支持...");
+				logger.info("模板"+key+"目前功能不支持...");
 				continue;
 			}
 			// 入库

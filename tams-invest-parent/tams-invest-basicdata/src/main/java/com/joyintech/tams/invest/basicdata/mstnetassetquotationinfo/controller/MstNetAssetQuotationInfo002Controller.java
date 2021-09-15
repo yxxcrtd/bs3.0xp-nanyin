@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.dto.MstNetAs
 import com.joyintech.tams.invest.basicdata.mstnetassetquotationinfo.service.MstNetAssetQuotationInfo001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -111,8 +112,7 @@ public class MstNetAssetQuotationInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getAssetCodeList")
-    public List<SelectOptionDto> getAssetCodeList()
-        throws Exception { 
+    public List<SelectOptionDto> getAssetCodeList(){
         Map<String,Object> param = RequestUtil.getPageParam();
         //map.put("finProdMarketId", param);
 		/* param.put("PROFITTYPE_VALUE_01", DictCodeList.收益类型_净值型.getValue()); */
@@ -168,7 +168,7 @@ public class MstNetAssetQuotationInfo002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstNetAssetQuotationInfo001Dto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) MstNetAssetQuotationInfo001Dto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

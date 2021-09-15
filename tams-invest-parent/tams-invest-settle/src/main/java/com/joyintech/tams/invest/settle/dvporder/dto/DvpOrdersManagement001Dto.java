@@ -86,4 +86,8 @@ public class DvpOrdersManagement001Dto extends DvpOrdersManagementDto implements
         return SysDataUtil.getNameFromDataDict(DictCode.成功失败标志, super.getSendStatus());
     }
 
+
+    public String getRemark() {
+        return super.getRemark();
+    }
 }

@@ -210,7 +210,7 @@ public class BMWEclCalculationProcessorService {
                 commonErrorParams.setErrorMsg(
                         "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
                                 + "】计算异常");
-                commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
                 errors.add(commonErrorParams);
                 stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
                 e.getMessage();
@@ -338,7 +338,7 @@ public class BMWEclCalculationProcessorService {
                 commonErrorParams.setFinprodId(entityDto.getAssetId());
                 commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
                 commonErrorParams.setErrorMsg("【ECL计算批处理】：回购资产【" + entityDto.getAssetId() + "】无质押券信息");
-                commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+                commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
                 errors.add(commonErrorParams);
                 stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
                 return;
@@ -446,7 +446,7 @@ public class BMWEclCalculationProcessorService {
             commonErrorParams.setFinprodId(entityDto.getAssetId());
             commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
             commonErrorParams.setErrorMsg("【ECL计算批处理】：资产【" + entityDto.getAssetId() + "】未配置LGD参数");
-            commonErrorParams.setErrorType(ModelDictCodeList.批处理执行结果_异常结束.getValue());
+            commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
             errors.add(commonErrorParams);
             stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
         }

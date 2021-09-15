@@ -143,7 +143,6 @@ public class DisRepTreadInfoService extends FileImpService {
         } catch (ParseException e) {
             logger.error("transMap2Dto方法转换CreateTime或UpdateTime异常");
             logger.error(e.getMessage(),e);
-            e.printStackTrace();
         }
         //表中被废弃的字段：资产一级分类、资产二级分类、资产三级分类、是否外部交易、剩余融资期限、投资比例
         return dto;

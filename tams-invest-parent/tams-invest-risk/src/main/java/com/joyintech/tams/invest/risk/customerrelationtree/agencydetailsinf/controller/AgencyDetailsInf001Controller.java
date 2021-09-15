@@ -68,7 +68,7 @@ public class AgencyDetailsInf001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<AgencyDetailsInf001Dto> selectForPage()
-        throws Exception {
+    {
         return agencyDetailsInf001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -112,7 +112,7 @@ public class AgencyDetailsInf001Controller extends BaseController{
      * @throws Exception
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return agencyDetailsInf001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     /**

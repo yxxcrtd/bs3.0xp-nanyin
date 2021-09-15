@@ -157,7 +157,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	public Map<String, String> receiveAlloFromSale(String date) throws Exception {
+	public Map<String, String> receiveAlloFromSale(String date) {
 		
 		Map<String, String> res = new HashMap<>();
 		//从临时表获取产品认购数据
@@ -185,7 +185,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	private Map<String, String> doSubAndPurToBusiness(SaleAlloDto saleAlloDto) throws Exception {
+	private Map<String, String> doSubAndPurToBusiness(SaleAlloDto saleAlloDto) {
 		
 		Map<String, String> res = new HashMap<>();
 		// 获取产品收益类型
@@ -219,7 +219,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	public Map<String, String> receiveRedeemFromSale(String date) throws Exception {
+	public Map<String, String> receiveRedeemFromSale(String date) {
 		
 		Map<String, String> res = new HashMap<>();
 		//从临时表获取产品到期数据
@@ -247,7 +247,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	private Map<String, String> doRedeemToBusiness(SaleRedeemDto saleRedeemDto) throws Exception {
+	private Map<String, String> doRedeemToBusiness(SaleRedeemDto saleRedeemDto) {
 		
 		Map<String, String> res = new HashMap<>();
 		// 获取产品收益类型
@@ -325,7 +325,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	public Map<String, String> receiveBonusCollectSale(String date) throws Exception {
+	public Map<String, String> receiveBonusCollectSale(String date) {
 		
 		Map<String, String> res = new HashMap<>();
 		//从临时表获取产品认购数据
@@ -354,7 +354,7 @@ public class SaleSystemInterfService {
      * @return
 	 * @throws Exception 
      */
-	private Map<String, String> doBonusCollectToBusiness(SaleBonusCollectDto saleBonusCollectDto) throws Exception {
+	private Map<String, String> doBonusCollectToBusiness(SaleBonusCollectDto saleBonusCollectDto) {
 		
 		Map<String, String> res = new HashMap<>();
 		// 获取产品收益类型

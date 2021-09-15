@@ -60,7 +60,7 @@ public class TrdPlanRateInvestTradeController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<TrdPlanRateInvestTradeDto> findPage(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<TrdPlanRateInvestTradeDto> findPage(@RequestBody Map<String, Object> map, @PathVariable("page") int page, @PathVariable("length") int length) {
         map.put("validStatus_02", DictCodeListExt1.交易流程状态_有效.getValue());
         map.put("validStatus_01", DictCodeListExt1.交易流程状态_流程中.getValue());
         map.put("validStatus_03", DictCodeListExt1.交易流程状态_撤销.getValue());

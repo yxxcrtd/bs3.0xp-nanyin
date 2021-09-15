@@ -32,7 +32,7 @@ public class UpdateSysdateTask {
     @Autowired
     private BaseCommonService baseCommonService;
 
-    public void execute() throws Exception{
+    public void execute() {
         baseCommonService.updateSysdate();
     }
 }

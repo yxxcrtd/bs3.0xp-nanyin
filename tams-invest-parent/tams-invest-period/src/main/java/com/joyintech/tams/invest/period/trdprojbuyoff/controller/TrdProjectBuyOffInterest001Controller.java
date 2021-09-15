@@ -21,6 +21,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.intf.IDictCode;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 /**
@@ -97,8 +98,7 @@ public class TrdProjectBuyOffInterest001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("importFile")
-    public List<ExcelValidDto> importData(String fileName)
-            throws Exception{
+    public List<ExcelValidDto> importData(String fileName) throws FileNotFoundException {
         return this.trdProjectBuyOffInterest001Service.importData(fileName);
     }
 
@@ -111,7 +111,7 @@ public class TrdProjectBuyOffInterest001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return trdProjectBuyOffInterest001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

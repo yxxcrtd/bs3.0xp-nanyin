@@ -103,7 +103,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      */
     public Page<TrdStandardBondSearchDto> selectSearchDataList(int page, int length,
                                                                Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         Page<TrdStandardBondSearchDto> pageResult = this.queryForPage(page, length,
                 () -> this.trdStandardBondMapper.selectSearchDataList(pageParam));
@@ -205,7 +205,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @since 1.0
      */
     public List<TrdStandardBondInDto> selectAvaPledgeBondList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         return this.trdStandardBondMapper.selectAvaPledgeBondList(pageParam);
     }
@@ -219,7 +219,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public List<TrdStandardBondOutDto> selectOutListData(Map<String, Object> pageParam) throws Exception {
+    public List<TrdStandardBondOutDto> selectOutListData(Map<String, Object> pageParam) {
         this.setParam(pageParam);
 
         List<TrdStandardBondOutDto> resultList = this.trdStandardBondMapper.selectOutListData(pageParam);
@@ -302,12 +302,13 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
             PtlSecPositionFlowDto resultDto;
             TrdStasecFlowDetail tsfd;
 
+            int tradeIdIndex = 0;
             Map<String, List<TrdStandardBondInDto>> dtoMap = dto.getPledgeBondList().stream().collect(JoyinCollectors.groupingBy(x -> x.getPortfolioId() + "," + x.getSecAcctId()));
             for (Map.Entry<String, List<TrdStandardBondInDto>> entry : dtoMap.entrySet()) {
                 BussinessCodeParameter parameter = new BussinessCodeParameter();
                 parameter.setSeqNo("9999");
                 String seqNo = baseGetBussinessId.buildBussinessCode(parameter);
-
+                tradeIdIndex++;
                 TrdStasecFlow tsf = new TrdStasecFlow();
                 tsf.setSeqno(seqNo);
                 tsf.setPortfolioId(entry.getValue().get(0).getPortfolioId());
@@ -325,7 +326,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
                     tsfd.setBranch(dto.getBranch());
                     tsfd.setAmt(ArithmeticUtil.divide(tsb.getPledgePrinAmt(), new BigDecimal("100"), 4));
                     saveCount += trdStasecFlowDetailMapper.insert(tsfd);
-                 // 标准券出入库头寸处理
+                    // 标准券出入库头寸处理
                     EtrSecPositionFlowDto ret = new EtrSecPositionFlowDto();
                     ret.setSeqno(IDGenerator.generate());
                     String secAcctId = entry.getValue().get(0).getSecAcctId() ;
@@ -583,7 +584,7 @@ public class TrdStandardBondService extends BaseService<TrdStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long outSave(TrdStandardBondOutDto dto) throws Exception {
+    public Long outSave(TrdStandardBondOutDto dto) {
         Long saveCount = 0L;
         Date sysDate = platformDateImpl.getSysDate();
 

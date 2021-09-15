@@ -30,7 +30,7 @@ public class CalFuncDefaultSecAcctByPort extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap){
 		String portfolio=genConvertFormula(inputValue, colcfgMap);
 		PortfolioHdr por=portfolioHdrDao.loadPortfolio(portfolio);
 		return String.valueOf(por.getDefaultSecAcct());
@@ -42,7 +42,7 @@ public class CalFuncDefaultSecAcctByPort extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

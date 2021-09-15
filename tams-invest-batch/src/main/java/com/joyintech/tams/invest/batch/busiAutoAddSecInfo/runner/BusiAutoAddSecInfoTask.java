@@ -79,7 +79,7 @@ public class BusiAutoAddSecInfoTask extends BatchBaseService {
         }
 
         try {
-            busiAutoAddSecInfoService.autoGeneration(batchDate);
+            busiAutoAddSecInfoService.autoGeneration(batchDate,platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
             result.setStatus(BatchStatus.COMPLETED);
         }
         catch (Exception e) {

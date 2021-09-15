@@ -9,10 +9,12 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
+import com.joyintech.tams.common.base.entity.FinCashPlan;
 import com.joyintech.tams.common.base.entity.PaFinCashCalcRule;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.asset.common.dto.FinAssetRateAdjDto;
+import com.joyintech.tams.invest.asset.common.dto.FinPayPlanDto;
 import com.joyintech.tams.invest.common.asset.dto.RateAdjDto;
 import com.joyintech.tams.invest.common.asset.service.RateAdjService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
@@ -20,6 +22,8 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +44,10 @@ import java.util.Map;
  */
 @Service
 public class FinAssetRateAdj001Service extends CommonExportService<FinAssetRateAdjDto> implements BaseProcessService<FinAssetRateAdjDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinAssetRateAdj001Service.class);
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -254,10 +262,12 @@ public class FinAssetRateAdj001Service extends CommonExportService<FinAssetRateA
                     //entity = againCalCashPlan(entity);
                 }
                 catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
+        //针对还本不付息资产，还本时，计划应付利息应等于区间还本未付利息
+        entity =encapFinCashPlanIntAmt(entity);
         if (OperationType.DELETE.equals(type)) {
             action = "delete";
         }
@@ -269,7 +279,16 @@ public class FinAssetRateAdj001Service extends CommonExportService<FinAssetRateA
         }
         restTemplate.postForObject(ServiceApplication.ASSET_SERVICE_NAME + "/FinAssetRateAdj/" + action, entity, Integer.class);
     }
-
+    private FinAssetRateAdjDto encapFinCashPlanIntAmt(FinAssetRateAdjDto entity){
+        if(!StringUtil.isEmptyList(entity.getFinCashPlanList()) && entity.getFinCashPlanList().size()>0){
+            for(FinCashPlan plan:entity.getFinCashPlanList()){
+                if(StringUtil.isNotEmpty(plan.getIsPayInt()) && StringUtil.equals(DictCodeList.是否_否.getValue(), plan.getIsPayInt())){//业务场景，是还本不带息的
+                    plan.setIntAmt(plan.getRepayWithoutInt());
+                }
+            }
+        }
+        return entity;
+    }
     /**
      * 重新计算现金流计划 <功能详细描述>
      *

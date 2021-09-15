@@ -26,8 +26,7 @@ public class ValElectReconciliation002Service extends CommonExportService<ValEle
      * @since 1.0
      */
     public Page<ValElectReconciliation002Dto> findPage(int page, int length,
-                                                       Map<String, Object> params)
-        throws Exception {
+                                                       Map<String, Object> params){
         params.put("INTER_TYPE_BALANCE", DictCodeListExt1.深圳通接口类型_余额表.getValue());
         return super.queryForPage(page, length,
             () -> valElectReconciliation001Mapper.queryPageList(params));

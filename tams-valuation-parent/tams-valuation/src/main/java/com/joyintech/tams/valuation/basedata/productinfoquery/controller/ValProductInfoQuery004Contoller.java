@@ -171,7 +171,7 @@ public class ValProductInfoQuery004Contoller extends BaseController {
     @RequestMapping("queryFeeList")
     @ResponseBody
     public List<ValProductInfoFeeDto> queryFeeList()
-        throws Exception {
+         {
         return valProductInfoQuery001Service.queryFeeList(RequestUtil.getPageParam());
     }
 }

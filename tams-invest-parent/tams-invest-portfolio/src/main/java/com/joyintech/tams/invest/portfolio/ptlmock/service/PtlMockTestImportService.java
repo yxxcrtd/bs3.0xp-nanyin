@@ -14,6 +14,8 @@ import com.joyintech.framework.export.paginator.domain.ITableRow;
 import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 public class PtlMockTestImportService extends BaseService<ITableRow> {
-
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlMockTestImportService.class);
+    
     @Autowired
     private PtlMockTest002Service ptlMockTest002Service;
 
@@ -60,7 +66,7 @@ public class PtlMockTestImportService extends BaseService<ITableRow> {
             dataList = ExcelUtil.readToList(fileName, null, null, 0, 1, 0);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         if (StringUtil.isNotEmpty(dataList)) {
             ptlMockTestTradeDtoList = new ArrayList<>(dataList.size());
@@ -82,7 +88,7 @@ public class PtlMockTestImportService extends BaseService<ITableRow> {
             dataList = ExcelUtil.readToList(fileName, null, null, 0, 1, 0);
         }
         catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (StringUtil.isNotEmpty(dataList)) {
@@ -251,7 +257,13 @@ public class PtlMockTestImportService extends BaseService<ITableRow> {
                 if (StringUtil.isNotBlank(rowData.get(9))) {
                     dto.setAccuir(new BigDecimal(rowData.get(9)));
                 }
-                dto.setTradeDate(DateUtil.parse(iPlatformDate.getSysDateStr()));
+                //
+                if (StringUtil.isNotBlank(rowData.get(4))) {
+                    dto.setTradeDate(DateUtil.parse(rowData.get(4)));
+                }else{
+                    dto.setTradeDate(DateUtil.parse(iPlatformDate.getSysDateStr()));
+                }
+
                 if (StringUtil.isNotBlank(rowData.get(10))) {
                     dto.setMdate(DateUtil.parse(rowData.get(10)));
                 }

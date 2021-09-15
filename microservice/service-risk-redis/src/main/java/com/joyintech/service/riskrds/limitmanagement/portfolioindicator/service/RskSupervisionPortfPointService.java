@@ -56,7 +56,7 @@ public class RskSupervisionPortfPointService extends BaseService<RskPortfolioInd
      */
     public Page<RskPortfolioIndicator002Dto> selectForPage(int page, int length,
                                                            Map<String, Object> param)
-        throws Exception {
+    {
         if (null != param.get("portfolioLevel")) {
             if (BussinessDictCodeListRds.组合层次_组合包.getValue().equals(param.get("portfolioLevel"))) {
                 return super.queryForPage(page, length,
@@ -77,7 +77,7 @@ public class RskSupervisionPortfPointService extends BaseService<RskPortfolioInd
      */
     public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(int page, int length,
                                                                    Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionPortfPointMapper.selectTableIndForPage(param));
     }

@@ -122,7 +122,7 @@ public class CreditRiskManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid CreditRiskManagement001Dto dto, BindingResult result) throws Exception {
+    public AjaxResult check(@RequestBody @Valid CreditRiskManagement001Dto dto, BindingResult result){
         AjaxResult ajaxResult = new AjaxResult();
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);

@@ -3,6 +3,7 @@
  */
 package com.joyintech.service.product.messageadjust.finmdateadjustment.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class FinMdateAdjustmentController {
      */
     @PostMapping("queryAdjustMdateList/{page}/{length}")
     public Page<FinMdateAdjustmentDto> queryAdjustMdateList(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finMdateAdjustmentService.queryAdjustMdateList(page, length, param);
     }
     
@@ -56,9 +57,10 @@ public class FinMdateAdjustmentController {
      * @param param 入参
      * @return 产品代码下拉框
      */
-    @PostMapping("queryAdjustProdIdList")
-    public List<SelectOptionDto> queryAdjustProdIdList(@RequestBody Map<String, Object> param){
-        return finMdateAdjustmentService.queryAdjustProdIdList(param);
+    @PostMapping("queryAdjustProdIdList/{page}/{length}")
+    public Page<SelectOptionDto> queryAdjustProdIdList(@RequestBody Map<String, Object> param,
+                                                       @PathVariable("page") int page, @PathVariable("length") int length){
+        return finMdateAdjustmentService.queryAdjustProdIdList(page, length, param);
     }
     
     /**
@@ -99,7 +101,7 @@ public class FinMdateAdjustmentController {
     @Transactional
     @DTXTransaction
     @PostMapping("updateProdPlanList")
-    public void updateProdPlanList(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+    public void updateProdPlanList(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         finMdateAdjustmentService.updateProdPlanList(finProductCommonInfoDto);
     }
     

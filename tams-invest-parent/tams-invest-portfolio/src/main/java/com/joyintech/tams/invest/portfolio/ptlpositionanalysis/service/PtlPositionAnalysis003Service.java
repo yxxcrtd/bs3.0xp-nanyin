@@ -18,6 +18,7 @@ import com.joyintech.tams.common.base.entity.TargetDetail;
 import com.joyintech.tams.common.base.entity.TargetTypeInfo;
 import com.joyintech.tams.common.base.entity.TilterInfo;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto;
@@ -56,10 +57,18 @@ public class PtlPositionAnalysis003Service extends CommonExportService<PtlPositi
     public List<TreeNode<TargetDetail>> getAllTreeNode(Map<String, Object> map) {
         List<TreeNode<TargetDetail>> treeNodeList=new ArrayList<>();
         String userId = com.joyintech.tams.systemtools.util.CommonUtil.getUserName();
+        if(null!=map && StringUtil.isNotEmpty(map.get("resultlist"))){
+            List<String> list= StringUtil.splitToList(GlobalConstant.COMMA,map.get("resultlist").toString()) ;
+            map.put("list",list);
+            map.put("isInit", DictCodeListExt1.是或否_否.getValue());
+        }else{
+            map.put("isInit",DictCodeListExt1.是或否_是.getValue());
+        }
+        map.put("userId",userId);
         List<TargetDetail> targetDetailList=new ArrayList<>();
         targetDetailList= restTemplate.postForList(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/getAllTreeNode",
-                userId, TargetDetail.class);
+                map, TargetDetail.class);
 
         TreeNode<TargetDetail> treeNode01=new TreeNode<TargetDetail>();
         TargetDetail targetDetail01=new TargetDetail();

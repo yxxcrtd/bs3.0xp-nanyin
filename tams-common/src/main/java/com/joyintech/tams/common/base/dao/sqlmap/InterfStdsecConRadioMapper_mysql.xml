@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfStdsecConRadioMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        <id column="SEC_ID" property="secId" jdbcType="VARCHAR" />
+        <id column="VDATE" property="vdate" jdbcType="DATE" />
+        <id column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="MDATE" property="mdate" jdbcType="DATE" />
+        <result column="SCALE" property="scale" jdbcType="DECIMAL" />
+        <result column="CVNPERHUNDRED" property="cvnperhundred" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEC_ID SEC_ID, VDATE VDATE, SOURCE SOURCE, MDATE MDATE, SCALE SCALE, CVNPERHUNDRED CVNPERHUNDRED, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfStdsecConRadioMapper.Base_Column_List" />
+        from INTERF_STDSEC_CON_RADIO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfStdsecConRadioMapper.Base_Column_List" />
+        from INTERF_STDSEC_CON_RADIO
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadioKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfStdsecConRadioMapper.Base_Column_List" />
+        from INTERF_STDSEC_CON_RADIO
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and VDATE = #{vdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadioKey" >
+        delete from INTERF_STDSEC_CON_RADIO
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and VDATE = #{vdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        insert into INTERF_STDSEC_CON_RADIO (SEC_ID, VDATE, SOURCE, 
+            MDATE, SCALE, CVNPERHUNDRED, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{secId,jdbcType=VARCHAR}, #{vdate,jdbcType=DATE}, #{source,jdbcType=VARCHAR}, 
+            #{mdate,jdbcType=DATE}, #{scale,jdbcType=DECIMAL}, #{cvnperhundred,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        insert into INTERF_STDSEC_CON_RADIO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secId != null" >
+                SEC_ID,
+            </if>
+            <if test="vdate != null" >
+                VDATE,
+            </if>
+            <if test="source != null" >
+                SOURCE,
+            </if>
+            <if test="mdate != null" >
+                MDATE,
+            </if>
+            <if test="scale != null" >
+                SCALE,
+            </if>
+            <if test="cvnperhundred != null" >
+                CVNPERHUNDRED,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secId != null" >
+                #{secId,jdbcType=VARCHAR},
+            </if>
+            <if test="vdate != null" >
+                #{vdate,jdbcType=DATE},
+            </if>
+            <if test="source != null" >
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="mdate != null" >
+                #{mdate,jdbcType=DATE},
+            </if>
+            <if test="scale != null" >
+                #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="cvnperhundred != null" >
+                #{cvnperhundred,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        insert into INTERF_STDSEC_CON_RADIO(SEC_ID, VDATE, SOURCE, MDATE, SCALE, CVNPERHUNDRED, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select SEC_ID, VDATE, SOURCE, MDATE, SCALE, CVNPERHUNDRED, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INTERF_STDSEC_CON_RADIO
+             where 1 = 1 and SEC_ID = #{secId,jdbcType=VARCHAR} and VDATE = #{vdate,jdbcType=DATE} and SOURCE = #{source,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        update INTERF_STDSEC_CON_RADIO
+        <set >
+            <if test="mdate != null" >
+                MDATE = #{mdate,jdbcType=DATE},
+            </if>
+            <if test="scale != null" >
+                SCALE = #{scale,jdbcType=DECIMAL},
+            </if>
+            <if test="cvnperhundred != null" >
+                CVNPERHUNDRED = #{cvnperhundred,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and VDATE = #{vdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfStdsecConRadio" >
+        update INTERF_STDSEC_CON_RADIO
+        set MDATE = #{mdate,jdbcType=DATE},
+            SCALE = #{scale,jdbcType=DECIMAL},
+            CVNPERHUNDRED = #{cvnperhundred,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEC_ID = #{secId,jdbcType=VARCHAR}
+          and VDATE = #{vdate,jdbcType=DATE}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+</mapper>

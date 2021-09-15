@@ -17,6 +17,7 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.interf.cache.InterfCacheUtil;
 import com.joyintech.service.interf.core.annotation.EsbSyshead;
 import com.joyintech.service.interf.core.constant.InterfConstant;
+import com.joyintech.service.interf.core.util.InterfException;
 import com.joyintech.service.interf.core.util.InterfUtil;
 
 /**
@@ -252,8 +253,7 @@ public abstract class InterfBaseEsbService<T, F> extends InterfBaseService {
      * @see
      * @since 1.0
      */
-    public abstract int saveInterfData(F entity)
-        throws Exception;
+    public abstract int saveInterfData(F entity) throws InterfException;
 
     /**
      * 业务表登录
@@ -264,8 +264,7 @@ public abstract class InterfBaseEsbService<T, F> extends InterfBaseService {
      * @see
      * @since 1.0
      */
-    public abstract int saveBusinessData(F entity)
-        throws Exception;
+    public abstract int saveBusinessData(F entity);
 
     /**
      * 获取 出入方向

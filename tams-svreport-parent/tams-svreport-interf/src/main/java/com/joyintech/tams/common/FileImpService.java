@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import org.apache.commons.collections.CollectionUtils;
@@ -230,7 +232,7 @@ public abstract class FileImpService extends InterfService{
                 	 logger.info("实际取数目录："+finalPath);
                     if(StringUtil.equals(ftpType, "03")){
                 		//本地
-                		File finalDir = new File(finalPath);
+                		File finalDir = new SafelyFile(finalPath);
                         if (finalDir.exists() && finalDir.isDirectory()) {
                             Collection<File> files = FileUtils.listFiles(finalDir,
                                     null, false);
@@ -242,7 +244,7 @@ public abstract class FileImpService extends InterfService{
                                 if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                                     return fileName.contains((String)name);
                                 })) {
-                                    File lf = new File(localPath + fileName);
+                                    File lf = new SafelyFile(localPath + fileName);
                                     if (!lf.exists()) {
                                         lf.createNewFile();
                                         FileUtils.copyFile(ff, lf);
@@ -276,7 +278,7 @@ public abstract class FileImpService extends InterfService{
                                 if (containsFile == null || CollectionUtils.exists(containsFile, name -> {
                                     return fileName.contains((String)name);
                                 })) {
-                                    File lf = new File(localPath + fileName);
+                                    File lf = new SafelyFile(localPath + fileName);
                                     if (!lf.exists()) {
                                         SftpUtil.downloadSftp(username, url, Integer.parseInt(port), password,finalPath, entry.getFilename(), localPath);
                                     }
@@ -503,7 +505,9 @@ public abstract class FileImpService extends InterfService{
         deletAllErroData(listMap, interfType);
         /**end 新增删除逻辑  add  by  dongxiangyang 20201017    */
         List<Map<String, String>> listDupError = DataCheckService.checkDuplicatedData(infoList, checkEuplicatedKeys);
-        List<CheckRule> listRules = dataCheckService.queryCheckRules(dataType);
+        // add by zhangliang 20210418 TMP调用SUB校验配置 start
+        List<CheckRule> listRules = dataCheckService.queryCheckRules(ChbCheckTableInfo.genDataType(dataType));
+        // add by zhangliang 20210418 TMP调用SUB校验配置 end
         List<Map<String, String>> listError = DataCheckService.checkDataList(infoList,listRules, deleteFlag);
         // 将重复项入库
         if (deleteFlag && CollectionUtils.isNotEmpty(listError)){
@@ -641,7 +645,7 @@ public abstract class FileImpService extends InterfService{
      * @param checkTableInfo 接口类型
      * @return 返回待处理数据
      */
-    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo){
+    public List<Map<String, String>> checkDataCodeCheck(List<Map<String,String>> infoList, String fireName, ChbCheckTableInfo checkTableInfo) {
         // 配置脚本校验
         checkData(false, infoList, fireName, checkTableInfo.getTableName(), checkTableInfo.getTableName(), checkTableInfo.getBussinessKey(), checkTableInfo.getCheckEuplicatedKeys());
         // 代码校验
@@ -913,7 +917,7 @@ public abstract class FileImpService extends InterfService{
         else {
             monitorInfoDto.setFileHandleStatus(DictCodeListExt2.上游接口文件读取处理状态_异常结束.getValue());
             //add by liubin start 当异常在解析时未捕获时，即handLeResultMsg为空，则处理给个默认值
-            if("".equals(monitorInfoDto.getFileHandleResultMsg()) || monitorInfoDto.getFileHandleResultMsg() == null){
+            if(monitorInfoDto.getFileHandleResultMsg() == null || "".equals(monitorInfoDto.getFileHandleResultMsg())){
                  monitorInfoDto.setFileHandleResultMsg("数据文件有问题，已移动到fail文件夹下");
             }
             //add by liubin end
@@ -990,7 +994,6 @@ public abstract class FileImpService extends InterfService{
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
             return null;
         }
@@ -1011,7 +1014,7 @@ public abstract class FileImpService extends InterfService{
         baseinfoList.forEach(item -> lines.add(ImportGenerator.buildTxt(item, columns)));
         try {
             FileUtils.writeLines(
-                new File(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
+                new SafelyFile(path + GlobalConstant.UNDER_LINE + UUID.randomUUID().toString() + ".tmp"),
                 "UTF-8", lines, true);
         }
         catch (IOException e) {

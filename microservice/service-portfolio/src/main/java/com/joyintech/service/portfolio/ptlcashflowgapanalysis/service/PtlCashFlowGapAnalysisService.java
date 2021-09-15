@@ -53,7 +53,7 @@ public class PtlCashFlowGapAnalysisService extends BaseService<PtlCashFlowGapAna
      * @throws Exception 异常信息
      */
     public Page<PtlCashFlowGapAnalysisDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	//如果汇总维度字段不为空
 		pageParam.put("F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 		pageParam.put("T03", DictCodeList.交易方向_行权_回售.getValue());
@@ -171,7 +171,7 @@ public class PtlCashFlowGapAnalysisService extends BaseService<PtlCashFlowGapAna
     }
  
     public List<PtlCashFlowGapAnalysisDto> selectForList(Map<String, Object> pageParam)
-        throws Exception {
+    {
       //如果汇总维度字段不为空
         pageParam.put("F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         pageParam.put("T03", DictCodeList.交易方向_行权_回售.getValue());

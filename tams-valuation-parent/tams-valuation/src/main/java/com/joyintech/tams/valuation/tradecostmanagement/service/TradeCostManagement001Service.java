@@ -49,7 +49,7 @@ public class TradeCostManagement001Service extends BaseService<TradeCostManageme
      * @return 交易费用分页数据
      */
     public Page<TradeCostManagement001Dto> queryPageList(Map<String, Object> param)
-            throws Exception {
+              {
         //  一次性费用	佣金 账户维护费 其他费用 交易手续费 结算手续费
         List<String> feeType0 = new ArrayList<String>();
         feeType0.add(DictCodeListExt1.一次性费用类型_佣金.getValue());

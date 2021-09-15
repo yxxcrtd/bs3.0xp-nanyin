@@ -51,7 +51,7 @@ public class ProductHistoricalService extends BaseService{
 	 * @see
 	 * @since 1.0
 	 */
-	public List<ProductHistoricalDto> findPage(Map<String, Object> pageParam)throws Exception {
+	public List<ProductHistoricalDto> findPage(Map<String, Object> pageParam) {
 		String assetTypeOne = (String)pageParam.get("assetTypeOne");
 		String assetTypeThree = (String)pageParam.get("assetTypeThree");
 		pageParam.put("assetTypeThree", StringUtil.splitToList(GlobalConstant.COMMA, assetTypeThree));

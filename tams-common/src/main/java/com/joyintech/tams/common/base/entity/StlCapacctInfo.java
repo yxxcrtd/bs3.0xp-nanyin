@@ -55,8 +55,8 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      * 流水号
      */
     private String seqNo;
-
-    /**
+	
+	/**
      * 账户性质
      */
     private String accountNature;
@@ -258,22 +258,6 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
     }
 
     /**
-     * 取得 账户性质
-     * @return 账户性质
-     */
-    public String getAccountNature() {
-        return accountNature;
-    }
-
-    /**
-     * 设置 账户性质
-     * @param accountNature 账户性质
-     */
-    public void setAccountNature(String accountNature) {
-        this.accountNature = accountNature == null ? null : accountNature.trim();
-    }
-
-    /**
      * 取得 是否计提活期利息
      * @return 是否计提活期利息
      */
@@ -335,5 +319,20 @@ public class StlCapacctInfo extends StlCapacctInfoKey {
      */
     public void setTradePass(String tradePass) {
         this.tradePass = tradePass == null ? null : tradePass.trim();
+    }
+	
+	/**
+     * 取得 账户性质
+     * @return 账户性质
+     */
+    public String getAccountNature() {
+        return accountNature;
+    }
+    /**
+     * 设置 账户性质
+     * @param accountNature 账户性质
+     */
+    public void setAccountNature(String accountNature) {
+        this.accountNature = accountNature;
     }
 }

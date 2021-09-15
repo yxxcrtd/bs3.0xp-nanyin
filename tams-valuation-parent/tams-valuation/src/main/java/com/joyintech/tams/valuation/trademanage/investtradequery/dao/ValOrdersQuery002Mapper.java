@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.ValOrdersDto;
+import org.springframework.stereotype.Repository;
 
 
-
+@Repository
 public interface ValOrdersQuery002Mapper {
 
    /**

@@ -49,12 +49,12 @@ public class ValFinExercisePara001Service extends CommonExportService<ValFinExer
     private ValFinExercisePara002Service valFinExercisePara002Service;
 
     public Page<ValFinExercisePara001Dto> findPage(Map<String, Object> map)
-        throws Exception {
+          {
         return super.queryForPage(() -> valFinExercisePara001Mapper.selectAll(map));
     }
 
     public List<ValFinExercisePara001Dto> findAll(Map<String, Object> map)
-        throws Exception {
+          {
         return valFinExercisePara001Mapper.selectAll(map);
     }
 

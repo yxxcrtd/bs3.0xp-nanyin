@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.joyintech.tams.valuation.basedata.marketdata.bondmarketinfo.dto.ValBondMarketInfo001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.bondmarketinfo.dto.ValBondMarketInfo001SearchDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -14,6 +15,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.bondmarketinfo.dto.ValBo
  * @see ValBondMarketInfo001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValBondMarketInfo001Mapper {
     
     /**

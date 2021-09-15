@@ -28,6 +28,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.redisinit.dto.IRiskRds;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,11 +50,11 @@ import org.apache.shiro.util.CollectionUtils;
 public abstract class BaseRiskRdsService<V extends IRiskRds> extends BaseService {
 
     public interface IInfRds<V>{
-       ClientData receive(V v) throws Exception;
+       ClientData receive(V v) throws IOException, InstantiationException;
     }
 
     public interface IInfBatchRds<T,V>{
-        ClientData receive(T t,V v) throws Exception;
+        ClientData receive(T t,V v) throws InstantiationException, IOException;
     }
 
     /**
@@ -98,11 +99,11 @@ public abstract class BaseRiskRdsService<V extends IRiskRds> extends BaseService
      * @return
      * @throws Exception
      */
-    public ClientData execRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws Exception {
+    public ClientData execRiskRds(V v,String eventType,String infCode,String assetType,IInfRds<V> iInfRds) throws IOException, InstantiationException {
         return iInfRds.receive(execBase(v,eventType,infCode,assetType));
     }
 
-    public <T> ClientData execBatchRiskRds(T t,V v,String eventType,String infCode,String assetType,IInfBatchRds<T,V> iInfRds) throws Exception {
+    public <T> ClientData execBatchRiskRds(T t,V v,String eventType,String infCode,String assetType,IInfBatchRds<T,V> iInfRds) throws IOException, InstantiationException {
         return iInfRds.receive(t,execBase(v,eventType,infCode,assetType));
     }
 

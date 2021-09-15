@@ -91,7 +91,7 @@ public class RepRaiseSumRegist001Controller extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repRaiseSumRegist001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
