@@ -104,6 +104,22 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/findPage", param,
                 EquityBusiInfoRegist001Dto.class);
     }
+
+    /**
+     * 查询事件(无分页)
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    public List<EquityBusiInfoRegist001Dto> searchInfo(Map<String, Object> param) {
+        return restTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/queryEquityBusiInfoRegist",
+                param,
+                EquityBusiInfoRegist001Dto.class);
+    }
+
     @ResponseBody
     public List<SuggestDto> queryPrdNameList(String param) {
         return restTemplate.postForList(

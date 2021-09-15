@@ -412,18 +412,18 @@ $(function() {
                 //给出提示框【导出数据包含修改或已报送数据，请确认是否导出！】
                 Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0011"), function() {
                     //点击“是”导出数据并且手工处理，否则重新选择数据
-                    exportZZ(doManualTip);
+                    exportZZ(doManualTip,expArr);
                 });
             }else{
                 //勾选的数据正常，不需要给出提示，直接导出数据并且手工处理
-                exportZZ(doManualTip);
+                exportZZ(doManualTip,expArr);
             }
         }
 
     }
-    function exportZZ(flag){
+    function exportZZ(flag,expArr){
         //导出中债excel并且调用手工处理
-        var expArr=table.getAllCheckedRows();
+        // var expArr=table.getAllCheckedRows();
         $.each(expArr, function(i, v) {
             v.sendStatus=v.sendStatusCode;
             v.status=v.statusCode;
@@ -494,8 +494,17 @@ $(function() {
                     );
                 });
             }else{
-                Joyin.exportExcel('export', param);//原导出逻辑
-                doManual(JoyinUtil.getMessage("REPORT_MANUAL_0012"),param);//原手工处理逻辑
+                // Joyin.exportExcel('export', param);//原导出逻辑
+                // doManual(JoyinUtil.getMessage("REPORT_MANUAL_0012"),param);//原手工处理逻辑
+                Joyin.ajax('searchInfo',
+                    param,
+                    function (result) {
+                        if (result && result.length > 0){
+                            exportZZ(true,result);
+                        } else {
+                            Joyin.alert(JoyinUtil.getMessage("无可导出数据!"));
+                        }
+                    });
             }
         });
         // 添加后台批处理导出逻辑 zhangyf 20200113 end
