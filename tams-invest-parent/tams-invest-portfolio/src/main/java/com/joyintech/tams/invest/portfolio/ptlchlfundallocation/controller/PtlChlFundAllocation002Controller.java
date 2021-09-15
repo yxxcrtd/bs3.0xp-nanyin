@@ -16,6 +16,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,8 +132,7 @@ public class PtlChlFundAllocation002Controller extends BaseController {
 
     @RequestMapping("selectPagePortfolioId")
     @ResponseBody
-    public Page<SelectOptionDto> selectPagePortfolioId()
-            throws Exception {
+    public Page<SelectOptionDto> selectPagePortfolioId(){
         return ptlChlFundAllocation002Service.selectPagePortfolioId(RequestUtil.getPageParam());
     }
 
@@ -190,12 +190,11 @@ public class PtlChlFundAllocation002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException WorkFlowException
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Valid PtlChlFundAllocationDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody @Valid PtlChlFundAllocationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

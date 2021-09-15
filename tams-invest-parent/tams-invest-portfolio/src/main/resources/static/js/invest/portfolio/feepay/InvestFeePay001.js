@@ -5,6 +5,9 @@
 		var param = $.serializeToObject('#searchForm');
 		param.payDateStart = $('#InvestFeePay001_paydate').startDate();
 		param.payDateEnd = $('#InvestFeePay001_paydate').endDate();
+		if($('#secAcctId').val()){
+			param.secAcctId=$('#secAcctId').val().join();
+		}
 		return param;
 	}
 	

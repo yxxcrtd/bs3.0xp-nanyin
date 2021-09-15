@@ -3,169 +3,169 @@
 <mapper namespace="com.joyintech.service.product.common.dao.FinProductFloatFeeMapper_mysql">
 	<select id="queryFloatFeeInfoByFinprodId" resultType="com.joyintech.service.product.common.dto.FinProductFloatFeeDto">
 		select FIN_CASH_INFO.FEE_ID feeId,
-			   FIN_FLOAT_CALC_RULE.BASE_RULE floatBaseRule,
-			   FIN_FLOAT_CALC_RULE.AST_VDATE_TYPE netAssetValueDay,
-			   FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
-			   IFNULL(FIN_FLOAT_CALC_RULE.BASE_TYPE,MST_FEEINFO.BASIC_BILL) basicBill,
-			   MST_FEEINFO.BASIS basis,
-			   FIN_FLOAT_COUNTING_RULE.ACCR_TYPE accrType,
-			   FIN_FLOAT_COUNTING_RULE.INTERVAL_RULE interValRule,
-	           	   FIN_FLOAT_COUNTING_RULE.F_ACCR_END_DATE fAccrEndDate,
-			   FIN_FLOAT_COUNTING_RULE.ACCR_TDAY_RULE accrTdayRule,
-			   FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
+			   FFCR.BASE_RULE floatBaseRule,
+			   FFCR.AST_VDATE_TYPE netAssetValueDay,
+			   FFCRU.F_ACCR_DATE provisionFirstDay,
+			   IFNULL(FFCR.BASE_TYPE,MF.BASIC_BILL) basicBill,
+			   MF.BASIS basis,
+			   FFCRU.ACCR_TYPE accrType,
+			   FFCRU.INTERVAL_RULE interValRule,
+	           FFCRU.F_ACCR_END_DATE fAccrEndDate,
+			   FFCRU.ACCR_TDAY_RULE accrTdayRule,
+			   FFCRU.E_ACCR_DATE eAccrDate,
 			   FIN_CASH_INFO.FIRST_PAY_DATE firstPayDate,
 			   FIN_CASH_INFO.END_TDAY_RULE endTdayRule,
 			   FIN_CASH_INFO.PAY_TDAY_RULE payTdayRule,
 			   FIN_CASH_INFO.PAY_CYCLE payCycle
-		  from (SELECT FIN_CASH_INFO.CASH_ID,
-		  			   FIN_CASH_INFO.FINPROD_ID,
-		  			   FIN_CASH_INFO.FEE_ID,
-		               FIN_CASH_PAY_RULE.FIRST_PAY_DATE,
-		               FIN_CASH_PAY_RULE.END_TDAY_RULE,
-		               FIN_CASH_PAY_RULE.PAY_TDAY_RULE,
-		               FIN_CASH_PAY_RULE.PAY_CYCLE,
-                   	   FIN_CASH_PAY_RULE.EFF_DATE
-		          FROM FIN_CASH_INFO
-		          JOIN FIN_CASH_PAY_RULE
-		            ON FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID 
-		          JOIN FIN_PRODUCT
-        			ON FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-        		  JOIN FIN_PRODUCT_ADD
-        		  	ON FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		         WHERE FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		           AND FIN_CASH_INFO.CASH_TYPE_2 = #{cashType2}
-		           AND ((FIN_CASH_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10})
-		           		OR (FIN_PRODUCT.P_FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
-		           		AND FIN_PRODUCT_ADD.TERM_TYPE != #{termType02}))
-		           AND FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}) FIN_CASH_INFO
-		  , FIN_FLOAT_CALC_RULE, FIN_FLOAT_COUNTING_RULE, MST_FEEINFO, FIN_PRODUCT
-		 where FIN_CASH_INFO.CASH_ID = FIN_FLOAT_CALC_RULE.CASH_ID
-	       and FIN_CASH_INFO.EFF_DATE = FIN_FLOAT_CALC_RULE.EFF_DATE
-	       and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-	       and FIN_CASH_INFO.EFF_DATE = FIN_FLOAT_COUNTING_RULE.EFF_DATE
-		   and FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-		   and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		  from (SELECT FCI.CASH_ID,
+		  			   FCI.FINPROD_ID,
+		  			   FCI.FEE_ID,
+		               FCPR.FIRST_PAY_DATE,
+		               FCPR.END_TDAY_RULE,
+		               FCPR.PAY_TDAY_RULE,
+		               FCPR.PAY_CYCLE,
+                   	   FCPR.EFF_DATE
+		          FROM FIN_CASH_INFO FCI
+		          JOIN FIN_CASH_PAY_RULE FCPR
+		            ON FCI.CASH_ID = FCPR.CASH_ID 
+		          JOIN FIN_PRODUCT FP
+        			ON FCI.FINPROD_ID = FP.FINPROD_ID
+        		  JOIN FIN_PRODUCT_ADD FPA
+        		  	ON FCI.FINPROD_ID = FPA.FINPROD_ID
+		         WHERE FCI.CASH_TYPE_1 = #{cashType1}
+		           AND FCI.CASH_TYPE_2 = #{cashType2}
+		           AND ((FCI.FINPROD_ID = #{finprodId} and FPA.DEAL_MODE != #{dealMode10})
+		           		OR (FP.P_FINPROD_ID = #{finprodId} and FPA.DEAL_MODE = #{dealMode10}
+		           		AND FPA.TERM_TYPE != #{termType02}))
+		           AND FCI.FINPROD_TYPE = #{finprodType}) FIN_CASH_INFO
+		  , FIN_FLOAT_CALC_RULE FFCR, FIN_FLOAT_COUNTING_RULE FFCRU, MST_FEEINFO MF, FIN_PRODUCT FP
+		 where FIN_CASH_INFO.CASH_ID = FFCR.CASH_ID
+	       and FIN_CASH_INFO.EFF_DATE = FFCR.EFF_DATE
+	       and FIN_CASH_INFO.CASH_ID = FFCRU.CASH_ID
+	       and FIN_CASH_INFO.EFF_DATE = FFCRU.EFF_DATE
+		   and FIN_CASH_INFO.FEE_ID = MF.FEE_ID
+		   and FIN_CASH_INFO.FINPROD_ID = FP.FINPROD_ID
 		   <choose>
 		   	<when test="effDate != null and effDate != ''">
-		   		and FIN_FLOAT_CALC_RULE.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
-			    and FIN_FLOAT_COUNTING_RULE.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+		   		and FFCR.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+			    and FFCRU.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
 		   	</when>
 		   	<otherwise>
-		   		and (FIN_FLOAT_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE
-		   		     AND FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE
-		   		     OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+		   		and (FFCR.EFF_DATE = FP.VDATE
+		   		     AND FFCRU.EFF_DATE = FP.VDATE
+		   		     OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
 		   	</otherwise>
 		   </choose>
 	</select>
 	<select id="queryLayerFloatFeeInfoByFinprodId" resultType="com.joyintech.service.product.common.dto.FinProductFloatFeeDto">
 		select FIN_CASH_INFO.FEE_ID feeId,
-		       FIN_FLOAT_CALC_RULE.EFF_DATE effDate,
-			   FIN_FLOAT_CALC_RULE.BASE_RULE floatBaseRule,
-			   FIN_FLOAT_CALC_RULE.AST_VDATE_TYPE netAssetValueDay,
-			   FIN_FLOAT_COUNTING_RULE.F_ACCR_DATE provisionFirstDay,
-			   IFNULL(FIN_FLOAT_CALC_RULE.BASE_TYPE,MST_FEEINFO.BASIC_BILL)  basicBill,
-			   MST_FEEINFO.BASIS basis,
-			   FIN_FLOAT_COUNTING_RULE.ACCR_TYPE accrType,
-			   FIN_FLOAT_COUNTING_RULE.INTERVAL_RULE interValRule,
-	           FIN_FLOAT_COUNTING_RULE.F_ACCR_END_DATE fAccrEndDate,
-			   FIN_FLOAT_COUNTING_RULE.ACCR_TDAY_RULE accrTdayRule,
-			   FIN_FLOAT_COUNTING_RULE.E_ACCR_DATE eAccrDate,
+		       FFCR.EFF_DATE effDate,
+			   FFCR.BASE_RULE floatBaseRule,
+			   FFCR.AST_VDATE_TYPE netAssetValueDay,
+			   FFCRU.F_ACCR_DATE provisionFirstDay,
+			   IFNULL(FFCR.BASE_TYPE,MF.BASIC_BILL)  basicBill,
+			   MF.BASIS basis,
+			   FFCRU.ACCR_TYPE accrType,
+			   FFCRU.INTERVAL_RULE interValRule,
+	           FFCRU.F_ACCR_END_DATE fAccrEndDate,
+			   FFCRU.ACCR_TDAY_RULE accrTdayRule,
+			   FFCRU.E_ACCR_DATE eAccrDate,
 			   FIN_CASH_INFO.FIRST_PAY_DATE firstPayDate,
 			   FIN_CASH_INFO.END_TDAY_RULE endTdayRule,
 			   FIN_CASH_INFO.PAY_TDAY_RULE payTdayRule,
 			   FIN_CASH_INFO.PAY_CYCLE payCycle,
 			   FIN_CASH_INFO.prod_style prodStyle,
 			   FIN_CASH_INFO.TERM_MAX investmentCycle,
-			   FIN_PRODUCT.vdate,
-			   FIN_PRODUCT.FINPROD_ID finprodid,
-			   FIN_BASE_RULE_INFO.RATE_TYPE rateType,
-			   FIN_BASE_RULE_INFO.RATE*100 rate,
-			   FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
-			   FIN_BASE_RULE_INFO.INDEX_ID indexId,
-			   FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
-			   FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
-			   FIN_BASE_RULE_INFO.RESET_TYPE resetType,
-			   FIN_BASE_RULE_INFO.REMARK remark 
-		  from (SELECT FIN_CASH_INFO.CASH_ID,
-		  			   FIN_CASH_INFO.FINPROD_ID,
-		  			   FIN_CASH_INFO.FEE_ID,
-		               FIN_CASH_PAY_RULE.FIRST_PAY_DATE,
-		               FIN_CASH_PAY_RULE.END_TDAY_RULE,
-		               FIN_CASH_PAY_RULE.PAY_TDAY_RULE,
-		               FIN_CASH_PAY_RULE.PAY_CYCLE,
-		               PRD_LAYER_PARAM.PROD_STYLE,
-		               PRD_LAYER_PARAM.TERM_MAX
-		          FROM FIN_CASH_INFO
-		          JOIN FIN_CASH_PAY_RULE
-		            ON FIN_CASH_INFO.CASH_ID = FIN_CASH_PAY_RULE.CASH_ID
-		          LEFT JOIN PRD_LAYER_PARAM 
-                	ON FIN_CASH_INFO.FINPROD_ID = PRD_LAYER_PARAM.FINPROD_ID    
-		         WHERE FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		           AND FIN_CASH_INFO.CASH_TYPE_2 = #{cashType2}
-		           AND (FIN_CASH_INFO.FINPROD_ID = #{finprodId} OR PRD_LAYER_PARAM.P_FINPROD_ID = #{finprodId})
-		           AND FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}) FIN_CASH_INFO
-		  , FIN_FLOAT_CALC_RULE, FIN_FLOAT_COUNTING_RULE, MST_FEEINFO, FIN_PRODUCT 
-		  LEFT JOIN FIN_BASE_RULE_INFO ON FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+			   FP.vdate,
+			   FP.FINPROD_ID finprodid,
+			   FBRI.RATE_TYPE rateType,
+			   FBRI.RATE*100 rate,
+			   FBRI.COEFFICIENT coefficient,
+			   FBRI.INDEX_ID indexId,
+			   FBRI.INDEX_SOURCE indexSource,
+			   FBRI.SPREAD_RATE*100 spreadRate,
+			   FBRI.RESET_TYPE resetType,
+			   FBRI.REMARK remark 
+		  from (SELECT FCI.CASH_ID,
+		  			   FCI.FINPROD_ID,
+		  			   FCI.FEE_ID,
+		               FCPR.FIRST_PAY_DATE,
+		               FCPR.END_TDAY_RULE,
+		               FCPR.PAY_TDAY_RULE,
+		               FCPR.PAY_CYCLE,
+		               PLP.PROD_STYLE,
+		               PLP.TERM_MAX
+		          FROM FIN_CASH_INFO FCI
+		          JOIN FIN_CASH_PAY_RULE FCPR
+		            ON FCI.CASH_ID = FCPR.CASH_ID
+		          LEFT JOIN PRD_LAYER_PARAM  PLP
+                	ON FCI.FINPROD_ID = PLP.FINPROD_ID    
+		         WHERE FCI.CASH_TYPE_1 = #{cashType1}
+		           AND FCI.CASH_TYPE_2 = #{cashType2}
+		           AND (FCI.FINPROD_ID = #{finprodId} OR PLP.P_FINPROD_ID = #{finprodId})
+		           AND FCI.FINPROD_TYPE = #{finprodType}) FIN_CASH_INFO
+		  , FIN_FLOAT_CALC_RULE FFCR, FIN_FLOAT_COUNTING_RULE FFCRU, MST_FEEINFO MF, FIN_PRODUCT FP
+		  LEFT JOIN FIN_BASE_RULE_INFO FBRI ON FBRI.FINPROD_ID = FP.FINPROD_ID
 		 	<if test="baseRuleType != null and baseRuleType != ''">
-				AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+				AND FBRI.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
 			</if>
 		 	<if test="publishType != null and publishType != ''">
-				AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+				AND FBRI.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
 			</if>
 			<if test="effDate != null and effDate != ''">
-			    and FIN_BASE_RULE_INFO.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+			    and FBRI.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
 		   	</if>
-		 where FIN_CASH_INFO.CASH_ID = FIN_FLOAT_CALC_RULE.CASH_ID
-		   and FIN_CASH_INFO.CASH_ID = FIN_FLOAT_COUNTING_RULE.CASH_ID
-		   and FIN_CASH_INFO.FEE_ID = MST_FEEINFO.FEE_ID
-		   and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		   and FIN_BASE_RULE_INFO.BRANCH = 0
+		 where FIN_CASH_INFO.CASH_ID = FFCR.CASH_ID
+		   and FIN_CASH_INFO.CASH_ID = FFCRU.CASH_ID
+		   and FIN_CASH_INFO.FEE_ID = MF.FEE_ID
+		   and FIN_CASH_INFO.FINPROD_ID = FP.FINPROD_ID
+		   and FBRI.BRANCH = 0
 		   <choose>
 		   	<when test="effDate != null and effDate != ''">
-		   		and FIN_FLOAT_CALC_RULE.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
-			    and FIN_FLOAT_COUNTING_RULE.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+		   		and FFCR.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+			    and FFCRU.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
 		   	</when>
 		   	<otherwise>
-		   		and (FIN_FLOAT_CALC_RULE.EFF_DATE = FIN_PRODUCT.VDATE
-		   		     AND FIN_FLOAT_COUNTING_RULE.EFF_DATE = FIN_PRODUCT.VDATE
-		   		     OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+		   		and (FFCR.EFF_DATE = FP.VDATE
+		   		     AND FFCRU.EFF_DATE = FP.VDATE
+		   		     OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
 		   	</otherwise>
 		   </choose>
 	</select>
 	<select id="queryFloatFeeDetailByFinprodId" resultType="com.joyintech.tams.common.base.entity.FinFloatCalcRuleDetail">
-		select  LEV lev,
-				BASE_RULE_ID baseRuleId,
-				COEFFICIENT coefficient,
-				SPREAD_RATE * 100 spreadRate,
-				CHARGE_RATIO * 100 chargeRatio
-		from FIN_FLOAT_CALC_RULE_DETAIL, FIN_CASH_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
-		where FIN_FLOAT_CALC_RULE_DETAIL.CASH_ID = FIN_CASH_INFO.CASH_ID
-		  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-		  and FIN_CASH_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
-		  and FIN_CASH_INFO.CASH_TYPE_1 = #{cashType1}
-		  and FIN_CASH_INFO.CASH_TYPE_2 = #{cashType2}
-		  and FIN_CASH_INFO.BRANCH = 0
-		   AND ((FIN_CASH_INFO.FINPROD_ID = #{finprodId}
+		select  FFCRD.LEV lev,
+				FFCRD.BASE_RULE_ID baseRuleId,
+				FFCRD.COEFFICIENT coefficient,
+				FFCRD.SPREAD_RATE * 100 spreadRate,
+				FFCRD.CHARGE_RATIO * 100 chargeRatio
+		from FIN_FLOAT_CALC_RULE_DETAIL FFCRD, FIN_CASH_INFO FCI, FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA
+		where FFCRD.CASH_ID = FCI.CASH_ID
+		  and FCI.FINPROD_ID = FP.FINPROD_ID
+		  and FCI.FINPROD_ID = FPA.FINPROD_ID
+		  and FCI.CASH_TYPE_1 = #{cashType1}
+		  and FCI.CASH_TYPE_2 = #{cashType2}
+		  and FCI.BRANCH = 0
+		   AND ((FCI.FINPROD_ID = #{finprodId}
 		   		<if test="dealMode10 != null and dealMode10 != ''">
-		   			and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10}
+		   			and FPA.DEAL_MODE != #{dealMode10}
 		   		</if>
 		   		)
-           			OR (FIN_PRODUCT.P_FINPROD_ID = #{finprodId}
+           			OR (FP.P_FINPROD_ID = #{finprodId}
            		<if test="dealMode10 != null and dealMode10 != ''">
-          		 	and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
+          		 	and FPA.DEAL_MODE = #{dealMode10}
         		 </if>
-           		AND FIN_PRODUCT_ADD.TERM_TYPE != #{termType02}))
-		   and FIN_CASH_INFO.FINPROD_TYPE = #{finprodType}
+           		AND FPA.TERM_TYPE != #{termType02}))
+		   and FCI.FINPROD_TYPE = #{finprodType}
 		  <choose>
 		   	<when test="effDate != null and effDate != ''">
-		   		and FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
+		   		and FFCRD.EFF_DATE = STR_TO_DATE(#{effDate},'%Y-%m-%d')
 		   	</when>
 		   	<otherwise>
-		   		and (FIN_FLOAT_CALC_RULE_DETAIL.EFF_DATE = FIN_PRODUCT.VDATE
-		   		     OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+		   		and (FFCRD.EFF_DATE = FP.VDATE
+		   		     OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
 		   	</otherwise>
 		   </choose>
-		  order by LEV
+		  order by FFCRD.LEV
 	</select>
 	<select id="getMaxLevByCashIdAndEffDate" resultType="java.lang.Integer">
 		select

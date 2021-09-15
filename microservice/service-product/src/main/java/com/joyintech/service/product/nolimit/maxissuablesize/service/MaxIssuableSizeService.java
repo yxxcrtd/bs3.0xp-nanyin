@@ -47,7 +47,7 @@ public class MaxIssuableSizeService extends BaseService<MaxIssuableSizeDto>{
      * @since 1.0
      */
     public Page<MaxIssuableSizeDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-            throws Exception {
+	{
     	
     	Page<MaxIssuableSizeDto> pages = super.queryForPage(page, length, () -> maxIssuableSizeMapper.selectForPage(pageParam));
         List<MaxIssuableSizeDto> getroot = pages.getRoot();

@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.trade.channel.feepay.dto.ChannelFeePay002Dto;
 import com.joyintech.tams.invest.trade.channel.feepay.service.ChannelFeePay002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -148,8 +149,7 @@ public class ChannelFeePay002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Valid ChannelFeePay002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Valid ChannelFeePay002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -12,6 +12,8 @@ package com.joyintech.tams.disclosure.information.config.poireportmodelmanage;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -106,7 +108,7 @@ public class PoiReportModelManage001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<DisPoiTab> findIndexId() throws Exception {
+	public Page<DisPoiTab> findIndexId() {
 		Page<DisPoiTab> page = reportModelManage001Service.findByPage(RequestUtil.getPageParam());
 		return page;
 	}
@@ -149,22 +151,25 @@ public class PoiReportModelManage001Controller extends BaseController {
      */
 	@ResponseBody
     @RequestMapping("downLoad")
-    public ResponseEntity<byte[]> download()
-        throws Exception {
+    public ResponseEntity<byte[]> download() throws IOException {
     	String tempPath = RequestUtil.getParam("tempPath");
     	String tempName = RequestUtil.getParam("tempName");
     	
         // 目标文件
         File  targetFile=new  File(tempPath+"/"+tempName);
         InputStream in = null;
-        if (!targetFile.exists()) {
-            throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
-        }
-        else {
-            in = new FileInputStream(targetFile);
-        }
-        return ExportUtil.export(targetFile.getName(), in);
+        try {
+			if (!targetFile.exists()) {
+				throw new BusinessException("文件[" +targetFile.getPath() + "]不存在！");
+			}
+			else {
+				in = new FileInputStream(targetFile);
+			}
+			return ExportUtil.export(targetFile.getName(), in);
+		}finally {
+        	if(in != null){
+        		in.close();
+			}
+		}
     }
-	
-	
 }

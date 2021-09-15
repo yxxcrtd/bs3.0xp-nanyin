@@ -21,6 +21,7 @@ import com.joyintech.tams.valuation.interf.valuation.sztinterf.utils.SztMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public class SztInterfDealService {
      * @param cDate
      * @param detailFlag
      */
-    public void callSztInterf(String prodIds, String interfType, String cDate, String detailFlag) throws Exception {
+    public void callSztInterf(String prodIds, String interfType, String cDate, String detailFlag) throws IOException {
         //定义 		List<String> listProdId = prodIds.split(",")
         List<String> listProdId = StringUtil.splitToList(GlobalConstant.COMMA, prodIds);
         //1、调用工具类生成连接器，并初始化连接

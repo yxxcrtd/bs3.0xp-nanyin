@@ -10,16 +10,27 @@
 
 package com.joyintech.tams.svreport.chb.assetinforeg.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbAssetInfoDto;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
+import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
+import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegistMService;
 import com.joyintech.tams.svreport.chbsd.assetinfosub.service.SdAssetiInfoRegBatchService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +43,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.ajax.MessageType;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.tams.common.svreport.chb.constant.SVReportGlobalConstant;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.svreport.chb.assetinforeg.dto.AssetInfoRegist001Dto;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
-import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegistMService;
-import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
-import com.joyintech.tams.systemtools.util.CommonUtil;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 /**
  * 资产要素登记
  *
@@ -99,6 +99,8 @@ public class AssetInfoRegist001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
+		model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_资产要素信息登记.getValue());
+		model.addAttribute("FILE_HANDLE_STATUS", DictCodeListExt3.中债一二三期文件处理状态_未处理.getValue());
 		super.setSelectOptionToModel(model, DictCode.币种_中债,DictCode.资产_负债类别
 				,DictCode.交易流通场所_中债, DictCode.资产_负债二级类别
 				,DictCode.报送数据状态, DictCode.报送状态, DictCode.报送反馈状态);
@@ -226,7 +228,7 @@ public class AssetInfoRegist001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
 		List<AssetInfoRegist001Dto> list=new ArrayList<>();
 		// 选择行数据时
@@ -237,7 +239,6 @@ public class AssetInfoRegist001Controller extends BaseController {
 						AssetInfoRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{
@@ -256,7 +257,11 @@ public class AssetInfoRegist001Controller extends BaseController {
 			dataList.add(target);
 		}
 
-		sdAssetiInfoRegBatchService.sendBatchCommon(dataList);
+		SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+		if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+			sendDataCheckType = SendDataCheckType.重新报送;
+		}
+		sdAssetiInfoRegBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
 	}

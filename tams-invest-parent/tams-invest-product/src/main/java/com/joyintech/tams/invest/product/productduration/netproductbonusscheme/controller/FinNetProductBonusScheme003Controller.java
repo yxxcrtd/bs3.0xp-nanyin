@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,6 +61,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 @PageId("FinNetProductBonusScheme003")
 @RequestMapping("/invest/product/productduration/netproductbonusscheme/FinNetProductBonusScheme003")
 public class FinNetProductBonusScheme003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinNetProductBonusScheme003Controller.class);
+    
     /**
      * 净值型分红方案service
      */
@@ -113,7 +121,7 @@ public class FinNetProductBonusScheme003Controller extends BaseController {
 				processMark.setPageId("FinNetProductBonusScheme002");
 				finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 			} catch (Exception e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
 			String operateType = getParam("operateType");
             finNetProductBonusSchemeInfo.setOperateType(operateType);
@@ -133,7 +141,7 @@ public class FinNetProductBonusScheme003Controller extends BaseController {
 				processMark.setPageId("FinNetProductBonusScheme003");
 				finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 			} catch (Exception e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
 			String operateType = getParam("operateType");
             finNetProductBonusSchemeInfo.setOperateType(operateType);
@@ -188,14 +196,13 @@ public class FinNetProductBonusScheme003Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -223,7 +230,7 @@ public class FinNetProductBonusScheme003Controller extends BaseController {
     
     @ResponseBody
     @RequestMapping("doRevoke")
-    public AjaxResult doRevoke(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br) throws Exception{
+    public AjaxResult doRevoke(@RequestBody FinNetProductBonusSchemeDto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -238,7 +245,7 @@ public class FinNetProductBonusScheme003Controller extends BaseController {
 			processMark.setPageId("FinNetProductBonusScheme003");
 			finNetProductBonusSchemeInfo = finNetProductBonusSchemeService.getBussinessEntityByPk(processMark);
 		} catch (Exception e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		
         params.setPageId(this.getPageId());

@@ -81,13 +81,11 @@ public class TrdOverdueCalcuPenaltyDto extends BaseEntity implements ProcessEnti
     private String oldPenaltyBaseType;
     //罚息利率
     private BigDecimal yield;
-    @NotEmpty(fieldName = "截止后是否冲回",groups= {ValidateGroupEdit.class})
     private String isRushBack;
 
     private String oldIsRushBack;
     //罚息开始日
     private String fxvdate;
-    @NotEmpty(fieldName = "罚息截止日",groups= {ValidateGroupEdit.class})
     private String fxmdate;
 
     private String oldFxmdate;

@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.trademanage.investtradequery.dao;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.BondLendDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 债券借贷交易查询
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.trademanage.investtradequery.dto.BondLendDto
  * @see BondLend001Mapper
  * @since 1.0
  */
+@Repository
 public interface BondLend001Mapper {
 
     /**

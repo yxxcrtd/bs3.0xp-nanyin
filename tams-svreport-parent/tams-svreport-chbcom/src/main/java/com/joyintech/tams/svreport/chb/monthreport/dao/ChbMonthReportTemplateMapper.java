@@ -3,7 +3,9 @@ package com.joyintech.tams.svreport.chb.monthreport.dao;
 import java.util.List;
 
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthReportTemplate;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthReportTemplateMapper {
     int deleteByPrimaryKey(String tempuuid);
 

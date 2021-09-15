@@ -154,7 +154,7 @@ public class CreditLinesAstGrpDto  extends CreditLines implements ITableRow,Proc
      * {@inheritDoc}
      */
     @Override
-    @Amount(fieldName = "CeAssetGroup002.creditTotalAmt", maxIntBit = 30, maxDecBit = 2, groups = {
+    @Amount(fieldName = "CeAssetGroup002.creditTotalAmt", maxIntBit = 30, maxDecBit = 4, groups = {
             ValidateGroupEdit.class})
     @NotEmpty(fieldName = "CeAssetGroup002.creditTotalAmt", groups = {ValidateGroupEdit.class})
     public BigDecimal getCreditAmt(){

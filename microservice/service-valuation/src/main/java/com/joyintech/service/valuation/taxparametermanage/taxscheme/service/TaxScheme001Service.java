@@ -51,7 +51,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-	public Page<TaxScheme001Dto> findSchemeByPage(int page, int length, Map<String, Object> parameters) throws Exception {
+	public Page<TaxScheme001Dto> findSchemeByPage(int page, int length, Map<String, Object> parameters) {
 		return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectScheme(parameters));
     }
 
@@ -60,7 +60,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-	public Page<TaxScheme001Dto> findVatTaxByPage(int page, int length, Map<String, Object> parameters) throws Exception {
+	public Page<TaxScheme001Dto> findVatTaxByPage(int page, int length, Map<String, Object> parameters) {
 		return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectVatTax(parameters));
 	}
 	
@@ -69,7 +69,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-	public List<TaxScheme001Dto> findVatTax(Map<String, Object> parameters) throws Exception {
+	public List<TaxScheme001Dto> findVatTax(Map<String, Object> parameters) {
 		return taxScheme001Mapper.selectVatTax(parameters);
 	}
 
@@ -78,7 +78,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-    public Page<TaxScheme001Dto> findAdtTaxByPage(int page, int length, Map<String, Object> parameters) throws Exception {
+    public Page<TaxScheme001Dto> findAdtTaxByPage(int page, int length, Map<String, Object> parameters) {
 
         if(MultilevelDataAuthorityUtil.isEnabled()){
 
@@ -93,7 +93,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-    public List<TaxScheme001Dto> findAdtTax(Map<String, Object> parameters) throws Exception {
+    public List<TaxScheme001Dto> findAdtTax(Map<String, Object> parameters){
         if(MultilevelDataAuthorityUtil.isEnabled()){
 
             List<String> treeInstCode = LoginUserUtil.getTreeInstCode();
@@ -113,7 +113,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<TaxScheme001Dto> findTaxableByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<TaxScheme001Dto> findTaxableByPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectTaxable(pageParam));
     }
     
@@ -135,7 +135,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @return
      * @throws Exception
      */
-    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) throws Exception {
+    public List<SelectOptionDto> findAsset(Map<String, Object> pageParam) {
         pageParam.put("InstCode",LoginUserUtil.getInstCode());
         List<TaxScheme005Dto> resultList = taxScheme005Mapper.selectAsset(pageParam);
         List<SelectOptionDto> selectOptionList = new ArrayList<>();
@@ -158,7 +158,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<TaxScheme001Dto> findConfigByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<TaxScheme001Dto> findConfigByPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectConfig(pageParam));
     }
     
@@ -170,7 +170,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @see
      * @since 1.0
      */
-    public List<TaxScheme001Dto> findConfig(Map<String, Object> pageParam) throws Exception {
+    public List<TaxScheme001Dto> findConfig(Map<String, Object> pageParam) {
         return taxScheme001Mapper.selectConfig(pageParam);
     }
 
@@ -182,7 +182,7 @@ public class TaxScheme001Service extends CommonExportService<TaxScheme001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<TaxScheme001Dto> findTaxSchaBokConfigByPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<TaxScheme001Dto> findTaxSchaBokConfigByPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page, length, ()-> taxScheme001Mapper.selectTaxSchaBokConfig(pageParam));
     }
 

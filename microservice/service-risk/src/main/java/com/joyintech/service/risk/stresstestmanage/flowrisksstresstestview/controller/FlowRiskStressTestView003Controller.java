@@ -42,7 +42,7 @@ public class FlowRiskStressTestView003Controller {
     private FlowRiskStressTestView003Service flowRiskStressTestView003Service;
     
     @PostMapping("getCashFlowDetail")
-    public List<FlowRiskStressTestView003Dto> getCashFlowDetail(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FlowRiskStressTestView003Dto> getCashFlowDetail(@RequestBody Map<String, Object> param) {
         return flowRiskStressTestView003Service.getCashFlowDetail(param);
     }
 

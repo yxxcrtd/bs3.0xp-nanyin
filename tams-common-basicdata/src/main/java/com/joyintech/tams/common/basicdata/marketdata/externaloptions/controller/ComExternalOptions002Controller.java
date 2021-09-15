@@ -139,7 +139,7 @@ public class ComExternalOptions002Controller extends BaseController {
             processParameter.setWorkFlowParameter(workFlowParameter);// 塞入流程参数
 
             comExternalOptions002Service.start(processParameter, dto);
-            msg = getMessage("COMMON_I_0001"); // 处理正常结束
+            msg = getMessage("COMMON_I_0002"); // 处理正常结束
         }
         catch (Exception e) {
             this.getLogger().error("启动外汇估值信息流程失败：", e);

@@ -10,9 +10,19 @@
  
 package com.joyintech.tams.invest.risk.valtblimport.valid;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
+import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.util.StringUtil;
@@ -31,22 +41,63 @@ import com.joyintech.tams.invest.risk.valtblimport.dto.RskValTableImportParamDto
 @Component
 public class RskValTableImportParamValidator implements BeanValidator{
 
+    @Autowired
+    private RskValTableImportCommonService rskValTableImportCommonService;
+
     @Override
     public List<ValidMessage> valid(Object value) {
         RskValTableImportParamDto dto = (RskValTableImportParamDto)value;
         ArrayList<ValidMessage> resultList = new ArrayList<>();
-        if(StringUtil.isEmpty(dto.getPtlId())){
-            resultList.add(new ValidMessage("ptlId",
-                getMessage("COMMON_E_0057", getMessage("RskValTableImport001.ptlId"))));
-        }
-        if(null==dto.getValDate()){
-            resultList.add(new ValidMessage("valDate",
-                getMessage("COMMON_E_0057", getMessage("RskValTableImport001.valDate"))));
-        }
         if(StringUtil.isEmpty(dto.getValTableFileName())){
             resultList.add(new ValidMessage("valTableFileName",
-                getMessage("COMMON_E_0057", getMessage("RskValTableImport001.valTableFileName"))));
+                    getMessage("COMMON_E_0057", getMessage("RskValTableImport001.valTableFileName"))));
+        } else {
+            File file = new SafelyFile(dto.getValTableFileName());
+            if (dto.getValTableFileName().endsWith(".zip")) {
+                List<File> fileList = new ArrayList<>();
+                if (Objects.nonNull(file)) {
+                    if (RskValTableImportCommonService.decompressZip(file, fileList)) {
+                        if (!StringUtil.isEmptyList(fileList)) {
+                            for (File file1 : fileList) {
+                                checkFileName(file1.getName(), resultList);
+                            }
+                        } else {
+                            resultList.add(new ValidMessage("valTableFileName", "上传的估值表zip文件为空!"));
+                        }
+                    }
+                } else {
+                    resultList.add(new ValidMessage("valTableFileName", "上传估值表zip文件失败!"));
+                }
+
+            } else {
+                checkFileName(file.getName(), resultList);
+                if(StringUtil.isEmpty(dto.getPtlId())){
+                    resultList.add(new ValidMessage("ptlId",
+                            getMessage("COMMON_E_0057", getMessage("RskValTableImport001.ptlId"))));
+                }
+                if(null==dto.getValDate()){
+                    resultList.add(new ValidMessage("valDate",
+                            getMessage("COMMON_E_0057", getMessage("RskValTableImport001.valDate"))));
+                }
+            }
         }
         return resultList;
+    }
+
+    private void checkFileName(String fileName, ArrayList<ValidMessage> resultList) {
+        String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
+        String[] arr = fileName.split(chbValSplitStr);
+        if (arr.length != 2) {
+            resultList.add(new ValidMessage("valTableFileName", "估值表导入失败，无法预览"));
+        } else {
+            Date valDate = rskValTableImportCommonService.getDateFromStr(arr[1]);
+            if (Objects.isNull(valDate)) {
+                resultList.add(new ValidMessage("valTableFileName", "估值表导入失败，无法预览"));
+            }
+            SelectOptionDto info = rskValTableImportCommonService.getAssetInfoFromName(arr[0]);
+            if (Objects.isNull(info)) {
+                resultList.add(new ValidMessage("valTableFileName", "估值表导入失败，无法预览"));
+            }
+        }
     }
 }

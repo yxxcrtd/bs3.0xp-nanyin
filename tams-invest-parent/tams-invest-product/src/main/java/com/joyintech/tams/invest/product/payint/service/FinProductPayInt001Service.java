@@ -42,10 +42,8 @@ public class FinProductPayInt001Service extends CommonExportService<FinProductPa
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> queryProdIdInfo(Map<String, Object> param){
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductPayInt/queryProdIdInfo", param,
             SelectOptionDto.class);
@@ -56,12 +54,9 @@ public class FinProductPayInt001Service extends CommonExportService<FinProductPa
      *
      * @param param 过滤参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public Page<SelectOptionDto> selectPortfolioId(Map<String, Object> param)
-        throws Exception {
+    public Page<SelectOptionDto> selectPortfolioId(Map<String, Object> param){
         param.put("loginUserName", LoginUserUtil.getUserName());
-
         return restTemplate.postForPage(
             ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductPayInt/selectPortfolioId", param,
             SelectOptionDto.class);

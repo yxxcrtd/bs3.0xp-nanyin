@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.invest.product.valuation.dto.AssetDealInfoDto;
 import com.joyintech.tams.invest.product.valuation.dto.FinProductValuation001Dto;
@@ -14,6 +15,7 @@ import com.joyintech.tams.invest.product.valuation.dto.ProdDealInfoDto;
 import com.joyintech.tams.invest.product.valuation.dto.ProdFeeInfoDto;
 import com.joyintech.tams.invest.product.valuation.dto.ProdInfoDto;
 
+@Repository
 public interface FinProductValuation001Dao {
 
 	void deleteValuation();

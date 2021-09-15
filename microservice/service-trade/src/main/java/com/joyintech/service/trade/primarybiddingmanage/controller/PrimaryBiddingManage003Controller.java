@@ -42,7 +42,7 @@ public class PrimaryBiddingManage003Controller {
      */
     @PostMapping("findBidPrice")
     public List<BidOrderBidPriceDto> findBidPrice(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return primaryBiddingManage003Service.findBidPrice(param);
     }
 
@@ -55,7 +55,7 @@ public class PrimaryBiddingManage003Controller {
      */
     @PostMapping("getBidDetailByBidId")
     public List<BidOrderBidPriceDto> getBidDetailByBidId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         return primaryBiddingManage003Service.getBidDetailByBidId(param.get("bidId").toString());
     }
 
@@ -78,7 +78,7 @@ public class PrimaryBiddingManage003Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody TrdBiddingManage003Dto dto) throws Exception {
+    public void insert(@RequestBody TrdBiddingManage003Dto dto) {
     	primaryBiddingManage003Service.insert(dto);
     }
     
@@ -91,7 +91,7 @@ public class PrimaryBiddingManage003Controller {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody TrdBiddingManage003Dto dto) throws Exception {
+    public void update(@RequestBody TrdBiddingManage003Dto dto) {
     	primaryBiddingManage003Service.update(dto);
     }
 

@@ -13,6 +13,7 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalassetcode.service
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -83,7 +84,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      * @since 1.0
      */
     public Page<RskValtblAssetSubMapDtlDto> findPageDtl(int page, int length,
-                                                       Map<String, Object> pageParam) throws Exception {
+                                                       Map<String, Object> pageParam) {
              return super.queryForPage(page, length, () -> {
                  rskValAssetCodeMapper.selectDtl(pageParam);
              });
@@ -160,7 +161,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      */
     public void saveAssetCodeDtl(RskValtblAssetSubMapDtlDto dto){
         if(StringUtil.isNotEmpty(dto.getSrcCode())){
-            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode().toString());
+            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode());
             for(String srcCode:srcCodeList){
                 RskValtblAssetSubMapDtl record = new RskValtblAssetSubMapDtl();
                 record.setId(dto.getId());
@@ -209,5 +210,26 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
     public int getCountByPtl(String assetSubMapId){
         return rskValAssetCodeMapper.getCountByPtl(assetSubMapId);
     }
-    
+    /**
+     * 查询目标汇总科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(int page, int length, Map<String, Object> pageParam){
+        return super.queryForPageForSelectReturn(page,length,() -> rskValAssetCodeMapper.selecctRskValtblSubjectSumCodeList(pageParam));
+    }
+
+    /**
+     * 查询所有已配置科目代码
+     * @param page
+     * @param length
+     * @param pageParam
+     * @return
+     */
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(Map<String, Object> pageParam) {
+           return rskValAssetCodeMapper.selectDtl(pageParam);
+    }
+
 }

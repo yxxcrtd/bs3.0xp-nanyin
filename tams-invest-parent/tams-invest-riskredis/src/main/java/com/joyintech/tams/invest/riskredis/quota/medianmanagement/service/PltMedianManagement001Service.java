@@ -29,7 +29,6 @@ public class PltMedianManagement001Service extends CommonExportService<PltMedian
      * 使用给定的sqlID检索分页数据。返回类型是Service的泛型。
      * @param pageParam pageParam
      * @return Page类 Page
-     * @throws Exception 异常信息
      */
     public Page<PltMedianManagementDto> selectForPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(
@@ -65,7 +64,7 @@ public class PltMedianManagement001Service extends CommonExportService<PltMedian
 			map.put("paraCode", paraCodeList);
 		}
 		Object blank = map.get("blank");
-		if(blank != null || blank != ""){
+		if(blank != null && blank != ""){
 			map.put("blank", blank);
 		}
 		Object supDate = map.get("supDate");

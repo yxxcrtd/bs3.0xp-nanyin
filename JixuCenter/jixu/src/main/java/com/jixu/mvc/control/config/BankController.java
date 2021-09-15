@@ -560,7 +560,7 @@ public class BankController extends ExceptionControl{
 								   HttpServletResponse response) {
 		
 		int typeid=Integer.valueOf(category);
-		String acctnum=acct.toString().split("\\|")[0];
+		String acctnum=acct.split("\\|")[0];
     	bankCfgService.updateBankacctGL(acctID, typeid, acctnum);
         JsonUtil.writeObjToResponse(response, acctID + "");
 	}
@@ -586,7 +586,7 @@ public class BankController extends ExceptionControl{
 								  HttpServletResponse response) {
 		
 		int typeid=Integer.valueOf(category);
-		String acctnum=acct.toString().split("\\|")[0];
+		String acctnum=acct.split("\\|")[0];
 		bankCfgService.updateBankacctGL(acctID, typeid, acctnum);
         JsonUtil.writeObjToResponse(response, acctID + "");
 	}

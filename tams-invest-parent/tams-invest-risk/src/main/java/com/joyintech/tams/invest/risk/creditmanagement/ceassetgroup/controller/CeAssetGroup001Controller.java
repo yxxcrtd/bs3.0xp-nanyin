@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -66,7 +67,7 @@ public class CeAssetGroup001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getAssetGroupAliasIds")
     public List<SelectOptionDto> getAssetGroupAliasIds()
-        throws Exception {
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         /** modify by yanya on 20190930 param参数获取不到修复(名称改为search) start **/
         String param = super.getRequest().getParameter("search");
@@ -85,7 +86,7 @@ public class CeAssetGroup001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<CreditLinesAstGrpDto> selectAll()
-        throws Exception {
+    {
         return ceAssetGroup001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -113,8 +114,7 @@ public class CeAssetGroup001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) CreditLinesAstGrpDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) CreditLinesAstGrpDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -145,7 +145,7 @@ public class CeAssetGroup001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return ceAssetGroup001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

@@ -3,6 +3,7 @@ package com.joyintech.tams.valuation.common.interf.tempTables.entity;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.CustomDateDeserialize;
+
 import java.util.Date;
 
 public class ValFloatCalcRuleN extends BaseEntity {
@@ -259,4 +260,5 @@ public class ValFloatCalcRuleN extends BaseEntity {
     public void setCalRule(String calRule) {
         this.calRule = calRule == null ? null : calRule.trim();
     }
+
 }

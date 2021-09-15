@@ -95,7 +95,14 @@ var table
             Joyin.error('交易在撤销流程中，请检查后再打印单据。')
             return;
         }
-        window.open("printPayOrders?bizCode=" + data.bizCode + "&paBussType=" + data.paBussType + "&statusValid=" + data.statusValid, "_blank", "fullscreen=yes,resizeable=no,scrollbars=yes,channelmode=yes,left=0,top=0,width=1366,height=768")
+        //表格记录查出的有效状态与查询交易有效状态值保持一致
+        var statusValid = null;
+        if(data.statusValid == '03'){
+        	statusValid  = "01";
+        }else{
+        	statusValid  = "02";
+        }
+        window.open("printPayOrders?bizCode=" + data.bizCode + "&paBussType=" + data.paBussType + "&statusValid=" + statusValid, "_blank", "fullscreen=yes,resizeable=no,scrollbars=yes,channelmode=yes,left=0,top=0,width=1366,height=768")
     }
 
     /**

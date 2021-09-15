@@ -26,7 +26,7 @@ import java.util.List;
  * @see MstFileCommonServiceMapperImpl
  * @since 1.0
  */
-@Repository
+@Repository("MstFileCommonServiceMapperImpl_val")
 public interface MstFileCommonServiceMapperImpl {
     /**
      * 

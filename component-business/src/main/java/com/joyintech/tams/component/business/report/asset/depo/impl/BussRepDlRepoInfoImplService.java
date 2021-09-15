@@ -32,7 +32,7 @@ public class BussRepDlRepoInfoImplService extends BaseService<BussRepDlRepoInfoD
 
     @Override
     public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所};
+        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.交易流通场所_中债};
     }
 
     /**

@@ -72,7 +72,7 @@ public class TaxScheme003Controller extends BaseController {
 	 * @throws Exception
 	 */
     @PostMapping("/checkVatTax")
-	public List<TaxScheme003Dto> checkVatTax(@RequestBody Map<String, Object> param) throws Exception {
+	public List<TaxScheme003Dto> checkVatTax(@RequestBody Map<String, Object> param) {
 		return taxScheme003Service.checkVatTax(param);
 	}
 }

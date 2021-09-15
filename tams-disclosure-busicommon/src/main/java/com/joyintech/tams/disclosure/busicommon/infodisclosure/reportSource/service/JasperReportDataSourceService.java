@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.joyintech.framework.util.SpringContextUtil;
@@ -16,15 +18,19 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRField;
 
 public class JasperReportDataSourceService implements JRDataSource {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(JasperReportDataSourceService.class);
 
 	private Map<String, Object> data = new HashMap<String, Object>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
 	
-	public void createService() throws Exception {
+	public void createService() {
 		new JasperReportDataSourceService("",new Date(1),new Date(1),"");
 	}
-	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
+	public JasperReportDataSourceService(String prodId, Date startDate, Date endDate,String reportType) {
 		this.parameters.put("prodId", prodId);
 		this.parameters.put("startDate", startDate);
 		this.parameters.put("endDate", endDate);
@@ -54,7 +60,8 @@ public class JasperReportDataSourceService implements JRDataSource {
 			conn = jdbcTemplate.getDataSource().getConnection();
 			data = t.printGS(DateUtils.parseDate(startDate,"yyyy-MM-dd"), DateUtils.parseDate(endDate,"yyyy-MM-dd"), prodId, conn);
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+//			System.err.println(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		finally {
 			try {
@@ -62,7 +69,7 @@ public class JasperReportDataSourceService implements JRDataSource {
 					conn.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 

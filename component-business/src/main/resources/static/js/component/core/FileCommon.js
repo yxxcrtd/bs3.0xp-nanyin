@@ -10,6 +10,12 @@ var FileCommon = function() {
         getUploadFileInfo : function() {
             var fun = $('#fileUploader').data('getSelectedFiles');
             if(typeof fun === 'function') {
+                var array = fun();
+                if(array) {
+                    $.each(array, function(i,obj) {
+                        delete obj.targetFile;
+                    })
+                }
             	return fun();
             }
             return [];

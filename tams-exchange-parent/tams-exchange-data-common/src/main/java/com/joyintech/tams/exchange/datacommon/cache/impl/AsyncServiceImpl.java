@@ -6,7 +6,7 @@ import com.joyintech.tams.exchange.common.db.domain.KeyMethodInterface;
 import com.joyintech.tams.exchange.common.utils.ConvertListUtils;
 import com.joyintech.tams.exchange.datacommon.async.AsyncPersistenceWorker;
 import com.joyintech.tams.exchange.datacommon.cache.AsyncService;
-import com.joyintech.tams.exchange.datacommon.db.mapper.IMybatisMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
 import com.joyintech.tams.exchange.datacommon.sync.SyncPersistenceWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 

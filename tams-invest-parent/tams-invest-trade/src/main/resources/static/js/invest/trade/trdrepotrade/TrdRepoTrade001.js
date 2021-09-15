@@ -71,7 +71,7 @@
         cols: [
             {field: 'validStatusText', width:120, sortField:'validStatus', title: 'TrdRepoTrade001.colModel.validStatus'}
             , {field: 'tradeId', width:180, sortField:'tradeId', title: 'TrdRepoTrade001.colModel.tradeId'}
-            , {field: 'entrustId', width:180, sortField:'entrustId', title: 'TrdRepoTrade001.colModel.entrustId'}
+            , {field: 'entrustId', width:200, sortField:'entrustId', title: 'TrdRepoTrade001.colModel.entrustId'}
             //,{field:'fTradeId',sortField:'fTradeId', width:180, title: 'TrdBondInvestTrade002.fTradeId'}
             , {
                 field: 'portfolioId', width:180, sortField:'portfolioId', title: 'TrdRepoTrade001.colModel.portfolioId',
@@ -83,19 +83,20 @@
             // , {field: 'chlFinprodId', width:180, sortField:'chlFinprodId', title: 'TrdRepoTrade001.colModel.chlFinprodId'}
             , {field: 'tradeMarket', width:180, sortField:'tradeMarket', title: 'TrdRepoTrade001.colModel.tradeMarket'}
             , {field: 'bondName', width:180, sortable:false, title: 'TrdRepoTrade001.colModel.bondName'}
-            , {field: 'repoTypeText', width:120, sortField:'repoType', title: 'TrdRepoTrade001.colModel.repoType'}
+            , {field: 'repoTypeText', width:180, sortField:'repoType', title: 'TrdRepoTrade001.colModel.repoType'}
             , {field: 'termTypeReback', width:150, sortField:'termTypeReback', title: 'TrdRepoTrade001.colModel.termTypeReback'}
             , {field: 'psText', width:120, sortField:'ps', title: 'TrdRepoTrade001.colModel.ps'}
             , {field: 'tradeDate', width:120, sortField:'tradeDate', title: 'TrdRepoTrade001.colModel.tradeDate', type: 'date'}
             , {field: 'prinAmt', width:120, sortField:'prinAmt', title: 'TrdRepoTrade001.colModel.prinAmt', type: 'money'}
-            , {field: 'ccyText', width:120, sortField:'ccy', title: 'TrdRepoTrade001.colModel.ccy'}
+            , {field: 'ccyText', width:180, sortField:'ccy', title: 'TrdRepoTrade001.colModel.ccy'}
             , {field:'fTradeId',sortField:'fTradeId', width:180, title: '银行间成交编号', visible:pageId != 'TrdRepoTradeEx001'}
             , {field: 'remark', width:120, sortable:false, title: 'TrdRepoTrade001.colModel.remark'}
             , {field: 'ps', visible: false}
             , {field: 'repoType', visible: false}
             , {field: 'validStatus', visible: false}
             , {field: 'ccy', visible: false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     var exportExcel = function () {
         Joyin.exportExcel('export', getSearchParams());
@@ -236,7 +237,7 @@
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0058"));
                 return;
             }
-            if(selArr[0]["validStatusText"]!='有效' || selArr[0]["repoTypeText"]!='质押式协议回购'){
+            if(selArr[0]["validStatusText"]!='有效' || (selArr[0]["repoTypeText"]!='质押式协议回购' && selArr[0]["tradeMarket"]!='银行间')){
                 Joyin.error(JoyinUtil.getMessage("请选择交易状态为有效、回购类型为质押式协议回购、直投的数据进行操作!"));
                 return;
             }

@@ -106,7 +106,7 @@ public class InvestInterfCommonService {
 			}
 		} catch (IOException e) {
 			updateInterfStatus(interfTermtrc,InfDictCodeList.发送状态_发送失败.getValue());
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 
 		return res;

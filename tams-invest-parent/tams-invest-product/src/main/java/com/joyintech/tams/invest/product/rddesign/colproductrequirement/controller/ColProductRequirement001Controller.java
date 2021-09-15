@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.product.rddesign.colproductrequirement.control
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,14 +76,13 @@ public class ColProductRequirement001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return colProductRequirement001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 
@@ -110,13 +110,12 @@ public class ColProductRequirement001Controller extends BaseController {
 	 * @param dto
 	 * @param br
 	 * @return 结果
-	 * @throws Exception
 	 *             异常
 	 */
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
 	public AjaxResult save(@RequestBody @Validated({ ValidateGroupDelete.class }) ColProductRequirement001Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

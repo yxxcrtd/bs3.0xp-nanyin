@@ -35,7 +35,7 @@ public class BussRepDepositInfoImplService extends BaseService<BussRepDepositInf
     @Override
     public IDictCode[] getInitDictCode() {
         return new DictCode[] {DictCode.标的类别,DictCode.资产_负债二级类别,
-            DictCode.是否_中债,DictCode.交易流通场所};
+            DictCode.是否_中债,DictCode.交易流通场所,DictCode.交易流通场所_中债};
     }
     
     @Override

@@ -17,6 +17,8 @@ import java.util.Map;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.PtlPortfolio;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +47,11 @@ import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 @SuppressWarnings("rawtypes")
 @Service
 public class BasRiskMathCommService extends BaseService{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BasRiskMathCommService.class);
+
     @Autowired
     private RskIsupTrialMapper rskIsupTrialMapper;
     @Autowired
@@ -148,7 +155,7 @@ public class BasRiskMathCommService extends BaseService{
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             } 
         }
         return null;
@@ -159,5 +166,22 @@ public class BasRiskMathCommService extends BaseService{
         map.put("ptlId",ptlId);
         return restTemplate.postForObject(ServiceApplication.COMMON_SERVICE_NAME + "/RiskSelect/getPtlPortfolioInfo",
                 map,PtlPortfolio.class);
+    }
+
+    /**
+     * 按组合代码检查是否配置风险指标
+     * @param portfolioId 组合代码
+     * @return 结果
+     */
+    public String isSetRiskByPortfolioId(String portfolioId) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("portfolioId", portfolioId);
+        String resultFlag = "Y";
+        PtlPortfolio ptlPortfolio = restTemplate.postForObject(
+                ServiceApplication.COMMON_SERVICE_NAME + "/RiskSelect/getRiskInfoByPortfolioId", map, PtlPortfolio.class);
+        if (!StringUtil.isNotEmpty(ptlPortfolio.getPortfolioId())) {
+            resultFlag = "N";
+        }
+        return resultFlag;
     }
 }

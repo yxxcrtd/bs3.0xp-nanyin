@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,11 @@ import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog00
  */
 @Service
 public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ChbSubinfoBatchLog001Servcie.class);
+
 	@Autowired
     private FileAttachmentProcess fileAttachmentProcess;
 
@@ -57,7 +65,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		try {
 			fileList = JsonUtils.json2List(param.get("keyList").toString(), ChbSubinfoBatchLog001Dto.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}		
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
 			UploadFile	 upd=  fileAttachmentProcess.fetch(dataFile.getCompresFileId());
@@ -68,7 +76,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 				stringBuilder.append("没有文件").append(",");
 				continue;
 			}
-			File file = new File(dataFile.getCompresFilePath());
+			File file = new SafelyFile(dataFile.getCompresFilePath());
 			if (!file.exists()) {
 				String filePath = dataFile.getCompresFilePath();
 				String[] filePathSplit = filePath.split("/");
@@ -94,11 +102,11 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		try {
 			fileList = JsonUtils.json2List(param.get("keyList").toString(), ChbSubinfoBatchLog001Dto.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
-			File file = new File(dataFile.getCompresFilePath());
+			File file = new SafelyFile(dataFile.getCompresFilePath());
 			if(!file.exists()){
 				UploadFile	 upd=  fileAttachmentProcess.fetch(dataFile.getCompresFileId());
 				sourceFiles.add(upd.getTargetFile());
@@ -116,15 +124,15 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 			String exportFilePath = SvrDataUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
 			String zipFileName = "中债报送文件" + DateUtil.getCurrentDateTime() + ".zip";
 			zipFileName = zipFileName.replaceAll(":", "-");
-			outFile = new File(exportFilePath + File.separator + zipFileName);
+			outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
 			try {
-				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new File[] {}));
+				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 //				// 压缩文件失败后，删除所有临时文件
 //				for (File file : sourceFiles) {
 //					if (file.exists()) {

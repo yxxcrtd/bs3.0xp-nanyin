@@ -60,7 +60,8 @@ public class PtlInvestStrategyPoolController {
 		 */
 		@PostMapping("selectForPage/{page}/{length}")
 		public Page<PtlInvestStrategyPoolDto> selectForPage(@RequestBody Map<String, Object> pageParam,
-				@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+				@PathVariable("page") int page, @PathVariable("length") int length)
+		{
 			if(StringUtil.isNotEmpty(pageParam.get("strategyId"))){
 				pageParam.put("strategyId", StringUtil.splitToList(null, pageParam.get("strategyId").toString()));
 			}
@@ -88,7 +89,7 @@ public class PtlInvestStrategyPoolController {
 		 * @throws Exception 异常
 		 */
 		@PostMapping("selectIsPtlPortfolioCount")
-		public Integer selectIsPtlPortfolioCount(@RequestBody Map<String, Object> pageParam) throws Exception {
+		public Integer selectIsPtlPortfolioCount(@RequestBody Map<String, Object> pageParam) {
 			return ptlInvestStrategyPoolService.selectIsPtlPortfolioCount(pageParam);
 		}
 		/**
@@ -100,7 +101,7 @@ public class PtlInvestStrategyPoolController {
 		@PostMapping("delete")
 		@Transactional
 		@DTXTransaction
-		public Integer delete(@RequestBody PtlInvestStrategyPoolDto entity) throws Exception {
+		public Integer delete(@RequestBody PtlInvestStrategyPoolDto entity) {
 			return ptlInvestStrategyPoolService.delete(entity);
 		}
 		/**

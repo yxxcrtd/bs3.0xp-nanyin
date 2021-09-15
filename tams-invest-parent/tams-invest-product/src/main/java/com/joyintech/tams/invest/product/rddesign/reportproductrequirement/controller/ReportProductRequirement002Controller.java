@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.product.rddesign.reportproductrequirement.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -84,7 +85,7 @@ public class ReportProductRequirement002Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("/save")
 	public AjaxResult save(@RequestBody @Validated({ ValidateGroupEdit.class }) ReportProductRequirement002Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

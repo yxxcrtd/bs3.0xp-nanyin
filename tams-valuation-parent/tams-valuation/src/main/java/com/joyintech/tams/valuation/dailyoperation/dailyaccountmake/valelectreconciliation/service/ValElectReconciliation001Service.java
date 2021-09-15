@@ -1,11 +1,13 @@
 package com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valelectreconciliation.service;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
@@ -31,7 +33,7 @@ public class ValElectReconciliation001Service extends CommonExportService<ValEle
      * @since 1.0
      */
     public Page<ValElectReconciliation001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+          {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ValElectReconciliation001/findPage",
             params, ValElectReconciliation001Dto.class);
@@ -89,8 +91,7 @@ public class ValElectReconciliation001Service extends CommonExportService<ValEle
      * @see
      * @since 1.0
      */
-    public  String formatXml(String str)
-        throws Exception {
+    public  String formatXml(String str) throws DocumentException, IOException {
         Document document = null;
         document = DocumentHelper.parseText(str);
         // 格式化输出格式

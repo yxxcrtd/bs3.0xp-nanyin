@@ -26,8 +26,7 @@ public class ValFinFundTargetController {
      * @since 1.0
      */
      @GetMapping("/getIntPayByFinprodId")
-     public ValBussFinIntPayDto getIntPayByFinprodId(String finprodId) 
-         throws Exception {
+     public ValBussFinIntPayDto getIntPayByFinprodId(String finprodId) {
          return finFundTargetService.getIntPayByFinprodId(finprodId);
      }   
 

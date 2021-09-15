@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RskIndividUniteMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        <id column="UNITE_ID" property="uniteId" jdbcType="VARCHAR" />
+        <id column="PRT_BAG_ID" property="prtBagId" jdbcType="VARCHAR" />
+        <id column="IND_ID" property="indId" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        UNITE_ID UNITE_ID, PRT_BAG_ID PRT_BAG_ID, IND_ID IND_ID, REMARK REMARK, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividUniteMapper.Base_Column_List" />
+        from RSK_INDIVID_UNITE
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividUniteMapper.Base_Column_List" />
+        from RSK_INDIVID_UNITE
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.RskIndividUniteKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RskIndividUniteMapper.Base_Column_List" />
+        from RSK_INDIVID_UNITE
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+          and PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIndividUniteKey" >
+        delete from RSK_INDIVID_UNITE
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+          and PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        insert into RSK_INDIVID_UNITE (UNITE_ID, PRT_BAG_ID, IND_ID, 
+            REMARK, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{uniteId,jdbcType=VARCHAR}, #{prtBagId,jdbcType=VARCHAR}, #{indId,jdbcType=VARCHAR}, 
+            #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        insert into RSK_INDIVID_UNITE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="uniteId != null" >
+                UNITE_ID,
+            </if>
+            <if test="prtBagId != null" >
+                PRT_BAG_ID,
+            </if>
+            <if test="indId != null" >
+                IND_ID,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="uniteId != null" >
+                #{uniteId,jdbcType=VARCHAR},
+            </if>
+            <if test="prtBagId != null" >
+                #{prtBagId,jdbcType=VARCHAR},
+            </if>
+            <if test="indId != null" >
+                #{indId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        insert into RSK_INDIVID_UNITE(UNITE_ID, PRT_BAG_ID, IND_ID, REMARK, CREATE_USER, 
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select UNITE_ID, PRT_BAG_ID, IND_ID, REMARK, CREATE_USER, 
+            CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from RSK_INDIVID_UNITE
+             where 1 = 1 and UNITE_ID = #{uniteId,jdbcType=VARCHAR} and PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR} and IND_ID = #{indId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        update RSK_INDIVID_UNITE
+        <set >
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+          and PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RskIndividUnite" >
+        update RSK_INDIVID_UNITE
+        set REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where UNITE_ID = #{uniteId,jdbcType=VARCHAR}
+          and PRT_BAG_ID = #{prtBagId,jdbcType=VARCHAR}
+          and IND_ID = #{indId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -104,7 +105,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     /** 情景分页查询 */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<FlowRiskSceneManage001Dto> selectForPage() throws Exception {
+    public Page<FlowRiskSceneManage001Dto> selectForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         
         Set<String> idSet = new HashSet<>();
@@ -129,7 +130,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/updateScenesEffStatus")
     public AjaxResult updateScenesEffStatus(@RequestBody @Validated({ValidateGroupEffective.class}) 
-        FlowRiskSceneManage001Dto dto, BindingResult br)  throws Exception {
+        FlowRiskSceneManage001Dto dto, BindingResult br) throws WorkFlowException {
         AjaxResult checkResult = commonCheck(br, dto.getOperateType());
 
      /*   if (!br.hasErrors()) {
@@ -221,7 +222,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) 
-        FlowRiskSceneManage001Dto dto, BindingResult br) throws Exception {
+        FlowRiskSceneManage001Dto dto, BindingResult br) throws WorkFlowException {
         AjaxResult checkResult = commonCheck(br, dto.getOperateType());
         if (br.hasErrors()) {
             //return new AjaxResult(br);
@@ -255,7 +256,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     @ResponseBody
     @GetMapping("fuzzyNameSelectScene")
     @Deprecated
-    public List<SelectOptionDto> fuzzyNameSelectScene() throws Exception {
+    public List<SelectOptionDto> fuzzyNameSelectScene() {
         //Map<String, Object> map = RequestUtil.getParameters(getRequest());
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();
@@ -270,7 +271,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     @ResponseBody
     @GetMapping("fuzzyCodeSelectScene")
     @Deprecated
-    public List<SelectOptionDto> fuzzyCodeSelectScene() throws Exception {
+    public List<SelectOptionDto> fuzzyCodeSelectScene() {
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();
         Object search = pageMap.get("search");
@@ -283,7 +284,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
     
     @ResponseBody
     @GetMapping("fuzzySelectScene")
-    public List<SelectOptionDto> fuzzySelectScene() throws Exception {
+    public List<SelectOptionDto> fuzzySelectScene() {
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();
         Object search = pageMap.get("search");
@@ -317,7 +318,7 @@ public class FlowRiskSceneManage001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
     	Map<String, Object> map = RequestUtil.getParameters(getRequest());
         
         Set<String> idSet = new HashSet<>();

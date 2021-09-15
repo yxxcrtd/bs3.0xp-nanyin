@@ -40,7 +40,7 @@
 							data-th-text="#{FinProductBuild002.finprodName}">产品名称</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" name="repFinprodName" id="repFinprodName"
-								class="layui-input form-input" maxlength=60
+								class="layui-input form-input" maxlength=200
 								data-th-placeholder="#{SysCommon.placeholder}"
 								data-th-value='${entity?.repFinprodName}' required>
 						</div>
@@ -60,7 +60,7 @@
 							data-th-text="#{BussRepFinProductInfo.repFinProdBrand}">产品品牌</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="repFinprodBrand" th:name="repFinprodBrand"
-								  maxlength="6"
+								  maxlength="120"
 								data-th-value="${entity?.repFinprodBrand}" class="layui-input form-input" />
 						</div>
 					</div>
@@ -72,7 +72,7 @@
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="repFinprodStage" th:name="repFinprodStage"
 								class="layui-input form-input text-number"
-								data-th-value="${entity?.repFinprodStage}" data-textrange="0" maxlength="5"
+								data-th-value="${entity?.repFinprodStage}" data-textrange="0" maxlength="6"
 								data-th-required="true" />
 						</div>
 					</div>
@@ -359,8 +359,11 @@
 							   data-th-text="#{BussRepFinProductInfo.shortTerm}">最短持有期限(天)</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="shortTerm" th:name="shortTerm"
-								   class="layui-input form-input text-number" maxlength="5"
-								   data-th-value="${entity?.shortTerm}" placeholder="请输入" />
+								   class="layui-input form-input text-number"
+								   data-th-value="${entity?.shortTerm}" data-textrange="0" maxlength="5"
+								   onkeyup="this.value=this.value.replace(/\D/g,'')"
+								   onafterpaste="this.value=this.value.replace(/\D/g,'')"
+							/>
 						</div>
 					</div>
 					<div class="form-inline-wrap">
@@ -414,7 +417,7 @@
 							<select th:id="repRaiseCcy" th:name="repRaiseCcy"
 								class="layui-input form-input input-select"
 								data-th-placeholder="#{SysCommon.placeholder}"
-								data-th-initValue='${entiy?.repRaiseCcy}?:${repRaiseCcyCNY}' data-th-data-result="${CCY}" required>
+								data-th-initValue='${entity?.repRaiseCcy}?:${repRaiseCcyCNY}' data-th-data-result="${CCY}" required>
 							</select>
 						</div>
 					</div>
@@ -426,7 +429,7 @@
 								th:name="repCashPrinCcy"
 								class="layui-input form-input input-select"
 								data-th-data-result="${CCY}" placeholder="请输入内容"
-								data-th-initValue="${entiy?.repCashPrinCcy}?:${repRaiseCcyCNY}"
+								data-th-initValue="${entity?.repCashPrinCcy}?:${repRaiseCcyCNY}"
 								data-th-placeholder="#{SysCommon.placeholder}" required>
 							</select>
 						</div>
@@ -678,11 +681,19 @@
 						<label class="layui-form-label form-label-wrap"
 							data-th-text="#{BussRepFinProductInfo.repInvTypeRat}">投资资产种类及比例</label>
 						<div class="layui-input-inline input-inline">
-							<input type="text" th:id="repInvTypeRat" th:name="repInvTypeRat"
-								data-th-value="${entity?.repInvTypeRat}" maxlength=300 class="layui-input form-input"
-								data-th-required="true" placeholder="请输入">
-								<a th:id="repInvTypeRat_showRule" class="layui-btn layui-btn-sm form-input-text">规则</a>
+								<textarea th:id="repInvTypeRat"
+									th:name="repInvTypeRat" maxlength=300
+									data-th-text="${entity?.repInvTypeRat}"
+									class="layui-input form-input layui-textarea" placeholder="请输入"></textarea>
+							<a th:id="repInvTypeRat_showRule"
+							   class="layui-btn layui-btn-sm form-input-text">规则</a>
 						</div>
+<!--						<div class="layui-input-inline input-inline">-->
+<!--							<input type="text" th:id="repInvTypeRat" th:name="repInvTypeRat"-->
+<!--								data-th-value="${entity?.repInvTypeRat}" maxlength=300 class="layui-input form-input"-->
+<!--								data-th-required="true" placeholder="请输入">-->
+<!--								<a th:id="repInvTypeRat_showRule" class="layui-btn layui-btn-sm form-input-text">规则</a>-->
+<!--						</div>-->
 					</div>
 				</div>
 					<div class="layui-form-item">					
@@ -698,21 +709,22 @@
 										data-th-data-result="${IS_FHXGCP}" required>
 								</select>
 							</div>
-						</div>																	
-						
-						<div class="form-inline-wrap">
-							<label class="layui-form-label form-label-wrap"
-								   data-th-text="#{BussRepFinProductInfo.isYllccp}">是否养老理财</label>
-							<div class="layui-input-inline input-inline">
-								<select th:name="isYllccp"
-										th:id="isYllccp"
-										class="layui-input form-input input-select"
-										data-th-initValue= "${entity?.isYllccp}"
-										data-th-placeholder="#{SysCommon.placeholder}"
-										data-th-data-result="${SVR_YES_OR_NO}" required>
-								</select>
-							</div>
 						</div>
+
+						<!-- 缺少“是否养老理财”字段，与新建输入页面字段不一致   修改方案为将此字段注释 挪到产品新建界面  leipeng 20210430
+							<div class="form-inline-wrap">
+								<label class="layui-form-label form-label-wrap"
+									   data-th-text="#{BussRepFinProductInfo.isYllccp}">是否养老理财</label>
+								<div class="layui-input-inline input-inline">
+									<select th:name="isYllccp"
+											th:id="isYllccp"
+											class="layui-input form-input input-select"
+											data-th-initValue= "${entity?.isYllccp}"
+											data-th-placeholder="#{SysCommon.placeholder}"
+											data-th-data-result="${SVR_YES_OR_NO}" required>
+									</select>
+								</div>
+							</div> -->
 						
 					</div>
 				<div class="layui-form-item">

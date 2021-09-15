@@ -146,7 +146,7 @@ public class PayTheVatQuery003Controller extends BaseController {
             model.addAttribute("remark", dto.getRemark());
             
             //新增通道增值税缴纳的字段
-            model.addAttribute("taxClass",taxClass);
+            model.addAttribute("taxClass",dto.getTaxClass());//modify by jiangpeng 20210513 ZGBSSE-380
             model.addAttribute("channelId",dto.getChannelId());
             model.addAttribute("channelName",dto.getChannelName());
             model.addAttribute("profitType",dto.getProfitType());
@@ -237,8 +237,7 @@ public class PayTheVatQuery003Controller extends BaseController {
     @SuppressWarnings("unchecked")
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid PayTheVatQuery001Dto dto, BindingResult bindingResult)
-            throws Exception {
+    public AjaxResult check(@RequestBody @Valid PayTheVatQuery001Dto dto, BindingResult bindingResult){
         String msg = StringUtil.EMPTY;
         String operateType = null;
         String tradeId = dto.getTradeId();

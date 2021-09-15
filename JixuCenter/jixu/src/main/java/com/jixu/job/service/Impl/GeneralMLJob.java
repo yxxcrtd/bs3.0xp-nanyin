@@ -99,54 +99,56 @@ public class GeneralMLJob extends GeneralBaseJob {
 				
 				/***saveGL(GLCOOABase glcooa, JournalBaseObj jnlobj,
 				double dcash, double dfxcash, double ccash, double cfxcash, String acctnum) {**/
-				if (priorDayV.p_funcloss + asofdayV.p_funcgain > 0) {
+				if(asofdayV != null && priorDayV != null){
+					if (priorDayV.p_funcloss + asofdayV.p_funcgain > 0) {
+						jobCom.saveGL(generalCooa,
+								RoundUtil.roundMoney2Dec(asofdayV.p_funcgain),
+								RoundUtil.roundMoney2Dec(asofdayV.p_localgain),
+								RoundUtil.roundMoney2Dec(priorDayV.p_funcloss),
+								RoundUtil.roundMoney2Dec(priorDayV.p_localloss),
+								jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.VALUATION_GAIN));
+					}
+					if (priorDayV.p_funcgain + asofdayV.p_funcloss > 0) {
+						jobCom.saveGL(generalCooa,
+								RoundUtil.roundMoney2Dec(asofdayV.p_funcloss),
+								RoundUtil.roundMoney2Dec(asofdayV.p_localloss),
+								RoundUtil.roundMoney2Dec(priorDayV.p_funcgain),
+								RoundUtil.roundMoney2Dec(priorDayV.p_localgain),
+								jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.VALUATION_LOSS));
+					}
+
 					jobCom.saveGL(generalCooa,
-							RoundUtil.roundMoney2Dec(asofdayV.p_funcgain),
-							RoundUtil.roundMoney2Dec(asofdayV.p_localgain),
-							RoundUtil.roundMoney2Dec(priorDayV.p_funcloss),
-							RoundUtil.roundMoney2Dec(priorDayV.p_localloss),
-							jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.VALUATION_GAIN));
-				}
-				if (priorDayV.p_funcgain + asofdayV.p_funcloss > 0) {
-					jobCom.saveGL(generalCooa,
-							RoundUtil.roundMoney2Dec(asofdayV.p_funcloss),
-							RoundUtil.roundMoney2Dec(asofdayV.p_localloss),
-							RoundUtil.roundMoney2Dec(priorDayV.p_funcgain),
-							RoundUtil.roundMoney2Dec(priorDayV.p_localgain),
-							jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.VALUATION_LOSS));
-				}
-				
-				jobCom.saveGL(generalCooa,
-					RoundUtil.roundMoney2Dec(asofdayV.p_funcgain + priorDayV.p_funcgain),
-					RoundUtil.roundMoney2Dec(asofdayV.p_localgain + priorDayV.p_localgain),
-					RoundUtil.roundMoney2Dec(asofdayV.p_funcloss + priorDayV.p_funcloss),
-					RoundUtil.roundMoney2Dec(asofdayV.p_localloss+ priorDayV.p_localloss),
-					jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CARRY_VAL_ADJ));
-				
-				if (priorDayV.r_funcgain + asofdayV.r_funcloss > 0) {
-					jobCom.saveGL(generalCooa,
-						RoundUtil.roundMoney2Dec(asofdayV.r_funcloss),
-						RoundUtil.roundMoney2Dec(0),
-						RoundUtil.roundMoney2Dec(priorDayV.r_funcgain),
-						RoundUtil.roundMoney2Dec(0),
-						jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_VALUATION_LOSS));
-				}
-				if (priorDayV.r_funcloss + asofdayV.r_funcgain > 0) {
-					jobCom.saveGL(generalCooa,
-							RoundUtil.roundMoney2Dec(asofdayV.r_funcgain),
-							RoundUtil.roundMoney2Dec(0),
-							RoundUtil.roundMoney2Dec(priorDayV.r_funcloss),
-							RoundUtil.roundMoney2Dec(0),
-							jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_VALUATION_GAIN));
-				}
-				
-				if (asofdayV.r_funcgain + priorDayV.r_funcgain + asofdayV.r_funcloss + priorDayV.r_funcloss > 0) {
-					jobCom.saveGL(generalCooa,
-							RoundUtil.roundMoney2Dec(priorDayV.r_funcgain + priorDayV.r_funcloss),
-							RoundUtil.roundMoney2Dec(0),
-							RoundUtil.roundMoney2Dec(asofdayV.r_funcgain + asofdayV.r_funcloss),
-							RoundUtil.roundMoney2Dec(0),
-							jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_RESERVE_CAP));
+							RoundUtil.roundMoney2Dec(asofdayV.p_funcgain + priorDayV.p_funcgain),
+							RoundUtil.roundMoney2Dec(asofdayV.p_localgain + priorDayV.p_localgain),
+							RoundUtil.roundMoney2Dec(asofdayV.p_funcloss + priorDayV.p_funcloss),
+							RoundUtil.roundMoney2Dec(asofdayV.p_localloss+ priorDayV.p_localloss),
+							jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.CARRY_VAL_ADJ));
+
+					if (priorDayV.r_funcgain + asofdayV.r_funcloss > 0) {
+						jobCom.saveGL(generalCooa,
+								RoundUtil.roundMoney2Dec(asofdayV.r_funcloss),
+								RoundUtil.roundMoney2Dec(0),
+								RoundUtil.roundMoney2Dec(priorDayV.r_funcgain),
+								RoundUtil.roundMoney2Dec(0),
+								jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_VALUATION_LOSS));
+					}
+					if (priorDayV.r_funcloss + asofdayV.r_funcgain > 0) {
+						jobCom.saveGL(generalCooa,
+								RoundUtil.roundMoney2Dec(asofdayV.r_funcgain),
+								RoundUtil.roundMoney2Dec(0),
+								RoundUtil.roundMoney2Dec(priorDayV.r_funcloss),
+								RoundUtil.roundMoney2Dec(0),
+								jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_VALUATION_GAIN));
+					}
+
+					if (asofdayV.r_funcgain + priorDayV.r_funcgain + asofdayV.r_funcloss + priorDayV.r_funcloss > 0) {
+						jobCom.saveGL(generalCooa,
+								RoundUtil.roundMoney2Dec(priorDayV.r_funcgain + priorDayV.r_funcloss),
+								RoundUtil.roundMoney2Dec(0),
+								RoundUtil.roundMoney2Dec(asofdayV.r_funcgain + asofdayV.r_funcloss),
+								RoundUtil.roundMoney2Dec(0),
+								jobCom.loadGLAcctnum(chartnum, groupnum, GLACCT.FX_RESERVE_CAP));
+					}
 				}
 				genJnlList.add(generalCooa);
 			}

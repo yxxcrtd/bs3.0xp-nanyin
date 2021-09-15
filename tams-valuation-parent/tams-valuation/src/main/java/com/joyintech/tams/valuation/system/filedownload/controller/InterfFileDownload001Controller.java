@@ -1,9 +1,12 @@
 package com.joyintech.tams.valuation.system.filedownload.controller;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.validation.Valid;
 
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,7 +76,7 @@ public class InterfFileDownload001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws JSchException, SftpException, IOException {
         return interfFileDownload001Service.exportFile(RequestUtil.getParameters(getRequest()));
         
     }

@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dt
 import com.joyintech.tams.invest.period.trdrepoduration.service.TrdRepoDuration002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
@@ -147,8 +148,7 @@ public class TrdSecLendDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecLendDuration002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdSecLendDuration002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

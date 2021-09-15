@@ -88,8 +88,8 @@ public class ComRateAssetQuotationInfo001Dto extends FinProductValuation impleme
      * 
      * @return 每日估值
      */
-    @Amount(fieldName = "MstRateAssetQuotationInfo001.netValue", maxIntBit = 16, maxDecBit = 14, groups = {ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "MstRateAssetQuotationInfo001.netValue", groups = {ValidateGroupEdit.class})
+    @Amount(fieldName = "ComRateAssetQuotationInfo001.valuation", maxIntBit = 16, maxDecBit = 14, groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "ComRateAssetQuotationInfo001.valuation", groups = {ValidateGroupEdit.class})
     public BigDecimal getValuation() {
         return super.getValuation();
     }

@@ -17,10 +17,19 @@ import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgName
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,7 +69,7 @@ public class OrgNameManagement003Controller extends BaseController {
         model.addAttribute("RSK_OPERATE_PS_NAME_01", DictCodeListExt2.名单操作方向_移出名单.getCodeName());
         model.addAttribute("RSK_OPERATE_PS_NAME_02", DictCodeListExt2.名单操作方向_移入名单.getCodeName());
         model.addAttribute("RSK_OPERATE_PS_NAME_03", DictCodeListExt2.名单操作方向_修改.getCodeName());
-        model.addAttribute("RSK_OPERATE_PS_NAME_99", DictCodeListExt2.名单操作方向_不变.getCodeName());
+        model.addAttribute("RSK_OPERATE_PS_NAME_99", DictCodeListExt2.名单操作方向_不变.getCodeName()); 
         model.addAttribute("sumCount",orgNameManagementDetailService.getNameDetailCount(listId));
         //不来自于代办
         if(WorkFlowUtil.isNotFromToDoList()&& StringUtil.isNotEmpty(listId)) {
@@ -76,6 +85,18 @@ public class OrgNameManagement003Controller extends BaseController {
             //根据工作流与留痕处理提供的共通方法获取业务实体
             RskAccessListDto rskAccessListDto = orgNameManagementService.getBussinessEntityByWorkflowId(workflowId);
             //设置到model中
+            if (CollectionUtils.isEmpty(rskAccessListDto.getRskAccessListDetailList())) {
+                Map<String, Object> selectParam = new HashMap<String, Object>();
+                selectParam.put("listId", rskAccessListDto.getListId()); 
+                Page<RskAccessListDetailDto> detailPage = orgNameManagementDetailService.selectPageData(selectParam);
+                List<RskAccessListDetailDto> detailList = new ArrayList<>();
+                detailPage.getRoot().stream().forEach(item->{
+                    item.setOperatePs("01");
+                    detailList.add(item);
+                });
+                rskAccessListDto.setRskAccessListDetailList(detailList);
+            } 
+            model.addAttribute("sumCount",orgNameManagementDetailService.getNameDetailCount(rskAccessListDto.getListId()));
             model.addAttribute("entity", rskAccessListDto);
             model.addAttribute("listName",rskAccessListDto.getListName());
             model.addAttribute("listId",rskAccessListDto.getListId());
@@ -95,8 +116,7 @@ public class OrgNameManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskAccessListDetailDto> selectAll()
-        throws Exception {
+    public Page<RskAccessListDetailDto> selectAll() throws IOException {
         Page<RskAccessListDetailDto> page = orgNameManagementService.selectForDetailPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -131,8 +151,7 @@ public class OrgNameManagement003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

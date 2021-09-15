@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto.RskSuper
 import com.joyintech.tams.invest.riskredis.quota.superviseindicator.service.RskSupervisionIndicator001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,7 @@ public class RskSupervisionIndicator001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionIndicator002Dto> selectAll()
-        throws Exception {
+         {
         return rskSupervisionIndicator001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -120,8 +121,7 @@ public class RskSupervisionIndicator001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskSupervisionIndicator002Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskSupervisionIndicator002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -152,7 +152,7 @@ public class RskSupervisionIndicator001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return rskSupervisionIndicator001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

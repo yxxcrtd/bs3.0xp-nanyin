@@ -37,6 +37,8 @@ import com.joyintech.tams.valuation.common.service.BaseCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -65,6 +67,10 @@ import java.util.Map;
 @PageId("ValManualVoucher003")
 @RequestMapping("/valuation/accounadjustmanage/manualvoucher/ValManualVoucher003")
 public class ValManualVoucher003Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValManualVoucher003Controller.class);
 
     @Autowired
     private ValManualVoucher003Service valManualVoucher003Service;

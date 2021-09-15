@@ -266,8 +266,8 @@ public class InBottomAstPositionBatchService extends FileImpService {
         	// 底层持仓登记报送时点:持仓日期
             if(sub.getPosDate()!=null){ 
     	    	Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-            	dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(), 
-								            			 DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
+            	dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资管计划底层持仓信息登记.getValue(),
+															sub.getStatus(), dateMap,
 								    					 sub.getPosDate());
 				if (CollectionUtils.isNotEmpty(dateList)) {
 					// 中债报送截止日

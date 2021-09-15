@@ -101,7 +101,7 @@ public class EtrBoutRepoValidator implements EtrCommonValidator {
                 errorList.add(new ValidMessage("mdateAdd",this.getMessage("ETR_X_014",DateUtil.format(finmdate),DateUtil.format(mdateAdd))));
             }
             //证券托管户 与通道二选一
-            if(("".equals(dto.getChlId())||dto.getChlId()==null)&&("".equals(dto.getSecuritiesCust())||dto.getSecuritiesCust()==null)){
+            if((dto.getChlId()==null||"".equals(dto.getChlId()))&&(dto.getSecuritiesCust()==null||"".equals(dto.getSecuritiesCust()))){
                 ValidMessage validMessage = new ValidMessage("chlId", getMessage("TRD_E_0014",getMessage("invest.channelId")));
                 errorList.add(validMessage);
             }

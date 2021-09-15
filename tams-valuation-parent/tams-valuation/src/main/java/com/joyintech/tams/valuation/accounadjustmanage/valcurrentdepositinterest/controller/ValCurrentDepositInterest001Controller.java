@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.valuation.accounadjustmanage.valcurrentdepositinterest.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class ValCurrentDepositInterest001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid ValCurrentDepositInterest001Dto dto, BindingResult result) throws Exception {
+    public AjaxResult check(@RequestBody @Valid ValCurrentDepositInterest001Dto dto, BindingResult result) throws ParseException {
         AjaxResult ajaxResult = new AjaxResult();
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
@@ -130,8 +131,7 @@ public class ValCurrentDepositInterest001Controller  extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> exportExcel()
-        throws Exception {
+    public ResponseEntity<byte[]> exportExcel() throws ParseException {
     	Map<String, Object> params = RequestUtil.getParameters(getRequest());
     	return valCurrentDepositInterest001Service.exportExcel(params);
     }

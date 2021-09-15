@@ -57,8 +57,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValFinprodTradeQuery001Dto> findPage(@RequestBody Map<String, Object> param,
-                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+                                                     @PathVariable("page") int page, @PathVariable("length") int length){
         return valFinprodTradeQuery001Service.findPage(page, length, param);
     }
 
@@ -70,8 +69,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
      * @throws Exception
      */
     @PostMapping("/queryPageList")
-    public List<ValFinprodTradeQuery001Dto> queryPageList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    public List<ValFinprodTradeQuery001Dto> queryPageList(@RequestBody Map<String, Object> param){
         return valFinprodTradeQuery001Service.queryPageList(param);
     }
 

@@ -11,138 +11,138 @@
     
      <select id="selectByPrimaryKey" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
      select 
-     	FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
-		FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
-		FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
-		FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit, 
-        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
-        FIN_BASE_RULE_INFO.EFF_DATE effDate,
-        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
-        FIN_BASE_RULE_INFO.RATE*100 rate,
-        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
-        FIN_BASE_RULE_INFO.INDEX_ID indexId,
-        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
-        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
-        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
-        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
-        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
-        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
-        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit
-        from FIN_BASE_RULE_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
-        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-        AND FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+     	FBRI.BASE_RULE_TYPE baseRuleType,
+		FBRI.PUBLISH_TYPE publishType,
+		FBRI.RATE_LOWER*100 rateLower,
+		FBRI.RATE_LIMIT*100 rateLimit, 
+        FBRI.BASE_RULE_ID baseRuleId,
+        FBRI.EFF_DATE effDate,
+        FBRI.RATE_TYPE rateType,
+        FBRI.RATE*100 rate,
+        FBRI.COEFFICIENT coefficient,
+        FBRI.INDEX_ID indexId,
+        FBRI.INDEX_SOURCE indexSource,
+        FBRI.SPREAD_RATE*100 spreadRate,
+        FBRI.RESET_TYPE resetType,
+        FBRI.BASE_RULE_TYPE baseRuleType,
+        FBRI.PUBLISH_TYPE publishType,
+        FBRI.RATE_LOWER*100 rateLower,
+        FBRI.RATE_LIMIT*100 rateLimit
+        from FIN_BASE_RULE_INFO FBRI, FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA
+        where FBRI.FINPROD_ID = FP.FINPROD_ID
+        AND FBRI.FINPROD_ID = FPA.FINPROD_ID
         <!-- 只查询期限层业绩基准 start add by wm 2019-10-23-->
-        AND FIN_BASE_RULE_INFO.BRANCH = 0 
+        AND FBRI.BRANCH = 0 
         <!-- 只查询期限层业绩基准 end add by wm 2019-10-23-->
         <!-- 净值周期型无固定期限和单一固定期限也走此方法，故修改 modify by wm start -->
         <!-- and FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} -->
-        AND ((FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10})
-		           		OR (FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
+        AND ((FBRI.FINPROD_ID = #{finprodId} and FPA.DEAL_MODE != #{dealMode10})
+		           		OR (FBRI.FINPROD_ID = #{finprodId} and FPA.DEAL_MODE = #{dealMode10}
 		           		))
         <!-- 净值周期型无固定期限和单一固定期限也走此方法，故修改 modify by wm end -->
 	 	<if test="baseRuleType != null and baseRuleType != ''">
-			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+			AND FBRI.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
 		</if>
 	 	<if test="publishType != null and publishType != ''">
-			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+			AND FBRI.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
 		</if>
         <choose>
         	<when test="effDate != null and effDate != ''">
-        		and FIN_BASE_RULE_INFO.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
+        		and FBRI.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
         	</when>
         	<otherwise>
-        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        		and (FBRI.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
         	</otherwise>
         </choose>
      </select>
      <select id="selectByPrimaryKey2" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
      select 
-     	FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
-		FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
-		FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
-		FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit, 
-        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
-        FIN_BASE_RULE_INFO.EFF_DATE effDate,
-        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
-        FIN_BASE_RULE_INFO.RATE*100 rate,
-        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
-        FIN_BASE_RULE_INFO.INDEX_ID indexId,
-        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
-        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
-        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
-        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
-        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
-        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
-        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit
-        from FIN_BASE_RULE_INFO, FIN_PRODUCT, FIN_PRODUCT_ADD
-        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-        AND FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT_ADD.FINPROD_ID
+     	FBRI.BASE_RULE_TYPE baseRuleType,
+		FBRI.PUBLISH_TYPE publishType,
+		FBRI.RATE_LOWER*100 rateLower,
+		FBRI.RATE_LIMIT*100 rateLimit, 
+        FBRI.BASE_RULE_ID baseRuleId,
+        FBRI.EFF_DATE effDate,
+        FBRI.RATE_TYPE rateType,
+        FBRI.RATE*100 rate,
+        FBRI.COEFFICIENT coefficient,
+        FBRI.INDEX_ID indexId,
+        FBRI.INDEX_SOURCE indexSource,
+        FBRI.SPREAD_RATE*100 spreadRate,
+        FBRI.RESET_TYPE resetType,
+        FBRI.BASE_RULE_TYPE baseRuleType,
+        FBRI.PUBLISH_TYPE publishType,
+        FBRI.RATE_LOWER*100 rateLower,
+        FBRI.RATE_LIMIT*100 rateLimit
+        from FIN_BASE_RULE_INFO FBRI, FIN_PRODUCT FP, FIN_PRODUCT_ADD FPA
+        where FBRI.FINPROD_ID = FP.FINPROD_ID
+        AND FBRI.FINPROD_ID = FPA.FINPROD_ID
         <!-- 只查询期限层业绩基准 start add by wm 2019-10-23-->
-        AND FIN_BASE_RULE_INFO.BRANCH = 0 
+        AND FBRI.BRANCH = 0 
         <!-- 只查询期限层业绩基准 end add by wm 2019-10-23-->
         <!-- 净值周期型无固定期限和单一固定期限也走此方法，故修改 modify by wm start -->
         <!-- and FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} -->
-		AND ((FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE != #{dealMode10})
-		           		OR (FIN_PRODUCT.P_FINPROD_ID = #{finprodId} and FIN_PRODUCT_ADD.DEAL_MODE = #{dealMode10}
-		           		AND FIN_PRODUCT_ADD.TERM_TYPE != #{termType02}))
+		AND ((FBRI.FINPROD_ID = #{finprodId} and FPA.DEAL_MODE != #{dealMode10})
+		           		OR (FP.P_FINPROD_ID = #{finprodId} and FPA.DEAL_MODE = #{dealMode10}
+		           		AND FPA.TERM_TYPE != #{termType02}))
         <!-- 净值周期型无固定期限和单一固定期限也走此方法，故修改 modify by wm end -->
 	 	<if test="baseRuleType != null and baseRuleType != ''">
-			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+			AND FBRI.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
 		</if>
 	 	<if test="publishType != null and publishType != ''">
-			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+			AND FBRI.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
 		</if>
         <choose>
         	<when test="effDate != null and effDate != ''">
-        		and FIN_BASE_RULE_INFO.EFF_DATE = (select max(EFF_DATE) 
+        		and FBRI.EFF_DATE = (select max(EFF_DATE) 
         		                                     from FIN_BASE_RULE_INFO T1
-        		                                     WHERE T1.FINPROD_ID = FIN_BASE_RULE_INFO.FINPROD_ID
-        		                                        AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = T1.BASE_RULE_TYPE
+        		                                     WHERE T1.FINPROD_ID = FBRI.FINPROD_ID
+        		                                        AND FBRI.BASE_RULE_TYPE = T1.BASE_RULE_TYPE
         		                                        AND T1.EFF_DATE >= to_date(#{effDate},'yyyy-MM-dd')
         		                                        AND to_date(#{sysDate},'yyyy-MM-dd') >= T1.EFF_DATE)
         	</when>
         	<otherwise>
-        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        		and (FBRI.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
         	</otherwise>
         </choose>
      </select>
      <select id="selectByFinprodidList" resultType="com.joyintech.service.product.common.dto.BussBenchMarkInfoDto">
      select 
-        FIN_BASE_RULE_INFO.BASE_RULE_ID baseRuleId,
-        FIN_BASE_RULE_INFO.EFF_DATE effDate,
-        FIN_BASE_RULE_INFO.RATE_TYPE rateType,
-        FIN_BASE_RULE_INFO.RATE*100 rate,
-        FIN_BASE_RULE_INFO.COEFFICIENT coefficient,
-        FIN_BASE_RULE_INFO.INDEX_ID indexId,
-        FIN_BASE_RULE_INFO.INDEX_SOURCE indexSource,
-        FIN_BASE_RULE_INFO.SPREAD_RATE*100 spreadRate,
-        FIN_BASE_RULE_INFO.RESET_TYPE resetType,
-        prd_layer_param.PROD_STYLE prodStyle,
-        prd_layer_param.TERM_MAX investmentCycle,
-        FIN_BASE_RULE_INFO.BASE_RULE_TYPE baseRuleType,
-        FIN_BASE_RULE_INFO.PUBLISH_TYPE publishType,
-        FIN_BASE_RULE_INFO.RATE_LOWER*100 rateLower,
-        FIN_BASE_RULE_INFO.RATE_LIMIT*100 rateLimit,
-        FIN_PRODUCT.VDATE vdate,
-        FIN_BASE_RULE_INFO.FINPROD_ID finprodId
-        from FIN_BASE_RULE_INFO, FIN_PRODUCT
-        left join prd_layer_param 
-          on FIN_PRODUCT.FINPROD_ID = prd_layer_param.FINPROD_ID   
-        where FIN_BASE_RULE_INFO.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
-        and (FIN_BASE_RULE_INFO.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} or prd_layer_param.P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR})
-        and FIN_BASE_RULE_INFO.BRANCH = 0
+        FBRI.BASE_RULE_ID baseRuleId,
+        FBRI.EFF_DATE effDate,
+        FBRI.RATE_TYPE rateType,
+        FBRI.RATE*100 rate,
+        FBRI.COEFFICIENT coefficient,
+        FBRI.INDEX_ID indexId,
+        FBRI.INDEX_SOURCE indexSource,
+        FBRI.SPREAD_RATE*100 spreadRate,
+        FBRI.RESET_TYPE resetType,
+        PLP.PROD_STYLE prodStyle,
+        PLP.TERM_MAX investmentCycle,
+        FBRI.BASE_RULE_TYPE baseRuleType,
+        FBRI.PUBLISH_TYPE publishType,
+        FBRI.RATE_LOWER*100 rateLower,
+        FBRI.RATE_LIMIT*100 rateLimit,
+        FP.VDATE vdate,
+        FBRI.FINPROD_ID finprodId
+        from FIN_BASE_RULE_INFO FBRI, FIN_PRODUCT FP
+        left join prd_layer_param PLP
+          on FP.FINPROD_ID = PLP.FINPROD_ID   
+        where FBRI.FINPROD_ID = FP.FINPROD_ID
+        and (FBRI.FINPROD_ID = #{finprodId,jdbcType=VARCHAR} or PLP.P_FINPROD_ID = #{finprodId,jdbcType=VARCHAR})
+        and FBRI.BRANCH = 0
 	 	<if test="baseRuleType != null and baseRuleType != ''">
-			AND FIN_BASE_RULE_INFO.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
+			AND FBRI.BASE_RULE_TYPE = #{baseRuleType,jdbcType=VARCHAR}
 		</if>
 	 	<if test="publishType != null and publishType != ''">
-			AND FIN_BASE_RULE_INFO.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
+			AND FBRI.PUBLISH_TYPE = #{publishType,jdbcType=VARCHAR}
 		</if>
         <choose>
         	<when test="effDate != null and effDate != ''">
-        		and FIN_BASE_RULE_INFO.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
+        		and FBRI.EFF_DATE = to_date(#{effDate},'yyyy-MM-dd')
         	</when>
         	<otherwise>
-        		and (FIN_BASE_RULE_INFO.EFF_DATE = FIN_PRODUCT.VDATE OR FIN_PRODUCT.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
+        		and (FBRI.EFF_DATE = FP.VDATE OR FP.FINPROD_TYPE2= #{finprodType2, jdbcType=VARCHAR})
         	</otherwise>
         </choose>
      </select>

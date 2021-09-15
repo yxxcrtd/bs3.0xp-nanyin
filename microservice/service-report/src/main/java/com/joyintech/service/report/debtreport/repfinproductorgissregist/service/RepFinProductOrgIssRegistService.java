@@ -67,7 +67,7 @@ public class RepFinProductOrgIssRegistService extends BaseService<RepFinProductO
      * @since 1.0
      */
     public Page<RepFinProductOrgIssRegistDto> selectForPage(int page, int length,
-                                                            Map<String, Object> pageParam) throws Exception {
+                                                            Map<String, Object> pageParam) {
         pageParam.put("productStartingSDate", pageParam.get("productStartingSDate"));
         pageParam.put("productStartingEDate", pageParam.get("productStartingEDate"));
         pageParam.put("repStatusSDate", pageParam.get("repStatusSDate"));

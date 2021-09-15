@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.SttStatElementMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.SttStatElement" >
+        <id column="S_S_E_SEQ_NO" property="seqNo" jdbcType="VARCHAR" />
+        <result column="S_S_E_OBJECT_ID" property="objectId" jdbcType="VARCHAR" />
+        <result column="S_S_E_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="S_S_E_CDATE" property="cdate" jdbcType="TIMESTAMP" />
+        <result column="S_S_E_INV_AIM" property="invAim" jdbcType="VARCHAR" />
+        <result column="S_S_E_SEC_ACCT_ID" property="secAcctId" jdbcType="VARCHAR" />
+        <result column="S_S_E_PARAM_CODE" property="paramCode" jdbcType="VARCHAR" />
+        <result column="S_S_E_PARAM_TYPE" property="paramType" jdbcType="VARCHAR" />
+        <result column="S_S_E_PARAM_VALUE" property="paramValue" jdbcType="VARCHAR" />
+        <result column="S_S_E_DICT_CODE" property="dictCode" jdbcType="VARCHAR" />
+        <result column="S_S_E_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="S_S_E_CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="S_S_E_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="S_S_E_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="S_S_E_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SEQ_NO as S_S_E_SEQ_NO, OBJECT_ID as S_S_E_OBJECT_ID, ELEMENT_ID as S_S_E_ELEMENT_ID, 
+        CDATE as S_S_E_CDATE, INV_AIM as S_S_E_INV_AIM, SEC_ACCT_ID as S_S_E_SEC_ACCT_ID, 
+        PARAM_CODE as S_S_E_PARAM_CODE, PARAM_TYPE as S_S_E_PARAM_TYPE, PARAM_VALUE as S_S_E_PARAM_VALUE, 
+        DICT_CODE as S_S_E_DICT_CODE, CREATE_USER as S_S_E_CREATE_USER, CREATE_DEPT as S_S_E_CREATE_DEPT, 
+        CREATE_TIME as S_S_E_CREATE_TIME, UPDATE_USER as S_S_E_UPDATE_USER, UPDATE_TIME as S_S_E_UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStatElementMapper.Base_Column_List" />
+        from STT_STAT_ELEMENT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStatElementMapper.Base_Column_List" />
+        from STT_STAT_ELEMENT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.SttStatElementMapper.Base_Column_List" />
+        from STT_STAT_ELEMENT
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from STT_STAT_ELEMENT
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from STT_STAT_ELEMENT
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        insert into STT_STAT_ELEMENT (SEQ_NO, OBJECT_ID, ELEMENT_ID, 
+            CDATE, INV_AIM, SEC_ACCT_ID, 
+            PARAM_CODE, PARAM_TYPE, PARAM_VALUE, 
+            DICT_CODE, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{seqNo,jdbcType=VARCHAR}, #{objectId,jdbcType=VARCHAR}, #{elementId,jdbcType=VARCHAR}, 
+            #{cdate,jdbcType=TIMESTAMP}, #{invAim,jdbcType=VARCHAR}, #{secAcctId,jdbcType=VARCHAR}, 
+            #{paramCode,jdbcType=VARCHAR}, #{paramType,jdbcType=VARCHAR}, #{paramValue,jdbcType=VARCHAR}, 
+            #{dictCode,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        insert into STT_STAT_ELEMENT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                SEQ_NO,
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="invAim != null" >
+                INV_AIM,
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID,
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE,
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE,
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE,
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="seqNo != null" >
+                #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invAim != null" >
+                #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        insert into STT_STAT_ELEMENT(SEQ_NO, OBJECT_ID, ELEMENT_ID, CDATE, INV_AIM, SEC_ACCT_ID, 
+        PARAM_CODE, PARAM_TYPE, PARAM_VALUE, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SEQ_NO, OBJECT_ID, ELEMENT_ID, CDATE, INV_AIM, SEC_ACCT_ID, 
+            PARAM_CODE, PARAM_TYPE, PARAM_VALUE, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+             from STT_STAT_ELEMENT
+             where STATUS = 'E' and SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        update STT_STAT_ELEMENT
+        <set >
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        update STT_STAT_ELEMENT
+        <set >
+            <if test="seqNo != null" >
+                SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null" >
+                OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                CDATE = #{cdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="invAim != null" >
+                INV_AIM = #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="secAcctId != null" >
+                SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCode != null" >
+                PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            </if>
+            <if test="paramType != null" >
+                PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            </if>
+            <if test="paramValue != null" >
+                PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            </if>
+            <if test="dictCode != null" >
+                DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        update STT_STAT_ELEMENT
+        set 
+        SEQ_NO = #{seqNo,jdbcType=VARCHAR},
+        OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        CDATE = #{cdate,jdbcType=TIMESTAMP},
+        INV_AIM = #{invAim,jdbcType=VARCHAR},
+        SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+        PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+        PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+        PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+        DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.SttStatElement" >
+        update STT_STAT_ELEMENT
+        set OBJECT_ID = #{objectId,jdbcType=VARCHAR},
+            ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            CDATE = #{cdate,jdbcType=TIMESTAMP},
+            INV_AIM = #{invAim,jdbcType=VARCHAR},
+            SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR},
+            PARAM_CODE = #{paramCode,jdbcType=VARCHAR},
+            PARAM_TYPE = #{paramType,jdbcType=VARCHAR},
+            PARAM_VALUE = #{paramValue,jdbcType=VARCHAR},
+            DICT_CODE = #{dictCode,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -20,6 +20,7 @@ import com.joyintech.tams.valuation.basedata.productinfoquery.dto.ValProductInfo
 import com.joyintech.tams.valuation.basedata.productinfoquery.dto.ValProductInfoFeeDto;
 import com.joyintech.tams.valuation.basedata.productinfoquery.dto.ValProductInfoQuery001Dto;
 import com.joyintech.tams.common.base.entity.BokBooksetExt;
+import org.springframework.stereotype.Repository;
 
 /**
  * 金融产品交易查询
@@ -29,6 +30,7 @@ import com.joyintech.tams.common.base.entity.BokBooksetExt;
  * @see ValProductInfoQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValProductInfoQuery001Mapper {
 
     /**

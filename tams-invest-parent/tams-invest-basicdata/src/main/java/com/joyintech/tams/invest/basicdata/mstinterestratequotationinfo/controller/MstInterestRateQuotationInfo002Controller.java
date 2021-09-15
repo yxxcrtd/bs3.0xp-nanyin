@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstinterestratequotationinfo.control
 import java.util.HashMap;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -119,8 +120,7 @@ public class MstInterestRateQuotationInfo002Controller extends BaseController {
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstInterestRateQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstInterestRateQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

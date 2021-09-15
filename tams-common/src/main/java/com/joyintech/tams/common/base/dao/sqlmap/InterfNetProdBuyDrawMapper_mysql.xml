@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfNetProdBuyDrawMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw" >
+        <result column="PROD_ID" property="prodId" jdbcType="VARCHAR" />
+        <result column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <result column="MOTHER_PROD_ID" property="motherProdId" jdbcType="VARCHAR" />
+        <result column="PROD_NAME" property="prodName" jdbcType="VARCHAR" />
+        <result column="CCY" property="ccy" jdbcType="VARCHAR" />
+        <result column="NET_VALUE" property="netValue" jdbcType="VARCHAR" />
+        <result column="NET_LOT" property="netLot" jdbcType="VARCHAR" />
+        <result column="BUY_AMT" property="buyAmt" jdbcType="VARCHAR" />
+        <result column="BUY_LOT" property="buyLot" jdbcType="VARCHAR" />
+        <result column="TOTAL_DRAW_LOT" property="totalDrawLot" jdbcType="VARCHAR" />
+        <result column="TOTAL_DRAW_VAL_AMT" property="totalDrawValAmt" jdbcType="VARCHAR" />
+        <result column="TOTAL_DRAW_CLT_AMT" property="totalDrawCltAmt" jdbcType="VARCHAR" />
+        <result column="TOTAL_DRAW_COMMISSION" property="totalDrawCommission" jdbcType="VARCHAR" />
+        <result column="TOTAL_LEFT_COMMISSION" property="totalLeftCommission" jdbcType="VARCHAR" />
+        <result column="DRAW_NET_DATE" property="drawNetDate" jdbcType="VARCHAR" />
+        <result column="DRAW_NET" property="drawNet" jdbcType="VARCHAR" />
+        <result column="DRAW_LOT" property="drawLot" jdbcType="VARCHAR" />
+        <result column="DRAW_VAL_AMT" property="drawValAmt" jdbcType="VARCHAR" />
+        <result column="DRAW_CLT_AMT" property="drawCltAmt" jdbcType="VARCHAR" />
+        <result column="DRAW_COMMISSION" property="drawCommission" jdbcType="VARCHAR" />
+        <result column="LEFT_COMMISSION" property="leftCommission" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw" >
+        insert into INTERF_NET_PROD_BUY_DRAW (PROD_ID, CDATE, MOTHER_PROD_ID, 
+            PROD_NAME, CCY, NET_VALUE, 
+            NET_LOT, BUY_AMT, BUY_LOT, 
+            TOTAL_DRAW_LOT, TOTAL_DRAW_VAL_AMT, TOTAL_DRAW_CLT_AMT, 
+            TOTAL_DRAW_COMMISSION, TOTAL_LEFT_COMMISSION, 
+            DRAW_NET_DATE, DRAW_NET, DRAW_LOT, 
+            DRAW_VAL_AMT, DRAW_CLT_AMT, DRAW_COMMISSION, 
+            LEFT_COMMISSION, CREATE_TIME)
+        values (#{prodId,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{motherProdId,jdbcType=VARCHAR}, 
+            #{prodName,jdbcType=VARCHAR}, #{ccy,jdbcType=VARCHAR}, #{netValue,jdbcType=VARCHAR}, 
+            #{netLot,jdbcType=VARCHAR}, #{buyAmt,jdbcType=VARCHAR}, #{buyLot,jdbcType=VARCHAR}, 
+            #{totalDrawLot,jdbcType=VARCHAR}, #{totalDrawValAmt,jdbcType=VARCHAR}, #{totalDrawCltAmt,jdbcType=VARCHAR}, 
+            #{totalDrawCommission,jdbcType=VARCHAR}, #{totalLeftCommission,jdbcType=VARCHAR}, 
+            #{drawNetDate,jdbcType=VARCHAR}, #{drawNet,jdbcType=VARCHAR}, #{drawLot,jdbcType=VARCHAR}, 
+            #{drawValAmt,jdbcType=VARCHAR}, #{drawCltAmt,jdbcType=VARCHAR}, #{drawCommission,jdbcType=VARCHAR}, 
+            #{leftCommission,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw" >
+        insert into INTERF_NET_PROD_BUY_DRAW
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                PROD_ID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="motherProdId != null" >
+                MOTHER_PROD_ID,
+            </if>
+            <if test="prodName != null" >
+                PROD_NAME,
+            </if>
+            <if test="ccy != null" >
+                CCY,
+            </if>
+            <if test="netValue != null" >
+                NET_VALUE,
+            </if>
+            <if test="netLot != null" >
+                NET_LOT,
+            </if>
+            <if test="buyAmt != null" >
+                BUY_AMT,
+            </if>
+            <if test="buyLot != null" >
+                BUY_LOT,
+            </if>
+            <if test="totalDrawLot != null" >
+                TOTAL_DRAW_LOT,
+            </if>
+            <if test="totalDrawValAmt != null" >
+                TOTAL_DRAW_VAL_AMT,
+            </if>
+            <if test="totalDrawCltAmt != null" >
+                TOTAL_DRAW_CLT_AMT,
+            </if>
+            <if test="totalDrawCommission != null" >
+                TOTAL_DRAW_COMMISSION,
+            </if>
+            <if test="totalLeftCommission != null" >
+                TOTAL_LEFT_COMMISSION,
+            </if>
+            <if test="drawNetDate != null" >
+                DRAW_NET_DATE,
+            </if>
+            <if test="drawNet != null" >
+                DRAW_NET,
+            </if>
+            <if test="drawLot != null" >
+                DRAW_LOT,
+            </if>
+            <if test="drawValAmt != null" >
+                DRAW_VAL_AMT,
+            </if>
+            <if test="drawCltAmt != null" >
+                DRAW_CLT_AMT,
+            </if>
+            <if test="drawCommission != null" >
+                DRAW_COMMISSION,
+            </if>
+            <if test="leftCommission != null" >
+                LEFT_COMMISSION,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="prodId != null" >
+                #{prodId,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="motherProdId != null" >
+                #{motherProdId,jdbcType=VARCHAR},
+            </if>
+            <if test="prodName != null" >
+                #{prodName,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null" >
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="netValue != null" >
+                #{netValue,jdbcType=VARCHAR},
+            </if>
+            <if test="netLot != null" >
+                #{netLot,jdbcType=VARCHAR},
+            </if>
+            <if test="buyAmt != null" >
+                #{buyAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="buyLot != null" >
+                #{buyLot,jdbcType=VARCHAR},
+            </if>
+            <if test="totalDrawLot != null" >
+                #{totalDrawLot,jdbcType=VARCHAR},
+            </if>
+            <if test="totalDrawValAmt != null" >
+                #{totalDrawValAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="totalDrawCltAmt != null" >
+                #{totalDrawCltAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="totalDrawCommission != null" >
+                #{totalDrawCommission,jdbcType=VARCHAR},
+            </if>
+            <if test="totalLeftCommission != null" >
+                #{totalLeftCommission,jdbcType=VARCHAR},
+            </if>
+            <if test="drawNetDate != null" >
+                #{drawNetDate,jdbcType=VARCHAR},
+            </if>
+            <if test="drawNet != null" >
+                #{drawNet,jdbcType=VARCHAR},
+            </if>
+            <if test="drawLot != null" >
+                #{drawLot,jdbcType=VARCHAR},
+            </if>
+            <if test="drawValAmt != null" >
+                #{drawValAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="drawCltAmt != null" >
+                #{drawCltAmt,jdbcType=VARCHAR},
+            </if>
+            <if test="drawCommission != null" >
+                #{drawCommission,jdbcType=VARCHAR},
+            </if>
+            <if test="leftCommission != null" >
+                #{leftCommission,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfNetProdBuyDraw" >
+        insert into INTERF_NET_PROD_BUY_DRAW(PROD_ID, CDATE, MOTHER_PROD_ID, PROD_NAME, CCY, 
+        NET_VALUE, NET_LOT, BUY_AMT, BUY_LOT, TOTAL_DRAW_LOT, TOTAL_DRAW_VAL_AMT, TOTAL_DRAW_CLT_AMT, 
+        TOTAL_DRAW_COMMISSION, TOTAL_LEFT_COMMISSION, DRAW_NET_DATE, DRAW_NET, DRAW_LOT, 
+        DRAW_VAL_AMT, DRAW_CLT_AMT, DRAW_COMMISSION, LEFT_COMMISSION, CREATE_TIME)
+        select PROD_ID, CDATE, MOTHER_PROD_ID, PROD_NAME, CCY, 
+            NET_VALUE, NET_LOT, BUY_AMT, BUY_LOT, TOTAL_DRAW_LOT, TOTAL_DRAW_VAL_AMT, TOTAL_DRAW_CLT_AMT, 
+            TOTAL_DRAW_COMMISSION, TOTAL_LEFT_COMMISSION, DRAW_NET_DATE, DRAW_NET, DRAW_LOT, 
+            DRAW_VAL_AMT, DRAW_CLT_AMT, DRAW_COMMISSION, LEFT_COMMISSION, CREATE_TIME
+             from INTERF_NET_PROD_BUY_DRAW
+             where 1 = 1
+    </insert>
+</mapper>

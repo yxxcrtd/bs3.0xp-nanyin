@@ -739,7 +739,6 @@
 		where 1 =1
 		and info.fprod_id is null <!-- 去除子产品 -->
 		and info.RAISE_VDATE is not null
-		and reginfo.REG_CODE is not null
 		<if test="prodInfos!=null and prodInfos.size()!=0">
           AND trim(info.prod_id) in
           <foreach collection="prodInfos" item="item" index="index" open="(" separator="," close=")">
@@ -870,7 +869,7 @@
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       ISSUE_PARTY_ID, SUMIT_SEQ,
        MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
-      BUSI_ACCT_NO, ACCT_NAME
+      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG
       )
       select
       REGIST_SEQNO, PROD_REGIST_CODE, PROD_ID, 
@@ -887,7 +886,7 @@
       SUBMIT_TIME, CHB_SUBMIT_DEADLINE, SUBMIT_DEADLINE, 
       ISSUE_PARTY_ID, SUMIT_SEQ,
       MANAGE_TYPE, YIELD_LOW, YIELD_HIGH, YIELD_REMARK, 
-      BUSI_ACCT_NO, ACCT_NAME
+      BUSI_ACCT_NO, ACCT_NAME, SUBMIT_FEEDBACK_MSG
     from CHB_PRD_ISSUE_SUB_HIS
     where SEND_STATUS in ('02','03')<!-- 只移除已报送数据 -->
   	<if test="regList !=null and regList.size()>0">

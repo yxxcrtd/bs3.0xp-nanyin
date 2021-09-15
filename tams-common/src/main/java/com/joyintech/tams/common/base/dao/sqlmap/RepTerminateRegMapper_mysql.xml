@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.RepTerminateRegMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        <id column="REP_FINPROD_ID" property="repFinprodId" jdbcType="VARCHAR" />
+        <result column="REP_FINPROD_REG_ID" property="repFinprodRegId" jdbcType="VARCHAR" />
+        <result column="REP_ISSUE_PARTY_ID" property="repIssuePartyId" jdbcType="VARCHAR" />
+        <result column="REP_PROD_ACTEND_DATE" property="repProdActendDate" jdbcType="DATE" />
+        <result column="REP_ACT_ACHI_PROFIT" property="repActAchiProfit" jdbcType="DECIMAL" />
+        <result column="REP_CASH_CUS_PROFIT" property="repCashCusProfit" jdbcType="DECIMAL" />
+        <result column="REP_CASH_CUS_SUM" property="repCashCusSum" jdbcType="DECIMAL" />
+        <result column="REP_CASH_SHARE" property="repCashShare" jdbcType="DECIMAL" />
+        <result column="REP_THIS_TRUSTEE_FEE" property="repThisTrusteeFee" jdbcType="DECIMAL" />
+        <result column="REP_THIS_MNG_FEE" property="repThisMngFee" jdbcType="DECIMAL" />
+        <result column="REP_THIS_SALE_FEE" property="repThisSaleFee" jdbcType="DECIMAL" />
+        <result column="REP_THIS_OTHER_FEE" property="repThisOtherFee" jdbcType="DECIMAL" />
+        <result column="REP_OTHER_TRUSTEE_FEE" property="repOtherTrusteeFee" jdbcType="DECIMAL" />
+        <result column="REP_OTHER_MNG_FEE" property="repOtherMngFee" jdbcType="DECIMAL" />
+        <result column="REP_OTHER_SALE_FEE" property="repOtherSaleFee" jdbcType="DECIMAL" />
+        <result column="REP_INVEST_CONVINCE_FEE" property="repInvestConvinceFee" jdbcType="DECIMAL" />
+        <result column="REP_OTHER_OTHER_FEE" property="repOtherOtherFee" jdbcType="DECIMAL" />
+        <result column="REP_CUS_ACT_YEAR_YIELD" property="repCusActYearYield" jdbcType="DECIMAL" />
+        <result column="REP_PROD_ACT_YEAR_YIELD" property="repProdActYearYield" jdbcType="DECIMAL" />
+        <result column="REP_TERMIN_REG_DATE" property="repTerminRegDate" jdbcType="DATE" />
+        <result column="REP_SEND_STATUS" property="repSendStatus" jdbcType="VARCHAR" />
+        <result column="REP_STATUS_DATE" property="repStatusDate" jdbcType="DATE" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        REP_FINPROD_ID REP_FINPROD_ID, REP_FINPROD_REG_ID REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID REP_ISSUE_PARTY_ID, 
+        REP_PROD_ACTEND_DATE REP_PROD_ACTEND_DATE, REP_ACT_ACHI_PROFIT REP_ACT_ACHI_PROFIT, 
+        REP_CASH_CUS_PROFIT REP_CASH_CUS_PROFIT, REP_CASH_CUS_SUM REP_CASH_CUS_SUM, REP_CASH_SHARE REP_CASH_SHARE, 
+        REP_THIS_TRUSTEE_FEE REP_THIS_TRUSTEE_FEE, REP_THIS_MNG_FEE REP_THIS_MNG_FEE, REP_THIS_SALE_FEE REP_THIS_SALE_FEE, 
+        REP_THIS_OTHER_FEE REP_THIS_OTHER_FEE, REP_OTHER_TRUSTEE_FEE REP_OTHER_TRUSTEE_FEE, 
+        REP_OTHER_MNG_FEE REP_OTHER_MNG_FEE, REP_OTHER_SALE_FEE REP_OTHER_SALE_FEE, REP_INVEST_CONVINCE_FEE REP_INVEST_CONVINCE_FEE, 
+        REP_OTHER_OTHER_FEE REP_OTHER_OTHER_FEE, REP_CUS_ACT_YEAR_YIELD REP_CUS_ACT_YEAR_YIELD, 
+        REP_PROD_ACT_YEAR_YIELD REP_PROD_ACT_YEAR_YIELD, REP_TERMIN_REG_DATE REP_TERMIN_REG_DATE, 
+        REP_SEND_STATUS REP_SEND_STATUS, REP_STATUS_DATE REP_STATUS_DATE, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTerminateRegMapper.Base_Column_List" />
+        from REP_TERMINATE_REG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTerminateRegMapper.Base_Column_List" />
+        from REP_TERMINATE_REG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.RepTerminateRegMapper.Base_Column_List" />
+        from REP_TERMINATE_REG
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from REP_TERMINATE_REG
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        insert into REP_TERMINATE_REG (REP_FINPROD_ID, REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID, 
+            REP_PROD_ACTEND_DATE, REP_ACT_ACHI_PROFIT, REP_CASH_CUS_PROFIT, 
+            REP_CASH_CUS_SUM, REP_CASH_SHARE, REP_THIS_TRUSTEE_FEE, 
+            REP_THIS_MNG_FEE, REP_THIS_SALE_FEE, REP_THIS_OTHER_FEE, 
+            REP_OTHER_TRUSTEE_FEE, REP_OTHER_MNG_FEE, REP_OTHER_SALE_FEE, 
+            REP_INVEST_CONVINCE_FEE, REP_OTHER_OTHER_FEE, 
+            REP_CUS_ACT_YEAR_YIELD, REP_PROD_ACT_YEAR_YIELD, 
+            REP_TERMIN_REG_DATE, REP_SEND_STATUS, REP_STATUS_DATE, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{repFinprodId,jdbcType=VARCHAR}, #{repFinprodRegId,jdbcType=VARCHAR}, #{repIssuePartyId,jdbcType=VARCHAR}, 
+            #{repProdActendDate,jdbcType=DATE}, #{repActAchiProfit,jdbcType=DECIMAL}, #{repCashCusProfit,jdbcType=DECIMAL}, 
+            #{repCashCusSum,jdbcType=DECIMAL}, #{repCashShare,jdbcType=DECIMAL}, #{repThisTrusteeFee,jdbcType=DECIMAL}, 
+            #{repThisMngFee,jdbcType=DECIMAL}, #{repThisSaleFee,jdbcType=DECIMAL}, #{repThisOtherFee,jdbcType=DECIMAL}, 
+            #{repOtherTrusteeFee,jdbcType=DECIMAL}, #{repOtherMngFee,jdbcType=DECIMAL}, #{repOtherSaleFee,jdbcType=DECIMAL}, 
+            #{repInvestConvinceFee,jdbcType=DECIMAL}, #{repOtherOtherFee,jdbcType=DECIMAL}, 
+            #{repCusActYearYield,jdbcType=DECIMAL}, #{repProdActYearYield,jdbcType=DECIMAL}, 
+            #{repTerminRegDate,jdbcType=DATE}, #{repSendStatus,jdbcType=VARCHAR}, #{repStatusDate,jdbcType=DATE}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        insert into REP_TERMINATE_REG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                REP_FINPROD_ID,
+            </if>
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID,
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID,
+            </if>
+            <if test="repProdActendDate != null" >
+                REP_PROD_ACTEND_DATE,
+            </if>
+            <if test="repActAchiProfit != null" >
+                REP_ACT_ACHI_PROFIT,
+            </if>
+            <if test="repCashCusProfit != null" >
+                REP_CASH_CUS_PROFIT,
+            </if>
+            <if test="repCashCusSum != null" >
+                REP_CASH_CUS_SUM,
+            </if>
+            <if test="repCashShare != null" >
+                REP_CASH_SHARE,
+            </if>
+            <if test="repThisTrusteeFee != null" >
+                REP_THIS_TRUSTEE_FEE,
+            </if>
+            <if test="repThisMngFee != null" >
+                REP_THIS_MNG_FEE,
+            </if>
+            <if test="repThisSaleFee != null" >
+                REP_THIS_SALE_FEE,
+            </if>
+            <if test="repThisOtherFee != null" >
+                REP_THIS_OTHER_FEE,
+            </if>
+            <if test="repOtherTrusteeFee != null" >
+                REP_OTHER_TRUSTEE_FEE,
+            </if>
+            <if test="repOtherMngFee != null" >
+                REP_OTHER_MNG_FEE,
+            </if>
+            <if test="repOtherSaleFee != null" >
+                REP_OTHER_SALE_FEE,
+            </if>
+            <if test="repInvestConvinceFee != null" >
+                REP_INVEST_CONVINCE_FEE,
+            </if>
+            <if test="repOtherOtherFee != null" >
+                REP_OTHER_OTHER_FEE,
+            </if>
+            <if test="repCusActYearYield != null" >
+                REP_CUS_ACT_YEAR_YIELD,
+            </if>
+            <if test="repProdActYearYield != null" >
+                REP_PROD_ACT_YEAR_YIELD,
+            </if>
+            <if test="repTerminRegDate != null" >
+                REP_TERMIN_REG_DATE,
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS,
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="repFinprodId != null" >
+                #{repFinprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="repFinprodRegId != null" >
+                #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repProdActendDate != null" >
+                #{repProdActendDate,jdbcType=DATE},
+            </if>
+            <if test="repActAchiProfit != null" >
+                #{repActAchiProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCusProfit != null" >
+                #{repCashCusProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCusSum != null" >
+                #{repCashCusSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashShare != null" >
+                #{repCashShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisTrusteeFee != null" >
+                #{repThisTrusteeFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisMngFee != null" >
+                #{repThisMngFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisSaleFee != null" >
+                #{repThisSaleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisOtherFee != null" >
+                #{repThisOtherFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherTrusteeFee != null" >
+                #{repOtherTrusteeFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherMngFee != null" >
+                #{repOtherMngFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherSaleFee != null" >
+                #{repOtherSaleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repInvestConvinceFee != null" >
+                #{repInvestConvinceFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherOtherFee != null" >
+                #{repOtherOtherFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repCusActYearYield != null" >
+                #{repCusActYearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdActYearYield != null" >
+                #{repProdActYearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repTerminRegDate != null" >
+                #{repTerminRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        insert into REP_TERMINATE_REG(REP_FINPROD_ID, REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID, 
+        REP_PROD_ACTEND_DATE, REP_ACT_ACHI_PROFIT, REP_CASH_CUS_PROFIT, REP_CASH_CUS_SUM, 
+        REP_CASH_SHARE, REP_THIS_TRUSTEE_FEE, REP_THIS_MNG_FEE, REP_THIS_SALE_FEE, REP_THIS_OTHER_FEE, 
+        REP_OTHER_TRUSTEE_FEE, REP_OTHER_MNG_FEE, REP_OTHER_SALE_FEE, REP_INVEST_CONVINCE_FEE, 
+        REP_OTHER_OTHER_FEE, REP_CUS_ACT_YEAR_YIELD, REP_PROD_ACT_YEAR_YIELD, REP_TERMIN_REG_DATE, 
+        REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME)
+        select REP_FINPROD_ID, REP_FINPROD_REG_ID, REP_ISSUE_PARTY_ID, 
+            REP_PROD_ACTEND_DATE, REP_ACT_ACHI_PROFIT, REP_CASH_CUS_PROFIT, REP_CASH_CUS_SUM, 
+            REP_CASH_SHARE, REP_THIS_TRUSTEE_FEE, REP_THIS_MNG_FEE, REP_THIS_SALE_FEE, REP_THIS_OTHER_FEE, 
+            REP_OTHER_TRUSTEE_FEE, REP_OTHER_MNG_FEE, REP_OTHER_SALE_FEE, REP_INVEST_CONVINCE_FEE, 
+            REP_OTHER_OTHER_FEE, REP_CUS_ACT_YEAR_YIELD, REP_PROD_ACT_YEAR_YIELD, REP_TERMIN_REG_DATE, 
+            REP_SEND_STATUS, REP_STATUS_DATE, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from REP_TERMINATE_REG
+             where 1 = 1 and REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        update REP_TERMINATE_REG
+        <set >
+            <if test="repFinprodRegId != null" >
+                REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            </if>
+            <if test="repIssuePartyId != null" >
+                REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            </if>
+            <if test="repProdActendDate != null" >
+                REP_PROD_ACTEND_DATE = #{repProdActendDate,jdbcType=DATE},
+            </if>
+            <if test="repActAchiProfit != null" >
+                REP_ACT_ACHI_PROFIT = #{repActAchiProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCusProfit != null" >
+                REP_CASH_CUS_PROFIT = #{repCashCusProfit,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashCusSum != null" >
+                REP_CASH_CUS_SUM = #{repCashCusSum,jdbcType=DECIMAL},
+            </if>
+            <if test="repCashShare != null" >
+                REP_CASH_SHARE = #{repCashShare,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisTrusteeFee != null" >
+                REP_THIS_TRUSTEE_FEE = #{repThisTrusteeFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisMngFee != null" >
+                REP_THIS_MNG_FEE = #{repThisMngFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisSaleFee != null" >
+                REP_THIS_SALE_FEE = #{repThisSaleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repThisOtherFee != null" >
+                REP_THIS_OTHER_FEE = #{repThisOtherFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherTrusteeFee != null" >
+                REP_OTHER_TRUSTEE_FEE = #{repOtherTrusteeFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherMngFee != null" >
+                REP_OTHER_MNG_FEE = #{repOtherMngFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherSaleFee != null" >
+                REP_OTHER_SALE_FEE = #{repOtherSaleFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repInvestConvinceFee != null" >
+                REP_INVEST_CONVINCE_FEE = #{repInvestConvinceFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repOtherOtherFee != null" >
+                REP_OTHER_OTHER_FEE = #{repOtherOtherFee,jdbcType=DECIMAL},
+            </if>
+            <if test="repCusActYearYield != null" >
+                REP_CUS_ACT_YEAR_YIELD = #{repCusActYearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repProdActYearYield != null" >
+                REP_PROD_ACT_YEAR_YIELD = #{repProdActYearYield,jdbcType=DECIMAL},
+            </if>
+            <if test="repTerminRegDate != null" >
+                REP_TERMIN_REG_DATE = #{repTerminRegDate,jdbcType=DATE},
+            </if>
+            <if test="repSendStatus != null" >
+                REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="repStatusDate != null" >
+                REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.RepTerminateReg" >
+        update REP_TERMINATE_REG
+        set REP_FINPROD_REG_ID = #{repFinprodRegId,jdbcType=VARCHAR},
+            REP_ISSUE_PARTY_ID = #{repIssuePartyId,jdbcType=VARCHAR},
+            REP_PROD_ACTEND_DATE = #{repProdActendDate,jdbcType=DATE},
+            REP_ACT_ACHI_PROFIT = #{repActAchiProfit,jdbcType=DECIMAL},
+            REP_CASH_CUS_PROFIT = #{repCashCusProfit,jdbcType=DECIMAL},
+            REP_CASH_CUS_SUM = #{repCashCusSum,jdbcType=DECIMAL},
+            REP_CASH_SHARE = #{repCashShare,jdbcType=DECIMAL},
+            REP_THIS_TRUSTEE_FEE = #{repThisTrusteeFee,jdbcType=DECIMAL},
+            REP_THIS_MNG_FEE = #{repThisMngFee,jdbcType=DECIMAL},
+            REP_THIS_SALE_FEE = #{repThisSaleFee,jdbcType=DECIMAL},
+            REP_THIS_OTHER_FEE = #{repThisOtherFee,jdbcType=DECIMAL},
+            REP_OTHER_TRUSTEE_FEE = #{repOtherTrusteeFee,jdbcType=DECIMAL},
+            REP_OTHER_MNG_FEE = #{repOtherMngFee,jdbcType=DECIMAL},
+            REP_OTHER_SALE_FEE = #{repOtherSaleFee,jdbcType=DECIMAL},
+            REP_INVEST_CONVINCE_FEE = #{repInvestConvinceFee,jdbcType=DECIMAL},
+            REP_OTHER_OTHER_FEE = #{repOtherOtherFee,jdbcType=DECIMAL},
+            REP_CUS_ACT_YEAR_YIELD = #{repCusActYearYield,jdbcType=DECIMAL},
+            REP_PROD_ACT_YEAR_YIELD = #{repProdActYearYield,jdbcType=DECIMAL},
+            REP_TERMIN_REG_DATE = #{repTerminRegDate,jdbcType=DATE},
+            REP_SEND_STATUS = #{repSendStatus,jdbcType=VARCHAR},
+            REP_STATUS_DATE = #{repStatusDate,jdbcType=DATE},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
+    </update>
+</mapper>

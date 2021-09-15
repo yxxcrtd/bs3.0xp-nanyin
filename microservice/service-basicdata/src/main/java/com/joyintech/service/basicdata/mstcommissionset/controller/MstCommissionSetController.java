@@ -8,6 +8,7 @@ package com.joyintech.service.basicdata.mstcommissionset.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.common.base.entity.TrdFeeConfigDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,7 @@ public class MstCommissionSetController {
     @PostMapping("findPage/{page}/{length}")
     public Page<MstCommissionSetDto> selectAll(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCommissionSetService.selectForPage(page, length, param);
     }
 
@@ -97,7 +98,7 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("insert")
     public void insert(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         mstCommissionSetService.insert(dto);
     }
 
@@ -112,7 +113,7 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("update")
     public void update(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         mstCommissionSetService.update(dto);
     }
 
@@ -127,10 +128,13 @@ public class MstCommissionSetController {
     @DTXTransaction
     @PostMapping("delete")
     public int delete(@RequestBody MstCommissionSetDto dto)
-        throws Exception {
+    {
         return mstCommissionSetService.delete(dto);
     }
-
+    @PostMapping("findTable")
+    public List<TrdFeeConfigDetail> findTable(@RequestBody Map<String, Object> param) {
+        return mstCommissionSetService.findTable(param);
+    }
     /**
      * add by hudongyang
      * @param param

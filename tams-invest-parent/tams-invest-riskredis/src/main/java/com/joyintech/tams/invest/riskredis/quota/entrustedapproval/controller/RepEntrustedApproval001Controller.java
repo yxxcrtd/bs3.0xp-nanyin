@@ -52,12 +52,11 @@ public class RepEntrustedApproval001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepEntrustedApprovalDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepEntrustedApprovalDto> page = repEntrustedApprovalService.selectForPage(map);
         return page;

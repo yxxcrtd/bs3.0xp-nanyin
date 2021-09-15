@@ -229,6 +229,17 @@ public class FlowRiskSceneManage002Service extends CommonExportService<FlowRiskS
             param, SttSceneFtrtips.class);
         
     }
-    
+
+    /**
+     * 取情景id的序列值
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public String getNewSceneId(){
+        return restTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME +
+                "/MarketRiskSceneManage003/getNewSceneId", null, String.class);
+    }
 
 }

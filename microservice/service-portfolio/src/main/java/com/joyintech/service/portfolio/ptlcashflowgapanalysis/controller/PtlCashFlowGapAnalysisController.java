@@ -58,7 +58,7 @@ public class PtlCashFlowGapAnalysisController {
 	@PostMapping("findPage/{page}/{length}")
 	public Page<PtlCashFlowGapAnalysisDto> selectAll(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length)
-					throws Exception {
+	{
 		return ptlCashFlowGapAnalysisService.selectForPage(page, length, param);
 	}
 	
@@ -80,7 +80,7 @@ public class PtlCashFlowGapAnalysisController {
 	
 	@PostMapping("selectForList")
     public List<PtlCashFlowGapAnalysisDto> selectForList(@RequestBody Map<String, Object> param)
-                    throws Exception {
+	{
         return ptlCashFlowGapAnalysisService.selectForList(param);
     }
 	

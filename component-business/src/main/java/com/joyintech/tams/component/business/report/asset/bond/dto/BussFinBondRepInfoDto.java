@@ -178,8 +178,8 @@ public class BussFinBondRepInfoDto extends RepAssetBond{
         this.repTradeMarket = repTradeMarket;
     }
 
-
-    @Length(fieldName = "BussFinBondRepInfo.repRegistorgComment", max = 256, groups = {ValidateGroupEdit.class})
+    /***ZGBSSE-558 【中债直连】债券标的新建提交时，必填项校验不正确**/
+//    @Length(fieldName = "BussFinBondRepInfo.repRegistorgComment", max = 256, groups = {ValidateGroupEdit.class})
     public String getRepRegistorgComment(){
         return super.getRepRegistorgComment();
     }

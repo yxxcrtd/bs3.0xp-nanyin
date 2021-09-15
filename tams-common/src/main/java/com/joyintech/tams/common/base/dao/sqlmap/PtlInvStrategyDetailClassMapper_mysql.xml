@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.PtlInvStrategyDetailClassMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        <id column="STRATEGY_DET_ID" property="strategyDetId" jdbcType="VARCHAR" />
+        <id column="BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+        <result column="TYPE_2" property="type2" jdbcType="VARCHAR" />
+        <result column="TYPE_3" property="type3" jdbcType="VARCHAR" />
+        <result column="TYPE_4" property="type4" jdbcType="VARCHAR" />
+        <result column="TYPE_5" property="type5" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        STRATEGY_DET_ID STRATEGY_DET_ID, BATCH_ID BATCH_ID, TYPE_2 TYPE_2, TYPE_3 TYPE_3, 
+        TYPE_4 TYPE_4, TYPE_5 TYPE_5, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyDetailClassMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY_DETAIL_CLASS
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyDetailClassMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY_DETAIL_CLASS
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClassKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.PtlInvStrategyDetailClassMapper.Base_Column_List" />
+        from PTL_INV_STRATEGY_DETAIL_CLASS
+        where STRATEGY_DET_ID = #{strategyDetId,jdbcType=VARCHAR}
+          and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClassKey" >
+        delete from PTL_INV_STRATEGY_DETAIL_CLASS
+        where STRATEGY_DET_ID = #{strategyDetId,jdbcType=VARCHAR}
+          and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        insert into PTL_INV_STRATEGY_DETAIL_CLASS (STRATEGY_DET_ID, BATCH_ID, TYPE_2, 
+            TYPE_3, TYPE_4, TYPE_5, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{strategyDetId,jdbcType=VARCHAR}, #{batchId,jdbcType=VARCHAR}, #{type2,jdbcType=VARCHAR}, 
+            #{type3,jdbcType=VARCHAR}, #{type4,jdbcType=VARCHAR}, #{type5,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        insert into PTL_INV_STRATEGY_DETAIL_CLASS
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="strategyDetId != null" >
+                STRATEGY_DET_ID,
+            </if>
+            <if test="batchId != null" >
+                BATCH_ID,
+            </if>
+            <if test="type2 != null" >
+                TYPE_2,
+            </if>
+            <if test="type3 != null" >
+                TYPE_3,
+            </if>
+            <if test="type4 != null" >
+                TYPE_4,
+            </if>
+            <if test="type5 != null" >
+                TYPE_5,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="strategyDetId != null" >
+                #{strategyDetId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchId != null" >
+                #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="type2 != null" >
+                #{type2,jdbcType=VARCHAR},
+            </if>
+            <if test="type3 != null" >
+                #{type3,jdbcType=VARCHAR},
+            </if>
+            <if test="type4 != null" >
+                #{type4,jdbcType=VARCHAR},
+            </if>
+            <if test="type5 != null" >
+                #{type5,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        insert into PTL_INV_STRATEGY_DETAIL_CLASS(STRATEGY_DET_ID, BATCH_ID, TYPE_2, TYPE_3, 
+        TYPE_4, TYPE_5, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select STRATEGY_DET_ID, BATCH_ID, TYPE_2, TYPE_3, 
+            TYPE_4, TYPE_5, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from PTL_INV_STRATEGY_DETAIL_CLASS
+             where 1 = 1 and STRATEGY_DET_ID = #{strategyDetId,jdbcType=VARCHAR} and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        update PTL_INV_STRATEGY_DETAIL_CLASS
+        <set >
+            <if test="type2 != null" >
+                TYPE_2 = #{type2,jdbcType=VARCHAR},
+            </if>
+            <if test="type3 != null" >
+                TYPE_3 = #{type3,jdbcType=VARCHAR},
+            </if>
+            <if test="type4 != null" >
+                TYPE_4 = #{type4,jdbcType=VARCHAR},
+            </if>
+            <if test="type5 != null" >
+                TYPE_5 = #{type5,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where STRATEGY_DET_ID = #{strategyDetId,jdbcType=VARCHAR}
+          and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.PtlInvStrategyDetailClass" >
+        update PTL_INV_STRATEGY_DETAIL_CLASS
+        set TYPE_2 = #{type2,jdbcType=VARCHAR},
+            TYPE_3 = #{type3,jdbcType=VARCHAR},
+            TYPE_4 = #{type4,jdbcType=VARCHAR},
+            TYPE_5 = #{type5,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where STRATEGY_DET_ID = #{strategyDetId,jdbcType=VARCHAR}
+          and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </update>
+</mapper>

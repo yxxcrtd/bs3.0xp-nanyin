@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.basedata.marketdata.intratequote.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -104,8 +105,7 @@ public class ValIntRateQuote001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         String rateType = this.getParam("rateType");
         String rateName = this.getParam("rateName");

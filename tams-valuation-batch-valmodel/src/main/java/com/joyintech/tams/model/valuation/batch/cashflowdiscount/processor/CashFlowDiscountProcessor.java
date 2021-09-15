@@ -15,6 +15,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.service.CashFlowDiscountProcessorService;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -36,21 +37,14 @@ public class CashFlowDiscountProcessor extends BaseProcessor<NeedOperateEntity, 
      */
     @Autowired
     private CashFlowDiscountProcessorService cashFlowDiscountProcessorService;
+    private StepExecution stepExecution;
 
     @Override
     public CashFlowDiscountResult process(NeedOperateEntity items)
         throws Exception {
-        // 获取reader方法的返回值
-        CashFlowDiscountReaderResult entity = (CashFlowDiscountReaderResult)items;
-
-        Map<String, Object> thisParams = new HashMap<>();
-        thisParams.putAll(this.getParams());
-        // 将返回值塞入参数中
-        thisParams.put("READER_RESULT", entity);
-
 
         // 调用service方法进行逻辑逻辑
-        CashFlowDiscountResult result = cashFlowDiscountProcessorService.execute(thisParams);
+        CashFlowDiscountResult result = cashFlowDiscountProcessorService.execute(items,getParams(),stepExecution);
         
         //当为null时候，给予初始化
         if(result == null){

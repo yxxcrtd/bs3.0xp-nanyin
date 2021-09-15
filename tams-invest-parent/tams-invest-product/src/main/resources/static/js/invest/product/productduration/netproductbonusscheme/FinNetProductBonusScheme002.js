@@ -256,6 +256,7 @@
         }
         else{
             $(".totalAmt").show();
+            $("#unitBonusVlu").val('')
             $(".unitBonusVlu").hide();
         }
         if(isInit){

@@ -14,6 +14,7 @@ import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.service.entrust.common.service.WFlowCommonService;
 import com.joyintech.service.entrust.etrfund.dto.EtrFundDto;
@@ -61,7 +62,7 @@ public class EtrFundController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<EtrFundDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page,
-                                          @PathVariable("length") int length)throws Exception {
+                                          @PathVariable("length") int length) {
         return etrFundService.selectForPage(page,length,pageParam);
     }
     
@@ -384,7 +385,7 @@ public class EtrFundController {
     @RequestMapping("selectManeger")
     @ResponseBody
     public String selectManeger(String issuer){
-        return etrFundService.selectManeger(issuer);
+        return StringUtil.trimHtmlTag(etrFundService.selectManeger(issuer));
     }
 
     @PostMapping("/findSameNameCounterId")

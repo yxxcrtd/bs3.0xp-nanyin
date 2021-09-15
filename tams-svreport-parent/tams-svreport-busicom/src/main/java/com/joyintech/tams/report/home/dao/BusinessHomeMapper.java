@@ -74,4 +74,6 @@ public interface BusinessHomeMapper {
 	 * @return
 	 */
 	int selectChbEqudet(@Param("searchDate")String searchDate);
+
+	List<BusinessHomeDto> selectBusinessHomeInfoAll(Map<String, Object> parmMap);
 }

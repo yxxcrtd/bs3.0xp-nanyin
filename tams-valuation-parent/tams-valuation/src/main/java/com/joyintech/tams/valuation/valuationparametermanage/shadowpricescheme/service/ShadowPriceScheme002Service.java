@@ -46,7 +46,7 @@ public class ShadowPriceScheme002Service extends CommonExportService<ShadowPrice
      * @return
      * @throws Exception 
      */
-	public Page<ShadowPriceScheme002Dto> findShadowPriceDetial(Map<String, Object> pageParam) throws Exception {
+	public Page<ShadowPriceScheme002Dto> findShadowPriceDetial(Map<String, Object> pageParam) {
 //		// TODO Auto-generated method stub
 //		return super.queryForPage(()-> shadowPriceScheme002Mapper.findShadowPriceDetial(pageParam)); 
 		return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME

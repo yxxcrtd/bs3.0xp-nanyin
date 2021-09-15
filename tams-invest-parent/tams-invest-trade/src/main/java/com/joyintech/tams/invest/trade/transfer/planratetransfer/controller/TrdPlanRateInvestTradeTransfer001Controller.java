@@ -20,6 +20,7 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDto;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.dto.PlanTransferDtos;
 import com.joyintech.tams.invest.trade.transfer.planratetransfer.service.TrdPlanRateInvestTradeTransfer001Service;
@@ -28,6 +29,7 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +75,9 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
 //     */
 //    @Autowired
 //    private TrdPlanInterestDuration001Service trdPlanInterestDuration001Service;
+
+    @Autowired
+    private TrdBondInvestTrade002Service trdBondInvestTrade002Service;
     
     @Autowired
     private com.joyintech.tams.invest.trade.transfer.assign.service.TrdAssetAssignService trdAssetAssignService;
@@ -181,7 +186,7 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
     @RequestMapping("queryProdIdInfo")
     @ResponseBody
     public List<SelectOptionDto> queryProdIdInfo()
-            throws Exception {
+             {
         return trdPlanRateInvestTradeTransfer001Service.selectPortoId(RequestUtil.getPageParam());
     }
 
@@ -201,7 +206,7 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
     @RequestMapping("queryPortoAmtAndChlAmt")
     @ResponseBody
     public Map<String, Object> queryPortoAmtAndChlAmt(@RequestParam Map<String, Object> param)
-            throws Exception {
+            {
         PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
         Date sysdate = DateUtil.parse((String) param.get("cDate"));
         dto.setCdate(sysdate);
@@ -242,6 +247,26 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
 			wr.setMessage("转仓列表信息不能空", MessageType.错误消息);
 			return wr;
 		}
+        if (StringUtil.isNotEmpty(dto.getChlId())) {
+            Integer count;
+            String str = "";
+            Map<String, Object> sMap = new HashMap<>();
+            for (PlanTransferDtos ptl : dto.getPlanTransferDtos()) {
+                sMap.put("chlId", dto.getChlId());
+                sMap.put("counterId", ptl.getPortfolioId());
+                count = trdBondInvestTrade002Service.selectchlTrade(sMap);
+                if (count <= 0) {
+                    if (!StringUtil.equals(str, "")) {
+                        str += "</br>";
+                    }
+                    str += "交易对手(" + ptl.getPortfolioId() + ")通过一次性通道投资请先进行划款！";
+                }
+            }
+            if(StringUtil.isNotEmpty(str)){
+                wr.setMessage(str, MessageType.错误消息);
+                return wr;
+            }
+        }
 		//查询计划类利率型资产存续期交易 状态为 01-待处理、03-流程中 的数据  2020-10-22 start
 		/*Map<String, Object> params = new HashMap<String,Object>();
 		params.put("finprodId", dto.getFinprodId());//金融产品代码
@@ -299,8 +324,7 @@ public class TrdPlanRateInvestTradeTransfer001Controller extends BaseController 
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) PlanTransferDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) PlanTransferDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

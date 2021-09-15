@@ -66,7 +66,7 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @since 1.0
      */
     public Page<CeAssetGroupManagement001Dto> selectForPage(int page, int length,
-                                                            Map<String, Object> param) throws Exception {
+                                                            Map<String, Object> param) {
         return super.queryForPage(page, length, () -> ceAssetGroupManagementMapper.selectForPage(param));
     }
 
@@ -173,7 +173,7 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @since 1.0
      */
     public Page<CeAssetGroupManagement002Dto> selectAssetInfo(Map<String, Object> param,int page,int length)
-        throws Exception {
+    {
         Page<CeAssetGroupManagement001Dto> page0 = super.queryForPage(page,length,() -> ceAssetGroupManagementMapper.selectAssetInfo(param));
         List<CeAssetGroupManagement002Dto> listObj = new ArrayList<>();
         for(CeAssetGroupManagement001Dto dto:page0.getRoot()){
@@ -232,7 +232,7 @@ public class CeAssetGroupManagementService extends BaseService<CeAssetGroupManag
      * @since 1.0
      */
     public Page<CeAssetGroupManagement001Dto> getAssetDetailBySeqno(int page, int length,
-                                                                    Map<String, Object> param) throws Exception {
+                                                                    Map<String, Object> param) {
         return super.queryForPage(page, length, () ->ceAssetGroupManagementMapper.getAssetDetailBySeqno(param));
     }
 

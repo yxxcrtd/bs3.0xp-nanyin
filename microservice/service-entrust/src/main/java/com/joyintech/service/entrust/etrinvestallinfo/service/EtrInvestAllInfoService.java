@@ -90,7 +90,8 @@ public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrInvestAllInfoDto> selectForPage(int page, int length,Map<String, Object> param) throws Exception{
+    public Page<EtrInvestAllInfoDto> selectForPage(int page, int length,Map<String, Object> param)
+    {
         param.put("ASSET_TYPE_07", DictCodeList.平安资产类型_拆借.getValue());
         param.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
         param.put("ASSET_TYPE_10", DictCodeList.平安资产类型_买断式回购.getValue());
@@ -132,7 +133,8 @@ public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
      * @see
      * @since 1.0
      */
-    public List<EtrInvestAllInfoDto> selectExportPB(Map<String, Object> param) throws Exception{
+    public List<EtrInvestAllInfoDto> selectExportPB(Map<String, Object> param)
+    {
         param.put("ASSET_TYPE_08", DictCodeList.平安资产类型_质押式回购.getValue());
         param.put("assetBond", DictCodeList.平安资产类型_债券.getValue());
        

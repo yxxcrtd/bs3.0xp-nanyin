@@ -63,7 +63,7 @@ public class FinProductBuildController {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<FinProductBuild001Dto> selectForPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return finProductBuildService.selectForPage(page, length, param);
 	}
 	

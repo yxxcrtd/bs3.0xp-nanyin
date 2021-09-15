@@ -70,6 +70,6 @@ public interface ValFinPayInterestStdInfoService {
      * @see
      * @since 1.0
      */
-     List<FinCashPlanDto> createAssetPayInteresPlan(ValFinPayInterestStdInfoDto dto) throws ParseException;
+     List<FinCashPlanDto> createAssetPayInteresPlan(ValFinPayInterestStdInfoDto dto) throws ParseException, InstantiationException, IllegalAccessException;
     
 }

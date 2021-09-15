@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -384,8 +385,7 @@ public class FinProductModule002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Valid FinProductModuleInfo002Dto dto,
-                           BindingResult result)
-        throws Exception {
+                           BindingResult result) throws WorkFlowException {
         if (result.hasErrors()) {
             return new AjaxResult(result);
         }

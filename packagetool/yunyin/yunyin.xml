@@ -27,11 +27,14 @@
         <module>../../tams-disclosure-busicommon</module>
         <module>../../tams-disclosure-common</module>
         <module>../../tams-disclosure-interf</module>
+        <module>../../background-component/component-common</module>
+        <module>../../background-component/component-check</module>
+        <module>../../background-component/msg-generate</module>
         <module>../../tams-svreport-common</module>
         <module>../../tams-valuation-common</module>
         <module>../../tams-common-basicdata</module>
-        <module>../../tams-valuation-batch-valmodel</module>
-        <module>../../tams-valuation-batch-lossmodel</module>
+<!--        <module>../../tams-valuation-batch-valmodel</module>-->
+<!--        <module>../../tams-valuation-batch-lossmodel</module>-->
 		<!-- 后台服务 -->
         <module>../../microservice/service-chb</module>
 		<module>../../microservice/service-chb3</module>
@@ -48,13 +51,17 @@
 
         <!-- 批处理 -->
 		<module>../../tams-disclosure-batch</module>
+        <module>../../tams-valuation-api</module>
         <module>../../tams-valuation-batch</module>
+        <module>../../tams-valuation-batch-lossmodel</module>
+        <module>../../tams-valuation-batch-valmodel</module>
         <module>../../tams-svreport-batch</module>
         <module>../../tams-system/yunying/batch</module>
 
         <!-- 前台应用 -->
 		<module>../../tams-disclosure-parent</module>
         <module>../../tams-svreport-parent</module>
+        <module>../../tams-invest-common</module>
         <module>../../tams-valuation-parent</module>
         <module>../../tams-valuation-basicdata</module>
         <module>../../tams-system/yunying/app</module>

@@ -10,18 +10,17 @@
 
 package com.joyintech.service.interf.wind.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.interf.core.constant.InterfDictCode;
 import com.joyintech.service.interf.core.constant.InterfDictCodeList;
 import com.joyintech.service.interf.core.service.InterfBaseService;
 import com.joyintech.service.interf.dobatch.dto.BatchResultDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * wind数据接入Device
@@ -66,8 +65,7 @@ public abstract class WindService<E> extends InterfBaseService {
      * @see
      * @since 1.0
      */
-    public abstract int insert(E entity)
-        throws Exception;
+    public abstract int insert(E entity);
 
     /**
      * 执行入口

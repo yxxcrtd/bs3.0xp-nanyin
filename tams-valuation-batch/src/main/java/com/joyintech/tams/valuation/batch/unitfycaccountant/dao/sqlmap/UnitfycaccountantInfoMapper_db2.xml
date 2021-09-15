@@ -136,11 +136,11 @@
 		 </if>
     )
 		union all
-		select N.task_id,N.task_Grp_Type,N.task_grp_id,N.task_grp_name,N.p_task_grp_id,N.order_no
-		from bok_batch_task_grp t,N
-		where t.p_task_grp_id=N.task_grp_id
+		select bbtg.task_id,bbtg.task_Grp_Type,bbtg.task_grp_id,bbtg.task_grp_name,bbtg.p_task_grp_id,bbtg.order_no
+		from bok_batch_task_grp t,N bbtg
+		where t.p_task_grp_id=bbtg.task_grp_id
 		<if test="batchName != null and batchName != ''">
-		 and (UPPER(N.task_grp_name) LIKE concat(concat('%', UPPER(#{batchName})),'%') OR UPPER(N.task_grp_name) LIKE concat(concat('%', UPPER(#{batchName})),'%') )
+		 and (UPPER(bbtg.task_grp_name) LIKE concat(concat('%', UPPER(#{batchName})),'%') OR UPPER(bbtg.task_grp_name) LIKE concat(concat('%', UPPER(#{batchName})),'%') )
 		 </if>
 		)
         SELECT distinct

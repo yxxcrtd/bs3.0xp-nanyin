@@ -53,7 +53,7 @@ public interface ValBussFinRepaymentService {
      * @see
      * @since 1.0
      */
-    List<FinCashPlanDto> createAssetRePaymentPlan(ValBussFinRepaymentDto dto) throws ParseException;
+    List<FinCashPlanDto> createAssetRePaymentPlan(ValBussFinRepaymentDto dto) throws ParseException, InstantiationException, IllegalAccessException;
 	    
     /**
      * 根据新的计息截止日获取还款日（支付日）

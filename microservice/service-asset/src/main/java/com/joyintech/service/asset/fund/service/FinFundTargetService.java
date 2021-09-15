@@ -115,7 +115,7 @@ public class FinFundTargetService extends BaseService<FinFundTargetDto> {
      * @since 1.0
      */
     public Page<FinFundTargetDto> selectForPage(int page, int length, Map<String, Object> param) 
-        throws Exception {
+    {
         param.put("CASH_TYPE_2", DictCodeListExt1.现金流二级类型_利息.getValue());
         param.put("FIN_CASH_BUSINESS_TYPE", DictCodeListExt1.现金流业务类型_金融产品.getValue());
         param.put("FINPROD_TYPE_TG_F06", DictCodeListExt1.金融产品类型_投管用_基金.getValue());

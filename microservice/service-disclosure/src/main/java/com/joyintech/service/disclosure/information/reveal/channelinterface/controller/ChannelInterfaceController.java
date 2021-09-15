@@ -64,7 +64,7 @@ public class ChannelInterfaceController extends BaseController{
 	@ResponseBody
 	public Page<ChannelInterfaceNew001Dto> findPage(@RequestBody Map<String, Object> param,
 			@PathVariable("page") int page, @PathVariable("length") int length) 
-		throws Exception{
+	{
 		return channelInterface001Service.findPage(page, length, param);
 	}
 	

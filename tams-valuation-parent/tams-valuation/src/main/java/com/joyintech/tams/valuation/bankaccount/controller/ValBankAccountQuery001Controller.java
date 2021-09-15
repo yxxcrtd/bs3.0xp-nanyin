@@ -97,7 +97,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getProduct")
     public Page<SelectOptionDto> getProduct()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getPageParam();
         return valAssetReclassification001Service.getBookSetId(map);
     }
@@ -113,7 +113,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
     @RequestMapping("findIncomeStatisticsPage")
     @ResponseBody
     public Page<ValIncomeStatisticsQuery001Dto> findIncomeStatisticsPage()
-        throws Exception {
+         {
         return valIncomeStatisticsQuery001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -131,7 +131,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
     @ResponseBody
     public AjaxResult checkIncomeStatistics(@Valid @RequestBody ValIncomeStatisticsQuery001Dto dto,
                                             BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -168,7 +168,7 @@ public class ValBankAccountQuery001Controller extends BaseController {
     @RequestMapping("findAccountDetailsPage")
     @ResponseBody
     public Page<AccountDetailsQuery001Dto> findAccountDetailsPage()
-        throws Exception {
+         {
         return accountDetailsQuery001Service.findAccountDetailsPage(RequestUtil.getPageParam());
     }
 

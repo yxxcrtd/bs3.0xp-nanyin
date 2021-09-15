@@ -5,13 +5,13 @@
 	<select id="getBatchLog" resultType="com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog">
 		select *
 		from chb_subinfo_batch_log
-		where deal_status = '04'
+		where deal_status = '04' and task_id='3075'
 	</select>
 
 	<select id="countExportNum" parameterType="map" resultType="int">
-		select count(*)
+		select count(1)
 		from CHB_EQUDET_SUB ciis
-		left join CHB_SUBMIT_STATUS status
+		left join CHB_EQUDET_SUBMIT_STATUS status
 		on ciis.sumit_seq = status.seqno
 		<where>
 			<if test="submitDeadLineStart != null and submitDeadLineStart != ''">
@@ -225,7 +225,7 @@
 				and ciis.BUSI_SEQNO = #{busiSeqno,jdbcType=VARCHAR}
 			</if>
 		</where>
-		order by ciis.CHB_SUBMIT_DEADLINE,ciis.UPDATE_TIME desc
+		order by ciis.CHB_SUBMIT_DEADLINE,ciis.BUSI_SEQNO desc
         )tmp_page
 		)
 		WHERE

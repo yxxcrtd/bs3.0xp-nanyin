@@ -134,4 +134,9 @@ public class RskValAssetCode001Service extends CommonExportService<RskValtblAsse
            ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/getCountByPtl?assetSubMapId="+assetSubMapId,
            Integer.class);
    }
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(Map<String, Object> param) {
+        return restTemplate.postForList(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/findListDtl",
+                param,RskValtblAssetSubMapDtlDto.class);
+    }
 }

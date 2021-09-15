@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,13 +70,13 @@ public class PeriodicManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getFinprodIds")
-	public List<SelectOptionDto> getFinprodid(){
+	public Page<SelectOptionDto> getFinprodid(){
         return periodicManagement001Service.getFinprodIds(RequestUtil.getPageParam());
     }
 
 	@ResponseBody
 	@RequestMapping("selectForPage")
-	public Page<PeriodicManagement001Dto> selectForPage() throws Exception {
+	public Page<PeriodicManagement001Dto> selectForPage() {
 		return periodicManagement001Service.selectForPage(RequestUtil.getPageParam());
 	}
 	
@@ -105,13 +106,12 @@ public class PeriodicManagement001Controller extends BaseController {
      * @param dto 验证的实体类
      * @param br 错误结果
      * @return 错误信息
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("delete")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PeriodicManagement001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) PeriodicManagement001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -141,8 +141,7 @@ public class PeriodicManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return periodicManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

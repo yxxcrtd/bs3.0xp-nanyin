@@ -1,0 +1,355 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.HxBalanceMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.HxBalance">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="crt_mon" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="pbc_assetscode" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="curr_type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="qc_qm_flag" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="deposit" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="curr_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="cred_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="bond_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="feibiao_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="quanyi_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="deriva_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="other_invest" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="inter_accr" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="in_fund" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="huigou_fund" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="deriva_debt" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="accr_profit" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="capital_shouyi" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="capital_jingzhi" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="accr_income" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="tax_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="yuji_fuzhai" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="other_pay" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="undis_profit" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="busi_date" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, crt_mon, pbc_assetscode, curr_type, qc_qm_flag, deposit, curr_invest, cred_invest,
+    bond_invest, feibiao_invest, quanyi_invest, deriva_invest, other_invest, inter_accr,
+    in_fund, huigou_fund, deriva_debt, accr_profit, capital_shouyi, capital_jingzhi,
+    accr_income, tax_pay, yuji_fuzhai, other_pay, undis_profit, remark, busi_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from hx_balance
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from hx_balance
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
+    insert into hx_balance (id, crt_mon, pbc_assetscode,
+                            curr_type, qc_qm_flag, deposit,
+                            curr_invest, cred_invest, bond_invest,
+                            feibiao_invest, quanyi_invest, deriva_invest,
+                            other_invest, inter_accr, in_fund,
+                            huigou_fund, deriva_debt, accr_profit,
+                            capital_shouyi, capital_jingzhi, accr_income,
+                            tax_pay, yuji_fuzhai, other_pay,
+                            undis_profit, remark, busi_date
+    )
+    values (#{id,jdbcType=INTEGER}, #{crtMon,jdbcType=VARCHAR}, #{pbcAssetscode,jdbcType=VARCHAR},
+            #{currType,jdbcType=VARCHAR}, #{qcQmFlag,jdbcType=VARCHAR}, #{deposit,jdbcType=DECIMAL},
+            #{currInvest,jdbcType=DECIMAL}, #{credInvest,jdbcType=DECIMAL}, #{bondInvest,jdbcType=DECIMAL},
+            #{feibiaoInvest,jdbcType=DECIMAL}, #{quanyiInvest,jdbcType=DECIMAL}, #{derivaInvest,jdbcType=DECIMAL},
+            #{otherInvest,jdbcType=DECIMAL}, #{interAccr,jdbcType=DECIMAL}, #{inFund,jdbcType=DECIMAL},
+            #{huigouFund,jdbcType=DECIMAL}, #{derivaDebt,jdbcType=DECIMAL}, #{accrProfit,jdbcType=DECIMAL},
+            #{capitalShouyi,jdbcType=DECIMAL}, #{capitalJingzhi,jdbcType=DECIMAL}, #{accrIncome,jdbcType=DECIMAL},
+            #{taxPay,jdbcType=DECIMAL}, #{yujiFuzhai,jdbcType=DECIMAL}, #{otherPay,jdbcType=DECIMAL},
+            #{undisProfit,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{busiDate,jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
+    insert into hx_balance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="crtMon != null">
+        crt_mon,
+      </if>
+      <if test="pbcAssetscode != null">
+        pbc_assetscode,
+      </if>
+      <if test="currType != null">
+        curr_type,
+      </if>
+      <if test="qcQmFlag != null">
+        qc_qm_flag,
+      </if>
+      <if test="deposit != null">
+        deposit,
+      </if>
+      <if test="currInvest != null">
+        curr_invest,
+      </if>
+      <if test="credInvest != null">
+        cred_invest,
+      </if>
+      <if test="bondInvest != null">
+        bond_invest,
+      </if>
+      <if test="feibiaoInvest != null">
+        feibiao_invest,
+      </if>
+      <if test="quanyiInvest != null">
+        quanyi_invest,
+      </if>
+      <if test="derivaInvest != null">
+        deriva_invest,
+      </if>
+      <if test="otherInvest != null">
+        other_invest,
+      </if>
+      <if test="interAccr != null">
+        inter_accr,
+      </if>
+      <if test="inFund != null">
+        in_fund,
+      </if>
+      <if test="huigouFund != null">
+        huigou_fund,
+      </if>
+      <if test="derivaDebt != null">
+        deriva_debt,
+      </if>
+      <if test="accrProfit != null">
+        accr_profit,
+      </if>
+      <if test="capitalShouyi != null">
+        capital_shouyi,
+      </if>
+      <if test="capitalJingzhi != null">
+        capital_jingzhi,
+      </if>
+      <if test="accrIncome != null">
+        accr_income,
+      </if>
+      <if test="taxPay != null">
+        tax_pay,
+      </if>
+      <if test="yujiFuzhai != null">
+        yuji_fuzhai,
+      </if>
+      <if test="otherPay != null">
+        other_pay,
+      </if>
+      <if test="undisProfit != null">
+        undis_profit,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="busiDate != null">
+        busi_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="crtMon != null">
+        #{crtMon,jdbcType=VARCHAR},
+      </if>
+      <if test="pbcAssetscode != null">
+        #{pbcAssetscode,jdbcType=VARCHAR},
+      </if>
+      <if test="currType != null">
+        #{currType,jdbcType=VARCHAR},
+      </if>
+      <if test="qcQmFlag != null">
+        #{qcQmFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null">
+        #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="currInvest != null">
+        #{currInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="credInvest != null">
+        #{credInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="bondInvest != null">
+        #{bondInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="feibiaoInvest != null">
+        #{feibiaoInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="quanyiInvest != null">
+        #{quanyiInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="derivaInvest != null">
+        #{derivaInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="otherInvest != null">
+        #{otherInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="interAccr != null">
+        #{interAccr,jdbcType=DECIMAL},
+      </if>
+      <if test="inFund != null">
+        #{inFund,jdbcType=DECIMAL},
+      </if>
+      <if test="huigouFund != null">
+        #{huigouFund,jdbcType=DECIMAL},
+      </if>
+      <if test="derivaDebt != null">
+        #{derivaDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="accrProfit != null">
+        #{accrProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalShouyi != null">
+        #{capitalShouyi,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalJingzhi != null">
+        #{capitalJingzhi,jdbcType=DECIMAL},
+      </if>
+      <if test="accrIncome != null">
+        #{accrIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxPay != null">
+        #{taxPay,jdbcType=DECIMAL},
+      </if>
+      <if test="yujiFuzhai != null">
+        #{yujiFuzhai,jdbcType=DECIMAL},
+      </if>
+      <if test="otherPay != null">
+        #{otherPay,jdbcType=DECIMAL},
+      </if>
+      <if test="undisProfit != null">
+        #{undisProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="busiDate != null">
+        #{busiDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
+    update hx_balance
+    <set>
+      <if test="crtMon != null">
+        crt_mon = #{crtMon,jdbcType=VARCHAR},
+      </if>
+      <if test="pbcAssetscode != null">
+        pbc_assetscode = #{pbcAssetscode,jdbcType=VARCHAR},
+      </if>
+      <if test="currType != null">
+        curr_type = #{currType,jdbcType=VARCHAR},
+      </if>
+      <if test="qcQmFlag != null">
+        qc_qm_flag = #{qcQmFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="deposit != null">
+        deposit = #{deposit,jdbcType=DECIMAL},
+      </if>
+      <if test="currInvest != null">
+        curr_invest = #{currInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="credInvest != null">
+        cred_invest = #{credInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="bondInvest != null">
+        bond_invest = #{bondInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="feibiaoInvest != null">
+        feibiao_invest = #{feibiaoInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="quanyiInvest != null">
+        quanyi_invest = #{quanyiInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="derivaInvest != null">
+        deriva_invest = #{derivaInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="otherInvest != null">
+        other_invest = #{otherInvest,jdbcType=DECIMAL},
+      </if>
+      <if test="interAccr != null">
+        inter_accr = #{interAccr,jdbcType=DECIMAL},
+      </if>
+      <if test="inFund != null">
+        in_fund = #{inFund,jdbcType=DECIMAL},
+      </if>
+      <if test="huigouFund != null">
+        huigou_fund = #{huigouFund,jdbcType=DECIMAL},
+      </if>
+      <if test="derivaDebt != null">
+        deriva_debt = #{derivaDebt,jdbcType=DECIMAL},
+      </if>
+      <if test="accrProfit != null">
+        accr_profit = #{accrProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalShouyi != null">
+        capital_shouyi = #{capitalShouyi,jdbcType=DECIMAL},
+      </if>
+      <if test="capitalJingzhi != null">
+        capital_jingzhi = #{capitalJingzhi,jdbcType=DECIMAL},
+      </if>
+      <if test="accrIncome != null">
+        accr_income = #{accrIncome,jdbcType=DECIMAL},
+      </if>
+      <if test="taxPay != null">
+        tax_pay = #{taxPay,jdbcType=DECIMAL},
+      </if>
+      <if test="yujiFuzhai != null">
+        yuji_fuzhai = #{yujiFuzhai,jdbcType=DECIMAL},
+      </if>
+      <if test="otherPay != null">
+        other_pay = #{otherPay,jdbcType=DECIMAL},
+      </if>
+      <if test="undisProfit != null">
+        undis_profit = #{undisProfit,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="busiDate != null">
+        busi_date = #{busiDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.HxBalance">
+    update hx_balance
+    set crt_mon = #{crtMon,jdbcType=VARCHAR},
+        pbc_assetscode = #{pbcAssetscode,jdbcType=VARCHAR},
+        curr_type = #{currType,jdbcType=VARCHAR},
+        qc_qm_flag = #{qcQmFlag,jdbcType=VARCHAR},
+        deposit = #{deposit,jdbcType=DECIMAL},
+        curr_invest = #{currInvest,jdbcType=DECIMAL},
+        cred_invest = #{credInvest,jdbcType=DECIMAL},
+        bond_invest = #{bondInvest,jdbcType=DECIMAL},
+        feibiao_invest = #{feibiaoInvest,jdbcType=DECIMAL},
+        quanyi_invest = #{quanyiInvest,jdbcType=DECIMAL},
+        deriva_invest = #{derivaInvest,jdbcType=DECIMAL},
+        other_invest = #{otherInvest,jdbcType=DECIMAL},
+        inter_accr = #{interAccr,jdbcType=DECIMAL},
+        in_fund = #{inFund,jdbcType=DECIMAL},
+        huigou_fund = #{huigouFund,jdbcType=DECIMAL},
+        deriva_debt = #{derivaDebt,jdbcType=DECIMAL},
+        accr_profit = #{accrProfit,jdbcType=DECIMAL},
+        capital_shouyi = #{capitalShouyi,jdbcType=DECIMAL},
+        capital_jingzhi = #{capitalJingzhi,jdbcType=DECIMAL},
+        accr_income = #{accrIncome,jdbcType=DECIMAL},
+        tax_pay = #{taxPay,jdbcType=DECIMAL},
+        yuji_fuzhai = #{yujiFuzhai,jdbcType=DECIMAL},
+        other_pay = #{otherPay,jdbcType=DECIMAL},
+        undis_profit = #{undisProfit,jdbcType=DECIMAL},
+        remark = #{remark,jdbcType=VARCHAR},
+        busi_date = #{busiDate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -69,7 +69,7 @@ public class DataPushEclResultWriter extends BaseWriter<AssetLossResultProcessDt
                 batchParam.setFinprodId(resultDto.getProdId());
                 batchParam.setTaskId(taskId);
                 batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_正常结束.getValue());
+                batchParam.setType(ModelDictCodeList.模型计算结果_成功.getValue());
                 batchParam.setMsg("【减值模型数据推送批处理】：执行批处理【" + resultDto.getProdId()+ "】成功结束！");
                 bBatchLogResultList.add(batchParam);
             }
@@ -83,7 +83,7 @@ public class DataPushEclResultWriter extends BaseWriter<AssetLossResultProcessDt
                 batchParam.setFinprodId(processDto.getProdId());
                 batchParam.setTaskId(taskId);
                 batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.批处理执行结果_异常结束.getValue());//EXP 失败
+                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());//EXP 失败
                 batchParam.setMsg("【减值模型数据推送批处理】：计算错误");
                 bBatchLogResultList.add(batchParam);
             }

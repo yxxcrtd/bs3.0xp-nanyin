@@ -3,9 +3,9 @@
 <mapper namespace="com.joyintech.tams.valuation.batch.tablepartition.dao.TablePartitionMapper_mysql">
 	<select id="findAllUnPartionsByBooksetId" resultType="com.joyintech.tams.valuation.batch.tablepartition.dto.TablePartitionNameDto">
     	SELECT
-		    tablename,
-		    partitionName,
-		    bookset_id "partValue",
+		    a.tablename,
+		    a.partitionName,
+		    a.bookset_id "partValue",
 		    'BOOKSET_ID_DEFAULT' "defPartName"
 		FROM
 		    (
@@ -17,7 +17,7 @@
 		            user_tab_partitions u,
 		            bok_bookset b
 		        WHERE
-		                bookset_type = '02'
+		                b.bookset_type = '02'
 		         <if test="tableNames !=null">
 		            AND u.table_name IN 
                         <foreach collection="tableNames" item="tableName" open="( " close=" )" separator=",">

@@ -1,0 +1,1 @@
+update CHB_DATACHECK_RULE_INV set CHECKCLASS = 'com.joyintech.service.chb.common.service.ChbBaseCheckLib' where CHECKCLASS = 'com.joyintech.tams.invest.common.ChbBaseCheckLib';

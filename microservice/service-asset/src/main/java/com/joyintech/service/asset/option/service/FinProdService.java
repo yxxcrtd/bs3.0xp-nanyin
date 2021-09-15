@@ -43,7 +43,7 @@ public class FinProdService extends BaseService<FinOptionTargetDto> {
      * @throws Exception
      */
     public Page<FinOptionTargetDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         //导出时考虑标的类型被多选的情况
         String type =(String)param.get("targetType");
         if(StringUtil.isNotEmpty(type) && type.contains(",")){

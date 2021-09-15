@@ -50,7 +50,7 @@ public class InterfG1003Service extends SendEsbService<InterfG1003InEntity, Inte
      */
     @Override
     public InterfG1003InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         // 参数取得
         TradeClearDto dto = (TradeClearDto)param;
         String orderid = dto.getOrderOrTradeNo();
@@ -67,7 +67,7 @@ public class InterfG1003Service extends SendEsbService<InterfG1003InEntity, Inte
      */
     @Override
     public int saveInterfData(InterfG1003OutEntity entity)
-        throws Exception {
+    {
         // 无需登录接口表
         return 0;
     }
@@ -77,7 +77,7 @@ public class InterfG1003Service extends SendEsbService<InterfG1003InEntity, Inte
      */
     @Override
     public int saveBusinessData(InterfG1003OutEntity entity)
-        throws Exception {
+    {
         // 无需登录业务表
         return 0;
     }

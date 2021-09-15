@@ -102,7 +102,7 @@ public class CompintroductionService extends WindService<InterfCompintroduction>
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfCompintroduction entity) throws Exception {
+	public int insert(InterfCompintroduction entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 接口表登录

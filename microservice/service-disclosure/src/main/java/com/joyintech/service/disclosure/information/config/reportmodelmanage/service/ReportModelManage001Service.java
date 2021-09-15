@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ import com.joyintech.tams.common.base.dao.RepInfoMapper;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.util.JasparConnectUtilService;
 import com.joyintech.tams.disclosure.common.common.util.OfficeMergeUtil;
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * 记账凭证查询service
@@ -85,7 +89,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String exportFilePath = CacheUtil.getSysParam(
                 GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String zipFileName = FileNameUtil.createFileName("zip");
-            File zipFile = new File(exportFilePath + File.separator + zipFileName);
+            File zipFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             FileOutputStream stream = null;
             ZipOutputStream  zipOut =null;
             try{
@@ -102,7 +106,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
                              zipOut.write(tmp);
                          }
                       }catch (Exception e) {
- //                         e.printStackTrace();
+ //                       logger.error(e.getMessage(),e);
                           logger.error("error:",e);
                       }finally{
                           if(input!=null){
@@ -168,7 +172,6 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
               dto.setName(uploadFile.getSrcName());
               dto.setTemLoad(uploadFile.getTargetFile().getPath());
         } catch (Exception e) {
- //           e.printStackTrace();
         	logger.error("error:",e);
         }
         
@@ -202,7 +205,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws Exception {
+        public ResponseEntity<byte[]> mergeExport(List<ReportModelManage001Dto> list) throws IOException {
             List<String> srcFileList = new ArrayList<String>();
             for (ReportModelManage001Dto reportModelManage001Dto : list) {
                 createExcel(reportModelManage001Dto);
@@ -211,7 +214,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             String fileType = list.get(0).getFileType();
             String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
             String mergeExportFileName = FileNameUtil.createFileName(fileType);
-            File exportFile = new File(exportFilePath + File.separator + mergeExportFileName);
+            File exportFile = new SafelyFile(exportFilePath + File.separator + mergeExportFileName);
             if("docx".equals(fileType)){
                 OfficeMergeUtil.mergeWord(exportFilePath + File.separator + mergeExportFileName, srcFileList);
             }else if("xls".equals(fileType) || "xlsx".equals(fileType)){
@@ -229,7 +232,7 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
          * @see
          * @since 1.0
          */
-        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws Exception {
+        public ResponseEntity<byte[]> mergeExportSingle(ReportModelManage001Dto reportModelManage001Dto) throws IOException {
         	//连接报表服务器并且将文件下载到本地
             createExcel(reportModelManage001Dto);
             //文件类型
@@ -245,12 +248,12 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
             }
             
             //获取已经下载到本地的文件
-            File exportFile = new File(reportModelManage001Dto.getTemLoad());
+            File exportFile = new SafelyFile(reportModelManage001Dto.getTemLoad());
             
             return ExportUtil.export(fileName, exportFile, true);
         }
         
-        public List<Map<String,String>> searchReports(Map<String,Object> params) throws Exception{
+        public List<Map<String,String>> searchReports(Map<String,Object> params) throws IOException, ParserConfigurationException, SAXException {
         	//后台批处理报表地址单独啦出来
     		String serverUrl = CacheUtil.getSysParam(ReportGlobalConstant.REPORT_SERVER_URL);
     		//用户名
@@ -276,7 +279,8 @@ public class ReportModelManage001Service extends CommonExportService<ReportModel
     	 * @param pageParam
     	 * @return
     	 */
-    	public Page<ReportModelManage001Dto> findByPage(int page, int length, Map<String, Object> params) throws Exception {
+    	public Page<ReportModelManage001Dto> findByPage(int page, int length, Map<String, Object> params)
+        {
     		return super.queryForPageForSelectReturn(page, length, () -> reportModelManage001Mapper.searchReports(params));
     	}
 }

@@ -87,7 +87,7 @@ public class FlowRiskStressTestController {
 //    @DTXTransaction
 //    @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("Asset")
-    public FlowRiskStressTest001Dto Asset(@RequestBody FlowRiskStressTest001Dto dto) throws Exception {
+    public FlowRiskStressTest001Dto Asset(@RequestBody FlowRiskStressTest001Dto dto) {
         return flowRiskStressTestService.asset(dto);
     }
     

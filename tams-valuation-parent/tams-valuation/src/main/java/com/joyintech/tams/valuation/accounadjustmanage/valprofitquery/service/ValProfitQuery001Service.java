@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.valprofitquery.service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
@@ -115,12 +116,12 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         String[] strArr = reportDate.split(",")[0].split("-");
         if (DictCodeListExt1.报表期限类型_年报.getValue().equals(reportTermType)) {// 年底
         	//update yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
-        	//year = Integer.valueOf(strArr[0]);
-            //month += 12;
-            //day = 31;
-            year = Integer.valueOf(strArr[0]);
-            month += Integer.valueOf(strArr[1]);
-            day = Integer.valueOf(strArr[2]);
+        	year = Integer.valueOf(strArr[0]);
+            month += 12;
+            day = 31;
+//            year = Integer.valueOf(strArr[0]);
+//            month += Integer.valueOf(strArr[1]);
+//            day = Integer.valueOf(strArr[2]);
            
         }
         if (DictCodeListExt1.报表期限类型_半年报.getValue().equals(reportTermType)) {
@@ -243,7 +244,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
     public ResponseEntity<byte[]> exportExcel(Map<String, Object> params)
             throws ParseException, IOException {
         ExportFileDto exportFileDto = createExcel(params);
-        File file = new File(exportFileDto.getFilePath());
+        File file = new SafelyFile(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
     }
 
@@ -276,7 +277,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         String exportFilePath = CacheUtil.getSysParam(GlobalConstant.COM_PROP_ACCESS_EXPORTPATH);
         String fileName = prefix + "_" + reportDate + "_利润表" + ".xls";
         String tempName = "ValProfitQuery.xls";
-        String tplFlodPath = "accounadjustmanage/valprofitquery/ValProfitQuery.xls";
+        String tplFlodPath = "accounadjustmanage" + File.separator + "valprofitquery" + File.separator + "ValProfitQuery.xls";
         String tplPath = FileNameUtil.getTplFile(tplFlodPath);
         String outPath = exportFilePath + File.separator + fileName;
 
@@ -319,7 +320,7 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         try {
             
             //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
+            File templeteFile = new SafelyFile(tplPath);
             //文件存在情况,直接该路径获取文件流
             if (templeteFile.exists()) {
                 stream = new FileInputStream(templeteFile);

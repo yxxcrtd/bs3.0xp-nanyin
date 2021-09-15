@@ -203,7 +203,6 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 						ChbAstValueRegist001Dto.class);
 				pageParam.put("astValueList", astValueList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {
@@ -223,6 +222,9 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 			// 将报送状态当做多选下拉框处理
 			if (StringUtil.isNotBlank(sendStatus)) {
 				pageParam.put("sendStatusList", StringUtil.splitToList(GlobalConstant.COMMA, sendStatus));
+				if(StringUtil.splitToList(GlobalConstant.COMMA, sendStatus).contains(DictCodeListExt2.报送状态_未报送.getValue())){
+					pageParam.put("notSubmitStatus", DictCodeListExt2.报送状态_未报送.getValue());
+				}
 			}
 			// 将反馈状态当做多选下拉框处理
 			if (StringUtil.isNotBlank(submitFeedbackStatus)) {
@@ -604,7 +606,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
  		int dataCount = investList.size();
  		if (dataCount <= maxDataCountOneTime) {
  			assetInfoRegist001Mapper.mergeSubStatusList(assetStatusList);
-// 			chbAstValueRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
+			chbAstValueRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, investList);
  			return;
  		}
 
@@ -625,8 +627,8 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
  		for (int i = 0; i < part; i++) {
  			logger.info("单次更新登记表start===");
  			assetInfoRegist001Mapper.mergeSubStatusList(assetStatusList.subList(0, maxDataCountOneTime));
- 			
- 			
+			chbAstValueRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus,newDataList.subList(0, maxDataCountOneTime));
+			newDataList.subList(0, maxDataCountOneTime).clear();
  			assetStatusList.subList(0, maxDataCountOneTime).clear();
  			logger.info("单次更新登记表end===");
  		}
@@ -634,6 +636,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
  		if (CollectionUtils.isNotEmpty(newDataList)) {
  			logger.info("单次更新登记表start===");
  			assetInfoRegist001Mapper.mergeSubStatusList(assetStatusList);
+			chbAstValueRegist001Mapper.updateInterfSubmitAndSeqBatch(sendStatus, newDataList);
  			logger.info("单次更新登记表end===");
  		}
  	}
@@ -700,7 +703,7 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 			}
 			//删除删除登记数据
             assetInfoRegist001Mapper.deleteSubStausEx(registSeqList);
-
+			chbAstValueRegist001Mapper.cancelMannultRegist(list);
 //        	//查询his表，取最新的已报送数据
 // 			List<String> seqnolist = chbAstValSubHisMapper.selectByprodId(list);
 // 			chbAstValueRegist001Mapper.cancelMannultRegist(list);
@@ -784,7 +787,6 @@ public class ChbAstValueRegist001Service extends SvrCommonExportService<ChbAstVa
 						ChbAstValueRegist001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

@@ -18,6 +18,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.tams.constant.DictCodeListExt1;
 
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -388,14 +389,13 @@ public class FinProductEstablish002Controller extends BaseController {
      *
      * @param dto dto
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductEstablish002Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductEstablish002Dto dto) throws WorkFlowException {
     	BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();
         bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_收益型产品认申购管理);
         dto.setTradeId(baseGetBusinessId !=null ? baseGetBusinessId.buildBussinessCode(bussinessCodeParameter):IDGenerator.generate());

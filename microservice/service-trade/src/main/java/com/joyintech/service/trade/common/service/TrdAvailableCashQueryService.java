@@ -161,6 +161,9 @@ public class TrdAvailableCashQueryService {
         List<String> secManager = trdAvailableCashQueryMapper.selectSecManager(param);
         PtlCashPositionFlowDto dto = new PtlCashPositionFlowDto();
         dto.setPortfolioId((String)param.get("portfolioId"));
+        // add by jiangpeng on 20210510 start YHZGCPB20210115001 通道增值税缴纳
+        dto.setChlFinprodId((String)param.get("channelId"));
+        // add by jiangpeng on 20210510 end YHZGCPB20210115001 通道增值税缴纳
         dto.setHodingType(DictCodeList.持仓类型_可用.getValue());
         dto.setCdate(DateUtil.parse((String)param.get("tradeDate")));
         dto.setCcy((String)param.get("ccy"));
@@ -257,7 +260,13 @@ public class TrdAvailableCashQueryService {
      */
     public Map<String, Object> getFinAvaPosition(Map<String, Object> map) {
         map.put("hodingType03", DictCodeList.持仓类型_实际.getValue());
-        return trdAvailableCashQueryMapper.getFinAvaPosition(map);
+        Map<String, Object> resultMap=trdAvailableCashQueryMapper.getFinAvaPosition(map);
+        if(StringUtil.isNotEmpty(map.get("isContainWfl")) && StringUtil.equals(map.get("isContainWfl").toString(),DictCodeListExt1.是或否_是.getValue())){
+            //针对，计划类利率型资产买入时，在流程中不存表ptl_sec_position_flow，因此，流程中的持仓取自表wfl_trd_product_deal
+            BigDecimal 可用持仓 = trdAvailableCashQueryMapper.getFinAvaPositionFlow(map);
+            resultMap.put("POSITIONFLOW", 可用持仓);
+        }
+        return resultMap;
     }
 
     /**

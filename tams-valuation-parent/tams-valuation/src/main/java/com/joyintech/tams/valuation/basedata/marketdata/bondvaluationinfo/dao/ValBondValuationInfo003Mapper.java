@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.ValBondValuationInfo002Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.ValBondValuationInfo003Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 债券估值行情-新建、删除、修改 mapper
@@ -26,6 +27,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.Va
  * @see ValBondValuationInfo003Mapper
  * @since 1.0
  */
+@Repository
 public interface ValBondValuationInfo003Mapper {
     
     /**

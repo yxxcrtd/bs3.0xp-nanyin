@@ -72,7 +72,7 @@ public class FinProductBuildService extends BaseService<FinProductBuild001Dto> {
      * @return Page类  Page
      * @throws Exception 异常信息
      */
-    public Page<FinProductBuild001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<FinProductBuild001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) {
     	pageParam.put("statusValidE", DictCodeListExt1.有效状态_有效.getValue());
     	pageParam.put("statusValidA", DictCodeListExt1.有效状态_待处理.getValue());
     	pageParam.put("statusValidEName", DictCodeListExt1.有效状态_有效.getCodeName());

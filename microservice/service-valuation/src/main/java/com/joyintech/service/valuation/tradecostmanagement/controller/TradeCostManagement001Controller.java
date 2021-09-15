@@ -62,8 +62,7 @@ public class TradeCostManagement001Controller extends BaseController {
 
     @PostMapping("/findPage/{page}/{length}")
     public Page<TradeCostManagement001Dto> findPage(@RequestBody Map<String, Object> param,
-                                                   @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+                                                   @PathVariable("page") int page, @PathVariable("length") int length){
         return tradeCostManagement001Service.queryPageList(page, length, param);
     }
 

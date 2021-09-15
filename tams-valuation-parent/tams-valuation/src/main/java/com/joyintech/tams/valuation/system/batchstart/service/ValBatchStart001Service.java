@@ -1,24 +1,5 @@
 package com.joyintech.tams.valuation.system.batchstart.service;
 
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import com.github.pagehelper.ISelect;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dao.SysBatchGrpMapper;
@@ -26,15 +7,9 @@ import com.joyintech.framework.base.dao.SysBatchPrdGrpMapper;
 import com.joyintech.framework.base.dao.SysBatchTaskMapper;
 import com.joyintech.framework.base.dao.SysBatchgrpExecInfoMapper;
 import com.joyintech.framework.base.dto.Product;
-import com.joyintech.framework.base.entity.SysBatchGrp;
-import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
-import com.joyintech.framework.base.entity.SysBatchJob;
-import com.joyintech.framework.base.entity.SysBatchPrdGrp;
-import com.joyintech.framework.base.entity.SysBatchTask;
-import com.joyintech.framework.base.entity.SysBatchgrpExecInfo;
+import com.joyintech.framework.base.entity.*;
 import com.joyintech.framework.base.service.ProductService;
 import com.joyintech.framework.constant.BatchDictCodeList;
-import com.joyintech.framework.constant.BusinessMode;
 import com.joyintech.framework.constant.DictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
@@ -43,17 +18,26 @@ import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.security.SecurityUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResult;
 import com.joyintech.tams.valuation.system.batchstart.dao.ValBatchStart001Mapper;
 import com.joyintech.tams.valuation.system.batchstart.dto.BatchGrpPri;
 import com.joyintech.tams.valuation.system.batchstart.dto.DimensionValue;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
 //import com.joyintech.tools.mq.MessageQueueManager;
-import com.joyintech.tools.mq.constant.OperationType;
-import com.joyintech.tools.mq.constant.SystemList;
 //import com.joyintech.tools.mq.entity.PushMessageDto;
 
 @Service
@@ -87,6 +71,9 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	public static final String BATCH_UNISTART = "999999";
 
 	public static final String BATCH_UNISTART_WITHOUT_DATECHANGE = "999998";
+
+	public static final String  BATCHGRP_UNISTART = "unistart";
+
 	/**
 	 * 日志
 	 */
@@ -98,7 +85,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	@Value("${spring.activemq.active:true}")
 	private Boolean isActivemqActive;
 
-	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) throws Exception {
+	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) {
 		return super.queryForPage(new ISelect() {
 
 			@Override
@@ -293,8 +280,10 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		if (doBatchDispatch) {
 			dates.add(start);
 		} else {
-			for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
-				dates.add(date);
+			if (start != null){
+				for (Date date = start; !date.after(end); date = DateUtil.addDay(date, 1)) {
+					dates.add(date);
+				}
 			}
 		}
 		for (Date exeDate : dates) {
@@ -450,4 +439,53 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 		}
 	}
 
+	public String checkPrebatchResult() {
+		String result = "";
+
+		String selectedBatchGroup = RequestUtil.getParam("selectedBatchGroup");
+		String selectedProductGroup = RequestUtil.getParam("selectedProductGroup");
+		String startDate = RequestUtil.getParam("startDate");
+		String endDate = RequestUtil.getParam("endDate");
+		String batchGroupType = RequestUtil.getParam("batchGroupType");
+
+		// 选择 的是 任务组  并且包含 统一批处理 并且没选产品组 没选产品
+		if (GlobalConstant.BATCH_EXECUTE_TYPE_GROUP.equals(batchGroupType) && StringUtil.isEmpty(selectedProductGroup)) {
+
+			//包含 统一批处理
+			if( StringUtil.isNotEmpty(selectedBatchGroup) &&   StringUtil.contains(selectedBatchGroup,BATCHGRP_UNISTART)){
+
+				DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+				Date start = null;
+				Date end = null;
+				try {
+					start = StringUtils.isEmpty(startDate) ? null : format.parse(startDate);
+					end = StringUtils.isEmpty(endDate) ? null : format.parse(endDate);
+				} catch (ParseException e) {
+					logger.error("转换日期异常---", e);
+				}
+				Map<String, Object> param = new HashMap<>();
+				param.put("startDate", start);
+				param.put("endDate", end);
+
+				if(MultilevelDataAuthorityUtil.isEnabled()){
+
+//					List<String> listCodes = MultilevelDataAuthorityUtil.getSelfAndChildrenOrgCode(MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName()));
+					List<String> listCodes = new ArrayList<>();
+					String  myinstCode = MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+					if(StringUtil.isNotEmpty(myinstCode)) {
+						listCodes.add(myinstCode);
+					}
+					param.put("instCodes",listCodes);
+
+				}
+				List<SysPrebatchResult>  results = valBatchStart001Mapper.selectErrorPrebatchResults(param);
+				if(!StringUtil.isEmptyList(results)){
+					return "批前检查有卡批项未检查通过,请处理后再执行【批前检查】";
+				}
+
+			}
+
+		}
+		return result;
+	}
 }

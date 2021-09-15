@@ -80,8 +80,7 @@ public class ValCoinFundQuotationInfoService extends BaseService<ValCoinFundQuot
      * @see
      * @since 1.0
      */
-    public Page<ValCoinFundQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    public Page<ValCoinFundQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> pageParam){
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_基金.getValue());
         pageParam.put("yes", DictCodeList.是否_是.getValue());
         return super.queryForPage(page,length,() -> valCoinFundQuotationInfoMapper.queryForPage(pageParam));

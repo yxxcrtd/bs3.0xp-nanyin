@@ -402,8 +402,38 @@ public class DeltRightCurCalAmortProcessorService {
         returnResult.getValBokBookdetailBatch().addAll(resultNowNow.getValBokBookdetailBatch());
 
         // 3.3 统计分析账务明细汇总信息赋值
-        // 定义当日统计分析账务明细汇总信息
-        BokStatDetPosiiton bokSummaryTableNew = new BokStatDetPosiiton();
+        // 调用共通：统计分析账务明细汇总查询
+        // 变量.当日统计分析账务明细汇总信息
+        BokStatDetPosiiton bokSummaryTableNew = accountingCommonService
+                .getCountAnalysis(acctEntity.getHappenDate(), acctEntity.getHappenDate(), acctEntity.getBookDate(), acctEntity.getBooksetId(), acctEntity.getBokDetailId(), null, null);
+        if(bokSummaryTableNew == null) {
+            bokSummaryTableNew = new BokStatDetPosiiton();
+            // 变量.当日统计分析账务明细汇总信息.账套代码 = 计提类账务处理结果.账套代码
+            bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId());
+            // 变量.当日统计分析账务明细汇总信息.发生日期 = 计提类账务处理结果.发生日期
+            bokSummaryTableNew.setHappenDate(acctEntity.getHappenDate());
+            // 变量.当日统计分析账务明细汇总信息.入账日期 = 计提类账务处理结果.入账日期
+            bokSummaryTableNew.setBookDate(acctEntity.getBookDate());
+            // 变量.当日统计分析账务明细汇总信息.账务明细代码 = 计提类账务处理结果.账务明细代码
+            bokSummaryTableNew.setBokDetailId(acctEntity.getBokDetailId());
+            // 变量.当日统计分析账务明细汇总信息.处理序列 = 调用序列生成共通
+            bokSummaryTableNew.setBookSummaryOrder(
+                    new BigDecimal(dBUtil.getSequenceIndex(DataIndexSequenceType.账务汇总表_处理序列)));
+            // 变量.当日统计分析账务明细汇总信息.账套日期 = 计提类账务处理结果.账套日期
+            bokSummaryTableNew.setBooksetDate(listDrawBaseInfoSelectComDTONow.get(0).getBooksetDate());
+            // 变量.当日统计分析账务明细汇总信息.币种 = 变量.标的信息.币种
+            bokSummaryTableNew.setCcy(targetFinProduct.getCcy());
+            // 变量.当日统计分析账务明细汇总信息.业务明细代码 = 计提类账务处理结果.业务明细代码
+            bokSummaryTableNew.setBusiId(acctEntity.getBusiId());
+            // 变量.当日统计分析账务明细汇总信息.本位币 = 计提类账务处理结果.本位币
+            bokSummaryTableNew.setbCcy(listDrawBaseInfoSelectComDTONow.get(0).getStandardCcy());
+            // 变量.当日统计分析账务明细汇总信息.金融产品类型 = 变量.标的信息.金融产品类型
+            bokSummaryTableNew.setFinprodType(targetFinProduct.getFinprodType());
+            // 变量.当日统计分析账务明细汇总信息.起息日 = 变量.标的信息.起息日
+            bokSummaryTableNew.setVdate(targetFinProduct.getVdate());
+            // 变量.当日统计分析账务明细汇总信息.到期日 = 变量.标的信息.实际到期日
+            bokSummaryTableNew.setMdate(targetFinProduct.getActmdate());
+        }
         // 变量.当日统计分析账务明细汇总信息.当前持仓 = 计提类账务处理结果.成本科目数量
         bokSummaryTableNew.setPosAmt(
             acctEntity.getListDrawBaseInfoSelectComDTO().get(0).getNumAmtHappenDate());
@@ -424,18 +454,18 @@ public class DeltRightCurCalAmortProcessorService {
         // 变量.当日统计分析账务明细汇总信息.当日成本 = 变量.当日成本科目余额
         bokSummaryTableNew.setTdyCostAmt(costBalance);
         // 变量.当日统计分析账务明细汇总信息.金融产品类型 = 变量.标的信息.金融产品类型
-        bokSummaryTableNew.setFinprodType(targetFinProduct.getFinprodType());
+        // bokSummaryTableNew.setFinprodType(targetFinProduct.getFinprodType());
         // 变量.当日统计分析账务明细汇总信息.起息日 = 变量.标的信息.起息日
-        bokSummaryTableNew.setVdate(targetFinProduct.getVdate());
+        // bokSummaryTableNew.setVdate(targetFinProduct.getVdate());
         // 变量.当日统计分析账务明细汇总信息.到期日 = 变量.标的信息.实际到期日
-        bokSummaryTableNew.setMdate(targetFinProduct.getActmdate());
+        // bokSummaryTableNew.setMdate(targetFinProduct.getActmdate());
         // 变量.当日统计分析账务明细汇总信息.行情日期 = 变量.估值日期
         bokSummaryTableNew.setValDate(valDate);
         // 变量.当日统计分析账务明细汇总信息.业务明细代码 = 计提类账务处理结果.业务明细代码
-        bokSummaryTableNew.setBusiId(acctEntity.getBusiId());
+        // bokSummaryTableNew.setBusiId(acctEntity.getBusiId());
         // 变量.当日统计分析账务明细汇总信息.账套日期 = 变量.账套日期 add by zhangzhao 2020/4/14 BSTOT-2128 
         bokSummaryTableNew.setBooksetDate(acctEntity.getListDrawBaseInfoSelectComDTO().get(0).getBooksetDate());
-       // 账套代码
+        // 账套代码
         bokSummaryTableNew.setBooksetId(acctEntity.getBooksetId());
         // 发生日期
         bokSummaryTableNew.setHappenDate(acctEntity.getHappenDate());
@@ -463,7 +493,7 @@ public class DeltRightCurCalAmortProcessorService {
         // 当日累计公允价值变动_本位币
         bokSummaryTableNew.setTdyFloatIngplExpB(bokSummaryTableNew.getTdyFloatIngplExp());
         // 当日应计利息_本位币
-        bokSummaryTableNew.setTdyIntincexpB(bokSummaryTableNew.getTdyIntincexp());
+        // bokSummaryTableNew.setTdyIntincexpB(bokSummaryTableNew.getTdyIntincexp());
         // 与金茂东确认：当前【统计分析明细表（账务明细）】 相关本位币字段值 = 对应原币字段值 yangjian 2019/08/13 ======== end
         /** add by taoran 20200103 start **/
         // 本位币
@@ -477,6 +507,14 @@ public class DeltRightCurCalAmortProcessorService {
                 changeRate));
         bokSummaryTableNew.setTdyIntincexp(tdyintincexpNowBccy);
         /** add by taoran 20200103 end **/
+
+        // 变量.当日统计分析账务明细汇总信息.当日成本_本位币 = 变量.当日成本科目余额*变量.汇率
+        bokSummaryTableNew.setTdyCostAmtB(calculationCommonService.doMultiply(
+                NumberEnum.MONEY.getCode(), null, costBalance, changeRate));
+        // 变量.当日统计分析账务明细汇总信息.当日累计应计利息余额_本位币 = 变量.当日统计分析账务明细汇总信息.当日累计应计利息余额*变量.汇率
+        bokSummaryTableNew.setTdyIntincexpB(calculationCommonService.doMultiply(
+                NumberEnum.MONEY.getCode(), null, bokSummaryTableNew.getTdyIntincexp(), changeRate));
+
         // 添加到返回值中
         returnResult.getBokSummaryList().add(bokSummaryTableNew);
 

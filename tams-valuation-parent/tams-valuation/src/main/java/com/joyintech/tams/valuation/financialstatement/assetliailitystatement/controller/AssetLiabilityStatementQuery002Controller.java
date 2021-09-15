@@ -67,8 +67,7 @@ public class AssetLiabilityStatementQuery002Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("findPage")
-	public List<AssetLiabilityStatementQuery001Dto> findPage(AssetLiabilityStatementQuery001SearchDto dto)
-			throws Exception {
+	public List<AssetLiabilityStatementQuery001Dto> findPage(AssetLiabilityStatementQuery001SearchDto dto) throws ParseException {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为全账套
 		//dto.setAccountList(valAssetBook001Service.getBooksetId2(super.getRequest().getParameter("param")));

@@ -44,7 +44,7 @@ public class FlowRiskSceneManage001Service extends BaseService<FlowRiskSceneMana
 //	@Transactional
 //	@DataSource(DataSourceType.STRESSTEST)
     public Page<FlowRiskSceneManage001Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         Page<FlowRiskSceneManage001Dto> pageData = super.queryForPage(page, length, () -> flowRiskSceneManageMapper.queryForPage(pageParam));
         DynamicDataSourceHolder.clearDataSource();

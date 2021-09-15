@@ -204,10 +204,9 @@ public class ExcelUtilForRisk {
      * @see
      * @since 1.0
      */
-    public static int columnToIndex(String column)
-            throws Exception {
+    public static int columnToIndex(String column){
         if (!column.matches("[A-Z]+")) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalArgumentException("Invalid parameter");
         }
         int index = 0;
         char[] chars = column.toUpperCase().toCharArray();
@@ -227,10 +226,9 @@ public class ExcelUtilForRisk {
      * @see
      * @since 1.0
      */
-    public static String indexToColumn(int index)
-            throws Exception {
+    public static String indexToColumn(int index){
         if (index <= 0) {
-            throw new Exception("Invalid parameter");
+            throw new IllegalArgumentException("Invalid parameter");
         }
         index-- ;
         String column = "";
@@ -309,5 +307,35 @@ public class ExcelUtilForRisk {
             logger.error(e1.getMessage(),e1);
         }
         return dataList;
+    }
+	
+    /**
+     * 修改文件名
+     * wangyang1
+     * @param filePath    需要修改的文件的路径
+     * @param oldFileName 的文件的名称
+     * @param newFileName 需要修改的文件的名称
+     * @return
+     */
+    public static boolean fixFileName(String filePath,String oldFileName, String newFileName) {
+        File file = new File(filePath+File.separator+oldFileName);
+        if (!file.exists()) { // 判断原文件是否存在（防止文件名冲突）
+            return false;
+        }
+        newFileName = newFileName.trim();
+        if ("".equals(newFileName) || newFileName == null) // 文件名不能为空
+            return false;
+        String newFilePath = filePath + File.separator + newFileName;
+        File newfile = new File(newFilePath);
+        try {
+            if (newfile.exists()){
+                newfile.delete();
+            }
+            file.renameTo(newfile); // 修改文件名
+        } catch (Exception err) {
+            err.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

@@ -61,7 +61,7 @@ public class AgencyDetailsInf002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getRelateOrgInf")
-	public List<SelectOptionDto> getRelateOrgInf() throws Exception {
+	public List<SelectOptionDto> getRelateOrgInf() {
 		return agencyDetailsInf002Service.getRelateOrgInf(RequestUtil.getPageParam());
 	}
 
@@ -74,7 +74,7 @@ public class AgencyDetailsInf002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getMstCustomerInfoAdd")
-	public List<MstCustomerInfoAddDto> getMstCustomerInfoAdd() throws Exception {
+	public List<MstCustomerInfoAddDto> getMstCustomerInfoAdd() {
 		return agencyDetailsInf002Service.getMstCustomerInfoAdd(RequestUtil.getParameters(getRequest()));
 	}
 
@@ -87,7 +87,7 @@ public class AgencyDetailsInf002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/getSeniorExecutiveInf")
-	public Page<SeniorExecutiveInfDto> getSeniorExecutiveInf() throws Exception {
+	public Page<SeniorExecutiveInfDto> getSeniorExecutiveInf() {
 		Page<SeniorExecutiveInfDto> page = new Page<>();
 		List<SeniorExecutiveInfDto> lst = agencyDetailsInf002Service.getCorrelationInf(RequestUtil.getParameters(getRequest()));
 		page.setRoot(lst);
@@ -147,7 +147,7 @@ public class AgencyDetailsInf002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("save")
-	public boolean save(@RequestBody SeniorExecutiveInfDto dto) throws Exception {
+	public boolean save(@RequestBody SeniorExecutiveInfDto dto) {
 		return agencyDetailsInf002Service.save(dto);
 	}
 

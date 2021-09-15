@@ -19,7 +19,10 @@ import java.io.OutputStreamWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +63,7 @@ public class Sqlldr implements ImpExcutor {
         // 控制文件路径
         String control = args.getControl();
         // 创建控制文件
-        File file = new File(control);
+        File file = new SafelyFile(control);
         if (!file.exists()) {
             // 如果控制文件不存在，则创建
             file.createNewFile();
@@ -95,10 +98,10 @@ public class Sqlldr implements ImpExcutor {
 			//add by liubin start 将sqlldr执行日志输出到文件
 			String sqlldrLogFilePath = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY, InterfConstant.SQLLDR_LOG_FILEPATH);
 			LOGGER.info("sqlldr输出日志路径："+sqlldrLogFilePath);
-			File file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
+			File file = new SafelyFile(sqlldrLogFilePath+File.separator+"sqlldr_log.txt");
 //    	//判断sqlldr输出日志路径下是否存在日志文件，若存在则加上时间戳
 			if(file.exists()){
-				file = new File(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
+				file = new SafelyFile(sqlldrLogFilePath+File.separator+"sqlldr_log_"+System.currentTimeMillis()+".txt");
 			}
 			//声明输出流相关控件
 			fout = new FileOutputStream(file);
@@ -117,27 +120,36 @@ public class Sqlldr implements ImpExcutor {
 			    LOGGER.warn("不支持的参数类型:" + args.getClass().getName());
 			}
 			String command = ((SqlldrImpArgument)args).toString();
-			LOGGER.info("执行命令：" + sh + command);
-			Process process = Runtime.getRuntime().exec(sh + command);
-			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				//add by liubin start 将日志输出到文件
-				osw.append(line+"\n");
-				osw.flush();
-				//add by liubin end
-			    LOGGER.info(line);
-			}
-			//add by liubin start 关闭流
-			osw.close();
-			fout.close();
-			//add by liubin end
-			
-			// 输出日志
-			printLog(((SqlldrImpArgument)args).getLog());
-			// 删除导入用的临时文件
-			deleteTmpFile((SqlldrImpArgument)args);
-			exitValue = process.waitFor();
+//			LOGGER.info("执行命令：" + sh + command);
+
+            //根据ImpArgument实体类设计的白名单校验
+            String pattern = "[0-9a-zA-Z_]{1,}[/][0-9a-zA-Z_]{1,}[@][0-9a-zA-Z_ =./|]{1,}";
+            Pattern pa = Pattern.compile(pattern);
+            Matcher matcher = pa.matcher(command);
+            if (matcher.matches()){
+                Process process = Runtime.getRuntime().exec(sh + command);
+                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    //add by liubin start 将日志输出到文件
+                    osw.append(line+"\n");
+                    osw.flush();
+                    //add by liubin end
+                    LOGGER.info(line);
+                }
+                //add by liubin start 关闭流
+                osw.close();
+                fout.close();
+                //add by liubin end
+
+                // 输出日志
+                printLog(((SqlldrImpArgument)args).getLog());
+                // 删除导入用的临时文件
+                deleteTmpFile((SqlldrImpArgument)args);
+                exitValue = process.waitFor();
+            }else{
+                LOGGER.info("command命令未通过白名单校验");
+            }
 		} finally {
 			if (osw != null)
 				try {
@@ -170,7 +182,7 @@ public class Sqlldr implements ImpExcutor {
      * @param logFile 日志文件
      */
     private void printLog(String logFile) {
-        File log = new File(logFile);
+        File log = new SafelyFile(logFile);
         if (log.exists()) {
             try {
                 LOGGER.info(FileUtils.readFileToString(log));
@@ -200,7 +212,10 @@ public class Sqlldr implements ImpExcutor {
         if (badFile == null || badFile.length() == 0) {
             badFile = args.getData().substring(0, args.getData().length() - 4) + ".bad";
         }
-        delete(badFile);
+//        delete(badFile);
+        
+        LOGGER.info("坏数据:"+badFile+",转移到目录:"+args.getBadFileDir());
+        moveFile(badFile,args.getBadFileDir());
     }
 
     /**
@@ -210,9 +225,27 @@ public class Sqlldr implements ImpExcutor {
      */
     private void delete(String filePath) {
         if (filePath != null && filePath.length() > 0) {
-            File file = new File(filePath);
+            File file = new SafelyFile(filePath);
             if (file.exists()) {
                 file.delete();
+            }
+        }
+    }
+    
+    
+    /**
+     * 移动文件
+     * 
+     * @param filePath 文件路径
+     */
+    private void moveFile(String filePath,String movepath) {
+        if (filePath != null && filePath.length() > 0) {
+            File file = new SafelyFile(filePath);
+            if (file.exists()) {
+                LOGGER.info("坏数据:"+filePath+",转移到目录:"+movepath+File.separatorChar+file.getName());
+                int flag = file.compareTo(new File(movepath+File.separatorChar+file.getName()));                
+                LOGGER.info("坏数据:"+filePath+",转移到目录:"+movepath+File.separatorChar+file.getName()+"转移数据:"+flag);
+
             }
         }
     }

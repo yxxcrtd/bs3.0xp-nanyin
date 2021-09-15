@@ -50,8 +50,7 @@ public class ValInterestRateQuotationInfoService extends BaseService<ValInterest
      * @see
      * @since 1.0
      */
-    public Page<ValInterestRateQuotationInfoDto> selectForPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    public Page<ValInterestRateQuotationInfoDto> selectForPage(int page,int length,Map<String, Object> pageParam) {
         pageParam.put("BENCHMARK_TYPE_04", DictCodeListExt1.基准类型_2_利率.getValue());
         return super.queryForPage(page,length,() -> myValIntRateInfoMapper.select(pageParam));
     };

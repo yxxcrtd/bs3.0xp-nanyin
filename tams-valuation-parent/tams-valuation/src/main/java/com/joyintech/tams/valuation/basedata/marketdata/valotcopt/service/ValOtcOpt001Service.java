@@ -42,7 +42,7 @@ public class ValOtcOpt001Service extends CommonExportService<ValOtcOpt001Dto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValOtcOpt001Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ValOtcOpt001Dto> findPage(Map<String, Object> params) {
     	return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValOtcOpt001/findPage",
                 params, ValOtcOpt001Dto.class);
@@ -55,7 +55,7 @@ public class ValOtcOpt001Service extends CommonExportService<ValOtcOpt001Dto>{
      * @return 表格信息
      * @throws Exception 
      */
-    public List<ValOtcOpt001Dto> findAll(Map<String, Object> params) throws Exception {
+    public List<ValOtcOpt001Dto> findAll(Map<String, Object> params) {
     	return restTemplate.postForList(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValOtcOpt001/findAll",
                 params, ValOtcOpt001Dto.class);

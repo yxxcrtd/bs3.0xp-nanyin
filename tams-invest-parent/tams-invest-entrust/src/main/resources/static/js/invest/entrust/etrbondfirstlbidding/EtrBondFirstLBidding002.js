@@ -306,6 +306,9 @@
             elementId = 'EtrBondFirstLBidding002_btn_total';
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
         }
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         if (operateType === 'save') {
             WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
         }else{

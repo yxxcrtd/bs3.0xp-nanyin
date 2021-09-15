@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.security.SecurityUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -170,6 +171,7 @@ public class RegTimePoints001Controller extends BaseController {
     public  AjaxResult saveData() {
 //        dto.setOrgCode(this.getLoginUser().getOrgCode());
         Map<String, Object> paraMap = RequestUtil.getPageParam();
+        paraMap.put("updateUser", SecurityUtil.getLoginUser().getUserName());//add by lingxq on 2021-06-23 for 微服务获取Session必须前台传参
         regTimePointsMService.updateAllRegTimePoints(paraMap);
         return commonCheck(null, "save");
     }
@@ -186,6 +188,7 @@ public class RegTimePoints001Controller extends BaseController {
     @RequestMapping("/getReportCode")
     public Page<SelectOptionDto> getReportCode(){
         Map<String, String> reportCodeMap = SvrDataUtil.getSysDictDataMap(DictCode.报表名称);
+        String search = this.getParam("search");//页面传递过来的搜索内容
         List<SelectOptionDto> resultList = new ArrayList<>();
         if(MapUtils.isNotEmpty(reportCodeMap)){
             for (String key : reportCodeMap.keySet()) {
@@ -198,7 +201,17 @@ public class RegTimePoints001Controller extends BaseController {
                 SelectOptionDto resultDto = new SelectOptionDto();
                 resultDto.setId(key);
                 resultDto.setText(reportCodeMap.get(key));
-                resultList.add(resultDto);
+                //modify by yanya on 20210526 增加模糊匹配的功能 start
+                if(StringUtil.isNotEmpty(search)) {
+                    if(key.toLowerCase().contains(search.toLowerCase())
+                            || reportCodeMap.get(key).toLowerCase().contains(search.toLowerCase())) {
+                        resultList.add(resultDto);
+                    }
+                }
+                else {
+                    resultList.add(resultDto);
+                }
+                //modify by yanya on 20210526 增加模糊匹配的功能 end
             }
         }
         

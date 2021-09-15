@@ -1,0 +1,2 @@
+-- 按照雪玲姐新需求删除之前新增字段
+ALTER TABLE CREDIT_LINES_DEAL  drop COLUMN  REAL_CREDIT_AMT;

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyintech.tams.common.base.dao.PrdBalanceMapper">
+  <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.PrdBalance">
+    <constructor>
+      <arg column="real_prd_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="subject_id" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="subject_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="ccy" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="end_bal" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="begin_bal" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="busi_date" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="lia_subject_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="lia_end_bal" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="lia_begin_bal" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+    </constructor>
+  </resultMap>
+  <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.PrdBalance">
+    insert into prd_balance (real_prd_id, subject_id, subject_name, 
+      ccy, end_bal, begin_bal, 
+      busi_date, lia_subject_name, lia_end_bal, 
+      lia_begin_bal)
+    values (#{realPrdId,jdbcType=VARCHAR}, #{subjectId,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
+      #{ccy,jdbcType=VARCHAR}, #{endBal,jdbcType=DECIMAL}, #{beginBal,jdbcType=DECIMAL}, 
+      #{busiDate,jdbcType=VARCHAR}, #{liaSubjectName,jdbcType=VARCHAR}, #{liaEndBal,jdbcType=DECIMAL}, 
+      #{liaBeginBal,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.PrdBalance">
+    insert into prd_balance
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="realPrdId != null">
+        real_prd_id,
+      </if>
+      <if test="subjectId != null">
+        subject_id,
+      </if>
+      <if test="subjectName != null">
+        subject_name,
+      </if>
+      <if test="ccy != null">
+        ccy,
+      </if>
+      <if test="endBal != null">
+        end_bal,
+      </if>
+      <if test="beginBal != null">
+        begin_bal,
+      </if>
+      <if test="busiDate != null">
+        busi_date,
+      </if>
+      <if test="liaSubjectName != null">
+        lia_subject_name,
+      </if>
+      <if test="liaEndBal != null">
+        lia_end_bal,
+      </if>
+      <if test="liaBeginBal != null">
+        lia_begin_bal,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="realPrdId != null">
+        #{realPrdId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectId != null">
+        #{subjectId,jdbcType=VARCHAR},
+      </if>
+      <if test="subjectName != null">
+        #{subjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="ccy != null">
+        #{ccy,jdbcType=VARCHAR},
+      </if>
+      <if test="endBal != null">
+        #{endBal,jdbcType=DECIMAL},
+      </if>
+      <if test="beginBal != null">
+        #{beginBal,jdbcType=DECIMAL},
+      </if>
+      <if test="busiDate != null">
+        #{busiDate,jdbcType=VARCHAR},
+      </if>
+      <if test="liaSubjectName != null">
+        #{liaSubjectName,jdbcType=VARCHAR},
+      </if>
+      <if test="liaEndBal != null">
+        #{liaEndBal,jdbcType=DECIMAL},
+      </if>
+      <if test="liaBeginBal != null">
+        #{liaBeginBal,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

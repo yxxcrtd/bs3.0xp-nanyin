@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.financemanage.accountbook.valsubjectbalancequery.controller;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,7 @@ public class ValSubjectBalanceQuery002Contoller extends BaseController {
      */
     @RequestMapping("searchList")
     @ResponseBody
-    public List<ValSubjectWaterQuery001Dto> searchList() throws Exception {
+    public List<ValSubjectWaterQuery001Dto> searchList() throws ParseException {
         //账套代码
         String booksetId = this.getParam("booksetId");
         //记账日期

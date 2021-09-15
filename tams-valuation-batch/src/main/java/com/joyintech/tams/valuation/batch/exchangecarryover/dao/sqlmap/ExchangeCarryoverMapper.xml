@@ -76,8 +76,8 @@
     <select id="getExBalance"
             resultType="com.joyintech.tams.valuation.batch.profitandlossaccounting.dto.ProfitAndLossAccountingSubject">
         select
-          subject_no,
-          base_subject_nature
+          bs.subject_no,
+          bs.base_subject_nature
         from BOK_SUBJECT bs, BOK_BOOKSET bb
         where
         bb.bookset_id_tmpl = bs.bookset_id
@@ -90,7 +90,7 @@
         <foreach collection="listSubjectType" open="(" item="item" close=")" separator="," >
             #{item}
         </foreach>
-        order by SUBJECT_LEVEL DESC
+        order by bs.SUBJECT_LEVEL DESC
     </select>
 
 </mapper>

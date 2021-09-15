@@ -167,7 +167,7 @@ public class PayTheVatQuery003Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Valid PayTheVatQuery001Dto dto, BindingResult bindingResult)
-			throws Exception {
+			 {
 		String msg = StringUtil.EMPTY;
 		String booksetId = dto.getBooksetId();
 		String operateType = dto.getOperateType();

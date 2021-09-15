@@ -10,6 +10,7 @@
  
 package com.joyintech.tams.invest.report.debtreport.repfinproductperdeclare.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang.WordUtils;
@@ -79,7 +80,7 @@ public class RepFinProductPerDeclare001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepFinProductPerDeclareDto> selectAll()
-        throws Exception {
+    {
         Page<RepFinProductPerDeclareDto> page = repFinProductPerDeclareService.select(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -96,7 +97,7 @@ public class RepFinProductPerDeclare001Controller extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repFinProductPerDeclareService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -112,7 +113,7 @@ public class RepFinProductPerDeclare001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("createDeclaration")
-    public ResponseEntity<byte[]> createDeclaration() throws Exception{
+    public ResponseEntity<byte[]> createDeclaration() throws IOException {
         return repFinProductPerDeclareService.createDeclaration(
             RequestUtil.getParameters(getRequest()));
     }

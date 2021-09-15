@@ -127,7 +127,7 @@ public class RepTradeRegist001Controller extends BaseController{
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return repTradeRegist001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.dao;
 
 import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.dto.ValNetValueConfirm004Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -20,6 +21,7 @@ import com.joyintech.tams.valuation.dailyoperation.dailyaccountmake.valnetvaluec
  * @see ValNetValueConfirm004Mapper
  * @since 1.0
  */
+@Repository
 public interface ValNetValueConfirm004Mapper {
 
 	/**

@@ -40,7 +40,7 @@ public class ValFxValuztionInfo002Service extends CommonExportService<ValFxValuz
      * @return 返回的数据
      */
     
-    public List<SuggestDto> getFinprodId2(Map<String, Object> params) throws Exception{
+    public List<SuggestDto> getFinprodId2(Map<String, Object> params){
     	 return valFxValuztionInfo002Mapper.getFinprodId2(params);
 	
     }

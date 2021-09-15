@@ -45,7 +45,7 @@ public class ReportWorkMonitor002Service extends CommonExportService<ReportWorkM
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportWorkMonitor002Dto> findPage(int page, int length, Map<String, Object> params) throws Exception {
+    public Page<ReportWorkMonitor002Dto> findPage(int page, int length, Map<String, Object> params) {
         
     	String jobId = (String)params.get("jobId");
         String[] jobIdArr = null;

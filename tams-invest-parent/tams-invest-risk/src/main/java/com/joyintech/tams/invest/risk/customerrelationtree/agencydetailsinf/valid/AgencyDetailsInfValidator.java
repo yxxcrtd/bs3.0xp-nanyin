@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,11 @@ import com.joyintech.tams.invest.risk.customerrelationtree.agencydetailsinf.serv
  */
 @Component
 public class AgencyDetailsInfValidator implements BeanValidator {
+	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(AgencyDetailsInfValidator.class);
 
 	@Autowired
 	private AgencyDetailsInf002Service agencyDetailsInf002Service;
@@ -48,7 +55,7 @@ public class AgencyDetailsInfValidator implements BeanValidator {
 		if (StringUtil.equals(dto.getCorClass(), "1") && StringUtil.equals(dto.getOperateType(), "new")) {
 			// 添加 check验证
 			List<SeniorExecutiveInfDto> list = dto.getSelectedItem();
-			if (list.size() > 0 && list != null) {
+			if (list != null && list.size() > 0) {
 				for (SeniorExecutiveInfDto e : list) {
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("orgNo", e.getOrgNo());
@@ -58,7 +65,7 @@ public class AgencyDetailsInfValidator implements BeanValidator {
 					try {
 						lst = agencyDetailsInf002Service.getCorrelationInf(map);
 					} catch (Exception e1) {
-						e1.printStackTrace();
+						logger.error(e1.getMessage(),e1);
 					}
 					if (lst != null && lst.size() > 0) {
 						SeniorExecutiveInfDto entity = lst.get(0);
@@ -76,7 +83,7 @@ public class AgencyDetailsInfValidator implements BeanValidator {
 				map.put("corOrgtype", dto.getCorOrgtype());
 				lst = agencyDetailsInf002Service.getCorrelationInf(map);
 			} catch (Exception e1) {
-				e1.printStackTrace();
+				logger.error(e1.getMessage(),e1);
 			}
 			if (lst != null && lst.size() > 0) {
 				resultList.add(new ValidMessage(this.getMessage("RSK_W_0071")));

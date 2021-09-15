@@ -16,12 +16,13 @@ import java.util.Map;
 
 import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.investtrade.investdealquery.dto.AssetTransferExport001Dto;
 import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto;
 
-
+@Repository
 public interface TrdInvestDealQuery001Mapper {
 	/**
 	 * 流程中的搜索

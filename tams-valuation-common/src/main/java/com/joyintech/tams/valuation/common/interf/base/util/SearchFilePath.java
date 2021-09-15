@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +70,8 @@ public class SearchFilePath {
 
 		byte[] b = new byte[1024];
 		int a;
-		File file = new File(remoteFile);
-		File localFile = new File(localDir);
+		File file = new SafelyFile(remoteFile);
+		File localFile = new SafelyFile(localDir);
 		if (file.exists()) {
 			if (!localFile.exists()) {
 				localFile.mkdirs();
@@ -80,7 +81,7 @@ public class SearchFilePath {
 					localFile.mkdirs();
 				}
 			}
-			File localfile = new File(localDir + File.separator + file.getName());
+			File localfile = new SafelyFile(localDir + File.separator + file.getName());
 			try {
 				fis = new FileInputStream(file);
 				fos = new FileOutputStream(localfile);
@@ -123,7 +124,7 @@ public class SearchFilePath {
 	 */
 	public static List<File> searchAllFile(String localPath, boolean flag) {
 		List<File> fileList = new ArrayList<File>();
-		File localFile = new File(localPath);// 获取文件夹
+		File localFile = new SafelyFile(localPath);// 获取文件夹
 		if(localFile==null){
 			logger.warn("源文件夹不存在："+localPath);
 		}
@@ -156,7 +157,7 @@ public class SearchFilePath {
 	 */
 	public static List<File> searchFileByName(String localPath, String fileName) {
 		List<File> fileList = new ArrayList<File>();
-		File localFile = new File(localPath);// 获取文件夹
+		File localFile = new SafelyFile(localPath);// 获取文件夹
 		if (localFile.isDirectory()) {// 是文件夹则查找目录下文件
 			File[] files = localFile.listFiles();// 获取文件夹下的文件列表
 			if (files != null) {
@@ -186,7 +187,7 @@ public class SearchFilePath {
 	public static List<String> queryFilePath(String xmlPath, String tmpEName) {
 		List<String> pathList = new ArrayList<String>();
 		String path;
-		File folder = new File(xmlPath);// 默认目录
+		File folder = new SafelyFile(xmlPath);// 默认目录
 		String keyword = tmpEName; // 文件名
 		File[] result = searchFile(folder, keyword);// 调用方法获得文件数组
 		if (result != null) {

@@ -3,6 +3,9 @@ package com.joyintech.tams.invest.product.productelement.periodicmanagement.serv
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;;
 @Service("PeriodicManagement001Service")
 public class PeriodicManagement001Service extends CommonExportService<PeriodicManagement001Dto> 
 			implements BaseProcessService<PeriodicManagement001Dto>{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PeriodicManagement001Service.class);
 
     @Autowired
     private PeriodicManagement002Service  periodicManagement002Service;
@@ -45,10 +52,10 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
      * @param param String
      * @return List<SelectOptionDto>
      */
-    public List<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
+    public Page<SelectOptionDto> getFinprodIds(Map<String, Object> param) {
     	param.put("dealMode10", BussinessDictCodeList.处理模式_周期型.getValue());
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
-        return restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME
+        return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME
                 + "/PeriodicManagement/getFinprodIds",param,SelectOptionDto.class);      
     }
 
@@ -59,7 +66,7 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<PeriodicManagement001Dto> selectForPage(Map<String, Object> params) throws Exception {
+	public Page<PeriodicManagement001Dto> selectForPage(Map<String, Object> params){
 		if (StringUtil.isNotEmpty(params.get("finprodId"))) {
 			params.put("finprodId", StringUtil.splitToList(null, params.get("finprodId").toString()));
         }
@@ -152,7 +159,7 @@ public class PeriodicManagement001Service extends CommonExportService<PeriodicMa
     	try {
 			return selectForPage(selectParam);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
     	return null;
     }

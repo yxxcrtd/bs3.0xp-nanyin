@@ -179,9 +179,8 @@
         set sub.SEND_STATUS = '02',
             sub.submit_time = sysdate
         where
-            sub.REGIST_SEQNO in (select REGIST_SEQNO from CHB_SEND_CB_TEMP)
-            and sub.SEND_STATUS = '01'
-            <!-- and exists (select 1 from CHB_SEND_CB_TEMP tempTable where sub.SUMIT_SEQ = tempTable.SUMIT_SEQ) -->
+              sub.SEND_STATUS = '01'
+           and exists (select 1 from CHB_SEND_CB_TEMP tempTable where sub.REGIST_SEQNO = tempTable.REGIST_SEQNO)
     </update>
     
     <select id="selectUnregistDataRepeatDataByFiveElem"  parameterType="map" resultType="java.lang.String">

@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.trademanage.accountsreceivableinfoquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ public class AccountsReceivableInfoQuery001Controller extends BaseController {
 
 	@RequestMapping("findPage")
 	@ResponseBody
-	public Page<AccountsReceivableInfoQuery001Dto> findPage() throws Exception {
+	public Page<AccountsReceivableInfoQuery001Dto> findPage() {
 		Map<String,Object> reqMap = RequestUtil.getPageParam();
 		return accountsReceivableInfoQuery001Service.findByPage(reqMap);
 	}
@@ -102,7 +103,7 @@ public class AccountsReceivableInfoQuery001Controller extends BaseController {
      */
     @RequestMapping("/getBdFinprodId")
     @ResponseBody
-    public List<SelectOptionDto> getBdFinprodId() throws Exception{
+    public List<SelectOptionDto> getBdFinprodId() {
     	Map<String, Object> param = RequestUtil.getPageParam();
         return accountsReceivableInfoQuery001Service.getBdFinprodId(param); 
     }
@@ -114,7 +115,7 @@ public class AccountsReceivableInfoQuery001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		 String datas = this.getParam("datas");
 		 Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<AccountsReceivableInfoQuery001Dto> listdto;

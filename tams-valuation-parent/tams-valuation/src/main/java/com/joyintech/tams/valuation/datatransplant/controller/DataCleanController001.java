@@ -78,7 +78,7 @@ public class DataCleanController001 extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-            throws Exception {
+             {
         return valAssetBook001Service.getBooksetId(RequestUtil.getPageParam());
     }
 

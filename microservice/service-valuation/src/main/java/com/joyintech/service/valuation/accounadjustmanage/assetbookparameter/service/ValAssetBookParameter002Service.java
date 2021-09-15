@@ -39,7 +39,7 @@ public class ValAssetBookParameter002Service extends CommonExportService<ValAsse
      * @return
      * @throws Exception
      */
-	public Page<SelectOptionDto> findParam(int page,int length,Map<String, Object> parameters) throws Exception {
+	public Page<SelectOptionDto> findParam(int page,int length,Map<String, Object> parameters) {
 		String pageModel = String.valueOf(parameters.get("pageModel"));
 		Page<SelectOptionDto>  resultPage = new Page<>();
 		if (pageModel.equals("0") ){

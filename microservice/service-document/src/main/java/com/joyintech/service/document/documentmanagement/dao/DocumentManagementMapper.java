@@ -10,14 +10,12 @@
  
 package com.joyintech.service.document.documentmanagement.dao;
 
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.document.documentmanagement.dto.DocumentManagementDto;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Component;
-
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.service.document.documentmanagement.dto.DocumentManagementDto;
 
 /**
  * 〈一句话功能简述〉
@@ -27,7 +25,7 @@ import com.joyintech.service.document.documentmanagement.dto.DocumentManagementD
  * @see DocumentManagementMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface DocumentManagementMapper {
 
     /**

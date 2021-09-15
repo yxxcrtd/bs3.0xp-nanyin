@@ -549,14 +549,15 @@ $(function() {
                 var riskparam = getriskdata();
                 if (pageModel==PAGE_MODEL_NEW){
                     riskparam.data =null;
-                    window.BaseRiskMathComm.getparam(riskparam);
+                    //window.BaseRiskMathComm.getparam(riskparam);
 
                     } else {
                     //window.BaseRiskMathComm.initBaseRiskMathCommPage(riskparam);
                     $("#riskMathFlag").val("02");
                     }
                 }
-            	star();
+                window.BaseRiskMathComm.getparam(riskparam);
+
                 window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {
                     var data = {};
                     data.counterId = $('#trdInvestPersonInfo_counterId').val();
@@ -576,6 +577,10 @@ $(function() {
                         ,'deal':data
                     };
                 });
+                if (pageModel == PAGE_MODEL_EDIT) {
+                    window.BussTrdTransferOrder['bussTrdTransferOrder'].saveCalcCondition()
+                }
+                star();
             }
         }
 

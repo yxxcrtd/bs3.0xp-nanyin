@@ -27,7 +27,8 @@ public class PoiReportModelManage003Controller extends BaseController {
 	private PoiReportModelManage003Service poiReportModelManage003Service;
 	
 	@PostMapping("createRepReveal")
-    public void createRepReveal(@RequestBody Map<String, Object> param) throws Exception {
+    public void createRepReveal(@RequestBody Map<String, Object> param)
+	{
 		poiReportModelManage003Service.createRepReveal(param);
     }
 }

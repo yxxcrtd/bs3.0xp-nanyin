@@ -133,6 +133,6 @@ public class OperationalInfo004Controller extends BaseController{
 	@ResponseBody
     @RequestMapping("savePlanData")
 	public String savePlanData() {
-		return operationalInfoMService.savePlanData(RequestUtil.getPageParam());
+		return StringUtil.trimHtmlTag(operationalInfoMService.savePlanData(RequestUtil.getPageParam()));
 	}
 }

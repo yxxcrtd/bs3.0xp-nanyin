@@ -66,11 +66,11 @@ public class PdCalculateListener implements JobExecutionListener {
     public void afterJob(JobExecution jobExecution) {
         List<ModValBatchLogResult> batchLogResultList = (List<ModValBatchLogResult>)jobExecution.getExecutionContext().get(BATCH_LOG_RESULTS);
         for(ModValBatchLogResult batchLogResult:batchLogResultList){
-            if(ModelDictCodeList.批处理执行结果_异常结束.getValue().equals(batchLogResult.getType())){
+            if(ModelDictCodeList.模型计算结果_失败.getValue().equals(batchLogResult.getType())){
                 modLogsService.error(batchLogResult.getFinprodId(), batchLogResult.getBatchExecSeqno(), batchLogResult.getTaskId(), batchLogResult.getMsg());
-            }else if(ModelDictCodeList.批处理执行结果_警告.getValue().equals(batchLogResult.getType())){
+            }else if(ModelDictCodeList.模型计算结果_警告.getValue().equals(batchLogResult.getType())){
                 modLogsService.warn(batchLogResult.getFinprodId(), batchLogResult.getBatchExecSeqno(), batchLogResult.getTaskId(), batchLogResult.getMsg());
-            }else if(ModelDictCodeList.批处理执行结果_正常结束.getValue().equals(batchLogResult.getType())){
+            }else if(ModelDictCodeList.模型计算结果_成功.getValue().equals(batchLogResult.getType())){
                 modLogsService.success(batchLogResult.getFinprodId(), batchLogResult.getBatchExecSeqno(), batchLogResult.getTaskId(), batchLogResult.getMsg());
             }
         }

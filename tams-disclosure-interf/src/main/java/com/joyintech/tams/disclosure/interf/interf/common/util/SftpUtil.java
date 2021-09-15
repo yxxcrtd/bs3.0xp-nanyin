@@ -26,7 +26,7 @@ public class SftpUtil {
 
     private static Session sshSession;
 
-    public static final String ENCODE = System.getProperty("file.encoding");
+    public static final String ENCODE = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 日志
@@ -241,7 +241,7 @@ public class SftpUtil {
         }
         catch (SftpException e) {
             // logger.error("error:",e);
-            System.out.println("未找到路劲");
+            logger.info("未找到路径");
         }
     }
 
@@ -269,14 +269,13 @@ public class SftpUtil {
      * @param deleteFile 要删除的文件
      * @throws Exception
      */
-    public static void delete(String directory, String deleteFile)
-        throws Exception {
+    public static void delete(String directory, String deleteFile){
         try {
             sftp.cd(directory);
             sftp.rm(deleteFile);
         }
-        catch (SftpException e) {
-            System.out.println(e);
+        catch (SftpException e) {      
+            logger.info(e.toString());
         }
     }
 }

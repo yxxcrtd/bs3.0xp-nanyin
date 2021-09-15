@@ -117,7 +117,7 @@ public class InterfLc0010Service extends ReceivedEsbService<InterfLc0010Entity, 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public InterfLc0010Entity selectResponseData(InterfLc0010Entity entity) throws Exception {
+	public InterfLc0010Entity selectResponseData(InterfLc0010Entity entity)  {
 		return new InterfLc0010Entity();
 	}
 
@@ -125,7 +125,7 @@ public class InterfLc0010Service extends ReceivedEsbService<InterfLc0010Entity, 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int saveInterfData(InterfLc0010Entity entity) throws Exception {
+	public int saveInterfData(InterfLc0010Entity entity) {
 		int result = 0;
 		// 当机构信息存在，登录CMS_机构信息表
 		if (StringUtil.isNotEmpty(entity.getCustomerId())) {
@@ -150,7 +150,7 @@ public class InterfLc0010Service extends ReceivedEsbService<InterfLc0010Entity, 
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int saveBusinessData(InterfLc0010Entity entity) throws Exception {
+	public int saveBusinessData(InterfLc0010Entity entity) {
 		boolean isInsert = false;
 		String compId = busiMapper.selectComIdByName(entity.getInstitutionName());
 		// 不存在时，生成新的id登录业务表

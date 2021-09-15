@@ -49,8 +49,7 @@ public class ValElectReconciliation002Controller {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValElectReconciliation002Dto> findPage(@RequestBody Map<String, Object> param,
                                                        @PathVariable("page") int page,
-                                                       @PathVariable("length") int length)
-        throws Exception {
+                                                       @PathVariable("length") int length){
         return valElectReconciliation002Service.findPage(page, length, param);
     }
 

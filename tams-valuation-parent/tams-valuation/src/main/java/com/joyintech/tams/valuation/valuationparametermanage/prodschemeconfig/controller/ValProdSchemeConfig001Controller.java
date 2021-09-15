@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.valuationparametermanage.prodschemeconfig.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -104,7 +105,7 @@ public class ValProdSchemeConfig001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId()
-        throws Exception {
+         {
 //        String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId(RequestUtil.getPageParam());
     }
@@ -120,7 +121,7 @@ public class ValProdSchemeConfig001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public Page<SelectOptionDto> getBooksetId2()
-        throws Exception {
+         {
         return valAssetBook001Service.findBooksetIdByPage(RequestUtil.getPageParam());
     }
     
@@ -134,7 +135,7 @@ public class ValProdSchemeConfig001Controller extends BaseController{
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValProdSchemeConfig001Dto> findPage() throws Exception {
+    public Page<ValProdSchemeConfig001Dto> findPage()  {
         return valProdSchemeConfig001Service.findPage(RequestUtil.getPageParam());
 
     }
@@ -149,7 +150,7 @@ public class ValProdSchemeConfig001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= RequestUtil.getPageParam();
         List<ValProdSchemeConfig001Dto> listdto;

@@ -78,8 +78,7 @@ public class DisclosureHolidaymarket001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ReportGlobalConstant.SEARCH_PAGE)
-    public Page<DisclosureHolidaymarket001Dto> search()
-        throws Exception {
+    public Page<DisclosureHolidaymarket001Dto> search(){
         return holidaymarket001Service.searchForPage(RequestUtil.getPageParam());
     }
     
@@ -92,8 +91,7 @@ public class DisclosureHolidaymarket001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/importFile")
-    public List<ExcelValidDto> importData(String fileName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String fileName){
         return this.holidaymarket001Service.importData(fileName);
     }
     

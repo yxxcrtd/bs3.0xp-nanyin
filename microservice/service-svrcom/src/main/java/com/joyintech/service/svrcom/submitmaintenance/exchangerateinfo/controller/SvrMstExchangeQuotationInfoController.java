@@ -41,7 +41,7 @@ public class SvrMstExchangeQuotationInfoController {
      * @since 1.0
      */
     @RequestMapping("/selectForPage/{page}/{length}")
-    public Page<SvrMstExchangeQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam) throws Exception{
+    public Page<SvrMstExchangeQuotationInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam) {
         return svrMstExchangeQuotationInfoService.selectForPage(pageParam);
     }
     /**
