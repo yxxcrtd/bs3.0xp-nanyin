@@ -318,7 +318,7 @@
 	                		object.accAvailableCashT1 = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].accAvailableCashT1;
 	                		object.channelAvailableCash = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].channelAvailableCash;
 	                		object.bottomAssetAmount = object.bussTrdTransfenpeiDto[bussTrdTransfenpeiOrder].bottomAssetAmount;
-	                        if(object.ps === buy && object.prinAmt && object.accAvailableCashT && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.accAvailableCashT))){
+	                        if(object.ps === buy && object.tradeAmtAndFee && object.accAvailableCashT && Number(object.tradeAmtAndFee) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.accAvailableCashT))){
 	                    		if (object.chlId && object.payType == '02') {
 	                    			message = JoyinUtil.getMessage("TRD_C_0004",JoyinUtil.getMessage("invest.channelId"));
 	                    			flag1 = false;
