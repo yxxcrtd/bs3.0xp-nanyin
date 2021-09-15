@@ -213,7 +213,7 @@ $(function () {
                 });
             }else{
                 Joyin.confirm("是否确认删除？", function(){
-                    WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
+                    WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
                         table.reload();
                     });
                 });

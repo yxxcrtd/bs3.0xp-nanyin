@@ -34,6 +34,7 @@
 
     <select id="getAstPosition" resultType="com.joyintech.service.entrust.etrastconfigtransfer.dto.EtrAssetConfigDto">
         <![CDATA[
+        select aaa.* from(
         WITH EXERCISE_PLAN_TEMP AS (
             SELECT FINPROD_ID,min(EXERCISE_DATE) EXERCISE_DATE FROM FIN_EXERCISE_PLAN
             WHERE EXERCISE_DATE > DATE '${valDate}'
@@ -100,7 +101,9 @@
         (SELECT MAX(SEC_ACCT_NAME) FROM STL_SEC_ACCT_INFO WHERE STL_SEC_ACCT_INFO.SEC_ACCT_ID = PSP.SEC_ACCT_ID) acctName ,
         RT.RATE ,
         PSP.AMOUNT,
-        PSP.SEC_ACCT_ID secAcctId
+        PSP.SEC_ACCT_ID secAcctId,
+	    ( FP.MDATE - DATE '${valDate}' ) / 365 JIUQI,/*（ 到期日-平台日 ）/365*/
+	    FP.ISSUE_TYPE
         FROM (
             SELECT
             PORTFOLIO_ID,
@@ -120,22 +123,22 @@
         LEFT JOIN PTL_SEC_ACCT_TEMP PAT ON PSP.PORTFOLIO_ID=PAT.PORTFOLIO_ID
         LEFT JOIN PTL_CAPACCT_INFO_TEMP PCT ON PSP.PORTFOLIO_ID=PCT.PORTFOLIO_ID
         LEFT JOIN RATE_TEMP RT ON PSP.FINPROD_ID=RT.FINPROD_ID
-        LEFT JOIN BOND_VALUATION_TEMP BVT ON FP.FINPROD_MARKET_ID = BVT.SEC_ID AND decode(FP.TRADE_MARKET,#{TRADE_PLACE_03},#{VALUATION_SOURCE_CSD},#{TRADE_PLACE_04},#{VALUATION_SOURCE_CSD},#{VALUATION_SOURCE_CBC}) = BVT.VALUE_SOURCE ]]>
+        LEFT JOIN BOND_VALUATION_TEMP BVT ON FP.FINPROD_MARKET_ID = BVT.SEC_ID AND decode(FP.TRADE_MARKET,#{TRADE_PLACE_03},#{VALUATION_SOURCE_CSD},#{TRADE_PLACE_04},#{VALUATION_SOURCE_CSD},#{VALUATION_SOURCE_CBC}) = BVT.VALUE_SOURCE) aaa ]]>
         <where>
             <if test="issueType != null and !issueType.equals('')">
-                AND FP.ISSUE_TYPE = #{issueType,jdbcType=VARCHAR}
+                AND aaa.ISSUE_TYPE = #{issueType,jdbcType=VARCHAR}
             </if>
             <if test="durationStart != null and !durationStart.equals('')">
-                AND BVT.M_DURATION &gt;=#{durationStart,jdbcType=DECIMAL}
+                AND aaa.JIUQI &gt;=#{durationStart,jdbcType=DECIMAL}
             </if>
             <if test="durationEnd != null and !durationEnd.equals('')">
-                AND BVT.M_DURATION &lt;=#{durationEnd,jdbcType=DECIMAL}
+                AND aaa.JIUQI &lt;=#{durationEnd,jdbcType=DECIMAL}
             </if>
             <if test="yieldStart != null and !yieldStart.equals('')">
-                AND RT.RATE &gt;=#{yieldStart,jdbcType=DECIMAL}
+                AND aaa.RATE &gt;=#{yieldStart,jdbcType=DECIMAL}
             </if>
             <if test="yieldEnd != null and !yieldEnd.equals('')">
-                AND RT.RATE &lt;=#{yieldEnd,jdbcType=DECIMAL}
+                AND aaa.RATE &lt;=#{yieldEnd,jdbcType=DECIMAL}
             </if>
         </where>
     </select>
