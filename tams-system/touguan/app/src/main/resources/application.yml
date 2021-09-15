@@ -199,7 +199,6 @@ application:
     systemVersion: V2.1.6
     lastChromeVersion: 73
     customerName: 某某银行
-  runOptimize: Y
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
