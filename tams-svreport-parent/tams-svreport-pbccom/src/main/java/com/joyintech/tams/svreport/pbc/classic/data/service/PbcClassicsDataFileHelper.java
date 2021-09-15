@@ -115,7 +115,7 @@ public class PbcClassicsDataFileHelper {
     	String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
     	// 手工生成的文件存入temporary文件夹
     	if (manualFlag) {
-    		rootdir += "temporary/";
+    		rootdir += "temporary" +File.separator;
     	}
     	List<String> result = new ArrayList<String>();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -197,8 +197,8 @@ public class PbcClassicsDataFileHelper {
                 fileSize = file.length();
                 
                 // 【dat文件生成留痕】key=目录名文件名，value=数据的key集合 
-				if (!pathfilenameDatakeylistMap.containsKey(fullPath + "/"+ dataType + ".dat")) {
-					pathfilenameDatakeylistMap.put(fullPath + "/"+ dataType + ".dat", dataValueList);
+				if (!pathfilenameDatakeylistMap.containsKey(fullPath + File.separator+ dataType + ".dat")) {
+					pathfilenameDatakeylistMap.put(fullPath + File.separator+ dataType + ".dat", dataValueList);
 				}
             }
         } catch (IOException e) {
@@ -231,7 +231,7 @@ public class PbcClassicsDataFileHelper {
         init();
         DATAMAP.get(type);
         for(String dataType:DATAMAP.get(type)){
-        	File file = new SafelyFile(folderName + "/"+dataType + ".dat");
+        	File file = new SafelyFile(folderName + File.separator+dataType + ".dat");
         	if(!file.exists()){
 				try {
 					file.createNewFile();
