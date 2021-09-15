@@ -3,10 +3,12 @@ package com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bi
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.export.paginator.domain.ITableRow;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.validator.ModBintreeConfig002Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
@@ -224,7 +226,14 @@ public class ModBintreeConfigDto extends BaseEntity implements ITableRow, Proces
      * @return STOCK_ID 标的股票代码
      */
     public String getStockId() {
-        return stockId;
+        String stockIdStr="";
+        //当标的公司上市状态为为上市时，显示“---”
+        if(StringUtil.equals(ModelDictCodeList.上市状态_未上市.getValue(),this.stockBordsttus)){
+            stockIdStr="---";
+        }else{
+            stockIdStr= stockId;
+        }
+        return stockIdStr;
     }
 
     /**

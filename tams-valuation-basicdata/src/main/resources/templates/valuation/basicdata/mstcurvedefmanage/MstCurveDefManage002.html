@@ -9,6 +9,15 @@
             height:30px;
             padding-top:0px;
         }
+
+        .checkRed{
+            font-weight: bolder;
+            vertical-align: middle;
+            display: inline-block;
+            height: 22px;
+            color: red;
+            font-size: 20px !important;
+        }
     </style>
 </head>
 <body>
@@ -67,13 +76,13 @@
 
                <div class="layui-form-item" id="intCurveType_id">
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.intCurveType}">曲线类型</label>
+                       <label class="layui-form-label form-lable" >曲线类型
+                           <span class="checkRed" id="intCurveType_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <select formatoption = "true" type="text" id="intCurveType"
                                    name="intCurveType"class="layui-input form-input input-select"
                                    data-th-data-result='${CURVE_TYPE}' data-th-initValue="${entity?.intCurveType}"
-                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" required>
+                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" >
                            </select>
                        </div>
                    </div>
@@ -134,13 +143,12 @@
                    </div>
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.ccy}">币种</label>
+                       <label class="layui-form-label form-lable">币种<span class="checkRed" id="ccy_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <select formatoption = "true" type="text" id="ccy"
                                    name="ccy"class="layui-input form-input input-select"
                                    data-th-data-result='${CCY}' data-th-initValue="${entity?.ccy}"
-                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" required>
+                                   allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" >
                            </select>
                        </div>
                    </div>
@@ -150,26 +158,26 @@
                <div class="layui-form-item">
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.interMethod}">插值方式</label>
+                       <label class="layui-form-label form-lable">插值方式
+                           <span class="checkRed" id="interMethod_redId">*</span></label>
                        <div class="layui-input-inline input-inline ">
                            <input type="text" id="interMethod" name="interMethod"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.interMethod}" disabled required>
+                                  data-th-value = "${entity?.interMethod}" disabled >
                        </div>
                    </div>
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.dayRules}">日算规则</label>
+                       <label class="layui-form-label form-lable">日算规则
+                           <span class="checkRed" id="dayRules_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="dayRules" name="dayRules"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.dayRules}" disabled required>
+                                  data-th-value = "${entity?.dayRules}" disabled >
                        </div>
                    </div>
                </div>
@@ -177,26 +185,26 @@
                <div class="layui-form-item">
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.calender}">日历</label>
+                       <label class="layui-form-label form-lable">日历
+                           <span class="checkRed" id="calender_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="calender" name="calender"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.calender}" disabled required>
+                                  data-th-value = "${entity?.calender}" disabled >
                        </div>
                    </div>
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.interestDateRule}">付息日规则</label>
+                       <label class="layui-form-label form-lable">付息日规则
+                           <span class="checkRed" id="interestDateRule_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="interestDateRule" name="interestDateRule"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.interestDateRule}" disabled  required>
+                                  data-th-value = "${entity?.interestDateRule}" disabled  >
                        </div>
                    </div>
                </div>
@@ -204,39 +212,41 @@
                <div class="layui-form-item">
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.interestCalMethod}">计息方式</label>
+                       <label class="layui-form-label form-lable">计息方式
+                           <span class="checkRed" id="interestCalMethod_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="interestCalMethod" name="interestCalMethod"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.interestCalMethod}" disabled  required>
+                                  data-th-value = "${entity?.interestCalMethod}" disabled  >
                        </div>
                    </div>
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable"
-                              data-th-text="#{MstCurveDefManage002.interestFreq}">付息频率</label>
+                       <label class="layui-form-label form-lable">付息频率
+                           <span class="checkRed" style="float:right" id="interestFreq_redId">*</span></label>
+
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="interestFreq" name="interestFreq"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.interestFreq}" disabled required>
+                                  data-th-value = "${entity?.interestFreq}" disabled >
                        </div>
                    </div>
                </div>
 
                <div class="layui-form-item">
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable" >描述</label>
+                       <label class="layui-form-label form-lable" >描述<span class="checkRed" id="remark_redId">*</span>
+                           </label>
                        <div class="layui-input-inline input-inline">
                            <input type="text" id="remark" name="remark"
                                   class="layui-input form-input"
                                   placeholder="请输入内容"
                                   data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.remark}" required>
+                                  data-th-value = "${entity?.remark}" >
                        </div>
                    </div>
                </div>
