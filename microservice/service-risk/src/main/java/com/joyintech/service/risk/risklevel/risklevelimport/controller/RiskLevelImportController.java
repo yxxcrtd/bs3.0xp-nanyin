@@ -92,9 +92,10 @@ public class RiskLevelImportController {
            riskLevelImportService.save(equityList);
     }
     
+    
 
-    @PostMapping("queryFinprodMarketId")
-    public String queryFinprodMarketId(@RequestBody Map<String, Object> param){
-        return riskLevelImportService.queryFinprodMarketId(param);
+    @PostMapping("IsInFinproduct")
+    public Boolean IsInFinproduct(@RequestBody Map<String, Object> param){
+        return riskLevelImportService.IsInFinproduct(param);
     }
 }
