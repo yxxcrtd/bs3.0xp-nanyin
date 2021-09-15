@@ -361,7 +361,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
 //            }
         }
-        else if(DictCodeList.交易方向_卖出.getValue().equals(ps)){
+        else if(DictCodeList.交易方向_卖出.getValue().equals(ps)||DictCodeListExt2.交易方向_转换申请.getValue().equals(ps)){
 //            if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
             EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(entrustCommonDto);
             if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())

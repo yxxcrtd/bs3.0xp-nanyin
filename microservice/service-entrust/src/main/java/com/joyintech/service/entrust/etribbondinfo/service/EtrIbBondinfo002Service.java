@@ -491,4 +491,8 @@ public class EtrIbBondinfo002Service extends BaseService<EtrIbBondinfo002Dto> {
         }
         return entity;
     }
+
+    public String qryPortfolioSecAcctId(Map<String, Object> param) {
+        return etrIbBondinfo002Mapper.qryPortfolioSecAcctId(param);
+    }
 }
