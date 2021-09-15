@@ -89,6 +89,7 @@
         <module>JixuCenter</module>
 
         <module>microservice/tams-service-container</module>
+        <module>microservice/tams-service-container-yunying</module>
         <module>microservice/service-bankuplink</module>
         <module>tams/app</module>
 
