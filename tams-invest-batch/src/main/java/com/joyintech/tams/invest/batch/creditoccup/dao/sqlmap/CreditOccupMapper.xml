@@ -284,6 +284,7 @@
     <select id="listWwSec" resultType="com.joyintech.tams.invest.common.trade.dto.CreditLinesInputDto">
         SELECT
             rvas.FINPROD_ID finprodId,
+            fp.FINPROD_TYPE2 finprodType2,
             fp.CCY ccy,
             rvas.SECURITY_QUANTITY*temp.AMOUNT/rvsas.SECURITY_QUANTITY shareAmt,
             CASE
@@ -323,8 +324,8 @@
             AND rvas.FINPROD_ID IS NOT NULL
         LEFT JOIN FIN_PRODUCT fp ON
             fp.FINPROD_ID = rvas.FINPROD_ID
-        left join TRD_PRODUCT_DEAL tpd
-          on temp.FINPROD_ID=tpd.FINPROD_ID
+        left join FIN_TRADE_PRODUCT tpd
+          on rvas.FINPROD_ID=tpd.FINPROD_ID
               and tpd.BRANCH='0'
               and tpd.FINPROD_TYPE2 not in ('F02','F04','F08')
     </select>

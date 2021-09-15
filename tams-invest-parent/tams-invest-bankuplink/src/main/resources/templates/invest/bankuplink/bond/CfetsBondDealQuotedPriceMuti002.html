@@ -24,7 +24,7 @@
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_entrustId" th:value="${entity?.entrustId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_finprodId" th:value="${entity?.finprodId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_quotaPageModel"name="quotaPageModel"  th:value="${entity?.quotaPageModel}" />
-            <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_settleCcy" name="settleCcy"  th:value="${entity?.settleCcy}" />
+            <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_settleCcy" name="settleCcy"   th:value="${entity?.settleCcy?:CCY_CNY}"/>
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_checkType" name="checkType" th:value="${entity?.checkType}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_quoteId" name="quoteId" th:value="${entity?.quoteId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceMuti002_hidden_quoteRoleType" name="quoteRoleType" th:value="${initQuoteRoleType}" />
@@ -303,6 +303,7 @@
         var quotaPageModel = /*[[${quotaPageModel}]]*/'';
         var cfetsBondDealRequestQuoteDtoList = /*[[${cfetsBondDealRequestQuoteDtoList}]]*/'';
 
+        var CCY_CNY = /*[[${CCY_CNY}]]*/'';
         var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
         var FINPROD_TYPE_F01 = /*[[${FINPROD_TYPE_F01}]]*/'';
         var sysDate = /*[[${sysDate}]]*/ '';
