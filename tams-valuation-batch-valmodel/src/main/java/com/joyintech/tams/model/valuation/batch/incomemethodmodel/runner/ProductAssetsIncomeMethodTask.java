@@ -88,6 +88,7 @@ public class ProductAssetsIncomeMethodTask extends BatchBaseService{
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
+        valModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         JobExecution jobExecution = batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(

@@ -76,7 +76,7 @@ public class BinaryTreeModelTask extends BatchBaseService {
         binaryTreeModelReader.setParams(params);
         binaryTreeModelProcessor.setParams(params);
         binaryTreeModelWriter.setParams(params);
-
+        valModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
         return batchBuilder.init(this).batch("step1",
                 (BaseReader)binaryTreeModelReader,(BaseProcessor)binaryTreeModelProcessor, (BaseWriter)binaryTreeModelWriter).builder(
                 this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()

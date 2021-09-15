@@ -34,8 +34,8 @@ $(function () {
             {field: 'executeDateStr', sortField: 'executeDate', width: 150, title: '业务日期'}
             , {field: 'seqNo', visible: false}
             , {field: 'taskId', visible: false}
-            , {field: 'startDate', visible: false}
-            , {field: 'endDate', visible: false}
+            /**, {field: 'startDate', visible: false}
+            , {field: 'endDate', visible: false}**/
             , {
                 field: 'taskName', title: '任务名称', width: 150, render: function (data, type, row, meta) {
                     var html = '<a href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '">' + data + '</a>';
@@ -50,9 +50,9 @@ $(function () {
                         return '执行中'
                     } else if (data == 'BRK') {
                         return '中断'
-                    } else if (data == 'END' && row.infoSeqNo == 0) {
+                    } else if (data == 'END') {
                         return '正常结束'
-                    } else if (data == 'EXP' || row.infoSeqNo != 0) {
+                    } else if (data == 'EXP') {
                         return '异常结束'
                     }
                     return '未知';
@@ -79,7 +79,7 @@ $(function () {
                     }
                     return data;
                 }}
-            , {
+/*            , {
                 field: 'percent', title: '进度', width: 120, render: function (data, type, row, meta) {
                     var status = row.status;
                     var percent = '0';
@@ -96,7 +96,7 @@ $(function () {
                         '</div></div>';
                     return progress;
                 }
-            }
+            }*/
             , {
                 field: 'totalNum', title: '资产总数', width: 120,render: function (data, type, row, meta) {
                     var html = '<a href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '">' + data + '</a>';

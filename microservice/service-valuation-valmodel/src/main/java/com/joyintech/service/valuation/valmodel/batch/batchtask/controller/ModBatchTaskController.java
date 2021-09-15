@@ -31,31 +31,44 @@ public class ModBatchTaskController {
         return modBatchTaskService.getBatchTask(params);
     }
 
-    @PostMapping("insertBatch")
-    public boolean insertBatch(@RequestBody Map<String, Object> params) {
-        Date dealDate = DateUtil.parse(params.get("execDate").toString());
-        // 选中的数据文件
-        String datas = (String)params.get("datas");
+//    @PostMapping("insertBatch")
+//    public boolean insertBatch(@RequestBody Map<String, Object> params) {
+//
+//        Date dealDate = DateUtil.parse(params.get("execDate").toString());
+//        // 选中的数据文件
+//        String datas = (String)params.get("datas");
+//
+//        // 真实操作人
+//        String realName = (String)params.get("realName");
+//
+//        // 资产代码集合
+//        String finprodIds = (String)params.get("finprodId");
+//
+//        String selectedBatchGroup = datas;
+//        String selectedProductGroup = "";
+//        String startDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
+//        String endDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
+//        String batchGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE;
+//        String prodGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_GROUP;
+//        /** modify by yanya on 20210901 检验是否有跑批的数据，单独检验 **/
+//        //if (!modBatchTaskService.checkIsRunning(finprodIds)) {
+//            modBatchTaskService.cleanBatchParams();
+//            return modBatchTaskService.executeBatch(realName, selectedBatchGroup,
+//                    selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType, finprodIds);
+//        //}
+//        //return false;
+//    }
 
-        // 真实操作人
-        String realName = (String)params.get("realName");
-
+    @PostMapping("excuteTasks")
+    public boolean excuteTasks(@RequestBody Map<String, Object> params) {
+        //跑批日期
+        Date execDate = DateUtil.parse(params.get("execDate").toString());
         // 资产代码集合
         String finprodIds = (String)params.get("finprodId");
 
-        String selectedBatchGroup = datas;
-        String selectedProductGroup = "";
-        String startDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
-        String endDate = DateUtil.format(dealDate, DateUtil.DEFAULT_DATE_FORMAT_EN);
-        String batchGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE;
-        String prodGroupType = GlobalConstant.BATCH_EXECUTE_TYPE_GROUP;
-        /** modify by yanya on 20210901 检验是否有跑批的数据，单独检验 **/
-        //if (!modBatchTaskService.checkIsRunning(finprodIds)) {
-            modBatchTaskService.cleanBatchParams();
-            return modBatchTaskService.executeBatch(realName, selectedBatchGroup,
-                    selectedProductGroup, startDate, endDate, batchGroupType, prodGroupType, finprodIds);
-        //}
-        //return false;
+        modBatchTaskService.cleanBatchParams();
+
+        return modBatchTaskService.executeBatch( execDate, execDate,  finprodIds);
     }
 
     /**
