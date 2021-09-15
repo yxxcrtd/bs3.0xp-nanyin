@@ -135,12 +135,6 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
                 cfetsRepoDealQuotedPrice001Dto.setTradeDate(dto.getVdate());
                 cfetsRepoDealQuotedPrice001Dto.setPortfolioSeries(dto.getPortfolioSeries());
             }
-            if(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt() != null){
-                cfetsRepoDealQuotedPrice001Dto.setZzTotalAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getCbShareCtAmt(), new BigDecimal("10000"), 2));
-            }
-            if(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt() != null){
-                cfetsRepoDealQuotedPrice001Dto.setSqTotalAmt(ArithmeticUtil.divide(cfetsRepoDealQuotedPrice001Dto.getScShareCtAmt(), new BigDecimal("10000"), 2));
-            }
             //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
             model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
             //组合分配列表初始化
