@@ -38,6 +38,7 @@ public interface RiskLevelImportMapper {
 
     void insert(RiskLevelImportDto riskLevelImportDto);
 
-    String queryFinprodMarketId(Map<String, Object> pageParam);
-    
+    String IsInFinproduct(Map<String, Object> pageParam);
+
+    String queryIsExit(Map<String, Object> pageParam);
 }
