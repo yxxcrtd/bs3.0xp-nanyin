@@ -164,4 +164,10 @@ public class EtrIbBondinfo002Controller {
     public BigDecimal getExercisePricebyPara(@RequestBody Map<String, Object> param) {
         return etrIbBondinfo002Service.getExercisePricebyPara(param);
     }
+
+
+    @PostMapping("qryPortfolioSecAcctId")
+    public String qryPortfolioSecAcctId(@RequestBody Map<String, Object> param) {
+        return etrIbBondinfo002Service.qryPortfolioSecAcctId(param);
+    }
 }

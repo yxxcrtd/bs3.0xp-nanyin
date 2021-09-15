@@ -68,7 +68,7 @@
     <select id="getModAssetInfoOptionBMW" resultType="com.joyintech.framework.select.SelectOptionDto">
         <!--标的类金融产品代码 -->
         select
-        fin.FINPROD_ID as id,
+        finType.FINPROD_ID as id,
         NVL(NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME),finType.FINPROD_ID) as text,
         finType.TYPE_18 as object
         from FIN_PRODUCT_TYPE finType /** 标的类金融产品 **/
