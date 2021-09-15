@@ -676,6 +676,9 @@ public class EtrBrowDepoInfoService extends CommonExportService<EtrBrowDepoInfoD
                 // 委托结束日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBrowDepoInfo001.entrustMDate", lineNo));
+                // 委托开始、终止日是否是平台日check
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
                 // 组合代码非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBrowDepoInfo001.portfolioId", lineNo));

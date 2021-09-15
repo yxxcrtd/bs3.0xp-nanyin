@@ -627,6 +627,9 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsDate(rowData.get(2).toString(),
                         "EtrPlanAssetR002.mdate", lineNo));
+                // 委托开始、终止日是否是平台日check
+                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                        EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
                 // 组合代码
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                     etrCommonService.checkIsBlank(rowData.get(3).toString(),
