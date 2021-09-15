@@ -188,7 +188,7 @@
             temp.counterId = temp.counterId;
             temp.repoType = temp.busAssetType1;
             temp.assetType1 = temp.busAssetType1;
-            temp.remark = temp.repoType;
+            temp.remark = temp.remark;
             if(temp.ps == '03'){
             	temp.finprodType2 = 'F02';
             }else{
@@ -199,7 +199,7 @@
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if(!temp.assetType1){
-                temp.assetType1 = TARGET_BACK_TYPE_H01;
+                temp.assetType1 = TARGET_BACK_TYPE_H04;
             }
             if (operateType === 'save') {
                 temp.elementId = 'EtrIbRepoMain_btn_save';
