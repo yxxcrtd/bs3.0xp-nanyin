@@ -968,6 +968,8 @@ public class CfetsRepoDealQuotedPrice002Service extends CommonExportService<Cfet
 		if(StringUtil.isNotEmpty(entity.getQuoteId())){
 			CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
 			cfetsRepoDealQuotedPrice001Dto.setQuoteId(entity.getQuoteId());
+			cfetsRepoDealQuotedPrice001Dto.setIsDzh(entity.getIsDzh());
+			cfetsRepoDealQuotedPrice001Dto.setIsKtg(entity.getIsKtg());
 			doInsetOrUpdateForPtlPositionHold(cfetsRepoDealQuotedPrice001Dto);
 		}
     }
