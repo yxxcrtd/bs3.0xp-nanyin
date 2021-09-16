@@ -1,3 +1,3 @@
 DELETE FROM CHB_DATACHECK_RULE WHERE CHECKRULEID = 'W84827E5-DF35-D920-E050-007F010077ZY';
 INSERT INTO CHB_DATACHECK_RULE (CHECKRULEID, DATATYPE, CHECKCLASS, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS)
-VALUES ('W84827E5-DF35-D920-E050-007F010077ZY', 'CHB_ASSET_INFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNotEmpty', 'ORG_ASSET_TYPE1', null, null,'N', '…œ”Œ◊ ≤˙“ªº∂∑÷¿‡≤ªø…“‘Œ™ø’°£', 'E');
+VALUES ('W84827E5-DF35-D920-E050-007F010077ZY', 'CHB_ASSET_INFO', 'com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib', 'isNotEmpty', 'ORG_ASSET_TYPE1', null, null,'N', '‰∏äÊ∏∏ËµÑ‰∫ß‰∏ÄÁ∫ßÂàÜÁ±ª‰∏çÂèØ‰ª•‰∏∫Á©∫„ÄÇ', 'E');
