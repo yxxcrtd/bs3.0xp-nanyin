@@ -6,16 +6,17 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.listener.AssetImpairmentStageJudgeModelListener;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.processor.AssetImpairmentStageJudgeModelDelProcessor;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.processor.AssetImpairmentStageJudgeModelProcessor;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.reader.AssetImpairmentStageJudgeModelDelReader;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.reader.AssetImpairmentStageJudgeModelReader;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.writer.AssetImpairmentStageJudgeModelDelWriter;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.writer.AssetImpairmentStageJudgeModelWriter;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class AssetImpairmentStageJudgeModelTask extends BatchBaseService {
     @Autowired
     private AssetImpairmentStageJudgeModelDelWriter modelDelWriter;
     @Autowired
-    private AssetImpairmentStageJudgeModelListener assetImpairmentStageJudgeModelListener;
+    private LossModelCommonListener lossModelCommonListener;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -83,11 +84,12 @@ public class AssetImpairmentStageJudgeModelTask extends BatchBaseService {
         modelDelReader.setParams(params);
         modelDelProcessor.setParams(params);
         modelDelWriter.setParams(params);
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         JobExecution jobExecution = batchBuilder.init(this).batch("step0",(BaseReader)modelDelReader,(BaseProcessor)modelDelProcessor,(BaseWriter)modelDelWriter)
                 .batch("step1",(BaseReader)modelReader,(BaseProcessor)modelProcessor, (BaseWriter)modelWriter).builder(
                 this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-                , assetImpairmentStageJudgeModelListener).run();
+                , lossModelCommonListener).run();
        return jobExecution;
     }
 }

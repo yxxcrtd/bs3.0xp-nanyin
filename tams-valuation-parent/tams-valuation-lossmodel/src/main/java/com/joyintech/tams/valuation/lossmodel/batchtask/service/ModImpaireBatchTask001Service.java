@@ -33,7 +33,7 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
      * 定义常量 估值减值任务组组号
      * add by yanya on 20210901
      */
-    private final static String BATCH_GROUP_SEQNO = "valloss0000000000000000000000001";
+    private final static String LOSS_MODEL_BATCH_GROUP = "valloss0000000000000000000000001";
     /**
      * 获取批处理列表
      * @param pageParam
@@ -41,7 +41,7 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
      */
     public List<String> getBatchList(Map<String, Object> pageParam) {
         //add by yanya on 20210901 添加估值模型任务组组号
-        pageParam.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
+        pageParam.put("BATCH_GROUP_SEQNO", LOSS_MODEL_BATCH_GROUP);
         List<BatchTaskDto> batchTaskDtos = restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME
                 + "/modBatchTask/getAllBatchTask", pageParam, BatchTaskDto.class);
         if (!CollectionUtils.isEmpty(batchTaskDtos)) {
@@ -76,6 +76,8 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
         // 用户名
         String realName = SecurityUtil.getLoginUser().getRealName();
         pageParam.put("realName", realName);
+        pageParam.put("BATCH_GROUP_SEQNO", LOSS_MODEL_BATCH_GROUP);
+
         boolean checkFlag = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
                 + "/modBatchTask/checkIsRunning", pageParam, Boolean.class);
         if(!checkFlag) {
@@ -119,7 +121,7 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
         Map<String, Object> params = RequestUtil.getPageParam();
         params.put("sysDate", sysDate);
         //add by yanya on 20210901 添加估值模型任务组组号
-        params.put("BATCH_GROUP_SEQNO", BATCH_GROUP_SEQNO);
+        params.put("BATCH_GROUP_SEQNO", LOSS_MODEL_BATCH_GROUP);
         Page<BatchExecutingStatusDto> page = restTemplate.postForPage(ServiceApplication.LOSS_MODEL_SERVICE_NAME
                 + "/modBatchTask/findBatchExeDetail", params, BatchExecutingStatusDto.class);
 

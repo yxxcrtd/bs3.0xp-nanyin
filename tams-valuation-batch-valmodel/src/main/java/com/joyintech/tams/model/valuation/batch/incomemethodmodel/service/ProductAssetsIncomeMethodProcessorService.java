@@ -13,6 +13,7 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
@@ -21,8 +22,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.*;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
@@ -46,8 +45,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProductAssetsIncomeMethodProcessorService {
-    private final String BATCH_LOG_RESULTS = "logResults";
-
     @Autowired
     private IncomeMethodMapper incomeMethodMapper;
     //引入共通service
@@ -70,7 +67,7 @@ public class ProductAssetsIncomeMethodProcessorService {
      */
     public ProductAssetsIncomeMethodResultDto convertResultFromReader(ProductAssetsIncomeMethodReaderDto item, Map<String, Object> mapParam,StepExecution stepExecution){
         ProductAssetsIncomeMethodResultDto resultDto = new ProductAssetsIncomeMethodResultDto();//从reader 返回结果result
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
+        List<ModBatchLogs> bBatchLogResultList = new ArrayList<>();
 
         Date plateDate = (Date)mapParam.get(ValComponentConstant.EXECUTE_DATE);//平台日
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get(ValComponentConstant.BATCH_EXECUTEINFO);
@@ -424,22 +421,4 @@ public class ProductAssetsIncomeMethodProcessorService {
         return currentValue;
     }
 
-    /**
-     * @Description:保存上下文日志信息
-     * @auther: yuzj
-     * @date: 2021/7/27
-     * @param:
-     * @return:
-     */
-    private  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
-        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
-            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
-                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
-                oldLogResultList.addAll(bBatchLogResultList);
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
-            }else{
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
-            }
-        }
-    }
 }

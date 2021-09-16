@@ -19,7 +19,6 @@ import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapp
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.AssetImpairmentPdCalculateResultDto;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.ModConfigUseageResultDto;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.service.PdCalculateProcessService;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.batch.losscommon.dao.LossCommonMapper;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import org.apache.commons.collections.CollectionUtils;
@@ -78,7 +77,6 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
         List<AssetImpairmentPdCalculateResultDto> resultList = (List<AssetImpairmentPdCalculateResultDto>)items;
         List<ModEclResultProcess> modEclResultProcessResultList = new ArrayList<ModEclResultProcess>();
         List<ModConfigUseageResultDto> modConfigUseageResultList = new ArrayList<ModConfigUseageResultDto>();
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
         String taskId =(String)mapParam.get("TASK_ID");
         try {
             if (!StringUtil.isEmptyList(resultList)) {
@@ -100,33 +98,33 @@ public class PdCalculateWriter extends BaseWriter<AssetImpairmentPdCalculateResu
                 if (modConfigUseageResultList != null && modConfigUseageResultList.size() > 0) {
                     insertConfigUseageResultPremium(modConfigUseageResultList, batchExecuteInfo);
                 }
-                if(!org.springframework.util.CollectionUtils.isEmpty(modEclResultProcessResultList)){
-                    //=====记录成功日志=====start=====
-                    for(ModEclResultProcess resultDto :modEclResultProcessResultList){
-                        ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                        batchParam.setFinprodId(resultDto.getProdId());
-                        batchParam.setTaskId(taskId);
-                        batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                        batchParam.setType(ModelDictCodeList.模型计算结果_成功.getValue());
-                        batchParam.setMsg("执行批处理【" + resultDto.getProdId()+ "】成功结束！");
-                        bBatchLogResultList.add(batchParam);
-                    }
-                    pdCalculateProcessService.sendlogResults(bBatchLogResultList,stepExecution);
-                    //=====记录成功日志=====end=====
-                }
+//                if(!org.springframework.util.CollectionUtils.isEmpty(modEclResultProcessResultList)){
+//                    //=====记录成功日志=====start=====
+//                    for(ModEclResultProcess resultDto :modEclResultProcessResultList){
+//                        ModValBatchLogResult batchParam = new ModValBatchLogResult();
+//                        batchParam.setFinprodId(resultDto.getProdId());
+//                        batchParam.setTaskId(taskId);
+//                        batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+//                        batchParam.setType(ModelDictCodeList.模型计算结果_成功.getValue());
+//                        batchParam.setMsg("执行批处理【" + resultDto.getProdId()+ "】成功结束！");
+//                        bBatchLogResultList.add(batchParam);
+//                    }
+//                    pdCalculateProcessService.sendlogResults(bBatchLogResultList,stepExecution);
+//                    //=====记录成功日志=====end=====
+//                }
             }
         } catch (Exception e) {
             //=====记录失败日志=====start=====
-            for(ModEclResultProcess resultDto :modEclResultProcessResultList){
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(resultDto.getProdId());
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());
-                batchParam.setMsg("【PD计算批处理】：计算错误");
-                bBatchLogResultList.add(batchParam);
-            }
-            pdCalculateProcessService.sendlogResults(bBatchLogResultList,stepExecution);
+//            for(ModEclResultProcess resultDto :modEclResultProcessResultList){
+//                ModValBatchLogResult batchParam = new ModValBatchLogResult();
+//                batchParam.setFinprodId(resultDto.getProdId());
+//                batchParam.setTaskId(taskId);
+//                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+//                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());
+//                batchParam.setMsg("【PD计算批处理】：计算错误");
+//                bBatchLogResultList.add(batchParam);
+//            }
+//            pdCalculateProcessService.sendlogResults(bBatchLogResultList,stepExecution);
             //=====记录失败日志=====end=====
         }
 

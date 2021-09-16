@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.pdcalculate.listener.PdCalculateListener;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.processor.PdCalculateDelProcessor;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.processor.PdCalculateProcessor;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.reader.PdCalculateDelReader;
@@ -61,7 +61,7 @@ public class PdCalculateTask extends BatchBaseService {
     private BatchBuilder<BaseReader<NeedOperateEntity>, BaseProcessor<NeedOperateEntity, NeedToWriteEntity>, BaseWriter<NeedToWriteEntity>> batchBuilder;
 
     @Autowired
-    private PdCalculateListener pdCalculateListener;
+    private LossModelCommonListener lossModelCommonListener;
 
     /**
      * 减值-PD计算删除批处理 step1Reader
@@ -126,12 +126,13 @@ public class PdCalculateTask extends BatchBaseService {
         step2Reader.setParams(params);
         step2Processor.setParams(params);
         step2Writer.setParams(params);
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
                 (BaseProcessor)step1Processor, (BaseWriter)step1Writer).batch("step2",
                 (BaseReader)step2Reader, (BaseProcessor)step2Processor,
                 (BaseWriter)step2Writer).builder(
-                this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),pdCalculateListener).run();
+                this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),lossModelCommonListener).run();
 
     }
 

@@ -490,7 +490,9 @@
                     M1.TRADER_NAME AS EXT_OUTRADER_NAME,
                     M2.TRADER_NAME AS EXT_CPTRADER_NAME,
                     N1.PARTY_ABBR  AS EXT_OUPARTY_NAME,
-                    N2.PARTY_ABBR  AS EXT_CPPARTY_NAME
+                    N2.PARTY_ABBR  AS EXT_CPPARTY_NAME,
+                    A.CREATE_USER,
+                    A.UPDATE_USER
                     from IBU_QUOTE_CREP A
                     left join SYS_USER f on A.OU_TRADER_ID = f.USER_NAME
                     left join SYS_USER_ADD fa on fa.USER_ID = f.USER_ID
@@ -563,6 +565,11 @@
             </if>
             <if test="entrustTradelimitdays !=null and entrustTradelimitdays !='' ">
                 and I.TRADELIMITDAYS = #{entrustTradelimitdays}
+            </if>
+            <if test="loginUserId != null and loginUserId != '' ">
+                and (iqcc.CREATE_USER = #{loginUserId,jdbcType=VARCHAR}
+                or iqcc.UPDATE_USER = #{loginUserId,jdbcType=VARCHAR}
+                )
             </if>
             and tpd.FINPROD_TYPE2 IN ('F02', 'F03')
             AND tpd.TRADE_STATUS = '01'

@@ -6,7 +6,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.datapusheclresult.listener.DataPushEclResultListener;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.processor.DataPushEclResultProcessor;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.reader.DataPushEclResultReader;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.writer.DataPushEclResultWriter;
@@ -42,7 +42,7 @@ public class DataPushEclResultTask extends BatchBaseService{
     private BatchBuilder<BaseReader<NeedOperateEntity>, BaseProcessor<NeedOperateEntity, NeedToWriteEntity>, BaseWriter<NeedToWriteEntity>> batchBuilder;
 
     @Autowired
-    private DataPushEclResultListener dataPushEclResultListener;
+    private LossModelCommonListener lossModelCommonListener;
 
     /**
      * 数据推送批处理Reader
@@ -88,10 +88,10 @@ public class DataPushEclResultTask extends BatchBaseService{
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
-
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
         return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
-                    this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),dataPushEclResultListener).run();
+                    this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),lossModelCommonListener).run();
     }
     
 }

@@ -2,6 +2,8 @@ package com.joyintech.tams.model.impairment.batch.eadcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
@@ -9,12 +11,14 @@ import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculati
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadErrorParams;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dto.EadModEclResultProcess;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -46,18 +50,13 @@ public class EadCalculationBatchReaderService {
 
     @Autowired
     private ModParamsService modParamsService;
+    @Autowired
+    private ModLogsService modLogsService;
 
     // Reader查询
-    public List<EadCalculationReaderDto> execute(Map<String, Object> param){
+    public List<EadCalculationReaderDto> execute(Map<String, Object> param, StepExecution stepExecution){
         logger.info("---------EAD计算批处理reader开始------");
         SysBatchExecInfo batchExecuteInfo  = (SysBatchExecInfo)param.get("BATCH_INFO");
-        SysBatchTask batchtask = (SysBatchTask)param.get("BATCHTASK");
-        // 批处理上下文日志处理
-        ExecutionContext executionContext = (ExecutionContext)param.get("executionContext");
-        List<EadErrorParams> errors  = (List<EadErrorParams>)executionContext.get("ERRORS");
-        if( errors == null){
-            errors = new ArrayList<EadErrorParams>();
-        }
 
         List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
         //1.读取需要进行处理的资产
@@ -120,13 +119,9 @@ public class EadCalculationBatchReaderService {
         for (EadCalculationReaderDto item : result){
             List<ModCashFlowDto> cashFlowList = modValuationCommonService.getCashFlowPlanInfoByFinprodId(item.getAssetId());
             if(cashFlowList==null || cashFlowList.size()==0){//
-                logger.error("【EAD计算批处理】：资产无未来现金流");
-                EadErrorParams eadErrorParams = new EadErrorParams();
-                eadErrorParams.setFinprodId(item.getAssetId());
-                eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-                eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无未来现金流");
-                errors.add(eadErrorParams);
-                executionContext.put("ERRORS",errors);
+                String msg = "【EAD计算批处理】：资产无未来现金流";
+                logger.error(msg);
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
             }else{
                 item.setCashFlowList(cashFlowList);
             }

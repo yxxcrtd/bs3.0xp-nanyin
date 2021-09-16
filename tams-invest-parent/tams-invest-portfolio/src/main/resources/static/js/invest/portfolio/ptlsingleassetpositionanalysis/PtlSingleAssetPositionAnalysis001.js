@@ -37,13 +37,15 @@ $(function () {
          ,{field:'shareAmt', title: '持仓数量',type:'money',width:150}//持仓数量
          ,{field:'dscCostAmt', title: '成本(元)',type:'money',width:150}//成本(元)
          ,{field:'marketValue', title: '市值(元)',type:'money',width:150}//市值(元)
-         ,{field:'marketValueRatio', title: '市值比例%',type: 'number',digit:2}//市值比例%
+         ,{field:'marketValueRatio', title: '市值比例%',type: 'number',digit:2,width:150}//市值比例%
          ,{field:'childInfo', visible: false}
          ,{field:'parentInfo', visible: false}
          ,{field:'belongInstitutionNameNew', title: '机构名称',visible:AUTHORITY_TYPE=='02'}//组合名称
          // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 start
-         //,{field:'assetRatio', title: '资产占比%',type: 'number',digit:2}//资产占比%
-         ,{field:'ptlIssueTypeStr', width:150, title: '产品募集方式'}//产品募集方式
+         // add by chenjiaxing [重庆银行] 增加资产占比，产品募集方式 2021年9月9日 start
+         ,{field:'assetRatio', title: '资产占比%',type: 'number',digit:2,minWidth:100, width:'20%',}//资产占比%
+            // add by chenjiaxing [重庆银行] 增加资产占比，产品募集方式 2021年9月9日 end
+         ,{field:'ptlIssueTypeStr',minWidth:100, width:'20%', title: '产品募集方式'}//产品募集方式
          // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 end
          ]
     });

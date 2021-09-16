@@ -66,7 +66,7 @@ public class ModBatchTaskController {
         // 资产代码集合
         String finprodIds = (String)params.get("finprodId");
 
-        modBatchTaskService.cleanBatchParams();
+        modBatchTaskService.cleanBatchParams(params);
 
         return modBatchTaskService.executeBatch( execDate, execDate,  finprodIds);
     }

@@ -94,6 +94,7 @@ public class TrdFundDurationNew001Controller extends BaseController {
         model.addAttribute("F01", BussinessDictCodeList.基金类资产类型_货币基金.getValue());
         model.addAttribute("PAGE_DATA_STATUS_05", BussinessDictCodeList.画面数据状态_有效.getValue());
         model.addAttribute("AUTHORITY_TYPE", CacheUtil.getSysParam("AUTHORITY_TYPE"));
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         return super.init(model);
     }
     /**

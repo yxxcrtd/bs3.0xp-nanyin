@@ -1013,7 +1013,7 @@ public class EtrSecCashPositionDealService extends EtrCashPositionBaseService {
             }
             //添加新的参数 add by zhangpei 20201119 start
             //BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), settledate, etrEntrust.getTradeMarket());
-            BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), settledate, etrEntrust.getTradeMarket(),entrustCommonDto);
+            BigDecimal 委托全价 = gen委托全价(etrEntrust.getEntrustId(), etrEntrust.getVdate(), etrEntrust.getTradeMarket(),entrustCommonDto);
             //添加新的参数 add by zhangpei 20201119 end
             if (DictCodeList.交易方向_买入.getValue().equals(ps)
                     // add by dubaojun 2020-08-14 场内交易增加配债逻辑 start

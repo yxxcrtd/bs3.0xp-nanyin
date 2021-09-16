@@ -511,9 +511,12 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                 map.put("length", 20);
                 map.put("innerTrade", false);
                 map.put("tradeMarket",DictCodeListExt1.交易场所_银行间);
-                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                    map, SelectOptionDto.class);
+//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+//                    map, SelectOptionDto.class);
+                Page<SelectOptionDto>  selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/queryCounterSidePage",
+                        map, SelectOptionDto.class);
                 if (selectOptionDtoPage.getRoot().isEmpty()) {
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                         "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
@@ -597,9 +600,19 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
      * @return
      */
     public String getCounterName(String counterId) {
-        return restTemplate.getForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/getCounterName?counterId=" + counterId,
-                String.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("initValue", counterId);
+        map.put("page", 1);
+        map.put("length", 20);
+        Page<SelectOptionDto>  selectOptionDtoPage = restTemplate.postForPage(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/queryCounterSidePage",
+                map, SelectOptionDto.class);
+
+        if (selectOptionDtoPage.getRoot().isEmpty()) {
+            return "";
+        }else{
+            return selectOptionDtoPage.getRoot().get(0).getText();
+        }
     }
     
     /**

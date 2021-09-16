@@ -73,10 +73,13 @@
             $('#tree').reloadTree({portfolioId:$('#portfolioId').val()});
         }
         //if(pageModel==PAGE_MODEL_NEW || pageModel==PAGE_MODEL_EDIT){
-        if(pageModel==PAGE_MODEL_NEW){
+        /*if(pageModel==PAGE_MODEL_NEW){
             $("#portfolioType").val('04').attr("disabled",true).change();
         }else{
             $("#portfolioType").attr("disabled",true).change();
+        }*/
+        if(pageModel==PAGE_MODEL_NEW || pageModel==PAGE_MODEL_EDIT){
+            $("#portfolioType").val('01').change();
         }
     }
     function saveOrSubmit(operateType) {

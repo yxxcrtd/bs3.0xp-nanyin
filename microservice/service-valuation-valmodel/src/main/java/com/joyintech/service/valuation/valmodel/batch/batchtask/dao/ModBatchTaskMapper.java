@@ -7,6 +7,8 @@ import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetIn
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchTaskDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModValBatchAssetInfoDto;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public interface ModBatchTaskMapper {
 
     int checkIsRunning(Map<String, Object> params);
 
-    Integer cleanBatchParams();
+    Integer cleanBatchParams(Map<String, Object> params);
 
     List<BatchAssetInfoDto> getAssetInfo(Map<String, Object> param);
 
@@ -42,9 +44,9 @@ public interface ModBatchTaskMapper {
 
     List<SelectOptionDto> getValAssetInfo(Map<String, Object> param);
 
-
-
-
-
-
+    /**
+     *
+     * @param params
+     */
+    List<ModBatchLogDetailDTO> selectLogsDetail(Map<String, Object> params);
 }

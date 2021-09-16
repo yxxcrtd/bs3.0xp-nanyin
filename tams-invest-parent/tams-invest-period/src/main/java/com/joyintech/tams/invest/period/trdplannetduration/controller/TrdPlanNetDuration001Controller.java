@@ -16,6 +16,7 @@ import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
@@ -80,6 +81,7 @@ public class TrdPlanNetDuration001Controller extends BaseController {
         model.addAttribute("PS_T12",DictCodeList.交易方向_红利再投.getValue());
         model.addAttribute("PS_T13", DictCodeList.交易方向_除权登记.getValue());
         model.addAttribute("PAGE_DATA_STATUS_05", DictCodeListExt1.画面数据状态_有效.getValue());
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         return super.init(model);
     }
     /**
