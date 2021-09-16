@@ -40,10 +40,10 @@ $(function() {
         },
         cols:[
              {field:'assetsType',sortField:"assetsType",title:'资产类型'}
-            ,{field:'finprodMarketId',sortField:"FINPROD_MARKET_ID",title:'资产代码'}
-            ,{field:'finprodName', sortField:"FINPROD_MARKET_ID" , title: '资产名称'}
-            ,{field:'bondRiskType',  sortField:"BOND_RISK_TYPE" , title: '风险五级分类'}
-            ,{field:'updateTimeStr',  sortField:"UPDATE_TIME" , title: '更新日期'}
+            ,{field:'finprodMarketId',sortField:"finprodMarketId",title:'资产代码'}
+            ,{field:'finprodName', sortField:"finprodMarketId" , title: '资产名称'}
+            ,{field:'bondRiskType',  sortField:"bondRiskType" , title: '风险五级分类'}
+            ,{field:'updateTimeStr',  sortField:"updateTime" , title: '更新日期'}
         ]
     });
 

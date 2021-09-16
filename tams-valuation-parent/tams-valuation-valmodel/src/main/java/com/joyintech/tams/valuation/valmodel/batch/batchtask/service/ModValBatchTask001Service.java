@@ -103,7 +103,7 @@ public class ModValBatchTask001Service  extends CommonExportService {
                 + "/modValBatchTask/checkIsRunning", pageParam, Boolean.class);
         if(!checkFlag) {
             boolean res = restTemplate.postForObject(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                    + "/modValBatchTask/insertBatch", pageParam, Boolean.class);
+                    + "/modValBatchTask/excuteTasks", pageParam, Boolean.class);
             if (res) {
                 isCheck = 0;
                 checkMsg = "执行成功!";

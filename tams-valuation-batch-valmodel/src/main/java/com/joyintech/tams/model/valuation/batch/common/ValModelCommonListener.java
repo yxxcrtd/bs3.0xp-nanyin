@@ -1,5 +1,6 @@
 package com.joyintech.tams.model.valuation.batch.common;
 
+import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
@@ -13,6 +14,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Scope("prototype")
 public class ValModelCommonListener implements JobExecutionListener {
 
     @Autowired
@@ -29,23 +32,25 @@ public class ValModelCommonListener implements JobExecutionListener {
     @Autowired
     private ModLogsService modLogsService;
 
+    private SysBatchExecInfo batchExecuteInfo;
+
+    public SysBatchExecInfo getBatchExecuteInfo() {
+        return batchExecuteInfo;
+    }
+
+    public void setBatchExecuteInfo(SysBatchExecInfo batchExecuteInfo) {
+        this.batchExecuteInfo = batchExecuteInfo;
+    }
+
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        // 执行日
-        Date date = jobExecution.getJobParameters().getDate("date");
-        // 任务名称
-        String jobName = jobExecution.getJobInstance().getJobName();
-        String[] jobNames = StringUtil.split(jobName, GlobalConstant.UNDER_LINE);
-        if (jobNames == null || jobNames.length != 2) {
-            return;
-        }
-        String taskId = jobNames[1];
+        batchExecuteInfo.getExecuteDate();
         // 查询参数
-        List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(date);
+        List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(batchExecuteInfo.getExecuteDate());
         if (CollectionUtils.isNotEmpty(params)) {
             Map<String,ModBatchLogs> logsMap = new HashedMap<>();
             params.stream().forEach(x->{
-                ModBatchLogs log = modLogsService.initLog(taskId,x.getBatchExecSeqno(),x.getFinprodId());
+                ModBatchLogs log = modLogsService.initLog(batchExecuteInfo.getTaskId(),batchExecuteInfo.getSeqNo(),x.getFinprodId());
                 logsMap.put(x.getFinprodId(),log);
             });
             jobExecution.getExecutionContext().put(ValComponentConstant.MODEL_LOGS,logsMap);

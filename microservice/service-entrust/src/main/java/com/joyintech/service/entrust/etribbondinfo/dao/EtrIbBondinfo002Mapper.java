@@ -71,4 +71,6 @@ public interface EtrIbBondinfo002Mapper {
     int deleteWflEtrEntrustByEntrustId(String entrustId);
 
     int deleteWflEtrEntrustAddByEntrustId(String entrustId);
+
+    String qryPortfolioSecAcctId(Map<String, Object> param);
 }

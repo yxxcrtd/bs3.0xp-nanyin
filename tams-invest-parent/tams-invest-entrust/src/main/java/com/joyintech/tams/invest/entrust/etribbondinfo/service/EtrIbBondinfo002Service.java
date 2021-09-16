@@ -975,4 +975,14 @@ public class EtrIbBondinfo002Service extends CommonExportService<EtrIbBondinfo00
         return deviationDegree;
     }
 
+    /**
+     *
+     * @param map
+     * @return
+     */
+    public String qryPortfolioSecAcctId(Map<String, Object> map) {
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo002/qryPortfolioSecAcctId", map,
+                String.class);
+    }
 }

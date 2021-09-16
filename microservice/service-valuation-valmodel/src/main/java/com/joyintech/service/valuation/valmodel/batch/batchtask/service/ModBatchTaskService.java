@@ -4,7 +4,6 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dao.SysBatchGrpMapper;
 import com.joyintech.framework.base.dao.SysBatchPrdGrpMapper;
 import com.joyintech.framework.base.dao.SysBatchgrpExecInfoMapper;
-import com.joyintech.framework.base.dto.Product;
 import com.joyintech.framework.base.entity.*;
 import com.joyintech.framework.base.service.ProductService;
 import com.joyintech.framework.constant.BatchDictCodeList;
@@ -17,6 +16,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
+import com.joyintech.tams.common.base.entity.SysBatchTask;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
@@ -30,7 +30,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,17 +54,17 @@ public class ModBatchTaskService extends BaseService {
     @Autowired
     private SysBatchGrpMapper batchGroupMapper;
 
-    @Autowired(required = false)
-    private ProductService productService;
+//    @Autowired(required = false)
+//    private ProductService productService;
+
+//    @Autowired
+//    private SysBatchPrdGrpMapper batchProductGroupMapper;
 
     @Autowired
-    private SysBatchPrdGrpMapper batchProductGroupMapper;
+    private SysBatchgrpExecInfoMapper sysBatchgrpExecInfoMapper;
 
     @Autowired
-    private SysBatchgrpExecInfoMapper batchExecuteDetailMapper;
-
-    @Autowired
-    private ValModBatchLogsMapper modBatchLogsMapper;
+    private ValModBatchLogsMapper valModBatchLogsMapper;
 
     public List<BatchTaskDto> getBatchTask(Map<String, Object> params) {
         return modBatchTaskMapper.getBatchTask(params);
@@ -79,6 +78,12 @@ public class ModBatchTaskService extends BaseService {
     public void batchInsertProdGroup(List<SysBatchGrpPrdlink> products) {
         modBatchTaskMapper.batchInsertProdGroup(products);
     }
+
+    /**
+     * 模型批处理固定的批处理分组编号
+     */
+    private final static String VAL_MODEL_BATCH_GROUP = "valmodel000000000000000000000001";
+
 
     /**
      * 读取资产信息
@@ -177,89 +182,46 @@ public class ModBatchTaskService extends BaseService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
-    public boolean executeBatch(String realName,
-                                String selectedBatchGroup,
-                                String selectedProductGroup,
-                                String startDate,
-                                String endDate,
-                                String batchGroupType,
-                                String prodGroupType,
+    public boolean executeBatch(
+                                Date startDate,
+                                Date endDate,
                                 String finprodIds) {
-        String batchGroupSeqNo = selectedBatchGroup;
-        String nowString = null;
-        if (GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE.equals(batchGroupType)) {
-            batchGroupSeqNo = IDGenerator.generate();
-            SysBatchGrp batchGroup = new SysBatchGrp();
-            // TODO
-            batchGroup.setSystemCode(SysCodeUtil.getSysCode());
-            nowString = DateUtil.getCurrentDateTime();
-            batchGroup.setSeqNo(batchGroupSeqNo);
-            batchGroup.setBatchName(realName + "创建于" + nowString);
-            batchGroup.setDetail(batchGroup.getBatchName() + ";启动批处理时创建。");
-            String[] batchGroupSeqNos = selectedBatchGroup.split(",");
-            List<SysBatchJob> jobList = new ArrayList<>();
-            for (String taskId : batchGroupSeqNos) {
-                SysBatchJob job = new SysBatchJob();
-                job.setBatchSeqNo(batchGroupSeqNo);
-                job.setTaskId(taskId);
-                jobList.add(job);
-            }
-            batchGroupMapper.insert(batchGroup);
-            batchInsertBatchGroup(jobList);
-        }
-
-        String prodGroupSeqNo = selectedProductGroup;
-        if (StringUtil.isNotEmpty(prodGroupSeqNo) && GlobalConstant.BATCH_EXECUTE_TYPE_SINGLE.equals(prodGroupType)) {
-            prodGroupSeqNo = IDGenerator.generate();
-            SysBatchPrdGrp productGroup = new SysBatchPrdGrp();
-            productGroup.setSeqNo(prodGroupSeqNo);
-            productGroup.setGroupName(realName + "创建于"
-                    + (nowString == null ? DateUtil.getCurrentDateTime() : nowString));
-            productGroup.setDetail(productGroup.getGroupName() + ";启动批处理时创建。");
-            productGroup.setSystemCode(SysCodeUtil.getSysCode());
-            String[] prodGroupSeqNos = StringUtil.split(selectedProductGroup, ",");
-            List<Product> productList = new ArrayList<Product>();
-            if (productService != null) {
-                productList = productService.findProductByIds(prodGroupSeqNos);
-            }
-            Map<String, Product> productMap = productList.parallelStream().collect(
-                    Collectors.toMap(Product::getProdId, product -> product));
-            List<SysBatchGrpPrdlink> products = new ArrayList<>();
-            for (String prodId : prodGroupSeqNos) {
-                SysBatchGrpPrdlink groupProducts = new SysBatchGrpPrdlink();
-                groupProducts.setProductId(prodId);
-                groupProducts.setGroupSeq(prodGroupSeqNo);
-                groupProducts.setProductName(productMap.get(prodId).getProdName());
-                products.add(groupProducts);
-            }
-            batchProductGroupMapper.insert(productGroup);
-            batchInsertProdGroup(products);
-        }
 
         SysBatchgrpExecInfo executeDetail = new SysBatchgrpExecInfo();
         executeDetail.setSystemCode(SysCodeUtil.getSysCode());
         executeDetail.setSeqNo(IDGenerator.generate());
-        executeDetail.setBatchSeqNo(batchGroupSeqNo);
-        executeDetail.setPrdGroupSeqNo(prodGroupSeqNo);
-        executeDetail.setStartDate(DateUtil.parse(startDate));
-        executeDetail.setEndDate(DateUtil.parse(endDate));
+        executeDetail.setBatchSeqNo(VAL_MODEL_BATCH_GROUP);
+        executeDetail.setPrdGroupSeqNo(null);
+        executeDetail.setStartDate(startDate);
+        executeDetail.setEndDate(endDate);
         executeDetail.setStatus(BatchDictCodeList.批处理执行状态_未执行.getValue());
         executeDetail.setCreateUser(LoginUserUtil.getUserName());
         executeDetail.setUpdateUser(LoginUserUtil.getUserName());
-        executeDetail.setDetailName(StringUtil.isBlank(
-                RequestUtil.getParam("detailName")) ? (realName + "创建于"
-                + DateUtil.getCurrentDateTime()) : RequestUtil.getParam("detailName"));
+        executeDetail.setDetailName(StringUtil.isBlank(RequestUtil.getParam("detailName")) ? (LoginUserUtil.getUserName() + "创建于"+ DateUtil.getCurrentDateTime()) : RequestUtil.getParam("detailName"));
 
-        batchExecuteDetailMapper.insert(executeDetail);
+        sysBatchgrpExecInfoMapper.insert(executeDetail);
 
         List<ModValBatchParams> params = new ArrayList<>();
 
+        buildModParam(startDate, finprodIds, executeDetail, params);
+
+        return true;
+    }
+
+    /**
+     * 构间模型新增的批处理额外参数
+     * @param startDate
+     * @param finprodIds
+     * @param executeDetail
+     * @param params
+     */
+    private void buildModParam(Date startDate, String finprodIds, SysBatchgrpExecInfo executeDetail, List<ModValBatchParams> params) {
         if (StringUtil.isNotBlank(finprodIds)) {
             List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
             for (String finprodId : finprodIdList) {
                 ModValBatchParams param = new ModValBatchParams();
                 param.setSeqno(IDGenerator.generate());
-                param.setExecDate(DateUtil.parse(startDate));
+                param.setExecDate(startDate);
                 // 批处理执行序号
                 param.setBatchExecSeqno(executeDetail.getSeqNo());
 
@@ -276,7 +238,7 @@ public class ModBatchTaskService extends BaseService {
                 for (BatchAssetInfoDto assetInfo : assetInfos) {
                     ModValBatchParams param = new ModValBatchParams();
                     param.setSeqno(IDGenerator.generate());
-                    param.setExecDate(DateUtil.parse(startDate));
+                    param.setExecDate(startDate);
                     // 批处理执行序号
                     param.setBatchExecSeqno(executeDetail.getSeqNo());
 
@@ -291,7 +253,6 @@ public class ModBatchTaskService extends BaseService {
         }
 
         insertBatchParams(params);
-        return true;
     }
 
     public List<ModBatchLogDetailDTO> findBatchExeTaskForExport(Map<String, Object> params) {
@@ -311,7 +272,7 @@ public class ModBatchTaskService extends BaseService {
             criteria.andExecStatusEqualTo(execStatus);
         }
 
-        List<ModBatchLogs> logPage =  modBatchLogsMapper.selectByExampleWithBLOBs(example);
+        List<ModBatchLogs> logPage =  valModBatchLogsMapper.selectByExampleWithBLOBs(example);
         List<ModBatchLogDetailDTO> res = new ArrayList<>();
         BeanUtil.copyPropertiesIgnoreNull(res, logPage);
 
@@ -375,7 +336,7 @@ public class ModBatchTaskService extends BaseService {
             criteria.andExecStatusEqualTo(execStatus);
         }
 
-        Page<ModBatchLogs> logPage = super.queryForPage(page, length, () -> modBatchLogsMapper.selectByExampleWithBLOBs(example));
+        Page<ModBatchLogs> logPage = super.queryForPage(page, length, () -> valModBatchLogsMapper.selectByExampleWithBLOBs(example));
         Page<ModBatchLogDetailDTO> res = new Page<>();
         BeanUtil.copyPropertiesIgnoreNull(res, logPage);
         List<ModBatchLogDetailDTO> root = new ArrayList<>(logPage.getRoot().size());

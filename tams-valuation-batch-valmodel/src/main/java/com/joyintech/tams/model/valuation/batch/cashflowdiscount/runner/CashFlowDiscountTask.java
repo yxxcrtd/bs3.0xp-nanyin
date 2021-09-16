@@ -94,7 +94,8 @@ public class CashFlowDiscountTask extends BatchBaseService {
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
-        
+        valModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
+
         logger.info("批处理[" + this.getBatchTask().getTaskName() + "]开始。");
         return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
