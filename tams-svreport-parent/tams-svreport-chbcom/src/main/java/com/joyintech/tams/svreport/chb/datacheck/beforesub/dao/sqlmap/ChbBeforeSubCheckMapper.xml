@@ -50,7 +50,8 @@
 	/**产品的卖出投资交易数量，条件：已报送，卖出交易*/
 	,ps as (
 	    select prod_id,count(1) sended_counts from chb_invest_trade_sub 
-	    where CUR_ASSET_TYPE in ('02','04','07','08') 
+	    where 1 = 1
+	    <!--  CUR_ASSET_TYPE in ('02','04','07','08')   -->
 	    and SUBMIT_FEEDBACK_STATUS = '03'
 	    and status!='04'
 	    group by prod_id
