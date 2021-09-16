@@ -2,17 +2,16 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
-import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
-import com.joyintech.tams.common.base.entity.ModConfigUseage;
-import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
@@ -35,6 +34,9 @@ public class ImpairmentDataLoadReaderStep2Service {
     private RateConfigCommonService rateConfigCommonService;
     @Autowired
     private RateInfoCommonService rateInfoCommonService;
+    @Autowired
+    private ModLogsService modLogsService;
+
 
     /**
      * 二叉树模型-reader
@@ -114,8 +116,8 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级配置信息";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        item.getAssetId(), msg, ModelDictCodeList.模型计算结果_失败.getValue(), "ERRORS");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+
                 continue;
             }
             if(ratingInfoDto != null){
@@ -128,8 +130,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级结果";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        item.getAssetId(), msg, ModelDictCodeList.模型计算结果_失败.getValue(), "ERRORS");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
                 continue;
             }
 

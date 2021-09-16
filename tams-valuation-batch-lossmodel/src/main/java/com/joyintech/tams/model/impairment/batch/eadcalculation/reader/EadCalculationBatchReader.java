@@ -47,7 +47,7 @@ public class EadCalculationBatchReader extends BaseReader<EadCalculationReaderDt
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         // 只有普华处理EAD计算，毕马威依赖于日终账面，模型中不计算EAD
         if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
-            listResult = eadCalculationBatchReaderService.execute(param);
+            listResult = eadCalculationBatchReaderService.execute(param, stepExecution);
         }
         return listResult;
     }

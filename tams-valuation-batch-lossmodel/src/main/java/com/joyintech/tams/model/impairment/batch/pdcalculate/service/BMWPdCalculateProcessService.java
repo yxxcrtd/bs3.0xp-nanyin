@@ -6,13 +6,15 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,8 @@ public class BMWPdCalculateProcessService {
     private final String BATCH_PARAMS_KEY = "params";
 
     private final String BATCH_LOG_RESULTS = "logResults";
-
+    @Autowired
+    private ModLogsService modLogsService;
 
     /**
      * @Description:获取待处理资产信息List
@@ -52,7 +55,6 @@ public class BMWPdCalculateProcessService {
 
         Date plateDate = (Date)mapParams.get("PLATE_DATE");//平台日
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParams.get("BATCH_INFO");
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
         String taskId =(String)mapParams.get("TASK_ID");
         String logMsg = "";
 
@@ -89,8 +91,9 @@ public class BMWPdCalculateProcessService {
                 //=====记录警告日志=====start=====
                 String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, variablePdCalculateDto.getGradeOrgId());
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                    readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_警告.getValue(), BATCH_LOG_RESULTS);
+                // 警告：资产无对应评级信息
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+
                 //=====记录计算警告日志=====end=====
 
                 // 国债、政策性金融债、地方政府债兜底评级
@@ -147,8 +150,7 @@ public class BMWPdCalculateProcessService {
                     //生成警告日志
                     //=====记录计算错误日志=====start=====
                     logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+variablePdCalculateDto.getGradeResult()+"】的PD未维护";
-                    impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
                     //=====记录计算错误日志=====end=====
                     return resultDto;
             }
@@ -244,8 +246,7 @@ public class BMWPdCalculateProcessService {
         } catch (Exception e) {
             //=====记录计算错误日志=====start=====
             logMsg ="【PD计算批处理】：计算异常";
-            impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                readerDto.getAssetId(), logMsg,ModelDictCodeList.模型计算结果_失败.getValue(), BATCH_LOG_RESULTS);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
             //=====记录计算错误日志=====end=====
             return resultDto;
         }

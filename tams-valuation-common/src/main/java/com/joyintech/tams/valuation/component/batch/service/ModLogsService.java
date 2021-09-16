@@ -3,10 +3,9 @@ package com.joyintech.tams.valuation.component.batch.service;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.ModBatchLogsMapper;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.ModelDictCodeList;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
-import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -38,8 +37,8 @@ public class ModLogsService {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    @Autowired
-    private ValModBatchLogsMapper modBatchLogsMapper;
+//    @Autowired
+//    private ModBatchLogsMapper modBatchLogsMapper;
 
     /**
      * 批量保存日志
@@ -48,7 +47,7 @@ public class ModLogsService {
     public void saveBatch(List<ModBatchLogs> logs) {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
-            ValModBatchLogsMapper mapper = sqlSession.getMapper(ValModBatchLogsMapper.class);
+            ModBatchLogsMapper mapper = sqlSession.getMapper(ModBatchLogsMapper.class);
             int count = 0;
             for (ModBatchLogs log : logs) {
                 // 每1000条提交一次
@@ -56,18 +55,7 @@ public class ModLogsService {
                     sqlSession.commit();
                     sqlSession.clearCache();
                 }
-                ModBatchLogsExample example = new ModBatchLogsExample();
-                ModBatchLogsExample.Criteria criteria = example.createCriteria();
-                criteria.andFinprodIdEqualTo(log.getFinprodId());
-                criteria.andTaskIdEqualTo(log.getTaskId());
-                criteria.andBatchExecSeqnoEqualTo(log.getBatchExecSeqno());
-                List<ModBatchLogs> modBatchLogs = mapper.selectByExample(example);
-                if (CollectionUtils.isEmpty(modBatchLogs)) {
-                    mapper.insertSelective(log);
-                } else {
-                    // 已经存在日志的不更新
-                    // mapper.updateByExample(log, example);
-                }
+                mapper.insertSelective(log);
                 count++;
             }
 
@@ -97,20 +85,20 @@ public class ModLogsService {
      * @param batchExeDetailSeqno
      * @param finprodIds
      */
-    public void batchInitLogs(String taskId, String batchExeDetailSeqno, List<String> finprodIds){
-        List<ModBatchLogs> listLog = new ArrayList<ModBatchLogs>();
-        if (CollectionUtils.isNotEmpty(finprodIds)) {
-            finprodIds.forEach((x) -> {
-                ModBatchLogs log = new ModBatchLogs();
-                log.setSeqno(IDGenerator.generate());
-                log.setFinprodId(x);
-                log.setBatchExecSeqno(batchExeDetailSeqno);
-                log.setTaskId(taskId);
-                listLog.add(log);
-            });
-            this.saveBatch(listLog);
-        }
-    }
+//    public void batchInitLogs(String taskId, String batchExeDetailSeqno, List<String> finprodIds){
+//        List<ModBatchLogs> listLog = new ArrayList<ModBatchLogs>();
+//        if (CollectionUtils.isNotEmpty(finprodIds)) {
+//            finprodIds.forEach((x) -> {
+//                ModBatchLogs log = new ModBatchLogs();
+//                log.setSeqno(IDGenerator.generate());
+//                log.setFinprodId(x);
+//                log.setBatchExecSeqno(batchExeDetailSeqno);
+//                log.setTaskId(taskId);
+//                listLog.add(log);
+//            });
+//            this.saveBatch(listLog);
+//        }
+//    }
 
     /**
      * 警告信息
@@ -118,40 +106,40 @@ public class ModLogsService {
      * @param batchExecSeq 批处理Seq
      * @param msg 消息
      */
-    public synchronized void warn(String finprodId, String batchExecSeq, String taskId,  String msg) {
-        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
-            logger.error("资产代码或批处理序号不能为空");
-            return;
-        }
-        // 条件
-        ModBatchLogsExample example = new ModBatchLogsExample();
-        ModBatchLogsExample.Criteria criteria = example.createCriteria();
-        criteria.andFinprodIdEqualTo(finprodId);
-        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
-        criteria.andTaskIdEqualTo(taskId);
-        // 查询
-        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
-        if (modBatchLogs.size() != 1) {
-            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
-            return;
-        }
-        ModBatchLogs modBatchLog = modBatchLogs.get(0);
-        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
-        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_警告.getValue());
-        modBatchLog.setUpdateTime(new Date());
-        List<String> execResult = new ArrayList<>(2);
-        execResult.add(ModelDictCodeList.模型计算结果_成功.getValue());
-        execResult.add(ModelDictCodeList.模型计算结果_失败.getValue());
-        criteria.andExecStatusNotIn(execResult);
-        ModBatchLogsExample.Criteria orCriteria = example.createCriteria();
-        orCriteria.andExecStatusIsNull();
-        orCriteria.andFinprodIdEqualTo(finprodId);
-        orCriteria.andBatchExecSeqnoEqualTo(batchExecSeq);
-        orCriteria.andTaskIdEqualTo(taskId);
-        example.or(orCriteria);
-        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
-    }
+//    public synchronized void warn(String finprodId, String batchExecSeq, String taskId,  String msg) {
+//        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
+//            logger.error("资产代码或批处理序号不能为空");
+//            return;
+//        }
+//        // 条件
+////        ModBatchLogsExample example = new ModBatchLogsExample();
+////        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+////        criteria.andFinprodIdEqualTo(finprodId);
+////        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
+////        criteria.andTaskIdEqualTo(taskId);
+//        // 查询
+////        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
+//        if (modBatchLogs.size() != 1) {
+//            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
+//            return;
+//        }
+//        ModBatchLogs modBatchLog = modBatchLogs.get(0);
+//        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
+//        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
+//        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_警告.getValue());
+//        modBatchLog.setUpdateTime(new Date());
+//        List<String> execResult = new ArrayList<>(2);
+//        execResult.add(ModelDictCodeList.模型计算结果_成功.getValue());
+//        execResult.add(ModelDictCodeList.模型计算结果_失败.getValue());
+//        criteria.andExecStatusNotIn(execResult);
+//        ModBatchLogsExample.Criteria orCriteria = example.createCriteria();
+//        orCriteria.andExecStatusIsNull();
+//        orCriteria.andFinprodIdEqualTo(finprodId);
+//        orCriteria.andBatchExecSeqnoEqualTo(batchExecSeq);
+//        orCriteria.andTaskIdEqualTo(taskId);
+//        example.or(orCriteria);
+//        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
+//    }
 
     /**
      * 失败信息
@@ -159,30 +147,30 @@ public class ModLogsService {
      * @param batchExecSeq 批处理Seq
      * @param msg 消息
      */
-    public synchronized void error(String finprodId, String batchExecSeq, String taskId, String msg) {
-        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
-            logger.error("资产代码或批处理序号不能为空");
-            return;
-        }
-        // 条件
-        ModBatchLogsExample example = new ModBatchLogsExample();
-        ModBatchLogsExample.Criteria criteria = example.createCriteria();
-        criteria.andFinprodIdEqualTo(finprodId);
-        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
-        criteria.andTaskIdEqualTo(taskId);
-        // 查询
-        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
-        if (modBatchLogs.size() != 1) {
-            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
-            return;
-        }
-        ModBatchLogs modBatchLog = modBatchLogs.get(0);
-        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
-        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_失败.getValue());
-        modBatchLog.setUpdateTime(new Date());
-        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
-    }
+//    public synchronized void error(String finprodId, String batchExecSeq, String taskId, String msg) {
+//        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
+//            logger.error("资产代码或批处理序号不能为空");
+//            return;
+//        }
+//        // 条件
+//        ModBatchLogsExample example = new ModBatchLogsExample();
+//        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+//        criteria.andFinprodIdEqualTo(finprodId);
+//        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
+//        criteria.andTaskIdEqualTo(taskId);
+//        // 查询
+//        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
+//        if (modBatchLogs.size() != 1) {
+//            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
+//            return;
+//        }
+//        ModBatchLogs modBatchLog = modBatchLogs.get(0);
+//        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
+//        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
+//        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_失败.getValue());
+//        modBatchLog.setUpdateTime(new Date());
+//        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
+//    }
 
     /**
      * 成功信息
@@ -190,33 +178,33 @@ public class ModLogsService {
      * @param batchExecSeq 批处理Seq
      * @param msg 消息
      */
-    public synchronized void success(String finprodId, String batchExecSeq, String taskId, String msg) {
-        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
-            logger.error("资产代码或批处理序号不能为空");
-            return;
-        }
-        // 条件
-        ModBatchLogsExample example = new ModBatchLogsExample();
-        ModBatchLogsExample.Criteria criteria = example.createCriteria();
-        criteria.andFinprodIdEqualTo(finprodId);
-        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
-        criteria.andTaskIdEqualTo(taskId);
-        // 查询
-        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
-        if (modBatchLogs.size() != 1) {
-            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
-            return;
-        }
-        ModBatchLogs modBatchLog = modBatchLogs.get(0);
-        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
-        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
-        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
-        modBatchLog.setUpdateTime(new Date());
-
-        // 只能对未修改状态的进行更新
-        criteria.andExecStatusIsNull();
-        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
-    }
+//    public synchronized void success(String finprodId, String batchExecSeq, String taskId, String msg) {
+//        if (StringUtil.isBlank(finprodId) || StringUtil.isEmpty(batchExecSeq)) {
+//            logger.error("资产代码或批处理序号不能为空");
+//            return;
+//        }
+//        // 条件
+//        ModBatchLogsExample example = new ModBatchLogsExample();
+//        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+//        criteria.andFinprodIdEqualTo(finprodId);
+//        criteria.andBatchExecSeqnoEqualTo(batchExecSeq);
+//        criteria.andTaskIdEqualTo(taskId);
+//        // 查询
+//        List<ModBatchLogs> modBatchLogs = modBatchLogsMapper.selectByExample(example);
+//        if (modBatchLogs.size() != 1) {
+//            logger.error("不正确的日志记录:资产代码【{}】, 批处理序列号【{}】", finprodId, batchExecSeq);
+//            return;
+//        }
+//        ModBatchLogs modBatchLog = modBatchLogs.get(0);
+//        String detailMsg = modBatchLog.getExecDetail() == null ? "": modBatchLog.getExecDetail();
+//        modBatchLog.setExecDetail(detailMsg + msg + ENDING);
+//        modBatchLog.setExecStatus(ModelDictCodeList.模型计算结果_成功.getValue());
+//        modBatchLog.setUpdateTime(new Date());
+//
+//        // 只能对未修改状态的进行更新
+//        criteria.andExecStatusIsNull();
+//        modBatchLogsMapper.updateByExampleWithBLOBs(modBatchLog,example);
+//    }
 
     /**
      *

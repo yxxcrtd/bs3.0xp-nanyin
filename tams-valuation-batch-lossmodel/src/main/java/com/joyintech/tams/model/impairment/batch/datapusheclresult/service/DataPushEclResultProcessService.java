@@ -7,9 +7,6 @@ import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLoss
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultProcessDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultReaderDto;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.ImpairmentBatchSynParam;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,26 +61,6 @@ public class DataPushEclResultProcessService extends BaseService {
         param.setSynList(assetLossResultList);
         Integer result = impairmentModReultSyn(param);
         return result;
-    }
-
-
-    /**
-     * @Description:保存上下文日志信息
-     * @auther: yuzj
-     * @date: 2021/7/27
-     * @param:
-     * @return:
-     */
-    public  void  sendlogResults(List<ModValBatchLogResult> bBatchLogResultList, StepExecution stepExecution){
-        if(CollectionUtils.isNotEmpty(bBatchLogResultList)){
-            if( stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS") !=null){
-                List<ModValBatchLogResult> oldLogResultList = (List<ModValBatchLogResult>)stepExecution.getJobExecution().getExecutionContext().get("BATCH_LOG_RESULTS");
-                oldLogResultList.addAll(bBatchLogResultList);
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,oldLogResultList);
-            }else{
-                stepExecution.getJobExecution().getExecutionContext().put(BATCH_LOG_RESULTS,bBatchLogResultList);
-            }
-        }
     }
 
     public int impairmentModReultSyn(ImpairmentBatchSynParam param){

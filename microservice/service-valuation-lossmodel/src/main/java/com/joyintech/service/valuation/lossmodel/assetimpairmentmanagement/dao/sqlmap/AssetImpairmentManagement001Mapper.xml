@@ -267,7 +267,7 @@
 		where
 		c.FINPROD_ID = a.FINPROD_ID and
 		c.INV_AIM = 'AC' and
-		c.CDATE = to_date(#{execDate,jdbcType=VARCHAR}, 'yyyy-MM-dd')
+		c.CDATE = #{execDate,jdbcType=DATE}
 		and c.AMOUNT != 0
 		)
 		)

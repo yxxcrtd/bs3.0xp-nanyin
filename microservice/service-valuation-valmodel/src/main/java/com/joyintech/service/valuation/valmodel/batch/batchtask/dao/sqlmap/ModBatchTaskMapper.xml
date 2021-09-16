@@ -84,7 +84,7 @@
             SUM(DECODE(LOGSINFO.EXEC_STATUS,'EXP',1,0)) errorNum,
             SUM(DECODE(LOGSINFO.EXEC_STATUS,'WARN',1,0)) warnNum,
             SUM(DECODE(LOGSINFO.EXEC_STATUS,'NOR',1,0)) successNum,
-            EXEINFO.SEQ_NO,
+            EXEINFO.BATCH_EXEDETAIL_SEQ_NO as SEQ_NO,
             EXEINFO.EXECUTE_DATE,
             EXEINFO.CREATE_USER createUser,
             EXEINFO.CREATE_TIME createTime,
@@ -107,17 +107,31 @@
             LEFT JOIN SYS_BATCH_TASK TASK
             ON EXEINFO.TASK_ID = TASK.TASK_ID
             LEFT JOIN MOD_BATCH_LOGS LOGSINFO
-            ON LOGSINFO.BATCH_EXEC_SEQNO = EXEINFO.SEQ_NO
+            ON LOGSINFO.BATCH_EXEC_SEQNO = GRPINFO.SEQ_NO
+            AND LOGSINFO.TASK_ID = EXEINFO.TASK_ID
         WHERE   EXEINFO.EXECUTE_DATE = to_date(#{importDate, jdbcType=VARCHAR},'YYYY-MM-DD')
         GROUP BY
-        EXEINFO.SEQ_NO,
-        EXEINFO.EXECUTE_DATE,
-        EXEINFO.CREATE_USER,
-        EXEINFO.CREATE_TIME,
-        EXEINFO.UPDATE_TIME,
-        EXEINFO.TASK_STATUS,
-        TASK.TASK_NAME,
-        EXEINFO.TASK_ID
+            EXEINFO.BATCH_EXEDETAIL_SEQ_NO,
+            EXEINFO.EXECUTE_DATE,
+            EXEINFO.CREATE_USER,
+            EXEINFO.CREATE_TIME,
+            EXEINFO.UPDATE_TIME,
+            EXEINFO.TASK_STATUS,
+            TASK.TASK_NAME,
+            EXEINFO.TASK_ID
+        ORDER BY UPDATETIME DESC
+    </select>
+   <select id="selectLogsDetail" resultType="com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO">
+        SELECT
+          LOGS.FINPROD_ID,
+          LOGS.EXEC_STATUS,
+          LOGS.EXEC_DETAIL,
+          PRO.FINPROD_NAME
+         FROM MOD_BATCH_LOGS LOGS
+        LEFT JOIN FIN_PRODUCT PRO
+        ON LOGS.FINPROD_ID = PRO.FINPROD_ID
+        WHERE LOGS.BATCH_EXEC_SEQNO = #{detailSeqNo,jdbcType=VARCHAR}
+        AND LOGS.TASK_ID = #{taskId,jdbcType=VARCHAR}
     </select>
 
     <delete id="cleanBatchParams">
@@ -129,6 +143,7 @@
                                                'UNR', 'RUN'
                              )
                            AND info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO)
+                           AND mvbp.BATCH_EXEC_SEQNO = #{BATCH_EXEC_SEQNO,jdbcType=VARCHAR}
     </delete>
 
 
@@ -169,6 +184,7 @@
         FROM sys_batchgrp_exec_info info
         left join MOD_VAL_BATCH_PARAMS mvbp on info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO
         WHERE 1 = 1
+        AND INFO.BATCH_SEQ_NO = #{BATCH_SEQ_NO,jdbcType=VARCHAR}
         AND info.status IN (
             'UNR', 'RUN'
         )
