@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +19,6 @@ import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.common.base.entity.TempCheckInfo;
 import com.joyintech.tams.common.base.entity.ValInterflog;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
@@ -41,10 +37,15 @@ public class InterfHelper {
     			md5CashId += FinalString.SPLIT+cashId[i];
     		}
     	}
-    	md5CashId = EncryptUtil.getInstance().md5(md5CashId);
+        md5CashId = MD5Util.string2MD5(md5CashId);
     	return md5CashId;
     }
-    
+
+    public static void main(String args[]){
+        //dto.getFinprodId(), DictCodeListExt1.金融产品类型_债券.getValue(), branch, cashType2
+        System.out.println(        getMd5CashId_("F01_010011.IB",DictCodeListExt1.金融产品类型_债券.getValue(),"C02"));
+    }
+
     @SuppressWarnings("unchecked")
 	public static String getDictColdeList_ItemName(String code,String itemcode){
     	String itemName = null;

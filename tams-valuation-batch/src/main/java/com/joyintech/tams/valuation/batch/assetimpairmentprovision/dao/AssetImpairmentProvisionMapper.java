@@ -55,4 +55,15 @@ public interface AssetImpairmentProvisionMapper {
      * @return
      */
     ModEclResult getModelEclResult(Map<String, Object> params);
+
+    /**
+     * 模型法减值资产明细查询 <功能详细描述>
+     *
+     * @param branch
+     * @param taskId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<AssetImpairmentProvisionReaderResult> queryTrdAssetLossReaderPH(Map<String, Object> param);
 }

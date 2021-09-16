@@ -164,7 +164,7 @@ public class ModImpairementBatchTaskService extends BaseService {
             finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
             finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             param.put("finprodTypes", finprodTypes);
-            if (!org.springframework.util.CollectionUtils.isEmpty(finprodIdList)) {
+            if (!CollectionUtils.isEmpty(finprodIdList)) {
                 param.put("finprodIdList", finprodIdList);
             }
             assetInfos= assetImpairmentManagement001Mapper.getAssetInfo(param);

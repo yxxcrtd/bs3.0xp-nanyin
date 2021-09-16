@@ -63,16 +63,16 @@ values ('3108','SVR','资产交易信息登记直连报送批处理',null,'sdAss
 /***删除原中债反馈批处理**/
 DELETE FROM SYS_BATCH_TASK WHERE TASK_ID = '3004' AND BEAN_NAME = 'cnBondConnectMsgService';
 
-/** 产品版本使用 徽商使用下面**/
+/** 产品版本使用 徽商使用下面
 delete from sys_batch_task where task_id='3083';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('3083','SVR','产品发行登记生成批处理',null,'svrInProdIssueInfoTaskService',3100,'system',null,SysDate,'system',SysDate);
-
-/**徽商使用 
+**/
+/**徽商使用 **/
 delete from sys_batch_task where task_id='3201';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('3201','SVR','产品发行登记生成批处理',null,'svrInProdIssueInfoTaskService',3100,'system',null,SysDate,'system',SysDate);
-**/
+
 delete  from SYS_BATCH_TASK  where TASK_ID='3087'; 
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('3087','SVR','资产负债登记要素生成批处理',null,'svrInAssetInfoTaskService',3100,'system',null,SysDate,'system',SysDate);
@@ -82,17 +82,17 @@ delete  from SYS_BATCH_TASK  where TASK_ID='3080';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
 values ('3080','SVR','产品申报登记生成批处理',null,'svrInProdDeclareInfoTaskService',3100,'system',null,SysDate,'system',SysDate);
 
-/** 产品版本使用 徽商使用下面**/
+/** 产品版本使用 徽商使用下面
 delete  from SYS_BATCH_TASK  where  TASK_ID='3084';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values
 ('3084','SVR','产品存续期登记生成批处理',null,'svrInProdDealTaskService',3100,'system',null,SysDate,'system',SysDate);
+**/
 
-
-/**  徽商使用
+/**  徽商使用 **/
 delete  from SYS_BATCH_TASK  where  TASK_ID='3202';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values
 ('3202','SVR','产品存续期登记生成批处理',null,'svrInProdDealTaskService',3100,'system',null,SysDate,'system',SysDate);
- **/
+
 /**产品募集总量登记生成批处理脚本添加*/
 delete  from SYS_BATCH_TASK  where TASK_ID='3085'; 
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
@@ -118,8 +118,7 @@ Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TAS
 values ('3093','SVR','底层资产持仓信息生成批处理',null,'svrInBottomAstPositionTaskService',3100,'system',null,sysdate,'system',sysdate);
 
 delete from  SYS_BATCH_TASK  where TASK_ID='811';
-INSERT INTO SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) 
-VALUES ('811', 'CHB', '解析中债反馈任务', null, 'chbFeedBackRunner', 0, 'system', null, SYSDATE, 'system', SYSDATE);
+INSERT INTO SYS_BATCH_TASK (TASK_ID, SYSTEM_CODE, TASK_NAME, FTASK_ID, BEAN_NAME, TASK_PRI, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('811', 'CHB', '解析中债反馈任务', null, 'chbFeedBackRunner', 0, 'system', null, SYSDATE, 'system', SYSDATE);
 
 delete  from  SYS_BATCH_TASK  where  TASK_ID='3078';
 Insert into SYS_BATCH_TASK (TASK_ID,SYSTEM_CODE,TASK_NAME,FTASK_ID,BEAN_NAME,TASK_PRI,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values 
@@ -140,11 +139,18 @@ UPDATE sys_batch_task SET TASK_NAME = '底层资产持仓信息登记生成批�
 
 
 /*****************============sys_para========*****************/
-
+update    sys_para  set remark='资本公积取数配置,01(产品余额表)，02(人行产品头寸)，03(产品指标表)'  where para_code='SVR_ZBGJ_PERSON_LOGIC';
+DELETE FROM SYS_PARA WHERE PARA_CODE='SEND_CB_DATA_COUNT_PER_TIME_FIRST';
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
+values ('SVR','SEND_CB_DATA_COUNT_PER_TIME_FIRST','50000',' ',null,'中债一二期直连报送每批次处理数据条数','system',null,sysdate,'system',sysdate);
 delete  from SYS_PARA  where  para_code='CHB_WARNING_CHECKRESULT_IS_SEND';
-INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE , REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER , UPDATE_TIME) 
-VALUES ('SVR', 'CHB_WARNING_CHECKRESULT_IS_SEND', '01', ' ', NULL , '中债一二期直连报送前检查预警信息是否发送接口', 'system', NULL, sysdate, 'system' , sysdate);
+INSERT INTO SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE , REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER , UPDATE_TIME) VALUES ('SVR', 'CHB_WARNING_CHECKRESULT_IS_SEND', '01', ' ', NULL , '中债一二期直连报送前检查预警信息是否发送接口', 'system', NULL, sysdate, 'system' , sysdate);
 
+DELETE FROM   SYS_PARA  WHERE   PARA_CODE='SVR_IS_EQUDET_CONUT';
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR','SVR_IS_EQUDET_CONUT','01',null,null,'募集登记客户数是否走投资者明细中取(01:是  02:否)','system',null,sysdate,'system',sysdate);
+delete  from  SYS_PARA  where  para_code='SVR_IS_TOATL_YES_NO';
+Insert into SYS_PARA (SYSTEM_CODE,PARA_CODE,PARAM_VALUE,DATA_TYPE,DATA_SCOPE,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
+values ('VAL','SVR_IS_TOATL_YES_NO','N','01','(null)','是否走产品汇总分支 N(默认):否 Y:是','system',null,SYSDATE,'system',SYSDATE);
 /***报送数据修改,限制申报登记为5条每批次,其他资产为1万每批次**/
 DELETE FROM SYS_PARA WHERE PARA_CODE in ('SEND_CB_DATA_COUNT_PER_TIME_FIRST','SEND_CB_DATA_DECLARE_MAXCOUNT');
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
@@ -152,22 +158,28 @@ values ('SVR', 'SEND_CB_DATA_COUNT_PER_TIME_FIRST', '10000', ' ', null, '中债�
 insert into SYS_PARA (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('SVR', 'SEND_CB_DATA_DECLARE_MAXCOUNT', '5', ' ', null, '中债一二期直连报送产品申报登记单次最大报送条数(申报包含申报附件,内容较大,不建议过大.报送时间过长会导致数据库连接池中断)', 'system', null, SYSDATE, 'system', SYSDATE);
 
-update    sys_para  set remark='资本公积取数配置,01(产品余额表)，02(人行产品头寸)，03(产品指标表)'  where para_code='SVR_ZBGJ_PERSON_LOGIC';
-/****20.20210511_修改中债交易对手取值的备注**/
-update sys_para set remark='【中债交易对手取值】0：真实交易对手，即交易表存的交易对手， 1：虚拟交易对手，参数配置' where para_code='SVR_IF_REAL_COUNTER';
+DELETE FROM sys_para WHERE PARA_CODE = 'SVR_IS_SUBSIDIARY';
+insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('SVR', 'SVR_IS_SUBSIDIARY', '01', '', '', '是否子公司(01：是 02：否)', 'system', '', SYSDATE, 'why', SYSDATE);
 
 
+
+--menu脚本
+delete  from sys_menu where page_id = 'InvestorsQualityCheck001';
+Insert into sys_menu (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('REPORT_001_002_007','REP',null,'REPORT_001_002','InvestorsQualityCheck001',7,'02','投资者质量核查','system',null,SYSDATE,'system',SYSDATE);
+--page脚本
+delete from  SYS_PAGE where page_id = 'InvestorsQualityCheck001';
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('InvestorsQualityCheck001','REP','/svreport/submitexamination/investorsqualitycheck/InvestorsQualityCheck001','report/submitexamination/investorsqualitycheck/InvestorsQualityCheck001','REPORT_001_002_007',null,null,'02','02','投资者质量核查','system',null,SYSDATE,'system',SYSDATE);
 
 
 /*****************============SYS_MENU|SYS_PAGE========*****************/
 
 
---增加中债反馈文件匹配页面
-delete from SYS_PAGE where PAGE_ID in ('ChbFeedbackFileManagement001','ChbFeedbackFileManagement002');
-INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement001', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'REPORT_001_006_008', null, null, '02', '02', '中债反馈文件管理', 'system', null, sysdate, 'system', sysdate);
-INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement002', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement002', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement002', 'REPORT_001_006_008', null, null, '02', '02', '中债反馈文件匹配', 'system', null, sysdate, 'system', sysdate);
 
 
+delete from SYS_MENU where menu_id = 'REPORT_001_003_000';
+Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
+values ('REPORT_001_003_000','SVR',null,'REPORT_001_003','SvrEmployeeInfoReg001',0,'02','从业人员登记','system',null,sysdate,'system',sysdate);
 
 delete from SYS_PAGE where PAGE_ID = 'SvrEmployeeInfoReg001';
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) 
@@ -190,6 +202,15 @@ Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_IT
 Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('FinProjectTargetAsset002','BussFinBondRepInfo','SVR_REGIST_ORG','02','上海清算所',null,'admin',null,sysdate,'admin',sysdate);
 Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('FinProjectTargetAsset002','BussFinBondRepInfo','SVR_REGIST_ORG','03','中国证券登记结算有限责任公司',null,'admin',null,sysdate,'admin',sysdate);
 Insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,DICT_ITEM_VAL_DEFAULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('FinProjectTargetAsset002','BussFinBondRepInfo','SVR_REGIST_ORG','99','其他',null,'admin',null,sysdate,'admin',sysdate);
+
+/********  20200629-隐藏产品登记页面相关按钮列表脚本 BY wm start *******/
+delete from PAGE_ELEMENT_CONFIG where page_id = 'ProRegistCodeManage001';
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('43', 'ProRegistCodeManage001', 'ProRegistCodeManage001_btn_sendSale', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('44', 'ProRegistCodeManage001', 'ProRegistCodeManage001_sendStatus', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('45', 'ProRegistCodeManage001', 'send_status_table_link', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('46', 'ProRegistCodeManage001', 'send_status_table', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('47', 'ProRegistCodeManage001', 'send_remark_table', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO PAGE_ELEMENT_CONFIG (SEQ_NO, PAGE_ID, ELEMENT_ID, ROLE_ID, USER_ID, IS_SHOW, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('51', 'ProRegistCodeManage001', 'ProRegistCodeManage001_btn_importnew', null, null, 'N', 'system', null, sysdate, 'system', sysdate);
 
 
 /*****************============SYS_DATADICT========*****************/
@@ -1042,7 +1063,20 @@ Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_V
 
 delete from SYS_DATADICT_LIST where dict_code='SVR_MANAGE_STYLE' and ITEM_CODE='99';
 
+/****20.20210511_修改中债交易对手取值的备注**/
+update sys_para set remark='【中债交易对手取值】0：真实交易对手，即交易表存的交易对手， 1：虚拟交易对手，参数配置' where para_code='SVR_IF_REAL_COUNTER';
 
+
+/****21.20210513_新增反馈文件管理功能页面***/
+--增加中债反馈文件管理菜单和页面
+delete from SYS_MENU where PAGE_ID = 'ChbFeedbackFileManagement001';
+delete from SYS_PAGE where PAGE_ID in ('ChbFeedbackFileManagement001','ChbFeedbackFileManagement002');
+
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_006_008', 'REP', null, 'REPORT_001_006', 'ChbFeedbackFileManagement001', 10, '02', '中债反馈文件管理', 'system', null, TO_TIMESTAMP('2019-03-13 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'), 'system', TO_TIMESTAMP('2019-03-13 00:00:00.000000', 'YYYY-MM-DD HH24:MI:SS.FF6'));
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement001', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'REPORT_001_006_008', null, null, '02', '02', '中债反馈文件管理', 'system', null, sysdate, 'system', sysdate);
+
+--增加中债反馈文件匹配页面
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement002', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement002', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement002', 'REPORT_001_006_008', null, null, '02', '02', '中债反馈文件匹配', 'system', null, sysdate, 'system', sysdate);
 
 --增加中债一二三期文件处理状态字典
 delete from SYS_DATADICT where DICT_CODE = 'FILE_HANDLE_STATUS';
@@ -1077,6 +1111,13 @@ INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 INSERT INTO SYS_PAGE_DICTLIST (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DICT_ITEM_VAL_CNNAME, DICT_ITEM_VAL_DEFAULT, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement001', '999999', 'SVR_REPORT_CODE', '12', null, null, 'system', null, SYSDATE, 'system', SYSDATE);
 
 
+/***26.20210518_新增报送状态查询页面**/
+--新增菜单和页面
+delete from SYS_MENU where PAGE_ID = 'ReportStatusInfo001';
+delete from SYS_PAGE where PAGE_ID = 'ReportStatusInfo001';
+
+INSERT INTO SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('REPORT_001_006_006', 'REP', null, 'REPORT_001_006', 'ReportStatusInfo001', 6, '02', '发送状态信息查询', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ReportStatusInfo001', 'REP', '/svreport/system/reportstatusinfo/ReportStatusInfo001', 'report/system/reportstatusinfo/ReportStatusInfo001', 'REPORT_001_006_006', null, null, '02', '02', '发送状态信息查询', 'system', null, sysdate, 'system', sysdate);
 
 --新增页面字典
 delete from SYS_PAGE_DICTLIST where PAGE_ID = 'ReportStatusInfo001' and DICT_ID = 'SVR_REPORT_CODE';
@@ -1114,9 +1155,8 @@ INSERT INTO SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT
 
 
 /***31.20210520_添加九大附件批量上传附件上传页面菜单**/
-delete from sys_page where page_id = 'SvrPerProDeclareReg002';
-insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SvrPerProDeclareReg002', 'SVR', '/chb/perprodeclarereg/PerProDeclareReg002', 'report/chb/perprodeclarereg/PerProDeclareReg002', 'REPORT_003002001', null, null, '02', '02', '产品申报登记', 'system', null, sysdate, 'system', sysdate);
+delete from SYS_PAGE where PAGE_ID='SvrPerProDeclareReg002';
+Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SvrPerProDeclareReg002','SVR','/report/chb/perprodeclarereg/PerProDeclareReg002','report/chb/perprodeclarereg/PerProDeclareReg002',null,null,null,'02','02','附件上传','system',null,sysdate,'system',sysdate);
 
 
 /****32.20210525_反馈文件管理页面按钮增加权限控制*/
@@ -1125,604 +1165,12 @@ INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRA
 INSERT INTO SYS_PAGE_ELEMENT (PAGE_ID, ELEMENT_ID, ELEMENT_TYPE, IS_CONTROL, TRANSFER_PAGE_ID, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME) VALUES ('ChbFeedbackFileManagement001', 'ChbFeedbackFileManagement001_btn_backup', '01', '01', null, '文件移除备份', 'system', null, sysdate, 'system', sysdate);
 
 
---资产五级分类映射关系调整脚本  删除2202-039  新增2202-163
-delete from SYS_DATADICT_LIST_LINK where DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '2202' AND LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' AND LINKED_ITEM_CODE = '039';
-delete from SYS_DATADICT_LIST_LINK where DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '2202' AND LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' AND LINKED_ITEM_CODE = '163';
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','2202','CUSTOM_ASSET_TYPE_FIVE','163','system',null,sysdate,'system',sysdate);
-
-
-
-
---修改计划类资产三级分类数据字典参数值
-delete from SYS_DATADICT_LIST where dict_code = 'CUSTOM_ASSET_TYPE_THREE' and item_code in ('52','53','54','55','56');
-
-Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('CUSTOM_ASSET_TYPE_THREE','52','券商资产管理产品',52,'0','system',null,sysdate,'system',sysdate,null);
-Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('CUSTOM_ASSET_TYPE_THREE','53','基金资产管理产品',53,'0','system',null,sysdate,'system',sysdate,null);
-Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('CUSTOM_ASSET_TYPE_THREE','54','期货资产管理产品',54,'0','system',null,sysdate,'system',sysdate,null);
-Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('CUSTOM_ASSET_TYPE_THREE','55','保险资产管理产品',55,'0','system',null,sysdate,'system',sysdate,null);
-Insert into SYS_DATADICT_LIST (DICT_CODE,ITEM_CODE,ITEM_VALUE,ORDER_NO,DEFAULT_VALUE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,INSTITUTION_CODE) values ('CUSTOM_ASSET_TYPE_THREE','56','其他资产管理产品',56,'0','system',null,sysdate,'system',sysdate,null);
-
-
-
---计划类净值型资产根据五级分类调整下拉框联动
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE <> '1701';
-
-
-
-DELETE FROM SYS_BATCH_TASK WHERE TASK_ID IN ('3201','3202');
-
-
-delete from SYS_PAGE_DICTLIST where PAGE_ID='CheckReport001' and SUB_PAGE_ID='999999' and DICT_ID='SVR_CHECK_RESULT'  and DICT_ITEM_VAL='02' and DICT_ITEM_VAL_CNNAME='检查不通过';
-delete from SYS_PAGE_DICTLIST where PAGE_ID='CheckReport001' and SUB_PAGE_ID='999999' and DICT_ID='SVR_CHECK_RESULT'  and DICT_ITEM_VAL='03' and DICT_ITEM_VAL_CNNAME='存在预警信息项';
-
-insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values ('CheckReport001','999999','SVR_CHECK_RESULT','02','检查不通过','system',sysdate,'system',sysdate);
-insert into SYS_PAGE_DICTLIST (PAGE_ID,SUB_PAGE_ID,DICT_ID,DICT_ITEM_VAL,DICT_ITEM_VAL_CNNAME,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME)values ('CheckReport001','999999','SVR_CHECK_RESULT','03','存在预警信息项','system',sysdate,'system',sysdate);
-
-
-DELETE FROM sys_trash_not_target_page WHERE page_id = 'SvrTransformRule002';
-insert into sys_trash_not_target_page (SEQ_NO,page_id) values(sys_guid(),'SvrTransformRule002');
-
-
-DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE1';
-insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_ASSETDEBT_TYPE1', 'REP', '资产/负债类别', null, '02', 'system', null, sysdate, 'system', sysdate);
-DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE1';
-insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-SELECT 'SVR_ASSETDEBT_TYPE1',T.ITEM_CODE,T.ITEM_VALUE,T.ORDER_NO,T.DEFAULT_VALUE,T.CREATE_USER,T.CREATE_DEPT,SYSDATE,T.UPDATE_USER,SYSDATE,T.INSTITUTION_CODE FROM SYS_DATADICT_LIST T WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE' AND ITEM_CODE != 'L01';
-
-
-
-
-
-
-
-
-delete from SYS_PAGE where PAGE_ID  IN ('ChbFeedbackFileManagement001','ChbSubinfoBatchLog001','ManuallyGeneratingPbcData001','PbcReportFileManage001',
-'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001','AutBatchProResultQuery001');
+/***32.20210526_新增支持中债excel导入_leipeng**/
+DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SvrSubOperationalInfo001';
 insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ChbFeedbackFileManagement001', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'REPORT_001_006_007', null, null, '02', '02', '中债反馈文件管理', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ChbSubinfoBatchLog001', 'REP', '/svreport/system/subinfobatchlog/ChbSubinfoBatchLog001', 'report/system/subinfobatchlog/ChbSubinfoBatchLog001', 'REPORT_001_006_008', null, null, '02', '02', '中债报送Excel下载', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ManuallyGeneratingPbcData001', 'SYS', '/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001', 'report/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001', 'REPORT_001_006_003', null, null, '02', '02', '手工生成人行报送文件', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PbcReportFileManage001', 'SYS', '/pbc/classic/pbcreportfilemanage/PbcReportFileManage001', 'report/pbc/classic/pbcreportfilemanage/PbcReportFileManage001', 'REPORT_001_006_002', null, null, '02', '02', '人行报送文件管理', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RegTimePoints001', 'REP', '/svreport/system/regtimepoints/RegTimePoints001', 'report/system/regtimepoints/RegTimePoints001', 'REPORT_001_006_001', null, null, '02', '02', '监管报送时点维护', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportStatusInfo001', 'REP', '/svreport/system/reportstatusinfo/ReportStatusInfo001', 'report/system/reportstatusinfo/ReportStatusInfo001', 'REPORT_001_006_006', null, null, '02', '02', '发送状态信息查询', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportUpInterfMonitor001', 'REP', '/svreport/system/upinterfmonitor/ReportUpInterfMonitor001', 'report/system/upinterfmonitor/ReportUpInterfMonitor001', 'REPORT_001_006_004', null, null, '02', '02', '上游接口文件读取处理监控', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DebtSubmitInfo001', 'REP', '/svreport/system/debtsubmitinfo/DebtSubmitInfo001', 'report/system/debtsubmitinfo/DebtSubmitInfo001', 'REPORT_001_006_005', null, null, '02', '02', '中债报送信息反馈', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AutBatchProResultQuery001', 'REP', '/svreport/system/autbatchproresultquery/AutBatchProResultQuery001', 'report/system/autbatchproresultquery/AutBatchProResultQuery001', 'REPORT_001_006_009', null, null, '02', '02', '自动报送批处理结果查询', 'system', null, SYSDATE, 'system', SYSDATE);
-
-
-
-
-
---投资者身份信息登记:EquityInfoRegist001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_cancelManual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_chbexport';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_checkData';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_export';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_exportDel';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_manual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_search';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfoRegist001' AND ELEMENT_ID='EquityInfoRegist001_btn_submit';
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='EquityInfoRegist001' and ELEMENT_ID='EquityInfoRegist001_btn_reset' and REMARK='重置';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='EquityInfoRegist001' and ELEMENT_ID='EquityInfoRegist001_btn_submitAgain' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('EquityInfoRegist001','EquityInfoRegist001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('EquityInfoRegist001','EquityInfoRegist001_btn_submitAgain','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---投资者持有信息登记:InvestorsHoldInfoRegist001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_cancelManual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_chbexport';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_checkData';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_export';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_manual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_reset';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_search';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfoRegist001' AND ELEMENT_ID='InvestorsHoldInfoRegist001_btn_submit';
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='InvestorsHoldInfoRegist001' and ELEMENT_ID='InvestorsHoldInfoRegist001_btn_submitAgain' and REMARK='重新报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='InvestorsHoldInfoRegist001' and ELEMENT_ID='InvestorsHoldInfoRegist001_btn_exportDel' and REMARK='导出删除模板';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('InvestorsHoldInfoRegist001','InvestorsHoldInfoRegist001_btn_submitAgain','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('InvestorsHoldInfoRegist001','InvestorsHoldInfoRegist001_btn_exportDel','01','01',null,'导出删除模板','system',null,sysdate,'system',sysdate,'C');
-
---投资者明细信息登记:SvrEquityBusiInfoRegist001
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_checkData' and REMARK='数据检查';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_submitAgain' and REMARK='重新报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_manual' and REMARK='手工处理';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_cancelManual' and REMARK='取消手工处理';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_export' and REMARK='导出查询结果';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_chbexport' and REMARK='导出中债Excel';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='EquityBusiInfoRegist001_btn_exportDel' and REMARK='导出删除模板';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='SvrEquityBusiInfoRegist001_btn_search' and REMARK='查询';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusiInfoRegist001' and ELEMENT_ID='SvrEquityBusiInfoRegist001_btn_reset' and REMARK='重置';
-
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_checkData','01','01',null,'数据检查','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_submitAgain','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_manual','01','01',null,'手工处理','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_cancelManual','01','01',null,'取消手工处理','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_export','01','01',null,'导出查询结果','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_chbexport','01','01',null,'导出中债Excel','system',null,sysdate,'system',sysdate,'COM');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','EquityBusiInfoRegist001_btn_exportDel','01','01',null,'导出删除模板','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','SvrEquityBusiInfoRegist001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'COM');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusiInfoRegist001','SvrEquityBusiInfoRegist001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C');
-
---产品发行登记SvrProdPersonIssue001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdPersonIssue001' and ELEMENT_ID='SvrProdPersonIssue001_btn_submitChb' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdPersonIssue001' and ELEMENT_ID='SvrProdPersonIssue001_btn_reSubmitChb' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdPersonIssue001','SvrProdPersonIssue001_btn_submitChb','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdPersonIssue001','SvrProdPersonIssue001_btn_reSubmitChb','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---产品存续期登记SvrProdDurationReg001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdDurationReg001' and ELEMENT_ID='ProdDurationReg001_btn_submitChb' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdDurationReg001' and ELEMENT_ID='ProdDurationReg001_btn_reSubmitChb' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdDurationReg001','ProdDurationReg001_btn_submitChb','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdDurationReg001','ProdDurationReg001_btn_reSubmitChb','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---产品募集总量登记SvrRaiseTotalRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrRaiseTotalRegist001' and ELEMENT_ID='SvrRaiseTotalRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrRaiseTotalRegist001' and ELEMENT_ID='SvrRaiseTotalRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrRaiseTotalRegist001','SvrRaiseTotalRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrRaiseTotalRegist001','SvrRaiseTotalRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---产品申报登记SvrPerProDeclareReg001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrPerProDeclareReg001' and ELEMENT_ID='SvrPerProDeclareReg001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrPerProDeclareReg001' and ELEMENT_ID='SvrPerProDeclareReg001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrPerProDeclareReg001','SvrPerProDeclareReg001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrPerProDeclareReg001','SvrPerProDeclareReg001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---产品终止登记SvrProdTerminationRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdTerminationRegist001' and ELEMENT_ID='SvrProdTerminationRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrProdTerminationRegist001' and ELEMENT_ID='SvrProdTerminationRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdTerminationRegist001','SvrProdTerminationRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrProdTerminationRegist001','SvrProdTerminationRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---资产要素登记SvrAssetInfoRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrAssetInfoRegist001' and ELEMENT_ID='AssetInfoRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrAssetInfoRegist001' and ELEMENT_ID='AssetInfoRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrAssetInfoRegist001','AssetInfoRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrAssetInfoRegist001','AssetInfoRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---资产估值信息登记SvrChbAstValueRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrChbAstValueRegist001' and ELEMENT_ID='ChbAstValueRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrChbAstValueRegist001' and ELEMENT_ID='ChbAstValueRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrChbAstValueRegist001','ChbAstValueRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrChbAstValueRegist001','ChbAstValueRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---底层资产持仓登记SvrChbBotAstPositionRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrChbBotAstPositionRegist001' and ELEMENT_ID='ChbBotAstPositionRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrChbBotAstPositionRegist001' and ELEMENT_ID='ChbBotAstPositionRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrChbBotAstPositionRegist001','ChbBotAstPositionRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrChbBotAstPositionRegist001','ChbBotAstPositionRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---交易信息登记SvrInvestTradeRegist001:添加报送与重新报送
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrInvestTradeRegist001' and ELEMENT_ID='InvestTradeRegist001_btn_submit' and REMARK='报送';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrInvestTradeRegist001' and ELEMENT_ID='InvestTradeRegist001_btn_reSubmit' and REMARK='重新报送';
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrInvestTradeRegist001','InvestTradeRegist001_btn_submit','01','01',null,'报送','system',null,sysdate,'system',sysdate,'C');
---INSERT 
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrInvestTradeRegist001','InvestTradeRegist001_btn_reSubmit','01','01',null,'重新报送','system',null,sysdate,'system',sysdate,'C');
-
---从业人员登记:SvrEmployeeInfoReg001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_manual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_cancelManual';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_chbexport';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_submitChb';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_reSubmitChb';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_search';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEmployeeInfoReg001' AND ELEMENT_ID='SvrEmployeeInfoReg001_btn_reset';
-
-
-
-
-
---投资者身份信息：EquityInfo001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfo001' AND ELEMENT_ID='EquityInfo001_btn_delete';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfo001' AND ELEMENT_ID='EquityInfo001_btn_import';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfo001' AND ELEMENT_ID='EquityInfo001_btn_export';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'EquityInfo001' AND ELEMENT_ID='EquityInfo001_btn_search';
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='EquityInfo001' and ELEMENT_ID='EquityInfo001_btn_add' and REMARK='新建';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='EquityInfo001' and ELEMENT_ID='EquityInfo001_btn_chbImport' and REMARK='导入代销数据';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='EquityInfo001' and ELEMENT_ID='EquityInfo001_btn_reset' and REMARK='重置';
---INSERT
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('EquityInfo001','EquityInfo001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('EquityInfo001','EquityInfo001_btn_chbImport','01','01',null,'导入代销数据','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('EquityInfo001','EquityInfo001_btn_reset','01','01',null,'重置','system',null,sysdate,'system',sysdate,'C');
-
---投资者持有信息：InvestorsHoldInfo001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_add';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_delete';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_import';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_export';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_search';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'InvestorsHoldInfo001' AND ELEMENT_ID='InvestorsHoldInfo001_btn_reset';
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='InvestorsHoldInfo001' and ELEMENT_ID='InvestorsHoldInfo001_btn_chbImport' and REMARK='导入代销数据';
---INSERT
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('InvestorsHoldInfo001','InvestorsHoldInfo001_btn_chbImport','01','01',null,'导入代销数据','system',null,sysdate,'system',sysdate,'C');
-
---投资者明细信息：SvrEquityBusinessDetails001
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEquityBusinessDetails001' AND ELEMENT_ID='SvrEquityBusinessDetails001_btn_delete';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEquityBusinessDetails001' AND ELEMENT_ID='SvrEquityBusinessDetails001_btn_import';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEquityBusinessDetails001' AND ELEMENT_ID='SvrEquityBusinessDetails001_btn_export';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'COM',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEquityBusinessDetails001' AND ELEMENT_ID='SvrEquityBusinessDetails001_btn_search';
-UPDATE SYS_PAGE_ELEMENT SET ADMIN_FLAG = 'C',IS_CONTROL='01' WHERE PAGE_ID = 'SvrEquityBusinessDetails001' AND ELEMENT_ID='SvrEquityBusinessDetails001_btn_reset';
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrEquityBusinessDetails001' and ELEMENT_ID='SvrEquityBusinessDetails001_btn_chbImport' and REMARK='导入代销数据';
---INSERT
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrEquityBusinessDetails001','SvrEquityBusinessDetails001_btn_chbImport','01','01',null,'导入代销数据','system',null,sysdate,'system',sysdate,'C');
-
---变形转换规则：SvrTransformRule001
---DELETE
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrTransformRule001' and ELEMENT_ID='TransformRule001_btn_add' and REMARK='新建';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrTransformRule001' and ELEMENT_ID='TransformRule001_btn_delete' and REMARK='删除';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrTransformRule001' and ELEMENT_ID='SvrTransformRule001_btn_export' and REMARK='导出';
-delete from SYS_PAGE_ELEMENT where PAGE_ID='SvrTransformRule001' and ELEMENT_ID='SvrTransformRule001_btn_search' and REMARK='查询';
---INSERT
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrTransformRule001','TransformRule001_btn_add','01','01',null,'新建','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrTransformRule001','TransformRule001_btn_delete','01','01',null,'删除','system',null,sysdate,'system',sysdate,'C');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrTransformRule001','SvrTransformRule001_btn_export','01','01',null,'导出','system',null,sysdate,'system',sysdate,'COM');
-insert into SYS_PAGE_ELEMENT (PAGE_ID,ELEMENT_ID,ELEMENT_TYPE,IS_CONTROL,TRANSFER_PAGE_ID,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME,ADMIN_FLAG)values ('SvrTransformRule001','SvrTransformRule001_btn_search','01','01',null,'查询','system',null,sysdate,'system',sysdate,'COM');
-
-
-
-delete from SYS_PAGE where PAGE_ID  IN ('ChbFeedbackFileManagement001','ChbSubinfoBatchLog001','ManuallyGeneratingPbcData001','PbcReportFileManage001',
-'RegTimePoints001','ReportStatusInfo001','ReportUpInterfMonitor001','DebtSubmitInfo001','AutBatchProResultQuery001');
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ChbFeedbackFileManagement001', 'REP', '/svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'report/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001', 'REPORT_001_006_007', null, null, '02', '02', '中债反馈文件管理', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ChbSubinfoBatchLog001', 'REP', '/svreport/system/subinfobatchlog/ChbSubinfoBatchLog001', 'report/system/subinfobatchlog/ChbSubinfoBatchLog001', 'REPORT_001_006_008', null, null, '02', '02', '中债报送Excel下载', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ManuallyGeneratingPbcData001', 'SYS', '/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001', 'report/pbc/classic/manuallygeneratingpbcdata/ManuallyGeneratingPbcData001', 'REPORT_001_006_003', null, null, '02', '02', '手工生成人行报送文件', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('PbcReportFileManage001', 'SYS', '/pbc/classic/pbcreportfilemanage/PbcReportFileManage001', 'report/pbc/classic/pbcreportfilemanage/PbcReportFileManage001', 'REPORT_001_006_002', null, null, '02', '02', '人行报送文件管理', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('RegTimePoints001', 'REP', '/svreport/system/regtimepoints/RegTimePoints001', 'report/system/regtimepoints/RegTimePoints001', 'REPORT_001_006_001', null, null, '02', '02', '监管报送时点维护', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportStatusInfo001', 'REP', '/svreport/system/reportstatusinfo/ReportStatusInfo001', 'report/system/reportstatusinfo/ReportStatusInfo001', 'REPORT_001_006_006', null, null, '02', '02', '发送状态信息查询', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('ReportUpInterfMonitor001', 'REP', '/svreport/system/upinterfmonitor/ReportUpInterfMonitor001', 'report/system/upinterfmonitor/ReportUpInterfMonitor001', 'REPORT_001_006_004', null, null, '02', '02', '上游接口文件读取处理监控', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('DebtSubmitInfo001', 'REP', '/svreport/system/debtsubmitinfo/DebtSubmitInfo001', 'report/system/debtsubmitinfo/DebtSubmitInfo001', 'REPORT_001_006_005', null, null, '02', '02', '中债报送信息反馈', 'system', null,sysdate, 'system', sysdate);
-insert into SYS_PAGE (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('AutBatchProResultQuery001', 'REP', '/svreport/system/autbatchproresultquery/AutBatchProResultQuery001', 'report/system/autbatchproresultquery/AutBatchProResultQuery001', 'REPORT_001_006_009', null, null, '02', '02', '自动报送批处理结果查询', 'system', null, SYSDATE, 'system', SYSDATE);
-
-
-
-
-
-
-
-----------------------------------------------------中债要素check  start---------------
---项目类资产根据五级分类调整下拉框联动
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '040' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' and ITEM_CODE = '2202';
-
-
---回退ZGBSSE-644错误删除的脚本
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '105' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '106' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '107' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '108' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '109' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '110' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '111' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '112' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '113' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '114' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '115' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '116' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '117' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '118' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '119' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '120' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '121' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_FIVE' and LINKED_ITEM_CODE = '122' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '51' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1701';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '52' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1703';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '53' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1704';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '54' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1706';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '55' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1702';
-delete from sys_datadict_list_link where  LINKED_DICT_CODE = 'CUSTOM_ASSET_TYPE_THREE' and LINKED_ITEM_CODE = '56' and DICT_CODE = 'SVR_ASSET_TYPE_SECOND_LEVEL' AND ITEM_CODE = '1705';
-
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','121                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_FIVE','122                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','105                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','106                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','107                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','108                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','109                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','110                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','111                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','112                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','113                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','114                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','115                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','116                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','117                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','118                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','119                                               ','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_FIVE','120                                               ','system',null,sysdate,'system',sysdate);
-
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1701','CUSTOM_ASSET_TYPE_THREE','51','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1703','CUSTOM_ASSET_TYPE_THREE','52','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1704','CUSTOM_ASSET_TYPE_THREE','53','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1706','CUSTOM_ASSET_TYPE_THREE','54','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1702','CUSTOM_ASSET_TYPE_THREE','55','system',null,sysdate,'system',sysdate);
-Insert into SYS_DATADICT_LIST_LINK (DICT_CODE,ITEM_CODE,LINKED_DICT_CODE,LINKED_ITEM_CODE,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME) values ('SVR_ASSET_TYPE_SECOND_LEVEL','1705','CUSTOM_ASSET_TYPE_THREE','56','system',null,sysdate,'system',sysdate);
-
-
-DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE1';
-SELECT * FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE';
-
-DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE1';
-insert into SYS_DATADICT (DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('SVR_ASSETDEBT_TYPE1', 'REP', '资产/负债类别', null, '02', 'system', null, sysdate, 'system', sysdate);
-DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE1';
-insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-SELECT 'SVR_ASSETDEBT_TYPE1',T.ITEM_CODE,T.ITEM_VALUE,T.ORDER_NO,T.DEFAULT_VALUE,T.CREATE_USER,T.CREATE_DEPT,SYSDATE,T.UPDATE_USER,SYSDATE,T.INSTITUTION_CODE FROM SYS_DATADICT_LIST T WHERE DICT_CODE = 'SVR_ASSETDEBT_TYPE' AND ITEM_CODE != 'L01';
-
-
-
---账户性质新增脚本
---add by lpf 2021-04-27 增加字段 账户性质
-DELETE FROM SYS_DATADICT WHERE DICT_CODE='ACCOUNT_NATURE';
-INSERT INTO SYS_DATADICT(DICT_CODE, SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-VALUES('ACCOUNT_NATURE', 'TG', '账户性质', NULL, '01', 'system', NULL, TIMESTAMP '2019-07-08 00:00:00.000000', 'system', TIMESTAMP '2019-07-08 00:00:00.000000');
-
-DELETE FROM SYS_DATADICT_LIST WHERE DICT_CODE='ACCOUNT_NATURE';
-INSERT INTO SYS_DATADICT_LIST(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-VALUES('ACCOUNT_NATURE', '01', '银行账户', 1, '0', 'system', NULL, TIMESTAMP '2019-03-05 00:00:00.000000', 'system', TIMESTAMP '2019-03-05 00:00:00.000000', NULL);
-INSERT INTO SYS_DATADICT_LIST(DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-VALUES('ACCOUNT_NATURE', '02', '非银行账户', 2, '0', 'system', NULL, TIMESTAMP '2019-03-05 00:00:00.000000', 'system', TIMESTAMP '2019-03-05 00:00:00.000000', NULL);
-
-
-
-----------------------------------------------------中债要素check  end------------------------------
-
-
-
-
+values ('SvrSubOperationalInfo001', 'SYS', '/common/submanagement/SvrSubOperationalInfo001', 'report/common/submanagement/SvrSubOperationalInfo001', 'REPORT_001_001_015', null, null, '02', '02', '中债excel数据导入', 'system', null, SYSDATE, 'system', SYSDATE);
+
+DELETE FROM SYS_MENU WHERE PAGE_ID = 'SvrSubOperationalInfo001';
+insert into SYS_MENU (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('REPORT_001_001_015', 'REP', null, 'REPORT_001_001', 'SvrSubOperationalInfo001', 15, '02', '中债excel数据导入', 'system', null, SYSDATE, 'system', SYSDATE);
 

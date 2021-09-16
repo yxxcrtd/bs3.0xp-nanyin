@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -155,7 +157,18 @@ public class AssetImpairmentProvisionReaderService {
 //				|| StringUtil.equals(DictCodeListExt1.周期单位_日.getValue(), lossTestRate)) {
 //			resultList = assetImpairmentProvisionMapper.queryTrdAssetLossProvisionReader(param);
 //		} else {
-       List<AssetImpairmentProvisionReaderResult> resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReader(param);
+        // add by weipeng 20210915：增加模型法减值计提查询逻辑 start
+        // 查询系统采用的减值方案
+        List<AssetImpairmentProvisionReaderResult> resultList = null;
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        if(lossType!=null && DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+            resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReaderPH(param);
+        }
+        //  否则，继续走原来的逻辑
+        else{
+           resultList = assetImpairmentProvisionMapper.queryTrdAssetLossReader(param);
+        }
+        // add by weipeng 20210915：增加模型法减值计提查询逻辑 end
 //		}
 		
 		// 获取场景代码会计分录

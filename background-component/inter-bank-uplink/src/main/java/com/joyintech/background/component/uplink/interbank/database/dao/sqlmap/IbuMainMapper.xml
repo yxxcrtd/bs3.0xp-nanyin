@@ -1380,8 +1380,6 @@ SELECT T.QUOTE_ID,
 					#{item, jdbcType=VARCHAR}
 				</foreach>
 			</if>
-			<if test="term !=null and term !=''">and a.TERM = #{term,jdbcType=VARCHAR}</if>
-
 			<if test="portfolioIdList != null and portfolioIdList.size() > 0">
 				and (
 				a.PORTFOLIO_ID in<foreach item="item" index="index" collection="portfolioIdList" open="(" separator="," close=")">
@@ -1481,10 +1479,10 @@ SELECT T.QUOTE_ID,
 			</if>
 			<!-- add by chenjiaxing 20210816 委托查询 start -->
 			<if test="termStart !=null and termStart !=''">
-				and a.TERM <![CDATA[<=]]> #{termStart,jdbcType=VARCHAR}
+				and a.TERM <![CDATA[>=]]> #{termStart,jdbcType=VARCHAR}
 			</if>
 			<if test="termEnd !=null and termEnd !=''">
-				and a.TERM >= #{termEnd,jdbcType=VARCHAR}
+				and a.TERM <![CDATA[<=]]> #{termEnd,jdbcType=VARCHAR}
 			</if>
 			<if test="ouPartyIdList != null and ouPartyIdList.size() > 0">
 				and a.OU_PARTY_ID in

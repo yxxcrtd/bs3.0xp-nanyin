@@ -6,8 +6,12 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.batchtask.model.dto.BatchExecutingStatusDto;
 import com.joyintech.tams.valuation.lossmodel.batchtask.model.dto.BatchTaskDto;
@@ -107,9 +111,15 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
      * @return
      */
     public Page<SelectOptionDto> getAssetInfo(Map<String, Object> pageParam) {
-        Page<SelectOptionDto> page = restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                + "/modValBatchTask/getAssetInfo", pageParam, SelectOptionDto.class);
-        return page;
+        //带入系统参数 01毕马威 02普华
+        pageParam.put("lossType", CacheUtil.getSysParam(DictCode.减值方案类型.getValue()));
+        if(CacheUtil.getSysParam(DictCode.减值方案类型.getValue()).equals(DictCodeListExt3.减值方案类型_普华.getValue())){
+            return restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
+                    + "/LossModCommon/getModAssetInfoPagePH", pageParam, SelectOptionDto.class);
+        }else{
+            return restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
+                    + "/LossModCommon/getModAssetInfoPageBMW", pageParam, SelectOptionDto.class);
+        }
     }
 
     /**
