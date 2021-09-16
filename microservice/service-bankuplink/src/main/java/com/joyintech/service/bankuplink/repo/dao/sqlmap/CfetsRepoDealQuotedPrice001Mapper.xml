@@ -793,7 +793,9 @@
     		   qcph.PLEDGE_FINPROD_ID,
     		   fp.FINPROD_ABBR,
     		   (qcph.PLEDGE_RATIO * 100) PLEDGE_RATIO,
-    		   qcph.PLEDGE_AMT PLEDGE_AMT
+    		   qcph.PLEDGE_AMT PLEDGE_AMT,
+    		   qch.ZZ_TOTAL_AMT zzTotalAmt,
+    		   qch.SQ_TOTAL_AMT sqTotalAmt
     	FROM IBU_QUOTE_CREP_HIS qch
     	LEFT JOIN IBU_QUOTE_CREP_PLEDGE_HIS qcph
     	ON qch.QUOTE_ID = qcph.QUOTE_ID and qch.VERSION = qcph.VERSION
