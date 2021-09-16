@@ -203,9 +203,9 @@ public class LgdSpecialConfigService extends  CommonExportService<LgdSpecialConf
         //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         if(StringUtil.equals(DictCodeListExt3.减值方案类型_普华.getValue(),lossType)){
-            return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
-        }else{
             return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPagePH", param, SelectOptionDto.class);
+        }else{
+            return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
         }
 
     }

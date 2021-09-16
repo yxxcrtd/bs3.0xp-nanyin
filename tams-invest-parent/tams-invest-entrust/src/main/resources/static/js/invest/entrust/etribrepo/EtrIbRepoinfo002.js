@@ -324,6 +324,11 @@
             if (param.remark) {
                 $("#remark").val(param.remark).trigger("change");//备注
             }
+            //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 start
+            if (param.counterId) {
+                $("#counterId").textSelect('setValue',param.counterId);
+            }
+            //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 end
             pageModel = PAGE_MODEL_EDIT;
             //operType = ENTRUST_RECORD_MODIFY;
         }

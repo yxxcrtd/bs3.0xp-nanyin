@@ -1,0 +1,4 @@
+ALTER TABLE  PBC_SEND_ZIP_DAT_FILE ADD    ENDDATE            DATE;
+comment on column PBC_SEND_ZIP_DAT_FILE.ENDDATE
+  is '结束日期';
+

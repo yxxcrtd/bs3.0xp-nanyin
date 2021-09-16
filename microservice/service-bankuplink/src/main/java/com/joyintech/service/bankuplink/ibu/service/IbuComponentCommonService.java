@@ -2631,6 +2631,14 @@ public class IbuComponentCommonService extends BaseService {
         dto.setAvaNum(ArithmeticUtil.divide(ibuQuoteCrepDto.getShareAmt(), new BigDecimal(10000), 2));
         dto.setCbShareCtAmt(ibuQuoteCrepDto.getCbShareCtAmt());// 中债折算券面金额
         dto.setScShareCtAmt(ibuQuoteCrepDto.getScShareCtAmt());// 上清折算券面金额
+        //add by chenjiaxing 界面未展示中债上清面额 20210915 start
+        if(ibuQuoteCrepDto.getZzTotalAmt() != null){
+            dto.setZzTotalAmt(ibuQuoteCrepDto.getZzTotalAmt());
+        }
+        if(ibuQuoteCrepDto.getSqTotalAmt() != null){
+            dto.setSqTotalAmt(ibuQuoteCrepDto.getSqTotalAmt());
+        }
+        //add by chenjiaxing 界面未展示中债上清面额 20210915 end
         dto.setDealAmt(ibuQuoteCrepDto.getFpriceAmt());// 全价总额
         // dto.setShareCtAmt(ibuQuoteCrepDto.getShareCtAmt());// 折算券面金额
         if (!StringUtil.isNotEmpty(dto.getShareCtAmt())) {

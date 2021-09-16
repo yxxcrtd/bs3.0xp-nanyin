@@ -224,662 +224,662 @@ CREATE TABLE
     );
 COMMENT ON TABLE RSK_ASSET_INFO
 IS
-    '�ʲ�Ҫ�ر�';
+    '资产要素表';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_UUID
 IS
-    '�ʲ�Ҫ��uuid��Ϊ�޸�ɾ��ʹ�ã�';
+    '资产要素uuid（为修改删除使用）';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_CODE
 IS
-    '�����ʲ���ծ����';
+    '行内资产负债编码';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_TYPE
 IS
-    '�ʲ�����';
+    '资产类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_TYPE2
 IS
-    '�ʲ�/��ծ������� �ο������ֵ�:ASSET_TYPE_SECOND_LEVEL';
+    '资产/负债二级类别 参考数据字典:ASSET_TYPE_SECOND_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.CCY
 IS
-    '���� �ο������ֵ䣺CURRENCY_CHB';
+    '币种 参考数据字典：CURRENCY_CHB';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRADE_MARKET
 IS
-    '������ͨ���� 01 ���м�ծȯ�г�/02 ��ҵ���й�̨�г�/03 �Ϻ�֤ȯ������/04 ����֤ȯ������/05 ȫ����С��ҵ�ɷ�ת��ϵͳ/06 �Ϻ��ڻ�������/07 ֣����Ʒ������/08 ������Ʒ������/09 �й������ڻ�������/10 �Ϻ��ƽ�����/11 �����Բ�Ȩ/�ʲ������г�/12 ��������Ʒ������/13 �����Թ����������/14 ����Ʒ�г�/15 �����г�/16 �����г�/17ȫ�����м�ͬҵ����г� /18 �Ϻ�Ʊ�ݽ�����/99 ����������ͨ����'
+    '交易流通场所 01 银行间债券市场/02 商业银行柜台市场/03 上海证券交易所/04 深圳证券交易所/05 全国中小企业股份转让系统/06 上海期货交易所/07 郑州商品交易所/08 大连商品交易所/09 中国金融期货交易所/10 上海黄金交易所/11 区域性产权/资产交易市场/12 区域性商品交易所/13 区域性贵金属交易所/14 艺术品市场/15 基金市场/16 信托市场/17全国银行间同业拆借市场 /18 上海票据交易所/99 其他交易流通场所'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.VDATE
 IS
-    '��Ϣ��';
+    '起息日';
 COMMENT ON COLUMN RSK_ASSET_INFO.MDATE
 IS
-    '������';
+    '到期日';
 COMMENT ON COLUMN RSK_ASSET_INFO.DISCOUNT_YIELD
 IS
-    '��������';
+    '贴现利率';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_YIELD
 IS
-    '������/������';
+    '收益率/年利率';
 COMMENT ON COLUMN RSK_ASSET_INFO.BASIS
 IS
-    '��Ϣ���� 01 ACT/366��02 ACT/360��03 ACT/365��04 ACT/ACT��05 30/360';
+    '计息基础 01 ACT/366；02 ACT/360；03 ACT/365；04 ACT/ACT；05 30/360';
 COMMENT ON COLUMN RSK_ASSET_INFO.AMT
 IS
-    '���';
+    '金额';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_NAME
 IS
-    '�ʽ��������';
+    '资金存入银行';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_STRUCT
 IS
-    '�Ƿ�Ϊ�ṹ�Դ�� 01��/02��';
+    '是否为结构性存款 01是/02否';
 COMMENT ON COLUMN RSK_ASSET_INFO.TARGET_TYPE
 IS
-    '�ṹ�Դ��ҹ������� 01 ����/02 ����/03 ��Ʊ/04 ũ��Ʒ/05 ������Ʒ/06 �����/07 ծȯ/08 ָ�� /09 ����/10 �����ʲ�/11 �ڻ�/12 ��Ȩ/13 Զ��/14 ����/15 ���Ͻ�������Ʒ/99 ����'
+    '结构性存款挂钩标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.TARGET
 IS
-    '�ṹ�Դ��ҹ����';
+    '结构性存款挂钩标的';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_ID
 IS
-    '�ʲ�����';
+    '资产代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_NAME
 IS
-    '�ʲ�����';
+    '资产名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHB_SECTYPE
 IS
-    '�������01 ��ҵ������ͨծ/ 02 ��ҵ���дμ�ծ/ 03 ��ҵ���л���ʱ�ծ/ 04 ��ҵ���ж����ʱ�����/ 05 ֤ȯ��˾����ծ/ 06 ֤ȯ��˾��������ȯ/ 07 ���չ�˾����ծ/ 08 ����˾����ծ/ 09 �������޹�˾����ծ/ 10 �ʲ�������˾����ծ/ 11 ������ҵծ/ 12 ��Ŀ����ծȯ/ 13 ��ת����˾ծȯ/ 14 �ɽ�����˾ծȯ/ 15 ���뽻�׵Ŀ�ת����˾ծȯ/ 16 ��������ȯ��CP��/ 17 ����������ȯ��SCP��/ 18 ����Ʊ�ݣ�MTN��/ 19 ��Ŀ����Ʊ�ݣ�PRN��/ 20 ��С��ҵ����Ʊ�ݣ�SMECN��/ 21�ǹ�������ծ�����ʹ���/ 22 �Ŵ��ʲ�֧��֤ȯ/ 23 �ʲ�֧��ר��ƻ�/ 24 �ǽ�����ҵ�ʲ�֧��Ʊ�ݣ�ABN��/ 25 ���ʽ��ڻ���ծȯ/ 26 �������ծȯ/ 27 ������ڻ���ծȯ/ 28 �����˾ծȯ/ 99 ����ծȯ'
+    '具体类别01 商业银行普通债/ 02 商业银行次级债/ 03 商业银行混合资本债/ 04 商业银行二级资本工具/ 05 证券公司金融债/ 06 证券公司短期融资券/ 07 保险公司金融债/ 08 财务公司金融债/ 09 融资租赁公司金融债/ 10 资产管理公司金融债/ 11 集合企业债/ 12 项目收益债券/ 13 可转换公司债券/ 14 可交换公司债券/ 15 分离交易的可转换公司债券/ 16 短期融资券（CP）/ 17 超短期融资券（SCP）/ 18 中期票据（MTN）/ 19 项目收益票据（PRN）/ 20 中小企业集合票据（SMECN）/ 21非公开定向债务融资工具/ 22 信贷资产支持证券/ 23 资产支持专项计划/ 24 非金融企业资产支持票据（ABN）/ 25 国际金融机构债券/ 26 外国政府债券/ 27 外国金融机构债券/ 28 外国公司债券/ 99 其他债券'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.ISSUE_MODE
 IS
-    '���з�ʽ 01 ��������/02 �ǹ�������';
+    '发行方式 01 公开发行/02 非公开发行';
 COMMENT ON COLUMN RSK_ASSET_INFO.PARTY_GRADE
 IS
-    '���л���������������';
+    '发行机构主体信用评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.PARTY_TYPE1
 IS
-    '���л������ͣ�����ģ���֣� 01 ��С΢��ҵ/02 ������ҵ/99 ����';
+    '发行机构类型（按规模划分） 01 中小微企业/02 大型企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.PARTY_TYPE3
 IS
-    '���л������ͣ����������򻮷֣�01 ���¼�����ҵ/99 ����';
+    '发行机构类型（按技术领域划分）01 高新技术企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.PARTY_TYPE2
 IS
-    '���л������ͣ����������ͻ��֣�01 ������ҵ/02 ������ҵ/03 ˽Ӫ��ҵ/99 ����';
+    '发行机构类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY
 IS
-    '���л���������ҵһ������ ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_FIRST_LEVEL';
+    '发行机构所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_LEVEL2
 IS
-    '���л���������ҵ�������� ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL'
+    '发行机构所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.REGIST_ORG
 IS
-    '�Ǽ��йܻ��� 01 �����ծ�Ǽǽ����������ι�˾/ 02 �Ϻ�������/03 �й�֤ȯ�Ǽǽ����������ι�˾/99 ����';
+    '登记托管机构 01 中央国债登记结算有限责任公司/ 02 上海清算所/03 中国证券登记结算有限责任公司/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.REGISTORG_COMMENT
 IS
-    '�Ǽ��йܻ���˵��';
+    '登记托管机构说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.RIVAL_PARTY
 IS
-    '���ַ�';
+    '对手方';
 COMMENT ON COLUMN RSK_ASSET_INFO.TARGET_TYPE1
 IS
-    '�ع������� 01 ծȯ/ 02 ��Ʊ/03 �������Ʒ/99 ����';
+    '回购标的类别 01 债券/ 02 股票/03 基金类产品/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.TARGET_AMT
 IS
-    '�ع���Ľ��';
+    '回购标的金额';
 COMMENT ON COLUMN RSK_ASSET_INFO.COUNTRY_AREA
 IS
-    '�������һ���� �ο������ֵ䣺COUNTRY_AREA';
+    '所属国家或地区 参考数据字典：COUNTRY_AREA';
 COMMENT ON COLUMN RSK_ASSET_INFO.PROFIT_TYPE
 IS
-    '��/����Ȩ���� 01 ���д���/ 02 �Ŵ��ʲ�ת��/ 03 ί��ծȨ/ 04 Ӧ���˿�/ 05 ���ع�����Ĺ�Ȩ������/06 ˽ļծȨ/ 07 ������ȯ/ 08 ֤ȯ��˾����ƾ֤/ 09 ί�д���/ 99 ����'
+    '收/受益权类型 01 信托贷款/ 02 信贷资产转让/ 03 委托债权/ 04 应收账款/ 05 带回购条款的股权性融资/06 私募债权/ 07 融资融券/ 08 证券公司收益凭证/ 09 委托贷款/ 99 其他'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_RESALE
 IS
-    '�Ƿ��������뷵�� 01��/02��';
+    '是否属于买入返售 01是/02否';
 COMMENT ON COLUMN RSK_ASSET_INFO.TERM_DATE
 IS
-    '���ޣ��죩';
+    '期限（天）';
 COMMENT ON COLUMN RSK_ASSET_INFO.RATE_FLAG
 IS
-    '�Ƿ���Ԥ�������� 01��/02��';
+    '是否有预期收益率 01是/02否';
 COMMENT ON COLUMN RSK_ASSET_INFO.INTPAY_CYCLE
 IS
-    '��ϢƵ�ʣ�����/�Σ�';
+    '付息频率（个月/次）';
 COMMENT ON COLUMN RSK_ASSET_INFO.REPAY_CMT
 IS
-    '������Ϣ˵��';
+    '还本付息说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.BASIS_TYPE
 IS
-    '��׼�������� �ο������ֵ䣺BASIS_TYPE';
+    '基准利率种类 参考数据字典：BASIS_TYPE';
 COMMENT ON COLUMN RSK_ASSET_INFO.FLOAT_FACTOR
 IS
-    '��������';
+    '浮动因子';
 COMMENT ON COLUMN RSK_ASSET_INFO.SPREAD_RATE
 IS
-    '����';
+    '利差';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIE
 IS
-    '������';
+    '融资人';
 COMMENT ON COLUMN RSK_ASSET_INFO.FIN_ORG_CODE
 IS
-    '��������֯��������';
+    '融资人组织机构代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.FCR_GRADE_IN
 IS
-    '�������ڲ���������';
+    '融资人内部信用评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.FCR_GRADE_OUT
 IS
-    '�ⲿ�����������Ƽ��������������';
+    '外部评级机构名称及融资人评级结果';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIER_TYPE1
 IS
-    '���������ͣ�����ģ���֣� 01 ��С΢��ҵ/02 ������ҵ/99 ����';
+    '融资人类型（按规模划分） 01 中小微企业/02 大型企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIER_TYPE2
 IS
-    '���������ͣ����������򻮷֣�01 ���¼�����ҵ/99 ����';
+    '融资人类型（按技术领域划分）01 高新技术企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIER_TYPE3
 IS
-    '���������ͣ����������ͻ��֣�01 ������ҵ/02 ������ҵ/03 ˽Ӫ��ҵ/99 ����';
+    '融资人类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCE_PROJ
 IS
-    '������Ŀ';
+    '融资项目';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY1
 IS
-    '������������ҵһ������ ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_FIRST_LEVEL';
+    '融资人所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_LEVEL2_TYPE
 IS
-    '������������ҵ�������� ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL';
+    '融资人所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRO_INDUSTRY
 IS
-    '������Ŀ������ҵһ������ ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_FIRST_LEVEL';
+    '融资项目所属行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRO_INDUSTRY_LEVEL2
 IS
-    '������Ŀ������ҵ�������� ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL';
+    '融资项目所属行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_FLAG
 IS
-    '��Ŀ�Ƿ������ص�����ҵ������ 01 ��/ 02 ��';
+    '项目是否属于重点监控行业和领域 01 是/ 02 否';
 COMMENT ON COLUMN RSK_ASSET_INFO.MONIT_TYPE
 IS
-    '�ص�����ҵ��������� 01 ���ز�(���Ϸ�����)/ 02 �ط���������ƽ̨/ 03 ������������ҵ/ 04 ������һʣ����ҵ/ 99 ����';
+    '重点监控行业和领域类别 01 房地产(保障房除外)/ 02 地方政府融资平台/ 03 “铁公基”行业/ 04 “两高一剩”行业/ 99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.MON_TYPE_COMM
 IS
-    '�ص�����ҵ���������˵��';
+    '重点监控行业和领域类别说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.GUA_TYPE
 IS
-    '������ʽ  01 ���õ���/ 02 ��������֤/ 03 ��Ѻ/ 04 ��Ѻ/ 05 ��������/ 99 ����';
+    '担保方式  01 信用担保/ 02 第三方保证/ 03 抵押/ 04 质押/ 05 信用增级/ 99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.GUA_TYPE_REMARK
 IS
-    '������ʽ˵��';
+    '担保方式说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIER_GRADE
 IS
-    '��������������';
+    '融资人主体评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.IN_GRADE
 IS
-    '�ʲ��ڲ�����';
+    '资产内部评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.OUT_GRADE
 IS
-    '�ʲ��ⲿ����';
+    '资产外部评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHOSE
 IS
-    'ѡ��Ȩ';
+    '选择权';
 COMMENT ON COLUMN RSK_ASSET_INFO.CONDITION_CMM
 IS
-    '��Ȩ����˵��';
+    '行权条件说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.FIN_AREA
 IS
-    '��������������  �ο������ֵ䣺COUNTRY_AREA';
+    '融资人所属地区  参考数据字典：COUNTRY_AREA';
 COMMENT ON COLUMN RSK_ASSET_INFO.TOTAL_FEE_RATE
 IS
-    '�����ܷ���';
+    '融资总费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_RIGHT
 IS
-    '�Ƿ�Ϊ��/����Ȩ 01��/02��';
+    '是否为收/受益权 01是/02否';
 COMMENT ON COLUMN RSK_ASSET_INFO.NOTSTAND_SEC_TYPE
 IS
-    '�Ǳ�׼��ծȯ���ʲ����� 01 ��ҵ�жһ�Ʊ/ 02 ���гжһ�Ʊ/ 03 ����Ʊ��/ 04 �����Ʊ��/ 05 ����֤';
+    '非标准化债券类资产类型 01 商业承兑汇票/ 02 银行承兑汇票/ 03 其他票据/ 04 混合类票据/ 05 信用证';
 COMMENT ON COLUMN RSK_ASSET_INFO.NOTSTAND_SEC_NUM
 IS
-    '�Ǳ�׼��ծȯ���ʲ�����';
+    '非标准化债券类资产数量';
 COMMENT ON COLUMN RSK_ASSET_INFO.REMAIN_TERM
 IS
-    '��Ȩʣ������(��)';
+    '加权剩余期限(天)';
 COMMENT ON COLUMN RSK_ASSET_INFO.MAX_REMAIN_TERM
 IS
-    '�ʣ������(��)';
+    '最长剩余期限(天)';
 COMMENT ON COLUMN RSK_ASSET_INFO.MIN_REMAIN_TERM
 IS
-    '���ʣ������(��)';
+    '最短剩余期限(天)';
 COMMENT ON COLUMN RSK_ASSET_INFO.SHARES_TYPE
 IS
-    '��Ʊ���� 01 ��ͨ��/02 ���ȹ�/99 ����';
+    '股票类型 01 普通股/02 优先股/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_SHARES
 IS
-    '��ҵһ������ ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_FIRST_LEVEL';
+    '行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_SHARES2
 IS
-    '��ҵ�������� ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL';
+    '行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.INVEST_STAGE
 IS
-    'Ͷ�ʽ׶� 01 ������/ 02 ����/ 03 ������/ 04 ������/ 05 �ؽ���/ 06 ������/ 99 ����';
+    '投资阶段 01 种子期/ 02 起步期/ 03 扩张期/ 04 过渡期/ 05 重建期/ 06 已上市/ 99 其它';
 COMMENT ON COLUMN RSK_ASSET_INFO.SHARES_TYPE1
 IS
-    'Ͷ����ҵ���ͣ�����ģ���֣� 01 ��С΢��ҵ/02 ������ҵ/99 ����';
+    '投资企业类型（按规模划分） 01 中小微企业/02 大型企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.SHARES_TYPE2
 IS
-    'Ͷ����ҵ���ͣ����������ͻ��֣�01 ������ҵ/02 ������ҵ/03 ˽Ӫ��ҵ/99 ����';
+    '投资企业类型（按经济类型划分）01 国有企业/02 集体企业/03 私营企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.SHARES_TYPE3
 IS
-    'Ͷ����ҵ���ͣ����������򻮷֣�01 ���¼�����ҵ/99 ����';
+    '投资企业类型（按技术领域划分）01 高新技术企业/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_PLEDGE
 IS
-    '�Ƿ�Ϊ��Ѻ���� 01��/02��';
+    '是否为质押融资 01是/02否';
 COMMENT ON COLUMN RSK_ASSET_INFO.NOM_CAPI
 IS
-    '���屾��';
+    '名义本金';
 COMMENT ON COLUMN RSK_ASSET_INFO.TARGET_TYPE3
 IS
-    '������ 01 ����/02 ����/03 ��Ʊ/04 ũ��Ʒ/05 ������Ʒ/06 �����/07 ծȯ/08 ָ�� /09 ����/10 �����ʲ�/11 �ڻ�/12 ��Ȩ/13 Զ��/14 ����/15 ���Ͻ�������Ʒ/99 ����'
+    '标的类别 01 利率/02 汇率/03 股票/04 农产品/05 大宗商品/06 贵金属/07 债券/08 指数 /09 基金/10 另类资产/11 期货/12 期权/13 远期/14 互换/15 复合金融衍生品/99 其他'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.ISSUE_PARTY_ID
 IS
-    '���л�������';
+    '发行机构代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.TERM_MONTH
 IS
-    '���ޣ��£�';
+    '期限（月）';
 COMMENT ON COLUMN RSK_ASSET_INFO.GUARANTEE_CMT
 IS
-    '�������˵��';
+    '担保情况说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.SPECIAL_CMT
 IS
-    '�Ƿ�Ȩ�����������˵��';
+    '是否含权等特条款情况说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.CONTRACT_NAME
 IS
-    '��Լ����';
+    '合约名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.INCOME_RATIO
 IS
-    '�̶����沿����ռ����';
+    '固定收益部分所占比例';
 COMMENT ON COLUMN RSK_ASSET_INFO.DER_INSTR_RATIO
 IS
-    '�������ڹ�����ռ����';
+    '衍生金融工具所占比例';
 COMMENT ON COLUMN RSK_ASSET_INFO.DER_INSTR_INV_TYPE
 IS
-    '�������ڹ��߾���Ͷ�ʷ�ʽ';
+    '衍生金融工具具体投资方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.DER_INSTR_TARGET
 IS
-    '�������ڹ��߹ҹ�����ʲ�';
+    '衍生金融工具挂钩标的资产';
 COMMENT ON COLUMN RSK_ASSET_INFO.ACCT_MODE
 IS
-    '��Ϣ���㷽ʽ';
+    '利息结算方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.SPECIAL_CMT1
 IS
-    '��Ȩ���˵��';
+    '含权情况说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.MAX_YIELD
 IS
-    '�ṹ��Ʊ�����������';
+    '结构性票据最高收益率';
 COMMENT ON COLUMN RSK_ASSET_INFO.MIN_YIELD
 IS
-    '�ṹ��Ʊ�����������';
+    '结构性票据最低收益率';
 COMMENT ON COLUMN RSK_ASSET_INFO.BASIC_PRICE
 IS
-    '�ҹ�����ʲ���׼�۸�';
+    '挂钩标的资产基准价格';
 COMMENT ON COLUMN RSK_ASSET_INFO.REG_DATE_PRICE
 IS
-    '�ҹ�����ʲ��Ǽ��ռ۸�';
+    '挂钩标的资产登记日价格';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRADE_FEE
 IS
-    '���׷�';
+    '交易费';
 COMMENT ON COLUMN RSK_ASSET_INFO.PARTY_CODE
 IS
-    '�ʹܼƻ������˻�������';
+    '资管计划发起人机构编码';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHECK_CODE
 IS
-    '�ʹܼƻ��ǼǱ���';
+    '资管计划登记编码';
 COMMENT ON COLUMN RSK_ASSET_INFO.MANAGER_ID
 IS
-    '������';
+    '管理人';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRUSTEE_ID
 IS
-    '�й���';
+    '托管人';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRU_ACT_TYPE
 IS
-    '�ʽ�ʵ��Ͷ�� 01 �ṹ��Ͷ����/02 �����г�������/03 ծȯ��/04 ��Ʊ��/05 ��Ȩ��/06 ����Ͷ����/07 �����/08 �Ǳ�׼��ծȨ��/09 ���д����/10 ����ֱ�����ʹ�����/11 ������Ͷ���ʲ���/12 ���;���Ͷ����/13 ��ļ������/ 14 ˽ļ������/ 15 ��ҵ������ /16 ������Ʒ�� /17 ��Ʒ��/18 ͬҵ�浥��/19���ͬҵ�����뷵����'
+    '资金实际投向 01 结构性投资类/02 货币市场工具类/03 债券类/04 股票类/05 股权类/06 另类投资类/07 混合类/08 非标准化债权类/09 银行存款类/10 理财直接融资工具类/11 新增可投资资产类/12 代客境外投资类/13 公募基金类/ 14 私募基金类/ 15 产业基金类 /16 衍生产品类 /17 商品类/18 同业存单类/19拆放同业及买入返售类'
     ;
 COMMENT ON COLUMN RSK_ASSET_INFO.INVEST_TYPE
 IS
-    '�ʽ����÷�ʽ';
+    '资金运用方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.CAP_USE_INDU
 IS
-    '�ʽ�������ҵһ������ ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_FIRST_LEVEL';
+    '资金运用行业一级分类 枚举值数据字典：INSTITUTION_INDUSTRY_FIRST_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.PLAN_SDATE
 IS
-    '�ʹܼƻ���������';
+    '资管计划成立日期';
 COMMENT ON COLUMN RSK_ASSET_INFO.PLAN_EDATE
 IS
-    '�ʹܼƻ���ֹ����';
+    '资管计划终止日期';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRO_PROPERTY
 IS
-    '�ʹܼƻ�����/ί��Ͷ������ 01 ����/02 ��һ/03 ר��/04 ����/05 ר��/99 ����';
+    '资管计划属性/委外投资属性 01 集合/02 单一/03 专项/04 定向/05 专户/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.MAX_RATE
 IS
-    '���Ԥ��������';
+    '最高预期收益率';
 COMMENT ON COLUMN RSK_ASSET_INFO.MIN_RATE
 IS
-    '���Ԥ��������';
+    '最低预期收益率';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEBT_SCALE
 IS
-    '��ծ��ģ';
+    '负债规模';
 COMMENT ON COLUMN RSK_ASSET_INFO.BUY_STRUCT
 IS
-    '����ṹ 01 ����/02 �Ӻ�/03 ����';
+    '购买结构 01 优先/02 劣后/03 整体';
 COMMENT ON COLUMN RSK_ASSET_INFO.MANAGE_TYPE
 IS
-    '������ʽ 01 ����������������/02������ί�й�����/99����';
+    '管理方式 01 主动（自主管理）/02被动（委托管理）/99其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_CTRL_BOTTOM
 IS
-    '�Ƿ��ƿؼƻ��ײ��ʲ����� 01 ��/ 02 ��';
+    '是否掌控计划底层资产详情 01 是/ 02 否';
 COMMENT ON COLUMN RSK_ASSET_INFO.MGR_FEE_RATE
 IS
-    '��������';
+    '管理费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRU_FEE_RATE
 IS
-    '�йܷ���';
+    '托管费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRADE_FEE_RATE
 IS
-    '������غϼƷ���';
+    '交易相关合计费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.AGENCY_FEE_RATE
 IS
-    '�н��������ϼƷ���';
+    '中介服务机构合计费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.OTHER_FEE_RATE
 IS
-    '�����ϼƷ���';
+    '其他合计费率';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_VALUE
 IS
-    '�ʲ���ֵ';
+    '资产价值';
 COMMENT ON COLUMN RSK_ASSET_INFO.REGIST_ORG1
 IS
-    '�ǼǱ������� 01 �����ծ�Ǽǽ����������ι�˾/ 02 �Ϻ������� / 03 �й�֤ȯ�Ǽǽ����������ι�˾ / 04 �й�֤ȯͶ�ʻ���ҵЭ�� /99 ����';
+    '登记备案机构 01 中央国债登记结算有限责任公司/ 02 上海清算所 / 03 中国证券登记结算有限责任公司 / 04 中国证券投资基金业协会 /99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.MNG_ORG_NAME
 IS
-    '���������������';
+    '基金管理机构名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRU_ORG_NAME
 IS
-    '�����йܻ�������';
+    '基金托管机构名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.FUND_INVEST_ASSET
 IS
-    '����Ͷ���ʲ�';
+    '基金投资资产';
 COMMENT ON COLUMN RSK_ASSET_INFO.IN_ASSET_TYPE
 IS
-    '�����ʲ���� 01 ���ڹ�Ʊ��Ѻ�ع�/02 �����Ʊ��Ѻ����/03 ��������/99 ����';
+    '行内资产类别 01 场内股票质押回购/02 场外股票质押融资/03 融资租赁/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.IN_ASSET_TYPE_CMM
 IS
-    '�����ʲ����˵��';
+    '行内资产类别说明';
 COMMENT ON COLUMN RSK_ASSET_INFO.REMARK
 IS
-    '��ע';
+    '备注';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_UNDER_ASSET
 IS
-    '�Ƿ�ײ��ʲ� 01 ��/ 02 ��';
+    '是否底层资产 01 是/ 02 否';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_GOVERN_FUND
 IS
-    '�Ƿ���������Ͷ�ʻ��� 01 ��/ 02 ��';
+    '是否属于政府投资基金 01 是/ 02 否';
 COMMENT ON COLUMN RSK_ASSET_INFO.GOVERN_INVEST_FUND
 IS
-    '����Ͷ�ʻ���Ͷ�� 01 Ͷ��ҵ������ҵ/ 02 Ͷ����С΢��ҵ/ 03 Ͷ���ҵת�������ͷ�չ/ 04 Ͷ�������ʩ�͹�����������/99 ����';
+    '政府投资基金投向 01 投向创业早期企业/ 02 投向中小微企业/ 03 投向产业转型升级和发展/ 04 投向基础设施和公共服务领域/99 其他';
 COMMENT ON COLUMN RSK_ASSET_INFO.FUND_ENPE_NAME
 IS
-    '����˾����';
+    '基金公司名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRUSTEE
 IS
-    '������';
+    '受托人';
 COMMENT ON COLUMN RSK_ASSET_INFO.STATUS
 IS
-    '����״̬  D ɾ�� A ������ E ��Ч';
+    '数据状态  D 删除 A 待处理 E 有效';
 COMMENT ON COLUMN RSK_ASSET_INFO.CREATE_USER
 IS
-    '������';
+    '创建人';
 COMMENT ON COLUMN RSK_ASSET_INFO.CREATE_TIME
 IS
-    '����ʱ��';
+    '创建时间';
 COMMENT ON COLUMN RSK_ASSET_INFO.UPDATE_USER
 IS
-    '������';
+    '更新人';
 COMMENT ON COLUMN RSK_ASSET_INFO.UPDATE_TIME
 IS
-    '����ʱ��';
+    '更新时间';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEPT_CODE
 IS
-    '���Ŵ���';
+    '部门代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_CODE
 IS
-    '��������';
+    '机构代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.DATA_SOURCE
 IS
-    '������Դ';
+    '数据来源';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRIVATEFUND_FLAG
 IS
-    '�Ƿ�Ͷ�򡰽����ʲ�Ͷ�ʹ�˾���丽���������е�˽ļ��ȨͶ�ʻ���';
+    '是否投向“金融资产投资公司或其附属机构发行的私募股权投资基金';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRIVATEPRD_FLAG
 IS
-    '�Ƿ�Ͷ������ʲ�Ͷ�ʹ�˾���е�˽ļ�ʲ�������Ʒ';
+    '是否投向金融资产投资公司发行的私募资产管理产品';
 COMMENT ON COLUMN RSK_ASSET_INFO.BONDTOSTOCK_FLAG
 IS
-    '�Ƿ�Ͷ���г���ծת����ز�Ʒ�Ĳ��֡�';
+    '是否投向“市场化债转股相关产品的部分”';
 COMMENT ON COLUMN RSK_ASSET_INFO.PPPFLAG
 IS
-    '����PPP';
+    '公共PPP';
 COMMENT ON COLUMN RSK_ASSET_INFO.STATUS_DATE
 IS
-    '��������';
+    '数据日期';
 COMMENT ON COLUMN RSK_ASSET_INFO.CAP_USE_INDU_LEVEL2
 IS
-    '�ʽ�������ҵ�������� ö��ֵ�����ֵ䣺INSTITUTION_INDUSTRY_SECOND_LEVEL';
+    '资金运用行业二级分类 枚举值数据字典：INSTITUTION_INDUSTRY_SECOND_LEVEL';
 COMMENT ON COLUMN RSK_ASSET_INFO.ISSUE_PARTY_NAME
 IS
-    '���л���';
+    '发行机构';
 COMMENT ON COLUMN RSK_ASSET_INFO.SEC_CREDIT_GRADE_TYPE
 IS
-    'ծȯ��������';
+    '债券信用评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.SEC_MAIN_GRADE
 IS
-    'ծȯ��������';
+    '债券主体评级';
 COMMENT ON COLUMN RSK_ASSET_INFO.BLN_AREA
 IS
-    '������';
+    '境内外';
 COMMENT ON COLUMN RSK_ASSET_INFO.INDUSTRY_PBC
 IS
-    '������������ҵһ������';
+    '融资人所属行业一级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.CUSTOMER_OBJ_TYPE
 IS
-    '�ͻ���������,�����ֵ�:SVR_CUSTOMER_PRIN_TYPE';
+    '客户主体类型,数据字典:SVR_CUSTOMER_PRIN_TYPE';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_ASSET_TYPE1
 IS
-    '�����ʲ�һ������';
+    '上游资产一级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_ASSET_TYPE2
 IS
-    '�����ʲ���������';
+    '上游资产二级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_ASSET_TYPE3
 IS
-    '�����ʲ���������';
+    '上游资产三级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.BUY_PLACE
 IS
-    '������/��������������';
+    '发行人/融资人所属地区';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_CODE_OLD
 IS
-    '��ʷ�ʲ����룬������ֲʱˢ��';
+    '历史资产代码，数据移植时刷入';
 COMMENT ON COLUMN RSK_ASSET_INFO.ASSET_TYPE3
 IS
-    '�����ʲ�ϸ����:�ʲ�/��ծ�������=2201 �Ŵ��ʲ���ת��Ŀʱ���ö��ֵ��01 С΢��ҵ�Ŵ��ʲ���ת������Ȩת��/02 �Ŵ��ʲ�����Ȩת��';
+    '二级资产细分类:资产/负债二级类别=2201 信贷资产流转项目时必填，枚举值：01 小微企业信贷资产流转和收益权转让/02 信贷资产收益权转让';
 COMMENT ON COLUMN RSK_ASSET_INFO.PBC_ASSET_TYPE1
 IS
-    '�����ʲ�һ������';
+    '人行资产一级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.PBC_ASSET_TYPE2
 IS
-    '�����ʲ���������';
+    '人行资产二级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.PBC_ASSET_TYPE3
 IS
-    '�����ʲ���������';
+    '人行资产三级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_ASSET_TYPE4
 IS
-    '�����ʲ��ļ�����';
+    '上游资产四级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.ORG_ASSET_TYPE5
 IS
-    '�����ʲ��弶����';
+    '上游资产五级分类';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRIVATE_FLAG
 IS
-    '�Ƿ�Ͷ��ط���������ƽ̨';
+    '是否投向地方政府融资平台';
 COMMENT ON COLUMN RSK_ASSET_INFO.INSTIT_SIZE
 IS
-    '���л�����ģ';
+    '人行机构规模';
 COMMENT ON COLUMN RSK_ASSET_INFO.TRM_FUND_TYPE
 IS
-    '��������������';
+    '交易所基金类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_SEC_CAPITAL
 IS
-    '��ҵ���ж����ʱ�ծ';
+    '商业银行二级资本债';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_SEC_PREFER
 IS
-    '��ҵ�������ȹ�';
+    '商业银行优先股';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_SEC_PERPETUAL
 IS
-    '��ҵ��������ծ';
+    '商业银行永续债';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEPO_TYPE
 IS
-    '�������';
+    '存款类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.RIVAL_PARTY_TYPE
 IS
-    '���ַ�����';
+    '对手方类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.PRIN_BASEAMT
 IS
-    '�ݶ���ֵ';
+    '份额面值';
 COMMENT ON COLUMN RSK_ASSET_INFO.FMDATE
 IS
-    '����������';
+    '法定到期日';
 COMMENT ON COLUMN RSK_ASSET_INFO.COUPON_SPECIES
 IS
-    '��Ϣ����';
+    '计息类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.INTEREST_RULE_FLAG
 IS
-    '����Ϣ��ʶ';
+    '规则付息标识';
 COMMENT ON COLUMN RSK_ASSET_INFO.INTPAY_RULE
 IS
-    '��Ϣ�ֲ���ʽ';
+    '利息分布方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.FLOAT_FACTOR_FLAG
 IS
-    '�Ƿ��и�������';
+    '是否有浮动因子';
 COMMENT ON COLUMN RSK_ASSET_INFO.STRUCT_GRADE
 IS
-    '�ṹ����';
+    '结构档次';
 COMMENT ON COLUMN RSK_ASSET_INFO.REPAYMENT_TYPE
 IS
-    '������ʽ';
+    '还本方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.PERIOD_REPAYMENT_FLAG
 IS
-    '���ڻ��������ʶ';
+    '分期还本条款标识';
 COMMENT ON COLUMN RSK_ASSET_INFO.BASIC_ASSET_TYPE
 IS
-    '�����ʲ�����';
+    '基础资产类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.EXCESS_PROFIT_RATE
 IS
-    '��������������%';
+    '超额收益分配比例%';
 COMMENT ON COLUMN RSK_ASSET_INFO.PLEDGE_TYPE
 IS
-    '����Ѻ������';
+    '抵质押物类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.PLEDGE_VALUE
 IS
-    '����Ѻ���ֵ��Ԫ��';
+    '抵质押物价值（元）';
 COMMENT ON COLUMN RSK_ASSET_INFO.NATURE_GUARANTEE
 IS
-    '��������';
+    '担保性质';
 COMMENT ON COLUMN RSK_ASSET_INFO.RELATION_FINAN
 IS
-    '�������������˹�ϵ';
+    '担保人与融资人关系';
 COMMENT ON COLUMN RSK_ASSET_INFO.CONTAIN_TYPE
 IS
-    '��Ȩ����';
+    '含权类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.EXERCISE_TYPE
 IS
-    '��Ȩ��ʽ';
+    '行权方式';
 COMMENT ON COLUMN RSK_ASSET_INFO.EXERCISE_DATE
 IS
-    '�̶���Ȩ��';
+    '固定行权日';
 COMMENT ON COLUMN RSK_ASSET_INFO.FIRST_EXERCISE_DATE
 IS
-    '�״���Ȩ����';
+    '首次行权日期';
 COMMENT ON COLUMN RSK_ASSET_INFO.EXERCISE_PERIOD
 IS
-    '��Ȩ����';
+    '行权周期';
 COMMENT ON COLUMN RSK_ASSET_INFO.EXERCISE_PRICE
 IS
-    '��Ȩ�۸�';
+    '行权价格';
 COMMENT ON COLUMN RSK_ASSET_INFO.PERPETUAL_CLAUSE_TYPE
 IS
-    '������������';
+    '永续条款类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEFERRED_INTEREST_TYPE
 IS
-    '��Ϣ������������';
+    '利息递延条款类型';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEFERRED_INTEREST_INT
 IS
-    '������Ϣ�Ƿ��Ϣ';
+    '递延利息是否计息';
 COMMENT ON COLUMN RSK_ASSET_INFO.FIRST_REPRCE_DATE
 IS
-    '�״��ض�������';
+    '首次重定价日期';
 COMMENT ON COLUMN RSK_ASSET_INFO.REPRCE_CYCLE
 IS
-    '�ض�������';
+    '重定价周期';
 COMMENT ON COLUMN RSK_ASSET_INFO.PART_REDEM_FLAG
 IS
-    '������ر�ʶ';
+    '部分赎回标识';
 COMMENT ON COLUMN RSK_ASSET_INFO.PART_REDEM_RATE
 IS
-    '������ر���%';
+    '部分赎回比例%';
 COMMENT ON COLUMN RSK_ASSET_INFO.CREDIT_ORG_CODE
 IS
-    '���Ż�������';
+    '增信机构代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.CREDIT_ORG_NAME
 IS
-    '���Ż�������';
+    '增信机构名称';
 COMMENT ON COLUMN RSK_ASSET_INFO.EQUITY_QUIT
 IS
-    '��Ȩ�˳�����';
+    '股权退出安排';
 COMMENT ON COLUMN RSK_ASSET_INFO.DEPT_EQUITY
 IS
-    '�Ƿ�Ϊծת��';
+    '是否为债转股';
 COMMENT ON COLUMN RSK_ASSET_INFO.HOLD_PURPOSE
 IS
-    '����Ŀ��';
+    '持有目的';
 COMMENT ON COLUMN RSK_ASSET_INFO.FINANCIAL_COMISSUE
 IS
-    '�Ƿ��ɽ����ʲ�Ͷ�ʹ�˾����';
+    '是否由金融资产投资公司发行';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHB_ISSUER_ID
 IS
-    '�����˴���';
+    '发行人代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHB_MANAGER_ID
 IS
-    '�����˴���';
+    '管理人代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.CHB_FINANCIER_ID
 IS
-    '�����˴���';
+    '融资人代码';
 COMMENT ON COLUMN RSK_ASSET_INFO.PERPETUAL_FLAG
 IS
-    '�Ƿ�����ծ';
+    '是否永续债';
 COMMENT ON COLUMN RSK_ASSET_INFO.OPTION_FLAG
 IS
-    '�Ƿ�Ȩծ';
+    '是否含权债';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_BJSZQ
 IS
-    '�Ƿ��ʲ��ļ�����Ϊ��������ծȨ��';
+    '是否资产四级分类为“北金所债权”';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_SEC_KZZQ
 IS
-    '�Ƿ���ҵ���п�תծ';
+    '是否商业银行可转债';
 COMMENT ON COLUMN RSK_ASSET_INFO.BANK_SEC_ZXZQ
 IS
-    '�Ƿ�ר��ծȯ';
+    '是否专项债券';
 COMMENT ON COLUMN RSK_ASSET_INFO.ISUNLISTED
 IS
-    '�Ƿ��������ʲ�ҵͶ�ʻ���';
+    '是否政府出资产业投资基金';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_BZHPJ
 IS
-    '�Ƿ��׼��Ʊ��';
+    '是否标准化票据';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_PERPETUAL
 IS
-    '����ծ���ԣ�ծ��/���ԣ�';
+    '永续债属性（债性/股性）';
 COMMENT ON COLUMN RSK_ASSET_INFO.IS_FBZB
 IS
-    '�Ƿ�Ǳ�ת���ʲ�';
+    '是否非标转标资产';
 COMMENT ON COLUMN RSK_ASSET_INFO.INVEST_NATURE
 IS 
-    '�ʲ�Ͷ������' ;
+    '资产投资性质' ;

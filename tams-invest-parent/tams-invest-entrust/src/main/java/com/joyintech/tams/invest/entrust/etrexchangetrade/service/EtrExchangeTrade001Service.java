@@ -3618,8 +3618,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 	 * @see
 	 **/
 	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
-		return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
-				String.class);
+		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+				List.class);
 	}
 
 	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start

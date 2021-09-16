@@ -703,6 +703,7 @@
      * 表格联动
      */
     var resetTableData = function() {
+        var type = $("#type").val();
         // 利息明细根据基础数据联动
         var finAssetIntInfos = finAssetIntInfoList;
         if(!finAssetIntInfos){
@@ -711,6 +712,8 @@
         //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
        var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+            var itemArr = ['qty','tradeAmt'];
+        } if( type=="01" || type == "04"){ // 红利再投确认
             var itemArr = ['qty','tradeAmt'];
         }else{
             var itemArr = ['tradeAmt'];
@@ -723,7 +726,9 @@
 //      初始化所有的钱和已分配的钱
         $.each(itemArr,function(index,val){
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
-            if (assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02) {
+            if ((assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02)
+                || ( type=="01" || type == "04") // 红利再投确认
+                 ) {
                 if (faceValue && val == 'qty') {
                     var value = $('#' + val).val();
                     var tradeAmt = $('#tradeAmt').val();
@@ -738,7 +743,8 @@
                 } else {
                     itemObj[val] = $('#' + val).val() || 0;
                 }
-            }else{
+            }
+            else{
                 itemObj[val] = $('#' + val).val() || 0;
             }
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
@@ -748,7 +754,9 @@
         debugger;
         for (var i = 0; i < finAssetIntInfos.length; i++) {
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
-            if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+            if((assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02)
+                || ( type=="01" || type == "04") // 红利再投确认
+            ){
 
             }else{
                 finAssetIntInfos[i][qty]=" ";

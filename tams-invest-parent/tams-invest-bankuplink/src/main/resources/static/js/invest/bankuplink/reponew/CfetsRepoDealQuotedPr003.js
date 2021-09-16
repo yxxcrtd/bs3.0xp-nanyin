@@ -726,11 +726,14 @@
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').addClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',true);
                 $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
+                //质押券页面展示组合代码，组合名称
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: true}, {field:'portfolioName',visible: true}],true);
             }else if(ps == '04'){
                 $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',false);
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: false}, {field:'portfolioName',visible: false}],true);
             }
         });
         /**

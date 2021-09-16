@@ -2,10 +2,10 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.read
 
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.AssetImpairmentStageJudgeModelReaderEntity;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.ModStageParaDto;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.service.AssetImpairmentStageJudgeModelReaderService;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;

@@ -281,7 +281,7 @@ $(
                 rightDiv.attr("style", "position: absolute; left: 0px; top:0px; width: 100%; height:100%;background: #fff; z-index: 100");
                 rightDiv.attr("flag","0");
             }else{
-                rightDiv.attr("style", defaultStyle);
+                rightDiv.attr("style", " float:right; width:57.5%; height:100%; display: inline-block;");
                 rightDiv.attr("flag","1");
             }
             if(flag === "narrow"){

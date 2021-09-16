@@ -57,7 +57,7 @@
             , {field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit']
                 ,
                 render: function (data, type, row, meta) {
-                    if (row.updateFlag != '01')
+                    if (row.updateFlag != '01'||IsChongQing == 'Y')
                         return "";
                     else
                         //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S

@@ -46,7 +46,7 @@ public class EadCalCulationBatchProcessor extends BaseProcessor<NeedOperateEntit
         thisParams.put(GlobalConstant.READER_RESULT, readerDto);
         thisParams.put(GlobalConstant.HAPPEN_DATE,  this.getBatchExecuteInfo().getExecuteDate());
         thisParams.put("executionContext",stepExecution.getJobExecution().getExecutionContext());
-        EadCalCulationResultDto result = eadCalCulationBatchProcessorService.execute(thisParams);
+        EadCalCulationResultDto result = eadCalCulationBatchProcessorService.execute(thisParams,stepExecution);
 
         //当为null时候，给予初始化
         if(result == null){

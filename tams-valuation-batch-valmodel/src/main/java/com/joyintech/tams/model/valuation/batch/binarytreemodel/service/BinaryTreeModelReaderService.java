@@ -3,12 +3,12 @@ package com.joyintech.tams.model.valuation.batch.binarytreemodel.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.common.base.entity.ModBintreeConfig;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
@@ -140,7 +140,7 @@ public class BinaryTreeModelReaderService {
             if(modAssetInfoDto.getConFinprodId()!=null){
                 listStockId.add(modAssetInfoDto.getConFinprodId());
             }else{
-                modLogsService.error((Map<String,ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：债券的转股代码为空，无法继续.");
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：债券的转股代码为空，无法继续.");
                 return list;
             }
             modStockMarketParamsDto.setStockIdList(listStockId);

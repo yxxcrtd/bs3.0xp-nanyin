@@ -1,12 +1,14 @@
 package com.joyintech.tams.model.impairment.batch.datapusheclresult.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dao.DataPushEclResultMapper;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResult;
 import com.joyintech.tams.model.impairment.batch.datapusheclresult.dto.AssetLossResultReaderDto;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class DataPushEclResultReaderService {
     DataPushEclResultProcessService dataPushEclResultProcessService;
     @Autowired
     ModParamsService modParamsService;
+    @Autowired
+    private ModLogsService modLogsService;
     /**
      * @Description:获取待处理资产信息List
      * @auther: yuzj
@@ -42,7 +46,6 @@ public class DataPushEclResultReaderService {
         String taskId =(String)mapParam.get("TASK_ID");
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get("BATCH_INFO");
         List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-        List<ModValBatchLogResult> bBatchLogResultList = new ArrayList<>();
         //1.读取需要进行处理的资产
         //资产代码集合
         List<String> finprodIdList = new ArrayList<String>();
@@ -58,22 +61,10 @@ public class DataPushEclResultReaderService {
             assetLossResultReaderList.add(assetLossResultReaderDto);
         }
         if(CollectionUtils.isEmpty(assetLossResultReaderList)){
-            //=====记录计算错误日志=====start=====
-            for(String finprodId:finprodIdList){
-                ModValBatchLogResult batchParam = new ModValBatchLogResult();
-                batchParam.setFinprodId(finprodId);
-                batchParam.setTaskId(taskId);
-                batchParam.setBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
-                batchParam.setType(ModelDictCodeList.模型计算结果_失败.getValue());//EXP 失败
-                batchParam.setMsg("【数据推送批处理】：计算错误");
-                bBatchLogResultList.add(batchParam);
-            }
-            dataPushEclResultProcessService.sendlogResults(bBatchLogResultList,stepExecution);
-            return null;
-            //=====记录计算错误日志=====end=====
+            finprodIdList.forEach(x->{
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x, "【数据推送批处理】：批处理执行错误.");
+            });
         }
-
-
         return assetLossResultReaderList;
     }
 

@@ -65,7 +65,7 @@
             ,{field:'entrustStatus', title: 'EtrExchangeTrade003.entrustStatus',visible:false, sortField:'ENTRUST_STATUS',width : 150}//组合名称
             ,{field:'entrustStatusString', title: 'EtrExchangeTrade003.entrustStatus', sortField:'ENTRUST_STATUS',width : 150}//组合名称
             ,{field:'implementPercentAge', title: 'EtrExchangeTrade003.implementPercentAge',render: function (data, type, row, meta) {
-                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:3px;'><div class='layui-progress-bar layui-bg-green' style='width:"
                         + (row.implementPercentAge)
                         + "%'><span class='layui-progress-text' style='color:black;'>"
                         + (row.implementPercentAge)
@@ -77,7 +77,7 @@
                     if(row.entrustType == "09" || row.entrustType == "10" || row.entrustType == "11" || row.entrustType == "12" || row.entrustType == "13" || row.entrustType == "16"){
                         return '<span class="s-color-gray">N/A</span>';
                     }
-                    return "<div class='layui-progress layui-progress-big' style='margin-top:5px;'><div class='layui-progress-bar layui-bg-green' style='width:"
+                    return "<div class='layui-progress layui-progress-big' style='margin-top:3px;'><div class='layui-progress-bar layui-bg-green' style='width:"
                         + (row.dealPercentAge)
                         + "%'><span class='layui-progress-text' style='color:black;'>"
                         + (row.dealPercentAge)

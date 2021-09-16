@@ -14,6 +14,7 @@ import com.joyintech.framework.base.entity.SysBatchTask;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.common.utils.ArithmeticUtil1;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
@@ -23,9 +24,11 @@ import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowPayRulesDto;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -52,23 +55,19 @@ public class EadCalCulationBatchProcessorService {
     @Autowired
     private EadCalculationBatchMapper eadCalculationBatchMapper;
 
-
+    private StepExecution stepExecution;
     @Autowired
     private ModLogsService modLogsService;
 
-    public EadCalCulationResultDto execute(Map<String, Object> param) {
+    public EadCalCulationResultDto execute(Map<String, Object> param, StepExecution execution) {
+
         logger.info("---------EAD计算Processor业务层开始---------");
+        stepExecution = execution;
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
         SysBatchTask batchtask = (SysBatchTask) param.get("BATCHTASK");
         // 定义返回list
         EadCalCulationResultDto result = new EadCalCulationResultDto();
 
-        // 批处理上下文日志处理
-        ExecutionContext executionContext = (ExecutionContext) param.get("executionContext");
-        List<EadErrorParams> errors = (List<EadErrorParams>) executionContext.get("ERRORS");
-        if (errors == null) {
-            errors = new ArrayList<EadErrorParams>();
-        }
         // 获取reader返回值
         EadCalculationReaderDto readerDto = (EadCalculationReaderDto) param.get(GlobalConstant.READER_RESULT);
         Date excuteDate = (Date) param.get(GlobalConstant.HAPPEN_DATE); // 发生日：批处理任务执行信息.处理日（发生日）
@@ -338,13 +337,9 @@ public class EadCalCulationBatchProcessorService {
                 });
             }
         } catch (Exception e) {
-            logger.error("【EAD计算批处理】：计算错误");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(readerDto.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：计算错误");
-            errors.add(eadErrorParams);
-            executionContext.put("ERRORS", errors);
+            String msg = "【EAD计算批处理】：计算错误";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), msg);
             return result;
         }
         // 四、计算每笔交易的单位EAD(债券是百元、项目类资产是单位)
@@ -361,13 +356,9 @@ public class EadCalCulationBatchProcessorService {
                 itemIn.setPaperRate(readerDto.getCashFlowCalRuleList().get(0).getYield());
                 //nvl(买入交易i.到期收益率，买入交易.票面利率)
                 if (null == itemIn.getYield() && null == itemIn.getPaperRate()) {
-                    logger.error("【EAD计算批处理】：资产无折现率");
-                    EadErrorParams eadErrorParams = new EadErrorParams();
-                    eadErrorParams.setFinprodId(readerDto.getAssetId());
-                    eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-                    eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无折现率");
-                    errors.add(eadErrorParams);
-                    executionContext.put("ERRORS", errors);
+                    String msg = "【EAD计算批处理】：资产无折现率";
+                    logger.error(msg);
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), msg);
                 }
                 BigDecimal tempRate;
 //                if (ModelDictCodeList.模型_证券品种_债券.getValue().equals(itemIn.getType8())) {
@@ -376,9 +367,8 @@ public class EadCalCulationBatchProcessorService {
                 } else {// 如果 证券品种为其他
                     tempRate = itemIn.getPaperRate();
                 }
-                PriceYieldOutParameter yieldPriceOutParameter = calaYieldByPriceCalculator(readerDto, excuteDate, tempRate, param, errors);
+                PriceYieldOutParameter yieldPriceOutParameter = calaYieldByPriceCalculator(readerDto, excuteDate, tempRate, param);
                 if (null == yieldPriceOutParameter) {
-                    executionContext.put("ERRORS", errors);
                     break;
                 }
                 // 获取买入全价
@@ -403,7 +393,7 @@ public class EadCalCulationBatchProcessorService {
      * @param excuteDate
      * @return
      */
-    private PriceYieldOutParameter calaYieldByPriceCalculator(EadCalculationReaderDto entity, Date excuteDate, BigDecimal yeild, Map<String, Object> param, List<EadErrorParams> errors) {
+    private PriceYieldOutParameter calaYieldByPriceCalculator(EadCalculationReaderDto entity, Date excuteDate, BigDecimal yeild, Map<String, Object> param) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
         SysBatchTask batchtask = (SysBatchTask) param.get("BATCHTASK");
         PriceYieldOutParameter priceYieldOutParameter = null;
@@ -442,12 +432,9 @@ public class EadCalCulationBatchProcessorService {
                 secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             }
         } else {
-            logger.error("【EAD计算批处理】：资产无计息基础");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(entity.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无计息基础");
-            errors.add(eadErrorParams);
+            String msg = "【EAD计算批处理】：资产无计息基础";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
             return priceYieldOutParameter;
         }
         DictCodeList bondsTypeDict = DictCodeList.from(DictCode.息票品种, entity.getCouponSpecies());
@@ -477,12 +464,10 @@ public class EadCalCulationBatchProcessorService {
         }
         // 判断资产有无付息频率
         if (StringUtil.isEmpty(modCashFlowPayRule.getPayCycle())) {
-            logger.error("【EAD计算批处理】：资产无付息频率");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(entity.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无付息频率");
-            errors.add(eadErrorParams);
+            String msg = "【EAD计算批处理】：资产无付息频率";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
+
             return priceYieldOutParameter;
         }
         if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {

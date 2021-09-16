@@ -92,11 +92,11 @@ $(function() {
             ,{field:'assetType',visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
                 ,render: function (data, type, row, meta) {
-                // ZGZGST-1537: 有效不展示确认按钮 fuyongsheng 20210830 add start
-                if (row.statusValid == '05')
+                // ZGZGST-1537: 有效和撤销状态不展示确认按钮 fuyongsheng 20210830 add start
+                if (row.statusValid == PAGE_DATA_STATUS_05 || row.statusValid == PAGE_DATA_STATUS_06)
                     return "";
                 else
-                // ZGZGST-1537: 有效不展示确认按钮 fuyongsheng 20210830 add end
+                // ZGZGST-1537: 有效和撤销状态不展示确认按钮 fuyongsheng 20210830 add end
                 //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
                 if(purviewElements.indexOf('_edit')!=-1){
                     return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';

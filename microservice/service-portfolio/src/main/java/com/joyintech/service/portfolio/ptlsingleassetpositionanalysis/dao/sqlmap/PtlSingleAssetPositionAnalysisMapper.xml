@@ -450,7 +450,7 @@
 			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
 			round(sum(nvl(assetHold1.marketValue,0))/sum(assetHold1.tdyAssetValue)*100,2) as marketValueRatio,null portfolioId,'02' as hasChildren
 			,'root' parentInfo,assetHold1.finprodMarketId childInfo,assetHold1.ptlIssueType ptlIssueType,
-			case when assetHold1.assetRatioTemp != null then sum(assetHold1.marketValue)/sum(assetHold1.assetRatioTemp) else null end as assetRatio
+			case when assetHold1.assetRatioTemp > 0 then (sum(assetHold1.marketValue)/assetHold1.assetRatioTemp)*100 else null end as assetRatio
 			from (
 			SELECT
 			assetHold.*
@@ -472,7 +472,7 @@
 			assetHold1.marketValueRatio,assetHold1.portfolioId,'01' as hasChildren
 			,assetHold1.finprodMarketId parentInfo,assetHold1.portFolioName childInfo,
 			assetHold1.belongInstitutionCode belongInstitutionCodeNew,assetHold1.ptlIssueType ptlIssueType,
-			case when assetHold1.assetRatioTemp != null then assetHold1.marketValue/assetHold1.assetRatioTemp else null end as assetRatio
+			case when assetHold1.assetRatioTemp > 0 then (assetHold1.marketValue/assetHold1.assetRatioTemp)*100 else null end as assetRatio
 			from (
 			SELECT
 			assetHold.*,
@@ -495,7 +495,7 @@
 			sum(assetHold1.dscCostAmt) as dscCostAmt,sum(assetHold1.shareAmt) as shareAmt,
 			sum(assetHold1.marketValueRatio) as marketValueRatio,null portfolioId,'02' as hasChildren
 			,'root' parentInfo,assetHold1.finprodMarketId childInfo,assetHold1.ptlIssueType ptlIssueType,
-			case when assetHold1.assetRatioTemp != null then sum(assetHold1.marketValue)/sum(assetHold1.assetRatioTemp) else null end as assetRatio
+			case when assetHold1.assetRatioTemp > 0 then (sum(assetHold1.marketValue)/assetHold1.assetRatioTemp)*100 else null end as assetRatio
 			from
 			(
 			SELECT

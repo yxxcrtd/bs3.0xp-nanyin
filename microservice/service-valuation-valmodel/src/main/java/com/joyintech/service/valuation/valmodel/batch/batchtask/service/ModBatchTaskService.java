@@ -2,10 +2,8 @@ package com.joyintech.service.valuation.valmodel.batch.batchtask.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.dao.SysBatchGrpMapper;
-import com.joyintech.framework.base.dao.SysBatchPrdGrpMapper;
 import com.joyintech.framework.base.dao.SysBatchgrpExecInfoMapper;
 import com.joyintech.framework.base.entity.*;
-import com.joyintech.framework.base.service.ProductService;
 import com.joyintech.framework.constant.BatchDictCodeList;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
@@ -16,16 +14,15 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dao.ModBatchTaskMapper;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.*;
-import com.joyintech.tams.common.base.entity.SysBatchTask;
+import com.joyintech.tams.common.base.dao.ModBatchLogsMapper;
+import com.joyintech.tams.common.base.dao.ModValBatchParamsMapper;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.common.base.entity.ModBatchLogsExample;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogsExample;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.tams.valuation.component.batch.dao.ValModBatchLogsMapper;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
@@ -64,7 +61,7 @@ public class ModBatchTaskService extends BaseService {
     private SysBatchgrpExecInfoMapper sysBatchgrpExecInfoMapper;
 
     @Autowired
-    private ValModBatchLogsMapper valModBatchLogsMapper;
+    private ModBatchLogsMapper modBatchLogsMapper;
 
     public List<BatchTaskDto> getBatchTask(Map<String, Object> params) {
         return modBatchTaskMapper.getBatchTask(params);
@@ -121,6 +118,7 @@ public class ModBatchTaskService extends BaseService {
     }
 
     public List<BatchAssetInfoDto> getAllAssetInfo() {
+        //TODO
         Map<String, Object> requestMaps = new HashMap<>();
         List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
                         + "/interf/ModelCallOnInvest/getAllAssetInfo"
@@ -135,7 +133,7 @@ public class ModBatchTaskService extends BaseService {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
             int count = 0;
-            ModBatchParams2Mapper batchMapper = session.getMapper(ModBatchParams2Mapper.class);
+            ModValBatchParamsMapper batchMapper = session.getMapper(ModValBatchParamsMapper.class);
             int size = params.size();
             for(int index = 0; index < size; index++){
                 batchMapper.insert(params.get(index));
@@ -166,6 +164,7 @@ public class ModBatchTaskService extends BaseService {
         if (StringUtil.isNotBlank(finprodIds)) {
             List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
             params.put("finprodIdList", finprodIdList);
+            params.put("BATCH_SEQ_NO", VAL_MODEL_BATCH_GROUP);
         }
         return modBatchTaskMapper.checkIsRunning(params) > 0;
     }
@@ -173,8 +172,8 @@ public class ModBatchTaskService extends BaseService {
     /**
      * 跑批前清理掉之前的参数
      */
-    public void cleanBatchParams() {
-        modBatchTaskMapper.cleanBatchParams();
+    public void cleanBatchParams(Map<String, Object> params) {
+        modBatchTaskMapper.cleanBatchParams(params);
     }
 
     /**
@@ -256,130 +255,133 @@ public class ModBatchTaskService extends BaseService {
     }
 
     public List<ModBatchLogDetailDTO> findBatchExeTaskForExport(Map<String, Object> params) {
-        String batchSeqno = (String)params.get("detailSeqNo");
-        String taskId = (String)params.get("taskId");
-        String execStatus = (String)params.get("execStatus");
-        ModBatchLogsExample example = new ModBatchLogsExample();
-        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+        return modBatchTaskMapper.selectLogsDetail(params);
 
-        if (StringUtil.isNotBlank(batchSeqno)) {
-            criteria.andBatchExecSeqnoEqualTo(batchSeqno);
-        }
-        if (StringUtil.isNotBlank(taskId)) {
-            criteria.andTaskIdEqualTo(taskId);
-        }
-        if (StringUtil.isNotBlank(execStatus) && !StringUtil.equals("undefined", execStatus)) {
-            criteria.andExecStatusEqualTo(execStatus);
-        }
-
-        List<ModBatchLogs> logPage =  valModBatchLogsMapper.selectByExampleWithBLOBs(example);
-        List<ModBatchLogDetailDTO> res = new ArrayList<>();
-        BeanUtil.copyPropertiesIgnoreNull(res, logPage);
-
-        if (CollectionUtils.isNotEmpty(logPage)) {
-            List<String> finProdIdList = new ArrayList<>(logPage.size());
-            for (ModBatchLogs modBatchLogs : logPage) {
-                finProdIdList.add(modBatchLogs.getFinprodId());
-                ModBatchLogDetailDTO modBatchLogDetailDTO = new ModBatchLogDetailDTO();
-                BeanUtil.copyPropertiesIgnoreNull(modBatchLogDetailDTO, modBatchLogs);
-                res.add(modBatchLogDetailDTO);
-            }
-            Map<String, Object> requestMap = new HashMap<>();
-            requestMap.put("finProdIdList", finProdIdList);
-            requestMap.put("isImpairment", true);
-//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-//                    , requestMap, BatchAssetInfoDto.class);
-            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
-            Boolean isImpairment = false;
-            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
-                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
-            }
-            if(isImpairment) {
-                params.put("execDate",params.get("execDate"));
-                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
-            }
-            else {
-                List<String> finprodTypes = new ArrayList<>(2);
-                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                params.put("finprodTypes", finprodTypes);
-                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
-                    params.put("finprodIdList", finProdIdList);
-                }
-                assetInfos= modBatchTaskMapper.getAssetInfo(params);
-            }
-            if (CollectionUtils.isNotEmpty(assetInfos)) {
-                Map<String, BatchAssetInfoDto> map = assetInfos.stream()
-                        .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
-                res.forEach(x->x.setFinprodName(map.get(x.getFinprodId()) == null ? null:map.get(x.getFinprodId()).getFinprodName()));
-            }
-        }
-
-        return res;
+//        String batchSeqno = (String)params.get("detailSeqNo");
+//        String taskId = (String)params.get("taskId");
+//        String execStatus = (String)params.get("execStatus");
+//        ModBatchLogsExample example = new ModBatchLogsExample();
+//        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+//
+//        if (StringUtil.isNotBlank(batchSeqno)) {
+//            criteria.andBatchExecSeqnoEqualTo(batchSeqno);
+//        }
+//        if (StringUtil.isNotBlank(taskId)) {
+//            criteria.andTaskIdEqualTo(taskId);
+//        }
+//        if (StringUtil.isNotBlank(execStatus) && !StringUtil.equals("undefined", execStatus)) {
+//            criteria.andExecStatusEqualTo(execStatus);
+//        }
+//
+//        List<ModBatchLogs> logPage =  modBatchLogsMapper.selectByExampleWithBLOBs(example);
+//        List<ModBatchLogDetailDTO> res = new ArrayList<>();
+//        BeanUtil.copyPropertiesIgnoreNull(res, logPage);
+//
+//        if (CollectionUtils.isNotEmpty(logPage)) {
+//            List<String> finProdIdList = new ArrayList<>(logPage.size());
+//            for (ModBatchLogs modBatchLogs : logPage) {
+//                finProdIdList.add(modBatchLogs.getFinprodId());
+//                ModBatchLogDetailDTO modBatchLogDetailDTO = new ModBatchLogDetailDTO();
+//                BeanUtil.copyPropertiesIgnoreNull(modBatchLogDetailDTO, modBatchLogs);
+//                res.add(modBatchLogDetailDTO);
+//            }
+//            Map<String, Object> requestMap = new HashMap<>();
+//            requestMap.put("finProdIdList", finProdIdList);
+//            requestMap.put("isImpairment", true);
+////            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+////                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+////                    , requestMap, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+//            Boolean isImpairment = false;
+//            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+//                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+//            }
+//            if(isImpairment) {
+//                params.put("execDate",params.get("execDate"));
+//                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+//            }
+//            else {
+//                List<String> finprodTypes = new ArrayList<>(2);
+//                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+//                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//                params.put("finprodTypes", finprodTypes);
+//                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+//                    params.put("finprodIdList", finProdIdList);
+//                }
+//                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+//            }
+//            if (CollectionUtils.isNotEmpty(assetInfos)) {
+//                Map<String, BatchAssetInfoDto> map = assetInfos.stream()
+//                        .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
+//                res.forEach(x->x.setFinprodName(map.get(x.getFinprodId()) == null ? null:map.get(x.getFinprodId()).getFinprodName()));
+//            }
+//        }
+//
+//        return res;
     }
 
     public Page<ModBatchLogDetailDTO> findBatchExeTask(Map<String, Object> params, int page, int length) {
-        String batchSeqno = (String)params.get("detailSeqNo");
-        String taskId = (String)params.get("taskId");
-        String execStatus = (String)params.get("execStatus");
-        ModBatchLogsExample example = new ModBatchLogsExample();
-        ModBatchLogsExample.Criteria criteria = example.createCriteria();
-        
-        if (StringUtil.isNotBlank(batchSeqno)) {
-            criteria.andBatchExecSeqnoEqualTo(batchSeqno);
-        }
-        if (StringUtil.isNotBlank(taskId)) {
-            criteria.andTaskIdEqualTo(taskId);
-        }
-        if (StringUtil.isNotBlank(execStatus) && !StringUtil.equals("undefined", execStatus)) {
-            criteria.andExecStatusEqualTo(execStatus);
-        }
+//        String batchSeqno = (String)params.get("detailSeqNo");
+//        String taskId = (String)params.get("taskId");
+//        String execStatus = (String)params.get("execStatus");
+//        ModBatchLogsExample example = new ModBatchLogsExample();
+//        ModBatchLogsExample.Criteria criteria = example.createCriteria();
+//
+//        if (StringUtil.isNotBlank(batchSeqno)) {
+//            criteria.andBatchExecSeqnoEqualTo(batchSeqno);
+//        }
+//        if (StringUtil.isNotBlank(taskId)) {
+//            criteria.andTaskIdEqualTo(taskId);
+//        }
+//        if (StringUtil.isNotBlank(execStatus) && !StringUtil.equals("undefined", execStatus)) {
+//            criteria.andExecStatusEqualTo(execStatus);
+//        }
 
-        Page<ModBatchLogs> logPage = super.queryForPage(page, length, () -> valModBatchLogsMapper.selectByExampleWithBLOBs(example));
-        Page<ModBatchLogDetailDTO> res = new Page<>();
-        BeanUtil.copyPropertiesIgnoreNull(res, logPage);
-        List<ModBatchLogDetailDTO> root = new ArrayList<>(logPage.getRoot().size());
-        if (CollectionUtils.isNotEmpty(logPage.getRoot())) {
-            List<String> finProdIdList = new ArrayList<>(logPage.getRoot().size());
-            for (ModBatchLogs modBatchLogs : logPage.getRoot()) {
-                finProdIdList.add(modBatchLogs.getFinprodId());
-                ModBatchLogDetailDTO modBatchLogDetailDTO = new ModBatchLogDetailDTO();
-                BeanUtil.copyPropertiesIgnoreNull(modBatchLogDetailDTO, modBatchLogs);
-                root.add(modBatchLogDetailDTO);
-            }
-            Map<String, Object> requestMaps = new HashMap<>();
-            requestMaps.put("finProdIdList", finProdIdList);
-//            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-//                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
-//                    , requestMaps, BatchAssetInfoDto.class);
-            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
-            Boolean isImpairment = false;
-            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
-                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
-            }
-            if(isImpairment) {
-                params.put("execDate",params.get("execDate"));
-                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
-            }
-            else {
-                List<String> finprodTypes = new ArrayList<>(2);
-                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-                params.put("finprodTypes", finprodTypes);
-                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
-                    params.put("finprodIdList", finProdIdList);
-                }
-                assetInfos= modBatchTaskMapper.getAssetInfo(params);
-            }
-
-            if (CollectionUtils.isNotEmpty(assetInfos)) {
-                Map<String, BatchAssetInfoDto> map = assetInfos.stream()
-                        .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
-                root.forEach(x->x.setFinprodName(map.get(x.getFinprodId()) == null ? null:map.get(x.getFinprodId()).getFinprodName()));
-            }
-        }
-        res.setRoot(root);
-        return res;
+        Page<ModBatchLogDetailDTO> logPage = super.queryForPage(page, length, () -> modBatchTaskMapper.selectLogsDetail(params));
+//        Page<ModBatchLogDetailDTO> res = new Page<>();
+//        BeanUtil.copyPropertiesIgnoreNull(res, logPage);
+//        List<ModBatchLogDetailDTO> root = new ArrayList<>(logPage.getRoot().size());
+//        if (CollectionUtils.isNotEmpty(logPage.getRoot())) {
+//            List<String> finProdIdList = new ArrayList<>(logPage.getRoot().size());
+//            for (ModBatchLogs modBatchLogs : logPage.getRoot()) {
+//                finProdIdList.add(modBatchLogs.getFinprodId());
+//                ModBatchLogDetailDTO modBatchLogDetailDTO = new ModBatchLogDetailDTO();
+//                BeanUtil.copyPropertiesIgnoreNull(modBatchLogDetailDTO, modBatchLogs);
+//                root.add(modBatchLogDetailDTO);
+//            }
+//            Map<String, Object> requestMaps = new HashMap<>();
+//            requestMaps.put("finProdIdList", finProdIdList);
+////            List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+////                            + "/interf/ModelCallOnInvest/getAllAssetInfo"
+////                    , requestMaps, BatchAssetInfoDto.class);
+//            List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
+//            Boolean isImpairment = false;
+//            if(StringUtil.isNotEmpty(params.get("isImpairment"))) {
+//                isImpairment = Boolean.parseBoolean(params.get("isImpairment").toString());
+//            }
+//            if(isImpairment) {
+//                params.put("execDate",params.get("execDate"));
+//                assetInfos= modBatchTaskMapper.getAssetInfoImpairment(params);
+//            }
+//            else {
+//                List<String> finprodTypes = new ArrayList<>(2);
+//                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+//                finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//                params.put("finprodTypes", finprodTypes);
+//                if (!org.springframework.util.CollectionUtils.isEmpty(finProdIdList)) {
+//                    params.put("finprodIdList", finProdIdList);
+//                }
+//                assetInfos= modBatchTaskMapper.getAssetInfo(params);
+//            }
+//
+//            if (CollectionUtils.isNotEmpty(assetInfos)) {
+//                Map<String, BatchAssetInfoDto> map = assetInfos.stream()
+//                        .collect(Collectors.toMap(BatchAssetInfoDto::getFinprodId, Function.identity()));
+//                root.forEach(x->x.setFinprodName(map.get(x.getFinprodId()) == null ? null:map.get(x.getFinprodId()).getFinprodName()));
+//            }
+//        }
+//        res.setRoot(root);
+//        return res;
+        return logPage;
     }
 }
