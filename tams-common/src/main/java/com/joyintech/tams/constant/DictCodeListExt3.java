@@ -1543,6 +1543,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     曲线来源_第三方曲线(DictCode.曲线来源,"02","第三方曲线"),
 
     共通业务类型_收益率曲线管理(DictCode.共通业务类型,"MOD13","收益率曲线管理"),
+    内部评级_C(DictCode.内部评级,"24","内部评级_C"),
 
 
 

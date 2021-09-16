@@ -244,7 +244,12 @@ public class ModLogsService {
     public synchronized void warn(Map<String,ModBatchLogs> logsMap,String finProdId,String msg) {
         if(logsMap.containsKey(finProdId)){
             logsMap.get(finProdId).setExecStatus(ModelDictCodeList.模型计算结果_警告.getValue());
-            logsMap.get(finProdId).setExecDetail(logsMap.get(finProdId).getExecDetail()+";"+msg);
+            if(logsMap.get(finProdId).getExecDetail() == null){
+                logsMap.get(finProdId).setExecDetail(msg);
+            }
+            else{
+                logsMap.get(finProdId).setExecDetail(logsMap.get(finProdId).getExecDetail()+";"+msg);
+            }
         }else{
             logger.error("资产代码："+finProdId+" 未初始化执行日志.");
         }
