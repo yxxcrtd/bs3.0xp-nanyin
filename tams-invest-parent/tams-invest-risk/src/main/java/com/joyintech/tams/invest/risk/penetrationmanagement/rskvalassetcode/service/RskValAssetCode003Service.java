@@ -114,6 +114,10 @@ public class RskValAssetCode003Service extends BaseService<RskValtblAssetSubMapD
             for(int m=0;m<rskValtblSubjectCodeList.size();m++){
                 TreeNode treeNode = new TreeNode();
                 String assetCode = rskValtblSubjectCodeList.get(m).getSubCode();
+                // 特殊处理100201科目 & 120401科目
+                if ((assetCode.startsWith("100201") && !StringUtil.equals("100201",assetCode))||(assetCode.startsWith("120401") && !StringUtil.equals("120401",assetCode))) {
+                   continue;
+                }
                 String assetName = assetCode+"("+rskValtblSubjectCodeList.get(m).getSubName()+")";
                 treeNode.setId(assetCode);treeNode.setName(assetName);
                 treeNode.setOpen(true);
