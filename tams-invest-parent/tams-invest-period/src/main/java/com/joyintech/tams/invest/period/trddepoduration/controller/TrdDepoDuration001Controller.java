@@ -83,6 +83,7 @@ public class TrdDepoDuration001Controller extends BaseController{
         model.addAttribute("CASH_CLASS_TYPE_ZJSX", BussinessDictCodeList.现金流类型_中间收息.getValue());
         model.addAttribute("assetType_tyjk",BussinessDictCodeList.存款类资产类型_同业借款.getValue());
         model.addAttribute("DEPO_ASSET_TYPE_03", DictCodeListExt3.存款类资产类型_活期存放.getValue());
+        model.addAttribute("PAGE_DATA_STATUS_06", BussinessDictCodeList.画面数据状态_撤销.getValue());
         Map<String, Object> map = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty(map.get("remType"))) {
             model.addAttribute("finprodId", (String)map.get("finprodId"));
