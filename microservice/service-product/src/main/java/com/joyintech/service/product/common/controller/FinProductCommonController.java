@@ -423,4 +423,10 @@ public class FinProductCommonController {
             @PathVariable("length") int length) {
     	return finProductCommonService.queryTrusteeId(map,page,length);
     }
+    @PostMapping("getUserNameList")
+    public List<SelectOptionDto> getUserNameList(@RequestBody Map<String, Object> param) {
+//        Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("roleName", DictCodeListExt2.角色岗位_产品设计岗.getValue());
+        return finProductCommonService.getUserNameList(param);
+    }
 }
