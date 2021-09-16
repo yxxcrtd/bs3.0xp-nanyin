@@ -99,5 +99,27 @@
     </select>
 
 
+    <!-- 减值模型产品信息下拉框共通 -->
+    <select id="getModProInfoPage" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT A.BOOKSET_ID AS id,
+        nvl(A.BOOKSET_NAME, A.BOOKSET_FULLNAME) AS text,
+        NVL(prodAdd.PORTFOLIO_ID,A.ACCT_SUBJECT_ID) AS object
+        FROM BOK_BOOKSET A
+        LEFT JOIN FIN_PRODUCT_ADD prodAdd
+        ON prodAdd.FINPROD_ID = A.ACCT_SUBJECT_ID
+        WHERE A.BOOKSET_TYPE = '02'
+        and A.ACCT_MODE != '03'
+        <if test="search != null and search !=''">
+            AND (A.BOOKSET_ID LIKE concat(concat('%',#{search}),'%')
+            OR (A.BOOKSET_NAME LIKE concat(concat('%',#{search}),'%') OR A.BOOKSET_FULLNAME LIKE concat(concat('%',#{search}),'%')))
+        </if>
+        <!-- 下拉框有初始值时，需要带initValue查询 -->
+        <if test="initValue != null and initValue != ''">
+            and A.BOOKSET_ID = #{initValue}
+        </if>
+
+    </select>
+
+
 
 </mapper>
