@@ -48,7 +48,8 @@
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
         round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
-        T1.REMARK
+        T1.REMARK,
+        T1.COUNTER_ID counterId
         from
         ETR_ENTRUST T1
         INNER JOIN
@@ -99,7 +100,8 @@
         T1.MDATE mdate,
         NVL(T5.FINISH_AMT,0) finishAmt,
         round(NVL(T5.FINISH_AMT,0)/(T1.ENTRUST_AMT),4)*100 transactioncom,
-        T1.REMARK
+        T1.REMARK,
+         T1.COUNTER_ID counterId
         from
         WFL_ETR_ENTRUST T1
         INNER JOIN

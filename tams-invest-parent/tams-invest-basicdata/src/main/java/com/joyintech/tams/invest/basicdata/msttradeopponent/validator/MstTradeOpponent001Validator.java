@@ -120,7 +120,7 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
                     if (mstTradeOpponent001Service.checkCounterId(dto.getCounterId()) > 0) {
                         errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006",
-                            getMessage("MstTradeOpponent001.counterId"))));
+                            getMessage("MstTradeOpponent001.counterId"), "【" + dto.getCounterId() + "】")));
                     }
                     if (dto.getCustomerId() != null
                         && mstTradeOpponent001Service.checkCounterId(dto.getCustomerId()) > 0) {
@@ -136,7 +136,7 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                     // ZGZGST-949:交易对手新建时,linkId做唯一性校验 fuyongsheng 20210823 add end
                     //add by songyawei 20200712 验证交易对手名称不能重复 start
                     if(mstTradeOpponent001Service.checkCounterName(dto.getCounterName()) > 0) {
-                    	errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006", "交易对手名称重复","【"+dto.getCounterName()+"】")));
+                    	errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0006", "交易对手名称","【"+dto.getCounterName()+"】")));
                     }
                     //add by songyawei 20200712 验证交易对手名称不能重复 end
                     //add by yangwenjun 20200904 验证备注字段长度 start

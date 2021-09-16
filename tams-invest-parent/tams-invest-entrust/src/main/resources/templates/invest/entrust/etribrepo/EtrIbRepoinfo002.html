@@ -21,7 +21,7 @@
                     <input type="hidden" id="secManageAcctId" name="secAcctId" th:value="${entity?.secAcctId}">
                     <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
                         <iframe th:src="@{/invest/entrust/EtrCommonController/initCash}" width="100%"
-                                height="100%" frameborder="0" style="border:none;"></iframe>
+                                height="100%" frameborder="0" style="border:none;" id="cash_iframe"></iframe>
                     </div>
                     <div class="layui-form-item">
                         <div class="form-inline-wrap"  style=" width: 50%;">
@@ -397,6 +397,35 @@
 
                 var shortSellingSupported = /*[[${shortSellingSupported}]]*/ '';
                 var repo_pledge_model = /*[[${repo_pledge_model}]]*/ '';
+
+                // add by wanshiwei ZGZGST-2657:审批时现金没有正确显示 20210916 start
+                $(document).ready(function(e) {
+                    var iframe = document.getElementById("cash_iframe");
+                    // 在firefox、chrome下 iframe.attachEvent返回undefined，可被翻译成false，
+                    // 用此可以解决和ie下绑定onload事件写法不同的缺陷
+                    if (iframe.attachEvent) {
+                        iframe.attachEvent("onload", function () {
+                            //iframe加载完成后你需要进行的操作
+                            var portfolioId = document.getElementById("portfolioId").value;
+                            var vdate = document.getElementById("vdate").value;
+                            var ccy = document.getElementById("ccy").value;
+                            if (portfolioId && vdate && ccy) {
+                                window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+                            }
+                        });
+                    } else {
+                        iframe.onload = function () {
+                            //iframe加载完成后你需要进行的操作
+                            var portfolioId = document.getElementById("portfolioId").value;
+                            var vdate = document.getElementById("vdate").value;
+                            var ccy = document.getElementById("ccy").value;
+                            if (portfolioId && vdate && ccy) {
+                                window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+                            }
+                        };
+                    }
+                })
+                // add by wanshiwei ZGZGST-2657:审批时现金没有正确显示 20210916 end
             </script>
             <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>
             <script data-th-src="@{/js/invest/entrust/etribrepo/EtrIbRepoinfo002.js}" type="text/javascript"></script>

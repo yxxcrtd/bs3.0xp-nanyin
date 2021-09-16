@@ -967,7 +967,7 @@
     }
     
     var saveOrSubmitCheck = function(mes){
-        if(mes == 'save'&&etr_save_riskcheck&&parent&&parent.pageId&&parent.pageId.toUpperCase().indexOf("ETR") == 0)
+        if(mes == 'save'&&etr_save_riskcheck=='N'&&parent&&parent.pageId&&parent.pageId.toUpperCase().indexOf("ETR") == 0)
             return true;
         if(mes == 'save'){
             mes = JoyinUtil.getLabel("SysCommon.save");
