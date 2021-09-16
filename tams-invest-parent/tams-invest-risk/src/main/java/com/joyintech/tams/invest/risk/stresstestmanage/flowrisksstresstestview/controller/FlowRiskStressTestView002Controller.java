@@ -12,6 +12,10 @@ package com.joyintech.tams.invest.risk.stresstestmanage.flowrisksstresstestview.
 
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,7 +37,7 @@ import com.joyintech.tams.invest.risk.stresstestmanage.riskfactor.dto.RiskFactor
  * 〈功能详细描述〉
  * @author wangkang
  * @version 1.0 2019年8月13日
- * @see FlowRiskStressTest001Controller
+ * @see
  * @since 1.0
  */
 @Controller
@@ -76,11 +80,19 @@ public class FlowRiskStressTestView002Controller extends BaseController{
         return page;
     }
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-             {
-        return service.export(this.getPageId(),
+    public ResponseEntity<byte[]> export(){
+         String excelFileName = getParam("testNameE");
+         String export_excel_type = CacheUtil.getSysParam("export_excel_type");
+         String fileType = ".xlsx";
+         if (StringUtil.equals(export_excel_type, com.joyintech.framework.constant.DictCodeList.是否_否.getValue())) {
+             fileType = ".xls";
+         }
+         if (StringUtil.isNotEmpty(excelFileName)) {
+            excelFileName = excelFileName + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(DateUtil.platDateFromCache())
+                    + GlobalConstant.CLOSE_PARENTHESIS + fileType;
+         }
+        return service.export(excelFileName,
                 RequestUtil.getParameters(getRequest()));
-
     }
     
     /**

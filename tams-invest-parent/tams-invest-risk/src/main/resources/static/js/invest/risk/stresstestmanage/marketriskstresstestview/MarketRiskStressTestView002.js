@@ -36,6 +36,7 @@ $(function() {
 		//alert($('#testId').val());
 		return {
 			testId: $('#testId').val(),	//测试id
+			testNameE:$('#testId').text()
         }	
 	};
 	

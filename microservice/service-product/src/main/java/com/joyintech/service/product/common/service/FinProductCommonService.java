@@ -4028,4 +4028,7 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
 //		pag.setRecords(list.size());
 		return selcectList;
 	}
+    public List<SelectOptionDto> getUserNameList(Map<String, Object> pageParam) {
+        return  productCommonMapper.selectByUserName(pageParam);
+    }
 }

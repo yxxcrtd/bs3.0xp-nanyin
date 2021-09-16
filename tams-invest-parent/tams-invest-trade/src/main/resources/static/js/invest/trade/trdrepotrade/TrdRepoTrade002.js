@@ -735,7 +735,7 @@
                             }
                             // $("#tradeAmtAndFee").val($("#prinAmt").val()).trigger("blur");
                         }
-                        else if(v.feeType==FEE_TYPE_088){
+                        else if(v.feeType==FEE_TYPE_08){
                             cntS++;
                             if (v.feeAmt) {
                                 $("#settleAmt").val(v.feeAmt).trigger("blur");
