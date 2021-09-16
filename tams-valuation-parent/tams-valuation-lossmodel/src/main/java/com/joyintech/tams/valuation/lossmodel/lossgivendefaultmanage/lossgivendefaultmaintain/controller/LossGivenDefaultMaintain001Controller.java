@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.service.LossGivenDefaultMaintain001Service;
@@ -36,12 +37,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
@@ -148,9 +143,10 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
     @RequestMapping("getSecTypeOption")
     public List<SelectOptionDto> getSecTypeOption() throws Exception {
         Map<String, Object> param = RequestUtil.getPageParam();
-        //type 01 毕马威  02 普华永道
-        //当为01时，资产类型显示回购09 和存款07
-//        param.put("type","01");
+        //当为02时，资产类型不显示回购09 和存款07
+        //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        param.put("lossType",lossType);
         List<SelectOptionDto> linkSelectOption = lossGivenDefaultMaintain001Service.getLinkSelectOption(param);
         return linkSelectOption;
     }
