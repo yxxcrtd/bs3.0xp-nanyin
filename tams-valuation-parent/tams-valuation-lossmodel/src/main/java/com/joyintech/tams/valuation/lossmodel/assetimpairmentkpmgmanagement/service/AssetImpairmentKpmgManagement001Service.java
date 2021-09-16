@@ -71,8 +71,8 @@ public class AssetImpairmentKpmgManagement001Service extends CommonExportService
      * @return
      * @throws Exception
      */
-    public List<SelectOptionDto> getProdIdByLossResult(Map<String, Object> params){
-        return restTemplate.postForList(ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/AssetImpairmentKpmgManagement001/getProdIdByLossResult", params, SelectOptionDto.class);
+    public Page<SelectOptionDto> getProdIdByLossResult(Map<String, Object> params){
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/LossModCommon/getModProInfoPage", params, SelectOptionDto.class);
     }
 
     /**

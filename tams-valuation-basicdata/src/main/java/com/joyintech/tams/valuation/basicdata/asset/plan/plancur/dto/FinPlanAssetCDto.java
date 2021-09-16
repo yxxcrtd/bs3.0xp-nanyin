@@ -82,6 +82,10 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
      * 数据来源
      */
     private String dataSource;
+    /**
+     * 删除标识 Y；批量删除 N：单条删除
+     */
+    private String batchDelFlag;
 
     /**
      * 资产投资性质
@@ -1239,5 +1243,14 @@ public class FinPlanAssetCDto extends FinProduct implements ProcessEntity{
 
     public String getUpdateTimeStr(){
         return DateUtil.format(super.getUpdateTime());
+    }
+
+
+    public String getBatchDelFlag() {
+        return batchDelFlag;
+    }
+
+    public void setBatchDelFlag(String batchDelFlag) {
+        this.batchDelFlag = batchDelFlag;
     }
 }

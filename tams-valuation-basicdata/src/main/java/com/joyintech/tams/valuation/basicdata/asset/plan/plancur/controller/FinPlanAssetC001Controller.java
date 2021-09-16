@@ -63,6 +63,7 @@ public class FinPlanAssetC001Controller extends BaseController{
         /*行内资产五级分类的数据字典值 lishuping 2019/7/23 start*/
         this.setSelectOptionToModel(model,DictCode.计划类资产类型,DictCode.收益类型);
         /*行内资产五级分类的数据字典值 lishuping 2019/7/23 end*/
+        model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("FINPROD_TYPE_TG_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         model.addAttribute("PROFIT_TYPE_03", DictCodeList.收益类型_货币型.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));

@@ -232,8 +232,7 @@ public class AssetImpairmentKpmgManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getProdIdByLossResult")
-    public List<SelectOptionDto> getProdIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
-        Map<String, Object> param = RequestUtil.getPageParam();
+    public Page<SelectOptionDto> getProdIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
         return assetImpairmentKpmgManagement001Service.getProdIdByLossResult(params);
     }
 

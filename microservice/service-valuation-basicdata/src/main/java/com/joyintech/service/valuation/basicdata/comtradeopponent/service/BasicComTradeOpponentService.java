@@ -111,6 +111,7 @@ public class BasicComTradeOpponentService extends BaseService<ComTradeOpponentDt
             mstCounterPartyMapper.insertSelective(entity);
         }else{
             mstCounterPartyMapper.deleteByPrimaryKey(entity.getCounterId());
+            mstCounterPartyMapper.insertSelective(entity);
         }
 //        if (StringUtil.equals(type, "NEW")) {
 //            // 调用父类的主键插入方法

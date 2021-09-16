@@ -72,4 +72,19 @@ public class LossModCommonController extends BaseController {
                                                              @PathVariable("page") int page, @PathVariable("length") int length){
         return lossModCommonService.getModAssetInfoOptionPageBMW(page, length, params);
     }
+
+
+    /**
+     * 减值模型-产品信息下拉框Page - 分页
+     * @param page
+     * @param length
+     * @param params
+     * @return
+     */
+    @PostMapping("getModProInfoPage/{page}/{length}")
+    public Page<SelectOptionDto> getModProInfoPage(@RequestBody Map<String, Object> params,
+                                                        @PathVariable("page") int page, @PathVariable("length") int length){
+        return lossModCommonService.getModProInfoPage(page, length, params);
+    }
+
 }

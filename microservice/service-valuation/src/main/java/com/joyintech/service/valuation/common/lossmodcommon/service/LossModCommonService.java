@@ -56,4 +56,13 @@ public class LossModCommonService extends BaseService {
     public Page<SelectOptionDto> getModAssetInfoOptionPageBMW(int page, int length, Map<String, Object> params) {
         return super.queryForPage(page,length,()-> lossModCommonMapper.getModAssetInfoOptionBMW(params));
     }
+
+    /**
+     * 返回减值模型产品信息下拉框List对象
+     * @param params
+     * @return
+     */
+    public Page<SelectOptionDto> getModProInfoPage(int page, int length, Map<String, Object> params) {
+        return super.queryForPage(page,length,()-> lossModCommonMapper.getModProInfoPage(params));
+    }
 }
