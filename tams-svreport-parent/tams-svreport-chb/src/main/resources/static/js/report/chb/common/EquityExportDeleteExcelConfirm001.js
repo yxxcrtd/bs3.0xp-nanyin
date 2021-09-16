@@ -27,6 +27,7 @@ $(function() {
 	           param.expKeys=expKeys;
 	           param.paramKeys=paramKeys;
 				param.pageId = orgPageId;
+				param.keyList = keyList;
 	           Joyin.exportExcel("exportDel",param, function() {
 		           var index = parent.layer.getFrameIndex(window.name);
 		           parent.layer.close(index);
