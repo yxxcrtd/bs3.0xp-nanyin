@@ -252,7 +252,7 @@
                 // 折算比例
                 var pledgeRate = new BigNumber(row.pledgeRatio?row.pledgeRatio:100).dividedBy(new BigNumber(100));
                 /*计算券面总额合计，中债登券面总额合计，上清所券面总额合计*/
-                pledgePrinTotal = pledgePrinTotal.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
+                pledgePrinTotal = pledgePrinTotal.plus(pledgePrin.multipliedBy(divd));
                 if(row.repRegistOrg == '01'){
                     cbShareCtAmt = cbShareCtAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
                     cbDealAmt = cbDealAmt.plus(pledgePrin.multipliedBy(divd));
