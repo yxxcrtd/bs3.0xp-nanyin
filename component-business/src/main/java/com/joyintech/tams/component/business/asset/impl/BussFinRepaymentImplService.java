@@ -320,9 +320,7 @@ public class BussFinRepaymentImplService extends BaseService<BussFinRepaymentDto
      */
     @Override
     public String genPayDate(Map<String, Object> paramMap) {
-        Long date = Long.valueOf((String)paramMap.get("mdate"));
-        Date ddate = new Date(date);
-        String mdate = DateUtil.format(ddate);
+        String mdate = (String) paramMap.get("mdate");
         String finprodId = (String) paramMap.get("finprodId");
 
         if (StringUtil.isBlank(mdate) || StringUtil.isBlank(finprodId)
