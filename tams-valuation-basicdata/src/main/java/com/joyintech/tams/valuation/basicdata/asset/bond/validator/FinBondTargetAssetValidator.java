@@ -79,7 +79,6 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
                 for(FinBondTargetAssetDto entity : dto.getSelectedItem()){
-
                     if(commonBusinessService.isTransInAsset(entity.getFinprodId()) != 0 && !StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())){
                         if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
                             resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_005", entity.getFinprodId())));
@@ -114,9 +113,6 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                             continue;
                         }
                     }
-
-
-
                 }
             }
         }
