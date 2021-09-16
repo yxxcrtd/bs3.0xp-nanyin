@@ -129,20 +129,26 @@
                 });
             }
         }
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/check',object,
-	                function(result) {
-	                    Joyin.confirm(result.data,function() {
-	                        if (operateType === 'save') {
-	                            WorkFlow.doSaveList(basePath+'invest/entrust/etrconbond/EtrConBond002/save',object,"EtrConBond002_btn_save");
-	                        } else {
-	                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrconbond/EtrConBond002/save',object,"EtrConBond002_btn_submit");
-	                        }
-	                    });
-	                });
-        	});
-        })
+        //保存跳过校验 edit by yeming 20210916 start
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath+'invest/entrust/etrconbond/EtrConBond002/save',object,"EtrConBond002_btn_save");
+        } else {
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function (result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/checkAuthorization', object, function (result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrconbond/EtrConBond002/check', object,
+                        function (result) {
+                            Joyin.confirm(result.data, function () {
+                                // if (operateType === 'save') {
+                                //     WorkFlow.doSaveList(basePath + 'invest/entrust/etrconbond/EtrConBond002/save', object, "EtrConBond002_btn_save");
+                                // } else {
+                                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrconbond/EtrConBond002/save', object, "EtrConBond002_btn_submit");
+                                // }
+                            });
+                        });
+                });
+            })
+        }
+        //保存跳过校验 edit by yeming 20210916 end
     }
     
     window.componentLoadCallback = function(isDone, pagePath, params){
