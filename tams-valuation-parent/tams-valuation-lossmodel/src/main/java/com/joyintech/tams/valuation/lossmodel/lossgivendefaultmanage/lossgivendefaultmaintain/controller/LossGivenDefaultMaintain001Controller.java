@@ -71,6 +71,9 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
         //初始化值数据
         entity.setAssetType(DictCodeListExt1.证券品种_债券.getValue());
         model.addAttribute("entity",entity);
+        // 减值方案系统参数lossType 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        model.addAttribute("lossType",lossType);
         return super.init(model);
     }
     @ResponseBody

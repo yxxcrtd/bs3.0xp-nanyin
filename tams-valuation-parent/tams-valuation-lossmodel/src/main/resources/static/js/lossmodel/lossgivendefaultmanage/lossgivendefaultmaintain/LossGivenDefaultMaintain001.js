@@ -31,7 +31,8 @@ $(function(){
         cols:[	
 				{ field: 'seqno',visible:false},
 				{ title: "资产类别", field: 'assetTypeStr',sortField:'BOND_TYPE',align:'center'},
-				{ title: "债券类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center'},
+				{ title: "债券/存款类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center',visible:$('#lossType').val()== "01"},
+                { title: "债券类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center',visible:$('#lossType').val()== "02"},
 				{ title: "是否含有抵质押物", field: 'isContainPledgeStr',sortField:'IS_CONTAIN_PLEDGE',align:'center'},
 				{ title: "LGD%", field: 'lgd',sortField:'LGD',type:'number',align:'center'},
 				{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit'],align:'center'}
