@@ -47,6 +47,11 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		List<SzdSjsjg> szdSjsjgList = new ArrayList<SzdSjsjg>();
     		// 开始处理
     		for (StlDataCreateDto stlDataCreateDto : stlDataCreateReaderDto.getStlDataCreateDtoList()) {
+    			// 申请编号字段值修改 = 四位固定字符 + 日间成交的申请编号
+				if (StringUtil.isNotBlank(stlDataCreateDto.getOrderNo())) {
+					stlDataCreateDto.setOrderNo("RZJS" + stlDataCreateDto.getOrderNo());
+				}
+
     			// 成交明细.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券 and 成交明细.交易场所 = 数据字典.交易场所.上海证券交易所
     			if (StringUtil.equals(stlDataCreateDto.getFinprodTypeTg(), DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && 
     					StringUtil.equals(stlDataCreateDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
