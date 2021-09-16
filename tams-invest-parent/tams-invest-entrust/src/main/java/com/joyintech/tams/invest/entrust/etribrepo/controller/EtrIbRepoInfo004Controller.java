@@ -95,6 +95,7 @@ public class EtrIbRepoInfo004Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", BussinessDictCodeList.监督时分_委托监控.getValue());
         model.addAttribute("fintype_zhg", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         model.addAttribute("fintype_nhg", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        model.addAttribute("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
         model.addAttribute("TARGET_BACK_TYPE_H04", DictCodeList.回购类型_质押式回购.getValue());
         model.addAttribute("ps_03", DictCodeList.回购拆借方向_正回购.getValue());
         model.addAttribute("ps_04", DictCodeList.回购拆借方向_逆回购.getValue());
