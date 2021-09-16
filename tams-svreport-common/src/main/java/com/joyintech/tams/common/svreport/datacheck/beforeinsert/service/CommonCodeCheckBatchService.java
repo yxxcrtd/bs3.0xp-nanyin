@@ -645,11 +645,15 @@ public class CommonCodeCheckBatchService {
                         saleAreaList.add(areaInfoList.get(0));
                     }
                     else{
-                        errMsg +="产品销售区域格式不正确[SALE_AREA_AMT="+singleAreaAmt+"];";
+                    	if(!"0".equals(singleAreaAmt)) {
+                    		errMsg +="产品销售区域格式不正确[SALE_AREA_AMT="+singleAreaAmt+"];";
+                    	}                        
                     }
                 }
                 else{
-                    errMsg +="产品销售区域格式不正确[SALE_AREA_AMT="+singleAreaAmt+"];";
+                	if(!"0".equals(singleAreaAmt)) {
+                		errMsg +="产品销售区域格式不正确[SALE_AREA_AMT="+singleAreaAmt+"];";
+                	}  
                 }
                 /*else if (ccyAmtDetailList.size() == 1){
                     areaAmtFlag = true;

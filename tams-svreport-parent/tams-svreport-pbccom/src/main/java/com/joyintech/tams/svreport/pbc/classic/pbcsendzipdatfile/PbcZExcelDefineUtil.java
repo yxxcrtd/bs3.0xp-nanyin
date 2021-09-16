@@ -6,6 +6,7 @@ import com.joyintech.framework.util.FileNameUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbTypeMappingEx;
 import com.joyintech.tams.report.common.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
@@ -16,10 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,6 +83,8 @@ public class PbcZExcelDefineUtil {
                 boolean dataFlag = true;
                 String rowNum="";
                 for (int c = 0; c < cells; c++ ) {
+                    Cell cell1 = row.getCell(c);
+
                     if (row.getCell(c) == null
                         || row.getCell(c).getCellTypeEnum() == CellType.BLANK) {
                         //r.add("");
@@ -94,7 +94,7 @@ public class PbcZExcelDefineUtil {
                         Cell cell=row.getCell(c);
                         String strValue=getStringCellValue(row.getCell(c));
                         if(c==0){
-                            if(isNumeric(strValue)){
+                            if(isNumeric(strValue)|| CommonUtil.isEnglish(strValue)){
                                 rowNum=strValue;
                             }else {
                                 break;
@@ -109,11 +109,12 @@ public class PbcZExcelDefineUtil {
                                 String properyFiled=keyVal.substring(keyVal.indexOf(".")+1,keyVal.length());
                                 properyFiled=properyFiled.replace(" ", "");//去掉空格
                                 ChbTypeMappingEx ex=new ChbTypeMappingEx();
-                                ex.setMappingid(properyCode);
+                                ex.setMappingid(UUID.randomUUID().toString());
                                 ex.setMappingcode(reportType);
                                 ex.setMappingname("MI");
                                 ex.setObjfield("");//防止空异常
                                 ex.setSrcfield1(properyFiled);
+                                ex.setSrcfield(properyCode);
                                 ex.setObjfield1(rowNum);
                                 ex.setObjfield2(columnMap.get(cell.getColumnIndex()));
                                 ls.add(ex);

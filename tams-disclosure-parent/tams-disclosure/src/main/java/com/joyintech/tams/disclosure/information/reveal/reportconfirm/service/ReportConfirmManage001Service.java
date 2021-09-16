@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.ZipFileUtil;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -314,7 +315,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        compressFile(zipOut, firstFile, firstFile.getName());
+                        ZipFileUtil.compressZip(zipFile,false,firstFile);
                         //zipOut.setEncoding("gbk");
                         //zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(firstFile);
@@ -493,7 +494,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        compressFile2(zipOut, baseFile, baseFile.getName());
+                        ZipFileUtil.compressZip(zipFile,false,baseFile);
                         // zipOut.setEncoding("gbk");
                         // zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(baseFile);
@@ -534,118 +535,6 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 		}
 		return fileName;
 	}
-    /**
-     * 压缩报表信息
-     * 
-     * @param
-     * @param
-     * @param
-     * @throws IOException
-     */
-    private void compressFile(ZipOutputStream out, File sourcefile, String basedir)
-        throws IOException {
-        if (sourcefile.isDirectory()) {
-            File[] files = sourcefile.listFiles();
-
-            if (files == null || files.length == 0) {
-                out.putNextEntry(new ZipEntry(basedir + File.separator));
-            }
-            else {
-                for (int i = 0; i < files.length; i++ ) {
-                    compressFile(out, files[i], basedir + File.separator + files[i].getName());
-                }
-            }
-        }
-        else {
-            out.putNextEntry(new ZipEntry(basedir));
-
-            FileInputStream fos =null;
-            BufferedInputStream bis =null;
-            try {
-                 fos = new FileInputStream(sourcefile);
-                 bis = new BufferedInputStream(fos);
-                int len;
-                byte[] buf = new byte[1024];
-                while ((len = bis.read(buf, 0, 1024)) != -1) {
-                    out.write(buf, 0, len);
-                }
-            }catch (Exception e)
-            {
-                logger.error(e.getMessage(),e);
-            }finally {
-                if(bis!=null)
-                {
-                    bis.close();
-
-                }
-
-                if(fos!=null)
-                {
-                    fos.close();
-
-                }
-            }
-
-
-
-        }
-    }
-
-    /**
-     * 压缩报表信息
-     * 
-     * @param
-     * @param
-     * @param
-     * @throws IOException
-     */
-    private void compressFile2(ZipOutputStream out, File sourcefile, String basedir)
-        throws IOException {
-        if (sourcefile.isDirectory()) {
-            File[] files = sourcefile.listFiles();
-
-            if (files == null || files.length == 0) {
-                out.putNextEntry(new ZipEntry(basedir + File.separator));
-            }
-            else {
-                for (int i = 0; i < files.length; i++ ) {
-                    compressFile2(out, files[i], files[i].getName());
-                }
-            }
-        }
-        else {
-            out.putNextEntry(new ZipEntry(basedir));
-
-            FileInputStream fos = null;
-            BufferedInputStream bis = null;
-            try {
-                 fos = new FileInputStream(sourcefile);
-                 bis = new BufferedInputStream(fos);
-                int len;
-                byte[] buf = new byte[1024];
-                while ((len = bis.read(buf, 0, 1024)) != -1) {
-                    out.write(buf, 0, len);
-                }
-            }catch (Exception e)
-            {
-                logger.error(e.getMessage(),e);
-            }finally {
-                if(bis!=null)
-                {
-                    bis.close();
-
-                }
-                if(fos!=null)
-                {
-                    fos.close();
-
-                }
-            }
-
-
-
-        }
-    }
 
     /**
      * 删除多余文件

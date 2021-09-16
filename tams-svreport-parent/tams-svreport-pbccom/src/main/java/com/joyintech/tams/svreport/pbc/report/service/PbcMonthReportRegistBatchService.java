@@ -8,6 +8,9 @@ import com.joyintech.tams.report.common.constant.BatchBeanName;
 import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetPositionService;
 import com.joyintech.tams.svreport.pbc.assetposition.service.PbcMonthAssetReportService;
 import com.joyintech.tams.svreport.pbc.prod.service.PbcMonthProdPositionService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +29,8 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
+
+    private static final Logger logger = LoggerFactory.getLogger(PbcMonthReportRegistBatchService.class);
 
     @Autowired
     private PbcMonthAssetPositionService pbcAssetPositionInterf;
@@ -47,7 +52,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
      * @throws Exception 
      * void
      */
-    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
+    public void generateReport(Date batchDate,List<String> prodIdList,boolean isEdit,String orgCode) {
         setBatchBeanName(BatchBeanName.人行报表生成);
         logInfoBatchStart();
         Calendar calendar = Calendar.getInstance();
@@ -59,9 +64,9 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
             return;
         }
         // 先生成产品端
-        generateProdReport(batchDate,prodIdList,isEdit);
+        generateProdReport(batchDate,prodIdList,isEdit,orgCode);
         // 在生成资产端
-        generateAssetReport(batchDate,prodIdList,isEdit);
+        generateAssetReport(batchDate,prodIdList,isEdit,orgCode);
         logInfoBatchEnd();
     }
     
@@ -76,22 +81,22 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
      * @throws Exception 
      * void
      */
-	public void generateAssetReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
+	public void generateAssetReport(Date batchDate,List<String> prodIdList,boolean isEdit,String  orgCode) {
 //        //已报送报送检查
         List<String> reporttypeList = new ArrayList<String>();
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品资产负债统计表.getValue());
         reporttypeList.add(DictCodeListExt2.人行报表名称_资产收益权按基础资产投向分类统计表.getValue());
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品只数情况统计表.getValue());
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品资产负债剩余期限统计表.getValue());
-        String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList);
+        String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList,orgCode);
         if(msg!=null&&!StringUtil.isEmpty(msg)){
-            throw new BusinessException(msg+"\n");
+            logger.error(msg);
+        }else{
+            // 上游资产头寸数据接入
+            pbcAssetPositionInterf.generateAssetPositionData(batchDate, prodIdList, null, false,isEdit);
+            // 人行报表生成处理
+            pbcMonthAssetPositionService.generateMonthAssetReport(batchDate, prodIdList,isEdit);
         }
-
-        // 上游资产头寸数据接入
-	    pbcAssetPositionInterf.generateAssetPositionData(batchDate, prodIdList, null, false,isEdit);
-        // 人行报表生成处理
-        pbcMonthAssetPositionService.generateMonthAssetReport(batchDate, prodIdList,isEdit);
 	}
 
 
@@ -106,7 +111,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
 	 * @throws Exception 
 	 * void
 	 */
-    public void generateProdReport(Date batchDate,List<String> prodIdList,boolean isEdit) {
+    public void generateProdReport(Date batchDate,List<String> prodIdList,boolean isEdit,String orgCode) {
         //已报送报送检查
         List<String> reporttypeList = new ArrayList<String>();
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品募集余额统计表.getValue());
@@ -117,12 +122,13 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
         reporttypeList.add(DictCodeListExt2.人行报表名称_资管产品到期未兑付统计表.getValue());
         reporttypeList.add(DictCodeListExt2.人行报表名称_存续产品分合同期限募集余额统计表.getValue());
         reporttypeList.add(DictCodeListExt2.人行报表名称_新发产品分合同期限募集金额统计表.getValue());
-        String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList);
+        String msg = pbcMonthProdPositionService.checkSendStatus(batchDate,reporttypeList,orgCode);
         if(msg!=null&&!StringUtil.isEmpty(msg)){
-            throw new BusinessException(msg+"\n");
+            logger.error(msg);
+        }else{
+            pbcMonthProdPositionService.generateProdPositionData(batchDate,prodIdList,false,isEdit);
         }
 
-        pbcMonthProdPositionService.generateProdPositionData(batchDate,prodIdList,false,isEdit);
 
 //        //已报送报送检查
 //        List<String> reporttypeAssetList = new ArrayList<String>();
@@ -150,7 +156,7 @@ public class PbcMonthReportRegistBatchService  extends SvrCBBaseService{
     @Override
     public void execute(Date executeDate, List<String> prodList, List<String> assetList,Map<String,List<String>> param) throws BusinessException {
         try {
-            generateReport(executeDate,null,true);
+            generateReport(executeDate,null,true, CommonUtil.getOrgCode());
         } catch (Exception e) {
             throw new BusinessException(e);
         }

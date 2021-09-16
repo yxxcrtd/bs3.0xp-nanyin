@@ -153,6 +153,12 @@ public class NewPbcMonthReportService {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate", statusVdate);
             paramMap.put("datZipType", "MI");
+            //数据权限模式（01：银行模式，02：联社模式）
+            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+            if("02".equals(authorityType)){
+                //机构
+                paramMap.put("reportOrgName",SecurityUtil.getLoginUser().getOrgCode());
+            }
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             Set<String> sets = new HashSet<>();
             for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
@@ -176,6 +182,7 @@ public class NewPbcMonthReportService {
                     }
                 }
                 if(CollectionUtil.isNotEmpty(validMessageList)){
+                    //do not ask me why,god know it!
                     ajaxResult.setData("CONFIRM_MSG");
                     ajaxResult.setErrorList(validMessageList);
                     ajaxResult.setMessageType(MessageType.确认消息);
@@ -206,34 +213,45 @@ public class NewPbcMonthReportService {
                 return errorList;
             }
             String fName = strName[0];
-            String statusVdate1 = fName.substring(0,4).concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
-            String statusVdate = fName.substring(0,4).concat(fName.substring(4,6));//.concat("-").concat(fName.substring(6,8));
+            String year = fName.substring(0, 4);
+            String mon = fName.substring(4, 6);
+            String day = fName.substring(6, 8);
+            String statusVdate1;
+            String statusVdate;
+            if("01".equals(mon) && "01".equals(day)){
+                int lastYear = Integer.parseInt(year) - 1;
+                statusVdate1 = String.valueOf(lastYear).concat("-").concat("12").concat("-").concat("31");
+                statusVdate = String.valueOf(lastYear).concat("12");//.concat("-").concat(fName.substring(6,8));
+            }else{
+                statusVdate1 = year.concat("-").concat(fName.substring(4,6)).concat("-").concat(fName.substring(6,8));
+                statusVdate = year.concat(fName.substring(4,6));//.concat("-").concat(fName.substring(6,8));
+            }
             Map<String,Object> paramMap = new HashMap<>();
             paramMap.put("statusVdate",statusVdate);
             paramMap.put("datZipType","MI");
+            //数据权限模式（01：银行模式，02：联社模式）
+            String authorityType = CacheUtil.getSysParam("AUTHORITY_TYPE");
+            logger.info("数据权限模式:{}",authorityType);
+            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
+            if("02".equals(authorityType)){
+                //机构
+                paramMap.put("reportOrgName",orgCode);
+            }
             List<PbcSendZipDatFile> pbcSendZipDatFiles = pbcSendZipDatFileMapper.selectByZipTypeAndStatusVdate(paramMap);
             ReportDealParamDto paramDto = new ReportDealParamDto();
-            String orgCode = SecurityUtil.getLoginUser().getOrgCode();
             paramDto.setOrgCode(orgCode);
             paramDto.setStatusVdate(statusVdate);
-            String datZipPath = CacheUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
-            paramDto.setDatZipPath(StrUtil.isEmpty(datZipPath) ? "/app/etliu/pbcdat/" : datZipPath);
             Set<String> noUpdateReport = new HashSet<>();
+            Map<String,PbcSendZipDatFile> map = new HashMap<>();
             if(CollectionUtil.isNotEmpty(pbcSendZipDatFiles)){
                 for (PbcSendZipDatFile pbcSendZipDatFile : pbcSendZipDatFiles) {
                     if(pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_接口报送.getValue())
                      || pbcSendZipDatFile.getZipSendStatus().equals(DictCodeListExt2.报送状态_手工处理.getValue())){
                         noUpdateReport.add(getSheetName(pbcSendZipDatFile.getDatZipDatType()));
                     }
+                    map.put(getSheetName(pbcSendZipDatFile.getDatZipDatType()),pbcSendZipDatFile);
                 }
-                PbcSendZipDatFile pbcSendZipDatFile = pbcSendZipDatFiles.get(0);
-                paramDto.setReportUUID(pbcSendZipDatFile.getReportuuid());
-                paramDto.setDatZipCode(pbcSendZipDatFile.getDatZipCode());
-                paramDto.setHasRecord(true);
-            }else{
-                paramDto.setReportUUID(UUID.randomUUID().toString());
-                paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
-                paramDto.setHasRecord(false);
+
             }
             while(sheetIterator.hasNext()){
                 HSSFSheet sheet = (HSSFSheet)sheetIterator.next();
@@ -242,6 +260,17 @@ public class NewPbcMonthReportService {
                 if(noUpdateReport.contains(sheetName)){
                     continue;
                 }
+                if(map.containsKey(sheetName)){
+                    PbcSendZipDatFile sendZipDatFile = map.get(sheetName);
+                    paramDto.setReportUUID(sendZipDatFile.getReportuuid());
+                    paramDto.setDatZipCode(sendZipDatFile.getDatZipCode());
+                    paramDto.setHasRecord(true);
+                }else{
+                    paramDto.setReportUUID(UUID.randomUUID().toString());
+                    paramDto.setDatZipCode(PbcDatUtil.genZipCode(DictCodeListExt2.人行报送类型_统计模板数据.getValue(),DateUtil.parse(statusVdate1, com.joyintech.framework.util.DateUtil.DEFAULT_DATE_FORMAT_EN),1,orgCode));
+                    paramDto.setHasRecord(false);
+                }
+                //use cache,god knows me!
                 if(allNewPbcMonthReportsMap.containsKey(sheetName)){
                     errorList.addAll(allNewPbcMonthReportsMap.get(sheetName).dealExcelData(paramDto));
                 }else{
@@ -305,12 +334,8 @@ public class NewPbcMonthReportService {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dateTime);
             if("01".equals(month)){
-                if(!(calendar.get(Calendar.DAY_OF_MONTH) == 1)){
-                    ValidMessage dto = new ValidMessage();
-                    dto.setMessage(TIPS_FILE_NAME_ERROR);
-                    validMessages.add(dto);
-                }else if(!(calendar.get(Calendar.DAY_OF_MONTH) == calendar
-                        .getActualMaximum(Calendar.DAY_OF_MONTH))){
+                int day1 = calendar.get(Calendar.DAY_OF_MONTH);
+                if(!(day1 == 1 || day1 == 31)){
                     ValidMessage dto = new ValidMessage();
                     dto.setMessage(TIPS_FILE_NAME_ERROR);
                     validMessages.add(dto);

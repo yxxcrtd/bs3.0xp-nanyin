@@ -458,9 +458,9 @@ public class TrdBondInvestTrade003Controller extends BaseController {
                         if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs())) {
                             if ((StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) && StringUtil.isEmpty(dto.getPayType()))
                                     || StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_逐笔划款.getValue())){
-                                if (StringUtil.isNotEmpty(bussTrdTransfenpeiDto.get(i).getTradeAmt())) {
+                                if (StringUtil.isNotEmpty(bussTrdTransfenpeiDto.get(i).getTradeAmtAndFee())) {
                                     if (bussTrdTransfenpeiDto.get(i).getTgSurpluscash()!=null&&!(bussTrdTransfenpeiDto.get(i).getTgSurpluscash().compareTo(BigDecimal.ZERO)==0)
-                                            &&bussTrdTransfenpeiDto.get(i).getTradeAmt().compareTo(bussTrdTransfenpeiDto.get(i).getTgSurpluscash()) > 0) {
+                                            &&bussTrdTransfenpeiDto.get(i).getTradeAmtAndFee().compareTo(bussTrdTransfenpeiDto.get(i).getTgSurpluscash()) > 0) {
                                         if (StringUtil.isNotBlank(confirmMsg)) {
                                             confirmMsg += changeLineMark;
                                         }
@@ -476,9 +476,9 @@ public class TrdBondInvestTrade003Controller extends BaseController {
                 if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs())) {
                     if ((StringUtil.equals(dto.getTradeMarket(), DictCodeListExt1.交易场所_银行间.getValue()) && StringUtil.isEmpty(dto.getPayType()))
                             || StringUtil.equals(dto.getPayType(), DictCodeListExt2.划款方式_逐笔划款.getValue())){
-                        if (StringUtil.isNotEmpty(dto.getBussTrdAvailableCashQuery()) && StringUtil.isNotEmpty(dto.getTradeAmt())) {
+                        if (StringUtil.isNotEmpty(dto.getBussTrdAvailableCashQuery()) && StringUtil.isNotEmpty(dto.getTradeAmtAndFee())) {
                             if (dto.getBussTrdAvailableCashQuery().getSecAcctBalance()!=null&&!(dto.getBussTrdAvailableCashQuery().getSecAcctBalance().compareTo(BigDecimal.ZERO)==0)
-                                   && dto.getTradeAmt().compareTo(dto.getBussTrdAvailableCashQuery().getSecAcctBalance()) > 0) {
+                                   && dto.getTradeAmtAndFee().compareTo(dto.getBussTrdAvailableCashQuery().getSecAcctBalance()) > 0) {
                                 if (StringUtil.isNotBlank(confirmMsg)) {
                                     confirmMsg += changeLineMark;
                                 }

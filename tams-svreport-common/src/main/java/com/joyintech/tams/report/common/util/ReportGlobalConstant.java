@@ -324,6 +324,10 @@ public class ReportGlobalConstant {
     public static final String SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST = "SEND_CB_DATA_COUNT_PER_TIME_FIRST";
     
     
+ /**
+     * SQLLOAD的bad文件放置路径
+     */
+    public static final String SVR_BAD_FILE_PATH="SVR_BAD_FILE_PATH";
     public static final String SEND_CB_DATA_DECLARE_MAXCOUNT = "SEND_CB_DATA_DECLARE_MAXCOUNT";
 
 }

@@ -32,6 +32,8 @@ import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.report.interf.common.constant.DateUtil;
+import com.joyintech.tams.report.system.instregbankcode.dao.SysInstRegBankCode001Mapper;
+import com.joyintech.tams.report.system.instregbankcode.dto.SysInstRegBankCode001Dto;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.*;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.*;
 import com.joyintech.tams.svreport.pbc.classic.data.service.PbcClassicsUtil;
@@ -44,6 +46,10 @@ import com.joyintech.tams.svreport.pbc.classic.prdinfoendsubnew.dao.PbcPrdBasein
 import com.joyintech.tams.svreport.pbc.common.dto.DatDownloadDto;
 import com.joyintech.tams.svreport.pbc.common.util.SftpUtil;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
+import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
+import com.joyintech.tams.svreport.pbc.report.service.PbcMonthReport001Service;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import groovy.util.MapEntry;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +92,9 @@ public class PbcZipDataFileService {
     private  List<ChbTypeMappingEx> chbTypeMappingExList=null;
 
 	@Autowired
+	private SysInstRegBankCode001Mapper sysInstRegBankCode001Mapper;
+
+	@Autowired
 	private PbcPrdBaseinfoSubDatMapper pbcPrdBaseinfoSubDatMapper;
 
 	@Autowired
@@ -112,6 +121,9 @@ public class PbcZipDataFileService {
 	@Autowired
 	private PbcPrdBaseinfoEndSubNewMapper pbcPrdBaseinfoEndSubNewMapper;
 
+	@Autowired
+	private PbcMonthReport001Service pbcMonthReport001Service;
+
 	public final static String PBC_PROD_BASEINFO_SEQCODE = "PBCPRDBASEINFO";
 
 	/**
@@ -123,21 +135,29 @@ public class PbcZipDataFileService {
     	List<String> zipFileName = new ArrayList<String>();
 		AjaxResult ajaxResult = new AjaxResult();
 		List<ValidMessage> errorList = new ArrayList<>();
+//		initChbExData();
 		chbTypeMappingExList=initReportConfig();
 		//去重
 		Set<String> reslut = new HashSet<String>();
     	//zipDat更新数据
 		List<PbcSendZipDatFile> zipDatFileList=new ArrayList<>();
+		//获取压缩包传进来时候的状态
+		Map<String,String> dataStatus = new HashMap<>();
+		for(Map.Entry<String, PbcSendZipDatFile> entity :zipInfoMap.entrySet()){
+			dataStatus.put(entity.getValue().getStatusVdate(),entity.getValue().getZipSendStatus());
+		}
 		List<PbcSendZipDatFile> baseZipDatFileList=new ArrayList<>();
 		//pbcReport更新数据
-		List<String> pbcReportUuidList=new ArrayList<>();
 		List<DatDownloadDto> datDownloadDtos = new ArrayList<>();
-		Date date= DateUtil.parse(DateUtil.getCurrentDate());
+		Date date= DateUtil.parse(DateUtil.formatDateTime(new Date()));
+		String statusVdate = "";
 		for (Map.Entry<String, Set<String>> entry : paramMap.entrySet()) {  //循环datZipCode
 			String datZipCode=entry.getKey();
 			Set<String> set=entry.getValue();
 			PbcSendZipDatFile pbcSendZipDatFile=zipInfoMap.get(datZipCode);
+			statusVdate = pbcSendZipDatFile.getStatusVdate();
 			String datZipCodePath="";
+			String reportuuid=pbcSendZipDatFile.getReportuuid();
 			Set<String> rst = new HashSet<String>();
 			for(String datType:set) {  //生成dat文件
 				if(DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType)){
@@ -149,6 +169,7 @@ public class PbcZipDataFileService {
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
 							rst.add(datDownloadDto.getUrl());
+							datZipCodePath = datDownloadDto.getUrl();
 						}
 					}
 				}else if(DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
@@ -160,6 +181,7 @@ public class PbcZipDataFileService {
 					}else{
 						if(StringUtil.isNotEmpty(datDownloadDto.getUrl())){
 							rst.add(datDownloadDto.getUrl());
+							datZipCodePath = datDownloadDto.getUrl();
 						}
 					}
 				}else if (DictCodeListExt2.人行报送明细类型_募集余额报表.getValue().equals(datType)
@@ -202,22 +224,24 @@ public class PbcZipDataFileService {
 						rst.add(datZipCodePath);
 					}
 				}
+				//添加生成更新表状态的list
+				if(CollectionUtil.isEmpty(errorList)){
+					if(!DictCodeListExt2.人行报送明细类型_产品基本信息.getValue().equals(datType) ||
+							!DictCodeListExt2.人行报送明细类型_产品终止信息.getValue().equals(datType)){
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH"),date,datType,reportuuid,DictCodeListExt2.人行报送类型_产品信息.getValue());
+						zipDatFileList.add(zipDatFile);
+					}else{
+						PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH"),date,pbcSendZipDatFile.getDatZipType(),reportuuid,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+						baseZipDatFileList.add(zipDatFile);
+
+					}
+				}
 			}
 			if(CollectionUtil.isNotEmpty(errorList)){
 				ajaxResult.setErrorList(errorList);
 				continue;
 			}
 			reslut.addAll(rst);
-			//添加zip路径
-			if(DictCodeListExt2.人行报送类型_统计模板数据.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
-				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
-				zipDatFileList.add(zipDatFile);
-				pbcReportUuidList.add(pbcSendZipDatFile.getReportuuid());
-			}
-			if(DictCodeListExt2.人行报送类型_产品信息.getValue().equals(pbcSendZipDatFile.getDatZipType())) {
-				PbcSendZipDatFile zipDatFile = getPbcSendZipDatFile(datZipCode,datZipCodePath,date);
-				baseZipDatFileList.add(zipDatFile);
-			}
 		}
 		//生成压缩包
 		if(reslut.size() > 0){
@@ -227,7 +251,7 @@ public class PbcZipDataFileService {
 			ajaxResult.setData(finalZipFile);
 		}
 		//更新数据状态
-		updateFileDatAndPbcReport(zipDatFileList,pbcReportUuidList,date);
+		updateFileDatAndPbcReport(zipDatFileList,date,statusVdate,dataStatus);
 		//更新产本基本和终止信息状态
 		updateBaseFileDatAndPbcReport(baseZipDatFileList,datDownloadDtos);
 		return ajaxResult;
@@ -246,9 +270,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -265,7 +291,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -284,9 +310,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -303,7 +331,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -322,9 +350,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -341,7 +371,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -360,9 +390,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -379,7 +411,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", sub.getIssuePartyId());
 				data.put("prodVariety", sub.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -419,9 +451,14 @@ public class PbcZipDataFileService {
 				Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
 						pbcPrdBaseinfoSubDat.getProdId().equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
 				if(first.isPresent()){
-					innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
-					pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
-					innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),first.get().getPbcCode());
+					PbcProdAssetpoolCode prodAssetpoolCode = first.get();
+					if(StrUtil.isNotEmpty(prodAssetpoolCode.getPbcCode())){
+						innerProdIdsNew.add(pbcPrdBaseinfoSubDat.getProdId());
+						pbcPrdBaseinfoSubDatsNew.add(pbcPrdBaseinfoSubDat);
+						innerProdIdMapping.put(pbcPrdBaseinfoSubDat.getProdId(),prodAssetpoolCode.getPbcCode());
+					}else{
+						noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
+					}
 				}else{
 					noPbcIdsList.add(pbcPrdBaseinfoSubDat.getProdId());
 				}
@@ -438,15 +475,52 @@ public class PbcZipDataFileService {
 				if(StrUtil.isNotEmpty(prodId)){
 					Optional<PbcProdAssetpoolCode> first = pbcProdAssetpoolCodes.stream().filter(pbcProdAssetpoolCode ->
 							prodId.equals(pbcProdAssetpoolCode.getInsideProdId())).findFirst();
-					if(first.isPresent()){
+					if(first.isPresent() && StrUtil.isNotEmpty(first.get().getPbcCode())){
 						innerProdIdsNew.add(subDat.getProdId());
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
 						innerProdIdMapping.put(prodId,first.get().getPbcCode());
 					}else{
-						String pbcProdId = PbcClassicsUtil.getPbcProdId(subDat.getIssuePartyId(), subDat.getProfitType(), PBC_PROD_BASEINFO_SEQCODE, subDat.getVdate());
+						if(StrUtil.isNotEmpty(subDat.getIssuePartyId())){
+							SysInstRegBankCode001Dto sysInstRegBankCode001Dto = sysInstRegBankCode001Mapper.selectRegistBankCode(subDat.getIssuePartyId());
+							logger.info("查询的机构代码信息为:{}",sysInstRegBankCode001Dto == null ? "" : sysInstRegBankCode001Dto.getRegistBankCode());
+							if(sysInstRegBankCode001Dto != null && StrUtil.isNotEmpty(sysInstRegBankCode001Dto.getRegistBankCode())){
+								String prodProfitType = "03";
+								if(subDat.getBusiModel() == null || !"3".equals(subDat.getBusiModel())){
+									prodProfitType = "other";
+								}
+								String pbcProdIdExternal = PbcClassicsUtil.getPbcProdId(sysInstRegBankCode001Dto.getRegistBankCode(),
+										prodProfitType, PBC_PROD_BASEINFO_SEQCODE,
+										subDat.getVdate());
+								if(StrUtil.isNotEmpty(pbcProdIdExternal)){
+									subDat.setPbcProdId(pbcProdIdExternal);
+									innerProdIdMapping.put(prodId, pbcProdIdExternal);
+								}else{
+									ValidMessage message = new ValidMessage();
+									message.setMessage(prodId + "生成人行代码失败");
+									List<ValidMessage> validMessages = datDownloadDto.getValidMessages();
+									if(CollectionUtils.isNotEmpty(validMessages)){
+										validMessages.addAll(Collections.singletonList(message));
+										datDownloadDto.setValidMessages(validMessages);
+									}else{
+										datDownloadDto.setValidMessages(Collections.singletonList(message));
+									}
+									return datDownloadDto;
+								}
+							}else{
+								ValidMessage message = new ValidMessage();
+								message.setMessage("发行机构代码" + subDat.getIssuePartyId() + "未匹配到登记银行代码！");
+								List<ValidMessage> validMessages = datDownloadDto.getValidMessages();
+								if(CollectionUtils.isNotEmpty(validMessages)){
+									validMessages.addAll(Collections.singletonList(message));
+									datDownloadDto.setValidMessages(validMessages);
+								}else{
+									datDownloadDto.setValidMessages(Collections.singletonList(message));
+								}
+								return datDownloadDto;
+							}
+						}
 						innerProdIdsNew.add(subDat.getProdId());
 						pbcPrdBaseinfoSubDatsNew.add(subDat);
-						innerProdIdMapping.put(prodId, pbcProdId);
 					}
 				}
 			}
@@ -559,49 +633,84 @@ public class PbcZipDataFileService {
 			dataList.add(data2);
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
-			//组装数据
-			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-			//序号
-			data.put("number","3");
-			//产品代码
-			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-			//增信机构类型
-			data.put("creditType",subDat.getCreditType());
-			dataList.add(data);
+			String creditFlag = subDat.getCreditFlag();
+			if(StrUtil.isNotEmpty(creditFlag) && "1".equals(creditFlag)){
+
+
+				//增信机构类型
+				String creditType = subDat.getCreditType();
+				if(StrUtil.isNotEmpty(creditType)){
+					String[] split = creditType.split(",");
+					if(split.length > 0){
+						for (int i = 0;i < split.length; i++) {
+							//组装数据
+							LinkedHashMap<String,String> data = new LinkedHashMap<String,String>();
+							//序号
+							data.put("number","3");
+							//产品代码
+							data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+							data.put("creditType",split[i]);
+							dataList.add(data);
+						}
+					}else{
+						//组装数据
+						LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+						//序号
+						data.put("number","3");
+						//产品代码
+						data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+						data.put("creditType",subDat.getCreditType());
+						dataList.add(data);
+					}
+				}else{
+					//组装数据
+					LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+					//序号
+					data.put("number","3");
+					//产品代码
+					data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+					data.put("creditType",subDat.getCreditType());
+					dataList.add(data);
+				}
+
+			}
 		}
 		for (PbcPrdBaseinfoSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
-			String creditMode = subDat.getCreditMode();
-			if(StrUtil.isNotEmpty(creditMode) && "3".equals(creditMode)){
-				//组装数据
-				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-				//序号
-				data.put("number","4");
-				//产品代码
-				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-				//增信形式
-				data.put("creditMode","1");
-				dataList.add(data);
-				//组装数据
-				LinkedHashMap<String,String> data1 = new LinkedHashMap<String,String>();
-				//序号
-				data1.put("number","4");
-				//产品代码
-				data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-				//增信形式
-				data1.put("creditMode","2");
-				dataList.add(data1);
-			}else{
-				//组装数据
-				LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
-				//序号
-				data.put("number","4");
-				//产品代码
-				data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
-				//增信形式
-				data.put("creditMode",subDat.getCreditMode());
-				dataList.add(data);
+			String creditFlag = subDat.getCreditFlag();
+			if(StrUtil.isNotEmpty(creditFlag) && "1".equals(creditFlag)){
+				String creditMode = subDat.getCreditMode();
+				//3：内外增级
+				if(StrUtil.isNotEmpty(creditMode) && "3".equals(creditMode)){
+					//组装数据
+					LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+					//序号
+					data.put("number","4");
+					//产品代码
+					data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+					//增信形式
+					data.put("creditMode","1");
+					dataList.add(data);
+					//组装数据
+					LinkedHashMap<String,String> data1 = new LinkedHashMap<String,String>();
+					//序号
+					data1.put("number","4");
+					//产品代码
+					data1.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+					//增信形式
+					data1.put("creditMode","2");
+					dataList.add(data1);
+				}else{
+					//组装数据
+					LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+					//序号
+					data.put("number","4");
+					//产品代码
+					data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
+					//增信形式
+					data.put("creditMode",subDat.getCreditMode());
+					dataList.add(data);
+				}
 			}
-
 		}
 		datDownloadDto.setUrl(PbcZipDataFileHelper.genFile(pbcSendZipDatFile,datType,dataList));
 		return datDownloadDto;
@@ -646,6 +755,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","1");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//产品实际终止日期
@@ -657,6 +768,8 @@ public class PbcZipDataFileService {
 		for (PbcPrdBaseinfoEndSubDat subDat : pbcPrdBaseinfoSubDatsNew) {
 			//组装数据
 			LinkedHashMap<String,String> data= new LinkedHashMap<String,String>();
+			//序号
+			data.put("number","2");
 			//产品代码
 			data.put("pbcProdId",innerProdIdMapping.get(subDat.getProdId()));
 			//币种代码
@@ -683,9 +796,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 					Object   filedValue=null;
+				    String fieldName = "";
 					//get[源属性1]()   取得报表的对应单元的数值
 					try {
 						Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+						fieldName = field.getName();
 						//设置对象的访问权限，保证对private的属性的访问
 						field.setAccessible(true);
 						filedValue= field.get(sub);
@@ -702,7 +817,7 @@ public class PbcZipDataFileService {
 					data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 					data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 					data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-					data.put("filedValue", dealDataBaseForDat(filedValue));
+					data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 					dataList.add(data);
 			}
 		}
@@ -726,9 +841,11 @@ public class PbcZipDataFileService {
 					propertyCodeEx -> propertycode.equals(propertyCodeEx.getSrcfield())).collect(Collectors.toList());
 			for(ChbTypeMappingEx ex:propertyCodeFiledList) {
 				Object   filedValue=null;
+				String fieldName = "";
 				//get[源属性1]()   取得报表的对应单元的数值
 				try {
 					Field field = sub.getClass().getDeclaredField(ex.getSrcfield1());
+					fieldName = field.getName();
 					//设置对象的访问权限，保证对private的属性的访问
 					field.setAccessible(true);
 					filedValue= field.get(sub);
@@ -745,7 +862,7 @@ public class PbcZipDataFileService {
 				data.put("issuePartyId", pbcSendZipDatFile.getIssuePartyId());
 				data.put("prodVariety", pbcSendZipDatFile.getProdVariety());
 				data.put("rowColumn", getRowAndColumn(ex.getObjfield1(),ex.getObjfield2()));
-				data.put("filedValue", dealDataBaseForDat(filedValue));
+				data.put("filedValue", dealDataBaseForDat(filedValue,fieldName,datType));
 				dataList.add(data);
 			}
 		}
@@ -861,9 +978,11 @@ public class PbcZipDataFileService {
 	private String  initChbExData(){
 		String[] reportTypeList={"1_1","1_2","1_3","1_4","1_5","1_6",
 				"2_1","2_2","2_3","2_4","2_5","3_1","3_2","3_3"};
+//		String[] reportTypeList={"1_1"};
 		List<String> deleteSqlList=new ArrayList<>();
 		for(String reportType:reportTypeList ) {
-			File file = new File("D:\\pj\\yth\\tams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+			File file = new File("D:\\workCode\\ZGBS-CPtams\\tams-svreport-parent\\tams-svreport\\src\\main\\resources\\tpl\\pbc\\PbcDatReport_"+reportType+".xls");
+//			File file = new File("D:\\2_1.xlsx");
 			try {
 				List<ChbTypeMappingEx> list = PbcZExcelDefineUtil.readToList(reportType, file, 0);
 				for (ChbTypeMappingEx chbTypeMappingEx : list) {
@@ -871,19 +990,19 @@ public class PbcZipDataFileService {
 					if (typeMappingEx == null) {
 						chbTypeMappingExMapper.insertSelective(chbTypeMappingEx);
 					}
-					String sql="delete from CHB_TYPE_MAPPING_EX where Srcfield='"+chbTypeMappingEx.getSrcfield()+"' and Srcfield1='"+chbTypeMappingEx.getSrcfield1()+"'";
-					deleteSqlList.add(sql);
 				}
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
-		return JsonUtils.object2Json(deleteSqlList);
+		return null;
 	}
 
 	//数据报送文件管理表PBC_SEND_ZIP_DAT_FILE
-    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date){
+    private PbcSendZipDatFile getPbcSendZipDatFile(String ZipCode,String datZipPath,Date date,String datType,String reportuuid,String datZipType){
 		PbcSendZipDatFile datFile=new PbcSendZipDatFile();
+		datFile.setDatZipDatType(datType);
+		datFile.setReportuuid(reportuuid);
 		datFile.setDatZipCode(ZipCode);
 		datFile.setDatZipPath(datZipPath);
 		datFile.setDatZipStatus(DictCodeListExt3.zip包状态_已使用.getValue());
@@ -891,26 +1010,35 @@ public class PbcZipDataFileService {
 		datFile.setSubmitTime(date);
 		datFile.setZipDownloadTime(date);
 		datFile.setZipSendStatus(DictCodeListExt2.报送状态_手工处理.getValue());
-		datFile.setDatZipType(DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+		datFile.setDatZipType(datZipType);
 		return datFile;
 	}
 	//更新数据状态
-	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,List<String> pbcReportUuidList,Date date){
+	private  void updateFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,Date date,String statusVdate,Map<String,String> termidMap){
 		if(!CollectionUtils.isEmpty(datFileList)){
 			//更新PBC_SEND_ZIP_DAT_FILE
-			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList);
+			for(Map.Entry<String,String> dto :termidMap.entrySet()){
+				if(DictCodeListExt2.报送状态_未报送.getValue().equals(dto.getValue())){
+					List<PbcMonthReport> reportList  = new ArrayList<PbcMonthReport>();
+					PbcMonthReport report = new PbcMonthReport();
+					report.setTermid(dto.getKey());
+					report.setOrgCode(CommonUtil.getOrgCode());
+					reportList.add(report);
+					pbcMonthReport001Service.updateInterfSubmitAndSeq(DictCodeListExt2.报送状态_手工处理.getValue(), reportList);
+				}
+			}
+			//更新报表
+			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), datFileList);
+
 		}
-	    //更新报表
-		if(!CollectionUtils.isEmpty(pbcReportUuidList)) {
-			pbcMonthReportMapper.updatePbcReportSendInfo(DictCodeListExt2.报送状态_手工处理.getValue(), date, DictCodeListExt2.人行报送反馈状态_人行通过.getValue(), pbcReportUuidList);
-		}
-		}
+	}
 	//更新数据状态
 	private  void updateBaseFileDatAndPbcReport(List<PbcSendZipDatFile> datFileList,List<DatDownloadDto> datDownloadDtos){
 		//更新报送文件管理表PBC_SEND_ZIP_DAT_FILE
 		if(CollectionUtils.isNotEmpty(datFileList)){
 			//更新PBC_SEND_ZIP_DAT_FILE
-			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList,DictCodeListExt2.人行报送类型_统计模板数据.getValue());
+			pbcSendZipDatFileMapper.updateByZipCodeAndZipType(datFileList);
 		}
 		if(CollectionUtils.isNotEmpty(datDownloadDtos)){
 			for (DatDownloadDto datDownloadDto : datDownloadDtos) {
@@ -964,6 +1092,7 @@ public class PbcZipDataFileService {
 							prodAssetpoolCode.setCodeType(DictCodeListExt3.代码类型_产品.getValue());
 							prodAssetpoolCode.setStatus("E");
 							prodAssetpoolCode.setCreateUser(SecurityUtil.getLoginUser().getUserName());
+							prodAssetpoolCode.setOrgCode(SecurityUtil.getLoginUser().getOrgCode());
 							prodAssetpoolCode.setCreateTime(new Date());
 							prodAssetpoolCode.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
 							prodAssetpoolCode.setUpdateTime(new Date());
@@ -981,13 +1110,25 @@ public class PbcZipDataFileService {
 		}
 	}
     //取出来的数据库值除以10000成真实的值
-	public String dealDataBaseForDat(Object data) {
+	public String dealDataBaseForDat(Object data,String feildName,String reportType) {
+		//1_3为只数统计表，不需要除以10000
+		if("1_3".equals(reportType)){
+			return data == null ? null : data.toString();
+		}
+		//1_5只数，不需要除以10000
+		if("1_5".equals(reportType) && feildName.equals("prodcounts")){
+			return data == null ? null : data.toString();
+		}
+		//1_6只数，不需要除以10000
+		if("1_6".equals(reportType) && feildName.equals("prodcounts")){
+			return data == null ? null : data.toString();
+		}
 		BigDecimal bigDecimal = new BigDecimal(data.toString());
 		BigDecimal tenthousand = new BigDecimal(10000);
 		if (data != null) {
 			bigDecimal = bigDecimal.divide(tenthousand, 6, BigDecimal.ROUND_HALF_UP);
 		}
-		return bigDecimal.toString();
+		return bigDecimal.stripTrailingZeros().toPlainString();
 	}
 
 

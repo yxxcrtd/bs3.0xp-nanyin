@@ -96,8 +96,8 @@ public class PrdBaseinfoEndSubService001 extends CommonExportService<PbcPrdBasei
 	 */
 	public Page<PbcPrdBaseinfoEndSub> searchPage(Map<String, Object> searchParam) {
 		deaSearchParam(searchParam);
-		int pagenum = StringUtil.integerValueOf(RequestUtil.getParam(GlobalConstant.PARAM_PAGE), 1);
-        int length = StringUtil.integerValueOf(RequestUtil.getParam(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
+		int pagenum = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_PAGE), 1);
+		int length = StringUtil.integerValueOf(""+searchParam.get(GlobalConstant.PARAM_LENGTH), GlobalConstant.DEFAULT_PAGE_SIZE);
 		Page<PbcPrdBaseinfoEndSub> page = queryForPage(pagenum,length,()->pbcPrdBaseinfoEndSubMapper.searchPage(searchParam));
 		dealResult(page);
 		return page;

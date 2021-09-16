@@ -2252,10 +2252,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
-                    #{item}
-                </foreach>
+                AND (atd.FINPROD_MARKET_ID IN
+                        <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    OR RAI.ASSET_CODE IN
+                        <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                            #{item}
+                        </foreach>
+                    )
             </if>
             <if test="pass != null and pass != '' and pass == '02'.toString()">
                 and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
@@ -2331,10 +2336,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
             <if test="pass != null and pass != '' and pass == '02'.toString()">
                 and atd.IS_PERNE= #{pass} and (atd.pinan_asset_type is not NULL OR RAI.ORG_ASSET_TYPE1 is NOT NULL)
@@ -2459,10 +2469,15 @@
                 )
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2640,10 +2655,15 @@
                 </foreach>
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
+                AND (atd.FINPROD_MARKET_ID IN
                 <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2722,10 +2742,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -2903,10 +2928,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">
@@ -3053,10 +3083,15 @@
 
             </if>
             <if test="finprodMarketIdList != null and finprodMarketIdList.size()>0">
-                AND atd.FINPROD_MARKET_ID IN
-                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close=")">
+                AND (atd.FINPROD_MARKET_ID IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
                     #{item}
                 </foreach>
+                OR RAI.ASSET_CODE IN
+                <foreach collection="finprodMarketIdList" item="item" separator="," open="(" close =")">
+                    #{item}
+                </foreach>
+                )
             </if>
 
             <if test="pass != null and pass != '' and pass == '02'.toString()">

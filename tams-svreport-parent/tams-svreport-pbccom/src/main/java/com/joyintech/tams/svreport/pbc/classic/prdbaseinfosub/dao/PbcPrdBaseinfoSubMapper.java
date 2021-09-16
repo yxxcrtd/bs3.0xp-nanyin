@@ -51,6 +51,15 @@ public interface PbcPrdBaseinfoSubMapper {
 	 * @return 所有不是删除状态的人行产品信息
 	 */
 	List<PbcPrdBaseinfoSub> queryAllPbcPrdBaseInfo(Map<String, Object> param);
+
+
+
+	/**
+	 * 查询所有不是删除状态的人行产品信息
+	 * @param param
+	 * @return 所有不是删除状态的人行产品信息
+	 */
+	List<PbcPrdBaseinfoSub> selectDatAccountData(Map<String, Object> param);
 	
 	List<PbcPrdAccountSub> selectAllRegisteAccountData(@Param("reglist")List<PbcPrdBaseinfoSub> reglist);
 	

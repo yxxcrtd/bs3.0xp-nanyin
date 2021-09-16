@@ -106,9 +106,10 @@ public class PbcNewPrdDatFileService {
      * @since 1.0
      */
     public void genDataFile(String reportType,  List<String> listProds,Date genDate, Map<String, Object> param,String OrgCodenull) throws UnsupportedEncodingException {
-		String sendStatus = DictCodeListExt2.报送状态_未报送.getValue();
 		Map<String,Object> searchParam = new HashMap<>();
-		searchParam.put("sendStatusList",Arrays.asList(sendStatus));
+		searchParam.put("sendStatusList",Arrays.asList(DictCodeListExt2.报送状态_未报送.getValue()));
+		//生成dat不再生成修改及删除的数据
+		searchParam.put("statusList",Arrays.asList(DictCodeListExt2.报送数据状态_新建.getValue()));
 		searchParam.put("prodIdList",listProds);
     	/****1、产品基本信息处理*/
     	List<PbcPrdBaseinfoSubDat> prdList = getPrdBaseinfoList(searchParam);
@@ -127,12 +128,9 @@ public class PbcNewPrdDatFileService {
 			dateSet.addAll(orgPrdEndMap.keySet());
 		}
 
-
-
-
 		for(String OrgCode : dateSet){
 			/**3、调用共通处理【DAT生成共通处理-产品端】**/
-			Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(), CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL"), DictCodeList.是否_中债_否.getValue(),OrgCode,
+			Map<String, ArrayList> resultMap = PbcDatUtil.genDatZipList(DictCodeListExt3.是否压缩_不生成压缩文件.getValue(), CacheUtil.getSysParam("PBC_SEND_ZIP_MODEL"), DictCodeList.是否_中债_是.getValue(),OrgCode,
 					orgPrdBaseMap.get(OrgCode),orgPrdEndMap.get(OrgCode));
 			/***4、数据入库*/
 			/***5.1、清除DAT表中的未报送数据*/
@@ -142,6 +140,11 @@ public class PbcNewPrdDatFileService {
 			int batchCount = reportInsertLongCount==0?50:reportInsertLongCount;//每批commit的个数
 			if(null!=resultMap.get("zipList")){
 				List<PbcSendZipDatFile> zipList = resultMap.get("zipList");
+
+				//批量删除dat文件
+				List<String> zipCodeList = zipList.stream().map(PbcSendZipDatFile::getDatZipCode).collect(Collectors.toList());
+				pbcNewPrdDatFileMapper.deleteZipDataList(zipCodeList);
+
 				int batchLastIndex = batchCount;//每批最后一个的下标
 				for(int index = 0; index < zipList.size();){
 					if(batchLastIndex > zipList.size()-1){
@@ -221,8 +224,8 @@ public class PbcNewPrdDatFileService {
 //
 //		/**根据机构将zipSend表中的数据进行修改**/
 //		pbcNewPrdDatFileMapper.updateZipSendCount(OrgCode,listProds);
-		/**删除所有不包含未报送数据的dat文件*/
-		pbcNewPrdDatFileMapper.deleteZipData(OrgCode);
+		/**删除所有未报送状态的dat文件*/
+//		pbcNewPrdDatFileMapper.deleteZipData(OrgCode);
 
 	}
 

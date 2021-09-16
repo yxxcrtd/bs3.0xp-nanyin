@@ -376,7 +376,7 @@
       ON SI.INSTITUTION_CODE = CORBC.ORG_CODE
   	<where>
         <if test="pbcProdIdList != null and pbcProdIdList.size > 0">
-            <foreach collection="pbcProdIdList" item="items" open="and a.PBC_PROD_ID in (" separator="," close =")">
+            <foreach collection="pbcProdIdList" item="items" open="and nvl(t2.pbc_code,a.PBC_PROD_ID) in (" separator="," close =")">
             #{items,jdbcType=VARCHAR}
             </foreach>
         </if>

@@ -108,12 +108,6 @@ public class ValBatchImportService {
     @Autowired
     private ValtblImportDateTraceMapper valtblImportDateTraceMapper;
 
-    /**
-     * 底层资产映射
-     */
-    @Autowired
-    private RskValtblPrtBotassetMapper rskValtblPrtBotassetMapper;
-
     private final static String BAK_START_STR = "BAK";
 
     /**
@@ -134,13 +128,52 @@ public class ValBatchImportService {
     public static final String KEY_INT_STR = "1204";
 
     /**
+     * 非标
+     */
+    public static final String KEY_FB_STR = "1701";
+    /**
+     * 项目类
+     */
+    public static final String KEY_LLXFB_STR = "1901";
+    /**
+     * 存款类
+     */
+    public static final String KEY_CKL_STR = "1003";
+    /**
+     * 逆回购
+     */
+    public static final String KEY_NHGB_STR = "1202";
+
+    /**
+     * 正回购利息
+     */
+    public static final String KEY_ZHGI_STR = "2231";
+    /**
+     * 期权
+     */
+    public static final String KEY_QQ_STR = "3103";
+    /**
+     * 期货
+     */
+    public static final String KEY_QH_STR = "3102";
+    /**
+     * 逆回购利息
+     */
+    public static final String KEY_NHGI_STR = "120410";
+
+    /**
+     * 正回购
+     */
+    public static final String KEY_ZHGB_STR = "2202";
+
+    public static final String KEY_INT_GPJJ_STR = "1203";
+    /**
      * 委外估值表导入
      *
      * @param supDate
      */
     public void execute(Date supDate) {
         String valTableFilePath = CacheUtil.getSysParam("RSK_OUTS_VALTABLE_IMPORT_PATH");
-
         //是否是联社模式
         Boolean flag = StringUtil.equals(CacheUtil.getSysParam("AUTHORITY_TYPE"),"02");
         Map<String, Date> dateMap = new HashMap<>();
@@ -765,7 +798,7 @@ public class ValBatchImportService {
         List<String> isAutoCouponStockfInfoWindcodeList = new ArrayList<String>();
 
         //查找底层资产映射表
-        List<RskValtblPrtBotassetMapDto> botAssetMapList = rskValtblPrtBotassetMapper.selectBotAssetMap(dto.getPtlId());
+        List<RskValtblPrtBotassetMapDto> botAssetMapList = assetCommonMapper.selectBotAssetMap(dto.getPtlId());
         //查找标的金融产品信息
         List<FinProduct> finProductList = assetCommonMapper.selectAllAsset();
         List<String> subNameList = new ArrayList<String>();
@@ -796,8 +829,8 @@ public class ValBatchImportService {
             }
         }
 
-        String actMarketCode = null;
         for(RskValtblAssetSubDto entity:dto.getSelectedItem()){
+            String actMarketCode = null;
             String subCode=entity.getSubCode();
             String subName=entity.getSubName();
             if(StringUtil.equals(entity.getValType().getDesc(), ValType.ASSET.getDesc())
@@ -861,7 +894,7 @@ public class ValBatchImportService {
                 }
             }else {
                 //根据估值表底层资产映射获取债券的交易场所，适用于四级科目无法区分
-                if(entity.getSubCode().length() >8){
+                if(subCode.length() >8){
                     String subNamesub = paraMap.get(subCode.substring(0,8));
                     if(StringUtil.isNotEmpty(subNamesub)){
                         if (subNamesub.contains("上交所")) {
@@ -935,14 +968,18 @@ public class ValBatchImportService {
                                 }
                             }
                         }
-                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_JJ_STR)){
+                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_JJ_STR)
+                            ||StringUtil.equals(subCode.substring(0, 4),KEY_INT_GPJJ_STR)){
                         if(null!=infChinamutualfunddescriptionList&&!infChinamutualfunddescriptionList.isEmpty()){
                             for(InfChinamutualfunddescriptionDto entityinfChinamutualfunddescription:infChinamutualfunddescriptionList){
                                 if(StringUtil.equals(subName, entityinfChinamutualfunddescription.getfInfoName())
                                         ||StringUtil.equals(subName, entityinfChinamutualfunddescription.getfInfoFullname())){
                                     flag = false;
-                                    isAutoCoupon = true;
-                                    isAutoCouponFundfInfoWindcodeList.add(entityinfChinamutualfunddescription.getfInfoWindcode());
+                                    //避免重复加券
+                                    if(StringUtil.equals(subCode.substring(0, 4),KEY_JJ_STR)){
+                                        isAutoCoupon = true;
+                                        isAutoCouponFundfInfoWindcodeList.add(entityinfChinamutualfunddescription.getfInfoWindcode());
+                                    }
                                     entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND基金.getValue());
                                     //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
                                     entity.setFinprodId(entityinfChinamutualfunddescription.getFinprodId());
@@ -953,13 +990,17 @@ public class ValBatchImportService {
                             }
                         }
                         //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  start
-                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_GP_STR)){
+                    }else if(StringUtil.equals(subCode.substring(0, 4),KEY_GP_STR)
+                            ||StringUtil.equals(subCode.substring(0, 4),KEY_INT_GPJJ_STR)){
                         if(null!=interfStockInfoList&&!interfStockInfoList.isEmpty()){
                             for(InterfStockInfoDto entityInterfStockInfoDto:interfStockInfoList){
                                 if(StringUtil.equals(subName, entityInterfStockInfoDto.getAssetname())){
                                     flag = false;
-                                    isAutoCoupon = true;
-                                    isAutoCouponStockfInfoWindcodeList.add(entityInterfStockInfoDto.getAssetcode());
+                                    //避免重复加券
+                                    if(StringUtil.equals(subCode.substring(0, 4),KEY_GP_STR)){
+                                        isAutoCoupon = true;
+                                        isAutoCouponStockfInfoWindcodeList.add(entityInterfStockInfoDto.getAssetcode());
+                                    }
                                     entity.setAssetSource(DictCodeListExt1.估值资产来源_WIND股票.getValue());
                                     entity.setFinprodId(entityInterfStockInfoDto.getFinprodId());
                                     entity.setFinprodMarketId(entityInterfStockInfoDto.getAssetcode());
@@ -971,6 +1012,7 @@ public class ValBatchImportService {
                     //徽商代码移植-股票加券、股票债券基金加券数据的有效性check处理合并  201210602  end
                 }
             }
+
         }
         botAssetMapList.clear();
 
@@ -1014,39 +1056,58 @@ public class ValBatchImportService {
                 if(StringUtil.equals(entity2.getValType().getDesc(), ValType.ASSET.getDesc())){
                     RskValtblPrtBotassetMapDto rskValtblPrtBotassetMapDto2 = new RskValtblPrtBotassetMapDto();
                     if(StringUtil.isNotEmpty(entity2.getSubCode())&&entity2.getSubCode().length()>8){
-                        if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1103")){
+                        if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZQ_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_债券.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1105")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_JJ_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_基金.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1102")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_GP_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_股票.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1701")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_FB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_非标.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1901")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_LLXFB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_项目类.getValue());
-                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),"1003")){
+                        }else if(StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_CKL_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_存款类.getValue());
-                        }else if (StringUtil.equals(entity2.getSubCode().substring(0, 4), "1202")) {
+                        }else if (StringUtil.equals(entity2.getSubCode().substring(0, 4), KEY_NHGB_STR)) {
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
+                            String code=StringUtil.substring(entity2.getSubCode(),0,8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"12020101") || StringUtil.equals(code,"12020201") || StringUtil.equals(code,"12020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue();
+                            }else if(StringUtil.equals(code,"12020102") || StringUtil.equals(code,"12020202") || StringUtil.equals(code,"12020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue();
+                            }
                             String termType = getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(termType);
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
                             } else {
-                                entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
                             }
-                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"2202")){
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            commonAutoCouponService.createRepoInfo(entity2);
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZHGB_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
+                            String code=entity2.getSubCode().substring(0, 8);
+                            String finprodType= null;
+                            if(StringUtil.equals(code,"22020101") || StringUtil.equals(code,"22020201") || StringUtil.equals(code,"22020301")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue();
+                            }else if(StringUtil.equals(code,"22020102") || StringUtil.equals(code,"22020202") || StringUtil.equals(code,"22020302")){
+                                finprodType=DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue();
+                            }
                             String termType = getTermTypeFromStr(entity2.getSubCode(), entity2.getSubName());
                             if(termType != null) {
-                                entity2.setFinprodId(termType);
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(termType));
                             } else {
-                                entity2.setFinprodId(entity2.getSubCode().substring(8, entity2.getSubCode().length()));
+                                finprodType = "";
+                                entity2.setFinprodId(finprodType.concat(GlobalConstant.UNDER_LINE).concat(entity2.getSubCode().substring(8, entity2.getSubCode().length())));
                             }
-                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"2231")){
+                            //在fin_trade_product、fin_product_type生成相关数据，风险需要用到
+                            commonAutoCouponService.createRepoInfo(entity2);
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_ZHGI_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_正回购.getValue());
-                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 6),"120410")){
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 6),KEY_NHGI_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_逆回购.getValue());
-                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),"3103") || StringUtil.equals(entity2.getSubCode().substring(0, 4),"3102")){
+                        } else if (StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_QQ_STR) || StringUtil.equals(entity2.getSubCode().substring(0, 4),KEY_QH_STR)){
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_衍生品.getValue());
                         }else{
                             rskValtblPrtBotassetMapDto2.setSubClass(DictCodeListExt1.资产科目类型_其他.getValue());
@@ -1601,7 +1662,10 @@ public class ValBatchImportService {
                         continue;
                     }
                     logger.info(fileName+"估值表自动解析处理状态正常结束!!");
-
+                    String runFlag = StringUtil.EMPTY;
+                    if (errorList != null && errorList.size()>0){
+                        runFlag = DictCodeListExt1.估值表自动解析错误码_自动加券失败.getValue();
+                    }
                     StringBuilder sb = new StringBuilder(StringUtils.EMPTY);
                     for (String item : errorList) {
                         sb.append("[");
@@ -1612,7 +1676,7 @@ public class ValBatchImportService {
 
                     //保存委托估值导入记录表
                     this.saveRskOutValtblImportHis(fileName, valTableFile.getPath(), ptlId, portfolioName, resValDate,
-                            DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),StringUtil.EMPTY,startDate,impDate,deptCode,sb.toString());
+                            DictCodeListExt1.估值表自动解析处理状态_正常结束.getValue(),runFlag,startDate,impDate,deptCode,sb.toString());
                     if (flag){
                         ExcelUtilForRisk.fixFileName( filePath+ File.separator +deptCode, fileName,BAK_START_STR+"_"+fileName);
                     } else{

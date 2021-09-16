@@ -19,16 +19,16 @@
 			<Cell order="15" name="募集方式">raiseType</Cell>
 			<Cell order="16" name="管理方式">manageType</Cell>
 			<Cell order="17" name="运行方式">operateMode</Cell>
-			<Cell order="18" name="募集起始日期">raiseVdate01</Cell>
-			<Cell order="19" name="募集结束日期">raiseEnddate01</Cell>
+			<Cell order="18" name="募集起始日期">raiseVdate02</Cell>
+			<Cell order="19" name="募集结束日期">raiseEnddate02</Cell>
 			<Cell order="20" name="发行机构提前终止权标识">termRightFlag</Cell>
 			<Cell order="21" name="客户赎回权标识">cusRedeemFlag</Cell>
 			<Cell order="22" name="产品增信标识">creditFlag</Cell>
 			<Cell order="23" name="境内托管机构代码">inDepCode</Cell>
 			<Cell order="24" name="境外托管机构国别">outDepCtry</Cell>
 			<Cell order="25" name="境外托管机构名称">outDepName</Cell>
-			<Cell order="26" name="产品起始日期">vdate01</Cell>
-			<Cell order="27" name="产品预计终止日期">mdate01</Cell>
+			<Cell order="26" name="产品起始日期">vdate02</Cell>
+			<Cell order="27" name="产品预计终止日期">mdate02</Cell>
 			<Cell order="28" name="受托职责">fiduciaryDuty</Cell>
 			<Cell order="29" name="分级产品标识">isConstracte</Cell>
 			<Cell order="30" name="收益权转让产品标识">transferType</Cell>

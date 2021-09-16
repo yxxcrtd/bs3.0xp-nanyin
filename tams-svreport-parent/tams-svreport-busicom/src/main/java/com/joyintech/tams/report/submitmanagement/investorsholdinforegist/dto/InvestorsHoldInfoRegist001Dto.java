@@ -124,7 +124,10 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
      */
     private String cnyAmtExportExcel;
 
-
+    /**
+     * 删除原因
+     */
+    private String deleteReason;
 
     public String getAmountExportExcel() {
         return amountExportExcel;
@@ -464,4 +467,12 @@ public class InvestorsHoldInfoRegist001Dto extends ChbInvestholdInfoSub implemen
     }
 
     // 导出报错新添加的 （徽商） njl  end
+
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
+    }
 }

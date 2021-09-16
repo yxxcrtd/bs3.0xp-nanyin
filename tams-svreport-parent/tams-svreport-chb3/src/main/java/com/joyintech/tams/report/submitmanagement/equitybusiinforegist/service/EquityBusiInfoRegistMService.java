@@ -104,6 +104,22 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
                 SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/findPage", param,
                 EquityBusiInfoRegist001Dto.class);
     }
+
+    /**
+     * 查询事件(无分页)
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    public List<EquityBusiInfoRegist001Dto> searchInfo(Map<String, Object> param) {
+        return restTemplate.postForList(
+                SvrServiceApplication.CHB3_SERVICE_NAME + "/EquityBusiInfoRegist/queryEquityBusiInfoRegist",
+                param,
+                EquityBusiInfoRegist001Dto.class);
+    }
+
     @ResponseBody
     public List<SuggestDto> queryPrdNameList(String param) {
         return restTemplate.postForList(
@@ -420,9 +436,9 @@ public class EquityBusiInfoRegistMService extends BaseService<EquityInfoRegist00
             ajaxResult.setMessage("投资者明细信息登记导出批处理正在执行中或待执行！", MessageType.错误消息);
             return ajaxResult;
         }
-        else if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
+         if (!equityBusiInfoRegist001Service.checkIfInBatchByTaskBeanName(
                 BatchBeanName.投资者明细信息登记手工处理.getTaskId())) {
-            ajaxResult.setMessage("投资者明细信息手工批处理正在执行中或待执行！", MessageType.错误消息);
+            ajaxResult.setMessage("投资者明细信息登记手工处理批处理正在执行中或待执行！", MessageType.错误消息);
             return ajaxResult;
         }
         ChbSubinfoBatchLog log = new ChbSubinfoBatchLog();

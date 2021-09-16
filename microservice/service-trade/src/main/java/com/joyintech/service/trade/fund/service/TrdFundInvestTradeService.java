@@ -1303,7 +1303,7 @@ public class TrdFundInvestTradeService extends BaseService<TrdFundInvestTradeDto
         BigDecimal carryAmtNew =BigDecimal.ZERO;
         if(StringUtil.isNotEmpty(map.get("shuhuishareAmt"))){
             carryAmtNew = new BigDecimal(map.get("shuhuishareAmt").toString());
-            carryAmtNew = ArithmeticUtil.round(ArithmeticUtil.multiply(carryAmtNew,lastNewWfsy),2, RoundingMode.HALF_UP);
+            carryAmtNew = ArithmeticUtil.round(ArithmeticUtil.multiply(carryAmtNew,lastNewWfsy==null?BigDecimal.ZERO:lastNewWfsy),2, RoundingMode.HALF_UP);
         }
         if(carryAmt != null){
             carryAmt = carryAmt.add(carryAmtNew);

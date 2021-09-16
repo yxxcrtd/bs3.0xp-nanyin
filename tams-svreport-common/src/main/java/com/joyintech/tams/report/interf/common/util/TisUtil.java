@@ -1327,8 +1327,8 @@ public class TisUtil {
 			cell.setCellValue((Double)value);
 		}
 		else if (value instanceof BigDecimal) {
-			BigDecimal cellValue = (BigDecimal)value;
-			cell.setCellValue(cellValue.doubleValue());
+			//BigDecimal cellValue = (BigDecimal)value;
+			cell.setCellValue(value.toString());
 		}
 		else if (value instanceof Integer) {
 			Integer cellValue = (Integer)value;//转为整形会变成.0,转为字符串正常
@@ -1338,23 +1338,16 @@ public class TisUtil {
 			Integer keyDiff=Integer.parseInt(datas.get(valKey+"Diff").toString());
 			if(1==keyDiff) {
 				CellStyle newStyle = wb.createCellStyle();
-				newStyle.cloneStyleFrom(cell.getCellStyle());
+				newStyle.cloneStyleFrom(newStyle);
 				// 修改字体颜色为红色
 				Font ztFont1 = wb.createFont();
 				ztFont1.setColor(Font.COLOR_RED); // 将字体设置为“红色”
 				// 字体颜色设置
 				newStyle.setFont(ztFont1);
+				newStyle.setAlignment(HorizontalAlignment.CENTER);
 				cell.setCellStyle(newStyle);
 			}
 		}
 	}
 
-	private static Integer replaceInteger(String key, Map<String, Integer> datas) {
-		if(key.contains(".")&&null!=datas) {
-			String subKey = key.substring(key.indexOf(".")+1, key.length());
-			Integer index = datas.get(subKey);
-			return index;
-		}
-		return 0;
-	}
 }

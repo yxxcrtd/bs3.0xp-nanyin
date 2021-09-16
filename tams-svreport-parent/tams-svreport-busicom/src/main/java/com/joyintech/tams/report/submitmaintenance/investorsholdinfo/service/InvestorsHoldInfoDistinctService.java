@@ -1,13 +1,17 @@
 package com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.poi.ss.formula.functions.T;
@@ -17,6 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.common.svreport.chb.util.SvrDataUtil;
@@ -26,6 +32,7 @@ import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.systemtools.constant.DataIndexSequenceType;
 import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.tams.report.framework.thread.JoyinThreadPoolExecutor;
 import com.joyintech.tams.report.investormerger.dao.ChbEquHoldCheckDtoMapper;
 import com.joyintech.tams.report.investormerger.dao.ChbInvestholdInfoCheckDtoMapper;
 import com.joyintech.tams.report.investormerger.dto.ChbEquHoldCheckDto;
@@ -34,6 +41,7 @@ import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao.Investo
 //import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dao.InvestorsHoldInfo001Mapper;
 //import com.joyintech.tams.report.submitmaintenance.equityinfo.dao.EquityInfoDistinctMapper;
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001Dto;
+import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.dto.InvestorsHoldInfo001FileReadParaDto;
 import com.joyintech.tams.report.submitmanagement.checkreport.dao.CheckReport001Mapper;
 import com.joyintech.tams.report.submitmanagement.checkreport.dto.CheckReport001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dao.InvestorsHoldInfoRegist001Mapper;
@@ -140,15 +148,16 @@ public class InvestorsHoldInfoDistinctService {
 		return temp;
 		
 	}
-	@SuppressWarnings("unchecked")
 	/**
 	 * 
 	 * @param list
 	 * @param type 检查类型 01报送前检查 02普通入库检查
 	 */
-	public void checkInvestorsHoldInfolist(@SuppressWarnings("rawtypes") List list,String type){
+	@SuppressWarnings("unchecked")
+	public void checkInvestorsHoldInfolist(List list,String type){
 		//查询到持有信息检查表数据 并以身份标识和登记银行代码分组
 		 List<ChbEquHoldCheckDto> allHoldTmpList = chbEquHoldCheckDtoMapper.selectAllData(null);
+		 
 		 Map<String, List<ChbEquHoldCheckDto>> holdTmpMap=allHoldTmpList.stream().collect(
 				 JoyinCollectors.groupingBy(
                x -> x.getRegistBankCode()+GlobalConstant.UNDER_LINE+x.getIndentifyMark()));
@@ -248,14 +257,14 @@ public class InvestorsHoldInfoDistinctService {
 								 dmodel.setCcy(tep.getCcy());
 //								 dmodel.setPrdRegistCode(tep.getPrdRegistCode());
 								 dmodel.setProdid(tep.getProdid());
-//								 chbInvestholdInfoCheckDtoMapper.deleteBymodel(dmodel);
-							     chbInvestholdInfoCheckDtoMapper.updateOperatestatusW(tep);
+							     chbInvestholdInfoCheckDtoMapper.updateOperatestatus(tep);
 						 }
 					 }
 				 }
 				 iterator.remove();
 			 }
 		 }
+		 
 		 for(ChbInvestholdInfoCheckDto temp:insertBatch){
 			 if(type.equals("01")){
 				 ChbInvestholdInfoCheckDto qmodel=new ChbInvestholdInfoCheckDto();
@@ -290,203 +299,362 @@ public class InvestorsHoldInfoDistinctService {
 		 }
 		
 	}
+	 
+	
 	/**
-	 * 合并
-	 * @param type 01 map类型  02dto 类型
+	 * 
+	 * @param type 只处理普通入库逻辑
 	 */
-	public void mergeInvestorsHoldInfolist(String type,String interType){
-		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
-		//查询出上次合并后识别标识
-		List<String> lastHbhList=chbInvestholdInfoCheckDtoMapper.selectLastMergerIndentifyMarkAndBankcode();
-		try {
-			for(String lasthbh:lastHbhList){
-				String[] ss=lasthbh.split(",");
-				ChbInvestholdInfoCheckDto recode=new ChbInvestholdInfoCheckDto();
-				recode.setRegistBankCode(ss[0]);
-				recode.setIndentifyMark(ss[1]);
-				 recode.setHoldDate(sdf.parse(ss[2]));
-				chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkWH(recode);
-				chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ(recode);
+	
+	 @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+	public List<ChbInvestholdInfoCheckDto> checkInvestorsHoldInfolistBack( List<Map<String, String>> list,InvestorsHoldInfo001FileReadParaDto paraDto){
+		
+		//查询出需要合并的数据(只文件）
+		 List<ChbInvestholdInfoCheckDto> checkDtoList= this.selectAllNeedCheckDtoList(list);
+		 
+		//list 先入库   REGIST_BANK_CODE  INDENTIFY_MARK CCY HOLD_DATE PRODID 到临时表
+		 //this.insertListTmp(list);
+//		 List<ChbInvestholdInfoCheckDto> checkDtoList= chbInvestholdInfoCheckDtoMapper.selectNeedCheckList();
+		 
+ 		 List<ChbInvestholdInfoCheckDto> insertBatch=new ArrayList<ChbInvestholdInfoCheckDto>();
+ 		 
+ 		 if(checkDtoList!=null && !checkDtoList.isEmpty()){
+ 		     
+ 		    Map<String, String> prdRegistMap = paraDto.getPrdRegistMap();
+ 		    
+ 		   
+	    for (ChbInvestholdInfoCheckDto temp : checkDtoList) {
+
+		// 根据身份的识别标识合并状态查询设置持有的状态，如果是01的身份，则持有原封不动的插入到info表不做处理。
+		temp.setWorkflowId(temp.getOperatestatus());
+		// 默认设置成 需要合并
+		temp.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
+		temp.setPrdRegistCode(prdRegistMap.get(temp.getProdid()) == null ? null : prdRegistMap.get(temp.getProdid()));
+		insertBatch.add(temp);
+ 
+		// 是否排除自己待定
+		List<ChbEquHoldCheckDto> mergeList = chbInvestholdInfoCheckDtoMapper.getMergerindentifymark(temp);
+
+		for (ChbEquHoldCheckDto equInfo : mergeList) {
+
+		    ChbInvestholdInfoCheckDto queryModel = new ChbInvestholdInfoCheckDto();
+		    queryModel.setRegistBankCode(equInfo.getRegistBankCode());
+		    queryModel.setIndentifyMark(equInfo.getIndentifyMark());
+		    queryModel.setHoldDate(temp.getHoldDate());
+		    queryModel.setProdid(temp.getProdid());
+
+		    List<ChbInvestholdInfoCheckDto> temList = chbInvestholdInfoCheckDtoMapper.selectBymodel(queryModel);
+		    if (temList == null || temList.isEmpty()) {// CHB_INVESTHOLD_INFO_CHECK 查询没有记录
+			// CHB_INVESTHOLD_INFO 去查询未报送记录 SEND_STATUS='01
+			queryModel.setMergerindentifymark(temp.getMergerindentifymark());
+			int count =chbInvestholdInfoCheckDtoMapper.isExistsMergerindentifymark(queryModel);
+			if(count==0){//Merge表有就不再进
+			List<ChbInvestholdInfoCheckDto> infoList = chbInvestholdInfoCheckDtoMapper.selectBymodelFromFormer(queryModel);
+			if (infoList != null && !infoList.isEmpty()) {// 有数据，且合并后的不再check有记录的情况下，才会进check
+								      
+			    for (ChbInvestholdInfoCheckDto dto : infoList) {
+				dto.setMergerindentifymark(dto.getIndentifyMark());
+				dto.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
+				// check表插入以此识别标识为合并后记录的数据。
+				ChbInvestholdInfoCheckDto dmodel = new ChbInvestholdInfoCheckDto();
+				dmodel.setRegistBankCode(dto.getRegistBankCode());
+				dmodel.setIndentifyMark(dto.getIndentifyMark());
+				dmodel.setHoldDate(dto.getHoldDate());
+				dmodel.setCcy(dto.getCcy());
+				dmodel.setProdid(dto.getProdid());
+				dto.setCreateTime(new Date());
+				chbInvestholdInfoCheckDtoMapper.deleteBymodel(dmodel);
+				//
+				chbInvestholdInfoCheckDtoMapper.insert(dto);
+			    }
 			}
-		} catch (ParseException e) {
-			logger.error(e.getMessage(),e);
+			}
+		    } else {// 如果有当日已入库的数据，则修改这些状态为待合并。
+			chbInvestholdInfoCheckDtoMapper.updateOperatestatusW(temList);
+		    }
 		}
-		//合并处理
-		List<InvestorsHoldInfo001Dto> resultList=chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();
-		for(Iterator<InvestorsHoldInfo001Dto> iterator = resultList.iterator();iterator.hasNext();){
-			InvestorsHoldInfo001Dto single=iterator.next();
-			if(chbInvestholdInfoCheckDtoMapper.checkInvestholdInfoSub(single) > 0){
-			 iterator.remove();
-			 continue;
+	    }
+	}
+ 		 
+ 		 //将文件里的数据插入check，如果有待处理的身份合并，则插入为A状态数据到Info里。
+		 for(ChbInvestholdInfoCheckDto temp:insertBatch){
+				 //考虑重复导入 重复了 先删后插
+				 ChbInvestholdInfoCheckDto qmodel=new ChbInvestholdInfoCheckDto();
+				 qmodel.setRegistBankCode(temp.getRegistBankCode());
+				 qmodel.setIndentifyMark(temp.getIndentifyMark());
+				 qmodel.setHoldDate(temp.getHoldDate());
+				 qmodel.setCcy(temp.getCcy());
+				 qmodel.setPrdRegistCode(temp.getPrdRegistCode());
+				 qmodel.setProdid(temp.getProdid());
+				 chbInvestholdInfoCheckDtoMapper.deleteBymodel(qmodel);
+//				 if(temp.getStatus().equals("N")){
+//					 temp.setStatus("E");
+//				 }
+				 if("01".equals(temp.getWorkflowId())){//如果身份是待处理，则直接插入temp表
+					 temp.setWorkflowId(null);
+					 temp.setStatus("A");
+					 chbInvestholdInfoCheckDtoMapper.insertToChbInvestholdInfo(temp);
+				 }
+				 temp.setStatus("E");
+				 
+				 chbInvestholdInfoCheckDtoMapper.insert(temp);
 		 }
-		}
-		List<String> keys = new ArrayList<>();
-		List<Map<String, String>> newList=new ArrayList<Map<String, String>>();
-		Map<String, String> nmap=null;
-		for(InvestorsHoldInfo001Dto single:resultList){
-			nmap=dtoToMap(single);
-			newList.add(nmap);
-			String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-			+GlobalConstant.UNDER_LINE+single.getCcy()+GlobalConstant.UNDER_LINE+sdf.format(single.getHoldDate())+
-			GlobalConstant.UNDER_LINE+single.getProdid();
-			keys.add(key);
-		}
-		if(!keys.isEmpty()){
-			chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoBatch(keys);
-			chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoSubBatch(keys);
-		}
-//		if("01".equals(type)){
-//			list.addAll(newList);
-//		}else{
-//			list.addAll(resultList);
+		 
+		 return checkDtoList;
+		
+	}
+	/*
+	 * 开启线程池模式查询大数据量，每个线程查100
+	 * */
+    private List<ChbInvestholdInfoCheckDto> selectAllNeedCheckDtoList(List<Map<String, String>> list) {
+
+	List<Callable<Boolean>> tasks = new ArrayList<>();
+
+	List<ChbInvestholdInfoCheckDto> result = Collections.synchronizedList(new ArrayList<ChbInvestholdInfoCheckDto>());
+	if (null != list) {
+	    ExecutorService service = new JoyinThreadPoolExecutor(10);
+	    int start = 0;
+	    int end = 0;
+	    int size = list.size();
+	    int max = (int) Math.ceil((double) size / 100);
+	    // 信号量
+	    CountDownLatch countDown = new CountDownLatch(max);
+
+	    for (int i = 0; i < max; i++) {
+		start = end;
+		end = Math.min(size, 100 * (i + 1));
+		List<Map<String, String>> subList = list.subList(start, end);
+
+		// 提交任务
+		tasks.add(new Callable<Boolean>() {
+
+		    @Override
+		    public Boolean call() throws Exception {
+			result.addAll(chbInvestholdInfoCheckDtoMapper.selectNeedCheckDtoList(subList));
+			countDown.countDown();// 个数-1
+			return true;
+		    }
+		});
+	    }
+	    // 添加线程等待转换线执行
+	    try {
+		service.invokeAll(tasks);
+		countDown.await();
+		service.shutdown();
+	    } catch (InterruptedException e) {
+		e.printStackTrace();
+	    }
+	}
+	return result;
+    }
+	
+	
+	public void insertListTmp(List<Map<String, String>> list) {
+
+//		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+		//参数调优
+		int maxDataCountOneTime =100;
+		
+		 List<Callable<Boolean>> tasks = new ArrayList<>();
+		 
+	        if (null != list) {
+	        	  ExecutorService service = new JoyinThreadPoolExecutor(10);
+	              int start = 0;
+	              int end = 0;
+	              int size = list.size();
+	              int max = (int)Math.ceil((double)size / maxDataCountOneTime);
+	              //信号量
+	              CountDownLatch countDown = new CountDownLatch(max);
+	              
+	              for (int i = 0; i < max; i++ ) {
+	                  start = end;
+	                  end = Math.min(size, maxDataCountOneTime * (i + 1));
+	                  List<Map<String, String>> subList = list.subList(start, end);
+	               
+	               //提交任务
+	               tasks.add(new Callable<Boolean>() {
+
+	  				@Override
+	  				public Boolean call() throws Exception {
+	  					 chbInvestholdInfoCheckDtoMapper.insertListToTmp(subList);
+	  					countDown.countDown();//个数-1
+	  					return true;
+	  				}
+	                });
+	              }
+	            //添加线程等待转换线执行
+	              try {
+	        	  service.invokeAll(tasks);
+	        	  countDown.await();
+	        	  service.shutdown();
+	              } catch (InterruptedException e) {
+	        	  e.printStackTrace();
+	              }
+	          }
+//		int maxDataCountOneTime = 500;
+//		 
+//		int dataCount = list.size();
+//		if (dataCount <= maxDataCountOneTime) {
+//			chbInvestholdInfoCheckDtoMapper.insertListToTmp(list);
+//		} else {
+//			List<Map<String, String>> newList = new ArrayList<Map<String, String>>();
+//			newList.addAll(list);
+//
+//			// 分批处理
+//			int part = dataCount / maxDataCountOneTime; // 分批数
+//			for (int i = 0; i < part; i++) {
+//				chbInvestholdInfoCheckDtoMapper.insertListToTmp(newList.subList(0, maxDataCountOneTime));
+//				newList.subList(0, maxDataCountOneTime).clear();
+//			}
+//			// 最后剩下的数据
+//			if (CollectionUtils.isNotEmpty(newList)) {
+//				chbInvestholdInfoCheckDtoMapper.insertListToTmp(newList);
+//			}
 //		}
-		//更新持有检查表数据状态
-		chbInvestholdInfoCheckDtoMapper.updateChbInvestholdCheckAftermerged();
-		//插入维护及登记表
-//		investorsHoldInfo001Mapper.insertChbHoldInfoData(resultList);
-		InvestorsHoldInfo001Service investorsHoldInfo001Service = 
-                SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
-		// 获取所有的产品登记编码
-		Map<String, String> prdRegistMap = new HashMap<String, String>();
-		List<InvestorsHoldInfo001Dto> listA=new ArrayList<InvestorsHoldInfo001Dto>();
-		List<InvestorsHoldInfo001Dto> listE=new ArrayList<InvestorsHoldInfo001Dto>();
-		for(InvestorsHoldInfo001Dto single:resultList){
-			if(single.getPrdRegistCode()==null||"".equals(single.getPrdRegistCode())){
-				if (prdRegistMap.isEmpty()) {
-					prdRegistMap = investorsHoldInfo001Mapper.getAllRegistProdCodeSet().stream()
-							.collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
-				} 
-				if(single.getProdid()!=null){
-					single.setPrdRegistCode(prdRegistMap.get(single.getProdid()));
-				}
-				if(single.getPrdRegistCode()==null||"".equals(single.getPrdRegistCode())){
-					if(interType.equals(DictCodeListExt2.数据来源_资管系统.getValue()))
-					listA.add(single);
-				}else{
-					listE.add(single);
-				}
-			}else{
-				listE.add(single);
-			}
+	}
+	
+    /**
+     * 合并
+     * 
+     * @param list
+     * @param type
+     *            01 map类型 02dto 类型
+     */
+	
+	@Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+    public void mergeInvestorsHoldInfolist(String type, String interType) {
+	//删除info表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkWH();
+	//删除sub表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ();
+
+	// 查询需要合并的数据
+	List<InvestorsHoldInfo001Dto> resultList = chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();
+
+	/**** 数据处理,大批量删除导致速度降低,修改逻辑 **/
+	if (!resultList.isEmpty()) {
+	    this.deleteInvestholdInfoSubBatchGroupDto(resultList);
+	    this.deleteInvestholdInfoBatchGroupDto(resultList);
+	}
+	// 更新持有检查表数据状态
+	chbInvestholdInfoCheckDtoMapper.updateChbInvestholdCheckAftermerged();
+	// 插入维护及登记表
+	InvestorsHoldInfo001Service investorsHoldInfo001Service = SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
+	// 获取所有的产品登记编码
+	Map<String, String> prdRegistMap = new HashMap<String, String>();
+	List<InvestorsHoldInfo001Dto> listA = new ArrayList<InvestorsHoldInfo001Dto>();
+	List<InvestorsHoldInfo001Dto> listE = new ArrayList<InvestorsHoldInfo001Dto>();
+	for (InvestorsHoldInfo001Dto single : resultList) {
+	    if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		if (prdRegistMap.isEmpty()) {
+		    prdRegistMap = investorsHoldInfo001Mapper.getAllRegistProdCodeSet().stream().collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
 		}
-    	investorsHoldInfo001Service.afterCheckDeal(listE, listA, interType, null, null, null, null);
+		if (single.getProdid() != null) {
+		    single.setPrdRegistCode(prdRegistMap.get(single.getProdid()));
+		}
+		if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		    if (interType.equals(DictCodeListExt2.数据来源_资管系统.getValue()))
+			listA.add(single);
+		} else {
+		    listE.add(single);
+		}
+	    } else {
+		listE.add(single);
+	    }
 	}
-	public void checkBeforeSubmit(){
-		checkBeforeSubmit(null,"02");
+	investorsHoldInfo001Service.afterCheckDeal(listE, listA, interType, null, null, null, null);
+    }
+
+	/**
+     * 合并-前台导入用
+     * 
+     * @param list
+     * @param type
+     *            01 map类型 02dto 类型
+     */	
+    public void mergeInvestorsHoldInfolistNew(String type, String interType) {
+	//删除info表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkWH();
+	//删除sub表中存在check表MergeIndentyMark的当日数据
+	chbInvestholdInfoCheckDtoMapper.deleteByBankcodeAndIndentifyMarkDJ();
+
+	// 查询需要合并的数据
+	List<InvestorsHoldInfo001Dto> resultList = chbInvestholdInfoCheckDtoMapper.selectHbhChbInvestholdInfoUnmerged();
+
+	/**** 数据处理,大批量删除导致速度降低,修改逻辑 **/
+	if (!resultList.isEmpty()) {
+	    this.deleteInvestholdInfoSubBatchGroupDto(resultList);
+	    this.deleteInvestholdInfoBatchGroupDto(resultList);
 	}
+	// 更新持有检查表数据状态
+	chbInvestholdInfoCheckDtoMapper.updateChbInvestholdCheckAftermerged();
+	// 插入维护及登记表
+	InvestorsHoldInfo001Service investorsHoldInfo001Service = SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
+	// 获取所有的产品登记编码
+	Map<String, String> prdRegistMap = new HashMap<String, String>();
+	List<InvestorsHoldInfo001Dto> listA = new ArrayList<InvestorsHoldInfo001Dto>();
+	List<InvestorsHoldInfo001Dto> listE = new ArrayList<InvestorsHoldInfo001Dto>();
+	for (InvestorsHoldInfo001Dto single : resultList) {
+	    if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		if (prdRegistMap.isEmpty()) {
+		    prdRegistMap = investorsHoldInfo001Mapper.getAllRegistProdCodeSet().stream().collect(JoyinCollectors.toMap(x -> x.get("PRODID"), x -> x.get("REG_CODE")));
+		}
+		if (single.getProdid() != null) {
+		    single.setPrdRegistCode(prdRegistMap.get(single.getProdid()));
+		}
+		if (single.getPrdRegistCode() == null || "".equals(single.getPrdRegistCode())) {
+		    if (interType.equals(DictCodeListExt2.数据来源_资管系统.getValue()))
+			listA.add(single);
+		} else {
+		    listE.add(single);
+		}
+	    } else {
+		listE.add(single);
+	    }
+	}
+	investorsHoldInfo001Service.afterCheckDeal(listE, listA, interType, null, null, null, null);
+    }
+	
 	/**
 	 * @param type "01" 数据检查  02自动报送的检查
 	 * @param registList
 	 * @returnqueryRepeatEquityInfoHoldUnSubmit
 	 */
-	public List<InvestorsHoldInfoRegist001Dto> checkBeforeSubmit(List<InvestorsHoldInfoRegist001Dto> registList,String type){
+	public void checkBeforeSubmit(){
 		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd");
-		//查询出存在于身份检查表中 且状态为未报送的持有维护信息
-		List<String> keyst = new ArrayList<>();
-		if(registList!=null){
-			for(InvestorsHoldInfoRegist001Dto single:registList){
-				String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-				+GlobalConstant.UNDER_LINE+single.getCcy()+GlobalConstant.UNDER_LINE+sdf.format(single.getHoldDate())+
-				GlobalConstant.UNDER_LINE+single.getProdid();
-				keyst.add(key);
-			}
-		}
-//		List<InvestorsHoldInfo001Dto> listR=chbInvestholdInfoCheckDtoMapper.queryRepeatEquityInfoHoldUnSubmit(keyst);
-		List<InvestorsHoldInfo001Dto> listR=chbInvestholdInfoCheckDtoMapper.queryNotInHoldButIncheckInfoHold(keyst);
+		
+	 List<InvestorsHoldInfo001Dto> listR=chbInvestholdInfoCheckDtoMapper.queryNotInHoldButIncheckInfoHold(null);
 		
 		if(listR!=null&&!listR.isEmpty()){
 			String mergerFlag = SvrDataUtil.getSysParam("SVR_EQU_HOLD_MERGER");
-//			if("0".equals(mergerFlag)){//如果是手动
-//				//插入检查表
-////				for(InvestorsHoldInfo001Dto single:listR){
-////					ChbInvestholdInfoCheckDto temp=transformModelToTemp(single);
-////					temp.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
-////					chbInvestholdInfoCheckDtoMapper.insert(temp);
-////				}
-//				//删除维护表和登记表
-//				List<String> keys = new ArrayList<>();
-//				for(InvestorsHoldInfo001Dto single:listR){
-//					String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-//					+GlobalConstant.UNDER_LINE+single.getCcy()+GlobalConstant.UNDER_LINE+sdf.format(single.getHoldDate())+
-//					GlobalConstant.UNDER_LINE+single.getProdid();
-//					keys.add(key);
-//				}
-////				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
-////	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
-//				checkInvestorsHoldInfolist(listR,"01");
-//				//查询出对应的未报送登记信息
-//				List<InvestorsHoldInfoRegist001Dto> djlist=chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(keys);
-//				//更新原检查表和登记表检查检查状态
-//				dochecksafe(djlist,"02");
-//				if("01".equals(type)){
-//					return djlist;
-//				}
-//			}else
+ 
 			if(!"0".equals(mergerFlag)){
-				//插入检查表
-//				for(InvestorsHoldInfo001Dto single:listR){
-//					ChbInvestholdInfoCheckDto temp=transformModelToTemp(single);
-//					temp.setOperatestatus(DictCodeListExt2.处理状态_中债_未合并.getValue());
-//					chbInvestholdInfoCheckDtoMapper.insert(temp);
-//				}
-				//删除维护表和登记表
-				//删除维护表和登记表
-//				List<String> keys = new ArrayList<>();
-//				for(InvestorsHoldInfo001Dto single:listR){
-//					String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
-//					+GlobalConstant.UNDER_LINE+single.getCcy()+GlobalConstant.UNDER_LINE+sdf.format(single.getHoldDate())+
-//					GlobalConstant.UNDER_LINE+single.getProdid();
-//					keys.add(key);
-//				}
-//				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoBatch(keys);
-//				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoSubBatch(keys);
-//				checkInvestorsHoldInfolist(listR,"01");
-				//调用合并处理
-//	        	List<InvestorsHoldInfo001Dto> listN=new ArrayList<InvestorsHoldInfo001Dto>();
-//	        	mergeInvestorsHoldInfolist("02",DictCodeListExt2.数据来源_EXCEL导入.getValue());
-	        	
-//	        	InvestorsHoldInfo001Service investorsHoldInfo001Service = 
-//                SpringContextUtil.getBean(InvestorsHoldInfo001Service.class);
-//	        	if(null==listN||listN.isEmpty()){
-//	        		return null;
-//	        	}
-//	        	investorsHoldInfo001Service.afterCheckDeal(listN, null, DictCodeListExt2.数据来源_EXCEL导入.getValue(), null, null, null, null);
-	        	
-				List<String> keys1 = new ArrayList<>();
+			 
+				List<String> keysList = new ArrayList<>();
+				
 	        	for(InvestorsHoldInfo001Dto single:listR){
 					String key=single.getRegistBankCode()+GlobalConstant.UNDER_LINE +single.getIndentifyMark()
 					+GlobalConstant.UNDER_LINE +single.getCcy()+GlobalConstant.UNDER_LINE +sdf.format(single.getHoldDate())
 					+GlobalConstant.UNDER_LINE +single.getProdid();
-					keys1.add(key);
-				}
-//				chbEquHoldCheckDtoMapper.deleteEquityInfoBatch(keys);
-//	        	chbEquHoldCheckDtoMapper.deleteEquitySubInfoBatch(keys);
+					keysList.add(key);
+			   }
+	        	
 				//查询出对应的未报送登记信息
-	        	List<InvestorsHoldInfoRegist001Dto> djlist=chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(keys1);
+	        	List<InvestorsHoldInfoRegist001Dto> list=chbInvestholdInfoCheckDtoMapper.queryInvestorsHoldInfoRegistByPkUnsubmit(keysList);
 	        	//更新正确的识别标识
 	        	//更新info表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(keys1);
+	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo(keysList);
 	        	//更新sub表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(keys1);
+	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub(keysList);
 	        	//更新check表
-	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(keys1);
+	        	chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoCheck(keysList);
 	        	//更新原检查表和登记表检查检查状态
-				dochecksafe(djlist,"01");
-				if("02".equals(type)){
-					return djlist;
-				}
-			}
-		}else{
-			if("02".equals(type)){
-			return registList;
+				dochecksafe(list);
 			}
 		}
-		//增加检查 存在合并身份后 并没有接持有数据 导致持有 信息还是合并前识别标识 刷新该数据
-//				chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfo();
-//				chbInvestholdInfoCheckDtoMapper.updateUnMergeInvestorsHoldInfoSub();
-		return null;
 	}
-	void dochecksafe(List<InvestorsHoldInfoRegist001Dto> equityInfoRegistRstList,String type){
+	
+	public void dochecksafe(List<InvestorsHoldInfoRegist001Dto> equityInfoRegistRstList){
 		 List<InvestorsHoldInfoRegist001Dto> investRegistUpdateList = new ArrayList<>();
 		  List<CheckReport001Dto> resultList = new ArrayList<>();
 		  List<String> checkseqnos= new ArrayList<String>();
@@ -528,17 +696,16 @@ public class InvestorsHoldInfoDistinctService {
 	                chbReportCheck.setCheckSeqno(CommonUtil.getSequenceIndexData(DataIndexSequenceType.检查序列号));
 	                chbReportCheck.setRepCode(DictCodeListExt2.报表名称_投资者持有信息登记.getValue());
 	                chbReportCheck.setRepName(DictCodeListExt2.报表名称_投资者持有信息登记.getCodeName());
-	                if(type.equals("01")){
-	                	chbReportCheck.setCheckResult("01");
-	                }else{
+//	                if(type.equals("01")){
+//	                	chbReportCheck.setCheckResult("01");
+//	                }else{
 	                	chbReportCheck.setCheckResult("02");
 	                	chbReportCheck.setErrorInfo("检查不通过，该投资者存在多个识别标识！");
-	                }
+//	                }
 	                resultList.add(chbReportCheck);
 
 	                //更新检查序列号对应的数据
 	                InvestorsHoldInfoRegist001Dto dto = new InvestorsHoldInfoRegist001Dto();
-//	                List<String> keyList = StringUtil.splitToList(GlobalConstant.COMMA,item.getValidKey());
 	                dto.setPrdRegistCode(item.getPrdRegistCode());
 	                dto.setIndentifyMark(item.getIndentifyMark());
 	                dto.setHoldDate(item.getHoldDate());
@@ -578,7 +745,7 @@ public class InvestorsHoldInfoDistinctService {
 //		}
 		int dataCount = listE.size();
 		if (dataCount <= maxDataCountOneTime) {
-			allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(listE));
+			allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(listE));
 		} else {
 			List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
 			newKeyList.addAll(listE);
@@ -587,25 +754,90 @@ public class InvestorsHoldInfoDistinctService {
 			int part = dataCount / maxDataCountOneTime; // 分批数
 			for (int i = 0; i < part; i++) {
 				allDataList.addAll(
-						investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
+						chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList.subList(0, maxDataCountOneTime)));
 				newKeyList.subList(0, maxDataCountOneTime).clear();
 			}
 			// 最后剩下的数据
 			if (CollectionUtils.isNotEmpty(newKeyList)) {
-				allDataList.addAll(investorsHoldInfo001Mapper.selectAllHoldInfoData(newKeyList));
+				allDataList.addAll(chbInvestholdInfoCheckDtoMapper.selectAllHoldInfoData(newKeyList));
 			}
 		}
 		Map<String, InvestorsHoldInfo001Dto> allHoldInfoDataMap = StringUtil.isEmptyList(allDataList)
 				? new HashMap<String, InvestorsHoldInfo001Dto>()
 				: allDataList.stream().collect(JoyinCollectors.toMap(x -> x.getRegistBankCode()
 						+ GlobalConstant.UNDER_LINE + x.getIndentifyMark() + GlobalConstant.UNDER_LINE
-						// +x.getPrdRegistCode()+GlobalConstant.UNDER_LINE+x.getPrdRegistCode()
 						+ x.getPrdRegistCode()  + GlobalConstant.UNDER_LINE + x.getCcy() + GlobalConstant.UNDER_LINE
 						+ DateUtil.format(x.getHoldDate()), x -> x));
 		return allHoldInfoDataMap;
 	}
 	
+	/**
+	 * 识别标识合并批量删除维护表中数据  <功能详细描述>
+	 *
+	 * @param keys
+	 *            数据集合
+	 * @see
+	 * @since 1.0
+	 */
+	private void deleteInvestholdInfoBatchGroupDto(List<InvestorsHoldInfo001Dto> keys) {
+		
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+//		if (maxDataCountOneTime < 1) {
+//			maxDataCountOneTime = 1000;
+//		}
+		int dataCount = keys.size();
+		if (dataCount <= maxDataCountOneTime) {
+			chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoBatchDto(keys);
+		} else {
+			List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
+			newKeyList.addAll(keys);
+
+			// 分批处理
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++) {
+				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoBatchDto(newKeyList.subList(0, maxDataCountOneTime));
+				newKeyList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newKeyList)) {
+				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoBatchDto(newKeyList);
+			}
+		}
+	}
 	
+	/**
+	 * 识别标识合并批量删除登记表中数据 <功能详细描述>
+	 *
+	 * @param keys
+	 *            数据集合
+	 * @see
+	 * @since 1.0
+	 */
+	private void deleteInvestholdInfoSubBatchGroupDto(List<InvestorsHoldInfo001Dto> keys) {
+		
+		int maxDataCountOneTime = this.parsToInt(reportSelectOrDeleteCount, "2");
+//		if (maxDataCountOneTime < 1) {
+//			maxDataCountOneTime = 1000;
+//		}
+		int dataCount = keys.size();
+		if (dataCount <= maxDataCountOneTime) {
+			chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoSubBatchDto(keys);
+		} else {
+			List<InvestorsHoldInfo001Dto> newKeyList = new ArrayList<InvestorsHoldInfo001Dto>();
+			newKeyList.addAll(keys);
+
+			// 分批处理
+			int part = dataCount / maxDataCountOneTime; // 分批数
+			for (int i = 0; i < part; i++) {
+				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoSubBatchDto(newKeyList.subList(0, maxDataCountOneTime));
+				newKeyList.subList(0, maxDataCountOneTime).clear();
+			}
+			// 最后剩下的数据
+			if (CollectionUtils.isNotEmpty(newKeyList)) {
+				chbInvestholdInfoCheckDtoMapper.deleteInvestholdInfoSubBatchDto(newKeyList);
+			}
+		}
+	}
     /**
      * 配置项中非空处理
      * @param Count

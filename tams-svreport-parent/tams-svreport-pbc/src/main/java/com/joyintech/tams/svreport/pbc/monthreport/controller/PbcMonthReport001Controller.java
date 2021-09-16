@@ -95,7 +95,7 @@ public class PbcMonthReport001Controller extends BaseController{
 		}else{
 
 
-			Date sysDate = new Date();//DateUtil.platDateFromCache();
+			Date sysDate = DateUtil.platDateFromCache();
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(sysDate);
 

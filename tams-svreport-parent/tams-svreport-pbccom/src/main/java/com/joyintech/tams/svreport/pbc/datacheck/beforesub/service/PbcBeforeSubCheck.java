@@ -85,6 +85,10 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         // 删除检查表数据
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品基本信息.getValue(),checkdate);
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品终止信息.getValue(),checkdate);
+
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),checkdate);
+        checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_新人行产品终止信息.getValue(),checkdate);
+
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_产品资金募集信息.getValue(),checkdate);
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_人行月度统计报表.getValue(),checkdate);
         checkReport001Mapper.delReportDatasByCodeAndDate(DictCodeListExt2.报表名称_资产负债信息.getValue(),checkdate);
@@ -107,6 +111,10 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         //警告逻辑检查
          resultList.addAll(checkPbcProdBaseInfoSub(checkdate,mapPrdBaseInfoRuleout));
          resultList.addAll(checkPbcProdBaseInfoEndSub(checkdate,mapPrdEndRuleout));
+         //ZGBSEI-445  【新人行升级】功能遗漏：新人行升级未考虑延时报送检查功能
+        resultList.addAll(checkPbcProdBaseInfoSubNew(checkdate,mapPrdBaseInfoRuleout));
+        resultList.addAll(checkPbcProdBaseInfoEndSubNew(checkdate,mapPrdEndRuleout));
+
          resultList.addAll(checkPbcPrdRaisingSub(checkdate,mapPrdRaiseRuleout));
          resultList.addAll(checkPbcReport(checkdate));
          resultList.addAll(checkPbcPbcPrdAssetDebtSub(checkdate));
@@ -176,6 +184,53 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         return resultList;
         
     }
+
+
+    /**
+     *ZGBSEI-445  【新人行升级】功能遗漏：新人行升级未考虑延时报送检查功能
+     * 人行产品基本信息检查
+     * @param checkdate
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkPbcProdBaseInfoSubNew(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+        logger.info("人行产品基本信息检查开始");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        //查找募集登记检查数据
+        List<PbcBeforeSubCheckDto> checklist = pbcBeforeSubCheckMapper.selectPbcPrdBaseInfoNewSubCheck(checkdate);
+        for ( PbcBeforeSubCheckDto m:checklist ) {
+            //增加例外情况过滤
+            if(mapRuleout.containsKey(m.getProdid())){
+                continue;
+            }
+            //不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.getRegistseqno());
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_新人行产品基本信息.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_新人行产品基本信息.getCodeName());
+            chbReportCheck.setValidKey("产品代码:"+m.getProdid());
+            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
+                    DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+            String warnInfo="";
+            if ( m.getProdprofit1().compareTo(BigDecimal.ONE)<0 ) {//不合格
+                warnInfo += "预期最高收益率小于1%!";
+            }
+            if ( m.getProdprofit2().compareTo(BigDecimal.ONE)<0 ) {//不合格
+                warnInfo += "预期最低收益率小于1%!";
+            }
+            if(!warnInfo.equals("")){
+                chbReportCheck.setWarnInfo(warnInfo);
+                resultList.add(chbReportCheck);
+            }
+        }
+
+        logger.info("人行产品基本信息检查结束");
+        return resultList;
+
+    }
     
     /**
      * 
@@ -222,6 +277,53 @@ public class PbcBeforeSubCheck extends SvrCBBaseService{
         return resultList;
         
     }
+
+    /**
+     *ZGBSEI-445  【新人行升级】功能遗漏：新人行升级未考虑延时报送检查功能
+     * 人行产品终止信息登记检查
+     * @param checkdate
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkPbcProdBaseInfoEndSubNew(Date checkdate,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+        logger.info("人行产品终止信息登记检查开始");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+        //查找募集登记检查数据
+        List<PbcBeforeSubCheckDto> checklist = pbcBeforeSubCheckMapper.selectPbcPrdBaseInfoNewEndSubCheck(checkdate);
+        for ( PbcBeforeSubCheckDto m:checklist ) {
+            //增加例外情况过滤
+            if(mapRuleout.containsKey(m.getProdid())){
+                continue;
+            }
+            //不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.getRegistseqno());
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_新人行产品终止信息.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_新人行产品终止信息.getCodeName());
+            chbReportCheck.setValidKey("产品代码:"+m.getProdid()+" 币种:"+m.getCcy());
+            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
+                    DictCode.检查结果, DictCodeListExt2.检查结果_存在预警信息项.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+            String warnInfo="";
+            if ( m.getProdprofit1().compareTo(BigDecimal.ZERO)<=0 ) {//客户收益
+                warnInfo += "机构实现收入及折人民币金额为零或负数!";
+            }
+            if ( m.getCustprofit1().compareTo(BigDecimal.ONE)<0 ) {//不合格
+                warnInfo += "兑付客户收益率小于1%";
+            }
+            if(!warnInfo.equals("")){
+                chbReportCheck.setWarnInfo(warnInfo);
+                resultList.add(chbReportCheck);
+            }
+        }
+
+        logger.info("人行产品终止信息登记检查结束");
+        return resultList;
+
+    }
+
     /**
      * 
      * 人行产品资金募集信息登记检查

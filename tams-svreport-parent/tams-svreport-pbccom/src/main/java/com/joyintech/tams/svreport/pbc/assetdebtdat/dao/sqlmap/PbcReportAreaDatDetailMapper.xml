@@ -175,5 +175,7 @@
            left join  PBC_SEND_ZIP_DAT_FILE psz on psz.REPORTUUID=prp.REPORTUUID and  psz.DAT_ZIP_DAT_TYPE =prp.REPORTTYPE
     where psz.DAT_ZIP_CODE=#{datZipCode,jdbcType=VARCHAR}
       and psz.DAT_ZIP_DAT_TYPE = #{datZipDatType,jdbcType=VARCHAR}
+      and prp.PROPERTYCODE is  not  null
+      and (prp.BALANCE &lt;&gt; 0)
   </select>
 </mapper>

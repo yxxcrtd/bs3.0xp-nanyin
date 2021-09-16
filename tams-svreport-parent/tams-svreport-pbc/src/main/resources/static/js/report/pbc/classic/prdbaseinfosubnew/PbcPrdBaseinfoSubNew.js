@@ -267,6 +267,7 @@ $(function () {
                     return;
                 }
             }
+
             var paramObj = {};
             paramObj.flag = '01';
             paramObj.infoList = rows;
@@ -377,10 +378,14 @@ $(function () {
 
             //Joyin.exportExcel("download",paramObj);
             Joyin.exportExcel("download", param);
+
+            //ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG 20210827
+            isHaveData = false;
             if (isHaveData) {
                 Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
+                    param.isall = '01';
                     //页面添加滚动条
-                    layui.layer.open({type: 3});
+                    // layui.layer.open({type: 3});
                     Joyin.ajaxJson('doManul', param, function () {
                         table.load();
                         layui.layer.closeAll();
@@ -405,22 +410,10 @@ $(function () {
                         || expArr[i].sendStatus != "01") {
                         statuFlag = true;
                     }
-
-                    // var pbcProd = expArr[i].pbcProdIdShow;
-                    // p.pbcProdId = pbcProd;
-                    // Joyin.ajaxSync(basePath + 'pbc/prdinitraisesub/PbcPrdInitRaiseSub/searchPage', p, function (result) {
-                    //
-                    //     if (!result || result.root.length == 0) {
-                    //         message = message + "&nbsp;&nbsp;" + pbcProd;
-                    //         count++;
-                    //
-                    //         //当
-                    //         expArr1 = expArr1.filter(function (item) {
-                    //             return item.pbcProdId != pbcProd
-                    //         });
-                    //     }
-                    // })
-
+                    if (expArr[i].submitFeedbackStatus == "01" || expArr[i].submitFeedbackStatus == "03"){
+                        Joyin.error("所选记录中包含已报送数据，请重新选择。");
+                        return;
+                    }
                 }
             }
 
@@ -447,28 +440,36 @@ $(function () {
      * 确认导出之后的操作
      */
     var confirmExport = function (param, expArr1) {
+
         var datas = JSON.stringify(expArr1);
         Joyin.exportExcel("download", {datas: datas});
-
-
         var obj = {};
         obj.flag = '01';
         obj.infoList = expArr1;
 
-        for (var i = 0; i < expArr1.length; i++) {
-            // 含有删除状态数据
-            if (expArr1[i].sendStatus == "01") {
-                Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
-                    layui.layer.open({type: 3});
-                    Joyin.ajaxJson('doManul', obj, function () {
-                        table.load();
-                        layui.layer.closeAll();
-                    });
-                });
-            } else {
-                return;
-            }
-        }
+        //            //ZGBSEI-394  新人行产品基本信息登记页面，统计模板登记页面，产品终止信息登记页面，导出待修复按钮点击后，去掉是否手工处理的提示 LEIPENG 20210827
+        // for (var i = 0; i < expArr1.length; i++) {
+        //     // 含有删除状态数据
+        //     if (expArr1[i].sendStatus == "01") {
+        //         Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function () {
+        //             for(var i = 0; i < expArr1.length; i++){
+        //                 if(expArr1[i].pbcPoolCode==null||expArr1[i].pbcPoolCode==''){
+        //                     Joyin.error("请先维护人行产品代码后，再进行手工处理。");
+        //                     return;
+        //                 }
+        //             }
+        //
+        //
+        //             layui.layer.open({type: 3});
+        //             Joyin.ajaxJson('doManul', obj, function () {
+        //                 table.load();
+        //                 layui.layer.closeAll();
+        //             });
+        //         });
+        //     } else {
+        //         return;
+        //     }
+        // }
     };
 
 

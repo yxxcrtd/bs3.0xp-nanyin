@@ -12,6 +12,8 @@ package com.joyintech.tams.invest.batch.valbatchimport.common.dao;
 
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.MstCalendarInfo;
+import com.joyintech.tams.invest.batch.valbatchimport.dto.RskValtblPrtBotassetMapDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +40,15 @@ public interface AssetCommonMapper {
      * @since 1.0
      */
     List<MstCalendarInfo> getMstCalendarInfo();
+
+    /**
+     * by组合代码查找底层资产映射
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param ptlId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<RskValtblPrtBotassetMapDto>  selectBotAssetMap(@Param("ptlId") String ptlId);
 }

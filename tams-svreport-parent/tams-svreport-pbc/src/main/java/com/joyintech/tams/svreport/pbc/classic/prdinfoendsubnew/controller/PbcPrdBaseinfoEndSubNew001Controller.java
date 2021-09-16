@@ -92,7 +92,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("export")
 	public ResponseEntity<byte[]> export() {
-		return prdBaseinfoEndSubNew001Service.export("PIB产品终止信息(资产管理)_" +DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
+		return prdBaseinfoEndSubNew001Service.export("PIE产品终止信息(资产管理)_" +DateUtil.formatDate(DateUtil.getCurrentDate())+ GlobalConstant.POINT +"xls", RequestUtil.getPageParam());
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 	public AjaxResult cancelManul(@RequestBody Map<String, Object> map) {
 		String result = pbcPrdBaseinfoEndSubNewMService.cancelMannul(map);
 		if ("fail".equals(result)) {
-			AjaxResult ajaxresult = new AjaxResult("有未报送的数据", MessageType.错误消息);
+			AjaxResult ajaxresult = new AjaxResult("存在未报送的数据，无法撤销", MessageType.错误消息);
 			ajaxresult.setStatuCode(HttpStatus.OK.value());
 			return ajaxresult;
 		}
@@ -151,6 +151,8 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 		List<PbcPrdBaseinfoEndSubNew> dtoList;
 
 		if (null == datas) {
+			//则默认根据当前查询条件对系统中报送状态为“未报送”或反馈状态为“发送失败”“发送异常”“中债退回”的数据进行检索导出
+			paraMap.put("submitFeedbackStatusExp","02,04,06");
 			dtoList = prdBaseinfoEndSubNew001Service.searchByExcel(paraMap);
 		} else {
 			dtoList = JsonUtils.json2List(datas, PbcPrdBaseinfoEndSubNew.class);
@@ -162,7 +164,7 @@ public class PbcPrdBaseinfoEndSubNew001Controller extends BaseController {
 		File outFile = prdBaseinfoEndSubNew001Service.makeFile(
 				"/com/joyintech/tams/svreport/pbc/classic/prdinfoendsubnew/conf/export_confNew.xml",
 				dtoList);
-		return ExportUtil.export(" PIB产品终止信息(资产管理)报送内容_"
+		return ExportUtil.export(" PIE产品终止信息(资产管理)报送内容_"
 						+ DateUtil.formatDate(DateUtil.getCurrentDate())
 						+ GlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
 				outFile, true);

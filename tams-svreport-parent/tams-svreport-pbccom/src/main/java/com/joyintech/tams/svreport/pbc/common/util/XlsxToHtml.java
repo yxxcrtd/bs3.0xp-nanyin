@@ -494,7 +494,9 @@ public class XlsxToHtml {
                         sb.append(" &nbsp; ");
                     } else {
                         // 将ascii码为160的空格转换为html下的空格（&nbsp;）
+                        sb.append("<nobr>"); //强制不换行
                         sb.append(stringValue.replace(String.valueOf((char) 160),"&nbsp;"));
+                        sb.append("</nobr>");//强制不换行
                     }
                     sb.append("</font></td>");
                 }

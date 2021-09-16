@@ -223,16 +223,18 @@ public class FinMdateAdjustment002Controller extends BaseController {
     	AjaxResult ar = new AjaxResult();
         List<ValidMessage> errorList = new ArrayList<ValidMessage>();
         
-        //add by yzg 流程中校验 20200427 start 
-        WflValidInputParameter wflValidInputParameterIssue = new WflValidInputParameter();
-        wflValidInputParameterIssue.setPageId(this.getPageId());
-        wflValidInputParameterIssue.setWorkflowId(finMdateAdjustment001Dto.getWorkflowId());
-        wflValidInputParameterIssue.setBusinessDataPk1(finMdateAdjustment001Dto.getFinprodId());
-        if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameterIssue)) {
-        	errorList.add(new ValidMessage(getMessage("FIN_PROD_E_0077",
-                "")));
-        	ar.setErrorList(errorList);
-        	return ar;
+        //add by yzg 流程中校验 20200427 start
+        if (WorkFlowUtil.isNotFromToDoList()) {
+            WflValidInputParameter wflValidInputParameterIssue = new WflValidInputParameter();
+            wflValidInputParameterIssue.setPageId(this.getPageId());
+            wflValidInputParameterIssue.setWorkflowId(finMdateAdjustment001Dto.getWorkflowId());
+            wflValidInputParameterIssue.setBusinessDataPk1(finMdateAdjustment001Dto.getFinprodId());
+            if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameterIssue)) {
+                errorList.add(new ValidMessage(getMessage("FIN_PROD_E_0077",
+                        "")));
+                ar.setErrorList(errorList);
+                return ar;
+            }
         }
         //add by yzg 流程中校验 20200427 end
         

@@ -77,4 +77,8 @@ public class RskValStructureController {
     public boolean getCountById(@RequestBody RskValStructureDto dto){
         return rskValStructuresService.getCountById(dto);
     }
+    @PostMapping("getStructInfoIsDefault")
+    public boolean getStructInfoIsDefault(@RequestBody RskValStructureDto dto){
+        return rskValStructuresService.getStructInfoIsDefault(dto);
+    }
 }

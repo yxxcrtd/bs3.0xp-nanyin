@@ -11,9 +11,11 @@ import com.joyintech.tams.report.common.constant.SvrServiceApplication;
 import com.joyintech.tams.report.common.util.SysDataUtil;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dao.PbcReportAssetDebtDatDetailMapper;
 import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportAssetDebtDatDetailDto;
+import com.joyintech.tams.svreport.pbc.assetdebtdat.dto.PbcReportProdDatDto;
 import com.joyintech.tams.svreport.pbc.common.annotation.TemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcDatTemplateName;
 import com.joyintech.tams.svreport.pbc.common.constants.PbcTemplateName;
+import com.joyintech.tams.svreport.pbc.common.enums.PbcDictCodeEnums;
 import com.joyintech.tams.svreport.pbc.common.service.PbcDatPriviewService;
 import com.joyintech.tams.svreport.pbc.report.dao.PbcMonthReportMapper;
 import com.joyintech.tams.svreport.pbc.report.dto.PbcMonthReport;
@@ -63,6 +65,9 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
         if (pbcReport == null) {
             return data;
         }
+        if(StringUtil.isNotEmpty(pbcReport.getProdVariety())){
+            pbcReport.setProdVariety(PbcDictCodeEnums.银行非保本理财_01.getName());
+        }
         data.put("report", JsonUtils.object2Map(pbcReport));
         // 导出excel或预览时，值为0的单元格显示成0还是显示成空，读取系统参数
         String isShowZero = SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SHOW_ZERO);
@@ -107,6 +112,7 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
         List<PbcReportAssetDebtDatDetailDto> listDetail = pbcReportAssetDebtDatDetailMapper.selectByReportuuid(reportuuid);
         if (!CollectionUtils.isEmpty(listDetail)) {
             for (PbcReportAssetDebtDatDetailDto detail : listDetail) {
+                detail.setProdVariety(pbcReport.getProdVariety());
                 // 处理数据
                 dealAssetDebtDateListForExport(detail);
                 dealProdData(detail, isShowZero);
@@ -255,43 +261,58 @@ public class PbcReportAssetDebtDatService extends PbcDatPriviewService {
         return data;
     }
 
-    /**
-     * 功能:处理查询出资管产品统计模板和资管产品统计模板DAT差异
-     * @since 1.6.0
-     * @version 1.6.0
-     * @param detail
-     * @return
-     * PbcReportAssetDebtDetailDto
-     */
     public void dealAreaDateListForDiff(PbcReportAssetDebtDatDetailDto detail) {
         // 人民币
-        if(!StringUtil.equals(detail.getCny(),detail.getCnyPrd())){
-            detail.setCnyDiff(1);
+        if(!(detail.getCny()==null&&detail.getCnyPrd()==null)){
+            if(detail.getCny()==null||detail.getCnyPrd()==null||
+                    detail.getCny().compareTo(detail.getCnyPrd())!=0){
+                detail.setCnyDiff(1);
+            }
         }
+
         //美元折人民币
-        if(!StringUtil.equals(detail.getUsdToCny(),detail.getUsdToCnyPrd())){
-            detail.setUsdToCnyDiff(1);
+        if(!(detail.getUsdToCny()==null&&detail.getUsdToCnyPrd()==null)) {
+            if (detail.getUsdToCny() == null || detail.getUsdToCnyPrd() == null ||
+                    detail.getUsdToCny().compareTo(detail.getUsdToCnyPrd()) != 0) {
+                detail.setUsdToCnyDiff(1);
+            }
         }
         //欧元折人民币
-        if(!StringUtil.equals(detail.getEurToCny(),detail.getUsdToCnyPrd())){
-            detail.setEurToCnyDiff(1);
+        if(!(detail.getEurToCny()==null&&detail.getEurToCnyPrd()==null)) {
+            if (detail.getEurToCny() == null || detail.getEurToCnyPrd() == null
+                    || detail.getEurToCny().compareTo(detail.getEurToCnyPrd()) != 0) {
+                detail.setEurToCnyDiff(1);
+            }
         }
         //英镑折人民币
-        if(!StringUtil.equals(detail.getGbpToCny(),detail.getGbpToCnyPrd())){
-            detail.setGbpToCnyDiff(1);
+        if(!(detail.getGbpToCny()==null&&detail.getGbpToCnyPrd()==null)) {
+            if (detail.getGbpToCny() == null || detail.getGbpToCnyPrd() == null ||
+                    detail.getGbpToCny().compareTo(detail.getGbpToCnyPrd()) != 0) {
+                detail.setGbpToCnyDiff(1);
+            }
         }
         //日元折人民币
-        if(!StringUtil.equals(detail.getJpyToCny(),detail.getJpyToCnyPrd())){
-            detail.setJpyToCnyDiff(1);
+        if(!(detail.getJpyToCny()==null&&detail.getJpyToCnyPrd()==null)) {
+            if (detail.getJpyToCny() == null || detail.getJpyToCnyPrd() == null ||
+                    detail.getJpyToCny().compareTo(detail.getJpyToCnyPrd()) != 0) {
+                detail.setJpyToCnyDiff(1);
+            }
         }
         //其他币种(外币)折人民币
-        if(!StringUtil.equals(detail.getOthToCny(),detail.getOthToCnyPrd())){
-            detail.setOthToCnyDiff(1);
+        if(!(detail.getOthToCny()==null&&detail.getOthToCnyPrd()==null)) {
+            if (detail.getOthToCny() == null || detail.getOthToCnyPrd() == null
+                    || detail.getOthToCny().compareTo(detail.getOthToCnyPrd()) != 0) {
+                detail.setOthToCnyDiff(1);
+            }
         }
         //合计
-        if(!StringUtil.equals(detail.getTotal(),detail.getTotalPrd())){
-            detail.setTotalDiff(1);
+        if(!(detail.getTotal()==null&&detail.getTotalPrd()==null)) {
+            if (detail.getTotal() == null || detail.getTotalPrd() == null
+                    || detail.getTotal().compareTo(detail.getTotalPrd()) != 0) {
+                detail.setTotalDiff(1);
+            }
         }
+
     }
 
 

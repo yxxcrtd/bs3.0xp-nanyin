@@ -212,7 +212,10 @@ public class Sqlldr implements ImpExcutor {
         if (badFile == null || badFile.length() == 0) {
             badFile = args.getData().substring(0, args.getData().length() - 4) + ".bad";
         }
-        delete(badFile);
+//        delete(badFile);
+        
+        LOGGER.info("坏数据:"+badFile+",转移到目录:"+args.getBadFileDir());
+        moveFile(badFile,args.getBadFileDir());
     }
 
     /**
@@ -225,6 +228,24 @@ public class Sqlldr implements ImpExcutor {
             File file = new SafelyFile(filePath);
             if (file.exists()) {
                 file.delete();
+            }
+        }
+    }
+    
+    
+    /**
+     * 移动文件
+     * 
+     * @param filePath 文件路径
+     */
+    private void moveFile(String filePath,String movepath) {
+        if (filePath != null && filePath.length() > 0) {
+            File file = new SafelyFile(filePath);
+            if (file.exists()) {
+                LOGGER.info("坏数据:"+filePath+",转移到目录:"+movepath+File.separatorChar+file.getName());
+                int flag = file.compareTo(new File(movepath+File.separatorChar+file.getName()));                
+                LOGGER.info("坏数据:"+filePath+",转移到目录:"+movepath+File.separatorChar+file.getName()+"转移数据:"+flag);
+
             }
         }
     }

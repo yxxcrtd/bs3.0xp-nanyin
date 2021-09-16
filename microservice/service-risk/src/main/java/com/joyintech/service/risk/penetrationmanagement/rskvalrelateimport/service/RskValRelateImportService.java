@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import org.apache.commons.beanutils.BeanUtils;
@@ -87,7 +88,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> queryStructMapId() {
-        return rskValRelateImportMapper.queryStructMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.queryStructMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.queryStructMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.queryStructMapId();
+        }
     }
 
     /**
@@ -98,7 +106,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> querySumsubMapId() {
-        return rskValRelateImportMapper.querySumsubMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.querySumsubMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.querySumsubMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.querySumsubMapId();
+        }
     }
 
     /**
@@ -109,7 +124,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> queryAssetSubMapId() {
-        return rskValRelateImportMapper.queryAssetSubMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.queryAssetSubMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.queryAssetSubMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.queryAssetSubMapId();
+        }
     }
 
     /**

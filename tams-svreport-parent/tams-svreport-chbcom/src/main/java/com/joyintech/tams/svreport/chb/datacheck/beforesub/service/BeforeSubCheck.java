@@ -191,7 +191,7 @@ public class BeforeSubCheck extends SvrCBBaseService{
             chbReportCheck.setDataTime(checkdate);
             String warnInfo="";
             if ( m.getRegcounts()<=0 ) {//不合格
-            	warnInfo=warnInfo+"产品不存在已报送的卖出投资交易!";
+            	warnInfo=warnInfo+"产品未进行交易登记!";
 //                chbReportCheck.setWarnInfo("产品不存在已报送的卖出投资交易!");
 //                resultList.add(chbReportCheck);
             }
@@ -214,23 +214,23 @@ public class BeforeSubCheck extends SvrCBBaseService{
 //                resultList.add(chbReportCheck);
             }
             
-            if ( m.getBankprofit1().subtract(m.getBankprofit2()).compareTo(BigDecimal.ZERO)!=0 ) {
-            	warnInfo=warnInfo+"存续期登记的银行收入与终止登记的银行收入不相等!";
-//                chbReportCheck.setWarnInfo("存续期登记的银行收入与终止登记的银行收入不相等!");
-//                resultList.add(chbReportCheck);
-            }
+//            if ( m.getBankprofit1().subtract(m.getBankprofit2()).compareTo(BigDecimal.ZERO)!=0 ) {
+//            	warnInfo=warnInfo+"存续期登记的银行收入与终止登记的银行收入不相等!";
+////                chbReportCheck.setWarnInfo("存续期登记的银行收入与终止登记的银行收入不相等!");
+////                resultList.add(chbReportCheck);
+//            }
 
 //            if ( m.getBankprofit1().subtract(m.getBankprofit2()).compareTo(BigDecimal.ZERO)!=0 ) {
 //                chbReportCheck.setWarnInfo("存续期登记的银行收入与终止登记的银行收入不相等!");
 //                resultList.add(chbReportCheck);
 //            }
             
-            if ( m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(1))<0
-                ||m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(8))>0) {
-            	warnInfo=warnInfo+"客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!";
-//                chbReportCheck.setWarnInfo("客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!");
-//                resultList.add(chbReportCheck);
-            }
+//            if ( m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(1))<0
+//                ||m.getCustyield().subtract(m.getProdyield()).abs().compareTo(BigDecimal.valueOf(8))>0) {
+//            	warnInfo=warnInfo+"客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!";
+////                chbReportCheck.setWarnInfo("客户实际年化收益率和产品实际年化收益率偏差过大[1%-8%]!");
+////                resultList.add(chbReportCheck);
+//            }
 
 //            if ( m.getCustyield().subtract(m.getProdyield()).compareTo(new BigDecimal(0.01))<0 
 //                ||m.getCustyield().subtract(m.getProdyield()).compareTo(new BigDecimal(0.08))>0) {
@@ -239,19 +239,24 @@ public class BeforeSubCheck extends SvrCBBaseService{
 //                resultList.add(chbReportCheck);
 //            }
 
-            // 产品自动持仓金额=募集份额+投资交易发生金额之和（注意交易方向）
-            // 封闭式产品的兑付客户总金额（元）=兑付客户份额+兑付客户总收益
-            if ( m.getDiffrate2().abs().compareTo( BigDecimal.valueOf(0.01))>0 ) {
-            	warnInfo=warnInfo+"产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差不在[1%]之内!";
-//                chbReportCheck.setWarnInfo("产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差过大[1%]!");
-//                resultList.add(chbReportCheck);
-            }
+//            // 产品自动持仓金额=募集份额+投资交易发生金额之和（注意交易方向）
+//            // 封闭式产品的兑付客户总金额（元）=兑付客户份额+兑付客户总收益
+//            if ( m.getDiffrate2().abs().compareTo( BigDecimal.valueOf(0.01))>0 ) {
+//            	warnInfo=warnInfo+"产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差不在[1%]之内!";
+////                chbReportCheck.setWarnInfo("产品的【银行实际实现收入（元）+兑付客户总金额（元）】与产品自动持仓金额的偏差过大[1%]!");
+////                resultList.add(chbReportCheck);
+//            }
             
             if ( m.getCustprofit1().compareTo(BigDecimal.ZERO)==0 ) {
             	warnInfo=warnInfo+"兑付客户收益为0";
 //                chbReportCheck.setWarnInfo("兑付客户收益为0");
 //                resultList.add(chbReportCheck);
             }
+            
+            if ( m.getCustyield().compareTo(m.getProdyield())==1 ) {
+            	warnInfo=warnInfo+"收益率不准确";
+            }
+            
             if(!warnInfo.equals("")){
             	chbReportCheck.setWarnInfo(warnInfo);
             	resultList.add(chbReportCheck);

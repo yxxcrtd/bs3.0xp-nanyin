@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @author:  Jason.Jin
  * @创建时间: 2021年8月3日10:14:50
  */
-@ReportGroup(group = PbcMonthReportGroupConstants.PBC_REPORT_1_3_1)
+@ReportGroup(group = PbcMonthReportGroupConstants.PBC_REPORT_1_3_1,isDivide = false)
 public class ExcelPbcReportProdDat1_3QMCXDto {
     /**
      * 属性代码
