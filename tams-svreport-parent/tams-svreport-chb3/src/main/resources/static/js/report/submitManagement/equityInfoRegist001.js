@@ -137,7 +137,7 @@ $(function(){
             },
             { title: "数据类型", field: 'type' ,sortField:'type',width:100},
             { field: 'submitStatus',visible:false},
-            { title: "报送流水号", field: 'sumitSeq',visible:false},
+            { title: "报送流水号", field: 'sumitSeq',width:150},
             { title: "登记银行代码", field: 'bankCode',width:160 },
             { title: "机构代码",field:'orgCode',width: 160},
             { title: "识别标识", field: 'indentifyMark',width:100 },
