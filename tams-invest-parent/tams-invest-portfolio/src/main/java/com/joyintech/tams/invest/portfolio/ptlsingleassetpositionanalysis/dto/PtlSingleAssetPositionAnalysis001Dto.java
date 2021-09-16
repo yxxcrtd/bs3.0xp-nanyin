@@ -465,7 +465,7 @@ public class PtlSingleAssetPositionAnalysis001Dto extends BaseDto implements Gri
     }
 
     public String getPtlIssueTypeStr() {
-        return  SysDataUtil.getNameFromDataDict(DictCode.募集方式_中债, ptlIssueType);
+        return  SysDataUtil.getNameFromDataDict(DictCode.募集方式, ptlIssueType);
     }
 
     public void setPtlIssueType(String ptlIssueType) {
