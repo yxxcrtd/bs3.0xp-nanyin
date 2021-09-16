@@ -18,6 +18,7 @@ import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.valid.RskValStructureValidator;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
 
@@ -99,13 +100,25 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
         return SysDataUtil.getNameFromDataDict(DictCode.估值字段, super.getTgtIndex());
     }
 
-    public String getSrcColIndexLetter(){
+    /*public String getSrcColIndexLetter(){
         if(StringUtil.isNotEmpty(this.getSrcColIndex())){
             return this.getSrcColIndex();
         }
         return srcColIndexLetter;
+    }*/
+    public String getSrcColIndexLetter(){
+        String srcColIndexLetter="";
+        if(StringUtil.isNotEmpty(this.getSrcColIndex()) && this.getSrcColIndex().matches("\\d+")){
+            return ExcelUtilForRisk.indexToColumn(Integer.parseInt(String.valueOf(this.getSrcColIndex())));
+        }else{
+            srcColIndexLetter= this.getSrcColIndex();
+        }
+        //保存时需要转换
+        if(StringUtil.isEmpty(srcColIndexLetter)){
+            srcColIndexLetter = this.srcColIndexLetter;
+        }
+        return srcColIndexLetter;
     }
-
     public void setSrcColIndexLetter(String srcColIndexLetter) {
         this.srcColIndexLetter = srcColIndexLetter;
     }
