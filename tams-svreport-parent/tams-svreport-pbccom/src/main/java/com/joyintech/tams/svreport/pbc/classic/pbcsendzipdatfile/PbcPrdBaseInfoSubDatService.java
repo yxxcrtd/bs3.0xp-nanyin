@@ -298,6 +298,18 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
             result.setCreditModeDiff(1);
         }
 
+        ///ZGBSEI-419  【新人行升级】人行报送文件管理（资产管理），dat预览页面，字体颜色显示问题
+        if (!StringUtil.equals(result.getProdStage(),result.getProdStagePrd())){
+            result.setCreditModeDiff(1);
+        }
+        if (!StringUtil.equals(result.getInsideProdId(),result.getInsideProdIdPrd())){
+            result.setCreditModeDiff(1);
+        }
+        if (!StringUtil.equals(result.getIsMarketFund(),result.getIsMarketFundPrd())){
+            result.setCreditModeDiff(1);
+        }
+
+
     }
     /**
      * 功能:获取人行代码(外部)
