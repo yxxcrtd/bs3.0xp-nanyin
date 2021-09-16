@@ -851,21 +851,32 @@ public class RiskRedisInitServiceImpl extends BaseService implements RiskRedisIn
         }
         // add by zhangrui1 自定义条件阈值 start
         // 剔除未启用的自定义条件项
-//        Map<String, Set<String>> ptlIndMap = lineService.getPtlIndMap(ptlList);
-//        if (!CollectionUtils.isEmpty(resultPtlInd)) {
-//            resultPtlInd.forEach(dealImplPtlInd -> {
-//                Map<String, Set<String>> ptlIndicatorMap = dealImplPtlInd.getPtlIndicatorRedis();
-//                if (CollectionUtils.isEmpty(ptlIndicatorMap)) {
-//                    return;
-//                }
-//                ptlIndicatorMap.forEach((key, val) -> {
-//                    Set<String> indSet = ptlIndMap.get(key);
-//                    if (!CollectionUtils.isEmpty(indSet) && !CollectionUtils.isEmpty(val)) {
-//                        indSet.forEach(str -> val.remove(str));
-//                    }
-//                });
-//            });
-//        }
+        Map<String, Set<String>> ptlIndMap = lineService.getPtlIndMap(ptlList);
+        if (!CollectionUtils.isEmpty(resultPtlInd)) {
+            resultPtlInd.forEach(dealImplPtlInd -> {
+                Map<String, Set<String>> ptlIndicatorMap = dealImplPtlInd.getPtlIndicatorRedis();
+                if (CollectionUtils.isEmpty(ptlIndicatorMap)) {
+                    return;
+                }
+                //取出组合自身挂指标的MAP，可能为空
+                Set<String> ptlIndicatorSet = StringUtil.isNotEmpty(ptlIndicatorMap.get(dealImplPtlInd.getPtlCode()))?ptlIndicatorMap.get(dealImplPtlInd.getPtlCode()):new HashSet<>();
+                ptlIndicatorMap.forEach((key, val) -> {
+                    Set<String> indSet = ptlIndMap.get(key);
+                    if (!CollectionUtils.isEmpty(indSet) && !CollectionUtils.isEmpty(val)) {
+                        if(!StringUtil.equals(key,dealImplPtlInd.getPtlCode())) {
+                            indSet.forEach(str -> ptlIndicatorSet.add(str));
+                        }
+
+                        indSet.forEach(str -> val.remove(str));
+                    }
+                });
+
+                //如果存在挂在组合包但不计算组合包的指标，放入组合自身挂的指标中。
+                if(StringUtil.isNotEmpty(ptlIndicatorSet)) {
+                    ptlIndicatorMap.put(dealImplPtlInd.getPtlCode(),ptlIndicatorSet);
+                }
+            });
+        }
         // add by zhangrui1 自定义条件阈值 end
         if (cond.isDel()) {
             ptlIndicatorService.deleteInfoFromRedis(RedisKeyEnum.组合关联指标配置.key(),

@@ -17,7 +17,13 @@
         if(param.data.ps=='04'){
             pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible: false}]);
         }else{
-            pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible: true}]);
+            if(isDzh == 'Y'){
+                pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: true},
+                    {field:'portfolioName',visible: true},
+                    {field:'avaPledgePrin',visible: true}]);
+            }else{
+                pledgeBondTotalTbl.showColumns([{field:'avaPledgePrin',visible: true}]);
+            }
         }
     }
 

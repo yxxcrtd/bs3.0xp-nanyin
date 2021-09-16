@@ -137,8 +137,9 @@ tr.layui-table-hover {
 				 
 			<div class="layui-tab-content">
 				<div class="layui-tab-item layui-show">
+					<div class="joyin-form-wrap">
 					<form class="layui-form" id="cfetsBondDealQuotedPrice001_entrustOrder_form">
-                        <div class="layui-col-md12" style="background: #f5f5f5;padding-top: 5px;">
+						<div class="layui-form-item">
 							<div class="layui-col-md3">
 								<a id="cfetsBondDealQuotedPrice001_dialogueBtn" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.dialogueBtn}">对话</a>
 								<a id="cfetsBondDealQuotedPrice001_requestBtn" class="layui-btn layui-btn-sm"  data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.requestBtn}">请求</a>
@@ -257,6 +258,7 @@ tr.layui-table-hover {
 							</div>
 						</div>
 					</form>
+					</div>
 					<div>
 						<table class="layui-table" id="CfetsBond001_entrust_table" lay-filter="CfetsBond001_entrust_table"></table>
 					</div>
@@ -291,10 +293,10 @@ tr.layui-table-hover {
 			<div class="layui-tab-content">
 				<!-- 当日报价 -->
 				<div class="layui-tab-item layui-show">
-					<div class='layui-fluid'>
+					<div class="joyin-form-wrap">
 						<form class="layui-form" id="cfetsBondDealQuotedPrice001_dayOffer_form">
                             <input type="hidden" class="layui-input form-input" name="loginTraderId" th:value="${loginTraderId}"/>
-                            <div class="layui-col-md12 layui-col-sm12 layui-col-lg12" style="background: #f5f5f5;padding-top: 5px;">
+                            <div class="layui-form-item">
 								<div class="layui-col-md3">
 									<a id="CfetsBondDealQuotedPrice001_dayOffer_recall" class="layui-btn layui-btn-sm layui-btn-warm" data-th-text="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.revokeBtn}">撤回</a>
 									<a id="CfetsBondDealQuotedPrice001_dayOffer_copy" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.dayOffer.searchArea.copyBtn}">复制</a>
@@ -399,24 +401,20 @@ tr.layui-table-hover {
 								</div>
 							</div>
 						</form>
-						<div>
-							<table class="layui-table" id="CfetsBond001_dayOffer_table"></table>
-						</div>
+					</div>
+					<div>
+						<table class="layui-table" id="CfetsBond001_dayOffer_table"></table>
 					</div>
 				</div>
 				<!-- 指令报价 -->
 				<div class="layui-tab-item">
-					<div class='layui-fluid'>
-						<div>
-							<table class="layui-table" id="CfetsBond001_orderOffer_table"></table>
-						</div>
-					</div>
+					<table class="layui-table" id="CfetsBond001_orderOffer_table"></table>
 				</div>
 				<!-- 成交回报查询 -->
 				<div class="layui-tab-item">
-					<div class='layui-fluid'>
+					<div class="joyin-form-wrap">
 						<form class="layui-form" id="searchFormCstp">
-							<div class="layui-col-md12 layui-col-sm12 layui-col-lg12" style="background: #f5f5f5;">
+							<div class="layui-form-item">
     							<div class="input-btn-append layui-col-md2 layui-col-xs2 layui-col-sm2 layui-col-lg2">
 									<input type="text" id="keywords-cstp" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input" placeholder="关键字搜索">
 									<a id='CfetsBondDealQuotedPrice001_cstp_search' class="iconinput" href='javascript:;'><i class='iconfont icon-search'></i></a>
@@ -474,16 +472,16 @@ tr.layui-table-hover {
 								
 							</div>							
 						</form>
-						<div>
-							<table class="layui-table" id="CfetsBond001_cstp_table"></table>
-						</div>
+					</div>
+					<div>
+						<table class="layui-table" id="CfetsBond001_cstp_table"></table>
 					</div>
 				</div>
 				<!-- 做市报价 -->
 				<div class="layui-tab-item" style="display:none">
-					<div class='layui-fluid'>
+					<div class="joyin-form-wrap">
 						<form class="layui-form" id="cfetsBondDealQuotedPrice001_marketOffer_form">
-							<div class="layui-col-md12" style="background: #f5f5f5;">
+							<div class="layui-form-item">
 								<div class="form-inline-wrap">
 	                                 <label class="layui-form-label form-label-wrap"
 	                                        th:text="#{CfetsBondDealQuotedPrice001.marketOffer.searchArea.myPs}">本方方向</label>
@@ -530,9 +528,9 @@ tr.layui-table-hover {
 	                            </div>
 							</div>
 						</form>
-						<div>
-							<table class="layui-table" id="CfetsBond001_marketOffer_table"></table>
-						</div>
+					</div>
+					<div>
+						<table class="layui-table" id="CfetsBond001_marketOffer_table"></table>
 					</div>
 				</div>
 			</div>

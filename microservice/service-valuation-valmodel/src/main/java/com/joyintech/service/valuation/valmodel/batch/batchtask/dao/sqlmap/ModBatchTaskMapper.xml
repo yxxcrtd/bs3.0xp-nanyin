@@ -310,4 +310,27 @@
         </if>
     </select>
 
+    <!-- 获取资产代码集合  -->
+    <select id="getAllAssetInfo"  resultType="com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto">
+        SELECT
+        A.FINPROD_ID as finprodId,/**金融产品代码**/
+        A.FINPROD_ABBR as finprodName,/**金融产品简称**/
+        A.FINPROD_ID id,
+        A.FINPROD_ABBR  text
+        FROM
+        FIN_PRODUCT A /**标的类金融产品表**/
+        INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
+        WHERE
+        1 = 1
+        AND (D.TYPE_18 = '01' or D.TYPE_18 = '13')
+        AND (
+        EXISTS (
+        SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
+        )
+        OR
+        EXISTS (
+        SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+        )
+        )
+    </select>
 </mapper>

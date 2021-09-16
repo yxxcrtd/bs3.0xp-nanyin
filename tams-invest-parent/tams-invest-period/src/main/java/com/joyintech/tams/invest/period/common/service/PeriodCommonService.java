@@ -889,7 +889,6 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
                     creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
-                    creditLinesInputDto.setTradeDate(DateUtil.platDateFromCache());
                     creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
                     if (StringUtil.isNotEmpty(inputDto.getEarlyWithdrawalAmt())){
                         creditLinesInputDto.setTradeAmt(inputDto.getEarlyWithdrawalAmt());

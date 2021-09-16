@@ -1,5 +1,5 @@
 DELETE FROM CHB_DATACHECK_RULE_INV WHERE CHECKRULEID = 'ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000501';
 INSERT INTO CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-VALUES ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000501','AssetInfoRegist002', 'isNotEmpty', 'svrBussRepPlacementInfoDto.checkCode', null, null, 'N', '∂‘”¶◊ π‹º∆ªÆ¥˙¬Î≤ªø…Œ™ø’°£', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
+VALUES ('ASSET_INFO_DETAIL_RULE_0000-0000-0000-0000-0000-0000-0000-000501','AssetInfoRegist002', 'isNotEmpty', 'svrBussRepPlacementInfoDto.checkCode', null, null, 'N', 'ÂØπÂ∫îËµÑÁÆ°ËÆ°Âàí‰ª£Á†Å‰∏çÂèØ‰∏∫Á©∫„ÄÇ', 'E', 'com.joyintech.service.chb.common.service.ChbBaseCheckLib');
        
       
