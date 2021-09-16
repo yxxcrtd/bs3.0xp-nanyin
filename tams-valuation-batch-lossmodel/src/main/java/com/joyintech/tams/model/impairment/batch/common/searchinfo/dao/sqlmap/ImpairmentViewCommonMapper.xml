@@ -39,7 +39,8 @@
         deal.SETTLE_DATE AS SETTLE_DATE,
         deal.TRADE_DATE AS TRADE_DATE,
         deal.MDATE AS PLAN_END_DATE,
-        deal.IS_CLEAN AS IS_CLEAN
+        deal.IS_CLEAN AS IS_CLEAN,
+        ACC.INV_AIM AS invAim
         FROM FIN_PRODUCT fin
         INNER JOIN FIN_PRODUCT_TYPE typ
         ON fin.FINPROD_ID = typ.FINPROD_ID

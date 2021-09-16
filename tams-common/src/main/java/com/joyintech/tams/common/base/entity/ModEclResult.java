@@ -144,6 +144,11 @@ public class ModEclResult extends BaseEntity {
     private BigDecimal eclRatio;
 
     /**
+     * 投资目的
+     */
+    private String invAim;
+
+    /**
      * 取得 序列号
      * @return 序列号
      */
@@ -543,5 +548,21 @@ public class ModEclResult extends BaseEntity {
      */
     public void setEclRatio(BigDecimal eclRatio) {
         this.eclRatio = eclRatio;
+    }
+
+    /**
+     * 取得 投资目的
+     * @return 投资目的
+     */
+    public String getInvAim() {
+        return invAim;
+    }
+
+    /**
+     * 设置 投资目的
+     * @param invAim 投资目的
+     */
+    public void setInvAim(String invAim) {
+        this.invAim = invAim == null ? null : invAim.trim();
     }
 }

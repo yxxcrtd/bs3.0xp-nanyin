@@ -131,7 +131,7 @@ where
 		LGD, EAD, PRE_PROSPECTIVE_ECL,
 		PROSPECTIVE_ECL, ALLOW_MODEL_COVER, DATA_SOURCE,
 		CREATE_USER, CREATE_DEPT, CREATE_TIME,
-		UPDATE_USER, UPDATE_TIME, ECL_RATIO)
+		UPDATE_USER, UPDATE_TIME, ECL_RATIO,INV_AIM)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
 			#{item.seqno,jdbcType=VARCHAR}, #{item.prodId,jdbcType=VARCHAR}, #{item.prodName,jdbcType=VARCHAR},
@@ -143,7 +143,8 @@ where
 			#{item.lgd,jdbcType=DECIMAL}, #{item.ead,jdbcType=DECIMAL}, #{item.preProspectiveEcl,jdbcType=DECIMAL},
 			#{item.prospectiveEcl,jdbcType=DECIMAL}, #{item.allowModelCover,jdbcType=VARCHAR}, #{item.dataSource,jdbcType=VARCHAR},
 			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
-			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.eclRatio,jdbcType=DECIMAL}
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.eclRatio,jdbcType=DECIMAL},
+		    #{item.invAim,jdbcType=VARCHAR}
 		</foreach>
 	</insert>
 

@@ -82,9 +82,9 @@
 		OR (BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F03},#{FINPROD_TYPE_F05},#{FINPROD_TYPE_F07},#{FINPROD_TYPE_F21})))
 		INNER JOIN FIN_PRODUCT finProduct
 		ON finProduct.FINPROD_ID = BDI.BUSI_ID
-		INNER JOIN trdAssetLossNew 
+		LEFT JOIN trdAssetLossNew
 		ON trdAssetLossNew.SEC_ID = finProduct.FINPROD_MARKET_ID
-		INNER JOIN TRD_ASSET_LOSS TAL
+		LEFT JOIN TRD_ASSET_LOSS TAL
 		ON TAL.SEC_ID = trdAssetLossNew.SEC_ID
 		AND TAL.VAL_DATE = trdAssetLossNew.VAL_DATE
 		AND TAL.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
@@ -145,9 +145,9 @@
 		OR (BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F03},#{FINPROD_TYPE_F05},#{FINPROD_TYPE_F07},#{FINPROD_TYPE_F21})))
 		INNER JOIN FIN_PRODUCT finProduct
 		ON finProduct.FINPROD_ID = BDI.BUSI_ID
-		INNER JOIN trdAssetLossNew 
+		LEFT JOIN trdAssetLossNew 
 		ON trdAssetLossNew.SEC_ID = finProduct.FINPROD_MARKET_ID
-		INNER JOIN TRD_ASSET_LOSS TAL
+		LEFT JOIN TRD_ASSET_LOSS TAL
 		ON TAL.SEC_ID = trdAssetLossNew.SEC_ID
 		AND TAL.VAL_DATE = trdAssetLossNew.VAL_DATE
 		AND TAL.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
@@ -205,9 +205,9 @@
 		OR (BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F03},#{FINPROD_TYPE_F05},#{FINPROD_TYPE_F07},#{FINPROD_TYPE_F21})))
 		INNER JOIN FIN_PRODUCT finProduct
 		ON finProduct.FINPROD_ID = BDI.BUSI_ID
-		INNER JOIN trdAssetLossNew 
+		LEFT JOIN trdAssetLossNew 
 		ON trdAssetLossNew.SEC_ID = finProduct.FINPROD_MARKET_ID
-		INNER JOIN TRD_ASSET_LOSS TAL
+		LEFT JOIN TRD_ASSET_LOSS TAL
 		ON TAL.SEC_ID = trdAssetLossNew.SEC_ID
 		AND TAL.VAL_DATE = trdAssetLossNew.VAL_DATE
 		AND TAL.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
@@ -280,9 +280,9 @@
 		OR (BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F03},#{FINPROD_TYPE_F05},#{FINPROD_TYPE_F07},#{FINPROD_TYPE_F21})))
 		INNER JOIN FIN_PRODUCT finProduct
 		ON finProduct.FINPROD_ID = BDI.BUSI_ID
-		INNER JOIN trdAssetLossNew 
+		LEFT JOIN trdAssetLossNew 
 		ON trdAssetLossNew.SEC_ID = finProduct.FINPROD_MARKET_ID
-		INNER JOIN TRD_ASSET_LOSS TAL
+		LEFT JOIN TRD_ASSET_LOSS TAL
 		ON TAL.SEC_ID = trdAssetLossNew.SEC_ID
 		AND TAL.VAL_DATE = trdAssetLossNew.VAL_DATE
 		AND TAL.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
@@ -313,6 +313,68 @@
 		)
 	
 	</select>
+
+	<!-- 采用普华方案减值计提 -->
+	<select id="queryTrdAssetLossReaderPH" parameterType="java.util.Map"
+			resultMap="resultMap">
+		with trdAssetLossNew as (
+			select
+				t.SEC_ID,
+				max(t.VAL_DATE) VAL_DATE
+			FROM TRD_ASSET_LOSS t
+			WHERE t.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
+			  and t.VAL_DATE <![CDATA[<=]]> #{HAPPEN_DATE,jdbcType=DATE}
+			GROUP BY t.SEC_ID
+		)
+		SELECT
+		BBTT.BOOKSET_ID booksetId,
+		BBTT.HAPPEN_DATE happenDate,
+		BBTT.BOOK_DATE bookDate,
+		BBTT.BOOKSET_DATE booksetDate,
+		BDI.BOK_DETAIL_ID bokDetailId,
+		BDI.BUSI_ID busiId,
+		BB.STANDARD_CCY standardCcy,
+		BDI.INV_AIM invAim,
+		TAL.TRADE_ID tradeId,
+		TAL.SEC_ID   secId,
+		TAL.STAGE   stage,
+		TAL.PEROID   peroid,
+		TAL.VAL_DATE   valDate,
+		TAL.STR_DATE   strDate,
+		TAL.END_DATE   endDate,
+		TAL.LOSS_TEST_TYPE   lossTestType,
+		TAL.LOSS_INPUT_TYPE   lossInputType,
+		TAL.LOSS_RATIO   lossRatio,
+		TAL.PD_VAULE   pdVaule,
+		TAL.LGD_VAULE   lgdVaule,
+		TAL.ECL_VAULE   eclVaule
+		FROM BOK_BATCH_TASK_TODO BBTT
+		INNER JOIN BOK_BOOKSET BB
+		ON BB.BOOKSET_ID = BBTT.BOOKSET_ID
+		INNER JOIN BOK_DETAIL_ID BDI
+		ON BDI.BOOKSET_ID = BB.BOOKSET_ID
+		AND (
+		(BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F01},#{FINPROD_TYPE_F17})
+		AND BDI.INV_AIM IN (#{INV_AIM_AC},#{INV_AIM_FVOCI}))
+		OR (BDI.BUSI_DETAIL_TYPE IN (#{FINPROD_TYPE_F03},#{FINPROD_TYPE_F05},#{FINPROD_TYPE_F07},#{FINPROD_TYPE_F21})))
+		INNER JOIN FIN_PRODUCT finProduct
+		ON finProduct.FINPROD_ID = BDI.BUSI_ID
+		LEFT JOIN trdAssetLossNew
+				  ON trdAssetLossNew.SEC_ID = finProduct.FINPROD_MARKET_ID
+		LEFT JOIN TRD_ASSET_LOSS TAL
+				  ON TAL.SEC_ID = trdAssetLossNew.SEC_ID
+					  AND TAL.VAL_DATE = trdAssetLossNew.VAL_DATE
+					  AND TAL.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
+		WHERE BBTT.SEQ_NO = #{seqNo,jdbcType=VARCHAR}
+		AND BBTT.BOOKSET_DATE = #{BOOKSET_DATE,jdbcType=DATE}
+		AND BBTT.BOOK_DATE = #{BOOK_DATE,jdbcType=DATE}
+		AND BBTT.HAPPEN_DATE = #{HAPPEN_DATE,jdbcType=DATE}
+		AND BBTT.TASK_ID = #{taskId,jdbcType=VARCHAR}
+		AND BBTT.IS_SUB_BOOKSET = #{IS_SUB_BOOKSET,jdbcType=VARCHAR}
+
+	</select>
+
+
 	<update id="updateBokStatDetPosiiton" parameterType="com.joyintech.tams.common.base.entity.BokStatLossPosiiton" >
         update BOK_STAT_DET_POSIITON
         set TDY_LOSS_AMT = #{tdyLossamt,jdbcType=DECIMAL},
@@ -328,11 +390,11 @@
 		SELECT
 			A.*
 		FROM MOD_ECL_RESULT A
-		WHERE A.BOOKSET_ID = #{booksetId}
+		WHERE A.PROD_ID = #{booksetId}
 			AND A.DEC_DATE = #{happenDate}
-		  	AND AASSET_ID = #{assetId}
+		  	AND A.ASSET_ID = #{assetId}
 		  	<if test="invAim != null and invAim != ''">
-		  		AND A.INV_AIM = invAim
+		  		AND A.INV_AIM = #{invAim}
 		  	</if>
 
 	</select>
