@@ -517,8 +517,10 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     EtrCashPositionKey etrCashPositionKey = new EtrCashPosition(); 
                     BeanUtil.copyPropertiesIgnoreNull(etrCashPositionKey, tempPosition);
                     EtrCashPosition EtrCashPositionKey = etrCashPositionMapper.selectByPrimaryKey(etrCashPositionKey);
-                    tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));                    
-                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);     
+                    if(EtrCashPositionKey != null){
+                        tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(), EtrCashPositionKey.getAmount()));
+                    }
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);
                     }
                 }
             }
