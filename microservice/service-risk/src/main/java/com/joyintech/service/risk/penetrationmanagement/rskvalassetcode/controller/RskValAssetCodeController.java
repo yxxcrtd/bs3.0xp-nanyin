@@ -217,5 +217,17 @@ public class RskValAssetCodeController {
     public List<RskValtblAssetSubMapDtlDto> findListDtl(@RequestBody Map<String, Object> param) {
         return rskValAssetCodeService.findListDtl(param);
     }
+    /**
+     * 是否默认模板数
+     * <功能详细描述>
+     * @param assetSubMapId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("getAssetSubInfoIsDefault")
+    public int getAssetSubInfoIsDefault(String assetSubMapId){
+        return rskValAssetCodeService.getAssetSubInfoIsDefault(assetSubMapId);
+    }
 
 }

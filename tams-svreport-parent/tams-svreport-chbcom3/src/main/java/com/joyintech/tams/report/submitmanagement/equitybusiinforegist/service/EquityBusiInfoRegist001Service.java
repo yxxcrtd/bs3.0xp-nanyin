@@ -187,7 +187,21 @@ public class EquityBusiInfoRegist001Service extends CommonExportService<EquityBu
         dealDataList(page.getRoot(), false);
         return page;
     }
-
+    /**
+     * 查询数据(无分页)
+     *
+     * @param pageParam 查询条件
+     * @return 结果列表
+     * @see
+     * @since 1.0
+     */
+    public List<EquityBusiInfoRegist001Dto> queryEquityBusiInfoRegist(Map<String, Object> pageParam) {
+        dealSearchParam(pageParam);
+        // 将发送状态改为空
+        List<EquityBusiInfoRegist001Dto> list =  equityBusiInfoRegist001Mapper.selectAllData(pageParam);
+        dealDataList(list, false);
+        return list;
+    }
     /**
      * 处理查询前的参数 <功能详细描述>
      *

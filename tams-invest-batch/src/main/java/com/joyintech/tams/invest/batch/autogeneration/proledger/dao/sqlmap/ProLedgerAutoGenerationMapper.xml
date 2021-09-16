@@ -344,12 +344,19 @@
 		                 where CHB_PRD_END_SUB.PROD_ID =
 		                       FIN_PRODUCT.FINPROD_MARKET_ID
 		                   and CHB_PRD_END_SUB.SEND_STATUS != '01') actYield, <!--客户实际收益率（%）-->
-				(select nvl(sum(TRADE_AMT), 0)
+				((select nvl(sum(TRADE_AMT), 0)
 		                  from deal
 		                 where deal.ps = 'C1'
 		                   and deal.finprod_id = fin_product.finprod_id
 		                   and deal.trade_status != '03'
-		                 group by deal.finprod_id) firstPrinAmt,		  <!--首次认购总额（元）--> 
+		                 group by deal.finprod_id) +
+					nvl((select sum(decode(deal.ps,'C3',TRADE_AMT,TRADE_AMT*-1))
+						from deal
+						where deal.ps in ('C3','C6')
+						and deal.finprod_id = fin_product.finprod_id
+						and deal.trade_status != '03'
+						and deal.trade_date = fin_product.vdate
+						group by deal.finprod_id),0)) firstPrinAmt,		  <!--首次认购总额（元）-->
 				((select nvl(sum(SHARE_AMT), 0)
 		                   from deal
 		                  where deal.ps in ('C1', 'C2', 'C3', 'C10')

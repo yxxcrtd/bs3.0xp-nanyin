@@ -158,7 +158,12 @@ $(function() {
             }
             param.flag = "2";
             param.sendStatus='01';
-            Joyin.exportExcel("export",param);
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"InvestorsHoldInfoRegist001",paramKeys:JSON.stringify(param)},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
         }
         else{
 
@@ -170,13 +175,18 @@ $(function() {
             }
             var keyList = [];
             $.each(expArr,function(i,v){
-                v.sendStatus=v.sendStatusCode;
-                v.status=v.statusCode;
-                v.ccy=v.ccyCode;
+                keyList.push(v.prdRegistCode + '|' + v.indentifyMark + '|' + v.ccy);
             })
             param.keyList = JSON.stringify(expArr);
             param.flag='2';
-            Joyin.exportExcel('export', param);
+            param.expKeys= keyList.join(',')
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"InvestorsHoldInfoRegist001",keyList:param.keyList,expKeys:param.expKeys},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
         }
     });
 

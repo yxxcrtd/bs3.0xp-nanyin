@@ -65,6 +65,11 @@ public class EquityInfoRegist001Dto extends TableRow {
      * 报送流水号list
      */
     private String seqList;
+
+    /**
+     * 删除原因
+     */
+    private String deleteReason;
     /**
      * 获取 orgCodeList
      * @return orgCodeList.
@@ -1239,4 +1244,13 @@ public class EquityInfoRegist001Dto extends TableRow {
     }
 
     // 导出报错新添加的 （徽商） njl  end
+
+
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
+    }
 }

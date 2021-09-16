@@ -84,4 +84,25 @@
 		WHERE
 		rsk.status in ('E', 'M')
 	</select>
+	<select id="queryStructMapIdDefault" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		rvs.ID id,
+		rvs.ID || ':' || rvs.NAME text
+		from RSK_VALTBL_STRUCT_MAP rvs
+		where rvs.is_default='Y'
+	</select>
+	<select id="querySumsubMapIdDefault" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		rvs.ID id,
+		rvs.ID || ':' || rvs.NAME text
+		from RSK_VALTBL_SUMSUB_MAP rvs
+		where rvs.is_default='Y'
+	</select>
+	<select id="queryAssetSubMapIdDefault" resultType="com.joyintech.framework.select.SelectOptionDto">
+		select
+		rva.ID id,
+		rva.ID || ':' || rva.NAME text
+		from RSK_VALTBL_ASSET_SUB_MAP rva
+		where rva.is_default='Y'
+	</select>
 </mapper>
