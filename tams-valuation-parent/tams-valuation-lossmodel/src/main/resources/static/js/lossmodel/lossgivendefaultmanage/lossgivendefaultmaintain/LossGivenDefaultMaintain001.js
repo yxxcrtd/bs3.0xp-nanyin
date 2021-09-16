@@ -47,6 +47,10 @@ $(function(){
         });
 	// 查询按钮
 	$('#LossGivenDefaultMaintain001_btn_search').click(function(){
+        if($("#assetcode").val().length ==0){
+            layer.msg("请选择资产类别！");
+            return;
+        }
 		table.load();
 	})
 	// 导出按钮
