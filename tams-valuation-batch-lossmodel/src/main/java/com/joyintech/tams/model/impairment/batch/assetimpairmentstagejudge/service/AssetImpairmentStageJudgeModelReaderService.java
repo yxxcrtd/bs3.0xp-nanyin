@@ -2,6 +2,7 @@ package com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.serv
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dao.AssetImpairmentStageJudgeModelMapper;
 import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*;
@@ -9,6 +10,7 @@ import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.Impai
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
@@ -34,9 +36,6 @@ public class AssetImpairmentStageJudgeModelReaderService {
 
     @Autowired
     private ImpairmentCommonService impairmentCommonService;
-
-    // 日志key
-    private final String LOG_KEY = "logkey";
 
     /**
      * 资产减值阶段判断模型-reader
@@ -71,10 +70,9 @@ public class AssetImpairmentStageJudgeModelReaderService {
             SysBatchExecInfo sysBatchExecInfo = (SysBatchExecInfo) params.get("BATCH_INFO");
             String msg = "【资产减值阶段判断批处理】：计算错误";
             // 取不到满足条件的数据
-            for(int i=0;i<finprodIdList.size();i++){
-                impairmentCommonService.sendLogContextInfo(stepExecution, sysBatchExecInfo,
-                    finprodIdList.get(i), msg,ModelDictCodeList.模型计算结果_失败.getValue(), LOG_KEY);
-            }
+            finprodIdList.forEach(x->{
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x, msg);
+            });
         }
         return list;
     }

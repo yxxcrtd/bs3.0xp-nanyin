@@ -1,26 +1,26 @@
-package com.joyintech.tams.valuation.common.batch.batchTasks;
+package com.joyintech.tams.common.base.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ModValBatchParamsExample {
+public class ModBatchLogsExample {
     /**
-     * LCZGMODEL_VALUATION.MOD_VAL_BATCH_PARAMS
+     * CVR30INIT_XUQIU.MOD_BATCH_LOGS
      */
     protected String orderByClause;
 
     /**
-     * LCZGMODEL_VALUATION.MOD_VAL_BATCH_PARAMS
+     * CVR30INIT_XUQIU.MOD_BATCH_LOGS
      */
     protected boolean distinct;
 
     /**
-     * LCZGMODEL_VALUATION.MOD_VAL_BATCH_PARAMS
+     * CVR30INIT_XUQIU.MOD_BATCH_LOGS
      */
     protected List<Criteria> oredCriteria;
 
-    public ModValBatchParamsExample() {
+    public ModBatchLogsExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -324,63 +324,143 @@ public class ModValBatchParamsExample {
             return (Criteria) this;
         }
 
-        public Criteria andExecDateIsNull() {
-            addCriterion("EXEC_DATE is null");
+        public Criteria andTaskIdIsNull() {
+            addCriterion("TASK_ID is null");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateIsNotNull() {
-            addCriterion("EXEC_DATE is not null");
+        public Criteria andTaskIdIsNotNull() {
+            addCriterion("TASK_ID is not null");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateEqualTo(Date value) {
-            addCriterion("EXEC_DATE =", value, "execDate");
+        public Criteria andTaskIdEqualTo(String value) {
+            addCriterion("TASK_ID =", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateNotEqualTo(Date value) {
-            addCriterion("EXEC_DATE <>", value, "execDate");
+        public Criteria andTaskIdNotEqualTo(String value) {
+            addCriterion("TASK_ID <>", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateGreaterThan(Date value) {
-            addCriterion("EXEC_DATE >", value, "execDate");
+        public Criteria andTaskIdGreaterThan(String value) {
+            addCriterion("TASK_ID >", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateGreaterThanOrEqualTo(Date value) {
-            addCriterion("EXEC_DATE >=", value, "execDate");
+        public Criteria andTaskIdGreaterThanOrEqualTo(String value) {
+            addCriterion("TASK_ID >=", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateLessThan(Date value) {
-            addCriterion("EXEC_DATE <", value, "execDate");
+        public Criteria andTaskIdLessThan(String value) {
+            addCriterion("TASK_ID <", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateLessThanOrEqualTo(Date value) {
-            addCriterion("EXEC_DATE <=", value, "execDate");
+        public Criteria andTaskIdLessThanOrEqualTo(String value) {
+            addCriterion("TASK_ID <=", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateIn(List<Date> values) {
-            addCriterion("EXEC_DATE in", values, "execDate");
+        public Criteria andTaskIdLike(String value) {
+            addCriterion("TASK_ID like", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateNotIn(List<Date> values) {
-            addCriterion("EXEC_DATE not in", values, "execDate");
+        public Criteria andTaskIdNotLike(String value) {
+            addCriterion("TASK_ID not like", value, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateBetween(Date value1, Date value2) {
-            addCriterion("EXEC_DATE between", value1, value2, "execDate");
+        public Criteria andTaskIdIn(List<String> values) {
+            addCriterion("TASK_ID in", values, "taskId");
             return (Criteria) this;
         }
 
-        public Criteria andExecDateNotBetween(Date value1, Date value2) {
-            addCriterion("EXEC_DATE not between", value1, value2, "execDate");
+        public Criteria andTaskIdNotIn(List<String> values) {
+            addCriterion("TASK_ID not in", values, "taskId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskIdBetween(String value1, String value2) {
+            addCriterion("TASK_ID between", value1, value2, "taskId");
+            return (Criteria) this;
+        }
+
+        public Criteria andTaskIdNotBetween(String value1, String value2) {
+            addCriterion("TASK_ID not between", value1, value2, "taskId");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusIsNull() {
+            addCriterion("EXEC_STATUS is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusIsNotNull() {
+            addCriterion("EXEC_STATUS is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusEqualTo(String value) {
+            addCriterion("EXEC_STATUS =", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusNotEqualTo(String value) {
+            addCriterion("EXEC_STATUS <>", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusGreaterThan(String value) {
+            addCriterion("EXEC_STATUS >", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("EXEC_STATUS >=", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusLessThan(String value) {
+            addCriterion("EXEC_STATUS <", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusLessThanOrEqualTo(String value) {
+            addCriterion("EXEC_STATUS <=", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusLike(String value) {
+            addCriterion("EXEC_STATUS like", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusNotLike(String value) {
+            addCriterion("EXEC_STATUS not like", value, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusIn(List<String> values) {
+            addCriterion("EXEC_STATUS in", values, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusNotIn(List<String> values) {
+            addCriterion("EXEC_STATUS not in", values, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusBetween(String value1, String value2) {
+            addCriterion("EXEC_STATUS between", value1, value2, "execStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andExecStatusNotBetween(String value1, String value2) {
+            addCriterion("EXEC_STATUS not between", value1, value2, "execStatus");
             return (Criteria) this;
         }
 

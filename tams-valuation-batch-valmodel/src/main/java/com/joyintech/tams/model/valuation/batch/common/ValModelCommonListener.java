@@ -3,9 +3,9 @@ package com.joyintech.tams.model.valuation.batch.common;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogs;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
@@ -48,9 +48,9 @@ public class ValModelCommonListener implements JobExecutionListener {
         // 查询参数
         List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(batchExecuteInfo.getExecuteDate());
         if (CollectionUtils.isNotEmpty(params)) {
-            Map<String,ModBatchLogs> logsMap = new HashedMap<>();
+            Map<String, ModBatchLogs> logsMap = new HashedMap<>();
             params.stream().forEach(x->{
-                ModBatchLogs log = modLogsService.initLog(batchExecuteInfo.getTaskId(),batchExecuteInfo.getSeqNo(),x.getFinprodId());
+                ModBatchLogs log = modLogsService.initLog(batchExecuteInfo.getTaskId(),batchExecuteInfo.getBatchExedetailSeqNo(),x.getFinprodId());
                 logsMap.put(x.getFinprodId(),log);
             });
             jobExecution.getExecutionContext().put(ValComponentConstant.MODEL_LOGS,logsMap);

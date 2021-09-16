@@ -6,8 +6,7 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.model.impairment.batch.eadcalculation.listener.EadCalCulationBatchListener;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.processor.EadCalCulationBatchProcessor;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.processor.EadCalculationDelProcessor;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.reader.EadCalCulationDelReader;
@@ -80,7 +79,7 @@ public class EadCalCulationBatchTask extends BatchBaseService {
     private EadCalCulationBatchWriter step1Writer;
 
     @Autowired
-    private EadCalCulationBatchListener eadCalCulationBatchListener;
+    private LossModelCommonListener lossModelCommonListener;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -103,12 +102,13 @@ public class EadCalCulationBatchTask extends BatchBaseService {
         step0Reader.setParams(params);
         step0Processor.setParams(params);
         step0Writer.setParams(params);
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
         logger.info("批处理[" + this.getBatchTask().getTaskName() + "]开始。");
         return batchBuilder.init(this)
                 .batch("step0", (BaseReader)step0Reader,(BaseProcessor)step0Processor, (BaseWriter)step0Writer)
                 .batch("step1", (BaseReader)step1Reader,(BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
                 this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-                ,eadCalCulationBatchListener).run();
+                ,lossModelCommonListener).run();
 
     }
 }
