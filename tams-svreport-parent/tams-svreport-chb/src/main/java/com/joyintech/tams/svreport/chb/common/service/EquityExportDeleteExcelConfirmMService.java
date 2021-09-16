@@ -195,8 +195,10 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
                 }
             } else {
                 // 无勾选数据，根据条件查询
-                dealInvestorsHoldInfoRegistSearchParam(param);
-                list = investorsHoldInfoRegist001Mapper.selectAllData(param);
+                String paramKeys = (String)param.get("paramKeys") ;
+                Map<String,Object> searchParamMap = JsonUtils.stringToMap(paramKeys);
+                dealEquityBusiInfoRegistSearchParam(searchParamMap);
+                list = investorsHoldInfoRegist001Mapper.selectAllData(searchParamMap);
             }
             list.stream().forEach(item -> {
                 item.setDeleteReason(deleteReason);
