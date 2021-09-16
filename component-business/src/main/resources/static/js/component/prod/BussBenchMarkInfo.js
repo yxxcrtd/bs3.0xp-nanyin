@@ -49,6 +49,7 @@
 			getElementById('rateLimit').trigger('change').prop('disabled', false);
 		}
     	else if(getElementById('publishType').val() === PUBLISH_TYPE_02) {
+			getElementById('rateType').trigger('change').prop('disabled', false);
             $("#rateTypeDiv").css('display','block');
             rateTypeChange();
 			getElementById('rateLower').val('').trigger('change').prop('disabled', true);
