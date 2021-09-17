@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import com.csii.dc.client.util.StringUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.batch.autogeneration.risk.dao.RiskComRedFeeExpCondGenMapper;
-import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 
 /**
  * 强制赎回费征收条件落地批处理Service
