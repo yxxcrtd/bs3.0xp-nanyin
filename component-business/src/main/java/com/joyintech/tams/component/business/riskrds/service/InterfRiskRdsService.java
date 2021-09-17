@@ -705,7 +705,15 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     if(StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())){
                         //针对超违规线情况
                         retMap.put(InterfUtil.BACK_PAGE_FLAG,DictCodeList.是否_是.getValue());
-                        retMap.put(InterfUtil.RISK_BACK_MES,InterfUtil.FORBID_MES);
+                        //增加软控硬控开关 add by jqq 20201216 start
+                        String institutionCode = "";
+                        if(MultilevelDataAuthorityUtil.isEnabled()){
+                            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+                        }
+                        String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+                         if(BaseDictCodeList.是否_否.getValue().equals(isSoft)) {//硬控
+                             retMap.put(InterfUtil.RISK_BACK_MES, InterfUtil.FORBID_MES);
+                         }
                     }
                 }
             }

@@ -1,6 +1,4 @@
-prompt Importing table CHB_DATACHECK_REP_TYPE_INV...
-set feedback off
-set define off
+delete from CHB_DATACHECK_REP_TYPE_INV;
 insert into CHB_DATACHECK_REP_TYPE_INV (PAGE_ID, REP_TYPE, SRCPROPERTY)
 values ('FinPlanNetAsset002', '1701', 'bussRepAssetMngProdInfo');
 
@@ -187,4 +185,3 @@ values ('FinBondTargetAsset002', '1301', 'bussRepEquityInfoDto');
 insert into CHB_DATACHECK_REP_TYPE_INV (PAGE_ID, REP_TYPE, SRCPROPERTY)
 values ('FinBondTargetAsset002', '1305', 'bussRepEquityInfoDto');
 
-prompt Done.

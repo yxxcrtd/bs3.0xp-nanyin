@@ -1,6 +1,4 @@
-prompt Importing table CHB_DATACHECK_RULE_INV...
-set feedback off
-set define off
+delete from CHB_DATACHECK_RULE_INV;
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('de4E4A50-6813-5A9E-E050-007F01006A66', 'ProductReportRegister002', 'isNumber2', 'repYield', null, '8,5', 'Y', '业绩比较基准%必须为n..(8,5)格式', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
 
@@ -3877,4 +3875,3 @@ values ('FINPRODUCTBUILD002-ys214A49-6813-5A9E-E050-007F22700006', 'FinProductBu
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
 values ('FINPRODUCTBUILD002-zl214A49-6813-5A9E-E050-006F22700036', 'FinProductBuild002', 'lessThanCharLengthUTF8', 'bussRepFinProductInfoDto.repOpenCircleDays', '==', '0', 'Y', '他规律开放周期（天）不能有值', 'D', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
 
-prompt Done.

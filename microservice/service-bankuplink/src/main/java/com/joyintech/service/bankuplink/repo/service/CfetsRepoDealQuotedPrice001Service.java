@@ -10,38 +10,14 @@
 
 package com.joyintech.service.bankuplink.repo.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.joyintech.background.component.uplink.interbank.business.dto.*;
-import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
-import org.apache.commons.collections.CollectionUtils;
-import org.codehaus.plexus.util.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.HtmlUtils;
-
 import com.alibaba.fastjson.JSON;
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.common.dao.CfetsQuotedCommonMapper;
 import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentCommonService;
@@ -52,7 +28,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
@@ -62,10 +37,22 @@ import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlPositionHoldDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
+import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
 import com.joyintech.tams.invest.common.trade.dao.BaseAssetCashPositionCommMapper;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
 import com.joyintech.tams.invest.common.util.QuotaPageModelUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tools.collectors.JoyinCollectors;
+import org.apache.commons.collections.CollectionUtils;
+import org.codehaus.plexus.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
+
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 〈一句话功能简述〉 〈功能详细描述〉
@@ -821,24 +808,40 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
 				    dto.setPs(repoDialogueQuoteDto.getIbuQuoteCrepDto().getRepoPs());
                 }
 			}
-			if(null != repoDialogueQuoteDto && null != repoDialogueQuoteDto.getIbuQuoteCrepPledgeDtoList()){
-				List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = dto.getPledgeBondList();
-				if(null == pledgeBondList){
-					pledgeBondList = new ArrayList<CfetsRepoDealQuotedPrice003Dto>();
-					for(IbuQuoteCrepPledgeDto ibuQuoteCrepPledgeDto : repoDialogueQuoteDto.getIbuQuoteCrepPledgeDtoList()){
-						CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
-						BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,ibuQuoteCrepPledgeDto);
-						cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ibuQuoteCrepPledgeDto.getPledgeAmt());
-                        //add by zn 20210112
-                        //退回时，回归持仓流水
-                        if(StringUtil.isEmpty(cfetsRepoDealQuotedPrice003Dto.getBondCode())){
-                            cfetsRepoDealQuotedPrice003Dto.setBondCode(ibuQuoteCrepPledgeDto.getFinprodMarketId());
+            ps = dto.getPs();
+			//多组合 正回购 时   质押券取拆分后的质押券 需要关联组合拆分
+            List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = dto.getPledgeBondList();
+            if(null == pledgeBondList){
+                if(StringUtil.equals(isDzh,"Y")&&StringUtil.equals(ps,DictCodeListExt3.交易方向_正回购.getValue())){
+                    if(null!=repoDialogueQuoteDto&&null!=repoDialogueQuoteDto.getIbuQuoteEntCrepPledgeDtoList()){
+                        pledgeBondList = new ArrayList<CfetsRepoDealQuotedPrice003Dto>();
+                        for (IbuQuoteEntCrepPledgeDto ibuQuoteEntCrepPledgeDto : repoDialogueQuoteDto.getIbuQuoteEntCrepPledgeDtoList()) {
+                            CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
+                            BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,ibuQuoteEntCrepPledgeDto);
+                            cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(ibuQuoteEntCrepPledgeDto.getPledgeNumber(),new BigDecimal(100)));
+                            cfetsRepoDealQuotedPrice003Dto.setFinprodId(ibuQuoteEntCrepPledgeDto.getPledgeFinprodId());
+                            pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
                         }
-						pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
-						dto.setPledgeBondList(pledgeBondList);
-					}
-				}
-			}
+                        dto.setPledgeBondList(pledgeBondList);
+                    }
+                }else{
+                    if(null != repoDialogueQuoteDto && null != repoDialogueQuoteDto.getIbuQuoteCrepPledgeDtoList()){
+                        pledgeBondList = new ArrayList<CfetsRepoDealQuotedPrice003Dto>();
+                        for(IbuQuoteCrepPledgeDto ibuQuoteCrepPledgeDto : repoDialogueQuoteDto.getIbuQuoteCrepPledgeDtoList()){
+                            CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
+                            BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,ibuQuoteCrepPledgeDto);
+                            cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ibuQuoteCrepPledgeDto.getPledgeAmt());
+                            //add by zn 20210112
+                            //退回时，回归持仓流水
+                            if(StringUtil.isEmpty(cfetsRepoDealQuotedPrice003Dto.getBondCode())){
+                                cfetsRepoDealQuotedPrice003Dto.setBondCode(ibuQuoteCrepPledgeDto.getFinprodMarketId());
+                            }
+                            pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
+                            dto.setPledgeBondList(pledgeBondList);
+                        }
+                    }
+                }
+            }
 			if(null!= repoDialogueQuoteDto && null!=repoDialogueQuoteDto.getIbuQuoteEtrReDtoList()){
                 List<PtlAllocationDto> ptlAllocationList = dto.getPtlAllocationList();
                 if(null == ptlAllocationList){
@@ -851,7 +854,6 @@ public class CfetsRepoDealQuotedPrice001Service extends BaseService {
                     dto.setPtlAllocationList(ptlAllocationList);
                 }
             }
-			ps = dto.getPs();
 		}
 		PtlPositionHoldDto ptlPositionHoldDto = new PtlPositionHoldDto();// 组合持仓流水、组合现金流水
 		List<PtlCashPositionFlowDto> ptlCashPositionFlows = new ArrayList<>();// 现金流水

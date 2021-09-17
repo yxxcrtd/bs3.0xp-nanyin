@@ -67,10 +67,7 @@ var QueryFunc = function () {
         if (assetProviderTemp != null)
             assetProvider = assetProviderTemp.join(",");
 	    object.minSaleUnit = parseInt($("#minSaleUnit").val(), 10);
-        var shOrZhList = $("#shOrZh").val();
-        if(shOrZhList!=null)
-            shOrZh = shOrZhList.join(",");
-        object.shOrZh = shOrZh;
+        object.shOrZh = $("#shOrZh").val();
         object.assetProvider = assetProvider;
         object.pageModel = pageModel;
         object.operateType = operateType;
@@ -80,6 +77,7 @@ var QueryFunc = function () {
         object.type11 = "095";
         object.type12 = "097";
         // 为type9，type10，type11，type12赋值 by 赵东东 end
+        object.bussRepEquityInfoDto.repRemark = $('#remark').val();
         //文件信息
         if(FileCommon) {
             object.fileArray = FileCommon.getUploadFileInfo();
