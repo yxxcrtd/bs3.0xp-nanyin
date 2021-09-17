@@ -133,9 +133,10 @@ public class CashFlowDiscountReaderService {
                 pendingModAssetInfo.stream().forEach(item -> {
                     CashFlowDiscountReaderResult cashFlowDiscountReaderResult = new CashFlowDiscountReaderResult();
                     cashFlowDiscountReaderResult.setModAssetInfoDto(item);
-                    String key = item.getSecType()+item.getSecTypeDetail();
-                    if(configIndex.containsKey(key)){
-                        cashFlowDiscountReaderResult.setModCurveConfig(configIndex.get(key));
+                    String key_detail = item.getSecType()+item.getSecTypeDetail();
+                    String key = item.getSecType();
+                    if(configIndex.containsKey(key_detail)){
+                        cashFlowDiscountReaderResult.setModCurveConfig(configIndex.get(key_detail));
                         //查找现金流计划信息
                         List<ModCashFlowDto> modCashFlows = modValuationCommonService.getCashFlowPlanInfoByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlows(modCashFlows);
@@ -151,9 +152,14 @@ public class CashFlowDiscountReaderService {
                         if(modAssetGradeSpecialConfigMap!=null && modAssetGradeSpecialConfigMap.containsKey(item.getFinprodId())){
                             ModAssetGradeSpecialConfig modAssetGradeSpecialConfig = modAssetGradeSpecialConfigMap.get(item.getFinprodId());
                             rateInfo = rateInfoCommonService.getRatingInfoBySpecialConfig(item,modAssetGradeSpecialConfig,happenDate);
+                        }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key_detail)){
+                            ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key_detail);
+                            rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
                         }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key)){
                             ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key);
                             rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
+                        }else{
+                            //TODO 打印日志，找不到评级配置
                         }
 
                         //处理曲线信息

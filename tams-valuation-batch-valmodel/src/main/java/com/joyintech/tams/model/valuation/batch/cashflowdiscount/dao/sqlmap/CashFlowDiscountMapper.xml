@@ -27,7 +27,7 @@
 	    1=1
 		<if test="searchDate != null">
 			AND T1.EFF_DATE <![CDATA[<=]]> #{searchDate}
-			AND T1.INVALID_DATE <![CDATA[>=]]> #{searchDate}
+			AND (T1.INVALID_DATE <![CDATA[>=]]> #{searchDate} OR T1.INVALID_DATE IS NULL)
 		</if>
 	</where>
 	</select>
