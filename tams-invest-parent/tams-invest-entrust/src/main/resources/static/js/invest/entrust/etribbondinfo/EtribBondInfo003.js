@@ -8,6 +8,7 @@
     var initFlag = false;
     var cluflag;
     var businessId;
+    var fprice;
 
     let doOther = {
         star : function () {
@@ -1288,17 +1289,20 @@
                     });
                 }
             }
+            fprice = "";
             Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/calData", object, function (result) {
                 if (result && result.data) {
                     var data = result.data;
                     if (data.price) {
+                        fprice = data.unitFprice;
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("blur").trigger('change');
                         // 根据净价计算净价偏离度
                         calDeviationDegree();
                     } else {
+                        fprice = "";
                         query("#price").val("");
-                        query("#fpriceAmt").val("");
+                        query("#fpriceAmt").val("").trigger("blur").trigger('change');
                     }
                     if (pageModel != PAGE_MODEL_REFERENCE) {
                         query("#exerYield").val(data.exerYield).trigger("blur");
@@ -1346,14 +1350,14 @@
      * 全价change
      */
     query("#fpriceAmt").change(function () {
-        var fpriceAmt = query('#fpriceAmt').val();
-        if(!fpriceAmt){
+        // var fpriceAmt = query('#fpriceAmt').val();
+        if(!fprice||fprice==''){
             return;
         }
         var datas = table.getAllRows();
         for (var i in datas) {
-            if(query('#fpriceAmt').val()&&datas[i].entrustNum){
-                datas[i].settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fpriceAmt,100,6),JoyinMath.doMul(10000,datas[i].entrustNum,2),2);
+            if(fprice&&fprice!=''&&datas[i].entrustNum){
+                datas[i].settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fprice,100,14),JoyinMath.doMul(10000,datas[i].entrustNum,2),2);
             }
             table.renderRow(i, datas[i]);
         }
@@ -1366,8 +1370,8 @@
      */
     function calSettleAmt (value, data) {
         var rowData = {};
-        if(query('#fpriceAmt').val()&&data.entrustNum){
-            rowData.settleAmt = JoyinMath.doMul(JoyinMath.doDiv(query('#fpriceAmt').val(),100,6),JoyinMath.doMul(10000,data.entrustNum,2),2);
+        if(fprice&&fprice!=''&&data.entrustNum){
+            rowData.settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fprice,100,14),JoyinMath.doMul(10000,data.entrustNum,2),2);
         }
         table.renderRow(data.LAY_TABLE_INDEX, rowData);
     }

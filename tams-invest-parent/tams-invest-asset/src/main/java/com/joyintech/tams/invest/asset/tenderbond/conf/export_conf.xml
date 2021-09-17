@@ -24,7 +24,7 @@
             <Cell order="20" name="发行日">idateStr</Cell>
             <Cell order="21" name="发行人">issuer</Cell>
             <Cell order="22" name="登记托管机构">registOrgName</Cell>
-            <Cell order="23" name="发行金额">issueAmt</Cell>
+            <Cell order="23" name="发行金额（万元）">issueAmt</Cell>
             <Cell order="24" name="付息频率">payCycleStr</Cell>
             <Cell order="25" name="主体评级">ztGradeResultStr</Cell>
             <Cell order="26" name="主体评级机构">ztGradeOrgIdStr</Cell>

@@ -304,7 +304,11 @@
                     }else if(wgArrSub.length > 1){
                         var url = "";
                         for(var i = 0;i<wgArrSub.length;i++){
-                            url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+wgArrSub[i]+">"+wgArrSub[i]+','+"</ a>"
+                            if(i<wgArrSub.length - 1){
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+wgArrSub[i]+">"+wgArrSub[i]+','+"</ a>"
+                            }else{
+                                url=url + "<a class='pro-link entrustIdLink' style='cursor: pointer;' id = "+wgArrSub[i]+">"+wgArrSub[i]+"</ a>"
+                            }
                         }
                         return url;
                     }
