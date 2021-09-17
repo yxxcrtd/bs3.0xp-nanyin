@@ -223,10 +223,11 @@
                             <label class="layui-form-label" style="width: 105px;" data-th-text="#{EtrIbBondinfo002.fpriceAmt}">全价</label>
                             <div class="layui-input-inline input-inline" style=" margin: 0px; margin-left: auto;">
                                 <!--ZGZGST-1631:流程中数据展示全价字段有误,展示成了全价总额 fuyongsheng 20210904 edit start -->
+                                <!--ZGZGST-2822:修改字段展示名称为单位全价 fuyongsheng 20210904 edit start -->
                                 <input
                                         type="text"
                                         id="fpriceAmt"
-                                        name="fpriceAmt"
+                                        name="unitFprice"
                                         placeholder="请输入内容"
                                         data-pattern=""
                                         data-fixtype="2"
@@ -234,6 +235,7 @@
                                         class="layui-input form-input text-number"
                                         data-th-value="${entity?.unitFprice}"
                                 />
+                                <!--ZGZGST-2822:修改字段展示名称为单位全价 fuyongsheng 20210904 edit end -->
                                 <!--ZGZGST-1631:流程中数据展示全价字段有误,展示成了全价总额 fuyongsheng 20210904 edit end -->
                                 <span class="input-right-show">元</span>
                             </div>
