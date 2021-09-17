@@ -169,11 +169,12 @@ html {
 										<div class="sgePortDiv">
 											<label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;" data-th-text="#{EtrRepo002.termType}">期限品种</label>
 											<div class="layui-input-inline input-inline">
-												<input type="text" id="termType" name="termType" parentIds="tradeMarket" allowClear="true"
+												<select type="text" id="termType" name="termType" parentIds="tradeMarket" allowClear="true"
 													   class="layui-input form-input input-select"
 													   data-th-placeholder="#{SysCommon.placeholder}"
 													   data-th-data-result='${TERM_TYPE_REBACK}'
 													   data-th-initvalue="${entity?.termType}">
+												</select>
 											</div>
 										</div>
 										<div class="sgePortDiv">
