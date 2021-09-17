@@ -97,6 +97,12 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
      * 是否正反同步交易
      */
     public static final String IS_SYNC = "isSync";
+
+    /**
+     * 是否转化申请交易
+     */
+    public static final String IS_CONV = "isConv";
+
     // add by zhangrui1 正反同步交易特殊处理 end
     // add by zhangrui1 取基金净值 start
     @Autowired
@@ -867,6 +873,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 break;
             }
         }
+        for (Map<String, Object> map : list) {
+            Object isConv = map.get(IS_CONV);
+            if (StringUtil.isNotEmpty(isConv)) {
+                body.put(IS_CONV, isConv);
+                break;
+            }
+        }
         // add by zhangrui1 正反同步委托/交易特殊处理 end
         ClientData data = new ClientData();
         data.setHead(header);
@@ -1085,6 +1098,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             String groupId = String.valueOf(System.nanoTime());
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
             if(StringUtil.isNotEmpty(infMap.get(PageFieldToInterfFactory.INF_AMOUNT))) {
                 infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal((String)infMap.get(PageFieldToInterfFactory.INF_AMOUNT)), new BigDecimal(100), 2));
@@ -1117,6 +1131,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             // add by zhangrui1 正反同步交易特殊处理 start
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
             String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
             if (!StringUtil.isEmpty(entrustId)
@@ -1194,6 +1209,7 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             String groupId = String.valueOf(System.nanoTime());
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
             infMap.put("fundConvertFlg",DictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
             result.add(infMap);
