@@ -1041,7 +1041,60 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     public List<Map<String, Object>> prepareRiskListEntity(Map<String, Object> dataMap, V v)  throws IOException, InstantiationException {
         List<Map<String, Object>> result = new ArrayList<>();
         String ps = (String) dataMap.get(InterfUtil.ps);
-        if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
+        // ZGZGST-2517:质押式回购指令组合系列每个组合需要拆分为独立指令 fuyongsheng 20210917 add start
+        if (StringUtil.equals(dataMap.get("assetType1"), DictCodeList.回购类型_质押式回购.getValue())) {
+            //正回购和逆回购存在多组合，每个组合需要拆分为独立指令
+            if(StringUtil.isNotEmpty(dataMap.get("etrInvestRepoInfoDtos"))) {
+                List<Map> etrInvestRepoInfoDtos = (List<Map>)dataMap.get("etrInvestRepoInfoDtos");
+                for(Map<String,Object> map:etrInvestRepoInfoDtos) {
+                    String eventDate = null;
+                    if(StringUtil.isNotEmpty(dataMap.get("entrustDate"))) {
+                        Object entrustDate = dataMap.get("entrustDate");
+                        String type = entrustDate.getClass().toString();
+                        if("Long".equals( type.substring(type.lastIndexOf('.') + 1, type.length()))) {
+                            eventDate = DateUtil.format(new Date((long)entrustDate));
+                        }
+                        else {
+                            eventDate = DateUtil.format(DateUtil.parse(entrustDate.toString()));
+                        }
+                    }
+                    //获取接口类型
+                    String infCode = v.getInfCode();
+                    InterfRiskRdsDto infRiskRdsDto=new InterfRiskRdsDto();
+                    infRiskRdsDto.setEventType(v.getEventType());
+                    infRiskRdsDto.setCcy((String)map.get("ccy"));
+                    infRiskRdsDto.setInfCode(infCode);
+                    infRiskRdsDto.setEventId((String)map.get("entrustId"));
+                    infRiskRdsDto.setPreOccupyCode((String)map.get("entrustId"));
+                    infRiskRdsDto.setEventDate(eventDate);
+                    infRiskRdsDto.setPortfolioCode((String)map.get("portfolioId"));
+                    infRiskRdsDto.setAssetCode((String)map.get("finprodId"));
+                    infRiskRdsDto.setAmount(BigDecimal.valueOf(Double.parseDouble((String) map.get("entrustAmt"))));
+                    infRiskRdsDto.setDeliveryDate(DateUtil.parse(eventDate));
+                    infRiskRdsDto.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                    infRiskRdsDto.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                    infRiskRdsDto.setTradePlace((String)dataMap.get("tradeMarket"));
+                    infRiskRdsDto.setTradeMarketMode((String)dataMap.get("tradeMarketMode"));
+                    infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
+                    infRiskRdsDto.setMdate(new Date((Long)CommonUtil.findValue(dataMap,"mdate")));
+                    long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                            DateUtil.parse(infRiskRdsDto.getMdate()));
+                    infRiskRdsDto.setOneDay(oneDay);
+                    infRiskRdsDto.setPs(DictCodeList.交易方向_买入.getValue());
+                    infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
+                    infRiskRdsDto.setAssetType2(ps);
+                    infRiskRdsDto.setAssetRate(StringUtil.isNotEmpty(dataMap.get("price"))?dataMap.get("price") instanceof BigDecimal ?ArithmeticUtil.divide((BigDecimal)dataMap.get("price"),new BigDecimal(100),4):ArithmeticUtil.divide(new BigDecimal(dataMap.get("price").toString()),new BigDecimal(100),4):null);
+                    infRiskRdsDto.setCalendarCode((String)dataMap.get("calendarId"));
+                    infRiskRdsDto.setDeadline(StringUtil.isNotEmpty(dataMap.get("repoTerm"))?new BigDecimal(dataMap.get("repoTerm").toString()):null);
+                    if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_预占释放批量接口)) {
+                        infRiskRdsDto.setRevokeFlg(BussinessDictCodeList.是否_是.getValue());
+                    }
+                    result.add(BeanUtil.object2Map(infRiskRdsDto));
+                }
+            }
+        }
+        // ZGZGST-2517:质押式回购指令组合系列每个组合需要拆分为独立指令 fuyongsheng 20210917 add end
+        else if (CommonUtil.isType(ps, DictCodeListExt1.交易方向_债转股)) {
             Map<String, Object> infMap = new HashMap<>();
             //委托字段转化
             if(StringUtil.equals(v.getEventType(),BussinessDictCodeListRds.事件类型_投资委托.getValue())){
