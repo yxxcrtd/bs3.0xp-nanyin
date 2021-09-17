@@ -469,6 +469,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         //委托编号
         String entrustCode = finDto.getEntrustCode();
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustCode);
+        finDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
         if(StringUtil.isNotEmpty(etrEntrust)) {
             if(StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                 finDto.setCalendarCode("04");

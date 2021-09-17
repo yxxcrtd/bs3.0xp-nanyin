@@ -16,6 +16,10 @@ import java.util.Map;
 
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.base.BaseDictCodeList;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
@@ -52,7 +56,15 @@ public interface IRiskSender {
                 String statusRisk = StringUtil.isNotEmpty(body2) && StringUtil.isNotEmpty(
                     body2.get("rskStatus")) ? (String)body2.get("rskStatus") : null;
                 if (StringUtil.equals(statusRisk, BussinessDictCodeListRds.指标状态_禁止.getValue())) {
-                    return getAjaxResult(returnCli, InterfUtil.FORBID_MES, MessageType.错误消息);
+                    //增加软控硬控开关 add by jqq 20201216 start
+                    String institutionCode = "";
+                    if(MultilevelDataAuthorityUtil.isEnabled()){
+                        institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+                    }
+                    String isSoft = CacheUtil.getSpecialSysParam("IS_RISKMATH_SOFTCONTROL", institutionCode);
+                    if(BaseDictCodeList.是否_否.getValue().equals(isSoft)) {//硬控
+                        return getAjaxResult(returnCli, InterfUtil.FORBID_MES, MessageType.错误消息);
+                    }
                 }
             }
         }
