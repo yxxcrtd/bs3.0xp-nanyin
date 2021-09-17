@@ -1,7 +1,7 @@
 delete from CHB_DATACHECK_CONDITION a where a.checkconditionid in ('W13E4A49-6810-5A9E-E050-107F01006A61','W84807E5-DF1F-D920-E050-007F020080FD','W84807E5-DF1F-D920-E050-007F020078FD');
 
 insert into CHB_DATACHECK_CONDITION (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
-values ('W13E4A49-6810-5A9E-E050-107F01006A61', 'W23E4A49-6810-5A9E-E050-007F01006A22', 'inArray', 'ASSET_TYPE', '!=', '03,04,07,13,18,17,14', 'µ±×Ê²ú/¸ºÕ®Àà±ðÎªÕ®È¯Àà×Ê²ú»ò·Ç±ê×Ê²ú»ò½ðÈÚÑÜÉúÆ·»òÉÌÆ·Àà×Ê²ú»òÁíÀà×Ê²ú»òÆäËû£¨¸ºÕ®£©Àà×Ê²ú»ò¸÷Àà×Ê²úµÄÆäËûÏîÊ±', 'E');
+values ('W13E4A49-6810-5A9E-E050-107F01006A61', 'W23E4A49-6810-5A9E-E050-007F01006A22', 'inArray', 'ASSET_TYPE', '!=', '03,04,07,13,18,17,14', 'å½“èµ„äº§/è´Ÿå€ºç±»åˆ«ä¸ºå€ºåˆ¸ç±»èµ„äº§æˆ–éžæ ‡èµ„äº§æˆ–é‡‘èžè¡ç”Ÿå“æˆ–å•†å“ç±»èµ„äº§æˆ–å¦ç±»èµ„äº§æˆ–å…¶ä»–ï¼ˆè´Ÿå€ºï¼‰ç±»èµ„äº§æˆ–å„ç±»èµ„äº§çš„å…¶ä»–é¡¹æ—¶', 'E');
 
 insert into CHB_DATACHECK_CONDITION (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
-values ('W84807E5-DF1F-D920-E050-007F020080FD', 'W84807E5-DF1E-D920-E050-007F010077FD', 'compareValue', 'TARGET_TYPE3', '==', '99', '±êµÄÀà±ðÎª¡°ÆäËû¡±Ê±', 'E');
+values ('W84807E5-DF1F-D920-E050-007F020080FD', 'W84807E5-DF1E-D920-E050-007F010077FD', 'compareValue', 'TARGET_TYPE3', '==', '99', 'æ ‡çš„ç±»åˆ«ä¸ºâ€œå…¶ä»–â€æ—¶', 'E');
