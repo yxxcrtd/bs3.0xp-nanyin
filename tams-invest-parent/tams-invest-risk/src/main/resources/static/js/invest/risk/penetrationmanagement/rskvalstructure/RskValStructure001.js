@@ -85,6 +85,25 @@ $(function () {
             });
         });
     })
+　　　//绑定映射生成按钮事件
+    $("body").on('click', ".node_copy", null, function (e) {
+        var thisNodeId = $(this).attr('nodeid');
+        Joyin.ajaxJson(basePath + 'invest/risk/penetrationmanagement/rskvalstructure/RskValStructure001/check',
+        {
+            pageModel: PAGE_MODEL_NEW,
+            id: thisNodeId
+        }, function (result) {
+            Joyin.dialog(JoyinUtil.getLabel("RskValStructure005"),
+            basePath + "invest/risk/penetrationmanagement/rskvalstructure/RskValStructure005/init",
+                 "50%", "50%", {
+                     pageModel: PAGE_MODEL_NEW,
+                     id: thisNodeId
+                 },
+                 function () {
+                     table.reload();
+                 });
+        });
+    })
     /**
      * 定义数据表格
      */

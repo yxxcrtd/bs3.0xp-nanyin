@@ -156,4 +156,20 @@
         where ID = #{id,jdbcType=VARCHAR}
           and SRC_CODE = #{srcCode,jdbcType=VARCHAR}
     </update>
+    <insert id="insertList" parameterType="com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl" >
+        insert into RSK_VALTBL_ASSET_SUB_MAP_DTL (ID, SRC_CODE, TGT_CODE,
+        ALLOW_SUM, MEMO, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        <foreach collection="list" item="dto" index="index"
+                 separator="union all" open="(" close=")">
+            select
+            #{dto.id,jdbcType=VARCHAR}, #{dto.srcCode,jdbcType=VARCHAR}, #{dto.tgtCode,jdbcType=VARCHAR},
+            #{dto.allowSum,jdbcType=VARCHAR}, #{dto.memo,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR}, #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR},
+            #{dto.updateTime,jdbcType=TIMESTAMP}
+            from dual
+        </foreach>
+    </insert>
+
 </mapper>

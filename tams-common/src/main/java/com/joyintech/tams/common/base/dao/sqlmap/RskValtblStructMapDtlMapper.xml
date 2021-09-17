@@ -157,4 +157,23 @@
         where ID = #{id,jdbcType=VARCHAR}
           and SRC_COL_INDEX = #{srcColIndex,jdbcType=VARCHAR}
     </update>
+    <insert id="insertList" parameterType="com.joyintech.tams.common.base.entity.RskValtblStructMapDtl" >
+        insert into RSK_VALTBL_STRUCT_MAP_DTL(ID, SRC_COL_INDEX, SRC_COL_DATA_TYPE, TGT_INDEX,
+        MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        <foreach collection="list" item="dto" index="index"
+                 separator="union all" open="(" close=")">
+            select
+            #{dto.id,jdbcType=VARCHAR},
+            #{dto.srcColIndex,jdbcType=VARCHAR},
+            #{dto.srcColDataType,jdbcType=VARCHAR},
+            #{dto.tgtIndex,jdbcType=VARCHAR},
+            #{dto.memo,jdbcType=VARCHAR},
+            #{dto.createUser,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR},
+            #{dto.createTime,jdbcType=TIMESTAMP},
+            #{dto.updateUser,jdbcType=VARCHAR},
+            #{dto.updateTime,jdbcType=TIMESTAMP}
+            from dual
+        </foreach>
+    </insert>
 </mapper>

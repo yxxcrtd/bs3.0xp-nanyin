@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
+import com.joyintech.tams.common.base.entity.RskValtblSumsubMapDtl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,6 +124,18 @@ public class RskValSumname003Service extends CommonExportService<RskValSumnameDt
         pageParam.put("subType","02");
         return rskValAssetCode003Service.selecctRskValtblSubjectSumCodeList(pageParam);
 
+    }
+    /**
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    public void insertList(List<RskValtblSumsubMapDtl> list) {
+        restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValSumname003/insertList",
+                list,Integer.class);
     }
 
 }

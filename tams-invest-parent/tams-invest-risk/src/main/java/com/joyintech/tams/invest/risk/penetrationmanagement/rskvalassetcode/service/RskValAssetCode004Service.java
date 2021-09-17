@@ -10,12 +10,16 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.service;
 
+import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDtlDto;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -33,5 +37,17 @@ public class RskValAssetCode004Service extends CommonExportService<RskValtblAsse
          restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/saveAssetCodeDtl",
             dto,Integer.class);
+    }
+    /**
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    public void insertList(List<RskValtblAssetSubMapDtl> list) {
+         restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValAssetCode/insertList",
+                list,Integer.class);
     }
 }

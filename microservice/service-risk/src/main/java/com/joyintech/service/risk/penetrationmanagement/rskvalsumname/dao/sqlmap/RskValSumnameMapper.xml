@@ -41,6 +41,7 @@
 		 ID id,
 	 	SUM_CODE sumCode,
 	 	SUM_NAME sumName,
+		has_next_index hasNextIndex,
 	 	NEXT_INDEX_TYPE nextIndexType
 	  FROM RSK_VALTBL_SUMSUB_MAP_DTL
 	  WHERE

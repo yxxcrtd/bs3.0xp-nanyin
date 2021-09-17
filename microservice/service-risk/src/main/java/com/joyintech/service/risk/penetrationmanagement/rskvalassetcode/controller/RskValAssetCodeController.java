@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -229,5 +230,17 @@ public class RskValAssetCodeController {
     public int getAssetSubInfoIsDefault(String assetSubMapId){
         return rskValAssetCodeService.getAssetSubInfoIsDefault(assetSubMapId);
     }
-
+    /**
+     * 资产科目映射明细保存
+     * <功能详细描述>
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("insertList")
+    public void insertList(@RequestBody List<RskValtblAssetSubMapDtl> list){
+        rskValAssetCodeService.insertList(list);
+    }
 }

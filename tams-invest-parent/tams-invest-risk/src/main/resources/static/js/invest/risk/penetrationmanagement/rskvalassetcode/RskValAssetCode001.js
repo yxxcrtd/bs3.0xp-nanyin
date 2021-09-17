@@ -89,7 +89,19 @@ $(function () {
             });
         })
     })
-    
+　　　//绑定映射生成按钮事件
+    $("body").on('click', ".node_copy", null, function (e) {
+        var thisNodeId = $(this).attr('nodeid');
+        Joyin.dialog(JoyinUtil.getLabel("RskValAssetCode006"),
+            basePath + "invest/risk/penetrationmanagement/rskvalassetcode/RskValAssetCode006/init",
+                 "50%", "50%", {
+                     pageModel: PAGE_MODEL_NEW,
+                     id: thisNodeId
+                 },
+                 function () {
+                    loadTree;
+                 });
+    })
     /**
      * 定义数据表格
      */

@@ -157,4 +157,20 @@
         where ID = #{id,jdbcType=VARCHAR}
           and SUM_CODE = #{sumCode,jdbcType=VARCHAR}
     </update>
+    <insert id="insertList" parameterType="com.joyintech.tams.common.base.entity.RskValtblSumsubMapDtl" >
+        insert into RSK_VALTBL_SUMSUB_MAP_DTL (ID, SUM_CODE, SUM_NAME,
+        HAS_NEXT_INDEX, NEXT_INDEX_TYPE, CREATE_USER,
+        CREATE_DEPT, CREATE_TIME, UPDATE_USER,
+        UPDATE_TIME)
+        <foreach collection="list" item="dto" index="index"
+                 separator="union all" open="(" close=")">
+            select
+            #{dto.id,jdbcType=VARCHAR}, #{dto.sumCode,jdbcType=VARCHAR}, #{dto.sumName,jdbcType=VARCHAR},
+            #{dto.hasNextIndex,jdbcType=VARCHAR}, #{dto.nextIndexType,jdbcType=VARCHAR}, #{dto.createUser,jdbcType=VARCHAR},
+            #{dto.createDept,jdbcType=VARCHAR}, #{dto.createTime,jdbcType=TIMESTAMP}, #{dto.updateUser,jdbcType=VARCHAR},
+            #{dto.updateTime,jdbcType=TIMESTAMP}
+            from dual
+        </foreach>
+    </insert>
+
 </mapper>
