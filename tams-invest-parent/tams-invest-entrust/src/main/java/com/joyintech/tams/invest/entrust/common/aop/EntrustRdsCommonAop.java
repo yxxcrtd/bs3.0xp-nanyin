@@ -348,7 +348,11 @@ public class EntrustRdsCommonAop {
             }
             String infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
             if (listInfPs.contains(
-                CommonUtil.findValue(mapTrd, PageFieldToInterfFactory.INF_PS))) {
+                CommonUtil.findValue(mapTrd, PageFieldToInterfFactory.INF_PS))
+            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917
+            || mapTrd.containsKey("etrInvestRepoInfoDtos")
+            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917
+            ) {
                 logger.info(BATCH_INFO_LOG, infCode);
                 infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();
             }
@@ -579,9 +583,11 @@ public class EntrustRdsCommonAop {
 
         // add by etliu 20210902 start
         // 债券多组合指令，走预占释放批量接口
-        if (mapTrd.containsKey("etrInvestBondInfoDtos")) {
+        // ZGZGST-2517:质押式回购多组合走预占释放批量接口 fuyongsheng 20210917 edit start
+        if (mapTrd.containsKey("etrInvestBondInfoDtos") || mapTrd.containsKey("etrInvestRepoInfoDtos")) {
             infCode = BussinessDictCodeListRds.接口系统ID_预占释放批量接口.getValue();
         }
+        // ZGZGST-2517:质押式回购多组合走预占释放批量接口 fuyongsheng 20210917 edit end
         // add by etliu 20210902 end
 
         revokeBackRiskCommon(mapTrd, infCode, joinPoint);
