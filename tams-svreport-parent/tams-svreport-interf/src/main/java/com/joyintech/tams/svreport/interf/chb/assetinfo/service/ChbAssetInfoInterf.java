@@ -747,9 +747,10 @@ public class ChbAssetInfoInterf  extends BaseService{
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
                     blnarea = null;
                 }
+                //TISHKBS-2835  监管报送-人行资管产品月度统计报告  添加对手方类型映射规则
                 mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_PBCASSETTYPE, 
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3(),industry,repprofittype
-                        ,isCentralCounter,counterType2,blnarea); 
+                        ,isCentralCounter,counterType2,blnarea,chbAssetInfo.getRivalPartyType());
             }
             if(mappingEx!=null){
                 chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());
