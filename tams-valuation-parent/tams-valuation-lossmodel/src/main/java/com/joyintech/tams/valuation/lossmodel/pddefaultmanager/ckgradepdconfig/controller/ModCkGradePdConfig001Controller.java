@@ -106,7 +106,7 @@ public class ModCkGradePdConfig001Controller extends BaseController {
         AjaxResult ajaxResult = new AjaxResult();
         Map<String, Object> map = RequestUtil.getPageParam();
         map.put("seqNo",dto.getSeqNo());
-        map.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());//03为评级PD维护配置类型
+        map.put("configType", ModelDictCodeList.模型_减值配置类型_存款评级PD配置.getValue());//03为评级PD维护配置类型
         int exists = modCkGradePdConfigService.checkBySeqNoAndType(map);
         //评级PD维护是否被PD生成批处理调用过
         if(exists>0) {
