@@ -1645,6 +1645,10 @@
             }
             // 设置添加质押券共通参数
             setBussRepoSecInput();
+            debugger;
+            if(distributionInit != null && distributionInit != ''){
+                $('#distribution').attr('disabled', true).textSelect('setValue', distributionInit);
+            }
         }
     }
 }());
