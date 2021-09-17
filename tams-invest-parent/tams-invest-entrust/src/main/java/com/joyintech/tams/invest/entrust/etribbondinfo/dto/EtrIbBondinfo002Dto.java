@@ -914,7 +914,11 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal entrustIntegrateNum;
-    
+
+    /**
+     * 证券账户名称
+     */
+    private String secManageAcctIdName;
 
 	public List<EtrIbBondinfo002Dto> getSelectedItem() {
 		return selectedItem;
@@ -1069,4 +1073,11 @@ public class EtrIbBondinfo002Dto extends EtrEntrust implements ProcessEntity {
         return SysDataUtil.getNameFromDataDict(DictCode.投资目的, super.getInvAim());
     }
 
+    public String getSecManageAcctIdName() {
+        return secManageAcctIdName;
+    }
+
+    public void setSecManageAcctIdName(String secManageAcctIdName) {
+        this.secManageAcctIdName = secManageAcctIdName;
+    }
 }

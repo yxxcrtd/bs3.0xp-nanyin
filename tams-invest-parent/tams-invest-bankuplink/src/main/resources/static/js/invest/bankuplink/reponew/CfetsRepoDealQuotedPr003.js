@@ -628,6 +628,16 @@
                 }
                 $("#CfetsRepoDealQuotedPrice002_dealAmt").val(dealAmt).trigger("change");
             }
+            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 start
+            if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.reload({data: []});
+            }
+            if($("#CfetsRepoDealQuotedPrice002_ps").val() == '03'){
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: true}, {field:'portfolioName',visible: true}]);
+            }else if($("#CfetsRepoDealQuotedPrice002_ps").val() == '04'){
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: false}, {field:'portfolioName',visible: false}]);
+            }
+            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 end
             //回购利率
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
@@ -741,11 +751,6 @@
             /*接收001页面的传值*/
             duihuaFlag = true;
             qingqiuFlag = false;
-            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 start
-            if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
-                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.reload({data: []});
-            }
-            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 end
             /**
              * 对外公开的接口
              */
@@ -1036,7 +1041,7 @@
      * 成交发送
      */
     var sendDeal = function (object) {
-        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice003_btn_done", null, function (result) {
+        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_done", null, function (result) {
             var index = window.parent.layer.getFrameIndex(window.name);
             window.parent.layer.close(index);
         })

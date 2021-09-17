@@ -311,6 +311,7 @@
 			$("#invManagerId").empty();
 			$("#entrustId").empty();
 			$("#entrustDate").val("");
+            $("#termType").val('').trigger("change");
         });
 
     	/**
