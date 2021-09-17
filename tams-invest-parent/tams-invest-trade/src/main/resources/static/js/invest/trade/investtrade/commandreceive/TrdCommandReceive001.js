@@ -557,6 +557,11 @@ var TrdCommandReceive001 = function () {
                     }, {
                         field: 'entrustId',
                         visible: false
+                    // add by zhangrui1 增加交易对手字段 start
+                    }, {
+                        field: 'counterId',
+                        visible: false
+                    // add by zhangrui1 增加交易对手字段 end
                     }, {
                         field: 'finprodId',
                         visible: false
@@ -1429,12 +1434,30 @@ var TrdCommandReceive001 = function () {
                                     .substring(0, entrustStatus.length - 1)
                                 : entrustStatus;
 
+                             // add by zhangrui1 增加交易对手字段 start
+                             var counterIds = "";
+                             var psList = "";
+                             for (var i = 0; i < tableData.length; i++) {
+                                 counterIds += tableData[i].entrustId + ":" + tableData[i].counterId + ",";
+                                 psList += tableData[i].entrustId + ":" + tableData[i].ps + ",";
+                             }
+                             counterIds = (counterIds
+                                     .substring(counterIds.length - 1) == ',') ? counterIds
+                                         .substring(0, counterIds.length - 1)
+                                     : counterIds;
+                             psList = (psList.substring(psList.length - 1) == ',') ? psList.substring(0, psList.length - 1)
+                                      : psList;
+                             // add by zhangrui1 增加交易对手字段 end
                             //调用退回委托业务组件
                             Joyin.ajax(JoyinUtil.getRealPath('invest/trade/investtrade/commandreceive/TrdCommandReceive001/refuseEntrust'),
                                 {
                                     entrustIds: entrustIds,
                                     entrustStatus: entrustStatus,
                                     entrustBackReason:result
+                                    // add by zhangrui1 增加交易对手字段 start
+                                    ,counterIds: counterIds
+                                    ,psList: psList
+                                    // add by zhangrui1 增加交易对手字段 end
                                 }, function (result) {
                                     //成功后刷新table
                                     otherTable.table ? otherTable.reload() : otherTable.load();
