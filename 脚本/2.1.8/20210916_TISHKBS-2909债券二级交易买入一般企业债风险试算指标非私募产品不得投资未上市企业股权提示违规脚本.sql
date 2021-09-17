@@ -1,0 +1,1 @@
+delete from RSK_EVENT_ITEM_RULE t where t.event_code = 'EVENT_ID_FSMCPBDTZWSSQYGQ_07'and group_id = '6c22c97954f249d0a7d485749d74c0a0' and ITEM_CODE ='assetType';

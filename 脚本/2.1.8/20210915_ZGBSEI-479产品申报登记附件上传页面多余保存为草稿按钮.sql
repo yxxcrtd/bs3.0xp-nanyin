@@ -1,0 +1,3 @@
+delete from SYS_TRASH_NOT_TARGET_PAGE a where a.PAGE_ID='SvrPerProDeclareReg002';
+
+insert into SYS_TRASH_NOT_TARGET_PAGE (SEQ_NO, PAGE_ID) values ('A96EA0A2367F043FE0539C5AA8C0280A', 'SvrPerProDeclareReg002');

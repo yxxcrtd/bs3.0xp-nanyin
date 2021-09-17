@@ -117,7 +117,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "EquityInfoRegistDel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag) && CollectionUtils.isNotEmpty(list)) {
                 List<String> updateKeys = list.stream().map(
                         item -> item.getBankCode()+"|"+item.getIndentifyMark()+"|"+item.getSubmitStatus()+"|"+item.getSumitSeq()).collect(Collectors.toList());
                 Map<String,Object> map = new HashMap<>();
@@ -177,7 +177,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "EquityBusiInfoRegistDel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)  && CollectionUtils.isNotEmpty(list)) {
                 Map<String,Object> map = new HashMap<>();
                 map.put("keyList",JSON.toJSONString(list));
                 dealDeleteEquityBusiInfoRegistDataSendStatus(map);
@@ -195,8 +195,10 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
                 }
             } else {
                 // 无勾选数据，根据条件查询
-                dealInvestorsHoldInfoRegistSearchParam(param);
-                list = investorsHoldInfoRegist001Mapper.selectAllData(param);
+                String paramKeys = (String)param.get("paramKeys") ;
+                Map<String,Object> searchParamMap = JsonUtils.stringToMap(paramKeys);
+                dealEquityBusiInfoRegistSearchParam(searchParamMap);
+                list = investorsHoldInfoRegist001Mapper.selectAllData(searchParamMap);
             }
             list.stream().forEach(item -> {
                 item.setDeleteReason(deleteReason);
@@ -216,7 +218,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "InvestorsHoldInfoRegistdel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag) && CollectionUtils.isNotEmpty(list)) {
                 Map<String,Object> map = new HashMap<>();
                 map.put("keyList",JSON.toJSONString(list));
                 dealDeleteInvestorsHoldInfoRegistDataSendStatus(map);

@@ -326,7 +326,7 @@ public class TrdRepoTrade002Controller extends BaseController {
         // 交易手续费
         model.addAttribute("FEE_TYPE_06", BussinessDictCodeList.费用类型_交易手续费.getValue());
         // 结算手续费
-        model.addAttribute("FEE_TYPE_088", BussinessDictCodeList.费用类型_结算手续费.getValue());
+        model.addAttribute("FEE_TYPE_08", BussinessDictCodeList.费用类型_结算手续费.getValue());
         //--------add by 王国显 费用设置 2019/07/19------end--------
 
     }
