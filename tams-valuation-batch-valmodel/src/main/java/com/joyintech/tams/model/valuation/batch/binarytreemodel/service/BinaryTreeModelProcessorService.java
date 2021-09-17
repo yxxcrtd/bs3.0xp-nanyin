@@ -86,8 +86,8 @@ public class BinaryTreeModelProcessorService {
 
         //4.计算波动率
         //变量.股票收盘价序列列表 = 资产信息.股票行情
-        BigDecimal stockVolatility = calaStockVolatility(binaryTreeModelReaderEntity.getModStockMarketInfoList());
-        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-波动率计算结果: "+stockVolatility);
+        BigDecimal stockVolatility = calaStockVolatility(modAssetInfoDto,binaryTreeModelReaderEntity.getModStockMarketInfoList());
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-年化后波动率: "+stockVolatility);
 
         //5.计算二叉树步长
         // 计算剩余期限
@@ -472,6 +472,7 @@ public class BinaryTreeModelProcessorService {
         BigDecimal upProbability = ArithmeticUtil.multiply(ArithmeticUtil.subtract(cdateYield, entity.getModBintreeConfig().getSmoothsection()), binaryTreeLength);
         upProbability = ArithmeticUtil.subtract(BigDecimal.valueOf(Math.pow(Math.E, upProbability.doubleValue())), downNum);
         upProbability = ArithmeticUtil.divide(upProbability, ArithmeticUtil.subtract(upNum, downNum), 12, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-估值日无风险收益率: "+cdateYield);
 
         //变量.估价下降概率 = 1- 变量.估计上升概率
         BigDecimal downProbability = ArithmeticUtil.subtract(BigDecimal.ONE, upProbability);
@@ -512,6 +513,8 @@ public class BinaryTreeModelProcessorService {
                 baseDate = entity.getModAssetInfoDto().getLastTradeInDate();
             }
         }
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-买入日: "+DateUtil.format(baseDate,"yyyy-MM-dd")+"买入日全价均价："+buyAllPrice);
+
         //【算法包到期收益率计算】
         //变量.到期收益率折现前 = 返回.到期收益率
         BigDecimal yieldByPriceBefore = calaYieldByPriceCalculator(entity, buyAllPrice, baseDate).getMatYield();
@@ -922,10 +925,12 @@ public class BinaryTreeModelProcessorService {
 
     /**
      * 计算标的股票波动率
+     *
+     * @param modAssetInfoDto
      * @param listStock
      * @return
      */
-    private BigDecimal calaStockVolatility(List<MstSharePrice> listStock) {
+    private BigDecimal calaStockVolatility(ModAssetInfoDto modAssetInfoDto, List<MstSharePrice> listStock) {
         //变量.股票收盘价序列列表 = 资产信息.股票行情
         if (listStock == null || listStock.size() == 0) {
             return null;
@@ -943,11 +948,11 @@ public class BinaryTreeModelProcessorService {
         }
 
         //调用【波动率计算方法】
-        BigDecimal stockVolatility = calaVolatility(stockYieldsList);
+        BigDecimal stockVolatility = calaVolatility(modAssetInfoDto,stockYieldsList);
         return stockVolatility;
     }
 
-    private BigDecimal calaVolatility(List<StockYieldsDto> stockYieldsList) {
+    private BigDecimal calaVolatility(ModAssetInfoDto modAssetInfoDto, List<StockYieldsDto> stockYieldsList) {
         //变量.日收益率均值 = 0
         BigDecimal yieldsMeanValue = BigDecimal.ZERO;
         //变量.波动率 = 0
@@ -968,6 +973,7 @@ public class BinaryTreeModelProcessorService {
             volatility = BigDecimal.ZERO;
         }
         volatility = BigDecimal.valueOf(Math.sqrt(volatility.doubleValue())).setScale(12, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-年化前波动率: "+volatility);
 
         //调用方法 年化标准差
         BigDecimal annualizedVolatility = calaAnnualizedStandardDeviation(volatility, new BigDecimal(252));
