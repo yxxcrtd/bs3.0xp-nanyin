@@ -227,6 +227,8 @@ insert into SYS_MENU values ('VALUATION_001_010_006','VAL','','VALUATION_001_010
 insert into SYS_MENU values ('VALUATION_001_010_007','VAL','','VALUATION_001_010','TrdAssetLossBalance001','10','1','资产减值余额查询','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_010_008','VAL','','VALUATION_001_010','AssetImpairmentManagement001','11','1','交易减值结果管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
 insert into SYS_MENU values ('VALUATION_001_010_009','VAL','','VALUATION_001_010','AssetImpairmentKpmgManagement001','12','1','资产减值结果管理','system','',to_date('2018/2/1', 'yyyy/mm/dd'), 'system',to_date('2018/2/1', 'yyyy/mm/dd'));
+--增加一个平台日调整功能，待与晓勇确认是否要增加 -金茂东
+insert into sys_menu (MENU_ID, SYSTEM_CODE, ICON, PARENT_MENU_ID, PAGE_ID, ORDER_NO, IS_SPREAD, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)values ('SYSTEM_001_003_006', 'SYS', null, 'SYSTEM_001_003', 'SysDate001', 7, '2', '平台日调整', 'system', null, sysdate, 'system',sysdate);
 
 --刷新PAGE表的MENU_ID
 update sys_page page set menu_id = (select menu_id from sys_menu where page_id = page.page_id);

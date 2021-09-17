@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.basicdata.asset.plan.plancur.dto.FinPlanAssetCDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.plancur.service.FinPlanAssetCService;
 import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
@@ -58,11 +59,45 @@ public class FinPlanAssetCValidator implements BeanValidator {
         if (WorkFlowUtil.isNotFromToDoList()) {
             if (StringUtil.equals(dto.getOperateType(), "delete")) {
                 for(FinPlanAssetCDto e:dto.getSelectedItem()) {
-                    if (commonBusinessService.isTransInAsset(e.getFinprodId())>0){
+                    /*if (commonBusinessService.isTransInAsset(e.getFinprodId())>0){
                         errorList.add(new ValidMessage(getMessage("BUSS_COM_E_0043")));
                     }
                     if(finPlanAssetCService.getBasicInfoByFinprodId(e.getFinprodId()) == null){
                         errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
+                    }*/
+                    if(commonBusinessService.isTransInAsset(e.getFinprodId()) != 0 && !StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), e.getDataSource())){
+                        if(StringUtil.equals(DictCodeList.是否_是.getValue(), e.getBatchDelFlag())) {
+                            errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_005", e.getFinprodId())));
+                            //break;
+                        }
+                        else {
+                            errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_006")));
+                            //break;
+                        }
+                        continue;
+                    }else{
+                        if(commonBusinessService.isTransInAsset(e.getFinprodId()) != 0){
+                            if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
+                                errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_002", e.getFinprodId())));
+                                //break;
+                            }
+                            else {
+                                errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_003")));
+                                //break;
+                            }
+                            continue;
+                        }
+                        if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), e.getDataSource())) {
+                            if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
+                                errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_001", e.getFinprodId())));
+                                //break;
+                            }
+                            else {
+                                errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_004")));
+                                //break;
+                            }
+                            continue;
+                        }
                     }
                 }
             }

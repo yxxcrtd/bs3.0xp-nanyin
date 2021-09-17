@@ -82,19 +82,23 @@
 				object.closePrice = result;
 			}, false);
 		}*/
-        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-        	Joyin.ajaxJson(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/checkAuthorization', object, function(result2) {
-	            Joyin.ajaxJson(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/check', object,function (result) {
-	                Joyin.confirm(result.data, function () {
-	                    if (operateType === 'save') {
-	                        WorkFlow.doSaveList(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/save', object, "EtrNewStock002_btn_save");
-	                    } else {
-	                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/save', object, "EtrNewStock002_btn_submit");
-	                    }
-	                });
-	            });
-        	});
-        });
+        if (operateType === 'save') {
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/save', object, "EtrNewStock002_btn_save");
+        } else {
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function (result1) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/checkAuthorization', object, function (result2) {
+                    Joyin.ajaxJson(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/check', object, function (result) {
+                        Joyin.confirm(result.data, function () {
+                            // if (operateType === 'save') {
+                            //     WorkFlow.doSaveList(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/save', object, "EtrNewStock002_btn_save");
+                            // } else {
+                                WorkFlow.doSubmitList(basePath + 'invest/entrust/etrnewstock/EtrNewStock002/save', object, "EtrNewStock002_btn_submit");
+                            // }
+                        });
+                    });
+                });
+            });
+        }
     }
 
     function  computedAmount(){

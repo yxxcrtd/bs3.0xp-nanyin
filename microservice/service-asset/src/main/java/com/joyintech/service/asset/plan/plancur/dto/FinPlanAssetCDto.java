@@ -244,6 +244,13 @@ public class FinPlanAssetCDto extends FinProduct {
      * 批复流水号
      */
     private String pflsh;
+
+
+    /**
+     * 数据来源
+     */
+    private String dataSource;
+
     /**
      * 已占用额度，初始值为0
      */
@@ -918,5 +925,13 @@ public class FinPlanAssetCDto extends FinProduct {
 
     public void setFundMangerName(String fundMangerName) {
         this.fundMangerName = fundMangerName;
+    }
+
+    public String getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
     }
 }

@@ -1,18 +1,18 @@
---²Ëµ¥±í
+--èœå•è¡¨
 delete from SYS_MENU where MENU_ID = 'RISK_MANAGEMENT_001_005_009';
 Insert into SYS_MENU (MENU_ID,SYSTEM_CODE,ICON,PARENT_MENU_ID,PAGE_ID,ORDER_NO,IS_SPREAD,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('RISK_MANAGEMENT_001_005_009','MST',null,'RISK_MANAGEMENT_001_005','RskValBotDetailReport001',9,'02','´©Í¸ºóµ×²ãÃ÷Ï¸±í','system',null,sysdate,'system',sysdate);
---»­Ãæ±í	
+values ('RISK_MANAGEMENT_001_005_009','MST',null,'RISK_MANAGEMENT_001_005','RskValBotDetailReport001',9,'02','ç©¿é€åŽåº•å±‚æ˜Žç»†è¡¨','system',null,sysdate,'system',sysdate);
+--ç”»é¢è¡¨	
 delete from SYS_PAGE where PAGE_ID in ('RskValBotDetailReport001');
 Insert into SYS_PAGE (PAGE_ID,SYSTEM_CODE,PAGE_URL,PAGE_FILE,MENU_ID,HEIGHT,WIDTH,IS_HP_SELECT,IS_NEED_WORKFLOW,REMARK,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-values ('RskValBotDetailReport001','MST','/invest/risk/rskbotdetailreport/RskValBotDetailReport001','invest/risk/rskbotdetailreport/RskValBotDetailReport001','RISK_MANAGEMENT_001_005_009',null,null,'02','02','´©Í¸ºóµ×²ãÃ÷Ï¸±í','system',null,sysdate,'system',sysdate);
+values ('RskValBotDetailReport001','MST','/invest/risk/rskbotdetailreport/RskValBotDetailReport001','invest/risk/rskbotdetailreport/RskValBotDetailReport001','RISK_MANAGEMENT_001_005_009',null,null,'02','02','ç©¿é€åŽåº•å±‚æ˜Žç»†è¡¨','system',null,sysdate,'system',sysdate);
 
---CHB_BOT_AST_POSÐÂÔöINT_AMT×Ö¶Î
+--CHB_BOT_AST_POSæ–°å¢žINT_AMTå­—æ®µ
 ALTER TABLE CHB_BOT_AST_POS DROP COLUMN INT_AMT;
 ALTER TABLE CHB_BOT_AST_POS ADD INT_AMT NUMBER(30,2);
-COMMENT ON COLUMN CHB_BOT_AST_POS.INT_AMT IS 'ÀûÏ¢' ;
+COMMENT ON COLUMN CHB_BOT_AST_POS.INT_AMT IS 'åˆ©æ¯' ;
 
---ÐÂ½¨±íCHB_SEC_REPAY_INFO
+--æ–°å»ºè¡¨CHB_SEC_REPAY_INFO
 DROP TABLE CHB_SEC_REPAY_INFO;
 CREATE TABLE
     CHB_SEC_REPAY_INFO
@@ -29,30 +29,30 @@ CREATE TABLE
     );
     COMMENT ON TABLE CHB_SEC_REPAY_INFO
 IS
-    'Õ®È¯»¹±¾ÐÅÏ¢a';
+    'å€ºåˆ¸è¿˜æœ¬ä¿¡æ¯a';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.SEC_ID
 IS
-     'Õ®È¯´úÂë';
+     'å€ºåˆ¸ä»£ç ';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.SEC_NM
 IS
-     'Õ®È¯Ãû³Æ';
+     'å€ºåˆ¸åç§°';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.REPAY_DT
 IS
-     '»¹±¾ÈÕÆÚ';
+     'è¿˜æœ¬æ—¥æœŸ';
  COMMENT ON COLUMN CHB_SEC_REPAY_INFO.REPAY_RATE
 IS
-     '»¹±¾±ÈÀý';
+     'è¿˜æœ¬æ¯”ä¾‹';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.REPAY_NET
 IS
-     '»¹±¾ºóÃæÖµ';
+     'è¿˜æœ¬åŽé¢å€¼';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.TRADE_MARKET
 IS
-     'ÉÏÊÐµØµã ÉÏ½»Ëù£ºSH,Éî½»Ëù:SZ,ÒøÐÐ¼ä£ºIB';
+     'ä¸Šå¸‚åœ°ç‚¹ ä¸Šäº¤æ‰€ï¼šSH,æ·±äº¤æ‰€:SZ,é“¶è¡Œé—´ï¼šIB';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.REPAY_CYCLE_DAY
 IS
-     '»¹±¾ÖÜÆÚ¼ÆÏ¢½ØÖ¹ÈÕ';
+     'è¿˜æœ¬å‘¨æœŸè®¡æ¯æˆªæ­¢æ—¥';
 COMMENT ON COLUMN CHB_SEC_REPAY_INFO.REPAY_MODE
 IS
-     '»¹±¾·½Ê½ °´ÃæÖµ£º1,°´ÊýÁ¿£º2';
+     'è¿˜æœ¬æ–¹å¼ æŒ‰é¢å€¼ï¼š1,æŒ‰æ•°é‡ï¼š2';
 
     

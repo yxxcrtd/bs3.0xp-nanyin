@@ -65,10 +65,15 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        // 画面参数设置
-//    	super.setSelectOptionToModel(model, DictCode.资产类型);
         super.setSelectOptionToModel(model, DictCode.证券品种);
         model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), "fileCommonDto"));
+        ModLgdConfigDto entity = new  ModLgdConfigDto();
+        //初始化值数据
+        entity.setAssetType(DictCodeListExt1.证券品种_债券.getValue());
+        model.addAttribute("entity",entity);
+        // 减值方案系统参数lossType 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        model.addAttribute("lossType",lossType);
         return super.init(model);
     }
     @ResponseBody

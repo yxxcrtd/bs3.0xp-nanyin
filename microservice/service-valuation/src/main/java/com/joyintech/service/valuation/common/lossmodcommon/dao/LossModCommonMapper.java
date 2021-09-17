@@ -33,5 +33,12 @@ public interface LossModCommonMapper {
      */
     List<SelectOptionDto> getModAssetInfoOptionBMW(Map<String, Object> params);
 
+    /**
+     * 减值模型产品信息下拉框
+     * @param params
+     * @return
+     */
+    List<SelectOptionDto> getModProInfoPage(Map<String, Object> params);
+
 
 }

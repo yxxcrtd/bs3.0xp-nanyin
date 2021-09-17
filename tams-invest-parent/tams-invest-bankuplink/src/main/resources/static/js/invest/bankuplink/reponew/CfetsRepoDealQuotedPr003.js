@@ -628,6 +628,16 @@
                 }
                 $("#CfetsRepoDealQuotedPrice002_dealAmt").val(dealAmt).trigger("change");
             }
+            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 start
+            if (window && window.BussRepoSec && window.BussRepoSec["bussRepoSec"]) {
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.reload({data: []});
+            }
+            if($("#CfetsRepoDealQuotedPrice002_ps").val() == '03'){
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: true}, {field:'portfolioName',visible: true}]);
+            }else if($("#CfetsRepoDealQuotedPrice002_ps").val() == '04'){
+                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: false}, {field:'portfolioName',visible: false}]);
+            }
+            //add by chenjiaxing ZGZGST-2851银行间交易下单管理-CFETS质押式回购报价画面，组合系列交易下单tab质押券信息区域的初期化显示不对 end
             //回购利率
             if (param[0].price) {
                 $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
@@ -727,13 +737,11 @@
                 $("#distribution").attr('disabled',true);
                 $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
                 //质押券页面展示组合代码，组合名称
-                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: true}, {field:'portfolioName',visible: true}],true);
             }else if(ps == '04'){
                 $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_dzh_add_btn').addClass('layui-btn-disabled');
                 $('#CfetsRepoDealQuotedPrice003_btn_cal').removeClass('layui-btn-disabled');
                 $("#distribution").attr('disabled',false);
-                window.BussRepoSec["bussRepoSec"].pledgeBondTotalTbl.showColumns([{field:'portfolioId', visible: false}, {field:'portfolioName',visible: false}],true);
             }
         });
         /**
@@ -1632,7 +1640,9 @@
             }
             $('#CfetsRepoDealQuotedPrice002_term').trigger('change');
             //多组合回购利率 重刷
-            refreshPrice();
+            if(pageModel != PAGE_MODEL_NEW){
+                refreshPrice();
+            }
             // 设置添加质押券共通参数
             setBussRepoSecInput();
         }

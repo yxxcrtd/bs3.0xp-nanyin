@@ -39,7 +39,8 @@
         deal.SETTLE_DATE AS SETTLE_DATE,
         deal.TRADE_DATE AS TRADE_DATE,
         deal.MDATE AS PLAN_END_DATE,
-        deal.IS_CLEAN AS IS_CLEAN
+        deal.IS_CLEAN AS IS_CLEAN,
+        ACC.INV_AIM AS invAim
         FROM FIN_PRODUCT fin
         INNER JOIN FIN_PRODUCT_TYPE typ
         ON fin.FINPROD_ID = typ.FINPROD_ID
@@ -67,6 +68,7 @@
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND deal.IS_CANCEL = 'N'
         AND deal.TRADE_STATUS = '01'
         AND typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13})
@@ -281,6 +283,7 @@
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.DSC_COST_AMT != 0
         AND VAL.CDATE = #{searchDate} -1
         AND VAL.INV_AIM IN ('AC','FVOCI','999999')
@@ -363,6 +366,7 @@
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.Portfolio_Id IS NULL
         AND DEAL.PS IN ('T01','T35')
         AND ACC.INV_AIM != 'FVTPL'

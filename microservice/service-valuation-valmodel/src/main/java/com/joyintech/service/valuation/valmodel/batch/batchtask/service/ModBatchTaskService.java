@@ -92,17 +92,17 @@ public class ModBatchTaskService extends BaseService {
         params.put("length", length);
 
         Page<SelectOptionDto> assetInfoPages = new Page<>();
-        String isImpairment = (String)params.get("isImpairment");
-        String lossType =(String)params.get("lossType");
-        if (isImpairment != null && "true".equals(isImpairment)) {
-              if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
-                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossKpmgAssetInfo(params));
-              }else{
-                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossPwcAssetInfo(params));
-              }
-        } else {
+//        String isImpairment = (String)params.get("isImpairment");
+//        String lossType =(String)params.get("lossType");
+//        if (isImpairment != null && "true".equals(isImpairment)) {
+//              if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+//                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossKpmgAssetInfo(params));
+//              }else{
+//                  assetInfoPages = super.queryForPage(page, length, () -> modBatchTaskMapper.getLossPwcAssetInfo(params));
+//              }
+//        } else {
               assetInfoPages=super.queryForPage(page, length, () -> modBatchTaskMapper.getValAssetInfo(params));
-        }
+//        }
         return assetInfoPages;
     }
 
@@ -119,10 +119,15 @@ public class ModBatchTaskService extends BaseService {
 
     public List<BatchAssetInfoDto> getAllAssetInfo() {
         //TODO
-        Map<String, Object> requestMaps = new HashMap<>();
-        List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-                        + "/interf/ModelCallOnInvest/getAllAssetInfo"
-                , requestMaps, BatchAssetInfoDto.class);
+//        Map<String, Object> requestMaps = new HashMap<>();
+//        List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
+//                        + "/interf/ModelCallOnInvest/getAllAssetInfo"
+//                , requestMaps, BatchAssetInfoDto.class);
+        /**
+         * 不带参数查所有模型法要跑的资产
+         */
+        List<BatchAssetInfoDto> assetInfos= modBatchTaskMapper.getAllAssetInfo(null);
+
         return assetInfos;
     }
 

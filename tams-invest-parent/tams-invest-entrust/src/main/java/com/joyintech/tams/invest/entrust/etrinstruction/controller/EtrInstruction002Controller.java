@@ -114,7 +114,7 @@ public class EtrInstruction002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrInstructionDto dto, BindingResult br) throws WorkFlowException {
+    public AjaxResult save(@RequestBody EtrInstructionDto dto, BindingResult br) throws WorkFlowException {//暂存去除校验
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

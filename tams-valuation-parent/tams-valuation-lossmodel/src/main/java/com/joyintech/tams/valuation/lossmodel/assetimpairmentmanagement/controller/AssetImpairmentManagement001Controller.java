@@ -231,10 +231,11 @@ public class AssetImpairmentManagement001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getProdIdByLossResult")
-    public List<SelectOptionDto> getProdIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
-        Map<String, Object> param = RequestUtil.getPageParam();
+    public Page<SelectOptionDto> getProdIdByLossResult(@RequestParam Map<String, Object> params) throws Exception {
         return assetImpairmentManagement001Service.getProdIdByLossResult(params);
     }
+
+
 
     /**
      * @Description:有效业务编号查询-减值结果管理

@@ -11,6 +11,7 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -373,8 +374,18 @@ public class EadCalCulationBatchProcessorService {
                 }
                 // 获取买入全价
                 BigDecimal fullPrice = yieldPriceOutParameter.getFullPrice();
+                BigDecimal EAD = BigDecimal.ZERO;
                 //4.4 计算每笔交易对应EAD
-                itemIn.setEad(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), fullPrice), unPrincipleAndInterest.get(itemIn.getTradeId())));
+                if(DictCodeListExt1.证券品种_债券.getValue().equals(readerDto.getModelAssetType())){
+                    // EAD = 移动平均后份额 * 全价 + 应收未收本息和
+                    EAD = ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), fullPrice), unPrincipleAndInterest.get(itemIn.getTradeId()));
+                }
+                else{
+                    // EAD = 全价/发行规模 * 移动平均后份额 + 应收未收本息和
+                    EAD = ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), ArithmeticUtil.divide(fullPrice, itemIn.getIssueAmt())), unPrincipleAndInterest.get(itemIn.getTradeId()));
+                }
+                // 保留4位小数，四舍五入
+                itemIn.setEad(ArithmeticUtil.round(EAD,4, RoundingMode.HALF_UP));
                 // '“03 EAD计算”，此批处理主要加载数据。
                 itemIn.setProcess(ModelDictCodeList.模型_减值过程_EAD计算.getValue());
             }

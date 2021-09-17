@@ -43,6 +43,7 @@ import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -284,8 +285,8 @@ public class AssetImpairmentProvisionProcessorService {
 		BigDecimal lossBalance = BigDecimal.ZERO;
 		// 获取系统参数——减值方案类型
 		String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
-		// 定义 变量.减值模型ECL结果
-		ModEclResult modEclResult = new ModEclResult();
+		// 定义 变量.是否走减值模型逻辑，默认为false，不走减值模型逻辑
+		boolean lossModFlag = false;
 		// 减值方案不为空时，查询对应减值模型结果
 		if(StringUtil.isNotEmpty(lossType)){
 			Map<String, Object> params = new HashMap<>();
@@ -293,52 +294,48 @@ public class AssetImpairmentProvisionProcessorService {
 			params.put("assetId", acctEntity.getBusiId());
 			params.put("invAim", acctEntity.getInvAim());
 			params.put("happenDate", acctEntity.getHappenDate());
-			modEclResult = assetImpairmentProvisionMapper.getModelEclResult(params);
-		}
-		if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
-			// 变量.减值余额 = 减值模型ECL结果.前瞻后ECL预期信用损失
-			lossBalance = modEclResult.getProspectiveEcl();
-		}
-		else{
-			// 定义 变量.ecl损失比例
-			BigDecimal eclRatio = BigDecimal.ZERO;
-			// 若采用毕马威方案，则ecl损失比例直接查询，无需重新计算
-			if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
-				// 变量.ecl损失比例 =  减值模型ECL结果.ecl损失比例
-				eclRatio = modEclResult.getEclRatio();
+			// 定义 变量.减值模型ECL结果
+			ModEclResult modEclResult = assetImpairmentProvisionMapper.getModelEclResult(params);
+			if(modEclResult != null){
+				if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+					// 变量.减值余额 = 减值模型ECL结果.前瞻后ECL预期信用损失
+					lossBalance = modEclResult.getProspectiveEcl();
+					// 变量.是否走减值模型逻辑 = true
+					lossModFlag = true;
+				}
+				// 若采用毕马威方案，则ecl损失比例直接查询，无需重新计算
+				else if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+					// 定义 变量.ecl损失比例 =  减值模型ECL结果.ecl损失比例
+					BigDecimal eclRatio = modEclResult.getEclRatio();
+					// 变量.减值余额 = EAD * ECL信用损失比例 *-1
+					lossBalance = ArithmeticUtil.multiply(variableEda,eclRatio);
+					lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);
+					// 若采用的是毕马威方案，则返回结果EAD需要更新入库
+					// 变量.减值模型ECL结果.EAD = 变量.EAD
+					modEclResult.setEad(variableEda);
+					//  变量.减值模型ECL结果.前瞻后ECL预期信用损失= 变量.减值余额
+					modEclResult.setProspectiveEcl(lossBalance);
+					// 将ECL结果添加到返回结果中
+					result.setModEclResult(modEclResult);
+					// 变量.是否走减值模型逻辑 = true
+					lossModFlag = true;
+				}
 			}
-			else{
-				List<String> subjectNatureList = accountingCommonService
-						.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
+		}
+		// 若未走减值模型逻辑，则继续走原先逻辑
+		if(!lossModFlag){
+			List<String> subjectNatureList = accountingCommonService
+					.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
-				eclRatio= accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
-						acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
-						acctEntity.getBookDate(), subjectNatureList);
-			}
-			// 变量.减值余额 = EAD * ECL信用损失比例 *-1
+			BigDecimal eclRatio= accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
+					acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
+					acctEntity.getBookDate(), subjectNatureList);
+			// 变量.减值余额 = EAD * ECL信用损失比例
 			lossBalance = ArithmeticUtil.multiply(variableEda,eclRatio);
 			lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);
-			// 若采用的是毕马威方案，则返回结果EAD需要更新入库
-			if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
-				// 变量.减值模型ECL结果.EAD = 变量.EAD
-				modEclResult.setEad(variableEda);
-				//  变量.减值模型ECL结果.前瞻后ECL预期信用损失= 变量.减值余额
-				modEclResult.setProspectiveEcl(lossBalance);
-				// 将ECL结果添加到返回结果中
-				result.setModEclResult(modEclResult);
-			}
 		}
+		//  变量.减值余额 =  变量.减值余额 * -1
 		lossBalance = ArithmeticUtil.multiply(lossBalance,new BigDecimal(-1));
-
-		// 调用减值相关共通【减值计提计算】
-		// 组装成的资产减值流水DTO
-//		TrdAssetLoss trdAssetLoss = new TrdAssetLoss();
-//		trdAssetLoss.setLossTestType(acctEntity.getLossTestType());
-//		trdAssetLoss.setLossInputType(acctEntity.getLossInputType());
-//		trdAssetLoss.setLossRatio(acctEntity.getLossRatio());
-//		trdAssetLoss.setPdVaule(acctEntity.getPdValue());
-//		trdAssetLoss.setLgdVaule(acctEntity.getLgdValue());
-//		lossBalance = lossCommonService.lossProvisionCalculate(trdAssetLoss, variableEda);
 
 		//========= modify by weipeng :加入减值模型相关处理 end========
 

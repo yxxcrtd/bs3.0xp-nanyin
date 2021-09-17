@@ -232,7 +232,6 @@ $(function(){
 	            $('.tabJump').val('').trigger('change');
 	            $('.tabJump').val('');
 	            chan(temp);
-	            console.log("111");
 	        }
 	    })
    }
@@ -358,11 +357,14 @@ $(function(){
         $('#pTypeOne4').change(counterType4Change);*/
         //counterType1Change($('#pTypeOne').val());
         <!--update by chenjiaixng 交易对手改造 20210729 end-->
+        var counterType =[COUNTER_TYPE_02,COUNTER_TYPE_03,COUNTER_TYPE_04];
         if(pageModel!=PAGE_MODEL_NEW){
+            if(counterType.indexOf(initType)<0){
+                $(".counterId").attr("disabled",true);
+                $("#type2").attr("disabled",true);
+            }
             $(".counterType").attr("disabled",true);
-            $(".counterId").attr("disabled",true);
-            $("#type2").attr("disabled",true);
-            console.log("444");
+            var ttt = $(".counterId").attr("disabled");
         }else{
             chan(COUNTER_TYPE_01);
             initChange();

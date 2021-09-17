@@ -44,12 +44,13 @@
 			</div>-->
 			<div class="joyin-form-wrap joyin-filter-form condition-area" >
 				<form class="layui-form" id="searchForm">
+					<input type="text" name="lossType" id="lossType" th:value="${lossType}" hidden>
 					<div class="layui-form-item " >
 						<div class="layui-inline layui-col-md4">
 							<label class="layui-form-label form-lable-wrap">资产类别</label>
 							<div class="layui-input-inline input-inline">
 								<select id="assetcode" name="assetcode" class="layui-input form-input input-select" placeholder="请输入"
-										allowClear="true" data-th-data-result="${SEC_TYPE}" data-th-initvalue="${entity?.assetcode}"
+										allowClear="true" data-th-data-result="${SEC_TYPE}" data-th-initvalue="${entity?.assetType}"
 										parentIds="" formatoption = "true"
 										data-th-data-url="@{/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain001/getSecTypeOption}">
 									<option></option>

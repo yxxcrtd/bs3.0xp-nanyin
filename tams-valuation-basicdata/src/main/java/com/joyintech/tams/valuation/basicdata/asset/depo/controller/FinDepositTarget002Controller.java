@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.FinProductClass;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.basicdata.asset.common.service.ValAssetCommonService;
 import com.joyintech.tams.valuation.basicdata.asset.depo.dto.FinDepositTargetDto;
 import com.joyintech.tams.valuation.basicdata.asset.depo.service.FinDepositTargetService;
@@ -159,6 +160,7 @@ public class FinDepositTarget002Controller extends BaseController {
         } else if(WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(workflowId)){//新建
             FinDepositTargetDto finDepositTargetDto = new FinDepositTargetDto();
             finDepositTargetDto.setReferRate(BigDecimal.ZERO);
+            finDepositTargetDto.setBondRiskType(DictCodeListExt3.风险五级分类_正常.getValue());
             model.addAttribute("entity", finDepositTargetDto);
             //操作类型标识
             model.addAttribute("optType","new");

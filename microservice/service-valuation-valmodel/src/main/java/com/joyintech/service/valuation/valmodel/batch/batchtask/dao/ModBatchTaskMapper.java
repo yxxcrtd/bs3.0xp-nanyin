@@ -44,9 +44,12 @@ public interface ModBatchTaskMapper {
 
     List<SelectOptionDto> getValAssetInfo(Map<String, Object> param);
 
+    List<BatchAssetInfoDto> getAllAssetInfo(Object o);
+
     /**
      *
      * @param params
      */
     List<ModBatchLogDetailDTO> selectLogsDetail(Map<String, Object> params);
+
 }

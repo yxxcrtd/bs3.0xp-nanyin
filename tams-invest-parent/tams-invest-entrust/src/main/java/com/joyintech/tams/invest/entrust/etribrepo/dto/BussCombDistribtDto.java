@@ -196,4 +196,19 @@ public class BussCombDistribtDto {
     public void setParentPortfolioId(String parentPortfolioId) {
         this.parentPortfolioId = parentPortfolioId;
     }
+
+    //add by chenjiaxing 20210913 ZGZGST-2543 质押式回购指令-多组合指令，提交审批流程中指令要素为空 start
+    /**
+     * 证券托管户
+     */
+    private String secManageAcctId;
+
+    public String getSecManageAcctId() {
+        return secManageAcctId;
+    }
+
+    public void setSecManageAcctId(String secManageAcctId) {
+        this.secManageAcctId = secManageAcctId;
+    }
+    //add by chenjiaxing 20210913 ZGZGST-2543 质押式回购指令-多组合指令，提交审批流程中指令要素为空 end
 }
