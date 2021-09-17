@@ -154,14 +154,13 @@
     </select>
 
     <delete id="cleanBatchParams">
-        DELETE
-        FROM MOD_VAL_BATCH_PARAMS MVBP
-        WHERE NOT EXISTS(SELECT 1
-                         FROM sys_batchgrp_exec_info info
-                         where info.status IN (
-                                               'UNR', 'RUN'
-                             )
-                           AND info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO)
+        delete FROM MOD_VAL_BATCH_PARAMS MVBP
+         WHERE EXISTS (SELECT 1
+                  FROM sys_batchgrp_exec_info info
+                 where info.status NOT IN ('UNR', 'RUN')
+                   AND info.SEQ_NO = mvbp.BATCH_EXEC_SEQNO
+                   AND INFO.BATCH_SEQ_NO = #{BATCH_EXEC_SEQNO, jdbcType = VARCHAR}
+                   )
     </delete>
 
 

@@ -33,7 +33,8 @@ $(function () {
             ,{field:'type9Fmt', sortable: false, width:120, title: '资产二级分类',rowspan: 2}
             ,{field:'type9', sortable: false, width:120, title: '资产二级分类', visible:false}
             ,{title: '前瞻后减值金额',sortable: false, colspan: 4}
-            ,{title: '前瞻后减值计算比例',sortable: false, colspan: 8}
+            /*,{title: '前瞻后减值计算比例',sortable: false, colspan: 8}*/
+            ,{title: '前瞻后减值计算比例',sortable: false, colspan: 4}
             ,{title: '前瞻后资产余额',sortable: false, colspan: 4}
             ,{title: '前瞻前减值金额',sortable: false, colspan: 4}
             ,{title: '前瞻前减值计算比例',sortable: false, colspan: 4}
@@ -55,17 +56,17 @@ $(function () {
             ,{field:'decBalanceP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
             ,{field:'decBalanceP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
             ,{field:'decBalanceSum', type:"number", digit:4,sortable: false, title: '合计',width:100}
-            ,{field:'perEclP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
+           /* ,{field:'perEclP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
             ,{field:'perEclP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
             ,{field:'perEclP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
-            ,{field:'perEclSum', type:"number", digit:4,sortable: false, title: '合计',width:100}
+            ,{field:'perEclSum', type:"number", digit:4,sortable: false, title: '合计',width:100}*/
             ,{field:'perDecRatioP1Fmt', type:"text", sortable: false, title: '阶段一',width:100}
-            ,{field:'perDecRatioP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
-            ,{field:'perDecRatioP2Fmt', type:"text", sortable: false, title: '阶段二',width:100}
-            ,{field:'perDecRatioP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
-            ,{field:'perDecRatioP3Fmt', type:"text", sortable: false, title: '阶段三',width:100}
-            ,{field:'perDecRatioP3', type:"number", digit:4,sortable: false, title: '阶段三',width:100}
-            ,{field:'perDecRatioSumFmt', type:"text", sortable: false, title: '合计',width:100}
+            ,{field:'perDecRatioP1', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
+            ,{field:'perDecRatioP2Fmt', type:"text", sortable: false, title: '阶段三',width:100}
+            ,{field:'perDecRatioP2', type:"number", digit:4,sortable: false, title: '合计',width:100}
+            ,{field:'perDecRatioP3Fmt', type:"text", sortable: false, title: '阶段一',width:100}
+            ,{field:'perDecRatioP3', type:"number", digit:4,sortable: false, title: '阶段二',width:100}
+            ,{field:'perDecRatioSumFmt', type:"text", sortable: false, title: '阶段三',width:100}
             ,{field:'perDecRatioSum', type:"number", digit:4,sortable: false, title: '合计',width:100}
             ,{field:'bondCountP1', type:"number", digit:4,sortable: false, title: '阶段一',width:100}
             ,{field:'bondCountP2', type:"number", digit:4,sortable: false, title: '阶段二',width:100}

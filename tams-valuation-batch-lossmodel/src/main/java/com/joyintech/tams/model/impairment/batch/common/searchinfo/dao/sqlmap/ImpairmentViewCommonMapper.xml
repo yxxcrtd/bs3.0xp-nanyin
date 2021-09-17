@@ -295,10 +295,10 @@
         AND NVL(fin.VDATE,trdfin.VDATE) <![CDATA[<=]]> #{searchDate}
         AND NVL(NVL(fin.MDATE,trdfin.MDATE) , #{searchDate}+1)<![CDATA[>]]> #{searchDate}
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (fin.FINPROD_ID IN
+            AND (VAL.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR fin.FINPROD_ID in (
+                    null) OR VAL.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -369,7 +369,7 @@
         AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.Portfolio_Id IS NULL
         AND DEAL.PS IN ('T01','T35')
-        AND ACC.INV_AIM != 'FVTPL'
+        AND (ACC.INV_AIM IS NULL OR ACC.INV_AIM IN ('AC','FVOCI'))
         AND DEAL.SETTLE_DATE = #{searchDate}
         AND (
         typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
@@ -377,10 +377,10 @@
         OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
         )
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (fin.FINPROD_ID IN
+            AND (DEAL.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR fin.FINPROD_ID in (
+                    null) OR DEAL.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>

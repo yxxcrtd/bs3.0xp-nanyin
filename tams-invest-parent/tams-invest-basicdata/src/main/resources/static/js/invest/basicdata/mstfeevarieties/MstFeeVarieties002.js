@@ -191,7 +191,13 @@
         		if($('#feeName').val()===FEENAME_04){
         			$('#feeName').val("").attr("disabled",false).trigger('change');
         		}
-        		$('#orgType').val("").attr("disabled",false).trigger('change');
+				var orgType = $("#orgType").val();
+				if(orgType == '01'){
+					$('#orgType').val(ORGTYPE_01).attr("disabled",false).trigger('change');
+				}
+				if(orgType == '02'){
+					$('#orgType').val(ORGTYPE_02).attr("disabled",false).trigger('change');
+				}
         		$('#chargeType').val("").attr("disabled",false).trigger('change');
         		$('#basicBill').val("").attr("disabled",false).trigger('change');
         		$('#basis').val("").attr("disabled",false).trigger('change');

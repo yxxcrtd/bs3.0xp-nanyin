@@ -438,6 +438,9 @@
         }
         //ZGBUGTWO-77 公募基金指令_新建窗口内部分字段回显异常以及按钮点击无反应，见截图 modify by lizhi 20200712 start
         $('#finprodMarketId').attr("required",true); //.trigger('change');
+        $('#assetType1').attr("required",true);
+        $('#assetType10').attr("required",true);
+        $('#assetType11').attr("required",true);
         //ZGBUGTWO-77 公募基金指令_新建窗口内部分字段回显异常以及按钮点击无反应，见截图 modify by lizhi 20200712 end
         $(".changein").hide();
         //选择了交易方向，查询标的，符合条件选中，不符合清空
@@ -463,6 +466,11 @@
             getProAvailableCash1();
             if($("#assetType1").val() != F02){
                 $('#finprodMarketId').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add start
+                $('#assetType1').removeAttr("required");
+                $('#assetType10').removeAttr("required");
+                $('#assetType11').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add end
                 star();
             }
             if(!initFlag) {
@@ -493,6 +501,11 @@
             getAssetAvailablePosition();
             if($("#assetType1").val() != F02){
                 $('#finprodMarketId').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add start
+                $('#assetType1').removeAttr("required");
+                $('#assetType10').removeAttr("required");
+                $('#assetType11').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add end
                 star();
             }
             if(!initFlag){
@@ -528,6 +541,11 @@
             getProAvailableCash1();
             if($("#assetType1").val() != F02){
                 $('#finprodMarketId').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add start
+                $('#assetType1').removeAttr("required");
+                $('#assetType10').removeAttr("required");
+                $('#assetType11').removeAttr("required");
+                // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add end
                 star();
             }
             if(!initFlag) {
@@ -679,6 +697,11 @@
             else{
                 $("#entrustNum").val('');
                 $('#finprodMarketId').attr("required",true);
+                // ZGZGST-2788:资产代码必填时，资产二、三、四级分类也必填 fuyongsheng 20210917 add start
+                $('#assetType1').attr("required",true);
+                $('#assetType10').attr("required",true);
+                $('#assetType11').attr("required",true);
+                // ZGZGST-2788:资产代码必填时，资产二、三、四级分类也必填 fuyongsheng 20210917 add end
                 star();
             }
         }
@@ -721,6 +744,11 @@
             else{
                 $("#entrustNum").val('');
                 $('#finprodMarketId').attr("required",true);
+                // ZGZGST-2788:资产代码必填时，资产二、三、四级分类必填 fuyongsheng 20210917 add start
+                $('#assetType1').attr("required",true);
+                $('#assetType10').attr("required",true);
+                $('#assetType11').attr("required",true);
+                // ZGZGST-2788:资产代码必填时，资产二、三、四级分类必填 fuyongsheng 20210917 add end
                 star();
             }
         }
@@ -873,10 +901,20 @@
             if($("#ps").val() == T04 || ($("#ps").val() == T06 || $("#ps").val() == T65)){
                 if($("#assetType1").val() != F02){
                     $('#finprodMarketId').removeAttr("required");
+                    // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add start
+                    $('#assetType1').removeAttr("required");
+                    $('#assetType10').removeAttr("required");
+                    $('#assetType11').removeAttr("required");
+                    // ZGZGST-2788:资产代码非必填时，资产二、三、四级分类也非必填 fuyongsheng 20210917 add end
                     star();
                 }
                 else{
                     $('#finprodMarketId').attr("required",true);
+                    // ZGZGST-2788:资产代码必填时，资产二、三、四级分类必填 fuyongsheng 20210917 add start
+                    $('#assetType1').attr("required",true);
+                    $('#assetType10').attr("required",true);
+                    $('#assetType11').attr("required",true);
+                    // ZGZGST-2788:资产代码必填时，资产二、三、四级分类必填 fuyongsheng 20210917 add start
                     star();
                 }
             }

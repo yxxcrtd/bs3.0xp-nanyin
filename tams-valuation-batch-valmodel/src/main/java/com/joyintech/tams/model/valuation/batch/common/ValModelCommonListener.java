@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import javax.batch.runtime.BatchStatus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,9 +45,8 @@ public class ValModelCommonListener implements JobExecutionListener {
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        batchExecuteInfo.getExecuteDate();
         // 查询参数
-        List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(batchExecuteInfo.getExecuteDate());
+        List<ModValBatchParams> params = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
         if (CollectionUtils.isNotEmpty(params)) {
             Map<String, ModBatchLogs> logsMap = new HashedMap<>();
             params.stream().forEach(x->{
@@ -59,6 +59,7 @@ public class ValModelCommonListener implements JobExecutionListener {
 
     @Override
     public void afterJob(JobExecution jobExecution) {
+//        jobExecution.getStatus().getBatchStatus().compareTo(BatchStatus.FAILED);
         Map<String,CommonErrorParams> logs = (Map<String,CommonErrorParams>)jobExecution.getExecutionContext().get(ValComponentConstant.MODEL_LOGS);
         if(logs != null && logs.size() > 0){
             modLogsService.saveBatch(new ArrayList(logs.values()));

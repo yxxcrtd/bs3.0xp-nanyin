@@ -98,6 +98,7 @@ public enum ModelDictCodeList implements BaseDictCodeList {
     季度_第三季度(ModelDictCode.季度,"03","第三季度"),
     季度_第四季度(ModelDictCode.季度,"04","第四季度"),
     曲线代码_中债国债收益率曲线(ModelDictCode.曲线代码,"1231","中债国债收益率曲线"),
+    曲线代码_中债国债到期收益率曲线(ModelDictCode.曲线代码,"1232","中债国债到期收益率曲线"),
     ;
 
     /**

@@ -53,16 +53,18 @@ public class BinaryTreeModelProcessorService {
     @Autowired
     private ModLogsService modLogsService;
 
+    private StepExecution stepExecution;
+
     /**
      * 二叉树模型-reader
      *
      * @param params
      * @return
      */
-    public BinaryTreeModelResultDto excute(BinaryTreeModelReaderEntity binaryTreeModelReaderEntity, Map<String, Object> params, StepExecution stepExecution) {
+    public BinaryTreeModelResultDto excute(BinaryTreeModelReaderEntity binaryTreeModelReaderEntity, Map<String, Object> params, StepExecution execution) {
         //封装最终计算结果
         BinaryTreeModelResultDto result = new BinaryTreeModelResultDto();
-
+        stepExecution = execution;
         ModAssetInfoDto modAssetInfoDto = binaryTreeModelReaderEntity.getModAssetInfoDto();
 
         //2.处理参数
@@ -84,7 +86,8 @@ public class BinaryTreeModelProcessorService {
 
         //4.计算波动率
         //变量.股票收盘价序列列表 = 资产信息.股票行情
-        BigDecimal stockVolatility = calaStockVolatility(binaryTreeModelReaderEntity.getModStockMarketInfoList());
+        BigDecimal stockVolatility = calaStockVolatility(modAssetInfoDto,binaryTreeModelReaderEntity.getModStockMarketInfoList());
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-年化后波动率: "+stockVolatility);
 
         //5.计算二叉树步长
         // 计算剩余期限
@@ -93,14 +96,20 @@ public class BinaryTreeModelProcessorService {
         BigDecimal encashYears = forwadCashCalculator.calcTerm(BasicUtil.dateToLocal(platDate),
                 BasicUtil.dateToLocal(modAssetInfoDto.getMdate()), BasicUtil.dateToLocal(modAssetInfoDto.getVdate()),
                 BasicUtil.dateToLocal(modAssetInfoDto.getMdate()), null, SecIntSchCalMethod.起息日向后);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-年化剩余期限: "+encashYears);
+
         //变量.步长  = 变量.年化期限/资产信息.二叉树步数
         BigDecimal binaryTreeLength = ArithmeticUtil.divide(encashYears, binaryTreeModelReaderEntity.getModBintreeConfig().getBintreeStep(), 4, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-步长: "+binaryTreeLength);
 
         //6.计算二叉树上升倍数和下降倍数
         //变量.上升倍数 = Math.pow（E,sqrt(变量.步长，1/变量.标的股票波动率)）
         BigDecimal upNum = BigDecimal.valueOf(Math.pow(Math.E, ArithmeticUtil.multiply(stockVolatility, BigDecimal.valueOf(Math.sqrt(binaryTreeLength.doubleValue()))).doubleValue()));
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-上升倍数: "+upNum);
+
         //变量.下降倍数 = 1/变量.上升倍数
         BigDecimal downNum = ArithmeticUtil.divide(BigDecimal.ONE, upNum, 12, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-下降倍数: "+downNum);
 
         //7.转股期限
         //变量.转股期限 = 0
@@ -111,7 +120,12 @@ public class BinaryTreeModelProcessorService {
             BigDecimal dateNum = forwadCashCalculator.calcTerm(BasicUtil.dateToLocal(platDate),
                     BasicUtil.dateToLocal(modAssetInfoDto.getConVdate()), BasicUtil.dateToLocal(modAssetInfoDto.getVdate()),
                     BasicUtil.dateToLocal(modAssetInfoDto.getConVdate()), null, SecIntSchCalMethod.起息日向后);
+
             stockLimit = ArithmeticUtil.divide(dateNum, binaryTreeLength, 0, RoundingMode.HALF_UP);
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-转股期限: "+stockLimit);
+
+        }else{
+
         }
 
         //8.生成二叉树
@@ -129,6 +143,7 @@ public class BinaryTreeModelProcessorService {
             rootStockPrice = binaryTreeModelReaderEntity.getModStockMarketInfoList().get(binaryTreeModelReaderEntity.getModStockMarketInfoList().size() - 1).getPb();
             rootStockPrice = ArithmeticUtil.multiply(rootStockPrice, binaryTreeModelReaderEntity.getModBintreeConfig().getFinprodNetasset());
         }
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-根节点股票价格: "+rootStockPrice);
 
         //9.调用【二叉树生成】
         StockInfoDto[][] binTree = createBinaryTree(binaryTreeModelReaderEntity.getModBintreeConfig().getBintreeStep(), rootStockPrice, upNum, downNum, stockLimit, binaryTreeModelReaderEntity.getModAssetInfoDto().getConPrice());
@@ -140,11 +155,11 @@ public class BinaryTreeModelProcessorService {
         quaryMidAllValue(binTree, binaryTreeModelReaderEntity, upNum, downNum, platDate, binaryTreeLength, encashYears, modRiskPremium);
         //12.估值全价
         //变量.估值全价 = 变量.二叉树二维数据[0][0].总价值
-        BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(8, RoundingMode.HALF_UP);
+        BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(2, RoundingMode.HALF_UP);
         //13.调用【算法包.计算百元面值的债券的利息-记账用】
         BigDecimal interest = getCalculate(binaryTreeModelReaderEntity, platDate).getInterest();
         //14.变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
-        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(8, RoundingMode.HALF_UP);
+        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(2, RoundingMode.HALF_UP);
 
         //封装结果
         modCurveResult.setSeqno(IDGenerator.generate());
@@ -167,6 +182,7 @@ public class BinaryTreeModelProcessorService {
         mstBondValuationInfo.setPrice(valueAllPrice); //估值全价
         mstBondValuationInfo.setNetprice(valueNetPrice);//估值净价
         mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondValuationInfo.setLastPeriod(encashYears.setScale(4, RoundingMode.HALF_UP));//设置剩余期限，且保留4位小数
         mstBondValuationInfo.setCreateUser("batch"); //
         mstBondValuationInfo.setUpdateUser("batch");
         mstBondValuationInfo.setCreateTime(DateUtil.now());
@@ -193,19 +209,19 @@ public class BinaryTreeModelProcessorService {
         if (errors == null) {
             errors = new ArrayList<CommonErrorParams>();
         }
-        //【批处理名称】：未配置二叉树模型参数
+        //【批处理名称】-未配置二叉树模型参数
         if (entity.getModBintreeConfig() == null || StringUtil.isEmpty(entity.getModBintreeConfig().getFinprodId())) {
-            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：未配置二叉树模型参数.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-未配置二叉树模型参数.");
             checkResult = false;
         }
-        //【批处理名称】：当天无股票行情
+        //【批处理名称】-当天无股票行情
         if (entity.getModStockMarketInfoList() == null || entity.getModStockMarketInfoList().size() == 0) {
-            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：当天无股票行情.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-历史股票行情缺失.");
             checkResult = false;
         }
-        //【批处理名称】：当天无收益率曲线行情
+        //【批处理名称】-当天无收益率曲线行情
         if (entity.getModYieldCurveInfoList() == null || entity.getModYieldCurveInfoList().size() == 0) {
-            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】：当天无收益率曲线行情.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-收益率曲线行情缺失.");
             checkResult = false;
         }
         return checkResult;
@@ -456,9 +472,12 @@ public class BinaryTreeModelProcessorService {
         BigDecimal upProbability = ArithmeticUtil.multiply(ArithmeticUtil.subtract(cdateYield, entity.getModBintreeConfig().getSmoothsection()), binaryTreeLength);
         upProbability = ArithmeticUtil.subtract(BigDecimal.valueOf(Math.pow(Math.E, upProbability.doubleValue())), downNum);
         upProbability = ArithmeticUtil.divide(upProbability, ArithmeticUtil.subtract(upNum, downNum), 12, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-估值日无风险收益率: "+cdateYield);
 
         //变量.估价下降概率 = 1- 变量.估计上升概率
         BigDecimal downProbability = ArithmeticUtil.subtract(BigDecimal.ONE, upProbability);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-上升概率: "+upProbability+";下降概率: "+downProbability);
+
 //        if (upProbability != null) {
 //            logger.info("估价上升概率：" + upProbability.doubleValue());
 //            logger.info("估价下降概率：" + downProbability.doubleValue());
@@ -494,9 +513,14 @@ public class BinaryTreeModelProcessorService {
                 baseDate = entity.getModAssetInfoDto().getLastTradeInDate();
             }
         }
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-买入日: "+DateUtil.format(baseDate,"yyyy-MM-dd")+"买入日全价均价："+buyAllPrice);
+
         //【算法包到期收益率计算】
         //变量.到期收益率折现前 = 返回.到期收益率
         BigDecimal yieldByPriceBefore = calaYieldByPriceCalculator(entity, buyAllPrice, baseDate).getMatYield();
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-到期收益率折现前: "+yieldByPriceBefore);
+
+
 //        if (yieldByPriceBefore != null) {
 //            logger.info("到期收益率折现前：" + yieldByPriceBefore.doubleValue());
 //        }
@@ -514,10 +538,12 @@ public class BinaryTreeModelProcessorService {
                 || StringUtil.equals(DictCodeList.频率_不规则.getValue(), modCashFlowPayRule.getPayCycle())) {
             calcRule = 1;
         }
-        //变量.到期收益率 = 变量.到期收益率折现前 * Math.pow（Math.E, 1 + 变量.到期收益率/变量.频率）
+        //变量.连续复利到期收益率 = 变量.到期收益率折现前 * Math.pow（Math.E, 1 + 变量.到期收益率/变量.频率）
         BigDecimal yieldByPrice = ArithmeticUtil.doAdd(BigDecimal.ONE, ArithmeticUtil.divide(yieldByPriceBefore, BigDecimal.valueOf(calcRule), 12, RoundingMode.HALF_UP));
         yieldByPrice = BigDecimal.valueOf(Math.log(yieldByPrice.doubleValue()));
         yieldByPrice = ArithmeticUtil.multiply(BigDecimal.valueOf(calcRule), yieldByPrice);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-连续复利到期收益率: "+yieldByPrice);
+
 //        if (yieldByPrice != null) {
 //            logger.info("到期收益率：" + yieldByPrice.doubleValue());
 //        }
@@ -560,6 +586,11 @@ public class BinaryTreeModelProcessorService {
                 }
                 //变量.二叉树二维数据[n][i].总价值  = 变量.二叉树二维数据[n][i].股权价值 + 变量.二叉树二维数据[n][i].债权价值
                 binTree[n][i].setAllValue(ArithmeticUtil.doAdd(binTree[n][i].getBondValue(), binTree[n][i].getStockValue()));
+
+                if(i == 0 && n ==0){
+                    modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),
+                            entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-初始节点，股权价值: "+binTree[0][0].getStockValue()+";债权价值: "+binTree[0][0].getBondValue());
+                }
 
 //                //测试信息打印
 //                if (binTree[n][i].getStockValue() != null) {
@@ -827,6 +858,7 @@ public class BinaryTreeModelProcessorService {
             }
             //变量.二叉树二维数据[资产信息.二叉树步数][i].总价值 = 变量.二叉树二维数据[资产信息.二叉树步数][i].股票价值 + 变量.二叉树二维数据[资产信息.二叉树步数][i].债券价值
             binTree[bintreeStep.intValue()][i].setAllValue(ArithmeticUtil.doAdd(binTree[bintreeStep.intValue()][i].getStockValue(), binTree[bintreeStep.intValue()][i].getBondValue()));
+
 //            //测试信息打印
 //            if (binTree[bintreeStep.intValue()][i].getStockValue() != null) {
 //                logger.info("股权价值["+ bintreeStep.intValue() + "][" + i + "]" + binTree[bintreeStep.intValue()][i].getStockValue().doubleValue());
@@ -893,10 +925,12 @@ public class BinaryTreeModelProcessorService {
 
     /**
      * 计算标的股票波动率
+     *
+     * @param modAssetInfoDto
      * @param listStock
      * @return
      */
-    private BigDecimal calaStockVolatility(List<MstSharePrice> listStock) {
+    private BigDecimal calaStockVolatility(ModAssetInfoDto modAssetInfoDto, List<MstSharePrice> listStock) {
         //变量.股票收盘价序列列表 = 资产信息.股票行情
         if (listStock == null || listStock.size() == 0) {
             return null;
@@ -914,11 +948,11 @@ public class BinaryTreeModelProcessorService {
         }
 
         //调用【波动率计算方法】
-        BigDecimal stockVolatility = calaVolatility(stockYieldsList);
+        BigDecimal stockVolatility = calaVolatility(modAssetInfoDto,stockYieldsList);
         return stockVolatility;
     }
 
-    private BigDecimal calaVolatility(List<StockYieldsDto> stockYieldsList) {
+    private BigDecimal calaVolatility(ModAssetInfoDto modAssetInfoDto, List<StockYieldsDto> stockYieldsList) {
         //变量.日收益率均值 = 0
         BigDecimal yieldsMeanValue = BigDecimal.ZERO;
         //变量.波动率 = 0
@@ -939,6 +973,7 @@ public class BinaryTreeModelProcessorService {
             volatility = BigDecimal.ZERO;
         }
         volatility = BigDecimal.valueOf(Math.sqrt(volatility.doubleValue())).setScale(12, RoundingMode.HALF_UP);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-年化前波动率: "+volatility);
 
         //调用方法 年化标准差
         BigDecimal annualizedVolatility = calaAnnualizedStandardDeviation(volatility, new BigDecimal(252));

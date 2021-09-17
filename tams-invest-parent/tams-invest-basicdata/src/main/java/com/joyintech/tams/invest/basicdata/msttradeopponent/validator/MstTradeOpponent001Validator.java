@@ -406,7 +406,22 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                 errorList.add(new ValidMessage(
                     getMessage("FW_E_0006", getMessage("MstTradeOpponent001.FeeInfo"))));
             }
-
+            //因为产品端和重庆端代码相同，因此参数来控制校验 edit by yeming 20210906 start
+            /*update by chenjiaixng 交易对手改造 20210729 start*/
+            // START  交易对手性质必填校验 update by wj 20200413
+            if((!StringUtil.isNotEmpty(ISChongQing)) || StringUtil.equals(ISChongQing,"N")){
+                if (mDto.getpTypeOne() == null || mDto.getpTypeOne().isEmpty()) {
+                    errorList.add(new ValidMessage("pTypeOne",
+                            getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeOne"))));
+                }
+                if (mDto.getpTypeTwo() == null || mDto.getpTypeTwo().isEmpty()) {
+                    errorList.add(new ValidMessage("pTypeTwo",
+                            getMessage("FW_E_0006", getMessage("MstTradeOpponent002.pTypeTwo"))));
+                }
+            }
+            // END  交易对手性质必填校验 update by wj 20200413
+            /*update by chenjiaixng 交易对手改造 20210729 end*/
+            //因为产品端和重庆端代码相同，因此参数来控制校验 edit by yeming 20210906 end
             Map<String, Object> map = BeanUtil.object2Map(mDto);
             Set<String> set = map.keySet();
             Iterator<String> iterator = set.iterator();

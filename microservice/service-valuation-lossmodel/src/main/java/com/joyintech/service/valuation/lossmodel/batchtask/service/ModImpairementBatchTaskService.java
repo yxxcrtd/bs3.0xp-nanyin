@@ -210,6 +210,7 @@ public class ModImpairementBatchTaskService extends BaseService {
         if (StringUtil.isNotBlank(finprodIds)) {
             List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
             params.put("finprodIdList", finprodIdList);
+            //清理和确认是否有执行中的时候要使用任务组代码查
             params.put("BATCH_SEQ_NO", LOSS_MODEL_BATCH_GROUP);
         }
         return modImpairementBatchTaskMapper.checkIsRunning(params) > 0;
@@ -220,6 +221,8 @@ public class ModImpairementBatchTaskService extends BaseService {
      * @param params
      */
     public void cleanBatchParams(Map<String, Object> params) {
+        //清理和确认是否有执行中的时候要使用任务组代码查
+        params.put("BATCH_SEQ_NO", LOSS_MODEL_BATCH_GROUP);
         modImpairementBatchTaskMapper.cleanBatchParams(params);
     }
 

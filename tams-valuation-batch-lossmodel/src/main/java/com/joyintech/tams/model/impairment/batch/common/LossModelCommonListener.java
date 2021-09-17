@@ -43,7 +43,7 @@ public class LossModelCommonListener implements JobExecutionListener {
     public void beforeJob(JobExecution jobExecution) {
         batchExecuteInfo.getExecuteDate();
         // 查询参数
-        List<ModValBatchParams> params = modParamsService.selectAllParamsByDate(batchExecuteInfo.getExecuteDate());
+        List<ModValBatchParams> params = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
         if (CollectionUtils.isNotEmpty(params)) {
             Map<String, ModBatchLogs> logsMap = new HashedMap<>();
             params.stream().forEach(x->{

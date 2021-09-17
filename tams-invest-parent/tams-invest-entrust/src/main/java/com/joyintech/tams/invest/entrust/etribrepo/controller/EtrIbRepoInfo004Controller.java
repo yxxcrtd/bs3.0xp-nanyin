@@ -204,6 +204,18 @@ public class EtrIbRepoInfo004Controller extends BaseController {
                 confirmMessage.append("<br />");
                 confirmMessage.append(getMessage("TRD_C_0002"));
             }
+
+            // add by wanshiwei ZGZGST-2657 6:添加委托金额校验--委托金额不低于10万 20210917 start
+            // modify by wanshiwei ZGZGST-2657 7：指令阶段不check
+            /*if (dto.getEntrustAmt().compareTo(BigDecimal.valueOf(100000)) == -1) {
+                if (StringUtil.isNotBlank(confirmMessage)) {
+                    confirmMessage.append("<br />");
+                }
+                confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
+                confirmMessage.append("<br />");
+                confirmMessage.append(getMessage("委托金额低于10万，是否继续？"));
+            }*/
+            // add by wanshiwei ZGZGST-2657 6:添加委托金额校验--委托金额不低于10万 20210917 end
         }
         // 授信软控 start
         if (joyinMessages.size() > 0 || messages.size() > 0) { 

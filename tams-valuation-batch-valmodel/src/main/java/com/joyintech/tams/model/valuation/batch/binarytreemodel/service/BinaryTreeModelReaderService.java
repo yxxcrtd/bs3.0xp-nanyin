@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.common.base.entity.ModBintreeConfig;
 import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.common.base.entity.MstSharePrice;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dao.BinaryTreeModelMapper;
 import com.joyintech.tams.model.valuation.batch.binarytreemodel.dto.*;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
@@ -133,15 +134,18 @@ public class BinaryTreeModelReaderService {
             model.setModCashFlowPayRulesList(modCashFlowPayRulesList);
 
             //9.5 股票行情查询
-            //todo
-            // 此处逻辑存在问题，没有考虑标的公司、可比公司配置
             ModStockMarketParamsDto modStockMarketParamsDto = new ModStockMarketParamsDto();
             List<String> listStockId = new ArrayList<>();
-            if(modAssetInfoDto.getConFinprodId()!=null){
-                listStockId.add(modAssetInfoDto.getConFinprodId());
+            ModBintreeConfig config = model.getModBintreeConfig();
+            if(config.getStockBordsttus()!=null&&config.getStockBordsttus().equals(ModelDictCodeList.上市状态_未上市.getValue())){
+                listStockId.add(config.getCompStockid());
             }else{
-                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：债券的转股代码为空，无法继续.");
-                return list;
+                if(modAssetInfoDto.getConFinprodId()!=null){
+                    listStockId.add(modAssetInfoDto.getConFinprodId());
+                }else{
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：债券的转股代码为空，无法继续.");
+                    continue;
+                }
             }
             modStockMarketParamsDto.setStockIdList(listStockId);
             //查询开始日	= 跑批日-（明细.到期日-跑批日）
