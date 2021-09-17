@@ -410,7 +410,7 @@
         title : 'SysCommon.operation',
         sortable: false,
         render : function(data, type, row, meta) {
-            return '<a class="layui-btn layui-btn-sm uploadFile" >上传附件</a> ';
+            return '<a class="layui-btn layui-btn-sm uploadFile" style="color:#FFFFFF">上传附件</a> ';
         },
         width : 150
     }
