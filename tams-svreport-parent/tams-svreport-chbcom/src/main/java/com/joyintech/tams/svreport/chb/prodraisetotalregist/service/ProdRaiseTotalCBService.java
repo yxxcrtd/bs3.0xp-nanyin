@@ -509,6 +509,11 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		}else{
 			dto.setIsConsign(DictCodeList.是否_中债_否.getValue());
 		}
+		
+		//认购金额为0的情况下，也要生成募集总量登记对应的改造  20210910   start
+		dto.setSaleAreaAmt("0");//销售区域及金额
+		//认购金额为0的情况下，也要生成募集总量登记对应的改造  20210910   end
+		
 		if(place.length()>0){
 			dto.setSaleAreaAmt(place.toString().substring(0, place.length() - 1));//销售区域及金额
 		}

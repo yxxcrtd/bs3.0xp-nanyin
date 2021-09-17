@@ -168,7 +168,7 @@
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.ajaxJson(basePath + 'invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002/check', object, function(result) {
 	                var message = '';
-	                if(object.ps === buy && object.prinAmt && object.accAvailableCashT && Number(object.prinAmt) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.accAvailableCashT))){
+	                if(object.ps === buy && object.tradeAmtAndFee && object.accAvailableCashT && Number(object.tradeAmtAndFee) > (object.chlId && object.payType == '02' ? Number(object.channelAvailableCash) : Number(object.accAvailableCashT))){
 	                    if (object.chlId && object.payType == '02') {
 	                        message = JoyinUtil.getMessage("TRD_C_0004",JoyinUtil.getMessage("invest.channelId"));
 	                    }

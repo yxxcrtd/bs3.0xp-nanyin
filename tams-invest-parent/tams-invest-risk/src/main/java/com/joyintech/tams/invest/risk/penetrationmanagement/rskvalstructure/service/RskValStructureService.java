@@ -210,5 +210,18 @@ public class RskValStructureService extends CommonExportService<RskValStructureD
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure/getCountById",
             dto,boolean.class);
     }
+    /**
+     * 选中记录是否是默认模板，是则不允许修改，删除
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public boolean getStructInfoIsDefault(RskValStructureDto dto) {
+        return restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure/getStructInfoIsDefault",
+                dto,boolean.class);
+    }
 
 }

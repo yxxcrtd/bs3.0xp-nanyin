@@ -105,4 +105,22 @@
 	     SUMSUB_MAP_ID = #{id,jdbcType=VARCHAR}
 	     </where>
         </select>
+	<select id="getSumNameDefault" resultType="com.joyintech.service.risk.penetrationmanagement.rskvalsumname.dto.RskValSumnameDto">
+		SELECT
+		distinct
+		ID id,
+		NAME name,
+		TRIM_CHARS trimChars
+		FROM RSK_VALTBL_SUMSUB_MAP
+		where is_default='Y'
+		order by NAME DESC
+	</select>
+	<select id="getAssetSumInfoIsDefault" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM RSK_VALTBL_SUMSUB_MAP
+		<where>
+			id = #{id,jdbcType=VARCHAR} and is_default='Y'
+		</where>
+	</select>
 </mapper>

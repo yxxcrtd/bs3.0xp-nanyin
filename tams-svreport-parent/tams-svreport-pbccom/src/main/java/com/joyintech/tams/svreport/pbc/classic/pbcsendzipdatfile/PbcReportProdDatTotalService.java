@@ -205,36 +205,61 @@ public abstract class PbcReportProdDatTotalService extends PbcDatPriviewService 
 	 */
 	public void dealAreaDateListForDiff(PbcReportProdDatDto detail) {
 		// 人民币
-		if(!StringUtil.equals(detail.getCny(),detail.getCnyPrd())){
-			detail.setCnyDiff(1);
+		if(!(detail.getCny()==null&&detail.getCnyPrd()==null)){
+			if(detail.getCny()==null||detail.getCnyPrd()==null||
+					detail.getCny().compareTo(detail.getCnyPrd())!=0){
+				detail.setCnyDiff(1);
+			}
 		}
+
 		//美元折人民币
-		if(!StringUtil.equals(detail.getUsdToCny(),detail.getUsdToCnyPrd())){
-			detail.setUsdToCnyDiff(1);
+		if(!(detail.getUsdToCny()==null&&detail.getUsdToCnyPrd()==null)) {
+			if (detail.getUsdToCny() == null || detail.getUsdToCnyPrd() == null ||
+					detail.getUsdToCny().compareTo(detail.getUsdToCnyPrd()) != 0) {
+				detail.setUsdToCnyDiff(1);
+			}
 		}
 		//欧元折人民币
-		if(!StringUtil.equals(detail.getEurToCny(),detail.getUsdToCnyPrd())){
-			detail.setEurToCnyDiff(1);
+		if(!(detail.getEurToCny()==null&&detail.getEurToCnyPrd()==null)) {
+			if (detail.getEurToCny() == null || detail.getEurToCnyPrd() == null
+					|| detail.getEurToCny().compareTo(detail.getEurToCnyPrd()) != 0) {
+				detail.setEurToCnyDiff(1);
+			}
 		}
 		//英镑折人民币
-		if(!StringUtil.equals(detail.getGbpToCny(),detail.getGbpToCnyPrd())){
-			detail.setGbpToCnyDiff(1);
+		if(!(detail.getGbpToCny()==null&&detail.getGbpToCnyPrd()==null)) {
+			if (detail.getGbpToCny() == null || detail.getGbpToCnyPrd() == null ||
+					detail.getGbpToCny().compareTo(detail.getGbpToCnyPrd()) != 0) {
+				detail.setGbpToCnyDiff(1);
+			}
 		}
 		//日元折人民币
-		if(!StringUtil.equals(detail.getJpyToCny(),detail.getJpyToCnyPrd())){
-			detail.setJpyToCnyDiff(1);
+		if(!(detail.getJpyToCny()==null&&detail.getJpyToCnyPrd()==null)) {
+			if (detail.getJpyToCny() == null || detail.getJpyToCnyPrd() == null ||
+					detail.getJpyToCny().compareTo(detail.getJpyToCnyPrd()) != 0) {
+				detail.setJpyToCnyDiff(1);
+			}
 		}
 		//其他币种(外币)折人民币
-		if(!StringUtil.equals(detail.getOthToCny(),detail.getOthToCnyPrd())){
-			detail.setOthToCnyDiff(1);
+		if(!(detail.getOthToCny()==null&&detail.getOthToCnyPrd()==null)) {
+			if (detail.getOthToCny() == null || detail.getOthToCnyPrd() == null
+					|| detail.getOthToCny().compareTo(detail.getOthToCnyPrd()) != 0) {
+				detail.setOthToCnyDiff(1);
+			}
 		}
 		//合计
-		if(!StringUtil.equals(detail.getTotal(),detail.getTotalPrd())){
-			detail.setTotalDiff(1);
+		if(!(detail.getTotal()==null&&detail.getTotalPrd()==null)) {
+			if (detail.getTotal() == null || detail.getTotalPrd() == null
+					|| detail.getTotal().compareTo(detail.getTotalPrd()) != 0) {
+				detail.setTotalDiff(1);
+			}
 		}
 		//只数
-		if(!StringUtil.equals(detail.getProdcounts(),detail.getProdcountsPrd())){
-			detail.setProdcountsDiff(1);
+		if(!(detail.getProdcounts()==null&&detail.getProdcountsPrd()==null)) {
+			if (detail.getProdcounts() == null || detail.getProdcountsPrd() == null
+					|| detail.getProdcounts().compareTo(detail.getProdcountsPrd()) != 0) {
+				detail.setProdcountsDiff(1);
+			}
 		}
 	}
 

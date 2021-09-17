@@ -168,11 +168,11 @@ $(function() {
             return;
         }
         // 选中的导出数据
-        var expArr=table.getAllCheckedRows();
-        if(!expArr || expArr.length ==0){
-            Joyin.error("没有选中的记录！");
-            return;
-        }
+        // var expArr=table.getAllCheckedRows();
+        // if(!expArr || expArr.length ==0){
+        //     Joyin.error("没有选中的记录！");
+        //     return;
+        // }
         var expArr=table.getAllCheckedRows();
         var param={};
         if(!expArr || expArr.length ==0){
@@ -181,20 +181,26 @@ $(function() {
                 param.status='03';
             }
             param.flag = "2";
-//        	param.sendStatus="01";
-            Joyin.exportExcel("export",param);
-            Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
-                Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-                    layui.layer.open({type:3});
-                    Joyin.ajax('doExportManual',null, function() {
-                        table.load();
-                        layui.layer.closeAll();
-                    });
+       	    param.sendStatus="01";
+//             Joyin.exportExcel("export",param);
+//             Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+//                 Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+//                     layui.layer.open({type:3});
+//                     Joyin.ajax('doExportManual',null, function() {
+//                         table.load();
+//                         layui.layer.closeAll();
+//                     });
+//                 });
+//             },function() {
+//                 $('iframe').contents().find("#loading").hide();
+//             });
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"SvrEquityBusiInfoRegist001",paramKeys:JSON.stringify(param)},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
                 });
-            },function() {
-                $('iframe').contents().find("#loading").hide();
-            });
-
         }
         else{
             for(var i=0;i<expArr.length;i++){
@@ -210,14 +216,21 @@ $(function() {
             param.keyList = JSON.stringify(expArr);
             param.expKeys = keyList.join(',')
             param.flag = "2";
-            Joyin.exportExcel('exportDel', param);
-            Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
-                layui.layer.open({type:3});
-                Joyin.ajax('doManual', {flag : '02',keyList: JSON.stringify(expArr)}, function() {
-                    table.load();
-                    layui.layer.closeAll();
+            // Joyin.exportExcel('exportDel', param);
+            // Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
+            //     layui.layer.open({type:3});
+            //     Joyin.ajax('doManual', {flag : '02',keyList: JSON.stringify(expArr)}, function() {
+            //         table.load();
+            //         layui.layer.closeAll();
+            //     });
+            // });
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"SvrEquityBusiInfoRegist001",expKeys:param.expKeys},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
                 });
-            });
         }
     });
 
@@ -399,18 +412,18 @@ $(function() {
                 //给出提示框【导出数据包含修改或已报送数据，请确认是否导出！】
                 Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0011"), function() {
                     //点击“是”导出数据并且手工处理，否则重新选择数据
-                    exportZZ(doManualTip);
+                    exportZZ(doManualTip,expArr);
                 });
             }else{
                 //勾选的数据正常，不需要给出提示，直接导出数据并且手工处理
-                exportZZ(doManualTip);
+                exportZZ(doManualTip,expArr);
             }
         }
 
     }
-    function exportZZ(flag){
+    function exportZZ(flag,expArr){
         //导出中债excel并且调用手工处理
-        var expArr=table.getAllCheckedRows();
+        // var expArr=table.getAllCheckedRows();
         $.each(expArr, function(i, v) {
             v.sendStatus=v.sendStatusCode;
             v.status=v.statusCode;
@@ -481,8 +494,17 @@ $(function() {
                     );
                 });
             }else{
-                Joyin.exportExcel('export', param);//原导出逻辑
-                doManual(JoyinUtil.getMessage("REPORT_MANUAL_0012"),param);//原手工处理逻辑
+                // Joyin.exportExcel('export', param);//原导出逻辑
+                // doManual(JoyinUtil.getMessage("REPORT_MANUAL_0012"),param);//原手工处理逻辑
+                Joyin.ajax('searchInfo',
+                    param,
+                    function (result) {
+                        if (result && result.length > 0){
+                            exportZZ(true,result);
+                        } else {
+                            Joyin.alert(JoyinUtil.getMessage("无可导出数据!"));
+                        }
+                    });
             }
         });
         // 添加后台批处理导出逻辑 zhangyf 20200113 end

@@ -51,11 +51,7 @@
     	else if(getElementById('publishType').val() === PUBLISH_TYPE_02) {
 			getElementById('rateType').trigger('change').prop('disabled', false);
             $("#rateTypeDiv").css('display','block');
-			getElementById('rate').trigger('change').prop('disabled', false);
-			getElementById('indexId').trigger('change').prop('disabled', false);
-			getElementById('coefficient').trigger('change').prop('disabled', false);
-			getElementById('spreadRate').trigger('change').prop('disabled', false);
-			getElementById('resetType').trigger('change').prop('disabled', false);
+            rateTypeChange();
 			getElementById('rateLower').val('').trigger('change').prop('disabled', true);
 			getElementById('rateLimit').val('').trigger('change').prop('disabled', true);
 		}
