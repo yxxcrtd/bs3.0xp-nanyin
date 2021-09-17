@@ -1041,7 +1041,7 @@
      * 成交发送
      */
     var sendDeal = function (object) {
-        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice003_btn_done", null, function (result) {
+        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice003/save', object, "CfetsRepoDealQuotedPrice003_btn_done", null, function (result) {
             var index = window.parent.layer.getFrameIndex(window.name);
             window.parent.layer.close(index);
         })
