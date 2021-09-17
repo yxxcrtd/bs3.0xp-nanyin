@@ -142,6 +142,7 @@ public class FinPayInterestStdInfoController extends BaseController {
         model.addAttribute("INTPAY_CYCLE_05", DictCodeList.频率_年.getValue());
         /** add by yanya on 20210901 增加是否无明确融资金额**/
         model.addAttribute("YES", DictCodeList.是否_是.getValue());
+        model.addAttribute("objectType", this.getParam("objectType")); //标的类型objectType：01 债权类资产  【标的类型用于区分‘无明确融资金额’按钮】
         return "valuation/component/asset/FinPayInterestStdInfo";
     }
 

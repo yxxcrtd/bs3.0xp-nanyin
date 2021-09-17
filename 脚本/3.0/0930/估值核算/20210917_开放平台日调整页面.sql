@@ -13,6 +13,8 @@ insert into sys_page_dictlist (PAGE_ID, SUB_PAGE_ID, DICT_ID, DICT_ITEM_VAL, DIC
 values ('CashFlowDiscount002', '999999', 'CURVE_TYPE', 'SP', null, null, 'system', null, '25-AUG-21 05.29.43.000000 PM', 'system', '25-AUG-21 05.29.43.000000 PM', null);
 
 
-
+--股息增长率配置去除资产类型，资产细分类必填项
+alter table MOD_STOCKDIVITRATE_CONFIG modify SEC_TYPE_MODEL null;
+alter table MOD_STOCKDIVITRATE_CONFIG modify SEC_DETAIL_TYPE_MODEL null;
 
 
