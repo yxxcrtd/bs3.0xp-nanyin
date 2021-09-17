@@ -88,7 +88,12 @@ public class ValRiftTask extends BatchBaseService{
                 supDate = new Date();
             }
             //add by lpf for 估值穿透改造 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
-            String deptCode = batchExecuteInfo.getCreateUser() != null?MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            String deptCode = null;
+            try{
+                deptCode = batchExecuteInfo.getCreateUser() != null?MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            }catch (Exception e){
+
+            }
             List<Map<String,Object>> importValTableProdList = valRiftService.selectImportValTableProdList(supDate,this.getProductIdList(),deptCode);
             List<String> importProdList = new ArrayList<>();
             List<String> unImportProdList = new ArrayList<>();
