@@ -253,6 +253,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     }
                 } else {
                     trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
+                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("系统中已存在该资产代码!"));
                 }
             }
             if (!StringUtil.isNotEmpty(rowData.get(0))) {

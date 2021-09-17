@@ -286,10 +286,13 @@
             rvas.FINPROD_ID finprodId,
             fp.FINPROD_TYPE2 finprodType2,
             fp.CCY ccy,
-            rvas.SECURITY_QUANTITY*temp.AMOUNT/rvsas.SECURITY_QUANTITY shareAmt,
+            CASE
+                WHEN fp.FINPROD_TYPE2 = 'F01' THEN rvas.SECURITY_QUANTITY*temp.AMOUNT/rvsas.SECURITY_QUANTITY
+                ELSE rvas.smv*temp.AMOUNT/rvsas.SECURITY_QUANTITY
+                END shareAmt,
             CASE
                     WHEN fp.FINPROD_TYPE2 = 'F01' THEN rvas.SECURITY_QUANTITY*temp.AMOUNT/rvsas.SECURITY_QUANTITY
-                    ELSE rvas.UNIT_COST*temp.AMOUNT/rvsas.SECURITY_QUANTITY
+                    ELSE rvas.smv*temp.AMOUNT/rvsas.SECURITY_QUANTITY
             END tradeAmt,
             temp.FINPROD_ID pFinprodId,
             #{YES_OR_NO_Y} isBottom,
