@@ -10,6 +10,7 @@
 			A.VDATE VDATE,/**起息日**/
 			A.MDATE MDATE,/**到期日**/
 			A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
+			A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
 			D.TYPE_18 AS SEC_TYPE,/**证券品种**/
 			D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
 		FROM
@@ -17,7 +18,10 @@
 			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
 		WHERE
 			1 = 1
-			AND D.TYPE_18 = '01' AND (D.TYPE_1 = '033' OR (A.IS_SUS = '01' AND A.IS_RIGHT = '02'))/**优先股、不含权的永续债**/
+			AND (
+				(D.TYPE_18 = '01' AND D.TYPE_1 = '033')/**非可转、可交换、优先股且非永续**/
+				OR (D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'Y' AND A.IS_RIGHT = 'N')/**非可转、可交换、优先股且永续不含权**/
+			)
 			AND (
 			EXISTS (
 				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
@@ -133,9 +137,8 @@
 		1 = 1
 		AND (
 			(
-				D.TYPE_18 = '01' AND (
-				(D.TYPE_1 != '028' AND D.TYPE_1 != '029')/**可转债、可交换债**/ OR (A.IS_SUS = '01' AND A.IS_RIGHT = '01')/**包含永续含权债**/
-				)
+			(D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'N')/**非可转、可交换、优先股且非永续**/
+			OR (D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'Y' AND A.IS_RIGHT = 'Y')/**非可转、可交换、优先股且永续含权**/
 			)
 			OR D.TYPE_18 = '13' /**其他债权类资产**/
 		)
@@ -283,29 +286,34 @@
     </select>
     <!-- 股票行情查询 -->
     <select id="getStockMarketInfo"  resultType="com.joyintech.tams.common.base.entity.MstSharePrice">
-    	SELECT B.SHARES_ID sharesId,
-		       B.DEAL_DATE DEAL_DATE,
-		       B.CLOSE_PRICE CLOSE_PRICE,
-		       B.PB PB,
-		       B.PE PE
-		FROM
-			MST_SHARE_PRICE B INNER JOIN  FIN_PRODUCT A  ON A.FINPROD_MARKET_ID = B.SHARES_ID
-	    where 1=1
-	    <if test="stockIdList != null and stockIdList.size()>0 ">
-		   AND A.FINPROD_ID IN(
-		        <foreach item="item" index="index" collection="stockIdList" separator=",">
-						#{item}
+		select SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE
+		from (
+			SELECT B.SHARES_ID,
+			B.DEAL_DATE,
+			B.CLOSE_PRICE,
+			B.PB          PB,
+			B.PE          PE,
+			rownum        as r
+			FROM MST_SHARE_PRICE B
+			INNER JOIN FIN_PRODUCT A
+			ON A.FINPROD_MARKET_ID = B.SHARES_ID
+			where 1 = 1
+			<if test="stockIdList != null and stockIdList.size()>0 ">
+				AND A.FINPROD_ID IN(
+				<foreach item="item" index="index" collection="stockIdList" separator=",">
+					#{item}
 				</foreach>
-		     )
+				)
+			</if>
+			<if test="searchDate != null">
+				and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
+			</if>
+			ORDER BY B.DEAL_DATE desc
+		) info
+		where 1=1
+		<if test="searchNum != null">
+			AND info.r &lt;= #{searchNum, jdbcType=NUMERIC}
 		</if>
-		<!-- 开始日期 -->
-		<if test="startDate != null">
-		  	AND B.DEAL_DATE >= #{startDate, jdbcType=DATE}
-		</if>
-		<if test="searchDate != null">
-		 	and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
-		</if>
-		ORDER BY B.DEAL_DATE
     </select>
     <!-- 曲线行情查询   -->
     <select id="selectYieldCurveInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModYeildCurveParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto">

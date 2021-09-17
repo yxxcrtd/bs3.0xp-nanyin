@@ -13,7 +13,9 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.reader;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.service.CashFlowDiscountReaderService;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ import java.util.List;
  */
 @Service
 @Scope("prototype")
-public class CashFlowDiscountTaskReader extends BaseReader<CashFlowDiscountReaderResult> {
+public class CashFlowDiscountTaskReader extends BaseReader<CashFlowDiscountReaderResult> implements StepExecutionListener {
 
     /**
      * reader方法的 Service
@@ -44,6 +46,16 @@ public class CashFlowDiscountTaskReader extends BaseReader<CashFlowDiscountReade
     @Override
     public List<CashFlowDiscountReaderResult> createList() {
         return cashFlowDiscountReaderService.execute(getParams(),stepExecution);
+    }
+
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        return stepExecution.getExitStatus();
     }
 
 }

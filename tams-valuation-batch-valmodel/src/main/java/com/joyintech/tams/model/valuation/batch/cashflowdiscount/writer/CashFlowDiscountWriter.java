@@ -25,6 +25,9 @@ import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.ExitStatus;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -42,9 +45,11 @@ import java.util.Map;
  */
 @Service
 @Scope("prototype")
-public class CashFlowDiscountWriter extends BaseWriter<NeedToWriteEntity>{
+public class CashFlowDiscountWriter extends BaseWriter<NeedToWriteEntity> implements StepExecutionListener {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
+
+    private StepExecution stepExecution;
 
     @Autowired
     private CashFlowDiscountMapper cashFlowDiscountMapper;
@@ -170,4 +175,15 @@ public class CashFlowDiscountWriter extends BaseWriter<NeedToWriteEntity>{
             }
         }
     }
+
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        return stepExecution.getExitStatus();
+    }
+
 }

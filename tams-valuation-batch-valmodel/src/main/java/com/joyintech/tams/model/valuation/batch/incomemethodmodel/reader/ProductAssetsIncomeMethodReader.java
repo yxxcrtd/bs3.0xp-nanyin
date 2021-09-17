@@ -3,7 +3,9 @@ package com.joyintech.tams.model.valuation.batch.incomemethodmodel.reader;
 import com.joyintech.batch.batchbase.baseclass.BaseReader;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodReaderDto;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodReaderService;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,7 @@ import java.util.List;
  * @return:
  */
 @Service
-public class ProductAssetsIncomeMethodReader extends BaseReader <ProductAssetsIncomeMethodReaderDto>{
+public class ProductAssetsIncomeMethodReader extends BaseReader <ProductAssetsIncomeMethodReaderDto> implements StepExecutionListener {
     /**
      *  收益法估值批处理readerService
      */
@@ -29,5 +31,14 @@ public class ProductAssetsIncomeMethodReader extends BaseReader <ProductAssetsIn
     public List<ProductAssetsIncomeMethodReaderDto> createList() {
         List<ProductAssetsIncomeMethodReaderDto> result = productAssetsIncomeMethodReaderService.createList(getParams(),stepExecution);
         return result;
+    }
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution=stepExecution;
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        return null;
     }
 }

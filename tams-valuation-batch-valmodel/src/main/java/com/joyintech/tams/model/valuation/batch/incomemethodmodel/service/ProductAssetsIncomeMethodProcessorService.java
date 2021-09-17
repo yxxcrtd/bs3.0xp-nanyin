@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -134,7 +135,7 @@ public class ProductAssetsIncomeMethodProcessorService {
 
         //deci1=（1+ 变量.股息预期股息增长率）
         BigDecimal deciRate1= ArithmeticUtil.doAdd(BigDecimal.ONE,g);
-        //deci2=（变量.年股息*deci1/ 变量.买入全价 + 变量.股息预期股息增长率）
+        //deci2=（变量.年股息*deci1/ 变量.贴现目标价 + 变量.股息预期股息增长率）
         BigDecimal deciRate2 = ArithmeticUtil.doAdd(ArithmeticUtil.divide(ArithmeticUtil.multiply(D0,deciRate1),targetPrice,12),g);
         //deci3=变量.估值日国债收益率  +（deci2- 变量.基准日国债收益率 ）
         BigDecimal r= ArithmeticUtil.doAdd(valuationGovernmentDebtYield,ArithmeticUtil.subtract(deciRate2,baseDateGovernmentDebtYield));
@@ -142,19 +143,19 @@ public class ProductAssetsIncomeMethodProcessorService {
 
         /**
          * 3.估值全价、净价计算
-         * 变量.估值净价 = 变量.年股息*（1 + 变量.股息预期股息增长率）/ (变量.折现率 - 变量.股息预期股息增长率)
+         * 变量.估值全价 = 变量.年股息*（1 + 变量.股息预期股息增长率）/ (变量.折现率 - 变量.股息预期股息增长率)
          */
         // deciPrice1 = 变量.年股息*（1 + 变量.股息预期股息增长率）
         BigDecimal deciPrice1 = ArithmeticUtil.multiply(D0, ArithmeticUtil.doAdd(BigDecimal.ONE, g)
         );
         // deciPrice1 / (变量.折现率 - 变量.股息预期股息增长率)
-        BigDecimal netPrice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
+        BigDecimal fullprice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
 
         // 变量.单位应计利息 = 返回值.单位应计利息
         BigDecimal interest = getCalculate(item, plateDate).getInterest();
 
         // 变量.估值全价 = 变量.估值净价 + 变量.单位应计利息
-        BigDecimal fullprice = ArithmeticUtil.doAdd(netPrice, interest);
+        BigDecimal netPrice = ArithmeticUtil.subtract(fullprice, interest);
 
         //封装结果
         //1封装债券估值行情DTO
@@ -181,8 +182,8 @@ public class ProductAssetsIncomeMethodProcessorService {
         mstBondValuationInfo.setSecId(modAssetInfoDto.getFinprodMarketId()); //市场代码
         mstBondValuationInfo.setValueDate(plateDate);//估值日
         mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
-        mstBondValuationInfo.setPrice(fullprice); //估值全价
-        mstBondValuationInfo.setNetprice(netPrice);//估值净价
+        mstBondValuationInfo.setPrice(fullprice.setScale(2, RoundingMode.HALF_UP)); //估值全价
+        mstBondValuationInfo.setNetprice(netPrice.setScale(2, RoundingMode.HALF_UP));//估值净价
         mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
         mstBondValuationInfo.setCreateUser("batch"); //
         mstBondValuationInfo.setUpdateUser("batch");

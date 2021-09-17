@@ -150,10 +150,11 @@ public class BinaryTreeModelReaderService {
             modStockMarketParamsDto.setStockIdList(listStockId);
             //查询开始日	= 跑批日-（明细.到期日-跑批日）
             long lastQx = DateUtil.getBetweenDayNumber(platDate, modAssetInfoDto.getMdate());
-            Date startDate = DateUtil.addDay(platDate, -(int)lastQx);
-            modStockMarketParamsDto.setStartDate(startDate);
+//            Date startDate = DateUtil.addDay(platDate, -(int)lastQx);
+//            modStockMarketParamsDto.setStartDate(startDate);
             //查询结束日 = 跑批日
             modStockMarketParamsDto.setSearchDate(platDate);
+            modStockMarketParamsDto.setSearchNum(lastQx);
             List<MstSharePrice> listStock = modValuationCommonService.getStockMarketIntervalInfo(modStockMarketParamsDto);
             model.setModStockMarketInfoList(listStock);
 
