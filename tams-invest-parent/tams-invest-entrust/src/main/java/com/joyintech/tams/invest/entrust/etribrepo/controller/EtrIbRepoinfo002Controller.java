@@ -261,11 +261,13 @@ public class EtrIbRepoinfo002Controller extends BaseController {
         	return ar;
         }
 
+        // modify by wanshiwei ZGZGST-2657 7：指令阶段不check 20210917 start
         //光大PB子系统：添加委托金额校验--委托金额不低于10万 add by:mengpeng
-        if (dto.getEntrustAmt().compareTo(BigDecimal.valueOf(100000)) == -1){
-            ar.setData(this.getMessage("委托金额低于10万，是否继续？"));
-            return ar;
-        }
+//        if (dto.getEntrustAmt().compareTo(BigDecimal.valueOf(100000)) == -1){
+//            ar.setData(this.getMessage("委托金额低于10万，是否继续？"));
+//            return ar;
+//        }
+        // modify by wanshiwei ZGZGST-2657 7：指令阶段不check 20210917 end
 
         return commonCheck(result, dto.getOperateType());
     }
