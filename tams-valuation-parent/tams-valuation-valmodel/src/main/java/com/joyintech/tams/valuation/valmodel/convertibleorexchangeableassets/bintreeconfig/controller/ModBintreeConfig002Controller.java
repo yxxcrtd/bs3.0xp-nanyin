@@ -80,6 +80,7 @@ public class ModBintreeConfig002Controller extends BaseController {
              ModBintreeConfigDto creditTagInfo = new ModBintreeConfigDto();
              creditTagInfo.setSmoothsection(new BigDecimal("0.00"));
              creditTagInfo.setBintreeStep(new BigDecimal("100"));
+             creditTagInfo.setCurveCode(ModelDictCodeList.曲线代码_中债国债到期收益率曲线.getValue());
              model.addAttribute(GlobalConstant.ENTITY, creditTagInfo);
          }
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
