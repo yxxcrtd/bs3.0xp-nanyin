@@ -183,9 +183,17 @@ public class ValSecBaseInfo extends BaseEntity {
     private String bondRiskType;
 
     /**
-     * 正股代码
+     * 转股产品代码
      */
     private String conFinprodId;
+    /**
+     * 转股市场代码
+     */
+    private String comShareId;
+    /**
+     * 转股日期
+     */
+    private Date conVdate;
 
     /**
      * 转股价格
@@ -812,4 +820,19 @@ public class ValSecBaseInfo extends BaseEntity {
         this.redeemPrice = redeemPrice;
     }
 
+    public String getComShareId() {
+        return comShareId;
+    }
+
+    public void setComShareId(String comShareId) {
+        this.comShareId = comShareId;
+    }
+
+    public Date getConVdate() {
+        return conVdate;
+    }
+
+    public void setConVdate(Date conVdate) {
+        this.conVdate = conVdate;
+    }
 }

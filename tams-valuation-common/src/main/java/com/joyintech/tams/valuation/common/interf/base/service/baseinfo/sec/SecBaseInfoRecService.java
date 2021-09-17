@@ -422,6 +422,8 @@ public class SecBaseInfoRecService {
             FinProductConvertible result = new FinProductConvertible();
             result.setFinprodId(dto.getAssetId());//金融产品代码
             result.setConFinprodId(dto.getConFinprodId());//转股产品代码
+            result.setConShareId(dto.getComShareId());//转股市场代码
+            result.setConVdate(dto.getConVdate());//转股起始日
             result.setConPrice(dto.getConPrice());//转股价格
             result.setResalePrice(dto.getResalePrice());//回售触发价
             result.setRedeemPrice(dto.getRedeemPrice());//赎回触发价
