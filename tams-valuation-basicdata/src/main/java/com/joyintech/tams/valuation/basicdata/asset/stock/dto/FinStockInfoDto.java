@@ -308,7 +308,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      */
     @Override
     @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^[a-zA-z0-9]*\\.[a-zA-z]*$",message = "FinStockInfo002.finprodMarketId.CHECKERR_001",groups={ValidateGroupEdit.class})
-//    @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
+    @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();

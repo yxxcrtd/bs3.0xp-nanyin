@@ -1,0 +1,4 @@
+
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='FinBondTargetAsset002' AND ELEMENT_ID = 'capiIncomeFeature';
+insert into SYS_ELEMENT_CONTROL (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('FinBondTargetAsset002','capiIncomeFeature','capiIncomeFeature','保本标识','02','02','02',null);

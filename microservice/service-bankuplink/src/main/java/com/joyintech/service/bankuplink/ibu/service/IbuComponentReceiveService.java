@@ -480,9 +480,9 @@ public class IbuComponentReceiveService extends BaseService{
                     BigDecimal shareAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(shareAmtTotalBW,ptlAllocationDto.getShareAmt()),shareAmtTotalFP,2,RoundingMode.HALF_DOWN);
 //                    BigDecimal fpriceAmt = ArithmeticUtil.divide(ArithmeticUtil.multiply(fpriceAmtTotalBW,ptlAllocationDto.getFpriceAmt()),fpriceAmtTotalFP,2,RoundingMode.HALF_DOWN);
                     ptlAllocationDto.setShareAmt(shareAmt);
-                    ptlAllocationDto.setFpriceAmt(shareAmt.divide(new BigDecimal(100)));
+                    ptlAllocationDto.setFpriceAmt(shareAmt.multiply(new BigDecimal(100)));
                     交易份额尾差 = ArithmeticUtil.subtract(交易份额尾差,shareAmt);
-                    全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,shareAmt.divide(new BigDecimal(100)));
+                    全价总额尾差 = ArithmeticUtil.subtract(全价总额尾差,shareAmt.multiply(new BigDecimal(100)));
                 }
                 //尾差处理  尾差放在指令的交易金额最大的记录
                 for(PtlAllocationDto item : ptlAllocations){
