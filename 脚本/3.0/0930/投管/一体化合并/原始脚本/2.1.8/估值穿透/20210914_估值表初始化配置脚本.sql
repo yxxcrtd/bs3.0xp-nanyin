@@ -1274,7 +1274,7 @@ insert into RSK_VALTBL_ASSET_SUB_MAP_DTL (ID, SRC_CODE, TGT_CODE, ALLOW_SUM, MEM
 values ('d25b93ed1d73404d9a42', '11051201', '11050201', 'Y', null, 'fqq', null, sysdate, 'fqq', sysdate);
 
 insert into RSK_VALTBL_ASSET_SUB_MAP_DTL (ID, SRC_CODE, TGT_CODE, ALLOW_SUM, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
-values ('d25b93ed1d73404d9a42', '11051501', '11050401', 'Y', null, 'admin', null, '07-SEP-21 03.55.10.822000 PM', 'admin', '07-SEP-21 03.55.10.822000 PM');
+values ('d25b93ed1d73404d9a42', '11051501', '11050401', 'Y', null, 'admin', null, sysdate, 'admin', sysdate);
 
 insert into RSK_VALTBL_ASSET_SUB_MAP_DTL (ID, SRC_CODE, TGT_CODE, ALLOW_SUM, MEMO, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('d25b93ed1d73404d9a42', '110521', '110502', 'Y', null, 'fqq', null, sysdate, 'fqq', sysdate);
