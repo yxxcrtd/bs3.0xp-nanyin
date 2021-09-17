@@ -1506,4 +1506,16 @@ public class CfetsRepoDealQuotedPrice001Dto extends EtrEntrust implements Proces
     public void setSqTotalAmt(BigDecimal sqTotalAmt) {
         this.sqTotalAmt = sqTotalAmt;
     }
+
+    //add by chenjiaxing 流程中未展示分配方式字段 start
+    private String distribution;
+
+    public String getDistribution() {
+        return distribution;
+    }
+
+    public void setDistribution(String distribution) {
+        this.distribution = distribution;
+    }
+    //add by chenjiaxing 流程中未展示分配方式字段 end
 }
