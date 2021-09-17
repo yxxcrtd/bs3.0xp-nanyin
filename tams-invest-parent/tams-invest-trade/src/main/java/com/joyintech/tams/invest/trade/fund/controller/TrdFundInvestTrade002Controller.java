@@ -535,11 +535,14 @@ public class TrdFundInvestTrade002Controller extends BaseController {
             String ps = dto.getPs();
             //add by zznn 20210909 start
             //申购实占  处理下份额   相关指比按占比计算  redis资产实时规模信息amount和num 均置为交易金额 有问题
-            if(StringUtil.equals(ps,DictCodeList.交易方向_申购.getValue())){
-                if(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue())){
-                    dto.setShareAmt(ArithmeticUtil.multiply(dto.getTradeAmt(), new BigDecimal(100)));
-                }else{
-                    dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), new BigDecimal(100),2));
+            //针对场内
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())||StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                if(StringUtil.equals(ps,DictCodeList.交易方向_申购.getValue())){
+                    if(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue())){
+                        dto.setShareAmt(ArithmeticUtil.multiply(dto.getTradeAmt(), new BigDecimal(100)));
+                    }else{
+                        dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), new BigDecimal(100),2));
+                    }
                 }
             }
             //add by zznn 20210909 end

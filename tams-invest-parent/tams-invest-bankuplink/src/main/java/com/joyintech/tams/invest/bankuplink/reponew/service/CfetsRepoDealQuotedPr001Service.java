@@ -105,7 +105,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("loginUserId", LoginUserUtil.getUserName());
         // 投资经理
-        Object invManagerIdObj = param.get("invManagerId_zlgl");
+        Object invManagerIdObj = param.get("invManagerId");
         if (invManagerIdObj != null) {
             param.put("invManagerIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)invManagerIdObj));
@@ -114,7 +114,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
             param.put("invManagerIdList", new ArrayList<>());
         }
         // 组合代码
-        Object portfolioIdObj = param.get("portfolioId_zlgl");
+        Object portfolioIdObj = param.get("portfolioId");
         if (portfolioIdObj != null) {
             param.put("portfolioIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
@@ -123,20 +123,26 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         else {
             param.put("portfolioIdList", new ArrayList<>());
         }
-
-        // 资产代码
-        Object assetIdObj = param.get("assetId_zlgl");
-        if (assetIdObj != null) {
-            param.put("assetIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)assetIdObj));
-            param.put("assetId",null);
+        Object entrustIdObj = param.get("entrustId");
+        if (entrustIdObj != null) {
+            param.put("entrustIdMultiple",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)entrustIdObj));
+            param.put("entrustId",null);
         }
         else {
-            param.put("assetIdList", new ArrayList<>());
+            param.put("entrustIdMultiple", new ArrayList<>());
+        }
+        String keywords = "";
+        if(param.containsKey("keywords")){
+            keywords =(String) param.get("keywords");
+            param.remove("keywords");
         }
         List<CfetsRepoDealQuotedPr001Dto> list = restTemplate.postForList(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/queryZlzxList",
                 param, CfetsRepoDealQuotedPr001Dto.class);
+        if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
+            list = (List<CfetsRepoDealQuotedPr001Dto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));
+        }
         return list;
     }
 

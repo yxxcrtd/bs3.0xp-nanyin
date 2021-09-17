@@ -30,7 +30,15 @@
         , {field: 'lossInputPattern', title: '减值录入方式', width: '10%', sortField: "lossInputPattern",visible: false}
         , {field: 'lossInputPatternStr', title: '减值录入方式', width: '10%', sortField: "lossInputPatternStr"}
         , {field: 'lossRatio', title: '减值比例%', width: '10%', sortField: "lossRatio"}
-        , {field: 'checkStatusStr', title: '检查结果', width: '10%', sortField: "checkStatusStr"}
+        , {
+            field: 'checkStatusStr', title: '检查结果',width:'10%',render: function (data, type, row, meta) {
+                if (data == "不通过") {
+                    return '<span style="color: red">'+data+'</span>';
+                }else{
+                    return data;
+                }
+            }
+        }
         , {field: 'tradeId', title: '交易编号', width: '10%', sortField: "tradeId", visible: false}
         , {field: 'remark', title: '备注', width: '10%', sortField: "remark"}
     ];
