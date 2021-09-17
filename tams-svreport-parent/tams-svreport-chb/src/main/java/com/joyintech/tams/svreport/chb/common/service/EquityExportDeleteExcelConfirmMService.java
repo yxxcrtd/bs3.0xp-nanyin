@@ -117,7 +117,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "EquityInfoRegistDel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag) && CollectionUtils.isNotEmpty(list)) {
                 List<String> updateKeys = list.stream().map(
                         item -> item.getBankCode()+"|"+item.getIndentifyMark()+"|"+item.getSubmitStatus()+"|"+item.getSumitSeq()).collect(Collectors.toList());
                 Map<String,Object> map = new HashMap<>();
@@ -177,7 +177,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "EquityBusiInfoRegistDel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)  && CollectionUtils.isNotEmpty(list)) {
                 Map<String,Object> map = new HashMap<>();
                 map.put("keyList",JSON.toJSONString(list));
                 dealDeleteEquityBusiInfoRegistDataSendStatus(map);
@@ -218,7 +218,7 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             excelTemplate = "InvestorsHoldInfoRegistdel";
 
             // 是否更新报送状态为手工报送
-            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag)) {
+            if (DictCodeList.是否_中债_是.getValue().equals(doMannulFlag) && CollectionUtils.isNotEmpty(list)) {
                 Map<String,Object> map = new HashMap<>();
                 map.put("keyList",JSON.toJSONString(list));
                 dealDeleteInvestorsHoldInfoRegistDataSendStatus(map);
