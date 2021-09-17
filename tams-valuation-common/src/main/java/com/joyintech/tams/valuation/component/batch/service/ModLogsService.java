@@ -247,7 +247,7 @@ public class ModLogsService {
                 logsMap.get(finProdId).setExecDetail(msg);
             }
             else{
-                logsMap.get(finProdId).setExecDetail(logsMap.get(finProdId).getExecDetail()+";"+msg);
+                logsMap.get(finProdId).setExecDetail(logsMap.get(finProdId).getExecDetail()+";\r"+msg);
             }
         }else{
             logger.error("资产代码："+finProdId+" 未初始化执行日志.");

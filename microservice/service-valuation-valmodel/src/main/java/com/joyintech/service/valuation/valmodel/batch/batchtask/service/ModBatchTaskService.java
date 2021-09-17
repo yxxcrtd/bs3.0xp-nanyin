@@ -169,6 +169,7 @@ public class ModBatchTaskService extends BaseService {
         if (StringUtil.isNotBlank(finprodIds)) {
             List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
             params.put("finprodIdList", finprodIdList);
+            //清理和确认是否有执行中的时候要使用任务组代码查
             params.put("BATCH_SEQ_NO", VAL_MODEL_BATCH_GROUP);
         }
         return modBatchTaskMapper.checkIsRunning(params) > 0;
@@ -178,6 +179,8 @@ public class ModBatchTaskService extends BaseService {
      * 跑批前清理掉之前的参数
      */
     public void cleanBatchParams(Map<String, Object> params) {
+        //清理和确认是否有执行中的时候要使用任务组代码查
+        params.put("BATCH_SEQ_NO", VAL_MODEL_BATCH_GROUP);
         modBatchTaskMapper.cleanBatchParams(params);
     }
 

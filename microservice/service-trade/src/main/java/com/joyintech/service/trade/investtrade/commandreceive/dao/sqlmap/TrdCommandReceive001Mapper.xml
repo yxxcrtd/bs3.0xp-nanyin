@@ -96,6 +96,9 @@
 		ETR_ENTRUST_ADD.MATURE_YIELD matureYield,
 		ETR_ENTRUST_ADD.EXER_YIELD exerYield,
 		ETR_ENTRUST.PRICE_MODEL priceMode
+		<!-- add by zhangrui1 查询交易对手字段 start -->
+		,ETR_ENTRUST.COUNTER_ID counterId
+		<!-- add by zhangrui1 查询交易对手字段 end -->
 		FROM
 		ETR_DISTRIBUTE INNER JOIN ETR_ENTRUST
 		ON ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -289,6 +292,9 @@
 		ETR_ENTRUST_ADD.MATURE_YIELD matureYield,
 		ETR_ENTRUST_ADD.EXER_YIELD exerYield,
 		ETR_ENTRUST.PRICE_MODEL priceMode
+		<!-- add by zhangrui1 查询交易对手字段 start -->
+		,ETR_ENTRUST.COUNTER_ID counterId
+		<!-- add by zhangrui1 查询交易对手字段 end -->
 		FROM
 		ETR_DISTRIBUTE INNER JOIN ETR_ENTRUST
 		ON ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
