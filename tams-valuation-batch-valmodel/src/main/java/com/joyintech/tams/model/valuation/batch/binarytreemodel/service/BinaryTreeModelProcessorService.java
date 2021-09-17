@@ -155,11 +155,11 @@ public class BinaryTreeModelProcessorService {
         quaryMidAllValue(binTree, binaryTreeModelReaderEntity, upNum, downNum, platDate, binaryTreeLength, encashYears, modRiskPremium);
         //12.估值全价
         //变量.估值全价 = 变量.二叉树二维数据[0][0].总价值
-        BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(8, RoundingMode.HALF_UP);
+        BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(2, RoundingMode.HALF_UP);
         //13.调用【算法包.计算百元面值的债券的利息-记账用】
         BigDecimal interest = getCalculate(binaryTreeModelReaderEntity, platDate).getInterest();
         //14.变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
-        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(8, RoundingMode.HALF_UP);
+        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(2, RoundingMode.HALF_UP);
 
         //封装结果
         modCurveResult.setSeqno(IDGenerator.generate());
@@ -182,6 +182,7 @@ public class BinaryTreeModelProcessorService {
         mstBondValuationInfo.setPrice(valueAllPrice); //估值全价
         mstBondValuationInfo.setNetprice(valueNetPrice);//估值净价
         mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
+        mstBondValuationInfo.setLastPeriod(encashYears.setScale(4, RoundingMode.HALF_UP));//设置剩余期限，且保留4位小数
         mstBondValuationInfo.setCreateUser("batch"); //
         mstBondValuationInfo.setUpdateUser("batch");
         mstBondValuationInfo.setCreateTime(DateUtil.now());
@@ -215,12 +216,12 @@ public class BinaryTreeModelProcessorService {
         }
         //【批处理名称】-当天无股票行情
         if (entity.getModStockMarketInfoList() == null || entity.getModStockMarketInfoList().size() == 0) {
-            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-当天无股票行情.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-历史股票行情缺失.");
             checkResult = false;
         }
         //【批处理名称】-当天无收益率曲线行情
         if (entity.getModYieldCurveInfoList() == null || entity.getModYieldCurveInfoList().size() == 0) {
-            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-当天无收益率曲线行情.");
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【二叉树模型批处理】-收益率曲线行情缺失.");
             checkResult = false;
         }
         return checkResult;
