@@ -124,134 +124,93 @@ public class BMWEclCalculationProcessorService {
         if (CollectionUtils.isEmpty(listProcess)) {
             return result;
         }
-        // 按资产分组，故取第一条作为资产信息使用
-        ModEclResultProcess assetInfo = listProcess.get(0);
-        // 定义 变量.三阶段减值管理数据 = null
-        TrdAssetLoss trdAssetLossP3 = null;
+        // 按资产分组，毕马威方案只有一条数据, 故取第一条作为资产信息使用
+        ModEclResultProcess entityDto = listProcess.get(0);
         List<CommonErrorParams> errors = (List<CommonErrorParams>) stepExecution.getJobExecution().getExecutionContext().get(
                 "ERRORS");
         if (errors == null) {
             errors = new ArrayList<CommonErrorParams>();
         }
         //模型计算LGD
-        caclLGD(assetInfo, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
+        caclLGD(entityDto, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
 
         // 计算ECL
         // 查询成本科目性质
         List<String> subjectNatureList = accountingCommonBatchService
                 .getValSubjectNatureListWithAcctStandardId(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), null);
-        // 循环 变量.减值结果过程List，毕马威方案只有一条数据
-        for (ModEclResultProcess entityDto : listProcess) {
-            // 定义 变量.减值结果过程表
-            ModEclResultProcess modEclResultProcess = new ModEclResultProcess();
-            // 定义 变量.资产减值结果表
-            ModEclResult modEclResult = new ModEclResult();
-            // 定义 变量.数据来源 = 模型
-            String dataSource = DictCodeListExt3.减值数据来源_模型.getValue();
-            try {
-                // 计算ECL
-                // 依据资产减值管理界面资产数据来源字段区分，手工、模型、wind、中债
-                // 查询资产减值日期对应的资产减值管理数据
-                Map<String, Object> searchPara = new HashMap<>();
-                searchPara.put("assetId", finprodId);
-                searchPara.put("platDate", platDate);
-                searchPara.put("INPUT_TYPE_03", DictCodeListExt3.减值数据来源_中债接入.getValue());
-                // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
-                List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
-                        searchPara);
-                if(!CollectionUtils.isEmpty(listTrdAssetLoss)){
-                    // 将查询结果按数据来源分组：手工、wind、中债
-                    Map<String, List<TrdAssetLoss>> lossMap = listTrdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getLossInputType));
-                    // 返回结果中手工数据来源不为空
-                    if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_手工.getValue()))) {
-                        // 数据来源
-                        dataSource = DictCodeListExt3.减值数据来源_手工.getValue();
-                        listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_手工.getValue());
-                    }
-                    else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_wind接入.getValue()))) {
-                        // 数据来源
-                        dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
-                        listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
-                    }
-                    else{
-                        // 数据来源
-                        dataSource = DictCodeListExt3.减值数据来源_中债接入.getValue();
-                        listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_中债接入.getValue());
-                    }
-
-                    // 调用共通根据最终减值流水计算ECL损失比例
-                    BigDecimal eclRatio = accountingCommonBatchService.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
-                            booksetId, bokDetailId, platDate,
-                            platDate, subjectNatureList);
-                    // 存入减值结果过程表ECL损失比例
-                    entityDto.setEclRatio(ArithmeticUtil.round(eclRatio, NumberEnum.MONEY));
+        //
+        // 定义 变量.减值结果过程表
+        ModEclResultProcess modEclResultProcess = new ModEclResultProcess();
+        // 定义 变量.资产减值结果表
+        ModEclResult modEclResult = new ModEclResult();
+        // 定义 变量.数据来源 = 模型
+        String dataSource = DictCodeListExt3.减值数据来源_模型.getValue();
+        try {
+            // 计算ECL
+            // 依据资产减值管理界面资产数据来源字段区分，手工、模型、wind、中债
+            // 查询资产减值日期对应的资产减值管理数据
+            Map<String, Object> searchPara = new HashMap<>();
+            searchPara.put("assetId", finprodId);
+            searchPara.put("platDate", platDate);
+            searchPara.put("INPUT_TYPE_03", DictCodeListExt3.减值数据来源_中债接入.getValue());
+            // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
+            List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
+                    searchPara);
+            if(!CollectionUtils.isEmpty(listTrdAssetLoss)){
+                // 将查询结果按数据来源分组：手工、wind、中债
+                Map<String, List<TrdAssetLoss>> lossMap = listTrdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getLossInputType));
+                // 返回结果中手工数据来源不为空
+                if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_手工.getValue()))) {
+                    // 数据来源
+                    dataSource = DictCodeListExt3.减值数据来源_手工.getValue();
+                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_手工.getValue());
                 }
-                // 无手工录入、wind、中债导入，采用模型LGD计算
-                else {
-                    // 计算ECL值
-                    //交易信息.前瞻前ECL预期信用损失 = 交易信息.前瞻前PD违约概率% * 交易信息.EAD * 交易信息.LGD 四舍五入保留2位小数
-                    entityDto.setPreProspectiveEcl(
-                            ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                                    entityDto.getPreProspectivePd(), entityDto.getEad(),
-                                    entityDto.getLgd()));
-                    //交易信息.前瞻后ECL预期信用损失 = 交易信息.前瞻后PD违约概率% * 交易信息.EAD * 交易信息.LGD  四舍五入保留2位小数
-                    entityDto.setProspectiveEcl(
-                            ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                                    entityDto.getProspectivePd(), entityDto.getEad(), entityDto.getLgd()));
+                else if (!CollectionUtils.isEmpty(lossMap.get(DictCodeListExt3.减值数据来源_wind接入.getValue()))) {
+                    // 数据来源
+                    dataSource = DictCodeListExt3.减值数据来源_wind接入.getValue();
+                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_wind接入.getValue());
                 }
-                //3.3 封装结果集
-                quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
-                        dataSource);
+                else{
+                    // 数据来源
+                    dataSource = DictCodeListExt3.减值数据来源_中债接入.getValue();
+                    listTrdAssetLoss = lossMap.get( DictCodeListExt3.减值数据来源_中债接入.getValue());
+                }
 
-            } catch (Exception e) {
-                CommonErrorParams commonErrorParams = new CommonErrorParams();
-                commonErrorParams.setFinprodId(entityDto.getAssetId());
-                commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-                commonErrorParams.setErrorMsg(
-                        "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
-                                + "】计算异常");
-                commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
-                errors.add(commonErrorParams);
-                stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
-                e.getMessage();
+                // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
+                BigDecimal eclRatio = accountingCommonBatchService.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
+                        booksetId, bokDetailId, platDate,
+                        platDate, subjectNatureList);
+                // 存入减值结果过程表ECL损失比例  四舍五入保留4位小数
+                entityDto.setEclRatio(ArithmeticUtil.round(eclRatio, 4, RoundingMode.HALF_UP));
             }
-            // 变量.减值结果过程表List 更新
-            modEclResultProcessList.add(modEclResultProcess);
-            // 变量.资产减值结果表List 更新
-            modEclResultList.add(modEclResult);
-        }
+            // 无手工录入、wind、中债导入，采用模型LGD计算
+            else {
+                //交易信息.ECL预期信用损失比例 = 交易信息.前瞻后PD违约概率% * 交易信息.LGD  四舍五入保留4位小数
+                entityDto.setEclRatio(
+                        ArithmeticUtil.multiply(4, RoundingMode.HALF_UP,
+                                entityDto.getProspectivePd(),entityDto.getLgd()));
+            }
+            //3.3 封装结果集
+            quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
+                    dataSource);
 
-        // 若变量.三阶段ECL损失比例 != null,重新计算所有ECL
-        if (trdAssetLossP3 != null) {
-            // 循环 变量.减值结果过程表List，重新赋值ECL
-            for (ModEclResultProcess item : modEclResultProcessList) {
-                // 前瞻前PD置空
-                item.setPreProspectivePd(null);
-                // 前瞻后PD =  变量.三阶段减值管理数据.PD
-                item.setProspectivePd(trdAssetLossP3.getPdVaule());
-                // 明细数据.LGD =  变量.三阶段减值管理数据.LGD
-                item.setLgd(trdAssetLossP3.getLgdVaule());
-                // ECL = EAD *   变量.三阶段减值管理数据.三阶段ECL损失比例
-                item.setProspectiveEcl(
-                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                                item.getEad(), trdAssetLossP3.getEclVaule()));
-            }
-            // 循环 变量.资产减值结果List，重新赋值ECL
-            for (ModEclResult item : modEclResultList) {
-                // 前瞻前PD置空
-                item.setPreProspectivePd(null);
-                // 前瞻后PD =  变量.三阶段减值管理数据.PD
-                item.setProspectivePd(trdAssetLossP3.getPdVaule());
-                // 明细数据.LGD =  变量.三阶段减值管理数据.LGD
-                item.setLgd(trdAssetLossP3.getLgdVaule());
-                // 数据来源 = 变量.三阶段减值管理数据.减值录入方式
-                item.setDataSource(trdAssetLossP3.getLossInputType());
-                // ECL = EAD *  变量.三阶段ECL损失比例
-                item.setProspectiveEcl(
-                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                                item.getEad(), trdAssetLossP3.getEclVaule()));
-            }
+        } catch (Exception e) {
+            CommonErrorParams commonErrorParams = new CommonErrorParams();
+            commonErrorParams.setFinprodId(entityDto.getAssetId());
+            commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
+            commonErrorParams.setErrorMsg(
+                    "【ECL计算批处理】：资产【" + entityDto.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
+                            + "】计算异常");
+            commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
+            errors.add(commonErrorParams);
+            stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+            e.getMessage();
         }
+        // 变量.减值结果过程表List 更新
+        modEclResultProcessList.add(modEclResultProcess);
+        // 变量.资产减值结果表List 更新
+        modEclResultList.add(modEclResult);
+
         result.setModConfigUseageList(modConfigUseageList);
         result.setModEclResultProcessList(modEclResultProcessList);
         result.setModEclResultList(modEclResultList);
