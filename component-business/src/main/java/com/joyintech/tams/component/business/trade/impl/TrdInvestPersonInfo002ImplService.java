@@ -37,11 +37,22 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002Service {
     @Autowired
     private JoyinRestTemplate restTemplate;
-    
+
     @Autowired
     private MstCounterPartyMapper mstCounterPartyMapper;
-    
-    @Override
+
+	@Override
+	public Page<SelectOptionDto> queryCounterId(Map<String, Object> param) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("initValue", param.get("counterId"));
+		map.put("page", 1);
+		map.put("length", 20);
+		return restTemplate.postForPage(
+				ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+				map, SelectOptionDto.class);
+	}
+
+	@Override
     public Page<SelectOptionDto> selectCounterId(Map<String, Object> param) {
         // 场内基金改造 add by renping 20191117 start
         if ((StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_买入.getValue())
@@ -66,7 +77,7 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
                 		key = "COUNTER_PARTY_ID_SHENZHEN";
                 		value = BussinessConstant.COUNTER_PARTY_ID_SHENZHEN;
                 	}
-                	List<String> counterList =mstCounterPartyMapper.getInsCounterIdByName(para); 
+                	List<String> counterList =mstCounterPartyMapper.getInsCounterIdByName(para);
                 	counterSet.addAll(counterList);
                 	boolean initFlag = false;
                 	if(StringUtil.isNotEmpty(param.get("initValue"))) {
@@ -94,7 +105,7 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
                     }
         	}
         }
-        
+
         // 场内基金改造 add by renping 20191117 end
         if((StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_买入.getValue())
             ||StringUtil.equals((String)param.get("ps"), DictCodeList.交易方向_卖出.getValue()))
@@ -135,7 +146,7 @@ public class TrdInvestPersonInfo002ImplService implements TrdInvestPersonInfo002
             return restTemplate.postForPage(ServiceApplication.COMMON_SERVICE_NAME + "/TrdInvestPersonInfo/getCounterId", param, SelectOptionDto.class);
         }
     }
-    
+
     @Override
     public Page<SelectOptionDto> selectTrader(Map<String, Object> param) {
     	if(StringUtil.isNotEmpty(param.get("callPageId"))
