@@ -965,7 +965,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     @Override
     @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 200, groups = {ValidateGroupEdit.class})
-  //  @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
+    @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
     public String getFinprodName(){
         return super.getFinprodName();
     }

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.asset.stock.valid;
 
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -58,7 +59,7 @@ public class FinStockInfoValidator implements BeanValidator {
     @Autowired
     private InvDataCheckService chbInvDataCheckService;
 
-    private com.joyintech.framework.base.intf.Page page;
+    private Page page;
 
     /**
      * {@inheritDoc}

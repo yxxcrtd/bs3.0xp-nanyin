@@ -119,13 +119,19 @@ public class ProductAssetsIncomeMethodProcessorService {
         if(valuationGovernmentDebtYield==null){
             modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券不存在估值日国债曲线收益率行情.");
             return resultDto;
+        }else{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券估值日国债曲线收益率："+valuationGovernmentDebtYield);
         }
 
         //2.2取基准日中债国债收益率曲线的最大年限点的利率
         BigDecimal baseDateGovernmentDebtYield = queryYieldByDate(baseDate, batchExecuteInfo, taskId, finprodId);
+
         if(baseDateGovernmentDebtYield==null){
             modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券不存在基准日国债曲线收益率行情.");
             return resultDto;
+        }else{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：债券基准日国债曲线收益率："+baseDateGovernmentDebtYield);
+
         }
 
         //2.3折算率

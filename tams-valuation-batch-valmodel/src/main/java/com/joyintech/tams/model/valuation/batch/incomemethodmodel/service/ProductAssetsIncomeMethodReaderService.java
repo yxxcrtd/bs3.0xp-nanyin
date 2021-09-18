@@ -17,6 +17,7 @@ import org.springframework.batch.core.StepExecution;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,8 +98,10 @@ public class ProductAssetsIncomeMethodReaderService {
             if(modStockdivitrateConfigMap!=null&&modStockdivitrateConfigMap.containsKey(methodReaderDto.getFinprodId())){
                 productAssetsIncomeMethodReaderDto.setModStockdivitrateConfig(modStockdivitrateConfigMap.get(methodReaderDto.getFinprodId()));
             }else{
-                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),methodReaderDto.getFinprodId(), "【收益法模型批处理】：资产未配置预期股息增长率.");
-                continue;
+                ModStockdivitrateConfig config = new ModStockdivitrateConfig();
+                config.setFinprodId(methodReaderDto.getFinprodId());
+                config.setStockIntrate(BigDecimal.ZERO);
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),methodReaderDto.getFinprodId(), "【收益法模型批处理】：资产未配置预期股息增长率，默认使用0作为增长率计算.");
             }
 
             //3.2组装-资产现金流计划集合
