@@ -363,7 +363,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 }
                 if(ratingInfo1 != null &&ratingInfo2 != null){
                     //债项评级在“C”以上（不含），主体评级在“C” 级以下（含）的债券
-                    if(this.getPoorRating(DictCodeListExt3.内部评级_C.getValue(),ratingInfo1.getRating())>=0
+                    if(this.getPoorRating(DictCodeListExt3.内部评级_C.getValue(),ratingInfo1.getRating())>0
                             && this.getPoorRating(DictCodeListExt3.内部评级_C.getValue(),ratingInfo2.getRating())<=0
                     ){
                         finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
