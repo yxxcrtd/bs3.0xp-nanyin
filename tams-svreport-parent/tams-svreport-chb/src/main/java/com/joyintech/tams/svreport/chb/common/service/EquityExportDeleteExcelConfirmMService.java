@@ -202,9 +202,6 @@ public class EquityExportDeleteExcelConfirmMService extends BaseService {
             }
             list.stream().forEach(item -> {
                 item.setDeleteReason(deleteReason);
-                item.setSendStatus(item.getSendStatusCode());
-                item.setStatus(item.getStatusCode());
-                item.setCcy(item.getCcyCode());
             });
 
             // 明细数据
