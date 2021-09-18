@@ -127,9 +127,20 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
          } else {
              listdto = JsonUtils.json2List(datas, ModLgdConfigDto.class);
          }
-         File outFile = lossGivenDefaultMaintain001Service.makeFile(
-                 "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf.xml",
-                 listdto);
+         //根据系统参数显示导出文件列名
+         //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
+         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        File outFile = null;
+         if(StringUtil.equals(DictCodeListExt3.减值方案类型_毕马威.getValue(),lossType)){
+             outFile = lossGivenDefaultMaintain001Service.makeFile(
+                     "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf_bmw.xml",
+                     listdto);
+         }else{
+             outFile = lossGivenDefaultMaintain001Service.makeFile(
+                     "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf_ph.xml",
+                     listdto);
+         }
+
          return ExportUtil.export(
                  this.getMessage(DateUtil.format(new Date())+"_LGD违约损失率维护")
                          + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),

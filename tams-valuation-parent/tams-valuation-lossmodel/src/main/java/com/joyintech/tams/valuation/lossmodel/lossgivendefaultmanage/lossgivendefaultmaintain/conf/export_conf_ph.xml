@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Workbook filePath="LossGivenDefaultMaintain001.xlsx" name="LGD违约损失率维护">
+<Workbook filePath="LossGivenDefaultMaintainPh001.xlsx" name="LGD违约损失率维护">
     <Worksheet javaBean="com.joyintech.tams.model.impairment.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto">
         <Row>
             <Cell order="1" name="资产类别">assetTypeStr</Cell>
