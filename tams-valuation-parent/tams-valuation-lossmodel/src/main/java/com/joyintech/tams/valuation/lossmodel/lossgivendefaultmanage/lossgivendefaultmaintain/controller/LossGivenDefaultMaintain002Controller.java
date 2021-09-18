@@ -54,7 +54,7 @@ public class LossGivenDefaultMaintain002Controller extends BaseController{
 	private LossGivenDefaultMaintain002Service lossGivenDefaultMaintain002Service;
     @Override
     public String init(Model model) {
-    	super.setSelectOptionToModel(model, DictCode.资产类型, DictCode.资产分类,DictCode.是否,DictCode.证券品种,DictCode.债券类型,DictCode.存款类资产存款类型);
+    	super.setSelectOptionToModel(model, DictCode.资产类型, DictCode.资产分类,DictCode.是否,DictCode.证券品种,DictCode.债券类型,DictCode.存款类资产类型_GZ);
     	 String workflowId = getParam("workflowId");
          String creditTagId = getParam("seqno");
          // 待办跳转
@@ -64,7 +64,6 @@ public class LossGivenDefaultMaintain002Controller extends BaseController{
              ModLgdConfigDto CreditTagInfo = lossGivenDefaultMaintain002Service.getBussinessEntityByWorkflowId(workflowId);
 
              model.addAttribute("entity", CreditTagInfo);
-
          }
          //修改
          else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(this.getParam("seqno"))) {

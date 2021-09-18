@@ -307,7 +307,7 @@ public class ModLgdConfigDto extends BaseEntity implements ITableRow, ProcessEnt
 		if(this.getAssetType().equals("01") || this.getAssetType().equals("13") || this.getAssetType().equals("09")){
             return SysDataUtil.getNameFromDataDict(DictCode.债券类型, this.getAssetDetailType());
         }else if(this.getAssetType().equals("07")){
-            return SysDataUtil.getNameFromDataDict(DictCode.存款类资产存款类型, this.getAssetDetailType());
+            return SysDataUtil.getNameFromDataDict(DictCode.存款类资产类型_GZ, this.getAssetDetailType());
         }
         return null;
     }

@@ -21,41 +21,18 @@ $(function() {
     };
     //联动
     var assetTypeChange = function() {
-    	var traget1=document.getElementById("isContainPledgeDiv");
-    	var traget2=document.getElementById("assetDetailTypeDiv");
-        var traget3=document.getElementById("ckAssetDetailTypeDiv");
-        if ($("#assetType").val().startsWith("01") || $("#assetType").val().startsWith("09")) {
-            if(traget1.style.display=="inline"||traget1.style.display==""){
-                traget1.style.display="none";
-            }
-            if(traget2.style.display=="none"){
-                traget2.style.display="inline";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-
-        } else if ($("#assetType").val().startsWith("07")) {
-            if(traget1.style.display=="inline"){
-                traget1.style.display="none";
-            }
-            if(traget2.style.display=="none"){
-                traget2.style.display="inline";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-        }else if($("#assetType").val().startsWith("13")){
-            if(traget1.style.display=="none"){
-                traget1.style.display="inline";
-            }
-            if(traget2.style.display=="inline"){
-                traget2.style.display="none";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            $("#isContainPledgeDiv").hide();
+            $("#assetDetailTypeDiv").show();
+            $("#ckAssetDetailTypeDiv").hide();
+        } else if ($("#assetType").val() == "07") {
+            $("#isContainPledgeDiv").hide();
+            $("#assetDetailTypeDiv").hide();
+            $("#ckAssetDetailTypeDiv").show();
+        }else if($("#assetType").val() == "13"){
+            $("#isContainPledgeDiv").show();
+            $("#assetDetailTypeDiv").hide();
+            $("#ckAssetDetailTypeDiv").hide();
         }
 
 	};
