@@ -336,19 +336,33 @@
 	<!-- add by etliu 20180818 start-->
 	<!-- 接口报送更新并且更新 报送流水号-->
 	<update id="updateInterfSubmitAndSeqBatch" parameterType="java.util.Map">
-		update CHB_INVESTHOLD_INFO_SUB sub
-		<set>
-			<if test="sendStatus != null and sendStatus != ''">
-				sub.SEND_STATUS = #{sendStatus},
-			</if>
-			sub.submit_time = sysdate,
-			sub.UPDATE_TIME = sysdate
-		</set>
-		<where>
-			<foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">
-				sub.REGIST_SEQNO = #{equityRegist.registSeqno}
-			</foreach>
-		</where>
+<!--		update CHB_INVESTHOLD_INFO_SUB sub-->
+<!--		<set>-->
+<!--			<if test="sendStatus != null and sendStatus != ''">-->
+<!--				sub.SEND_STATUS = #{sendStatus},-->
+<!--			</if>-->
+<!--			sub.submit_time = sysdate,-->
+<!--			sub.UPDATE_TIME = sysdate-->
+<!--		</set>-->
+<!--		<where>-->
+<!--			<foreach collection="investList" item="equityRegist" open="(" close=")" separator=") or (">-->
+<!--				sub.REGIST_SEQNO = #{equityRegist.registSeqno}-->
+<!--			</foreach>-->
+<!--		</where>-->
+		begin
+		<foreach collection="investList" item="equityRegist" index="index" separator=";" >
+			update CHB_INVESTHOLD_INFO_SUB sub
+			<set>
+				<if test="sendStatus != null and sendStatus != ''">
+					sub.SEND_STATUS = #{sendStatus},
+				</if>
+				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
+					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
+				</if>
+			</set>
+			where sub.REGIST_SEQNO = #{equityRegist.registSeqno}
+		</foreach>
+		;end;
 	</update>
 	<!-- add by etliu 20180818 end-->
 

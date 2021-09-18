@@ -11,10 +11,12 @@ $(function() {
 	        	   return;
 	           } 
 	           // 删除原因不能大于70字符
-	           if (strlen(param.remark) > 140){
-	        	   Joyin.error("删除原因长度不能大于70个字符(中文俩个字符，英文一个字符)！")
-	        	   return;
-	           }
+				// 去除删除原因长度校验 20210917 by caozhenming start
+	           // if (strlen(param.remark) > 140){
+	        	//    Joyin.error("删除原因长度不能大于70个字符(中文俩个字符，英文一个字符)！")
+	        	//    return;
+	           // }
+				// 去除删除原因长度校验 20210917 by caozhenming end
 	           // 是否更新为手工处理
 	           if ($("#isUpdate")[0].checked) {
 	               param.flag="01";

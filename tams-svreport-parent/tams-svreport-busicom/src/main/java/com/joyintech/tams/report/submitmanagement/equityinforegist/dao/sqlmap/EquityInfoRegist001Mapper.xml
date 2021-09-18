@@ -746,19 +746,37 @@
 	
 	<!-- 接口报送更新(手工处理，将接口报送状态修改为手工处理) -->
     <update id="updateInterfSubmitForAlreadySendData" parameterType="java.util.Map">
-        update chb_equ_sub  sub
-        <set> 
-            <if test="submitStatus != null and submitStatus != ''">
-                sub.SUBMIT_STATUS = #{submitStatus}
-            </if>
-        </set>
-        <where>
-            <foreach collection="equityInfoRegistList" item="equityRegist" open="(" close=")" separator=") or (">
-                    REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR} 
-                    and INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}
-                    and sub.SUBMIT_STATUS = '02'
-            </foreach>
-        </where>
+<!--        update chb_equ_sub  sub-->
+<!--        <set> -->
+<!--            <if test="submitStatus != null and submitStatus != ''">-->
+<!--                sub.SUBMIT_STATUS = #{submitStatus}-->
+<!--            </if>-->
+<!--        </set>-->
+<!--        <where>-->
+<!--            <foreach collection="equityInfoRegistList" item="equityRegist" open="(" close=")" separator=") or (">-->
+<!--                    REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR} -->
+<!--                    and INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}-->
+<!--                    and sub.SUBMIT_STATUS = '02'-->
+<!--            </foreach>-->
+<!--        </where>-->
+
+		begin
+		<foreach collection="equityInfoRegistList" item="equityRegist" index="index" separator=";" >
+			update CHB_INVESTHOLD_INFO_SUB sub
+			<set>
+				<if test="sendStatus != null and sendStatus != ''">
+					sub.SEND_STATUS = #{sendStatus},
+				</if>
+				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
+					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
+				</if>
+			</set>
+			where sub.REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR}
+			and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}
+			and sub.SUBMIT_STATUS = '02'
+		</foreach>
+		;end;
+
     </update>
 	
 	<!-- 接口报送更新 -->
