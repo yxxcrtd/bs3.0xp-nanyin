@@ -8,7 +8,7 @@
  * 系统名称：理财资管管理系统V2.0
  */
  
-package com.joyintech.service.valuation.basicdata.asset.controller;
+package com.joyintech.service.valuation.basicdata.asset.stock.controller;
 
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.grid.Page;
