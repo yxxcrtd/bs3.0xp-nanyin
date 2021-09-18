@@ -155,11 +155,11 @@ public class BinaryTreeModelProcessorService {
         quaryMidAllValue(binTree, binaryTreeModelReaderEntity, upNum, downNum, platDate, binaryTreeLength, encashYears, modRiskPremium);
         //12.估值全价
         //变量.估值全价 = 变量.二叉树二维数据[0][0].总价值
-        BigDecimal valueAllPrice = binTree[0][0].getAllValue().setScale(2, RoundingMode.HALF_UP);
+        BigDecimal valueAllPrice = binTree[0][0].getAllValue();
         //13.调用【算法包.计算百元面值的债券的利息-记账用】
         BigDecimal interest = getCalculate(binaryTreeModelReaderEntity, platDate).getInterest();
         //14.变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
-        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest);
 
         //封装结果
         modCurveResult.setSeqno(IDGenerator.generate());
@@ -179,8 +179,8 @@ public class BinaryTreeModelProcessorService {
         mstBondValuationInfo.setSecId(modAssetInfoDto.getFinprodMarketId()); //市场代码
         mstBondValuationInfo.setValueDate(platDate);//估值日
         mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
-        mstBondValuationInfo.setPrice(valueAllPrice); //估值全价
-        mstBondValuationInfo.setNetprice(valueNetPrice);//估值净价
+        mstBondValuationInfo.setPrice(valueAllPrice.setScale(2, RoundingMode.HALF_UP)); //估值全价
+        mstBondValuationInfo.setNetprice(valueNetPrice.setScale(2, RoundingMode.HALF_UP));//估值净价
         mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
         mstBondValuationInfo.setLastPeriod(encashYears.setScale(4, RoundingMode.HALF_UP));//设置剩余期限，且保留4位小数
         mstBondValuationInfo.setCreateUser("batch"); //

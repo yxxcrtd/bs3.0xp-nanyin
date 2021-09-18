@@ -25,6 +25,7 @@ import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.common.base.entity.ModBatchLogsExample;
 import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import com.joyintech.tams.valuation.common.dto.modelDto.BatchAssetInfoDto;
 import org.apache.commons.collections.CollectionUtils;
@@ -93,44 +94,44 @@ public class ModImpairementBatchTaskService extends BaseService {
         modImpairementBatchTaskMapper.batchInsertProdGroup(products);
     }
 
-    /**
-     * 读取资产信息
-     * @param params
-     * @return
-     */
-    public Page<SelectOptionDto> getAssetInfo(Map<String, Object> params, int page, int length) {
-        params.put("page", page);
-        params.put("length", length);
-        params.put("isImpairment", true);
-        Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
-
-        Boolean isImpairment = (Boolean)params.get("isImpairment");
-        if (isImpairment != null && isImpairment) {
-            assetInfoPages= super.queryForPage(page, length, () -> assetImpairmentManagement001Mapper.getAssetInfoImpairment(params));
-        } else {
-            List<String> finprodTypes = new ArrayList<>(2);
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            params.put("finprodTypes", finprodTypes);
-            assetInfoPages= super.queryForPage(page, length, () -> assetImpairmentManagement001Mapper.getAssetInfo(params));
-        }
-
-
-
-        Page<SelectOptionDto> res = new Page<>();
-        BeanUtils.copyProperties(assetInfoPages, res);
-        if (CollectionUtils.isNotEmpty(assetInfoPages.getRoot())) {
-            List<SelectOptionDto> root = new ArrayList<>(assetInfoPages.getRoot().size());
-            for (BatchAssetInfoDto batchAssetInfoDto : assetInfoPages.getRoot()) {
-                SelectOptionDto select = new SelectOptionDto();
-                select.setId(batchAssetInfoDto.getFinprodId());
-                select.setText(batchAssetInfoDto.getFinprodName());
-                root.add(select);
-            }
-            res.setRoot(root);
-        }
-        return res;
-    }
+//    /**
+//     * 读取资产信息
+//     * @param params
+//     * @return
+//     */
+//    public Page<SelectOptionDto> getAssetInfo(Map<String, Object> params, int page, int length) {
+//        params.put("page", page);
+//        params.put("length", length);
+//        params.put("isImpairment", true);
+//        Page<BatchAssetInfoDto> assetInfoPages = new Page<>();
+//
+//        Boolean isImpairment = (Boolean)params.get("isImpairment");
+//        if (isImpairment != null && isImpairment) {
+//            assetInfoPages= super.queryForPage(page, length, () -> assetImpairmentManagement001Mapper.getAssetInfoImpairment(params));
+//        } else {
+//            List<String> finprodTypes = new ArrayList<>(2);
+//            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+//            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//            params.put("finprodTypes", finprodTypes);
+//            assetInfoPages= super.queryForPage(page, length, () -> assetImpairmentManagement001Mapper.getAssetInfo(params));
+//        }
+//
+//
+//
+//        Page<SelectOptionDto> res = new Page<>();
+//        BeanUtils.copyProperties(assetInfoPages, res);
+//        if (CollectionUtils.isNotEmpty(assetInfoPages.getRoot())) {
+//            List<SelectOptionDto> root = new ArrayList<>(assetInfoPages.getRoot().size());
+//            for (BatchAssetInfoDto batchAssetInfoDto : assetInfoPages.getRoot()) {
+//                SelectOptionDto select = new SelectOptionDto();
+//                select.setId(batchAssetInfoDto.getFinprodId());
+//                select.setText(batchAssetInfoDto.getFinprodName());
+//                root.add(select);
+//            }
+//            res.setRoot(root);
+//        }
+//        return res;
+//    }
 
     /**
      * 主画面分页查询
@@ -142,38 +143,6 @@ public class ModImpairementBatchTaskService extends BaseService {
     public Page<BatchExecutingStatusDto> findBatchExeDetail(Map<String, Object> params, int page, int length) {
         return super.queryForPage(page, length, ()->modImpairementBatchTaskMapper.findBatchExeDetail(params));
     }
-
-    public List<BatchAssetInfoDto> getAllAssetInfo(Date execDate) {
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("isImpairment", true);
-        params.put("execDate", execDate);
-//        List<BatchAssetInfoDto> assetInfos = restTemplate.postForList(ServiceApplication.CUSTOMER_INTERF_NAME
-//                        + "/interf/ModelCallOnInvest/getAllAssetInfo"
-//                , params, BatchAssetInfoDto.class);
-
-        List<BatchAssetInfoDto> assetInfos = new ArrayList<>();
-        List<String> finprodIdList = (List<String>)params.get("finprodIdList");
-        Boolean isImpairment = (Boolean)params.get("isImpairment");
-        Map<String, Object> param = new HashMap<>(5);
-        if (isImpairment != null && isImpairment) {
-            param.put("execDate",DateUtil.parse(params.get("execDate").toString()));
-            assetInfos= assetImpairmentManagement001Mapper.getAssetInfoImpairment(param);
-        } else {
-            List<String> finprodTypes = new ArrayList<>(2);
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
-            finprodTypes.add(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-            param.put("finprodTypes", finprodTypes);
-            if (!CollectionUtils.isEmpty(finprodIdList)) {
-                param.put("finprodIdList", finprodIdList);
-            }
-            assetInfos= assetImpairmentManagement001Mapper.getAssetInfo(param);
-        }
-
-        return assetInfos;
-    }
-
-
 
     public void insertBatchParams(List<ModValBatchParams> params) {
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
@@ -205,14 +174,11 @@ public class ModImpairementBatchTaskService extends BaseService {
      * @param finprodIds
      * @return
      */
-    public boolean checkIsRunning(String finprodIds) {
+    public boolean checkIsRunning(List<String> finprodIdList, Date execDate) {
         Map<String, Object> params = new HashMap<String, Object>(4);
-        if (StringUtil.isNotBlank(finprodIds)) {
-            List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
-            params.put("finprodIdList", finprodIdList);
-            //清理和确认是否有执行中的时候要使用任务组代码查
-            params.put("BATCH_SEQ_NO", LOSS_MODEL_BATCH_GROUP);
-        }
+        params.put("finprodIdList", finprodIdList);
+        //清理和确认是否有执行中的时候要使用任务组代码查
+        params.put("BATCH_SEQ_NO", LOSS_MODEL_BATCH_GROUP);
         return modImpairementBatchTaskMapper.checkIsRunning(params) > 0;
     }
 
@@ -231,10 +197,9 @@ public class ModImpairementBatchTaskService extends BaseService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
-    public boolean executeBatch(Date startDate,
+    public int executeBatch(Date startDate,
                                 Date endDate,
-                                String finprodIds) {
-
+                                List<String> finprodIdList) {
         SysBatchgrpExecInfo executeDetail = new SysBatchgrpExecInfo();
         executeDetail.setSystemCode(SysCodeUtil.getSysCode());
         executeDetail.setSeqNo(IDGenerator.generate());
@@ -251,9 +216,8 @@ public class ModImpairementBatchTaskService extends BaseService {
 
         List<ModValBatchParams> params = new ArrayList<>();
 
-        buildModParam(startDate, finprodIds, executeDetail, params);
-
-        return true;
+        buildModParam(startDate, finprodIdList, executeDetail, params);
+        return 0;
     }
 
 
@@ -264,43 +228,20 @@ public class ModImpairementBatchTaskService extends BaseService {
      * @param executeDetail
      * @param params
      */
-    private void buildModParam(Date startDate, String finprodIds, SysBatchgrpExecInfo executeDetail, List<ModValBatchParams> params) {
-        if (StringUtil.isNotBlank(finprodIds)) {
-            List<String> finprodIdList = Arrays.asList(finprodIds.split(GlobalConstant.COMMA));
-            for (String finprodId : finprodIdList) {
-                ModValBatchParams param = new ModValBatchParams();
-                param.setSeqno(IDGenerator.generate());
-                param.setExecDate(startDate);
-                // 批处理执行序号
-                param.setBatchExecSeqno(executeDetail.getSeqNo());
+    private void buildModParam(Date startDate, List<String> finprodIdList, SysBatchgrpExecInfo executeDetail, List<ModValBatchParams> params) {
+        for (String finprodId : finprodIdList) {
+            ModValBatchParams param = new ModValBatchParams();
+            param.setSeqno(IDGenerator.generate());
+            param.setExecDate(startDate);
+            // 批处理执行序号
+            param.setBatchExecSeqno(executeDetail.getSeqNo());
+            // 资产代码
+            param.setFinprodId(finprodId);
 
-                // 资产代码
-                param.setFinprodId(finprodId);
-
-                param.setCreateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
-                param.setUpdateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
-                params.add(param);
-            }
-        } else {
-            List<BatchAssetInfoDto> assetInfos = getAllAssetInfo(startDate);
-            if (CollectionUtils.isNotEmpty(assetInfos)) {
-                for (BatchAssetInfoDto assetInfo : assetInfos) {
-                    ModValBatchParams param = new ModValBatchParams();
-                    param.setSeqno(IDGenerator.generate());
-                    param.setExecDate(startDate);
-                    // 批处理执行序号
-                    param.setBatchExecSeqno(executeDetail.getSeqNo());
-
-                    // 资产代码
-                    param.setFinprodId(assetInfo.getFinprodId());
-
-                    param.setCreateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
-                    param.setUpdateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
-                    params.add(param);
-                }
-            }
+            param.setCreateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
+            param.setUpdateUser(LoginUserUtil.getUserName() == null?"system":LoginUserUtil.getUserName());
+            params.add(param);
         }
-
         insertBatchParams(params);
     }
 
@@ -311,5 +252,16 @@ public class ModImpairementBatchTaskService extends BaseService {
 
     public List<ModBatchLogDetailDTO> findBatchExeTaskForExport(Map<String, Object> params) {
         return modImpairementBatchTaskMapper.selectLogsDetail(params);
+    }
+
+    public List<String> getAssetInfoAll(Date execDate){
+        String lossType = CacheUtil.getSysParam("LOSS_TYPE");
+        if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+            return modImpairementBatchTaskMapper.getAssetInfoAllPH(execDate);
+        }
+        else{
+            return modImpairementBatchTaskMapper.getAssetInfoAllBMW(execDate);
+        }
+
     }
 }

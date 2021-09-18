@@ -77,7 +77,6 @@ var QueryFunc = function () {
         object.type11 = "095";
         object.type12 = "097";
         // 为type9，type10，type11，type12赋值 by 赵东东 end
-        object.bussRepEquityInfoDto.repRemark = $('#remark').val();
         //文件信息
         if(FileCommon) {
             object.fileArray = FileCommon.getUploadFileInfo();
