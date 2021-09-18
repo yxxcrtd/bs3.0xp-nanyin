@@ -3376,8 +3376,10 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             repoSecDto.setPageFrom("TrdRepoTrade002");
             // 汇总质押券的全面总额
             BigDecimal totalPrimAmt = BigDecimal.ZERO;
-            for (PledgeBondInfoDto pledgeBond : pledgeBondInfoDtoByEntrustIdList) {
-                totalPrimAmt = totalPrimAmt.add(pledgeBond.getPledgePrin());
+            if(null!=pledgeBondInfoDtoByEntrustIdList&&!StringUtil.isEmptyList(pledgeBondInfoDtoByEntrustIdList)){
+                for (PledgeBondInfoDto pledgeBond : pledgeBondInfoDtoByEntrustIdList) {
+                    totalPrimAmt = totalPrimAmt.add(pledgeBond.getPledgePrin());
+                }
             }
             repoSecDto.setTotalPrinAmt(totalPrimAmt);
             repoSecDto.setPledgeBondList(pledgeBondInfoDtoByEntrustIdList);

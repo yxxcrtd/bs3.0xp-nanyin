@@ -62,7 +62,7 @@ public class LossGivenDefaultMaintain001Service extends CommonExportService<ModL
            export_conf = export_conf + map.get("tableNum").toString();
        }
        exportParam.config(
-               "/com/joyintech/tams/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf.xml").dataSource(
+               "/com/joyintech/tams/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf_ph.xml").dataSource(
                    DataSourceType.MASERT);
    }
    @Override

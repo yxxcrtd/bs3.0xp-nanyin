@@ -298,4 +298,8 @@ FROM
         SELECT #{sysDate,jdbcType=VARCHAR} || lpad(CSTP_MATCH_SEQNO.NEXTVAL, 4, '0')
         FROM DUAL
     </select>
+
+    <delete id="deleteMatchInfo">
+        delete from TRD_MATCH_INFO where CSTP_TRADE_ID =  #{execId}
+    </delete>
 </mapper>
