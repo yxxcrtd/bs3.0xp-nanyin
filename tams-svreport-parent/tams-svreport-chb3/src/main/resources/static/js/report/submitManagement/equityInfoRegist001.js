@@ -108,10 +108,10 @@ $(function(){
         cols: [
             { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
             { field: 'status',visible:false},
-            { title: "数据日期", field: 'updateTimeStr',sortField:'updateTime'},
+            { title: "数据日期", field: 'updateTimeStr',width:150,sortField:'updateTime'},
             { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},           
-            { title: "报送日期", field: 'submitTimeStr',sortField:'submitTime'},
-            { title: "报送截止日", field: 'chbSubmitDeadlineStr',sortField:'chbSubmitDeadline'},
+            { title: "报送日期", field: 'submitTimeStr',width:150,sortField:'submitTime'},
+            { title: "报送截止日", field: 'chbSubmitDeadlineStr',width:150,sortField:'chbSubmitDeadline'},
             { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
             { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
                 render: function (data, type, row, meta) {

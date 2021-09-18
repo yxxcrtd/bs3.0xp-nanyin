@@ -762,7 +762,7 @@
 
 		begin
 		<foreach collection="equityInfoRegistList" item="equityRegist" index="index" separator=";" >
-			update CHB_INVESTHOLD_INFO_SUB sub
+			update CHB_EQU_SUB sub
 			<set>
 				<if test="sendStatus != null and sendStatus != ''">
 					sub.SEND_STATUS = #{sendStatus},
@@ -770,6 +770,8 @@
 				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
 					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
 				</if>
+				sub.SUBMIT_TIME = sysdate,
+				sub.UPDATE_TIME = sysdate
 			</set>
 			where sub.REGIST_BANK_CODE = #{equityRegist.bankCode,jdbcType=VARCHAR}
 			and sub.INDENTIFY_MARK = #{equityRegist.indentifyMark,jdbcType=VARCHAR}
