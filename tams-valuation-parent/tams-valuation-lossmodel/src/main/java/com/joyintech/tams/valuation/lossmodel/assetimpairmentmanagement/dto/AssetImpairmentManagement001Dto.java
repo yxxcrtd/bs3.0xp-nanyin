@@ -22,6 +22,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.lossmodel.assetimpairmentmanagement.validator.AssetImpairmentManagement001Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -197,8 +198,8 @@ public class AssetImpairmentManagement001Dto extends BaseEntity implements Proce
     }
 
     public String getAssetTypeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.资产五级分类, assetType))?
-                SysDataUtil.getNameFromDataDict(DictCode.资产五级分类, assetType):assetType;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.证券品种, assetType))?
+                SysDataUtil.getNameFromDataDict(DictCode.证券品种, assetType):assetType;
     }
 
     public void setAssetType(String assetType) {
@@ -402,8 +403,8 @@ public class AssetImpairmentManagement001Dto extends BaseEntity implements Proce
     }
 
     public String getDataSourceFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.模型数据来源, dataSource))?
-                SysDataUtil.getNameFromDataDict(DictCode.模型数据来源, dataSource):dataSource;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.减值数据来源, dataSource))?
+                SysDataUtil.getNameFromDataDict(DictCode.减值数据来源, dataSource):dataSource;
     }
 
     public void setDataSource(String dataSource) {
