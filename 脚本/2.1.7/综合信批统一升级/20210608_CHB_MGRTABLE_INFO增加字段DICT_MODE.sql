@@ -1,3 +1,3 @@
 alter table CHB_MGRTABLE_INFO DROP COLUMN DICT_MODE;
 alter table CHB_MGRTABLE_INFO add DICT_MODE CHAR(1);
-COMMENT ON COLUMN CHB_MGRTABLE_INFO.DICT_MODE IS '数据字典操作模式,1表示存值格式为(01 新建),其他存值格式为(01)';
+COMMENT ON COLUMN CHB_MGRTABLE_INFO.DICT_MODE IS '鏁版嵁瀛楀吀鎿嶄綔妯″紡,1琛ㄧず瀛樺�兼牸寮忎负(01 鏂板缓),鍏朵粬瀛樺�兼牸寮忎负(01)';
