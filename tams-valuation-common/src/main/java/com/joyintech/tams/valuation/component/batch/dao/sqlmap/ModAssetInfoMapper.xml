@@ -287,29 +287,33 @@
     </select>
     <!-- 股票行情查询 -->
     <select id="getStockMarketInfo"  resultType="com.joyintech.tams.common.base.entity.MstSharePrice">
-		select SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE
+		select
+			SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE
 		from (
-			SELECT B.SHARES_ID,
-			B.DEAL_DATE,
-			B.CLOSE_PRICE,
-			B.PB          PB,
-			B.PE          PE,
-			rownum        as r
-			FROM MST_SHARE_PRICE B
-			INNER JOIN FIN_PRODUCT A
-			ON A.FINPROD_MARKET_ID = B.SHARES_ID
-			where 1 = 1
-			<if test="stockIdList != null and stockIdList.size()>0 ">
-				AND A.FINPROD_ID IN(
-				<foreach item="item" index="index" collection="stockIdList" separator=",">
-					#{item}
-				</foreach>
-				)
-			</if>
-			<if test="searchDate != null">
-				and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
-			</if>
-			ORDER BY B.DEAL_DATE desc
+			select
+				SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE,rownum as r
+			from (
+				SELECT B.SHARES_ID,
+				B.DEAL_DATE,
+				B.CLOSE_PRICE,
+				B.PB          PB,
+				B.PE          PE
+				FROM MST_SHARE_PRICE B
+				INNER JOIN FIN_PRODUCT A
+				ON A.FINPROD_MARKET_ID = B.SHARES_ID
+				where 1 = 1
+				<if test="stockIdList != null and stockIdList.size()>0 ">
+					AND A.FINPROD_ID IN(
+					<foreach item="item" index="index" collection="stockIdList" separator=",">
+						#{item}
+					</foreach>
+					)
+				</if>
+				<if test="searchDate != null">
+					and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
+				</if>
+				ORDER BY B.DEAL_DATE desc
+			)
 		) info
 		where 1=1
 		<if test="searchNum != null">
