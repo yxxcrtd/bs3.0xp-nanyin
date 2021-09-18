@@ -207,5 +207,9 @@ public class CstpCommonMatchService {
             });
         }
     }
+
+    public void deleteMatchInfo(Map<String,Object> map){
+        cstpCommonMatchMapper.deleteMatchInfo(map);
+    }
 }
 

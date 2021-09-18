@@ -10,6 +10,8 @@ import com.joyintech.service.bankuplink.common.dto.TrdRepoTrade002Dto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.impl.dao.BaseGetBussinessIdMapper;
@@ -201,8 +203,14 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 		}
 		// 查询抵押品债券信息
 		List<InterfTradRepoasstDto> repoasst = autoTradeMapper.queryRepoAsst(oritradeId);
-		if (StringUtil.isNotEmpty(entrust)
-				&& !StringUtil.isEmptyList(repoasst)) {
+		if (StringUtil.isNotEmpty(entrust)) {
+			//正回购必须有质押券
+			if(StringUtil.equals(entrust.getPs(), DictCodeList.回购拆借方向_正回购.getValue())&&StringUtil.isEmptyList(repoasst)){
+				String msg = "抵押品债券不存在！";
+				resultBaseDto.setErrMsg(msg);
+				logger.info(msg);
+				return;
+			}
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
 			if (!StringUtil.isNotEmpty(deal)) {
@@ -296,6 +304,8 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					Map<String,Object> map = new HashMap<>();
 					map.put("execId",oritradeId);
 					map.put("matchType", matchType);
+					//删除已经匹配的数据
+					cstpCommonMatchService.deleteMatchInfo(map);
 					cstpCommonMatchService.dealMatchEntrust(map);
 					logger.info("下行交易处理失败,自动生成匹配信息结束");
 					resultBaseDto.setErrMsg(e.getMessage());
@@ -307,7 +317,7 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 				logger.info(msg);
 			}
 		} else {
-			String msg = "无报价的指令代码或抵押品债券不存在！";
+			String msg = "没有对应的报价信息!";
 			resultBaseDto.setErrMsg(msg);
 			logger.info(msg);
 		}

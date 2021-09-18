@@ -117,6 +117,7 @@
         AND IS_CLEAN = 'Y'
         AND PS IN('T23','T22')
         AND A.IS_CANCEL ='N'
+        AND A.SETTLE_DATE <![CDATA[<=]]> #{execDate}
     </select>
 
     <!-- 获取资产现金流计划集合  -->

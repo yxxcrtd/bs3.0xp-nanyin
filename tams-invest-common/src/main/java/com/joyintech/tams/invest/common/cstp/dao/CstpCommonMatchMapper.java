@@ -28,4 +28,6 @@ public interface CstpCommonMatchMapper {
     InterfOpicsTradRepo getInterfOpicsTradRepoByExecId(@Param("execId") String execId);
 
     List<InterfTradRepoasstDto> getInterfTradRepoasst(@Param("tradeId") String tradeId);
+
+    void deleteMatchInfo(Map<String,Object> map);
 }
