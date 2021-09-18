@@ -79,6 +79,11 @@ public class PlanSearchInfo {
 	 */
 	private String portfolioId;
 
+	/**
+	 * 资金账户
+	 */
+	private String capitalAccountNo;
+
 	public String getTradePlatform() {
 		return tradePlatform;
 	}
@@ -173,5 +178,13 @@ public class PlanSearchInfo {
 
 	public void setPortfolioId(String portfolioId) {
 		this.portfolioId = portfolioId;
+	}
+
+	public String getCapitalAccountNo() {
+		return capitalAccountNo;
+	}
+
+	public void setCapitalAccountNo(String capitalAccountNo) {
+		this.capitalAccountNo = capitalAccountNo;
 	}
 }

@@ -1,4 +1,5 @@
 $(function(){
+    var counterId2;
 	/**
      * 定义数据表格
      */
@@ -341,6 +342,7 @@ $(function(){
 	 */
     function init(){
         debugger;
+        counterId2 = $('#counterId').val();
     	// /**新建页面不展示内部交易对手 add by chendijun**/
     	// if(pageModel===PAGE_MODEL_NEW) {
     	// 	$(".counterType").updateChosenArr({item: [COUNTER_TYPE_01,COUNTER_TYPE_02,COUNTER_TYPE_03,COUNTER_TYPE_04],
@@ -404,6 +406,7 @@ $(function(){
         var object = null;
         if(selectItem == COUNTER_TYPE_01){
             object = $.serializeToObject('#marketForm');
+            object.counterId=counterId2 + "/" + object.counterId;
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             object.counterName = $("#customerId").select2('data')[0].object;
@@ -414,6 +417,7 @@ $(function(){
              object.selectStlCapacct = selectDto;
         }else if(selectItem == COUNTER_TYPE_02){
             object = $.serializeToObject('#manageForm');
+            object.counterId=counterId2 + "/" + object.counterId;
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
@@ -423,6 +427,7 @@ $(function(){
             object.selectStlCapacct = selectDto;
         }else if(selectItem == COUNTER_TYPE_04){
             object = $.serializeToObject('#branchForm');
+            object.counterId=counterId2 + "/" + object.counterId;
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
@@ -433,6 +438,7 @@ $(function(){
             // object.selectFinCash = serializeTable(table3);
         }else if(selectItem == COUNTER_TYPE_05){
             object = $.serializeToObject('#counterpartyForm');
+            object.counterId=counterId2 + "/" + object.counterId;
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);

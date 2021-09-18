@@ -163,6 +163,37 @@
                    )
     </delete>
 
+    <select id="getAssetInfoAllPH" resultType="java.lang.String">
+        <!--标的类金融产品代码 -->
+        select
+        fin.FINPROD_ID
+        from FIN_PRODUCT fin /** 标的类金融产品 **/
+        LEFT JOIN FIN_PRODUCT_TYPE finType
+        ON finType.FINPROD_ID = fin.FINPROD_ID
+        where 1=1
+        AND finType.TYPE_18 IN ('01','13')    /** 债券、其他债权类**/
+        AND fin.VDATE <![CDATA[ <= ]]> #{execDate}
+        AND fin.MDATE <![CDATA[ >= ]]> #{execDate}
+    </select>
+
+    <select id="getAssetInfoAllBMW" resultType="java.lang.String">
+        <!--标的类金融产品代码 -->
+        select
+        finType.FINPROD_ID as finprodId
+        from FIN_PRODUCT_TYPE finType /** 标的类金融产品 **/
+        LEFT JOIN FIN_PRODUCT fin
+        ON finType.FINPROD_ID = fin.FINPROD_ID
+        LEFT JOIN FIN_TRADE_PRODUCT fintr
+        ON finType.FINPROD_ID = fintr.FINPROD_ID
+        where 1=1
+        AND (
+        finType.TYPE_18 IN ('01','13') /** 债券、其他债权类**/
+        OR (finType.TYPE_18 = '07' and finType.TYPE_1 IN ('01','03')) /** 存款类资产：存放同业、同业借款**/
+        OR (finType.TYPE_18 = '09' and finType.TYPE_1 IN ('02','04')) /** 回购类资产：质押式逆回购、买断式逆回购**/
+        )
+        AND NVL(fin.VDATE,fintr.VDATE)<![CDATA[ <= ]]> #{execDate}
+        AND NVL(fin.MDATE,fintr.MDATE) <![CDATA[ >= ]]> #{execDate}
+    </select>
 
 
 </mapper>

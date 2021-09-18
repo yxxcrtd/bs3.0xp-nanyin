@@ -42,7 +42,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="busiNum" name="busiNum"
                                 class="layui-input form-input input-select"
-                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/getProdIdByLossResult}"
+                                data-th-data-url="@{/model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/getBusiNumByLossResult}"
                                 multiple="multiple" allowClear="true" formatoption="false" data-th-placeholder="#{SysCommon.placeholder}">
                         </select>
                     </div>
@@ -74,7 +74,7 @@
                     <label class="layui-form-label form-lable">数据来源</label>
                     <div class="layui-input-inline input-inline">
                         <input type="text" id="dataSource" name="dataSource" class="layui-input form-input input-select" placeholder="请选择"
-                               data-th-data-result="${MODEL_DATA_SOURCE}" allowClear="true" multiple="multiple" >
+                               data-th-data-result="${LOSS_INPUT_TYPE}" allowClear="true" multiple="multiple" >
                     </div>
                 </div>
             </div>

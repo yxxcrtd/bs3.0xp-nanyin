@@ -650,46 +650,49 @@ public class TrdPlanCcyInvestTrade003Service extends BaseService<TrdPlanCcyInves
                 BigDecimal.class);
     }
 
-    @Override
-    public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
-        Map<String, Object> variables = new HashMap<>();
-        TrdPlanCcyInvestTradeConfirmDto dto = this.getBussinessEntity(entity);
-        if (taskId != null) {
-        	 try {
-             	if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
-//             		return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getShareAmt(), LoginUserUtil.getUserName(),
-//             				DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-//             				// 资产类型改为授权类型 add by renping 2019-08-06  start
-//             				, dto.getFinprodId()
-//             				// 资产类型改为授权类型 add by renping 2019-08-06  end
-//             				);
-                     Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getShareAmt(),LoginUserUtil.getUserName(),
-                         DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-                         , dto.getFinprodId() ,entity.getWorkflowId());
-                     
-                     return commonBusinessService.是否需要上级审批(params);
-             	}else{
-//             		return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getTradeAmt(), LoginUserUtil.getUserName(),
-//             				DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-//             				// 资产类型改为授权类型 add by renping 2019-08-06  start
-//             				, dto.getFinprodId()
-//             				// 资产类型改为授权类型 add by renping 2019-08-06  end
-//             				);
-                     Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTradeAmt(),LoginUserUtil.getUserName(),
-                         DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-                         , dto.getFinprodId() ,entity.getWorkflowId());
-                     params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
-                     return commonBusinessService.是否需要上级审批(params);
-             	}
-             }
-            catch (WorkFlowException e) {
-                // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
-                throw new WorkFlowException(e);
-            }
-        }
-        else {
-            return null;
-        }
-//        return null;
-    }
+    // delete by etliu 20210917 start
+    // 只需要对申请环节做授权检查，确认以及到账环节不需要授权检查
+//    @Override
+//    public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
+//        Map<String, Object> variables = new HashMap<>();
+//        TrdPlanCcyInvestTradeConfirmDto dto = this.getBussinessEntity(entity);
+//        if (taskId != null) {
+//        	 try {
+//             	if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
+////             		return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getShareAmt(), LoginUserUtil.getUserName(),
+////             				DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+////             				// 资产类型改为授权类型 add by renping 2019-08-06  start
+////             				, dto.getFinprodId()
+////             				// 资产类型改为授权类型 add by renping 2019-08-06  end
+////             				);
+//                     Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getShareAmt(),LoginUserUtil.getUserName(),
+//                         DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+//                         , dto.getFinprodId() ,entity.getWorkflowId());
+//
+//                     return commonBusinessService.是否需要上级审批(params);
+//             	}else{
+////             		return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getTradeAmt(), LoginUserUtil.getUserName(),
+////             				DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+////             				// 资产类型改为授权类型 add by renping 2019-08-06  start
+////             				, dto.getFinprodId()
+////             				// 资产类型改为授权类型 add by renping 2019-08-06  end
+////             				);
+//                     Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTradeAmt(),LoginUserUtil.getUserName(),
+//                         DictCodeList.平安资产类型_计划类资产_货币型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+//                         , dto.getFinprodId() ,entity.getWorkflowId());
+//                     params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+//                     return commonBusinessService.是否需要上级审批(params);
+//             	}
+//             }
+//            catch (WorkFlowException e) {
+//                // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
+//                throw new WorkFlowException(e);
+//            }
+//        }
+//        else {
+//            return null;
+//        }
+////        return null;
+//    }
+    // delete by etliu 20210917 end
 }

@@ -3,7 +3,10 @@ package com.joyintech.service.valuation.common.lossmodcommon.controller;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.service.valuation.common.lossmodcommon.service.LossModCommonService;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.common.constants.BookConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +76,25 @@ public class LossModCommonController extends BaseController {
         return lossModCommonService.getModAssetInfoOptionPageBMW(page, length, params);
     }
 
+    /**
+     * 减值模型-资产信息下拉框Page - 分页 根据系统参数方案处理
+     * @param page
+     * @param length
+     * @param params
+     * @return
+     */
+    @PostMapping("getModAssetInfoPage/{page}/{length}")
+    public Page<SelectOptionDto> getModAssetInfoPage(@RequestBody Map<String, Object> params,
+                                                       @PathVariable("page") int page, @PathVariable("length") int length){
+        String lossType = CacheUtil.getSysParam("LOSS_TYPE");
+        if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+            return lossModCommonService.getModAssetInfoOptionPagePH(page, length, params);
+        }
+        else{
+            return lossModCommonService.getModAssetInfoOptionPageBMW(page, length, params);
+        }
+
+    }
 
     /**
      * 减值模型-产品信息下拉框Page - 分页
