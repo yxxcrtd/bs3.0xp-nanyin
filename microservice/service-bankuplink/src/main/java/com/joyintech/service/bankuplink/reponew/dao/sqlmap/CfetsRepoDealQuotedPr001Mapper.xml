@@ -132,7 +132,21 @@
         ON A.CREATE_USER = H.USER_NAME
         <!-- ADD BY YZG 成交进度计算 20201230 START-->
         LEFT JOIN
-        (SELECT ENTRUST_ID,SUM(nvl(FPRICE_AMT,0)) totalShareAmt
+        (
+        <!--多组合成交金额 需要查询比例表-->
+        SELECT
+        T2.ENTRUST_ID,
+        SUM(NVL(T2.FPRICE_AMT, 0)) totalShareAmt
+        FROM
+        IBU_QUOTE_CREP T1
+        INNER JOIN IBU_QUOTE_ETR_RE T2 ON
+        T1.QUOTE_ID = T2.QUOTE_ID
+        WHERE
+        T1.TRADE_STATUS = '07'
+        GROUP BY
+        T2.ENTRUST_ID
+        UNION
+        SELECT ENTRUST_ID,SUM(nvl(FPRICE_AMT,0)) totalShareAmt
         FROM IBU_QUOTE_CREP
         WHERE TRADE_STATUS = '07'
         GROUP BY ENTRUST_ID) IQC

@@ -208,6 +208,8 @@ public class CstpSecAutoTradeService extends BaseService<TrdBondInvestTradeDto> 
                     Map<String,Object> map = new HashMap<>();
                     map.put("execId",oritradeId);
                     map.put("matchType", matchType);
+					//删除已经匹配的数据
+					cstpCommonMatchService.deleteMatchInfo(map);
                     cstpCommonMatchService.dealMatchEntrust(map);
                     logger.info("下行交易处理失败,自动生成匹配信息结束");
 					logger.error(this.getClass()+"债券成交明细接口异常:"+e.getMessage());
