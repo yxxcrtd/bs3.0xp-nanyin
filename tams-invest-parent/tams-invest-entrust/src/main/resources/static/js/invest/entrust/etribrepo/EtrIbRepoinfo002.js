@@ -24,7 +24,9 @@
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
         }
         // add by zhangrui1 交易对手影响风险试算 start
-        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // ZGZGST-2951:修改交易对手元素Id fuyongsheng 20210918 edit start
+        obj.counterId = $('#counterId').val();
+        // ZGZGST-2951:修改交易对手元素Id fuyongsheng 20210918 edit end
         // add by zhangrui1 交易对手影响风险试算 end
         obj.repoTerm = $('#repoTerm').val();
         //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
