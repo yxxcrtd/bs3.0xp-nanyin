@@ -176,6 +176,10 @@ public class TrdFeeCalcService {
     			if (StringUtil.isNotEmpty(stlDownDataDealAccountInfoDto.getPortfolioId())) {
     				localPlanSearchInfo.setPortfolioId(stlDownDataDealAccountInfoDto.getPortfolioId());
     			}
+    			// 资金账户
+				if (StringUtil.isNotEmpty(stlDownDataDealAccountInfoDto.getAcctNo())) {
+					localPlanSearchInfo.setCapitalAccountNo(stlDownDataDealAccountInfoDto.getAcctNo());
+				}
             } 
             else {
                 // 变量.方案查询信息 = 【入参】方案查询信息
@@ -343,6 +347,10 @@ public class TrdFeeCalcService {
 			if (StringUtil.isNotEmpty(stlDownDataDealAccountInfoDto.getPortfolioId())) {
 				localPlanSearchInfo.setPortfolioId(stlDownDataDealAccountInfoDto.getPortfolioId());
 			}
+			// 资金账户
+			if (StringUtil.isNotEmpty(stlDownDataDealAccountInfoDto.getAcctNo())) {
+				localPlanSearchInfo.setCapitalAccountNo(stlDownDataDealAccountInfoDto.getAcctNo());
+			}
 		}
         else {
         	// 变量.交易日期 = 【入参】交易特征信息.交易日期
@@ -424,6 +432,10 @@ public class TrdFeeCalcService {
 			// 组合代码
 			if (StringUtil.isNotEmpty(tradeFeatureInformation.getPortfolioId())) {
 				localPlanSearchInfo.setPortfolioId(tradeFeatureInformation.getPortfolioId());
+			}
+			// 资金账户
+			if (StringUtil.isNotEmpty(stlDownDataDealAccountInfoDto.getAcctNo())) {
+				localPlanSearchInfo.setCapitalAccountNo(stlDownDataDealAccountInfoDto.getAcctNo());
 			}
 		}
         // 查询费用方案
@@ -750,11 +762,27 @@ public class TrdFeeCalcService {
         List<TrdFeeConfig> trdFeeConfigs = trdFeeCalcMapper.getTrdFeeConfig(searchParam);
         if (trdFeeConfigs != null && !trdFeeConfigs.isEmpty()) {
             feePlan = new FeePlan();
+			TrdFeeConfig trdFeetConfig = trdFeeConfigs.get(0);
+            // 资金账户不为空
+			if(StringUtil.isNotEmpty(planSearchInfo.getCapitalAccountNo())){
+				List<TrdFeeConfig> trdFeeConfigs_capitalAccountNo = trdFeeConfigs.stream().filter(x->StringUtil.equals(x.getCapitalAccountNo(),planSearchInfo.getCapitalAccountNo())).collect(Collectors.toList());
+				if (trdFeeConfigs_capitalAccountNo != null && !trdFeeConfigs_capitalAccountNo.isEmpty()) {
+					trdFeetConfig = trdFeeConfigs_capitalAccountNo.get(0);
+				}
+			}else if(StringUtil.isNotEmpty(planSearchInfo.getBrokerageNo())){
+				List<TrdFeeConfig> trdFeeConfigs_brokerageNo = trdFeeConfigs.stream().filter(x->
+						StringUtil.equals(x.getCustomerId(),planSearchInfo.getBrokerageNo())
+						&&!StringUtil.isNotEmpty(planSearchInfo.getCapitalAccountNo())
+				).collect(Collectors.toList());
+				if (trdFeeConfigs_brokerageNo != null && !trdFeeConfigs_brokerageNo.isEmpty()) {
+					trdFeetConfig = trdFeeConfigs_brokerageNo.get(0);
+				}
+			}
             // 取第一条数据
-            feePlan.setTrdFeeConfig(trdFeeConfigs.get(0));
+            feePlan.setTrdFeeConfig(trdFeetConfig);
             // 1.2 交易费用配置明细
             List<TrdFeeConfigDetail> trdFeeConfigDetails = trdFeeCalcMapper
-                    .getTrdFeeConfigDetail(trdFeeConfigs.get(0).getSeqNo());
+                    .getTrdFeeConfigDetail(trdFeetConfig.getSeqNo());
             feePlan.setTrdFeeConfigDetails(trdFeeConfigDetails);
         }
         return feePlan;

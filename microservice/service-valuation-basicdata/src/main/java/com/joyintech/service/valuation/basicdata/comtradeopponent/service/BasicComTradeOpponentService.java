@@ -110,7 +110,12 @@ public class BasicComTradeOpponentService extends BaseService<ComTradeOpponentDt
         if (StringUtil.equals(type, "NEW")) {
             mstCounterPartyMapper.insertSelective(entity);
         }else{
-            mstCounterPartyMapper.deleteByPrimaryKey(entity.getCounterId());
+            String counterId = entity.getCounterId();
+            int num = counterId.indexOf("/");
+            String counterId2 = counterId.substring(0,num);
+            String counterId3 = counterId.substring(num+1);
+            entity.setCounterId(counterId3);
+            mstCounterPartyMapper.deleteByPrimaryKey(counterId2);
             mstCounterPartyMapper.insertSelective(entity);
         }
 //        if (StringUtil.equals(type, "NEW")) {
