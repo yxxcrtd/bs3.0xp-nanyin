@@ -167,4 +167,17 @@
         setEntrust : setEntrust
     };
     init();
+
+
+    /**
+     * 画面加载完成
+     */
+    $(function() {
+        // ZGZGST-2008:投资经理指定内部交易对手，交易员不能修改交易对手 fuyongsheng add start
+        if(entity && entity.counterId && entity.isOutTrade && entity.isOutTrade === "false"){
+            var counterId = getElementById('counterId');
+            $(counterId).attr('disabled',true);
+        }
+        // ZGZGST-2008:投资经理指定内部交易对手，交易员不能修改交易对手 fuyongsheng add end
+    });
 }());

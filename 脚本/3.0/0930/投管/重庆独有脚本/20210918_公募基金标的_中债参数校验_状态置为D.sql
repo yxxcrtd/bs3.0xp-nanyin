@@ -1,0 +1,1 @@
+update CHB_DATACHECK_RULE_INV set status = 'D' where PAGE_ID='FinFundTarget002' and SRCPROPERTY like 'bussRepFundInfoDto%';
