@@ -72,7 +72,10 @@ public class CommonExportPdfService<T> {
                 configFile = configFile.replace("file:","");
             }
             WorkPage workPage = readXmlToJavaBean(configFile);
-            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
+            // String filePath = CacheUtil.getSysParam("export_pdf_path");
+            String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             exportFileName = workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
             String fileName = filePath+"/"+ exportFileName;
             createPdfTable(workPage,list);
@@ -110,7 +113,10 @@ public class CommonExportPdfService<T> {
                 document.setPageSize(pageSize);
             }
             //pdf文件生成目录
-            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
+//            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             //建立一个书写器
             fileName = filePath+"/"+workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
