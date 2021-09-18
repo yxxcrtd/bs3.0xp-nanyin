@@ -247,11 +247,11 @@ public class BeforeSubCheck extends SvrCBBaseService{
 ////                resultList.add(chbReportCheck);
 //            }
             
-            if ( m.getCustprofit1().compareTo(BigDecimal.ZERO)==0 ) {
-            	warnInfo=warnInfo+"兑付客户收益为0";
-//                chbReportCheck.setWarnInfo("兑付客户收益为0");
-//                resultList.add(chbReportCheck);
-            }
+//            if ( m.getCustprofit1().compareTo(BigDecimal.ZERO)==0 ) {
+//            	warnInfo=warnInfo+"兑付客户收益为0";
+////                chbReportCheck.setWarnInfo("兑付客户收益为0");
+////                resultList.add(chbReportCheck);
+//            }
             
             if ( m.getCustyield().compareTo(m.getProdyield())==1 ) {
             	warnInfo=warnInfo+"收益率不准确";

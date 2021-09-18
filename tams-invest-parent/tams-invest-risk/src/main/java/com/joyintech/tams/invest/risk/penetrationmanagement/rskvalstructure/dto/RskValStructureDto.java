@@ -57,6 +57,10 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
      * 页面参数
      */
     private String pageModel;
+    /**
+     * 映射名称
+     */
+    private String oldStructName;
 
     
     public String getStructName() {
@@ -121,5 +125,13 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
     }
     public void setSrcColIndexLetter(String srcColIndexLetter) {
         this.srcColIndexLetter = srcColIndexLetter;
+    }
+
+    public String getOldStructName() {
+        return oldStructName;
+    }
+
+    public void setOldStructName(String oldStructName) {
+        this.oldStructName = oldStructName;
     }
 }

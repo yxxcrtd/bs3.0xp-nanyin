@@ -2,7 +2,10 @@ package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
 import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtlKey;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface RskValtblAssetSubMapDtlMapper {
@@ -19,4 +22,6 @@ public interface RskValtblAssetSubMapDtlMapper {
     int updateByPrimaryKeySelective(RskValtblAssetSubMapDtl record);
 
     int updateByPrimaryKey(RskValtblAssetSubMapDtl record);
+
+    void insertList(List<RskValtblAssetSubMapDtl> list);
 }

@@ -11,9 +11,14 @@
 package com.joyintech.service.risk.penetrationmanagement.rskvalsumname.service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.dao.RskValtblSumsubMapDtlMapper;
@@ -43,6 +48,11 @@ public class RskValSumname003Service extends BaseService<RskValSumnameDto>{
     private RskValtblSumsubMapDtlMapper rskValtblSumsubMapDtlMapper;
     @Autowired
     private RskValSumnameMapper rskValSumnameMapper;
+    /**
+     * 长sql最大一次插入或者更新条数
+     */
+    @Value("${application.reportInsertLongCount}")
+    public int reportInsertLongCount;
     /**
      * 修改映射明细
      * <功能详细描述>
@@ -108,5 +118,38 @@ public class RskValSumname003Service extends BaseService<RskValSumnameDto>{
      */
     public RskValSumnameDto selectByName(RskValSumnameDto dto) {
         return rskValSumnameMapper.selectByName(dto);
+    }
+    /**
+     * 新建映射明细
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public void insertList(List<RskValtblSumsubMapDtl> list){
+        //分批次插入数据库
+        int maxDataCountOneTime = reportInsertLongCount;
+        //插入list大小
+        int dataCount = list.size();
+        //若需要插入的数据比最大插入的数据少，则直接全部插入
+        if (dataCount <= maxDataCountOneTime) {
+            rskValtblSumsubMapDtlMapper.insertList(list);
+            return ;
+        }
+
+        List<RskValtblSumsubMapDtl> newDataList = new ArrayList<RskValtblSumsubMapDtl>();
+        newDataList.addAll(list);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++ ) {
+            rskValtblSumsubMapDtlMapper.insertList(newDataList.subList(0, maxDataCountOneTime));
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            rskValtblSumsubMapDtlMapper.insertList(newDataList);
+        }
     }
 }

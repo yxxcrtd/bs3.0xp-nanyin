@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.valid
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.security.LoginUserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
