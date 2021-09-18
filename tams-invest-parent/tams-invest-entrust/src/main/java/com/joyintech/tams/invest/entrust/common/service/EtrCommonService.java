@@ -1117,7 +1117,8 @@ public class EtrCommonService extends BaseService<ITableRow> {
             EtrRepoDto inputDto = (EtrRepoDto) object;
             if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(),inputDto.getPs())){
                 //逆回购无券  不占授信
-                if(StringUtil.isEmpty(inputDto.getFinprodId())){
+                if(StringUtil.isEmpty(inputDto.getFinprodId())
+                        && StringUtil.isEmptyList(inputDto.getBussRepoSec().getPledgeBondList())){
                     return null;
                 }
                 creditLinesInputDto = new CreditLinesInputDto();
@@ -1134,7 +1135,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 if(StringUtil.isNotEmpty(inputDto.getEtrInvestPersonInfo())){
                     creditLinesInputDto.setCounterId(inputDto.getEtrInvestPersonInfo().getCounterId());
                 }
-                List<PledgeBondInfoDto> pledgeBondInfoDtoList = inputDto.getPledgeBondList();
+                List<PledgeBondInfoDto> pledgeBondInfoDtoList = inputDto.getBussRepoSec().getPledgeBondList();
                 if (!StringUtil.isEmptyList(pledgeBondInfoDtoList)){
                     // 质押券面总额
                     BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
