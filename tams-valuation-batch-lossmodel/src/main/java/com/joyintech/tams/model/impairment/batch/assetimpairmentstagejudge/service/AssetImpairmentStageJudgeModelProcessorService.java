@@ -123,7 +123,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         // 查询存续期交易列表
         List<ModRepayAndInterestDto> hbList = new ArrayList<ModRepayAndInterestDto>(); // 还本
         List<ModRepayAndInterestDto> fxList = new ArrayList<ModRepayAndInterestDto>(); // 付息
-        List<ModRepayAndInterestDto> hbfxList = assetImpairmentStageJudgeModelMapper.assetImpairmentStageJudgeT2322List(resultProcess.getAssetId());
+        List<ModRepayAndInterestDto> hbfxList = assetImpairmentStageJudgeModelMapper.assetImpairmentStageJudgeT2322List(resultProcess.getAssetId(), resultProcess.getDecDate());
         if (hbfxList != null && hbfxList.size() > 0) {
             for (ModRepayAndInterestDto hbfxdto : hbfxList) {
                 if (hbfxdto.getDealSide().equals(DictCodeList.交易方向_还本到账.getValue())) {

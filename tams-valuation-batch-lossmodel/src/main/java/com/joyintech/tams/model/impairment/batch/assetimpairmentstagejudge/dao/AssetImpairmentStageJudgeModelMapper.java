@@ -4,8 +4,10 @@ import com.joyintech.tams.model.impairment.batch.assetimpairmentstagejudge.dto.*
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public interface AssetImpairmentStageJudgeModelMapper {
      * @param assetId
      * @return
      */
-    List<ModRepayAndInterestDto> assetImpairmentStageJudgeT2322List(String assetId);
+    List<ModRepayAndInterestDto> assetImpairmentStageJudgeT2322List(@Param("assetId")String assetId,@Param("execDate") Date execDate);
 
     /**
      * 删除
