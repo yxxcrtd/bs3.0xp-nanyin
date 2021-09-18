@@ -2,10 +2,10 @@ delete from CHB_DATACHECK_RULE_INV where SRCPROPERTY = 'bussFinProductSaleParamD
 and PAGE_ID = 'FinNetValueProductBuild002';
 
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('de4E4A59-6813-5A9E-E050-107F01006A77                            ', 'FinNetValueProductBuild002', 'isNotEmpty', 'bussFinProductSaleParamDto.raiseAmtPlan', null, null, 'N', '¼Æ»®Ä¼¼¯½ğ¶î£¨Ôª£©ÒªËØ²»¿ÉÎª¿Õ', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+values ('de4E4A59-6813-5A9E-E050-107F01006A77                            ', 'FinNetValueProductBuild002', 'isNotEmpty', 'bussFinProductSaleParamDto.raiseAmtPlan', null, null, 'N', 'è®¡åˆ’å‹Ÿé›†é‡‘é¢ï¼ˆå…ƒï¼‰è¦ç´ ä¸å¯ä¸ºç©º', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
 
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('de4E4A59-6813-5A9E-E050-007F01006A77                            ', 'FinNetValueProductBuild002', 'isNumber2', 'bussFinProductSaleParamDto.raiseAmtPlan', null, '15,2', 'Y', '¼Æ»®Ä¼¼¯½ğ¶î£¨Ôª£©±ØĞëÎªn(15,2)¸ñÊ½', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+values ('de4E4A59-6813-5A9E-E050-007F01006A77                            ', 'FinNetValueProductBuild002', 'isNumber2', 'bussFinProductSaleParamDto.raiseAmtPlan', null, '15,2', 'Y', 'è®¡åˆ’å‹Ÿé›†é‡‘é¢ï¼ˆå…ƒï¼‰å¿…é¡»ä¸ºn(15,2)æ ¼å¼', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
 
 insert into CHB_DATACHECK_RULE_INV (CHECKRULEID, PAGE_ID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, NULLABLE, REMARK, STATUS, CHECKCLASS)
-values ('de314A60-6813-5A9E-E050-007F01006A77                            ', 'FinNetValueProductBuild002', 'compareValueAsNumber', 'bussFinProductSaleParamDto.raiseAmtPlan', '>', '0', 'Y', '¼Æ»®Ä¼¼¯½ğ¶î£¨Ôª£©±ØĞë´óÓÚ0', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
+values ('de314A60-6813-5A9E-E050-007F01006A77                            ', 'FinNetValueProductBuild002', 'compareValueAsNumber', 'bussFinProductSaleParamDto.raiseAmtPlan', '>', '0', 'Y', 'è®¡åˆ’å‹Ÿé›†é‡‘é¢ï¼ˆå…ƒï¼‰å¿…é¡»å¤§äº0', 'E', 'com.joyintech.tams.invest.common.ChbBaseCheckLib');
