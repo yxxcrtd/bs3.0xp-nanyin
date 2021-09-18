@@ -1287,8 +1287,14 @@ var TrdCommandReceive001 = function () {
                                         '#TrdCommandReceive001_btn_transaction')
                                         .attr("style",
                                             "display:false");
-                                    $('#TrdCommandReceive001_btn_preTrade').show();// 交易预录入按钮
-                                    $('#TrdCommandReceive001_btn_contract').show();
+                                    //根据SYS_ELEMENT_CONTROL里的is_show参数来判断是否切换tab时展示 edit by yeming 20210918 start
+                                    if(!ElementsControl.includes("TrdCommandReceive001_btn_preTrade")){
+                                        $('#TrdCommandReceive001_btn_preTrade').show();// 交易预录入按钮
+                                    }
+                                    if(!ElementsControl.includes("TrdCommandReceive001_btn_contract")){
+                                        $('#TrdCommandReceive001_btn_contract').show();
+                                    }
+                                    //根据SYS_ELEMENT_CONTROL里的is_show参数来判断是否切换tab时展示 edit by yeming 20210918 end
                                     $(
                                         '#TrdCommandReceive001_btn_refuce')
                                         .attr("style",
