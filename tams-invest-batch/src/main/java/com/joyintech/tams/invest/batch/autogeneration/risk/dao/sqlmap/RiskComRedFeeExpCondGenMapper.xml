@@ -22,10 +22,17 @@
 		         left join RSK_ISUP_POINT_VAL rv
 		                   on ((pv.PORTFOLIO_ID = rv.PORTFOLIO_ID or rv.PORTFOLIO_ID in (select rd.PTL_BAG_ID
 		                                                                                 from RSK_PORTFOLIO_PACKAGE_DTL rd
-		                                                                                 where rd.PORTFOLIO_ID = pv.PORTFOLIO_ID)) and
+		                                                                                 where rd.PORTFOLIO_ID = pv.PORTFOLIO_ID
+		                                                                                   and rd.PORTFOLIO_ID not in (
+		                                                                                     select rv1.PORTFOLIO_ID
+		                                                                                     from RSK_ISUP_POINT_VAL rv1
+		                                                                                     where rv1.IND_ID = #{indID}
+		                                                                                       and rv1.SUP_DATE = #{batchDate,jdbcType=DATE}
+		                                                                                 ))) and
 		                       rv.SUP_DATE = #{batchDate,jdbcType=DATE} and
-		                       rv.IND_ID = #{indID)
+		                       rv.IND_ID = #{indID})
 		where pv.CDATE = #{batchDate,jdbcType=DATE}
+		order by pv.PORTFOLIO_ID asc
     </insert>
    
 </mapper>
