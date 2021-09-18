@@ -170,6 +170,9 @@ public class PdCalculateProcessService {
 
             //3、计算加载PDstress
             List<ModGradePdConfigDto> pdConfigList = new ArrayList<ModGradePdConfigDto>();
+            // 定义 变量.评级PD配置Map：key:年份
+            Map<String, ModGradePdConfigDto>pdConfigDtoMap = new HashMap<>();
+            // 循环遍历评级PD配置集合
             for(ModGradePdConfigDto pdConfigDto:variablePdCalculateDto.getModGradePdConfigList()){
                 //3.1 计算每一年的风险暴露相关系数R
                 BigDecimal R=new BigDecimal("0");
@@ -270,6 +273,8 @@ public class PdCalculateProcessService {
                          //=====记录计算错误日志=====end=====
                     }
                 }
+                // PD配置最终结果存入Map
+                pdConfigDtoMap.put(pdConfigDto.getYearStr(), pdConfigDto);
             }
             if(pdConfigList.size()>0){
                 variablePdCalculateDto.getModGradePdConfigUsedList().addAll(pdConfigList);
@@ -285,80 +290,80 @@ public class PdCalculateProcessService {
             }
 
             //4.2 计算每个累积PD
+            // 定义 变量.有效月度边际PD
+            ModGradePdConfigDto modGradePdConfigDto = new ModGradePdConfigDto();
             // 遍历年月列表
-            for(int i = 0; i < variablePdCalculateDto.getYearMonList().size() ; i++){
+            for(int i = 0;  i < variablePdCalculateDto.getYearMonList().size() ; i++){
                 String yearMonStr = variablePdCalculateDto.getYearMonList().get(i);//年月 202107
                 // 当前年份
                 String yearStr = variablePdCalculateDto.getYearMonList().get(i).substring(0,4);
                 // 当前月份
                 String monStr = variablePdCalculateDto.getYearMonList().get(i).substring(4);
                 // 遍历 [PD计算过程DTO]列表--每年对应的PD值
-                for(ModGradePdConfigDto pdConfigDto: variablePdCalculateDto.getModGradePdConfigList()){
-                    // 当前年份 = PD对应的年份时
-                    if(yearStr.equals(pdConfigDto.getYearStr())){
-                        //先计算前瞻前的
-                        // 计算前瞻前月度累积
-                        if(i==0){
-                            // 前瞻前累积PD（PD1A） = PD1M
-                            variablePdCalculateDto.setPreCdfPd(getPdm(pdConfigDto.getForwardYearPd()));
-                        }else{
-                            // 前瞻前累积PD = 调用前瞻前月度累积计算公式：得出累计PDt
-                            variablePdCalculateDto.setPreCdfPd(ArithmeticUtil.doAdd(variablePdCalculateDto.getPreCdfPd(),
-                                    ArithmeticUtil.multiply(ArithmeticUtil.subtract(BigDecimal.ONE, variablePdCalculateDto.getPreCdfPd()),
-                                            getPdm(pdConfigDto.getForwardYearPd()))));
-                        }
+                // 取对应年份PD，若取不到，则pdConfigDto用前一条结果的配置
+                // 当对应剩余期限年份/月份无对应前瞻PD和Z因子值，则采用最后一条有效月度边际PD继续按月向后累积至对应资产剩余期限时点
+                if(pdConfigDtoMap.get(yearStr)!=null){
+                    modGradePdConfigDto = pdConfigDtoMap.get(yearStr);
+                }
+                //先计算前瞻前的
+                // 计算前瞻前月度累积
+                if(i==0){
+                    // 前瞻前累积PD（PD1A） = PD1M
+                    variablePdCalculateDto.setPreCdfPd(getPdm(modGradePdConfigDto.getForwardYearPd()));
+                }else{
+                    // 前瞻前累积PD = 调用前瞻前月度累积计算公式：得出累计PDt
+                    variablePdCalculateDto.setPreCdfPd(ArithmeticUtil.doAdd(variablePdCalculateDto.getPreCdfPd(),
+                            ArithmeticUtil.multiply(ArithmeticUtil.subtract(BigDecimal.ONE, variablePdCalculateDto.getPreCdfPd()),
+                                    getPdm(modGradePdConfigDto.getForwardYearPd()))));
+                }
 
-                        //这里开始计算前瞻后PD
-                        int monInt = Integer.valueOf(monStr).intValue();
-                        if(monInt>=1 && monInt<=3){
-                            if(i==0){
-                                // 一季度乐观因子 PDstress 计算出 PDm
-                                variablePdCalculateDto.setOptimisticCdfPd(getPdm(pdConfigDto.getOptimisticFactorPdOne()));
-                                // 一季度基础因子 PDstress 计算出 PDm
-                                variablePdCalculateDto.setBasicCdfPd(getPdm(pdConfigDto.getBasicFactorPdOne()));
-                                // 一季度悲观因子 PDstress 计算出 PDm
-                                variablePdCalculateDto.setPessimismCdfPd(getPdm(pdConfigDto.getPessimismFactorPdOne()));
-                            }else{
-                                variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),pdConfigDto.getOptimisticFactorPdOne()));
-                                variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),pdConfigDto.getBasicFactorPdOne()));
-                                variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),pdConfigDto.getPessimismFactorPdOne()));
-                            }
-                        }else if(monInt>=4 && monInt<=6){
-                            if(i==0){
-                                variablePdCalculateDto.setOptimisticCdfPd(getPdm(pdConfigDto.getOptimisticFactorPdTwo()));
-                                variablePdCalculateDto.setBasicCdfPd(getPdm(pdConfigDto.getBasicFactorPdTwo()));
-                                variablePdCalculateDto.setPessimismCdfPd(getPdm(pdConfigDto.getPessimismFactorPdTwo()));
-                            }else{
-                                variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),pdConfigDto.getOptimisticFactorPdTwo()));
-                                variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),pdConfigDto.getBasicFactorPdTwo()));
-                                variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),pdConfigDto.getPessimismFactorPdTwo()));
-                            }
-
-                        }else if(monInt>=7 && monInt<=9){
-                            if(i==0){
-                                variablePdCalculateDto.setOptimisticCdfPd(getPdm(pdConfigDto.getOptimisticFactorPdThree()));
-                                variablePdCalculateDto.setBasicCdfPd(getPdm(pdConfigDto.getBasicFactorPdThree()));
-                                variablePdCalculateDto.setPessimismCdfPd(getPdm(pdConfigDto.getPessimismFactorPdThree()));
-                            }else{
-                                variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),pdConfigDto.getOptimisticFactorPdThree()));
-                                variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),pdConfigDto.getBasicFactorPdThree()));
-                                variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),pdConfigDto.getPessimismFactorPdThree()));
-                            }
-
-                        }else if(monInt>=10 && monInt<=12){
-                            if(i==0){
-                                variablePdCalculateDto.setOptimisticCdfPd(getPdm(pdConfigDto.getOptimisticFactorPdFour()));
-                                variablePdCalculateDto.setBasicCdfPd(getPdm(pdConfigDto.getBasicFactorPdFour()));
-                                variablePdCalculateDto.setPessimismCdfPd(getPdm(pdConfigDto.getPessimismFactorPdFour()));
-                            }else{
-                                variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),pdConfigDto.getOptimisticFactorPdFour()));
-                                variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),pdConfigDto.getBasicFactorPdFour()));
-                                variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),pdConfigDto.getPessimismFactorPdFour()));
-                            }
-                        }
-
+                //这里开始计算前瞻后PD
+                int monInt = Integer.valueOf(monStr).intValue();
+                if(monInt>=1 && monInt<=3){
+                    if(i==0){
+                        // 一季度乐观因子 PDstress 计算出 PDm
+                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdOne()));
+                        // 一季度基础因子 PDstress 计算出 PDm
+                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdOne()));
+                        // 一季度悲观因子 PDstress 计算出 PDm
+                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdOne()));
+                    }else{
+                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdOne()));
+                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdOne()));
+                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdOne()));
+                    }
+                }else if(monInt>=4 && monInt<=6){
+                    if(i==0){
+                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdTwo()));
+                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdTwo()));
+                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdTwo()));
+                    }else{
+                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdTwo()));
+                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdTwo()));
+                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdTwo()));
                     }
 
+                }else if(monInt>=7 && monInt<=9){
+                    if(i==0){
+                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdThree()));
+                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdThree()));
+                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdThree()));
+                    }else{
+                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdThree()));
+                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdThree()));
+                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdThree()));
+                    }
+
+                }else if(monInt>=10 && monInt<=12){
+                    if(i==0){
+                        variablePdCalculateDto.setOptimisticCdfPd(getPdm(modGradePdConfigDto.getOptimisticFactorPdFour()));
+                        variablePdCalculateDto.setBasicCdfPd(getPdm(modGradePdConfigDto.getBasicFactorPdFour()));
+                        variablePdCalculateDto.setPessimismCdfPd(getPdm(modGradePdConfigDto.getPessimismFactorPdFour()));
+                    }else{
+                        variablePdCalculateDto.setOptimisticCdfPd(getCdfPd(variablePdCalculateDto.getOptimisticCdfPd(),modGradePdConfigDto.getOptimisticFactorPdFour()));
+                        variablePdCalculateDto.setBasicCdfPd(getCdfPd(variablePdCalculateDto.getBasicCdfPd(),modGradePdConfigDto.getBasicFactorPdFour()));
+                        variablePdCalculateDto.setPessimismCdfPd(getCdfPd(variablePdCalculateDto.getPessimismCdfPd(),modGradePdConfigDto.getPessimismFactorPdFour()));
+                    }
                 }
 
                 if(i == 11){
