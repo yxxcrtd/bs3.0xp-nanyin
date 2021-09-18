@@ -150,12 +150,14 @@ public class EadCalCulationBatchProcessorService {
                     if (DateUtil.compareDate(itemServicing.getPayDate(), excuteDate) < 0) {
                         // 资产收息交易列表比那里
                         for (ModEclResultProcess item22 : listT22) {
+                            //if (资产付息交易i.计息截止日 == 资产付息计划i.计息截止日 && 资产付息交易i.是否结清 == 已结清)
                             if (DateUtil.compareDate(item22.getPlanEndDate(), itemServicing.getMdate()) == 0 &&
-                                    DictCodeList.是否_否.getValue().equals(item22.getIsClean())) {
+                                    DictCodeList.是否_是.getValue().equals(item22.getIsClean())) {
                                 isInterestTrade = true;
                                 break;
                             }
                             // 如果存在交易且未结清
+                            //if (资产付息交易i.计息截止日 == 资产付息计划i.计息截止日 && 资产付息交易i.是否结清 == 未结清)
                             if (DateUtil.compareDate(item22.getPlanEndDate(), itemServicing.getMdate()) == 0 &&
                                     DictCodeList.是否_否.getValue().equals(item22.getIsClean())) {
                                 isInterestTrade = true;
