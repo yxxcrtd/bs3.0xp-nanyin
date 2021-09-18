@@ -310,7 +310,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     msg = "【资产减值阶段判断批处理】：【"+gradeOrgName+"/"+item.getAssetId()+"】买入时点无评级信息";
                     modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), msg);
                 } else if (resultProcess.getResultDeal() != null && resultProcess.getResultCurrent() != null &&
-                        getPoorRating(resultProcess.getResultCurrent(), resultProcess.getResultDeal()) > Integer.valueOf(itemValue)) {
+                        getPoorRating(resultProcess.getResultCurrent(), resultProcess.getResultDeal()) >= Integer.valueOf(itemValue)) {
                     finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                     resultProcess.setFinStage(finStage);
                     rstDto.setModEclResultProcess(resultProcess);
