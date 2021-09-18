@@ -50,14 +50,14 @@
 				$('#secDetailTypeModel').val('');
         	}else{
         		$('#finProdName').val($('#finprodId').select2('data')[0].text).trigger('change');
-				var fiveClass = $('#finprodId').select2('data')[0].object;
-				Joyin.ajaxSync(basePath + 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/findModAseetMapping',{
-					finprodId:finprodId},function(result){
-					if(result){
-						$('#secTypeModel').val(result.output2).trigger('change');
-						$('#secDetailTypeModel').val(result.output3).trigger('change');
-					}
-				});
+				// var fiveClass = $('#finprodId').select2('data')[0].object;
+				// Joyin.ajaxSync(basePath + 'valmodel/modstockdivitrateconfig/ModStockDivitrateConfig002/findModAseetMapping',{
+				// 	finprodId:finprodId},function(result){
+				// 	if(result){
+				// 		$('#secTypeModel').val(result.output2).trigger('change');
+				// 		$('#secDetailTypeModel').val(result.output3).trigger('change');
+				// 	}
+				// });
         	}
         	
         });

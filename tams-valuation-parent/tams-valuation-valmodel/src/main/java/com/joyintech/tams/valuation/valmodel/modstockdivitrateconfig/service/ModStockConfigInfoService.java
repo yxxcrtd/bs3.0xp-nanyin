@@ -107,10 +107,10 @@ public class ModStockConfigInfoService extends CommonExportService<ModStockDivit
 	 * @return
 	 */
 	public Page<SelectOptionDto> getAssetCodeList(Map<String, Object> param) {
-		 param.put("IS_RIGHT_N",DictCodeListExt1.是否_否.getValue());
-		 param.put("IS_SUS_Y",DictCodeListExt1.是否_是.getValue());
-		 param.put("FIN_TYPE_F01",DictCodeListExt1.金融产品类型_投管用_债券.getValue());
-		 param.put("CUSTOM_ASSET_TYPE_FOUR_023",DictCodeListExt3.资产四级分类_优先股.getValue());
+//		 param.put("IS_RIGHT_N",DictCodeListExt1.是否_否.getValue());
+//		 param.put("IS_SUS_Y",DictCodeListExt1.是否_是.getValue());
+//		 param.put("FIN_TYPE_F01",DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+//		 param.put("CUSTOM_ASSET_TYPE_FOUR_023",DictCodeListExt3.资产四级分类_优先股.getValue());
 		 return restTemplate.postForPage(ServiceApplication.CUSTOMER_INTERF_NAME
                  + "/ModStockDivitrateConfigInfo/getAssetCodeList",param,SelectOptionDto.class);
 	}
