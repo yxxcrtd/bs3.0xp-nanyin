@@ -360,7 +360,6 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     // 失败	未查询到对应资产评级配置
                     msg = "【资产减值阶段判断批处理】：【"+item.getAssetId()+"】未查询到对应资产评级配置";
                     modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), msg);
-                    return null;
                 }
                 if(ratingInfo1 != null &&ratingInfo2 != null){
                     //债项评级在“C”以上（不含），主体评级在“C” 级以下（含）的债券
@@ -386,12 +385,12 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     }
                 }
             }
-            return null;
         } catch (Exception e) {
             msg = "【资产减值阶段判断批处理】：债项类资产债项评级、主体评级判断异常";
             modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), msg);
             return null;
         }
+        return rstDto;
     }
 
 
