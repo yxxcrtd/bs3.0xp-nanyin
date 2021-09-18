@@ -178,17 +178,17 @@ public class AssetImpairmentManagement001Controller extends BaseController {
 	}
 
 
-	@PostMapping("getAllAssetInfo")
-	public List<ModValBatchAssetInfoDto> getAllAssetInfo(@RequestBody Map<String, Object> map) throws Exception {
-		List<BatchAssetInfoDto> batchAssetInfoDtoList =  assetImpairmentManagement001Service.getAllAssetInfo(map);
-		List<ModValBatchAssetInfoDto> modValBatchAssetInfoDtoList= new ArrayList<>();
-		for(BatchAssetInfoDto dto:batchAssetInfoDtoList){
-			ModValBatchAssetInfoDto  batchAssetInfo= new ModValBatchAssetInfoDto();
-			BeanUtils.copyProperties(dto,batchAssetInfo);
-			modValBatchAssetInfoDtoList.add(batchAssetInfo);
-		}
-		return modValBatchAssetInfoDtoList;
-	}
+//	@PostMapping("getAllAssetInfo")
+//	public List<ModValBatchAssetInfoDto> getAllAssetInfo(@RequestBody Map<String, Object> map) throws Exception {
+//		List<BatchAssetInfoDto> batchAssetInfoDtoList =  assetImpairmentManagement001Service.getAllAssetInfo(map);
+//		List<ModValBatchAssetInfoDto> modValBatchAssetInfoDtoList= new ArrayList<>();
+//		for(BatchAssetInfoDto dto:batchAssetInfoDtoList){
+//			ModValBatchAssetInfoDto  batchAssetInfo= new ModValBatchAssetInfoDto();
+//			BeanUtils.copyProperties(dto,batchAssetInfo);
+//			modValBatchAssetInfoDtoList.add(batchAssetInfo);
+//		}
+//		return modValBatchAssetInfoDtoList;
+//	}
 
 
 

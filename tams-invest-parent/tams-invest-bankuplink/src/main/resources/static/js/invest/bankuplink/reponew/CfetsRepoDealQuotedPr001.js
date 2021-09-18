@@ -1,15 +1,22 @@
 (function () {
     var getEtrInfo = false;
     $(".layui-tab").show();
+    var fetsRepoDealQuotedPrice001_entrustOrderTable_loading;
+    var fetsRepoDealQuotedPrice001_dayOfferTable_loading;
     /**
      * 获取指令执行查询参数
      */
     var genzlzxTableParam = function () {
-        var pageParam = $.serializeToObject('#searchForm_zlgl');
-        if (pageParam.portfolioId_zlgl && pageParam.portfolioId_zlgl != '') {
-            pageParam.portfolioId_zlgl = pageParam.portfolioId_zlgl.join(",");
+        var pageParam = $.serializeToObject('#cfetsRepoDealQuotedPrice001_entrustOrder_form');
+        if (pageParam.invManagerId && pageParam.invManagerId != '') {
+            pageParam.invManagerId = pageParam.invManagerId.join(",");
         } else {
-            pageParam.portfolioId_zlgl = null;
+            pageParam.invManagerId = null;
+        }
+        if (pageParam.portfolioId && pageParam.portfolioId != '') {
+            pageParam.portfolioId = pageParam.portfolioId.join(",");
+        } else {
+            pageParam.portfolioId = null;
         }
         var cols = [];
         $.each(zlzxTable.options.cols, function (i, val) {
@@ -138,7 +145,10 @@
                     }
                 }
             }
-        ]
+        ],
+        done:function(allData){
+            layui.layer.close(fetsRepoDealQuotedPrice001_entrustOrderTable_loading);
+        },
     });
     /**
      * 接收
@@ -292,7 +302,32 @@
      * 获取委托查询对话查询参数
      */
     var genwtdhbjTableParam = function () {
-        var pageParam = $.serializeToObject('#searchForm_wtcxdh');
+        var pageParam = $.serializeToObject('#cfetsRepoDealQuotedPrice001_dayOffer_form');
+        if (pageParam.mySideTrader && pageParam.mySideTrader != '') {
+            pageParam.mySideTrader = pageParam.mySideTrader.join(",");
+        } else {
+            pageParam.mySideTrader = null;
+        }
+        if (pageParam.counterId && pageParam.counterId != '') {
+            pageParam.counterId = pageParam.counterId.join(",");
+        } else {
+            pageParam.counterId = null;
+        }
+        if (pageParam.counterTrader && pageParam.counterTrader != '') {
+            pageParam.counterTrader = pageParam.counterTrader.join(",");
+        } else {
+            pageParam.counterTrader = null;
+        }
+        var cols = [];
+        $.each(wtdhbjTable.options.cols,function(i,val){
+            if(val.visible==false){
+
+            }else{
+                cols.push(val.field);
+            }
+        })
+        cols.push("quoteId");
+        pageParam.keycols = cols.join(",");
         return pageParam;
     };
 
@@ -480,6 +515,9 @@
                 }
             }
         ],
+        done:function(allData){
+            layui.layer.close(fetsRepoDealQuotedPrice001_dayOfferTable_loading);
+        },
         dblclick: function (table, data) {
             // 判断交易状态
             var object = data;
@@ -782,12 +820,52 @@
             });
         });
 
-        /**
+/*        /!**
          * 指令执行查询按钮点击事件
-         */
+         *!/
         $('.zlgl-transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
             zlzxTable.load();
+        });*/
+        /**
+         * 指令执行查询弹出框
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seach').click(function() {
+            $('#dayOfferSelectorConditionFilter001').hide();
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            if($("#selectorConditionFilter001").css("display")=="none"){
+                $("#selectorConditionFilter001").show();
+            }
+            else{
+                $("#selectorConditionFilter001").hide();
+            }
         });
+        /**
+         * 指令执行查询弹出框关闭
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachClose').click(function() {
+            $("#selectorConditionFilter001").hide();
+        });
+        /**
+         * 委托指令查询弹出框查询
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_realseach').click(function() {
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
+            $("#selectorConditionFilter001").hide();
+        });
+        /**
+         * 委托指令查询弹出框重置
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachReset').click(function() {
+            $("#portfolioId_zlgl").empty();
+            $("#ps_zlgl").val("").trigger("change");
+            $("#term_zlgl").val("");
+            $("#settleSpreed_zlgl").val("").trigger("change");
+            $("#invManagerId_zlgl").empty();
+            $("#entrustId_zlgl").empty();
+            $("#entrustDate_zlgl").val("");
+        });
+
         /**
          * 质押券管理查询按钮点击事件
          */
@@ -802,11 +880,74 @@
             wtdhbjTable.load();
         });
         /**
-         * 委托查询报价查询按钮点击事件
+         * 委托指令放大镜点击事件
          */
-        $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
-            /*wtcxqqTable.load();*/
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_search').click(function(){
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
         });
+        /**
+         * 委托指令radio点击事件
+         */
+        $("[name=zlglStatus]").click(function(){
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
+        });
+        /**
+         * 当日报价放大镜点击事件
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_search').click(function(){
+            fetsRepoDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+        });
+        /**
+         * 当日报价radio点击事件
+         */
+        $("[name=dayOfferStatus]").click(function(){
+            fetsRepoDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+        });
+        /**
+         * 当日报价查询弹出框
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seach').click(function() {
+            $('#selectorConditionFilter001').hide();
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            if($("#dayOfferSelectorConditionFilter001").css("display")=="none"){
+                $("#dayOfferSelectorConditionFilter001").show();
+            }
+            else{
+                $("#dayOfferSelectorConditionFilter001").hide();
+            }
+        });
+
+        /**
+         * 当日报价查询弹出框关闭
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seachClose').click(function() {
+            $("#dayOfferSelectorConditionFilter001").hide();
+        });
+        /**
+         *当日报价查询弹出框查询
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_realseach').click(function() {
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+            $("#dayOfferSelectorConditionFilter001").hide();
+        });
+
+        /**
+         * 当日报价查询弹出框重置
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seachReset').click(function() {
+            $("#ps_wtcx").val("").trigger("change");
+            $("#mySideTrader_wtcx").empty();
+            $("#counterId_wtcx").empty();
+            $("#counterTrader_wtcx").empty();
+            $(".termEmpty_wtcx").val("");
+            $("#quoteId_wtcx").val("");
+        });
+
+
         /**
          * 成交查询查询按钮点击事件
          */

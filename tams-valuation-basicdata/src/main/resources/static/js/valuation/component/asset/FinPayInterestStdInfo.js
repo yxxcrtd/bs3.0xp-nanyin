@@ -43,6 +43,12 @@
     //画面根据资产类型show or hide;
     var init = function(){
         showAll();
+        debugger;
+        if($('#objectType').val() && $('#objectType').val() === '01'){
+            getElementById('isNoIssueAmtFlag_div').show();
+        }else{
+            getElementById('isNoIssueAmtFlag_div').hide();
+        }
         //债券、存款类资产hide自定义说明
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F01 || INT_ASSET_TYPE==FINPROD_TYPE_F21 ||INT_ASSET_TYPE==FINPROD_TYPE_F17){
             getElementById('remark','div').hide();
@@ -733,15 +739,21 @@
         //获取还本列表信息
         //存款类、计划类、项目类(主画面存款本金、融资金额)--issueAmt
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F17 || INT_ASSET_TYPE==FINPROD_TYPE_F21){
-            var isNoIssueAmtFlag = getElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
-            if(isNoIssueAmtFlag){
-                //是否还本不带息
-                param.isNoIssueAmtFlag='Y';
-                param.issueAmt = 100;
+            // 如果是债权类资产才会根据无明确融资金额判断
+            if($('#objectType').val() && $('#objectType').val() === '01'){
+                var isNoIssueAmtFlag = getElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
+                if(isNoIssueAmtFlag){
+                    //是否还本不带息
+                    param.isNoIssueAmtFlag='Y';
+                    param.issueAmt = 100;
+                }else{
+                    param.isNoIssueAmtFlag='N';
+                    param.issueAmt = $('#issueAmt').val();
+                }
             }else{
-                param.isNoIssueAmtFlag='N';
                 param.issueAmt = $('#issueAmt').val();
             }
+
 
         }else if(INT_ASSET_TYPE == FINPROD_TYPE_F01){
             param.issueAmt = 100;

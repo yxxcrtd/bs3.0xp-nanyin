@@ -163,9 +163,9 @@ public class ModValuationCommonService extends BaseService {
 	 */
 	public List<MstSharePrice> getStockMarketIntervalInfo(ModStockMarketParamsDto paraMap){
 		try{
-			if(null == paraMap.getSearchDate()||null==paraMap.getStartDate()){
-				logger.info("查询开始日、查询结束日不能为空！");
-				throw new Exception("查询开始日、查询结束日不能为空!");
+			if(null == paraMap.getSearchDate()||0==paraMap.getSearchNum()){
+				logger.info("查询结束日不能为空，查询数量不能为0！");
+				throw new Exception("查询结束日不能为空，查询数量不能为0!");
 			}
 			return modAssetInfoMapper.getStockMarketInfo(paraMap);
 		} catch (Exception e) {

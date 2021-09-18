@@ -89,8 +89,8 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         }
         //估值结果
         if (valuationResultList != null && valuationResultList.size() > 0) {
-            deleteValuationResultPremium(valuationResultList);
-            insertValuationResultPremium(valuationResultList);
+            deleteValuationResult(valuationResultList);
+            insertValuationResult(valuationResultList);
         }
 //        资产定价批操作
 //        if (makePriceResultList != null && makePriceResultList.size() > 0) {
@@ -143,7 +143,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 插入债券估值行情结果集
      * @param valuationResultList
      */
-    private void insertValuationResultPremium(List<ModCurveResult> valuationResultList) {
+    private void insertValuationResult(List<ModCurveResult> valuationResultList) {
         if (valuationResultList == null || valuationResultList.isEmpty()) {
             return;
         }
@@ -152,7 +152,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         List<List<ModCurveResult>> list = DataHandleUtil.splitList(valuationResultList);
         for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.insertValuationResultPremium(listInsert);
+                incomeMethodMapper.insertValuationResult(listInsert);
             }
         }
 
@@ -162,7 +162,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 删除债券估值行情结果集
      * @param listModRiskPremium
      */
-    private void deleteValuationResultPremium(List<ModCurveResult> listModRiskPremium) {
+    private void deleteValuationResult(List<ModCurveResult> listModRiskPremium) {
         if (listModRiskPremium == null || listModRiskPremium.isEmpty()) {
             return;
         }
@@ -170,7 +170,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         List<List<ModCurveResult>> list = DataHandleUtil.splitList(listModRiskPremium);
         for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.deleteValuationResultPremium(listInsert);
+                incomeMethodMapper.deleteValuationResult(listInsert);
             }
         }
     }

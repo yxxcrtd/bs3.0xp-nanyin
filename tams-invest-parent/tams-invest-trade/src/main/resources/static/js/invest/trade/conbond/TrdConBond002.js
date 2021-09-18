@@ -104,6 +104,40 @@ var table;
     }
 
     /**
+     * 画星星
+     */
+    var star = function() {
+        // 加红星星
+        // 查找label
+        var _findPrevLabel = function(element, level) {
+            var $el = element.prev();
+            if (!$el.is('label') && level > 0) {
+                $el = $el.find('label');
+                if ($el.length === 0) {
+                    return _findPrevLabel(element.parent(), level - 1);
+                }
+            }
+            return $el;
+        };
+
+        // 非查看模式
+        if (typeof pageModel !== 'undefined'
+            && (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+            $('.must').each(function() {
+                $(this).remove();
+            })
+            $('*[required]').each(function() {
+                var $el = $(this);
+                var $target = _findPrevLabel($el, 3);
+                if ($target.find('> .must').length === 0) {
+                    $target.append($('<i class="must">*</i>'));
+                }
+            });
+        }
+    }
+
+
+    /**
      * 1.5资产代码选择时
      * 资产名称文本框根据资产代码选择自动显示对应名称;
      * 同时带出资产相关信息，包括起息日，到期日，发行日，交易场所，币种，交易日历，计息基础等;
@@ -265,6 +299,9 @@ var table;
             if (pageModel==PAGE_MODEL_NEW){
                 riskparam.data =null;
             }
+            /*交易对手必填*/
+            $('#etrInvestPersonInfo.counterId').attr('required',true);
+            star();
             window.BaseRiskMathComm.getparam(riskparam);
             }
             window.BussTrdTransferOrder['bussTrdTransferOrder'].setStlCommandInput(function () {

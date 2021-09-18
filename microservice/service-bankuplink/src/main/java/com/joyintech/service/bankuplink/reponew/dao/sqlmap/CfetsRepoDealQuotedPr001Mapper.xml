@@ -151,17 +151,20 @@
         AND A.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
         AND E.TRADER = #{loginUserId}
         <if test="zlglStatus != null and zlglStatus.equals('02')">
-            AND A.ENTRUST_STATUS = #{entrustStatusUnAccept}
+            AND A.ENTRUST_STATUS = #{zlglStatus}
         </if>
         <if test="zlglStatus != null and zlglStatus.equals('03')">
-            AND A.ENTRUST_STATUS = #{entrustStatusAccept}
+            AND A.ENTRUST_STATUS = #{zlglStatus}
             AND NVL(T5.FINISH_AMT,0) &lt; A.ENTRUST_AMT
         </if>
         <if test="zlglStatus != null and zlglStatus.equals('04')">
-            AND ((A.ENTRUST_STATUS = #{entrustStatusAccept}
+            AND ((A.ENTRUST_STATUS = #{zlglStatus}
             AND NVL(T5.FINISH_AMT,0) &gt;= A.ENTRUST_AMT)
             OR A.ENTRUST_STATUS = #{entrustStatusComple}
             )
+        </if>
+        <if test="portfolioId != null and portfolioId != ''">
+            AND A.PORTFOLIO_ID = #{portfolioId}
         </if>
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND A.PORTFOLIO_ID IN
@@ -169,14 +172,14 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetIdList != null and assetIdList.size() > 0">
-            AND fp.FINPROD_MARKET_ID IN
-            <foreach collection="assetIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
+        <if test="term != null and term != ''">
+            AND C.TERM_DAYS = #{term}
         </if>
-        <if test="ps_zlgl != null and ps_zlgl != ''">
-            AND A.PS = #{ps_zlgl}
+        <if test="settleSpreed != null and settleSpreed != ''">
+            AND DECODE(C.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+        </if>
+        <if test="ps != null and ps != ''">
+            AND A.PS = #{ps}
         </if>
         <if test="invManagerIdList != null and invManagerIdList.size() > 0">
             AND A.INV_MANAGER_ID IN
@@ -184,7 +187,37 @@
                 #{item}
             </foreach>
         </if>
-        order by A.VDATE desc
+        <!--委托代码支持多选-->
+        <if test="entrustIdMultiple != null and entrustIdMultiple.size() > 0">
+            and A.ENTRUST_ID in
+            <foreach collection="entrustIdMultiple" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND A.ENTRUST_ID LIKE CONCAT('%', CONCAT(#{entrustId}, '%'))
+        </if>
+        <if test="platDate != null">
+            AND A.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+            AND A.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+        </if>
+        <if test="keywords != null and keywords != ''">
+            AND (H.USER_NAME LIKE '%'||#{keywords}||'%'
+            OR A.PORTFOLIO_ID LIKE '%'||#{keywords}||'%'
+            OR B.PORTFOLIO_NAME LIKE '%'||#{keywords}||'%'
+            OR C.SEC_ACCT_ID LIKE '%'||#{keywords}||'%'
+            OR A.PS LIKE '%'||#{keywords}||'%'
+            OR A.VDATE LIKE '%'||#{keywords}||'%'
+            OR A.MDATE LIKE '%'||#{keywords}||'%'
+            OR A.ENTRUST_ID LIKE '%'||#{keywords}||'%')
+        </if>
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and A.ENTRUST_ID not in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by A.PS,C.TERM_TYPE,C.SETTLE_SPREED,C.SEC_ACCT_ID desc
     </select>
 
     <select id="queryZyqglList" resultType="com.joyintech.service.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001Dto">

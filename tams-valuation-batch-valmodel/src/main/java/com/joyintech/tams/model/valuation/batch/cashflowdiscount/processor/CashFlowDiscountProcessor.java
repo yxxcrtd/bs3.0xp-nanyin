@@ -15,7 +15,9 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountResult;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.service.CashFlowDiscountProcessorService;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ import java.util.Map;
  */
 @Service
 @Scope("prototype")
-public class CashFlowDiscountProcessor extends BaseProcessor<NeedOperateEntity, CashFlowDiscountResult> {
+public class CashFlowDiscountProcessor extends BaseProcessor<NeedOperateEntity, CashFlowDiscountResult> implements StepExecutionListener {
 
     /**
      * processor方法的 Service
@@ -53,4 +55,15 @@ public class CashFlowDiscountProcessor extends BaseProcessor<NeedOperateEntity, 
 
         return result;
     }
+
+    @Override
+    public void beforeStep(StepExecution stepExecution) {
+        this.stepExecution = stepExecution;
+    }
+
+    @Override
+    public ExitStatus afterStep(StepExecution stepExecution) {
+        return stepExecution.getExitStatus();
+    }
+
 }

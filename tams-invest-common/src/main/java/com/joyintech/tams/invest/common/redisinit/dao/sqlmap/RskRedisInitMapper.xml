@@ -230,8 +230,8 @@
         from FIN_PRODUCT_VALUATION m
         inner join FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_MARKET_ID and m.FINPROD_TYPE2=n.FINPROD_TYPE2
         <where>
-          m.VAL_DATE IN (
-              select max(VAL_DATE) from FIN_PRODUCT_VALUATION where VAL_DATE &lt;= #{valDate, jdbcType=DATE}
+            TO_CHAR(m.VAL_DATE,'YYYY-MM-DD')  IN (
+              select DISTINCT TO_CHAR(max(VAL_DATE),'YYYY-MM-DD') from FIN_PRODUCT_VALUATION where VAL_DATE &lt;= #{valDate, jdbcType=DATE}
               and FINPROD_ID = m.FINPROD_ID
               group by FINPROD_ID
           )

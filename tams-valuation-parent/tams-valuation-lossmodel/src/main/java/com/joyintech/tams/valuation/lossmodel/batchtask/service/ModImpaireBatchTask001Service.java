@@ -62,7 +62,8 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
         // 返回的json串
         JsonObject json = new JsonObject();
 
-        int isCheck = 0;
+        // 初始化默认值：1失败
+        int isCheck = 1;
         String checkMsg = "";
 
 
@@ -82,23 +83,21 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
         pageParam.put("realName", realName);
         pageParam.put("BATCH_GROUP_SEQNO", LOSS_MODEL_BATCH_GROUP);
 
-        boolean checkFlag = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
-                + "/modBatchTask/checkIsRunning", pageParam, Boolean.class);
-        if(!checkFlag) {
-            boolean res = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
-                    + "/modBatchTask/insertBatch", pageParam, Boolean.class);
-            if (res) {
-                isCheck = 0;
+//        boolean checkFlag = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
+//                + "/modBatchTask/checkIsRunning", pageParam, Boolean.class);
+//        if(!checkFlag) {
+            isCheck = restTemplate.postForObject(ServiceApplication.LOSS_MODEL_SERVICE_NAME
+                    + "/modBatchTask/executeBatch", pageParam, Integer.class);
+            if (isCheck == 0) {
                 checkMsg = "执行成功!";
-            } else {
-                isCheck = 1;
+            }
+            else if (isCheck == 2) {
+                checkMsg = "当前有产品正在跑批，请稍后!";
+            }
+            else{
                 checkMsg = "执行失败, 请联系管理员!";
             }
-        }
-        else {
-            isCheck = 2;
-            checkMsg = "当前有产品正在跑批，请稍后!";
-        }
+//        }
         json.addProperty("isCheck", isCheck);
         json.addProperty("checkMsg", checkMsg);
         return json.toString();
@@ -111,15 +110,8 @@ public class ModImpaireBatchTask001Service extends CommonExportService {
      * @return
      */
     public Page<SelectOptionDto> getAssetInfo(Map<String, Object> pageParam) {
-        //带入系统参数 01毕马威 02普华
-        pageParam.put("lossType", CacheUtil.getSysParam(DictCode.减值方案类型.getValue()));
-        if(CacheUtil.getSysParam(DictCode.减值方案类型.getValue()).equals(DictCodeListExt3.减值方案类型_普华.getValue())){
             return restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                    + "/LossModCommon/getModAssetInfoPagePH", pageParam, SelectOptionDto.class);
-        }else{
-            return restTemplate.postForPage(ServiceApplication.VAL_MODEL_SERVICE_NAME
-                    + "/LossModCommon/getModAssetInfoPageBMW", pageParam, SelectOptionDto.class);
-        }
+                    + "/LossModCommon/getModAssetInfoPage", pageParam, SelectOptionDto.class);
     }
 
     /**

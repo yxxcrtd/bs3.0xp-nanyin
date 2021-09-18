@@ -112,6 +112,7 @@ public class ProductAssetsIncomeMethodReaderService {
             //3.4组装-现金流支付规则集合
             List<ModCashFlowPayRulesDto> modCashFlowPayRulesList = modValuationCommonService.getCashFlowPayRulesByFinprodId(methodReaderDto.getFinprodId());
             productAssetsIncomeMethodReaderDto.setModCashFlowPayRulesList(modCashFlowPayRulesList);
+            productAssetsIncomeMethodReaderDtoList.add(productAssetsIncomeMethodReaderDto);
         }
 
         return productAssetsIncomeMethodReaderDtoList;

@@ -10,6 +10,7 @@
                 <div class="layui-form-item">
                     <input th:name="|${entityName}.finprodType2|" th:value="${INT_ASSET_TYPE}" hidden>
                     <input th:name="|${entityName}.finprodType|" th:value="${INT_ASSET_TYPE}" hidden>
+                    <input id="objectType" name="objectType" data-th-value="${objectType}" hidden>
                     <div class="form-inline-wrap" th:id="|${entityName}_endTdayRule_div|">
                         <label class="layui-form-label form-label-wrap" data-th-text="#{FinPayInterestStdInfo.endTdayRule}">计息营业日准则</label>
                         <div class="layui-input-inline input-inline">
