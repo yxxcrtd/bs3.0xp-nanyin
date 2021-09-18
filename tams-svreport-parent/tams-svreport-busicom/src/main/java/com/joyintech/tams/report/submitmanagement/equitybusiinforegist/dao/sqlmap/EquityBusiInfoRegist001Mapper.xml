@@ -346,7 +346,7 @@
 				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
 					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
 				</if>
-				sub.submit_time = sysdate,
+				sub.SUBMIT_TIME = sysdate,
 				sub.UPDATE_TIME = sysdate
 			</set>
 			where sub.BUSI_SEQNO = #{equityRegist.busiSeqno}

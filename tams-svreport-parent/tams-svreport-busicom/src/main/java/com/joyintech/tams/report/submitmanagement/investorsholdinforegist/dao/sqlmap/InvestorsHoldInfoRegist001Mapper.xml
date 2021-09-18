@@ -359,6 +359,8 @@
 				<if test="equityRegist.sumitSeq != null and equityRegist.sumitSeq != ''">
 					sub.SUMIT_SEQ = #{equityRegist.sumitSeq},
 				</if>
+				sub.SUBMIT_TIME = sysdate,
+				sub.UPDATE_TIME = sysdate
 			</set>
 			where sub.REGIST_SEQNO = #{equityRegist.registSeqno}
 		</foreach>
