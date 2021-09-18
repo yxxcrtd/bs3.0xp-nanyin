@@ -46,7 +46,9 @@ import com.joyintech.tams.invest.risk.valtblimport.service.RskValTableImportServ
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 〈一句话功能简述〉
@@ -109,15 +111,41 @@ public class RskValTableImport001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) RskValTableImportParamDto dto, BindingResult result) {
-
+        AjaxResult res= new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        //检查上传的估值表是否符合要求
+        String  valTableFileName = dto.getValTableFileName();
+        // 解析上传文件名称，获取资产名称和估值日期
+        String chbValSplitStr = CacheUtil.getSysParam(BussinessConstant.CHB_VAL_SPLIT_STR);
+        String[] arr = valTableFileName.split(chbValSplitStr);
+        Boolean isError = false;
+        if (arr.length != 2) {
+            ValidMessage validMessage = new ValidMessage("上传的估值表文件名称不符合格式要求");
+            errorList.add(validMessage);
+            isError=true;
+        } else {
+            Date valDate = rskValTableImportCommonService.getDateFromStr(arr[1]);
+            if (Objects.isNull(valDate)) {
+                ValidMessage validMessage = new ValidMessage("上传的估值表文件名称不符合格式要求");
+                errorList.add(validMessage);
+                isError=true;
+            }else{
+                SelectOptionDto info = rskValTableImportCommonService.getAssetInfoFromName(arr[0]);
+                if (Objects.isNull(info)) {
+                    ValidMessage validMessage = new ValidMessage("上传的估值表文件资产名称不存在");
+                    errorList.add(validMessage);
+                    isError=true;
+                }
+            }
+        }
         //新增通过系统参数控制可导入的估值表最小日期   系统参数：MAX_SUB_VALDATE
         String days = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
         if(DateUtil.compareDate(dto.getValDate(),DateUtil.parse(DateUtil.addDay(DateUtil.getSysDate(),-1*Integer.valueOf(days))))<0){
-            AjaxResult res= new AjaxResult();
-            List<ValidMessage> errorList = new ArrayList<>();
             ValidMessage validMessage = new ValidMessage(
                     "超出可导入的估值表日期:" + DateUtil.addDay(DateUtil.getSysDate(),-1*Integer.valueOf(days)));
             errorList.add(validMessage);
+        }
+        if(isError){
             res.setErrorList(errorList);
             res.setMessageType(MessageType.错误消息);
             return res;

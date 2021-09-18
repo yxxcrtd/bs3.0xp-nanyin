@@ -88,5 +88,22 @@ public interface RskValSumnameMapper {
      * @since 1.0
      */
     int getCountById(RskValSumnameDto dto);
-
+    /**
+     * 查询映射名称,默认配置
+     * <功能详细描述>
+     * @param map
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<RskValSumnameDto> getSumNameDefault(Map<String, Object> map);
+    /**
+     * 选中记录在业务表中是否是默认配置
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    int getAssetSumInfoIsDefault(RskValSumnameDto dto);
 }

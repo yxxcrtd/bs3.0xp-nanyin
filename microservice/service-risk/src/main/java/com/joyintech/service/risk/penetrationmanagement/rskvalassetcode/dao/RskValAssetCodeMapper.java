@@ -47,4 +47,19 @@ public interface RskValAssetCodeMapper {
     int getCountByPtl(@Param("assetSubMapId") String assetSubMapId);
 
     List<SelectOptionDto> selecctRskValtblSubjectSumCodeList(Map<String, Object> pageParam);
+
+    /**
+     * 估值表科目配置，默认配置
+     * @param pageParam
+     * @return
+     */
+    List<RskValtblAssetSubMapDto> selectForPageDefault(Map<String, Object> pageParam);
+
+    /**
+     * 估值表科目配置，默认数
+     * @param assetSubMapId
+     * @return
+     */
+    int getAssetSubInfoIsDefault(@Param("assetSubMapId") String assetSubMapId);
+
 }

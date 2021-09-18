@@ -14,6 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
+import com.joyintech.tams.common.base.entity.RskValtblSumsubMapDtl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,5 +109,19 @@ public class RskValSumname003Controller {
     @PostMapping("/selectByName")
     public RskValSumnameDto selectByName(@RequestBody RskValSumnameDto dto){
         return rskValSumname003Service.selectByName(dto);
+    }
+    /**
+     * 新建映射明细
+     *
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/insertList")
+    public void insertList(@RequestBody List<RskValtblSumsubMapDtl> list){
+         rskValSumname003Service.insertList(list);
     }
 }

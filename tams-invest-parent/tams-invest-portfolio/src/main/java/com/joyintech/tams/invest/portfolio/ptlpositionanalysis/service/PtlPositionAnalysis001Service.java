@@ -48,9 +48,12 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
     	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
     		List<String> prodManagers = new ArrayList<>();
     		//产品经理不存在时获取所有符合的产品经理
-    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
-            		SelectOptionDto.class);
-    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		/*Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);*/
+            //此处应获取所有符合的产品经理，应该是List
+            List<SelectOptionDto> users = restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserNameList", new HashMap<String,Object>(),
+                    SelectOptionDto.class);
+    		users.stream().forEach(user->prodManagers.add(user.getId()));
     		map.put("prodManagers",prodManagers);
     	}
         return restTemplate.postForPage(

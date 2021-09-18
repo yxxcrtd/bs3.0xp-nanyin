@@ -520,6 +520,7 @@ public class FinNetProductBonusSchemeService extends CommonExportService<FinNetP
                     tempPosition.setAmount(ArithmeticUtil.doAdd(tempPosition.getAmount(),
                             StringUtil.isNotEmpty(EtrCashPositionKey) ? EtrCashPositionKey.getAmount(): BigDecimal.ZERO));
                    	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);     
+                   	 etrCashPositionMapper.updateByPrimaryKeySelective(tempPosition);
                     }
                 }
             }

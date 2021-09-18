@@ -12,6 +12,10 @@ package com.joyintech.tams.invest.risk.stresstestmanage.marketriskstresstestview
 
 import java.util.Map;
 
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -82,6 +86,17 @@ public class MarketRiskStressTestView002Controller extends BaseController{
     	Map<String, Object> Params=RequestUtil.getParameters(getRequest());
     	//树状图导出功能:此处写比较猥琐，为了展示报告时将现金余额放在一起，导出时不影响树状结构
     	Params.put("isExport", "Y");
-        return marketRiskStressTestView002Service.export(this.getPageId(),Params);
+
+    	String excelFileName = getParam("testNameE");
+    	String export_excel_type = CacheUtil.getSysParam("export_excel_type");
+    	String fileType = ".xlsx";
+    	if (StringUtil.equals(export_excel_type, com.joyintech.framework.constant.DictCodeList.是否_否.getValue())) {
+    	    fileType = ".xls";
+    	}
+    	if (StringUtil.isNotEmpty(excelFileName)) {
+    	    excelFileName = excelFileName + GlobalConstant.OPEN_PARENTHESIS + DateUtil.format(DateUtil.platDateFromCache())
+                    + GlobalConstant.CLOSE_PARENTHESIS + fileType;
+    	}
+        return marketRiskStressTestView002Service.export(excelFileName,Params);
     }
 }

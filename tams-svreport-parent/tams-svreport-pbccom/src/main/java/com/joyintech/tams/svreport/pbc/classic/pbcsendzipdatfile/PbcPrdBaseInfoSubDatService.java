@@ -297,6 +297,20 @@ public class PbcPrdBaseInfoSubDatService extends PbcReportProdDatTotalService {
         if (!StringUtil.equals(result.getCreditMode(),result.getCreditModePrd())){
             result.setCreditModeDiff(1);
         }
+        ///ZGBSEI-419  【新人行升级】人行报送文件管理（资产管理），dat预览页面，字体颜色显示问题
+        if(!(result.getProdStage()==null&&result.getProdStagePrd()==null)){
+            if(result.getProdStage()==null||result.getProdStagePrd()==null||
+                    result.getProdStage().compareTo(result.getProdStagePrd())!=0){
+                result.setProdStageDiff(1);
+            }
+        }
+        if (!StringUtil.equals(result.getProdId(),result.getProdIdPrd())){
+            result.setProdIdDiff(1);
+        }
+        if (!StringUtil.equals(result.getIsMarketFund(),result.getIsMarketFundPrd())){
+            result.setIsMarketFundDiff(1);
+        }
+
 
     }
     /**

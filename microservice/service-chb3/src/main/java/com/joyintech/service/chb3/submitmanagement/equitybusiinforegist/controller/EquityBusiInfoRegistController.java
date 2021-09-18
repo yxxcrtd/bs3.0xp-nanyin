@@ -66,6 +66,20 @@ public class EquityBusiInfoRegistController{
     public Page<EquityBusiInfoRegist001Dto> search(@RequestBody Map<String, Object> param){
         return equityBusiInfoRegist001Service.selectForPage(param);
     }
+
+    /**
+     *
+     * 查询功能
+     * <功能详细描述>
+     * @return 存储了查询结果的list
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryEquityBusiInfoRegist")
+    public List<EquityBusiInfoRegist001Dto> queryEquityBusiInfoRegist(@RequestBody Map<String, Object> param) {
+        return equityBusiInfoRegist001Service.queryEquityBusiInfoRegist(param);
+    }
+
     @PostMapping("queryPrdNameList")
     public List<SuggestDto> queryPrdNameList(Map<String,Object> paramMap) {
     	return checkReport001Service.queryPrdNameList(paramMap);

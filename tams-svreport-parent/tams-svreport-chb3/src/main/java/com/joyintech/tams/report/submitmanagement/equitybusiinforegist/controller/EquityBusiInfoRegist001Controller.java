@@ -182,6 +182,20 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
     }
 
     /**
+     * 查询事件（无分页）
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("searchInfo")
+    public List<EquityBusiInfoRegist001Dto> searchInfo(@RequestParam Map<String,Object> param) {
+        return equityBusiInfoRegistMService.searchInfo(param);
+    }
+
+
+    /**
      * 产品名称下拉框
      *
      * @return 产品名称列表

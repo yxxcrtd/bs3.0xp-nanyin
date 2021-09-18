@@ -86,4 +86,20 @@
 	     STRUCT_MAP_ID = #{id,jdbcType=VARCHAR}
 	     </where>
 	     </select>
+	<select id="getStructNameDefault" resultType="com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto">
+		SELECT
+		t.ID id,
+		t.NAME structName
+		FROM
+		RSK_VALTBL_STRUCT_MAP t
+		where 1=1 and t.is_default='Y'
+	</select>
+	<select id="getStructInfoIsDefault" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM rsk_valtbl_struct_map
+		<where>
+			ID = #{id,jdbcType=VARCHAR} and is_default='Y'
+		</where>
+	</select>
 </mapper>

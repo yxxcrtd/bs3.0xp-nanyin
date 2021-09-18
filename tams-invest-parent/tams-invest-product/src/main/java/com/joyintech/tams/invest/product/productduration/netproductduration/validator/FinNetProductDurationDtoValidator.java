@@ -1118,7 +1118,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             		errorList.add(new ValidMessage("bonusShareEndDate03","计息结束日不能为空"));
             	}
             	//再投确认日不能为空
-            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<=0){
+            	if(dto.getBonusShareConfirmDate03()==null ||dto.getBonusShareConfirmDate03().compareTo(sysDate)<0){
                     errorList.add(new ValidMessage("bonusShareConfirmDate03","再投确认日不能为空，且必须大于等于平台日！"));
                 }
             	//modify by wm 2019-06-19 start 根据需求去除红利再投金额为负的限制

@@ -613,7 +613,8 @@ public class PbcMonthAssetPositionService  extends BaseService{
                         singel.setEndDays(new BigDecimal(betweenDays));
                     }
                 } 
-            } 
+            }
+            //※※※※※※※※此部分代码为废代码.永不会进.资产映射在资产基本信息接入的时候已经映射完毕※※※※※
             if (DictCodeList.是否_中债_是.getValue().equals(singel.isNeedReflect())){
                 // 优先级先查资产代码取值映射
                 ChbTypeMappingEx mappingEx = chbTypeMappingService.getMapping(PbcAssetPositionConstants.MAPPINGCODE_PBCASSETTYPE,

@@ -62,9 +62,14 @@
             }
         }
         var tradeMarket = $("#tradeMarket").val();
+        var changeToFinprodMarketId = $("#changeToFinprodMarketId").val();
         var ps = $("#ps").val();
         if (ps == T65 && tradeMarket && tradeMarket != TRADE_PLACE_06) {
             Joyin.error("只有场外基金才能做转换。");
+            return;
+        }
+        if (ps == T65 && changeToFinprodMarketId=='' ) {
+            Joyin.error("转入资产代码不能为空。");
             return;
         }
         

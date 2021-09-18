@@ -56,6 +56,11 @@ public class RskValSumnameDto extends RskValtblSumsubMapDtl implements ITableRow
      * 页面参数
      */
     private String pageModel;
+    /**
+     * 映射名称
+
+     */
+    private String oldName;
     
     public String getName() {
         return name;
@@ -93,5 +98,13 @@ public class RskValSumnameDto extends RskValtblSumsubMapDtl implements ITableRow
     }
     public String getNextIndexTypeStr() {
         return SysDataUtil.getNameFromDataDict(DictCode.估值字段类型, super.getNextIndexType());
+    }
+
+    public String getOldName() {
+        return oldName;
+    }
+
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
     }
 }

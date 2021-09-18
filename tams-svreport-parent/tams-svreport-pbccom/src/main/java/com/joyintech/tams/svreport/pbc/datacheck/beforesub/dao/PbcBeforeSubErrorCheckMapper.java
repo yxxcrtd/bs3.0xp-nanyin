@@ -13,5 +13,11 @@ public interface PbcBeforeSubErrorCheckMapper {
     List<Map<String,Object>> selectPrdBaseInfoSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
 
     int updatePrdBaseInfoSub(String seqno);
+
+
+
+    List<Map<String,Object>> selectPrdBaseInfoNewSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+
+    int updatePrdBaseInfoNewSub(String seqno);
     
 }

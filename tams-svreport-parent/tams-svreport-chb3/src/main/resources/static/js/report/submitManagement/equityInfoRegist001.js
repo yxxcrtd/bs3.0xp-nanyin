@@ -137,7 +137,7 @@ $(function(){
             },
             { title: "数据类型", field: 'type' ,sortField:'type',width:100},
             { field: 'submitStatus',visible:false},
-            { title: "报送流水号", field: 'sumitSeq',visible:false},
+            { title: "报送流水号", field: 'sumitSeq',width:150},
             { title: "登记银行代码", field: 'bankCode',width:160 },
             { title: "机构代码",field:'orgCode',width: 160},
             { title: "识别标识", field: 'indentifyMark',width:100 },
@@ -281,6 +281,59 @@ $(function(){
             Joyin.exportExcel("exportDel",param);
         }
     });
+
+    //导出删除模板
+    $('#SvrEquityInfoRegist001_btn_exportDel').click(function(){
+        if(!table.isSearched()) {
+            return;
+        }
+        var expArr=table.getAllCheckedRows();
+        var param={};
+        if(!expArr || expArr.length ==0){
+            param = getPageParams();
+            if (param.status==null||param.status==''){
+                param.status='03';
+            }
+            param.flag = "2";
+            param.submitStatus='01';
+            // Joyin.exportExcel("export",param);
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"EquityInfoRegist001",paramKeys:JSON.stringify(param)},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
+        }
+        else{
+
+            for(var i=0;i<expArr.length;i++){
+                if(expArr[i].status !="03"||expArr[i].submitStatus !="01"){
+                    Joyin.error("只能导出删除状态且未报送的数据，请重新选择");
+                    return;
+                }
+            }
+
+            var keyList = [];
+            $.each(expArr, function(i, row) {
+                keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus);
+            });
+            param.expKeys = keyList.join(',')
+            param.flag = "2";
+            // Joyin.exportExcel("exportDel",param);
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"EquityInfoRegist001",expKeys:param.expKeys},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
+        }
+    });
+
+
+
+
     //数据检查
     $('#EquityInfoRegist001_btn_checkData').click(dateCheckMethod);
     function dateCheckMethod(){

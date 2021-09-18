@@ -747,15 +747,24 @@ public class ChbAssetInfoInterf  extends BaseService{
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3()) == null){
                     blnarea = null;
                 }
+                //TISHKBS-2835  监管报送-人行资管产品月度统计报告  添加对手方类型映射规则
                 mappingEx = chbTypeMappingExService.getMappingBySrcField(InterfMappingConstants.MAPPINGCODE_PBCASSETTYPE, 
                         chbAssetInfo.getPbcAssetType1(),chbAssetInfo.getPbcAssetType2(),chbAssetInfo.getPbcAssetType3(),industry,repprofittype
-                        ,isCentralCounter,counterType2,blnarea); 
+                        ,isCentralCounter,counterType2,blnarea,chbAssetInfo.getRivalPartyType());
             }
             if(mappingEx!=null){
                 chbAssetInfo.setPbcAssetType1(mappingEx.getObjfield1());
                 chbAssetInfo.setPbcAssetType2(mappingEx.getObjfield2());
                 chbAssetInfo.setPbcAssetType3(mappingEx.getObjfield3());
             }
+            //ZGBSEI-16  【徽银理财】监管报送-贷款明细信息维护新建页面，资产代码下拉框可选择四级分类为北金所债权资产的项目类资产
+            //当资产是北金所时.直接设置为贷款
+            if(DictCodeList.是否_中债_是.getValue().equals(chbAssetInfo.getIsBjszq())){
+                chbAssetInfo.setPbcAssetType1(DictCodeListExt3.人行资产一级分类_贷款.getValue());
+                chbAssetInfo.setPbcAssetType2(DictCodeListExt3.人行资产二级分类_除回购或拆借外贷款.getValue());
+                chbAssetInfo.setPbcAssetType3(DictCodeListExt3.人行资产三级分类_除回购或拆借外贷款.getValue());
+            }
+
 //            else {//映射不到 存成空
 //                chbAssetInfo.setPbcAssetType1(null);
 //                chbAssetInfo.setPbcAssetType2(null);

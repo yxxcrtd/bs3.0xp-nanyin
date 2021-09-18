@@ -298,9 +298,28 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
         
         if(null != dto && null != dto.getBussTrdTransfenpeiDto() && dto.getBussTrdTransfenpeiDto().size() > 0){
         	BigDecimal total = BigDecimal.ZERO;
-        	for(BussTrdTransfenpeiDto fenpei : dto.getBussTrdTransfenpeiDto()){
-        		total = total.add(fenpei.getPrinAmt());
-        	}
+        	for(BussTrdTransfenpeiDto fenpei : dto.getBussTrdTransfenpeiDto()) {
+                total = total.add(fenpei.getPrinAmt());
+
+                String confirmMsg = "";
+                String changeLineMark = "<br/>";
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                    //交易金额check
+                    if (fenpei.getTradeAmt() != null && fenpei.getBussTrdAvailableCashQueryavalibleCash() != null
+                            && StringUtil.isEmpty(dto.getWorkflowId())
+                            && fenpei.getTradeAmt().compareTo(fenpei.getBussTrdAvailableCashQueryavalibleCash()) == 1) {
+                        if (StringUtil.isNotBlank(confirmMsg)) {
+                            confirmMsg += changeLineMark;
+                        }
+                        confirmMsg += this.getMessage("TRD_C_0002");
+                    }
+                }
+                if (StringUtil.isNotBlank(confirmMsg)) {
+                    AjaxResult wr = new AjaxResult();
+                    wr.setData(confirmMsg);
+                    return wr;
+                }
+            }
         	if(total.compareTo(dto.getPrinAmt()) != 0){
                     AjaxResult res= new AjaxResult();
                     res.setMessage("金额信息中的本金金额不等于各组合的本金金额之和！", MessageType.错误消息);
