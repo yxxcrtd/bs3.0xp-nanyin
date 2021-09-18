@@ -52,7 +52,7 @@
 					OR
 					INT_CURVE_TYPE LIKE CONCAT('%', CONCAT(#{search}, '%'))
 					OR
-				    curveName LIKE CONCAT('%', CONCAT(#{search}, '%'))
+					CURVE_NAME LIKE CONCAT('%', CONCAT(#{search}, '%'))
 				)
 			</if>
 			<if test="curve_type != null and curve_type != ''">

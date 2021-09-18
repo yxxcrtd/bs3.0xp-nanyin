@@ -2133,10 +2133,15 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
                     if (null != ptlSecAcctList && ptlSecAcctList.size() > 0) {
                         if (StringUtil.isNotEmpty(rowData.get(2))) {
-                            if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
-                                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                        getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
-                            }
+                        	if (rowData.get(2).contains(":")) {
+								if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
+									confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+											getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
+								}
+							} else {
+								confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+										getMessage("ETR_E_0042", getMessage("EtrExchangeTrade001.acctNo"), getMessage("EtrExchangeTrade001.acctNoWithCorrectFormat"), lineNo));
+							}
                             //add by chenjiaixng 添加多券商资金账户时，资金账号代码必填校验 20210827 start
                         }else{
 							if(ptlSecAcctList.size() > 1) {

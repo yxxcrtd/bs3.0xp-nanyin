@@ -63,10 +63,10 @@
             ,{field:'mdate',title:'FinTenderBondTargetAsset002.mdate',type:'date',width:150}//到期日
             ,{field:'bidDate',title:'FinTenderBondTargetAsset002.bidDate',type:'date',width:150}//到期日
             ,{field:'ccyName',title:'FinTenderBondTargetAsset002.ccy',sortField:'ccy',width:150}//币种
-            ,{field:'couponSpeciesName',title:'FinTenderBondTargetAsset002.couponSpecies',sortField:'COUPON_SPECIES',width:150}//息票
-            ,{field:'intType',title:'FinTenderBondTargetAsset002.rateType',visible:false,sortField:'rateType',width:150}//利率类型
-            ,{field:'rateTypeName',title:'FinTenderBondTargetAsset002.rateType',sortField:'rateType',width:150}//利率类型
-            ,{field:'rate',title:'FinTenderBondTargetAsset002.rate',type:'number',width:150}//票面利率
+            ,{field:'couponSpeciesName',visible :false}//息票
+            ,{field:'intType',visible :false}//利率类型
+            ,{field:'rateTypeName',visible :false}//利率类型
+            ,{field:'rate',visible :false}//票面利率
             ,{field:'type4Name',title:'FinTenderBondTargetAsset002.type4',sortField:'TYPE_4',width:150,visible:false}//债券一级分类
             ,{field:'type5Name',title:'FinTenderBondTargetAsset002.type5',sortField:'TYPE_5',width:150,visible:false}//债券二级分类
             // 新增资产二、三、四、五级分类 王贵奇 2019/7/31 开始
@@ -75,10 +75,10 @@
             ,{field:'type11Name',title:'FinBondTargetAsset002.type11',sortField:'TYPE_11',width:150,visible:IS_SHOW_TYPE == '01'?true:false}//资产四级分类
             ,{field:'type12Name',title:'FinBondTargetAsset002.type12',sortField:'TYPE_12',width:150,visible:IS_SHOW_TYPE == '01'?true:false}//资产五级分类
             // 新增资产二、三、四、五级分类 王贵奇 2019/7/31 开始
-            ,{field:'indexIdName',title:'FinTenderBondTargetAsset002.indexId',sortField:'indexId',type:'number',width:150}//挂钩利率
-            ,{field:'coefficient',title:'FinTenderBondTargetAsset002.coefficient',sortField:'coefficient',type:'number',width:150}//浮动系数
-            ,{field:'spreadRate',title:'FinTenderBondTargetAsset002.spreadRate',sortField:'SPREAD_RATE',type:'number',width:150}//利差
-            ,{field:'basisName',title:'FinTenderBondTargetAsset002.basis',sortField:'basis',width:150}//计息基础
+            ,{field:'indexIdName',visible :false}//挂钩利率
+            ,{field:'coefficient',visible :false}//浮动系数
+            ,{field:'spreadRate',visible :false}//利差
+            ,{field:'basisName',visible :false}//计息基础
             ,{field:'isSecBondName',title:'FinTenderBondTargetAsset002.isSecBond',sortField:'IS_SEC_BOND',width:150}//是否次级债
             ,{field:'partyType2Name',title:'FinTenderBondTargetAsset002.qyxz',sortField:'partyType2',width:150,visible:false}//企业性质
             ,{field:'tradeMarketName',title:'FinTenderBondTargetAsset002.tradeMarket',sortField:'TRADE_MARKET',width:150}//交易场所
@@ -86,12 +86,12 @@
             ,{field:'issuerName',title:'FinTenderBondTargetAsset002.issuer',width:150,sortField:'issuer'}//发行人
             ,{field:'registOrgName',title:'FinTenderBondTargetAsset002.registOrg',sortField:'REGIST_ORG',width:150}//登记托管机构
             ,{field:'issueAmt',title:'FinTenderBondTargetAsset002.issueAmt',sortField:'ISSUE_AMT',width:150,type:'money'}//发行金额
-            ,{field:'payCycleStr',sortField:"payCycle",title:'FinTenderBondTargetAsset002.payCycle',width:150}//付息频率
-            ,{field:'ztGradeResultStr',sortField:"ztGradeResult",title:'FinTenderBondTargetAsset001.ztGradeResult',width:150}//主体评级结果
-            ,{field:'ztGradeOrgIdStr',sortField:"ztGradeOrgId",title:'FinTenderBondTargetAsset001.ztGradeOrgId',width:150}//主体评级机构
-            ,{field:'zxGradeResultStr',sortField:"zxGradeResult",title:'FinTenderBondTargetAsset001.zxGradeResult',width:150}//债项评级结果
-            ,{field:'zxGradeOrgIdStr',sortField:"zxGradeOrgId",title:'FinTenderBondTargetAsset001.zxGradeOrgId',width:150}//债项评级机构
-            ,{field:'exerciseDate',sortField:"exerciseDate",title:'FinTenderBondTargetAsset001.exerciseDate',width:150,type:'date'}//行权日
+            ,{field:'payCycleStr',visible :false}//付息频率
+            ,{field:'ztGradeResultStr',visible :false}//主体评级结果
+            ,{field:'ztGradeOrgIdStr',visible :false}//主体评级机构
+            ,{field:'zxGradeResultStr',visible :false}//债项评级结果
+            ,{field:'zxGradeOrgIdStr',visible :false}//债项评级机构
+            ,{field:'exerciseDate',visible :false}//行权日
            ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}//编辑和删除事件
         ]
     });
