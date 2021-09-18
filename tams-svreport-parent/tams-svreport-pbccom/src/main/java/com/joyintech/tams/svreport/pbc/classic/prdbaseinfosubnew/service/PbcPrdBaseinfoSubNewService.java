@@ -202,7 +202,7 @@ public class PbcPrdBaseinfoSubNewService extends PbcClassicsSubService<PbcPrdBas
 
 	            // 产品发行登记报送时点:募集起始日期
 	            if(sub.getVdate()!=null){ 
-	                List<Date> issueDateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品基本信息.getValue(), 
+	                List<Date> issueDateList = DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_新人行产品基本信息.getValue(),
 	                        DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
 	                        sub.getVdate(),SVReportGlobalConstant.SVR_SUBMIT_TIME_PBC);
 	                if (CollectionUtils.isNotEmpty(issueDateList)) {

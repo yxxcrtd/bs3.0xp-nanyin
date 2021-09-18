@@ -403,6 +403,9 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private String datZipCode;
 
     private String pbcProdIdPrd;
+
+
+    private String prodIdPrd;
     private String issuePartyIdPrd;
     private String prodNamePrd;
     private String pbcProdTypePrd;
@@ -442,12 +445,14 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private String 	creditModePrd;
 
     private Integer pbcProdIdDiff=0;
+    private Integer prodIdDiff=0;
     private Integer issuePartyIdDiff=0;
     private Integer prodNameDiff=0;
     private Integer pbcProdTypeDiff=0;
     private Integer ivstorientationDiff=0;
     private Integer prodBrandDiff=0;
     private Integer prodStageDiff=0;
+    private Integer isMarketFundDiff=0;
     private Integer prodTypeDiff=0;
     private Integer InsideProdIdDiff=0;
     private Integer raiseTypeDiff=0;
@@ -476,7 +481,29 @@ public class PbcPrdBaseinfoSubDatDiffDto {
     private Integer 	creditModeDiff=0;
 
 
+    public String getProdIdPrd() {
+        return prodIdPrd;
+    }
 
+    public void setProdIdPrd(String prodIdPrd) {
+        this.prodIdPrd = prodIdPrd;
+    }
+
+    public Integer getProdIdDiff() {
+        return prodIdDiff;
+    }
+
+    public void setProdIdDiff(Integer prodIdDiff) {
+        this.prodIdDiff = prodIdDiff;
+    }
+
+    public Integer getIsMarketFundDiff() {
+        return isMarketFundDiff;
+    }
+
+    public void setIsMarketFundDiff(Integer isMarketFundDiff) {
+        this.isMarketFundDiff = isMarketFundDiff;
+    }
 
     public String getDatZipCode() {
         return datZipCode;

@@ -108,10 +108,10 @@ $(function() {
             object.bussReduceShareInfoDto.finReduceShareInfoList = BussReduceShareInfo.getAllRows();
         }
         //认购信息
-        if(BussSubscriptionInfo){
-            object.bussSubscriptionInfoDto = {};
-            object.bussSubscriptionInfoDto.finSubscriptionInfoList = BussSubscriptionInfo.getAllRows();
-        }
+//        if(BussSubscriptionInfo){
+//            object.bussSubscriptionInfoDto = {};
+//            object.bussSubscriptionInfoDto.finSubscriptionInfoList = BussSubscriptionInfo.getAllRows();
+//        }
         //文件信息
         if(FileCommon){
             object.fileArray = FileCommon.getUploadFileInfo();
@@ -626,13 +626,13 @@ $(function() {
     /**
      * 认购信息显示/隐藏
      */
-    var showBussSubscriptionInfo = function(){
-        var type6 = $('#type6').val();
-        $('#bussSubscriptionInfoDto_div').hide();
-        if(type6 == ASSET_TYPE_PROJECT_11){
-            $('#bussSubscriptionInfoDto_div').show();
-        }
-    }
+//    var showBussSubscriptionInfo = function(){
+//        var type6 = $('#type6').val();
+//        $('#bussSubscriptionInfoDto_div').hide();
+//        if(type6 == ASSET_TYPE_PROJECT_11){
+//            $('#bussSubscriptionInfoDto_div').show();
+//        }
+//    }
     /**
      * 资产类别的change事件
      */
@@ -670,7 +670,7 @@ $(function() {
         /*showReportInfo();*/
         showBussParticipantInfo();
         showBussReduceShareInfo();
-        showBussSubscriptionInfo();
+//        showBussSubscriptionInfo();
     }
     
     /**

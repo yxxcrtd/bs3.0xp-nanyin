@@ -77,5 +77,9 @@ public class RskValSumname001Controller {
     public boolean getCountById(@RequestBody RskValSumnameDto dto){
         return rskValSumname001Service.getCountById(dto);
     }
+    @PostMapping("getAssetSumInfoIsDefault")
+    public boolean getAssetSumInfoIsDefault(@RequestBody RskValSumnameDto dto){
+        return rskValSumname001Service.getAssetSumInfoIsDefault(dto);
+    }
     
 }

@@ -362,6 +362,10 @@ public class EquityBusiInfoRegist001Dto extends BaseEntity {
     private String prodValueExportExcel;
     private String feeAmtExportExcel;
     /**
+     * 删除原因
+     */
+    private String deleteReason;
+    /**
      * 取得 产品代码
      * @return 产品代码
      */
@@ -1025,5 +1029,12 @@ public class EquityBusiInfoRegist001Dto extends BaseEntity {
 	public void setFeeAmtExportExcel(String feeAmtExportExcel) {
 		this.feeAmtExportExcel = feeAmtExportExcel;
 	}
-    
+
+    public String getDeleteReason() {
+        return deleteReason;
+    }
+
+    public void setDeleteReason(String deleteReason) {
+        this.deleteReason = deleteReason;
+    }
 }

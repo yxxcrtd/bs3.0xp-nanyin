@@ -109,4 +109,16 @@
 			</if>
 		</where>
 	</select>
+	<select id="selectForPageDefault" resultType="com.joyintech.service.risk.penetrationmanagement.rskvalassetcode.dto.RskValtblAssetSubMapDto">
+		SELECT
+		ID,
+		NAME
+		FROM RSK_VALTBL_ASSET_SUB_MAP
+		where is_default='Y'
+		ORDER BY UPDATE_TIME desc
+	</select>
+	<select id="getAssetSubInfoIsDefault" parameterType="Map" resultType="Integer">
+		select count(*) from RSK_VALTBL_ASSET_SUB_MAP
+		where ID = #{assetSubMapId} and  is_default='Y'
+	</select>
 </mapper>

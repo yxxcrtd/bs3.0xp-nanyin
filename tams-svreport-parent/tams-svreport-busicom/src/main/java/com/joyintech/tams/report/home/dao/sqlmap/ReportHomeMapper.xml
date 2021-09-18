@@ -1150,6 +1150,51 @@
 
 </select>
 
+
+
+	<select id="selectPbcPrdBaseinfoSubNew" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendPbcStatusFlag" />
+		SUBMIT_DEADLINE,
+		PBC_SUBMIT_DEADLINE,
+		PROD_ID
+		FROM  PBC_PRD_BASEINFO_SUB_NEW PR
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		<include refid="belongInstitutionCode" />
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(PBC_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum,/*删除模版*/
+		null as countType,
+		'32' as reporttype /*人行产品基本信息*/
+		FROM prd_tmp P
+		<include refid="belongInstitutionCode_1" />
+
+	</select>
+
 <select id="selectPbcInitProdRaisingSub" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
 	WITH prd_tmp AS (
 		SELECT
@@ -1327,6 +1372,50 @@
 		<include refid="belongInstitutionCode_1" />
 
 </select>
+
+	<select id="selectPbcPrdBaseinfoEndSubNew" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
+		WITH prd_tmp AS (
+		SELECT
+		<include refid="sendPbcStatusFlag" />
+		PR.SUBMIT_DEADLINE,
+		PR.PBC_SUBMIT_DEADLINE,
+		PB.PROD_ID
+		FROM  PBC_PRD_BASEINFO_END_SUB_NEW PR
+		LEFT JOIN PBC_PRD_BASEINFO_SUB_NEW PB ON PR.PBC_PROD_ID = PB.PBC_PROD_ID
+		WHERE 1=1
+		<if test="createDeptList != null and createDeptList.size>0">
+			<foreach collection="createDeptList" item = "item" open="and PR.CREATE_DEPT in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="orgCodeList != null and orgCodeList.size>0">
+			<foreach collection="orgCodeList" item = "item" open=" and PR.ORG_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		<if test="deptCodeList != null and deptCodeList.size>0">
+			<foreach collection="deptCodeList" item = "item" open=" and PR.DEPT_CODE in(" separator="," close=")">
+				#{item,jdbcType=VARCHAR}
+			</foreach>
+		</if>
+		)
+		<include refid="belongInstitutionCode" />
+		SELECT
+		SUM(DECODE(SEND_STATUS,'01',1,0)) as delaynum, /*已延期*/
+		min(DECODE(SEND_STATUS,'02',to_char(SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as mindate,
+		max(DECODE(SEND_STATUS,'02',to_char(PBC_SUBMIT_DEADLINE, 'yyyy-mm-dd'),null)) as maxdate,
+		SUM(DECODE(SEND_STATUS,'02',1,0)) as delayingnum, /*即将延期*/
+		SUM(DECODE(SEND_STATUS,'03',1,0)) as sendnum, /*将报送*/
+		SUM(DECODE(SEND_STATUS,'04',1,0)) as manualnum, /*手工处理*/
+		SUM(DECODE(SEND_STATUS,'05',1,0)) as interfPassnum, /*接口通过*/
+		SUM(DECODE(SEND_STATUS,'06',1,0)) as interfBacknum, /*接口退回*/
+		null as deletenum,/*删除模版*/
+		null as countType,
+		'33' as reporttype /*产品终止信息*/
+		FROM prd_tmp P
+		<include refid="belongInstitutionCode_1" />
+
+	</select>
 
 <select id="selectPbcReportAsset" resultType="com.joyintech.tams.report.home.dto.SubmitInformationRegistrationDto">
 

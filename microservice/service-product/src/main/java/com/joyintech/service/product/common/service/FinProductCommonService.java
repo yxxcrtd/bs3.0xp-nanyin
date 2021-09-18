@@ -4054,4 +4054,8 @@ public List<PrdMdateAdjust> queryPrdMdateAdjustByModel(PrdMdateAdjust prdMdateAd
         String tradeid = str + formatDate + sequence;
         return tradeid;
     }
+
+    public List<SelectOptionDto> getUserNameList(Map<String, Object> pageParam) {
+        return  productCommonMapper.selectByUserName(pageParam);
+    }
 }

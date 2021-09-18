@@ -13,6 +13,11 @@ public class RskValtblAssetSubMap extends BaseEntity {
 
      */
     private String name;
+    /**
+     * 映射名称
+
+     */
+    private String oldName;
 
     /**
      * 取得 组合资产科目映射编号
@@ -48,5 +53,13 @@ public class RskValtblAssetSubMap extends BaseEntity {
      */
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getOldName() {
+        return oldName;
+    }
+
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
     }
 }

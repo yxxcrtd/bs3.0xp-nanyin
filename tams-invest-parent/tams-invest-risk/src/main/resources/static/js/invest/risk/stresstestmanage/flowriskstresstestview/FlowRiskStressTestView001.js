@@ -72,7 +72,7 @@ $(function() {
 								{
 									field : 'testName',
 									width : 150,
-									title : 'FlowRiskStressTestView001。testName',
+									title : 'FlowRiskStressTestView001.testName',
 									sortable : true,
 									fixed:'left'
 								},

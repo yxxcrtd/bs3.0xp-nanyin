@@ -325,9 +325,9 @@ $(function () {
     };
     
     var curSelectedIndexPbc = 0;
-    var xAxisDataPbc = ["资产池\n基本信息", "产品基\n本信息","产品起始\n募集信息",
-                     "产品终\n止信息",  "资产池\n终止信息", "产品募\n集信息", "资产负\n债信息",
-                    "人行月\n度统计表"];
+    var xAxisDataPbc = ["PPB1资产池\n基本信息", "PIB1产品\n基本信息","PIB2产品\n起始募集信息",
+                     "PIE1产品\n终止信息",  "PPE1资产池\n终止信息", "PCD1产品资金\n募集信息", "PVD1资产\n负债信息",
+                    "MI统计\n模板数据", "PIB产品\n基本信息", "PIE产品\n终止信息"];
     var optionpbc = {
         tooltip: {
             trigger: 'item',
@@ -410,7 +410,7 @@ $(function () {
                 },
                 data: [{value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0,num: 0},
                        {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}, {value: 0, num: 0}
-                       
+                        , {value: 0, num: 0}, {value: 0, num: 0}
                       
                     /*   {value: 0, num: 0}, {value: 0, num: 0}*/
                 ]
@@ -425,7 +425,7 @@ $(function () {
             }
         },
         xAxis: [{
-            data: ['','','','','','','',''],
+            data: ['','','','','','','','','',''],
             axisLabel: {
                 interval: 0,
                 textStyle: {

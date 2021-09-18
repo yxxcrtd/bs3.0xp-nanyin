@@ -14,6 +14,10 @@ public interface PbcBeforeSubCheckMapper {
     List<PbcBeforeSubCheckDto> selectPbcPrdBaseInfoSubCheck(Date checkdate);
     
     List<PbcBeforeSubCheckDto> selectPbcPrdBaseInfoEndSubCheck(Date checkdate);
+
+    List<PbcBeforeSubCheckDto> selectPbcPrdBaseInfoNewSubCheck(Date checkdate);
+
+    List<PbcBeforeSubCheckDto> selectPbcPrdBaseInfoNewEndSubCheck(Date checkdate);
     
     List<PbcBeforeSubCheckDto> selectPbcPrdRaisingSubCheck(Date checkdate);
     

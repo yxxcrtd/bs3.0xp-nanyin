@@ -428,4 +428,10 @@ public class FinProductCommonController {
     public String getTradeid(@RequestBody Map<String, Object> map) {
         return finProductCommonService.getTradeid(map);
     }
-}
+
+    @PostMapping("getUserNameList")
+    public List<SelectOptionDto> getUserNameList(@RequestBody Map<String, Object> param) {
+//        Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("roleName", DictCodeListExt2.角色岗位_产品设计岗.getValue());
+        return finProductCommonService.getUserNameList(param);
+    }}
