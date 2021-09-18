@@ -173,6 +173,11 @@ $(function() {
                     return;
                 }
             }
+            $.each(expArr, function(i, v) {
+                v.sendStatus=v.sendStatusCode;
+                v.status=v.statusCode;
+                v.ccy=v.ccyCode;
+            });
             var keyList = [];
             $.each(expArr,function(i,v){
                 keyList.push(v.prdRegistCode + '|' + v.indentifyMark + '|' + v.ccy);

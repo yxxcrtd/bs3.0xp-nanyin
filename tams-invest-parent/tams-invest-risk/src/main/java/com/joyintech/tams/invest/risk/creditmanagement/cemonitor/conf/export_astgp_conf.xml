@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workbook filePath="CeMonitorAstGp.xlsx" name="系列授信额度监测表">
-    <Worksheet javaBean="com.joyintech.tams.invest.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto">
+    <Worksheet javaBean="com.joyintech.tams.invest.risk.creditmanagement.cemonitor.dto.CreditLinesDealDto" dataStart="2">
         <Row>
             <Cell order="1" name="批复号">pflsh</Cell>
             <Cell order="2" name="系列名称">customerName</Cell>
