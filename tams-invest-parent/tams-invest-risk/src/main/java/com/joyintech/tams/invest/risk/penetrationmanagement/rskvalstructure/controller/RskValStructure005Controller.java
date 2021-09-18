@@ -120,7 +120,6 @@ public class RskValStructure005Controller extends BaseController {
         String oldId=dto.getId();
         // 新建，系统生成申报附件方案代码
         dto.setId(( bussGetBussinessIdService.buildBussinessCode(parameter)));
-        rskValStructureService.insert(dto);
         //根据源映射获取所有的指标结构映射明细
         List<RskValStructureDto> rskValStructureList = rskValStructureService.selectForList(oldId);
         List<RskValtblStructMapDtl> rskValStructureDtlList =new ArrayList<>();
@@ -133,6 +132,7 @@ public class RskValStructure005Controller extends BaseController {
             }
             rskValStructure003Service.insertList(rskValStructureDtlList);
         }
+        rskValStructureService.insert(dto);
 
         return new AjaxResult(getMessage("FIN_PROD_E_0065"));
     }

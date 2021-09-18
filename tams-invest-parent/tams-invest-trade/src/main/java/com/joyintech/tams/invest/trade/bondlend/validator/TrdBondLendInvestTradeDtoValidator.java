@@ -159,7 +159,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
         }
         if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(), inputDto.getPs())) {
             if (inputDto.getShareAmt() != null && inputDto.getBussRepoSec() != null && inputDto.getBussRepoSec().getTotalPrinAmt() !=null
-                    && inputDto.getShareAmt().compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+                    && inputDto.getShareAmt().multiply(new BigDecimal(10000)).compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
                 ValidMessage validMessage = new ValidMessage(
                         getMessage("BUSS_COM_E_0003", getMessage("TrdBondLendInvestTrade002.tradeAmt"),
                                 getMessage("BussRepoSec.totalPrinAmt")));
