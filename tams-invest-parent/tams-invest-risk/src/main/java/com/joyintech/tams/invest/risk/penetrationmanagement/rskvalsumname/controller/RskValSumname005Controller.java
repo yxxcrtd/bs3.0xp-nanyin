@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.util.BeanUtil;
@@ -30,6 +31,7 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalsumname.servic
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -107,6 +109,8 @@ public class RskValSumname005Controller extends BaseController {
      * @see
      * @since 1.0
      */
+    @Transactional
+    @DTXTransaction
     @ResponseBody
     @RequestMapping("insert")
     public AjaxResult insert(@RequestBody RskValSumnameDto dto) {
@@ -121,7 +125,6 @@ public class RskValSumname005Controller extends BaseController {
         }
         // 新建，系统生成申报附件方案代码
         dto.setId(( bussGetBussinessIdService.buildBussinessCode(parameter)));
-        rskValSumname002Service.insert(dto);
         //根据源映射获取所有的指标结构映射明细
         List<RskValSumnameDto> rskValSumnameList =  rskValSumname001Service.selectForList(oldId);
         List<RskValtblSumsubMapDtl> rskValSumnameDtlList =new ArrayList<>();
@@ -134,6 +137,7 @@ public class RskValSumname005Controller extends BaseController {
             }
             rskValSumname003Service.insertList(rskValSumnameDtlList);
         }
+        rskValSumname002Service.insert(dto);
         return new AjaxResult(getMessage("FIN_PROD_E_0065"));
     }
 

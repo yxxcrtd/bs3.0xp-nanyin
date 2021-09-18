@@ -19,6 +19,7 @@ var loadTree = function (callback) {
           //update by yantianyuan 二级法人按钮改造 start
             if(purviewElements.indexOf('_edit')==-1){
             	$(".node_modify").hide();
+            	$(".node_copy").hide();
             }
             if(purviewElements.indexOf('_delete')==-1){
             	$(".node_delete").hide();
@@ -100,7 +101,7 @@ $(function () {
                      id: thisNodeId
                  },
                  function () {
-                     table.reload();
+                     loadTree();
                  });
         });
     })

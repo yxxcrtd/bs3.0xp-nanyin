@@ -110,7 +110,6 @@ public class RskValAssetCode006Controller extends BaseController{
         //获取源映射id
         String oldId=dto.getId();
         dto.setId((baseGetBusinessId.buildBussinessCode(parameter)));
-        rskValAssetCode002Service.insert(dto);
         //根据源映射获取所有的指标结构映射明细
         List<RskValtblAssetSubMapDtlDto> rskValAssetCodeList = rskValAssetCode001Service.selectDtlList(oldId);
         List<RskValtblAssetSubMapDtl> rskValAssetCodeDtlList =new ArrayList<>();
@@ -123,6 +122,7 @@ public class RskValAssetCode006Controller extends BaseController{
             }
             rskValAssetCode004Service.insertList(rskValAssetCodeDtlList);
         }
+        rskValAssetCode002Service.insert(dto);
         return new AjaxResult(getMessage("BUSS_COM_E_0033"));
     }
 }

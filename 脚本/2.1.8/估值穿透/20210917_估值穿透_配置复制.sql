@@ -7,3 +7,10 @@ values ('RskValAssetCode006', 'RSK', '/invest/risk/penetrationmanagement/rskvala
 delete from sys_page where page_id='RskValSumname005';
 insert into sys_page (PAGE_ID, SYSTEM_CODE, PAGE_URL, PAGE_FILE, MENU_ID, HEIGHT, WIDTH, IS_HP_SELECT, IS_NEED_WORKFLOW, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
 values ('RskValSumname005', 'RSK', '/invest/risk/penetrationmanagement/rskvalsumname/RskValSumname005', 'invest/risk/penetrationmanagement/rskvalsumname/RskValSumname005', null, null, null, '02', '01', '估值表组合汇总科目映射生成', 'system', null, sysdate, 'system',sysdate);
+--页面配置不展示草稿箱
+DELETE FROM sys_trash_not_target_page WHERE page_id = 'RskValStructure005';
+insert into sys_trash_not_target_page (SEQ_NO,page_id) values(sys_guid(),'RskValStructure005');
+DELETE FROM sys_trash_not_target_page WHERE page_id = 'RskValAssetCode006';
+insert into sys_trash_not_target_page (SEQ_NO,page_id) values(sys_guid(),'RskValAssetCode006');
+DELETE FROM sys_trash_not_target_page WHERE page_id = 'RskValSumname005';
+insert into sys_trash_not_target_page (SEQ_NO,page_id) values(sys_guid(),'RskValSumname005');
