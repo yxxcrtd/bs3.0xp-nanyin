@@ -29,6 +29,13 @@ public interface UpdateTraderMapper {
 	int selectCustomer02(Map<String, Object> map);
 
 	/**
+	 * 查询在交易对手中的非法人机构
+	 * @return
+	 */
+	String checkCustomerName(Map<String, Object> map);
+
+
+	/**
 	 * 查询在主机构代码
 	 * @return
 	 */
