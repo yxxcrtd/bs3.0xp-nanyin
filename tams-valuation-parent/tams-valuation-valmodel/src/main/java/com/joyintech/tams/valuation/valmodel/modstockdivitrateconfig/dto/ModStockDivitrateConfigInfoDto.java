@@ -87,8 +87,6 @@ public class ModStockDivitrateConfigInfoDto extends BaseEntity implements Proces
 	public void setFinProdName(String finProdName) {
 		this.finProdName = finProdName;
 	}
-	@PrimaryKey(Field.PK_2)
-	@NotEmpty(fieldName = "ModStockDivitrateConfig001.secTypeModel", groups = {ValidateGroupEdit.class})
 	public String getSecTypeModel() {
 		return secTypeModel;
 	}
@@ -104,8 +102,6 @@ public class ModStockDivitrateConfigInfoDto extends BaseEntity implements Proces
 		this.secTypeModel = secTypeModel;
 	}
 	
-	@PrimaryKey(Field.PK_3)
-	@NotEmpty(fieldName = "ModStockDivitrateConfig001.secDetailTypeModel", groups = {ValidateGroupEdit.class})
 	public String getSecDetailTypeModel() {
 		return secDetailTypeModel;
 	}

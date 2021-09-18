@@ -329,7 +329,7 @@ var outOk = function () {
     if (resultTable.getAllRows() != null && resultTable.getAllRows().length > 0) {
         var sumAmtValue = 0;
         for (var i = resultTable.getAllRows().length - 1; i >= 0; i--) {
-            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin * resultTable.getAllRows()[i].pledgeRatio/100 * 10000);
+            sumAmtValue = JoyinMath.doAdd(sumAmtValue, resultTable.getAllRows()[i].pledgePrin * resultTable.getAllRows()[i].pledgeRatio/100);
 
         }
         $("#sumAmt").val(sumAmtValue);
