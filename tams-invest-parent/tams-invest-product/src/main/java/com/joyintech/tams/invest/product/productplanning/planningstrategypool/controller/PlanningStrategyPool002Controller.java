@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.product.productplanning.planningstrategypool.c
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -147,7 +148,7 @@ public class PlanningStrategyPool002Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("save")
 	public AjaxResult save(@RequestBody @Validated({ ValidateGroupEdit.class }) PlanningStrategyPool001Dto dto,
-			BindingResult br) throws Exception {
+			BindingResult br) throws WorkFlowException {
 		// 新建、修改校验
 		if (br.hasErrors()) {
 			return new AjaxResult(br);

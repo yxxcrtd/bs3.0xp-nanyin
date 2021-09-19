@@ -116,12 +116,12 @@ public class ValProfitQuery001Service extends CommonExportService<ValProfitQuery
         String[] strArr = reportDate.split(",")[0].split("-");
         if (DictCodeListExt1.报表期限类型_年报.getValue().equals(reportTermType)) {// 年底
         	//update yanya 20190912 年报原控件类型yyyy更为到天yyyy-MM-dd
-        	//year = Integer.valueOf(strArr[0]);
-            //month += 12;
-            //day = 31;
-            year = Integer.valueOf(strArr[0]);
-            month += Integer.valueOf(strArr[1]);
-            day = Integer.valueOf(strArr[2]);
+        	year = Integer.valueOf(strArr[0]);
+            month += 12;
+            day = 31;
+//            year = Integer.valueOf(strArr[0]);
+//            month += Integer.valueOf(strArr[1]);
+//            day = Integer.valueOf(strArr[2]);
            
         }
         if (DictCodeListExt1.报表期限类型_半年报.getValue().equals(reportTermType)) {

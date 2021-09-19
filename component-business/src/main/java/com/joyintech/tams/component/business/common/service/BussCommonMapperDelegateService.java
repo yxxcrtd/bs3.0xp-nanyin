@@ -61,7 +61,7 @@ public class BussCommonMapperDelegateService extends BaseService {
         } catch (InvocationTargetException e) {
             logger.error(mapper.getName()  + "selectByPrimaryKey方法调用失败", e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -94,7 +94,7 @@ public class BussCommonMapperDelegateService extends BaseService {
         } catch (InvocationTargetException e) {
             logger.error(mapper.getName()  + "selectByPrimaryKey方法调用失败", e);
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

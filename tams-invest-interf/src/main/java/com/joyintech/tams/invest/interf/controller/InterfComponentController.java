@@ -59,7 +59,7 @@ public class InterfComponentController {
             logger.info("==========doEsbData start==========");
 
             if (StringUtil.isEmpty(request)) {
-                throw new NullPointerException("请求报文为空");
+                throw new IllegalArgumentException("请求报文为空");
             }
 
             String rspStr = null;

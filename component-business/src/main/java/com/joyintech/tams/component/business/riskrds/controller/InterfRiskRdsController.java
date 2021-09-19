@@ -65,10 +65,10 @@ public class InterfRiskRdsController {
             if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
                 logger.info("==========前端交易或委托类转换接口:{} start==========", eventType + infCode);
                 if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-                    throw new NullPointerException("请求报文为空");
+                    throw new IllegalArgumentException("请求报文为空");
                 }
                 if (StringUtil.isEmpty(eventType) || StringUtil.isEmpty(infCode)/*||StringUtil.isEmpty(assetType)*/) {
-                    throw new NullPointerException("请求参数为空");
+                    throw new IllegalArgumentException("请求参数为空");
                 }
                 InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
                 interfRiskRdsDto.setEventType(eventType);
@@ -104,10 +104,10 @@ public class InterfRiskRdsController {
             if(CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)) {
                 logger.info("==========前端交易或委托类转换接口:{} start==========", eventType + infCode);
                 if (!StringUtil.isNotEmpty(dataMap) || dataMap.isEmpty()) {
-                    throw new NullPointerException("请求报文为空");
+                    throw new IllegalArgumentException("请求报文为空");
                 }
                 if (StringUtil.isEmpty(eventType) || StringUtil.isEmpty(infCode)) {
-                    throw new NullPointerException("请求参数为空");
+                    throw new IllegalArgumentException("请求参数为空");
                 }
                 InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();
                 interfRiskRdsDto.setEventType(eventType);

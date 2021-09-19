@@ -9,7 +9,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.common.base.entity.ChbBotAstPosition;
 import com.joyintech.tams.svreport.chb.monthreport.dto.ChbMonthAssetPosition;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ChbMonthAssetPositionMapper {
     int deleteByPrimaryKey(String posuuid);
 
@@ -146,5 +148,15 @@ public interface ChbMonthAssetPositionMapper {
      * @since 1.0
      */
     List<ChbMonthAssetPosition> selectChlDealByCommon(ChbMonthAssetPosition pos);
+    
+    /**
+     * 查询穿透资产信息调用共同方法
+     * <功能详细描述>
+     * @param pos
+     * @return
+     * @see
+     * @since 1.0
+     */
+    List<ChbMonthAssetPosition> selectPlanInfoListByCommon(ChbMonthAssetPosition pos);
     
 }

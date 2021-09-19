@@ -45,7 +45,7 @@ public class FinResultsCoveringService extends BaseService<FinResultsCovering001
     @SuppressWarnings("unchecked")
     public Page<FinResultsCovering001Dto> selectForPage(int page, int length,
                                                         Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("param", pageParam);
         pageParam.put("ANAPLEROTIC_TYPE_02", DictCodeList.回补方式_自动回补.getValue());
         Page<FinResultsCovering001Dto> resultPage = this.queryForPage(page, length,

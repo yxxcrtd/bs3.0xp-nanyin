@@ -69,7 +69,7 @@ public class ValNetValueConfirm001Service extends CommonExportService<ValNetValu
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ValNetValueConfirm001Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+    public Page<ValNetValueConfirm001Dto> findPage(int page,int length,Map<String, Object> params) {
         //获取获取理财产品类型
         String profitType = (String)params.get("profitType");
         String finprodId = (String)params.get("finprodId");

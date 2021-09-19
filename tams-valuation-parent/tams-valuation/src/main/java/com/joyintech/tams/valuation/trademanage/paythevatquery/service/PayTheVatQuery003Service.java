@@ -104,7 +104,7 @@ public class PayTheVatQuery003Service extends CommonExportService<PayTheVatQuery
         dto.setCreateUser(dto.getCreateUser());
         // 金融产品代码
         List<PayTheVatQuery001Dto> dto2 = payTheVatQuery003Mapper.findCashid(
-            dto.getBooksetId().toString(), dto1.get(0).getAcctsubjectType().toString(),
+            dto.getBooksetId(), dto1.get(0).getAcctsubjectType(),
             DictCodeListExt1.现金流二级类型_税额.getValue());
         dto.setFinprodId(dto2.get(0).getCashId());
         // 交易金额

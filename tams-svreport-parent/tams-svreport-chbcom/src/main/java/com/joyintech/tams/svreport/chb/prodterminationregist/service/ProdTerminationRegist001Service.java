@@ -174,7 +174,6 @@ public class ProdTerminationRegist001Service extends SvrCommonExportService<Prod
 						ProdTerminationRegist001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

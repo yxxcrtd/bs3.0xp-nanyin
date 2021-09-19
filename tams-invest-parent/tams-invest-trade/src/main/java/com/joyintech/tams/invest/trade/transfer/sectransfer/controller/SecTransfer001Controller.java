@@ -28,6 +28,7 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -477,8 +478,7 @@ public class SecTransfer001Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody SecTransfer001Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody SecTransfer001Dto dto) throws WorkFlowException {
         ProcessParameter<SecTransfer001Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<SecTransfer001Dto> workFlowParameter = new WorkFlowParameter<>();
         workFlowParameter.setPageId(this.getPageId());

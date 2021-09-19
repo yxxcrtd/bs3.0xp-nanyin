@@ -92,7 +92,7 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @since 1.0
      */
     public Page<FinProductRateQuotationDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
             //得到产品代码
             String finprodId = (String)pageParam.get("finprodId");
             if(StringUtil.isNotEmpty(finprodId)){
@@ -300,7 +300,7 @@ public class FinProductRateQuotationService extends BaseService<FinProductRateQu
      * @since 1.0
      */
     public Page<FinProductRateQuotationDto> selectOther(int page, int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
         pageParam.put("cashType1", DictCodeListExt1.现金流一级类型_费用.getValue());
         pageParam.put("chargeType01", DictCodeList.收费类型_计提式费用.getValue());

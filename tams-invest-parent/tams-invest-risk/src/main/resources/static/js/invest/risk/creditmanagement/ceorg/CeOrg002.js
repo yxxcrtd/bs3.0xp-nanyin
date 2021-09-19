@@ -197,7 +197,11 @@
         	if(null!=v.creditAmt && typeof v.creditAmt !="undefined" && v.creditAmt !=''){
         		//v.creditMstId='0004';
         		object.creditQuoteItem.push(v);
-        	}
+        	}else if(null!=v.creditAmt && typeof v.creditAmt !="undefined" && v.creditAmt =='' &&
+                null!=v.creditAmtInit && typeof v.creditAmtInit !="undefined" && v.creditAmtInit !=''
+                && pageModel == PAGE_MODEL_EDIT){
+                object.creditQuoteItem.push(v);
+            }
         })
     	 Joyin.ajaxJson(basePath + 'invest/risk/creditmanagement/ceorg/CeOrg002/check', object, function(result) {        	
      		Joyin.confirm(result.data, function() {

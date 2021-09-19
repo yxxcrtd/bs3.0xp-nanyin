@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -115,7 +116,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findFinprod")
-	public List<SelectOptionDto> findFinprod() throws Exception {
+	public List<SelectOptionDto> findFinprod() {
 		return valuationMethodScheme004Service.findFinprod(RequestUtil.getPageParam());
 	}
 	
@@ -126,7 +127,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getFinprodInfo")
-	public ValuationMethodScheme004Dto getFinprodInfo() throws Exception {
+	public ValuationMethodScheme004Dto getFinprodInfo() {
 		return valuationMethodScheme004Service.getFinprodInfo(RequestUtil.getPageParam());
 	}
 	
@@ -136,7 +137,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	@ResponseBody
 	@RequestMapping("check")
 	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme004Dto dto, BindingResult bindingResult)
-			throws Exception {
+			throws ParseException {
 //        List<ValuationMethodScheme004Dto> list = listdto.getListValuationMethodSchemeDto();
 //        ValuationMethodScheme004Dto dto = list.get(0);
 		String msg = StringUtil.EMPTY;
@@ -316,7 +317,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 //	 */
 //	@ResponseBody
 //	@RequestMapping("getTradeMarket")
-//	public List<SelectOptionDto> getTradeMarket() throws Exception {
+//	public List<SelectOptionDto> getTradeMarket() {
 //		Map<String, Object> param = RequestUtil.getPageParam();
 //		param.put("dict_code_parent", DictCode.证券品种.getValue());
 //		param.put("dict_code_child", DictCode.估值交易市场.getValue());
@@ -333,7 +334,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationMethod")
-	public List<SelectOptionDto> getValuationMethod() throws Exception {
+	public List<SelectOptionDto> getValuationMethod() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.投资目的.getValue());
 		param.put("dict_code_child", DictCode.估值方法.getValue());
@@ -349,7 +350,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationPrice")
-	public List<SelectOptionDto> getValuationPrice() throws Exception {
+	public List<SelectOptionDto> getValuationPrice() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 //		String tradeMarket = (String)param.get("tradeMarket");
 //		if(StringUtils.isNotEmpty(tradeMarket)) {

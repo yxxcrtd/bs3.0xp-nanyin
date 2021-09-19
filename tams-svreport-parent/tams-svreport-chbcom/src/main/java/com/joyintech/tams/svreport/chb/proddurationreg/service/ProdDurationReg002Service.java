@@ -631,8 +631,10 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        if(sb.length() > 1){
 	        	result.setCcyPurchase(sb.deleteCharAt(sb.length() - 1).toString());
 	        }else{
-	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");
-	        }
+//	        	result.setCcyPurchase("CNY,0.00,0.00,0.00");//delete by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+				String ccy = (null == result.getValueCcy() ? "CNY" : result.getValueCcy());
+				result.setCcyPurchase(ccy + ",0.00,0.00,0.00");//add by lingxiaoqing on 2021-06-03 for 按照交易币种来报送
+			}
 
 	        // 报送截止日生成
 	        Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
@@ -645,7 +647,7 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        }else{
 	        	dateList = ChbDeadlineUtil.getChbEndDate(
 	    	            DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail,
-	    	            DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
+						result.getStatus(),dateMap, model.getOpenEnd() == null ? batchDate : model.getOpenEnd());
 	        	submitDateMap.put(key, dateList);
 	        }
 
@@ -663,9 +665,17 @@ public class ProdDurationReg002Service extends SvrDataStatusUtil {
 	        	for(ProdDurationReg001Dto  sub:lsitsub){
 	        	    // modify by dubaojun 2020-10-26 每万份份额分红和每万份现金分红保留5位小数 start
 	        		//04 现金分红
-	        		if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
-	        			 result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));
-	        		}
+					if(sub.getTradeType().equals("04") && sub.getCashAmtWan() != null){
+//						result.setCashAmtWan(sub.getCashAmtWan().setScale(5, RoundingMode.HALF_UP));//delete by lingxq on 2021-06-03 for 折算人民币
+						//----add by lingxq on 2021-06-03 for 折算人民币 ---->>>>>
+						BigDecimal cashAmt = sub.getCashAmtWan();
+						if (!StringUtil.equals(sub.getValueCcy(), DictCodeListExt1.币种_中债_人民币.getValue())){
+							cashAmt = ChbCcyConvertUtil.changeCnyMoney(sub.getValueCcy(), sub.getCashAmtWan(),
+									DateUtil.parse(result.getMdate()), rateMap);
+						}
+						result.setCashAmtWan(cashAmt.setScale(5, RoundingMode.HALF_UP));
+						//----add by lingxq on 2021-06-03 for 折算人民币 ----<<<<<
+					}
 	        		//05 红利再投
 	        		if(sub.getTradeType().equals("05") && sub.getShareAmtWan() != null){
 	        			result.setShareAmtWan(sub.getShareAmtWan().setScale(5, RoundingMode.HALF_UP));

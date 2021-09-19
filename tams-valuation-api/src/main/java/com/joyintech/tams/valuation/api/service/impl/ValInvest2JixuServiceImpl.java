@@ -1,54 +1,33 @@
 package com.joyintech.tams.valuation.api.service.impl;
 
+import com.jixu.common.type.FinProductTypes;
+import com.jixu.common.type.ResultContainer;
+import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
+import com.jixu.msg.dto.*;
+import com.joyintech.framework.base.BaseEntity;
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
+import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
+import com.joyintech.tams.valuation.api.service.DealCommonServiceApi;
+import com.joyintech.tams.valuation.api.service.ValInvest2JixuService;
+import com.joyintech.tams.valuation.common.dao.BaseCommonMapper;
+import com.joyintech.tams.valuation.common.dto.ApiTrdCommDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.jixu.joyin2jixu.service.Joyin2JixuInterface;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.jixu.common.type.ResultContainer;
-import com.jixu.common.types.FinProductTypes;
-import com.jixu.common.util.JsonUtil;
-import com.jixu.msg.dto.CashDividendDto;
-import com.jixu.msg.dto.CashFlowDto;
-import com.jixu.msg.dto.CashFlowFloatDto;
-import com.jixu.msg.dto.CashFlowPaymentsDto;
-import com.jixu.msg.dto.FXOpenDto;
-import com.jixu.msg.dto.ForwardCurrencyCuttingDto;
-import com.jixu.msg.dto.ForwardCurrencyMaurityDto;
-import com.jixu.msg.dto.ForwardCurrencyOpenDto;
-import com.jixu.msg.dto.InterestSwapMaturityDto;
-import com.jixu.msg.dto.InterestSwapOpenDto;
-import com.jixu.msg.dto.InterestSwapPayInterestDto;
-import com.jixu.msg.dto.SmfOperationDto;
-import com.jixu.msg.dto.StockDividendDto;
-import com.jixu.msg.dto.StockNewReceiveDto;
-import com.jixu.msg.dto.StockTranDto;
-import com.jixu.msg.dto.SwapFXOpenDto;
-import com.jixu.msg.dto.TranExpenseDto;
-import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.valuation.api.constant.BussinessJixuConstant;
-import com.joyintech.tams.valuation.api.service.DealCommonServiceApi;
-import com.joyintech.tams.valuation.api.service.ValInvest2JixuService;
-import com.joyintech.tams.valuation.common.dao.BaseCommonMapper;
-import com.joyintech.tams.valuation.common.dto.ApiTrdCommDto;
 
 @Service
 public class ValInvest2JixuServiceImpl implements ValInvest2JixuService {
@@ -88,7 +67,7 @@ public class ValInvest2JixuServiceImpl implements ValInvest2JixuService {
 //			return resultContainer;
 //		}
 		BaseEntity dto = transDto(o);
-		String jsonMsg = JsonUtil.objToString(dto);
+		String jsonMsg = JsonUtils.object2Json(dto);
 		logger.info("joyinToJixu的jsonMsg字符串消息:"+jsonMsg);
 //        ApiTrdCommDto trdCommDto = (ApiTrdCommDto) o;
 //        if (trdCommDto.isNoneTxApply()) {

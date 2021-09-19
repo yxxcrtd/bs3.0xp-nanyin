@@ -74,7 +74,7 @@ public class AssetNameManagementService extends BaseService<RskAccessListDto> {
      * @since 1.0
      */
     public Page<RskAccessListDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("sysDate",iPlatformDate.getSysDate());
         Page<RskAccessListDto> pageDto = super.queryForPage(page, length, () -> assetNameManagementMapper.queryForPage(pageParam));
         return pageDto;
@@ -154,7 +154,7 @@ public class AssetNameManagementService extends BaseService<RskAccessListDto> {
      * @see
      * @since 1.0
      */
-    public int getRskEntityByName(Map<String,Object> param) throws Exception {
+    public int getRskEntityByName(Map<String,Object> param) {
         Date sysDate = iPlatformDate.getSysDate();
         param.put("sysDate", sysDate);
         return rskAccessListDetailMapper.selectByName(param);
@@ -168,7 +168,7 @@ public class AssetNameManagementService extends BaseService<RskAccessListDto> {
      * @see
      * @since 1.0
      */
-    public List<RskAccessListDetail> getEntityList(Map<String,Object> param) throws Exception {
+    public List<RskAccessListDetail> getEntityList(Map<String,Object> param) {
         Date sysDate = iPlatformDate.getSysDate();
         param.put("sysDate", sysDate);
         return rskAccessListDetailMapper.selectEntityList(param);

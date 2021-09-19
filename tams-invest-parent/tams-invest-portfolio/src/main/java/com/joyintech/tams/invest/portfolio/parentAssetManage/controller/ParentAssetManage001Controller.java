@@ -65,11 +65,10 @@ public class ParentAssetManage001Controller extends BaseController{
      * 画面查询方法
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("selectForPage")
-    public Page<ParentAssetManage001Dto> selectForPage() throws Exception{
+    public Page<ParentAssetManage001Dto> selectForPage() {
     	Page<ParentAssetManage001Dto> planInfos = parentAssetManage001Service.getParentPlanInfos(RequestUtil.getPageParam());
     	return planInfos;
     }
@@ -77,7 +76,7 @@ public class ParentAssetManage001Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() {
     	HttpServletRequest requestParam = getRequest();
     	Map<String, Object> map = RequestUtil.getParameters(requestParam);
     	return parentAssetManage001Service.export("母资管计划.xlsx", map);

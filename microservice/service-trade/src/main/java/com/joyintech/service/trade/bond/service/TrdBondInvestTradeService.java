@@ -125,7 +125,7 @@ public class TrdBondInvestTradeService extends BaseService {
      */
     public Page<TrdBondInvestTradeDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
         pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
         pageParam.put("VALID_STATUS_03", DictCodeListExt1.有效状态_撤销.getValue());
@@ -398,7 +398,7 @@ public class TrdBondInvestTradeService extends BaseService {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
         param.put("isautobond", CacheUtil.getSysParam("IS_AUTOBOND"));
@@ -552,8 +552,10 @@ public class TrdBondInvestTradeService extends BaseService {
             else if(resultDto.getSettleSpeed() == 1L){
 //                resultDto.setSettleSpeedStr(DictCodeList.清算速度_T_1.getValue());
                resultDto.setSettleSpeedStr("1");
-            }else{
+            }else if(resultDto.getSettleSpeed() == 2L){
                resultDto.setSettleSpeedStr("2");
+           }else{
+               resultDto.setSettleSpeedStr(resultDto.getSettleSpeed().toString());
            }
             // 到期收益率
             if (resultDto.getYield() != null) {

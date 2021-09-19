@@ -49,8 +49,7 @@ public class MstBondCreditRatingService extends CommonExportService<MstBondCredi
      * @see
      * @since 1.0
      */
-    public Page<MstBondCreditRating> selectMstBondCreditPage(Map<String, Object> pageParam)
-        throws Exception {
+    public Page<MstBondCreditRating> selectMstBondCreditPage(Map<String, Object> pageParam){
         String workflowId = (String)pageParam.get("workflowId");
         if (StringUtil.isNotEmpty(workflowId)) {
             MstMarketInstitutionsDto mstMarketInstitutionsDto = mstMarketInstitutionsService.getBussinessEntityByWorkflowId(

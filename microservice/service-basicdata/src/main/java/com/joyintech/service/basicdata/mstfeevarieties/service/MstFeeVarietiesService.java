@@ -57,7 +57,7 @@ public class MstFeeVarietiesService extends BaseService<MstFeeVarietiesDto>{
      * @throws Exception 异常
      */
     public Page<MstFeeVarietiesDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page,length,
             () -> mstFeeVarietiesService.getForPage(pageParam));
     }

@@ -156,7 +156,7 @@ public class InfoDisclosureQuartzService extends AutoSendCBBaseService implement
                 }
             }
         } catch (SchedulerException e) {
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
         	logger.error("error:", e);
         }finally {
             try {

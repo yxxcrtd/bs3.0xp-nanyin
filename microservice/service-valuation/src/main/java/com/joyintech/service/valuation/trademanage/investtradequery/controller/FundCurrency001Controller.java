@@ -61,7 +61,7 @@ public class FundCurrency001Controller extends BaseController {
 //    }
     
     @PostMapping("/queryFundCurrencyList")
-    public FundCurrencyDto queryFundCurrencyList(@RequestBody Map<String, Object> param) throws Exception {
+    public FundCurrencyDto queryFundCurrencyList(@RequestBody Map<String, Object> param) {
         return fundCurrency001Service.queryFundCurrencyList(param);
     }
 }

@@ -109,7 +109,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
      * @throws Exception 异常信息
      */
     public Page<FinProductFeePayDto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         map.put("pendingStatus", DictCodeListExt1.有效状态_待处理.getValue());
         map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());
         map.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());

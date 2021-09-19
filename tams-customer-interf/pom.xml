@@ -113,11 +113,11 @@
                   </execution>
                </executions>
             </plugin>
-			
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+<!--	因为没有启动类，所以不打成springboot包		-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
         </plugins>
 		<resources>
 			<resource>

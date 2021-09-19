@@ -257,7 +257,7 @@ public class EmployeeInfoReg001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
 		List<EmployeeInfoReg001Dto> list = new ArrayList<EmployeeInfoReg001Dto>();
 		// 选择行数据时

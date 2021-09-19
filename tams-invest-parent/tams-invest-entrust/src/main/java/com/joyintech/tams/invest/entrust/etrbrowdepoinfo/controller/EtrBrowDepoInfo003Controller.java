@@ -28,6 +28,7 @@ import com.joyintech.tools.util.ValidationUtil.ValidResult;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,8 +150,7 @@ public class EtrBrowDepoInfo003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody List<EtrBrowDepoInfoDto> dtoList, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody List<EtrBrowDepoInfoDto> dtoList, BindingResult br) throws WorkFlowException {
         AjaxResult ajaxResult = this.check(dtoList, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

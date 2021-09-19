@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.trade.fund.dto.TrdFundInvestTradeDto;
@@ -32,7 +33,7 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
  * @see TrdFundInvestTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface TrdFundInvestTradeMapper {
     //    资产推荐方 新增 zhuyongkang 20191023 end
     /**

@@ -5,6 +5,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.ceassetgroupmanagement.c
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -99,7 +100,7 @@ public class CeAssetGroupManagement002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody CeAssetGroupManagement001Dto dto,BindingResult result) throws Exception {
+    public AjaxResult save(@RequestBody CeAssetGroupManagement001Dto dto,BindingResult result) throws WorkFlowException {
         if(result.hasErrors()) {
             return new AjaxResult(result);
         }

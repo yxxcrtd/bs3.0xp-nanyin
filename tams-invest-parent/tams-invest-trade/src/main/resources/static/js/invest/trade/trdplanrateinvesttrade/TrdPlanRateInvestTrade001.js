@@ -74,7 +74,8 @@ $(function(){
             ,{field:'tradeAmt', width:120, title: 'TrdPlanRateInvestTrade001.tradeAmt',type:'number',sortField:'tradeAmt'}
             ,{field:'ccyStr', width:120, title: 'TrdPlanRateInvestTrade001.ccy',sortField:'ccy'}
             ,{field:'remark', width:180, title: 'TrdPlanRateInvestTrade001.remark',sortable:false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     /**
      * 导出事件

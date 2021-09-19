@@ -47,7 +47,7 @@ public class SftpUtil {
     
     /**  
      * 构造基于密码认证的sftp对象  
-     * @param userName  
+     * @param username
      * @param password  
      * @param host  
      * @param port  
@@ -61,7 +61,7 @@ public class SftpUtil {
     
     /**  
      * 构造基于秘钥认证的sftp对象 
-     * @param userName 
+     * @param username
      * @param host 
      * @param port 
      * @param privateKey 
@@ -137,7 +137,7 @@ public class SftpUtil {
      *            上传到该目录  
      * @param sftpFileName  
      *            sftp端文件名  
-     * @param in  
+     * @param input
      *            输入流  
      * @throws SftpException   
      * @throws Exception  
@@ -176,7 +176,7 @@ public class SftpUtil {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(),e);
                 }
             }
         }
@@ -245,7 +245,7 @@ public class SftpUtil {
                 try {
                     fileOutputStream.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(),e);
                 }
             }
         }
@@ -291,8 +291,7 @@ public class SftpUtil {
      *  
      * @param directory 
      *            要列出的目录 
-     * @param sftp 
-     * @return 
+     * @return
      * @throws SftpException 
      */  
     public Vector<?> listFiles(String directory) throws SftpException {  

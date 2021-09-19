@@ -49,7 +49,7 @@ public class FtpUtil {
     /**
      * 编码
      */
-    private static String encoding = System.getProperty("file.encoding");
+    private static String encoding = System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding");
 
     /**
      * 路径分隔符
@@ -145,7 +145,7 @@ public class FtpUtil {
             	if(is !=null)
             	is.close();
             } catch (Exception e) {
-            	e.printStackTrace();
+                LOGGER.error(e.getMessage(),e);
              }
             ftpClose();
         }
@@ -292,7 +292,6 @@ public class FtpUtil {
             result = "true";
         }
         catch (IOException e) {
-//            e.printStackTrace();
             LOGGER.error(e.getMessage(),e);
             result = "false";
         }
@@ -408,7 +407,7 @@ public class FtpUtil {
 				try {
 					is.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+                    LOGGER.error(e.getMessage(),e);
 				}
         }
         return rslt;
@@ -621,8 +620,9 @@ public class FtpUtil {
             LOGGER.error(e.getMessage(),e);
         }
         finally {
-            return bool;
+//            return bool;
         }
+        return bool;
     }
 
     /**

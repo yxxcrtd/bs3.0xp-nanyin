@@ -5,6 +5,7 @@
 
 package com.joyintech.tams.invest.trade.fund.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -14,6 +15,7 @@ import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -378,7 +380,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
     @RequestMapping("getcarryAmt")
     @ResponseBody
     public BigDecimal getcarryAmt(@RequestBody Map<String, Object> map)
-        throws Exception {
+         {
         return trdFundInvestTrade003Service.getcarryAmt(map);
     }
 
@@ -513,8 +515,7 @@ public class TrdFundInvestTrade003Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -16,9 +16,11 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.portfolio.ptlmanagementinfo.dto.PtlManagementInfoDto;
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class MobilePtlManagementInfoService {
     private MobileApprovalService mobileApprovalService;
 
 
-    public String getWorkFlowInfo(String businessData) throws Exception {
+    public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //1、获取业务数据
         PtlManagementInfoDto dto = JsonUtils.json2Object(businessData, PtlManagementInfoDto.class);
         //2、处理数据字典

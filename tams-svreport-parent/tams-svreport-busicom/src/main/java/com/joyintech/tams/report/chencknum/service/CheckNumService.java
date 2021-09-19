@@ -2,6 +2,8 @@ package com.joyintech.tams.report.chencknum.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,9 @@ import com.joyintech.tams.report.submitmaintenance.equityinfo.service.EquityInfo
 import com.joyintech.tams.report.submitmaintenance.investorsholdinfo.service.InvestorsHoldInfo001Service;
 import com.joyintech.tams.report.submitmanagement.equityinforegist.dto.EquityInfoRegist001Dto;
 import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.InvestorsHoldInfoRegist001Dto;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 
 /**
@@ -60,13 +65,13 @@ public class CheckNumService {
 	@Autowired 
 	private InvestorsHoldInfo001Service investorsHoldInfo001Service;
 
-	public List<Map<String, String>> getCheckNumInterf(String fileName, String tmpPath) throws Exception {
+	public List<Map<String, String>> getCheckNumInterf(String fileName, String tmpPath) throws IOException, SAXException, ParserConfigurationException {
 		logger.info("文件解析开始...");
 		FileInputStream fileInputStream = null;
 		List<Map<String, String>> equityList = null;
 		try {
 			fileInputStream = new FileInputStream(new File(tmpPath + fileName));
-			equityList = XmlParseUtil.parse(new FileInputStream(new File(tmpPath + fileName)));
+			equityList = XmlParseUtil.parse(fileInputStream);
 		}finally {
 			if(fileInputStream != null){
 				fileInputStream.close();

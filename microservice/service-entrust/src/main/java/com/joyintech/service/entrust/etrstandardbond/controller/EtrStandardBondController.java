@@ -46,7 +46,7 @@ public class EtrStandardBondController {
     public Page<EtrStandardBondSearchDto> selectForPage(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
-            throws Exception {
+    {
         return etrStandardBondService.selectSearchDataList(page, length, param);
     }
 
@@ -61,7 +61,7 @@ public class EtrStandardBondController {
      */
     @RequestMapping("selectAvaPledgeBondList")
     public List<EtrStandardBondInDto> selectAvaPledgeBondList(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return etrStandardBondService.selectAvaPledgeBondList(param);
     }
     
@@ -76,7 +76,7 @@ public class EtrStandardBondController {
      */
     @RequestMapping("selectPledgeBondList")
     public List<EtrStandardBondInDto> selectPledgeBondList(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return etrStandardBondService.selectPledgeBondList(param);
     }
 
@@ -92,7 +92,7 @@ public class EtrStandardBondController {
     @Transactional
     @DTXTransaction
     @RequestMapping("inSave")
-    public Long inSave(@RequestBody EtrStandardBondInDto dto) throws Exception {
+    public Long inSave(@RequestBody EtrStandardBondInDto dto) {
         return etrStandardBondService.inSave(dto);
     }
 
@@ -108,7 +108,7 @@ public class EtrStandardBondController {
     @Transactional
     @DTXTransaction
     @RequestMapping("outSave")
-    public Long outSave(@RequestBody EtrStandardBondSearchDto dto) throws Exception {
+    public Long outSave(@RequestBody EtrStandardBondSearchDto dto) {
         return etrStandardBondService.outSave(dto);
     }
     
@@ -117,7 +117,7 @@ public class EtrStandardBondController {
      *
      */
     @RequestMapping("selectEtrSecPriDetailList")
-    public EtrStandardBond003Dto selectEtrSecPriDetailList() throws Exception {
+    public EtrStandardBond003Dto selectEtrSecPriDetailList() {
         return etrStandardBondService.selectEtrSecPriDetailList();
     }
     
@@ -128,7 +128,7 @@ public class EtrStandardBondController {
     @Transactional
     @DTXTransaction
     @RequestMapping("etrSecPrioritySave")
-    public Long etrSecPrioritySave(@RequestBody EtrStandardBond003Dto dto) throws Exception {
+    public Long etrSecPrioritySave(@RequestBody EtrStandardBond003Dto dto) {
         return etrStandardBondService.etrSecPrioritySave(dto);
     }
     
@@ -142,7 +142,7 @@ public class EtrStandardBondController {
      * @since 1.0
      */
     @RequestMapping("selectAutoPledge")
-    public List<PledgeBondInfoDto> selectAutoPledge(@RequestBody Map<String, Object> param) throws Exception {
+    public List<PledgeBondInfoDto> selectAutoPledge(@RequestBody Map<String, Object> param) {
         return etrStandardBondService.selectAutoPledge(param);
     }
     

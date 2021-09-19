@@ -24,6 +24,8 @@ import com.joyintech.tams.invest.common.service.InvestInterfCommService;
 import com.joyintech.tams.invest.common.util.MapParseUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +60,11 @@ import com.joyintech.workflow.engine.constant.OperationType;
 @Service
 public class FinFundTargetService extends CommonExportService<FinFundTargetDto> implements BaseProcessService<FinFundTargetDto> {
     /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinFundTargetService.class);
+
+    /**
      * 投管接口共通组件
      */
     @Autowired
@@ -76,8 +83,7 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<FinFundTargetDto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+    public Page<FinFundTargetDto> selectForPage(Map<String, Object> pageParam){
         // type9-11 created by wangguiqi on 2019/7/19 -start
         if (StringUtil.isNotEmpty(pageParam.get("type9"))) {
             pageParam.put("type9", StringUtil.splitToList(null, pageParam.get("type9").toString()));
@@ -159,7 +165,7 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
         	try {
 				ptlPortfolio.setMdate(new Date(new SimpleDateFormat("yyyy-MM-dd").parse("2099-12-31").getTime()));
 			} catch (ParseException e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }else{
         	ptlPortfolio.setMdate(entity.getMdate());
@@ -379,7 +385,7 @@ public class FinFundTargetService extends CommonExportService<FinFundTargetDto> 
             return selectForPage(selectParam);
         }
         catch (Exception e) {
-             e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }

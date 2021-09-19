@@ -55,7 +55,7 @@ public class SdAssetiInfoRegBatchService{
 	
 	
 	
-	public void sdAssetInfoRegData(Date batchDate) throws Exception{
+	public void sdAssetInfoRegData(Date batchDate) {
 		//1、报送数据检索,取得 List
 		logger.info("【资产要素信息登记】未报送数据检索开始------" +  df.format(new Date()));
 		List<AssetInfoRegist001Dto> resultList = SdAssetInfoSvrMapper.selcteUnRegData(DateUtil.format(batchDate));
@@ -536,7 +536,7 @@ public class SdAssetiInfoRegBatchService{
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbAssetInfoDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbAssetInfoDto> dataList, SendDataCheckType sendDataCheckType) {
 		int dataCountPerTime = Integer.valueOf(
 				CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_SEND_CB_DATA_COUNT_PER_TIME_FIRST));
 

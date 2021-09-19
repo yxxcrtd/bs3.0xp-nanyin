@@ -160,13 +160,11 @@ public class EtrSecLend001Controller extends BaseController {
      * 文件导出 <功能详细描述>
      *
      * @return 导出返回参数
-     * @throws Exception 抛出异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return etrSecLendService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

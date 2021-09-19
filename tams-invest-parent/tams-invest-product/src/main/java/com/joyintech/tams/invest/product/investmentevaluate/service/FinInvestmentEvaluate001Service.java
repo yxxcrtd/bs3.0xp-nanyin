@@ -1,10 +1,10 @@
 package com.joyintech.tams.invest.product.investmentevaluate.service;
 
-import com.jixu.common.util.DateUtil;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.component.business.evaluation.EvalIndexAlgorithmService;
 import com.joyintech.tams.component.business.evaluation.dao.BokPositionPrdReferenceMapper;
 import com.joyintech.tams.component.business.evaluation.dto.AverageStrategyDto;
@@ -15,9 +15,10 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.product.evaluationentrance.EvaluationEntrance;
 import com.joyintech.tams.invest.product.evaluationentrance.dto.EvaluationRateDto;
 import com.joyintech.tams.invest.product.investmentevaluate.dto.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FinInvestmentEvaluate001Service extends CommonExportService {
+    private static final Logger logger = LoggerFactory.getLogger(FinInvestmentEvaluate001Service.class);
     //调用共同接口方法
     @Autowired
     EvaluationEntrance evaluationEntrance;
@@ -65,7 +67,8 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
     public Page<FinInvestmentEvaluate003Dto> findPage(Map<String, Object> pageParam){
         Page<FinInvestmentEvaluate003Dto> findPage=restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinInvestmentEvaluate/findPage",
                 pageParam, FinInvestmentEvaluate003Dto.class);
-        System.out.println(findPage);
+//        System.out.println(findPage);
+        logger.info(findPage.toString());
         return restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinInvestmentEvaluate/findPage",
                 pageParam, FinInvestmentEvaluate003Dto.class);
     }
@@ -92,24 +95,22 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
         List page=new ArrayList();
         if (finInvestmentEvaluate002Dto==null){return page;}
             FinancialProductInformationDto financialProductInformationDto=financialProductInfo(finInvestmentEvaluate002Dto);
+            Date startDate = DateUtil.parse( (String) pageParam.get("startDate"));
+            Date endDate = DateUtil.parse( (String) pageParam.get("endDate"));
             //区间年化收益率
-            List<EvaluationRateDto> yearYield=evaluationEntrance.yearYield
-                    (DateUtil.convertStr2Date2( (String) pageParam.get("startDate")), DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> yearYield=evaluationEntrance.yearYield(startDate, endDate,financialProductInformationDto);
 //            Map<Date, EvaluationRateDto> yearYieldMap = yearYield.stream()
 //                    .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //净值增长率
-            List<EvaluationRateDto> netValueGrowthRate=evaluationEntrance.netValueGrowthRate
-                    (DateUtil.convertStr2Date2( (String) pageParam.get("startDate")),DateUtil.convertStr2Date2((String) pageParam.get("endDate")) ,financialProductInformationDto);
+            List<EvaluationRateDto> netValueGrowthRate=evaluationEntrance.netValueGrowthRate(startDate, endDate ,financialProductInformationDto);
             Map<Date, EvaluationRateDto> netValueGrowthRateMap = netValueGrowthRate.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //胜率
-            List<EvaluationRateDto> winRate=evaluationEntrance.winRate
-                    (DateUtil.convertStr2Date2( (String) pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> winRate=evaluationEntrance.winRate(startDate, endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> winRateMap = winRate.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //正负收益周期比
-            List<EvaluationRateDto> plusMinusEarningsPeriodRatio=evaluationEntrance.plusMinusEarningsPeriodRatio
-                    (DateUtil.convertStr2Date2((String) pageParam.get("startDate")) ,DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> plusMinusEarningsPeriodRatio=evaluationEntrance.plusMinusEarningsPeriodRatio(startDate, endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> plusMinusEarningsPeriodRatioMap = plusMinusEarningsPeriodRatio.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             for (EvaluationRateDto evaluationRateDto:yearYield){
@@ -134,27 +135,24 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
         List page=new ArrayList();
         if (finInvestmentEvaluate002Dto==null){return page;}
             FinancialProductInformationDto financialProductInformationDto=financialProductInfo(finInvestmentEvaluate002Dto);
+            Date startDate = DateUtil.parse( (String) pageParam.get("startDate"));
+            Date endDate = DateUtil.parse( (String) pageParam.get("endDate"));
             //波动率、年化波动率
-            List<EvaluationRateDto> fluctuateRate=evaluationEntrance.fluctuateRate
-                    (DateUtil.convertStr2Date2((String)  pageParam.get("startDate")),DateUtil.convertStr2Date2( (String) pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> fluctuateRate=evaluationEntrance.fluctuateRate(startDate,endDate,financialProductInformationDto);
             //下行标准差
-            List<EvaluationRateDto> descendingStandardDeviation=evaluationEntrance.descendingStandardDeviation
-                    (DateUtil.convertStr2Date2((String) pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> descendingStandardDeviation=evaluationEntrance.descendingStandardDeviation(startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> descendingStandardDeviationMap = descendingStandardDeviation.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //年化特累诺比率
-            List<EvaluationRateDto> annualizedTraynorRatio=evaluationEntrance.annualizedTraynorRatio
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> annualizedTraynorRatio=evaluationEntrance.annualizedTraynorRatio(startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> annualizedTraynorRatioMap = annualizedTraynorRatio.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //期间最大净值回撤
-            List<EvaluationRateDto> maximumRangeRetracement=evaluationEntrance.maximumRangeRetracement
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> maximumRangeRetracement=evaluationEntrance.maximumRangeRetracement(startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> maximumRangeRetracementMap = maximumRangeRetracement.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //历史最大净值回撤
-            List<EvaluationRateDto> historyBiggistWorthBack=evaluationEntrance.historyBiggistWorthBack
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2((String) pageParam.get("endDate")),financialProductInformationDto);
+            List<EvaluationRateDto> historyBiggistWorthBack=evaluationEntrance.historyBiggistWorthBack(startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> historyBiggistWorthBackMap = historyBiggistWorthBack.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             for(EvaluationRateDto evaluationRateDto:fluctuateRate){
@@ -182,22 +180,24 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
         List page=new ArrayList();
         if (finInvestmentEvaluate002Dto==null){return page;}
             FinancialProductInformationDto financialProductInformationDto=financialProductInfo(finInvestmentEvaluate002Dto);
+            Date startDate = DateUtil.parse( (String) pageParam.get("startDate"));
+            Date endDate = DateUtil.parse( (String) pageParam.get("endDate"));
             //年化夏普比率
             List<EvaluationRateDto> annualizedSharpe=evaluationEntrance.annualizedSharpe
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+                    (startDate,endDate,financialProductInformationDto);
             //年化卡玛比率
             List<EvaluationRateDto> annualKarmaRatio=evaluationEntrance.annualKarmaRatio
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+                    (startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> annualKarmaRatioMap = annualKarmaRatio.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //年化索提诺比率
             List<EvaluationRateDto> annualizedSotinoRatio=evaluationEntrance.annualizedSotinoRatio
-                    (DateUtil.convertStr2Date2( (String)pageParam.get("startDate")),DateUtil.convertStr2Date2( (String)pageParam.get("endDate")),financialProductInformationDto);
+                    (startDate,endDate,financialProductInformationDto);
             Map<Date, EvaluationRateDto> annualizedSotinoRatioMap = annualizedSotinoRatio.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             //詹森指数
             List<EvaluationRateDto> jensenIndex=evaluationEntrance.jensenIndex
-                    (DateUtil.convertStr2Date2((String) pageParam.get("startDate")),DateUtil.convertStr2Date2((String) pageParam.get("endDate")),financialProductInformationDto);
+                    (startDate,endDate, financialProductInformationDto);
             Map<Date, EvaluationRateDto> jensenIndexMap = jensenIndex.stream()
                     .collect(Collectors.toMap(EvaluationRateDto::getEndDate, Function.identity(), (k1, k2) -> k1));
             for(EvaluationRateDto evaluationRateDto:annualizedSharpe){
@@ -221,8 +221,8 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
         List<FinInvestmentEvaluate005Dto> list= restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinInvestmentEvaluate/findPage7",
                 pageParam,FinInvestmentEvaluate005Dto.class);
         String portfolioId=(String)pageParam.get("portfolioId");
-        Date startDate=DateUtil.convertStr2Date2((String)pageParam.get("startDate"));
-        Date endDate=DateUtil.convertStr2Date2((String)pageParam.get("endDate"));
+        Date startDate=DateUtil.parse((String)pageParam.get("startDate"));
+        Date endDate=DateUtil.parse((String)pageParam.get("endDate"));
         List<TimePointStrategyDto> calcTimePointStrategy=evalIndexAlgorithmService.
                 calcTimePointStrategy(startDate,endDate,portfolioId);
         Map<String, TimePointStrategyDto> calcTimePointStrategyMap = calcTimePointStrategy.stream()
@@ -249,7 +249,7 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
                     calcAssetContributionRate(dto.getAssetNetVal(),dto.getAssetCost()
                     ,dto.getPtlAssetNetVal(),dto.getPtlAssetCost());
             dto.setCalcAssetContributionRate(rate.multiply(BigDecimal.valueOf(100)));
-            dto.setcDate(DateUtil.convertStr2Date2((String)pageParam.get("endDate")));
+            dto.setcDate(DateUtil.parse((String)pageParam.get("endDate")));
         }
         return list;
     }
@@ -283,7 +283,7 @@ public class FinInvestmentEvaluate001Service extends CommonExportService {
 
             }
             dto3.setIndexId(dto3.getIndexId().multiply(BigDecimal.valueOf(100)));
-            dto3.setEffDate(DateUtil.convertStr2Date2((String)pageParam.get("endDate")));
+            dto3.setEffDate(DateUtil.parse((String)pageParam.get("endDate")));
             dto3.setPortfolioId(dto.getPortfolioId()); dto3.setPortfolioName(dto.getPortfolioName());
             dto3.setEvalIndex(dto.getEvalIndex());
             li.add(dto3);

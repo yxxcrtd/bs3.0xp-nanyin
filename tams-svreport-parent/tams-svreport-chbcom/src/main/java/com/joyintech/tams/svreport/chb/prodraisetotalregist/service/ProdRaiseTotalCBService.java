@@ -489,7 +489,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		dto.setSingleTotal(singleTotal==0?0:singleTotal);//个人
 		dto.setLegalTotal(legalTotal==0?0:legalTotal);//法人
 		dto.setUnlegalTotal(unlegalTotal==0?0:unlegalTotal);//非法人
-		dto.setTotalAmt(totAmt);//实际募集金额
+		dto.setTotalAmt(totAmt.setScale(2,BigDecimal.ROUND_HALF_UP));//实际募集金额
 		dto.setRaiseQty(totQty);//募集总额
 		StringBuffer place = new StringBuffer();
 		Iterator<Map.Entry<String, BigDecimal>> entries = placeMap.entrySet().iterator();
@@ -509,6 +509,11 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 		}else{
 			dto.setIsConsign(DictCodeList.是否_中债_否.getValue());
 		}
+		
+		//认购金额为0的情况下，也要生成募集总量登记对应的改造  20210910   start
+		dto.setSaleAreaAmt("0");//销售区域及金额
+		//认购金额为0的情况下，也要生成募集总量登记对应的改造  20210910   end
+		
 		if(place.length()>0){
 			dto.setSaleAreaAmt(place.toString().substring(0, place.length() - 1));//销售区域及金额
 		}
@@ -538,7 +543,7 @@ public class ProdRaiseTotalCBService extends SvrDataStatusUtil {
 //		当前批次报送时点集合
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 		List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_募集总量登记.getValue(),
-				DictCodeListExt2.报送数据状态_新建.getValue(),dateMap, dto.getRaiseEnddate());
+				dto.getStatus(),dateMap, dto.getRaiseEnddate());
 		if (!StringUtil.isEmptyList(dateList)) {
 			dto.setChbSubmitDeadline(dateList.get(0));
 			dto.setSubmitDeadline(dateList.get(1));

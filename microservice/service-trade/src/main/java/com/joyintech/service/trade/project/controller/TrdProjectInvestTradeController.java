@@ -51,7 +51,7 @@ public class TrdProjectInvestTradeController {
     @PostMapping("findPage/{page}/{length}")
     public Page<TrdProjectInvestTradeDto> findPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                    @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdProjectInvestTradeService.findPage(page, length, param);
     }
 
@@ -77,7 +77,7 @@ public class TrdProjectInvestTradeController {
     @PostMapping("getFinprodMarketId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodMarketId(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdProjectInvestTradeService.getFinprodMarketId(page, length, param);
     }
 

@@ -17,6 +17,8 @@ import java.util.Map;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.report.system.upinterfmonitor.dao.ReportUpInterfMonitor001Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,10 @@ import com.joyintech.tams.report.system.upinterfmonitor.dto.ReportUpInterfMonito
  */
 @Service
 public class ReportUpInterfMonitorMService extends BaseService<ReportUpInterfMonitor001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ReportUpInterfMonitorMService.class);
 
 	@Autowired
 	private ReportUpInterfMonitor001Mapper mapper;
@@ -99,7 +105,7 @@ public class ReportUpInterfMonitorMService extends BaseService<ReportUpInterfMon
 					try {
 						ZipFileUtil.compressZip(outFile,false,sourceFiles.toArray(new File[]{}));
 					} catch(Exception e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 					responseEntity = ExportUtil.export(outFile.getName(),outFile,true);
 				}
@@ -131,7 +137,7 @@ public class ReportUpInterfMonitorMService extends BaseService<ReportUpInterfMon
 		// 		try {
 		// 			ZipFileUtil.compressZip(outFile,false,sourceFiles.toArray(new File[]{}));
 		// 		} catch(Exception e) {
-		// 			e.printStackTrace();
+		// 			logger.error(e.getMessage(),e);
 		// 		}
 		// 		responseEntity = ExportUtil.export(outFile.getName(),outFile,true);
 		// 	}

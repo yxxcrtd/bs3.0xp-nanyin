@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import com.joyintech.framework.util.EncryptUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -104,7 +105,7 @@ public class UserControlServiceImpl implements UserControlService{
 	public ResultContainer login(String useracct, String pwd, String ip) {
 		Users user=usersDao.getUserAccount(useracct);
 		ResultContainer container=new ResultContainer();
-		pwd=Md5Util.md5(pwd);
+		pwd= EncryptUtil.getInstance().md5(pwd);
 		if(user==null){
 			container.setCorrectFlag(false);
 			container.setErrorMsg(ReturnResult.getDicHM().get(ReturnResult.user_notexist_chinese));

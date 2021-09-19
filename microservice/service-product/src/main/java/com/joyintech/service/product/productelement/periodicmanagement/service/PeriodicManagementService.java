@@ -54,7 +54,7 @@ public class PeriodicManagementService extends BaseService<PeriodicManagement001
 		return this.queryForPageForSelectReturn(page, length, () -> periodicManagementMapper.getFinprodIds(param));
 	}
 	
-	public Page<PeriodicManagement001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<PeriodicManagement001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) {
 		pageParam.put("VALID_STATUS_01", DictCodeListExt1.有效状态_有效.getValue());
 		pageParam.put("VALID_STATUS_02", DictCodeListExt1.有效状态_待处理.getValue());
 		pageParam.put("platDate", DateUtil.format(platformDate.getSysDate()));

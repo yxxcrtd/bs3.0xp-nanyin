@@ -1061,7 +1061,11 @@
             if (isNotNull(tradeAmt)&&isNotNull(sumRegistShare)) {
                 var assetType = $("#assetType").val();
                 if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
-                    $("#qty").val(tradeAmt).trigger("blur");
+                    if(faceValue){
+                        $("#qty").val(JoyinMath.doDiv(tradeAmt, faceValue)).trigger("blur");
+                    }else{
+                        $("#qty").val(tradeAmt).trigger("blur");
+                    }
                 }
                 else{
                     var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);

@@ -42,7 +42,7 @@ public class DisReportAssetIndexService  extends AutoSendCBBaseService{
      * @see
      * @since 1.0
      */
-    public DisReportAssetIndexIntoResult execute(Map<String, Object> param1) throws Exception {
+    public DisReportAssetIndexIntoResult execute(Map<String, Object> param1) {
     	// 获取reader返回值
     	DisReportAssetIndexResult DisReportAssetIndexEntity = (DisReportAssetIndexResult)param1.get(
             ReportGlobalConstant.REP_READER_RESULT);
@@ -77,7 +77,7 @@ public class DisReportAssetIndexService  extends AutoSendCBBaseService{
      * @return
      * @throws Exception
      */
-    public DisReportAssetIndexIntoResult processDto(DisReportAssetIndexResult acctEntity) throws Exception { 
+    public DisReportAssetIndexIntoResult processDto(DisReportAssetIndexResult acctEntity) {
 
     	// 若reader读取的值为空，直接返回空
     	if (acctEntity == null) {

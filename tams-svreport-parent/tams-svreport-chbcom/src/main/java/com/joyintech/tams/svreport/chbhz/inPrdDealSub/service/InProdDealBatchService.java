@@ -285,7 +285,7 @@ public class InProdDealBatchService extends FileImpService {
 				dateList = submitDateMap.get(key);
 			} else {
 				dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品存续期登记.getValue(), typeDetail,
-						DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, DateUtil.parse(sub.getMdate()));
+						sub.getStatus(), dateMap, DateUtil.parse(sub.getMdate()));
 				submitDateMap.put(key, dateList);
 			}
 

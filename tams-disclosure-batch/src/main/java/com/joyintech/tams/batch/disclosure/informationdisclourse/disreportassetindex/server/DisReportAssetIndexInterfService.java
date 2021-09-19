@@ -24,7 +24,7 @@ public class DisReportAssetIndexInterfService{
      * @return
      * @throws Exception
      */
-    public DisReportAssetIndexIntoResult processDto(DisReportAssetIndexResult acctEntity) throws Exception { 
+    public DisReportAssetIndexIntoResult processDto(DisReportAssetIndexResult acctEntity) {
 
     	// 若reader读取的值为空，直接返回空
     	if (acctEntity == null) {

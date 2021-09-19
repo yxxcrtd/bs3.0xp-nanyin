@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.se
 import com.joyintech.tams.systemtools.service.TamsBaseCommonService;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -100,7 +101,7 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionIndicatorParam006Dto> findPage()
-        throws Exception {
+         {
     	return rskSupervisionIndicatorParam006Service.findPage(RequestUtil.getPageParam());
     }
      
@@ -139,8 +140,7 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam006Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam006Dto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -179,8 +179,7 @@ public class RskSupervisionIndicatorParam006Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskSupervisionIndicatorParam006Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskSupervisionIndicatorParam006Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

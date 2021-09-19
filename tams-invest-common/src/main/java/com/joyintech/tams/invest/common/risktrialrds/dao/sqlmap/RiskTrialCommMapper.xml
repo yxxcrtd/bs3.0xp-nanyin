@@ -59,8 +59,9 @@
 		y on y.PTL_BAG_ID=m.PORTFOLIO_ID
 		<where>
 			<if test="portfolioCode != null and portfolioCode != '' ">
-				 (m.PORTFOLIO_ID =#{portfolioCode} or m.PORTFOLIO_ID in 
-				 (select PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL where PORTFOLIO_ID=#{portfolioCode}))
+				 ( m.PORTFOLIO_ID in
+				 (   select #{portfolioCode} from dual
+				union   select PTL_BAG_ID from RSK_PORTFOLIO_PACKAGE_DTL where PORTFOLIO_ID=#{portfolioCode}))
 			</if>
 			<if test="valDate != null and valDate != '' "><![CDATA[
 				and m.START_DATE <= to_date('${valDate}','yyyy-MM-dd')
@@ -312,4 +313,44 @@
 	    and DATA_AUTH_NOTIFY_INST.DATA_TYPE = 'PTL01'
 	    and DATA_AUTH_NOTIFY_INST.BUSINESS_ID = #{portfolioId,jdbcType=VARCHAR}
     </select>
+	<select id="selectImportValTableProdList" resultType="java.util.Map">
+		SELECT DISTINCT prod.prodId "finprodId",max(tt.VAL_DATE) "valDate"
+		FROM (<if test="productIdList!=null and productIdList.size()>0">
+				<choose>
+					<when test="productIdList.size() == 1">
+						select '${prodId}' as prodId from DUAL
+					</when>
+					<otherwise>
+						<foreach collection="productIdList" item="item" separator="as prodId from DUAL union all select" open="select " close="as prodId from DUAL">
+							#{item}
+						</foreach>
+					</otherwise>
+				</choose>
+			</if>) prod
+		LEFT JOIN FIN_PRODUCT fp1
+		ON fp1.FINPROD_ID = prod.prodId
+		LEFT JOIN PTL_SEC_VALUTION psv
+		ON fp1.FINPROD_MARKET_ID = psv.PORTFOLIO_ID
+		AND psv.CDATE+1= #{dateMax,jdbcType=DATE}
+		LEFT JOIN FIN_PRODUCT fp
+		ON fp.FINPROD_ID = psv.FINPROD_ID
+		AND fp.FINPROD_TYPE2='F17'
+		LEFT JOIN (
+			SELECT PTL_ID,max(VAL_DATE) VAL_DATE from(
+				SELECT PORTFOLIO_ID PTL_ID,
+					min(VIDT.VALDATE) VAL_DATE
+				FROM VALTBL_IMPORT_DATE_TRACE VIDT
+				WHERE
+					VIDT.VALDATE>=#{dateMin,jdbcType=DATE}
+					AND VIDT.VALDATE &lt; #{dateMax,jdbcType=DATE}
+					AND VIDT.IMPDATE = #{dateMax,jdbcType=DATE}
+					<if test="deptCode != null and deptCode != ''">
+						AND	VIDT.CREATE_DEPT = #{deptCode,jdbcType=VARCHAR}
+					</if>
+				GROUP BY PORTFOLIO_ID
+			)GROUP BY PTL_ID
+		)tt
+		ON tt.PTL_ID = fp.FINPROD_MARKET_ID
+		GROUP BY  prod.prodId
+	</select>
 </mapper>

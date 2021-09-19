@@ -40,6 +40,8 @@ public class WflRskAccessList extends WflRskAccessListKey {
      */
     private String remark;
 
+    private String listLevel;
+
     /**
      * 取得 名单名称
      * @return 名单名称
@@ -152,5 +154,13 @@ public class WflRskAccessList extends WflRskAccessListKey {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public String getListLevel() {
+        return listLevel;
+    }
+
+    public void setListLevel(String listLevel) {
+        this.listLevel = listLevel;
     }
 }

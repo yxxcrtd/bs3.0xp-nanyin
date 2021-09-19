@@ -3,6 +3,8 @@ package com.joyintech.service.trade.primarybiddingmanage.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingManageDto;
 import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingPortfolioDto;
 
@@ -16,7 +18,7 @@ import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingPortfo
  * @see PrimaryBiddingManage002Mapper
  * @since 1.0
  */
-
+@Repository
 public interface PrimaryBiddingManage002Mapper {
 
 	/**

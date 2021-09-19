@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,11 @@ import com.joyintech.tams.report.system.subinfobatchlog.dto.ChbSubinfoBatchLog00
  */
 @Service
 public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(ChbSubinfoBatchLog001Servcie.class);
+
 	@Autowired
     private FileAttachmentProcess fileAttachmentProcess;
 
@@ -58,7 +65,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		try {
 			fileList = JsonUtils.json2List(param.get("keyList").toString(), ChbSubinfoBatchLog001Dto.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}		
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
 			UploadFile	 upd=  fileAttachmentProcess.fetch(dataFile.getCompresFileId());
@@ -95,7 +102,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 		try {
 			fileList = JsonUtils.json2List(param.get("keyList").toString(), ChbSubinfoBatchLog001Dto.class);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		List<File> sourceFiles = new ArrayList<File>(16);
 		for (ChbSubinfoBatchLog001Dto dataFile : fileList) {
@@ -125,7 +132,7 @@ public class ChbSubinfoBatchLog001Servcie extends BaseService<ChbSubinfoBatchLog
 			try {
 				ZipFileUtil.compressZip(outFile, false, sourceFiles.toArray(new SafelyFile[] {}));
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 //				// 压缩文件失败后，删除所有临时文件
 //				for (File file : sourceFiles) {
 //					if (file.exists()) {

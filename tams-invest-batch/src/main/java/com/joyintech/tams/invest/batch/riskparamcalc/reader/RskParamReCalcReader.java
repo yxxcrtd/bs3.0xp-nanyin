@@ -87,7 +87,7 @@ public class RskParamReCalcReader extends BaseReader<RskParamReCalcReaderDto> {
                 opcInfoList.add(item);
             }
         });    
-        System.out.println();
+//        System.out.println();
         // 占用状态实占信息
         List<RskOccupyInfo> ocpInfo = new ArrayList<>();
         // 释放状态实占信息

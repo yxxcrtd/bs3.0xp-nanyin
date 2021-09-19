@@ -43,7 +43,8 @@ public class OperationManageController {
 	
 	@PostMapping("/selectForPage/{page}/{length}")
     public Page<OperationManageDto> selectForPage(@RequestBody Map<String, Object> pageParam,
-                                                           @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+                                                           @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         return operationManageService.selectForPage(page,length,pageParam);
     }
 	
@@ -58,7 +59,7 @@ public class OperationManageController {
      */
     @PostMapping("getPortfolioId")
     public List<SuggestDto> getPortfolioId(@RequestBody Map<String, Object> pageParam)
-        throws Exception {
+    {
         return operationManageService.getPortfolioId(pageParam);
     }
     
@@ -73,7 +74,7 @@ public class OperationManageController {
      */
     @PostMapping("getPortfolioId1")
     public List<SuggestDto> getPortfolioId1(@RequestBody Map<String, Object> pageParam)
-        throws Exception {
+    {
         return operationManageService.getPortfolioId1(pageParam);
     }
 	

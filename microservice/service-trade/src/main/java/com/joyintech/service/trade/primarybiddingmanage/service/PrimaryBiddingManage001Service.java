@@ -9,6 +9,8 @@ import com.joyintech.tams.common.base.dao.BidCloseStatusMapper;
 import com.joyintech.tams.common.base.entity.BidCloseStatus;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,11 @@ import com.joyintech.service.trade.primarybiddingmanage.dto.PrimaryBiddingManage
 
 @Service("backPrimaryBiddingManage001Service")
 public class PrimaryBiddingManage001Service extends BaseService<PrimaryBiddingManageDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(PrimaryBiddingManage001Service.class);
+
 	@Autowired
 	private PrimaryBiddingManage001Mapper primaryBiddingManage001Mapper;
 
@@ -93,7 +100,7 @@ public class PrimaryBiddingManage001Service extends BaseService<PrimaryBiddingMa
 			bidCloseStatusMapper.deleteByPrimaryKey(dto.getFinprodId());
 			bidCloseStatusMapper.insertSelective(bidCloseStatus);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			return "处理失败";
 		}
 		return "处理完成";

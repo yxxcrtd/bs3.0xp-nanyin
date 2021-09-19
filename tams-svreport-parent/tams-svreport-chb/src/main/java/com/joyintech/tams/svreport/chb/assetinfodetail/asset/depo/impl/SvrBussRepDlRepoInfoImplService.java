@@ -15,17 +15,18 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.BussAssetInfoService;
 import com.joyintech.tams.svreport.chb.assetinfodetail.asset.DtoChangeUtil;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.AssetInfoDetailDto;
-import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussFinBondRepInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDepositInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.dto.asset.SvrBussRepDlRepoInfoDto;
 import com.joyintech.tams.svreport.chb.assetinfodetail.service.AssetInfoDetailMService;
 import com.joyintech.tams.svreport.chb.common.util.asset.RechbAassetInfoUtilService;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -50,6 +51,9 @@ public class SvrBussRepDlRepoInfoImplService extends BaseService<SvrBussRepDlRep
     @Autowired
     private RechbAassetInfoUtilService rechbAassetInfoUtilService;
 
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
+
 
     /**
      *Service 主类方法
@@ -57,18 +61,23 @@ public class SvrBussRepDlRepoInfoImplService extends BaseService<SvrBussRepDlRep
      * @param dataStatus
      * @param model
      */
-    public void  setModle(String  assetUUid,String dataStatus,Model model){
-        //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
-        ChbAssetInfo  chbAssetInfo=rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus,assetUUid);
+    public void  setModle(String  assetUUid,String dataStatus,Model model,String workFlowId,String entityName){
+        if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workFlowId)) {// 判断是否存在于工作流中
+            SvrBussRepDlRepoInfoDto dto = mstWorkflowCommonService.getBusinessEntityByWorkFlowId(
+                    workFlowId, entityName, SvrBussRepDlRepoInfoDto.class);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
+        }else {
+            //2、入参【UUID】不为空的情况下，进入以下处理：   //调用共通处理【画面展示数据处理共通】
+            ChbAssetInfo chbAssetInfo = rechbAassetInfoUtilService.BackChbAssetInfoMethod(dataStatus, assetUUid);
 
-        //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
-        SvrBussRepDlRepoInfoDto dto=new    SvrBussRepDlRepoInfoDto();
-        if(chbAssetInfo!=null){
-            //实体类转换方法
-            DtoChangeUtil.SetChbToRep(chbAssetInfo,dto,DtoChangeUtil.target,false);
+            //3、以【2】取得的实体类为基础，进行子组件页面DTO组装
+            SvrBussRepDlRepoInfoDto dto = new SvrBussRepDlRepoInfoDto();
+            if (chbAssetInfo != null) {
+                //实体类转换方法
+                DtoChangeUtil.SetChbToRep(chbAssetInfo, dto, DtoChangeUtil.target, false);
+            }
+            //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（资产_负债类别_本行_他行存款_大额存单）);
+            model.addAttribute(GlobalConstant.ENTITY, dto);
         }
-        //4、model.addAttribute(GlobalConstant.ENTITY, 子组件DTO（资产_负债类别_本行_他行存款_大额存单）);
-        model.addAttribute(GlobalConstant.ENTITY, dto);
-
     }
 }

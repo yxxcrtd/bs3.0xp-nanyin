@@ -41,7 +41,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -49,9 +48,12 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
     	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
     		List<String> prodManagers = new ArrayList<>();
     		//产品经理不存在时获取所有符合的产品经理
-    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
-            		SelectOptionDto.class);
-    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
+    		/*Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
+            		SelectOptionDto.class);*/
+            //此处应获取所有符合的产品经理，应该是List
+            List<SelectOptionDto> users = restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserNameList", new HashMap<String,Object>(),
+                    SelectOptionDto.class);
+    		users.stream().forEach(user->prodManagers.add(user.getId()));
     		map.put("prodManagers",prodManagers);
     	}
         return restTemplate.postForPage(
@@ -63,7 +65,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓明细查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -85,7 +86,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -99,7 +99,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * 组合持仓汇总查询
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -146,7 +145,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -170,7 +168,6 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      *
      * @param map 画面参数
      * @return 调用微服务
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -201,6 +198,16 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
                         + "/PtlPositionAnalysis/getPortFolioInfo" , map,
                 SelectOptionDto.class);
     }
-    
-    
+
+    /**
+     * 剩余金额的信息
+     * @param map
+     * @return
+     */
+    public List<PtlPositionAnalysis002Dto> selectRemain(Map<String,Object> map ){
+        List<PtlPositionAnalysis002Dto> typelist = simpleRestTemplate.postForList(
+                ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/selectPeiZhiRemain",
+                map, PtlPositionAnalysis002Dto.class);
+        return typelist;
+    }
 }

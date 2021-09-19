@@ -153,7 +153,8 @@ public class TrdLendDurationService extends BaseService<TrdLendDurationDto> {
      * @see
      * @since 1.0
      */
-    public Page<TrdLendDurationDto> selectForPage(int page, int length, Map<String, Object> map) throws Exception {
+    public Page<TrdLendDurationDto> selectForPage(int page, int length, Map<String, Object> map)
+    {
         setParams(map);
         return super.queryForPage(page, length, () -> trdLendDurationMapper.findPage(map));
     }

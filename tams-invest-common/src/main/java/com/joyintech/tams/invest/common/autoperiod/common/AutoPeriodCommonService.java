@@ -454,8 +454,8 @@ public class AutoPeriodCommonService extends BaseService {
             if(StringUtil.equals(dto.getInvAim(),"999999")&&StringUtil.equals(total.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券.getValue())){ // 生成划款指令，无投资目的时设置成卖空，因为汇总表total就是这么处理的
                 dto.setInvAim(DictCodeListExt1.投资目的_卖空.getValue());
             }
-            if (dto.getPortfolioId().equals(total.getPortfolioId()) && ((StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim()))
-                    || (dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())))) {
+            if (((dto.getInvAim() != null && dto.getInvAim().equals(total.getInvAim())) || (StringUtil.isEmpty(dto.getInvAim()) && StringUtil.isEmpty(total.getInvAim())))
+                    && dto.getPortfolioId().equals(total.getPortfolioId())) {
                 stlPayOrders = dto;
                 if(StringUtil.isNotEmpty(stlPayOrders.getSettleAmt())){
                     stlPayOrders.setSettleAmt(StringUtil.isNotEmpty(total.getFpriceAmt())?total.getFpriceAmt():total.getTradeAmt());

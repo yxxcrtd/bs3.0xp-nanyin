@@ -15,6 +15,7 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.PtlPortfolioValuation;
@@ -30,6 +31,7 @@ import com.joyintech.tams.invest.common.risktrialrds.util.Const;
 import com.joyintech.tams.invest.common.risktrialrds.util.RiskUtil;
 import com.joyintech.tams.systemtools.util.CommonUtil;
 
+import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,4 +170,39 @@ public class RiskTrialDayTimeReaderService extends BaseService {
         }
     }
 
+    public List<Map<String, Object>> selectImportValTableProdList(Date maxDate, List<String> productIdList,String deptCode) {
+        //参数
+        Map<String,Object> param = new HashMap<>();
+        //系统参数配置 指定日期范围内天数 联社：一个月以内，16天可以  杭联：1个月2次 默认16天
+        String importValDay = StringUtil.defaultString(CacheUtil.getSysParam("MAX_SUB_VALDATE"),"16");
+        //计算最小日期
+        Date dateMin = DateUtil.addDay(maxDate,-1*Integer.valueOf(importValDay));
+        if(!StringUtil.isEmptyList(productIdList) && productIdList.size()>0){
+            param.put("prodId",productIdList.get(0));
+        }
+        param.put("dateMin",dateMin);
+        param.put("dateMax",maxDate);
+        param.put("deptCode", deptCode);
+        List<Map<String,Object>> resultList = new ArrayList<>();
+        //防止语句过长
+        if(productIdList == null || productIdList.size()<800) {
+            param.put("productIdList",productIdList);
+            //查询产品对应最小跑批日期
+            resultList.addAll(riskTrialCommMapper.selectImportValTableProdList(param));
+        }
+        else{
+            //分组查询防止语句过长
+            List<List<String>> totalList = DataHandleUtil.splitList(productIdList,800);
+            for (List<String> evrylist : totalList) {
+                param.put("productIdList",evrylist);
+                //查询产品对应最小跑批日期
+                List<Map<String,Object>> evryResList = riskTrialCommMapper.selectImportValTableProdList(param);
+                if(StringUtil.isNotEmpty(evryResList)){
+                    resultList.addAll(evryResList);
+                }
+            }
+        }
+
+        return resultList;
+    }
 }

@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -31,6 +32,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,6 +71,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Transactional(rollbackFor=Exception.class)
 public class PtlFundAllocation001Service extends CommonExportService<PtlFundAllocationDto>
     implements BaseProcessService<PtlFundAllocationDto>{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlFundAllocation001Service.class);
+
     /**
      * 业务主键生成类
      */
@@ -270,7 +278,7 @@ public class PtlFundAllocation001Service extends CommonExportService<PtlFundAllo
      * 导入
      * @param fileName
      */
-    public Map<String,Object> importData(String fileName) throws Exception {
+    public Map<String,Object> importData(String fileName) throws FileNotFoundException {
         Map<String,Object> result = new HashMap<>();
         // 检查文件名是否为空
         List<ValidMessage> errorMessage = new ArrayList<ValidMessage>();
@@ -469,7 +477,7 @@ public class PtlFundAllocation001Service extends CommonExportService<PtlFundAllo
         try {
             WorkFlowUtil.startProcess(processParameter.getWorkFlowParameter(),"","",SecurityUtil.getLoginUser().getUserName(),OperationType.NEW,false,dto);
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
     }
 

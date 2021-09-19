@@ -1,7 +1,9 @@
 package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.PrdOwnEquityChan;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PrdOwnEquityChanMapper {
     int insert(PrdOwnEquityChan record);
 

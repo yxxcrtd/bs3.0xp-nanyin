@@ -105,10 +105,10 @@ $(function() {
             object.bussReduceShareInfoDto.finReduceShareInfoList = BussReduceShareInfo.getAllRows();
         }
         //认购信息
-        if(BussSubscriptionInfo){
-            object.bussSubscriptionInfoDto = {};
-            object.bussSubscriptionInfoDto.finSubscriptionInfoList = BussSubscriptionInfo.getAllRows();
-        }
+//        if(BussSubscriptionInfo){
+//            object.bussSubscriptionInfoDto = {};
+//            object.bussSubscriptionInfoDto.finSubscriptionInfoList = BussSubscriptionInfo.getAllRows();
+//        }
         //文件信息
         if(FileCommon){
             object.fileArray = FileCommon.getUploadFileInfo();
@@ -605,13 +605,13 @@ $(function() {
     /**
      * 认购信息显示/隐藏
      */
-    var showBussSubscriptionInfo = function(){
-        var type6 = $('#type6').val();
-        $('#bussSubscriptionInfoDto_div').hide();
-        if(type6 == ASSET_TYPE_PROJECT_11){
-            $('#bussSubscriptionInfoDto_div').show();
-        }
-    }
+//    var showBussSubscriptionInfo = function(){
+//        var type6 = $('#type6').val();
+//        $('#bussSubscriptionInfoDto_div').hide();
+//        if(type6 == ASSET_TYPE_PROJECT_11){
+//            $('#bussSubscriptionInfoDto_div').show();
+//        }
+//    }
     /**
      * 资产类别的change事件
      */
@@ -649,7 +649,7 @@ $(function() {
         /*showReportInfo();*/
         showBussParticipantInfo();
         showBussReduceShareInfo();
-        showBussSubscriptionInfo();
+//        showBussSubscriptionInfo();
     }
     
     /**
@@ -883,16 +883,16 @@ $(function() {
         /****ZGBSSE-676  【中债直连check】新建项目类资产，当资产负债类别为[2201][2202]时，“分期还本条款标识”字段应不可填写且为空**/
         if($('#repAssetType').val()!=2201&&$('#repAssetType').val()!=2202){
             if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_16){
-                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_01).trigger('change');
                 $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_99).attr('disabled',true).trigger('change');
             }else if($("#bussFinRepaymentDto_payCycle").val()==FREQUENCY_UNIT_07){
-                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).trigger('change');
                 $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_02).attr('disabled',true).trigger('change');
             }else if($("#bussFinRepaymentDto_payCycle").val()!=""){
-                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).trigger('change');
                 $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val(SVR_PERIOD_REPAYMENT_FLAG_01).attr('disabled',true).trigger('change');
             }else{
-                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).attr('disabled',true).trigger('change');
+                $("#bussRepAssetCreditNonstdInfoDto_repRepaymentType").val(SVR_REPAYMENT_TYPE_02).trigger('change');
                 $("#bussRepAssetCreditNonstdInfoDto_repPeriodRepaymentFlag").val('').attr('disabled',true).trigger('change');
 
             }

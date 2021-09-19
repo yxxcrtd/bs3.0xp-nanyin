@@ -212,7 +212,11 @@ public class SecPosAutoGenerationService {
                             ArithmeticUtil.multiply(crn,StringUtil.isNotEmpty(assetRiskType)?new BigDecimal(assetRiskType): BigDecimal.ZERO));
                         underlyingBshareScaleSumDto.setAssetRiskType(assetRiskTypevalue.toString()); 
                     }
-                    
+                    //如果不是债券，rate(票面利率%)和BShareFaceValue(持仓券面总额)设置成空
+                    if(!StringUtil.equals(dto.getPinanAssetType(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                        dto.setRate(null);
+                        dto.setBshareFaceValue(null);
+                    }
                     assetTargetDbMapper.insert(dto);  
                 }
                 
@@ -277,7 +281,7 @@ public class SecPosAutoGenerationService {
                     //成本收益率计算
                     item.setCostRate(calculationCostRate(item.getFinprodId(), DateUtil.format(batchDate), item.getPortfolioId(), item.getIsPerne()));
 
-                    if (item.getIsRight().equals(DictCodeList.是否_是.getValue())) {
+                    if (StringUtil.equals(item.getIsRight(),DictCodeList.是否_是.getValue())) {
                         List<FinExercisePlan> finExercisePlanList =new ArrayList<FinExercisePlan>();
                         if(item.getExDate() !=null && item.getExDate() !=""){
                             finExercisePlanList = calculationSurplusExercise(item.getFinprodId(), DateUtil.format(batchDate), DictCodeListExt1.金融产品类型_投管用_债券.getValue(), "", item.getExDate());
@@ -343,6 +347,11 @@ public class SecPosAutoGenerationService {
                         && StringUtil.equals(item.getIsPerne(), DictCodeListExt3.穿透维度_不穿透.getValue())) {
                         item.setAssetRiskType(underlyingAssetsSumDto.getAssetRiskType());
                     }
+                }
+                //如果不是债券，rate(票面利率%)和BShareFaceValue(持仓券面总额)设置成空
+                if(!StringUtil.equals(item.getPinanAssetType(),DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+                    item.setRate(null);
+                    item.setBshareFaceValue(null);
                 }
                 assetTargetDbMapper.insert(item);  
             }

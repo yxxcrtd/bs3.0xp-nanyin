@@ -17,6 +17,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.valrateswapinformation.s
 //import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -121,7 +122,7 @@ public class ValRateSwapInformation002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValRateSwapInformationDto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ValRateSwapInformationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

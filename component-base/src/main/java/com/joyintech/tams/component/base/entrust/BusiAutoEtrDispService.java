@@ -208,7 +208,7 @@ public class BusiAutoEtrDispService {
         List<EtrDistribute> etrDistributeList = new ArrayList<EtrDistribute>();
         Map<String,Object> param = new HashMap<String,Object>();
         //资产类型
-        param.put("assetType", etrEntrust.getFinprodType2());
+        param.put("assetType", etrEntrustAdd.getAssetType());
         List<String> traderList = busiAutoEtrDispMapper.selectTrader(param);
         for(String trader:traderList){
             EtrDistribute etrDistribute = new EtrDistribute();

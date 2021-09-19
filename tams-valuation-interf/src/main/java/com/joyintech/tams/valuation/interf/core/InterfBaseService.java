@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
+import com.joyintech.tams.valuation.interf.core.exception.InterfException;
 
 public abstract class InterfBaseService {
     
@@ -27,7 +28,7 @@ public abstract class InterfBaseService {
     private Date interfTime; 
     
    
-    public abstract void execute() throws Exception;
+    public abstract void execute() throws InterfException;
     
     /**
      * 获取 params

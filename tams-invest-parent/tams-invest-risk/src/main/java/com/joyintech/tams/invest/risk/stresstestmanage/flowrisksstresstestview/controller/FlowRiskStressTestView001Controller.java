@@ -64,7 +64,7 @@ public class FlowRiskStressTestView001Controller extends BaseController{
     }
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 
@@ -75,7 +75,7 @@ public class FlowRiskStressTestView001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findOnePage")
     public Page<FlowRiskStressTestView001Dto> selectForPage()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         return service.selectAll(map);
     }
@@ -86,7 +86,7 @@ public class FlowRiskStressTestView001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("selectTestListMap")
     public List<SelectOptionDto> selectRiskFactorMap(@RequestParam Map<String, Object> param)
-        throws Exception {
+         {
 
         return service.selectTestListMap(param);
     }
@@ -95,7 +95,7 @@ public class FlowRiskStressTestView001Controller extends BaseController{
      */
     @ResponseBody
     @GetMapping("fuzzySelectScene")
-    public List<SelectOptionDto> fuzzySelectScene() throws Exception {
+    public List<SelectOptionDto> fuzzySelectScene() {
         //Map<String, Object> map = RequestUtil.getParameters(getRequest());
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();

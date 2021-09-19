@@ -1,6 +1,7 @@
 package com.jixu.adapter.service.impl;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -179,7 +181,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 				//自定义处理逻辑
 				container=adapterComFunction.executeCustom(true, sourceID, outParams, ilog);
 				if(!container.isCorrectFlag()) {
-					throw new Exception(container.getErrorMsg());
+					throw new ServiceException(container.getErrorMsg());
 				}
 				
 				logger.info(source.getSourceName()+ "		开始运行适配器");
@@ -494,12 +496,13 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 		
 		ResultContainer container=new ResultContainer();
 		List<MsgContainer> msgcontainerList=new ArrayList<MsgContainer>();
-		
+		FileOutputStream fos = null;
 		try{
 			for(MultipartFile mpf:mpfList){
 				//上传的文件先复制到配置的文件夹下,然后上传
 				String filePath = source.getFilepath() + "/" + mpf.getOriginalFilename();
-				FileCopyUtils.copy(mpf.getBytes(), new FileOutputStream(new SafelyFile(filePath)));
+				fos = new FileOutputStream(new SafelyFile(filePath));
+				FileCopyUtils.copy(mpf.getBytes(), fos);
 			
 				if(fileBean==null){
 					container.setCorrectFlag(false);
@@ -530,8 +533,15 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
 			container.setErrorMsg("上传并读取接口文件异常");//e.toString());
 			logger.error("Error", e);
 			return container;
+		}finally {
+			if (fos != null){
+				try {
+					fos.close();
+				} catch (IOException ioe) {
+					logger.error("Error", ioe);
+				}
+			}
 		}
-		
 		return container;
 	}
 	
@@ -624,7 +634,7 @@ public class DataServiceCenter implements InitializingBean, ApplicationContextAw
     private ApplicationContext applicationContext;
 	
     
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		logger.info("开始初始化数据中心...");
 		Map<String, ReadDataFile> beanMap = applicationContext.getBeansOfType(ReadDataFile.class);
 		for (ReadDataFile fileBean : beanMap.values()) {

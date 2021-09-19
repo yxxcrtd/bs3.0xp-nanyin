@@ -22,6 +22,7 @@ import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.dto.PtlSubFundsMange
 import com.joyintech.tams.invest.portfolio.ptlsubfundsmange.service.PtlSubFundsMange002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,8 +167,7 @@ public class PtlSubFundsMange002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("queryProdName")
-    public FinProduct queryProdName()
-        throws Exception {
+    public FinProduct queryProdName(){
         return ptlSubFundsMange002Service.queryProdName(RequestUtil.getPageParam());
     }
 
@@ -205,12 +205,10 @@ public class PtlSubFundsMange002Controller extends BaseController {
      * 
      * @param dto
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody PtlSubFundsMange002Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody PtlSubFundsMange002Dto dto) throws WorkFlowException {
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             dto.setTotleTradeId(genBussinessCode());
             // 明细信息，设置交易编号

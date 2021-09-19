@@ -11,8 +11,9 @@
 package com.joyintech.tams.valuation.trademanage.investtradequery.dao;
 
 import com.joyintech.tams.valuation.trademanage.investtradequery.dto.ValOrdersDto;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface ValOrdersQuery003Mapper {
 
    /**

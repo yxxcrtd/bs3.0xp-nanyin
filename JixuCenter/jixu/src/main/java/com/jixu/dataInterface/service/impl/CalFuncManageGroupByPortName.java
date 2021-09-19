@@ -37,7 +37,7 @@ public class CalFuncManageGroupByPortName extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws InterfaceException {
 		String portName=genConvertFormula(inputValue, colcfgMap);
 		ManagerGroup mg=managerGroupDao.loadGroupNameByPortName(portName);
 		if(mg.getId()!=0){
@@ -53,7 +53,7 @@ public class CalFuncManageGroupByPortName extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			 {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -52,7 +52,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @return
 	 * @throws Exception
 	 */
-	public List<SelectOptionDto> findScheme(Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findScheme(Map<String, Object> parameters) {
 		List<ValuationMethodScheme001Dto> resultList = valuationMethodScheme001Mapper.selectScheme(parameters);
 		List<SelectOptionDto> selectOptionList = new ArrayList<>();
 		if (CollectionUtils.isNotEmpty(resultList)) {
@@ -72,8 +72,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<ValuationMethodScheme001Dto> findSchemeByPage(int page, int length, Map<String, Object> parameters)
-			throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSchemeByPage(int page, int length, Map<String, Object> parameters){
 		Page<ValuationMethodScheme001Dto> pages = super.queryForPage(page, length,
 				() -> valuationMethodScheme001Mapper.selectScheme(parameters));
 		List<ValuationMethodScheme001Dto> list = pages.getRoot();
@@ -88,7 +87,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @throws Exception
 	 */
 	public Page<ValuationMethodScheme001Dto> findSchemeDetailByPage(int page, int length,
-			Map<String, Object> parameters) throws Exception {
+			Map<String, Object> parameters){
 		return super.queryForPage(page, length, () -> valuationMethodScheme001Mapper.selectSchemeDetail(parameters));
 	}
 
@@ -99,7 +98,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @throws Exception
 	 */
 	public Page<ValuationMethodScheme001Dto> findSpecialAssetsByPage(int page, int length,
-			Map<String, Object> parameters) throws Exception {
+			Map<String, Object> parameters) {
 		return super.queryForPage(page, length, () -> valuationMethodScheme001Mapper.selectSpecialAssets(parameters));
 	}
 
@@ -109,7 +108,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @return
 	 * @throws Exception
 	 */
-	public List<ValuationMethodScheme001Dto> findSchemeDetail(Map<String, Object> parameters) throws Exception {
+	public List<ValuationMethodScheme001Dto> findSchemeDetail(Map<String, Object> parameters) {
 		return valuationMethodScheme001Mapper.selectSchemeDetail(parameters);
 	}
 
@@ -119,7 +118,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @return
 	 * @throws Exception
 	 */
-	public List<ValuationMethodScheme001Dto> findSpecialAssets(Map<String, Object> parameters) throws Exception {
+	public List<ValuationMethodScheme001Dto> findSpecialAssets(Map<String, Object> parameters) {
 		return valuationMethodScheme001Mapper.selectSpecialAssets(parameters);
 	}
 
@@ -129,7 +128,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
 	 * @return
 	 * @throws Exception
 	 */
-	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) {
 		List<ValuationMethodScheme001Dto> resultList = valuationMethodScheme001Mapper.selectFinprod(parameters);
 //		List<ValuationMethodScheme001Dto> resultList = super.queryForPage(
 //				() -> valuationMethodScheme001Mapper.selectFinprod(parameters)).getRoot();

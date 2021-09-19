@@ -130,7 +130,6 @@ public class MonthReportProdService {
 			}
 		} catch (CloneNotSupportedException e) {
 			logger.error(e.getMessage(), e);
-			e.printStackTrace();
 		}
 		return ret;
 	}
@@ -166,7 +165,6 @@ public class MonthReportProdService {
 			}
 		} catch (CloneNotSupportedException e) {
 			logger.error(e.getMessage(), e);
-			e.printStackTrace();
 		}
 		return ret;
 	}

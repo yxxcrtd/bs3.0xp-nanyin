@@ -104,8 +104,7 @@ $(function() {
             
 			},
             {field:'sendStatus', visible:false},
-            {field:'status', visible:false},
-            {field:'reportuuid', visible:false}
+            {field:'status', visible:false}
         ]
     });
     

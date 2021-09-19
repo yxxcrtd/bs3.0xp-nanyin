@@ -168,7 +168,7 @@ public class TrdStockService extends BaseService<TrdStockDto> {
      * @see
      * @since 1.0
      */
-    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<SelectOptionDto> getFinprodId(int page, int length, Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG", DictCodeListExt1.金融产品类型_投管用_股票.getValue());
 //        List<SelectOptionDto> resultList = trdBondInvestTradeMapper.getFinprodId(param);
         Page<SelectOptionDto> resultList = this.queryForPageForSelectReturn(page, length,

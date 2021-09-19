@@ -30,7 +30,7 @@ import com.joyintech.service.entrust.etrbondfirstlbidding.dto.EtrBondFirstLBiddi
  * @see EtrBondFirstLBiddingMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrBondFirstLBiddingMapper {
 
     /**

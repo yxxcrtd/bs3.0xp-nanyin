@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -171,8 +172,7 @@ public class MstPerformanceBenchMark002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstPerformanceBenchMarkDto dto, BindingResult result)
-        throws Exception {
+        ValidateGroupEdit.class}) MstPerformanceBenchMarkDto dto, BindingResult result) throws WorkFlowException {
         if (result.hasErrors()) {
             return new AjaxResult();
         }
@@ -211,8 +211,7 @@ public class MstPerformanceBenchMark002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public List<ComponentInfoDto> selectAll()
-        throws Exception {
+    public List<ComponentInfoDto> selectAll(){
         List<ComponentInfoDto> page = componentInfoService.selectComponentInfoPage(
             RequestUtil.getPageParam());
 

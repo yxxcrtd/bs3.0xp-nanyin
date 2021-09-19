@@ -14,6 +14,7 @@
 	<!-- 更新jixu日期 -->
 	<update id="updateJixuDate" parameterType="java.util.Date">
 		update STT_DATA_READY set DATA_DATE=#{newDate, jdbcType=DATE}
+		where 1=1 
 	</update>
 	
 	

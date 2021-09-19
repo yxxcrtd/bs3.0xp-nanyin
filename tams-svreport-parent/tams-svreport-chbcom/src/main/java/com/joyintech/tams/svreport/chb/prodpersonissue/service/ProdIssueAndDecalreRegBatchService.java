@@ -157,16 +157,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                 sub.setIssuePartyId(issuePartyId);
             }
             
-            // 产品发行登记报送时点:募集起始日期
-            if(sub.getRaiseVdate()!=null){ 
-                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(), 
-                        DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
-                        sub.getRaiseVdate());
-                if (CollectionUtils.isNotEmpty(issueDateList)) {
-                    sub.setChbSubmitDeadline(issueDateList.get(0));
-                    sub.setSubmitDeadline(issueDateList.get(1));
-                }
-            }
+
             // 已登记
             if (regMap.get(sub.getProdId()) != null) {
                 //删除未报送的数据
@@ -198,6 +189,17 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                     // 准备插入处理未报送的数据
                     issueInsertDataList.add(sub);
                     sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
+                }
+            }
+
+            // 产品发行登记报送时点:募集起始日期
+            if(sub.getRaiseVdate()!=null){
+                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),
+                        sub.getStatus(), dateMap,
+                        sub.getRaiseVdate());
+                if (CollectionUtils.isNotEmpty(issueDateList)) {
+                    sub.setChbSubmitDeadline(issueDateList.get(0));
+                    sub.setSubmitDeadline(issueDateList.get(1));
                 }
             }
         }
@@ -343,11 +345,11 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             if(single.getRaisePstrdate()!=null){
                 if (DictCodeListExt2.募集方式_中债_公募.getValue().equals(single.getRaiseType())){
                     declare=DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(), 
-                            DictCodeListExt2.细分类别_公募.getValue(),DictCodeListExt2.报送数据状态_新建.getValue(),
+                            DictCodeListExt2.细分类别_公募.getValue(),single.getStatus(),
                             declaredateMap, list.get(i).getRaisePstrdate(), SVReportGlobalConstant.SUBMIT_TIME);
                 } else if (DictCodeListExt2.募集方式_中债_私募.getValue().equals(single.getRaiseType())){
                         declare=DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(), 
-                                DictCodeListExt2.细分类别_私募.getValue(),DictCodeListExt2.报送数据状态_新建.getValue(),
+                                DictCodeListExt2.细分类别_私募.getValue(),single.getStatus(),
                                 declaredateMapP, list.get(i).getRaisePstrdate(), SVReportGlobalConstant.SUBMIT_TIME);
                 } else {
                     logger.error("产品代码："+single.getProdId()+"的募集方式接入错误！");

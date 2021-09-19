@@ -58,7 +58,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      */
     public Page<EtrStandardBondSearchDto> selectSearchDataList(int page, int length,
                                                                Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         Page<EtrStandardBondSearchDto> pageResult = this.queryForPage(page, length,
                 () -> this.etrStandardBondMapper.selectSearchDataList(pageParam));
@@ -102,7 +102,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @since 1.0
      */
     public List<EtrStandardBondInDto> selectAvaPledgeBondList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         this.setParam(pageParam);
         return this.etrStandardBondMapper.selectAvaPledgeBondList(pageParam);
     }
@@ -116,7 +116,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @since 1.0
      */
     public List<EtrStandardBondInDto> selectPledgeBondList(Map<String, Object> pageParam)
-        throws Exception {
+    {
         this.setParam(pageParam);
         return this.etrStandardBondMapper.selectPledgeBondList(pageParam);
     }
@@ -131,7 +131,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long inSave(EtrStandardBondInDto dto) throws Exception {
+    public Long inSave(EtrStandardBondInDto dto) {
         Long saveCount = 0L;
         if (!StringUtil.isEmptyList(dto.getPledgeBondList())) {
             for (EtrStandardBondInDto temp : dto.getPledgeBondList()) {
@@ -168,7 +168,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public Long outSave(EtrStandardBondSearchDto dto) throws Exception {
+    public Long outSave(EtrStandardBondSearchDto dto) {
         Long deleteCount = 0L;
         if (!StringUtil.isEmptyList(dto.getSelectedItem())) {
             for (EtrStandardBondSearchDto temp : dto.getSelectedItem()) {
@@ -188,7 +188,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * 优先级设置明细查询，填充画面列表
      *
      */
-    public EtrStandardBond003Dto selectEtrSecPriDetailList() throws Exception {
+    public EtrStandardBond003Dto selectEtrSecPriDetailList() {
         EtrStandardBond003Dto dto = new EtrStandardBond003Dto();
         dto = this.etrStandardBondMapper.selectEtrSecPriority();
         // 查询明细
@@ -203,7 +203,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * 优先级设置入库，先删后插
      *
      */
-    public Long etrSecPrioritySave(EtrStandardBond003Dto dto) throws Exception {
+    public Long etrSecPrioritySave(EtrStandardBond003Dto dto) {
         Long deleteCount = 0L;
         if (StringUtil.isNotEmpty(dto)) {
             //删除优先级及明细数据，全删全插
@@ -230,7 +230,7 @@ public class EtrStandardBondService extends BaseService<EtrStandardBondSearchDto
      * @see
      * @since 1.0
      */
-    public List<PledgeBondInfoDto> selectAutoPledge(@RequestBody Map<String, Object> param)throws Exception {
+    public List<PledgeBondInfoDto> selectAutoPledge(@RequestBody Map<String, Object> param) {
         this.setParam(param);
         return etrStandardBondMapper.selectAutoPledge(param);
     }

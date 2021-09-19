@@ -50,7 +50,7 @@ public class FinDepositTargetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinDepositTargetDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finDepositTargetService.selectForPage(page, length, param);
     }
     
@@ -65,14 +65,14 @@ public class FinDepositTargetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinDepositTargetDto dto) throws Exception {
+    public void insert(@RequestBody FinDepositTargetDto dto) {
          finDepositTargetService.insert(dto);
     }
 
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinDepositTargetDto dto) throws Exception{
+    public void update(@RequestBody FinDepositTargetDto dto) {
         finDepositTargetService.update(dto);
     }
     /**
@@ -85,7 +85,7 @@ public class FinDepositTargetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinDepositTargetDto dto) throws Exception{
+    public void delete(@RequestBody FinDepositTargetDto dto) {
         finDepositTargetService.delete(dto);
     }
     
@@ -98,7 +98,7 @@ public class FinDepositTargetController {
      * @since 1.0
      */
     @GetMapping("getBasicInfo")
-    public FinDepositTargetDto getBasicInfo(String finprodId,String finprodType,String cashType,String finprodMarketId) throws Exception {
+    public FinDepositTargetDto getBasicInfo(String finprodId,String finprodType,String cashType,String finprodMarketId) {
         return finDepositTargetService.getBasicInfo(finprodId,finprodType,cashType,finprodMarketId);
     }
     

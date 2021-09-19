@@ -76,7 +76,8 @@ public class MstTradeOpponentController {
      * @since 1.0
      */
     @PostMapping("/selectForPage/{page}/{length}")
-    public Page<MstTradeOpponentDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<MstTradeOpponentDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
+    {
         Page<MstTradeOpponentDto> dto = mstTradeOpponent001Service.selectForPage(page,length,pageParam);
         return dto;
     }
@@ -315,5 +316,18 @@ public class MstTradeOpponentController {
     @PostMapping("isExistHistoryDeal")
     public int isExistHistoryDeal(@RequestBody Map<String,Object> map){
         return basicMstTradeOpponentService.isExistHistoryDeal(map);
+    }
+
+    /**
+     * 统计 当交易对手类别是分行时，是否被债券投后责任机构使用
+     * <功能详细描述>
+     * @param counterId id
+     * @return 统计结果
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("/selectFHCounter")
+    public int selectFHCounter(@RequestBody String counterId) {
+        return mstTradeOpponent001Service.selectFHCounter(counterId);
     }
 }

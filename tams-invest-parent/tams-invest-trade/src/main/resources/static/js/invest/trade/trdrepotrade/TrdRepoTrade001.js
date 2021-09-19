@@ -94,7 +94,8 @@
             , {field: 'repoType', visible: false}
             , {field: 'validStatus', visible: false}
             , {field: 'ccy', visible: false}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     var exportExcel = function () {
         Joyin.exportExcel('export', getSearchParams());

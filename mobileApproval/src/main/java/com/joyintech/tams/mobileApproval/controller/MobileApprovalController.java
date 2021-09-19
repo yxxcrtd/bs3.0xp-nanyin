@@ -10,6 +10,7 @@ import com.joyintech.tams.mobileApproval.dto.TmAppAuditTabDetailDto;
 import com.joyintech.tams.mobileApproval.service.MobileApprovalService;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +83,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getNewTodoList")
-    public String getNewTodoList(HttpServletRequest request) throws Exception {
+    public String getNewTodoList(HttpServletRequest request) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //用户注册
 //        String msg = mobileApprovalService.autoLogin(request);
 //        if (msg.equals("用户已成功注册")) {
@@ -102,7 +104,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getDoneList")
-    public String getDoneList(HttpServletRequest request) throws Exception {
+    public String getDoneList(HttpServletRequest request) {
         //用户注册
 //        String msg = mobileApprovalService.autoLogin(request);
 //        if (msg.equals("用户已成功注册")) {
@@ -123,7 +125,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getMarkNum")
-    public String getMarkNum(HttpServletRequest request) throws Exception {
+    public String getMarkNum(HttpServletRequest request) {
         //用户注册
         int num = 0;
 //        String msg = mobileApprovalService.autoLogin(request);
@@ -148,7 +150,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getAuditTypeList")
-    public String getAuditTypeList(HttpServletRequest request) throws Exception {
+    public String getAuditTypeList(HttpServletRequest request) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //用户注册
 //        String msg = mobileApprovalService.autoLogin(request);
 //        if (msg.equals("用户已成功注册")) {
@@ -170,7 +172,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getAuditTypeDoneList")
-    public String getAuditTypeDoneList(HttpServletRequest request) throws Exception {
+    public String getAuditTypeDoneList(HttpServletRequest request) {
         Map<String, Object> param = RequestUtil.getParameters(request);
         return mobileApprovalService.getAuditTypeDoneList((String) param.get("userId"));
     }
@@ -179,7 +181,7 @@ public class MobileApprovalController {
     //获取待审批信息
     @ResponseBody
     @RequestMapping("/getWorkflowInfo")
-    public String getWorkflowInfo(HttpServletRequest request) throws Exception {
+    public String getWorkflowInfo(HttpServletRequest request) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
 //        System.out.println("==============================" + SecurityUtil.getLoginUser().getUserName());
 
         //用户注册
@@ -202,7 +204,7 @@ public class MobileApprovalController {
     //同步移动端的处理操作
     @ResponseBody
     @RequestMapping("/dealMobileApproval")
-    public String dealMobileApproval(HttpServletRequest request) throws Exception {
+    public String dealMobileApproval(HttpServletRequest request) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //用户注册
         String msg ;//= mobileApprovalService.autoLogin(request);
 //        if (msg.equals("用户已成功注册")) {
@@ -264,7 +266,7 @@ public class MobileApprovalController {
      */
     @ResponseBody
     @RequestMapping("/getAuditDetailConfig")
-    public String getAuditDetailConfig(HttpServletRequest request) throws Exception {
+    public String getAuditDetailConfig(HttpServletRequest request) {
     	
     	String methodName = "getAuditDetailConfig";
 		String message = "获取审批详情配置";

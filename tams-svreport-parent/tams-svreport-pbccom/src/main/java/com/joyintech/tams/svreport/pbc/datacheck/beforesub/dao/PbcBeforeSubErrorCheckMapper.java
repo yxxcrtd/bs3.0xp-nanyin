@@ -5,11 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PbcBeforeSubErrorCheckMapper {
        
     List<Map<String,Object>> selectPrdBaseInfoSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
 
     int updatePrdBaseInfoSub(String seqno);
+
+
+
+    List<Map<String,Object>> selectPrdBaseInfoNewSub(@Param("checkdate") Date checkdate,@Param("listProd") List<String> listProd);
+
+    int updatePrdBaseInfoNewSub(String seqno);
     
 }

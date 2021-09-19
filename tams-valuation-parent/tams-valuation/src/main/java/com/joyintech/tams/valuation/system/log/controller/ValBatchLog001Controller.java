@@ -123,7 +123,7 @@ public class ValBatchLog001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<ValBatchLog001Dto> selectBatchLog() throws Exception {
+    public Page<ValBatchLog001Dto> selectBatchLog() {
         return valBatchLog001Service.selectForPage(RequestUtil.getPageParam());
     }
     
@@ -135,7 +135,7 @@ public class ValBatchLog001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         List<ValBatchLog001Dto> dtoList = valBatchLog001Service.selectForExport(RequestUtil.getPageParam());
         File outFile = valBatchLog001Service.makeFile(
             "/com/joyintech/system/log/conf/export_batchlog.xml", dtoList);

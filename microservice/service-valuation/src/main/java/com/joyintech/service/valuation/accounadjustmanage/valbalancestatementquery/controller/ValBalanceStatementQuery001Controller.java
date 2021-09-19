@@ -105,7 +105,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @PostMapping("/findPage/{page}/{length}")
     public Page<ValBalanceStatementQuery001Dto> selectBalanceStatement(@RequestBody Map<String,Object> params,
                                                                        @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         Page<ValBalanceStatementQuery001Dto> pages = valBalanceStatementQuery001Service.selectForPage(params);
         return pages;
     }
@@ -113,7 +113,7 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
     @PostMapping("/selectSum/{page}/{length}")
     public Page<ValBalanceStatementQuery001Dto> selectSum(@RequestBody Map<String,Object> pageParam,
                                                           @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return valBalanceStatementQuery001Service.selectSum(pageParam);
     }
 //    /**

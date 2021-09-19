@@ -11,12 +11,15 @@
 package com.joyintech.tams.valuation.accounadjustmanage.valueaddedtax.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -61,7 +64,10 @@ public class ValueAddedTax001Controller extends BaseController {
     private ValueAddedTax001Service valueAddedTax001Service;
     
     @Autowired
-    private BaseCommonMapper baseCommonMapper;
+    private IPlatformDate platformDateImpl;
+
+//    @Autowired
+//    private BaseCommonMapper baseCommonMapper;
     
     @Override
     public String init(Model model) {
@@ -69,7 +75,9 @@ public class ValueAddedTax001Controller extends BaseController {
 //        this.setSelectOptionToModel(model, DictCode.年份);
         this.setSelectOptionToModel(model, DictCode.申报日期);
         //当前系统平台日期
-        Date date = baseCommonMapper.getNowSysDate();
+//        Date date = baseCommonMapper.getNowSysDate();
+        Date date = platformDateImpl.getSysDate();
+
         if(date==null){
             date = new Date();
         }
@@ -176,12 +184,11 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
     public Page<ValueAddedTax001Dto> selectBalanceStatement()
-        throws Exception {
+         {
         Page<ValueAddedTax001Dto> page = valueAddedTax001Service.selectForPage(RequestUtil.getParameters(getRequest()));
         return page;
     }
@@ -189,23 +196,21 @@ public class ValueAddedTax001Controller extends BaseController {
     /**
      * 查询页面
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("selectSum")
     public Page<ValueAddedTax001Dto> selectSum()
-        throws Exception {
+         {
         return valueAddedTax001Service.selectSum(RequestUtil.getParameters(getRequest()));
     }
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> para= RequestUtil.getPageParam();
         List<ValueAddedTax001Dto> dtoList;

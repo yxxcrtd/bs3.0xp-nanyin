@@ -57,7 +57,8 @@ public class EtrRepoController {
      * @since 1.0
      */
     @PostMapping("findPage/{page}/{length}")
-    public Page<EtrRepoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    public Page<EtrRepoDto> selectForPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page, @PathVariable("length") int length)
+    {
         String assetType1 = (String)param.get("assetType1");
         if(StringUtil.isNotEmpty(assetType1)){
             param.put("assetType1List", StringUtil.split(assetType1, GlobalConstant.COMMA));
@@ -76,7 +77,7 @@ public class EtrRepoController {
      */
     @PostMapping("getentrustId")
     public List<SuggestDto> getentrustId(@RequestBody Map<String, Object> map)
-        throws Exception {
+    {
         List<SuggestDto> temp = etrRepoService.getentrustId(map);
         return temp;
     }

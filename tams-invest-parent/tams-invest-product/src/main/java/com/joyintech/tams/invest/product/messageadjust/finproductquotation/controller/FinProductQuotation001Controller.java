@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -87,12 +88,10 @@ public class FinProductQuotation001Controller extends BaseController {
      * 产品报价管理查询
      * 
      * @return Page<FinProductQuotation001Dto>
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductQuotation001Dto> selectForPage()
-        throws Exception {
+    public Page<FinProductQuotation001Dto> selectForPage(){
         Map<String, Object> param = RequestUtil.getParameters(getRequest());
         return finProductQuotation001Service.selectForPage(param);
     }
@@ -144,14 +143,13 @@ public class FinProductQuotation001Controller extends BaseController {
      * @param dto
      * @param br
      * @return AjaxResult
-     * @throws Exception
+     * @throws WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody FinProductQuotation001Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult delete(@RequestBody FinProductQuotation001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -182,12 +180,10 @@ public class FinProductQuotation001Controller extends BaseController {
      * 导出信息
      * 
      * @return ResponseEntity
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return finProductQuotation001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -195,7 +191,7 @@ public class FinProductQuotation001Controller extends BaseController {
     /**
      * 报价调整-发送销售接口状态
      *
-     * @param FinNetProductBonusSchemeDto
+     * @param dto
      * @return 发送结果
      * @see
      * @since 1.0

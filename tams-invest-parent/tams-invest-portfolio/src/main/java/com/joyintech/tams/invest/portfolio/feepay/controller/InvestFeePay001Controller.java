@@ -11,12 +11,14 @@
 package com.joyintech.tams.invest.portfolio.feepay.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -150,8 +152,7 @@ public class InvestFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getSecAcctId")
-    public List<SuggestDto> getSecAcctId(String param)
-        throws Exception {
+    public List<SuggestDto> getSecAcctId(String param) {
         List<SuggestDto> temp = investFeePay001Service.getSecAcctId(param);
         return temp;
     }
@@ -166,8 +167,7 @@ public class InvestFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getSecAcctIdS")
-    public Page<SelectOptionDto> getSecAcctIdS(@RequestParam(required = false) String search)
-        throws Exception {
+    public Page<SelectOptionDto> getSecAcctIdS(@RequestParam(required = false) String search) {
 
         //Map<String, Object> param1 = RequestUtil.getPageParam();
         List<SuggestDto> temp = investFeePay001Service.getSecAcctId(search);
@@ -279,7 +279,7 @@ public class InvestFeePay001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody InvestFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws Exception {
+    AjaxResult doRevoke(@RequestBody InvestFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws WorkFlowException {
 
         ProcessParameter<InvestFeePay002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<InvestFeePay002Dto> workFlowParameter = new WorkFlowParameter<>();
@@ -349,8 +349,7 @@ public class InvestFeePay001Controller extends BaseController {
         return investFeePay001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }*/
-    public ResponseEntity<byte[]> export()
-			throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
 		 String datas = this.getParam("datas");
 		 List<InvestFeePay001Dto> param1; 
 		 if (datas == null) {

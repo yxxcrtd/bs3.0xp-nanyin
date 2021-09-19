@@ -20,10 +20,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
@@ -51,6 +48,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
@@ -117,7 +115,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @RequestMapping("search")
     @ResponseBody
-    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params) throws Exception {
+    public Page<PayTheVatQuery002Dto> search(Map<String, Object> params){
         return payTheVatQuery002Service.search(RequestUtil.getPageParam());
     }
     
@@ -244,7 +242,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws Exception {
+    public AjaxResult check(@Valid @RequestBody  PayTheVatQuery002Dto dto, BindingResult br) throws IOException {
         if (br != null && br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -319,6 +317,11 @@ public class PayTheVatQuery002Controller extends BaseController{
         String channelId = (String)pageParam.get("channelId");
         String payTaxMDate = (String)pageParam.get("payTaxMDate");
         if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_产品增值税.getValue())){
+			//在参数中添加平台日期，方便查询中与平台日期进行对比,并添加了发行状态参数
+			String pltDate = DateUtil.format(DateUtil.platDateFromCache());
+			pageParam.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
+			pageParam.put("FINPROD_TYPE_TG_F16",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
+			pageParam.put("pltDate",pltDate);
             return payTheVatQuery001Service.selectPortfolioId(pageParam);  
         } else if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_通道增值税.getValue())
             && StringUtil.isNotEmpty(channelId) && StringUtil.isNotEmpty(payTaxMDate)){
@@ -333,7 +336,7 @@ public class PayTheVatQuery002Controller extends BaseController{
     @RequestMapping(value = "docommit", method = RequestMethod.POST)
     @ResponseBody
     public AjaxResult docommit(@RequestBody PayTheVatQuery002Dto dto,
-                               BindingResult result) throws Exception {
+                               BindingResult result) throws InvocationTargetException, IllegalAccessException {
     	String msg = getMessage("COMMON_I_0001");
     	for(PayTheVatQuery002TableDto tabledto : dto.getListpayTheVatQuery002TableDto()){
     		PayTheVatQuery002Dto payTheVatQuery002Dto = new PayTheVatQuery002Dto();
@@ -381,10 +384,11 @@ public class PayTheVatQuery002Controller extends BaseController{
     		payTheVatQuery002Dto.setListpayTheVatQuery002TableDto(new ArrayList<PayTheVatQuery002TableDto>());
     		payTheVatQuery002Dto.getListpayTheVatQuery002TableDto().add(tabledto);
     		Date payment1 =  DateUtil.parse(payTheVatQuery002Dto.getPayment1());
-    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
-    		String season = DateUtil.getSeason(payment1)+"";
-    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
-    		payTheVatQuery002Dto.setRemark(remark);
+			//重复添加remark备注信息，导致修改后的备注信息被覆盖。
+//    		String year = DateUtil.getYearStr(payTheVatQuery002Dto.getPayment1());
+//    		String season = DateUtil.getSeason(payment1)+"";
+//    		String remark = year+"年"+season+"季度销项税金结转金额:"+tabledto.getTaxTotal();
+//    		payTheVatQuery002Dto.setRemark(remark);
     		try {
     			msg = payTheVatQuery002Service.start(proParam, payTheVatQuery002Dto);
     		}
@@ -425,7 +429,7 @@ public class PayTheVatQuery002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("searchCurrency")
-    public List<String> searchCurrency(Map<String, Object> params) throws Exception {
+    public List<String> searchCurrency(Map<String, Object> params) {
     	
     	params.put("finprodMarketId", getParam("finprodMarketId"));
     	

@@ -20,6 +20,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -43,6 +45,10 @@ import com.joyintech.tams.invest.common.dto.xmlrelation.XmlRelationRecordDto;
  * @since 1.0
  */
 public class XmlRelationUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(XmlRelationUtil.class);
 
     /**
      * root
@@ -289,19 +295,19 @@ public class XmlRelationUtil {
                 CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
             }
             catch (ParserConfigurationException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             catch (SAXException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }finally {
                 if (xmlFileInStream != null){
                     try {
                         xmlFileInStream.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -522,7 +528,6 @@ public class XmlRelationUtil {
 //                        field.set(para, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
 //                    }
 //                }
 //                else {
@@ -532,7 +537,6 @@ public class XmlRelationUtil {
 //                        field.set(result, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
 //                    }
 //                }
             }
@@ -564,7 +568,6 @@ public class XmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
     // }
     // finally {
     // if (fis != null) {
@@ -572,7 +575,6 @@ public class XmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
     // }
     // }
     // }
@@ -591,7 +593,6 @@ public class XmlRelationUtil {
         // fileWriter.close();
         // }
         // catch (IOException e) {
-        // e.printStackTrace();
         // }
 
     }

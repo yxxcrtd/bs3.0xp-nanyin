@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -149,8 +150,7 @@ public class FinAssetRateAdj001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinAssetRateAdjDto> selectAll()
-        throws Exception {
+    public Page<FinAssetRateAdjDto> selectAll(){
         Page<FinAssetRateAdjDto> page = finAssetRateAdj001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -202,8 +202,7 @@ public class FinAssetRateAdj001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinAssetRateAdjDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinAssetRateAdjDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -12,6 +12,7 @@ import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.dto
 import com.joyintech.tams.invest.product.productplanning.assetplannewsdefend.service.AssetPlanNewsDefend002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,8 +104,7 @@ public class AssetPlanNewsDefend002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/save")
-    public AjaxResult save(@RequestBody AssetPlanNewsDefend002Dto dto,BindingResult br)
-            throws Exception{
+    public AjaxResult save(@RequestBody AssetPlanNewsDefend002Dto dto,BindingResult br) throws WorkFlowException {
 
         //资产规划编号生成
         if(StringUtil.isEmpty(dto.getAssetPlanCode())){

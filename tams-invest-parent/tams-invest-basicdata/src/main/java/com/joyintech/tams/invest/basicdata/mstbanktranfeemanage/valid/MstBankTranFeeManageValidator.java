@@ -25,6 +25,8 @@ import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.dto.MstBankTranF
 import com.joyintech.tams.invest.basicdata.mstbanktranfeemanage.service.MstBankTranFeeManageService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +46,10 @@ import java.util.Map;
  */
 @Component
 public class MstBankTranFeeManageValidator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MstBankTranFeeManageValidator.class);
 
     /**
      * mstBankTranFeeManageService
@@ -227,7 +233,7 @@ public class MstBankTranFeeManageValidator implements BeanValidator {
                                 }
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            logger.error(e.getMessage(),e);
                         }
                     }
                 }

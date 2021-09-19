@@ -2,51 +2,59 @@ package com.joyintech.tams.disclosure.busicommon.jixu.framework.report.scriptlet
 
 import net.sf.jasperreports.engine.JRDefaultScriptlet;
 import net.sf.jasperreports.engine.JRScriptletException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class MyScriptlet extends JRDefaultScriptlet
 {
 
-
+	private static final Logger logger = LoggerFactory.getLogger(MyScriptlet.class);
 	@Override
 	public void beforeReportInit() throws JRScriptletException
 	{
-		System.out.println("call beforeReportInit");
+//		System.out.println("call beforeReportInit");
+		logger.info("call beforeReportInit");
 	}
 
 
 	@Override
 	public void afterReportInit() throws JRScriptletException
 	{
-		System.out.println("call afterReportInit");
+//		System.out.println("call afterReportInit");
+		logger.info("call afterReportInit");
 	}
 
 
 	@Override
 	public void beforePageInit() throws JRScriptletException
 	{
-		System.out.println("call   beforePageInit : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
+//		System.out.println("call   beforePageInit : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
+		logger.info("call   beforePageInit : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
 	}
 
 
 	@Override
 	public void afterPageInit() throws JRScriptletException
 	{
-		System.out.println("call   afterPageInit  : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
+//		System.out.println("call   afterPageInit  : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
+		logger.info("call   afterPageInit  : PAGE_NUMBER = " + this.getVariableValue("PAGE_NUMBER"));
 	}
 
 
 	@Override
 	public void beforeColumnInit() throws JRScriptletException
 	{
-		System.out.println("call     beforeColumnInit");
+//		System.out.println("call     beforeColumnInit");
+		logger.info("call     beforeColumnInit");
 	}
 
 
 	@Override
 	public void afterColumnInit() throws JRScriptletException
 	{
-		System.out.println("call     afterColumnInit");
+//		System.out.println("call     afterColumnInit");
+		logger.info("call     afterColumnInit");
 	}
 
 
@@ -55,7 +63,8 @@ public class MyScriptlet extends JRDefaultScriptlet
 	{
 		if (groupName.equals("CityGroup"))
 		{
-			System.out.println("call       beforeGroupInit : City = " + this.getFieldValue("City"));
+//			System.out.println("call       beforeGroupInit : City = " + this.getFieldValue("City"));
+			logger.info("call       beforeGroupInit : City = " + this.getFieldValue("City"));
 		}
 	}
 
@@ -65,7 +74,8 @@ public class MyScriptlet extends JRDefaultScriptlet
 	{
 		if (groupName.equals("CityGroup"))
 		{
-			System.out.println("call       afterGroupInit  : City = " + this.getFieldValue("City"));
+//			System.out.println("call       afterGroupInit  : City = " + this.getFieldValue("City"));
+			logger.info("call       afterGroupInit  : City = " + this.getFieldValue("City"));
 		
 			String allCities = (String)this.getVariableValue("AllCities");
 			String city = (String)this.getFieldValue("City");
@@ -86,7 +96,8 @@ public class MyScriptlet extends JRDefaultScriptlet
 	@Override
 	public void beforeDetailEval() throws JRScriptletException
 	{
-		System.out.println("        detail");
+//		System.out.println("        detail");
+		logger.info("        detail");
 	}
 
 

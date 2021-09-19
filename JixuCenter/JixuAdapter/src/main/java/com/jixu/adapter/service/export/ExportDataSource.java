@@ -36,7 +36,7 @@ public class ExportDataSource implements InitializingBean, ApplicationContextAwa
 	private HashMap<Integer, WriteDataFile> writeFileBeanHM;
     
     
-	public void afterPropertiesSet() throws Exception {
+	public void afterPropertiesSet() {
 		logger.info("开始初始化输出数据源...");
 		Map<String, ExportDataService> dataSources = applicationContext.getBeansOfType(ExportDataService.class);
 		//descriptionMap=new HashMap<Integer, String>();
@@ -84,11 +84,9 @@ public class ExportDataSource implements InitializingBean, ApplicationContextAwa
 			
 			for (Field field:fields) {  
 				FieldMeta meta=field.getAnnotation(FieldMeta.class);
-				try{
-					fieldNum++;
+				fieldNum++;
+				if(meta != null){
 					fieldsHM.put(fieldNum, meta.desc());
-				}catch(NullPointerException npe){
-					continue;
 				}
 			}
 		}

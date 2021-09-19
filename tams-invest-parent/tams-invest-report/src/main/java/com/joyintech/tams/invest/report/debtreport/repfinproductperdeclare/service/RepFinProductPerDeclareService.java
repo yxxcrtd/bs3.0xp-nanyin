@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -66,7 +67,11 @@ import freemarker.template.Template;
  */
 @Service
 public class RepFinProductPerDeclareService extends CommonExportService<RepFinProductPerDeclareDto>{
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RepFinProductPerDeclareService.class);
+
     /**
      * 理财产品排期
      */
@@ -129,7 +134,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 selectParam, RepFinProductPerDeclareDto.class);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -143,7 +148,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
      * @see
      * @since 1.0
      */
-    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws Exception {
+    public ResponseEntity<byte[]> createDeclaration(Map<String, Object> param) throws IOException {
         RepFinProductPerDeclareDto temp = JsonUtils.json2Object((String)param.get("dtoStr"),RepFinProductPerDeclareDto.class);
         List<RepFinProductPerDeclareDto> selectedItem = temp.getSelectedItem();
         //申报附件方案
@@ -166,6 +171,7 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 SysUploadFileInfo.class);
             //
             Writer w = null;
+            FileOutputStream fos = null;
             try {
                 // 创建配置
                 Configuration configuration = new Configuration(Configuration.getVersion());
@@ -257,7 +263,8 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     if (ftlName != null) {
                         Template template = configuration.getTemplate(ftlName, "UTF-8");
                         File f = new SafelyFile(exportPath+"/"+ftlName);
-                        w = new OutputStreamWriter(new FileOutputStream(f), "utf-8");
+                        fos = new FileOutputStream(f);
+                        w = new OutputStreamWriter(fos, "utf-8");
                         template.process(dataMap, w);
                         arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
                     }
@@ -265,14 +272,18 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                 else{
                 	BufferedInputStream bis =null;
                 	OutputStream os=null;
+                    FileInputStream fis = null;
                     try {
-						bis = new BufferedInputStream(new FileInputStream(new SafelyFile(templetFileFullPath)));
-						byte[] bytes = new byte[bis.available()];
-						os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
-						bis.read(bytes);
-						os.write(bytes);
-						bis.close();
-						os.close();
+                        fis = new FileInputStream(new SafelyFile(templetFileFullPath));
+						bis = new BufferedInputStream(fis);
+                        if(bis!=null) {
+						    byte[] bytes = new byte[bis.available()];
+						    os = new FileOutputStream(new SafelyFile(exportPath+"/"+ftlName));
+                            bis.read(bytes);
+                            os.write(bytes);
+                            bis.close();
+                            os.close();
+                        }
 						arrFileTemp.add(new SafelyFile(exportPath+"/"+ftlName));
 					} finally {
 	                    if (bis != null) {
@@ -281,12 +292,15 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
 	                    if (os != null) {
 	                    	os.close();
 	                    }
+	                    if (fis != null){
+                            fis.close();
 					}
+                }
                 }
                 
             }
             catch (Exception e) {
-            	e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             finally {
                 // 关闭流
@@ -294,9 +308,11 @@ public class RepFinProductPerDeclareService extends CommonExportService<RepFinPr
                     if (w != null) {
                         w.close();
                     }
+                    if (fos != null){
+                       fos.close();
+                }
                 }
                 catch (IOException ex) {
-                    // Logger.getLogger(Java2Word.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }

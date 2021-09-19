@@ -60,7 +60,7 @@
 							data-th-text="#{BussRepFinProductInfo.repFinProdBrand}">产品品牌</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="repFinprodBrand" th:name="repFinprodBrand"
-								  maxlength="6"
+								  maxlength="120"
 								data-th-value="${entity?.repFinprodBrand}" class="layui-input form-input" />
 						</div>
 					</div>
@@ -72,7 +72,7 @@
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="repFinprodStage" th:name="repFinprodStage"
 								class="layui-input form-input text-number"
-								data-th-value="${entity?.repFinprodStage}" data-textrange="0" maxlength="5"
+								data-th-value="${entity?.repFinprodStage}" data-textrange="0" maxlength="6"
 								data-th-required="true" />
 						</div>
 					</div>
@@ -359,8 +359,11 @@
 							   data-th-text="#{BussRepFinProductInfo.shortTerm}">最短持有期限(天)</label>
 						<div class="layui-input-inline input-inline">
 							<input type="text" th:id="shortTerm" th:name="shortTerm"
-								   class="layui-input form-input text-number" maxlength="5"
-								   data-th-value="${entity?.shortTerm}" placeholder="请输入" />
+								   class="layui-input form-input text-number"
+								   data-th-value="${entity?.shortTerm}" data-textrange="0" maxlength="5"
+								   onkeyup="this.value=this.value.replace(/\D/g,'')"
+								   onafterpaste="this.value=this.value.replace(/\D/g,'')"
+							/>
 						</div>
 					</div>
 					<div class="form-inline-wrap">

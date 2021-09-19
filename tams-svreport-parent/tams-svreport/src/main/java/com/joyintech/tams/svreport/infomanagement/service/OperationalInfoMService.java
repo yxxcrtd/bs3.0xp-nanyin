@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.file.SafelyFile;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -147,7 +148,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 	/**
 	 * 根据前台传入的条件动态查询结果
 	 * 
-	 * @param map 前台条件组成的map
+	 * @param param 前台条件组成的map
 	 * @return 动态结果
 	 */
 	@SuppressWarnings("unchecked")
@@ -308,14 +309,24 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 		 XSSFWorkbook xssfWorkBook = null;
 		 // 获取导入表名
 		 String tableName = null;
+		 FileInputStream fis = null;
 		 try {
-			 xssfWorkBook = new XSSFWorkbook(new FileInputStream(file));
+		 	fis =  new FileInputStream(file);
+		 	xssfWorkBook = new XSSFWorkbook(fis);
 			 XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
 			 tableName = xssfSheet.getSheetName();
 		 } catch (FileNotFoundException e1) {
 			 logger.error(e1.getMessage(),e1);
 		 } catch (IOException e1) {
 			 logger.error(e1.getMessage(),e1);
+		 }finally {
+		 	if (fis != null){
+				try {
+					fis.close();
+				} catch (IOException e) {
+					throw new BusinessException(e);
+				}
+			}
 		 }
 
 		 try {
@@ -331,7 +342,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //			 }
 
 		 } catch (FileNotFoundException e) {
-			 e.printStackTrace();
+			 logger.error(e.getMessage(),e);
 		 }
 		 param.put("tableName", tableName);
 		 param.put("dataList", dataList);
@@ -356,14 +367,15 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 					FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 		} catch (FileNotFoundException e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		}
 //		File file = new SafelyFile(fileName);
 		XSSFWorkbook xssfWorkBook = null;
 		// 获取导入表名
 		String tableName = null;
+		FileInputStream fis = null;
 		try {
-			xssfWorkBook = new XSSFWorkbook(new FileInputStream(new SafelyFile(fileName)));
+			fis = new FileInputStream(new SafelyFile(fileName));
+			xssfWorkBook = new XSSFWorkbook(fis);
 			XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
 			tableName = xssfSheet.getSheetName();
 		} catch (FileNotFoundException e1) {
@@ -371,14 +383,17 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 		} catch (IOException e1) {
 			logger.error(e1.getMessage(),e1);
 		}finally {
-			if(xssfWorkBook != null){
 				try {
+			if(xssfWorkBook != null){
 					xssfWorkBook.close();
+					}
+					if (fis != null){
+						fis.close();
+					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
-		}
 		try {
 		    int headerNum = operationalInfo001Service.selectHeaderNumByChiName(tableName);
 //			if (CHB_ASSET_INFO_CN.equals(tableName)) {
@@ -391,7 +406,7 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 //						FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
 //			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		param.put("userName", CommonUtil.getUserName());
 		param.put("tableName", tableName);
@@ -416,12 +431,14 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
                 FileNameUtil.getUploadFilePath(fileName), null, null, 0, 0, 0);
         } catch (FileNotFoundException e) {
         	logger.error(e.getMessage(),e);
-        	e.printStackTrace();
         }
         File file = new SafelyFile(fileName);
 		// 获取导入表名
 		String tableId = null;
-		try(XSSFWorkbook xssfWorkBook = new XSSFWorkbook(new FileInputStream(file))) {
+		FileInputStream fis = null;
+			try {
+			fis = new FileInputStream(file);
+			XSSFWorkbook xssfWorkBook = new XSSFWorkbook(fis);
 			try {
 				XSSFSheet xssfSheet = xssfWorkBook.getSheetAt(0);
 				tableId = xssfSheet.getSheetName();
@@ -429,6 +446,9 @@ public class OperationalInfoMService extends BaseService<FilterInformationDto>{
 				if (xssfWorkBook != null){
 					xssfWorkBook.close();
 				}
+				if (fis != null){
+					fis.close();
+			}
 			}
 		} catch (FileNotFoundException e1) {
 			logger.error(e1.getMessage(),e1);

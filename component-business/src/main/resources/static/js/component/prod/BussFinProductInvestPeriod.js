@@ -27,9 +27,10 @@
         loadonce: true,
         checkbox:false,
         page: false,
+		rowno: true,
         height : 200,
         cols:[
-            {field:'sn',width:300, title: 'BussFinProductInvestPeriod.sn', edit:false, sortable: false}
+            {field:'sn', title: 'BussFinProductInvestPeriod.sn', edit:false, sortable: false ,visible:false}
               ,{field:'investDays',title: 'BussFinProductInvestPeriod.investDays', sortable: false}
               ,{field:'operation', title: 'SysCommon.operation',type:'action', buttons: ['delt']}
           ],
@@ -86,7 +87,7 @@
 	 */
 	bussFinProductInvestPeriodTable.bind('click', '.delt', function(data, index) {
 		bussFinProductInvestPeriodTable.removeRow(data);
-		tableDataChange();
+		// tableDataChange();
 	});
 	var cleanTable=function(){
 		bussFinProductInvestPeriodTable.reload({ajax:null, url: null, data:[]});

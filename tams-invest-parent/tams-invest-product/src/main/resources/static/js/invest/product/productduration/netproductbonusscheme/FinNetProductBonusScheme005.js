@@ -26,8 +26,9 @@
         if(pageModel == PAGE_MODEL_NEW){
         	//确认日默认除权日+1天
         	var delDate = $('#delDate').val();
-//        	var confirmDate = Date.ofDate(delDate).DateAdd('d', 1).format('yyyy-MM-dd'); 
-            $('#confirmDate').val(iPlatformDate);
+        	var confirmDate = Date.ofDate(delDate).DateAdd('d', 1).format('yyyy-MM-dd');
+           // $('#confirmDate').val(iPlatformDate);
+           $('#confirmDate').val(confirmDate);
             
             $('#vluRefDate').val(Date.ofDate(delDate).format('yyyy-MM-dd')).trigger("change");
             

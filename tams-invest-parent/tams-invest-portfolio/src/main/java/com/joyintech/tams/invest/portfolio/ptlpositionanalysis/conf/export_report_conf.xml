@@ -68,7 +68,10 @@
             <Cell order="64" name="持仓占债券资产规模比%">positionBondIssuance</Cell>
             <Cell order="65" name="持仓占总股本比%">sSharesPercentage</Cell>
             <Cell order="66" name="持仓占流通股本比%">cSharesPercentage</Cell>
-            <Cell order="67" name="机构名称">belongInstitutionNameNew</Cell>
+            <Cell order="67" name="基点价值">dv01</Cell>
+            <Cell order="68" name="浮盈浮亏">floatIngplAdd</Cell>
+            <Cell order="69" name="浮盈浮亏（单价）">floatIngplAddPrice</Cell>
+            <Cell order="70" name="机构名称">belongInstitutionNameNew</Cell>
         </Row>
     </Worksheet>
 </Workbook>

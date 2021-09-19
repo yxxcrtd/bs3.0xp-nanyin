@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -97,13 +98,13 @@ public class PtlManualRelease002Controller extends BaseController{
 	 *
 	 * @param dto
 	 * @return
-	 * @throws Exception
+	 * @throws WorkFlowException
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping("save")
 	@ResponseBody
-	public AjaxResult save(@RequestBody PtlManualRelease001Dto dto, BindingResult br) throws Exception {
+	public AjaxResult save(@RequestBody PtlManualRelease001Dto dto, BindingResult br) throws WorkFlowException {
 		ProcessParameter<PtlManualRelease001Dto> processParameter = new ProcessParameter<PtlManualRelease001Dto>();
 		WorkFlowParameter<PtlManualRelease001Dto> params = new WorkFlowParameter<PtlManualRelease001Dto>();
 		params.setElementId(dto.getElementId());
@@ -127,8 +128,7 @@ public class PtlManualRelease002Controller extends BaseController{
 	
 	 @ResponseBody
 	 @RequestMapping("/findPageRepInfo")
-	 public Page<PtlManualRelease001Dto> findPageRepInfo()
-	        throws Exception {
+	 public Page<PtlManualRelease001Dto> findPageRepInfo(){
 	        return ptlManualRelease002Service.findPageRepInfo(RequestUtil.getParameters(getRequest()));
 	 }
 }

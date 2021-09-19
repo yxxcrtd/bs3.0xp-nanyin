@@ -60,7 +60,7 @@ public class CeAssetPositionManagementController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<CeAssetPositionManagement001Dto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return ceAssetPositionManagementService.selectForPage(page, length, param);
     }
     

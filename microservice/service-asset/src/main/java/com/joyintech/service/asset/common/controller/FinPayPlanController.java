@@ -49,7 +49,7 @@ public class FinPayPlanController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinPayPlanDto dto) throws Exception {
+    public void insert(@RequestBody FinPayPlanDto dto) {
         finPayPlanService.insert(dto);
     }
     
@@ -62,7 +62,7 @@ public class FinPayPlanController {
      * @since 1.0
      */
     @PostMapping("getBasicInfo")
-    public FinPayPlanDto getBasicInfo(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public FinPayPlanDto getBasicInfo(@RequestBody Map<String,Object> paramMap) {
         return finPayPlanService.getBasicInfo(paramMap);
     }
     
@@ -75,7 +75,7 @@ public class FinPayPlanController {
      * @since 1.0
      */
     @PostMapping("isNotIng")
-    public boolean isNotIng(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public boolean isNotIng(@RequestBody Map<String,Object> paramMap) {
         return finPayPlanService.isNotIng(paramMap);
     }
 }

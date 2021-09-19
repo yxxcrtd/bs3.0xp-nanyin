@@ -44,7 +44,7 @@ public class LocalhostService {
      */
     public ValRecvFileEntity doRecv(ValRecvServerInfoEntity entity,
                                     List<ValInterfTemplate> tempList)
-        throws Exception {
+         {
         ValRecvFileEntity retEntity = new ValRecvFileEntity();
         String localDir = entity.getLocalPath() + File.separator + entity.getSystemID()
                           + File.separator
@@ -131,7 +131,7 @@ public class LocalhostService {
         try {
             delAllFile(folderPath); // 删除完里面所有内容
             String filePath = folderPath;
-            filePath = filePath.toString();
+            //filePath = filePath;
             File myFilePath = new File(filePath);
             boolean rec= myFilePath.delete(); // 删除空文件夹
             if(rec){

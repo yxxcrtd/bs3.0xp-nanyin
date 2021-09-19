@@ -51,6 +51,8 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -63,6 +65,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTradeDto> implements BaseProcessService<TrdLendInvestTradeDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdLendInvestTrade002Service.class);
 
     @Autowired(required = false)
     private BussTrdTransferOrderService bussTrdTransferOrderService;
@@ -323,7 +329,7 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
         dto.getFinTradeProduct().setIntRate(
             ArithmeticUtil.divide(dto.getFinTradeProduct().getIntRate(), BigDecimal.valueOf(100))); // 固定利率
         // 本金收益特征 = 拆出：保本，拆入不存
-        if (DictCodeList.回购拆借方向_拆出.getValue().equals(dto.getPs())) {
+        if (DictCodeList.回购拆借方向_拆出.getValue().equals(dto.getBusiPs())) {
             // ※若画面联动1.7查询出的组合为保本
             dto.getFinTradeProduct().setCapiIncomeFeature(DictCodeListExt1.本金收益特征_保本.getValue());
         }
@@ -1463,7 +1469,7 @@ public class TrdLendInvestTrade002Service extends BaseService<TrdLendInvestTrade
                     interfComponentService.sendMurexRequest(OrderCaller.LNBR001, sendData);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

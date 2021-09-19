@@ -109,7 +109,8 @@ public class EtrWtFxswapService extends BaseService<EtrWtFxswapDto>{
      * @see
      * @since 1.0
      */
-    public Page<EtrWtFxswapDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrWtFxswapDto> selectForPage(int page, int length, Map<String, Object> param)
+    {
         param.put("F13", DictCodeListExt1.金融产品类型_投管用_掉期.getValue());
         return queryForPage(page, length, () -> etrWtFxswapMapper.selectForPage(param));
     }

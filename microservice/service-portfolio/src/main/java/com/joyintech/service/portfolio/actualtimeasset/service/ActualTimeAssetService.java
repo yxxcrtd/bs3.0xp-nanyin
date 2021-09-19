@@ -79,7 +79,7 @@ public class ActualTimeAssetService extends BaseService<ActualTimeAssetDto> {
      * @throws Exception 异常信息
      */
     public Page<ActualTimeAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         //组合持仓类型
         // modify by jiangpeng on 20210526 ZGBSSE-418 计划类净值型提交时没有可用持仓
         List<String> hodingTypeList = Arrays.asList(DictCodeList.持仓类型_实际.getValue(), DictCodeList.持仓类型_在途.getValue(),

@@ -2,6 +2,8 @@ package com.joyintech.tams.invest.trade.project.controller;
 
 import static com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service.genBizCode;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import com.joyintech.tams.common.base.entity.*;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -294,9 +297,28 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
         
         if(null != dto && null != dto.getBussTrdTransfenpeiDto() && dto.getBussTrdTransfenpeiDto().size() > 0){
         	BigDecimal total = BigDecimal.ZERO;
-        	for(BussTrdTransfenpeiDto fenpei : dto.getBussTrdTransfenpeiDto()){
-        		total = total.add(fenpei.getPrinAmt());
-        	}
+        	for(BussTrdTransfenpeiDto fenpei : dto.getBussTrdTransfenpeiDto()) {
+                total = total.add(fenpei.getPrinAmt());
+
+                String confirmMsg = "";
+                String changeLineMark = "<br/>";
+                if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue())) {
+                    //交易金额check
+                    if (fenpei.getTradeAmt() != null && fenpei.getBussTrdAvailableCashQueryavalibleCash() != null
+                            && StringUtil.isEmpty(dto.getWorkflowId())
+                            && fenpei.getTradeAmt().compareTo(fenpei.getBussTrdAvailableCashQueryavalibleCash()) == 1) {
+                        if (StringUtil.isNotBlank(confirmMsg)) {
+                            confirmMsg += changeLineMark;
+                        }
+                        confirmMsg += this.getMessage("TRD_C_0002");
+                    }
+                }
+                if (StringUtil.isNotBlank(confirmMsg)) {
+                    AjaxResult wr = new AjaxResult();
+                    wr.setData(confirmMsg);
+                    return wr;
+                }
+            }
         	if(total.compareTo(dto.getPrinAmt()) != 0){
                     AjaxResult res= new AjaxResult();
                     res.setMessage("金额信息中的本金金额不等于各组合的本金金额之和！", MessageType.错误消息);
@@ -369,7 +391,7 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
 	 */
 	@RequestMapping("save")
 	@ResponseBody
-	AjaxResult save(@RequestBody TrdProjectInvestTrade002Dto dto) throws Exception {
+	AjaxResult save(@RequestBody TrdProjectInvestTrade002Dto dto) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
 		List<TrdProjectInvestTrade002Dto> dtoList = new ArrayList<>();
 		List<BussTrdTransfenpeiDto> fenpeiList = dto.getBussTrdTransfenpeiDto();// 组合分配
 		List<BussTrdTransferOrderDto> orderList = dto.getBussTrdTransferOrder();// 划款指令

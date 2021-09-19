@@ -80,7 +80,7 @@ public class FinProductOpenPlanAdjust001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinProductOpenPlanAdjustDto> selectForPage() throws Exception{
+    public Page<FinProductOpenPlanAdjustDto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finProductOpenPlanAdjustService.selectForPage(param);
     }
@@ -94,8 +94,7 @@ public class FinProductOpenPlanAdjust001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductOpenPlanAdjustService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

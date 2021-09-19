@@ -38,6 +38,7 @@ import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdBondInvestTradeDto> findPage()
-        throws Exception {
+         {
         return trdBondInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -151,7 +152,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return trdBondInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -253,8 +254,7 @@ public class TrdBondInvestTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdBondInvestTradeDto inputDto)
-        throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdBondInvestTradeDto inputDto) throws WorkFlowException {
         String operateType = inputDto.getOperateType();
         String totleTradeId = inputDto.getTotleTradeId();
         inputDto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTotleTradeId());

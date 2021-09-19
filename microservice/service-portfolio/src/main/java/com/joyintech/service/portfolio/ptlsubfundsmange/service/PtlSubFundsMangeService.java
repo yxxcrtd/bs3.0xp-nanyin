@@ -79,7 +79,7 @@ public class PtlSubFundsMangeService extends BaseService<PtlSingleIssuerPosition
      * @see
      * @since 1.0
      */
-    public List<PtlSubFundsMangeDto> findPage(Map<String, Object> params) throws Exception {
+    public List<PtlSubFundsMangeDto> findPage(Map<String, Object> params) {
         String finprodId = (String) params.get("prodId");
         String[] finprodIdArr = null;
         if (StringUtil.isNotEmpty(finprodId)) {
@@ -197,7 +197,7 @@ public class PtlSubFundsMangeService extends BaseService<PtlSingleIssuerPosition
      * @see
      * @since 1.0
      */
-    public List<PtlSubFundsMangeDto> findPageList(Map<String, Object> params) throws Exception {
+    public List<PtlSubFundsMangeDto> findPageList(Map<String, Object> params) {
         String finprodId = (String) params.get("prodId");
         String[] finprodIdArr = null;
         if (StringUtil.isNotEmpty(finprodId)) {

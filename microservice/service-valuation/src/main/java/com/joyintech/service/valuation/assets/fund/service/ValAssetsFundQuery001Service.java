@@ -57,8 +57,7 @@ public class ValAssetsFundQuery001Service extends CommonExportService<ValAssetsF
      * @see
      * @since 1.0
      */
-    public Page<ValAssetsFundQuery001Dto> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValAssetsFundQuery001Dto> findPage(int page, int length, Map<String, Object> params){
         params.put("finprodType", "F06");// 仅查询基金型资产信息
         return super.queryForPageForSelectReturn(page, length, () -> valAssetsFundQuery001Mapper.selectList(params));
     }

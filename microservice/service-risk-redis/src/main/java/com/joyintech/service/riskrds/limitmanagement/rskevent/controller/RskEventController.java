@@ -50,7 +50,7 @@ public class RskEventController {
     public Page<RskEvent001Dto> selectAll(@RequestBody Map<String, Object> param,
                                           @PathVariable("page") int page,
                                           @PathVariable("length") int length)
-        throws Exception {
+    {
         return rskEventService.selectForPage(page, length, param);
     }
 
@@ -67,13 +67,13 @@ public class RskEventController {
     public Page<SelectOptionDto> selectMultiOptionEvent(@RequestBody Map<String, Object> param,
                                                         @PathVariable("page") int page,
                                                         @PathVariable("length") int length)
-        throws Exception {
+    {
         return rskEventService.selectMultiOptionEvent(page, length, param);
     }
 
     @PostMapping("selectRskEventList")
     public List<RskEvent> selectRskEventList(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String eventName = "";
         if (null != param.get("eventName")) {
             eventName = String.valueOf(param.get("eventName"));
@@ -90,7 +90,7 @@ public class RskEventController {
      */
     @PostMapping("selectByEventCode")
     public RskEvent selectByPrimaryKey(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String eventCode = "";
         if (null != param.get("eventCode")) {
             eventCode = String.valueOf(param.get("eventCode"));
@@ -100,7 +100,7 @@ public class RskEventController {
 
     @PostMapping("selectByEventNameNotEqCode")
     public List<RskEvent> selectRskEventListNotSelf(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String eventName = "";
         String eventCode = "";
         if (null != param.get("eventName")) {
@@ -121,7 +121,7 @@ public class RskEventController {
      */
     @PostMapping("selectEventDetailInfoByCode")
     public RskEvent002Dto selectEventDetailInfoByCode(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String eventCode = "";
         if (null != param.get("eventCode")) {
             eventCode = String.valueOf(param.get("eventCode"));
@@ -140,7 +140,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("insert")
     public void insert(@RequestBody RskEvent002Dto dto)
-        throws Exception {
+    {
         rskEventService.insert(dto);
     }
 
@@ -155,7 +155,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("update")
     public void update(@RequestBody RskEvent002Dto dto)
-        throws Exception {
+    {
         rskEventService.update(dto);
     }
 
@@ -170,7 +170,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("delete")
     public void delete(@RequestBody RskEvent002Dto dto)
-        throws Exception {
+    {
         rskEventService.delete(dto);
     }
 
@@ -183,7 +183,7 @@ public class RskEventController {
      */
     @PostMapping("selectEventRelParaByCode")
     public RskEvent003Dto selectEventRelParaByCode(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String eventCode = "";
         if (null != param.get("eventCode")) {
             eventCode = String.valueOf(param.get("eventCode"));
@@ -202,7 +202,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("insertRelPara")
     public void insertRelPara(@RequestBody RskEvent003Dto dto)
-        throws Exception {
+    {
         rskEventService.insertRelPara(dto);
     }
 
@@ -217,7 +217,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("updateRelPara")
     public void updateRelPara(@RequestBody RskEvent003Dto dto)
-        throws Exception {
+    {
         rskEventService.updateRelPara(dto);
     }
 
@@ -232,7 +232,7 @@ public class RskEventController {
     @DTXTransaction
     @PostMapping("deleteRelPara")
     public void deleteRelPara(@RequestBody RskEvent003Dto dto)
-        throws Exception {
+    {
         rskEventService.deleteRelPara(dto);
     }
     @GetMapping("isExistEventCode")

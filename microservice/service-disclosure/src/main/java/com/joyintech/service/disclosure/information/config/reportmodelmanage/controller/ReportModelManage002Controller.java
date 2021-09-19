@@ -182,17 +182,17 @@ public class ReportModelManage002Controller extends BaseController {
 	 
 	 
 	 @PostMapping("selectRepIdAndUri")
-	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public int selectRepIdAndUri(@RequestBody ReportModelManage002Dto dto) {
 		 return reportModelManage002Service.selectRepIdAndUri(dto);
 	    }
 	 
 	 @PostMapping("insert")
-	    public void insert(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void insert(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.insert(dto);
 	    }
 	 
 	 @PostMapping("update")
-	    public void update(@RequestBody ReportModelManage002Dto dto) throws Exception {
+	    public void update(@RequestBody ReportModelManage002Dto dto) {
 		 reportModelManage002Service.update(dto);
 	    }
 		
@@ -210,8 +210,7 @@ public class ReportModelManage002Controller extends BaseController {
 		 */
 		@RequestMapping(value = "/uploadFile")
 		@ResponseBody
-		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-				throws Exception {
+		public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws IOException {
 			 AjaxResult res = new AjaxResult();
 //			 if(request.getParameter("size")>1048576){}
 			 if(StringUtil.isEmpty(this.getParam("folder"))){
@@ -255,13 +254,14 @@ public class ReportModelManage002Controller extends BaseController {
 			 if(filepath.exists()&&filepath.isDirectory()){
 				 //获取已经下载的文件，并且转化为文件流
 				 File uploadfile = new SafelyFile(this.getParam("fileName"));///home/tamsuser/upload/.txt
-				 FileInputStream fis = new FileInputStream(uploadfile);
+				 FileInputStream fis = null;
 				 //要存放的文件名称，并且用输出流降读取的文件流内容输出
 
 				 FileOutputStream fos = null;
 				 BufferedInputStream bis = null;
 				 BufferedOutputStream bos = null;
 			  try {
+				  fis = new FileInputStream(uploadfile);
 				  File downFile = new SafelyFile(uploadFilePath+this.getParam("folder")+"/"+this.getParam("uploadFileName"));
 				   fos= new FileOutputStream(downFile);
 				   bis=new BufferedInputStream(fis);
@@ -272,7 +272,7 @@ public class ReportModelManage002Controller extends BaseController {
 				  }
 			  }catch (Exception e)
 			  {
-			  	e.printStackTrace();
+				  logger.error(e.getMessage(),e);
 			  }
 			  finally {
 			  	if(fos!=null)
@@ -289,14 +289,11 @@ public class ReportModelManage002Controller extends BaseController {
 				{
 					bos.close();
 				}
+				if (fis != null){
+					fis.close();
+				}
 			  }
-
-				 
 		 }
-//			 
-			
-			
-			 
 				return res;
 		}
 		

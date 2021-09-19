@@ -136,7 +136,7 @@ public class BussFinProductSaleParamDto extends PrdSaleParam {
     }
     
     @Override
-    @Amount(fieldName = "BussFinProductSaleParam.raiseAmtPlan", maxIntBit = 13)
+    @Amount(fieldName = "BussFinProductSaleParam.raiseAmtPlan", maxIntBit = 16,maxDecBit = 2)
     public BigDecimal getRaiseAmtPlan() {
         return super.getRaiseAmtPlan();
     }

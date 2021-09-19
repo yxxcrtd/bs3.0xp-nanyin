@@ -66,8 +66,7 @@ public abstract class WindService<E> extends InterfBaseService {
      * @see
      * @since 1.0
      */
-    public abstract int insert(E entity)
-        throws Exception;
+    public abstract int insert(E entity);
 
     /**
      * 执行入口

@@ -49,7 +49,7 @@ public class MstCaptialAccountController {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<MstCaptialAccountDto> selectForPage(@RequestBody Map<String, Object> pageParam,@PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstCaptialAccountService.selectForPage(page,length,pageParam);
     }
     /**

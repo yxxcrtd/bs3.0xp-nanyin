@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceorg.dto.CreditMstInfoDt
 import com.joyintech.tams.invest.risk.creditmanagement.ceorg.service.CeOrg002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,7 +117,7 @@ public class CeOrg002Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("/getAllCeOrgQuote")
     public List<TreeNode> getAllCeOrgQuote(@RequestParam(name="type", required=false) String type,@RequestParam(name="indId", required=false) String indId)
-        throws Exception {
+    {
         return ceOrg002Service.getAllCeOrgQuote(type,indId);
         
     }
@@ -130,7 +131,7 @@ public class CeOrg002Controller extends BaseController {
 	@ResponseBody
     @RequestMapping("/getTreeCeOrgQuote")
     public Page<CreditMstInfoDto> getTreeCeOrgQuote()
-        throws Exception {
+    {
 		Page<CreditMstInfoDto> page = ceOrg002Service.getTreeCeOrgQuote(RequestUtil.getParameters(getRequest()));
 		String workflowId = getParam("workflowId");
 		// 待办跳转
@@ -184,8 +185,7 @@ public class CeOrg002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody CreditLinesOrgDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody CreditLinesOrgDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

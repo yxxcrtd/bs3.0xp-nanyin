@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,11 +61,10 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
     /**
      * 新建页面画面联动
      * @return Page<FinProductRateQuotationDto>
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlSubFundsAllocate002Dto> selectOther() throws Exception{
+    public Page<PtlSubFundsAllocate002Dto> selectOther() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         String totleTradeId = this.getParam("totleTradeId");
         String workflowId = getParam("wfId");
@@ -87,21 +87,21 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("getSubFundsAllocate")
-    public Page<PtlSubFundsAllocate002Dto> getSubFundsAllocate() throws Exception{
+    public Page<PtlSubFundsAllocate002Dto> getSubFundsAllocate() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return ptlSubFundsAllocate002Service.getSubFundsAllocate(param);
     }
     
     @ResponseBody
     @RequestMapping("getCashFlowActualAmt")
-    public BigDecimal getCashFlowActualAmt() throws Exception{
+    public BigDecimal getCashFlowActualAmt(){
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return ptlSubFundsAllocate002Service.getCashFlowActualAmt(param);
     }
     
     @ResponseBody
     @RequestMapping("getSumCashFlowAvaAmt")
-    public BigDecimal getSumCashFlowAvaAmt() throws Exception{
+    public BigDecimal getSumCashFlowAvaAmt(){
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return ptlSubFundsAllocate002Service.getSumCashFlowAvaAmt(param);
     }
@@ -158,7 +158,7 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/getPortfolioId")
-	public List<SelectOptionDto> getPortfolioId() throws Exception {
+	public List<SelectOptionDto> getPortfolioId(){
 		return ptlSubFundsAllocate002Service.getPortfolioId(RequestUtil.getPageParam());
 	}
 
@@ -199,13 +199,11 @@ public class PtlSubFundsAllocate002Controller extends BaseController{
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) PtlSubFundsAllocate002Dto ptlSubFundsAllocate002Dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) PtlSubFundsAllocate002Dto ptlSubFundsAllocate002Dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }        

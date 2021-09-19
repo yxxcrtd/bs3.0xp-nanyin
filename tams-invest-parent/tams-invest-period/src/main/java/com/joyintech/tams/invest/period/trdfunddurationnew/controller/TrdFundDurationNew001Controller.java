@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.period.trdfunddurationnew.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dt
 import com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNew001Dto;
 import com.joyintech.tams.invest.period.trdfunddurationnew.service.TrdFundDurationNew001Service;
 import com.joyintech.tams.invest.period.trdfundobversion.service.TrdFundObversion001Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -137,12 +139,11 @@ public class TrdFundDurationNew001Controller extends BaseController {
      * 导出
      *
      * @return 导出的文件流
-     * @throws Exception 文件到处异常
+     * @throws IOException 文件到处异常
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return TrdFundDurationNew001Service.export(this.getPageId(),
@@ -168,8 +169,7 @@ public class TrdFundDurationNew001Controller extends BaseController {
     }
 
     @RequestMapping("exportConversion")
-    public ResponseEntity<byte[]> exportConversion()
-            throws Exception {
+    public ResponseEntity<byte[]> exportConversion() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             return trdFundObversion001Service.export("TrdFundObversion001",
@@ -201,8 +201,7 @@ public class TrdFundDurationNew001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult revoke(@RequestBody @Validated({
-            ValidateGroupDelete.class}) TrdFundDurationNew001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) TrdFundDurationNew001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

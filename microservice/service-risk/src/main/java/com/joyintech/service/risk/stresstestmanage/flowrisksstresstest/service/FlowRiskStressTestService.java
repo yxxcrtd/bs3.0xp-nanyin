@@ -10,33 +10,6 @@
  
 package com.joyintech.service.risk.stresstestmanage.flowrisksstresstest.service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.apache.commons.collections4.ListUtils;
-import org.bouncycastle.pqc.math.linearalgebra.IntUtils;
-import org.jfree.util.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.google.common.collect.ImmutableMap;
-import com.jixu.common.tool.JixuUserUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -64,7 +37,15 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListRsk;
 import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
-import com.joyintech.workflow.engine.parse.JoyinUserTaskParseHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 〈一句话功能简述〉
@@ -189,14 +170,13 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         int count = flowRiskStressTestMapper.queryStrTesCount();
         //压力测试表
         SttStressTest streTesEnt = new SttStressTest();
-        String username=JixuUserUtil.getLoginUserName();
+        String username=LoginUserUtil.getUserName();
         String testId =username+"-"+(dft.format(sysDate))+"-"+count+ IDGenerator.generate(5).substring(0, 8);
         //压测代码
         streTesEnt.setTestId(testId);
@@ -385,7 +365,7 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
         	catch(Exception e) {
         		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
         		flowRiskStressTestMapper.updateStressStatus(map);
-        		throw e;
+                throw new IllegalArgumentException("压力测试执行状态异常");
         	}
         }
         else {
@@ -395,7 +375,7 @@ public class FlowRiskStressTestService extends BaseService<FlowRiskStressTest001
         	catch(Exception e) {
         		map.put("status", DictCodeListRsk.压力测试_执行状态_异常.getValue());
         		flowRiskStressTestMapper.updateStressStatus(map);
-        		throw e;
+                throw new IllegalArgumentException("压力测试执行状态异常");
         	}
         }
         DynamicDataSourceHolder.clearDataSource();

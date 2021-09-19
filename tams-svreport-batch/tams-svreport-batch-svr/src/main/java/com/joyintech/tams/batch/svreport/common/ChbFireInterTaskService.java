@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.text.ParseException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ public class ChbFireInterTaskService extends InterfService {
      *
      */
     @SuppressWarnings("resource")
-    public void execute() {
+    public void execute() throws ParseException {
         FileChannel channel = null;
         FileLock lock = null;
         try {
@@ -124,7 +125,6 @@ public class ChbFireInterTaskService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error("中债上游接口定时任务处理Error",e);
                 }
             }
@@ -135,7 +135,6 @@ public class ChbFireInterTaskService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error("中债上游接口定时任务处理Error",e);
                 }
             }

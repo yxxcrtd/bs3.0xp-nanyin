@@ -15,6 +15,7 @@ package com.joyintech.tams.invest.basicdata.fundsecuritiesaccount.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -116,7 +117,7 @@ public class FundSecuritiesAccount002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FundSecuritiesAccountDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) FundSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -149,8 +150,7 @@ public class FundSecuritiesAccount002Controller extends BaseController{
     
     @ResponseBody
     @RequestMapping("/getSecManagerSelect")
-    public List<SelectOptionDto> getSecManagerSelect(String search)
-        throws Exception {
+    public List<SelectOptionDto> getSecManagerSelect(String search){
         List<SelectOptionDto> temp = fundSecuritiesAccountService.getSecManagerSelect(search);
         return temp;
     }

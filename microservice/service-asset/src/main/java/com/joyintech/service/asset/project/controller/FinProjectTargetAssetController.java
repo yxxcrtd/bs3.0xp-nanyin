@@ -52,7 +52,7 @@ public class FinProjectTargetAssetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinProjectTargetAssetDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length){
         return finProjectTargetAssetService.selectForPage(page, length, param);
     }
     
@@ -67,7 +67,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinProjectTargetAssetDto dto) throws Exception {
+    public void insert(@RequestBody FinProjectTargetAssetDto dto) {
         finProjectTargetAssetService.insert(dto);
     }
     /**
@@ -80,7 +80,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinProjectTargetAssetDto dto) throws Exception{
+    public void update(@RequestBody FinProjectTargetAssetDto dto) {
         finProjectTargetAssetService.update(dto);
     }
     
@@ -94,7 +94,7 @@ public class FinProjectTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinProjectTargetAssetDto dto) throws Exception{
+    public void delete(@RequestBody FinProjectTargetAssetDto dto) {
         finProjectTargetAssetService.delete(dto);
     }
     
@@ -107,7 +107,7 @@ public class FinProjectTargetAssetController {
      * @since 1.0
      */
     @PostMapping("getBasicInfo")
-    public FinProjectTargetAssetDto getBasicInfo(@RequestBody Map<String,Object> paramMap) throws Exception {
+    public FinProjectTargetAssetDto getBasicInfo(@RequestBody Map<String,Object> paramMap) {
         return finProjectTargetAssetService.getBasicInfo(paramMap);
     }
     

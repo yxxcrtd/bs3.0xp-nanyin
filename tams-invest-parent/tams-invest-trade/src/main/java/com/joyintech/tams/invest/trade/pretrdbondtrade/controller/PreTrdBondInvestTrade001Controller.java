@@ -14,6 +14,7 @@ import javax.validation.Valid;
 
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -102,7 +103,7 @@ public class PreTrdBondInvestTrade001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<PreTrdBondInvestTrade001Dto> findPage()
-        throws Exception {
+         {
         return preTrdBondInvestTrade001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -137,7 +138,7 @@ public class PreTrdBondInvestTrade001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return preTrdBondInvestTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -169,7 +170,7 @@ public class PreTrdBondInvestTrade001Controller extends BaseController {
     @SuppressWarnings("unchecked")
   	@RequestMapping("doRevoke")
       @ResponseBody
-      AjaxResult doRevoke(@RequestBody PreTrdBondInvestTrade002Dto dto)   throws Exception {
+      AjaxResult doRevoke(@RequestBody PreTrdBondInvestTrade002Dto dto) throws WorkFlowException {
 
           String msg = "";
 /*          Object[] fenpeiDto = dto.getBussTrdTransfenpeiDto();

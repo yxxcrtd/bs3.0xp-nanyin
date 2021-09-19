@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.transformation.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -121,8 +122,7 @@ public class TransformationController001 extends BaseController {
      * @since 1.0
      */
     @PostMapping("/uploadFile")
-    public AjaxResult uploadFile(@RequestBody Map<String, Object> params)
-        throws Exception {
+    public AjaxResult uploadFile(@RequestBody Map<String, Object> params) throws FileNotFoundException {
     	HttpServletRequest request = (HttpServletRequest) params.get("HttpServletRequest");
     	HttpServletResponse response = (HttpServletResponse) params.get("HttpServletResponse");
     	ModelMap model = (ModelMap) params.get("ModelMap");
@@ -143,7 +143,7 @@ public class TransformationController001 extends BaseController {
         
         
         // 获取文件名
-        String fileName1 = request.getParameter("fileName");
+        String fileName1 = request.getParameter("fileName")==null?"":request.getParameter("fileName");
         File tempFile1 =new SafelyFile(fileName1);
         String fName1 = tempFile1.getName();
         // 获取后缀名

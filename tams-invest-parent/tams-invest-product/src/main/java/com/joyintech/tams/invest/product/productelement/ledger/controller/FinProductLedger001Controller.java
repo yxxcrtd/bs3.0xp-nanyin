@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.product.productelement.ledger.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -100,7 +101,6 @@ public class FinProductLedger001Controller extends BaseController {
 	 * 画面查詢方法
 	 * 
 	 * @return 所有數據
-	 * @throws Exception 異常
 	 */
 	@ResponseBody
 	@RequestMapping("selectForPage")
@@ -112,13 +112,12 @@ public class FinProductLedger001Controller extends BaseController {
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception 异常
 	 * @see
 	 * @since 1.0
 	 */
 	@ResponseBody
 	@RequestMapping("export")
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws IOException {
 		String datas = this.getParam("datas");
         List<FinProductLedger001Dto> listdto;
         if (datas == null) {

@@ -50,7 +50,7 @@ public class CreditRightsManagementService extends BaseService<CreditRightsManag
 	 * @since 1.0
 	 */
     public Page<CreditRightsManagementDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-	        throws Exception {
+    {
     	pageParam.put("endDate", DateUtil.parse((String)pageParam.get("endDate")));
         pageParam.put("startDate", DateUtil.parse((String)pageParam.get("startDate")));
     	return super.queryForPage(page,length,() -> creditRightsManagementMapper.select(pageParam));

@@ -136,7 +136,7 @@ public class MstCalendarTypeService extends BaseService<MstCalendarType001Dto>{
      * @see
      * @since 1.0
      */
-    public Page<MstCalendarType001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<MstCalendarType001Dto> selectForPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page,length,()-> mstCalendarType001mapper.select(pageParam));
     }
 
@@ -193,7 +193,7 @@ public class MstCalendarTypeService extends BaseService<MstCalendarType001Dto>{
      * @since 1.0
      */
     public Page<MstCalendarType001Dto> selectCanlendarDetail(int page, int length, Map<String, Object> map)
-            throws Exception {
+    {
         return super.queryForPage(page,length,()-> mstCalendarType001mapper.selectCanlendarDetail(map));
     }
 

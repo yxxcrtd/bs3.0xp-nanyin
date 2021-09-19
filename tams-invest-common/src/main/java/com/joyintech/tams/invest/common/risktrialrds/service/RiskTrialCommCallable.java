@@ -45,7 +45,7 @@ public class RiskTrialCommCallable {
 	private SupervisionCalcSvc supervisionCalcSvc;
 
 	
-	public List<RiskTrialRetDto> getRiskTrialValue(List<SupervisionTargetDto> taskList,InvestTradeTrialInput inputDto) throws Exception{
+	public List<RiskTrialRetDto> getRiskTrialValue(List<SupervisionTargetDto> taskList,InvestTradeTrialInput inputDto) {
 		List<RiskTrialRetDto> riskTrialRetList=new ArrayList<RiskTrialRetDto>();
 		for (SupervisionTargetDto rskTaskDto : taskList) {
 			// 构造
@@ -174,7 +174,7 @@ public class RiskTrialCommCallable {
 				riskTrialRetDto.setFoulCond(rskTaskDto.getFoulCond());
 				riskTrialRetList.add(riskTrialRetDto);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return riskTrialRetList;

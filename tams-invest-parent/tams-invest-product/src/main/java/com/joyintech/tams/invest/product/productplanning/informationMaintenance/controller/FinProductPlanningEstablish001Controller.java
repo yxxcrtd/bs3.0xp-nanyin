@@ -18,6 +18,7 @@ import com.joyintech.tams.invest.product.productplanning.informationMaintenance.
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -58,7 +59,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
      */
     @RequestMapping("findForPageAll")
     @ResponseBody
-    public Page<FinProductPlanning001Dto> findForPageAll() throws Exception {
+    public Page<FinProductPlanning001Dto> findForPageAll(){
         return finProductPlanningEstablish001Service.findPageAll(RequestUtil.getPageParam());
     }
 
@@ -69,8 +70,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
      */
     @RequestMapping("querySeriesName")
     @ResponseBody
-    public Page<SelectOptionDto> querySeriesName()
-            throws Exception {
+    public Page<SelectOptionDto> querySeriesName(){
         Page<SelectOptionDto> selectOptionDtoPage = finProductPlanningEstablish001Service.querySeriesName(RequestUtil.getPageParam());
         return   selectOptionDtoPage;
     }
@@ -96,8 +96,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return finProductPlanningEstablish001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }
@@ -110,8 +109,7 @@ public class FinProductPlanningEstablish001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/delete")
-    public AjaxResult deleteByPrimaryKey(@RequestBody FinProductPlanning001Dto dto)
-            throws Exception{
+    public AjaxResult deleteByPrimaryKey(@RequestBody FinProductPlanning001Dto dto) throws WorkFlowException {
         dto.setOperateType(GlobalConstant.OPERATE_TYPE_DELETE);
         ProcessParameter<FinProductPlanning002Dto> processParameter = new ProcessParameter<FinProductPlanning002Dto>();
         WorkFlowParameter<FinProductPlanning002Dto> params = new WorkFlowParameter<FinProductPlanning002Dto>();

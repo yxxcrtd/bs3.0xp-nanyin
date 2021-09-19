@@ -115,7 +115,7 @@ public class ValRateSwapValuationInfo002Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupEdit.class}) ValRateSwapValuationInfo002Dto dto, BindingResult bindingResult)
-        throws Exception {
+         {
         String operateType = dto.getOperateType();
 
         if (!bindingResult.hasErrors()) {

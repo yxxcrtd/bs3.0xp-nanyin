@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.controller;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -102,8 +103,7 @@ public class DisValProfitQuery001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public List<DisValProfitQuery001Dto> selectBalanceStatement()
-        throws Exception {
+    public List<DisValProfitQuery001Dto> selectBalanceStatement() throws ParseException {
     	Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
     	// 报表维度为单账套
     	if ("01".equals(String.valueOf(paraMap.get("reportDimen")))) {
@@ -124,8 +124,7 @@ public class DisValProfitQuery001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getBooksetId2")
-    public List<SuggestDto> getBooksetId2()
-        throws Exception {
+    public List<SuggestDto> getBooksetId2(){
         String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
@@ -184,7 +183,7 @@ public class DisValProfitQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException, ParseException {
     	Map<String, Object> paraMap = RequestUtil.getPageParam();
     	if ("02".equals(paraMap.get("reportDimen"))) {
     	List<SuggestDto> accountList = valAssetBook001Service.getBooksetId2(super.getRequest().getParameter("param"));
@@ -202,7 +201,7 @@ public class DisValProfitQuery001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getTermLink")
-	public List<SelectOptionDto> getTradeMarket() throws Exception {
+	public List<SelectOptionDto> getTradeMarket(){
 		Map<String, Object> param = RequestUtil.getPageParam();
 		String reportTermType = (String) param.get("reportTermType");
 

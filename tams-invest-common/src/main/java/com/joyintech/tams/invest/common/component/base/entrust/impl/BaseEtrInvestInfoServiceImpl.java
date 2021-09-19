@@ -830,7 +830,11 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             // update by qk start HFZG-6 质押式回购退回，指令分发详情页面中的备注显示异常
             String remark=StringUtil.isEmpty(etrEntrust.getRemark()) ? "" : etrEntrust.getRemark();
             // update by qk end HFZG-6 质押式回购退回，指令分发详情页面中的备注显示异常
-            reason=remark+"\n"+"退回原因：" + reason;
+            if(StringUtil.isNotBlank(reason)){
+                reason=remark+"\n"+"退回原因：" + reason;
+            }else{
+                reason="退回原因：" + reason;
+            }
             // 更改委托状态
             etrEntrust.setRemark(reason);
             //退回备注不覆盖之前的备注 edit by xueying 20200725 end

@@ -555,18 +555,28 @@
                         newRowData.ccy = CCY_CNY;
                     }
                     var tempTable = mockTradeTable.getAllRows();
+
+                    var rowFlag = false;
+
                     for (i = 0; i < tempTable.length; i++) {
                         if (tempTable[i].portfolioId === newRowData.portfolioId
                             && tempTable[i].finprodId === newRowData.finprodId
                             && tempTable[i].invAim === newRowData.invAim) {
                             // 已经存在的不重复添加
+                            rowFlag=true;
+                            return;
                         }else{
-                            mockTradeTable.addRow(newRowData);
+                            //mockTradeTable.addRow(newRowData);
                         }
                     }
-                    if(tempTable.length === 0){
+
+                    if(!rowFlag){
                         mockTradeTable.addRow(newRowData);
                     }
+
+                    /*if(tempTable.length === 0){
+                        mockTradeTable.addRow(newRowData);
+                    }*/
                 });
             }
         });

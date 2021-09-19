@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.rskauthoritymanage.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -150,7 +151,7 @@ public class RskAuthorityManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/getUser")
     public List<SelectOptionDto> getUser()
-        throws Exception {
+         {
         return rskAuthorityManageService.getUser(RequestUtil.getPageParam());
     }
     /**
@@ -161,7 +162,7 @@ public class RskAuthorityManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskAuthorityManageDto> selectAll()
-        throws Exception {
+         {
         return rskAuthorityManageService.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -190,8 +191,7 @@ public class RskAuthorityManage001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) RskAuthorityManageDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) RskAuthorityManageDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -221,7 +221,7 @@ public class RskAuthorityManage001Controller extends BaseController {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return rskAuthorityManageService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

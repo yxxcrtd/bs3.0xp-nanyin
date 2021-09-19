@@ -59,7 +59,7 @@ public class MarketRiskStressTestView002Service extends BaseService<MarketRiskSt
      * @throws Exception
      */
     public Page<MarketRiskStressTestView002Dto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         //Page<MarketRiskStressTestView002Dto> PAGE= super.queryForPage(page, length, () -> marketRiskStressTestView002Mapper.queryForPage(pageParam));
         String parentId = (String)pageParam.get("parentId");
@@ -95,7 +95,7 @@ public class MarketRiskStressTestView002Service extends BaseService<MarketRiskSt
      * @throws Exception
      */
     public Page<MarketRiskStressTestView002Dto> selectForPageExport(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
         String parentId = (String)pageParam.get("parentId");
         pageParam.put("parentId", "");

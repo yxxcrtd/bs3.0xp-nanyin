@@ -9,6 +9,10 @@
  */
 package com.joyintech.tams.invest.common.risktrial.dto;
 
+import com.joyintech.framework.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ExprTree {
-
+	private static final Logger logger = LoggerFactory.getLogger(ExprTree.class);
 	private static final Pattern patternOp = Pattern.compile("[*/+-]");
 	private static final Pattern patternOpLvl2 = Pattern.compile("[+-]");
 	private static final Pattern patternOpLvl1 = Pattern.compile("[*/]");
@@ -175,7 +179,7 @@ public class ExprTree {
 	//------------------------------
 	//
 	//------------------------------
-	public Object calc(Map<String, Object> params) throws Exception {
+	public Object calc(Map<String, Object> params){
 		String v = root.getValue();
 		if(! patternOp.matcher(v).find()) {
 			return params.get(v);
@@ -186,7 +190,7 @@ public class ExprTree {
 		}
 	}
 	
-	private void _calc(ExprNode node, Stack<Double> vStack, Map<String, Object> params) throws Exception {
+	private void _calc(ExprNode node, Stack<Double> vStack, Map<String, Object> params) {
 		ExprNode left = node.getLeft();
 		if(left != null) _calc(left, vStack, params);
 		
@@ -205,7 +209,7 @@ public class ExprTree {
 			} else if(paramValue instanceof BigDecimal) {
 				vStack.push(((BigDecimal)paramValue).doubleValue());
 			} else {
-				throw new Exception("cannot get number from parameters for expression");
+				throw new BusinessException("cannot get number from parameters for expression");
 			}
 		} else {
 			Double vRight = vStack.pop();
@@ -218,10 +222,13 @@ public class ExprTree {
 				case "*": result = vLeft * vRight; break;
 				case "/": result = vLeft / vRight; break;
 			}
-			System.out.println(
-					new StringBuffer().append(vLeft)
+//			System.out.println(
+//					new StringBuffer().append(vLeft)
+//					.append(v).append(vRight)
+//					.append("=").append(result));
+			logger.info(new StringBuffer().append(vLeft)
 					.append(v).append(vRight)
-					.append("=").append(result));
+					.append("=").append(result).toString());
 			vStack.push(result);
 		}
 	}
@@ -232,7 +239,8 @@ public class ExprTree {
 	public void travelCalc() {
 		Stack<String> vStack = new Stack<String>();
 		_travelCalc(root, vStack);
-		System.out.println(vStack.pop());
+//		System.out.println(vStack.pop());
+		logger.info(vStack.pop());
 	}
 	
 	private void _travelCalc(ExprNode node, Stack<String> vStack) {
@@ -249,7 +257,8 @@ public class ExprTree {
 			String vRight = vStack.pop();
 			String vLeft = vStack.pop();
 			StringBuffer result = new StringBuffer(vLeft).append(v).append(vRight);
-			System.out.println(result);
+//			System.out.println(result);
+			logger.info(result.toString());
 			vStack.push(result.insert(0, '(').append(')').toString());
 		}
 	}

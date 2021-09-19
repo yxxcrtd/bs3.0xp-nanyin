@@ -123,7 +123,7 @@ public class FinNetValueProductBuild001Validator implements BeanValidator {
 					}
 					// 发行状态管理流程中数据check
 					WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-					wflValidInputParameter.setPageId("FinProductBuild003");
+					wflValidInputParameter.setPageId("FinNetValueProductBuild003");
 					wflValidInputParameter.setWorkflowId(entity.getWorkflowId());
 					wflValidInputParameter.setBusinessDataPk2(finProductBuild002Dto.getFinprodMarketId());
 					if (mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {

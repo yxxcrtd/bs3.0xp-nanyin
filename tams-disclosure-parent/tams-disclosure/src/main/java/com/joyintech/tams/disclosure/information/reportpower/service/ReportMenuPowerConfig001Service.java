@@ -55,8 +55,7 @@ public class ReportMenuPowerConfig001Service extends CommonExportService<ReportM
     * @see
     * @since 1.0
     */
-    public Page<ReportMenuPowerConfig001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<ReportMenuPowerConfig001Dto> findPage(Map<String, Object> params){
 //        return super.queryForPage(() -> reportMenuPowerConfig001Mapper.queryPageList(params));
    	 return restTemplate.postForPage(
              ServiceApplication.VALUATION_SERVICE_NAME + "/ReportMenuPowerConfig001/findPage",
@@ -73,8 +72,7 @@ public class ReportMenuPowerConfig001Service extends CommonExportService<ReportM
      * @see
      * @since 1.0
      */
-     public List<ReportMenuPowerConfig001Dto> findAll(Map<String, Object> params)
-         throws Exception {
+     public List<ReportMenuPowerConfig001Dto> findAll(Map<String, Object> params){
 //         List<ReportMenuPowerConfig001Dto> list = reportMenuPowerConfig001Mapper.queryPageList(params);
 //         return list;
     	 return restTemplate.postForList(

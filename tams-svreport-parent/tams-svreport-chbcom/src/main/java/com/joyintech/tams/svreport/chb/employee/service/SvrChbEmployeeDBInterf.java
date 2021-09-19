@@ -172,7 +172,7 @@ public class SvrChbEmployeeDBInterf extends BaseService{
             }
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			dateList = ChbDeadlineUtil.getChbEndDate(
-	                DictCodeListExt2.报表名称_从业人员信息登记.getValue(), DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, DateUtil.now());
+	                DictCodeListExt2.报表名称_从业人员信息登记.getValue(), sub.getStatus(), dateMap, DateUtil.now());
 	        if (!CollectionUtils.isEmpty(dateList)) {
 	        	sub.setChbSubmitDeadline(dateList.get(0));
 	        	sub.setSubmitDeadline(dateList.get(1));

@@ -252,10 +252,10 @@ $(function() {
      * 绑定导出事件->质押券置换查询导出
      */
     var exportSubstitutionExcel = function() {
-        var paramObj = getSubstitutionSearchParams();
-        Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/exportCheck', paramObj, function(result) {
-            if (result && result.statuCode == '200') {
-                Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', paramObj);
+//        var paramObj = getSubstitutionSearchParams();
+//        Joyin.ajaxJson(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/exportCheck', paramObj, function(result) {
+//            if (result && result.statuCode == '200') {
+//                Joyin.exportExcel(basePath + 'invest/portfolio/portfolioanalysis/ptlrepopledgesearch/PtlRepoPledgeSearch002/export', paramObj);
 
                 if (substitutionDataTable != null && substitutionDataTable != '') {
                     var selArr = substitutionDataTable.getAllCheckedRows();
@@ -270,8 +270,8 @@ $(function() {
                     });
                 }
 
-            }
-        }); 
+//            }
+//        });
     };
 
     /**

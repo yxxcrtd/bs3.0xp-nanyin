@@ -58,7 +58,7 @@ public class ValAssetsAmortizeSet002Service extends CommonExportService<ValAsset
      * @since 1.0
      */
     public List<ValAssetsAmortizeSet001Dto> findAll(Map<String, Object> map)
-        throws Exception {
+         {
 //        map.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
 //        return
 //        // super.queryForPage(() ->

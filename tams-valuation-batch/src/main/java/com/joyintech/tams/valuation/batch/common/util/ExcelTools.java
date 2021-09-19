@@ -43,6 +43,8 @@ import org.slf4j.LoggerFactory;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 
+import javax.annotation.processing.FilerException;
+
 public class ExcelTools {
 
     /**
@@ -64,7 +66,7 @@ public class ExcelTools {
                 wb = new HSSFWorkbook(stream);
             }
             else {
-                throw new Exception("不是一个有效的Excel文件");
+                throw new FilerException("不是一个有效的Excel文件");
             }
 
             for (Sheet sheet : wb) {
@@ -169,11 +171,6 @@ public class ExcelTools {
                 if(wb != null) {
                     wb.close(); 
                 }
-            }
-            catch (IOException e) {
-                logger.error(e.getMessage(), e);
-            }
-            try {
                 if(outputStream != null) {
                     outputStream.flush();
                     outputStream.close();
@@ -188,8 +185,7 @@ public class ExcelTools {
     /**
      * Remove a row by its index
      * 
-     * @param sheet a Excel sheet
-     * @param rowIndex a 0 based index of removing row
+     * @param row a Excel sheet
      */
     public static void removeRow(Row row) {
         Sheet sheet = row.getSheet();
@@ -205,8 +201,8 @@ public class ExcelTools {
     /**
      * Remove a row by its index
      * 
-     * @param sheet a Excel sheet
-     * @param rowIndex a 0 based index of removing row
+     * @param row a Excel sheet
+     * @param number a 0 based index of removing row
      */
     public static void insertRow(Row row, int number) {
         Sheet sheet = row.getSheet();

@@ -70,7 +70,7 @@ public class TrdBondInvestTradeController {
     @RequestMapping("findPage/{page}/{length}")
     public Page<TrdBondInvestTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdBondInvestTradeService.selectForPage(page, length, param);
     }
 
@@ -85,7 +85,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getTrdBondInvestTradeDto/{tradeId}")
     public TrdBondInvestTradeDto getTrdBondInvestTradeDto(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdBondInvestTradeService.getTrdBondInvestTradeDto(tradeId);
     }
 
@@ -101,7 +101,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getProfitType/{portfolioId}")
     public String getProfitType(@PathVariable("portfolioId") String portfolioId)
-            throws Exception {
+    {
         return trdBondInvestTradeService.getProfitType(portfolioId);
     }
     //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
@@ -195,7 +195,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getFinprodId/{page}/{length}")
     public Page<SelectOptionDto> getFinprodId(@RequestBody Map<String, Object> param,
-                                              @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                              @PathVariable("page") int page, @PathVariable("length") int length) {
         return trdBondInvestTradeService.getFinprodId(page, length, param);
     }
     //    资产推荐方 新增 zhuyongkang 20191023 start
@@ -268,7 +268,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getSecInfoModel")
     public SecInfoModelDto getSecInfoModel(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return trdBondInvestTradeService.getSecInfoModel(param);
     }
 
@@ -283,7 +283,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getFinCashPlan")
     public List<FinCashPlanDto> getFinCashPlan(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         String finprodId = (String) param.get("finprodId");
         return trdBondInvestTradeService.getFinCashPlan(finprodId);
     }
@@ -520,7 +520,7 @@ public class TrdBondInvestTradeController {
      */
     @RequestMapping("getReverseTradeDtoInvAim/{tradeId}")
     public String getReverseTradeDtoInvAim(@PathVariable("tradeId") String tradeId)
-            throws Exception {
+    {
         return trdBondInvestTradeService.getReverseTradeDtoInvAim(tradeId);
     }
 

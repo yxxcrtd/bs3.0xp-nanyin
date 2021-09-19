@@ -63,9 +63,8 @@ public class FinProductValuation001Service extends BaseService<FinProductValuati
 	 * 
 	 * @param pageParam
 	 * @return
-	 * @throws Exception
 	 */
-	public Page<FinProductValuation001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+	public Page<FinProductValuation001Dto> selectForPage(Map<String, Object> pageParam) {
 		return super.queryForPage(() -> finProductValuation001Dao.selectForPage(pageParam));
 	}
 
@@ -97,7 +96,7 @@ public class FinProductValuation001Service extends BaseService<FinProductValuati
 					buildValuation(prodInfo, start, vldate);
 				} catch (Exception e) {
 					logger.info("估值出错!");
-					throw new RuntimeException(e);
+					throw new IllegalArgumentException(e);
 				} finally {
 					this.assetInfoList.remove();
 					this.feeInfoList.remove();
@@ -111,7 +110,7 @@ public class FinProductValuation001Service extends BaseService<FinProductValuati
 			logger.info("估值出错!!");
 			//add by chenxiaoqiu 20191128
 			Thread.currentThread().interrupt();
-			throw new RuntimeException(e);
+			throw new IllegalArgumentException(e);
 		} finally {
 			executor.shutdown();
 		}

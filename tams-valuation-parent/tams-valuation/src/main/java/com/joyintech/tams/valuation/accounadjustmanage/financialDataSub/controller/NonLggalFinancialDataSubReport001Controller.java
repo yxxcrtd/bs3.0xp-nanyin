@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.financialDataSub.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +72,7 @@ public class NonLggalFinancialDataSubReport001Controller extends BaseController 
 
 	@ResponseBody
 	@RequestMapping("findPage")
-	public Page<NonLggalFinancialDataSubReport001Dto> findPage(NonLggalFinancialDataSubReport001Dto dto) throws Exception {
+	public Page<NonLggalFinancialDataSubReport001Dto> findPage(NonLggalFinancialDataSubReport001Dto dto) {
 //		  Map<String, Object> params= this.getRequestMap();
 //	      dto = (NonLggalFinancialDataSubReport001Dto)JsonUtils.map2entity(params, NonLggalFinancialDataSubReport001Dto.class);	     
 		return  NonLggalFinancialDataSubReport001Service.selectForPage(RequestUtil.getPageParam());
@@ -96,16 +97,21 @@ public class NonLggalFinancialDataSubReport001Controller extends BaseController 
 	 * 导出信息excel
 	 * 
 	 * @return excel
-	 * @throws Exception
-	 *             异常
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() throws ParseException, IOException {
 		String datas = this.getParam("datas");
 		Map<String, Object> paraMap = this.getRequestMap();
-		NonLggalFinancialDataSubReport001Dto dto = (NonLggalFinancialDataSubReport001Dto)JsonUtils.map2entity(paraMap, NonLggalFinancialDataSubReport001Dto.class);
+		NonLggalFinancialDataSubReport001Dto dto = null;
+		try {
+			dto = (NonLggalFinancialDataSubReport001Dto) JsonUtils.map2entity(paraMap, NonLggalFinancialDataSubReport001Dto.class);
+		} catch (Exception e) {
+//			e.printStackTrace();
+			getLogger().error(e.getMessage());
+			throw new ParseException(e.getMessage(),0);
+		}
 		List<NonLggalFinancialDataSubReport001Dto> listdto;
 		if (datas == null) {
 			listdto = (List<NonLggalFinancialDataSubReport001Dto>) NonLggalFinancialDataSubReport001Service.findPageout(dto);

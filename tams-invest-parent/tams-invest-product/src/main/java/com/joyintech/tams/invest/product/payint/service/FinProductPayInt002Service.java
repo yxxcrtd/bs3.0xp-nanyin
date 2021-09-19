@@ -152,12 +152,10 @@ public class FinProductPayInt002Service extends BaseService<FinProductPayInt002D
      *
      * @param inputDto 画面参数
      * @return 利息明细信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-    public Page<ReduceInfoDto> findIntDetailInfo(FinProductPayInt002Dto inputDto)
-        throws Exception {
+    public Page<ReduceInfoDto> findIntDetailInfo(FinProductPayInt002Dto inputDto){
         Page<ReduceInfoDto> resultPage = new Page<>();
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(inputDto.getWorkflowId())) {
             FinProductPayInt002Dto dataDto = this.getBussinessEntityByWorkflowId(inputDto.getWorkflowId());
@@ -186,10 +184,8 @@ public class FinProductPayInt002Service extends BaseService<FinProductPayInt002D
      *
      * @param inputDto 参数
      * @return 下拉框列表
-     * @throws Exception Exception
      */
-    public FinProductPayInt002Dto calcCusProfit(FinProductPayInt002Dto inputDto)
-        throws Exception {
+    public FinProductPayInt002Dto calcCusProfit(FinProductPayInt002Dto inputDto){
         FinProductPayInt002Dto resultDto = new FinProductPayInt002Dto();
         if (inputDto == null || StringUtil.isEmptyList(inputDto.getIntDetailDataList())) {
             return resultDto;
@@ -218,8 +214,7 @@ public class FinProductPayInt002Service extends BaseService<FinProductPayInt002D
      * @return 下拉框列表
      * @throws Exception Exception
      */
-    public FinProductPayInt002IntDetailDto calcActYield(FinProductPayInt002IntDetailDto inputDto)
-        throws Exception {
+    public FinProductPayInt002IntDetailDto calcActYield(FinProductPayInt002IntDetailDto inputDto){
         FinProductPayInt002IntDetailDto resultDto = new FinProductPayInt002IntDetailDto();
         if (inputDto == null || inputDto.getActInt() == null) {
             return resultDto;

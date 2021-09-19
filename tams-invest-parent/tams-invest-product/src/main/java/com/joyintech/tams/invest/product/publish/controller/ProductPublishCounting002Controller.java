@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.product.publish.dto.ProductPublishCounting001Dt
 import com.joyintech.tams.invest.product.publish.service.ProductPublishCounting002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import java.util.Calendar;
@@ -117,7 +118,7 @@ public class ProductPublishCounting002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) ProductPublishCounting001Dto dto
-    		, BindingResult br) throws Exception{
+    		, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }

@@ -71,7 +71,7 @@ public class FinProductDurDealController {
     public Page<FinProductDurDealDto> queryForPage(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductDurDealService.selectForPage(page, length, pageParam);
     }
     
@@ -87,7 +87,7 @@ public class FinProductDurDealController {
     public Page<FinProductDurDealDto> queryForDetailPage(@RequestBody Map<String, Object> pageParam,
     												@PathVariable("page") int page,
     												@PathVariable("length") int length)
-    	throws Exception {
+    {
     	return finProductDurDealService.findDetailPage(page, length, pageParam);
     }
     
@@ -103,7 +103,7 @@ public class FinProductDurDealController {
     public Page<FinProductDurDealDetailDto> findDetailData(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return finProductDurDealService.findDetailData(page, length, pageParam);
     }
 

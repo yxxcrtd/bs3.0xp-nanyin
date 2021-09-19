@@ -1006,6 +1006,14 @@
                 msg = JoyinUtil.getMessage('BUSS_COM_E_0004',[JoyinUtil.getLabel("FinInterestFactor.investRate"), JoyinUtil.getLabel("FinInterestFactor.buyOutRate")]);
                 msgArray.push(msg);errorClassArray.push(referRate);
             }
+            if(newParam.vdate!=null && newParam.vdate!=''&&newParam.mdate!=null && newParam.mdate!=''){
+                var vdateDate = new Date(newParam.vdate);
+                var mdateDate = new Date(newParam.mdate);
+                if (vdateDate.DateDiff('d', mdateDate) <= 0) {
+                    msg = JoyinUtil.getMessage("终止日期必须大于成立日期");
+                    msgArray.push(msg);
+                }
+            }
         }else if(INT_ASSET_TYPE==FINPROD_TYPE_TG_F18){
             if(newParam.vdate==''||typeof newParam.vdate == 'undefined'){
                 msg = JoyinUtil.getMessage('COMMON_E_0057',JoyinUtil.getLabel("FinPayInterestStdInfo.asset.vdate"));
@@ -1206,7 +1214,7 @@
             }
             else {
                 //付息计划条数增加或减少，应点击确定按钮
-                if(list && list.length > 0 && list.length !=previewParams.invScheduleList.length ) {
+                if(list && list.length > 0 && previewParams.invScheduleList && previewParams.invScheduleList.length>0 && list.length !=previewParams.invScheduleList.length ) {
                       msg = JoyinUtil.getMessage("付息计划已变更,请点击确认!");
                 }
 
@@ -1351,7 +1359,7 @@
         list.sort(function(a,b){
             return -(new Date(a.vdate).DateDiff('d',b.vdate));
         })
-        generationPlanTable.reload({data:list, url:null})
+        generationPlanTable.reload({data:list, url:null});
     }
 
     function checkObjectDiff(currentDealObj, backupDealObj) {
@@ -1368,6 +1376,17 @@
             }
         }
         else if (currentDealObj != backupDealObj) {
+            // add by jiangpeng on 20210708 start
+            // TISHKBS-2450 mdate vdate 传值为number格式,表格reload后,转为string格式,导致判断不相等 此处转化为日期格式对比
+            if(typeof currentDealObj !== typeof backupDealObj){
+                var currentDealObjDate = new Date(currentDealObj);
+                var backupDealObjDate = new Date(backupDealObj);
+                var dsadf = new Date('dsadf');
+                if (currentDealObjDate.DateDiff('d', backupDealObjDate) === 0) {
+                    return false;
+                }
+            }
+            // add by jiangpeng on 20210708 end
             return true;
         }
         return result;

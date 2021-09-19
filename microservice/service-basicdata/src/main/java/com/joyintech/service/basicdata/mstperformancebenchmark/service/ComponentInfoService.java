@@ -51,7 +51,8 @@ public class ComponentInfoService extends BaseService<ComponentInfoDto>{
      * @see
      * @since 1.0
      */
-    public Page<ComponentInfoDto> selectComponentInfoPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ComponentInfoDto> selectComponentInfoPage(Map<String, Object> pageParam)
+    {
         return super.queryForPage(() -> mstPerformanceBenchMark001Mapper.selectComponentInfoPage(pageParam));
     }
     

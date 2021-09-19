@@ -22,6 +22,8 @@ import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,10 @@ import java.util.Map;
  */
 @Service
 public class FinAssetRateAdj001Service extends CommonExportService<FinAssetRateAdjDto> implements BaseProcessService<FinAssetRateAdjDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinAssetRateAdj001Service.class);
 
     @Autowired
     private IPlatformDate iPlatformDate;
@@ -256,7 +262,7 @@ public class FinAssetRateAdj001Service extends CommonExportService<FinAssetRateA
                     //entity = againCalCashPlan(entity);
                 }
                 catch (ParseException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

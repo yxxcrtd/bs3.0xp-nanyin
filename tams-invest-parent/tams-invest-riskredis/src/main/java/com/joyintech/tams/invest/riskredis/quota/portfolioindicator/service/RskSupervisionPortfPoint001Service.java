@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.riskredis.quota.portfolioindicator.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -90,6 +91,7 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 	 * @since 1.0
 	 */
 	public Page<RskPortfolioIndicator002Dto> selectTableIndForPage(Map<String, Object> parameters) {
+		parameters.put("platDate",platformDateService.getSysDate());
 		return restTemplate.postForPage(ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionPortfPoint/selectTableIndForPage",
 				parameters, RskPortfolioIndicator002Dto.class);
 	}
@@ -137,11 +139,11 @@ public class RskSupervisionPortfPoint001Service extends CommonExportService<RskP
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
         return null;
     }
-    private String transferWarnFoul(String value,String indCellType) throws Exception{
+    private String transferWarnFoul(String value,String indCellType) throws IOException {
 		String wg=StringUtil.EMPTY;
 		ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);

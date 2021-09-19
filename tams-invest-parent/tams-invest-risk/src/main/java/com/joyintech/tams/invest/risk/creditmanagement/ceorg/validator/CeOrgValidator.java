@@ -64,6 +64,13 @@ public class CeOrgValidator implements BeanValidator{
 					resultList.add(new ValidMessage("mdate", "到期日必须大于等于平台日！"));
 				}
 			}
+
+			if(dto.getOperateType().equals("submit") && StringUtil.isNotEmpty(dto.getVdate())){
+				if (dto.getVdate().compareTo(DateUtil.platDateFromCache()) < 0){
+					resultList.add(new ValidMessage("vdate", "生效日必须大于等于平台日！"));
+				}
+			}
+
         	if(StringUtil.isNotEmpty(dto.getCustomerId())&&StringUtil.isNotEmpty(dto.getVdate())&&StringUtil.isNotEmpty(dto.getMdate())){
 	           /* int vcount= ceOrg002Service.searchRepeatByVmDate(dto.getSeqno(),dto.getCustomerId(), dto.getVdate());
 	            if(vcount>0){
@@ -113,6 +120,9 @@ public class CeOrgValidator implements BeanValidator{
 				Map<String,List<CreditMstInfoDto>>  mapmap = new HashMap<>();
 				Map<String,BigDecimal>  maptwo = new HashMap<>();
 				for (CreditLines item:dto.getCreditQuoteItem()){
+					if(!StringUtil.isNotEmpty(item.getCreditAmt())){
+						continue;
+					}
 					for (CreditMstInfoDto dto1:sssMap.get("root")) {
 						if (dto1.getCreditMstId().equals(item.getCreditMstId())) {
 							creditAmt = ArithmeticUtil.doAdd(creditAmt, item.getCreditAmt());
@@ -134,7 +144,7 @@ public class CeOrgValidator implements BeanValidator{
 						BigDecimal creditAmtsum1 = BigDecimal.ZERO;
 						for (CreditLines item : dto.getCreditQuoteItem()) {
 						     for (CreditMstInfoDto dto2:listlist) {
-								if (dto2.getCreditMstId().equals(item.getCreditMstId())) {
+								if (dto2.getCreditMstId().equals(item.getCreditMstId()) && StringUtil.isNotEmpty(item.getCreditAmt())) {
 									creditAmtsum1 = ArithmeticUtil.doAdd(creditAmtsum1, item.getCreditAmt());
 								}
 							}

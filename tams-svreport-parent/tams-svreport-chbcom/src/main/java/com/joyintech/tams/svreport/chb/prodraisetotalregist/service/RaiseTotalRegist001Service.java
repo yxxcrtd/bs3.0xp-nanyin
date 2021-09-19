@@ -164,7 +164,6 @@ public class RaiseTotalRegist001Service extends SvrCommonExportService<RaiseTota
 						RaiseTotalRegist001Dto.class);
 				pageParam.put("investList", investList);
 			} catch (IOException e) {
-//				e.printStackTrace();
 	            logger.error(e.getMessage(),e);
 			}
 		} else {

@@ -30,7 +30,6 @@ public class MstCalendarType002Service extends CommonExportService<MstCalendarTy
      *
      * @param map 查询参数
      * @return 结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */

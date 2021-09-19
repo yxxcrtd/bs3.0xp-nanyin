@@ -135,7 +135,7 @@ public class FinPayPlanAdjustmentService extends BaseService<FinPayPlanAdjustmen
      * @since 1.0
      */
     public List<FinPayPlanAdjustmentDto> selectForPage(Map<String, Object> pageParam)
-        throws Exception {
+    {
             /*pageParam.put("openDateStrStart", DateUtil.parse((String)pageParam.get("openDateStrStart")));
             pageParam.put("openDateStrEnd", DateUtil.parse((String)pageParam.get("openDateStrEnd")));*/
             //数据字典.交易方向.付费  

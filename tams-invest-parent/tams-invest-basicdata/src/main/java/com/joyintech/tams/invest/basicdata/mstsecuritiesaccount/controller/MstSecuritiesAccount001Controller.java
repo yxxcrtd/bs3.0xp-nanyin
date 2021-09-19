@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.basicdata.mstsecuritiesaccount.controller;
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -72,14 +73,12 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 页面查询，表格分页
      * 
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstSecuritiesAccountDto> selectAll()
-        throws Exception {
+    public Page<MstSecuritiesAccountDto> selectAll(){
         Page<MstSecuritiesAccountDto> page = mstSecuritiesAccountService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -89,14 +88,12 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 证券账户账号联想文本框 <功能详细描述>
      * @param param String
      * @return List
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getSecAcctId")
-    public List<SuggestDto> getSecAcctId(String param)
-        throws Exception {
+    public List<SuggestDto> getSecAcctId(String param){
         List<SuggestDto> temp = mstSecuritiesAccountService.getSecAcctId(param);
         return temp;
     }
@@ -132,7 +129,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 行删除及删除按钮点击
      * @return AjaxResult
      * @param dto MstSecuritiesAccountDto
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @param  br BindingResult
      * @see
      * @since 1.0
@@ -140,8 +137,7 @@ public class MstSecuritiesAccount001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstSecuritiesAccountDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstSecuritiesAccountDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -164,14 +160,12 @@ public class MstSecuritiesAccount001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return mstSecuritiesAccountService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

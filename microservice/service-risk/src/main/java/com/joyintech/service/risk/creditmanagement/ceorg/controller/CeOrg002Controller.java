@@ -87,7 +87,7 @@ public class CeOrg002Controller {
 	 */
 	 @PostMapping("/getTreeCeOrgQuote/{page}/{length}")
 	public Page<CreditMstInfoDto> getTreeCeOrgQuote(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
 		 length=100000000;
 	    return ceOrg002Service.getTreeCeOrgQuote(page, length,param);
 	}
@@ -134,7 +134,7 @@ public class CeOrg002Controller {
      * @since 1.0
      */
     @PostMapping("insert")
-    public void insert(@RequestBody CreditLinesOrgDto dto) throws Exception {
+    public void insert(@RequestBody CreditLinesOrgDto dto) {
     	ceOrg002Service.insert(dto);
     }
     
@@ -145,7 +145,7 @@ public class CeOrg002Controller {
      * @since 1.0
      */
     @PostMapping("update")
-    public void update(@RequestBody CreditLinesOrgDto dto) throws Exception {
+    public void update(@RequestBody CreditLinesOrgDto dto) {
     	ceOrg002Service.update(dto);
     }
 	    
@@ -156,7 +156,7 @@ public class CeOrg002Controller {
      * @throws Exception
      */
     @PostMapping("delete")
-    public int delete(@RequestBody CreditLinesOrgDto dto) throws Exception {
+    public int delete(@RequestBody CreditLinesOrgDto dto) {
         return ceOrg002Service.delete(dto);
     }
 

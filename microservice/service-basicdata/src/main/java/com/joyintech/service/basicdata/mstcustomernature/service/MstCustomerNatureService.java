@@ -176,7 +176,7 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
      */
 
     public Page<MstCustomerNatureDto> searchMstCustomerNature(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> mstCustomerNatureMapper.searchMstCustomerNature(pageParam));
     }
 
@@ -211,7 +211,7 @@ public class MstCustomerNatureService extends BaseService<MstCustomerNatureDto> 
      * @since 1.0
      */
     public Page<MstCustomerNatureDto> selectCustomerInfo(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         buileQueryMap(pageParam);
         Page<MstCustomerNatureDto> dto = super.queryForPage(page, length,
             () -> mstCustomerNatureMapper.selectCustomerInfo(pageParam));

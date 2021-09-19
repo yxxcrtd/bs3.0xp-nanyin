@@ -1,5 +1,6 @@
 package com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.controller;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<BokFileTransfer003Dto> findPage(@RequestBody Map<String, Object> map,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception{
+    		@PathVariable("page") int page, @PathVariable("length") int length) throws ParseException {
         return valNetValueConfirm003Service.findPage(page,length,map);
     }
 
@@ -110,7 +111,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
     @Transactional
     @DTXTransaction
     @PostMapping("/uploadFile")
-	public int insertFileTransferInfo(@RequestBody Map<String, Object> params) throws Exception {
+	public int insertFileTransferInfo(@RequestBody Map<String, Object> params) throws ParseException {
 		 return valNetValueConfirm003Service.insertFileTransferInfo(params);
         
 	}
@@ -132,8 +133,7 @@ public class ValNetValueConfirm003Contoller extends BaseController {
     @DTXTransaction
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo){
 		return null;
 	}
 	
@@ -171,14 +171,13 @@ public class ValNetValueConfirm003Contoller extends BaseController {
     @DTXTransaction
     @RequestMapping(value = "/deleteFile")
     @ResponseBody
-    public void deleteFile(HttpServletRequest request)
-            throws Exception { 
+    public void deleteFile(HttpServletRequest request){
            valNetValueConfirm003Service.deleteFile(request);
     }
     
     
     @PostMapping("/downloadFile")
-    public BokFileTransfer003Dto downloadFile(@RequestBody String fileId) throws Exception{
+    public BokFileTransfer003Dto downloadFile(@RequestBody String fileId) {
     	return valNetValueConfirm003Service.downloadFile(fileId);
     }
     

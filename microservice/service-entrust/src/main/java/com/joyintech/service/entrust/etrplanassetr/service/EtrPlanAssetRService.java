@@ -123,7 +123,7 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
      * @since 1.0
      */
     public Page<EtrPlanAssetRDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         String assetType1 =(String)param.get("assetType1");
         if(StringUtil.isNotEmpty(assetType1)){
             List<String> assetType1List = StringUtil.splitToList(",", assetType1);

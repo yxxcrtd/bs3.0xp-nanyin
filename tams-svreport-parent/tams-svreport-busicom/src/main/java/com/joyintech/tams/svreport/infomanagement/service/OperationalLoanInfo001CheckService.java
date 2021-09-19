@@ -379,6 +379,9 @@ public class OperationalLoanInfo001CheckService{
 				checkResult.add(new ExcelValidDto(StringUtil.joinString(strList,GlobalConstant.VERTICAL_LINE), String.valueOf(i+2), "产品登记编码不存在！"));
 			}else{
 				//产品发行登记导入的时候，产品登记编码若存在，则继续检查对应的产品代码是否一样，不一样则提示：理财产品代码与行内标识码不一致。
+				bisinessPkList.forEach(column ->{
+					strList.add(line.get(column));
+				});
 				if(!prodId.equals(line.get("PROD_ID"))&&"CHB_PRD_ISSUE_SUB_TMP".equals(tableName)){
 					checkResult.add(new ExcelValidDto(StringUtil.joinString(strList,GlobalConstant.VERTICAL_LINE), String.valueOf(i+2), "理财产品代码与行内标识码不一致"));
 

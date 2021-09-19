@@ -46,9 +46,12 @@ import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -59,6 +62,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +81,9 @@ import java.util.stream.Collectors;
 @PageId("TrdDepositInvestTrade002")
 @RequestMapping("/invest/trade/trddepositinvesttrade/TrdDepositInvestTrade002")
 public class TrdDepositInvestTrade002Controller extends BaseController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
 	@Autowired
 	private TradeCommonService tradeCommonService;
     /**
@@ -500,12 +507,22 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
           //  paramMap.put("calendarId", dto.getCalendarId());
             paramMap.put("chlId", dto.getChlId());
             paramMap.put("finprodId", dto.getFinprodId());
+            //考虑流程中被占用,是的情况
+            paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
+            //针对，流程中数据退回，然后又重新提交时，流程中占有应不包含该数据
+            paramMap.put("isnotContainTrds",dto.getTradeId());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
 
             BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
             //融资金额
             BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            //流程中占用金额
+            BigDecimal positionFlow =null;
+            if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+                positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+            }
+            position= ArithmeticUtil.doAdd(position,positionFlow);
             position = ArithmeticUtil.doAdd(position, dto.getPrinAmt());
             //资产 融资金额、发行金额
             if (issueAmt.compareTo(position) < 0) {
@@ -607,8 +624,7 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdDepositInvestTrade001Dto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException {
     	if(flag) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter(); 
             bussinessCodeParameter.setCommonBusinessType(DictCodeList.共通业务类型_存款录入);
@@ -666,7 +682,17 @@ public class TrdDepositInvestTrade002Controller extends BaseController {
         if(dto.getOperateType().equals(BussinessConstant.SUBMIT)&& CommonUtil.isType(CacheUtil.getSysParam("pageRedisFlag"), BussinessDictCodeListRds.是否_是)){
             AjaxResult ar=interfRiskRdsService.checkRiskRds(new InterfRiskRdsDto(), BussinessDictCodeListRds.事件类型_投资交易.getValue(),
                     BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_存款.getValue(),
-                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
+                    (en)-> {
+                        try {
+                            return interfRiskRdsService.sendRiskRdsData(dto,en);
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new IOException();
+                        } catch (InstantiationException e) {
+                            logger.error(e.getMessage(), e);
+                            throw new InstantiationException();
+                        }
+                    });
             if (StringUtil.isNotEmpty(ar)) {
                 return ar;
             }

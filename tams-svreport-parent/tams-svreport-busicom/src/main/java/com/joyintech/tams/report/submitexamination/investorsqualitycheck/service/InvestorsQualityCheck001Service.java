@@ -201,7 +201,6 @@ public class InvestorsQualityCheck001Service extends BaseService<InvestorsQualit
             }
         } catch (InterruptedException | ExecutionException e) {
             logger.error("InvestorsQualityCheckController.searchInvestorsPassRate统计失败：", e);
-            e.printStackTrace();
             Thread.currentThread().interrupt();
             errFlag = true;
         }finally {

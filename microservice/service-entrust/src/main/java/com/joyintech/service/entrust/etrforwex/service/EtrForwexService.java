@@ -111,7 +111,7 @@ public class EtrForwexService extends BaseService<EtrForwexDto> {
      */
     public Page<EtrForwexDto> selectForPage(int page, int length,
                                                   Map<String, Object> pageParam)
-        throws Exception {
+    {
         String assetType1 = (String)pageParam.get("assetType1");
         if(StringUtil.isNotEmpty(assetType1)){
             pageParam.put("assetType1List", StringUtil.splitToList(GlobalConstant.COMMA,assetType1));

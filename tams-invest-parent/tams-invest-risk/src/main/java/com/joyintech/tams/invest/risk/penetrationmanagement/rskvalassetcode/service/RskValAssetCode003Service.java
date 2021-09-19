@@ -12,9 +12,12 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.ser
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.entity.RskValtblSubject;
@@ -111,6 +114,10 @@ public class RskValAssetCode003Service extends BaseService<RskValtblAssetSubMapD
             for(int m=0;m<rskValtblSubjectCodeList.size();m++){
                 TreeNode treeNode = new TreeNode();
                 String assetCode = rskValtblSubjectCodeList.get(m).getSubCode();
+                // 特殊处理100201科目 & 120401科目
+                if ((assetCode.startsWith("100201") && !StringUtil.equals("100201",assetCode))||(assetCode.startsWith("120401") && !StringUtil.equals("120401",assetCode))) {
+                   continue;
+                }
                 String assetName = assetCode+"("+rskValtblSubjectCodeList.get(m).getSubName()+")";
                 treeNode.setId(assetCode);treeNode.setName(assetName);
                 treeNode.setOpen(true);
@@ -144,5 +151,18 @@ public class RskValAssetCode003Service extends BaseService<RskValtblAssetSubMapD
         return restTemplate.getForList(ServiceApplication.RISK_SERVICE_NAME
             + "/RskValAssetCode/selecctRskValtblSubjectCodeList?subType="+subType,
             RskValtblSubject.class);
+    }
+    /**
+     * 查询目标汇总科目代码
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public  Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(Map<String, Object> pageParam){
+        return restTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME
+                        + "/RskValAssetCode/selecctRskValtblSubjectSumCodeList",pageParam,
+                SelectOptionDto.class);
     }
 }

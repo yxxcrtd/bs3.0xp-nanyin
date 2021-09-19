@@ -115,7 +115,7 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
      * @since 1.0
      */
     public Page<FinStockInfoDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finStockInfoMapper.queryForPage(pageParam));
     }
     public FinStockInfoDto getShares(Map<String, Object> Param) {
@@ -371,4 +371,14 @@ public class FinStockInfoService extends BaseService<FinStockInfoDto>{
 		}
 		return username;
 	}
+
+    /**
+     * 沪港通&深港通交易日历
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<SuggestDto> getShOrZhCalendarId(){
+        return finStockInfoMapper.getShOrZhCalendarId();
+    }
 }

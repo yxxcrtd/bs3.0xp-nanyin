@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,6 +76,10 @@ import com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dto.In
 @PageId("SvrEquityBusiInfoRegist001")
 @RequestMapping("/svreport/submitmanagement/equitybusiinforegist/SvrEquityBusiInfoRegist001")
 public class EquityBusiInfoRegist001Controller extends BaseController {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(EquityBusiInfoRegist001Controller.class);
     /**
      * 进度条接口
      */
@@ -174,6 +180,20 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
                 RequestUtil.getPageParam());
         return page;
     }
+
+    /**
+     * 查询事件（无分页）
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("searchInfo")
+    public List<EquityBusiInfoRegist001Dto> searchInfo(@RequestParam Map<String,Object> param) {
+        return equityBusiInfoRegistMService.searchInfo(param);
+    }
+
 
     /**
      * 产品名称下拉框
@@ -291,7 +311,7 @@ public class EquityBusiInfoRegist001Controller extends BaseController {
                 }
             }
             catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
         }

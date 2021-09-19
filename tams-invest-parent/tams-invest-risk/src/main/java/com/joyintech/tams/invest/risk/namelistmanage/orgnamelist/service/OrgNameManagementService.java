@@ -24,6 +24,9 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +69,7 @@ public class OrgNameManagementService extends CommonExportService<RskAccessListD
      * @return Page类 Page
      * @throws Exception 异常信息
      */
-    public Page<RskAccessListDetailDto> selectForDetailPage(Map<String, Object> pageParam) throws Exception{
+    public Page<RskAccessListDetailDto> selectForDetailPage(Map<String, Object> pageParam) throws IOException {
         Page<RskAccessListDetailDto> resultPage = selectPageResult(pageParam);
         List<RskAccessListDetailDto> handleRskAccessListDetailList = new ArrayList<>();
         if(pageParam.containsKey("rskAccessListLogDtoList")){
@@ -308,7 +311,7 @@ public class OrgNameManagementService extends CommonExportService<RskAccessListD
      * @see
      * @since 1.0
      */
-    public AssetNameManagement004Dto importData(String fileName,String inputType,String listId) throws Exception {
+    public AssetNameManagement004Dto importData(String fileName,String inputType,String listId) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
         if(fileName != null && fileName.startsWith(CacheUtil.getSysParam("upload_file_path"))){
             fileName.replace(CacheUtil.getSysParam("upload_file_path"),"");
         }

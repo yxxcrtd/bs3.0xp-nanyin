@@ -72,7 +72,6 @@ public class EquityInfoMaintenanceService extends BaseService{
             tabs = properties.getProperty(tableName);
         }
         catch (IOException e) {
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }finally{
             if(inStream !=null){
@@ -80,7 +79,6 @@ public class EquityInfoMaintenanceService extends BaseService{
                     inStream.close();
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
             }

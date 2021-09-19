@@ -194,10 +194,13 @@
         where SEQ_NO = #{seqNo,jdbcType=VARCHAR}
     </update>
     
-    <select id="selectAsset" resultType="com.joyintech.service.valuation.taxparametermanage.taxscheme.dto.TaxScheme005Dto" >
-        select * from (
-
-			select 
+    <select id="selectAsset" resultType="com.joyintech.framework.select.SelectOptionDto" >
+        select
+            concat(concat(t.assetId, '('), t.finprodType) id,
+            concat(concat(t.assetId, '('), concat(t.assetName, ')')) text,
+            t.originalFinprodId object
+        from (
+			select
 			       nvl(fp.finprod_market_id, fp.finprod_id) as assetId, /*资产代码*/
 			       nvl(fp.finprod_abbr, fp.finprod_name) as assetName, /*资产名称*/
 			       fp.finprod_type as finprodType, /*金融产品分类*/
@@ -240,8 +243,8 @@
              </if>
              <!-- select2的模糊查询 -->
 	         <if test="search!=null and !''.equals(search.trim())">
-	             AND (assetId like '%' || #{search} || '%'
-	             OR assetName like '%' || #{search} || '%' )
+	             AND (t.assetId like '%' || #{search} || '%'
+	             OR t.assetName like '%' || #{search} || '%' )
 	         </if>
          </where>
 

@@ -3,6 +3,7 @@ package com.joyintech.tams.svreport.loaninfomanagement.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,7 +80,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("queryPbcAssetCode")
-    public List<SelectOptionDto> queryPbcAssetCode() {
+    public Page<SelectOptionDto> queryPbcAssetCode() {
         return operationalLoanInfo001Service.queryPbcAssetCode(RequestUtil.getPageParam());
     }
 	@ResponseBody
@@ -120,7 +121,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCounties")
-    public List<SelectOptionDto> getLoanCounties() throws Exception {
+    public Page<SelectOptionDto> getLoanCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("loanContractOrgCity"));
@@ -135,7 +136,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCounties")
-    public List<SelectOptionDto> getBorrowerCounties() throws Exception {
+    public Page<SelectOptionDto> getBorrowerCounties() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_市.getValue());
         param.put("item_code_child", param.get("borrowerCity"));
@@ -150,7 +151,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getBorrowerCities")
-    public List<SelectOptionDto> getBorrowerCities() throws Exception {
+    public Page<SelectOptionDto> getBorrowerCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("borrowerProvince"));
@@ -165,7 +166,7 @@ public class OperationalLoanInfo002Controller extends BaseController{
 	 */
 	@ResponseBody
     @RequestMapping("/getLoanCities")
-    public List<SelectOptionDto> getLoanCities() throws Exception {
+    public Page<SelectOptionDto> getLoanCities() {
         Map<String, Object> param = RequestUtil.getPageParam();
         param.put("dict_code_parent",DictCode.区域划分_省.getValue());
         param.put("item_code_child", param.get("loanContractOrgProvince"));

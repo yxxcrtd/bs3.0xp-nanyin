@@ -121,7 +121,8 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrProjectDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrProjectDto> selectForPage(int page, int length, Map<String, Object> param)
+    {
         String portfolioId = (String)param.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));

@@ -36,7 +36,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
      * @throws Exception 异常信息
      */
     public Page<CreditLinesDealDto> selectOrgForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (pageParam.get("customerId") != null && StringUtil.isNotEmpty((String)pageParam.get("customerId"))) {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
@@ -59,7 +59,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
      * @throws Exception 异常信息
      */
     public Page<CreditLinesDealDto> selectAssetForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (pageParam.get("customerId") != null && StringUtil.isNotEmpty((String)pageParam.get("customerId"))) {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));
@@ -76,7 +76,7 @@ public class CeMonitorReportService extends BaseService<CreditLinesDealDto> {
      * @throws Exception 异常信息
      */
     public Page<CreditLinesDealDto> selectAssetGroupForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if (pageParam.get("customerId") != null && StringUtil.isNotEmpty((String)pageParam.get("customerId"))) {
             String[] customerIdList = pageParam.get("customerId").toString().split(",");
             pageParam.put("customerIdList", Arrays.asList(customerIdList));

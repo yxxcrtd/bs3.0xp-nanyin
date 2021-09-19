@@ -66,6 +66,10 @@ var QueryFunc = function () {
         var assetProvider = null;
         if (assetProviderTemp != null)
             assetProvider = assetProviderTemp.join(",");
+        var shOrZhList = $("#shOrZh").val();
+        if(shOrZhList!=null)
+            shOrZh = shOrZhList.join(",");
+        object.shOrZh = shOrZh;
         object.assetProvider = assetProvider;
         object.pageModel = pageModel;
         object.operateType = operateType;
@@ -364,6 +368,10 @@ var QueryFunc = function () {
         if(isTransInAsset){
         	$("#ccy").attr("disabled",true);
         }
+        if($('#tradeMarket').val()=='12'){
+            $('#shOrZhDiv').show();
+        }
+
     }
     var getCalendarId = function(){
             Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getCalendarId?tradeMarket=' + $('#tradeMarket').val(),'' , function(result){
@@ -391,6 +399,16 @@ var QueryFunc = function () {
         $('#tradeMarket').change(function(){
             AssetCommon.setTradeMarketId($('#tradeMarket').val());
             getCalendarId();
+            if($('#tradeMarket').val()=='12'){
+                $('#shOrZhDiv').show();
+                $('#isMarginFinprod').val('N').trigger('change').attr('disabled',true);
+                $('#ccy').val('HKD').trigger('change');
+            }else {
+                $('#shOrZh').val('').trigger('change');
+                $('#shOrZhDiv').hide();
+                $('#isMarginFinprod').attr('disabled',false);
+                $('#ccy').val('CNY').trigger('change');
+            }
         });
         $('#magnifier').click(getInterfStockInfo);
         //typeSelect();
@@ -412,6 +430,19 @@ var QueryFunc = function () {
                 $("#actualCreditProvid").attr("required", false).trigger('change');
             }
             star();
+        });
+        $("#shOrZh").change(function () {
+           if($("#shOrZh").val()=='01'){
+               $('#calendarId').textSelect("setValue",'13');
+           } else if($("#shOrZh").val()=='02'){
+               $('#calendarId').textSelect("setValue",'14');
+           }else if($("#shOrZh").val()){
+                   Joyin.ajax(basePath + 'invest/asset/stock/FinStockInfo002/getShOrZhCalendarId','' , function(result){
+                       $('#calendarId').textSelect("setValue",result.data[0].code);
+               });
+           }else{
+               $("#calendarId").empty();
+           }
         });
     });
 }());

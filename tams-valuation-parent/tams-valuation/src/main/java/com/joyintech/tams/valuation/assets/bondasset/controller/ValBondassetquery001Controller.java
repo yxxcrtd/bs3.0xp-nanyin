@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assets.bondasset.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -140,7 +141,7 @@ public class ValBondassetquery001Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValBondassetquery001Dto> findPage() throws Exception {
+    public Page<ValBondassetquery001Dto> findPage() {
     	Map<String,Object> reqMap = RequestUtil.getPageParam();
         return valBondassetquery001Service.findPage(reqMap);
     }
@@ -155,7 +156,7 @@ public class ValBondassetquery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
             String datas = this.getParam("datas");
             Map<String, Object> paraMap = RequestUtil.getPageParam();
             List<ValBondassetquery001Dto> listdto;
@@ -189,7 +190,7 @@ public class ValBondassetquery001Controller extends BaseController {
     @RequestMapping("doDeleteCheck")
     @ResponseBody
     public AjaxResult doDeleteCheck(@RequestBody @Valid ValBondassetquery001Dto dto,
-                                 BindingResult result) throws Exception {
+                                 BindingResult result) {
     	// 有交易数据
         int count = valBondassetquery002Service.selectDealCount(dto.getBondid());
         if (count > 0) {

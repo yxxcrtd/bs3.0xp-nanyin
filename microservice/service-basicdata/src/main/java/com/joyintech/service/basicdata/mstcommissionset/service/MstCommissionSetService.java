@@ -50,7 +50,7 @@ public class MstCommissionSetService extends BaseService{
      * @throws Exception 异常信息
      */
     public Page<MstCommissionSetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+	{
 //    	pageParam.put("feeType", BussinessDictCodeList.费用类型_佣金.getValue());
     	Page<MstCommissionSetDto> resutList= super.queryForPage(page, length, () -> mstCommissionSetMapper.selectForPage(pageParam));
     /*	List<MstCommissionSetDto> reList=new ArrayList<MstCommissionSetDto>();

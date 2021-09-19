@@ -44,7 +44,7 @@ public class ReportWorkMonitor002Service extends CommonExportService<ReportWorkM
      * @return 表格信息
      * @throws Exception 
      */
-    public Page<ReportWorkMonitor002Dto> findPage(Map<String, Object> params) throws Exception {
+    public Page<ReportWorkMonitor002Dto> findPage(Map<String, Object> params) {
     	 return restTemplate.postForPage(
                  ServiceApplication.VALUATION_SERVICE_NAME + "/ReportWorkMonitor002/findPage",
                  params, ReportWorkMonitor002Dto.class);

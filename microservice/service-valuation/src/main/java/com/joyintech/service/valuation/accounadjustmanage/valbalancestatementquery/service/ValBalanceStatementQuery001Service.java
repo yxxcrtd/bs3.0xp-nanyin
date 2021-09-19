@@ -78,7 +78,7 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
         });
     }
 
-    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) throws Exception {
+    public Page<ValBalanceStatementQuery001Dto> selectForPage(Map<String, Object> pageParam) {
         String parentId = (String)pageParam.get("parentId");
         
         return super.queryForTree(() -> valBalanceStatementQuery001Mapper.selectAll(pageParam),

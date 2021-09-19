@@ -13,6 +13,8 @@ package com.joyintech.service.asset.common.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.asset.common.dto.BussParticipantInfoDto;
 
@@ -25,6 +27,7 @@ import com.joyintech.service.asset.common.dto.BussParticipantInfoDto;
  * @see BussParticipantInfoMapper
  * @since 1.0
  */
+@Repository
 public interface BussParticipantInfoMapper {
     
     List<BussParticipantInfoDto> queryBussParticipantInfo(Map<String,Object> paramMap);

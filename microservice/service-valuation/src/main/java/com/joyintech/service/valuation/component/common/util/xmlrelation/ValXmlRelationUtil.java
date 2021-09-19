@@ -19,6 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -42,6 +44,10 @@ import com.joyintech.service.valuation.component.common.util.dto.ValXmlRelationR
  * @since 1.0
  */
 public class ValXmlRelationUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(ValXmlRelationUtil.class);
 
     /**
      * root
@@ -290,20 +296,20 @@ public class ValXmlRelationUtil {
                     CacheUtil.putAppCache(CACHE_KEY_XMLRELATION, resultList);
                 }
                 catch (ParserConfigurationException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 catch (SAXException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }finally {
                 if (xmlFileInStream != null){
                     try {
                         xmlFileInStream.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -525,7 +531,7 @@ public class ValXmlRelationUtil {
 //                        field.set(para, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
+//                       logger.error(e.getMessage(),e);
 //                    }
 //                }
 //                else {
@@ -535,7 +541,7 @@ public class ValXmlRelationUtil {
 //                        field.set(result, valueStr);
 //                    }
 //                    catch (Exception e) {
-//                        e.printStackTrace();
+//                       logger.error(e.getMessage(),e);
 //                    }
 //                }
             }
@@ -567,7 +573,7 @@ public class ValXmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
+    // logger.error(e.getMessage(),e);
     // }
     // finally {
     // if (fis != null) {
@@ -575,7 +581,7 @@ public class ValXmlRelationUtil {
     // fis.close();
     // }
     // catch (IOException e) {
-    // e.printStackTrace();
+    // logger.error(e.getMessage(),e);
     // }
     // }
     // }
@@ -594,7 +600,7 @@ public class ValXmlRelationUtil {
         // fileWriter.close();
         // }
         // catch (IOException e) {
-        // e.printStackTrace();
+        // logger.error(e.getMessage(),e);
         // }
 
     }

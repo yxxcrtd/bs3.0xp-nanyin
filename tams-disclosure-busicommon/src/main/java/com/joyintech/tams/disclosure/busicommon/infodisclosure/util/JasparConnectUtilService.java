@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import javax.xml.parsers.ParserConfigurationException;
 
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
@@ -38,6 +40,7 @@ import com.joyintech.tams.disclosure.busicommon.jixu.framework.report.pojo.Repor
 import com.joyintech.tams.disclosure.common.common.util.ReportGlobalConstant;
 import com.joyintech.tams.disclosure.interf.interf.common.constant.DateUtil;
 import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
+import org.xml.sax.SAXException;
 
 /**
  * jaspar连接公共类
@@ -77,8 +80,10 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndDownload_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType, String repId, String prodId) throws Exception{
+			String fileType, String repId, String prodId) throws IOException {
 		logger.info("连接报表服务器开始=====");
+		InputStream inputStream = null;
+		try{
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
 		URLConnection conn = connUrl.openConnection();
@@ -86,7 +91,7 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
+			inputStream = conn.getInputStream();
 
         String filePathName = prodId + GlobalConstant.UNDER_LINE + repId + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
         // 获取自己数组
@@ -109,16 +114,13 @@ public class JasparConnectUtilService {
 			logger.info("写文件结束=====");
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {
 				fos.close();
 			}
-			if (inputStream != null) {
-				inputStream.close();
 			}
-		}
 
         UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
                 localFile);
@@ -135,10 +137,16 @@ public class JasparConnectUtilService {
         joyinDFSTemplate.upload(sysUploadFileInfo);
         
 		return uploadFile;
+		}finally {
+			if (inputStream != null) {
+				inputStream.close();
+	}
+		}
+	
 	}
 	
 	public UploadFile connectJasparAndDownload(String strUrl, String fileName,
-			String fileType, String repId, String prodId,Map<String,Object> params) throws Exception{
+			String fileType, String repId, String prodId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -190,7 +198,7 @@ public class JasparConnectUtilService {
 	 * @throws Exception
 	 */
 	public UploadFile connectJasparAndExport_old(String strUrl, String fileName,// 修改为old方法，不使用 zhangyf 20190219
-			String fileType) throws Exception{
+			String fileType) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -199,10 +207,7 @@ public class JasparConnectUtilService {
 		// 防止屏蔽程序抓取而返回403错误
         conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
-        InputStream inputStream = conn.getInputStream();
 
-        // 获取自己数组
-        byte[] getData = readInputStream(inputStream);
         
         String path = FileNameUtil.createUploadFilePath("");
         
@@ -213,13 +218,16 @@ public class JasparConnectUtilService {
         }
 
 		FileOutputStream fos = null;
-
+		InputStream inputStream = null;
         try {
+			inputStream = conn.getInputStream();
+			// 获取自己数组
+			byte[] getData = readInputStream(inputStream);
 			fos = new FileOutputStream(localFile);
 			fos.write(getData);
 		}catch (Exception e)
 		{
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		finally {
 			if (fos != null) {
@@ -246,7 +254,7 @@ public class JasparConnectUtilService {
 		return uploadFile;
 	}
 	public UploadFile connectJasparAndExport(String strUrl, String fileName,
-			String fileType,String repId,Map<String,Object> params) throws Exception{
+			String fileType,String repId,Map<String,Object> params) {
 		if(null!=params.get("endDate")){
     		Date endDate = DateUtil.parse(params.get("endDate").toString());
     		params.put("endDate", new java.sql.Date(endDate.getTime()));
@@ -324,7 +332,7 @@ public class JasparConnectUtilService {
     	 
         StringBuffer tStringBuffer = new StringBuffer();
 
-        String sTempOneLine = new String("");
+        String sTempOneLine = "";
 
         while ((sTempOneLine = tBufferedReader.readLine()) != null){
 
@@ -339,7 +347,7 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String  connectJasparAndGenHtml(String strUrl) throws Exception{
+	public String  connectJasparAndGenHtml(String strUrl) throws IOException {
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;
@@ -361,16 +369,6 @@ public class JasparConnectUtilService {
 //        if (!dir.exists()) {
 //            dir.mkdirs();
 //        }
-//        FileOutputStream fos = new FileOutputStream(localFile);
-//        fos.write(getData);
-//        if (fos != null) {
-//            fos.close();
-//        }
-//        UploadFile uploadFile = new UploadFile(fileName, IDGenerator.generate(),
-//                localFile);
-//        //存入SYS_UPLOAD_FILE_INFO表
-//        if(null != fileAttachmentProcess) {
-//            fileAttachmentProcess.upload(uploadFile);
 //        }
 			return getData;
 		}finally {
@@ -378,7 +376,7 @@ public class JasparConnectUtilService {
 				inputStream.close();
 			}
 		}
-	}
+        }
 	/**
 	 * 连接Jaspar并将url上的xml解析成list格式
 	 * @param strUrl 连接url
@@ -386,7 +384,9 @@ public class JasparConnectUtilService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws Exception{
+
+	public List<Map<String,String>>  connectJasparAndGenXML(String strUrl,boolean flag) throws ParserConfigurationException, SAXException, IOException {
+
 		
 		URL connUrl = new URL(strUrl);
 //		fileName = fileName + GlobalConstant.UNDER_LINE + DateUtil.getNewSysDate() +GlobalConstant.POINT+ fileType;

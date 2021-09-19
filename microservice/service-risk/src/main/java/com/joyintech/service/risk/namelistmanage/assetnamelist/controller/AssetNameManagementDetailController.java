@@ -34,7 +34,7 @@ public class AssetNameManagementDetailController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RskAccessListDetailDto> selectAll(@RequestBody Map<String, Object> param,
-                                                  @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                  @PathVariable("page") int page, @PathVariable("length") int length) {
         return assetNameManagementDetailService.selectForPage(page, length, param);
     }
 
@@ -58,7 +58,7 @@ public class AssetNameManagementDetailController {
      * @since 1.0
      */
     @PostMapping("selectAssetListDetail")
-    public List<RskAccessListDetailDto> selectAssetListDetail(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RskAccessListDetailDto> selectAssetListDetail(@RequestBody Map<String, Object> param) {
         return assetNameManagementDetailService.selectAssetListDetail(param);
     }
 
@@ -71,7 +71,7 @@ public class AssetNameManagementDetailController {
      * @since 1.0selectAssetListDetailLog
      */
     @PostMapping("selectAssetListDetailLog")
-    public List<RskAccessListLogDto> selectAssetListDetailLog(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RskAccessListLogDto> selectAssetListDetailLog(@RequestBody Map<String, Object> param) {
         return assetNameManagementDetailService.selectAssetListDetailLog(param);
     }
 
@@ -84,7 +84,7 @@ public class AssetNameManagementDetailController {
      * @since 1.0
      */
     @PostMapping("selectNameListLogDetail")
-    public List<RskAccessListLogDto> selectNameListLogDetail(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RskAccessListLogDto> selectNameListLogDetail(@RequestBody Map<String, Object> param) {
         param.put("listDate", DateUtil.parse(param.get("listDate").toString()));
         return assetNameManagementDetailService.selectNameListLogDetail(param);
     }
@@ -97,7 +97,7 @@ public class AssetNameManagementDetailController {
      * @throws Exception
      */
     @PostMapping("selectDayHisAssetLog")
-    public List<RskAccessListLogDto> selectDayHisAssetLog(@RequestBody Map<String, Object> param) throws Exception {
+    public List<RskAccessListLogDto> selectDayHisAssetLog(@RequestBody Map<String, Object> param) {
         param.put("listDate", iPlatformDate.getSysDate());
         return assetNameManagementDetailService.selectDayHisAssetLog(param);
     }
@@ -109,7 +109,7 @@ public class AssetNameManagementDetailController {
      * @throws Exception
      */
     @PostMapping("getNameDetailCount")
-    public int getNameDetailCount(@RequestBody Map<String, Object> param) throws Exception {
+    public int getNameDetailCount(@RequestBody Map<String, Object> param) {
         return assetNameManagementDetailService.getNameDetailCount(param);
     }
 

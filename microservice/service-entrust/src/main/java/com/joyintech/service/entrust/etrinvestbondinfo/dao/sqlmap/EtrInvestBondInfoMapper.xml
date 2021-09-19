@@ -678,4 +678,16 @@ SELECT interf.SECID id,
 	<select id="getBondVDate" parameterType = "java.lang.String" resultType="java.util.Date">
 		SELECT Distinct VDATE FROM FIN_PRODUCT where FINPROD_MARKET_ID = #{finprodMarketId,jdbcType=VARCHAR}
 	</select>
+
+	<select id="getLastNetAmortizationPrice" resultType="java.math.BigDecimal">
+		SELECT DECODE(POS_AMT,0,0,TDY_COST_AMT/POS_AMT) FROM (
+			SELECT TDY_COST_AMT,POS_AMT,DECODE(POS_AMT,0,0,TDY_COST_AMT/POS_AMT)
+			FROM  BOK_STAT_DET_POSIITON  BSDP
+			JOIN FIN_PRODUCT FP ON FP.FINPROD_ID = BSDP.BOOKSET_ID
+			WHERE FP.FINPROD_MARKET_ID = #{portfolioId}
+			AND BUSI_ID = #{finprodId}
+			AND BSDP.BOOK_DATE &lt;= TO_DATE(#{sysdate},'yyyy-mm-dd')
+			ORDER BY BSDP.BOOK_DATE DESC
+		)WHERE ROWNUM =1
+	</select>
 </mapper>

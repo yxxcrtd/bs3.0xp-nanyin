@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class ExternalOptions001Controller extends BaseController {
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({ValidateGroupDelete.class}) ExternalOptions002Dto dto,
                             BindingResult bindingResult)
-            throws Exception {
+             {
         String msg = StringUtils.EMPTY;
         String operateType = dto.getOperateType();
 
@@ -153,8 +154,7 @@ public class ExternalOptions001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<ExternalOptions001Dto> listdto ;
 

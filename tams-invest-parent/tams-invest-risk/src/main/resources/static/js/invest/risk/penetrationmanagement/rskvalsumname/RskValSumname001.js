@@ -19,6 +19,7 @@ var loadTree = function (callback) {
           //update by yantianyuan 二级法人按钮改造 start
             if(purviewElements.indexOf('_edit')==-1){
             	$(".node_modify").hide();
+            	$(".node_copy").hide();
             }
             if(purviewElements.indexOf('_delete')==-1){
             	$(".node_delete").hide();
@@ -88,6 +89,19 @@ $(function () {
             });
         });
     })
+    //绑定映射生成按钮事件
+    $("body").on('click', ".node_copy", null, function (e) {
+            var thisNodeId = $(this).attr('nodeid');
+            Joyin.dialog(JoyinUtil.getLabel("RskValSumname005"),
+                basePath + "invest/risk/penetrationmanagement/rskvalsumname/RskValSumname005/init",
+                     "50%", "50%", {
+                         pageModel: PAGE_MODEL_NEW,
+                         id: thisNodeId
+                     },
+                     function () {
+                        loadTree();
+                     });
+        })
     /**
      * 定义数据表格
      */

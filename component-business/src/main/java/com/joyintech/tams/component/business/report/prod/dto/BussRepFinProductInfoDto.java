@@ -370,7 +370,7 @@ public class BussRepFinProductInfoDto extends RepProdDeclare {
     }
 
     @Override
-    @OfficePhone(fieldName = "BussRepFinProductInfo.repLiaisonTel")
+    //@OfficePhone(fieldName = "BussRepFinProductInfo.repLiaisonTel")
     public String getRepLiaisonTel() {
         return super.getRepLiaisonTel();
     }

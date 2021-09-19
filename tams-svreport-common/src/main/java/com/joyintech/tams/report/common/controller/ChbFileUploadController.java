@@ -233,7 +233,6 @@ public class ChbFileUploadController {
         zipOut.close();
         }
         catch(IOException e){
-//            e.printStackTrace();
             logger.error(e.getMessage(),e);
         }
         finally{
@@ -242,7 +241,6 @@ public class ChbFileUploadController {
                  input.close();
              }
              catch (IOException e) {
-//                 e.printStackTrace();
                  logger.error(e.getMessage(),e);
              }
          }
@@ -251,14 +249,12 @@ public class ChbFileUploadController {
              fos.close();
              }
              catch (IOException e) {
-//                 e.printStackTrace();
                  logger.error(e.getMessage(),e);
              }
          } 
          if (zipOut!=null){
              try{zipOut.close();}
              catch (IOException e) {
-//                 e.printStackTrace();
                  logger.error(e.getMessage(),e);
              }
          }

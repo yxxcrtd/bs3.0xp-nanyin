@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -153,7 +154,7 @@ public class FlowRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryIndexTypePro")
-    public List<FlowRiskSceneManage002Dto> queryIndexTypePro() throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryIndexTypePro() {
         String modelId = getParam("modelId");
         
         return flowRiskSceneManage002Service.selectTmplIndByType(modelId, DictCodeListRsk.压力测试指标类型_产品指标.getValue());
@@ -171,7 +172,7 @@ public class FlowRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryIndexTypeStr")
-    public List<FlowRiskSceneManage002Dto> queryIndexTypeStr() throws Exception {
+    public List<FlowRiskSceneManage002Dto> queryIndexTypeStr() {
         String modelId = getParam("modelId");
         return flowRiskSceneManage002Service.selectTmplIndByType(modelId, DictCodeListRsk.压力测试指标类型_承压指标.getValue());
     }
@@ -186,7 +187,7 @@ public class FlowRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryFtrOne")
-    public List<FlowRiskSceneManageListDto> queryFtrOne() throws Exception {
+    public List<FlowRiskSceneManageListDto> queryFtrOne() {
     	List<FlowRiskSceneManageListDto> list = new ArrayList<>();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String sceneId = getParam("sceneId");
@@ -246,7 +247,7 @@ public class FlowRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/queryFtrTwo")
-    public List<FlowRiskSceneManageListDto> queryFtrTwo() throws Exception {
+    public List<FlowRiskSceneManageListDto> queryFtrTwo() {
     	List<FlowRiskSceneManageListDto> list = new ArrayList<>();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         String sceneId = getParam("sceneId");
@@ -292,8 +293,7 @@ public class FlowRiskSceneManage002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody @Validated FlowRiskSceneManage002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated FlowRiskSceneManage002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -303,7 +303,8 @@ public class FlowRiskSceneManage002Controller extends BaseController {
             //String sceCode=dto.getSceneId();//获取dto中情景代码（此时是工作流业务编号）
             String riskTypeCode=dto.getRiskType();//获取dto适用风险分类CODE
             String sceneTypeCode=dto.getSceneType();//获取dto情景类型CODE
-            String finSceCode=IDGenerator.generate(12).substring(0, 8);
+//            String finSceCode=IDGenerator.generate(12).substring(0, 8);
+            String finSceCode=StringUtil.leftPad(flowRiskSceneManage002Service.getNewSceneId(), 4, "0");
             if(riskTypeCode.equals("01")){//综合风险
              finSceCode="Gnr".concat(Integer.valueOf(sceneTypeCode).toString()).concat(finSceCode);
             }else if(riskTypeCode.equals("02")){//市场风险

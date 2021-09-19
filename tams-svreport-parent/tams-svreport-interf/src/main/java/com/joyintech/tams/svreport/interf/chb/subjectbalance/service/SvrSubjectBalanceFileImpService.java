@@ -113,7 +113,6 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 				insertData(bokBalanceList);
 			}catch(Exception e){
 				logger.error(e.getMessage(),e);
-				e.printStackTrace();
 				success = false;
 			}
 			
@@ -236,7 +235,6 @@ public class SvrSubjectBalanceFileImpService extends FileImpService{
 			session.clearCache();
 		}catch (Exception e) {
 			logger.error(e.getMessage(),e);
-			e.printStackTrace();
 		} finally {
 			session.close();
 		}

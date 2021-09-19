@@ -302,4 +302,9 @@ FROM
 		</if>
 	</where>
 </select>
+
+	<select id = "selectFHCounter" resultType = "java.lang.Integer">
+		SELECT COUNT(1) count FROM FIN_POST_INVEST_INFO
+		WHERE POST_ORG = #{counterId,jdbcType=VARCHAR}
+	</select>
 </mapper>

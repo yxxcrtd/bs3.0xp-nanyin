@@ -7,6 +7,7 @@ import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import com.joyintech.tams.invest.trade.planccy.service.TrdPlanCcyInvestTrade002S
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+
+import java.lang.reflect.InvocationTargetException;
 
 @Service
 public class MobileTrdPlanCcyInvestTradeService {
@@ -35,7 +38,7 @@ public class MobileTrdPlanCcyInvestTradeService {
     @Autowired
     private DateCalService dateCalService;
 	
-	public String getWorkFlowInfo(String businessData) throws Exception {
+	public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
         //1、获取业务数据
 		TrdPlanCcyInvestTradeDto dto = JsonUtils.json2Object(businessData, TrdPlanCcyInvestTradeDto.class);
 

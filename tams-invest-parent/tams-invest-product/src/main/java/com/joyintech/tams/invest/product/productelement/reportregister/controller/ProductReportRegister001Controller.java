@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.product.productelement.reportregister.controll
 
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -71,8 +72,7 @@ public class ProductReportRegister001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return productReportRegister001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -124,11 +124,11 @@ public class ProductReportRegister001Controller extends BaseController {
 	 * @param dto
 	 * @param br
 	 * @return 结果
-	 * @throws Exception 异常
+	 * @throws WorkFlowException 异常
 	 */
 	@ResponseBody
 	@RequestMapping(ACTION_DELETE)
-	public AjaxResult save(@RequestBody ProductReportRegister001Dto dto, BindingResult br) throws Exception {
+	public AjaxResult save(@RequestBody ProductReportRegister001Dto dto, BindingResult br) throws WorkFlowException {
 		if (br.hasErrors()) {
 			return new AjaxResult(br);
 		}

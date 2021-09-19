@@ -282,4 +282,14 @@ public interface SysCoreMapper {
 	List<InterfStockInfoDto> selectWindStockAsset(Map<String, Object> map);
 
 	void insertJxInfo(JxsIssueInfo jxsIssueInfo);
+
+	/**
+	 * 资产是否存在交易(存在撤销交易也算交易)
+	 *
+	 * @param finprodId 金融产品代码
+	 * @return 交易笔数
+	 * @see
+	 * @since 1.0
+	 */
+	int isTransInAssetTwo(String finprodId);
 }

@@ -46,7 +46,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
  */
 @Service
 public class DataCheckService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(DataCheckService.class);
     
     @Autowired
     private CheckRuleMapper checkRuleMapper;
@@ -103,10 +103,10 @@ public class DataCheckService {
                         }
                     }
                     catch (SecurityException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     mapClassMethod.put(r.getCheckclass(),mapMethod);
                 }
@@ -186,10 +186,10 @@ public class DataCheckService {
                     }
                 }
                 catch (SecurityException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 mapClassMethod.put(r.getCheckclass(),mapMethod);
             }
@@ -264,10 +264,10 @@ public class DataCheckService {
                         }
                     }
                     catch (SecurityException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     mapClassMethod.put(r.getCheckclass(),mapMethod);
                 }
@@ -327,13 +327,13 @@ public class DataCheckService {
             ret = (boolean)method.invoke(null,data, condition);
         }
         catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return ret;
 
@@ -355,13 +355,13 @@ public class DataCheckService {
             ret = (boolean)method.invoke(null,data, rule);
         }
         catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return ret;
 
@@ -448,10 +448,10 @@ public class DataCheckService {
             }
         }
         catch (SecurityException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         
         Map<String,List<CheckCondition>> mapConditions = new HashMap<String,List<CheckCondition>>();
@@ -663,10 +663,10 @@ public class DataCheckService {
             }
         }
         catch (SecurityException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         
         Map<String,List<CheckCondition>> mapConditions = new HashMap<String,List<CheckCondition>>();

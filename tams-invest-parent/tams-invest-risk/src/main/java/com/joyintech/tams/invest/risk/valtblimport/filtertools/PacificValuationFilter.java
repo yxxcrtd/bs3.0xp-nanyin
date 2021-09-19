@@ -14,7 +14,7 @@ public class PacificValuationFilter extends AbstractFilter {
 	private static final int PROJ_NAME_POS = XlsUtil.convertColumnCodeToSeq("F")-1;
 	
 	@Override
-	public Workbook doFilter(Workbook workbook,int sheetIndex) throws Exception {
+	public Workbook doFilter(Workbook workbook,int sheetIndex) {
 		org.apache.poi.ss.usermodel.Sheet sheet = workbook.getSheetAt(sheetIndex);
 	    for (org.apache.poi.ss.usermodel.Row row : sheet) {
 	    	org.apache.poi.ss.usermodel.Cell cellProjCode = row.getCell(PROJ_CODE_POS);

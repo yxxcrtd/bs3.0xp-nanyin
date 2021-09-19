@@ -27,7 +27,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -91,7 +94,11 @@ import com.joyintech.tools.collectors.JoyinCollectors;
  */
 @Service
 public class PbcClassicsDataFileService {
-	
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcClassicsDataFileService.class);
+
     public static final String APPLY_TYPE_1="1-产品基本信息";
     public static final String APPLY_TYPE_2="2-产品终止信息";
     public static final String APPLY_TYPE_3="3-资金池基本信息";
@@ -167,7 +174,7 @@ public class PbcClassicsDataFileService {
     
     /**
      * 删除上日及本日未处理（未发送）业务数据
-     * @param genDate 跑批日期
+     * @param batchDate 跑批日期
      * @return
      */
 	public String deleteUnSendDataFile(Date batchDate) {
@@ -341,7 +348,7 @@ public class PbcClassicsDataFileService {
     	
     	// 【dat文件生成留痕】文件和数据的主键集合map（key="pathfilenameDatakeylist"，value=文件全名和文件内数据主键list）
     	Map<String,Object> fileDataMap = new HashMap<String,Object>();
-    	
+
     	//记录序列号
     	Map<String,List<String>> seqMap = new HashMap<String,List<String>>();
     	//生成dat文件
@@ -2252,7 +2259,7 @@ public class PbcClassicsDataFileService {
     			  }
 //                new File(folderPath).delete();//删除文件夹
               }catch (Exception e) {
-            	  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     		  try {
     			  if(StringUtil.equals("open", switchs)){
@@ -2268,8 +2275,7 @@ public class PbcClassicsDataFileService {
     			  }
               }
               catch (Exception e) {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
               }
     	}
     	return zipFileList;
@@ -2302,6 +2308,7 @@ public class PbcClassicsDataFileService {
     		fileInfo.setFileid(fileid);
     		fileInfo.setFilecode(dataInfo.get(0));
     		fileInfo.setHeadOrgcode(dataInfo.get(1));
+			fileInfo.setOrgCode(CommonUtil.selectPbcBankCodeBack(dataInfo.get(1)));
     		fileInfo.setCdate(genDate);
     		fileInfo.setFileseqno(fileseqno);
     		fileInfo.setFilepath(folderPath.replace("_", "")+".zip");
@@ -2392,7 +2399,7 @@ public class PbcClassicsDataFileService {
     	try {
 			ZipFileUtil.compressZip(outFile, true, allFiles);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
     	
     	return finalZipPath;

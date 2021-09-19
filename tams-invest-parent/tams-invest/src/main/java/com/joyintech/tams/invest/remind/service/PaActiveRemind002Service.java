@@ -72,7 +72,7 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
      * @since 1.0
      */
     public List<PaActiveRemind001Dto> selRamind(Map<String, Object> param)
-            throws Exception {
+             {
         List<PaActiveRemind001Dto> dto = new ArrayList<PaActiveRemind001Dto>();
         //净值披露提醒,债券评级提醒,项目类资产标的修改提醒,债券借贷融出的券还本收息提醒
         param.put("R6S1", BussinessDictCodeList.提醒类型_小分类_净值披露提醒.getValue());

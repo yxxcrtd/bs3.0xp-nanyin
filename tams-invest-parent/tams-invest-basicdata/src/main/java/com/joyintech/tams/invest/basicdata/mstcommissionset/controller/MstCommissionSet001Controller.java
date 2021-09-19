@@ -5,6 +5,7 @@ package com.joyintech.tams.invest.basicdata.mstcommissionset.controller;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.util.*;
 import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -61,12 +63,10 @@ public class MstCommissionSet001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCommissionSetDto> selectAll()
-        throws Exception {
+    public Page<MstCommissionSetDto> selectAll(){
         Page<MstCommissionSetDto> page = mstCommissionSetService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -92,13 +92,12 @@ public class MstCommissionSet001Controller extends BaseController {
      * @param dto 页面选中的数据
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstCommissionSetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstCommissionSetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -127,7 +126,6 @@ public class MstCommissionSet001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
@@ -139,8 +137,7 @@ public class MstCommissionSet001Controller extends BaseController {
 //            RequestUtil.getParameters(getRequest()));
 //
 //    }
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         List<MstCommissionSetDto> param1;
         if (datas == null) {

@@ -362,6 +362,10 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      */
     组合类型_委外组合(BussinessDictCode.组合类型,"02","委外组合"),
     /**
+     * 自主组合
+     */
+    组合类型_自主组合(BussinessDictCode.组合类型, "06", "自主组合"),
+    /**
      * 基准类型
      */
     基准类型_SAA(BussinessDictCode.基准类型,"01","SAA"),
@@ -4726,6 +4730,11 @@ public enum BussinessDictCodeList implements BaseDictCodeList {
      * 池类型_机构池
      */
     池类型_机构池(BussinessDictCode.池类型,"02" , "机构池"),
+
+    /**
+     * 机构类型_总行
+     */
+    机构类型_省联社(BussinessDictCode.机构类型, "01", "省联社"),
     /**
      * 出入项类型_资产
      */

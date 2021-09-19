@@ -133,14 +133,13 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findScheme")
-	public List<SelectOptionDto> findScheme() throws Exception {
+	public List<SelectOptionDto> findScheme() {
 		return valuationMethodScheme001Service.findScheme(RequestUtil.getPageParam());
 	}
 
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme003Dto dto, BindingResult bindingResult)
-			throws Exception {
+	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme003Dto dto, BindingResult bindingResult) {
 //        List<ValuationMethodScheme003Dto> list = listdto.getListValuationMethodSchemeDto();
 //        ValuationMethodScheme003Dto dto = list.get(0);
 		String msg = StringUtil.EMPTY;
@@ -311,7 +310,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getTradeMarket")
-	public List<SelectOptionDto> getTradeMarket() throws Exception {
+	public List<SelectOptionDto> getTradeMarket() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.证券品种.getValue());
 		param.put("dict_code_child", DictCode.估值交易市场.getValue());
@@ -327,7 +326,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getInvAim")
-	public List<SelectOptionDto> getInvAim() throws Exception {
+	public List<SelectOptionDto> getInvAim() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.证券品种.getValue());
 		param.put("dict_code_child", DictCode.投资目的.getValue());
@@ -344,7 +343,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
     /** modify by dongjun on 20181218 start**/
 	@ResponseBody
 	@RequestMapping("getSecDetailType")
-	public Page<SelectPageOptionDto> getSecDetailType() throws Exception {
+	public Page<SelectPageOptionDto> getSecDetailType() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.估值交易市场.getValue());
 		param.put("dict_code_child", DictCode.债券类型.getValue());
@@ -361,7 +360,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationMethod")
-	public List<SelectOptionDto> getValuationMethod() throws Exception {
+	public List<SelectOptionDto> getValuationMethod(){
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.证券品种.getValue());
 		param.put("dict_code_child", DictCode.估值方法.getValue());
@@ -390,7 +389,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationPrice")
-	public List<SelectOptionDto> getValuationPrice() throws Exception {
+	public List<SelectOptionDto> getValuationPrice() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		String tradeMarket = (String) param.get("tradeMarket");
 		if (Arrays.asList(DictCodeListExt1.证券品种_基金.getValue()).contains(param.get("secType"))&&StringUtils.isNotEmpty(tradeMarket)) {

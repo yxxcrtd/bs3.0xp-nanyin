@@ -61,7 +61,7 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
      * @throws Exception 异常信息
      */
     public Page<MstSecuritiesAccountDto> selectForPage(int page, int length,Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> mstSecuritiesAccountMapper.select(param));
     }
     

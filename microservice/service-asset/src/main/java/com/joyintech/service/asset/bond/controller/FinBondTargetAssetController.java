@@ -49,7 +49,7 @@ public class FinBondTargetAssetController {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<FinBondTargetAssetDto> selectAll(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length){
         return finBondTargetAssetService.selectForPage(page, length, param);
     }
     /**
@@ -63,7 +63,7 @@ public class FinBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public void insert(@RequestBody FinBondTargetAssetDto dto) throws Exception {
+    public void insert(@RequestBody FinBondTargetAssetDto dto) {
         finBondTargetAssetService.insert(dto);
     }
     
@@ -77,7 +77,7 @@ public class FinBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public void update(@RequestBody FinBondTargetAssetDto dto) throws Exception{
+    public void update(@RequestBody FinBondTargetAssetDto dto){
         finBondTargetAssetService.update(dto);
     }
     
@@ -91,7 +91,7 @@ public class FinBondTargetAssetController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public void delete(@RequestBody FinBondTargetAssetDto dto) throws Exception{
+    public void delete(@RequestBody FinBondTargetAssetDto dto){
         finBondTargetAssetService.delete(dto);
     }
     
@@ -104,7 +104,7 @@ public class FinBondTargetAssetController {
      * @since 1.0
      */
     @GetMapping("getBasicInfo")
-    public FinBondTargetAssetDto getBasicInfo(String finprodId) throws Exception {
+    public FinBondTargetAssetDto getBasicInfo(String finprodId) {
         return finBondTargetAssetService.getBasicInfo(finprodId);
     }
     // 债券新建新增快捷录入功能 add by renping 20191010 start
@@ -146,7 +146,7 @@ public class FinBondTargetAssetController {
     @PostMapping("getfinprodIdForAdd/{page}/{length}")
     public Page<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return finBondTargetAssetService.getfinprodIdForAdd(page,length,param);
     }
     

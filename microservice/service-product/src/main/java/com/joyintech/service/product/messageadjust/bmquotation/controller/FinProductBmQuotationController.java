@@ -10,6 +10,7 @@
  
 package com.joyintech.service.product.messageadjust.bmquotation.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +72,7 @@ public class FinProductBmQuotationController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<FinProductBmQuotationDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return finProductBmQuotationService.selectForPage(page, length, param);
     }
     
@@ -82,7 +83,7 @@ public class FinProductBmQuotationController {
      * @throws Exception 异常
      */
     @PostMapping("selectForList")
-    public List<FinProductBmQuotationDto> selectForList(@RequestBody Map<String, Object> param) throws Exception {
+    public List<FinProductBmQuotationDto> selectForList(@RequestBody Map<String, Object> param) {
         return finProductBmQuotationService.selectForList(param);
     }
     /**
@@ -99,7 +100,7 @@ public class FinProductBmQuotationController {
     @Transactional
     @DTXTransaction
     @PostMapping("delete")
-    public int delete(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+    public int delete(@RequestBody FinProductBmQuotationDto dto) {
         return finProductBmQuotationService.delete(dto);
     }
     
@@ -117,7 +118,7 @@ public class FinProductBmQuotationController {
     @Transactional
     @DTXTransaction
     @PostMapping("insert")
-    public int insert(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+    public int insert(@RequestBody FinProductBmQuotationDto dto) throws InvocationTargetException, IllegalAccessException {
         return finProductBmQuotationService.insert(dto);
     }
 
@@ -135,7 +136,7 @@ public class FinProductBmQuotationController {
     @Transactional
     @DTXTransaction
     @PostMapping("update")
-    public int update(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+    public int update(@RequestBody FinProductBmQuotationDto dto) {
         return finProductBmQuotationService.update(dto);
     }
     /**
@@ -148,7 +149,7 @@ public class FinProductBmQuotationController {
      * @since 1.0
      */
     @PostMapping("/selectByFinprodId")
-    public FinProductBmQuotationDto selectByFinprodId(@RequestBody Map<String, Object> param) throws Exception {
+    public FinProductBmQuotationDto selectByFinprodId(@RequestBody Map<String, Object> param) {
         return finProductBmQuotationService.selectByFinprodId(param);
     }       
     /**
@@ -160,7 +161,7 @@ public class FinProductBmQuotationController {
      * @since 1.0
      */
     @PostMapping("/selectByFinprodIdAndEffDate")
-    public List<FinProductBmQuotationDto> selectByFinprodIdAndEffDate(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+    public List<FinProductBmQuotationDto> selectByFinprodIdAndEffDate(@RequestBody FinProductBmQuotationDto dto) {
         return finProductBmQuotationService.selectByFinprodIdAndEffDate(dto);
     }
     /**
@@ -172,7 +173,7 @@ public class FinProductBmQuotationController {
      * @since 1.0
      */
     @GetMapping("/getMdate")
-    public FinProductBmQuotationDto getMdate(String finprodId) throws Exception {
+    public FinProductBmQuotationDto getMdate(String finprodId) {
         return finProductBmQuotationService.getMdate(finprodId);
     }
     /**
@@ -184,7 +185,7 @@ public class FinProductBmQuotationController {
      * @since 1.0
      */
      @PostMapping("/getCount")
-     public Integer getCount(@RequestBody FinProductBmQuotationDto dto) throws Exception {
+     public Integer getCount(@RequestBody FinProductBmQuotationDto dto) {
          return finProductBmQuotationService.getCount(dto);
      }
 }

@@ -17,8 +17,11 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
@@ -33,6 +36,11 @@ import java.util.Map;
  **/
 @Service
 public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSupervisionRiskAnalyzeDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(RskSupervisionRiskAnalyzeService.class);
+
 	/*@Autowired
 	private RoleCommonService roleCommonService;*/
     /**
@@ -212,12 +220,12 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
     }
 
-    public String transferSupVal(String value,String foulValue,String indCellType) throws Exception{
+    public String transferSupVal(String value,String foulValue,String indCellType) throws IOException {
     	if(!StringUtil.isNotEmpty(value)){
     		return value;
     	}
@@ -246,7 +254,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	return wg;
     }
     
-    public String transferWarnFoul(String value,String indCellType) throws Exception{
+    public String transferWarnFoul(String value,String indCellType) throws IOException {
     	String wg=StringUtil.EMPTY;
     	ObjectMapper mapper = new ObjectMapper();
 		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);

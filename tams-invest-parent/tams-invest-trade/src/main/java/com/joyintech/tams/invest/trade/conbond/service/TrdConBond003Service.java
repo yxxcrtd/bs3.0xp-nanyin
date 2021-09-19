@@ -55,6 +55,8 @@ import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -74,6 +76,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implements BaseProcessService<TrdConBond003Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdConBond003Service.class);
 
     /**
      * BussTrdTransferOrderService
@@ -1179,7 +1185,7 @@ public class TrdConBond003Service extends BaseService<TrdConBond003Dto> implemen
         		WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         	}
         	catch (Exception e) {
-        		e.printStackTrace();
+                logger.error(e.getMessage(),e);
         	}
         	// 先删除流程中数据
             this.doDelete(entity.getWorkflowId());

@@ -225,69 +225,69 @@ public class SvrMaptoEntityUtil {
 	
 	
 	
-	/**
-	 * 测试方法
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		//数据list
-		List<Map<String, String>> infoList=new  ArrayList<>();
-		Map<String, String>  map1=new  HashMap<String, String>();
-		ChbAssetInfo  ChbAssetInfo= new  ChbAssetInfo();
-		map1.put("ASSET_CODE", "dxyceshi111");
-		map1.put("ASSET_TYPE", "02");
-		map1.put("VDATE", "2020-09-15");
-		map1.put("AMT", "100");
-		infoList.add(map1);
-		Map<String, String>  map2=new  HashMap<String, String>();
-		map2.put("ASSET_CODE", "dxyceshi222");
-		map2.put("ASSET_TYPE", "03");
-		map2.put("VDATE", "20200916");
-		map2.put("AMT", "200");
-		infoList.add(map2);
-		Map<String, String>  map3=new  HashMap<String, String>();
-		map3.put("ASSET_CODE", "dxyceshi333");
-		map3.put("ASSET_TYPE", "04");
-		map3.put("VDATE", "2020-09-17");
-		map3.put("AMT", "300");
-		infoList.add(map3);
-		
-		//数据库表字段list
-		List<String> listCloumn  =new  ArrayList<>(); 
-		listCloumn.add("ASSET_CODE1");
-		listCloumn.add("ASSET_TYPE");
-		listCloumn.add("VDATE");
-		listCloumn.add("AMT");
-	    List<ChbAssetInfo>	 list=(List<ChbAssetInfo>) SvrMaptoEntityUtil.convertMapToEntity(infoList, listCloumn,ChbAssetInfo.getClass());
-	    for(ChbAssetInfo  dto: list){
-	    	System.out.println("ASSET_CODE:"+dto.getAssetCode());
-	    	System.out.println("ASSET_TYPE:"+dto.getAssetType());
-	    	System.out.println("VDATE:"+dto.getVdate());
-	    	System.out.println("AMT:"+dto.getAmt());
-	    }
-	    
-	    //再将 List<ChbAssetInfo>	 list转为List<Map<String, String>>
-	    System.out.println("再将list<T>转为list<map<string,string>>-------");
-
-	    List<Map<String, String>>  listmap= SvrMaptoEntityUtil.convertEntityToMap(list, listCloumn);
-	    if(listmap.size()>0){
-		    System.out.println(listmap.get(0).get("ASSET_CODE"));
-		    System.out.println(listmap.get(0).get("ASSET_TYPE"));
-		    System.out.println(listmap.get(0).get("VDATE"));
-		    System.out.println(listmap.get(0).get("AMT"));
-		    
-		    System.out.println(listmap.get(1).get("ASSET_CODE"));
-		    System.out.println(listmap.get(1).get("ASSET_TYPE"));
-		    System.out.println(listmap.get(1).get("VDATE"));
-		    System.out.println(listmap.get(1).get("AMT"));
-		    
-		    System.out.println(listmap.get(2).get("ASSET_CODE"));
-		    System.out.println(listmap.get(2).get("ASSET_TYPE"));
-		    System.out.println(listmap.get(2).get("VDATE"));
-		    System.out.println(listmap.get(2).get("AMT"));
-	    }
-	    
-	}
+//	/**
+//	 * 测试方法
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		//数据list
+//		List<Map<String, String>> infoList=new  ArrayList<>();
+//		Map<String, String>  map1=new  HashMap<String, String>();
+//		ChbAssetInfo  ChbAssetInfo= new  ChbAssetInfo();
+//		map1.put("ASSET_CODE", "dxyceshi111");
+//		map1.put("ASSET_TYPE", "02");
+//		map1.put("VDATE", "2020-09-15");
+//		map1.put("AMT", "100");
+//		infoList.add(map1);
+//		Map<String, String>  map2=new  HashMap<String, String>();
+//		map2.put("ASSET_CODE", "dxyceshi222");
+//		map2.put("ASSET_TYPE", "03");
+//		map2.put("VDATE", "20200916");
+//		map2.put("AMT", "200");
+//		infoList.add(map2);
+//		Map<String, String>  map3=new  HashMap<String, String>();
+//		map3.put("ASSET_CODE", "dxyceshi333");
+//		map3.put("ASSET_TYPE", "04");
+//		map3.put("VDATE", "2020-09-17");
+//		map3.put("AMT", "300");
+//		infoList.add(map3);
+//
+//		//数据库表字段list
+//		List<String> listCloumn  =new  ArrayList<>();
+//		listCloumn.add("ASSET_CODE1");
+//		listCloumn.add("ASSET_TYPE");
+//		listCloumn.add("VDATE");
+//		listCloumn.add("AMT");
+//	    List<ChbAssetInfo>	 list=(List<ChbAssetInfo>) SvrMaptoEntityUtil.convertMapToEntity(infoList, listCloumn,ChbAssetInfo.getClass());
+//	    for(ChbAssetInfo  dto: list){
+//	    	System.out.println("ASSET_CODE:"+dto.getAssetCode());
+//	    	System.out.println("ASSET_TYPE:"+dto.getAssetType());
+//	    	System.out.println("VDATE:"+dto.getVdate());
+//	    	System.out.println("AMT:"+dto.getAmt());
+//	    }
+//
+//	    //再将 List<ChbAssetInfo>	 list转为List<Map<String, String>>
+//	    System.out.println("再将list<T>转为list<map<string,string>>-------");
+//
+//	    List<Map<String, String>>  listmap= SvrMaptoEntityUtil.convertEntityToMap(list, listCloumn);
+//	    if(listmap.size()>0){
+//		    System.out.println(listmap.get(0).get("ASSET_CODE"));
+//		    System.out.println(listmap.get(0).get("ASSET_TYPE"));
+//		    System.out.println(listmap.get(0).get("VDATE"));
+//		    System.out.println(listmap.get(0).get("AMT"));
+//
+//		    System.out.println(listmap.get(1).get("ASSET_CODE"));
+//		    System.out.println(listmap.get(1).get("ASSET_TYPE"));
+//		    System.out.println(listmap.get(1).get("VDATE"));
+//		    System.out.println(listmap.get(1).get("AMT"));
+//
+//		    System.out.println(listmap.get(2).get("ASSET_CODE"));
+//		    System.out.println(listmap.get(2).get("ASSET_TYPE"));
+//		    System.out.println(listmap.get(2).get("VDATE"));
+//		    System.out.println(listmap.get(2).get("AMT"));
+//	    }
+//
+//	}
 
 
 }

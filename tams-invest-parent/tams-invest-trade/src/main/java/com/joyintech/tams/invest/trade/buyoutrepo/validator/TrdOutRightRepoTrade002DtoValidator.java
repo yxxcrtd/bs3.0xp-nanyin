@@ -407,7 +407,7 @@ public class TrdOutRightRepoTrade002DtoValidator implements TradeCommonValidator
         }
 
         //add by msk TISHKBS-1038 新增一次性划款通道交易前是否划款判断 start
-        if(!"".equals(inputDto.getChlId())&&inputDto.getChlId()!=null){
+        if(inputDto.getChlId()!=null&&!"".equals(inputDto.getChlId())){
             Map<String,Object> sMap= new HashMap<String ,Object>();
             sMap.put("chlId",inputDto.getChlId());
             sMap.put("finprodId",inputDto.getPortfolioId());

@@ -19,6 +19,8 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructure003Service;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service.RskValStructureService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +37,11 @@ import java.util.List;
  */
 @Component
 public class RskValStructureValidator implements BeanValidator{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValStructureValidator.class);
+
     /**
      * rskValStructureService
      */
@@ -70,6 +77,10 @@ public class RskValStructureValidator implements BeanValidator{
                 if(rskValStructureService.getCountById(dto)){
                     errorList.add(new ValidMessage(this.getMessage("RSK_W_0001",getMessage("RskValStructure001.id"),dto.getId())));
                 }
+                //选中记录是默认配置时
+                if (rskValStructureService.getStructInfoIsDefault(dto)) {
+                    errorList.add(new ValidMessage(this.getMessage("RSK_W_0075", getMessage("RskValStructure001.id"), dto.getId())));
+                }
             }
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&!StringUtil.equals(dto.getOperateType(), "save")) {
                 if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)&&StringUtil.equals(dto.getOperateType(), "submit")){
@@ -79,7 +90,7 @@ public class RskValStructureValidator implements BeanValidator{
                             errorList.add(new ValidMessage(this.getMessage("FW_E_0006",getMessage("RskValStructure003.srcColIndex"))));
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     //add by 张年   2019/07/31
                     /*if(dto.getSrcColIndex() == null || "".equals(dto.getSrcColIndex())){
@@ -95,7 +106,7 @@ public class RskValStructureValidator implements BeanValidator{
                     try {
                         dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     RskValStructureDto entity = rskValStructure003Service.select(dto);
                     if(entity != null && entity.getId() != null){
@@ -120,12 +131,11 @@ public class RskValStructureValidator implements BeanValidator{
             }
             //add by yangwenjun 控制列长度 start
             try {
-				if(dto.getSrcColIndexLetter().length()>20) {
+				if(StringUtil.isNotEmpty(dto.getSrcColIndexLetter()) && dto.getSrcColIndexLetter().length()>20) {
 					errorList.add(new ValidMessage(getMessage("列过长","")));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
             //add by yangwenjun 控制列长度 end
             if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)&&!StringUtil.equals(dto.getOperateType(), "save")) {
@@ -155,6 +165,15 @@ public class RskValStructureValidator implements BeanValidator{
                 if(dto.getStructName() == null || "".equals(dto.getStructName())){
                     errorList.add(new ValidMessage(getMessage("FW_E_0006",getMessage("RskValStructure002.structName"))));
                 }
+            }
+        }
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            //选中记录在业务表中已关联组合时
+            if(rskValStructureService.getCountById(dto)){
+                errorList.add(new ValidMessage(this.getMessage("RSK_W_0073",getMessage("RskValStructure001.id"),dto.getId())));
+            }
+            if (rskValStructureService.getStructInfoIsDefault(dto)) {
+                errorList.add(new ValidMessage(this.getMessage("RSK_W_0074", getMessage("RskValStructure001.id"), dto.getId())));
             }
         }
         return errorList;

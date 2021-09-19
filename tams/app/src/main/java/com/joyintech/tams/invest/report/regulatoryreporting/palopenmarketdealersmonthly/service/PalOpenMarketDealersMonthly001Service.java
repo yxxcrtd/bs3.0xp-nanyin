@@ -69,7 +69,7 @@ public class PalOpenMarketDealersMonthly001Service extends CommonExportService<C
 	 * @return ResponseEntity<byte[]> 返回类型   
 	 * @throws  
 	 */  
-	public ResponseEntity<byte[]> export(Map<String, Object> pageParam) throws Exception {
+	public ResponseEntity<byte[]> export(Map<String, Object> pageParam) throws ParseException {
 		ExportFileDto exportFileDto = createExcel(pageParam);
         File file = new File(exportFileDto.getFilePath());
         return ExportUtil.export(exportFileDto.getFileName(), file, true);

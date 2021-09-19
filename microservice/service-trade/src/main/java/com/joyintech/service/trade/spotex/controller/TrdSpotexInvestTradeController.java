@@ -69,7 +69,7 @@ public class TrdSpotexInvestTradeController {
     public Page<TrdSpotexInvestTradeDto> findPage(@RequestBody Map<String, Object> param,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdSportexInvestTradeService.selectForPage(page, length, param);
     }
     

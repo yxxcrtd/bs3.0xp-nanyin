@@ -15,12 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.service.trade.investtrade.investdealquery.dto.AssetTransferExport001Dto;
 import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQuery001Dto;
 
-
+@Repository
 public interface TrdInvestDealQuery001Mapper {
 	/**
 	 * 流程中的搜索

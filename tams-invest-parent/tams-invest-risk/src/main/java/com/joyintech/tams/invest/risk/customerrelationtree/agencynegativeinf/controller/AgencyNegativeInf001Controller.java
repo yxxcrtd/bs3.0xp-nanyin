@@ -77,7 +77,7 @@ public class AgencyNegativeInf001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/findPage")
-    public Page<AgencyNegativeInf001Dto> selectForPage() throws Exception {
+    public Page<AgencyNegativeInf001Dto> selectForPage() {
         Map<String, Object> map = RequestUtil.getParameters(getRequest());
         String objTypes = map.get("objTypes").toString();
         if(objTypes != null && objTypes.length()>0){
@@ -96,7 +96,7 @@ public class AgencyNegativeInf001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/fuzzyQueryOrgByIdOrName")
-    public List<SelectOptionDto> fuzzyQueryOrgByIdOrName() throws Exception {
+    public List<SelectOptionDto> fuzzyQueryOrgByIdOrName() {
         Map<String, Object> paramMap = new HashMap<>();
         Map<String, Object> pageMap = RequestUtil.getPageParam();
         Object search = pageMap.get("search");

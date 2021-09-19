@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.entrust.etrbondtostock.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -101,8 +102,7 @@ public class EtrBondToStock001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodId")
-    public Page<SelectOptionDto> getFinprodId(String param)
-        throws Exception {
+    public Page<SelectOptionDto> getFinprodId(String param) {
     	Page<SelectOptionDto> temp = service.getFinprodId(RequestUtil.getPageParam());
         return temp;
     }
@@ -118,8 +118,7 @@ public class EtrBondToStock001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getShareId")
-    public Page<SelectOptionDto> getShareId(String param)
-            throws Exception {
+    public Page<SelectOptionDto> getShareId(String param){
         	Page<SelectOptionDto> temp = service.getShareId(RequestUtil.getPageParam());
             return temp;
         }
@@ -191,8 +190,7 @@ public class EtrBondToStock001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         Map<String, Object> searchParams = RequestUtil.getPageParam();
         String datas = this.getParam("datas");
         String fileName = "债转股委托查询" + "(" + DateUtil.getCurrentDate() + ").xlsx";

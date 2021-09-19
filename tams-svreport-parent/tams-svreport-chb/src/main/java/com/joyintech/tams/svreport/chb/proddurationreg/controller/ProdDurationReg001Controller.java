@@ -213,7 +213,7 @@ public class ProdDurationReg001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  {
 
 		List<ProdDurationReg001Dto> list=new ArrayList<ProdDurationReg001Dto>();
 		// 选择行数据时
@@ -224,7 +224,6 @@ public class ProdDurationReg001Controller extends BaseController {
 						ProdDurationReg001Dto.class);
 			}
 			catch (IOException e) {
-				// e.printStackTrace();
 				logger.error(e.getMessage(), e);
 			}
 		}else{

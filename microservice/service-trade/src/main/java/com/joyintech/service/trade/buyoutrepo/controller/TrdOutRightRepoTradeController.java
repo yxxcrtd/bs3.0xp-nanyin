@@ -63,7 +63,7 @@ public class TrdOutRightRepoTradeController {
     @RequestMapping("queryForPage/{page}/{length}")
     public Page<TrdOutRightRepoTradeDto> queryForPage(@RequestBody Map<String, Object> param,
                                                     @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return trdOutRightRepoTradeService.selectForPage(page, length, param);
     }
     

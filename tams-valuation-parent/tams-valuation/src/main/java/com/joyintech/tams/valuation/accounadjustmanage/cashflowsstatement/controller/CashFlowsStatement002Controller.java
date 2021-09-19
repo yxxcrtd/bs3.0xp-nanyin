@@ -66,7 +66,7 @@ public class CashFlowsStatement002Controller extends BaseController {
 
 	@ResponseBody
 	@RequestMapping("findPage")
-	public List<CashFlowsStatement001Dto> selectCashFlowsStatement(CashFlowsStatement001Dto dto) throws Exception {
+	public List<CashFlowsStatement001Dto> selectCashFlowsStatement(CashFlowsStatement001Dto dto) {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为账套组
 		List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);

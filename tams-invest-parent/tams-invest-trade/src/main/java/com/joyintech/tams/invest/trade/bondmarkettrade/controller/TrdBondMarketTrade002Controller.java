@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.trade.bondmarkettrade.service.TrdBondMarketTrad
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,8 +116,7 @@ public class TrdBondMarketTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto) throws IOException, InstantiationException, WorkFlowException {
         dto.setTotleTradeId(trdBondMarketTrade002Service.genTradeId());
         dto.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         ProcessParameter<TrdBondMarketTradeDto> processParameter = new ProcessParameter<>();

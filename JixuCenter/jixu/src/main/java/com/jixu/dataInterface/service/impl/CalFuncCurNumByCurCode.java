@@ -31,7 +31,7 @@ public class CalFuncCurNumByCurCode extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap){
 		String currency=genConvertFormula(inputValue, colcfgMap);
 		String cur=comService.loadFxCurIDByCurCode(currency);
 		return cur;
@@ -43,7 +43,7 @@ public class CalFuncCurNumByCurCode extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			 {
 		// TODO Auto-generated method stub
 		return null;
 	}

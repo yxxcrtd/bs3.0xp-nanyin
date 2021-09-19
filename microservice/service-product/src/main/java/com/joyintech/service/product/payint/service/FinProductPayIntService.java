@@ -108,7 +108,7 @@ public class FinProductPayIntService extends BaseService<FinProductPayIntDto> {
      */
     public Page<FinProductPayIntDto> selectForPage(int page, int length,
                                                      Map<String, Object> pageParam)
-        throws Exception {
+    {
         //pageParam.put("VALID_STATUS_01", DictCodeListExt1.画面数据状态_待处理.getValue());
         pageParam.put("VALID_STATUS_05", DictCodeListExt1.画面数据状态_有效.getValue());
         pageParam.put("VALID_STATUS_06", DictCodeListExt1.画面数据状态_撤销.getValue());

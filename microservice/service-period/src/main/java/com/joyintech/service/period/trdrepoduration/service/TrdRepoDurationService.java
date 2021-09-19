@@ -1460,6 +1460,8 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
             });
         }
 
+        // 划款指令
+        List<WflStlPayOrders> stlPayOrdersDtos = trdRepoDurationMapper.findOrdersByWorkflowId(trdRepoDurationDto.getWorkflowId());
         // 所有交易生效后调用的共通方法-	调用估值的入账信息
         AllTradeCommonInputDto inputDto = new AllTradeCommonInputDto();
         inputDto.setProdid(portfolioId);
@@ -1472,6 +1474,11 @@ public class TrdRepoDurationService extends BaseService<TrdRepoDurationDto> {
         inputDto.setRepoType("H01");//质押式协议回购
         inputDto.setActPortfolioId(portfolioId);//子组合代码
         inputDto.setPtlTradeList(ptlTradeList);
+        if (stlPayOrdersDtos != null && !stlPayOrdersDtos.isEmpty()) {
+            StlPayOrders stlPayOrders = new StlPayOrders();
+            BeanUtil.copyPropertiesIgnoreNull(stlPayOrders, stlPayOrdersDtos.get(0));
+            inputDto.setStlPayOrders(stlPayOrders);
+        }
         AllTradeCommonUtil.handleAfterTradeComplete(inputDto);
 
     }

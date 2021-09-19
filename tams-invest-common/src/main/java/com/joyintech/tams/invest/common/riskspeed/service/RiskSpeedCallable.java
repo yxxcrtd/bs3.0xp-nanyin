@@ -45,7 +45,7 @@ public class RiskSpeedCallable<T extends IRiskSpeed> extends BaseService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<RiskSpeedDto> getRiskSpeedValue(String speedType, RiskSpeedDto riskSpeedDto, List<SupervisionTargetDto> taskList, InvestTradeTrialInput inputDto) throws Exception{
+	public List<RiskSpeedDto> getRiskSpeedValue(String speedType, RiskSpeedDto riskSpeedDto, List<SupervisionTargetDto> taskList, InvestTradeTrialInput inputDto) {
 		List<RiskSpeedDto> riskTrialRetList=new ArrayList<>();
 		for (SupervisionTargetDto rskTaskDto : taskList) {
 			// 构造
@@ -121,7 +121,7 @@ public class RiskSpeedCallable<T extends IRiskSpeed> extends BaseService {
 					riskTrialRetList.add(returnDto);
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+			    logger.error(e.getMessage(),e);
 			}
 		}
 		return riskTrialRetList;

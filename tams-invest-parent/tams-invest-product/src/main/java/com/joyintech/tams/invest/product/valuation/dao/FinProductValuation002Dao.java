@@ -3,10 +3,12 @@ package com.joyintech.tams.invest.product.valuation.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.invest.product.valuation.dto.FinProductValuation001Dto;
 import com.joyintech.tams.invest.product.valuation.dto.FinProductValuationDetail001Dto;
 
+@Repository
 public interface FinProductValuation002Dao {
 
 	/**

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.xml.ws.soap.Addressing;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +63,7 @@ public class PtlRepoPledgeSearch004Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("pledgeSummaryFindPage")
-    public Page<PtlPldgeSummaryDto> pledgeSummaryFindPage()
-            throws Exception {
+    public Page<PtlPldgeSummaryDto> pledgeSummaryFindPage(){
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<PtlPldgeSummaryDto> ptlPledgeSummaryDtoPage = ptlRepoPledgeSearch004Service.selectForPage(map);
         return ptlPledgeSummaryDtoPage;
@@ -78,8 +78,7 @@ public class PtlRepoPledgeSearch004Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         if(datas==null) {
             Map<String, Object> param = RequestUtil.getParameters(getRequest());
@@ -108,8 +107,7 @@ public class PtlRepoPledgeSearch004Controller extends BaseController {
 
     @RequestMapping("exportCheck")
     @ResponseBody
-    public AjaxResult exportCheck()
-            throws Exception {
+    public AjaxResult exportCheck(){
         Page<PtlPldgeSummaryDto> result = ptlRepoPledgeSearch004Service.selectForPage(RequestUtil.getPageParam());
 //        if (result.getRoot().isEmpty()) {
 //            return new AjaxResult(getMessage("PTL_COM_E_0012"), MessageType.错误消息);

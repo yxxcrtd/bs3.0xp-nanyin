@@ -95,7 +95,7 @@ public class PtlAccountCurrentInterest001Service extends BaseService<PtlAccountC
      * @see
      * @since 1.0
      */
-    public Page<PtlAccountCurrentInterest001Dto> selectForPage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<PtlAccountCurrentInterest001Dto> selectForPage(int page,int length,Map<String,Object> map) {
         return super.queryForPage(page, length, () -> PtlAccountCurrentInterest001Mapper.selectForPage(map));
     }
     /**
@@ -323,7 +323,8 @@ public class PtlAccountCurrentInterest001Service extends BaseService<PtlAccountC
      * @see
      * @since 1.0
      */
-    public Page<PtlAccountCurrentInterest001Dto> ratePage(int page,int length,Map<String,Object> map) throws Exception{
+    public Page<PtlAccountCurrentInterest001Dto> ratePage(int page,int length,Map<String,Object> map)
+    {
         return super.queryForPage(page, length, () -> PtlAccountCurrentInterest001Mapper.ratePage(map));
     }
 

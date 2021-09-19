@@ -92,7 +92,7 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                     && !model.getPs().equals(DictCodeList.交易方向_到期.getValue()))
                     || (model.getPs().equals(DictCodeList.回购拆借方向_拆出.getValue())
                     &&StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue()))
-//                    || (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())
+//                    || (StringUtil.equals(model.getFinprodType2(), DictCodeListExt            if(creLineslist == null || creLineslist.size() < 1){1.金融产品类型_投管用_利率互换.getValue())
 //                    		&& !model.getPs().equals(DictCodeList.交易方向_到期.getValue()))
                     ||model.getPs().equals(DictCodeListExt2.交易方向_新股中签.getValue())
                     ||model.getPs().equals(DictCodeListExt2.交易方向_配股.getValue())
@@ -328,7 +328,14 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if (StringUtil.isEmptyList(orgcreLineslist) && ((creLineslist==null || creLineslist.size()==0)||
                 (creLineslist!=null && creLineslist.size()>0 && iscreditflag))){
             isKDQ = true;
-            customerid = creditLinesMapper.getCustomerid(mapParm);
+            // 拆借/回购 空档期以交易对手生成
+            if ((model.getFinprodType2() != null && (StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())
+                    || StringUtil.equals(model.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())
+                    || StringUtil.equals(model.getInputValue1(), DictCodeList.平安资产类型_拆借.getValue())))) {
+                customerid = model.getCounterId();
+            }else{
+                customerid = creditLinesMapper.getCustomerid(mapParm);
+            }
             if(StringUtil.isEmpty(customerid)){
                 customerid = model.getCounterId();
             }
@@ -377,7 +384,8 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
         if(isNotBottomflag){
             // 授信为Y 没有配置授信时
             if(creLineslist == null || creLineslist.size() < 1){
-                if(!isSave||!isCreditSoftControl) {
+                // 无授信提交加check
+                if(!isSave) {
                     if ("Y".equals(CacheUtil.getSysParam(BussinessConstant.ISNEEDCONTROLCREDIT))) {
                         common.setErrMessage(getMessage("BUSS_COM_CRE_001"));
                         list.add(common);
@@ -818,9 +826,9 @@ public class CelinesUpdateFactory implements BeanValidator,ICreditLinesBussness 
                 creditLines.setUpdateTime(model.getUpdateTime());
                 creditLines.setUpdateUser(model.getUpdateUser());
                 String institutionCode = "";
-                if(MultilevelDataAuthorityUtil.isEnabled()){
+//                if(MultilevelDataAuthorityUtil.isEnabled()){
                     institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
-                }
+//                }
                 creditLines.setInstitutionCode(institutionCode);
                 hapCreditAmt = extendCreditLinesDeal(creditLines.getSeqno(), creditLines.getVdate(), creditLines.getCreditMstId(),creditLines.getCustomerId(), institutionCode);
                 // 实际占用额度

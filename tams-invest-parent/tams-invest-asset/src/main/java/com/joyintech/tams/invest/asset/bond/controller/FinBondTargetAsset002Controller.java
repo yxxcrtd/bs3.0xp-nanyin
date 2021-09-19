@@ -36,6 +36,7 @@ import com.joyintech.tams.invest.asset.bond.service.FinBondTargetAssetService;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,8 +217,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) FinBondTargetAssetDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) FinBondTargetAssetDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -303,8 +303,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
 
     @ResponseBody
     @RequestMapping("/getBasicInfo")
-    public FinBondTargetAssetDto getBasicInfo(@RequestBody FinBondTargetAssetDto finBondTargetAssetDto)
-            throws Exception {
+    public FinBondTargetAssetDto getBasicInfo(@RequestBody FinBondTargetAssetDto finBondTargetAssetDto){
         FinBondTargetAssetDto resultDto = finBondTargetAssetService.getBasicInfo(
                 finBondTargetAssetDto.getFinprodId());
         return resultDto;
@@ -321,8 +320,7 @@ public class FinBondTargetAsset002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         return finBondTargetAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
     }
     /**

@@ -1,4 +1,5 @@
 package com.joyintech.tams.invest.portfolio.ptlfundallocation.controller;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocation002Dto;
 import com.joyintech.tams.invest.portfolio.ptlfundallocation.dto.PtlFundAllocationImportDto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,8 +100,7 @@ public class PtlFundAllocation001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlFundAllocationDto> findPage()
-        throws Exception {
+    public Page<PtlFundAllocationDto> findPage() {
         return ptlFundAllocation001Service.findPage(RequestUtil.getPageParam());
     }
     
@@ -143,8 +144,7 @@ public class PtlFundAllocation001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("revoke")
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) PtlFundAllocationDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) PtlFundAllocationDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -184,8 +184,7 @@ public class PtlFundAllocation001Controller extends BaseController {
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlFundAllocation001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 
@@ -200,8 +199,7 @@ public class PtlFundAllocation001Controller extends BaseController {
      */
     @RequestMapping("importFile")
     @ResponseBody
-    public AjaxResult importData(String fileName)
-            throws Exception{
+    public AjaxResult importData(String fileName) throws FileNotFoundException {
         AjaxResult result = new AjaxResult();
         result.setStatuCode(HttpStatus.OK.value());
         Map<String,Object> map = ptlFundAllocation001Service.importData(fileName);

@@ -157,7 +157,7 @@ public class MProdDivReinDealGenTask extends BatchBaseService{
         Map<String, Object> params = new HashMap<>();
 
         params.put(BatchConstant.BATCH_INFO, batchExecuteInfo);
-        params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate());
+        params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
         params.put("productIdList",this.getProductIdList());
 
         // 各步骤设置参数

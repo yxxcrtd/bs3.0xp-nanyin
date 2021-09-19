@@ -262,16 +262,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 						dto.setSubmitDeadline(dateListUn.get(1));
 					}
 				}*/
-				if (dto.getDealdate() != null) {
-					List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),
-							DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
-							dto.getDealdate());
-					if (CollectionUtils.isNotEmpty(dateList)) {
-						dto.setChbSubmitDeadline(dateList.get(0));
-						dto.setSubmitDeadline(dateList.get(1));
-					}
 
-				}
 				// 登记编码
 				dto.setRegistSeqno(IDGenerator.generate(36));
 				// 报送流水号
@@ -446,6 +437,17 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
 			if (DictCodeListExt2.资金流动类型_投资资产所得收益.getValue().equals(dto.getCurAssetType())) {
 				dto.setAssetMethod(null);
 			}
+
+			if (dto.getDealdate() != null) {
+				List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产交易信息登记.getValue(),
+						dto.getStatus(), dateMap,
+						dto.getDealdate());
+				if (CollectionUtils.isNotEmpty(dateList)) {
+					dto.setChbSubmitDeadline(dateList.get(0));
+					dto.setSubmitDeadline(dateList.get(1));
+				}
+			}
+
 		}
 	       
 		// add by dubaojun 2020-10-13 入库前需要进行数据检验，检验错误的数据不入库 start
@@ -618,7 +620,7 @@ public class InvestTradeRegistBatchService extends SvrDataStatusUtil {
             catch(Exception e){
             	logger.error(e.getMessage(),e);
                 session.rollback();
-                throw e;
+                throw new BusinessException(e);
             }
             finally {
                 session.close();

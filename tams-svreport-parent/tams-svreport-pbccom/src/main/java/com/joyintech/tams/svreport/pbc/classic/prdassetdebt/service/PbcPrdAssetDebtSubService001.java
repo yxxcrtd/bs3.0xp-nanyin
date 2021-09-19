@@ -190,7 +190,6 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
 			try {
 				infoList = JsonUtils.json2List(JsonUtils.object2Json(map.get("infoList")),PbcMonthReport.class);
 			} catch (IOException e) {
-				e.printStackTrace();
 				logger.debug("数据转换异常",e.getMessage(),e);
 				return ;
 			}
@@ -351,7 +350,6 @@ public class PbcPrdAssetDebtSubService001 extends CommonExportService<PbcMonthRe
         			cdate = DateUtil.parseDate(cdateStr,"yyyyMMdd");
         		} catch (ParseException e) {
         			logger.error(e.getMessage(),e);
-        			e.printStackTrace();
         		}
         		// 调用检查方法
         		resultlist.addAll(check(cdate));

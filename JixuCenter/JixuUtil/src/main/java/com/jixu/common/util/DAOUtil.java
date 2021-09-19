@@ -84,8 +84,7 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 		try {
 			return SessionFactoryUtils.getDataSource(getSessionFactory()).getConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}
@@ -335,7 +334,7 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 				heads.add(field );
 			}
 		}catch(SQLException se){
-			se.printStackTrace();
+			logger.error(se.getMessage(),se);
 		}finally {
 			try {
 				if (stmt != null){
@@ -345,7 +344,7 @@ public class DAOUtil<T> extends HibernateDaoSupport {
 					rs.close();
 				}
 			} catch (SQLException e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}
 		return heads;

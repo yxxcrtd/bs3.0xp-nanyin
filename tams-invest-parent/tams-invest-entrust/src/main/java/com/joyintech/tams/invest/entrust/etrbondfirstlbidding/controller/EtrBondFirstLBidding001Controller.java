@@ -77,8 +77,7 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustId")
-    public List<SuggestDto> getentrustId(String param)
-        throws Exception {
+    public List<SuggestDto> getentrustId(String param){
         return service.getentrustId(param);
     }
     /**
@@ -92,8 +91,7 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodId")
-    public List<SuggestDto> getfinprodId(String param)
-        throws Exception {
+    public List<SuggestDto> getfinprodId(String param){
         return service.getfinprodId(param);
     }
     /**
@@ -162,8 +160,7 @@ public class EtrBondFirstLBidding001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

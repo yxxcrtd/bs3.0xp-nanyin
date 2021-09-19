@@ -9,6 +9,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParamDto;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -134,8 +135,7 @@ public class RskSupervisionIndicatorParam002Controller extends BaseController {
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicatorParamDto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody RskSupervisionIndicatorParamDto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }

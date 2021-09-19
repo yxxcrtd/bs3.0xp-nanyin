@@ -123,8 +123,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 		// 报送时点通用方法
 		// 当前批次报送时点集合
 		Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
-		List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),
-				DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, executeDate);
+
 		if (CollectionUtils.isNotEmpty(assetInfoRegList)) {
 	        // 查询所有已登记的资产要素信息
 	        // 分批处理数据,100个资产查询一次
@@ -147,11 +146,6 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	        Map<String,String> counterMap = counterList.stream().collect(Collectors.toMap(MstCounterPartyDto::getCounterId, 
 	                MstCounterPartyDto::getCounterName,(key1,key2)->key2));
 			for (ChbAssetInfoSub001Dto dto : assetInfoRegList) {
-			    // 报送时点设置
-				if (CollectionUtils.isNotEmpty(dateList)) {
-					dto.setChbSubmitDeadline(dateList.get(0));
-					dto.setSubmitDeadline(dateList.get(1));
-				}
 	            // 交易对手
 	            if (StringUtil.isNotEmpty(dto.getRivalParty())){
 	                String counterid = dto.getRivalParty();
@@ -255,6 +249,14 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
                         deleteDataList.add(dto);
                     }
                 }
+
+                List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),
+                        dto.getStatus(), dateMap, executeDate);
+                // 报送时点设置
+                if (CollectionUtils.isNotEmpty(dateList)) {
+                    dto.setChbSubmitDeadline(dateList.get(0));
+                    dto.setSubmitDeadline(dateList.get(1));
+                }
                 // 准备插入处理修改未报送的数据
                 insertDataList.add(dto);
 			}
@@ -318,7 +320,7 @@ public class AssetInfoRegistBatchService extends SvrCBBaseService {
 	    	catch(Exception e){
 	    		logger.error(e.getMessage(),e);
 	    		session.rollback();
-	    		throw e;
+	    		throw new BusinessException(e);
 	    	}
 	    	finally {
 	    		session.close();

@@ -90,7 +90,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
 	 */
 	@PostMapping("/findSchemeList/{page}/{length}")
 	public Page<ValReconcileSchemeInfo001Dto> findSchemeList(@RequestBody Map<String, Object> params,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
 		return reconcileSchemeInfo001Service.findSchemeList(page, length,params);
 	}
 
@@ -175,7 +175,7 @@ public class ValReconcileSchemeInfo001Controller extends BaseController {
 	 * @since 1.0
 	 */
 	@PostMapping("/doSaveOrUpdate")
-	public void doSaveOrUpdate(@RequestBody ValReconcileSchemeInfo001Dto schemeDto) throws Exception {
+	public void doSaveOrUpdate(@RequestBody ValReconcileSchemeInfo001Dto schemeDto) {
 		reconcileSchemeInfo001Service.doSaveOrUpdate(schemeDto);
 	}
 

@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.grid.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -110,6 +112,11 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class FinProductEstablish002Service extends BaseService<FinProductEstablish002Dto> implements BaseProcessService<FinProductEstablish002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductEstablish002Service.class);
+
     /**
      * {@linkplain}
      */
@@ -252,7 +259,7 @@ public class FinProductEstablish002Service extends BaseService<FinProductEstabli
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
             this.doCompleteInsert(entity);

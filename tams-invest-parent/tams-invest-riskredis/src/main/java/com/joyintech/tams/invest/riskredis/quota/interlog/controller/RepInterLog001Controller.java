@@ -59,12 +59,11 @@ public class RepInterLog001Controller extends BaseController {
     /**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RepInterLogDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RepInterLogDto> page = repInterLogService.selectForPage(map);
         return page;
@@ -74,14 +73,13 @@ public class RepInterLog001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return repInterLogService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

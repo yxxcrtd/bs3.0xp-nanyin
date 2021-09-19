@@ -68,6 +68,32 @@
           AND SUBMIT_NUM = #{submitNum,jdbcType=VARCHAR}
         </if>
     </update>
+	<update id="mergerChbEquDetSubmitStatus">
+		MERGE INTO CHB_EQUDET_SUBMIT_STATUS T
+		USING (
+		<foreach collection="list" item="item" open="select * from("
+			close=")" separator="union all">SELECT
+			#{item.seqno,jdbcType=VARCHAR} as SEQNO,
+			#{item.submitNum,jdbcType=VARCHAR} as SUBMIT_NUM,
+			#{item.submitType,jdbcType=VARCHAR} as SUBMIT_TYPE,
+			#{item.submitFeedbackStatus,jdbcType=VARCHAR} as
+			SUBMIT_FEEDBACK_STATUS,
+			#{item.equityConfDate,jdbcType=DATE} as
+			EQUITY_CONF_DATE, #{item.reportNo,jdbcType=VARCHAR} as
+			REPORT_NO, #{item.submitFeedbackMsg,jdbcType=VARCHAR} as
+			SUBMIT_FEEDBACK_MSG,
+			#{item.uniqueIdenti,jdbcType=VARCHAR} as UNIQUE_IDENTI,
+			#{item.updateUser,jdbcType=VARCHAR} as UPDATE_USER,
+			#{item.updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME
+			FROM DUAL
+		</foreach>
+		) T1 ON (T.REPORT_NO=T1.REPORT_NO AND
+		T.SUBMIT_NUM = T1.SUBMIT_NUM) WHEN MATCHED THEN UPDATE
+		SET T.SUBMIT_FEEDBACK_STATUS =
+		T1.SUBMIT_FEEDBACK_STATUS, T.SUBMIT_FEEDBACK_MSG =
+		T1.SUBMIT_FEEDBACK_MSG, T.UPDATE_USER = T1.UPDATE_USER,
+		T.UPDATE_TIME = T1.UPDATE_TIME
+	</update>
     <insert id="insertChbInfoReportList">
         insert into CHB_INFO_REPORT (REPORT_NO, REP_MES_NO, UPLOAD_RESULT, 
             UPLOAD_RESULT_MSG, UPLOAD_FILE_ID, CHECK_FILE_ID, 
@@ -116,4 +142,9 @@
     <select id="selectOrgCodeByRegistBankCode" resultType="java.lang.String">
         select max(ORG_CODE) as orgCode from CHB_ORG_REGIST_BANK_CODE where REGIST_BANK_CODE = #{registBankCode,jdbcType=VARCHAR}
     </select>
+	<select id="selectReportFile" resultType="java.lang.String">SELECT UPLOAD_RESULT
+		from
+		CHB_INFO_REPORT where CHECK_SUCCESS_COUNT is null and
+		to_char(trunc(SEND_TIME - sysdate),'fm9999') = 0
+	</select>
 </mapper>

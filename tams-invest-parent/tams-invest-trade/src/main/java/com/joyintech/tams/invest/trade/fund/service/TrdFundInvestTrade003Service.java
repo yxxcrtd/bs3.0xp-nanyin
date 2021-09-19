@@ -19,6 +19,8 @@ import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.workflow.engine.WorkflowContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -73,6 +75,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTradeConfirmDto> implements BaseProcessService<TrdFundInvestTradeConfirmDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFundInvestTrade003Service.class);
 
     /**
      * 附件信息共通Service
@@ -129,7 +135,7 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
      * @return
      */
     public BigDecimal getcarryAmt(Map<String, Object> map)
-        throws Exception {
+         {
         Date carryDate = DateUtil.parse((String)map.get("carryDate"));
         String calId = (String)map.get("cid");
         if (StringUtil.isNotEmpty(calId)) {
@@ -317,8 +323,7 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
                         WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
                     }
                     catch (WorkFlowException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                 }
             }
@@ -439,7 +444,7 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
 
             if (StringUtil.isNotEmpty(entity.getActPortfolioId())) {

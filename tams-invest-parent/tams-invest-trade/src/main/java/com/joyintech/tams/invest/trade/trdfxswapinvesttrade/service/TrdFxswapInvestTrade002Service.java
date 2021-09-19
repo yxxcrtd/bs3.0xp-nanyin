@@ -12,6 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -70,6 +72,10 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswapInvestTrade001Dto> implements BaseProcessService<TrdFxswapInvestTrade001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdFxswapInvestTrade002Service.class);
 
     /**
      * 节假日计算用和日期关联的Service
@@ -1265,7 +1271,7 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     	                    	mdate = this.getNextWorkDay(map);
     	                    }
     					} catch (Exception e) {
-    						e.printStackTrace();
+                            logger.error(e.getMessage(),e);
     					}
                     }else {
                     	map.put("tradeDate", DateUtil.format(tradeDate));
@@ -1337,7 +1343,7 @@ public class TrdFxswapInvestTrade002Service extends CommonExportService<TrdFxswa
     	                    	vdate = this.getNextWorkDay(map);
     	                    }
     					} catch (Exception e) {
-    						e.printStackTrace();
+                            logger.error(e.getMessage(),e);
     					}
                     }else {
                     	map.put("tradeDate", DateUtil.format(tradeDate));

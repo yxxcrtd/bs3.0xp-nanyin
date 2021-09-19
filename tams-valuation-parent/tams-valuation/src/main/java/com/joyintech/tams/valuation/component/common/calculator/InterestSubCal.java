@@ -52,7 +52,7 @@ public class InterestSubCal {
                                                               List<? extends FinCashCalcRule> liy,
                                                               List<FinCashPlanDto> lirs,
                                                               AssetCommonInfoDto scai,
-                                                              BigDecimal papi, Class<T> class1) {
+                                                              BigDecimal papi, Class<T> class1) throws InstantiationException, IllegalAccessException {
         // 【变量】本金 = 【入参】资产基本信息.本金 - 【入参】已还本金额
         BigDecimal papiSrc = papi;
         // 付息最后区间本金计算

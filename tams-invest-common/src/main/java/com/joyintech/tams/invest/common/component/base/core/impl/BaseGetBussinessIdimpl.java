@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,10 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
  */
 @Component
 public class BaseGetBussinessIdimpl implements BaseGetBussinessId{
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(BaseGetBussinessIdimpl.class);
 
     /**
      * 业务编号生成规则mapper
@@ -218,7 +224,7 @@ public class BaseGetBussinessIdimpl implements BaseGetBussinessId{
                 return (String)method.invoke(clazz.newInstance());
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         return null;

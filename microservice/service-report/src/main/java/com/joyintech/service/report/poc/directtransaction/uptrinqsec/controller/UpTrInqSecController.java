@@ -80,7 +80,7 @@ public class UpTrInqSecController {
     @ResponseBody
     @PostMapping("getfinprodIdForAdd")
     public List<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         List<SelectOptionDto> temp = upTrInqSecService.getfinprodIdForAdd(param);
         return temp;
     }

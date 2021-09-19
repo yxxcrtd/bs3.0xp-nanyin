@@ -52,12 +52,7 @@ public class SdAssetInfoRegTaskService extends BatchBaseService {
         try {
             mainService.sdAssetInfoRegData(ToolsUtil.getCurrentTime(batchExecuteInfo.getExecuteDate()));
             result.setStatus(BatchStatus.COMPLETED);
-        }
-        catch (BatchException e) {
-            logger.error("【资产要素信息登记】直连报送批处理Error",e);
-        	throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 			logger.info("批处理异常" + e.getMessage());
         	logger.error("批处理异常Error",e);
         }finally{

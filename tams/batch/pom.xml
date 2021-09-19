@@ -205,6 +205,12 @@
 			<artifactId>tams-batch-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<!-- 几许工程 -->
+		<dependency>
+			<groupId>com.jixu</groupId>
+			<artifactId>jixu</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>tams-batch</finalName>

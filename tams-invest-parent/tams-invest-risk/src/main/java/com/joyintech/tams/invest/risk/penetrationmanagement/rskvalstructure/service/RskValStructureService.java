@@ -131,7 +131,7 @@ public class RskValStructureService extends CommonExportService<RskValStructureD
             // 仅资产的创建机构（当前登录用户所在机构）有编辑权限
             editOrgCodeList = Arrays.asList(dto.getCreateInst());
             // 记录二级法人权限
-            insertDataAuthTypeInst(dto.getId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_估值表资产科目映射.getValue());
+            insertDataAuthTypeInst(dto.getId(), searchOrgCodeList, editOrgCodeList, DictCodeList.共通业务类型_估值表指标结构映射.getValue());
         }
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure002/insert",
@@ -209,6 +209,19 @@ public class RskValStructureService extends CommonExportService<RskValStructureD
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure/getCountById",
             dto,boolean.class);
+    }
+    /**
+     * 选中记录是否是默认模板，是则不允许修改，删除
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public boolean getStructInfoIsDefault(RskValStructureDto dto) {
+        return restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure/getStructInfoIsDefault",
+                dto,boolean.class);
     }
 
 }

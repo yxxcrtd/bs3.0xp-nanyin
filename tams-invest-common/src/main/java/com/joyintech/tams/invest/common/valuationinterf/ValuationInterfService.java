@@ -1010,7 +1010,6 @@ public class ValuationInterfService {
         }
 //        }catch (Exception e) {
 //            resultContainer.setCorrectFlag(false);
-//            e.printStackTrace();
 //            logger.info("调用【jixu】接口发生异常:-----------------------");
 //            logger.info(e.getMessage());
 //        }

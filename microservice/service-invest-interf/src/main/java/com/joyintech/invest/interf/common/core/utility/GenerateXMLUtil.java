@@ -10,9 +10,15 @@ public class GenerateXMLUtil {
 		//读取配置文件，获取请求资管的接口地址
 			Properties prop = WebserviceIntefUtil.getProperties("webservice.properties");
 			//投管请求资管的验证用户名
-		    String userName = prop.getProperty("userName");
+		String userName = "";
+		if(prop!=null) {
+			userName = prop.getProperty("userName")== null? "":prop.getProperty("userName");
+		}
 		    //投管请求资管的验证密码
-		    String word = prop.getProperty("word");
+		String word = "";
+		if(prop!=null) {
+			word = prop.getProperty("word")== null? "":prop.getProperty("word");
+		}
 		
 		// 把json串中的双引号转换为%
 		//String json2 = json.replaceAll("\"","%");

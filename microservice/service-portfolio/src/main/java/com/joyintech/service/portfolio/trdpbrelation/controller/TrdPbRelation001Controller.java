@@ -58,7 +58,7 @@ public class TrdPbRelation001Controller {
 	 */
 	@PostMapping("selectForPage/{page}/{length}")
 	public Page<TrdPbRelation001Dto> selectForPage(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		if (StringUtil.isNotEmpty(pageParam.get("prdId"))) {
 			pageParam.put("prdId", StringUtil.splitToList(null, pageParam.get("prdId").toString()));
 		}else{
@@ -82,7 +82,7 @@ public class TrdPbRelation001Controller {
 	@PostMapping("delete")
 	@Transactional
 	@DTXTransaction
-	public Integer delete(@RequestBody TrdPbRelation001Dto entity) throws Exception {
+	public Integer delete(@RequestBody TrdPbRelation001Dto entity) {
 		return trdPbRelation001Service.delete(entity);
 	}
 	
@@ -95,7 +95,7 @@ public class TrdPbRelation001Controller {
 	@PostMapping("insert")
 	@Transactional
 	@DTXTransaction
-	public Integer insert(@RequestBody TrdPbRelation001Dto entity) throws Exception {
+	public Integer insert(@RequestBody TrdPbRelation001Dto entity) {
 		return trdPbRelation001Service.insert(entity);
 	}
 

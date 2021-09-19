@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -251,7 +251,7 @@ public class ValueAddedTaxTemplateRecService {
 					 val.getProdId(), DictCodeListExt1.金融产品类型_理财产品.getValue(), DictCodeListExt1.资金账户类型_产品托管户.getValue(),null,val.getCcy());
 			 if(valFinProductAcct != null){
 				 bokDetailId = valFinProductAcct.getAcctNo()+DictCodeListExt1.资金账户类型_产品托管户.getValue();
-				 bokDetailId = MD5Util.string2MD5(bokDetailId);
+				 bokDetailId = EncryptUtil.getInstance().md5(bokDetailId);
 			 }
 		 }else{
 			 bokDetailId = BookConstant.DEF_BOK_DETAIL_ID;
@@ -290,7 +290,7 @@ public class ValueAddedTaxTemplateRecService {
 			 bookId=bookId + DateUtil.format(val.getHappenDate(), "yyyymmdd")+ val.getProdId()+targetFinProduct.getFinprodType();
 		 }
 		 //bookId做MD5加密
-		 bookId = MD5Util.string2MD5(bookId);
+		 bookId = EncryptUtil.getInstance().md5(bookId);
 		 
 		 valBokBookdetailCurrent.setBookId(bookId);
 		 //凭证说明=接口介入

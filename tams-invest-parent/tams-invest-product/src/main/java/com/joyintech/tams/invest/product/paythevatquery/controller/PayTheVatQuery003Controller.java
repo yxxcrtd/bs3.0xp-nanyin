@@ -237,8 +237,7 @@ public class PayTheVatQuery003Controller extends BaseController {
     @SuppressWarnings("unchecked")
     @ResponseBody
     @RequestMapping("check")
-    public AjaxResult check(@RequestBody @Valid PayTheVatQuery001Dto dto, BindingResult bindingResult)
-            throws Exception {
+    public AjaxResult check(@RequestBody @Valid PayTheVatQuery001Dto dto, BindingResult bindingResult){
         String msg = StringUtil.EMPTY;
         String operateType = null;
         String tradeId = dto.getTradeId();

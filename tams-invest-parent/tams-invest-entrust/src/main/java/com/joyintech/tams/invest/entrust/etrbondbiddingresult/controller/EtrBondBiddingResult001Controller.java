@@ -60,8 +60,7 @@ public class EtrBondBiddingResult001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
+    public ResponseEntity<byte[]> export(){
         return etrbondbiddingresultService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

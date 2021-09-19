@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.file.SafelyFile;
+import com.joyintech.framework.util.ZipFileUtil;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.aspectj.util.FileUtil;
@@ -96,8 +97,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
      * @return 表格信息
      * @throws Exception
      */
-    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+    public Page<ReportConfirmManage001Dto> findPage(Map<String, Object> params){
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ReportConfirmManage001/findPage",
             params, ReportConfirmManage001Dto.class);
     }
@@ -158,19 +158,20 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
         if (StringUtil.isNotEmpty(reportList)) {
             String basePath = CacheUtil.getSysParam(KEY_REPORT_DOWNLOAD_PATH);
             // 需要层级。01：是，02：否
+            FileOutputStream fos = null;
             if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SECOND), "01")) {
                 File firstFile = null;
                 File secondFile = null;
                 try {
-                    zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+                    fos = new FileOutputStream(zipFile);
+                    zipOut = new ZipOutputStream(fos);
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
-                        // TODO
                         String fileType = StringUtil.substring(report.getSysFilename(),
                             report.getSysFilename().lastIndexOf("."));
                         String reportName = report.getReportName() + fileType;
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
@@ -220,7 +221,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                             // 是否需要下载系统生成报表。01：是，02：否
                             if (StringUtil.equals(CacheUtil.getSysParam(ReportGlobalConstant.IS_NEED_SYSFILE), "01")) {
                                 // 存在人工上传报表
-                                if (StringUtil.isNotEmpty(downloadFilePeople) && downloadFilePeople != null) {
+                                if (downloadFilePeople != null && StringUtil.isNotEmpty(downloadFilePeople)) {
                                     String filename = downloadFilePeople.getName();
                                     List<String> splitToList = StringUtil.splitToList(".", reportName);
                                     // 将下载的报表文件重命名
@@ -314,7 +315,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        compressFile(zipOut, firstFile, firstFile.getName());
+                        ZipFileUtil.compressZip(zipFile,false,firstFile);
                         //zipOut.setEncoding("gbk");
                         //zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(firstFile);
@@ -329,18 +330,23 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                 }
                 catch (Exception e) {
                     log.error("", e);
+                }finally {
+                    if (fos != null){
+                        fos.close();
+                    }
                 }
             }
             // 不需要层级
             else {
                 try {
-                    zipOut = new ZipOutputStream(new FileOutputStream(zipFile));
+                    fos = new FileOutputStream(zipFile);
+                    zipOut = new ZipOutputStream(fos);
                     // 设置UTF8编码
                     zipOut.setEncoding(StandardCharsets.UTF_8.displayName());
                     for (RepReveal report : reportList) {
                         // TODO
                         String reportName = report.getReportName();
-                        if (StringUtil.isNotEmpty(report.getEndDate()) && report.getEndDate() != null) {
+                        if (report.getEndDate() != null && StringUtil.isNotEmpty(report.getEndDate())) {
                             reportName = DateUtil.format(report.getEndDate(), DateUtil.DEFAULT_DATE_FORMAT_EN)
                                          + GlobalConstant.UNDER_LINE + reportName;
                         }
@@ -488,7 +494,7 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                                 }
                             }
                         }
-                        compressFile2(zipOut, baseFile, baseFile.getName());
+                        ZipFileUtil.compressZip(zipFile,false,baseFile);
                         // zipOut.setEncoding("gbk");
                         // zipOut.setEncoding(System.getProperty("file.encoding"));
                         deleteFile(baseFile);
@@ -499,13 +505,15 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
                             downloadFile.delete();
                         }
                     }
-                    zipOut.close();
                 }
                 catch (Exception e) {
                     log.error("", e);
                 }finally {
                     if(zipOut != null){
                         zipOut.close();
+                    }
+                    if (fos != null){
+                        fos.close();
                     }
                 }
             }
@@ -521,124 +529,12 @@ public class ReportConfirmManage001Service extends CommonExportService<ReportCon
 	private String getEncodeFileName(String fileName) {
 		try {
 			return StringUtil.isNotEmpty(fileName)
-					? (new String(fileName.getBytes(System.getProperty("file.encoding")), "UTF-8")) : fileName;
+					? (new String(fileName.getBytes(System.getProperty("file.encoding")==null?"":System.getProperty("file.encoding")), "UTF-8")) : fileName;
 		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+            logger.error(e.getMessage(),e);
 		}
 		return fileName;
 	}
-    /**
-     * 压缩报表信息
-     * 
-     * @param
-     * @param
-     * @param
-     * @throws IOException
-     */
-    private void compressFile(ZipOutputStream out, File sourcefile, String basedir)
-        throws IOException {
-        if (sourcefile.isDirectory()) {
-            File[] files = sourcefile.listFiles();
-
-            if (files == null || files.length == 0) {
-                out.putNextEntry(new ZipEntry(basedir + File.separator));
-            }
-            else {
-                for (int i = 0; i < files.length; i++ ) {
-                    compressFile(out, files[i], basedir + File.separator + files[i].getName());
-                }
-            }
-        }
-        else {
-            out.putNextEntry(new ZipEntry(basedir));
-
-            FileInputStream fos =null;
-            BufferedInputStream bis =null;
-            try {
-                 fos = new FileInputStream(sourcefile);
-                 bis = new BufferedInputStream(fos);
-                int len;
-                byte[] buf = new byte[1024];
-                while ((len = bis.read(buf, 0, 1024)) != -1) {
-                    out.write(buf, 0, len);
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }finally {
-                if(bis!=null)
-                {
-                    bis.close();
-
-                }
-
-                if(fos!=null)
-                {
-                    fos.close();
-
-                }
-            }
-
-
-
-        }
-    }
-
-    /**
-     * 压缩报表信息
-     * 
-     * @param
-     * @param
-     * @param
-     * @throws IOException
-     */
-    private void compressFile2(ZipOutputStream out, File sourcefile, String basedir)
-        throws IOException {
-        if (sourcefile.isDirectory()) {
-            File[] files = sourcefile.listFiles();
-
-            if (files == null || files.length == 0) {
-                out.putNextEntry(new ZipEntry(basedir + File.separator));
-            }
-            else {
-                for (int i = 0; i < files.length; i++ ) {
-                    compressFile2(out, files[i], files[i].getName());
-                }
-            }
-        }
-        else {
-            out.putNextEntry(new ZipEntry(basedir));
-
-            FileInputStream fos = null;
-            BufferedInputStream bis = null;
-            try {
-                 fos = new FileInputStream(sourcefile);
-                 bis = new BufferedInputStream(fos);
-                int len;
-                byte[] buf = new byte[1024];
-                while ((len = bis.read(buf, 0, 1024)) != -1) {
-                    out.write(buf, 0, len);
-                }
-            }catch (Exception e)
-            {
-                e.printStackTrace();
-            }finally {
-                if(bis!=null)
-                {
-                    bis.close();
-
-                }
-                if(fos!=null)
-                {
-                    fos.close();
-
-                }
-            }
-
-
-
-        }
-    }
 
     /**
      * 删除多余文件

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -77,14 +78,12 @@ public class MstCalendarType001Controller extends BaseController {
      * 查询操作
      *
      * @return 查询结果
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<MstCalendarType001Dto> selectAllCalendar()
-        throws Exception {
+    public Page<MstCalendarType001Dto> selectAllCalendar(){
         Map<String, Object> map = RequestUtil.getPageParam();
         return mstCalendarType001001service.selectForPage(map);
     }
@@ -93,14 +92,12 @@ public class MstCalendarType001Controller extends BaseController {
      * 交易日历名称的联想文本框事件
      * 
      * @return 查询的交易日历代码和交易日历名称列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getCalendarNameList")
-    public List<SuggestDto> getCalendarNameList()
-        throws Exception {
+    public List<SuggestDto> getCalendarNameList(){
         Map<String, Object> map = new HashMap<>();
         String param = super.getRequest().getParameter("param");
         map.put("calendarName", param);
@@ -113,14 +110,12 @@ public class MstCalendarType001Controller extends BaseController {
      * 交易日历类型的下拉框事件
      * 
      * @return 查询的交易日历类型列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getCalendarType")
-    public List<SelectOptionDto> getCalendarType()
-        throws Exception {
+    public List<SelectOptionDto> getCalendarType(){
         Map<String, Object> param = new HashMap<>();
         param.put("YESORNO_YES_01", DictCodeList.是否_是.getValue());
         param.put("calendarType", super.getRequest().getParameter("param"));
@@ -151,15 +146,14 @@ public class MstCalendarType001Controller extends BaseController {
      * @param dto dto
      * @param br BindingResult
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) MstCalendarType001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) MstCalendarType001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -183,13 +177,11 @@ public class MstCalendarType001Controller extends BaseController {
      * 导出信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return mstCalendarType001001service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -197,14 +189,12 @@ public class MstCalendarType001Controller extends BaseController {
     /**
      * getTradeCalendarName
      * @return List<SuggestDto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getTradeCalendarName")
-    public List<SuggestDto> getInstitutionName()
-        throws Exception {
+    public List<SuggestDto> getInstitutionName(){
         String param = super.getRequest().getParameter("param");
         String isTradeCalendar = super.getRequest().getParameter("isTradeCalendar");
         List<SuggestDto> temp = mstCalendarType001001service.getTradeCalendarName(param,isTradeCalendar);

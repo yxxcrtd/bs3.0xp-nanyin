@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.trade.common.service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -97,7 +98,7 @@ public class TradeCommonService extends BaseService {
                                                     DictCodeListExt1.平安划款类型_DVP划款.getValue()), "1");
                     if(cusdepOrderDto == null || cusdepOrderDto.getErrMsg() != null 
                         || StringUtil.equals(cusdepOrderDto.isResult(), false)){
-                        throw new RuntimeException("请求发送异常...");
+                        throw new BusinessException("请求发送异常...");
                     }
                 }
             });

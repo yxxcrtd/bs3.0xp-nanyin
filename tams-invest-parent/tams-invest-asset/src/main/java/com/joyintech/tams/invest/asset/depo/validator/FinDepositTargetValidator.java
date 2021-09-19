@@ -10,14 +10,6 @@
  
 package com.joyintech.tams.invest.asset.depo.validator;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -32,6 +24,13 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.asset.depo.dto.FinDepositTargetDto;
 import com.joyintech.tams.invest.asset.depo.service.FinDepositTargetService;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  *  存款类资产--业务验证
@@ -55,7 +54,7 @@ public class FinDepositTargetValidator implements BeanValidator{
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -177,7 +176,7 @@ public class FinDepositTargetValidator implements BeanValidator{
         // add by caiqun 20200727 end  BS-1118【银行模式】【投资交易-存款类标的】新建标的时，选择挂一次性划款通道，提交成功。控制只能选择逐笔划款通道
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
-            resultList = chbDataCheckCommonUtil.chbCheckCommon(resultList, dto, null, dto.getType6(), ValidMessage.class);
+            resultList = chbDataCheckService.chbCheckCommon(resultList, dto, null, dto.getType6());
         }
 
         return resultList;

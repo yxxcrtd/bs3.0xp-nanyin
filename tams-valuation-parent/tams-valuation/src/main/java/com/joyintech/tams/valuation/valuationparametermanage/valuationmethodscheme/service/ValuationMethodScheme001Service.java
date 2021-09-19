@@ -43,7 +43,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public List<SelectOptionDto> findScheme(Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findScheme(Map<String, Object> parameters) {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findScheme",
                 parameters, SelectOptionDto.class);
@@ -55,7 +55,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public Page<ValuationMethodScheme001Dto> findSchemeByPage(Map<String, Object> parameters) throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSchemeByPage(Map<String, Object> parameters) {
     	return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findSchemeByPage",
                 parameters, ValuationMethodScheme001Dto.class);
@@ -66,7 +66,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public Page<ValuationMethodScheme001Dto> findSchemeDetailByPage(Map<String, Object> parameters) throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSchemeDetailByPage(Map<String, Object> parameters){
 		return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findSchemeDetailByPage",
                 parameters, ValuationMethodScheme001Dto.class);
@@ -77,7 +77,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public Page<ValuationMethodScheme001Dto> findSpecialAssetsByPage(Map<String, Object> parameters) throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSpecialAssetsByPage(Map<String, Object> parameters) {
 		return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findSpecialAssetsByPage",
                 parameters, ValuationMethodScheme001Dto.class);
@@ -89,7 +89,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public List<ValuationMethodScheme001Dto> findSchemeDetail(Map<String, Object> parameters) throws Exception {
+	public List<ValuationMethodScheme001Dto> findSchemeDetail(Map<String, Object> parameters) {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findSchemeDetail",
                 parameters, ValuationMethodScheme001Dto.class);
@@ -100,7 +100,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public List<ValuationMethodScheme001Dto> findSpecialAssets(Map<String, Object> parameters) throws Exception {
+	public List<ValuationMethodScheme001Dto> findSpecialAssets(Map<String, Object> parameters) {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findSpecialAssets",
                 parameters, ValuationMethodScheme001Dto.class);
@@ -111,7 +111,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) {
 		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/findFinprod",
                 parameters, SelectOptionDto.class);
@@ -149,7 +149,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public boolean getIsdefault() throws Exception {
+	public boolean getIsdefault() {
 		return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME
                 + "/ValuationMethodScheme001/getIsdefault", null, boolean.class);
     }

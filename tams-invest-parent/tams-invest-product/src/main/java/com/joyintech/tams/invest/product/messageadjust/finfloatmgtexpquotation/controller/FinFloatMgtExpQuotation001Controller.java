@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -101,20 +102,18 @@ public class FinFloatMgtExpQuotation001Controller extends BaseController {
      * 浮动管理费报价查询
      * <功能详细描述>
      * @return Page<FinFloatMgtExpQuotation001Dto>
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<FinFloatMgtExpQuotation001Dto> selectForPage() throws Exception{
+    public Page<FinFloatMgtExpQuotation001Dto> selectForPage() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return finFloatMgtExpQuotation001Service.selectForPage(param);
     }
     /**
      * 产品代码联想框
      * <功能详细描述>
-     * @param search String
      * @return List<SelectOptionDto>
      * @see
      * @since 1.0
@@ -127,11 +126,10 @@ public class FinFloatMgtExpQuotation001Controller extends BaseController {
     /**
      * 导出信息
      * @return ResponseEntity<byte[]>
-     * @throws Exception Exception
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export(){
 //        return finFloatMgtExpQuotation001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
         
     	File outFile = null;
@@ -175,14 +173,13 @@ public class FinFloatMgtExpQuotation001Controller extends BaseController {
      * <功能详细描述>
      * @param dto FinFloatMgtExpQuotation001Dto
      * @return
-     * @throws Exception Exception
      * @return AjaxResult
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("delete")
-    public AjaxResult delete(@RequestBody FinFloatMgtExpQuotation001Dto dto) throws Exception{
+    public AjaxResult delete(@RequestBody FinFloatMgtExpQuotation001Dto dto) throws WorkFlowException {
         ProcessParameter<FinFloatMgtExpQuotation001Dto> processParameter=new ProcessParameter<FinFloatMgtExpQuotation001Dto>();
         WorkFlowParameter<FinFloatMgtExpQuotation001Dto> params=new WorkFlowParameter<FinFloatMgtExpQuotation001Dto>();
         BussinessCodeParameter parameter=new BussinessCodeParameter();

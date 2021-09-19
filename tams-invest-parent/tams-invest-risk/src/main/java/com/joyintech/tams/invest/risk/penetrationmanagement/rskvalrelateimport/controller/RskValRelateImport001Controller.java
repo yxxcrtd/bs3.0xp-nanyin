@@ -62,7 +62,7 @@ public class RskValRelateImport001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskValRelateImport001Dto> selectAll()
-        throws Exception {
+         {
         return rskValRelateImport001Service.selecForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -106,7 +106,7 @@ public class RskValRelateImport001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return rskValRelateImport001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

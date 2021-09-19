@@ -14,7 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.risktrial.dto.TreeNode;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -291,5 +298,162 @@ public class RskValtblPrtBotassetService extends CommonExportService<RskValtblPr
     public Page<RskValtblPrtBotassetMapDto> selectPageData(Map<String, Object> selectParam) {
         return selectForPage(selectParam);
     }
-    
+    /**
+     * 获取无标的信息下拉框
+     * @return
+     */
+    public List<SelectOptionDto> selectUnTargetAsset(Map<String,Object> param){
+        List<SelectOptionDto> result = simpleRestTemplate.postForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectUnTargetAsset", param, SelectOptionDto.class);
+        return result;
+    }
+
+    /**
+     * 以资管计划的维度获取所有含未映射资产的科目个数
+     * @param parameters
+     * @return
+     */
+    public Integer getCountOfAllUnMapped(Map<String, Object> parameters) {
+        return simpleRestTemplate.postForObject(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/getCountOfAllUnMapped", parameters, Integer.class);
+    }
+    /**
+     * @Description: 查询未映射科目组装树形
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    public List<RskValtblPrtBotassetMapDto> selectUnMapSubject(Map<String, Object> paramMap) {
+        return simpleRestTemplate.postForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectUnMapSubject",
+                paramMap, RskValtblPrtBotassetMapDto.class);
+    }
+    /**
+     * @Description: 组装科目树形
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    public List<TreeNode> genTreeNodeData(List<RskValtblPrtBotassetMapDto> dataList) {
+        List<TreeNode> treeNodeList = new ArrayList<>();
+        if(!StringUtil.isEmptyList(dataList)){
+            for (RskValtblPrtBotassetMapDto dto:dataList) {
+                TreeNode treeNode = new TreeNode();
+                treeNode.setId(dto.getSubCode());
+                treeNode.setName(dto.getSubCode()+"("+dto.getSubName()+")");
+                treeNode.setOpen(true);
+                if(StringUtil.isNotEmpty(dto.getSubClass())){
+                    treeNode.setpId(dto.getSubClass());
+                }
+                treeNodeList.add(treeNode);
+            }
+        }
+        return treeNodeList;
+    }
+
+    /**
+     * @Description: 查询已映射资产科目
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    public Page<RskValtblPrtBotassetMapDto> selectMapSubjectInfoForPage(Map<String, Object> paramMap) {
+        return simpleRestTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectMapSubjectInfoForPage",
+                paramMap, RskValtblPrtBotassetMapDto.class);
+    }
+
+    /**
+     * @Description:  映射&应用
+     * @Param:
+     * @return:
+     * @Author: liupengfei
+     * @Date: 2021/3/24
+     */
+    public void applyMapForSubject(Map<String, Object> paramMap) {
+        simpleRestTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValtblPrtBotasset/applyMapForSubject",
+                paramMap,Integer.class);
+    }
+
+    public void cancelApplyMapForSubject(Map<String, Object> paramMap) {
+        simpleRestTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValtblPrtBotasset/cancelApplyMapForSubject",
+                paramMap,Integer.class);
+    }
+
+    public Page<SelectOptionDto> selectAllAsset1(Map<String, Object> pageParam) {
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        String subClass = (String) pageParam.get("subClass");
+        String finprodType = "";
+        boolean flag = false;//是否无标的标识，防止重复放入
+       /* List<String> subClassList = Lists.newArrayList();
+        if (StringUtil.isNotEmpty(subClass)){
+            subClassList = StringUtil.splitToList(",", subClass);
+            if(StringUtil.isNotEmpty(subClassList.get(0))){
+                if(StringUtil.equals(subClass, DictCodeListExt1.资产科目类型_债券.getValue())){
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_债券.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_基金.getValue())){
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_基金.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_股票.getValue())){
+                    flag=true;
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_股票.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_非标.getValue())){
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_项目类.getValue())){
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_存款类.getValue())){
+                    finprodType = DictCodeListExt1.金融产品类型_投管用_存款.getValue();
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_股指期货类.getValue())){
+                    flag=true;
+                    finprodType = "F34";
+                }else if(StringUtil.equals(subClass,DictCodeListExt1.资产科目类型_收益互换类.getValue())){
+                    flag=true;
+                    finprodType = "F35";
+                }
+                pageParam.put("finprodType2",finprodType);
+                pageParam.put("notFinprodType2",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+            }
+        }else{pageParam.put("notFinprodType2",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());}*/
+        pageParam.put("notFinprodType2",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue());
+       //修改获取系统内的资产，资产通过资产要素界面维护
+       // resultList.addAll(selectRskAsset(pageParam));
+       // resultList.addAll(selectAsset(pageParam));
+       /* if(null!=resultList&&!resultList.isEmpty()){
+            for(SelectOptionDto selectOptionDto:resultList){
+                if(null!=selectOptionDto.getObject()){
+                    String obj = selectOptionDto.getObject().toString();
+                    if(obj.contains(",")){
+                        String[] objArr = selectOptionDto.getObject().toString().split(",");
+                        selectOptionDto.setText(objArr[1]+":"+selectOptionDto.getText());
+                    }else{
+                        selectOptionDto.setText(selectOptionDto.getId()+":"+selectOptionDto.getText());
+                    }
+                }
+            }
+        }*/
+        return selectRskAsset(pageParam);
+
+    }
+
+    /**
+     * 获取资产维护界面维护的资产
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> selectRskAsset(Map<String,Object> param){
+        if(MultilevelDataAuthorityUtil.isEnabled()) {
+            //联社模式,查询登录人的机构
+            param.put("orgCode", CommonUtil.getOrgCode());
+        }
+        return simpleRestTemplate.postForPage(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectRskAsset", param, SelectOptionDto.class);
+
+    }
+    /**
+     * 获取无标的信息下拉框
+     * @return
+     */
+   /* public List<SelectOptionDto> selectRepAssetDept(Map<String,Object> param){
+        List<SelectOptionDto> result = simpleRestTemplate.postForList(ServiceApplication.RISK_SERVICE_NAME + "/RskValtblPrtBotasset/selectRepAssetDept", param, SelectOptionDto.class);
+        return result;
+    }*/
 }

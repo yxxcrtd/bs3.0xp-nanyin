@@ -90,7 +90,7 @@ public class StlOrderManagement001Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return stlOrderManagement001Service.export("划款指令管理.xls", RequestUtil.getPageParam());
 
     }

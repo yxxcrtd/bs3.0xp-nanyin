@@ -486,7 +486,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         boolean 是否需要上级审批 = !DictCodeList.授权类型_无限授权.getValue().equals(authorizeLimitAmt.get("AUTHORIZE_TYPE"));
         //
@@ -504,7 +504,7 @@ public class CommonBusinessService extends BaseService {
             }
         }
         catch (Exception e){
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return variables;
     }
@@ -587,6 +587,19 @@ public class CommonBusinessService extends BaseService {
         if (portfolio != null) {
             return false;
         }
+
+        // modify by wj 20200620  五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            return false;
+        }
+
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
         BigDecimal authorizeLimitAmt = null;
@@ -674,6 +687,20 @@ public class CommonBusinessService extends BaseService {
             variables.put(BussinessConstant.是否需要上级审批, false);
             return variables;
         }
+
+        // modify by wj 20200620 二级法人改造 五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            variables.put(BussinessConstant.是否需要上级审批, false);
+            return variables;
+        }
+
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
         Map<String, Object> authorizeLimitAmt = null;
@@ -932,6 +959,19 @@ public class CommonBusinessService extends BaseService {
         if (portfolio != null) {
             return false;
         }
+
+        // modify by wj 20200620  五个特殊参数 修改 为特殊取值方法
+        String institutionCode = "";
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            institutionCode =  MultilevelDataAuthorityUtil.getOrganizationCode(LoginUserUtil.getUserName());
+        }
+        String paraAuthorizeLimit = CacheUtil.getSpecialSysParam(BussinessConstant.AUTHORIZE_LIMIT, institutionCode);
+
+        if (paraAuthorizeLimit == null || BussinessConstant.AUTHORIZE_LIMIT.equals(paraAuthorizeLimit)
+                || DictCodeListExt1.是或否_否.getValue().equals(paraAuthorizeLimit)) {
+            return false;
+        }
+
         // 资产类型改为授权类型 modify by renping 2019-08-06  start
         // 根据资产类型取得授权类型
         FinProductTypeConfig finProductTypeConfig = getRskAuthorizeType(assetId, assetType);
@@ -1079,7 +1119,7 @@ public class CommonBusinessService extends BaseService {
     * @since 1.0
     */
    public List<FinCashResetPlan> calFinCashResetPlanList(FinCashResetRuleDto finCashResetRuleDto,
-		   List<FinCashPlanDto> scheList,List<String> holidayList) throws Exception{
+		   List<FinCashPlanDto> scheList,List<String> holidayList) {
 	   // 重置计划列表
 	   List<FinCashResetPlan> finCashResetPlanList = new ArrayList<FinCashResetPlan>();
 	   // 频率值
@@ -1275,7 +1315,7 @@ public class CommonBusinessService extends BaseService {
      * @since 1.0
      */
     public String getNextLastWorkDay(Map<String, Object> parameters)
-        throws Exception {
+    {
         if (dateCalService != null) {
             String lastDay = (String)parameters.get("lastDay");
             Date lastday = DateUtil.parse(lastDay);
@@ -1348,4 +1388,17 @@ public class CommonBusinessService extends BaseService {
                 String.class);
     }
     /*组合模拟试算功能合并 panbin 2020-8-18 end*/
+
+    /**
+     * 资产是否存在交易(存在撤销交易也算交易)
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    public int isTransInAssetTwo(String finprodId) {
+        return restTemplate.getForObject(ServiceApplication.COMMON_SERVICE_NAME + "/core/isTransInAssetTwo?finprodId=" + finprodId,
+                Integer.class);
+    }
 }

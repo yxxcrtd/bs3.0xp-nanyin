@@ -45,12 +45,14 @@ public class CeAsset001Service extends BaseService<CreditLinesAstDto> {
      * @since 1.0
      */
     public Page<CreditLinesAstDto> selectForPage(int page, int length,Map<String, Object> param) 
-        throws Exception {
+	{
         return super.queryForPage(page, length, () -> ceAssetMapper.selectForPage(param));
     }
 
     /**
-     * 资产代码联想
+     * 资产代码联想/microservice/service-
+	 * risk/src/main/java/com/joyintech/service/risk/creditmanagement/ceasset/controller/CeAsset
+	 * 002Controller.java
       *
       * @param map 检索参数
       * @return SelectOptionDto

@@ -90,14 +90,12 @@ public class OperationManage001Controller extends BaseController{
      * 页面查询，表格分页
      * <功能详细描述>
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<OperationManageDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<OperationManageDto> selectAllMstCaptialAccount(){
         Page<OperationManageDto> page = operationManageService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -106,13 +104,11 @@ public class OperationManage001Controller extends BaseController{
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return operationManageService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
 
     }

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dao.ValFundMarketInfo001Mapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,6 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.service.valuation.basedata.marketdata.bondmarketinfo.dao.ValBondMarketInfo001Mapper;
-import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dao.ValFundMarketInfo001mapper;
 import com.joyintech.service.valuation.basedata.marketdata.fundmarketinfo.dto.ValFundMarketInfo001dto;
 import com.joyintech.tams.common.base.dao.MstFundMarketInfoMapper;
 import com.joyintech.tams.common.base.entity.MstFundMarketInfo;
@@ -43,7 +42,7 @@ public class ValFundMarketQuotationInfoImportDataService extends CommonExportSer
     * 每日债券行情 mapper
     */
    @Autowired
-   private ValFundMarketInfo001mapper valFundMarketInfo001mapper;
+   private ValFundMarketInfo001Mapper valFundMarketInfo001mapper;
 
     /**
      * 场外金融产品估值Mapper

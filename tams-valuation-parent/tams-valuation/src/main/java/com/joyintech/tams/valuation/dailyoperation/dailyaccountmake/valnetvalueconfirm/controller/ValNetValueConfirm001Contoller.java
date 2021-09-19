@@ -132,7 +132,7 @@ public class ValNetValueConfirm001Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<ValNetValueConfirm001Dto> findPage() throws Exception{
+    public Page<ValNetValueConfirm001Dto> findPage() {
         return valNetValueConfirm001Service.findPage(RequestUtil.getPageParam());
     }
     /**
@@ -253,7 +253,7 @@ public class ValNetValueConfirm001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
     	 String datas = this.getParam("datas");
          Map<String, Object> paraMap = RequestUtil.getPageParam();
          List<ValNetValueConfirm001Dto> dtoList;

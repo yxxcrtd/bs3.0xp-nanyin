@@ -147,7 +147,7 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 	 * @return 表格信息
 	 * @throws Exception
 	 */
-	public Page<BalTableGenerate001Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+	public Page<BalTableGenerate001Dto> findPage(int page,int length,Map<String, Object> params) {
 		// 获取交易类型
 //		String[] prodTypeArr = (String[]) params.get("prodTypes");
 		 //获取交易类型
@@ -174,13 +174,19 @@ public class BalTableGenerate001Service extends CommonExportService<BalTableGene
 		if (StringUtil.isNotEmpty(buildStatus)) {
 			buildStatusArr = buildStatus.split(",");
 		}
-		BalTableGenerate001SearchDto dto = (BalTableGenerate001SearchDto) JsonUtils.map2entity(params,
-				BalTableGenerate001SearchDto.class);
+		BalTableGenerate001SearchDto dto = null;
+		try {
+			dto = (BalTableGenerate001SearchDto) JsonUtils.map2entity(params,
+					BalTableGenerate001SearchDto.class);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("数据转换异常");
+		}
 		dto.setProdIds(prodIdArr);
 		dto.setProdTypes(prodTypeArr);
 		dto.setBuildStatuses(buildStatusArr);
 		dto.setFileType(DictCodeList.文件类型_余额表.getValue());
-		return super.queryForPage(page,length,() -> mapper.queryPageList(dto));
+		BalTableGenerate001SearchDto finalDto = dto;
+		return super.queryForPage(page,length,() -> mapper.queryPageList(finalDto));
 	}
 
 	/**

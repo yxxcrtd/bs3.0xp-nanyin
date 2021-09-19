@@ -18,6 +18,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -436,8 +437,7 @@ public class FinProductFeePay002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductFeePay002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductFeePay002Dto dto, BindingResult br) throws WorkFlowException {
         ProcessParameter<FinProductFeePay002Dto> processParameter = new ProcessParameter<FinProductFeePay002Dto>();
         WorkFlowParameter<FinProductFeePay002Dto> params = new WorkFlowParameter<FinProductFeePay002Dto>();
         params.setElementId(dto.getElementId());

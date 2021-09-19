@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,14 @@ public class ProductRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
         interfRiskRdsDto.setEventType(BussinessDictCodeListRds.事件类型_投资交易.getValue());
         interfRiskRdsDto.setEventStatus(BussinessDictCodeListRds.事件类型_投资交易_存续期.getValue());
         //调用共通方法包括处理封装实体及调用接口逻辑
-        completePeriodCommon(joinPoint,interfRiskRdsDto,(param,entry)->interfRiskRdsService.sendRiskRdsData(param, entry));
+        completePeriodCommon(joinPoint,interfRiskRdsDto,(param,entry)-> {
+            try {
+                return interfRiskRdsService.sendRiskRdsData(param, entry);
+            } catch (IOException e) {
+               logger.error(e.getMessage(),e);
+               throw new IOException();
+            }
+        });
         logger.info("==========={}类调用实占或释放接口结束=============",joinPoint.getTarget().getClass().getSimpleName());
 
     }

@@ -120,7 +120,7 @@ public class UpTrQuoTedSecController {
     @ResponseBody
     @PostMapping("getfinprodIdForAdd")
     public List<SelectOptionDto> getfinprodIdForAdd(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         List<SelectOptionDto> temp = upTrQuoTedSecService.getfinprodIdForAdd(param);
         return temp;
     }

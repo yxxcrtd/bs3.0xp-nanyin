@@ -57,7 +57,6 @@ public class SocketServer {
             }
         }
         catch (IOException e) {
-//            e.printStackTrace();
         	logger.error("error:",e);
             logger.error("Socket服务端异常: " + e.getMessage());
         }
@@ -70,7 +69,7 @@ public class SocketServer {
         			serverSocket.close();
         		}
 			} catch (IOException e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 			}
         }
     }

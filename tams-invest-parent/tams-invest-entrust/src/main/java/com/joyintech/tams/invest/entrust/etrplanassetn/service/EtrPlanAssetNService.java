@@ -444,9 +444,17 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                 dto.setEntrustNum(BigDecimal.valueOf(Double.valueOf(data.get(7).toString())));
             }
             //交易对手
-            dto.setCounterId(data.get(8).toString().trim());
-            String counterName = getCounterName(data.get(8).toString().trim());
-            dto.setCounterIdName(counterName);
+            if (StringUtil.equals(Ps.split(":")[0], DictCodeList.交易方向_申购.getValue())
+                    ||StringUtil.equals(Ps.split(":")[0], DictCodeList.交易方向_赎回.getValue())){
+                dto.setCounterId(data.get(10).toString().trim());
+                String counterName = getCounterName(data.get(10).toString().trim());
+                dto.setCounterIdName(counterName);
+            }else{
+                dto.setCounterId(data.get(8).toString().trim());
+                String counterName = getCounterName(data.get(8).toString().trim());
+                dto.setCounterIdName(counterName);
+            }
+
             //获取投资经理
             dto.setInvManagerId(SecurityUtil.getLoginUser().getUserName());
             //所属部门
@@ -663,20 +671,20 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     message = etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrPlanAssetN003.counterId", lineNo);
                     confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
                     //交易对手输入格式是否正确check
-                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("initValue", rowData.get(8).toString());
-                        map.put("page", 1);
-                        map.put("length", 20);
-                        map.put("counterType", null);
-                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                                map, SelectOptionDto.class);
-                        if (selectOptionDtoPage.getRoot().isEmpty()) {
-                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage(
-                                    "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
-                        }
-                    }
+//                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
+//                        Map<String, Object> map = new HashMap<>();
+//                        map.put("initValue", rowData.get(8).toString());
+//                        map.put("page", 1);
+//                        map.put("length", 20);
+//                        map.put("counterType", null);
+//                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+//                                map, SelectOptionDto.class);
+//                        if (selectOptionDtoPage.getRoot().isEmpty()) {
+//                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage(
+//                                    "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
+//                        }
+//                    }
                     //交易对手是否符合交易方向的check
                     if (StringUtil.isNotBlank(rowData.get(8).toString())) {
                         String[] s2 = rowData.get(5).toString().split(":");
@@ -717,8 +725,8 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                             if (selectOptionDtoPage2.getRoot().isEmpty()) {
                                 confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
                             }
-                            }
-                            else if(StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())
+                        }
+                        else if(StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())
                                 ||StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())){
                             // 申购与赎回时外部交易对手
                             Map<String, Object> map2 = new HashMap<>();
@@ -726,12 +734,24 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                             map2.put("page", 1);
                             map2.put("length", 20);
                             map2.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
+//                            Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
+//                                    "/common/EntrustCommonPersonSelect/getCounterId", map2, SelectOptionDto.class);
+//                            if (selectOptionDtoPage2.getRoot().isEmpty()) {
+//                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+//                            }
+                            //BSXQHD-2257
+                            //【计划类净值型指令】多对多指令导入，交易对手一直报必填报错
+                            //  要输入 组织机构代码或统一社会信用代码  进行 市场机构交易对手 校验。
                             Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                                    "/common/EntrustCommonPersonSelect/getCounterId", map2, SelectOptionDto.class);
+                                    "/common/EntrustCommonPersonSelect/getMarketInsCounterId", map2, SelectOptionDto.class);
                             if (selectOptionDtoPage2.getRoot().isEmpty()) {
                                 confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+                            }else{
+                                SelectOptionDto dto = selectOptionDtoPage2.getRoot().get(0);
+                                rowData.add(10,dto.getId());
                             }
-                            }
+
+                        }
                     }
                 }
                 if (StringUtil.isBlank(confirmmsg)) {

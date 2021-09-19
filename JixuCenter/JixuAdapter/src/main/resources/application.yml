@@ -106,8 +106,8 @@ spring:
   profiles: yitihua-jicheng
   datasource:
     url: jdbc:oracle:thin:@//192.168.90.140:1521/orcl
-    username: wangbo
-    password: wangbo
+    username: zgtams0810
+    password: zgtams0810_123
 #注册中心配置
 eureka:
   client:

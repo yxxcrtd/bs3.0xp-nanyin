@@ -165,7 +165,7 @@
   <select id="selectByReportuuid" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
-    from PBC_REPORT_COMPANY
+    from PBC_REPORT_COMPANY_DAT
     where REPORTUUID = #{reportuuid,jdbcType=CHAR}
   </select>
   <delete id="deleteByReportDate"  parameterType="map" >
@@ -185,7 +185,10 @@
           </if> 
           <if test="deptCode != null" >
 	         and DEPT_CODE = #{deptCode,jdbcType=VARCHAR}
-	       </if> 
+	       </if>
+          <if test="deptCode == null" >
+            and DEPT_CODE is null
+          </if>
        and pr.send_status = '01'/*只删除未报送数据*/)
   </delete>
 </mapper>

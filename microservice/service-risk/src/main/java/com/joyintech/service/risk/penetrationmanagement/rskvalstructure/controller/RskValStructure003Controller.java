@@ -11,8 +11,10 @@
 package com.joyintech.service.risk.penetrationmanagement.rskvalstructure.controller;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import com.joyintech.framework.annotation.DTXTransaction;
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -91,5 +93,19 @@ public class RskValStructure003Controller {
     @PostMapping("/select")
     public RskValStructureDto select(@RequestBody RskValStructureDto dto) throws IllegalAccessException, InvocationTargetException{
         return rskValStructuresService003.select(dto);
+    }
+    /**
+     * 新建映射明细
+     *
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("/insertList")
+    public Boolean insertList(@RequestBody List<RskValtblStructMapDtl> list){
+        return rskValStructuresService003.insertList(list);
     }
 }

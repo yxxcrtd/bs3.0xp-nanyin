@@ -27,13 +27,13 @@ public class JasperReportDataSourceListService implements JRDataSource {
 	private List<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
 	int index = -1;
 	Map<String, Object> parameters=new HashMap<String, Object>();
-	public JasperReportDataSourceListService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
-		this.parameters.put("prodId", prodId);
-		this.parameters.put("startDate", startDate);
-		this.parameters.put("endDate", endDate);
-		this.parameters.put("reportType", reportType);
-		fetchData();
-	}
+//	public JasperReportDataSourceListService(String prodId, Date startDate, Date endDate,String reportType) throws Exception {
+//		this.parameters.put("prodId", prodId);
+//		this.parameters.put("startDate", startDate);
+//		this.parameters.put("endDate", endDate);
+//		this.parameters.put("reportType", reportType);
+//		fetchData();
+//	}
 
 	public List<Map<String, Object>> getData() {
 		return data;
@@ -43,21 +43,25 @@ public class JasperReportDataSourceListService implements JRDataSource {
 		this.data = data;
 	}
 
-	private void fetchData() throws Exception {
-		String reportType=String.valueOf(parameters.get("reportType"));
-		String startDate=String.valueOf(parameters.get("startDate"));
-		String endDate=String.valueOf(parameters.get("endDate"));
-		String prodId=String.valueOf(parameters.get("prodId"));
-		Connection  conn=Dao.getConnection(reportType);
-		if(ReportGlobalConstant.pAjZ_THREE.equals(reportType)){
-			data = TbThreeNetTypeDataRepository.getNetTypeTbThreeData(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId, conn);
-		}else if(ReportGlobalConstant.pAzb_THREE.equals(reportType)){
-			data = TbThreeCurrencyDataRepository.getCurrencyTypeTbThreeDate(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId, conn);
-		}
-		if(conn!=null){
-			conn.close();
-		}
-	}
+//	private void fetchData() throws Exception {
+//		String reportType=String.valueOf(parameters.get("reportType"));
+//		String startDate=String.valueOf(parameters.get("startDate"));
+//		String endDate=String.valueOf(parameters.get("endDate"));
+//		String prodId=String.valueOf(parameters.get("prodId"));
+//		Connection  conn= null;
+//		try {
+//			conn = Dao.getConnection(reportType);
+//			if(ReportGlobalConstant.pAjZ_THREE.equals(reportType)){
+//				data = TbThreeNetTypeDataRepository.getNetTypeTbThreeData(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId, conn);
+//			}else if(ReportGlobalConstant.pAzb_THREE.equals(reportType)){
+//				data = TbThreeCurrencyDataRepository.getCurrencyTypeTbThreeDate(DateUtil.parse(startDate), DateUtil.parse(endDate), prodId, conn);
+//			}
+//		} finally {
+//			if(conn!=null){
+//				conn.close();
+//			}
+//		}
+//	}
 	public boolean next() throws JRException {
 		index++;
 		if (data != null && index < data.size()) {

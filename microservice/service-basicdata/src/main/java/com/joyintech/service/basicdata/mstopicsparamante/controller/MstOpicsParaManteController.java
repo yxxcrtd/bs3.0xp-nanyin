@@ -46,7 +46,7 @@ public class MstOpicsParaManteController {
     @PostMapping("/selectOpicsParaManteInfo/{page}/{length}")
     public Page<MstOpicsParaManteDto> selectOpicsParaManteInfo(@RequestBody Map<String, Object> pageParam,
                                                                @PathVariable("page") int page, @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstOpicsParaManteService.selectOpicsParaManteInfo(page, length, pageParam);
     }
 
@@ -75,7 +75,7 @@ public class MstOpicsParaManteController {
     @DTXTransaction
     @PostMapping("doComplete/{type}")
     public void doComplete(@RequestBody MstOpicsParaManteDto entity, @PathVariable("type") String type)
-        throws Exception {
+    {
         // MstOpicsParaManteDto entity = (MstOpicsParaManteDto) JsonUtils.map2entity((Map<String, Object>) map.get("entity"),
         // MstOpicsParaManteDto.class);
         // String type = (String) map.get("type");

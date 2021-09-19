@@ -55,8 +55,7 @@ public class ValBondRealRate001Service extends CommonExportService<ValBondRealRa
      * @see
      * @since 1.0
      */
-    public Page<ValBondRealRate001Dto> findPage(int page, int length, Map<String, Object> params)
-        throws Exception {
+    public Page<ValBondRealRate001Dto> findPage(int page, int length, Map<String, Object> params){
         params.put("finprodType", DictCodeListExt1.金融产品类型_债券.getValue());
         params.put("invAim", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
         return super.queryForPageForSelectReturn(page, length, () -> valBondRealRate001Mapper.findPage(params));

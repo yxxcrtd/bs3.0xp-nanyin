@@ -69,25 +69,7 @@ public class TrdPlanInterestDurationService extends BaseService {
         setParamsForSearch(param);
         String plateDate = platformDateImpl.getSysDateStr();
         param.put("PLATEFORM_DATE", plateDate);
-        Page<TrdPlanInterestDurationDto> pageR = new Page<>();
-        List<TrdPlanInterestDurationDto> search =  trdPlanInterestDurationMapper.findPage(param);
-        List<TrdPlanInterestDurationDto> root = new ArrayList<TrdPlanInterestDurationDto>();
-        for(int i=0;i<length;i++) {
-        	int index = (page-1)*length+i;
-        	if(index<search.size()) {
-        		root.add(search.get(index));
-        	}
-        }
-        int total = search.size()/length;
-        if(search.size()%length>0) {
-        	total++;
-        }
-        pageR.setPage(page);
-        pageR.setRecords(search.size());
-        pageR.setTotal(total);
-        pageR.setRoot(root);
-        //return queryForPageForSelectReturn(page, length, () -> trdPlanInterestDurationMapper.findPage(param));
-        return pageR;
+        return queryForPageForSelectReturn(page, length, () -> trdPlanInterestDurationMapper.findPage(param));
     }
 
     public List<TrdPlanInterestDurationDto> selectAllData(Map<String, Object> param) {

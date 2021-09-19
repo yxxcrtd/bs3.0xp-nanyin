@@ -8,7 +8,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,10 +37,14 @@ import com.joyintech.tams.valuation.report.common.util.ReportGlobalConstant;
 import com.joyintech.tams.valuation.report.common.constant.DateUtil;
 
 
-
+@Component
 @Service("valuationInfoDisclosureGenService")
 @Transactional(rollbackFor = Exception.class)
 public class InfoDisclosureGenService {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(InfoDisclosureGenService.class);
     @Autowired
 	//private FileAttachmentProcess fileAttachmentProcess;
     private ServiceFromJar fileAttachmentProcess;
@@ -64,7 +72,10 @@ public class InfoDisclosureGenService {
      */
     @Autowired
     private RepInstallLogDetailMapper repInstallLogDetailMapper;
-    
+
+	@Value("${infoDisclosureGenService.url}")
+	protected String url;
+
     public void genDetail(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity, String serverUrl, 
     		String serverUser, String serverPwd){
     	String exeStatus = ReportDictCodeList.执行结果_失败.getValue();
@@ -135,7 +146,7 @@ public class InfoDisclosureGenService {
 //    		}
     	}
     	catch(Exception e){
-    		e.printStackTrace();	
+			logger.error(e.getMessage(),e);
     	}
     	finally{
     		repInstallLogDetail.setExecStatus(exeStatus);
@@ -161,7 +172,7 @@ public class InfoDisclosureGenService {
 	public  boolean uploadFile(String id,String ftpCode,String fileName,String localPath,String filePathSeqno) throws FileNotFoundException{
 		boolean isFtpUploadSucess = false;
 		//ftp相关配置通过ftpCode获取
-		String url = "192.168.70.66";
+//		String url = "192.168.70.66";
 		int port  = 21;
 		String userName = "test1";
 		String passWord = "112233";
@@ -177,12 +188,23 @@ public class InfoDisclosureGenService {
 				localPath = uploadFile.getTargetFile().getPath();
 			}
 		}
-		if(StringUtil.isNotEmpty(localPath)){
-			InputStream input = new FileInputStream(localPath);
-			isFtpUploadSucess = FtpUtil.uploadFile(url, port, userName, passWord, path, fileName, input);
-		}		
-		
-		return isFtpUploadSucess;
+		InputStream input = null;
+		try {
+			if(StringUtil.isNotEmpty(localPath)){
+				input = new FileInputStream(localPath);
+				isFtpUploadSucess = FtpUtil.uploadFile(url, port, userName, passWord, path, fileName, input);
+			}
+			return isFtpUploadSucess;
+		}finally {
+			if (input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					logger.error(e.getMessage(),e);
+				}
+			}
+		}
+
 	}
 	/**
      * 生成文件方法
@@ -190,7 +212,7 @@ public class InfoDisclosureGenService {
      * @return
      * @throws MalformedURLException 
      */
-    public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,String url) throws MalformedURLException,Exception{
+    public Boolean gentFile(InfoDisclosureGenAndSendEntity infoDisclosureGenAndSendEntity,String url) throws MalformedURLException,IOException{
     	boolean flag = false;
     	UploadFile fileInfo  = jasparConnectUtilService.connectJasparAndDownload(url, infoDisclosureGenAndSendEntity.getReportName(), infoDisclosureGenAndSendEntity.getFileType());
 //    	URL connUrl = new URL(url);

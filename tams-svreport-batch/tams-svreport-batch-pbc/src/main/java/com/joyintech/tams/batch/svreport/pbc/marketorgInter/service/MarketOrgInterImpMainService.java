@@ -66,7 +66,7 @@ public class MarketOrgInterImpMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("市场机构数据接入Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

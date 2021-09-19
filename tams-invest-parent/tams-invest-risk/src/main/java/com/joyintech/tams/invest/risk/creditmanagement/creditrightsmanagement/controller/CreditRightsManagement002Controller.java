@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -124,7 +125,7 @@ public class CreditRightsManagement002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) CreditRightsManagementDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) CreditRightsManagementDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -137,7 +138,7 @@ public class CreditRightsManagement002Controller extends BaseController{
                 dto.setSeqno(seqno);
             /*}
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }*/
         }
         ProcessParameter<CreditRightsManagementDto> processParameter = new ProcessParameter<CreditRightsManagementDto>();

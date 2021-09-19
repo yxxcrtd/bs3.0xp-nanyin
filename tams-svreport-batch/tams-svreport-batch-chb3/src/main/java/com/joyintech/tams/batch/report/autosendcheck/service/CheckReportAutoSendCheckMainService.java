@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.svreport.chb.assetinforeg.service.AssetInfoRegist001Service;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -185,7 +186,7 @@ public class CheckReportAutoSendCheckMainService extends AutoSendCBBaseService{
             logInfo(e.getMessage());
             logger.error("报送前检查自动检查Error",e);
             insertResultLogException(batchStartTime);
-            throw e;
+            throw new BusinessException(e);
         }
     }
 

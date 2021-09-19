@@ -66,7 +66,7 @@ implements BaseProcessService<RskPortAutoRelatePointDto> {
 					try {
 						Thread.sleep(6000);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(),e);
 					}
 					logger.info("----------->添加指标后处理自动关联与redis初始化任务--------------");
 					//库中结合画面上，为了解决分布式事务一块

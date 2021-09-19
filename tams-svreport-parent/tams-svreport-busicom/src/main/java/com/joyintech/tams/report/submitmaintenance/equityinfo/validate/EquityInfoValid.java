@@ -110,7 +110,9 @@ public class EquityInfoValid {
     /**
      * 座机号码检查
      */
-    public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3})+(\\-[0-9]{7,8})?(\\-[0-9]{1,8})?$";
+    //public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3})+(\\-[0-9]{7,8})?(\\-[0-9]{1,8})?$";
+    public static final String PATTERN_OFFICE_PHONE = "^(0[0-9]{2,3}-)?([0-9]{7,8}){1}(-[0-9]{1,8})?$";
+    		//^([0-9]{3,4}-)?([0-9]{7,8}){1}(-[0-9]{1,8})?$
     /**
      * 白名单验证
      */
@@ -296,7 +298,6 @@ public class EquityInfoValid {
             existCount = equityInfoRegist001Mapper.selectExistsByIndentifyMark(param);
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage());
         }
         if(existCount != 0){
@@ -443,7 +444,6 @@ public class EquityInfoValid {
             }
         }
         catch (Exception e) {
-//            e.printStackTrace();
             logger.error(e.getMessage());
             return;
         }
@@ -753,8 +753,7 @@ public class EquityInfoValid {
             }
             else {
                 // 风险偏好
-                if (StringUtil.isNotEmpty(equityInfo001Dto.getHolderRiskPrefer())
-                        && !equityInfo001Dto.getHolderRiskPrefer().equals(
+                if (!equityInfo001Dto.getHolderRiskPrefer().equals(
                         equityInfoRegist001Dto.getHolderRiskPrefer())) {
                     map.put("HOLDER_RISK_PREFER", equityInfo001Dto.getHolderRiskPrefer());
                     type = "04";
@@ -2596,7 +2595,6 @@ public class EquityInfoValid {
             }
             catch (Exception e) {
 //                System.out.println("getEditMap出异常，异常信息：" + e.getMessage());
-//                e.printStackTrace();
                 logger.error("getEditMap出异常，异常信息：" + e.getMessage());
             }
             //01 新增/02 识别标识变更/03 重要信息变更/04 其他信息变更
@@ -2611,6 +2609,14 @@ public class EquityInfoValid {
             }
             else if("03".equals(map.get("type02"))){
                 message.add(this.getMessage("CHB_EQUITYINFO_E_034",list.get(1)));
+                EquityInfoRegist001Dto equityRegist = null;
+                if (StringUtil.isNotBlank(list.get(2)) && list.get(2).length() <= 30) {
+                    equityRegist = equityInfoRegist001Mapper.queryBatchForEquityInfoSingle(list.get(0),
+                            list.get(2));
+                }
+                if(equityRegist==null){
+                    message.add(this.getMessage("原识别标识为{0}的投资者信息未登记！",list.get(2)));
+                }
             }
             if ("01".equals(type) || "03".equals(type)) {
                 // 投资者是否属于本行
@@ -3150,7 +3156,8 @@ public class EquityInfoValid {
                 checkMess+=mes;
 
 
-                System.out.println("message 信息如下："+mes);
+//                System.out.println("message 信息如下："+mes);
+                logger.info("message 信息如下："+mes);
                 logger.error("message 信息如下：{}" , mes);
             }
         }

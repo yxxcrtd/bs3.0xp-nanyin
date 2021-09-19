@@ -42,11 +42,20 @@ public class Image2PDF {
 	private static void image2pdf(String text, String pdf)
 			throws DocumentException, IOException {
 		Document document = new Document();
-		OutputStream os = new FileOutputStream(new File(pdf));
-		PdfWriter.getInstance(document, os);
-		document.open();
-		createPic(document, text);
-		document.close();
+		OutputStream os =  null;
+		try{
+			os = new FileOutputStream(new File(pdf));
+			PdfWriter.getInstance(document, os);
+			document.open();
+			createPic(document, text);
+		} finally {
+			if (document != null){
+				document.close();
+			}
+			if (os != null){
+				os.close();
+			}
+		}
 	}
 
 	/**

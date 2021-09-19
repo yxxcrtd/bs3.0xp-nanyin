@@ -74,7 +74,7 @@ public class ValInertfLog001Service extends CommonExportService<ValInertfLog001D
      * @see
      * @since 1.0
      */
-    public Page<ValInertfLog001Dto> search(String tmpName,String fileName,Date startDate,Date endDate,String check) throws Exception{
+    public Page<ValInertfLog001Dto> search(String tmpName,String fileName,Date startDate,Date endDate,String check) {
         Map<String, Object> parameters = Maps.newHashMap();
         parameters.put("tmpName", tmpName);
         parameters.put("fileName", fileName);

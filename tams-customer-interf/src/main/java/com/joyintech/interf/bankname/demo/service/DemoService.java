@@ -11,6 +11,8 @@
 package com.joyintech.interf.bankname.demo.service;
 
 import com.joyintech.interf.bankname.demo.send.DemoDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +24,12 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DemoService {
-
+    private static final Logger logger = LoggerFactory.getLogger(DemoService.class);
     @Autowired
     private DemoDao demoDao;
 
     public void demo() {
-        System.out.println(demoDao.send());
+//        System.out.println(demoDao.send());
+        logger.info(demoDao.send());
     }
 }

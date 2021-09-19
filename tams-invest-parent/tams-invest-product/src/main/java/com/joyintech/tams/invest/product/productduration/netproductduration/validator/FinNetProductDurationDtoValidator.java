@@ -121,6 +121,13 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
             errorList.add(new ValidMessage("请选择交易类型！"));
         }
         // TISHKBS-1688 add by jiangpeng on 20210429 end
+        //判断交易方向是产品到期 和 产品收益类型 是货币型 判断收益金额不为空
+        if(DictCodeList.交易方向_产品到期.getValue().equals(dto.getDealType())
+                && DictCodeList.收益类型_货币型.getValue().equals(dto.getProfitType())){
+            if(dto.getExpireProfit03()==null){//FinNetProductDuration.profitAmt
+                errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0038",this.getMessage("FinNetProductDuration.profitAmt"))));
+            }
+        }
         
         if (WorkFlowUtil.isNotFromToDoList()) {
 	        //产品不能存在其他存续期交易
@@ -390,13 +397,13 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 	}
             	}
                 //赎回 交易份额、交易金额、净金额 必填校验
-            	if(dto.getRedDealNum()==null || dto.getRedDealNum().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealNum()==null || dto.getRedDealNum().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealNum",getMessage("FIN_PROD_E_0091","交易份额")));
                 }
-            	if(dto.getRedDealAmt()==null || dto.getRedDealAmt().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealAmt()==null || dto.getRedDealAmt().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealAmt",getMessage("FIN_PROD_E_0091","交易金额")));
                 }
-            	if(dto.getRedTotalNetValue()==null || dto.getRedTotalNetValue().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedTotalNetValue()==null || dto.getRedTotalNetValue().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redTotalNetValue",getMessage("FIN_PROD_E_0091","净金额")));
                 }
             	if(dto.getRedConfirmDate() ==null){
@@ -824,7 +831,7 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 	}
             	}
                 //赎回 交易本金、收益金额、交易金额、净金额 必填校验
-            	if(dto.getRedPrinAmt03()==null || dto.getRedPrinAmt03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedPrinAmt03()==null || dto.getRedPrinAmt03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redPrinAmt03",getMessage("FIN_PROD_E_0091","交易本金")));
                 }
 //            	if(dto.getRedProfit03()==null || dto.getRedProfit03().compareTo(BigDecimal.ZERO)<0){
@@ -836,10 +843,10 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
 	                    errorList.add(new ValidMessage("redProfit03",getMessage("FIN_PROD_E_0123","收益金额")));
 	                }
             	}
-            	if(dto.getRedDealAmt03()==null || dto.getRedDealAmt03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedDealAmt03()==null || dto.getRedDealAmt03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redDealAmt03",getMessage("FIN_PROD_E_0091","交易金额")));
                 }
-            	if(dto.getRedTotalNetValue03()==null || dto.getRedTotalNetValue03().compareTo(BigDecimal.ZERO)<0){
+            	if(dto.getRedTotalNetValue03()==null || dto.getRedTotalNetValue03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("redTotalNetValue03",getMessage("FIN_PROD_E_0091","净金额")));
                 }
             	//违约赎回，违约金不能为空
@@ -991,10 +998,10 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
 //                	}
                 	
                 	//产品到期 交易本金、收益金额、交易金额
-                	if(dto.getExpirePrinAmt03()==null || dto.getExpirePrinAmt03().compareTo(BigDecimal.ZERO)<0){
+                	if(dto.getExpirePrinAmt03()==null || dto.getExpirePrinAmt03().compareTo(BigDecimal.ZERO)<=0){
                         errorList.add(new ValidMessage("expirePrinAmt03",getMessage("FIN_PROD_E_0091","交易本金")));
                     }
-                	if(dto.getExpireDealAmt03()==null || dto.getExpireDealAmt03().compareTo(BigDecimal.ZERO)<0){
+                	if(dto.getExpireDealAmt03()==null || dto.getExpireDealAmt03().compareTo(BigDecimal.ZERO)<=0){
                         errorList.add(new ValidMessage("expireDealAmt03",getMessage("FIN_PROD_E_0091","交易金额")));
                     }
                 	
@@ -1045,8 +1052,8 @@ public class FinNetProductDurationDtoValidator implements BeanValidator{
                 }
             	//add  by wm 确认日要不小于起息日 end 2019-06-29
             	//强增强减 交易金额、交易份额校验
-            	if(dto.getAddReduceDealNum03()==null&&dto.getAddReduceDealAmt03()==null){
-                    errorList.add(new ValidMessage("交易金额与交易份额至少填写一个，且填写数值必须大于0"));
+            	if(dto.getAddReduceDealNum03()==null || dto.getAddReduceDealAmt03()==null){
+                    errorList.add(new ValidMessage("货币型产品强增强减必须同时输入金额和份额，且填写数值必须大于0"));
             	}
             	if(dto.getAddReduceDealNum03()!=null && dto.getAddReduceDealNum03().compareTo(BigDecimal.ZERO)<=0){
                     errorList.add(new ValidMessage("addReduceDealNum03","输入的交易份额必须大于0"));

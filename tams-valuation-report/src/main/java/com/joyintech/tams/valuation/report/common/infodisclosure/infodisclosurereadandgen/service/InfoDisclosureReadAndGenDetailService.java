@@ -90,7 +90,8 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @param executeDateStr 跑批日期
 	 * @throws Exception 异常
 	 */
-	public boolean readAndGenDetail(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr) throws Exception{
+	public boolean readAndGenDetail(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr)
+			throws ParseException,NoSuchFieldException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException{
 		boolean flag = false;
 		//规则表信息
 		RepRule repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());
@@ -122,7 +123,7 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @throws Exception
 	 */
 	public List<ProdInfoListEntity> getRuleProdList(RepJob repJob, RepRule repRule, Date executeDateStr, 
-			Date ptDate, Map<String,Date> dateMap) throws Exception{
+			Date ptDate, Map<String,Date> dateMap) throws NoSuchFieldException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException{
 		//获取作业范围list
 		List<RepJobRange> repJobRangeList = infoDisclosureReadAndGenMapper.getRepJobRangeList(repJob.getJobId());
 		//通过组装的条件，查询产品相关内容
@@ -179,7 +180,7 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @throws Exception
 	 */
 	public boolean doInsert(List<ProdInfoListEntity> list, Date ptDate, RepJob repJob,RepRule repRule,
-			Date executeDateStr, boolean runAgainFlag) throws Exception{
+			Date executeDateStr, boolean runAgainFlag) throws ParseException{
 		List<RepInstallFile> revealList = new ArrayList<RepInstallFile>();
 		RepInstallFile repInstallFile = null;
 		String seq = IDGenerator.generate();
@@ -271,7 +272,8 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @param executeDateStr 跑批日期
 	 * @throws Exception 异常
 	 */
-	public boolean preReadAndGenDetail(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr) throws Exception{
+	public boolean preReadAndGenDetail(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr)
+			throws ParseException,NoSuchFieldException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException{
 		boolean flag = false;
 		//规则表信息
 		RepRule repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());
@@ -575,7 +577,8 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean readAndGenDetailAgain(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr,String jobSeq) throws Exception{
+	public boolean readAndGenDetailAgain(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr,String jobSeq)
+			throws ParseException,NoSuchFieldException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException {
 		boolean flag = false;
 		//规则表信息
 		RepRule repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());
@@ -604,8 +607,8 @@ public class InfoDisclosureReadAndGenDetailService{
 	 * @param executeDateStr 跑批日期
 	 * @throws Exception 异常
 	 */
-	public boolean readAndGenErrorAgain(RepJob repJob, Map<String,Date> dateMap, 
-			Date executeDateStr,String jobSeq) throws Exception{
+	public boolean readAndGenErrorAgain(RepJob repJob, Map<String,Date> dateMap, Date executeDateStr,String jobSeq)
+			throws ParseException,NoSuchFieldException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, IntrospectionException{
 		boolean flag = false;
 		//规则表信息
 		RepRule repRule = infoDisclosureReadAndGenMapper.getRepRuleInfo(repJob.getRuleId());

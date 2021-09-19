@@ -24,6 +24,7 @@ import com.joyintech.tams.invest.period.trdrepoduration.service.TrdRepoDuration0
 import com.joyintech.tams.invest.period.trdrepoduration.service.TrdRepoDuration002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -151,8 +152,7 @@ public class TrdRepoDuration001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return trdRepoDuration001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }
@@ -164,8 +164,7 @@ public class TrdRepoDuration001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("revoke")
-    public AjaxResult revoke(@Valid TrdRepoDuration002Dto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult revoke(@Valid TrdRepoDuration002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -240,8 +239,7 @@ public class TrdRepoDuration001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("add")
-    public AjaxResult add(@Valid TrdRepoDuration002Dto dto, BindingResult br)
-            throws Exception {
+    public AjaxResult add(@Valid TrdRepoDuration002Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

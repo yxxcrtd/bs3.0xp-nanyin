@@ -2,7 +2,9 @@ package com.joyintech.tams.common.base.dao;
 
 import com.joyintech.tams.common.base.entity.RepInvassetkindDto;
 import com.joyintech.tams.common.base.entity.RepInvassetkindDtoKey;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface RepInvassetkindDtoMapper {
     int deleteByPrimaryKey(RepInvassetkindDtoKey key);
 

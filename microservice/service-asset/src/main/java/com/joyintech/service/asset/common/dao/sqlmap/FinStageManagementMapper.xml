@@ -191,7 +191,7 @@ delete from PA_FIN_PRODUCT_BUYOUT_RATE where FINPROD_ID in (
 			SELECT 1 FROM
 			SYS_DATA_PROCESS_MARK t2
 			where t2.workflow_id = t1.workflow_id
-			and t2.status = 'N'
+			and t2.status not in ('N','R')
 		)
 	</select>
 </mapper>

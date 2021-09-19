@@ -18,13 +18,14 @@ import com.joyintech.tams.mobileApproval.dto.TmAppAuditTabConfitDto;
 import com.joyintech.tams.mobileApproval.dto.TmAppAuditTabDetailDto;
 import com.joyintech.tams.mobileApproval.dto.WflBusinessNodeDto;
 import com.joyintech.tams.mobileApproval.dto.WflNextReviewerDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 移动审批
  *
  * @author houjifei
  */
-@Component
+@Repository
 public interface MobileApprovalMapper {
 
     //查询代办流程，根据用户汇总

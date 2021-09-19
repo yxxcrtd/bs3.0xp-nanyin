@@ -1,17 +1,5 @@
 package com.joyintech.tams.invest.product.productelement.reportregister.validator;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
@@ -24,8 +12,18 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.calculator.RepCheckUtil;
 import com.joyintech.tams.invest.product.productelement.reportregister.dto.ProductReportRegister002Dto;
 import com.joyintech.tams.invest.product.productelement.reportregister.service.ProductReportRegister002Service;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
+import com.joyintech.tams.systemtools.util.CommonUtil;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 产品收集删除修改验证
@@ -47,7 +45,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
     private MstWorkflowCommonService mstWorkflowCommonService;
 
 	@Autowired
-	private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+	private ChbDataCheckService chbDataCheckService;
 
 	@Override
 	public List<ValidMessage> valid(Object value) {
@@ -272,12 +270,12 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			}
 		}
 		// 业务联络人座机
-		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
-				validList.add(new ValidMessage("repLiaisonTel",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepLiaisonTel())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepLiaisonTel(), 30)) {
+//				validList.add(new ValidMessage("repLiaisonTel",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repLiaisonTel"))));
+//			}
+//		}
 		// 业务联络人手机
         if (StringUtil.isNotEmpty(entity.getRepLiaisonMobile())) {
             if(!RepCheckUtil.checkNum11(entity.getRepLiaisonMobile())){
@@ -303,25 +301,25 @@ public class ProductReportRegister002Validator implements BeanValidator {
 						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repOutDepName"))));
 			}
 		}
-		// 实际管理人名称
-		if (StringUtil.isNotEmpty(entity.getRepMname())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
-				validList.add(new ValidMessage("repMname",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
-			}
-		}
+//		// 实际管理人名称
+//		if (StringUtil.isNotEmpty(entity.getRepMname())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepMname(), 120)) {
+//				validList.add(new ValidMessage("repMname",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repMname"))));
+//			}
+//		}
 		// 境内托管机构名称
 		if (StringUtil.isNotEmpty(entity.getRepInDepName())
 				&& RepCheckUtil.checkByteLength(entity.getRepInDepName(), 120)) {
 			validList.add(new ValidMessage("repInDepName",
 					this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repInDepName"))));
 		}
-		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
-			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
-				validList.add(new ValidMessage("repCoopName",
-						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
-			}
-		}
+//		if (StringUtil.isNotEmpty(entity.getRepCoopName())) {
+//			if (RepCheckUtil.checkByteLength(entity.getRepCoopName(), 120)) {
+//				validList.add(new ValidMessage("repCoopName",
+//						this.getMessage("FW_E_0002", this.getMessage("BussRepFinProductInfo.repCoopName"))));
+//			}
+//		}
 		// 投资资产种类及比例
 		if (StringUtil.isNotEmpty(entity.getRepInvTypeRat())) {
 			if (RepCheckUtil.checkByteLength(entity.getRepInvTypeRat(), 300)) {
@@ -440,7 +438,7 @@ public class ProductReportRegister002Validator implements BeanValidator {
 			validList.add(new ValidMessage("发行机构代码必须与银行代码相同。"));
 		}
 
-		 validList = chbDataCheckCommonUtil.chbCheckCommon(validList, entity, null, null, ValidMessage.class);
+		 validList = chbDataCheckService.chbCheckCommon(validList, entity, null, null);
 
 		return validList;
 	}

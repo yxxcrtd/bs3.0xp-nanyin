@@ -99,7 +99,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlManagementInfoDto> selectAll(@RequestBody Map<String, Object> param, 
-                                                @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                @PathVariable("page") int page, @PathVariable("length") int length) {
         return ptlManagementInfo001Service.selectForPage(page,length,param);
     }
     /**
@@ -111,7 +111,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
      * @since 1.0
      */
     @PostMapping("getPortPage")
-    public List<PtlManagementInfoDto> getPortPage(@RequestBody Map<String, Object> map) throws Exception {
+    public List<PtlManagementInfoDto> getPortPage(@RequestBody Map<String, Object> map) {
         return ptlManagementInfo001Service.getPortPage(map);
     }
     /**
@@ -124,7 +124,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @DTXTransaction
     @PostMapping("delete")
     public int delete(@RequestBody PtlManagementInfoDto dto)
-        throws Exception {
+    {
         return ptlManagementInfo001Service.delete(dto);
     }
     /**
@@ -150,7 +150,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @DTXTransaction
     @PostMapping("insert")
     public ResultObject insert(@RequestBody PtlManagementInfoDto dto)
-        throws Exception {
+    {
         return ptlManagementInfo001Service.insert(dto);
     }
 
@@ -164,7 +164,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @DTXTransaction
     @PostMapping("update")
     public ResultObject update(@RequestBody PtlManagementInfoDto dto)
-        throws Exception {
+    {
         return ptlManagementInfo001Service.update(dto);
     }
 
@@ -178,7 +178,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
     @DTXTransaction
     @PostMapping("updateInsertPortfolio")
     public ResultObject updateInsertPortfolio(@RequestBody PtlManagementInfoDto dto)
-        throws Exception {
+    {
     	ResultObject resultObject = new ResultObject(ResultCode.SUCCESS);
         if (!StringUtil.equals(dto.getPortfolioType(), DictCodeListExt1.组合类型_子组合.getValue())) {
             ptlManagementInfo001Service.deleteUserId(dto.getPortfolioId());
@@ -586,7 +586,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
      */
     @PostMapping("selectAllBaseRule")
     public List<FinBaseRuleInfo> selectAllBaseRule(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlManagementInfo001Service.selectAllBaseRule(param);
     }
 
@@ -601,7 +601,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
      */
     @PostMapping("selectPortfolioDetailInfo")
     public MockPtlPortfolioDto selectPortfolioDetailInfo(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlManagementInfo001Service.selectPortfolioDetailInfo(param);
     }
 
@@ -615,7 +615,7 @@ public class PtlManagementInfo001Controller extends BaseService<PtlManagementInf
      */
     @PostMapping("selectAlllv")
     public List<MstIntRateInfo> selectAlllv(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlManagementInfo001Service.selectAlllv(param);
     }
 }

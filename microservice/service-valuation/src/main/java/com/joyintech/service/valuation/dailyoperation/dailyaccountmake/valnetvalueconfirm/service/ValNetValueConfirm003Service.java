@@ -1,12 +1,14 @@
 package com.joyintech.service.valuation.dailyoperation.dailyaccountmake.valnetvalueconfirm.service;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +58,15 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
 	 * @param request
 	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) throws JSchException {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName");
+		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
 		
 		//产品id
-		String finprodId = request.getParameter("finprodId");
+		String finprodId = request.getParameter("finprodId")==null?"":request.getParameter("finprodId");
 		
 		//估值表余额表标识
-		String valBalFlag = request.getParameter("valBalFlag");
+		String valBalFlag = request.getParameter("valBalFlag")==null?"":request.getParameter("valBalFlag");
         if(StringUtil.isNotEmpty(valBalFlag)){
             if(valBalFlag.equals(DictCodeList.文件类型_估值表.getCodeName())){
                 valBalFlag = DictCodeList.文件类型_估值表.getValue();
@@ -74,7 +76,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
         }
 		
 		//估值表余额表标识
-        String valDateS = request.getParameter("valDate");
+        String valDateS = request.getParameter("valDate")==null?"":request.getParameter("valDate");
         String valDate = valDateS.replace("-", "");
         
 		//产品唯一标识
@@ -111,7 +113,7 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
 	}
 	
 	
-	public int insertFileTransferInfo(Map<String, Object> params) throws Exception {
+	public int insertFileTransferInfo(Map<String, Object> params) throws ParseException {
 	    BokFileTransfer003Dto dto = new BokFileTransfer003Dto();
 	    //文件信息
 	    BokFileInfoDto infoDto = new BokFileInfoDto();
@@ -191,9 +193,9 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      * 
      * @param params 筛选条件
      * @return 表格信息
-     * @throws Exception 
+     * @throws ParseException
      */
-    public Page<BokFileTransfer003Dto> findPage(int page,int length,Map<String, Object> params) throws Exception {
+    public Page<BokFileTransfer003Dto> findPage(int page,int length,Map<String, Object> params) throws ParseException {
         //产品代码
         String finprodId = (String)params.get("finprodId");
         //估值表余额表标识
@@ -231,12 +233,10 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
     /**
      * 文件下载
      * 
-     * @param request
-     * @throws Exception
+     * @param fileId
      */
-    public BokFileTransfer003Dto downloadFile(String fileId) throws Exception {
-        
-        
+    public BokFileTransfer003Dto downloadFile(String fileId){
+
         return  valNetValueConfirm001Mapper.qryBokFileInfoByFileId(fileId);
         
     }
@@ -246,11 +246,10 @@ public class ValNetValueConfirm003Service extends CommonExportService<BokFileTra
      * 文件下载信息删除
      * 
      * @param request
-     * @throws Exception
      */
-    public void deleteFile(HttpServletRequest request) throws Exception {
+    public void deleteFile(HttpServletRequest request) {
         // 文件id
-        String fileId = request.getParameter("fileId");
+        String fileId = request.getParameter("fileId")==null?"":request.getParameter("fileId");
         //文件信息
         BokFileInfoDto infoDto = new BokFileInfoDto();
         //净值确认附件信息

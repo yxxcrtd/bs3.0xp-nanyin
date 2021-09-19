@@ -47,7 +47,7 @@ public class InterfLC0002Service extends ReceivedEsbService<InterfLC0002OutEntit
      */
     @Override
     public int saveInterfData(InterfLC0002InEntity entity)
-        throws Exception {
+    {
         // 查询类接口，无登录操作
         return 0;
     }
@@ -57,7 +57,7 @@ public class InterfLC0002Service extends ReceivedEsbService<InterfLC0002OutEntit
      */
     @Override
     public int saveBusinessData(InterfLC0002InEntity entity)
-        throws Exception {
+    {
         // 查询类接口，无登录操作
         return 0;
     }
@@ -66,8 +66,7 @@ public class InterfLC0002Service extends ReceivedEsbService<InterfLC0002OutEntit
      * {@inheritDoc}
      */
     @Override
-    public InterfLC0002OutEntity selectResponseData(InterfLC0002InEntity entity)
-        throws Exception {
+    public InterfLC0002OutEntity selectResponseData(InterfLC0002InEntity entity) throws InterfException {
         // 销售部门数据字典转换
         billService.changeSaleDeptCode(entity);
 

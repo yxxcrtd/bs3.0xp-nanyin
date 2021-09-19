@@ -1,5 +1,6 @@
 package com.joyintech.tams.svreport.chbsd.prdraisetotsub.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class SdProdRaisetotBatchService {
 	@Autowired
 	private RaiseTotalRegist001Service raiseTotalRegist001Service;
 	
-	public void sendRaisetotInfoMsg(Date batchDate, List<String> prodIdList) throws Exception  {
+	public void sendRaisetotInfoMsg(Date batchDate, List<String> prodIdList) throws InvocationTargetException, IllegalAccessException {
 		logger.debug("产品募集总量信息登记未报送数据检索开始------" + df.format(new Date()));
 		// 1、报送数据检索,取得 List
 		List<SdRaiseTotalSvrDto> listSub = sdRaiseTotalSvrMapper.selcteDataByIds(DateUtil.format(batchDate), prodIdList);
@@ -105,7 +106,7 @@ public class SdProdRaisetotBatchService {
 	 * 发送共通处理
 	 * @param dataList
 	 */
-	public void sendBatchCommon(List<ChbPrdRaisetotSubDto> dataList, SendDataCheckType sendDataCheckType) throws Exception{
+	public void sendBatchCommon(List<ChbPrdRaisetotSubDto> dataList, SendDataCheckType sendDataCheckType) {
 		// 报文发送
 		logger.debug("产品募集总量信息登记报文报送开始------" + df.format(new Date()));
 		//获取单批次发送条目数

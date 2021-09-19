@@ -50,11 +50,10 @@ public class DocumentManagement002Service {
 	 * 读取文件并上传到文件服务器
 	 * 
 	 * @param request
-	 * @throws Exception
 	 */
-	public void readFile(HttpServletRequest request) throws Exception {
+	public void readFile(HttpServletRequest request) {
 		// 文件本地路径
-		String filePath = request.getParameter("fileName1");
+		String filePath = request.getParameter("fileName1")==null?"":request.getParameter("fileName1");
 		/*
 		//上传文件名称
 		String name = request.getParameter("fileName");*/
@@ -80,9 +79,8 @@ public class DocumentManagement002Service {
 	 * 
 	 * @param dto2
 	 * @return
-	 * @throws Exception
 	 */
-	public int insertFileTransferInfo(DocumentManagement001Dto dto2) throws Exception {
+	public int insertFileTransferInfo(DocumentManagement001Dto dto2) {
 		DocumentManagement001Dto dto = new DocumentManagement001Dto();
 		// 系统时间
 		String Sysdate = baseCommonService.getSysDateString();

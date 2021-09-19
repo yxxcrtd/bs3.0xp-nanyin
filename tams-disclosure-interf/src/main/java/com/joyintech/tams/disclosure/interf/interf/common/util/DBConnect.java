@@ -153,7 +153,6 @@ public class DBConnect {
 						try {
 							rs.close();
 						} catch (SQLException e) {
-							e.printStackTrace();
 						}
 					}
 				}).forEach(col -> {

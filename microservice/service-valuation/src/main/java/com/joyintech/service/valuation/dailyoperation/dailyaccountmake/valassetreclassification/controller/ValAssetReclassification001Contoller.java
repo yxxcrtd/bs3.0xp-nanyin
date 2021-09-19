@@ -116,7 +116,7 @@ public class ValAssetReclassification001Contoller extends BaseController {
      */
     @PostMapping("/getBookSetId/{page}/{length}")
     public Page<SelectOptionDto> getBooksetId(@RequestBody Map<String, Object> paMap,
-    		@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    		@PathVariable("page") int page, @PathVariable("length") int length) {
         return valAssetReclassification001Service.getBookSetId(page,length,paMap);
     }
     

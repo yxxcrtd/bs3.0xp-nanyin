@@ -54,7 +54,7 @@ public class RepFinProductOrgIssRegistController {
      */
     @PostMapping("/findPage/{page}/{length}")
     public Page<RepFinProductOrgIssRegistDto> findPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return repFinProductOrgIssRegistService.selectForPage(page, length, param);
     }
 }

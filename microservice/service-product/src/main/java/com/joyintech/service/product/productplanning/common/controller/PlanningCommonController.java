@@ -113,7 +113,7 @@ public class PlanningCommonController {
     public Page<PlanningCommonDto> queryForPagePlanningCommon(@RequestBody Map<String, Object> pageParam,
                                                     @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return planningCommonService.queryForPagePlanningCommon(page, length, pageParam);
     }
     /**

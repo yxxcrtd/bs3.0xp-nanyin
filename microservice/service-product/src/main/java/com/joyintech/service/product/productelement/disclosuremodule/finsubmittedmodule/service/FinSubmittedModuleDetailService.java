@@ -99,7 +99,7 @@ public class FinSubmittedModuleDetailService extends BaseService<FinSubmittedMod
      * @throws Exception 异常信息
      */
     public Page<FinSubmittedModuleDetailDto> selectForPage(int page, int length, Map<String, Object> map)
-            throws Exception {
+    {
         Page<FinSubmittedModuleDetailDto> allPage = super.queryForPage(page, length, () -> finSubmittedModule002Mapper.select(map));
         List<FinSubmittedModuleDetailDto> list = allPage.getRoot();
         if(list != null && list.size()>0){
@@ -156,7 +156,7 @@ public class FinSubmittedModuleDetailService extends BaseService<FinSubmittedMod
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @DataSource(DataSourceType.OTHER)
     public FinSubmittedModuleDetailDto selectFile(String businessId)
-            throws Exception {
+    {
         FinSubmittedModuleDetailDto fileInfo;
         try {
             DynamicDataSourceHolder.putDataSource(DataSourceType.OTHER);

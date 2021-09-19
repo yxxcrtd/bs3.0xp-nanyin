@@ -57,7 +57,7 @@ public class RskSupervisionPortfPoint003Controller {
      */
     @PostMapping("/selectForPage/{page}/{length}")
     public Page<RskPortfolioPoolConfigDto> selectForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPoint003Service.selectForPage(page, length, param);
     }
 
@@ -91,7 +91,7 @@ public class RskSupervisionPortfPoint003Controller {
      * @throws Exception 异常
      */
     @GetMapping("queryPortfBagInfoByBagId")
-    public RskPortfolioPackage003Dto queryPortfBagInfoByBagId(String bagId) throws Exception {
+    public RskPortfolioPackage003Dto queryPortfBagInfoByBagId(String bagId) {
         return rskSupervisionPortfPoint003Service.queryPortfBagInfoByBagId(bagId);
     }
     
@@ -101,7 +101,7 @@ public class RskSupervisionPortfPoint003Controller {
      * @throws Exception 异常
      */
     @GetMapping("selectReleteIndByBagId")
-    public int selectReleteIndByBagId(String bagId) throws Exception {
+    public int selectReleteIndByBagId(String bagId) {
         return rskSupervisionPortfPoint003Service.selectReleteIndByBagId(bagId);
     }
     
@@ -133,7 +133,7 @@ public class RskSupervisionPortfPoint003Controller {
      */
     @PostMapping("/selectPortElementForPage/{page}/{length}")
     public Page<RskPtlPortfolioDto> selectPortElementForPage(@RequestBody Map<String, Object> param,
-            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+            @PathVariable("page") int page, @PathVariable("length") int length) {
         return rskSupervisionPortfPoint003Service.selectPortElementForPage(page, length, param);
     }
     
@@ -143,7 +143,7 @@ public class RskSupervisionPortfPoint003Controller {
      * @throws Exception 异常
      */
     @GetMapping("queryPortfolioPackageDtlByBagId")
-    public List<String> queryPortfolioPackageDtlByBagId(String bagId) throws Exception {
+    public List<String> queryPortfolioPackageDtlByBagId(String bagId) {
         return rskSupervisionPortfPoint003Service.queryPortfolioPackageDtlByBagId(bagId);
     }
 }

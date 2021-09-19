@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.exception.BusinessException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -111,7 +112,7 @@ public class ValAccountsAdjustAccountEntry002Controller extends BaseController {
      */
     protected void setStaticDictCodeValueToModel(Model model, String[] names, IDictCodeList... codeLists) {
         if(null == names || (names != null && names.length != codeLists.length)) {
-            throw new RuntimeException("数据字典别名和数据字典明细的个数不一致");
+            throw new BusinessException("数据字典别名和数据字典明细的个数不一致");
         }
         for (int i=0;i<codeLists.length;i++) {
             IDictCodeList dictCodeList = codeLists[i];

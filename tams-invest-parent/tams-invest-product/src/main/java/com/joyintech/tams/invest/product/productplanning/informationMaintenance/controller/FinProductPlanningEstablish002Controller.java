@@ -29,6 +29,7 @@ import com.joyintech.tams.invest.product.productplanning.informationMaintenance.
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.activiti.editor.language.json.converter.util.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -115,7 +116,7 @@ public class FinProductPlanningEstablish002Controller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public List<FinProductPlanning002DetailDto> findPage() throws Exception {
+    public List<FinProductPlanning002DetailDto> findPage(){
         String planningNo = RequestUtil.getParam("planningNo");
         String workflowId = RequestUtil.getParam(GlobalConstant.WORKFLOW_ID);
         /**
@@ -191,8 +192,7 @@ public class FinProductPlanningEstablish002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody FinProductPlanning002Dto dto)
-        throws Exception {
+    public AjaxResult save(@RequestBody FinProductPlanning002Dto dto) throws WorkFlowException {
         // 生成计划编号ID
         if (StringUtil.isEmpty(dto.getPlanningNo())) {
             BussinessCodeParameter bussinessCodeParameter = new BussinessCodeParameter();

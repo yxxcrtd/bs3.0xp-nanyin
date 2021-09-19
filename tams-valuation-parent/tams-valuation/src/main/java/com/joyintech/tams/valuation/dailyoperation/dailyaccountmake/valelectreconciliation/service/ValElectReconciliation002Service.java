@@ -21,7 +21,7 @@ public class ValElectReconciliation002Service extends CommonExportService<ValEle
      * @since 1.0
      */
     public Page<ValElectReconciliation002Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForPage(
             ServiceApplication.VALUATION_SERVICE_NAME + "/ValElectReconciliation002/findPage",
             params, ValElectReconciliation002Dto.class);

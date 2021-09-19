@@ -31,7 +31,7 @@ public class CalFuncAcctCodeBySecAcctSeatNumber extends AdditionValFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws InterfaceException {
 		String seatNumber=genConvertFormula(inputValue, colcfgMap);
 		SecAcct secAcct=secAcctDao.loadSecAcctBySeatNum(seatNumber);
 		if(secAcct!=null){
@@ -47,7 +47,7 @@ public class CalFuncAcctCodeBySecAcctSeatNumber extends AdditionValFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+			{
 		// TODO Auto-generated method stub
 		return null;
 	}

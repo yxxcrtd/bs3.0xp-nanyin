@@ -16,11 +16,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.web.PlatformDate;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,6 +81,9 @@ public class EtrWtFxswap002Controller extends BaseController {
     @Autowired
     private EtrWtFxswapService etrWtFxswapService;
 
+    @Autowired
+    private PlatformDate platformDate;
+
     /**
      * {@inheritDoc}
      */
@@ -92,7 +98,10 @@ public class EtrWtFxswap002Controller extends BaseController {
         setSelectOptionToModel(model, DictCode.外汇掉期期限类型);
         setSelectOptionToModel(model, DictCode.货币对);
         model.addAttribute("tradePs", DictCodeListExt2.交易方向_卖买.getValue());
-        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+//        Date sysDate = CacheUtil.getAppCache(GlobalConstant.NOW_SYS_DATE, Date.class);
+
+        Date sysDate = platformDate.getSysDate(LoginUserUtil.getUserName());
+
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
@@ -230,8 +239,7 @@ public class EtrWtFxswap002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrWtFxswapDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrWtFxswapDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -266,7 +274,7 @@ public class EtrWtFxswap002Controller extends BaseController {
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -281,7 +289,7 @@ public class EtrWtFxswap002Controller extends BaseController {
      * 
      * 查询币种账户信息
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0

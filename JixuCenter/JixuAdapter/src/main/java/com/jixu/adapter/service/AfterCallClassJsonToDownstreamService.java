@@ -49,7 +49,7 @@ public class AfterCallClassJsonToDownstreamService extends AfterCallClassesAbstr
 		try {
 			AdapterCoreUtility.send(response.convertToMap());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		logger.info(dto.getAdapterID() + ": " + " 结束");
 	}

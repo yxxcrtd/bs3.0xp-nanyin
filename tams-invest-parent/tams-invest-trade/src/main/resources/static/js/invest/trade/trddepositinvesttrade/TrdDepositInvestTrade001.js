@@ -88,7 +88,8 @@ $(function(){
             ,{field:'tradeAmt', width:150, title: 'TrdDepositInvestTrade001.tradeAmt',type:'number',sortField:'tradeAmt'}
             ,{field:'ccyStr', width:150, title: 'TrdDepositInvestTrade001.ccy',sortField:'ccy'}
             ,{field:'remark', width:150, title: 'TrdDepositInvestTrade001.remark'}
-        ]
+        ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
     /**
      * 导出事件

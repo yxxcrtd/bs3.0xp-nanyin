@@ -161,7 +161,7 @@ public class TrdCommandReceive001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdCommandReceive001Dto> selectAllCommandReceive() throws Exception{
+    public Page<TrdCommandReceive001Dto> selectAllCommandReceive() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         Page<TrdCommandReceive001Dto> trdCommandReceive001DtoPage = trdCommandReceive001Service.selectForPage(param);
         return trdCommandReceive001DtoPage;
@@ -175,7 +175,7 @@ public class TrdCommandReceive001Controller extends BaseController{
     **/
     @ResponseBody
     @RequestMapping("selectForPageFromCstp")
-    public Page<TrdCommandReceive001Dto> selectForPageFromCstp() throws Exception{
+    public Page<TrdCommandReceive001Dto> selectForPageFromCstp() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         Page<TrdCommandReceive001Dto> trdCommandReceive001DtoPage = trdCommandReceive001Service.selectForPageFromCstp(param);
         return trdCommandReceive001DtoPage;
@@ -187,7 +187,7 @@ public class TrdCommandReceive001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("otherFindPage")
-    public Page<TrdCommandReceive001Dto> otherSelectAllCommandReceive() throws Exception{
+    public Page<TrdCommandReceive001Dto> otherSelectAllCommandReceive() {
         Map<String,Object> param = RequestUtil.getParameters(getRequest());
         return trdCommandReceive001Service.otherSelectForPage(param);
     }
@@ -223,7 +223,7 @@ public class TrdCommandReceive001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getFinprodMarketIds")
-    public List<SuggestDto> getFinprodMarketIds() throws Exception {
+    public List<SuggestDto> getFinprodMarketIds() {
         String finprodMarketId=super.getRequest().getParameter("param");
         List<SuggestDto> list = trdCommandReceive001Service.getFinprodMarketIds(finprodMarketId);
         return list;
@@ -271,7 +271,7 @@ public class TrdCommandReceive001Controller extends BaseController{
      * @throws Exception
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return trdCommandReceive001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     /**

@@ -115,7 +115,6 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
                     lock = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
             }
@@ -126,7 +125,6 @@ public class Chb3CnBondUpInterfTaskService extends InterfService {
                     channel = null;
                 }
                 catch (IOException e) {
-//                    e.printStackTrace();
                     logger.error(e.getMessage(),e);
                 }
             }

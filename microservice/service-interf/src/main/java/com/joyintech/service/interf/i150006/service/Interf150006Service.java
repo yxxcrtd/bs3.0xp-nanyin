@@ -66,7 +66,7 @@ public class Interf150006Service extends SendEsbService<Interf150006InEntity, In
      */
     @Override
     public Interf150006InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         ProdModifyDto dto = (ProdModifyDto)param;
         String finProdId = dto.getFinProdId();
         // 金融产品代码， 平台时间
@@ -121,7 +121,7 @@ public class Interf150006Service extends SendEsbService<Interf150006InEntity, In
      */
     @Override
     public int saveInterfData(Interf150006OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -130,7 +130,7 @@ public class Interf150006Service extends SendEsbService<Interf150006InEntity, In
      */
     @Override
     public int saveBusinessData(Interf150006OutEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 

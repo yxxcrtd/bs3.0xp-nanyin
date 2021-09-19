@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex;
-
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -25,6 +25,11 @@ import com.joyintech.tams.disclosure.busicommon.common.dto.RepProdIndex;
  */
 public class StageValueGrowthRate {
 	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(StageValueGrowthRate.class);
+
+	/**
 	 * 阶段净值增长率计算
 	 * 
 	 * @param 开始日期startDate
@@ -32,7 +37,7 @@ public class StageValueGrowthRate {
 	 * @throws Exception 
 	 * @retun 阶段净值增长率计算
 	 */
-	public static BigDecimal getStageValueGrowthRate(Date startDate, Date endDate, Map<Date, RepProdIndex> map,String prodId,Connection conn) throws Exception {
+	public static BigDecimal getStageValueGrowthRate(Date startDate, Date endDate, Map<Date, RepProdIndex> map,String prodId,Connection conn){
 		// 定义 阶段净值增长率 = 1
 		BigDecimal stageRate = BigDecimal.ONE;
 
@@ -105,7 +110,7 @@ public class StageValueGrowthRate {
 					  list.add(vALUE_DATE);
 				  }
 			  } catch (SQLException e) {
-				  e.printStackTrace();
+				  logger.error(e.getMessage(),e);
 			  }
 			  finally {
 				  //释放连接
@@ -113,14 +118,14 @@ public class StageValueGrowthRate {
 					  try {
 						  ps.close();
 					  } catch (SQLException e) {
-						  e.printStackTrace();
+						  logger.error(e.getMessage(),e);
 					  }
 				  }
 				  if(rs!=null){
 					  try {
 						  rs.close();
 					  } catch (SQLException e) {
-						  e.printStackTrace();
+						  logger.error(e.getMessage(),e);
 					  }
 				  }
 			  }

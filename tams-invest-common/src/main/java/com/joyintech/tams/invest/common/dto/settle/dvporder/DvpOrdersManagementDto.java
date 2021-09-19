@@ -148,6 +148,12 @@ public class DvpOrdersManagementDto extends BaseEntity {
     private String purpose;
 
     /**
+     * 备注
+     */
+    private String remark;
+
+
+    /**
      * 发送状态
      */
     private String sendStatus;
@@ -727,6 +733,26 @@ public class DvpOrdersManagementDto extends BaseEntity {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
+
+    /**
+     * 获取 remark (备注)
+     *
+     * @return remark
+     */
+    public String getRemark() {
+        if (remark == null || "".equals(remark))
+            return "";
+        return remark;
+    }
+
+    /**
+     * 设置 remark (备注)
+     *
+     * @param remark remark
+     */
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
     
     
 }

@@ -539,11 +539,28 @@
     	var r =/^\d+$/;
 		var flag=r.test(getElementById('purSpeed').val());
 		if(!flag){
-			Joyin.error(JoyinUtil.getMessage("确认天数只能输入整数"));
+			Joyin.error(JoyinUtil.getMessage("确认天数只能输入正整数"));
 			getElementById('purSpeed').val('');
 		    return false;
 		}
     	}
+    }
+
+    var purSpeedRedChange = function (){
+        if(getElementByRedId('redSpeed').val()){
+            var r =/^\d+$/;
+            var flag=r.test(getElementByRedId('redSpeed').val());
+            if(!flag){
+                Joyin.error(JoyinUtil.getMessage("确认天数只能输入正整数"));
+                getElementByRedId('redSpeed').val('');
+                return false;
+            }else{
+                if(parentPageId == 'FinNetValueProductBuild002' && $('#FinNetValueProductBuild002_profitType').val()
+                                == '01' && getElementByRedId('redSpeed').val() == '0'){
+                            getElementByRedId('redSpeed').val('1');
+                }
+            }
+        }
     }
 	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 end
 	
@@ -1632,6 +1649,8 @@
     	getElementById('openDays').change(openDaysChange);
     	getElementById('purSpeed').change(purSpeedChange);
     	//add by yujiaping 20210312 ZGBS-168 控制开放周期、开放天数、确认天数只能输入整数 end
+
+    	getElementByRedId('redSpeed').change(purSpeedRedChange);
 
     	// 几号、第几工作日勾选标识
     	layui.form.on('radio(openDateFilter)', function(data){

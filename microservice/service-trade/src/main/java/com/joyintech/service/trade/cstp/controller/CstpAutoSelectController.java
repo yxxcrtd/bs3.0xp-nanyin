@@ -64,7 +64,7 @@ public class CstpAutoSelectController {
      */
     @ResponseBody
     @PostMapping("matchSecAndRepoTrade")
-    public String matchSecAndRepoTrade(@RequestBody Map<String,Object> map) throws Exception{
+    public String matchSecAndRepoTrade(@RequestBody Map<String,Object> map) {
     	HashMap<String, String> jsonMap=new HashMap<String, String>();
     	//初始化返回值
     	jsonMap.put("recvcode", "0");

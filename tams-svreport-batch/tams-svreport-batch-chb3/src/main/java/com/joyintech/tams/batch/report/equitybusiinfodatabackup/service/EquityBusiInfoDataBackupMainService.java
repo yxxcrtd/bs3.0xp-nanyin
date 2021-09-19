@@ -90,7 +90,7 @@ public class EquityBusiInfoDataBackupMainService extends AutoSendCBBaseService {
                 doDataBackupDB(dataBackupMonth, 2);
             }
             catch (NumberFormatException | ParseException e) {
-                e.printStackTrace();
+				logger.error(e.getMessage(),e);
             }
 
 

@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +57,10 @@ import com.joyintech.tools.collectors.JoyinCollectors;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class EquityBusiDetails002Service extends BaseService{
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(EquityBusiDetails002Service.class);
 
 	@Autowired
 	private EquityBusiDetails001Mapper equityBusiDetails001Mapper;
@@ -90,7 +96,7 @@ public class EquityBusiDetails002Service extends BaseService{
 
 	/**
 	 * 更新数据
-	 * @param dto
+	 * @param param
 	 */
 	@SuppressWarnings("unchecked")
 	public void doSaveOrUpdate(Map<String, Object> param){
@@ -104,7 +110,7 @@ public class EquityBusiDetails002Service extends BaseService{
 			try {
 				dto = (EquiteBusiDetails001Dto)JsonUtils.map2entity(dtomap,EquiteBusiDetails001Dto.class);
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 		}else{
 			dto=(EquiteBusiDetails001Dto)param.get("objdto");
@@ -128,6 +134,7 @@ public class EquityBusiDetails002Service extends BaseService{
 		List<Map<String, String>> checkList = new ArrayList<Map<String, String>>();
 		checkList.add(resultStrMap);
 		List<EquiteBusiDetails001Dto> entitiesList = new ArrayList<>();
+        List<EquiteBusiDetails001Dto> entitiesListQuery = new ArrayList<>();
 		// 删除导入用的临时的数据
 		equityBusiDetails001Service.deleteImportTmpData();
 		// 插入导入用的临时数据
@@ -140,11 +147,16 @@ public class EquityBusiDetails002Service extends BaseService{
 			upmap.put("INDENTIFY_MARK", map.get("indentifyMark"));
 			insertList.add(upmap);
 
+        	EquiteBusiDetails001Dto  temp = new EquiteBusiDetails001Dto();
+               temp.setRegistBankCode(map.get("registBankCode"));
+               temp.setBusiSeqno(map.get("busiSeqno"));
+               temp.setAccount( map.get("account"));
+               entitiesListQuery.add(temp);
 		}
 
 		equityBusiDetails001Mapper.insertIntoImportTable(insertList);
 		bankCode=dto.getRegistBankCode();
-		equityBusiDetails001Service.checkDataInfo(null,checkList, entitiesList,bankCode,deptCode,orgCode,userName);
+        equityBusiDetails001Service.checkDataInfo(null,checkList, entitiesListQuery,entitiesList,bankCode,deptCode,orgCode,userName);
 		if(!entitiesList.isEmpty()){
 			if(entitiesList.get(0).getTempMap()!=null){
 				dto.setTempMap(entitiesList.get(0).getTempMap());

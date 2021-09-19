@@ -101,7 +101,7 @@ public class ValAssetBook001Controller extends BaseController {
 
     @PostMapping("/getBooksetId")
     public Page<SelectOptionDto> getBooksetId(@RequestBody Map<String, Object> param)
-        throws Exception {
+    {
         String params = (String) param.get("param");
         return valAssetBook001Service.getBooksetId(param);
     }
@@ -116,7 +116,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2(@RequestBody Map<String, Object> params)
-        throws Exception {
+    {
         String param =(String) params.get("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
@@ -131,7 +131,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getBooksetIdAll")
     public List<SuggestDto> getBooksetIdAll(@RequestBody Map<String, Object> params)
-        throws Exception {
+    {
         String param =(String) params.get("param");
         return valAssetBook001Service.getBooksetIdAll(param);
     }
@@ -146,7 +146,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getBooksetId3")
     public List<SuggestDto> getBooksetId3(@RequestBody Map<String, Object> params)
-        throws Exception {
+    {
         return valAssetBook001Service.getBooksetId3(params);
     }
     /**
@@ -159,7 +159,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/getAllAssetbookPage/{page}/{length}")
     public Page<ValAssetbook001Dto> getAllAssetbookPage(@RequestBody Map<String,Object> params,
-                                                        @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                                        @PathVariable("page") int page, @PathVariable("length") int length) {
         String name = (String)params.get("name");
         String type = (String)params.get("type");
         return valAssetBook001Service.getAllAssetbookPage(page,length,type, name);
@@ -239,7 +239,7 @@ public class ValAssetBook001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("/doDeleteCheck")
-    public AjaxResult doDeleteCheck(@RequestBody Map<String,Object> params) throws Exception {
+    public AjaxResult doDeleteCheck(@RequestBody Map<String,Object> params) {
         ValAssetbook001Dto dto = (ValAssetbook001Dto)params.get("valAssetbook001Dto");
         BindingResult result = (BindingResult)params.get("bindingResult");
     	AjaxResult wr = new AjaxResult();
@@ -403,7 +403,7 @@ public class ValAssetBook001Controller extends BaseController {
      */
     @PostMapping("/findProductGrp")
     public List<SuggestDto> findProductGrp(@RequestBody Map<String, Object> params)
-            throws Exception {
+    {
         String param =(String) params.get("param");
         return valAssetBook001Service.findProductGrp(params);
     }

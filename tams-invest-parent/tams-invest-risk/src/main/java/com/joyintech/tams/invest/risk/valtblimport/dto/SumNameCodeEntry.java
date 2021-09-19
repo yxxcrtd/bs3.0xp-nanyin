@@ -1,6 +1,8 @@
 package com.joyintech.tams.invest.risk.valtblimport.dto;
 
 
+import com.csii.dc.client.util.StringUtil;
+
 public class SumNameCodeEntry {
 
 	private String sumName;
@@ -26,7 +28,7 @@ public class SumNameCodeEntry {
     }
 
     public void setNextColType(String sNextColType) {
-		if(sNextColType == null) {
+		if(StringUtil.isEmpty(sNextColType)) {
 			nextColType = ValDataType.NULL;
 		} else {
 			nextColType = ValDataType.valueOf(sNextColType.toUpperCase());

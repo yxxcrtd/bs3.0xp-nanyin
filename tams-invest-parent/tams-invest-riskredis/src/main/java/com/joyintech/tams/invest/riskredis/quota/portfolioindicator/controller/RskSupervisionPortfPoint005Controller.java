@@ -57,7 +57,7 @@ public class RskSupervisionPortfPoint005Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskPtlPortfolioDto> selectAll()
-        throws Exception {
+         {
         return rskSupervisionPortfPoint005Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -69,7 +69,7 @@ public class RskSupervisionPortfPoint005Controller extends BaseController {
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+         {
         return rskSupervisionPortfPoint005Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

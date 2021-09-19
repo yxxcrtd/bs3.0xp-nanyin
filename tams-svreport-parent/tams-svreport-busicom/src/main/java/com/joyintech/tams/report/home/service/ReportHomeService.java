@@ -69,12 +69,14 @@ public class ReportHomeService{
 	private static final String 产品终止信息_PAGEID = "PbcPrdBaseinfoEndSub";
 	private static final String 产品募集信息_PAGEID = "PbcPrdCashRaiseSub";
 	private static final String 资产负债信息_PAGEID = "PbcPrdAssetDebtSub";
+	private static final String 新人行产品基本信息_PAGEID = "PbcPrdBaseinfoSubNew001";
+	private static final String 新人行产品终止信息_PAGEID = "PbcPrdBaseinfoEndSubNew001";
 	
     
-    public Map<String, SubmitInformationRegistrationDto> searchReportInfo(String searchDate,List<String> reportlist) {
-        Map<String, Object> parmMap = new HashMap<>();
-        parmMap.put("searchDate", ToolsUtil.getCurrentTime(DateUtil.parse(searchDate)));
+    public Map<String, SubmitInformationRegistrationDto> searchReportInfo(Map<String, Object> parmMap) {
+        parmMap.put("searchDate", ToolsUtil.getCurrentTime(DateUtil.parse((String)parmMap.get("searchDate"))));
         parmMap.put("NO_SUBMIT", DictCodeListExt2.报送状态_未报送.getValue());
+        List<String> reportlist =(List<String>) parmMap.get("reportlist");
 //        String isDeptControl = CacheUtil.getSysParam(ReportGlobalConstant.SYS_PARA_IS_DEPTCODE_CONTROL);
 //        if(StringUtil.equals(isDeptControl, DictCodeList.是否_中债_否.getValue())) {
 //            parmMap.put("orgCodeList", CommonUtil.getAuthorityOnlyOrgListByUserName(null));
@@ -127,7 +129,11 @@ public class ReportHomeService{
         			dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoEndSub(parmMap));
         		} else if (DictCodeListExt2.报表名称_资产负债信息.getValue().equals(report)){
         			dtoList.addAll(reportHomeMapper.selectPbcReportAsset(parmMap));
-        		} else if ("25".equals(report)){
+        		}else if (DictCodeListExt2.报表名称_新人行产品基本信息.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoSubNew(parmMap));
+				}else if (DictCodeListExt2.报表名称_新人行产品终止信息.getValue().equals(report)){
+					dtoList.addAll(reportHomeMapper.selectPbcPrdBaseinfoEndSubNew(parmMap));
+				} else if ("25".equals(report)){
         			dtoList.addAll(reportHomeMapper.selectChbG06(parmMap));
         		}
         	}
@@ -205,6 +211,13 @@ public class ReportHomeService{
             parmMap.put("createDeptList", CommonUtil.getAuthorityDeptByUserName(null));
         }
         parmMap.put("dataTimeEnd", DateUtil.getCurrentDate());
+
+		if(CommonUtil.isBAmodel()){
+			parmMap.put("model_type", "01");
+		}
+
+
+
         List<InfoAreaDto> dataList = reportHomeMapper.searchInfoArea(parmMap);
         if (CollectionUtils.isNotEmpty(dataList)) {
             for (InfoAreaDto dto : dataList) {
@@ -249,7 +262,7 @@ public class ReportHomeService{
     public List<String> selectMenulist(){
     	List<String> menulist1 = new ArrayList<String>();
 
-    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM));
+    	List<String> menulist = reportHomeMapper.selectMenulist(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_IS_SUB_SYSTEM),SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_FIRST_MENU_ID));
     	if(!CollectionUtils.isEmpty(menulist)){
     		for(String menu : menulist){
     			switch(menu){
@@ -293,6 +306,10 @@ public class ReportHomeService{
     			break;
     			case 产品终止信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品终止信息.getValue());
     			break;
+				case 新人行产品基本信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_新人行产品基本信息.getValue());
+					break;
+				case 新人行产品终止信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_新人行产品终止信息.getValue());
+					break;
     			case 产品募集信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_产品资金募集信息.getValue());
     			break;
     			case 资产负债信息_PAGEID:menulist1.add(DictCodeListExt2.报表名称_资产负债信息.getValue());

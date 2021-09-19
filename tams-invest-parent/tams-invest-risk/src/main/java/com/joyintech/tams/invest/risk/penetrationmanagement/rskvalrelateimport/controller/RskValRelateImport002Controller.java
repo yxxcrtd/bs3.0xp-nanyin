@@ -127,7 +127,7 @@ public class RskValRelateImport002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("insert")
-    public AjaxResult insert(@RequestBody RskValRelateImport001Dto dto) throws Exception {
+    public AjaxResult insert(@RequestBody RskValRelateImport001Dto dto) {
         rskValRelateImport002Service.insert(dto);
         return new AjaxResult(this.getMessage("BUSS_COM_E_0033"));
     }
@@ -142,7 +142,7 @@ public class RskValRelateImport002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("update")
-    public AjaxResult update(@RequestBody RskValRelateImport001Dto dto) throws Exception {
+    public AjaxResult update(@RequestBody RskValRelateImport001Dto dto) {
         rskValRelateImport002Service.update(dto);
         return new AjaxResult(this.getMessage("BUSS_COM_E_0033"));
     }

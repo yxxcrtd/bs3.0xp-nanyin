@@ -104,7 +104,7 @@ public class RiskTrialDayTimeTask extends BatchBaseService{
                 params.put(BatchConstant.PLATE_DATE, batchExecuteInfo.getExecuteDate());
             }
             else{
-                params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate());
+                params.put(BatchConstant.PLATE_DATE, platformDateService.getSysDate(batchExecuteInfo.getCreateUser()));
             }
             params.put(Const.PROD_LIST,this.getProductIdList());
             params.put(Const.SUP_FREQUENCY, BussinessDictCodeListRds.监督频率_日间.getValue());

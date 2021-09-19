@@ -726,7 +726,9 @@
         $('#FinProductAnapleroticInfo002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
-        $('#rateType').trigger('change');
+        if(pageModel == PAGE_MODEL_NEW){
+            $('#rateType').trigger('change');
+        }
     });
 
 }());

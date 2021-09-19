@@ -67,16 +67,16 @@
     <select id="searchCPYECom" resultType="com.joyintech.tams.report.submitexamination.investorsqualitycheck.dto.InvestorsQualityCheck001Dto">
 
         SELECT
-        PROD_ID as prodId,
+        gg.PROD_ID as prodId,
         STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d') as holdDate,
-        MDATE as busiMDate,
-        IFNULL(BALANCE_AMT,0) as prdBalanceAmt,
-        IFNULL(PRD_QTY,0) as prdTotalQty,
-        IFNULL(TOTAL_AMT,0) as prdRaiseTotalAmt,
-        IFNULL(RAISE_QTY,0) as prdRaiseTotalQty,
-        IFNULL(SUM(CNY_AMT),0) as investBalanceAmt,
-        IFNULL(SUM(QTY),0) as investTotalQty,
-        REG_CODE as prdRegistCode
+        gg.MDATE as busiMDate,
+        IFNULL(gg.BALANCE_AMT,0) as prdBalanceAmt,
+        IFNULL(gg.PRD_QTY,0) as prdTotalQty,
+        IFNULL(gg.TOTAL_AMT,0) as prdRaiseTotalAmt,
+        IFNULL(gg.RAISE_QTY,0) as prdRaiseTotalQty,
+        IFNULL(SUM(gg.CNY_AMT),0) as investBalanceAmt,
+        IFNULL(SUM(gg.QTY),0) as investTotalQty,
+        gg.REG_CODE as prdRegistCode
         FROM
         (
         SELECT
@@ -97,12 +97,12 @@
         FROM
         (SELECT * FROM (
         SELECT
-        PROD_ID,
-        MDATE,
-        BALANCE_AMT,
-        PRD_QTY,
-        TOTAL_AMT,
-        RAISE_QTY
+        bb.PROD_ID,
+        bb.MDATE,
+        bb.BALANCE_AMT,
+        bb.PRD_QTY,
+        bb.TOTAL_AMT,
+        bb.RAISE_QTY
         FROM(
         SELECT
         @rownum :=@rownum +1 rownum,
@@ -132,15 +132,15 @@
         WHERE
         STR_TO_DATE(DATE_FORMAT(C.HOLD_DATE, '%Y-%m-%d'), '%Y-%m-%d') <![CDATA[=]]> STR_TO_DATE(#{searchDate,jdbcType=VARCHAR},'%Y-%m-%d')
         ) gg
-        WHERE 	hodeStsNo = 1
+        WHERE 	gg.hodeStsNo = 1
         GROUP BY
-        PROD_ID,
-        REG_CODE,
-        MDATE,
-        BALANCE_AMT,
-        PRD_QTY,
-        TOTAL_AMT,
-        RAISE_QTY
+        gg.PROD_ID,
+        gg.REG_CODE,
+        gg.MDATE,
+        gg.BALANCE_AMT,
+        gg.PRD_QTY,
+        gg.TOTAL_AMT,
+        gg.RAISE_QTY
     </select>
 
 </mapper>

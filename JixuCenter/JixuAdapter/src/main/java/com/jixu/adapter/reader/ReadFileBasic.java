@@ -1,6 +1,9 @@
 package com.jixu.adapter.reader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.jcraft.jsch.JSchException;
 import com.joyintech.framework.file.SafelyFile;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jixu.adapter.dao.intf.InterfaceColConfigDao;
@@ -117,7 +122,8 @@ public abstract class ReadFileBasic implements ReadDataFile{
 	}
 	
 	@Override
-	public DataReadResult readFileData(InterfaceSource interfaceSource, DataCounter dataCounter) throws Exception {
+	public DataReadResult readFileData(InterfaceSource interfaceSource, DataCounter dataCounter)
+			throws JSchException, IOException, FTPTool.FTPNotLoginException {
 		DataReadResult result=null;
 		if(interfaceSource.getChannelType()==InterfaceConfig.ftpType) {
 			//临时解决方案：如果配置FTP形式，适配器只提供下载文件功能
@@ -142,7 +148,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
 		return result;
 	}
 	
-	protected abstract DataReadResult readFileDataResult(InterfaceSource interfaceSource,DataCounter dataCounter) throws Exception;
+	protected abstract DataReadResult readFileDataResult(InterfaceSource interfaceSource,DataCounter dataCounter) throws IOException;
 	
 	
     
@@ -180,7 +186,8 @@ public abstract class ReadFileBasic implements ReadDataFile{
      * @return
      * @throws Exception
      */
-    private DataReadResult putFilesByFTP(InterfaceSource source, DataCounter dataCounter) throws Exception{
+    private DataReadResult putFilesByFTP(InterfaceSource source, DataCounter dataCounter)
+			throws IOException, FTPTool.FTPNotLoginException, JSchException {
     	DataReadResult result=new DataReadResult();
     	String backupPath = parseDateFolder(source.getBackupPath());;
     	String username=source.getChannelAccount();
@@ -189,7 +196,7 @@ public abstract class ReadFileBasic implements ReadDataFile{
     	String[] urlsArr=urlStr.split(":");
     	if(urlsArr.length!=3) {
     		String errormsg="FTP连接地址不正确(Host:Port:FilePath): " + urlStr;
-    		throw new Exception(errormsg);
+    		throw new ServiceException(errormsg);
     	}
     	
     	String host=urlsArr[0];

@@ -792,7 +792,7 @@
                 msg = JoyinUtil.getMessage('COMMON_E_0057',"还本计划");
              }
              //还本计划条数增加或减少，应点击确定按钮
-             if(list && list.length > 0 && list.length !=previewParams.invRepayList.length ) {
+             if(list && list.length > 0 && previewParams.invRepayList && previewParams.invRepayList.length>0 && list.length !=previewParams.invRepayList.length ) {
                     msg = JoyinUtil.getMessage("还本计划已变更,请点击确认,重新计算应计利息!");
              }
             if(msg) {

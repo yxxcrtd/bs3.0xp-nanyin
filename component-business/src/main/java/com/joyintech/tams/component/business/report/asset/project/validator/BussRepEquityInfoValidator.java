@@ -53,7 +53,7 @@ public class BussRepEquityInfoValidator implements BeanValidator{
                     resultList.add(new ValidMessage("repSharesType",
                             getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.repSharesType"))));
                 }
-                if(StringUtil.isEmpty(dto.getRepInvestStage())){
+                if(StringUtil.isEmpty(dto.getRepInvestStage()) && StringUtil.equals(dto.getRepAssetType(),DictCodeListExt2.资产_负债二级类别_股权.getValue())){
                     resultList.add(new ValidMessage("repInvestStage",
                             getMessage("COMMON_E_0057", getMessage("BussRepEquityInfo.repInvestStage"))));
                 }

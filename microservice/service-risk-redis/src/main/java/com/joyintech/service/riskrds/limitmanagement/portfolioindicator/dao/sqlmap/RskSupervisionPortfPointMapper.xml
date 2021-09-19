@@ -120,7 +120,7 @@
 					AND PORTFOLIO_LEVEL = #{portfolioLevel,jdbcType=VARCHAR}
 				</if>
 				<!-- add by wangshuang 不显示过期组合  2019-12-10 start-->
-				 AND (A.PORTFOLIO_LEVEL = '02' OR (A.PORTFOLIO_LEVEL = '01' AND C.MDATE > ( SELECT CUR_DATE FROM SYS_DATE)))
+				 AND (A.PORTFOLIO_LEVEL = '02' OR (A.PORTFOLIO_LEVEL = '01' AND C.MDATE > #{platDate,jdbcType=DATE} ))
 				<!-- add by wangshuang 不显示过期组合  2019-12-10 end-->
 			 </where>
 		 	) X

@@ -29,6 +29,18 @@
 		    DEAL.BOOK_ID as bookId,
 			<!--DEAL.BUSI_DETAIL_TYPE as tableId,-->
 		    DEAL.FINPROD_TYPE as tableId,
+			<if test="isShowfl == '' or isShowfl != 'yes'">
+			'' subjectNo,
+			'' subjectName,
+			'' detailSubjectNo,
+			'' detailSubjectName,
+			'' cdFlag,
+			'' ccy,
+			'' happenAmt,
+			'' happenNumber,
+			'' bCcy,
+			'' bHappenAmt,
+			</if>
 		    <if test="isShowfl == 'yes'">
 		    DETAIL.SUBJECT_NO AS subjectNo,
 		    DETAIL.SUBJECT_NAME AS subjectName,

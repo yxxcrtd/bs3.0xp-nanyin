@@ -182,7 +182,8 @@
         var finprodMarketId = selArr[0].finprodMarketId;
         var rateType = selArr[0].intType;
         var object = selArr[0];
-        object.type = "01"
+        object.type = "01";
+        object.pageModel = 1;
         Joyin.ajaxJson(basePath + 'invest/asset/common/FinAssetRateAdj001/check', object, function(
                 result) {
             Joyin.ajaxJson(basePath + 'invest/asset/common/FinAssetRateAdj001/isTransInAssetCheck', object, function(result2) {

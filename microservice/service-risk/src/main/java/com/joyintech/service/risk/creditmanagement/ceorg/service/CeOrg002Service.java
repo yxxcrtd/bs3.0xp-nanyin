@@ -74,9 +74,9 @@ public class CeOrg002Service extends BaseService<CreditMstInfoDto> {
        }
     
     public Page<CreditMstInfoDto> getTreeCeOrgQuote(int page, int length,Map<String, Object> param) 
-            throws Exception {
+	{
             return super.queryForPage(page, length, () -> ceOrgMapper.getTreeCeOrgQuote(param));
-        }
+	}
     
     /**
      * 查询额度信息

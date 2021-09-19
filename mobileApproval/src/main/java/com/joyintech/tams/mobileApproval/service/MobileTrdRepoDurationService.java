@@ -7,8 +7,11 @@ import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dt
 import com.joyintech.tams.mobileApproval.dao.MobileApprovalMapper;
 import com.joyintech.tams.mobileApproval.dto.ReturnTodoDto;
 import com.joyintech.tams.mobileApproval.util.MobileUtils;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.lang.reflect.InvocationTargetException;
 
 @Service
 public class MobileTrdRepoDurationService {
@@ -18,7 +21,7 @@ public class MobileTrdRepoDurationService {
 	@Autowired
 	private MobileApprovalMapper mobileApprovalMapper;
 
-	public String getWorkFlowInfo(String businessData) throws Exception {
+	public String getWorkFlowInfo(String businessData) throws WorkFlowException, IllegalAccessException, InvocationTargetException {
 		//1、获取业务数据
 		TrdRepoDuration002Dto dto = JsonUtils.json2Object(businessData, TrdRepoDuration002Dto.class);
 	    //2、处理数据字典

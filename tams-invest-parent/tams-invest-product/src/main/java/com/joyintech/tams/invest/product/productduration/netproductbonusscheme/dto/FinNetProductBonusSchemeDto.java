@@ -263,7 +263,11 @@ public class FinNetProductBonusSchemeDto extends PrdBonusPlanN implements Proces
     public String getBonuScalcFlag() {
         return super.getBonuScalcFlag();
     }
-    
+
+    //@NotEmpty(fieldName = "FinNetProductBonusScheme002.netValueNormalize",groups={ValidateGroupEdit.class})
+    public String getIsNetMormalize() {
+        return super.getIsNetMormalize();
+    }
 
     
     public List<FinNetProductBonusSchemeDto> getSelectedItem() {

@@ -10,26 +10,23 @@
  
 package com.joyintech.tams.invest.asset.plan.plancur.valid;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
 import com.joyintech.framework.constant.GlobalConstant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.asset.plan.plancur.dto.FinPlanAssetCDto;
 import com.joyintech.tams.invest.asset.plan.plancur.service.FinPlanAssetCService;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.service.ChbDataCheckService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -53,7 +50,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
     private FinPlanAssetCService finPlanAssetCService;
 
     @Autowired
-    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    private ChbDataCheckService chbDataCheckService;
 
     /**
      * {@inheritDoc}
@@ -140,7 +137,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
         }
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete") && StringUtil.isNotEmpty(dto.getBussRepAssetMngProdInfo())) {
-            errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, dto.getBussRepAssetMngProdInfo().getRepAssetType(), ValidMessage.class);
+            errorList = chbDataCheckService.chbCheckCommon(errorList, value, null, dto.getBussRepAssetMngProdInfo().getRepAssetType());
         }
 
         return errorList;

@@ -39,5 +39,12 @@ public interface ValRiftMapper {
     BigDecimal selectValCapital(Map<String,Object> paramMap);
     
     void deleteValRift(Map<String,Object> paramMap);
-    
+    //增加资管计划维度明细
+    void deleteDetailValRift(Map<String, Object> paramMap);
+
+    List<Map<String, Object>> selectImportValTableProdList(Map<String, Object> param);
+    //add by lpf 增加剩余现金处理逻辑
+    List<ValtblAssetSubDto> selectValtblAssetSubCash(Map<String, Object> paramMap);
+
+    List<ValtblAssetSubDto> selectValtblAssetSubHg(Map<String, Object> paramMap);
 }

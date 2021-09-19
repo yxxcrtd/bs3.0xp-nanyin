@@ -70,7 +70,7 @@
         		$('#inOutBank').attr("disabled",true).trigger('change');
 
         		$('#ccy').attr("disabled",true);
-        		$('#swiftCode').attr("disabled",true);
+                // $('#swiftCode').attr("disabled",true);
     		}
     	}
     	var ccy = $('#ccy').val();

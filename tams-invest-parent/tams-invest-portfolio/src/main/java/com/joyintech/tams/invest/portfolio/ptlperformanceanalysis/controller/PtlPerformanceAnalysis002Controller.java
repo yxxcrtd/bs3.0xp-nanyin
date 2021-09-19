@@ -50,11 +50,10 @@ public class PtlPerformanceAnalysis002Controller extends BaseController  {
     /**
      * 获取指标设置树结构
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping({"/getAllTreeNode"})
-    public List<TreeNode<TargetDetail>> getAllTreeNode() throws Exception {
+    public List<TreeNode<TargetDetail>> getAllTreeNode() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         return ptlPerformanceAnalysis002Service.getAllTreeNode(map);
     }
@@ -62,12 +61,11 @@ public class PtlPerformanceAnalysis002Controller extends BaseController  {
     /**
      * 保存设置的列
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @Transactional(rollbackFor=Exception.class)
     @ResponseBody
     @RequestMapping("savaTableCols")
-    public AjaxResult savaTableCols() throws Exception {
+    public AjaxResult savaTableCols() {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         AjaxResult ajaxResult=new AjaxResult();
 

@@ -10,6 +10,7 @@
 
 package com.joyintech.service.product.messageadjust.finfloatmgtexpquotation.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,7 +154,7 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
      * @since 1.0
      */
     public Page<FinFloatMgtExpQuotationDto> selectForPage(int page, int length,Map<String, Object> pageParam)
-            throws Exception {
+    {
         return super.queryForPage(page, length, () -> finFloatMgtExpQuotationMapper.selectForPage(pageParam));
     }
     
@@ -169,7 +170,7 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
      * @since 1.0
      */
     public List<FinFloatMgtExpQuotationDto> selectForList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         String keys = (String)pageParam.get("keys");
         pageParam.put("keys", StringUtil.splitToList(GlobalConstant.COMMA, keys));
         return finFloatMgtExpQuotationMapper.selectForPage(pageParam);
@@ -225,7 +226,7 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
      * @param cashExist  现金流代码是否存在 true 存在 false 不存在
      * @throws Exception 异常
      */
-    private void doCompleteFloatRule(FinFloatMgtExpQuotationDto entity, FinProduct finProduct, boolean cashExist) throws Exception{
+    private void doCompleteFloatRule(FinFloatMgtExpQuotationDto entity, FinProduct finProduct, boolean cashExist) throws InvocationTargetException, IllegalAccessException {
         //补充
         //现金流支付规则
         FinCashPayRule finCashPayRule = new FinCashPayRule();
@@ -464,7 +465,7 @@ public class FinFloatMgtExpQuotationService extends BaseService<FinFloatMgtExpQu
      * @see
      * @since 1.0
      */
-    public void doComplete(FinFloatMgtExpQuotationDto entity) throws Exception{
+    public void doComplete(FinFloatMgtExpQuotationDto entity) throws InvocationTargetException, IllegalAccessException {
     	// 平台日期
         Date platFormDate = iPlatformDate.getSysDate();
         String type = entity.getOperateType();

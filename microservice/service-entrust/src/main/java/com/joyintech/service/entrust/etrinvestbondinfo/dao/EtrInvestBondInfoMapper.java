@@ -156,4 +156,11 @@ public interface EtrInvestBondInfoMapper {
      * @author jiangpeng
      */
     Date getBondVDate(String finprodMarketId);
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    BigDecimal getLastNetAmortizationPrice(Map<String, Object> param);
 }

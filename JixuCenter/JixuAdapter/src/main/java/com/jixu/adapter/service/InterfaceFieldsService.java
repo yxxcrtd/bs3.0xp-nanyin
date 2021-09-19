@@ -1,11 +1,14 @@
 package com.jixu.adapter.service;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.script.ScriptException;
 
+import com.jixu.common.exception.InterfaceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,8 @@ public class InterfaceFieldsService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(InterfaceFieldsService.class);
 	
-	protected List<HashMap<String, Object>> genAdvanceMsg(List<HashMap<String, Object>> sourceHMList, List<InterfaceColConfig> colcfgList, HashMap<String, Object> initGlobalValHM) throws Exception{
+	protected List<HashMap<String, Object>> genAdvanceMsg(List<HashMap<String, Object>> sourceHMList, List<InterfaceColConfig> colcfgList, HashMap<String, Object> initGlobalValHM)
+			throws InterfaceException, ScriptException, ParseException {
 		logger.debug("Start Advance................................................................................");
 		
 		AdditionFunc func=null;

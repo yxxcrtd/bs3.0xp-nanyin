@@ -114,7 +114,7 @@ public class ValCronJob implements Job {
         List<Date> dates = new ArrayList<>();
         //当前日期
         ValBatchCronJobMapper valBatchCronJobMapper = SpringContextUtil.getBean(ValBatchCronJobMapper.class);
-        Date nowDate = valBatchCronJobMapper.getSysDate();
+        Date nowDate = valBatchCronJobMapper.getCommonSysDate();
 
         // etliu 批处理定时任务支持跳过节假日 20200116 modify start
         // 当配置的系统参数（是否放开支持批处理定时任务跳过节假日功能）的值为01:支持 时

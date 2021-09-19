@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,10 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Service
 public class EquityBusinessDetailsMService extends CommonExportService<EquiteBusiDetails001Dto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(EquityBusinessDetailsMService.class);
 
 	@Autowired
 	private EquityBusiDetails001Service equityBusiDetails001Service;
@@ -227,8 +233,7 @@ public class EquityBusinessDetailsMService extends CommonExportService<EquiteBus
 		try {
 			dataList = ExcelUtil.readToList(FileNameUtil.getUploadFilePath(fileName), null, null, 0, 1, 0);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("dataList", dataList);

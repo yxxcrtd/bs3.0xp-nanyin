@@ -17,8 +17,10 @@ import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgName
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,8 +116,7 @@ public class OrgNameManagement003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<RskAccessListDetailDto> selectAll()
-        throws Exception {
+    public Page<RskAccessListDetailDto> selectAll() throws IOException {
         Page<RskAccessListDetailDto> page = orgNameManagementService.selectForDetailPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -150,8 +151,7 @@ public class OrgNameManagement003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

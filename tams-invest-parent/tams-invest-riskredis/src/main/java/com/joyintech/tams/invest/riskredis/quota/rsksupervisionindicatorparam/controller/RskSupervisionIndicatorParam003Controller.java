@@ -11,6 +11,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.dto.RskSupervisionIndicatorParam003Dto;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam001Service;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionindicatorparam.service.RskSupervisionIndicatorParam003Service;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -111,7 +112,7 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getInstitutionId")
     public List<SelectOptionDto> getInstitutionId()
-        throws Exception { 
+         {
         return rskSupervisionIndicatorParam003Service.getInstitutionId(RequestUtil.getPageParam());
     }
     
@@ -126,8 +127,7 @@ public class RskSupervisionIndicatorParam003Controller extends BaseController{
     @DTXTransaction
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam003Dto dto, BindingResult br)
-        throws Exception{
+    public AjaxResult save(@RequestBody RskSupervisionIndicatorParam003Dto dto, BindingResult br) throws WorkFlowException {
     	if (br.hasErrors()) {
             return new AjaxResult(br);
         }

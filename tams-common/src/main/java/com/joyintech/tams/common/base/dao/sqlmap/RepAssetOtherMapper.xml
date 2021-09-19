@@ -17,7 +17,7 @@
         <result column="REP_ASSIGNEE" property="repAssignee" jdbcType="VARCHAR" />
         <result column="BANK_SEC_KZZQ" property="bankSecKzzq" jdbcType="VARCHAR" />
         <result column="BANK_SEC_ZXZQ" property="bankSecZxzq" jdbcType="VARCHAR" />
-        <result column="ISUNLISTED" property="isunlisted" jdbcType="VARCHAR" />
+        <result column="ISUNLISTED" property="isUnlisted" jdbcType="VARCHAR" />
         <result column="IS_BZHPJ" property="isBzhpj" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
@@ -61,7 +61,7 @@
             #{repPrivateprdFlag,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
             #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
             #{repInstitSize,jdbcType=VARCHAR}, #{repAssignee,jdbcType=VARCHAR}, #{bankSecKzzq,jdbcType=VARCHAR}, 
-            #{bankSecZxzq,jdbcType=VARCHAR}, #{isunlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}
+            #{bankSecZxzq,jdbcType=VARCHAR}, #{isUnlisted,jdbcType=VARCHAR}, #{isBzhpj,jdbcType=VARCHAR}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.RepAssetOther" >
@@ -112,7 +112,7 @@
             <if test="bankSecZxzq != null" >
                 BANK_SEC_ZXZQ,
             </if>
-            <if test="isunlisted != null" >
+            <if test="isUnlisted != null" >
                 ISUNLISTED,
             </if>
             <if test="isBzhpj != null" >
@@ -165,8 +165,8 @@
             <if test="bankSecZxzq != null" >
                 #{bankSecZxzq,jdbcType=VARCHAR},
             </if>
-            <if test="isunlisted != null" >
-                #{isunlisted,jdbcType=VARCHAR},
+            <if test="isUnlisted != null" >
+                #{isUnlisted,jdbcType=VARCHAR},
             </if>
             <if test="isBzhpj != null" >
                 #{isBzhpj,jdbcType=VARCHAR},
@@ -221,8 +221,8 @@
             <if test="bankSecZxzq != null" >
                 BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
             </if>
-            <if test="isunlisted != null" >
-                ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            <if test="isUnlisted != null" >
+                ISUNLISTED = #{isUnlisted,jdbcType=VARCHAR},
             </if>
             <if test="isBzhpj != null" >
                 IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR},
@@ -243,7 +243,7 @@
             REP_ASSIGNEE = #{repAssignee,jdbcType=VARCHAR},
             BANK_SEC_KZZQ = #{bankSecKzzq,jdbcType=VARCHAR},
             BANK_SEC_ZXZQ = #{bankSecZxzq,jdbcType=VARCHAR},
-            ISUNLISTED = #{isunlisted,jdbcType=VARCHAR},
+            ISUNLISTED = #{isUnlisted,jdbcType=VARCHAR},
             IS_BZHPJ = #{isBzhpj,jdbcType=VARCHAR}
         where REP_FINPROD_ID = #{repFinprodId,jdbcType=VARCHAR}
     </update>

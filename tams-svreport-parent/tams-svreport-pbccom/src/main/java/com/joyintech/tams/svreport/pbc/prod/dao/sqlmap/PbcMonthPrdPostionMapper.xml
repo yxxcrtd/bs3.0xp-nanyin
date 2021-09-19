@@ -603,7 +603,7 @@
 		                ) redamt,
 		                SUM(
 		                    CASE
-		                        WHEN dl.trade_type IN('01', '02', '05','14'
+		                        WHEN dl.trade_type IN('01', '02', '14'
                                   <if test="hasbouns != null and hasbouns =='01'">
                                       /***根据参数判断是否添加红利再投**/
                                       ,'05'

@@ -232,10 +232,8 @@ public class ExcelUtil {
 			if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2003_POSTFIX)) {
 			    try (POIFSFileSystem fs = new POIFSFileSystem(inputStream)){
 			        wb = new HSSFWorkbook(fs);
-			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 
@@ -243,10 +241,8 @@ public class ExcelUtil {
 			else if (fileName.toLowerCase().endsWith(OFFICE_EXCEL_2007_POSTFIX)) {
 			    try {
 			        wb = new XSSFWorkbook(inputStream);
-			        inputStream.close();
 			    }
 			    catch (Exception e) {
-//                e.printStackTrace();
 			        logger.error(e.getMessage(),e);
 			    }
 			}
@@ -450,6 +446,22 @@ public class ExcelUtil {
             dataList = ExcelUtil.readToList(
                     fileName, null, null, 0, 0, 0);
             
+        } catch (FileNotFoundException e1) {
+            logger.error(e1.getMessage(),e1);
+        }
+        return dataList;
+    }
+
+    /**
+     * 获取列表数据
+     * @param fileName 文件路径
+     * @return 列表数据
+     */
+    public static List<List<String>> getDataList2(String fileName){
+        List<List<String>> dataList = null;
+        try {
+            dataList = ExcelUtil.readToList(
+                    new File(fileName), 0);
         } catch (FileNotFoundException e1) {
             logger.error(e1.getMessage(),e1);
         }

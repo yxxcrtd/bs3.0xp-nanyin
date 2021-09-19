@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.invest.common.component.base.entrust.dto.BaseEtrFinishAmtDto;
 import com.joyintech.tams.invest.common.dto.trade.entrust.EtrFinishStatusDto;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -113,6 +115,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class TrdConBond002Service extends BaseService<TrdConBondDto> implements BaseProcessService<TrdConBondDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdConBond002Service.class);
 
     /**
      * BussTrdTransferOrderService
@@ -736,7 +742,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
         		WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         	}
         	catch (Exception e) {
-        		e.printStackTrace();
+                logger.error(e.getMessage(),e);
         	}
         	// 先删除流程中数据
 //        	this.doDelete(entity.getWorkflowId());
@@ -983,7 +989,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
                         OperationType.NEW, false, confirmDto);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
 
@@ -1348,6 +1354,7 @@ public class TrdConBond002Service extends BaseService<TrdConBondDto> implements 
 
 
     public BigDecimal getTongDaoCash(Map<String, Object> param) {
+        param.put("platDate",iPlatformDate.getSysDate());
         BigDecimal bigDecimal = restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdConBond/getTongDaoCash",
                 param, BigDecimal.class);
         return bigDecimal;

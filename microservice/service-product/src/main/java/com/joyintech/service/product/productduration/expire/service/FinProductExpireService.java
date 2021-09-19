@@ -57,7 +57,7 @@ public class FinProductExpireService extends BaseService<FinProductExpire001Dto>
      */
     public Page<FinProductExpire001Dto> selectForPage(int page, int length,
                                                       Map<String, Object> map)
-        throws Exception {
+    {
         map.put("statusUndo", DictCodeListExt1.有效状态_待处理.getValue());
         map.put("statusEffect", DictCodeListExt1.有效状态_有效.getValue());
         map.put("statusdel", DictCodeListExt1.有效状态_撤销.getValue());

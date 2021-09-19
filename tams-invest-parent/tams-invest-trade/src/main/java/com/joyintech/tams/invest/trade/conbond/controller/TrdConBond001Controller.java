@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -115,7 +116,7 @@ public class TrdConBond001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<TrdConBondDto> findPage()
-        throws Exception {
+          {
         return trdConBond001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -130,7 +131,7 @@ public class TrdConBond001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+        {
         return trdConBond001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -185,8 +186,7 @@ public class TrdConBond001Controller extends BaseController {
     @RequestMapping("doRevoke")
     @ResponseBody
     AjaxResult doRevoke(@RequestBody @Validated({
-        ValidateGroupDelete.class}) TrdConBondDto entity, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) TrdConBondDto entity, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -2130,6 +2130,7 @@ $(function() {
                     	data.tradeAmt = $('#expireDealAmt').val();
                     	data.tradeDate = $('#expirePayDate').val();                	
                     }else if("C3"==dealType || "C6"==dealType){
+                        var repPageId = 'FinNetProductDuration';
                     	data.tradeAmt = $('#addReduceDealAmt').val();
                     	data.tradeDate = $('#addReduceConfirmDate').val();                	
                     }
@@ -2173,6 +2174,7 @@ $(function() {
                     ,'portfolioId':$("#portfolioId").val()
                     ,'deal':data
                     ,'isLiquidation':true
+                    , 'repPageId': repPageId
                 };
             });
         }
@@ -2890,7 +2892,7 @@ $(function() {
         });
         //认购交易金额联动,交易份额=交易金额
         $('#subDealAmt').change(function() {
-        	$('#subDealNum').val($('#subDealAmt').val());
+        	$('#subDealNum').val(JoyinMath.doAdd(Number($('#subDealAmt').val()),Number(0))).trigger("change");
         	reloadSettle();
         });
         

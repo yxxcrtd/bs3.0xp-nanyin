@@ -63,7 +63,7 @@ public class CbindexeodpricesService extends WindService<InterfCbindexeodprices>
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfCbindexeodprices entity) throws Exception {
+	public int insert(InterfCbindexeodprices entity) {
 		// 删除重复数据
 		insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

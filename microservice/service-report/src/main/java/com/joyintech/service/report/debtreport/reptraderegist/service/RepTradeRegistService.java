@@ -50,7 +50,7 @@ public class RepTradeRegistService extends BaseService<RepTradeRegistDto>{
      * @since 1.0
      */
     public Page<RepTradeRegistDto> findPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> repTradeRegistMapper.findPage(map));
     }
     /**

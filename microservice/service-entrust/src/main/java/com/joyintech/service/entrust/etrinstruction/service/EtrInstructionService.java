@@ -99,7 +99,7 @@ public class EtrInstructionService extends BaseService<EtrInstructionDto> {
      */
     public Page<EtrInstructionDto> selectForPage(int page, int length,
                                           Map<String, Object> pageParam)
-        throws Exception {
+    {
         String assetTypeOne = (String)pageParam.get("assetType1");
         if(StringUtil.isNotEmpty(assetTypeOne)){
             pageParam.put("assetTypeOneList", StringUtil.splitToList(GlobalConstant.COMMA,assetTypeOne));

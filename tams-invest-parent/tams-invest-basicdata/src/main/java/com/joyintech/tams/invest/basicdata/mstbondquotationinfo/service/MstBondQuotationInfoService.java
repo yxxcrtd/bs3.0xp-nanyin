@@ -34,7 +34,6 @@ public class MstBondQuotationInfoService extends CommonExportService<MstBondQuot
      * 
      * @param pageParam pageParam
      * @return Page类 Page
-     * @throws Exception 异常信息
      */
     public Page<MstBondQuotationInfoDto> selectForPage(Map<String, Object> pageParam) {
         return restTemplate.postForPage(
@@ -47,7 +46,6 @@ public class MstBondQuotationInfoService extends CommonExportService<MstBondQuot
      * 
      * @param param param
      * @return List
-     * @throws Exception 异常
      */
     public List<SuggestDto> getSecIdOption(String param) {
         return restTemplate.getForList(ServiceApplication.BASICDATA_SERVICE_NAME

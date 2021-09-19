@@ -56,8 +56,7 @@ public class SysPrebatchResult002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<SysPrebatchResultDetail001Dto> findPage()
-            throws Exception {
+    public Page<SysPrebatchResultDetail001Dto> findPage(){
         Page<SysPrebatchResultDetail001Dto> page = sysPrebatchResult002Service.findPage(
                 RequestUtil.getPageParam());
         return page;

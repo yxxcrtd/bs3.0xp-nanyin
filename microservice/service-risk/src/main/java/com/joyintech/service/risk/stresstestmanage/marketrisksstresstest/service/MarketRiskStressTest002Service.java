@@ -24,6 +24,8 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +49,11 @@ import com.joyintech.tams.invest.common.component.base.core.IPlatformDate;
  */
 @Service("backMarketRiskStressTest002Service")
 public class MarketRiskStressTest002Service extends BaseService<MarketRiskStressTest002Dto> {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(MarketRiskStressTest002Service.class);
+
     @Autowired
     private MarketRiskStressTest002Mapper marketRiskStressTest002Mapper;
     
@@ -66,7 +72,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
      * @throws Exception
      */
     public Page<MarketRiskStressTest002Dto> selectProdForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	
     	SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -78,8 +84,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 		DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
 		//根据情景代码查找起止日期
@@ -118,7 +123,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
      * @throws Exception
      */
     public Page<MarketRiskStressTest002Dto> selectFacForPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
     	
     	SimpleDateFormat dft = new SimpleDateFormat("yyyy-MM-dd");
         Date sysDate = iPlatformDate.getSysDate();
@@ -130,8 +135,7 @@ public class MarketRiskStressTest002Service extends BaseService<MarketRiskStress
             endDate = dft.parse(dft.format(date.getTime()));
         }
         catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 		DynamicDataSourceHolder.putDataSource(DataSourceType.STRESSTEST);
 		//根据情景代码查找起止日期

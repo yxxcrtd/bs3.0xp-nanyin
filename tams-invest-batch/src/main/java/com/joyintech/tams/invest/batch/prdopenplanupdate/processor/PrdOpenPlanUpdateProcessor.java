@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.batch.prdopenplanupdate.processor;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +50,7 @@ public class PrdOpenPlanUpdateProcessor extends BaseProcessor<NeedOperateEntity,
 	@Override
 	public FinOpenPlanDto process(NeedOperateEntity item) throws Exception {
 		// 获取reader方法的返回值
+		Map<String, Object> params = this.getParams();
 		PrdOpenPlanUpdateDto prdOpenPlanUpdateDto = (PrdOpenPlanUpdateDto) item;	
 		FinOpenPlanDto finOpenPlanDto = new FinOpenPlanDto();
 		if(StringUtil.equals("开放计划", prdOpenPlanUpdateDto.getPlanType())){
@@ -58,7 +60,7 @@ public class PrdOpenPlanUpdateProcessor extends BaseProcessor<NeedOperateEntity,
 
 			// 更新后的开放计划
 			List<FinOpenPlan> newFinOpenPlanList = prdOpenPlanUpdateProcessorService.executeList(finOpenPlanList,
-					prdOpenPlanUpdateDto);
+					prdOpenPlanUpdateDto,this.getParams());
 			
 			finOpenPlanDto.setFinOpenPlanList(newFinOpenPlanList);
 		}else if(StringUtil.equals("付息/分红计划", prdOpenPlanUpdateDto.getPlanType())){

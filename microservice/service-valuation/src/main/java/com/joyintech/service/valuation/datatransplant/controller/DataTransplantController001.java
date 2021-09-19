@@ -11,6 +11,7 @@
 package com.joyintech.service.valuation.datatransplant.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -129,8 +130,7 @@ public class DataTransplantController001 extends BaseController {
     @RequestMapping(value = "/uploadFile")
     @ResponseBody
     public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response,
-                                 ModelMap model)
-        throws Exception {
+                                 ModelMap model) throws FileNotFoundException {
 
         // 获取默模版类型
         String modelType = request.getParameter("modelType");
@@ -141,7 +141,7 @@ public class DataTransplantController001 extends BaseController {
         }
         
         // 获取文件名
-        String fileName1 = request.getParameter("fileName");
+        String fileName1 = request.getParameter("fileName")==null?"":request.getParameter("fileName");
         File tempFile1 =new SafelyFile(fileName1);
         String fName1 = tempFile1.getName();
         // 获取后缀名

@@ -54,7 +54,7 @@ public class PtlSingleAssetPositionAnalysisService extends BaseService<PtlSingle
      * @since 1.0
      */
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectForPage(int page,int length,Map<String, Object> pageParam)
-            throws Exception {
+    {
         //右上角选择框为空时 存放本级机构及有权限的下级机构 选择时 存放所选机构
         List<String> resourcesTreeInstCodeList =  LoginUserUtil.getTreeInstCode();
         pageParam.put("resourcesTreeInstCodeList",resourcesTreeInstCodeList);
@@ -78,7 +78,7 @@ public class PtlSingleAssetPositionAnalysisService extends BaseService<PtlSingle
      * @throws Exception 异常信息
      */
     public List<PtlSingleAssetPositionAnalysis001Dto> selectForList(Map<String, Object> pageParam)
-            throws Exception {
+    {
         if(StringUtil.isNotEmpty(pageParam.get("finprodId"))){
             pageParam.put("finprodIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("finprodId")));
         }
@@ -142,7 +142,7 @@ public class PtlSingleAssetPositionAnalysisService extends BaseService<PtlSingle
      * @throws Exception 异常信息
      */
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectForExport(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if(StringUtil.isNotEmpty(pageParam.get("finprodId"))){
             pageParam.put("finprodIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("finprodId")));
         }

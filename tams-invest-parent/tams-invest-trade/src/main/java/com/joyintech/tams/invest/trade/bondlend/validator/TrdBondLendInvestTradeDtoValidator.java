@@ -157,6 +157,15 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
                 errorList.add(validMessage);
             }
         }
+        if (StringUtil.equals(DictCodeList.回购拆借方向_融入.getValue(), inputDto.getPs())) {
+            if (inputDto.getShareAmt() != null && inputDto.getBussRepoSec() != null && inputDto.getBussRepoSec().getTotalPrinAmt() !=null
+                    && inputDto.getShareAmt().multiply(new BigDecimal(10000)).compareTo(inputDto.getBussRepoSec().getTotalPrinAmt()) > 0) {
+                ValidMessage validMessage = new ValidMessage(
+                        getMessage("BUSS_COM_E_0003", getMessage("TrdBondLendInvestTrade002.tradeAmt"),
+                                getMessage("BussRepoSec.totalPrinAmt")));
+                errorList.add(validMessage);
+            }
+        }
 
         // 委托场合相关check
         if (StringUtil.isNotBlank(inputDto.getEntrustId())) {
@@ -236,7 +245,7 @@ public class TrdBondLendInvestTradeDtoValidator implements TradeCommonValidator 
 
 
     //证券托管户
-        if("".equals(inputDto.getSecManageAcctId())||inputDto.getSecManageAcctId()==null){
+        if(inputDto.getSecManageAcctId()==null||"".equals(inputDto.getSecManageAcctId())){
         	 ValidMessage validMessage = new ValidMessage(getMessage("TRD_E_0014",getMessage("invest.channelId")));
         	
         	errorList.add(validMessage);

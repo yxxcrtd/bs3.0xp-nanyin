@@ -14,7 +14,10 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.dto.RskAccessListDto;
 import com.joyintech.tams.invest.risk.namelistmanage.assetnamelist.service.AssetNameManagementService;
+import com.joyintech.tools.collectors.JoyinCollectors;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -32,6 +35,10 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AssetNameManagementValidator implements BeanValidator {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(AssetNameManagementValidator.class);
 
     @Autowired
     private AssetNameManagementService assetNameManagementService;
@@ -72,11 +79,14 @@ public class AssetNameManagementValidator implements BeanValidator {
                     excelUtil = ExcelUtil.build(dto.getFileName(), null);
                 }
                 catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 List<List<String>> dataList = excelUtil==null?null:excelUtil.readToList(0, 0, 0);
                 // 检查读出信息是否为空
-                if (null != dataList) {
+                if(dataList==null || dataList.size()<=1){
+                    resultList.add(new ValidMessage("", getMessage("RSK_W_0073")));
+
+                }else if (null != dataList) {
                     if((StringUtil.equals(dto.getListDetailType(),DictCodeListExt2.名单主体类型_机构.getValue())&&(
                         dataList.get(0).get(0) == null ||!StringUtil.equals(ids.get(1),(dataList.get(0).get(0)))
                                 || dataList.get(0).get(1) == null || !StringUtil.equals(names.get(1),(dataList.get(0).get(1)))
@@ -146,9 +156,14 @@ public class AssetNameManagementValidator implements BeanValidator {
                         }
                         if(!set2.add(rskAccessListDetailDto.getListDetailId())){
                             if(StringUtil.equals(dto.getListDetailType(),DictCodeListExt2.名单主体类型_机构.getValue())){
-                                resultList.add(new ValidMessage("",
-                                        getMessage("RSK_W_0059", getMessage("OrgNameManagement003.listDetailId"),rskAccessListDetailDto.getListDetailId())));
-                                break;
+                                Map<String, List<RskAccessListDetailDto>> mapres = allrskAccessListDetailList.stream().collect(JoyinCollectors.groupingBy(item -> item.getListDetailId()));
+                                List<RskAccessListDetailDto> listres = mapres.get(rskAccessListDetailDto.getListDetailId());
+                                if(!StringUtil.isEmptyList(listres)  && listres.size() == 2 && !StringUtil.equals(listres.get(0).getOperatePs(),listres.get(1).getOperatePs())){
+                                }else{
+                                    resultList.add(new ValidMessage("",
+                                            getMessage("RSK_W_0059", getMessage("OrgNameManagement003.listDetailId"),rskAccessListDetailDto.getListDetailId())));
+                                    break;
+                                }
                             }else{
                                 resultList.add(new ValidMessage("",
                                         getMessage("RSK_W_0059", getMessage("AssetNameManagement003.listDetailId"),rskAccessListDetailDto.getListDetailId())));

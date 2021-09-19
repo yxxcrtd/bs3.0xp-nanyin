@@ -27,6 +27,8 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ import java.util.*;
 
 @Service
 public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002Dto> implements BaseProcessService<FxSecdialogQuote002Dto> {
-
+    private static final Logger logger = LoggerFactory.getLogger(FxSecdialogQuote002Service.class);
     @Autowired
     private FxSecdialogQuoteMapper fxSecdialogQuoteMapper;
     @Autowired
@@ -419,12 +421,14 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
 
     @Override
     public void doUpdate(FxSecdialogQuote002Dto entity) {
-        System.out.println("===========doUpdate==============");
+//        System.out.println("===========doUpdate==============");
+        logger.info("===========doUpdate==============");
     }
 
     @Override
     public void doDelete(String workflowId) {
-        System.out.println("===========doDelete==============");
+//        System.out.println("===========doDelete==============");
+        logger.info("===========doDelete==============");
     }
 
     @Override
@@ -440,7 +444,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
                 fxSecdialogQuoteMapper.updateHis(entity);
                 //发送接口
                 CallReturn callReturn = clientService.send(entity,"add","addQuote");
-                System.out.println(callReturn);
+//                System.out.println(callReturn);
+                logger.info(callReturn.toString());
             }else if(dto.getOperateType().equalsIgnoreCase("3")){//回复报价
                  if (dto.getReplyType().equalsIgnoreCase(FxDictCodeList.回复报价_操作类型_成交.getItemCode())) {//成交
                      //修改为有效状态
@@ -450,7 +455,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
                      fxSecdialogQuoteMapper.updateHis(entity);
                      //发送接口
                      CallReturn callReturn = clientService.send(entity,"confirm","confirmQuote");
-                     System.out.println(callReturn);
+//                     System.out.println(callReturn);
+                     logger.info(callReturn.toString());
                 } else if (dto.getReplyType().equalsIgnoreCase(FxDictCodeList.回复报价_操作类型_终止.getItemCode())) {//终止
                      //修改为有效状态
                      entity.setEffectflag(FxDictCodeList.有效状态_有效.getItemCode());
@@ -459,7 +465,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
                      fxSecdialogQuoteMapper.updateHis(entity);
                      //发送接口
                      CallReturn callReturn = clientService.send(entity,"refuse","refuseQuote");
-                     System.out.println(callReturn);
+//                     System.out.println(callReturn);
+                     logger.info(callReturn.toString());
                 }
             }else if(dto.getOperateType().equalsIgnoreCase("4")){//修改报价
                 //修改为有效状态
@@ -469,7 +476,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
                 fxSecdialogQuoteMapper.updateHis(entity);
                 //发送接口
                 CallReturn callReturn = clientService.send(entity,"update","updateQuote");
-                System.out.println(callReturn);
+//                System.out.println(callReturn);
+                logger.info(callReturn.toString());
             }else if(dto.getOperateType().equalsIgnoreCase("7")){  //复制
                 //修改为有效状态
                 entity.setEffectflag(FxDictCodeList.有效状态_有效.getItemCode());
@@ -478,7 +486,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
                 fxSecdialogQuoteMapper.updateHis(entity);
                 //发送接口
                 CallReturn callReturn = clientService.send(entity,"add","addQuote");
-                System.out.println(callReturn);
+//                System.out.println(callReturn);
+                logger.info(callReturn.toString());
             }
         } else if (operationType == OperationType.MODIFY) {//修改
             //新增,修改为有效状态
@@ -488,7 +497,8 @@ public class FxSecdialogQuote002Service extends BaseService<FxSecdialogQuote002D
             fxSecdialogQuoteMapper.updateHis(entity);
             //发送接口
             CallReturn callReturn = clientService.send(entity,"add","addQuote");
-            System.out.println(callReturn);
+//            System.out.println(callReturn);
+            logger.info(callReturn.toString());
         } else if(operationType == OperationType.REVOKE){//撤销
             fxSecdialogQuoteMapper.revoke(dto.getSeqno());
         }

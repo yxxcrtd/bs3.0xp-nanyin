@@ -59,7 +59,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public Page<DocumentManagement001Dto> findPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+	public Page<DocumentManagement001Dto> findPage(int page, int length, Map<String, Object> pageParam) {
 		return super.queryForPage(() -> documentManagement001Mapper.queryPageList(pageParam));
 	}
 
@@ -70,7 +70,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 * @return
 	 * @throws Exception
 	 */
-	public List<DocumentManagement001Dto> findPageout(Map<String, Object> params) throws Exception {
+	public List<DocumentManagement001Dto> findPageout(Map<String, Object> params) {
 
 		return documentManagement001Mapper.queryPageList(params);
 	}
@@ -83,7 +83,7 @@ public class DocumentManagement001Service extends CommonExportService<DocumentMa
 	 * @throws IOException
 	 * @throws JSchException
 	 */
-	public ResponseEntity<byte[]> downloadFile(Map<String, Object> params) throws IOException, JSchException {
+	public ResponseEntity<byte[]> downloadFile(Map<String, Object> params) {
 		// 文件本地路径
 		String fileId = (String)params.get("fileId");
 		DocumentManagement001Dto dto = documentManagement001Mapper.qryBokDocInfoByFileId(fileId);

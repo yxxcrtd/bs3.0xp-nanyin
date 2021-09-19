@@ -393,6 +393,9 @@
        pledgeList.PLEDGE_RATIO*100 pledgeRatio,
        nvl(ava.AMOUNT,0) * 100 prin,
        fp.REGIST_ORG repRegistOrg
+       <if test="entrustId != null and entrustId != '' and (bizCode == null or bizCode == '')">
+       ,pledgeList.bussId entrustId
+       </if>
       FROM
            (
             <!-- 债券借贷交易画面有委托代码是双击查看报错修正 modify by renping 20191017 start -->
@@ -686,6 +689,9 @@
             pledgeList.PLEDGE_RATIO*100 pledgeRatio,
             '' prin,
             fp.REGIST_ORG repRegistOrg
+        <if test="entrustId != null and entrustId != '' and (bizCode == null or bizCode == '')">
+            ,pledgeList.bussId entrustId
+        </if>
         FROM
             (
             <if test="entrustId != null and entrustId != '' and (bizCode == null or bizCode == '')">

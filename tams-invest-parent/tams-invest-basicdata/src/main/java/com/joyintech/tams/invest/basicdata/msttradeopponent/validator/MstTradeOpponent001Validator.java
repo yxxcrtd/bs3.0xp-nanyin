@@ -82,6 +82,14 @@ public class MstTradeOpponent001Validator implements BeanValidator {
                         errorList.add(new ValidMessage(getMessage("COMMON_E_0030",
                             getMessage("MstTradeOpponent001.counterId"),
                             getMessage("MstTradeOpponent001.selectCounterId"))));
+                    }else{
+                        //当交易对手类别是分行并且被债券投后责任机构使用时
+                        if (StringUtil.equals(DictCodeListExt1.交易对手类型_分行.getValue(),dt.getCounterType())
+                                && mstTradeOpponent001Service.selectFHCounter(dt.getCounterId()) > 0) {
+                            errorList.add(new ValidMessage(getMessage("COMMON_E_0030",
+                                    getMessage("MstTradeOpponent001.counterId"),
+                                    getMessage(dt.getCounterId()))));
+                        }
                     }
 
                     // 当交易对手类别为内部交易对手时，不能删除！  add by zhangyf 20190826 start

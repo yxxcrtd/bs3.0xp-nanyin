@@ -74,7 +74,7 @@ public class ValRepurchaseAssetQuery001Service extends CommonExportService<ValRe
      * @since 1.0
      */
     public Page<ValRepurchaseAssetQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
 
 //        // String repAsset = (String)params.get("repAsset");
 //        String finprodType = (String)params.get("finprodType");

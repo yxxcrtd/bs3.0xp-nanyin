@@ -150,7 +150,7 @@ public class FinPlanProfitAssetService extends BaseService<FinPlanProfitAssetDto
      * @throws Exception 异常信息
      */
     public Page<FinPlanProfitAssetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         pageParam.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         pageParam.put("TYPE_TOUGUAN_F27", DictCodeListExt1.金融产品类型_投管用_母资管计划.getValue());
         pageParam.put("PROFIT_TYPE_02", DictCodeList.收益类型_收益型.getValue());

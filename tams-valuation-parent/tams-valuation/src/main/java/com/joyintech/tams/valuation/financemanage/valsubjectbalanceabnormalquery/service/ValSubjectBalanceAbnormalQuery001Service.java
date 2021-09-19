@@ -36,7 +36,7 @@ public class ValSubjectBalanceAbnormalQuery001Service extends CommonExportServic
     @Autowired
     private ValSubjectBalanceAbnormalQuery001Mapper valSubjectBalanceAbnormalQuery001Mapper;
 
-    public Page<ValSubjectBalanceAbnormalQuery001Dto> queryPageList(Map<String, Object> params) throws Exception {
+    public Page<ValSubjectBalanceAbnormalQuery001Dto> queryPageList(Map<String, Object> params) {
     	return restTemplate.postForPage(
                 ServiceApplication.VALUATION_SERVICE_NAME + "/ValSubjectBalanceAbnormalQuery001/findPage",
                 params, ValSubjectBalanceAbnormalQuery001Dto.class);

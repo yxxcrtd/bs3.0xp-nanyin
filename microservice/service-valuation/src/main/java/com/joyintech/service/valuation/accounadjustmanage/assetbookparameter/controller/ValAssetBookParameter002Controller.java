@@ -46,7 +46,7 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	 */
     @PostMapping("/findParam/{page}/{length}")
     public Page<SelectOptionDto> findParam(@RequestBody Map<String, Object> parameters,
-    @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+    @PathVariable("page") int page, @PathVariable("length") int length){
         return valAssetBookParameter002Service.findParam(page,length,parameters);
     }
 	

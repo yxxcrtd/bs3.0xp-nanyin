@@ -67,7 +67,7 @@ public class AccountsAdjustBusScenEleConf001Service extends BaseService<Accounts
      */
     @DataSource(DataSourceType.MASERT)
     public Page<AccountsAdjustBusScenEleConf001Dto> findPage(int page,int length,Map<String, Object> pageParam)
-        throws Exception {
+    {
     	pageParam.put("tableConfig", "业务场景要素配置");
     	return super.queryForPage(page,length,()-> accountsAdjustBusScenEleConf001Mapper.findBokTableList(pageParam));
     }

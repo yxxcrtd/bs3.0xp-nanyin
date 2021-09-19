@@ -102,7 +102,7 @@ public class ValBatchStart001Service extends BaseService<SysBatchTask> {
 	@Value("${spring.activemq.active:true}")
 	private Boolean isActivemqActive;
 
-	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) throws Exception {
+	public Page<SysBatchTask> findAllTask(Map<String, Object> pageParam) {
 		return super.queryForPage(new ISelect() {
 
 			@Override

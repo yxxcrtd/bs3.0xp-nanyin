@@ -18,6 +18,7 @@ import com.joyintech.tams.disclosure.busicommon.common.dto.BokBalance;
 import com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001Dto;
 import com.joyintech.tams.disclosure.busicommon.financialstatements.assetliailitystatement.dto.DisAssetLiabilityStatementQuery001SearchDto;
 import com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitquery.dto.DisProfitCalculationDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 资产负债表
@@ -26,6 +27,7 @@ import com.joyintech.tams.disclosure.busicommon.financialstatements.valprofitque
  * @see AssetLiabilityStatementQuery001Mapper
  * @since 1.0
  */
+@Repository
 public interface DisAssetLiabilityStatementQuery001Mapper {
 
 	/**

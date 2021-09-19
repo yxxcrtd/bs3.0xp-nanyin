@@ -29,5 +29,10 @@
     <select id="getSysDate" resultType="java.util.Date">
 		select CUR_DATE from SYS_DATE
 	</select>
+    <select id="getCommonSysDate" resultType="java.util.Date">
+        select CUR_DATE from SYS_DATE where institution_code = 'ALL'
+        or institution_code in ( select institution_code from sys_institution
+        where institution_type = '01')
+    </select>
 
 </mapper>

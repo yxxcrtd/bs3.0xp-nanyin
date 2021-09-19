@@ -56,7 +56,7 @@ public class RepAssetOther extends BaseEntity {
     /**
      * 是否政府出资产业投资基金
      */
-    private String isunlisted;
+    private String isUnlisted;
 
     /**
      * 是否标准化票据
@@ -224,22 +224,6 @@ public class RepAssetOther extends BaseEntity {
     }
 
     /**
-     * 取得 是否政府出资产业投资基金
-     * @return 是否政府出资产业投资基金
-     */
-    public String getIsunlisted() {
-        return isunlisted;
-    }
-
-    /**
-     * 设置 是否政府出资产业投资基金
-     * @param isunlisted 是否政府出资产业投资基金
-     */
-    public void setIsunlisted(String isunlisted) {
-        this.isunlisted = isunlisted == null ? null : isunlisted.trim();
-    }
-
-    /**
      * 取得 是否标准化票据
      * @return 是否标准化票据
      */
@@ -253,5 +237,19 @@ public class RepAssetOther extends BaseEntity {
      */
     public void setIsBzhpj(String isBzhpj) {
         this.isBzhpj = isBzhpj == null ? null : isBzhpj.trim();
+    }
+    /**
+     * 取得 是否政府出资产业投资基金
+     * @return 是否政府出资产业投资基金
+     */
+    public String getIsUnlisted() {
+        return isUnlisted;
+    }
+    /**
+     * 设置 是否政府出资产业投资基金
+     * @param isunlisted 是否政府出资产业投资基金
+     */
+    public void setIsUnlisted(String isUnlisted) {
+        this.isUnlisted = isUnlisted == null ? null : isUnlisted.trim();
     }
 }

@@ -63,6 +63,10 @@
 //                    $("#"+userIdList[i]).prop("checked",true);
 //                }
                 //modify by wm end 框架升级导致js报错问题修复 2019-11-28
+                 $("#milionProfitDec").attr("disabled",true);
+                 $("#milionProfitDecMode").attr("disabled",true);
+                 $("#rateDec").attr("disabled",true);
+                 $("#ratevalueMode").attr("disabled",true);
         }
         if(pageModel == PAGE_MODEL_REFERENCE){
             $(".userId").attr("disabled",true);
@@ -76,6 +80,7 @@
         }
     }
     function saveOrSubmit(operateType) {
+
         var fundAccountTables = FundAccountInfo.table;
         var securitiesAccountInfoTables = SecuritiesAccountInfo.table;
         /**
@@ -109,11 +114,11 @@
         var fundAccountTable = fundAccountTables.getAllRows();
         var securitiesAccountInfoTable = securitiesAccountInfoTables.getAllRows();
         object.fundAccountInfoDto = fundAccountTable;
-        for(var i in object.fundAccountInfoDto){
-            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
-                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
-            }
-        }
+//        for(var i in object.fundAccountInfoDto){
+//            if(object.fundAccountInfoDto[i] && object.fundAccountInfoDto[i].acctNo && object.fundAccountInfoDto[i].ccy){
+//                object.fundAccountInfoDto[i].acctNo = object.fundAccountInfoDto[i].acctNo.concat('_',object.fundAccountInfoDto[i].ccy);
+//            }
+//        }
         object.securitiesAccountInfoDto = securitiesAccountInfoTable;
         object.operateType = operateType;
         object.pageModel = pageModel;

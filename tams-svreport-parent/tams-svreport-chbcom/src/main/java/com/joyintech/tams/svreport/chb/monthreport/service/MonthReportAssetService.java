@@ -1,6 +1,7 @@
 package com.joyintech.tams.svreport.chb.monthreport.service;
 
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -14,7 +15,6 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthAssetPositionMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportDetailMapper;
-import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dao.ChbMonthReportTemplateMapper;
 import com.joyintech.tams.svreport.chb.monthreport.dto.*;
 import com.joyintech.tams.systemtools.util.CommonUtil;
@@ -91,7 +91,6 @@ public class MonthReportAssetService {
 			generateAssetMonthReportDetail(report,ifTrigger);
 		} catch (Exception e) {
 			logger.error("资产端月报生成错误："+e.getMessage(),e);
-//			e.printStackTrace();
 		}
 		 logger.info("生成月报资产明细数据结束："+year+"年"+month+"月");
         
@@ -185,6 +184,28 @@ public class MonthReportAssetService {
         logger.info("查询今日待处理资产头寸结束：");
         List<ChbMonthAssetPosition> positionList=new ArrayList<ChbMonthAssetPosition>();
         Map<String, BigDecimal> rateMap = new HashMap<String, BigDecimal>();
+        //FIXME：理财子公司月报处理慢，待优化
+
+		Map<String, ChbMonthAssetPosition> cmapMap = new HashMap<String, ChbMonthAssetPosition>();
+
+		ChbMonthAssetPosition qm = new ChbMonthAssetPosition();
+
+		qm.setBookdate(report.getStatusDate());
+		qm.setEnddate(lastday);
+		// 评级取值规则
+		qm.setSysflag(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG));
+		qm.setPrincipalRatingDimension(principalRatingDimension);
+		qm.setGradeDateEnd(formatter.format(lastday));
+		qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+		qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+
+		List<ChbMonthAssetPosition> cmaplist = chbMonthAssetPositionMapper.selectPlanInfoListByCommon(qm);
+
+		if(!StringUtil.isEmptyList(cmaplist)) {
+			for(ChbMonthAssetPosition tmp : cmaplist) {
+				cmapMap.put(tmp.getAssetCode(),tmp);
+			}
+		}
         for ( ChbMonthAssetPosition p1:listAssetposition ) {
         	p1.setAssetvalueA(ChbCcyConvertUtil.changeCnyMoney(p1.getCcy(),
         			p1.getAssetvalueA(), lastday, rateMap));
@@ -255,46 +276,60 @@ public class MonthReportAssetService {
                     List<ChbBotAstPosition> listPlanUnderDeal = this.genMonthPlanPosition(p);
                     for ( ChbBotAstPosition p11:listPlanUnderDeal ) {
                         ChbMonthAssetPosition m = new ChbMonthAssetPosition();
-                        ChbMonthAssetPosition qm = new ChbMonthAssetPosition();
-                        qm.setAssetCode(p11.getAssetCode());
-                        qm.setBookdate(p1.getBookdate());
-                        qm.setEnddate(p1.getEnddate());
-                        // 评级取值规则
-                        qm.setSysflag(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG));
-						qm.setPrincipalRatingDimension(principalRatingDimension);
+//                        ChbMonthAssetPosition qm = new ChbMonthAssetPosition();
+//                        qm.setAssetCode(p11.getAssetCode());
+//                        qm.setBookdate(p1.getBookdate());
+//                        qm.setEnddate(p1.getEnddate());
+//                        // 评级取值规则
+//                        qm.setSysflag(SvrDataUtil.getSysParam(SVReportGlobalConstant.SVR_SEC_RATING_FLAG));
+//						qm.setPrincipalRatingDimension(principalRatingDimension);
 						// 评级结果取值改变
                         // 判断走独立子系统还是走共通
                         if(isSubSystem != null){
                             if (StringUtils.equalsIgnoreCase(isSubSystem, DictCodeList.是否_中债_是.getValue())){
                                 m=chbMonthAssetPositionMapper.selectPlanInfo(qm);
                             }else{
-                            	qm.setGradeDateEnd(formatter.format(lastday));
-								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
-								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
-                                m=chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
+//                            	qm.setGradeDateEnd(formatter.format(lastday));
+//								qm.setGetProductRatingOrderSqlByZx(getProductRatingOrderSqlByZx);
+//								qm.setGetProductRatingOrderSqlByZt(getProductRatingOrderSqlByZt);
+//								m = chbMonthAssetPositionMapper.selectPlanInfoByCommon(qm);
+								ChbMonthAssetPosition cmamap =cmapMap.get(p11.getAssetCode());
+								if(cmamap!=null) {
+									BeanUtil.copyPropertiesIgnoreNull(m, cmamap);
+								}
+
                             }
                         }
-                        //评级结果 add by jiangxiao start
-                        if(m.getRating()!=null){
-                        	m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,m.getRating()));
-                        }
-                        //评级结果 add by jiangxiao end
-                        m.setProdId(p1.getProdId());
-                        m.setAssetCode(p11.getAssetCode());
-                        m.setAssetvalueA(null);
-                        m.setAssetvalueB(p11.getAccuamt());
-                        m.setAssetvalueB(m.getAssetvalueB().setScale(2,RoundingMode.HALF_UP));
-                        m.setPosuuid(IDGenerator.generate(36));
-                        m.setStartdate(firstday);
+
+						if(m == null){
+							logger.info("请先导入底层持仓信息后再跑月报资产头寸批处理");
+							continue;
+						}
+						if (m != null) {
+							//评级结果 add by jiangxiao start
+							if(m.getRating()!=null){
+								m.setRating(SvrDataUtil.getNameFromDataDict(DictCode.资产评级,m.getRating()));
+							}
+							//评级结果 add by jiangxiao end
+							m.setProdId(p1.getProdId());
+							m.setAssetCode(p11.getAssetCode());
+							m.setAssetvalueA(null);
+							m.setAssetvalueB(p11.getAccuamt());
+							m.setAssetvalueB(m.getAssetvalueB().setScale(2,RoundingMode.HALF_UP));
+							m.setPosuuid(IDGenerator.generate(36));
+							m.setStartdate(firstday);
 //                        chbMonthAssetPositionMapper.insert(m);
-                        m.setOldAssetCode(p1.getAssetCode());
-                        //新加字段
-						m.setIsFhxgcp(p1.getIsFhxgcp());
-                        positionList.add(m);
+							m.setOldAssetCode(p1.getAssetCode());
+							//新加字段
+							m.setIsFhxgcp(p1.getIsFhxgcp());
+							positionList.add(m);
+						}
                     }
                 }
             }
         }
+		cmapMap.clear();
+		cmapMap =null;
         SqlSession session = template.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
     	try{
     		ChbMonthAssetPositionMapper batchMapper =  session.getMapper(ChbMonthAssetPositionMapper.class);
@@ -385,7 +420,7 @@ public class MonthReportAssetService {
         		try {
 					bot.setBookdate(formatter.parse(formatter.format(report.getStatusDate())));
 				} catch (ParseException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
         		bot.setEnddate(lastday);
         		chbMonthAssetPositionMapper.insert(bot);

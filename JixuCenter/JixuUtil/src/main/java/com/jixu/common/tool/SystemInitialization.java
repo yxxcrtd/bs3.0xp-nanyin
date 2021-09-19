@@ -7,13 +7,10 @@ package com.jixu.common.tool;
  * @Description		[]  
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.jixu.common.pojo.*;
+import com.jixu.framework.dao.intf.RoleTypeDao;
+import com.jixu.framework.dao.intf.RoleTypeRoleGroupMapDao;
+import com.jixu.framework.dao.intf.UsersDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import com.jixu.common.pojo.RoleType;
-import com.jixu.common.pojo.RoleTypeRoleGroupMap;
-import com.jixu.common.pojo.UserRole;
-import com.jixu.common.pojo.UserRoleGroup;
-import com.jixu.common.pojo.UserRoleGroupMap;
-import com.jixu.common.pojo.Users;
-import com.jixu.framework.dao.intf.RoleTypeDao;
-import com.jixu.framework.dao.intf.RoleTypeRoleGroupMapDao;
-import com.jixu.framework.dao.intf.UsersDao;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 
 @Component("systemInit")
@@ -179,7 +170,7 @@ public class SystemInitialization implements CommandLineRunner{
 							RoleType role=new RoleType();
 							role.setRoleName(key.getName());
 							role.setRoleURLPath(roleURL);
-							roleTypeDao.saveEntityBean(role);
+//							roleTypeDao.saveEntityBean(role);
 							roleTypeHM.put(role.getRoleID(), role.getRoleName());
 						}
 						roleURLList.add(roleURL);

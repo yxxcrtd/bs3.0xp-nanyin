@@ -27,14 +27,8 @@ public class InstanceOfClass {
      * @see
      * @since 1.0
      */
-    public static <T> T createInstance(Class<T> cls) {
-        T obj=null;
-        try {
-            obj=cls.newInstance();
-        } 
-        catch (Exception e) {
-            throw new RuntimeException("参数出现异常");
-        }
+    public static <T> T createInstance(Class<T> cls) throws IllegalAccessException, InstantiationException {
+        T obj=cls.newInstance();
         return obj;
     }
 }

@@ -21,6 +21,7 @@ import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -187,14 +188,12 @@ public class EtrFund002Controller extends BaseController{
      * 获取组合代码联想文本框信息 
      * <功能详细描述>
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getSelectPortfolioId")
-    public Page<SelectOptionDto> getSelectPortfolioId()
-        throws Exception {
+    public Page<SelectOptionDto> getSelectPortfolioId(){
         Page<SelectOptionDto> temp = etrFundService.getSelectPortfolioId(RequestUtil.getPageParam());
         return temp;
     }
@@ -209,8 +208,7 @@ public class EtrFund002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSelectFinprodMarketId")
-    public Page<SelectOptionDto> getSelectFinprodMarketId() 
-        throws Exception {
+    public Page<SelectOptionDto> getSelectFinprodMarketId() {
         Page<SelectOptionDto> temp = etrFundService.getSelectFinprodMarketId(RequestUtil.getPageParam());
         return temp;
     }
@@ -268,13 +266,13 @@ public class EtrFund002Controller extends BaseController{
      * @param dto 业务实体
      * @param br AjaxResult
      * @return AjaxResul
-     * @throws Exception Exception
+     * @throws WorkFlowException WorkFlowException
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrFundDto dto, BindingResult br) throws Exception{
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) EtrFundDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -371,8 +369,7 @@ public class EtrFund002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getSelectTongDao")
-    public Page<SelectOptionDto> getSelectTongDao() 
-    		throws Exception {
+    public Page<SelectOptionDto> getSelectTongDao() {
     	        Page<SelectOptionDto> temp =  etrFundService.getSelectTongDao(RequestUtil.getPageParam());
     	        return temp;
     }
@@ -384,8 +381,7 @@ public class EtrFund002Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getTongDaoCash")
-    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> param)
-    		throws Exception{
+    public BigDecimal getTongDaoCash(@RequestBody Map<String,Object> param){
         BigDecimal bigDecimal = etrFundService.getChannelAvailableCash(param);
         if(bigDecimal != null){
             return bigDecimal;

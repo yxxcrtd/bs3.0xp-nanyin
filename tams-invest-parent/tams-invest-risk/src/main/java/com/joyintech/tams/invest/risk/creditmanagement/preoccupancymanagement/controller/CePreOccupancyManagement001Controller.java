@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -59,7 +60,7 @@ public class CePreOccupancyManagement001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("/getInstitutionName")
     public List<SelectOptionDto> getInstitutionName()
-        throws Exception {
+    {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("customerType", DictCodeList.客户类型_法人.getValue());
         String param = super.getRequest().getParameter("search");
@@ -77,7 +78,7 @@ public class CePreOccupancyManagement001Controller extends BaseController{
     @ResponseBody
     @RequestMapping("findPage")
     public Page<CePreOccupancyManagementDto> selectAll()
-        throws Exception {
+    {
         return cePreOccupancyManagement001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -105,8 +106,7 @@ public class CePreOccupancyManagement001Controller extends BaseController{
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-        ValidateGroupDelete.class}) CePreOccupancyManagementDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupDelete.class}) CePreOccupancyManagementDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -137,7 +137,7 @@ public class CePreOccupancyManagement001Controller extends BaseController{
      */
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-        throws Exception {
+    {
         return cePreOccupancyManagement001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

@@ -23,6 +23,7 @@ import com.joyintech.tams.invest.product.rddesign.productsimulationtrial.service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.LeaveMarkProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,12 +96,11 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	/**
 	 * 产品设计系列编号下拉框
 	 * @return 下拉框列表
-	 * @throws Exception Exception
 	 */
 	@RequestMapping("queryDesignIdInfo")
 	@ResponseBody
 	public Page<SelectOptionDto> queryDesignIdInfo(@RequestParam Map<String, Object> param)
-			throws Exception {
+	{
 		return productSimulationTrial001Service.queryDesignIdInfo(param);
 	}
 
@@ -164,14 +164,12 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 * @param dto dto
 	 * @param br 验证信息
 	 * @return 结果
-	 * @throws Exception 异常
 	 * @see
 	 * @since 1.0
 	 */
 	@ResponseBody
 	@RequestMapping("delete")
-	public AjaxResult delete(@RequestBody ProductSimulationTrial001Dto dto, BindingResult br)
-			throws Exception {
+	public AjaxResult delete(@RequestBody ProductSimulationTrial001Dto dto, BindingResult br) throws WorkFlowException {
 	    ProductSimulationTrial002Dto productSimulationTrial002Dto = productSimulationTrial002Service.getProductSimulationTrialBySeqNo(dto.getSeqNo());
 	    Map<String, Object> param = new HashMap<String, Object>();
 	    param.put("seqNo", dto.getSeqNo());
@@ -198,13 +196,12 @@ public class ProductSimulationTrial001Controller extends BaseController {
 	 * 导出信息excel
 	 *
 	 * @return excel
-	 * @throws Exception
 	 *             异常
 	 * @see
 	 * @since 1.0
 	 */
 	@RequestMapping(ACTION_EXPORT)
-	public ResponseEntity<byte[]> export() throws Exception {
+	public ResponseEntity<byte[]> export() {
 		return productSimulationTrial001Service.export(this.getPageId(), RequestUtil.getParameters(getRequest()));
 	}
 

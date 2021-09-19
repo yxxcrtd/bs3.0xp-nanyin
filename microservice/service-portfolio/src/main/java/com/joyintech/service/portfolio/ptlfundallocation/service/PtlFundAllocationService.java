@@ -37,6 +37,8 @@ import com.joyintech.tams.invest.common.service.MapperDelegateService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,11 @@ import java.util.Map;
  */
 @Service
 public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PtlFundAllocationService.class);
+
     /**
      * 注入资金划拨mapper
      */
@@ -276,7 +283,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
             amount = basePtlCashPositionInfoService.queryUsableCashPosition(ptlCashPositionFlowDto);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return amount;
     }
@@ -290,7 +297,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
      * @return 查询结果集
      * @throws Exception 异常
      */
-    public Page<PtlFundAllocationDto> findPage(int page, int length, Map<String, Object> map) throws Exception {
+    public Page<PtlFundAllocationDto> findPage(int page, int length, Map<String, Object> map) {
 //        return super.queryForPage(page, length, ()->ptlFundAllocationMapper.findPage(map));
         Page<PtlFundAllocationDto> pageData = super.queryForPage(page, length, () -> ptlFundAllocationMapper.findPage(map));
         if (pageData != null && !StringUtil.isEmptyList(pageData.getRoot())) {
@@ -784,7 +791,7 @@ public class PtlFundAllocationService extends BaseService<PtlFundAllocationDto> 
                 }
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
         return ptlFundAllocation001Dto;

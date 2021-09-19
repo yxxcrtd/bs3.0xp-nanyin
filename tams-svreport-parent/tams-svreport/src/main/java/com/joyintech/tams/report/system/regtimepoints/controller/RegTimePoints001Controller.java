@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.security.SecurityUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -170,6 +171,7 @@ public class RegTimePoints001Controller extends BaseController {
     public  AjaxResult saveData() {
 //        dto.setOrgCode(this.getLoginUser().getOrgCode());
         Map<String, Object> paraMap = RequestUtil.getPageParam();
+        paraMap.put("updateUser", SecurityUtil.getLoginUser().getUserName());//add by lingxq on 2021-06-23 for 微服务获取Session必须前台传参
         regTimePointsMService.updateAllRegTimePoints(paraMap);
         return commonCheck(null, "save");
     }

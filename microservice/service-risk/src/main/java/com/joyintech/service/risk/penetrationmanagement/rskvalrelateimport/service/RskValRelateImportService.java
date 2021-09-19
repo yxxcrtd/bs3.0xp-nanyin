@@ -15,7 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.common.base.entity.ChbAssetInfo;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +47,11 @@ import com.joyintech.service.risk.penetrationmanagement.rskvalrelateimport.dto.R
  */
 @Service
 public class RskValRelateImportService extends BaseService<RskValRelateImportDto> {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValRelateImportService.class);
+
     /**
      * RskValRelateImportMapper
      */
@@ -67,7 +76,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public Page<RskValRelateImportDto> selectForPage(int page, int length,
-                                                     Map<String, Object> param) throws Exception{
+                                                     Map<String, Object> param) {
         return super.queryForPage(page, length, () ->rskValRelateImportMapper.selectForPage(param));
     }
     
@@ -79,7 +88,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> queryStructMapId() {
-        return rskValRelateImportMapper.queryStructMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.queryStructMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.queryStructMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.queryStructMapId();
+        }
     }
 
     /**
@@ -90,7 +106,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> querySumsubMapId() {
-        return rskValRelateImportMapper.querySumsubMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.querySumsubMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.querySumsubMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.querySumsubMapId();
+        }
     }
 
     /**
@@ -101,7 +124,14 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
      * @since 1.0
      */
     public List<SelectOptionDto> queryAssetSubMapId() {
-        return rskValRelateImportMapper.queryAssetSubMapId();
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<SelectOptionDto> list=rskValRelateImportMapper.queryAssetSubMapId();
+            List<SelectOptionDto> listDefault=rskValRelateImportMapper.queryAssetSubMapIdDefault();
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValRelateImportMapper.queryAssetSubMapId();
+        }
     }
 
     /**
@@ -181,7 +211,7 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
             }
         }
         catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         //查询组合名称
         dto.setName(rskValRelateImportMapper.selectGroupName(ptlId));
@@ -216,5 +246,10 @@ public class RskValRelateImportService extends BaseService<RskValRelateImportDto
     public int checkGroupName(RskValRelateImportDto dto) {
         return rskValRelateImportMapper.checkGroupName(dto);
     }
-
+    /**
+     * 查询所有资产要素完整信息
+     */
+    public List<FinProduct> selectAllAsset() {
+        return rskValRelateImportMapper.selectAllAsset();
+    }
 }

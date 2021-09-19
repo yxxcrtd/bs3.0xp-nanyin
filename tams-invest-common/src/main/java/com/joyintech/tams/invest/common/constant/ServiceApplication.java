@@ -11,13 +11,13 @@
 
 package com.joyintech.tams.invest.common.constant;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PostConstruct;
 
 /**
  * 微服务访问路径定义
@@ -118,6 +118,11 @@ public class ServiceApplication {
     public static String INVEST_INTERF_SERVICE_NAME = "http://investInterfService";
 
     /**
+     * 中债服务
+     */
+    public static String CHB_SERVICE_NAME = "http://chbService";
+
+    /**
      * 页面端
      */
     public static String PINGAN_SERVICE_NAME = "http://tams-server";
@@ -157,6 +162,7 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = CUSTOMER_INTERF_NAME + config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = PINGAN_SERVICE_NAME + config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = INVEST_INTERF_SERVICE_NAME + config.getInvestInterfService();
+                CHB_SERVICE_NAME = CHB_SERVICE_NAME + config.getChbService();
             }
             else {
                 COMMON_SERVICE_NAME = config.getCommonService();
@@ -177,6 +183,7 @@ public class ServiceApplication {
                 CUSTOMER_INTERF_NAME = config.getCustomerInterfService();
                 PINGAN_SERVICE_NAME = config.getTamsServer();
                 INVEST_INTERF_SERVICE_NAME = config.getInvestInterfService();
+                CHB_SERVICE_NAME = config.getChbService();
             }
         }
     }
@@ -226,6 +233,8 @@ public class ServiceApplication {
          * 投管接口
          */
         private String investInterfService;
+
+        private String chbService;
 
         /**
          * 获取 investInterfService
@@ -433,6 +442,14 @@ public class ServiceApplication {
 
         public void setRiskInfService(String riskInfService) {
             this.riskInfService = riskInfService;
+        }
+
+        public String getChbService() {
+            return chbService;
+        }
+
+        public void setChbService(String chbService) {
+            this.chbService = chbService;
         }
     }
 

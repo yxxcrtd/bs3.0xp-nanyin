@@ -34,6 +34,7 @@ import com.joyintech.tams.invest.trade.trdrepotrade.service.TrdRepoTrade002Servi
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -106,7 +108,7 @@ public class TrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("selectForPage")
     @ResponseBody
-    public Page<TrdRepoTrade001Dto> selectForPage() throws Exception {
+    public Page<TrdRepoTrade001Dto> selectForPage()  {
         Page<TrdRepoTrade001Dto> trdRepoTrade001DtoPage = trdRepoTrade001Service.selectForPage(RequestUtil.getPageParam());
         return trdRepoTrade001DtoPage;
     }
@@ -121,7 +123,7 @@ public class TrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return trdRepoTrade001Service.export(this.getPageId(), RequestUtil.getPageParam());
     }
 
@@ -134,8 +136,7 @@ public class TrdRepoTrade001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("exportMailModel")
-    public ResponseEntity<byte[]> exportMailModel()
-            throws Exception {
+    public ResponseEntity<byte[]> exportMailModel() throws IOException {
         return trdRepoTrade001Service.exportMailModel(RequestUtil.getPageParam());
     }
 
@@ -176,8 +177,7 @@ public class TrdRepoTrade001Controller extends BaseController {
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody TrdRepoTrade002Dto inputDto)
-            throws Exception {
+    AjaxResult doRevoke(@RequestBody TrdRepoTrade002Dto inputDto) throws WorkFlowException {
 
         if(StringUtil.isNotEmpty(inputDto.getTradeId())){
             inputDto = trdRepoTrade002Service.getTrdRepoTradeDto(inputDto.getTradeId());
