@@ -66,14 +66,14 @@ $(function() {
             if(result.data.indexOf("前瞻因子")>0){
 				Joyin.confirm(result.data, function(){
                 	Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
-						WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorConfig001_btn_delete", "PdFactorConfig002",function(){
+						WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorKpmgConfig001_btn_delete", "PdFactorKpmgConfig002",function(){
                     		table.reload();
                 		});
 					});
             	});	
 			}else{
 				Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                	WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorConfig001_btn_delete", "PdFactorConfig002",function(){
+                	WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorKpmgConfig001_btn_delete", "PdFactorKpmgConfig002",function(){
                     	table.reload();
                 	});
             	});
