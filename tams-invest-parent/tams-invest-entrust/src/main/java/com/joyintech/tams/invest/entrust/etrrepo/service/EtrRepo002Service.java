@@ -820,4 +820,9 @@ public class EtrRepo002Service extends BaseService<EtrRepoDto> implements BasePr
         wr.setData(resultMap);
         return wr;
     }
+
+    @Override
+    public void doBack(EtrRepoDto entity) {
+        //授信拦截方法
+    }
 }

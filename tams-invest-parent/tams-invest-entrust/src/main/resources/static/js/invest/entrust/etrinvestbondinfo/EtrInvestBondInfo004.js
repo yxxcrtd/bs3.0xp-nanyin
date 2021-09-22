@@ -16,7 +16,7 @@
                     timePoint : MY_SUP_TIME_TYPE_02,
                     valDate : sysDate,
                     portfolioCode : item.portfolioId,
-                    tradeAmount : item.entrustNum,
+                    tradeAmount : JoyinMath.doMul(item.entrustNum,10000,2,JoyinMath.ROUND_HALF_UP),
                     assetType : fintype,
                     isEnabled : '01',
                     assetCode: item.finprodId,
@@ -213,6 +213,11 @@
             var object = $.serializeToObject('#searchForm', true);
             var checkParam = {};
             checkParam.data = getriskdata();
+            var objects = object.selectedItem;
+            for (var index in objects) {
+                var temp = objects[index];
+                temp.entrustNum = JoyinMath.doMul(temp.entrustNum,10000,2,JoyinMath.ROUND_HALF_UP);
+            }
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', object.selectedItem, checkParam);
             // 批量风险试算  modify by zhangrui1 end
         });

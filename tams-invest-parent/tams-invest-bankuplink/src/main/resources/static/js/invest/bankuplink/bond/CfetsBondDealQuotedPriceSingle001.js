@@ -972,4 +972,16 @@
         }
     };
 
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            calDeviationDegree();
+            var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
+            var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
+            var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
+            if(window.CfetsRepoDealQuotedPrInitCash){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+        }
+    },2000);
+
 }());
