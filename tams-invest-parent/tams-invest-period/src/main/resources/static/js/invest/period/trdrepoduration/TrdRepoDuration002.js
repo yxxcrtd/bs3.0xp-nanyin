@@ -222,7 +222,9 @@
                 //提前终止使用终止日生成划款指令
                 deal.settleDate = $("#ps").val()==PS_TQZZ ?$("#deadDate").val():$("#settleDate").val();
                 // 通道交易 新增 强成西 2019/03/26 start
-                deal.chlId = $("#chlId").val();
+                if($("#chlId").val()){
+                    deal.chlId = $("#chlId").val();
+                }
                 // 通道交易 新增 强成西 2019/03/26 end
                 return {
                     'isTotalTrade': YES_OR_NO_Y
