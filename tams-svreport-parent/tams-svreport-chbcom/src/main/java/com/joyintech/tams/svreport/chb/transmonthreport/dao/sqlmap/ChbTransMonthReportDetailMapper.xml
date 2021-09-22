@@ -45,7 +45,7 @@
     left join (select endval.finprod_id,
            nvl(endval.TOTAL_NET_VALUE,0) endvalue,
            nvl(strval.TOTAL_NET_VALUE,1) strvalue,
-           nvl(strval.val_date,vdateval.val_date) strdate
+           nvl(strval.val_date,(vdateval.val_date-1)) strdate
            from BOK_VALBAL_TABLE_STATUS endval
 			left join BOK_VALBAL_TABLE_STATUS strval
 			on endval.finprod_id=strval.finprod_id
@@ -61,7 +61,7 @@
    select endval.bookset_id as finprod_id,
            nvl(endval.subject_name,0) endvalue,
            nvl(strval.subject_name,vdateval.subject_name) strvalue,
-           nvl(strval.val_date,vdateval.val_date) strdate
+           nvl(strval.val_date,(vdateval.val_date-1)) strdate
            from bok_val_table_data endval
       left join bok_val_table_data strval
       on endval.bookset_id=strval.bookset_id
