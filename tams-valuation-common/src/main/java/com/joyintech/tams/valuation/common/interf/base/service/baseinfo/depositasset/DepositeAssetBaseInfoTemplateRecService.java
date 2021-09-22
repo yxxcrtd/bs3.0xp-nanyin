@@ -345,10 +345,13 @@ public class DepositeAssetBaseInfoTemplateRecService {
         fdto.setFinprodType(dto.getPrinType());
         // 资产类型
         fdto.setAssetType(dto.getAssetClass());
-        // 机构核算分类
-        fdto.setOrgClass(dto.getValClas());
 
-        valFinProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
+        fdto.setAccountingClass(dto.getValClas());
+        //机构核算分类
+//        fdto.setOrgClass(dto.getValClas());
+//        valFinProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
+        valFinProductType.setType2(dto.getValClas());
+//        valFinProductType.setType2(interfCommonService.getFinanceProductClass(fdto));
 
         // 分类3 = 调用共通方法查询税务分类
         valFinProductType.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
