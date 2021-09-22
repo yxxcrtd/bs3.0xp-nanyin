@@ -1,6 +1,7 @@
 package com.joyintech.service.bankuplink.ibu.dto.risk;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 风控实占请求bean
@@ -195,6 +196,7 @@ public class ReqRiskOccupy {
     private String seqNo;//释放流水号
     private String entrustId;// 委托代码
 
+    private List<String> pledgeAssetCodeList;
     public String getConShareId() {
         return conShareId;
     }
@@ -522,5 +524,13 @@ public class ReqRiskOccupy {
 
     public void setMdate(String mdate) {
         this.mdate = mdate;
+    }
+
+    public List<String> getPledgeAssetCodeList() {
+        return pledgeAssetCodeList;
+    }
+
+    public void setPledgeAssetCodeList(List<String> pledgeAssetCodeList) {
+        this.pledgeAssetCodeList = pledgeAssetCodeList;
     }
 }
