@@ -3,6 +3,7 @@ package com.joyintech.service.bankuplink.common.service;
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.common.dao.CstpAutoTradeMapper;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -259,14 +260,18 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 							ServiceApplication.PINGAN_SERVICE_NAME+ "/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade",
 							repoTradeDto, Map.class);
 					//登录匹配情况 ptlAllocationDtos  add by zhangnian 20210316 start
-					List<PtlAllocationDto> ptlAllocations = (List<PtlAllocationDto>)resultMap.get("ptlAllocationDtos");
+					List<Map<String,Object>> ptlAllocations = (List<Map<String,Object>>)resultMap.get("ptlAllocationDtos");
 					if(!StringUtil.isEmptyList(ptlAllocations)){
 						ptlAllocations.forEach(item -> {
+							PtlAllocationDto ptlAllocationDto = null;
+							try{
+								ptlAllocationDto = (PtlAllocationDto)JsonUtils.map2entity(item, PtlAllocationDto.class);
+							}catch (Exception e){}
 							TrdMatchInfo trdMatchInfo = new TrdMatchInfo();
 							trdMatchInfo.setSeqno(cstpMapper.selectSeqNo());
 							trdMatchInfo.setCstpTradeId(oritradeId);
-							trdMatchInfo.setEntrustId(item.getEntrustId());
-							trdMatchInfo.setMatchNum(item.getFpriceAmt());
+							trdMatchInfo.setEntrustId(ptlAllocationDto.getEntrustId());
+							trdMatchInfo.setMatchNum(ptlAllocationDto.getFpriceAmt());
 							trdMatchInfo.setMatchType(matchType);
 							trdMatchInfo.setTradeDate(DateUtil.parse(interfCstpTrade.getTradedate()));
 							trdMatchInfoMapper.insert(trdMatchInfo);
@@ -274,16 +279,20 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					}
 					//登录匹配情况 ptlAllocationDtos  add by zhangnian 20210316 end
 					//登录匹配质押券
-					List<PledgeBondInfoDto> pledgeBondInfoDtos = (List<PledgeBondInfoDto>)resultMap.get("pledgeBondInfoDtos");
+					List<Map<String,Object>> pledgeBondInfoDtos = (List<Map<String,Object>>)resultMap.get("pledgeBondInfoDtos");
 					if(!StringUtil.isEmptyList(pledgeBondInfoDtos)){
 						pledgeBondInfoDtos.forEach(item -> {
+							PledgeBondInfoDto pledgeBondInfoDto = null;
+							try{
+								pledgeBondInfoDto = (PledgeBondInfoDto)JsonUtils.map2entity(item, PledgeBondInfoDto.class);
+							}catch (Exception e){}
 							TrdPledgeMatchInfo trdPledgeMatchInfo = new TrdPledgeMatchInfo();
 							trdPledgeMatchInfo.setSeqno(cstpCommonMatchMapper.selectSeqNo(DateUtil.getSysDate()));
 							trdPledgeMatchInfo.setCstpTradeId(oritradeId);
-							trdPledgeMatchInfo.setEntrustId(item.getEntrustId());
-							trdPledgeMatchInfo.setSecAcctId(item.getSecAcctId());
-							trdPledgeMatchInfo.setPledgeFinprodId(item.getFinprodId());
-							trdPledgeMatchInfo.setMatchNum(item.getPledgePrin());
+							trdPledgeMatchInfo.setEntrustId(pledgeBondInfoDto.getEntrustId());
+							trdPledgeMatchInfo.setSecAcctId(pledgeBondInfoDto.getSecAcctId());
+							trdPledgeMatchInfo.setPledgeFinprodId(pledgeBondInfoDto.getFinprodId());
+							trdPledgeMatchInfo.setMatchNum(pledgeBondInfoDto.getPledgePrin());
 							trdPledgeMatchInfo.setMatchType(matchType);
 							trdPledgeMatchInfo.setTradeDate(DateUtil.parse(interfCstpTrade.getTradedate()));
 							trdPledgeMatchInfoMapper.insert(trdPledgeMatchInfo);
@@ -295,7 +304,9 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					repoRecord.setTradeid(interfcstpTradRepo.getTradeid());
 					repoRecord.setDealFeeamt(resultMap.containsKey("dealFeeamt")?(BigDecimal) resultMap.get("dealFeeamt"):null);
 					repoRecord.setSettFeeamt(resultMap.containsKey("settFeeamt")?(BigDecimal) resultMap.get("settFeeamt"):null);
-					repoMapper.updateByPrimaryKeySelective(repoRecord);
+					if(null!=repoRecord.getDealFeeamt()||null!=repoRecord.getSettFeeamt()){
+						repoMapper.updateByPrimaryKeySelective(repoRecord);
+					}
 					// 最后修改接口表中的数据来源,用于撤销
 					autoTradeMapper.updateInterfCstpTrade(oritradeId, BusinessTypeUtil.BUSINESSTYPE_REPO);
 				}
