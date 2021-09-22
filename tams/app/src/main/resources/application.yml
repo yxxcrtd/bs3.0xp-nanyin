@@ -237,7 +237,7 @@ application:
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
   versionInfo:
-     systemVersion: V2.1.7
+     systemVersion: V2.1.8
      lastChromeVersion: 73
      customerName: 兆尹科技
   runOptimize: Y
