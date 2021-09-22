@@ -390,6 +390,9 @@
         <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 start -->
         ,SSAI.SEC_ACCT_NAME AS secAcctName
         <!-- add by dubaojun 2020-08-12 上农商个性化-增加证券账户名称的显示 end -->
+		<!-- add by wanshiwei 2021-09-22 指令创建来源 start -->
+		,T4.ENTRUST_CREATE_SOURCE AS entrustCreateSource
+		<!-- add by wanshiwei 2021-09-22 指令创建来源 end -->
 		FROM ETR_ENTRUST T1
 		LEFT JOIN PTL_PORTFOLIO T2 ON T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
 		LEFT JOIN FIN_PRODUCT T3 ON T1.FINPROD_ID = T3.FINPROD_ID
