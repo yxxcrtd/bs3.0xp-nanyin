@@ -393,7 +393,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                 }else{
                     //不符合条件，不在区间内
                     trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("初始确认开始日和初始确认截止日不能出现在资产起息日和资产到期日区间中!"));
+                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("初始确认起始日和截止日应处于资产起息日和到期日区间中!"));
                 }
 
 

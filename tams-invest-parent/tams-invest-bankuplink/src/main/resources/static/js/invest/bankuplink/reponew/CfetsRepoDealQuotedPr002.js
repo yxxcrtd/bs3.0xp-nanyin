@@ -5,6 +5,44 @@
     //试算结果
     var riskResultdata;
     var cluflag;
+
+    /**
+     * 获取风险试算参数
+     *
+     * @returns
+     */
+    function getRiskdata() {
+        var obj = {
+            timePoint:MY_SUP_TIME_TYPE_02,
+            valDate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
+            portfolioCode:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
+            portfolioId:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
+            tradeAmount:$('#CfetsRepoDealQuotedPrice002_dealAmt').val(),
+            isEnabled:'01',
+            assetCode:$('#finprodId').val(),
+            tradeDirection:$('#CfetsRepoDealQuotedPrice002_ps').val(),
+            counterId: $('#CfetsRepoDealQuotedPrice002_counterId').val(),
+            ccy:'CNY'
+        }
+        if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_03){
+            obj.assetType = FINPROD_TYPE_TG_F02;
+        }else if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_04){
+            obj.assetType = FINPROD_TYPE_TG_F03;
+        }else{
+            obj.assetType = null;
+        }
+        var object = {
+            valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],
+            portfolioCode:['portfolioId','CfetsRepoDealQuotedPrice002.portfolioId'],
+            tradeAmount:['fpriceAmt','CfetsBondDealQuotedPrice002.dealAmt'],
+            tradeDirection:['ps','CfetsRepoDealQuotedPrice002.ps'],
+            counterId:['counterId', 'CfetsRepoDealQuotedPrice002.counterId'],
+            data:obj
+        }
+        return object;
+    }
+
+
     /**
 	 * 委托代码
 	 */
@@ -582,16 +620,36 @@
             window.BussRepoSec["bussRepoSec"].setInputParam(object);
         }
     };
+
     /**
-     * 获取风险试算参数
-     *
-     * @param operateType 操作类型（save，submit）
-     * @returns
+     * 单组合对话报价风险试算
      */
-    function getSearchParams() {
-        var object = $.serializeToObject("#CfetsRepoDealQuotedPrice002_submitForm");
-        return object;
+    function doRiskcal() {
+        var object = $.serializeToObject("#CfetsRepoDealQuotedPrice002_submitForm")
+        if(object){
+            var riskdata = getRiskdata();
+            var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F01";
+            if (riskdata && riskInterfUrl) {
+                window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackPr002);
+            }
+        }
     }
+
+    /**
+     * 单组合对话报价风险试算回调
+     */
+    function riskMathRedisCallbackPr002(object, paraCluflag) {
+        CfetsRepoDealQuotedPr002.riskResultdata = object;
+        CfetsRepoDealQuotedPr002.cluflag = paraCluflag;
+
+        var paramObj = {};
+        if (object) {
+            paramObj.riskResultdata = JSON.stringify(object);
+        }
+        paramObj.cluflag = paraCluflag;
+        Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
+    }
+
     /**
      * 对外公开的接口
      */
@@ -798,7 +856,8 @@
          * 风险试算
          */
         $('#CfetsRepoDealQuotedPrice002_btn_riskcal').click(function(){
-            /*doRiskcal();*/
+            debugger
+            doRiskcal();
         });
         /**
          * 对话按钮点击事件
@@ -976,13 +1035,22 @@
      * 提交
      */
     var submitAction = function(){
+        var s;
+        if (BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck("submit");
+            if (!s && s != "") {
+                return;
+            }
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskdata())) {
+                return;
+            }
+        }
         var object = $.serializeToObject('#CfetsRepoDealQuotedPrice002_submitForm');
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
         object.operation = "CfetsRepoDealQuotedPrice001.submit"
         object.operatorType = 'submit';
         //构造质押券list
-        debugger;
         handlepledgeBondList(object);
         if(pageModel != PAGE_MODEL_NEW){
             Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {

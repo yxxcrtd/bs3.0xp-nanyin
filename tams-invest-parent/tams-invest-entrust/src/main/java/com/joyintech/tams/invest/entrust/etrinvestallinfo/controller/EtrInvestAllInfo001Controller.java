@@ -106,6 +106,8 @@ public class EtrInvestAllInfo001Controller extends BaseController {
         model.addAttribute("ENTRUST_BUSS_TYPE_20", DictCodeListExt3.上农商_指令业务类型_协议回购到期续做指令.getValue());
         model.addAttribute("ENTRUST_BUSS_TYPE_21", DictCodeListExt3.上农商_指令业务类型_协议回购中途换券指令.getValue());
         model.addAttribute("ENTRUST_BUSS_TYPE_22", DictCodeListExt3.上农商_指令业务类型_协议回购解除质押指令.getValue());
+
+        model.addAttribute("ENTRUST_CREATE_SOURCE_01", DictCodeListExt3.指令创建来源_场内簿记.getValue());
         return super.init(model);
     }
     /**

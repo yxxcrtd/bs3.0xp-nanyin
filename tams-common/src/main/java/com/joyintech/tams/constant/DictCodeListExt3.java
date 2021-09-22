@@ -1241,6 +1241,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_关联方管理(DictCode.共通业务类型,"RSK49","关联方管理"),
     // add by zhangrui1 end
 
+    // add by wanshiwei 20210922：指令创建来源 start
+    指令创建来源_场内簿记(DictCode.指令创建来源, "01", "场内簿记"),
+    指令创建来源_场内实时(DictCode.指令创建来源, "02", "场内实时"),
+    指令创建来源_银行间簿记(DictCode.指令创建来源, "03", "银行间簿记"),
+    指令创建来源_银行间实时(DictCode.指令创建来源, "04", "银行间实时"),
+    // add by wanshiwei 20210922：指令创建来源 end
+
     交易单位_张(DictCode.交易单位,"01","张"),
     交易单位_份(DictCode.交易单位,"02","份"),
     交易单位_股(DictCode.交易单位,"03","股"),
@@ -1544,6 +1551,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 
     共通业务类型_收益率曲线管理(DictCode.共通业务类型,"MOD13","收益率曲线管理"),
     内部评级_C(DictCode.内部评级,"24","内部评级_C"),
+    
+    //20210922 从DictCodeList迁移过来  by yflv start
+    共通业务类型_资产要素信息维护(DictCode.共通业务类型,"MST26","资产要素信息维护"),
+	共通业务类型_资产基本信息维护(DictCode.共通业务类型,"SVR01","资产基本信息维护"),
+    项目类计提区间倒减方式_倒减科目余额(DictCode.项目类计提区间倒减方式,"01","倒减科目余额"),
+	项目类计提区间倒减方式_倒减前一日计算结果(DictCode.项目类计提区间倒减方式,"02","倒减前一日计算结果"),
+	//20210922 从DictCodeList迁移过来  by yflv end
 
 
 

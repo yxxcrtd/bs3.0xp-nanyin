@@ -27,6 +27,8 @@ import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,7 @@ public class ProductAssetsIncomeMethodProcessorService {
     @Autowired
     private ModLogsService modLogsService;
 
+    private Logger logger = LoggerFactory.getLogger(ProductAssetsIncomeMethodProcessorService.class);
     /**
      * 执行收益法计算过程，最终产物为资产定价数据和估值行情数据
      * 核心计算公式：FV = D0 (1 + g)/(r - g)
@@ -146,6 +149,7 @@ public class ProductAssetsIncomeMethodProcessorService {
         //deci3=变量.估值日国债收益率  +（deci2- 变量.基准日国债收益率 ）
         BigDecimal r= ArithmeticUtil.doAdd(valuationGovernmentDebtYield,ArithmeticUtil.subtract(deciRate2,baseDateGovernmentDebtYield));
 //        varDto.setYearDiscountRate(deciRate3);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：折现率："+r);
 
         /**
          * 3.估值全价、净价计算
@@ -155,13 +159,14 @@ public class ProductAssetsIncomeMethodProcessorService {
         BigDecimal deciPrice1 = ArithmeticUtil.multiply(D0, ArithmeticUtil.doAdd(BigDecimal.ONE, g)
         );
         // deciPrice1 / (变量.折现率 - 变量.股息预期股息增长率)
-        BigDecimal fullprice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
+        //变量.估值净价
+        BigDecimal netPrice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
 
         // 变量.单位应计利息 = 返回值.单位应计利息
         BigDecimal interest = getCalculate(item, plateDate).getInterest();
 
         // 变量.估值全价 = 变量.估值净价 + 变量.单位应计利息
-        BigDecimal netPrice = ArithmeticUtil.subtract(fullprice, interest);
+        BigDecimal fullprice = ArithmeticUtil.doAdd(netPrice, interest);
 
         //封装结果
         //1封装债券估值行情DTO
@@ -224,6 +229,9 @@ public class ProductAssetsIncomeMethodProcessorService {
         if(mapVList!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue())!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue()).size()>0){//数据字典.曲线代码.1231
             modYieldCurveInfoVList =(List<ModYieldCurveInfoDto>)mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());
             valuationGovernmentDebtYield = modYieldCurveInfoVList.get(modYieldCurveInfoVList.size()-1).getYield();
+        }else{
+            //取不到行情就报错，在外层报错
+            logger.error("曲线代码："+ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue()+",行情日期："+plateDate+"，无行情.");
         }
         return valuationGovernmentDebtYield;
     }

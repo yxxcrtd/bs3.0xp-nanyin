@@ -270,4 +270,14 @@ public class RskSupervisionRiskAnalyzeDto extends RskIsupPointVal {
     public void setMxCount(int mxCount) {
         this.mxCount = mxCount;
     }
+
+    private String isShow;
+
+    public String getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(String isShow) {
+        this.isShow = isShow;
+    }
 }

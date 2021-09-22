@@ -10,6 +10,76 @@
     var cluflag;
 
     /**
+     * 获取风险试算参数
+     *
+     * @returns
+     */
+    function getRiskdata() {
+        let dataList = [];
+        let portfolioIdList = $.serializeToObject('#CfetsRepoDealQuotedPrice003_submitForm').ptlAllocationList;
+        var dealAmt = $.serializeToObject('#CfetsRepoDealQuotedPrice003_submitForm').dealAmt;
+        var fpriceAmtTotal = 0;
+        if (portfolioIdList.length > 0) {
+            for (var index in portfolioIdList) {
+                var item = portfolioIdList[index];
+                var obj = getBaseRiskdata();
+                obj.portfolioCode = item.portfolioId;
+                obj.portfolioId = item.portfolioId;
+                obj.entrustId = item.entrustId;
+                obj.fpriceAmt = item.fpriceAmt;
+                dataList.push(obj);
+                if(obj.fpriceAmt){
+                    fpriceAmtTotal = Number(fpriceAmtTotal) + Number(obj.fpriceAmt);
+                }
+            }
+        }else{
+            let obj = getBaseRiskdata();
+            obj.portfolioCode="";
+            dataList.push(obj);
+        }
+        if(fpriceAmtTotal != dealAmt){
+            Joyin.error('报价交易金额和各指令分配后交易金额相等');
+            return;
+        }
+        var object = {
+            valDate:['settleDate','TrdPlanRateInvestTrade003.settleDate'],
+            portfolioCode:['portfolioId','CfetsRepoDealQuotedPrice002.portfolioId'],
+            tradeAmount:['fpriceAmt','CfetsBondDealQuotedPrice002.dealAmt'],
+            tradeDirection:['ps','CfetsRepoDealQuotedPrice002.ps'],
+            counterId:['counterId', 'CfetsRepoDealQuotedPrice002.counterId'],
+            data:dataList
+        }
+        object.price = ['price', 'CfetsBondDealQuotedPriceSingle.unitCprice'];
+        object.ccy = ['ccy', '币种'];
+        return object;
+    }
+
+    /**
+     * 获取风险试算基本参数
+     *
+     * @returns
+     */
+    function getBaseRiskdata() {
+        var obj = {
+            timePoint:MY_SUP_TIME_TYPE_02,
+            valDate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
+            mdate:$('#CfetsRepoDealQuotedPrice002_mSettleDate').val(),
+            isEnabled:'01',
+            tradeDirection:$('#CfetsRepoDealQuotedPrice002_ps').val(),
+            counterId:$('#CfetsRepoDealQuotedPrice002_counterId').val(),
+            ccy:'CNY'
+        }
+        if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_03){
+            obj.assetType = FINPROD_TYPE_TG_F02;
+        }else if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_04){
+            obj.assetType = FINPROD_TYPE_TG_F03;
+        }else{
+            obj.assetType = null;
+        }
+        return obj;
+    }
+
+    /**
      * 组合分配
      */
     var dzhTable = $("#CfetsRepoDealQuotedPrice003_dzh_table").joyintable({
@@ -532,7 +602,6 @@
      * 设置添加质押券共通参数
      */
     var setBussRepoSecInput = function () {
-        debugger;
         //组合分配列表
         var portfolioId = "";
         var ptlAllocationList = dzhTable.getAllRows();
@@ -664,6 +733,41 @@
             /*添加限制*/
         }
     };
+
+    /**
+     * 多组合对话报价风险试算
+     */
+    function doRiskcal() {
+        var object = $.serializeToObject("#CfetsRepoDealQuotedPrice003_submitForm")
+        if (object) {
+            var checkParam = getRiskdata();
+            if(!checkParam || !checkParam.data){
+                return null;
+            }
+            var riskInterfUrl = basePath + "riskrds/interf/batchRiskTrialRds/1/F07";
+            if (checkParam && riskInterfUrl) {
+                window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, checkParam.data, checkParam, riskMathRedisCallbackMuti003);
+            }
+        }
+    }
+
+    /**
+     * 多组合对话报价风险试算回调
+     */
+    function riskMathRedisCallbackMuti003(object, paraCluflag) {
+        CfetsRepoDealQuotedPr003.riskResultdata = object;
+        CfetsRepoDealQuotedPr003.cluflag = paraCluflag;
+
+        var paramObj = {};
+        if (object) {
+            paramObj.riskResultdata = JSON.stringify(object);
+        }
+        paramObj.cluflag = paraCluflag;
+        Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
+    }
+
+
+
     /**
      * 对外公开的接口
      */
@@ -747,7 +851,7 @@
         /**
          * 对话按钮点击事件
          */
-        $('#cfetsRepoDealQuotedPre002_duihua').click(function () {
+        $('#cfetsRepoDealQuotedPre003_duihua').click(function () {
             /*接收001页面的传值*/
             duihuaFlag = true;
             qingqiuFlag = false;
@@ -785,8 +889,8 @@
         /**
          * 风险试算
          */
-        $('#CfetsRepoDealQuotedPrice002_btn_riskcal').click(function () {
-            /*doRiskcal();*/
+        $('#CfetsRepoDealQuotedPrice003_btn_riskcal').click(function () {
+            doRiskcal();
         });
 
         /**
@@ -1097,6 +1201,16 @@
      * 提交
      */
     var submitAction = function () {
+        var s;
+        if (BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck("submit");
+            if (!s && s != "") {
+                return;
+            }
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskdata())) {
+                return;
+            }
+        }
         var object = $.serializeToObject('#CfetsRepoDealQuotedPrice003_submitForm');
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
@@ -1645,7 +1759,6 @@
             }
             // 设置添加质押券共通参数
             setBussRepoSecInput();
-            debugger;
             if(distributionInit != null && distributionInit != ''){
                 $('#distribution').attr('disabled', true).textSelect('setValue', distributionInit);
             }

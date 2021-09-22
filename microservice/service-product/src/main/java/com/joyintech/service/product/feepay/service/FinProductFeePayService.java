@@ -112,6 +112,8 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
     {
         map.put("pendingStatus", DictCodeListExt1.有效状态_待处理.getValue());
         map.put("effectStatus", DictCodeListExt1.有效状态_有效.getValue());
+        map.put("revokeStatus", DictCodeListExt1.有效状态_撤销.getValue());
+        map.put("processStatus", DictCodeListExt1.有效状态_流程中.getValue());
         map.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
         map.put("cashType1", DictCodeListExt1.现金流一级类型_费用.getValue());
         map.put("chargeType02", DictCodeList.收费类型_不规则费用.getValue());
@@ -128,6 +130,7 @@ public class FinProductFeePayService extends BaseService<FinProductFeePayDto> {
         map.put("profitType", DictCodeList.收益类型_收益型.getValue());
         map.put("platDate", iPlatformDate.getSysDate());
         map.put("noFlag", DictCodeList.是否_否.getValue());
+        map.put("yesFlag", DictCodeList.是否_是.getValue());
         // map.put("feeTypeTax", DictCodeList.费用品种类型_增值附加税费.getValue());
         map.put("feeType04", DictCodeList.费用品种类型_浮动差额中收.getValue());
         map.put("feeType_settle", DictCodeList.费用品种类型_结算服务费.getValue());

@@ -10,28 +10,16 @@
 
 package com.joyintech.tams.invest.risk.assetinfodetail.controller;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
-import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -40,10 +28,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.ExportUtil;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
+import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 
 /**
  * 资产要素登记
@@ -183,7 +187,7 @@ public class AssetInfoDetailRisk001Controller extends BaseController {
 		params.setPageId("AssetInfoDetailRisk002");
 		params.setElementId(dto.getElementId());
 		params.setBusinessCode(item -> item.getAssetCode());
-		params.setBusinessType(DictCodeList.共通业务类型_资产要素信息维护.getValue());
+		params.setBusinessType(DictCodeListExt3.共通业务类型_资产要素信息维护.getValue());
 		processParameter.setWorkFlowParameter(params);
 		String msg = assetInfoDetailRisk001Service.start(processParameter,
 				dto.getSelectedItem().toArray(new AssetInfoDetailRisk001Dto[dto.getSelectedItem().size()]));

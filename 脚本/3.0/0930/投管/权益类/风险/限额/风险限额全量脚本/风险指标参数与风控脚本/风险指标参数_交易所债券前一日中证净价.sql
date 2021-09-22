@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='JYSZQQYIZZJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JYSZQQYIZZJJ','交易所债券前一日中证净价','N','','wp','C001',sysdate,'wp',sysdate,'','','N','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JYSZQQYIZZJJ','交易所债券前一日中证净价','N','','lv','sun111',sysdate,'lv',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='JYSZQQYIZZJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','lv','sun111',sysdate,'lv',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','lv','sun111',sysdate,'lv',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','lv','sun111',sysdate,'lv',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','lv','sun111',sysdate,'lv',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','lv','sun111',sysdate,'lv',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -25,7 +25,7 @@ FROM
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
  inner join FIN_PRODUCT_TYPE t3
  on t2.FINPROD_ID = t3.FINPROD_ID
- WHERE  t1.VALUE_DATE<=DATE''${valDate}''
+ WHERE  t1.VALUE_DATE<=DATE''${valDate}''-1
  AND t1.VALUE_SOURCE = ''CSD''
  AND t3.TYPE_6 not in (''B17'',''B14'',''B15'')
  AND t2.TRADE_MARKET in (''03'',''04'')
@@ -41,7 +41,7 @@ FROM
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
  inner join FIN_PRODUCT_TYPE t3
  on t2.FINPROD_ID = t3.FINPROD_ID
- WHERE  t1.VALUE_DATE<=DATE''${valDate}''
+ WHERE  t1.VALUE_DATE<=DATE''${valDate}''-1
  AND t1.VALUE_SOURCE = ''CSD''
  AND t3.TYPE_6 not in (''B17'',''B14'',''B15'')
  AND t2.TRADE_MARKET in (''03'',''04'')
@@ -57,7 +57,7 @@ FROM
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
  inner join FIN_PRODUCT_TYPE t3
  on t2.FINPROD_ID = t3.FINPROD_ID
- WHERE  t1.VALUE_DATE<=DATE''${valDate}''
+ WHERE  t1.VALUE_DATE<=DATE''${valDate}''-1
  AND t1.VALUE_SOURCE = ''CSD''
  AND t3.TYPE_6 not in (''B17'',''B14'',''B15'')
  AND t2.TRADE_MARKET in (''03'',''04'')

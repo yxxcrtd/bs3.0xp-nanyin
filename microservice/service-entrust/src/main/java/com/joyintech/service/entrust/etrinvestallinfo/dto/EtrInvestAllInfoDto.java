@@ -68,10 +68,16 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	 * PB是否已导出
 	 */
 	private String pbExportstatus;
+
     /**
      * 证券账户名称
      */
     private String secAcctName;
+
+	/**
+	 * 指令创建来源
+	 */
+	private String entrustCreateSource;
 
 	/**
 	 * 获取 settleSpreed
@@ -251,5 +257,24 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
     public void setSecAcctName(String secAcctName) {
         this.secAcctName = secAcctName;
     }
-	
+
+	/**
+	 * 取得 指令创建来源
+	 * @return 指令创建来源
+	 */
+	public String getEntrustCreateSource() {
+		return entrustCreateSource;
+	}
+
+	/**
+	 * 设置 指令创建来源
+	 * 01：场内簿记
+	 * 02：场内实时
+	 * 03：银行间簿记
+	 * 04：银行间实时
+	 * @param entrustCreateSource 指令创建来源
+	 */
+	public void setEntrustCreateSource(String entrustCreateSource) {
+		this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
+	}
 }

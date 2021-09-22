@@ -245,7 +245,8 @@
         </if>
         <where>
             T5.TRADER = #{user}
-            AND T1.ENTRUST_STATUS = #{entrustStatus} 
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+            AND (T2.ENTRUST_CREATE_SOURCE is null or T2.ENTRUST_CREATE_SOURCE != '01')
             <if test="assetType == PINAN_ASSET_TYPE_F01 and (ps == '' or ps == null)">
                 AND (T1.PS = #{PS_T01} OR T1.PS = #{PS_T02} OR T1.PS = #{PS_T03})
             </if>
@@ -472,7 +473,8 @@
 		<!-- wangyang1 07-16-20 二级法人改造 end -->
         <where>
             T5.TRADER = #{user}
-            AND T1.ENTRUST_STATUS = #{entrustStatus} 
+            AND T1.ENTRUST_STATUS = #{entrustStatus}
+            AND (T2.ENTRUST_CREATE_SOURCE is null or T2.ENTRUST_CREATE_SOURCE != '01')
             <if test="assetType != 'Con1' and assetType != 'Con2' ">
                 AND T2.ASSET_TYPE = #{assetType} 
             </if>

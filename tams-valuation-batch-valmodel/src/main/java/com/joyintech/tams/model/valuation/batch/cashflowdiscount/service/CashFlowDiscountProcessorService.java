@@ -102,7 +102,7 @@ public class CashFlowDiscountProcessorService {
         Date happenDate = (Date) param1.get(ValComponentConstant.EXECUTE_DATE); // 发生日：批处理任务执行信息.处理日（发生日）
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param1.get(ValComponentConstant.BATCH_EXECUTEINFO);
         //处理业务数据
-        //是否资产定价
+        //资产是否需要重新定价
         boolean isAssetPrice = false;
         //资产定价基准日
         Date assetPriceBaseDate = happenDate;
@@ -166,7 +166,8 @@ public class CashFlowDiscountProcessorService {
                 //曲线行情处理
                 calCurveInfo = handleCurve(entity, assetPriceBaseDate);
                 if (calCurveInfo.isEmpty()) {
-                    modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：当天无收益率曲线行情.");
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：当天无收益率曲线行情.");
+                    return result;
                 }
                 //处理风险溢价
                 modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo);
@@ -302,12 +303,16 @@ public class CashFlowDiscountProcessorService {
                 ModYeildCurveParamsDto modYeildCurveParamsDto = new ModYeildCurveParamsDto();
                 modYeildCurveParamsDto.setYeildIdList(entity.getCurveCodes());
                 modYeildCurveParamsDto.setStartDate(smoothStartDate);
-                modYeildCurveParamsDto.setSearchDate(calDate);
+                modYeildCurveParamsDto.setEndDate(calDate);
                 Map<String, Map<Date, List<ModYieldCurveInfoDto>>> yeildCurveIntervalinfo = modValuationCommonService.getYeildCurveIntervalinfo(modYeildCurveParamsDto);
-                for (String item : entity.getCurveCodes()) {
-                    Map<Date, List<ModYieldCurveInfoDto>> dateListMap = yeildCurveIntervalinfo.get(item);
-                    List<ModYieldCurveInfoDto> curveSmoothDtos = this.calCurveSmooth(dateListMap, calDate);
-                    calCurveInfo.put(item, curveSmoothDtos);
+                if(yeildCurveIntervalinfo==null || yeildCurveIntervalinfo.isEmpty()){
+                    return calCurveInfo;
+                }else{
+                    for (String item : entity.getCurveCodes()) {
+                        Map<Date, List<ModYieldCurveInfoDto>> dateListMap = yeildCurveIntervalinfo.get(item);
+                        List<ModYieldCurveInfoDto> curveSmoothDtos = this.calCurveSmooth(dateListMap, calDate);
+                        calCurveInfo.put(item, curveSmoothDtos);
+                    }
                 }
             } else {
                 ModYeildCurveParamsDto modYeildCurveParamsDto = new ModYeildCurveParamsDto();

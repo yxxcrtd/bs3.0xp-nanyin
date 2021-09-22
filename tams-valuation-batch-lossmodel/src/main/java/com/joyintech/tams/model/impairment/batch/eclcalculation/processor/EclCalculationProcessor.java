@@ -1,8 +1,12 @@
 package com.joyintech.tams.model.impairment.batch.eclcalculation.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
+import com.joyintech.tams.model.impairment.batch.eclcalculation.service.BMWEclCalculationProcessorService;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.service.EclCalculationProcessorService;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
@@ -18,6 +22,12 @@ public class EclCalculationProcessor extends BaseProcessor<EclCalculationReaderD
     @Autowired
     private EclCalculationProcessorService eclCalculationProcessorService;
 
+    /**
+     *  逾期资产结转批处理Service
+     */
+    @Autowired
+    private BMWEclCalculationProcessorService bMWEclCalculationProcessorService;
+
     private StepExecution stepExecution;
 
     /**
@@ -28,7 +38,14 @@ public class EclCalculationProcessor extends BaseProcessor<EclCalculationReaderD
      */
     @Override
     public EclCalculationResultDto process(EclCalculationReaderDto item) throws Exception {
-        return eclCalculationProcessorService.excute(item,getParams(), stepExecution);
+        // 减值方案系统参数
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+            return eclCalculationProcessorService.excute(item,getParams(), stepExecution);
+        }
+        else{
+            return bMWEclCalculationProcessorService.excute(item,getParams(), stepExecution);
+        }
     }
 
 
