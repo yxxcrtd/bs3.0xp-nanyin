@@ -149,6 +149,7 @@ public class ProductAssetsIncomeMethodProcessorService {
         //deci3=变量.估值日国债收益率  +（deci2- 变量.基准日国债收益率 ）
         BigDecimal r= ArithmeticUtil.doAdd(valuationGovernmentDebtYield,ArithmeticUtil.subtract(deciRate2,baseDateGovernmentDebtYield));
 //        varDto.setYearDiscountRate(deciRate3);
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【收益法模型批处理】：折现率："+r);
 
         /**
          * 3.估值全价、净价计算
@@ -158,13 +159,14 @@ public class ProductAssetsIncomeMethodProcessorService {
         BigDecimal deciPrice1 = ArithmeticUtil.multiply(D0, ArithmeticUtil.doAdd(BigDecimal.ONE, g)
         );
         // deciPrice1 / (变量.折现率 - 变量.股息预期股息增长率)
-        BigDecimal fullprice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
+        //变量.估值净价
+        BigDecimal netPrice = ArithmeticUtil.divide(deciPrice1, ArithmeticUtil.subtract(r, g), 14);
 
         // 变量.单位应计利息 = 返回值.单位应计利息
         BigDecimal interest = getCalculate(item, plateDate).getInterest();
 
         // 变量.估值全价 = 变量.估值净价 + 变量.单位应计利息
-        BigDecimal netPrice = ArithmeticUtil.subtract(fullprice, interest);
+        BigDecimal fullprice = ArithmeticUtil.doAdd(netPrice, interest);
 
         //封装结果
         //1封装债券估值行情DTO
