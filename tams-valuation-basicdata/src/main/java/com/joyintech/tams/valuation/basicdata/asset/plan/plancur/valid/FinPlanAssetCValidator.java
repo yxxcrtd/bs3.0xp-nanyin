@@ -66,7 +66,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
                         errorList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0022")));
                     }*/
                     if(commonBusinessService.isTransInAsset(e.getFinprodId()) != 0 && !StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), e.getDataSource())){
-                        if(StringUtil.equals(DictCodeList.是否_是.getValue(), e.getBatchDelFlag())) {
+                        if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
                             errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_005", e.getFinprodId())));
                             //break;
                         }
@@ -87,7 +87,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
                             }
                             continue;
                         }
-                        if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), e.getDataSource())) {
+                        /*if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), e.getDataSource())) {
                             if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
                                 errorList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_001", e.getFinprodId())));
                                 //break;
@@ -97,7 +97,7 @@ public class FinPlanAssetCValidator implements BeanValidator {
                                 //break;
                             }
                             continue;
-                        }
+                        }*/
                     }
                 }
             }
