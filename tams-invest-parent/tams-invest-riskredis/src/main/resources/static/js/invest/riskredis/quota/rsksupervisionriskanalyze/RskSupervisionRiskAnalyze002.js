@@ -48,8 +48,10 @@ var rsk = function() {
                 }
             }
             , {field: 'operation',title: 'SysCommon.operation', type: 'action',render:function(d, type, row, meta){
-	                return  '<a onclick="showSecValuation(\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
-					+ '\''+',\''+new Date(row.supDate).format('yyyy-MM-dd')+'\')"  style="cursor: pointer;cursor: pointer;display: block;width: 70px;background: #2693ff; color: #fff;border-radius: 2px;"><span >持仓明细</span></a>';
+                  if (row.isShow=='Y'){
+                    return  '<a onclick="showSecValuation(\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
+                    + '\''+',\''+new Date(row.supDate).format('yyyy-MM-dd')+'\')"  style="cursor: pointer;cursor: pointer;display: block;width: 70px;background: #2693ff; color: #fff;border-radius: 2px;"><span >持仓明细</span></a>';
+                  }
                }
             }]
     });
