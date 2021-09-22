@@ -136,8 +136,8 @@
             </form>
             <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="margin:50px;">
                 <div class="text-center">
-                   <!-- <a id="EtrAutoManagementAccount002_btn_riskcal" class="layui-btn layui-btn-sm" data-th-text="#{EtrInvestBondInfo002.riskcal}">风险试算</a>
-                    <a id="EtrAutoManagementAccount002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>-->
+                    <a id="EtrAutoManagementAccount002_btn_riskcal" class="layui-btn layui-btn-sm" data-th-text="#{EtrInvestBondInfo002.riskcal}">风险试算</a>
+                    <a id="EtrAutoManagementAccount002_btn_save" class="layui-btn layui-btn-sm btn-save" data-th-text="#{SysCommon.save}">保存</a>
                     <a id="EtrAutoManagementAccount002_btn_submit" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{SysCommon.submit}">提交</a>
                     <a id="EtrAutoManagementAccount002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
                 </div>
@@ -154,7 +154,7 @@
             var sysDate = /*[[${sysDate}]]*/'';
             var entrustId=/*[[${entity?.entrustId}]]*/'';
             var workflowId=/*[[${entity?.workflowId}]]*/'';
-
+            var operateType=/*[[${entity?.operateType}]]*/'';
         </script>
         <script data-th-src="@{/js/component/common/util.js}" type="text/javascript"></script>
         <script data-th-src="@{/js/component/common/TradeCommon.js}" type="text/javascript"></script>

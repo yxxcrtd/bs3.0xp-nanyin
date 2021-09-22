@@ -88,6 +88,7 @@ public class TrdBondDuration001Controller extends BaseController {
             model.addAttribute("quaryDate", DateUtil.addDay(dDate,0)+" - "+DateUtil.addDay(mdate,0));
             model.addAttribute("statusValid", "01,03");
         }
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         return super.init(model);
     }
 
