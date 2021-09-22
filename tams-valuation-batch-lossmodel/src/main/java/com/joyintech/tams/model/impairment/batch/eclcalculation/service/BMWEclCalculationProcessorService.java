@@ -9,14 +9,12 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.TrdAssetLoss;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationReaderDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.EclCalculationResultDto;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.FinDealPledgeDTO;
-import com.joyintech.tams.common.base.entity.ModConfigUseage;
-import com.joyintech.tams.common.base.entity.ModEclResult;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.ModLgdConfigDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.valuation.common.batch.batchTasks.CommonErrorParams;
@@ -26,9 +24,9 @@ import com.joyintech.tams.valuation.common.batch.finproduct.service.AccountingCo
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
-import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.service.CalCommonService;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -132,7 +130,7 @@ public class BMWEclCalculationProcessorService {
             errors = new ArrayList<CommonErrorParams>();
         }
         //模型计算LGD
-        caclLGD(entityDto, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
+        caclLGD(entity, entityDto, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
 
         // 计算ECL
         // 查询成本科目性质
@@ -145,6 +143,13 @@ public class BMWEclCalculationProcessorService {
         ModEclResult modEclResult = new ModEclResult();
         // 定义 变量.数据来源 = 模型
         String dataSource = DictCodeListExt3.减值数据来源_模型.getValue();
+
+        String ECL比例结果保留小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT")) ? "6" : CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT");
+        String ECL比例结果保留小数位尾数处理方式 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT_TYPE")) ? DictCodeList.估值舍入规则_四舍五入.getValue() : CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT_TYPE");
         try {
             // 计算ECL
             // 依据资产减值管理界面资产数据来源字段区分，手工、模型、wind、中债
@@ -156,6 +161,7 @@ public class BMWEclCalculationProcessorService {
             // 查询按照录入方式升序排序,优先取手工数据，其次取导入数据，故只需取第一条即可
             List<TrdAssetLoss> listTrdAssetLoss = eclCalculationMapper.queryEclManage(
                     searchPara);
+            BigDecimal eclRatio = BigDecimal.ZERO;
             if(!CollectionUtils.isEmpty(listTrdAssetLoss)){
                 // 将查询结果按数据来源分组：手工、wind、中债
                 Map<String, List<TrdAssetLoss>> lossMap = listTrdAssetLoss.stream().collect(Collectors.groupingBy(TrdAssetLoss::getLossInputType));
@@ -177,19 +183,18 @@ public class BMWEclCalculationProcessorService {
                 }
 
                 // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
-                BigDecimal eclRatio = accountingCommonBatchService.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
+                eclRatio = accountingCommonBatchService.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
                         booksetId, bokDetailId, platDate,
                         platDate, subjectNatureList);
-                // 存入减值结果过程表ECL损失比例  四舍五入保留4位小数
-                entityDto.setEclRatio(ArithmeticUtil.round(eclRatio, 4, RoundingMode.HALF_UP));
             }
             // 无手工录入、wind、中债导入，采用模型LGD计算
             else {
                 //交易信息.ECL预期信用损失比例 = 交易信息.前瞻后PD违约概率% * 交易信息.LGD  四舍五入保留4位小数
-                entityDto.setEclRatio(
-                        ArithmeticUtil.multiply(4, RoundingMode.HALF_UP,
-                                entityDto.getProspectivePd(),entityDto.getLgd()));
+                eclRatio =ArithmeticUtil.multiply(entityDto.getProspectivePd(),entityDto.getLgd());
             }
+            // 系统参数控制ECL比例保留小数位数以及尾数处理方式
+            eclRatio = calCommonService.round(eclRatio, ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
+            entityDto.setEclRatio(eclRatio);
             //3.3 封装结果集
             quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
                     dataSource);
@@ -262,18 +267,29 @@ public class BMWEclCalculationProcessorService {
      * @param stepExecution
      * @param modConfigUseage
      */
-    public void caclLGD(ModEclResultProcess entityDto, Map<String, Object> params,
+    public void caclLGD(EclCalculationReaderDto entity, ModEclResultProcess entityDto, Map<String, Object> params,
                         SysBatchExecInfo batchExecuteInfo, List<CommonErrorParams> errors,
                         StepExecution stepExecution, List<ModConfigUseage> modConfigUseageList) {
         // 债券类、存款类、回购类资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> otherLgdConfigMap = CacheUtil.getAppCache(
-                GlobalConstant.OTHER_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> otherLgdConfigMap = entity.getOtherLgdConfigMap();
         // 其他债权类资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> deltRightLgdConfigMap = CacheUtil.getAppCache(
-                GlobalConstant.DELT_RIGHT_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> deltRightLgdConfigMap = entity.getDeltRightLgdConfigMap();
         // 特殊资产LGD违约损失率配置
-        Map<String, ModLgdConfigDto> specialLgdConfigMap = CacheUtil.getAppCache(
-                GlobalConstant.SPECIAL_LGD_CONFIG, Map.class);
+        Map<String, ModLgdConfigDto> specialLgdConfigMap = entity.getSpecialLgdConfigMap();
+
+        // LGD配置信息判空
+        if(CollectionUtils.isEmpty(specialLgdConfigMap)){
+            if (DictCodeListExt1.证券品种_其他债权类.getValue().equals(entityDto.getModelAssetType()) && CollectionUtils.isEmpty(specialLgdConfigMap)) {
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entityDto.getAssetId(), "资产无对应LGD配置信息");
+                return;
+            }
+            else if(CollectionUtils.isEmpty(otherLgdConfigMap)){
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entityDto.getAssetId(), "资产无对应LGD配置信息");
+                return;
+            }
+        }
+
+        // LGD小数位以及尾数处理方式取值
         String LGD违约损失小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
                 "SYS_PARA_LGD_DECIMAL_DIGIT")) ? "6" : CacheUtil.getSysParam(
                 "SYS_PARA_LGD_DECIMAL_DIGIT");
@@ -314,7 +330,7 @@ public class BMWEclCalculationProcessorService {
                 for (FinDealPledgeDTO item : finDealPledgeDTOList) {
                     configDto = null;
                     // 优先取质押券对应特殊资产LGD配置
-                    if (specialLgdConfigMap.get(item.getPledgeFinprodId()) != null) {
+                    if (specialLgdConfigMap != null && specialLgdConfigMap.get(item.getPledgeFinprodId()) != null) {
                         configDto = specialLgdConfigMap.get(item.getPledgeFinprodId());
                     } else {
                         // 债券类、存款类、回购类资产LGD违约损失率配置 中 取质押券：资产类型+资产细分类的LGD值
@@ -327,14 +343,14 @@ public class BMWEclCalculationProcessorService {
                         configDtoList.add(configDto);
                     }
                 }
-                // 进行位数保留和尾数处理（取决于系统参数）
-                lgdRate = calCommonService.round(lgdRate, LGD违约损失小数尾数处理方式, LGD违约损失小数位);
             }
-            // 1.2 当没有多笔质押券时，直接取界面维护值LGD
+            // 1.2 当没有多笔质押券时，直接取界面对应质押券的LGD维护值
             else {
                 // 优先取特殊资产配置
-                if (specialLgdConfigMap.get(entityDto.getAssetId()) != null) {
-                    configDto = specialLgdConfigMap.get(entityDto.getAssetId());
+                String assetId = finDealPledgeDTOList.get(0).getPledgeFinprodId();
+                // 取界面对应质押券的LGD维护值
+                if (specialLgdConfigMap != null && specialLgdConfigMap.get(assetId) != null) {
+                    configDto = specialLgdConfigMap.get(assetId);
                 } else {
                     // 债券类、存款类、回购类资产LGD违约损失率配置中取值：资产类型 + 质押券对应债券类型
                     configDto = otherLgdConfigMap.get(entityDto.getModelAssetType() + GlobalConstant.UNDER_LINE + finDealPledgeDTOList.get(0).getSecDetailType());
@@ -347,7 +363,7 @@ public class BMWEclCalculationProcessorService {
             }
         }
         // 优先特殊资产LGD配置取值：key--资产代码
-        else if (specialLgdConfigMap.get(entityDto.getAssetId()) != null) {
+        else if (specialLgdConfigMap != null && specialLgdConfigMap.get(entityDto.getAssetId()) != null) {
             configDto = specialLgdConfigMap.get(entityDto.getAssetId());
             lgdRate = configDto.getLgd();
             configDtoList.add(configDto);
@@ -372,11 +388,12 @@ public class BMWEclCalculationProcessorService {
         // 三阶段取(LGD+100%)÷2，LGD取界面维护值
         if (ModelDictCodeList.阶段_买入后出现减值_P3.getValue().equals(entityDto.getFinStage())) {
             lgdRate = ArithmeticUtil.divide(ArithmeticUtil.doAdd(BigDecimal.ONE, lgdRate), 2);
-            // 进行位数保留和尾数处理（取决于系统参数）
-            lgdRate = calCommonService.round(lgdRate, LGD违约损失小数尾数处理方式, LGD违约损失小数位);
+
         }
         // 模型计算LGD值
         if (!CollectionUtils.isEmpty(configDtoList)) {
+            // 进行位数保留和尾数处理（取决于系统参数）
+            lgdRate = calCommonService.round(lgdRate, LGD违约损失小数尾数处理方式, LGD违约损失小数位);
             //交易信息.LGD = LGD参数Dto.LGD
             entityDto.setLgd(lgdRate);
             // 循环遍历配置使用情况List，当回购存在多笔质押券时，会有多条数据，否则都是一条数据

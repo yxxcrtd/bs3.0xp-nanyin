@@ -200,7 +200,7 @@ where
 		FROM BOK_DETAIL_ID T
 		WHERE
 			T.BOOKSET_ID = #{booksetId}
-			AND T.BUSI_ID = #{busiId}
+			AND T.BUSI_ID = #{finprodId}
 		  	<if test="invAim != null and invAim != ''">
 				AND T.INV_AIM = #{invAim}
 		  	</if>

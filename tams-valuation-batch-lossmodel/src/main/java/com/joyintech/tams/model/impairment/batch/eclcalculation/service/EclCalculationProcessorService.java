@@ -4,7 +4,9 @@ import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.IDGenerator;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.ModConfigUseage;
@@ -21,6 +23,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCo
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.service.CalCommonService;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +53,9 @@ public class EclCalculationProcessorService {
 
     @Autowired
     private FinProductCommonBatchService finProductCommonBatchService;
+
+    @Autowired
+    private CalCommonService calCommonService;
 
     /**
      * 减值模型数据加载-processor
@@ -328,10 +334,17 @@ public class EclCalculationProcessorService {
                             + processEntity.getModelAssetDetailType());
         }
 
+        String LGD违约损失小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_LGD_DECIMAL_DIGIT")) ? "6" : CacheUtil.getSysParam(
+                "SYS_PARA_LGD_DECIMAL_DIGIT");
+        String LGD违约损失小数尾数处理方式 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_LGD_DIGIT_TYPE")) ? DictCodeList.估值舍入规则_四舍五入.getValue() : CacheUtil.getSysParam(
+                "SYS_PARA_LGD_DIGIT_TYPE");
+
         // 模型计算LGD值
         if (configDto != null) {
             //交易信息.LGD = LGD参数Dto.LGD
-            processEntity.setLgd(configDto.getLgd());
+            processEntity.setLgd(calCommonService.round(configDto.getLgd(), LGD违约损失小数尾数处理方式, LGD违约损失小数位));
             //定义 配置流水号 = LGD参数Dto.流水号
             String seqno = configDto.getSeqno();
             //定义 配置类型 = LGD参数Dto.配置类型
