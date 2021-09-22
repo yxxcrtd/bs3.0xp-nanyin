@@ -1241,6 +1241,13 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     共通业务类型_关联方管理(DictCode.共通业务类型,"RSK49","关联方管理"),
     // add by zhangrui1 end
 
+    // add by wanshiwei 20210922：指令创建来源 start
+    指令创建来源_场内簿记(DictCode.指令创建来源, "01", "场内簿记"),
+    指令创建来源_场内实时(DictCode.指令创建来源, "02", "场内实时"),
+    指令创建来源_银行间簿记(DictCode.指令创建来源, "03", "银行间簿记"),
+    指令创建来源_银行间实时(DictCode.指令创建来源, "04", "银行间实时"),
+    // add by wanshiwei 20210922：指令创建来源 end
+
     交易单位_张(DictCode.交易单位,"01","张"),
     交易单位_份(DictCode.交易单位,"02","份"),
     交易单位_股(DictCode.交易单位,"03","股"),
