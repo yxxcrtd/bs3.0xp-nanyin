@@ -10,27 +10,11 @@
 
 package com.joyintech.tams.invest.risk.assetinfodetail.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.select.SelectDto;
-import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.*;
-import com.joyintech.framework.validation.groups.ValidateGroupEdit;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
-import com.joyintech.tams.invest.risk.assetinfodetail.dto.asset.SvrBussRepEquityInfoRiskDto;
-import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
-import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +22,31 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.select.SelectDto;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.risk.assetinfodetail.dto.AssetInfoDetailRisk001Dto;
+import com.joyintech.tams.invest.risk.assetinfodetail.service.AssetInfoDetailRisk001Service;
+import com.joyintech.tams.systemtools.util.CommonUtil;
+import com.joyintech.workflow.engine.dto.ProcessParameter;
+import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
+import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 /**
  * 〈一句话功能简述〉
@@ -139,7 +142,7 @@ public class AssetInfoDetailRisk002Controller extends BaseController {
         params.setPageId("AssetInfoDetailRisk002");
         params.setElementId(dto.getElementId());
         params.setBusinessCode(dto.getAssetCode());
-        params.setBusinessType(DictCodeList.共通业务类型_资产要素信息维护.getValue());
+        params.setBusinessType(DictCodeListExt3.共通业务类型_资产要素信息维护.getValue());
         processParameter.setWorkFlowParameter(params);
         String msg = assetInfoDetailRisk001Service.start(processParameter, dto);
         return new AjaxResult(msg);
