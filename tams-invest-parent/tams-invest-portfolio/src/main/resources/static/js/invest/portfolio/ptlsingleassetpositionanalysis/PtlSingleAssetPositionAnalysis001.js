@@ -45,7 +45,7 @@ $(function () {
          // add by chenjiaxing [重庆银行] 增加资产占比，产品募集方式 2021年9月9日 start
          ,{field:'assetRatio', title: '资产占比%',type: 'number',digit:2,minWidth:100, width:'20%',}//资产占比%
             // add by chenjiaxing [重庆银行] 增加资产占比，产品募集方式 2021年9月9日 end
-         ,{field:'ptlIssueTypeStr',minWidth:100, width:'20%', title: '产品募集方式'}//产品募集方式
+         ,{field:'ptlIssueTypeStr',minWidth:100, width:'20%', title: '组合募集方式'}//产品募集方式
          // add by swwan [重庆银行] 增加资产占比，产品募集方式 2021年7月26日 end
          ]
     });
