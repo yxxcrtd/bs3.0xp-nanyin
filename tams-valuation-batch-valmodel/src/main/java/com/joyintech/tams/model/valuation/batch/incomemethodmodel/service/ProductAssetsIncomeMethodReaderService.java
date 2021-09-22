@@ -101,6 +101,7 @@ public class ProductAssetsIncomeMethodReaderService {
                 ModStockdivitrateConfig config = new ModStockdivitrateConfig();
                 config.setFinprodId(methodReaderDto.getFinprodId());
                 config.setStockIntrate(BigDecimal.ZERO);
+                productAssetsIncomeMethodReaderDto.setModStockdivitrateConfig(config);
                 modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),methodReaderDto.getFinprodId(), "【收益法模型批处理】：资产未配置预期股息增长率，默认使用0作为增长率计算.");
             }
 
