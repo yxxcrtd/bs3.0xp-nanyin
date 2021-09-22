@@ -27,7 +27,7 @@ var TrdBondDuration003 = function () {
             , {field: 'cPriceAmt', width: "200", title: '净价总额', type: 'money', sortable: false}
             , {field: 'intAmtTheory', width: "200", title: '理论应计利息', type: 'money', sortable: false}
             , {field: 'intAmtReal', width: "200", title: '实收利息总额', type: 'money', edit:true, sortable: false}
-            , {field: 'channelFee', width: "100", title: '通道费', type: 'money', sortable: false}
+            , {field: 'channelFee', width: "100", title: '通道费', visible:ISChongQing == 'Y'?false:true, type: 'money', sortable: false}
             , {field: 'settleAmt', width: "200", title: '到账金额', type: 'money', sortable: false}
         ],
         done: function () {
