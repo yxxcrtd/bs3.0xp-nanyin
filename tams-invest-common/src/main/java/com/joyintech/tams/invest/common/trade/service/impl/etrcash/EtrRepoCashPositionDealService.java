@@ -661,65 +661,68 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
             for (PledgeBondInfoDto pledgeBond : bussRepoSecDto.getPledgeBondList()) {
                 // 待分配投资目的的质押券面总额
                 BigDecimal pledgePrin = pledgeBond.getPledgePrin();
-                for (PledgeBondInfoDto avaBond : avaMap.get(pledgeBond.getBondCode())) {
-                    etrSecPositionFlowDto = new EtrSecPositionFlowDto();
-                    // 当前投资目的可分配券面总额
-                    BigDecimal avaPrin = avaBond.getAvaPledgePrin();
-                    // 当前投资目的决定分配的券面总额
-                    BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
-
-                    etrSecPositionFlowDto.setSeqno(getSeqNo());
-                    // 组合代码 = 画面.组合代码
-                    etrSecPositionFlowDto.setPortfolioId(input.getTrdProductDealAdd().getPortfolioId());
-                    // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
-                    String secAcctId = input.getTrdProductDeal().getSecManageAcctId();
-                    if (StringUtil.isEmpty(secAcctId) && StringUtil.isEmpty(input.getTrdProductDeal().getChlId())) {
-                        secAcctId = "999999";
-                    }
-                    else if (StringUtil.isNotEmpty(input.getTrdProductDeal().getChlId())) {
-                        secAcctId = input.getTrdProductDeal().getChlId();
-                    }
-                    etrSecPositionFlowDto.setSecAcctId(secAcctId);
-                    // 金融产品代码 = 输出质押品DTO.金融产品代码
-                    etrSecPositionFlowDto.setFinprodId(pledgeBond.getFinprodId());
-                    // 分支序号 = 系统固定参数，默认为0
-                    etrSecPositionFlowDto.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
-                    // 持仓类型
-                    etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-                    // 日期 = 金融产品交易Entity.交易日
-                    etrSecPositionFlowDto.setCdate(input.getTrdProductDeal().getVdate());
-                    if(StringUtil.equals(input.getTrdProductDeal().getPs(),DictCodeList.交易方向_到期.getValue())){
-                        etrSecPositionFlowDto.setCdate(input.getTrdProductDeal().getSettleDate());
-                    }
-
-                    // 数量 = 输出质押品DTO.质押数量
-                    BigDecimal amt = BigDecimal.ZERO ;
-                    if(flag){ // 委托开始减少,委托关闭增加
-                        amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4).negate() ;
-                    }else{
-                        amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4) ;
-                    }
-                    etrSecPositionFlowDto.setAmount(amt);
-                    // 币种 = 金融产品交易Entity.币种
-                    etrSecPositionFlowDto.setCcy(input.getTrdProductDeal().getCcy());
-                    // 交易编号 = 金融产品交易Entity.交易编号
-                    etrSecPositionFlowDto.setTradeId(input.getTrdProductDeal().getTradeId());
-                    // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
-                    etrSecPositionFlowDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
-
-                    if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
-//                            if (StringUtil.isNotEmpty(input.getActPortfolioId()) && !StringUtil.equals(input.getActPortfolioId(), input.getPortfolioId())) {
-//                                PtlSecPositionFlowDto subResultDto = new PtlSecPositionFlowDto();
-//                                BeanUtil.copyPropertiesIgnoreNull(subResultDto, etrSecPositionFlowDto);
-//                                subResultDto.setPortfolioId(input.getActPortfolioId());
-//                                lstPtlSecPositionFlowDto.add(subResultDto);
-//                            }
-                        list.add(etrSecPositionFlowDto);
-                    }
-                    // 分配完毕后,停止可质押券信息（含投资目的）的循环
-                    pledgePrin = pledgePrin.subtract(prin);
-                    if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
-                        break;
+                List<PledgeBondInfoDto> pledgeBondInfoDtos = avaMap.get(pledgeBond.getBondCode());
+                if(!StringUtil.isEmptyList(pledgeBondInfoDtos)){
+                    for (PledgeBondInfoDto avaBond : pledgeBondInfoDtos) {
+                        etrSecPositionFlowDto = new EtrSecPositionFlowDto();
+                        // 当前投资目的可分配券面总额
+                        BigDecimal avaPrin = avaBond.getAvaPledgePrin();
+                        // 当前投资目的决定分配的券面总额
+                        BigDecimal prin = pledgePrin.compareTo(avaPrin) > 0 ? avaPrin : pledgePrin;
+    
+                        etrSecPositionFlowDto.setSeqno(getSeqNo());
+                        // 组合代码 = 画面.组合代码
+                        etrSecPositionFlowDto.setPortfolioId(input.getTrdProductDealAdd().getPortfolioId());
+                        // 证券管理账户/通道代码 = nvl（nvl（金融产品交易Entity.证券托管账户，金融产品交易Entity.通道代码），999999）
+                        String secAcctId = input.getTrdProductDeal().getSecManageAcctId();
+                        if (StringUtil.isEmpty(secAcctId) && StringUtil.isEmpty(input.getTrdProductDeal().getChlId())) {
+                            secAcctId = "999999";
+                        }
+                        else if (StringUtil.isNotEmpty(input.getTrdProductDeal().getChlId())) {
+                            secAcctId = input.getTrdProductDeal().getChlId();
+                        }
+                        etrSecPositionFlowDto.setSecAcctId(secAcctId);
+                        // 金融产品代码 = 输出质押品DTO.金融产品代码
+                        etrSecPositionFlowDto.setFinprodId(pledgeBond.getFinprodId());
+                        // 分支序号 = 系统固定参数，默认为0
+                        etrSecPositionFlowDto.setBranch(Long.parseLong(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
+                        // 持仓类型
+                        etrSecPositionFlowDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
+                        // 日期 = 金融产品交易Entity.交易日
+                        etrSecPositionFlowDto.setCdate(input.getTrdProductDeal().getVdate());
+                        if(StringUtil.equals(input.getTrdProductDeal().getPs(),DictCodeList.交易方向_到期.getValue())){
+                            etrSecPositionFlowDto.setCdate(input.getTrdProductDeal().getSettleDate());
+                        }
+    
+                        // 数量 = 输出质押品DTO.质押数量
+                        BigDecimal amt = BigDecimal.ZERO ;
+                        if(flag){ // 委托开始减少,委托关闭增加
+                            amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4).negate() ;
+                        }else{
+                            amt = ArithmeticUtil.divide(prin, new BigDecimal("100"), 4) ;
+                        }
+                        etrSecPositionFlowDto.setAmount(amt);
+                        // 币种 = 金融产品交易Entity.币种
+                        etrSecPositionFlowDto.setCcy(input.getTrdProductDeal().getCcy());
+                        // 交易编号 = 金融产品交易Entity.交易编号
+                        etrSecPositionFlowDto.setTradeId(input.getTrdProductDeal().getTradeId());
+                        // 投资目的 = 按“摊余成本类-公允价值变动计入其他综合收益-公允价值变动计入当期损益”的顺序依次冻结，削减对应投资目的债券可用持仓
+                        etrSecPositionFlowDto.setInvAim(StringUtil.isEmpty(avaBond.getInvAim()) ? "999999" : avaBond.getInvAim());
+    
+                        if (avaPrin.compareTo(BigDecimal.ZERO) > 0) {
+    //                            if (StringUtil.isNotEmpty(input.getActPortfolioId()) && !StringUtil.equals(input.getActPortfolioId(), input.getPortfolioId())) {
+    //                                PtlSecPositionFlowDto subResultDto = new PtlSecPositionFlowDto();
+    //                                BeanUtil.copyPropertiesIgnoreNull(subResultDto, etrSecPositionFlowDto);
+    //                                subResultDto.setPortfolioId(input.getActPortfolioId());
+    //                                lstPtlSecPositionFlowDto.add(subResultDto);
+    //                            }
+                            list.add(etrSecPositionFlowDto);
+                        }
+                        // 分配完毕后,停止可质押券信息（含投资目的）的循环
+                        pledgePrin = pledgePrin.subtract(prin);
+                        if (pledgePrin.compareTo(BigDecimal.ZERO) <= 0) {
+                            break;
+                        }
                     }
                 }
             }
