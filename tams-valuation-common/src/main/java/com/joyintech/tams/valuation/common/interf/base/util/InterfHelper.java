@@ -41,7 +41,7 @@ public class InterfHelper {
     			md5CashId += FinalString.SPLIT+cashId[i];
     		}
     	}
-    	md5CashId = EncryptUtil.getInstance().md5(md5CashId);
+        md5CashId = MD5Util.string2MD5(md5CashId);
     	return md5CashId;
     }
     
