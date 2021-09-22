@@ -483,6 +483,11 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
     private BigDecimal entrustAmtTarget;
 
     /**
+     * 指令创建来源
+     */
+    private String entrustCreateSource;
+
+    /**
      * 取得 清算速度
      * @return 清算速度
      */
@@ -1915,5 +1920,25 @@ public class WflEtrEntrustAdd extends WflEtrEntrustAddKey {
      */
     public void setEntrustAmtTarget(BigDecimal entrustAmtTarget) {
         this.entrustAmtTarget = entrustAmtTarget;
+    }
+
+    /**
+     * 取得 指令创建来源
+     * @return 指令创建来源
+     */
+    public String getEntrustCreateSource() {
+        return entrustCreateSource;
+    }
+
+    /**
+     * 设置 指令创建来源
+     * 01：场内簿记
+     * 02：场内实时
+     * 03：银行间簿记
+     * 04：银行间实时
+     * @param entrustCreateSource 指令创建来源
+     */
+    public void setEntrustCreateSource(String entrustCreateSource) {
+        this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
     }
 }
