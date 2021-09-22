@@ -159,7 +159,7 @@ public class PdFactorKpmgConfig001Controller extends BaseController{
         }
         ProcessParameter<PdFactorKpmgConfigDto> processParameter = new ProcessParameter<PdFactorKpmgConfigDto>();
         WorkFlowParameter<PdFactorKpmgConfigDto> params = new WorkFlowParameter<PdFactorKpmgConfigDto>();
-        params.setPageId("PdFactorConfig002");
+        params.setPageId("PdFactorKpmgConfig002");
         params.setElementId(dto.getElementId());
         //业务编号
         //String businessCode = dto.getVouchYear()+"_"+dto.getVouchQuarter();
