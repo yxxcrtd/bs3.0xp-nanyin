@@ -83,6 +83,11 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	private String pbExportstatus;
 
 	/**
+	 * 指令创建来源
+	 */
+	private String entrustCreateSource;
+
+	/**
 	 * <功能详细描述>
 	 * @return
 	 */
@@ -307,5 +312,25 @@ public class EtrInvestAllInfoDto extends EtrEntrust {
 	public String getPbExportstatusStr() {
 		return SysDataUtil.getNameFromDataDict(DictCode.是否,
 				this.getPbExportstatus() == null ? DictCodeList.是否_否.getValue() : this.getPbExportstatus());
+	}
+
+	/**
+	 * 取得 指令创建来源
+	 * @return 指令创建来源
+	 */
+	public String getEntrustCreateSource() {
+		return entrustCreateSource;
+	}
+
+	/**
+	 * 设置 指令创建来源
+	 * 01：场内簿记
+	 * 02：场内实时
+	 * 03：银行间簿记
+	 * 04：银行间实时
+	 * @param entrustCreateSource 指令创建来源
+	 */
+	public void setEntrustCreateSource(String entrustCreateSource) {
+		this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
 	}
 }

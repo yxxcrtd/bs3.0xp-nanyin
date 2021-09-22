@@ -263,6 +263,11 @@ public class EntrustAddComponent extends BaseEntity {
     private String redoType;
 
     /**
+     * 指令创建来源
+     */
+    private String entrustCreateSource;
+
+    /**
      * 取得 委托代码
      * @return 委托代码
      */
@@ -1012,5 +1017,25 @@ public class EntrustAddComponent extends BaseEntity {
 
     public void setRedoType(String redoType) {
         this.redoType = redoType;
+    }
+
+    /**
+     * 取得 指令创建来源
+     * @return 指令创建来源
+     */
+    public String getEntrustCreateSource() {
+        return entrustCreateSource;
+    }
+
+    /**
+     * 设置 指令创建来源
+     * 01：场内簿记
+     * 02：场内实时
+     * 03：银行间簿记
+     * 04：银行间实时
+     * @param entrustCreateSource 指令创建来源
+     */
+    public void setEntrustCreateSource(String entrustCreateSource) {
+        this.entrustCreateSource = entrustCreateSource == null ? null : entrustCreateSource.trim();
     }
 }

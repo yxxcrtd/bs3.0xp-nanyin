@@ -185,6 +185,12 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
         cfetsRepoDealQuotedPrice002Service.单独处理页面质押券列表(cfetsRepoDealQuotedPrice001Dto);
         model.addAttribute("entity_bussRepoSecDto",cfetsRepoDealQuotedPrice001Dto.getBussRepoSec() == null ? null : JsonUtils.object2Json(cfetsRepoDealQuotedPrice001Dto.getBussRepoSec()));
         model.addAttribute("dialogueRecord",HtmlUtils.htmlUnescape(cfetsRepoDealQuotedPrice001Dto.getDialogueRecord()));
+        // 监督时分_交易监控
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         return super.init(model);
     }
 

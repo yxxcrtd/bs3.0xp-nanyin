@@ -5,12 +5,14 @@
      */
     var getSearchParams = function() {
         var object = $.serializeToObject('#searchForm');
-        if(pageModel != PAGE_MODEL_NEW){
-            object.portfolioIdChange = $('#portfolioIdChange').val();
-            object.modelStatus = '0';
-            if(entrustId)object.entrustId=entrustId;//update zhangweiqi 2021-1-11 列表展示重复问题
-            if($("#entrustDate").val())object.entrustDate=$("#entrustDate").val();//update zhangweiqi 2021-1-12 SNSTZJY-2549 自主专户投资指令，AAsfpjccs组合持仓在新建和修改页面显示不一致
-            object.workflowId=workflowId;
+        if(operateType !== 'save') {
+            if (pageModel != PAGE_MODEL_NEW) {
+                object.portfolioIdChange = $('#portfolioIdChange').val();
+                object.modelStatus = '0';
+                if (entrustId) object.entrustId = entrustId;//update zhangweiqi 2021-1-11 列表展示重复问题
+                if ($("#entrustDate").val()) object.entrustDate = $("#entrustDate").val();//update zhangweiqi 2021-1-12 SNSTZJY-2549 自主专户投资指令，AAsfpjccs组合持仓在新建和修改页面显示不一致
+                object.workflowId = workflowId;
+            }
         }
 
 
@@ -44,7 +46,7 @@
         var finprodType2 = $('#finprodType2').val();
         var objects = new Array();
         if (selectedItem.length > 0) {
-            
+
             for ( var index in selectedItem) {
                 var item = selectedItem[index];
                 var trdProductDeal = {};
@@ -101,50 +103,15 @@
     // add by zhangrui1 end
 
     function onSaveOrSubmitAction(operateType) {
-        // add by zhangrui1 end
-    	if(!$("#portfolioId").val()){
-    		Joyin.error(JoyinUtil.getMessage("自主专户代码不能为空!"));
-    		return ;
-    	}
-    	if(!$("#finprodMarketId").val()){
-    		Joyin.error(JoyinUtil.getMessage("底层资产代码不能为空!"));
-    		return ;
-    	}
-    	if(table.getAllRows().length==0){
-    		Joyin.error(JoyinUtil.getMessage("自主专户没有组合持有!"));
-    		return ;
-    	}
-        if(!$("#entrustAmt").val()){
-            Joyin.error(JoyinUtil.getMessage("指令金额不可为空!"))
-        }
-        var objectRisk=table.getAllRows();
-        var objectRiskForm = $.serializeToObject('#searchForm');
-        var checkParamRisk = {};
-        checkParamRisk.data = getriskdata();
-        var assetType = $('#assetType').val();
-        var paramRisk = [];
-        if (checkParamRisk.data.length > 0) {
-            for(var index in checkParamRisk.data){
-                var item = checkParamRisk.data[index];
-                item.data.ps = objectRiskForm.ps;
-                item.data.valDate = sysDate;
-                item.data.portfolioId = objectRisk[index].portfolioId;
-                item.data.finprodId = objectRiskForm.finprodId;
-                item.data.assetCode = objectRiskForm.finprodId;
-                item.data.entrustAmt = objectRisk[index].portfolioAmt;
-                item.data.entrustNum = objectRisk[index].portfolioAmt;
-                item.data.counterId = null;
-                item.data.eventType='0';
-                item.data.assetType= assetType;
-                paramRisk.push(item.data);
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
             }
         }
-        window.BaseRiskMathComm.initBaseRiskMathRedisEtr(basePath + 'riskrds/interf/batchRiskTrialRds/0/'+assetType, paramRisk, checkParamRisk);
-        if($('#riskTrialSpan').html()==''||$('#riskTrialSpan').html() == ("&nbsp;&nbsp;"+JoyinUtil.getLabel('BaseRiskMathComm.noclusion'))){
-            return;
-        }
-
-
 
         var object = $.serializeToObject('#searchForm', true);
         object.operateType = operateType;
@@ -173,18 +140,28 @@
             data.entrustNum=data.entrustAmt;//update zhangweiqi 2021-01-07 修改金额不对问题
             selectedItem.push(data);
         }
-        if(!(Number(entrustAmt) == Number(sumportfolioAmt))){
-            Joyin.error(JoyinUtil.getMessage("组合分配金额加总与指令金额不同，无法提交"));
-            return;
-        }
-
         object.selectedItem = selectedItem;
         if(entrustId)object.entrustId=entrustId;//update zhangweiqi 2021-1-11 列表展示重复问题
-        Joyin.ajaxJson(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/check', object, function(result) {
-            Joyin.confirm(result.data, function() {
-                WorkFlow.doSubmitList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_submit");
+        if(operateType === 'save'){
+            object.operateType = operateType;
+            WorkFlow.doSaveList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_save")
+        }else{
+            if(!(Number(entrustAmt) == Number(sumportfolioAmt))){
+                Joyin.error(JoyinUtil.getMessage("组合分配金额加总与指令金额不同，无法提交"));
+                return;
+            }
+            if(risk_math_switch != 'N') {
+                if ($('#riskTrialSpan').html() == '' || $('#riskTrialSpan').html() == ("&nbsp;&nbsp;" + JoyinUtil.getLabel('BaseRiskMathComm.noclusion'))) {
+                    Joyin.error(JoyinUtil.getMessage("风险试算不通过!"));
+                    return;
+                }
+            }
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/check', object, function(result) {
+                Joyin.confirm(result.data, function() {
+                    WorkFlow.doSubmitList(basePath + 'invest/entrust/etrautomanagementaccount/EtrAutoManagementAccount002/save', object, "EtrAutoManagementAccount002_btn_submit");
+                });
             });
-        });
+        }
     };
 
 
@@ -233,10 +210,10 @@
         $('#portfolioIdChange').val(finprodId);
         table.table == null ? table.load():table.reload();
         if($("#entrustAmt").val()&& pageModel == PAGE_MODEL_NEW){
-        	setTimeout( function(){$("#entrustAmt").trigger("change");},500 );
-        	//SNSTZJY-2529 自主专户投资指令新建，填写信息后，切换了自主专户代码，组合分配金额没有自动算过来，还需要再次填写指令金额才可以自动计算
+            setTimeout( function(){$("#entrustAmt").trigger("change");},500 );
+            //SNSTZJY-2529 自主专户投资指令新建，填写信息后，切换了自主专户代码，组合分配金额没有自动算过来，还需要再次填写指令金额才可以自动计算
         }
-        
+
     });
 
     $("#entrustAmt").change(function(){
@@ -260,16 +237,66 @@
                 rows[i].portfolioAmt = portfolioAmtT;
                 table.renderRow(rows[i].LAY_TABLE_INDEX,rows[i])
             }
-            debugger;
         }
     });
 
+    function fengXianShiSuan(){
+        if(!$("#portfolioId").val()){
+            Joyin.error(JoyinUtil.getMessage("自主专户代码不能为空!"));
+            return ;
+        }
+        if(!$("#finprodMarketId").val()){
+            Joyin.error(JoyinUtil.getMessage("底层资产代码不能为空!"));
+            return ;
+        }
+        if(table.getAllRows().length==0){
+            Joyin.error(JoyinUtil.getMessage("自主专户没有组合持有!"));
+            return ;
+        }
+        if(!$("#entrustAmt").val()){
+            Joyin.error(JoyinUtil.getMessage("指令金额不可为空!"))
+        }
+        var objectRisk=table.getAllRows();
+        var objectRiskForm = $.serializeToObject('#searchForm');
+        var checkParamRisk = {};
+        checkParamRisk.data = getriskdata();
+        var assetType = $('#assetType').val();
+        var paramRisk = [];
+        if (checkParamRisk.data.length > 0) {
+            for(var index in checkParamRisk.data){
+                var item = checkParamRisk.data[index];
+                item.data.ps = objectRiskForm.ps;
+                item.data.valDate = sysDate;
+                item.data.portfolioId = objectRisk[index].portfolioId;
+                item.data.finprodId = objectRiskForm.finprodId;
+                item.data.assetCode = objectRiskForm.finprodId;
+                item.data.entrustAmt = objectRisk[index].portfolioAmt;
+                item.data.entrustNum = objectRisk[index].portfolioAmt;
+                item.data.counterId = null;
+                item.data.eventType='0';
+                item.data.assetType= assetType;
+                paramRisk.push(item.data);
+            }
+        }
+        var sum = 0;
+        var allRows = table.getAllRows()
+        for(var i =0; i< allRows.length; i++){
+            sum += Number(allRows[i].portfolioAmt);
+        }
+        if(!(Number($('#entrustAmt').val()) == Number(sum))){
+            Joyin.error(JoyinUtil.getMessage("组合分配金额相加总额与指令金额不等"));
+            return;
+        }
+        window.BaseRiskMathComm.initBaseRiskMathRedisEtr(basePath + 'riskrds/interf/batchRiskTrialRds/0/'+assetType, paramRisk, checkParamRisk);
+    }
     function init(){
         if(pageModel != PAGE_MODEL_NEW){
-            $("#portfolioId").attr("disabled",true);
-            $("#finprodMarketId").attr("disabled",true);
-            $("#ps").attr("disabled",true);
-            $("#portfolioId").attr("disabled",true);
+            if(operateType != 'save') {
+                $("#portfolioId").attr("disabled", true);
+                $("#finprodMarketId").attr("disabled", true);
+                $("#ps").attr("disabled", true);
+                $("#portfolioId").attr("disabled", true);
+            }
 
             $('#type6Str').val(type6Str);
             $('#type7Str').val(type7Str);
@@ -286,8 +313,23 @@
     $(function() {
         init();
         // 提交按钮执行事件
+        /**
+         * 保存
+         */
+        $('#EtrAutoManagementAccount002_btn_save').click(function() {
+            onSaveOrSubmitAction('save');
+        });
+        /**
+         * 提交
+         */
         $('#EtrAutoManagementAccount002_btn_submit').click(function(){
             onSaveOrSubmitAction('submit');
+        });
+        /**
+         * 风险试算
+         */
+        $('#EtrAutoManagementAccount002_btn_riskcal').click(function(){
+            fengXianShiSuan();
         });
         $("#entrustAmt").change(function(){
             var entrustAmt = $('#entrustAmt').val();

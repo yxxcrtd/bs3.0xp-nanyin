@@ -99,33 +99,44 @@ public class RateInfoCommonService {
         String isFinLicence = null;
         //债券的处理逻辑
         if (DictCodeListExt1.证券品种_债券.getValue().equals(sectype)) {
-            isFinLicence = DictCodeList.是否_否.getValue();
             //评级主体代码设置为债券市场代码
             ocode=modAssetInfoDto.getFinprodMarketId();
             if (ModelDictCodeList.模型_评级类型_债项评级.getValue().equals(otype)) {
+                isFinLicence = DictCodeList.是否_否.getValue();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_主体评级.getValue().equals(otype)) {
+                isFinLicence = modAssetInfoDto.getIssueFinLicence();
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-
+                // 债项时，是否含有金融牌照 = 否
+                viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                // 主体取对应发行人是否含有金融牌照
+                viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
+                // 是否持有金融牌照= 上述比较返回结果.是否持有金融牌照
+                isFinLicence = resultDto.getIsFinLicence();
             }
             else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(otype)) {
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-
+                // 债项时，是否含有金融牌照 = 否
+                viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                // 主体取对应发行人是否含有金融牌照
+                viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
+                // 是否持有金融牌照= 上述比较返回结果.是否持有金融牌照
+                isFinLicence = resultDto.getIsFinLicence();
             }else{
                 logger.warn("评级类型不支持，无法查询评级信息.资产代码为："+modAssetInfoDto.getFinprodId()+"，评级类型为："+otype);
                 return null;

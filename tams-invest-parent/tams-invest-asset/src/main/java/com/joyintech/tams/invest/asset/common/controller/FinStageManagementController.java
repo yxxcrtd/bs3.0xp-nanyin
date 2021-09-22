@@ -72,6 +72,7 @@ public class FinStageManagementController extends BaseController{
         model.addAttribute("calendarId", this.getParam("calendarId"));
         model.addAttribute("workflowId", this.getParam("workflowId"));
         model.addAttribute("ccy", this.getParam("ccy"));
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         setEntity(model);
         return super.init(model); 
     }

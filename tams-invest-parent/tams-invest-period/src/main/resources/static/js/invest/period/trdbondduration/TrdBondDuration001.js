@@ -67,7 +67,13 @@ var TrdBondDuration001;
                         + '\')" class="pro-link"  style="cursor: pointer;">'+row.portfolioId+'</a>';
                 }}
             , {field: 'portfolioName', width:150, title: '组合名称'}*/
-            , {field: 'secAcctName', width:130, title: function(){return JoyinUtil.getLabel("EtrStandardBond002.secAcctId")+JoyinUtil.getLabel("invest.channelId");}(), sortField:'secAcctName'}
+            , {field: 'secAcctName', width:130, title: function(){
+                if(ISChongQing == 'Y' ){
+                    return JoyinUtil.getLabel("EtrStandardBond002.secAcctId1");
+                }else{
+                    return JoyinUtil.getLabel("EtrStandardBond002.secAcctId")+JoyinUtil.getLabel("invest.channelId");
+                }
+            }(), sortField:'secAcctName'}
             , {field: 'finprodMarketId', width:180, title: '资产代码',sortField:'FINPROD_MARKET_ID',
                 render : function(data, type, row, meta) {
                     if(row.finprodMarketId !=undefined){

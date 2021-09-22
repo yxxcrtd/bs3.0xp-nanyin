@@ -14,6 +14,9 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
@@ -21,6 +24,7 @@ import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.R
 import org.apache.poi.ss.usermodel.Cell;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -46,6 +50,10 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 
 	/*@Autowired
 	private RoleCommonService roleCommonService;*/
+
+	@Autowired
+	private FinProductMapper finProductMapper;
+
     /**
      * 查询界面询事件
      *
@@ -113,6 +121,12 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
         Page<RskSupervisionRiskAnalyzeDto> page = restTemplate.postForPage(
                 ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionRiskAnalyze/findPageMx",
                 map, RskSupervisionRiskAnalyzeDto.class);
+		for (RskSupervisionRiskAnalyzeDto dto:page.getRoot()){
+			FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getAssetCode());
+			if (StringUtil.isNotEmpty(finProduct)){
+				dto.setIsShow(DictCodeList.是否_是.getValue());
+			}
+		}
         return page;
     }
 

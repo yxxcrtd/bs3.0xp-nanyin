@@ -86,6 +86,7 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         }
         EntrustAddComponent etrAddEntity = new EntrustAddComponent();
         BeanUtil.copyPropertiesIgnoreNull(etrAddEntity, dto);
+        etrAddEntity.setEntrustCreateSource(DictCodeList.指令创建来源_场内簿记.getValue());
         if (StringUtil.isEmpty(etrAddEntity.getAssetType1())
             && StringUtil.isNotEmpty(etrEntity.getFinprodId())) {
             EntrustAddComponent info = commonMapper.selectAddProperty(etrEntity.getFinprodId());
@@ -113,6 +114,7 @@ public abstract class EtrSubComponentService<V extends EtrBaseDto> implements Et
         BeanUtil.copyPropertiesIgnoreNull(etrEntity, dto);
         EntrustAddComponent etrAddEntity = new EntrustAddComponent();
         BeanUtil.copyPropertiesIgnoreNull(etrAddEntity, dto);
+        etrAddEntity.setEntrustCreateSource(DictCodeList.指令创建来源_场内簿记.getValue());
         if (StringUtil.isEmpty(etrAddEntity.getAssetType1())
             && StringUtil.isNotEmpty(etrEntity.getFinprodId())) {
             EntrustAddComponent info = commonMapper.selectAddProperty(etrEntity.getFinprodId());

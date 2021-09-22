@@ -36,8 +36,8 @@ $(function() {
                 ,{field:'issueAmt',title:'FinStageManagement.issueAmt',sortable: false,width:150,edit:true,type:'number',digit:'4'}//融资金额
                 ,{field:'loadRate',title:'FinStageManagement.loadRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//借款利率（%）
                 ,{field:'investRate',title:'FinStageManagement.investRate',sortable: false,width:150,type:'number',digit:'4'}//净投资收益率（%）
-                ,{field:'buyoutRate',title:'FinStageManagement.buyoutRate',sortable: false,width:150,edit:true,type:'number',digit:'4'}//买断利率（%）
-                ,{field:'referRate',title:'FinStageManagement.referRate',sortable: false,width:150,type:'number',digit:'4'}//资产推荐费率（%）
+                ,{field:'buyoutRate',title:'FinStageManagement.buyoutRate',visible:ISChongQing == 'Y'?false:true,sortable: false,width:150,edit:true,type:'number',digit:'4'}//买断利率（%）
+                ,{field:'referRate',title:'FinStageManagement.referRate',visible:ISChongQing == 'Y'?false:true,sortable: false,width:150,type:'number',digit:'4'}//资产推荐费率（%）
                 ,{field:'periodCount',visible:false,type:'number'}//利率
                 , {field: 'operation', width: 150, title: 'SysCommon.operation', type: 'action', buttons: ['delt'],
                     render: function (data, type, row, meta) {
