@@ -27,6 +27,8 @@ import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,7 @@ public class ProductAssetsIncomeMethodProcessorService {
     @Autowired
     private ModLogsService modLogsService;
 
+    private Logger logger = LoggerFactory.getLogger(ProductAssetsIncomeMethodProcessorService.class);
     /**
      * 执行收益法计算过程，最终产物为资产定价数据和估值行情数据
      * 核心计算公式：FV = D0 (1 + g)/(r - g)
@@ -224,6 +227,9 @@ public class ProductAssetsIncomeMethodProcessorService {
         if(mapVList!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue())!=null&&mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue()).size()>0){//数据字典.曲线代码.1231
             modYieldCurveInfoVList =(List<ModYieldCurveInfoDto>)mapVList.get(ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue());
             valuationGovernmentDebtYield = modYieldCurveInfoVList.get(modYieldCurveInfoVList.size()-1).getYield();
+        }else{
+            //取不到行情就报错，在外层报错
+            logger.error("曲线代码："+ModelDictCodeList.曲线代码_中债国债收益率曲线.getValue()+",行情日期："+plateDate+"，无行情.");
         }
         return valuationGovernmentDebtYield;
     }

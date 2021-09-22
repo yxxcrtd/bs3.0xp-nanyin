@@ -167,6 +167,9 @@ public class BinaryTreeModelReaderService {
             Map<String, List<ModYieldCurveInfoDto>> mapYield = modValuationCommonService.getCurveInfo(modYeildCurveParamsDto);
             if (mapYield != null) {
                 model.setModYieldCurveInfoList(mapYield.get(model.getModBintreeConfig().getCurveCode().toString()));
+            }else{
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finProdId, "【二叉树模型批处理】：取不到曲线行情数据，曲线代码："+model.getModBintreeConfig().getCurveCode().toString()+"，曲线日期："+platDate);
+                continue;
             }
 
             list.add(model);
