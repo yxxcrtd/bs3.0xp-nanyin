@@ -14,17 +14,13 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.background.component.uplink.interbank.business.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDetDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteBondDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteCrepDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.IbuQuoteEtrReDto;
-import com.joyintech.background.component.uplink.interbank.business.dto.QuoteResultDto;
 import com.joyintech.background.component.uplink.interbank.business.service.IbuMainService;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.framework.base.BaseService;
@@ -236,56 +232,65 @@ public class IbuComponentRiskService extends BaseService {
                 quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepDto().getTradeStatus())) {
                 // 回购报价主信息
                 IbuQuoteCrepDto ibuQuoteCrepDto = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepDto();
-
-             // modify by etliu 20210318 银行间上下行多组合 start
+                //质押券信息
+                List<IbuQuoteCrepPledgeDto> ibuQuoteCrepPledgeDtoList = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepPledgeDtoList();
+                List<IbuQuoteEntCrepPledgeDto> ibuQuoteEntCrepPledgeDtoList = quoteResultDto.getRepoDialogueQuote().getIbuQuoteEntCrepPledgeDtoList();
+                // modify by etliu 20210318 银行间上下行多组合 start
                 // 交易对手代码
                 String counterId = cfetsQuotedCommonService.selectCounterIdByCpPartyId(
                     ibuQuoteCrepDto.getCpPartyId());
 
                 if (StringUtil.isEmptyList(quoteResultDto.getIbuQuoteEtrReDtoList())) {
                     // 单组合处理
-                    ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
-                    reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
-                    reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                    reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
-                    reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
-                    reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
-                    reqRiskOccupy.setAssetType(
-                        com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
-                    reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
-                    reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
-                    reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                    reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                    reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
-                    // 投管要求协议回购这里传入起息日,到期日
-                    reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
-                    reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
-                    reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
-                    reqRiskOccupy.setEventType("1");
-                    reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
-                    reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
-                    reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
-                    reqRiskOccupy.setCounterId(counterId);
-                    reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
-                    reqList.add(reqRiskOccupy);
-                }
-                else {
-                    // 多组合处理
-                    for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                    //update by zznn 20210922 start
+                    //非信用债不占授信  所以需要把券的信息传到风险接口
+                    if(!StringUtil.isEmptyList(ibuQuoteCrepPledgeDtoList)){
+                        for (IbuQuoteCrepPledgeDto ibuQuoteCrepPledgeDto : ibuQuoteCrepPledgeDtoList) {
+                            List<String> pledgeAssetCodeList = new ArrayList<>();
+                            pledgeAssetCodeList.add(ibuQuoteCrepPledgeDto.getFinprodMarketId());
+                            ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                            reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
+                            reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                            reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                            reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
+                            reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+                            reqRiskOccupy.setAssetType(
+                                    com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                            reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                            reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
+                            reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                            reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                            //reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
+                            reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ibuQuoteCrepPledgeDto.getPledgeAmt(),ibuQuoteCrepPledgeDto.getPledgeRatio()));
+                            // 投管要求协议回购这里传入起息日,到期日
+                            reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                            reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                            reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                            reqRiskOccupy.setEventType("1");
+                            reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                            reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                            reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                            reqRiskOccupy.setCounterId(counterId);
+                            reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
+                            reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
+                            reqList.add(reqRiskOccupy);
+                        }
+                    }
+                    //update by zznn 20210922 end
+                    else{
                         ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
-                        reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                        reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
                         reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                        String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId();
-                        reqRiskOccupy.setEventId(eventId);
-                        reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                        reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                        reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
                         reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
                         reqRiskOccupy.setAssetType(
                             com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
                         reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
-                        reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                        reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
                         reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                         reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                        reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                        reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
                         // 投管要求协议回购这里传入起息日,到期日
                         reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
                         reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
@@ -295,8 +300,78 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
                         reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                         reqRiskOccupy.setCounterId(counterId);
-                        reqRiskOccupy.setTradeId(eventId);
+                        reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
                         reqList.add(reqRiskOccupy);
+                    }
+                }
+                else {
+                    // 多组合处理
+                    if(!StringUtil.isEmptyList(ibuQuoteEntCrepPledgeDtoList)){
+                        for (IbuQuoteEntCrepPledgeDto ibuQuoteEntCrepPledgeDto : ibuQuoteEntCrepPledgeDtoList) {
+                            ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                            List<String> pledgeAssetCodeList = new ArrayList<>();
+                            pledgeAssetCodeList.add(ibuQuoteEntCrepPledgeDto.getBondCode());
+                            reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
+                            for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                                if(StringUtil.equals(ibuQuoteEntCrepPledgeDto.getEntrustId(),ibuQuoteEtrReDto.getEntrustId())){
+                                    reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                                    reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                                    String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId()+"_"+ibuQuoteEntCrepPledgeDto.getPledgeFinprodId();
+                                    reqRiskOccupy.setEventId(eventId);
+                                    reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                                    reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+                                    reqRiskOccupy.setAssetType(
+                                            com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                                    reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                                    //reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                                    reqRiskOccupy.setTradeNum(ibuQuoteEntCrepPledgeDto.getPledgeNumber());
+                                    reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                                    reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                                    //reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                                    reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.multiply(ibuQuoteEntCrepPledgeDto.getPledgeNumber(),new BigDecimal(100)),ibuQuoteEntCrepPledgeDto.getPledgeRatio()));
+                                    // 投管要求协议回购这里传入起息日,到期日
+                                    reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                                    reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                                    reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                                    reqRiskOccupy.setEventType("1");
+                                    reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                                    reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                                    reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                                    reqRiskOccupy.setCounterId(counterId);
+                                    reqRiskOccupy.setTradeId(eventId);
+                                    reqList.add(reqRiskOccupy);
+                                    break;
+                                }
+                            }
+                        }
+                    }else{
+                        for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                            ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                            reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                            reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                            String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId();
+                            reqRiskOccupy.setEventId(eventId);
+                            reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                            reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+                            reqRiskOccupy.setAssetType(
+                                com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                            reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                            reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                            reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                            reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                            reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                            // 投管要求协议回购这里传入起息日,到期日
+                            reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                            reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                            reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                            reqRiskOccupy.setEventType("1");
+                            reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                            reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                            reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                            reqRiskOccupy.setCounterId(counterId);
+                            reqRiskOccupy.setTradeId(eventId);
+                            reqList.add(reqRiskOccupy);
+                        }
                     }
                 }
             }
@@ -506,7 +581,9 @@ public class IbuComponentRiskService extends BaseService {
 
             // 回购报价主信息
             IbuQuoteCrepDto ibuQuoteCrepDto = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepDto();
-            
+            //质押券信息
+            List<IbuQuoteCrepPledgeDto> ibuQuoteCrepPledgeDtoList = quoteResultDto.getRepoDialogueQuote().getIbuQuoteCrepPledgeDtoList();
+            List<IbuQuoteEntCrepPledgeDto> ibuQuoteEntCrepPledgeDtoList = quoteResultDto.getRepoDialogueQuote().getIbuQuoteEntCrepPledgeDtoList();
          // modify by etliu 20210318 银行间上下行多组合 start
             // 银行间报价指令关系业务表
             List<IbuQuoteEtrReDto> ibuQuoteEtrReDtoList = quoteResultDto.getIbuQuoteEtrReDtoList();
@@ -519,61 +596,139 @@ public class IbuComponentRiskService extends BaseService {
 
             if (StringUtil.isEmptyList(ibuQuoteEtrReDtoList)) {
                 // 单组合处理
-                ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
-                reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
-                reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
-                reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
-                reqRiskOccupy.setSeqNo(ibuQuoteCrepDto.getQuoteId());
-                reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
-                reqRiskOccupy.setAssetType(
-                    com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
-                reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
-                // 投管要求协议回购这里传入起息日,到期日
-                reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
-                reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
-                reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
-//                reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
-                reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
-                reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
-                reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
-                reqRiskOccupy.setEventType("1");
-                reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
-                reqRiskOccupy.setCounterId(counterId);
-                
-                reqList.add(reqRiskOccupy);
-            }
-            else {
-                // 多组合处理
-                for (IbuQuoteEtrReDto ibuQuoteEtrReDto : ibuQuoteEtrReDtoList) {
+                //update by zznn 20210922 start
+                //非信用债不占授信  所以需要把券的信息传到风险接口
+                if(!StringUtil.isEmptyList(ibuQuoteCrepPledgeDtoList)){
+                    for (IbuQuoteCrepPledgeDto ibuQuoteCrepPledgeDto : ibuQuoteCrepPledgeDtoList) {
+                        List<String> pledgeAssetCodeList = new ArrayList<>();
+                        pledgeAssetCodeList.add(ibuQuoteCrepPledgeDto.getFinprodMarketId());
+                        ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                        reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
+                        reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                        reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                        reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
+                        reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+                        reqRiskOccupy.setAssetType(
+                                com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                        reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                        reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
+                        reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                        reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                        //reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
+                        reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ibuQuoteCrepPledgeDto.getPledgeAmt(),ibuQuoteCrepPledgeDto.getPledgeRatio()));
+                        // 投管要求协议回购这里传入起息日,到期日
+                        reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                        reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                        reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                        reqRiskOccupy.setEventType("1");
+                        reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                        reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                        reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                        reqRiskOccupy.setCounterId(counterId);
+                        reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
+                        reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
+                        reqList.add(reqRiskOccupy);
+                    }
+                }
+                //update by zznn 20210922 end
+                else{
                     ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
-                    reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                    reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
                     reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                    String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId();
-                    reqRiskOccupy.setTradeId(eventId);
-                    reqRiskOccupy.setEventId(eventId);
-                    reqRiskOccupy.setSeqNo(eventId);
-                    reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                    reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
+                    reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                    reqRiskOccupy.setSeqNo(ibuQuoteCrepDto.getQuoteId());
+                    reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
                     reqRiskOccupy.setAssetType(
                         com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
                     reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                     reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                    reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                    reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
                     // 投管要求协议回购这里传入起息日,到期日
                     reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
                     reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
                     reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
-//                    reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+    //                reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
                     reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
-                    reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                    reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
                     reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
                     reqRiskOccupy.setEventType("1");
                     reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                     reqRiskOccupy.setCounterId(counterId);
-                    
+
                     reqList.add(reqRiskOccupy);
+                }
+                }
+            else {
+                // 多组合处理
+                if(!StringUtil.isEmptyList(ibuQuoteEntCrepPledgeDtoList)){
+                    for (IbuQuoteEntCrepPledgeDto ibuQuoteEntCrepPledgeDto : ibuQuoteEntCrepPledgeDtoList) {
+                        ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                        List<String> pledgeAssetCodeList = new ArrayList<>();
+                        pledgeAssetCodeList.add(ibuQuoteEntCrepPledgeDto.getBondCode());
+                        reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
+                        for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                            if(StringUtil.equals(ibuQuoteEntCrepPledgeDto.getEntrustId(),ibuQuoteEtrReDto.getEntrustId())){
+                                reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                                reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                                String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId()+"_"+ibuQuoteEntCrepPledgeDto.getPledgeFinprodId();
+                                reqRiskOccupy.setEventId(eventId);
+                                reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                                reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+                                reqRiskOccupy.setAssetType(
+                                        com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                                reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                                //reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                                reqRiskOccupy.setTradeNum(ibuQuoteEntCrepPledgeDto.getPledgeNumber());
+                                reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                                reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                                //reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                                reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.multiply(ibuQuoteEntCrepPledgeDto.getPledgeNumber(),new BigDecimal(100)),ibuQuoteEntCrepPledgeDto.getPledgeRatio()));
+                                // 投管要求协议回购这里传入起息日,到期日
+                                reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                                reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                                reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                                reqRiskOccupy.setEventType("1");
+                                reqRiskOccupy.setIsWarnNeedConfirm(DictCodeList.是否_否.getValue());
+                                reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
+                                reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                                reqRiskOccupy.setCounterId(counterId);
+                                reqRiskOccupy.setTradeId(eventId);
+                                reqList.add(reqRiskOccupy);
+                                break;
+                            }
+                        }
+                    }
+                }
+                else{
+                    for (IbuQuoteEtrReDto ibuQuoteEtrReDto : ibuQuoteEtrReDtoList) {
+                        ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+                        reqRiskOccupy.setEntrustCode(ibuQuoteEtrReDto.getEntrustId());
+                        reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
+                        String eventId = ibuQuoteCrepDto.getQuoteId() + "_" + ibuQuoteEtrReDto.getEntrustId();
+                        reqRiskOccupy.setTradeId(eventId);
+                        reqRiskOccupy.setEventId(eventId);
+                        reqRiskOccupy.setSeqNo(eventId);
+                        reqRiskOccupy.setPortfolioCode(ibuQuoteEtrReDto.getPortfolioId());
+                        reqRiskOccupy.setAssetType(
+                            com.joyintech.tams.constant.DictCodeList.平安资产类型_质押式回购.getValue());
+                        reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                        reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+                        reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                        // 投管要求协议回购这里传入起息日,到期日
+                        reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
+                        reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
+                        reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
+    //                    reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                        reqRiskOccupy.setPriceAmt(ibuQuoteCrepDto.getRate());
+                        reqRiskOccupy.setTradeNum(ibuQuoteEtrReDto.getShareAmt());
+                        reqRiskOccupy.setAssetRate(ArithmeticUtil.multiply(ibuQuoteCrepDto.getRate(), BigDecimal.valueOf(100)));
+                        reqRiskOccupy.setEventType("1");
+                        reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
+                        reqRiskOccupy.setCounterId(counterId);
+
+                        reqList.add(reqRiskOccupy);
+                    }
                 }
             }
         }
