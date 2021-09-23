@@ -1091,6 +1091,10 @@
                 item.data.portfolioId = item.data.portfolioCode;
                 item.data.price=object.price;
                 item.data.entrustAmt=item.data.entrustAmt;
+                item.data.tradeMarket = object.tradeMarket;
+                item.data.repoTerm = object.repoTerm;
+                item.data.vdate = object.vdate;
+                item.data.mdate=object.mdate;
                 param.push(item.data);
             }
         }
@@ -1104,8 +1108,8 @@
      * @returns
      */
     function riskMathRedisCallback003(object,cluflag) {
-        riskResultdata = object;
-        cluflag = cluflag;
+        EtrIbRepoinfo003.riskResultdata = object;
+        EtrIbRepoinfo003.cluflag = cluflag;
         Joyin.dialog(JoyinUtil.getLabel('EtribRepoInfo003Riskcal'), '/invest/entrust/etribrepo/EtribRepoInfo003Riskcal/init', '60%', '75%',null);
     }
 
