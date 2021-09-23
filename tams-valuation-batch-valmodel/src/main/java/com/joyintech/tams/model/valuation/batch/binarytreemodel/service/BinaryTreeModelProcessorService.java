@@ -161,6 +161,8 @@ public class BinaryTreeModelProcessorService {
         //14.变量.估值净价 = 变量.估值全价 - 变量.单位应计利息
         BigDecimal valueNetPrice = ArithmeticUtil.subtract(valueAllPrice, interest);
 
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),modAssetInfoDto.getFinprodId(), "【二叉树模型批处理】-估值全价: "+valueAllPrice+";估值净价："+valueNetPrice);
+
         //封装结果
         modCurveResult.setSeqno(IDGenerator.generate());
         modCurveResult.setFinprodId(modAssetInfoDto.getFinprodId());
@@ -564,6 +566,7 @@ public class BinaryTreeModelProcessorService {
                 if (binTree[n][i].getStockFlg() == 1) {
                     //变量.二叉树二维数据[n][i].股权价值 = 变量.二叉树二维数据[n][i].股票价格
                     binTree[n][i].setStockValue(binTree[n][i].getStockPrice());
+                    binTree[n][i].setBondValue(BigDecimal.ZERO);
                 } else if (binTree[n][i].getStockFlg() == 0) {
                     //变量.二叉树二维数据[n][i].债权价值 = 变量.当前面值*（pow（Math.E，变量.票面利率* 变量.步长））+变量.二叉树二维数据[n+1][i].债权价值 *变量.股价上升概率*pow（Math.E，-1*变量.到期收益率* 变量.步长）+
                     //变量.二叉树二维数据[n+1][i+1].债权价值 *变量.股价下降概率*pow（Math.E，-1*变量.到期收益率* 变量.步长）

@@ -82,6 +82,7 @@ public class ImpairmentDataLoadReaderService {
                     searchPara.put("prodId", item.getProdId());
                     searchPara.put("portfolioId",item.getPortfolioId());
                     searchPara.put("finprodId",item.getFinprodId());
+                    searchPara.put("platDate",platDate);
                     // 调用方法查询首次买入日期，存入交割日，后续查询买入时点评级使用
                     item.setSettleDate(impairmentCommonService.queryFirstBuyDate(searchPara));
                 }

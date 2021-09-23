@@ -402,7 +402,8 @@
 						WHERE B.DSC_COST_AMT = 0
 							AND B.FINPROD_ID=#{finprodId}
 						  	AND B.PORTFOLIO_ID=#{portfolioId}
-				),A.SETTLE_DATE
+				            AND B.CDATE <![CDATA[<]]> #{platDate}
+                ),A.SETTLE_DATE
 			)
 			AND ACC.BOOKSET_ID = #{prodId}
 	</select>
