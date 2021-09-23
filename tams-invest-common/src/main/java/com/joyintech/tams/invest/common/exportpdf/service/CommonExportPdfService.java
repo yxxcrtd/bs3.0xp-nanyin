@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -99,6 +101,8 @@ public class CommonExportPdfService<T> {
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
+            // 删除临时目录下的配置文件
+            deleteTempConfigFile(configFile);
         }catch (Exception e){
             throw new BusinessException(e);
         }finally {
@@ -443,6 +447,47 @@ public class CommonExportPdfService<T> {
      */
     private WorkPage readXmlToJavaBean(String configFilePath){
         return XmlParseUtil.readXmlToJavaBean(configFilePath, WorkPage.class);
+    }
+
+    /**
+     * 创建临时目录下配置文件
+     * @param in
+     * @param tempPath
+     * @param tempConfigFilePath
+     * @return
+     */
+    public void createTempConfigFile(InputStream in, String tempPath, String tempConfigFilePath){
+        if(null != in){
+            File tempPathDir = new File(tempPath);
+            if (!tempPathDir.exists()) {
+                tempPathDir.mkdirs();
+            }
+            File tempFile = new File(tempConfigFilePath);
+            try {
+                FileOutputStream fos = new FileOutputStream(tempFile);
+                byte[] b = new byte[1024];
+                int count = 0;
+                while ((count=in.read(b)) != -1) {
+                    fos.write(b,0,count);
+                }
+                in.close();
+                fos.close();// 保存数据
+            } catch (IOException e) {
+
+            }
+        }
+    }
+
+    /**
+     * 删除临时目录下的配置文件
+     * @param tempConfigFilePath
+     * @return
+     */
+    public void deleteTempConfigFile(String tempConfigFilePath){
+        File tempFile = new File(tempConfigFilePath);
+        if(tempFile.exists()){
+            tempFile.delete();
+        }
     }
 
 }
