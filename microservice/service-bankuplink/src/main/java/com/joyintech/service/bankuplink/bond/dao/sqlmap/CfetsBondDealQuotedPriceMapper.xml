@@ -32,7 +32,7 @@
 		    ETR_ENTRUST.MDATE                                                   mdate,
 		    ETR_ENTRUST.ENTRUST_ID                                              entrustId,
 		    ETR_ENTRUST_ADD.QUOTE_TYPE                                          quoteType,
-		    
+	    	ETR_ENTRUST.BUSINESS_MODEL                                          businessModel,
 		    <!-- 本方 -->
 		    MST_CFETS_CUSTOMER_INFO.PARTY_ID                                    mySide,
 		    <!-- 本方名称 -->

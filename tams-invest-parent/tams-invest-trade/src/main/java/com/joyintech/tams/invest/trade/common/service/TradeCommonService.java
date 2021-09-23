@@ -1328,6 +1328,11 @@ public class TradeCommonService extends BaseService {
                 String.class);
     }
 
+    /**
+     *
+     * @param paramMap
+     * @return
+     */
 
     public String getSppiInfoByY1(Map<String, Object> paramMap){
         String finprodId = paramMap.get("finprodId").toString();
@@ -1364,8 +1369,8 @@ public class TradeCommonService extends BaseService {
                 return "1";
             }
             BigDecimal bidPriceCon2 = new BigDecimal(bidPriceCon);
-            if (price.compareTo(bidPriceCon2) != 0) {
-                return "0";
+            if (price.compareTo(bidPriceCon2) < 0) {
+                return "2";
             }
         }else{
             return "1";
