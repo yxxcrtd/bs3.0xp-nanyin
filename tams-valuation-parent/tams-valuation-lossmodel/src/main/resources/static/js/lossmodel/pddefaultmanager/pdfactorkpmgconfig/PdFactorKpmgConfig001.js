@@ -45,16 +45,14 @@ $(function() {
      */
     table.bind('click', '.edit', function (data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/check', data, function (result) {
-            Joyin.dialog('前瞻因子维护编辑',
-                basePath + "model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/init",
-                "45%", "75%", {
-                    pageModel: PAGE_MODEL_EDIT,
-                    seqno: data.seqno
-                }, function () {
-                    table.reload();
-                });
-        });
+        Joyin.dialog('前瞻因子维护编辑',
+            basePath + "model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/init",
+            "45%", "75%", {
+                pageModel: PAGE_MODEL_EDIT,
+                seqno: data.seqno
+            }, function () {
+                table.reload();
+            });
     });
     
 	/**
