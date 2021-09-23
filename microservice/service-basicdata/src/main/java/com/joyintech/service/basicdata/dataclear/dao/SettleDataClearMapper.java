@@ -12,6 +12,7 @@ package com.joyintech.service.basicdata.dataclear.dao;
 import com.joyintech.service.basicdata.dataclear.dto.SettleBatchResultDto;
 import com.joyintech.service.basicdata.dataimport.dto.SettleTransResultDto;
 import com.joyintech.tams.common.base.entity.SettleBatchResult;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @see SettleDataClearMapper
  * @since 1.0
  */
+@Repository
 public interface SettleDataClearMapper {
     List<SettleBatchResultDto> selectBatch(Map<String, Object> map);
 
