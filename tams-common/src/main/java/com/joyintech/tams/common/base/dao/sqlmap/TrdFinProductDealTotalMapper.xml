@@ -95,6 +95,7 @@
         <result column="YESTERDAY_POSITION" property="yesterdayPosition" jdbcType="DECIMAL" />
         <result column="TRADE_AMT_HK" property="tradeAmtHk" jdbcType="DECIMAL" />
         <result column="SELL_SETTLE_RATE" property="sellSettleRate" jdbcType="DECIMAL" />
+        <result column="BUSINESS_MODEL" property="businessModel" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         TOTLE_TRADE_ID TOTLE_TRADE_ID, BUSI_TYPE BUSI_TYPE, FINPROD_ID FINPROD_ID, FINPROD_TYPE FINPROD_TYPE, 
@@ -120,7 +121,7 @@
         DEVIDENT_DATE DEVIDENT_DATE, PER_DEVIDENT_AMT PER_DEVIDENT_AMT, PER_DEVIDENT_CASH PER_DEVIDENT_CASH, 
         DEVIDENT_CASH DEVIDENT_CASH, DEVIDENT_AMT DEVIDENT_AMT, 
         IF_DIVIDEND IF_DIVIDEND, DIVID_CCY DIVID_CCY, EXCHANGE_RATE EXCHANGE_RATE, REPLACE_PRICE REPLACE_PRICE, 
-        YESTERDAY_POSITION YESTERDAY_POSITION, TRADE_AMT_HK TRADE_AMT_HK, SELL_SETTLE_RATE SELL_SETTLE_RATE
+        YESTERDAY_POSITION YESTERDAY_POSITION, TRADE_AMT_HK TRADE_AMT_HK, SELL_SETTLE_RATE SELL_SETTLE_RATE  ,BUSINESS_MODEL BUSINESS_MODEL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -172,8 +173,8 @@
             RED_SHARE_LISTING_DATE, DEVIDENT_DATE, PER_DEVIDENT_AMT, 
             PER_DEVIDENT_CASH, DEVIDENT_CASH, DEVIDENT_AMT, IF_DIVIDEND, DIVID_CCY, 
             EXCHANGE_RATE, REPLACE_PRICE, YESTERDAY_POSITION, 
-            TRADE_AMT_HK, SELL_SETTLE_RATE
-            )
+            TRADE_AMT_HK, SELL_SETTLE_RATE ,BUSINESS_MODEL
+        )
         values (#{totleTradeId,jdbcType=VARCHAR}, #{busiType,jdbcType=VARCHAR}, #{finprodId,jdbcType=VARCHAR}, 
             #{finprodType,jdbcType=VARCHAR}, #{finprodType2,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL}, 
             #{tradeDate,jdbcType=DATE}, #{vdate,jdbcType=DATE}, #{mdate,jdbcType=DATE}, #{settleDate,jdbcType=DATE}, 
@@ -204,7 +205,7 @@
             #{perDevidentCash,jdbcType=DECIMAL}, #{devidentCash,jdbcType=DECIMAL}, #{devidentAmt,jdbcType=DECIMAL},
 	    #{ifDividend,jdbcType=VARCHAR}, #{dividCcy,jdbcType=VARCHAR}, 
             #{exchangeRate,jdbcType=DECIMAL}, #{replacePrice,jdbcType=DECIMAL}, #{yesterdayPosition,jdbcType=DECIMAL}, 
-            #{tradeAmtHk,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL}
+            #{tradeAmtHk,jdbcType=DECIMAL}, #{sellSettleRate,jdbcType=DECIMAL} , #{businessModel,jdbcType=DECIMAL}
             )
     </insert>
     <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.TrdFinProductDealTotal" >
@@ -489,6 +490,9 @@
             <if test="sellSettleRate != null" >
                 SELL_SETTLE_RATE,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="totleTradeId != null" >
@@ -769,6 +773,10 @@
             </if>
             <if test="sellSettleRate != null" >
                 #{sellSettleRate,jdbcType=DECIMAL},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=DECIMAL},
+
             </if>
         </trim>
     </insert>

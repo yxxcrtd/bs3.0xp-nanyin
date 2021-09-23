@@ -1215,8 +1215,10 @@
                 for ( var key in currentCalcConditionObj) {
                     if (typeof currentCalcConditionObj[key] != "object"
                         && currentCalcConditionObj[key] != calcConditionObjBackUp[key]) {
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            ["风险生成要素", "生成风险试算"]));
+                        // ZGZGST-2951:方法返回后已有提示弹窗,删除重复弹窗 fuyongsheng 20210923 edit start
+                        // Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                        //     ["风险生成要素", "生成风险试算"]));
+                        // ZGZGST-2951:方法返回后已有提示弹窗,删除重复弹窗 fuyongsheng 20210923 edit end
                         return true;
                     }
                 }

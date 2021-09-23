@@ -61,7 +61,7 @@
         A.UPDATE_USER AS updateUser,
         A.UPDATE_TIME AS updateTime
         FROM
-        MOD_STANDARD_GRADE_MAPPING A
+        MOD_STANDARD_GRADE_MAPPING A LEFT JOIN SYS_DATADICT_LIST L ON DICT_CODE = 'MAIN_GRADE_RESULT' AND ITEM_CODE = A.GRADE_STANDARD_RESULT
         WHERE
         1=1
         <if test="gradeInst!=null and gradeInst != ''">
@@ -70,6 +70,7 @@
         <if test="oType!=null and oType != ''">
             AND  O_TYPE = #{oType,jdbcType=VARCHAR}
         </if>
+        ORDER BY L.ORDER_NO
     </select>
 
 </mapper>

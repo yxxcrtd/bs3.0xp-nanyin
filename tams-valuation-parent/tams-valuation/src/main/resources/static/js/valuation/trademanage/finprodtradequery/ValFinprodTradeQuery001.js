@@ -42,7 +42,7 @@ $(function () {
 	       {field:'vdate', title: '起息日',width:120, sort: true},
            {field:'mdate', title: '到期日',width:120, sort: true},
            {field:'cpriceDate', title: '净值日期',width:120, sort: true},
-           {field:'unitCprice', type:"money", title: '单位净价',width:150, sort: true},
+           {field:'unitCprice', type:"money", title: '单位净值',width:150, sort: true},
            {field:'unitInt', type:"money", title: '单位利息',width:150, sort: true},
            {field:'unitFprice', type:"money", title: '单位全价',width:150, sort: true},
            {field:'parValue', type:"money", title: '单位面值',width:150, sort: true},

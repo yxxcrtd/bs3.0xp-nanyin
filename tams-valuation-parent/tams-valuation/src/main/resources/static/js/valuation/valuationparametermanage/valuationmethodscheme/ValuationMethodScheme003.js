@@ -156,13 +156,13 @@ $(function () {
             $("#valuationMethod").attr("disabled", "disabled");
 			
 		}else if(secType === '04' || secType === '05') {// 利率互换和外汇
-			$("#c_tradeMarket").hide();
+			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
 			$("#c_invAim").hide();
 			$("#c_valuationSource").show();
 //			$("#c_modelName").show();
 			
-			$("#valuationMethod").val("05").trigger("change");
+			$("#valuationMethod").val("01").trigger("change");
             $("#valuationMethod").attr("disabled", "disabled");
 			
 		} else if(secType === '06') {// 股票

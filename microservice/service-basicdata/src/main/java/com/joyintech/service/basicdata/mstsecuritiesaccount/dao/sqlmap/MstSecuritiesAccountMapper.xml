@@ -492,4 +492,14 @@ with ZYSHG as
             CONCAT('%',CONCAT(#{companyNo},'%'))
         </if>
     </select>
+
+    <select id="IsBondAsset" resultType="java.lang.String">
+         select FINPROD_TYPE2 from fin_product fp
+         where  fp.finprod_market_id = #{secId}
+    </select>
+
+    <select id="QueryForTestStatus" resultType="java.lang.String">
+        select IS_SPPI_PASS from SPPI_IMPORT_DATA sid  inner join fin_product fp on fp.finprod_id = sid.BOND_ID
+        where  fp.finprod_Market_id = #{secId}
+     </select>
 </mapper>

@@ -367,47 +367,27 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	public List<SelectOptionDto> getValuationMethod(){
 		List<SelectOptionDto> linkSelectOption = new ArrayList<>();
 		Map<String, Object> param = RequestUtil.getPageParam();
-		//估值方法根据投资目的联动
-		if(StringUtil.isNotEmpty(param.get("invAim"))){
-			param.put("dict_code_parent", DictCode.投资目的.getValue());
-			param.put("dict_code_child", DictCode.估值方法.getValue());
-			param.put("item_code_parent", param.get("invAim"));
-			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
+		if(StringUtil.isNotEmpty(param.get("invAim")) && StringUtil.isNotEmpty(param.get("secType"))){
+			//如果估值方法需要根据证券品种和投资目的共同联动的，故使用配置不方便，直接后台处理
+			linkSelectOption = valuationMethodScheme003Service.getResultByInvAimAndSecType(linkSelectOption,param);
+		}else{
+			////估值方法根据投资目的联动
+			if(StringUtil.isNotEmpty(param.get("invAim"))){
+				param.put("dict_code_parent", DictCode.投资目的.getValue());
+				param.put("dict_code_child", DictCode.估值方法.getValue());
+				param.put("item_code_parent", param.get("invAim"));
+				linkSelectOption =valuationMethodScheme003Service.getLinkSelectOption(param);
+			}
+
+			//估值方法根据证券品种联动
+			//当证券品种为01债券时，使用投资目的进行联动
+			if(StringUtil.isNotEmpty(param.get("secType")) ){
+				param.put("dict_code_parent", DictCode.证券品种.getValue());
+				param.put("dict_code_child", DictCode.估值方法.getValue());
+				param.put("item_code_parent", param.get("secType"));
+				linkSelectOption =valuationMethodScheme003Service.getLinkSelectOption(param);
+			}
 		}
-
-		//估值方法根据证券品种联动
-		//当证券品种为01债券时，使用投资目的进行联动
-		if(StringUtil.isNotEmpty(param.get("secType")) && !param.get("secType").toString().equals(DictCodeListExt1.证券品种_债券.getValue())){
-			param.put("dict_code_parent", DictCode.证券品种.getValue());
-			param.put("dict_code_child", DictCode.估值方法.getValue());
-			param.put("item_code_parent", param.get("secType"));
-			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
-		}
-
-//		param.put("dict_code_parent", DictCode.证券品种.getValue());
-//		param.put("dict_code_child", DictCode.估值方法.getValue());
-//		param.put("item_code_parent", param.get("secType"));
-//		param.put("dict_code_parent", DictCode.投资目的.getValue());
-//		param.put("dict_code_child", DictCode.估值方法.getValue());
-//		param.put("item_code_parent", param.get("invAim"));
-
-       	// ---  以投资目的维度联动
-//		if(Arrays.asList(DictCodeListExt1.证券品种_计划类资产_收益型.getValue()).contains(param.get("secType"))&&
-//				Arrays.asList(DictCodeListExt1.投资目的_摊余成本类.getValue(),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
-//			param.put("dict_code_parent", DictCode.投资目的.getValue());
-//			param.put("item_code_parent", param.get("invAim"));
-//		}
-//		if(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()).contains(param.get("secType"))){
-//			param.put("dict_code_parent", DictCode.投资目的.getValue());
-//			param.put("item_code_parent", param.get("invAim"));
-//		}
-//		return valuationMethodScheme00301Service.getLinkSelectOption(param);
-//		if (Arrays.asList(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
-//			//过滤掉 估值方法_摊余成本法
-//			linkSelectOption.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
-//		}
-		//投资目的联动处理start
-//		linkSelectOption = valuationMethodScheme001Service.getResultByInvAim(linkSelectOption,param);
 		//投资目的联动处理end
 		return linkSelectOption;
 	}

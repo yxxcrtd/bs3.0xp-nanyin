@@ -161,6 +161,12 @@ public class EtrProjectValidator implements EtrCommonValidator {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
                 }
             }
+
+            if(dto.getBusinessModel()==null||StringUtil.equals("",dto.getBusinessModel())){
+                errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
+            }
+
+
             // ZGZGST-1232 fuyongsheng 20210820:增加SPPI测试 系统参数开关,Y需要测试
             if(DictCodeListExt1.是否_是.getValue().equals(CacheUtil.getSysParam("IS_NEED_SPPI_CHECK"))){
                 //投资目的

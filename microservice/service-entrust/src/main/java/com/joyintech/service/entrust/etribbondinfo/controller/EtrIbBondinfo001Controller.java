@@ -92,4 +92,16 @@ public class EtrIbBondinfo001Controller {
     public BigDecimal getCostPrice(@RequestBody Map<String, Object> pageParam) {
         return etrIbBondinfo001Service.getCostPrice(pageParam);
     }
+
+
+    /**
+     * 查询是否sppi测试
+     * @param pageParam
+     * @return
+     */
+    @PostMapping("assetIsTestBySppi")
+    public String assetIsTestBySppi(@RequestBody Map<String, Object> pageParam) {
+         return etrIbBondinfo001Service.assetIsTestBySppi(pageParam);
+    }
+
 }

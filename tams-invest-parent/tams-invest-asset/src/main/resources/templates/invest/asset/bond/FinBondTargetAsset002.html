@@ -292,7 +292,7 @@
 											data-th-text="#{FinBondTargetAsset002.isSecBond}">是否次级债</label>
 										<div class="layui-input-inline input-inline">
 											<input type="checkbox" id="isSecBond" name="isSecBond"
-												lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+												lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
 												data-th-checked="${YES_OR_NO_Y} ==${entity?.isSecBond}">
 										</div>
 									</div>
@@ -304,7 +304,7 @@
 										<div class="layui-input-inline input-inline">
 											<input type="checkbox" id="isRight" name="isRight"
 												lay-skin="switch" lay-filter="isRight"
-												data-th-value="${YES}" lay-text="是|否"
+												data-th-value="${YES}" lay-text="是|否" required
 												data-th-checked="${YES_OR_NO_Y} ==${entity?.isRight}">
 										</div>
 									</div>
@@ -358,7 +358,7 @@
 											data-th-utext="#{FinBondTargetAsset002.isAutoUpdate}">是否允许wind数据覆盖</label>
 										<div class="layui-input-inline input-inline">
 											<input type="checkbox" id="isAutoUpdate" name="isAutoUpdate"
-												lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+												lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
 												data-th-checked="${YES_OR_NO_Y} ==${entity?.isAutoUpdate}">
 										</div>
 									</div>
@@ -431,7 +431,7 @@
 	                                    data-th-text="#{FinBondTargetAsset002.isFinOrg}">是否金融机构发行</label>
 	                                    <div class="layui-input-inline input-inline">
 											<input type="checkbox" id="isFinOrg" name="isFinOrg"
-												lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+												lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
 												data-th-checked="${YES_OR_NO_Y} ==${entity?.isFinOrg}">
 	                                    </div>
 	                                </div>
@@ -490,7 +490,7 @@
                                            data-th-text="#{FinBondTargetAsset002.isCityBond}">是否城投债</label>
                                     <div class="layui-input-inline input-inline">
                                         <input type="checkbox" id="isCityBond" name="isCityBond" lay-filter="isCityBond"
-                                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+                                               lay-skin="switch" data-th-value="${YES}" lay-text="是|否" required
                                                data-th-checked="${YES_OR_NO_Y} ==${entity?.isCityBond}">
                                     </div>
                                 </div>

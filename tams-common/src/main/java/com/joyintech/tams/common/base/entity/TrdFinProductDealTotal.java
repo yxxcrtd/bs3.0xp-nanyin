@@ -431,6 +431,8 @@ public class TrdFinProductDealTotal extends BaseEntity {
      */
     private Date devidentDate;
 
+
+
     /**
      * 每股送转
      */
@@ -486,6 +488,11 @@ public class TrdFinProductDealTotal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal tradeAmtHk;
+
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
     /**
      * 卖出结算汇兑比率
@@ -1790,5 +1797,13 @@ public class TrdFinProductDealTotal extends BaseEntity {
 
     public void setRegDateAmt(BigDecimal regDateAmt) {
         this.regDateAmt = regDateAmt;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

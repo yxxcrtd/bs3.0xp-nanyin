@@ -19,6 +19,7 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -99,12 +100,16 @@ public class EtrPlanAssetR002Controller extends BaseController {
                 , DictCode.行内资产二级分类
                 , DictCode.行内资产三级分类
                 , DictCode.行内资产四级分类
-                , DictCode.投资目的);
+                , DictCode.投资目的, BussinessDictCode.业务模式);
                 /*原因、zhuyongkang 2019/7/29  start */
         this.setSelectOptionToModel(model, DictCode.币种);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
-        
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+       //展示投资目的或业务模式参数
      // 一体化对应etliu start
 //        model.addAttribute("T04", DictCodeList.交易方向_申购.getValue());
 //        model.addAttribute("T06", DictCodeList.交易方向_赎回.getValue());

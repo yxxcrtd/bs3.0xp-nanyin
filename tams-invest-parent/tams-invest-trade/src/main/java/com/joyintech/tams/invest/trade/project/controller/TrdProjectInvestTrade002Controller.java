@@ -1,5 +1,24 @@
 package com.joyintech.tams.invest.trade.project.controller;
 
+import static com.joyintech.tams.invest.trade.project.service.TrdProjectInvestTrade002Service.genBizCode;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
@@ -172,6 +191,7 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("FINPROD_TYPE_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute(GlobalConstant.ENTITY, entity);
         
@@ -179,7 +199,11 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
         //add by lizhi 是否限制划款指令开关 2020年2月26日  start
         model.addAttribute("GEN_PAY_ORDERS_AUTO",CacheUtil.getSysParam(BussinessConstant.GEN_PAY_ORDERS_AUTO));
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
-      
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
+
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
         Map<String, String> map = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
@@ -264,6 +288,8 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
         if (etrInvestInfoDto.getEtrEntrustAdd() != null && com.joyintech.framework.util.StringUtil.isNotEmpty(etrInvestInfoDto.getEtrEntrustAdd().getSettleSpreed())) {
             entity.setSettleSpeed("0" + (etrInvestInfoDto.getEtrEntrustAdd().getSettleSpreed() + 1));
         }
+        //查询 委托表里存的业务模式字段
+        entity.setBusinessModel(tradeCommonService.findEtrWordInfo(etrInvestInfoDto.getEtrEntrust().getEntrustId()));
         return entity;
     }
 
