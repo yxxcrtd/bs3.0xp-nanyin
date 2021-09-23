@@ -28,6 +28,11 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.service.CfetsBondDealQuotedPriceSingle001Service;
@@ -101,6 +106,13 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
      */
     @Autowired(required = false)
     private FileAttachmentProcess fileAttachmentProcess;
+
+    @Autowired
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+    @Autowired
+    private DateCalService dateCalService;
 
     /**
      * {@inheritDoc}
@@ -387,7 +399,41 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
                 cfetsBondDealQuotedPriceSingle001Service.checkCalcFieldEntrust(cfetsBondDealDialogueQuoteDto, null, sb, false);
             }
         }
-        
+
+
+
+
+             // 委托场合时
+            if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())) {
+                //查询资产可用持仓
+                Map<String,Object> map = new HashMap<>();
+                map.put("portfolioId",cfetsBondDealDialogueQuoteDto.getPortfolioId()) ;
+                map.put("tradeDate",cfetsBondDealDialogueQuoteDto.getSettleDate()) ;
+                map.put("acctTypeList","A01,A07") ;
+                map.put("ccy",cfetsBondDealDialogueQuoteDto.getCcy()) ;
+                map.put("tradeDate",cfetsBondDealDialogueQuoteDto.getSettleDate()) ;
+                map.put("finprodId",cfetsBondDealDialogueQuoteDto.getFinprodId()) ;
+                String dateId =  null;
+                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+                        cfetsBondDealDialogueQuoteDto.getFinprodId(), FinProduct.class).getCalendarId();
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(cfetsBondDealDialogueQuoteDto.getSettleDate(), DateUtil.addDay(cfetsBondDealDialogueQuoteDto.getSettleDate(), 15), dateId);
+                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(cfetsBondDealDialogueQuoteDto.getSettleDate(), 1, holidayList, "1")));
+                BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
+
+                String sinal = cfetsBondDealQuotedPriceSingle001Service.getSppiInfoByY1(map) ;
+                if(StringUtil.equals("2",sinal)&&StringUtil.equals(cfetsBondDealDialogueQuoteDto.getBusinessModel(),"Y1")){
+                    if(position!=null){
+                        sb.append("交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！");
+                        sb.append(GlobalConstant.HTML_NEWLINE);
+                    }else{
+                        sb.append("交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！");
+                        sb.append(GlobalConstant.HTML_NEWLINE);
+                     }
+                }
+            }
+
+
+
         if (sb.length() > 0){
             sb.append("请确认是否继续？");
             ar.setData(sb);

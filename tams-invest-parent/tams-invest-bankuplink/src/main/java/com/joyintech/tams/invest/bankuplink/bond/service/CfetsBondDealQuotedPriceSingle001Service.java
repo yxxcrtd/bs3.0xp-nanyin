@@ -23,9 +23,13 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
+import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealEntrustOrderDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.SecInfoModelDto;
@@ -68,7 +72,8 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
      */
     @Autowired
     private IPlatformDate iPlatformDate;
-
+   @Autowired
+   private BusiFinExercisePlanService busiFinExercisePlanService;
     /**
      * {@linkplain}
      */
@@ -1109,5 +1114,56 @@ public class CfetsBondDealQuotedPriceSingle001Service extends BaseService<CfetsB
         cfetsBondDealDialogueQuoteDto.setAvaNum(avaNum);
         cfetsBondDealDialogueQuoteDto.setPrice(price);
         return cfetsBondDealDialogueQuoteDto;
+    }
+
+
+    /**
+     *
+     * @param paramMap
+     * @return
+     */
+
+    public String getSppiInfoByY1(Map<String, Object> paramMap){
+        String finprodId = paramMap.get("finprodId").toString();
+        if(!StringUtil.isNotEmpty(paramMap.get("price"))){
+            return "0";
+        }
+        BigDecimal price = new BigDecimal(paramMap.get("price").toString());
+        Date platDate = DateUtil.platDateFromCache();
+
+        Boolean sinal = true;
+        //1 查询资产是否有行权计划
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("finprodId", finprodId);
+        param.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+        param.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        param.put("execType01", DictCodeList.行权状态_未行权.getValue());
+        param.put("execType02", DictCodeList.行权状态_已行权.getValue());
+        List<FinExercisePlan> finExercisePlanList = busiFinExercisePlanService.getfinExercisePlanByProductId(param);
+        if(finExercisePlanList==null||finExercisePlanList.size()==0){
+            return "0";
+        }else if((StringUtil.equals(finExercisePlanList.get(0).getExerciseType(),"01")||StringUtil.equals(finExercisePlanList.get(0).getExerciseType(),"02"))&&DateUtil.compareDate(platDate,finExercisePlanList.get(0).getActExerciseDate())<=0){
+
+        }else{
+            return "0";
+        }
+
+        //2 查询sppi中债中的使权不重大的购入价条件（小于第二个数字）
+        String bidPriceCon = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest001/getSppiInfoByY1?finprodId="
+                + finprodId, String.class);
+        if(bidPriceCon!=null) {
+            if (StringUtil.isNotEmpty(bidPriceCon)) {
+                bidPriceCon = bidPriceCon.split(",")[1];
+            }else {
+                return "1";
+            }
+            BigDecimal bidPriceCon2 = new BigDecimal(bidPriceCon);
+            if (price.compareTo(bidPriceCon2) < 0) {
+                return "2";
+            }
+        }else{
+            return "1";
+        }
+        return "2";
     }
 }

@@ -18,11 +18,11 @@
             <Cell order="7" name="终止日期">mdate</Cell>
             <Cell order="8" name="管理人">manager</Cell>
             <!-- add by 张普裕  2019/10/16 新增托管人,发行人 start -->
-            <Cell order="10" name="托管人">trusteeId</Cell>
-            <Cell order="11" name="发行人">issuer</Cell>
+<!--            <Cell order="10" name="托管人">trusteeId</Cell>-->
+            <Cell order="9" name="发行人">issuer</Cell>
             <!-- add by 张普裕  2019/10/16 新增托管人,发行人 end -->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
-            <Cell order="9" name="资产推荐方">recommenderName</Cell>
+            <Cell order="10" name="资产推荐方">recommenderName</Cell>
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         </Row>
     </Worksheet>
