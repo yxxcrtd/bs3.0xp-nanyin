@@ -592,10 +592,10 @@ $(function() {
                 }
             },
             cols:[
-            	{field:'portfolioId',visible :false}
-                ,{field:'indId',visible :false}
+                {field:'indId',visible :false}
                 ,{field:'frequency',visible :false}
                 ,{field:'supFrequency',visible :false}
+                ,{field:'portfolioId',title: 'PaActiveRemindss002.groupName',width:250}
                 ,{field:'groupName', title: 'PaActiveRemindss002.groupNameStr',width:250}
                 ,{field:'supTypeAbbr',sortField:"supType", title: 'PaActiveRemindss002.supType',width:100}
                 ,{field:'supDate', title: 'PaActiveRemindss002.supDate',type:'date'}
