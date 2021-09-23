@@ -85,7 +85,7 @@
             ,{field:'idate',title:'FinTenderBondTargetAsset002.idate',width:150,type:'date'}//发行日
             ,{field:'issuerName',title:'FinTenderBondTargetAsset002.issuer',width:150,sortField:'issuer'}//发行人
             ,{field:'registOrgName',title:'FinTenderBondTargetAsset002.registOrg',sortField:'REGIST_ORG',width:150}//登记托管机构
-            ,{field:'issueAmt',title:'FinTenderBondTargetAsset002.issueAmt',sortField:'ISSUE_AMT',width:150,type:'money'}//发行金额
+            ,{field:'issueAmt',title:'FinTenderBondTargetAsset001.issueAmt',sortField:'ISSUE_AMT',width:150,type:'money'}//发行金额
             ,{field:'payCycleStr',visible :false}//付息频率
             ,{field:'ztGradeResultStr',visible :false}//主体评级结果
             ,{field:'ztGradeOrgIdStr',visible :false}//主体评级机构

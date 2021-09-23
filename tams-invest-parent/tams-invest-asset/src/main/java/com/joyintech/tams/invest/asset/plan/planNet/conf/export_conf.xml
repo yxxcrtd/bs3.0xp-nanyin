@@ -20,7 +20,7 @@
             <Cell order="14" name="发行人">issuer</Cell>
             <!-- add by 张普裕  2019/9/29 新增托管人,实际管理人,发行人 end -->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
-            <Cell order="15" name="资产推荐方">recommenderName</Cell>
+<!--            <Cell order="15" name="资产推荐方">recommenderName</Cell>-->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         </Row>
     </Worksheet>

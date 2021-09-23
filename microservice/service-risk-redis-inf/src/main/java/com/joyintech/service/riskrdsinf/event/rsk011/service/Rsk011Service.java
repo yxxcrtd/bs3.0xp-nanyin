@@ -539,7 +539,11 @@ public class Rsk011Service extends EventBaseService<Rsk002InEntity> {
             if (!CollectionUtils.isEmpty(old) && !CollectionUtils.isEmpty(temp)) {
                 old.entrySet().forEach(item -> {
                     String code = item.getKey();
-                    if (temp.containsKey(code) && item.getValue() != null) {
+//                    if (temp.containsKey(code) && item.getValue() != null) {
+//                        temp.put(code, item.getValue());
+//                    }
+                    //ZGZGST-2925 多个组合都需要缓存同一个指标参数到本地的时候，第一个组合缓存后会导致后续组合的指标参数不能被缓存到
+                    if (item.getValue() != null) {
                         temp.put(code, item.getValue());
                     }
                 });

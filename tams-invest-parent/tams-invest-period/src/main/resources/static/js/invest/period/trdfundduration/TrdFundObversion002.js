@@ -47,7 +47,8 @@
                 field : 'chIldName',
                 width : "150",
                 title : 'invest.channelId',
-                sortable : false
+                sortable : false,
+                visible :false
             }
         // // 权益登记日
         // , {

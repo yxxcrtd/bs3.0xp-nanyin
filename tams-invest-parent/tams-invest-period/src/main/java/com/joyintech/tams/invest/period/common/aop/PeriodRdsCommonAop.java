@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.period.trdfundduration.service.TrdFundDuration001Service;
+import com.joyintech.tams.invest.period.trdplancurrduration.service.TrdPlanCurrDuration001Service;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -79,6 +82,14 @@ public class PeriodRdsCommonAop extends AopBaseService<InterfRiskRdsDto> {
             ){
             return;
         }
+        // 基金计划列货币除权登记不进行风控  start
+        Map<String,Object> mapTrd=JsonUtils.object2Map(joinPoint.getArgs()[0]);
+        if ((StringUtil.equals(TrdFundDuration001Service.class.getSimpleName(), joinPoint.getTarget().getClass().getSimpleName())
+            || StringUtil.equals(TrdPlanCurrDuration001Service.class.getSimpleName(), joinPoint.getTarget().getClass().getSimpleName()))
+            && StringUtil.isNotEmpty(mapTrd.get("typeFlag"))&& StringUtil.equals(mapTrd.get("typeFlag"),"01")){
+            return;
+        }
+        // 基金计划列货币除权登记不进行风控  end
         logger.info("==========={}类调用实占或释放接口开始=============",joinPoint.getTarget().getClass().getSimpleName());
         //构造调用场景与交易类型
         InterfRiskRdsDto interfRiskRdsDto = new InterfRiskRdsDto();

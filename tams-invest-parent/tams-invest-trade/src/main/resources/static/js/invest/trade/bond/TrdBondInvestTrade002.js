@@ -3022,7 +3022,7 @@ var calculateField;
                     if (result.prinamt && result.prinamt != ''){
                         $('#tradeAmt').val(JoyinMath.doDiv(result.prinamt,unitNum,2,JoyinMath.ROUND_HALF_UP)).trigger('blur').trigger('change');// 本金金额(券面总额)
                         if($('#tradeAmt').val()){
-                            $('#tradeAmt').attr('disabled', false); //成交编号以后，页面的券面总额被置灰，期望可以修改
+                            $('#tradeAmt').attr('disabled', true); //成交编号以后，页面的券面总额被置灰，期望可以修改
                         }
                     }else{
                         $('#tradeAmt').val('').change();
