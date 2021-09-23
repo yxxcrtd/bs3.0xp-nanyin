@@ -416,7 +416,7 @@
                                         </input>
                                     </div>-->
                                     <div class="layui-input-inline input-inline delaytime-inline-wrap">
-                                        <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;padding-right:0px;">T+</label>
+                                        <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;padding:0px;">T+</label>
                                         <input type="text" id="settleSpreed" name="settleSpreed"  th:value="${entity?.settleSpreed}?:'0'" class="layui-input form-input"
                                                onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
                                                style="float: right;display: inline-block; width: 90%;"/>
