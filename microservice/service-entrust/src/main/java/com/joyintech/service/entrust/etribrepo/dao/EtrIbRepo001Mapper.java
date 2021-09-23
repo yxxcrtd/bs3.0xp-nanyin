@@ -20,6 +20,7 @@ import com.joyintech.tams.common.base.entity.PtlPortfolio;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @see EtrIbRepo001Mapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrIbRepo001Mapper {
     /**
      * 指令管理分页查询

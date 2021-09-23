@@ -45,6 +45,7 @@ import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dt
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration002ProcessDto;
 import com.joyintech.tams.invest.period.trdlendduration.dto.TrdLendDuration001Dto;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDetailDto;
+import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDuration001Dto;
 import com.joyintech.tams.invest.period.trdplanintduration.dto.TrdPlanInterestDurationProcessDto;
 import com.joyintech.tams.invest.period.trdprojduration.dto.TrdProjectDurationProcessDto;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
@@ -917,6 +918,21 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto.setTradeAmt(inputDto.getReturnAmount());
                     creditLinesInputDto.setTradeId(inputDto.getBusiCode());
                     creditLinesInputDto.setTradeDate(DateUtil.parse(inputDto.getArrivalDate()));
+                }
+            }
+            // 计划类利率存续期-红利再投
+            if (object instanceof TrdPlanCurrDuration001Dto){
+                TrdPlanCurrDuration001Dto inputDto = (TrdPlanCurrDuration001Dto)object;
+                if ("01".equals(inputDto.getType())){
+                    creditLinesInputDto = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
+                    creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                    creditLinesInputDto.setTradeStatus(status);
+                    creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+                    creditLinesInputDto.setShareAmt(inputDto.getQty());
+                    creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
+                    creditLinesInputDto.setTradeDate(inputDto.getReInvesDate());
                 }
             }
             // 买断式回购存续期

@@ -135,4 +135,6 @@ public interface CfetsBondDealQuotedPriceMapper {
      * @since 1.0
      */
     List<CstpSelectDto> getCstpQryTableList(Map<String,Object> map);
+
+    BigDecimal getWflEntrustDealedAmt(Map<String,Object> map);
 }

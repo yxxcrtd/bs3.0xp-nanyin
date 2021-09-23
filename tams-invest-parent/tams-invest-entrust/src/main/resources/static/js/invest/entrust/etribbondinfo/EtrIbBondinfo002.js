@@ -360,6 +360,10 @@
         }
         query("#portfolioId").change();
         query("#priceModel").trigger("change");
+        if (pageModel != PAGE_MODEL_REFERENCE) {
+            debugger;
+            query("#entrustNum").val(query("#entrustNum").val()/10000).trigger("change");
+        }
         
         initFlag = false;
         // 画星星

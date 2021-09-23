@@ -23,6 +23,7 @@ import com.joyintech.service.entrust.etragrereptrade.dto.OnWayRep002Dto;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.select.SuggestDto;
+import org.springframework.stereotype.Repository;
 
 /**
  *  场内交易委托
@@ -32,7 +33,7 @@ import com.joyintech.framework.select.SuggestDto;
  * @see EtrAgreRepTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrAgreRepTradeMapper {
 
 

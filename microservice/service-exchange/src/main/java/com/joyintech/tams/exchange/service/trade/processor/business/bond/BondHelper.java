@@ -2,8 +2,6 @@ package com.joyintech.tams.exchange.service.trade.processor.business.bond;
 
 import com.joyintech.tams.exchange.common.bean.MinTrdUnitLimit;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
-import com.joyintech.tams.exchange.common.constant.*;
-import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
 import com.joyintech.tams.exchange.common.utils.CheckParamUtils;
 import com.joyintech.tams.exchange.common.utils.EntrustUtils;
@@ -154,36 +152,31 @@ public class BondHelper {
             logger.info("债券全价成交回报价格和成交金额处理，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), trade.getTradedPrice(), trade.getTradedBalance());
             BigDecimal price = investmentManagement.queryEntrustPriceByFullPriceFromInvest(trade.getTradedPrice(), trade.getTradedVolume(), instruction, getPriceRoundByPriceStep(instrumentService.queryByInnerCode(instruction.getFinprodMarketId())));
             BigDecimal calculateBalance = TradeUtils.multiply(price, trade.getTradedVolume(), 2);
-            logger.info("全价转换为净价完成，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), price, calculateBalance);
+            logger.info("全价转换为净价完成，brokerEntrustId {} brokerTradeId {} tradePrice {} calculateBalance {} tradeVolume {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), price, calculateBalance, trade.getTradedVolume());
             return calculateBalance;
         }
         return trade.getTradedBalance();
     }
 
     // 债券净价成交转换为全价处理
-    public BigDecimal handleTradePriceByNetPrice(Trade trade, String isFullPrice, Instruction instruction) {
+    public BigDecimal getFullPriceByTradePrice(Trade trade, String isFullPrice, Instruction instruction) {
+
         if (IntegratedEntrustUtils.isProtocolBack(trade.getEntrustProp()) || trade.getTradedPrice().doubleValue() == 0) {
-            return trade.getTradedBalance();
+            return trade.getTradedPrice();
         }
         // 对于金证和金仕达柜台 -- 净价报单 净价成交。 ufx按照委托中isFullPrice区分 净价成交 全价成交
         Account account = accountManager.getAccountById(trade.getAccountId());
-        // 净价成交 转换为 全价 并计算成交金额
+        // 净价成交 转换为 全价
         if (Objects.nonNull(account) && AgentType.isNetPriceTrade(account.getAgentType())
                 || (Objects.nonNull(instruction) && !EntrustUtils.isFullPrice(instruction.getAssetType(), trade.getEntrustProp(), isFullPrice))) {
-            logger.info("债券净价成交回报价格和成交金额处理，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), trade.getTradedPrice(), trade.getTradedBalance());
             BigDecimal price = investmentManagement.queryFullPriceByEntrustPriceFromInvest(trade.getTradedPrice(), trade.getTradedVolume(), instruction, getPriceRoundByPriceStep(instrumentService.queryByInnerCode(instruction.getFinprodMarketId())));
-            BigDecimal calculateBalance = TradeUtils.multiply(price, trade.getTradedVolume(), 2);
-            logger.info("净价转换为全价完成，brokerEntrustId {} brokerTradeId {} tradePrice {} tradeBalance {}", trade.getBrokerEntrustId(), trade.getBrokerTradeId(), price, calculateBalance);
-            return calculateBalance;
+            logger.info("getFullPriceByTradePrice  trade fullPrice {}", price);
+            return price;
         }
-        return trade.getTradedBalance();
+        return trade.getTradedPrice();
     }
 
     public BigDecimal calculateBalanceForInstruction(String entrustProp, String assetType, BigDecimal entrustPrice, long volume, BigDecimal balance) {
-        //债券指令 全部按照净价处理
-        if (InvestmentAssetType.BOND.value.equals(assetType)) {
-            return TradeUtils.multiply(entrustPrice, volume, 2);
-        }
         //协议回购金额计算
         if (IntegratedEntrustUtils.isProtocolBack(entrustProp)) {
             return balance;
@@ -191,6 +184,10 @@ public class BondHelper {
         // 质押式竞价回购，金额计算
         if (InvestmentAssetType.PLEDGE_REPURCHASE.value.equals(assetType)) {
             return new BigDecimal(volume * 100).setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+        //债券指令 全部按照净价处理
+        if (InvestmentAssetType.BOND.value.equals(assetType)) {
+            return TradeUtils.multiply(entrustPrice, volume, 2);
         }
         return balance;
     }

@@ -11,6 +11,7 @@
 package com.joyintech.service.basicdata.dataimport.dao;
 
 import com.joyintech.service.basicdata.dataimport.dto.SettleTransResultDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Map;
  * @see SettleDataImportMapper
  * @since 1.0
  */
+@Repository
 public interface SettleDataImportMapper {
     List<SettleTransResultDto> selectBatch(Map<String, Object> map);
 

@@ -1787,5 +1787,9 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         map.put("acctType",BussinessDictCodeList.资金账户类型_托管账户.getValue());
         return cfetsBondDealQuotedPriceMapper.getCstpQryTableList(map);
     }
-    
+
+    public BigDecimal getWflEntrustDealedAmt(Map<String, Object> map){
+        return cfetsBondDealQuotedPriceMapper.getWflEntrustDealedAmt(map);
+    }
+
 }

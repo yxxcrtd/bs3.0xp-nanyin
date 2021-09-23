@@ -951,6 +951,32 @@
 			</if>
 		</where>
 	</select>
-
+	<!--查询流程中数据-->
+	<select id="getWflEntrustDealedAmt" resultType="java.math.BigDecimal">
+		<choose>
+			<when test="isDzh == 'Y'.toString()">
+				SELECT
+				SUM(SHARE_AMT*100)
+				FROM
+				WFL_IBU_QUOTE_ETR_RE
+				<where>
+					<if test="entrustId != null and entrustId != ''">
+						and ENTRUST_ID = #{entrustId}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				SELECT
+				SUM(SHARE_AMT*100)
+				FROM
+				WFL_IBU_QUOTE_BOND2
+				<where>
+					<if test="entrustId != null and entrustId != ''">
+						and ENTRUST_ID = #{entrustId}
+					</if>
+				</where>
+			</otherwise>
+		</choose>
+	</select>
 
 </mapper>
