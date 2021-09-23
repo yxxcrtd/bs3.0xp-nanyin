@@ -1012,6 +1012,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     doCommon(infMap, v);
                     infMap.put(GROUP_ID, groupId);
                     infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                    if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                        infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
+                    }
                     result.add(infMap);
                 }
                 // 新首期
@@ -1047,6 +1050,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 doCommon(infMap, v);
                 infMap.put(GROUP_ID, groupId);
                 infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                    infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
+                }
+
                 result.add(infMap);
             }
         }
