@@ -165,7 +165,7 @@ public class ImpairmentDataLoadReaderService {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
 
                 listErrorDto.add(entity);
                 continue;
@@ -180,8 +180,8 @@ public class ImpairmentDataLoadReaderService {
             }
             else{
                 // 警告：资产无对应评级信息
-                String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
+                String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果信息";
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
 
                 listErrorDto.add(entity);
             }
