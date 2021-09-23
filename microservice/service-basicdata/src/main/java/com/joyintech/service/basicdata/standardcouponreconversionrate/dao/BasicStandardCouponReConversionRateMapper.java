@@ -2,10 +2,12 @@ package com.joyintech.service.basicdata.standardcouponreconversionrate.dao;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.basicdata.standardcouponreconversionrate.dto.StandardCouponReConversionRateDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface BasicStandardCouponReConversionRateMapper {
 
     /**

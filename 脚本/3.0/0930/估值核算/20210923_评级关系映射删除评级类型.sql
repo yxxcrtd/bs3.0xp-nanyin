@@ -1,0 +1,5 @@
+
+--评级关系映射表删除字段：评级类型O_TYPE
+ALTER TABLE MOD_STANDARD_GRADE_MAPPING DROP COLUMN O_TYPE;
+--评级关系映射表增加主键SEQ_NO
+alter table MOD_STANDARD_GRADE_MAPPING add constraint PK_MOD_STANDARD_GRADE_MAPPING primary key (SEQ_NO);

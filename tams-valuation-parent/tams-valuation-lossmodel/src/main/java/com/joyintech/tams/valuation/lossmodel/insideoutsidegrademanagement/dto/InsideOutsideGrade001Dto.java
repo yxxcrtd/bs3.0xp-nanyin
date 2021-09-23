@@ -33,11 +33,6 @@ public class InsideOutsideGrade001Dto extends BaseEntity implements ProcessEntit
     private String gradeInst;
 
     /**
-     * 对象类型
-     */
-    private String oType;
-
-    /**
      * 外部评级
      */
     private String gradeResult;
@@ -107,15 +102,6 @@ public class InsideOutsideGrade001Dto extends BaseEntity implements ProcessEntit
     public void setGradeInst(String gradeInst) {
         this.gradeInst = gradeInst;
     }
-    @PrimaryKey(PrimaryKey.Field.PK_2)
-    @NotEmpty(fieldName = "对象类型", groups = {ValidateGroupEdit.class})
-    public String getoType() {
-        return oType;
-    }
-
-    public void setoType(String oType) {
-        this.oType = oType;
-    }
 
     public String getGradeResult() {
         return gradeResult;
@@ -169,7 +155,11 @@ public class InsideOutsideGrade001Dto extends BaseEntity implements ProcessEntit
         return SysDataUtil.getNameFromDataDict(DictCode.评级机构, this.getGradeInst());
     }
 
-    public String getoTypeStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.评级类型, this.getoType());
+    public String getGradeResultStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.评级结果, this.getGradeResult());
+    }
+
+    public String getGradeStandardResultStr() {
+        return SysDataUtil.getNameFromDataDict(DictCode.内部评级, this.getGradeStandardResult());
     }
 }

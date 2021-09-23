@@ -6,7 +6,6 @@ $(function() {
     var getSearchParams = function() {
         return {
             gradeInst : $('#gradeInst').val(),
-            oType : $('#oType').val(),
         }
     };
 /**
@@ -25,14 +24,12 @@ $(function() {
 	    checkbox:true,
         cols : [
                 {field : 'gradeInst',title : 'gradeInst',visible : false},
-                {field : 'oType',title : 'oType',visible : false},
                 { title: "评级机构", field: 'gradeInstStr',sortField:'gradeInst',sort : true},
-                { title: "对象类型", field: 'oTypeStr',sortField:'oType',sort : true},
                 { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
                ],
         dblclick: function(table, data){
         	Joyin.dialog(JoyinUtil.getLabel("内外部评级映射管理明细"), "/model/impairment/insideoutsidegrademanagement/InsideOutsideGrade002/init",
-                    "90%", "90%", {gradeInst:data.gradeInst,oType:data.oType, pageModel:PAGE_MODEL_REFERENCE,status:"02"}, function(){
+                    "90%", "90%", {gradeInst:data.gradeInst, pageModel:PAGE_MODEL_REFERENCE,status:"02"}, function(){
                         //table.reload();
                     }
               );

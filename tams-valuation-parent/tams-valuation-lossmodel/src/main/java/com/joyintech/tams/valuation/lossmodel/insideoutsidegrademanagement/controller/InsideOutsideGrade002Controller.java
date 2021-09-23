@@ -62,17 +62,15 @@ public class InsideOutsideGrade002Controller extends BaseController {
     @Override
     public String init(Model model) {
         String gradeInst = this.getParam("gradeInst");
-        String oType = this.getParam("oType");
         InsideOutsideGrade001Dto dto = new InsideOutsideGrade001Dto();
         List<InsideOutsideGrade001Dto> dtoList = new ArrayList<InsideOutsideGrade001Dto>();
         List<InsideOutsideGradeDetail001Dto> detailList = new ArrayList<InsideOutsideGradeDetail001Dto>();
 
         // 工作流ID
         String workflowId = this.getParam(GlobalConstant.WORKFLOW_ID);
-        if (StringUtil.isNotEmpty(gradeInst) && StringUtil.isNotEmpty(oType)) {
+        if (StringUtil.isNotEmpty(gradeInst)) {
             Map<String,Object> map = new HashMap<>();
             map.put("gradeInst",gradeInst);
-            map.put("oType",oType);
             dtoList = insideOutsideGrade001Service.getInsideOutSideDataBySeqNo(map);
             dto = dtoList.get(0);
 
@@ -90,7 +88,6 @@ public class InsideOutsideGrade002Controller extends BaseController {
 
             Map<String,Object> map = new HashMap<>();
             map.put("gradeInst",dto.getGradeInst());
-            map.put("oType",dto.getoType());
 
             if(dto.getSelectInsideOutsideDetail() == null){
                 dtoList = insideOutsideGrade001Service.getInsideOutSideDataBySeqNo(map);
@@ -127,13 +124,13 @@ public class InsideOutsideGrade002Controller extends BaseController {
         ProcessParameter<InsideOutsideGrade001Dto> proParam = new ProcessParameter<>();
         WorkFlowParameter<InsideOutsideGrade001Dto> params = new WorkFlowParameter<>();
         // 业务代码
-        params.setBusinessCode(dto.getGradeInst()+"_"+dto.getoType());
+        params.setBusinessCode(dto.getGradeInst());
         // 业务类型
         params.setBusinessType(DictCodeListExt3.共通业务类型_内外部评级映射管理.getValue());
         params.setPageId(this.getPageId());
         params.setElementId(this.getParam(GlobalConstant.ELEMENT_ID));
         // 设置流程业务说明, entity即传入的dto
-        params.setComment(entity -> WorkFlowUtil.concatComment("内外部评级映射管理修改：", SysDataUtil.getNameFromDataDict(DictCode.评级机构, entity.getGradeInst())+"_"+SysDataUtil.getNameFromDataDict(DictCode.评级类型, entity.getoType())));
+        params.setComment(entity -> WorkFlowUtil.concatComment("内外部评级映射管理修改：", SysDataUtil.getNameFromDataDict(DictCode.评级机构, entity.getGradeInst())));
 
         proParam.setWorkFlowParameter(params);
 
@@ -166,7 +163,6 @@ public class InsideOutsideGrade002Controller extends BaseController {
         WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
         wflValidInputParameter.setPageId("InsideOutsideGrade002");
         wflValidInputParameter.setBusinessDataPk1(dto.getGradeInst());
-        wflValidInputParameter.setBusinessDataPk2(dto.getoType());
 
         if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
             ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
@@ -179,7 +175,7 @@ public class InsideOutsideGrade002Controller extends BaseController {
         List<ValidMessage> errorList = new ArrayList<>();
 
         if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
-            if (StringUtil.isNotEmpty(dto.getGradeInst()) && StringUtil.isNotEmpty(dto.getoType())) {
+            if (StringUtil.isNotEmpty(dto.getGradeInst())) {
                 boolean flag = insideOutsideGrade001Service.haveDataCheck(dto);
                 if (flag) {
                     errorList.add(new ValidMessage("该评级机构和对象类型已配置映射，不可重复配置！"));
