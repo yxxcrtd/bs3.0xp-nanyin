@@ -80,7 +80,7 @@
                     <div class="layui-input-inline input-inline">
                         <select id="valuationMethod" name="valuationMethod" class="layui-input form-input input-select"
                             allowClear="true" placeholder="请输入" data-th-data-result="${VALUATION_METHOD}"
-                            data-th-initvalue="${entity?.valuationMethod}" parentIds="invAim,finprodType"data-th-required="true"
+                            data-th-initvalue="${entity?.valuationMethod}" parentIds="invAim,finprodType,finprodId"data-th-required="true"
                             data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getValuationMethod}">
                             <option></option>
                         </select>

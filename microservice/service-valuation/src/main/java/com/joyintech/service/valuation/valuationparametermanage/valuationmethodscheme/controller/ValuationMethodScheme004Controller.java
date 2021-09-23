@@ -122,4 +122,18 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		valuationMethodScheme004Service.doComplete(dto, OperationType.DELETE);
 	}
 
+	/**
+	 * 根据资产代码获取证券品种
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("getSecTypeByFinprodId")
+	public String getSecTypeByFinprodId(@RequestBody String finprodId) {
+		return valuationMethodScheme004Service.getSecTypeByFinprodId(finprodId);
+	}
+
+
+
+
 }
