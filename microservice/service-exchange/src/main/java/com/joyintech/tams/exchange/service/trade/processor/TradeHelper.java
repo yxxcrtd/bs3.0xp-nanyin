@@ -651,11 +651,11 @@ public class TradeHelper {
                 && EntrustUtils.isfairModeWithUnacceptInstructionForbid(commonManagement.getFairModeWithUnacceptInstruction())) {
             //公平交易开启
             Map<String, Instruction> instructionBeanMap = instructionService.queryInstructionByUserIdAndStockCode(order.getUserId(), order.getStockCode())
-                    .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
+                                                                            .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
                             && InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())
                             && InvestmentUtils.isNormalTradeFromInstruction(instruction.getTradePlat())
                             && !InvestmentUtils.isInstructionProcessComplete(instruction))
-                    .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
+                                                                            .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
             if (instructionBeanMap.size() > 0) {
                 logger.debug("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(instructionBeanMap));
                 order.setErrorMsg("存在公平指令未接收");

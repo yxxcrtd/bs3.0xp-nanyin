@@ -6,6 +6,7 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.entrust.etrstockconnect.dto.EtrStockConnectDto;
 import com.joyintech.tams.common.base.entity.StlSecAcctInfo;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.Map;
  * @see EtrStockConnect002Mapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrStockConnect002Mapper {
 
     /**

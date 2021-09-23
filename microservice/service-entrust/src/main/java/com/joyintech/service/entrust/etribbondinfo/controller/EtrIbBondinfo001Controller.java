@@ -94,14 +94,6 @@ public class EtrIbBondinfo001Controller {
     }
 
 
-    /**
-     * 查询是否sppi测试
-     * @param pageParam
-     * @return
-     */
-    @PostMapping("assetIsTestBySppi")
-    public String assetIsTestBySppi(@RequestBody Map<String, Object> pageParam) {
-         return etrIbBondinfo001Service.assetIsTestBySppi(pageParam);
-    }
+
 
 }

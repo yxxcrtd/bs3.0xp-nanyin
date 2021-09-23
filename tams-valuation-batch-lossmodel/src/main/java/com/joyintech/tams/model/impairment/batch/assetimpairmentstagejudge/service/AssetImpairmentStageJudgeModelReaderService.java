@@ -91,15 +91,6 @@ public class AssetImpairmentStageJudgeModelReaderService {
             }
             list.add(entity);
         }
-
-        if(list == null || list.size()==0){
-            SysBatchExecInfo sysBatchExecInfo = (SysBatchExecInfo) params.get("BATCH_INFO");
-            String msg = "【资产减值阶段判断批处理】：计算错误";
-            // 取不到满足条件的数据
-            finprodIdList.forEach(x->{
-                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),x, msg);
-            });
-        }
         return list;
     }
 

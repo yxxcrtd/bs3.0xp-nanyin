@@ -92,8 +92,8 @@ $(function() {
                 item.data.entrustAmt=item.data.entrustAmt;
                 item.data.tradeMarket = object.tradeMarket;
                 item.data.repoTerm = object.repoTerm;
-                item.data.vdate = object.vdate,
-                item.data.mdate=object.mdate,
+                item.data.vdate = object.vdate;
+                item.data.mdate=object.mdate;
                 
                 param.push(item.data);
             }

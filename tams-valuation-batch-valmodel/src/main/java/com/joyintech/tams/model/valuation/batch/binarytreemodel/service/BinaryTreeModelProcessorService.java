@@ -437,7 +437,20 @@ public class BinaryTreeModelProcessorService {
         //变量.现金流支付规则  = 资产信息.现金流支付规则.get（0）
         ModCashFlowPayRulesDto modCashFlowPayRule = entity.getModCashFlowPayRulesList().get(0);
         //变量.现金流计算规则  = 资产信息.现金流计算规则.get（0）
-        ModCashFlowCalRuleDto modCashFlowCalRule = entity.getModCashFlowCalRuleList().get(0);
+
+        ModCashFlowCalRuleDto modCashFlowCalRule = null;
+        //取最新的生效利率
+        for(ModCashFlowCalRuleDto dto : entity.getModCashFlowCalRuleList()){
+            if(modCashFlowCalRule==null) {
+                modCashFlowCalRule = dto;
+            }else{
+                if((dto.getEffDate().compareTo(platDate)<=0&&dto.getEffDate().compareTo(modCashFlowCalRule.getEffDate())>0)
+                ||(dto.getEffDate().compareTo(platDate)<=0&&modCashFlowCalRule.getEffDate().compareTo(platDate)>0)
+                ){
+                    modCashFlowCalRule = dto;
+                }
+            }
+        }
 
         //7.1 估值日的无风险利率
         //变量.估值日收益率曲线 = 资产信息.曲线行情
@@ -595,17 +608,17 @@ public class BinaryTreeModelProcessorService {
                             entity.getModAssetInfoDto().getFinprodId(), "【二叉树模型批处理】-初始节点，股权价值: "+binTree[0][0].getStockValue()+";债权价值: "+binTree[0][0].getBondValue());
                 }
 
-//                //测试信息打印
-//                if (binTree[n][i].getStockValue() != null) {
-//                    logger.info("股权价值["+ n + "][" + i + "]" + binTree[n][i].getStockValue().doubleValue());
-//                }
-//                if (binTree[n][i].getBondValue() != null) {
-//                    logger.info("债权价值["+ n + "][" + i + "]" + binTree[n][i].getBondValue().doubleValue());
-//                }
-//                if (binTree[n][i].getAllValue() != null) {
-//                    logger.info("总价值["+ n + "][" + i + "]" + binTree[n][i].getAllValue().doubleValue());
-//                }
-//                //测试信息打印
+                //测试信息打印
+                if (binTree[n][i].getStockValue() != null) {
+                    logger.info("股权价值["+ n + "][" + i + "]" + binTree[n][i].getStockValue().doubleValue());
+                }
+                if (binTree[n][i].getBondValue() != null) {
+                    logger.info("债权价值["+ n + "][" + i + "]" + binTree[n][i].getBondValue().doubleValue());
+                }
+                if (binTree[n][i].getAllValue() != null) {
+                    logger.info("总价值["+ n + "][" + i + "]" + binTree[n][i].getAllValue().doubleValue());
+                }
+                //测试信息打印
             }
         }
         //最终基准日

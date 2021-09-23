@@ -7,6 +7,7 @@ import com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -30,4 +31,6 @@ public interface CstpCommonMatchMapper {
     List<InterfTradRepoasstDto> getInterfTradRepoasst(@Param("tradeId") String tradeId);
 
     void deleteMatchInfo(Map<String,Object> map);
+
+    BigDecimal getMatchAmount(@Param("execId") String execId);
 }

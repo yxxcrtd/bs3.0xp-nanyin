@@ -357,9 +357,9 @@ public class EntrustCancelProcessor {
             cancelEntrustDb.setErrorCode(cancelEntrustBean.getErrorCode());
             cancelEntrustDb.setEntrustStatus(EntrustStatus.INVALID.value);
             cancelEntrustDb.setErrorMsg(cancelEntrustBean.getErrorMsg());
-            if (entrustDb.getTradedVolume() + entrustDb.getCancelVolume() < entrustDb.getEntrustVolume()) {
-                tradeHelper.rollbackCancelStatus(entrustDb);
-            }
+//            if (entrustDb.getTradedVolume() + entrustDb.getCancelVolume() < entrustDb.getEntrustVolume()) {
+//                tradeHelper.rollbackCancelStatus(entrustDb);
+//            }
         } else {
             cancelEntrustDb.setReportTime(simpleDateFormat.format(new Date(System.currentTimeMillis())));
             cancelEntrustDb.setEntrustStatus(EntrustStatus.REPORTED.value);

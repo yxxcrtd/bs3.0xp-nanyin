@@ -88,14 +88,12 @@ public class InsideOutsideGrade001Controller extends BaseController {
         WorkFlowParameter<InsideOutsideGrade001Dto> params = new WorkFlowParameter<InsideOutsideGrade001Dto>();
         params.setPageId("InsideOutsideGrade002");
         params.setElementId(dto.getElementId());
-        params.setBusinessCode(item -> item.getGradeInst()+"_"+item.getoType());
+        params.setBusinessCode(item -> item.getGradeInst());
         params.setBusinessType(DictCodeListExt3.共通业务类型_内外部评级映射管理.getValue());
         // 设置流程业务说明, entity即传入的dto
         params.setComment(entity -> {
             return WorkFlowUtil.concatComment("评级机构"+
-                    GlobalConstant.OPEN_PARENTHESIS+SysDataUtil.getNameFromDataDict(DictCode.评级机构, entity.getGradeInst())+GlobalConstant.CLOSE_PARENTHESIS+
-                    "对象类型"+GlobalConstant.OPEN_PARENTHESIS+
-                    SysDataUtil.getNameFromDataDict(DictCode.评级类型, entity.getoType())+GlobalConstant.CLOSE_PARENTHESIS);
+                    GlobalConstant.OPEN_PARENTHESIS+SysDataUtil.getNameFromDataDict(DictCode.评级机构, entity.getGradeInst())+GlobalConstant.CLOSE_PARENTHESIS);
         });
         processParameter.setWorkFlowParameter(params);
         String msg = insideOutsideGrade001Service.start(processParameter,
@@ -118,11 +116,10 @@ public class InsideOutsideGrade001Controller extends BaseController {
         String datas = this.getParam("datas");
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<InsideOutsideGrade001Dto> listdto = new ArrayList<>();
-        if (datas == null) {
-            listdto = insideOutsideGrade001Service.selectForExport(paraMap);
-        } else {
-            listdto = JsonUtils.json2List(datas, InsideOutsideGrade001Dto.class);
+        if (datas != null) {
+            paraMap.put("list", JsonUtils.json2List(datas, InsideOutsideGrade001Dto.class));
         }
+        listdto = insideOutsideGrade001Service.selectForExport(paraMap);
         File outFile = insideOutsideGrade001Service.makeFile(
                 "/com/joyintech/tams/valuation/lossmodel/insideoutsidegrademanagement/conf/export_insideoutsidegrade.xml",
                 listdto);

@@ -127,6 +127,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
     private MstCounterPartyMapper mstCounterPartyMapper;
 
     @Autowired
+    private MstCfetsCustomerInfoMapper mstCfetsCustomerInfoMapper;
+
+    @Autowired
     private IPlatformDate iPlatformDate;
 
     private List<String> 申购确认_赎回申请 = Arrays.asList(DictCodeList.交易方向_赎回.getValue(),
@@ -1009,6 +1012,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     doCommon(infMap, v);
                     infMap.put(GROUP_ID, groupId);
                     infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                    if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                        infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
+                    }
                     result.add(infMap);
                 }
                 // 新首期
@@ -1044,6 +1050,10 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 doCommon(infMap, v);
                 infMap.put(GROUP_ID, groupId);
                 infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+                if(StringUtil.equals(infRiskRdsDto.getTradePlace(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())) {
+                    infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
+                }
+
                 result.add(infMap);
             }
         }
@@ -1151,10 +1161,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             String groupId = String.valueOf(System.nanoTime());
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
-            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            BigDecimal num = (BigDecimal)convert(dataMap.get("conNum"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
+            BigDecimal pri = (BigDecimal)convert(dataMap.get("conPrice"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
+            if (num != null && pri != null) {
+                infMap.put(PageFieldToInterfFactory.INF_AMOUNT, num.multiply(pri));
+            }
             // add by zhangrui1 正反同步交易特殊处理 end
             if(StringUtil.isNotEmpty(infMap.get(PageFieldToInterfFactory.INF_AMOUNT))) {
-                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal((String)infMap.get(PageFieldToInterfFactory.INF_AMOUNT)), new BigDecimal(100), 2));
+                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal(infMap.get(PageFieldToInterfFactory.INF_AMOUNT).toString()), new BigDecimal(100), 2));
             }
             result.add(infMap);
             // 股票
@@ -1176,15 +1190,12 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             // add by zhangrui1 债转股拼接事件编号 end
             // 金额=转股数*转股价格
-            BigDecimal num = (BigDecimal)convert(dataMap.get("conNum"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
-            BigDecimal pri = (BigDecimal)convert(dataMap.get("conPrice"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
             if (num != null && pri != null) {
                 infMap.put(PageFieldToInterfFactory.INF_AMOUNT, num.multiply(pri));
             }
             // add by zhangrui1 正反同步交易特殊处理 start
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
-            infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
             String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
             if (!StringUtil.isEmpty(entrustId)
@@ -1807,6 +1818,21 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
             }
             //wangyang1 add by 增加期限金额 2021年9月10日 end
+            //获取交易对手的市场机构代码
+            if(StringUtil.isNotEmpty(finDto.getCounterId())) {
+                MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(finDto.getCounterId());
+                if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                   List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                    if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                        MstCounterParty mstCounterParty =mstCounterPartys.get(0);
+                        if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                            infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                        }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                            infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                        }
+                    }
+                }
+            }
         }
         // add by zhangrui1 画面到期日是mdateAdd end
         // add by zhangrui1 基金申购使用净值1 start

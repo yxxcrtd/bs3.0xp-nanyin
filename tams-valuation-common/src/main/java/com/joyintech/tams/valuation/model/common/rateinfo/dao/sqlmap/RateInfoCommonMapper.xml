@@ -40,7 +40,6 @@
 		AND fulldata.GRADE_DATE = maxdata.GRADE_DATE
 		inner join MOD_STANDARD_GRADE_MAPPING MAPP
 		ON fulldata.GRADE_ORG_ID = MAPP.GRADE_INST /**评级机构**/
-		AND fulldata.O_TYPE = MAPP.O_TYPE /**评级类型**/
 		AND fulldata.GRADE_RESULT = MAPP.GRADE_RESULT /**评级结果**/
 	</select>
 

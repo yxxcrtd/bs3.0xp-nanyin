@@ -408,7 +408,7 @@
                 title: '交易金额',
                 type: "money"
             }
-            , {field: 'term', width: 90, title: '回购期限'}
+            , {field: 'term', width: 90, title: '回购期限（天）'}
             , {field: 'rate', width: 130, title: 'CfetsRepoDealQuotedPrice001.dayOffer.table.rate'}
             , {
                 field: 'bondCode',

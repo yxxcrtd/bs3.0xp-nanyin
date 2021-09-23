@@ -37,7 +37,7 @@
          * 定义表头
          */
         cols:[
-            {field:'statusValidStr',width:'8%',title: 'TrdPlanCurrDuration001.pageDataStatus'} //数据状态
+            {field:'statusValidStr',width:'8%',title: 'TrdPlanCurrDuration001.pageDataStatus',sortField:'statusValid'} //数据状态
             ,{field:'totleTradeId',width:'15%',title: 'TrdPlanCurrDuration001.busiCode',sortField:'TOTLE_TRADE_ID'}//业务编号
             ,{field:'finprodMarketId',width:'15%',title:'TrdPlanCurrDuration001.finprodMarketId'}//资产代码
             ,{field:'finprodMarketName',width:'15%',title:'TrdPlanCurrDuration001.finprodMarketName'}//资产名称

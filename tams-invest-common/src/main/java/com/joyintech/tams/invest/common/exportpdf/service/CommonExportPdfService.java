@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.exportpdf.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.*;
@@ -14,6 +15,8 @@ import com.joyintech.tams.invest.common.exportpdf.model.*;
 import com.joyintech.tams.invest.common.util.XmlParseUtil;
 import com.joyintech.tools.util.ListUtils;
 import com.sun.javafx.font.FontFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,11 @@ import java.util.List;
  */
 @Service
 public class CommonExportPdfService<T> {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 数据展示方式 1.横向展示
@@ -70,14 +78,20 @@ public class CommonExportPdfService<T> {
             //读取导出pdf配置
             if(configFile.startsWith("file:")){
                 configFile = configFile.replace("file:","");
+            }else if(configFile.startsWith("jar:file:")){
+                configFile = configFile.replace("jar:file:","");
             }
+            logger.info("82行_导出pdf配置:"+configFile);
             WorkPage workPage = readXmlToJavaBean(configFile);
+            logger.info("84行_workPage:"+ JSON.toJSONString(workPage));
             //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
             // String filePath = CacheUtil.getSysParam("export_pdf_path");
             String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            logger.info("88行_pdf导出文件临时路径:"+filePath);
             //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             exportFileName = workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
             String fileName = filePath+"/"+ exportFileName;
+            logger.info("92行_fileName:"+fileName);
             createPdfTable(workPage,list);
             // 设置当前画面进度为50
             progressBarService.updatePercent(pageId, PROCESS_KEY, 50D, false);
@@ -116,9 +130,11 @@ public class CommonExportPdfService<T> {
             //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
 //            String filePath = CacheUtil.getSysParam("export_pdf_path");
             String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            logger.info("131行_pdf导出文件临时路径:"+filePath);
             //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             //建立一个书写器
             fileName = filePath+"/"+workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
+            logger.info("135行_pdf导出文件名称:"+fileName);
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
             //打开文件
             document.open();

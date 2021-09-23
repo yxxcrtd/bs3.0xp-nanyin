@@ -32,7 +32,7 @@
 		    ETR_ENTRUST.MDATE                                                   mdate,
 		    ETR_ENTRUST.ENTRUST_ID                                              entrustId,
 		    ETR_ENTRUST_ADD.QUOTE_TYPE                                          quoteType,
-		    
+	    	ETR_ENTRUST.BUSINESS_MODEL                                          businessModel,
 		    <!-- 本方 -->
 		    MST_CFETS_CUSTOMER_INFO.PARTY_ID                                    mySide,
 		    <!-- 本方名称 -->
@@ -951,6 +951,32 @@
 			</if>
 		</where>
 	</select>
-
+	<!--查询流程中数据-->
+	<select id="getWflEntrustDealedAmt" resultType="java.math.BigDecimal">
+		<choose>
+			<when test="isDzh == 'Y'.toString()">
+				SELECT
+				SUM(SHARE_AMT*100)
+				FROM
+				WFL_IBU_QUOTE_ETR_RE
+				<where>
+					<if test="entrustId != null and entrustId != ''">
+						and ENTRUST_ID = #{entrustId}
+					</if>
+				</where>
+			</when>
+			<otherwise>
+				SELECT
+				SUM(SHARE_AMT*100)
+				FROM
+				WFL_IBU_QUOTE_BOND2
+				<where>
+					<if test="entrustId != null and entrustId != ''">
+						and ENTRUST_ID = #{entrustId}
+					</if>
+				</where>
+			</otherwise>
+		</choose>
+	</select>
 
 </mapper>

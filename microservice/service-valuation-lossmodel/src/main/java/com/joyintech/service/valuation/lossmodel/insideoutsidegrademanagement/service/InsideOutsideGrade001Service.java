@@ -34,7 +34,7 @@ public class InsideOutsideGrade001Service extends BaseService<InsideOutsideGrade
      * @return
      */
     public int delete(InsideOutsideGrade001Dto dto) {
-        return mapper.deleteByPrimaryKey(dto.getGradeInst(),dto.getoType());
+        return mapper.deleteByPrimaryKey(dto.getGradeInst());
     }
 
     /**
@@ -52,7 +52,7 @@ public class InsideOutsideGrade001Service extends BaseService<InsideOutsideGrade
      * @return
      */
     public List<InsideOutsideGrade001Dto> selectForExport(Map<String, Object> map) {
-        return mapper.getQueryData(map);
+        return mapper.getExportData(map);
     }
 
     /**

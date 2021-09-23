@@ -724,6 +724,7 @@ public class TradeMsgProcessor {
             tradeRecord.setStockName(dbEntrust.getStockName());
             tradeRecord.setBsFlag(dbEntrust.getBsFlag());
             tradeRecord.setTradedPrice(dbEntrust.getEntrustPrice());
+            tradeRecord.setTradedPrice(dbEntrust.getFullPrice());
             tradeRecord.setTradedVolume(dbEntrust.getEntrustVolume());
             logger.info("委托废单，模拟废单成交处理");
             Instruction instruction = instructionService.findById(dbEntrust.getInstructionId());
