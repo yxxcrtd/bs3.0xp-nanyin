@@ -149,7 +149,7 @@ public class BMWPdCalculateProcessService {
             if(modGradePdConfigDto ==null ) {
                     //生成警告日志
                     //=====记录计算错误日志=====start=====
-                    logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+variablePdCalculateDto.getGradeResult()+"】的PD未维护";
+                    logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
                     modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
                     //=====记录计算错误日志=====end=====
                     return resultDto;
