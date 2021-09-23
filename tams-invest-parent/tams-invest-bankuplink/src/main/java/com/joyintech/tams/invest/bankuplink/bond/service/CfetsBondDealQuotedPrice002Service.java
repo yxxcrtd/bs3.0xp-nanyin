@@ -1040,4 +1040,10 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/isExerYieldDivShow",
                 paramMap, String.class);
     }
+
+    public BigDecimal getWflEntrustDealedAmt(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsBondDealQuotedPrice/getWflEntrustDealedAmt",
+                map, BigDecimal.class);
+    }
 }

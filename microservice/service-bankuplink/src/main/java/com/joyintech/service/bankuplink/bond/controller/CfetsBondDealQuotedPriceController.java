@@ -1126,4 +1126,9 @@ public class CfetsBondDealQuotedPriceController {
     public List<CstpSelectDto> getCstpQryTableList(@RequestBody Map<String,Object> map) throws Exception{
         return cfetsBondDealQuotedPriceService.getCstpQryTableList(map);
     }
+
+    @PostMapping("getWflEntrustDealedAmt")
+    public BigDecimal getWflEntrustDealedAmt(@RequestBody Map<String, Object> map){
+        return cfetsBondDealQuotedPriceService.getWflEntrustDealedAmt(map);
+    }
 }

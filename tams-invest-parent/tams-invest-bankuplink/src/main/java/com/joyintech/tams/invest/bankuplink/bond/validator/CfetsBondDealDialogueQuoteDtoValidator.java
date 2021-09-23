@@ -95,6 +95,34 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
             		validList.add(new ValidMessage("tradeStatus", this.getMessage("CFETS_COMMON_E_040")));
             	}
             }
+            if (StringUtil.equals(cfetsBondDealDialogueQuoteDto.getQuotaPageModel(), "new")) {
+                //多组合
+                if(StringUtil.equals(isDzh,"Y")){
+                    for (CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuote : cfetsBondDealDialogueQuoteDto.getCfetsBondDealDialogueQuoteDtoList()) {
+                        CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDoneDto = new CfetsBondDealDialogueQuoteDto();
+                        cfetsBondDealDialogueQuoteDoneDto.setQuoteId(cfetsBondDealDialogueQuoteDto.getQuoteId());
+                        cfetsBondDealDialogueQuoteDoneDto.setEntrustId(cfetsBondDealDialogueQuote.getEntrustId());
+                        cfetsBondDealDialogueQuoteDoneDto.setAvaNum(cfetsBondDealDialogueQuote.getAvaNum());
+                        cfetsBondDealDialogueQuoteDoneDto.setEntrustAvaNum(cfetsBondDealDialogueQuote.getEntrustNum());
+                        指令额度判断(cfetsBondDealDialogueQuoteDoneDto,isDzh,"new",validList);
+                        if(!StringUtil.isEmptyList(validList)){
+                            return validList;
+                        }
+                    }
+                }
+                else{
+                    if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())) {
+                        指令额度判断(cfetsBondDealDialogueQuoteDto,isDzh,"new",validList);
+                    }
+                    else {
+                        if (!StringUtil.equals(
+                                CacheUtil.getSysParam("ibuFlag_answerQuoteWithOutEntrust"), "02")) {
+                            validList.add(
+                                    new ValidMessage("entrustId", this.getMessage("CFETS_COMMON_E_009")));
+                        }
+                    }
+                }
+            }
         }
         //多组合
         if(StringUtil.equals(isDzh,"Y")){
@@ -169,7 +197,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustId(cfetsBondDealDialogueQuote.getEntrustId());
                         cfetsBondDealDialogueQuoteDoneDto.setAvaNum(cfetsBondDealDialogueQuote.getAvaNum());
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustAmt(cfetsBondDealDialogueQuote.getEntrustAmt());
-                        指令额度判断(cfetsBondDealDialogueQuoteDoneDto,validList);
+                        指令额度判断(cfetsBondDealDialogueQuoteDoneDto,isDzh,"done",validList);
                         if(!StringUtil.isEmptyList(validList)){
                             return validList;
                         }
@@ -177,7 +205,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                 }
                 else{
                     if (StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getEntrustId())) {
-                        指令额度判断(cfetsBondDealDialogueQuoteDto,validList);
+                        指令额度判断(cfetsBondDealDialogueQuoteDto,isDzh,"done",validList);
                     }
                     else {
                         if (!StringUtil.equals(
@@ -305,20 +333,30 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
         }
     }
 
-    private void 指令额度判断(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto,List<ValidMessage> validList){
+    private void 指令额度判断(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto,String isDzh,String quotaPageModel,List<ValidMessage> validList){
         if (cfetsBondDealDialogueQuoteDto.getAvaNum() != null) {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("entrustId", cfetsBondDealDialogueQuoteDto.getEntrustId());
+            map.put("isDzh",isDzh);
             if (StringUtil.isNotBlank(cfetsBondDealDialogueQuoteDto.getQuoteId())) {
                 map.put("quoteId", cfetsBondDealDialogueQuoteDto.getQuoteId());
             }
             BigDecimal dealedAmt = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt(
                     map);
-            BigDecimal avaAmt = ArithmeticUtil.subtract(
-                    cfetsBondDealDialogueQuoteDto.getEntrustAmt(), dealedAmt);
+            //验证下流程中
+            BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(map);
+            BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
+            BigDecimal avaAmt = BigDecimal.ZERO;
+            if(StringUtil.equals(quotaPageModel,"new")&&StringUtil.equals(isDzh,"Y")){
+                avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAvaNum(), new BigDecimal(10000)),dealedAmt),wflAmt);
+            }else{
+                avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(
+                        cfetsBondDealDialogueQuoteDto.getEntrustAmt(), dealedAmt),wflAmt);
+            }
             if (ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(), new BigDecimal(10000)).compareTo(avaAmt) > 0) {
+                String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+wflAmt:"";
                 validList.add(new ValidMessage("responseAmt",
-                        this.getMessage("CFETS_COMMON_E_010") + avaAmt.toPlainString()));
+                        this.getMessage("CFETS_COMMON_E_010") + avaAmt.toPlainString()+wflTip));
             }
         }
     }
