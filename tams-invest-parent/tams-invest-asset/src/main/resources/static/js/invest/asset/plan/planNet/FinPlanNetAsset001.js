@@ -111,7 +111,7 @@ $(function() {
             ,{field:'issuer',title: 'FinPlanNetAsset002.issuer',width:150} 
             // add by 张普裕  2019/9/27  增加托管人、实际管理人、发行人字段 资产推荐方 end
             // 增加推荐方与推荐费率 add by renping 20191014 start
-            ,{field:'recommenderName',  title: 'FinPlanNetAsset002.recommender', width:150, sortField:'recommender'}
+            ,{field:'recommenderName',  title: 'FinPlanNetAsset002.recommender',visible:false, width:150, sortField:'recommender'}
             // 增加推荐方与推荐费率 add by renping 20191014 end
             ,{field:'trialNo',visible :false}
             ,{field:'contractNo',visible :false}

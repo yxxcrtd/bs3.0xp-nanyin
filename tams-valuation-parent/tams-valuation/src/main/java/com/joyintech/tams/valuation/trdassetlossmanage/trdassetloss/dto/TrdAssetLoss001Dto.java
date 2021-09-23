@@ -707,7 +707,7 @@ public class TrdAssetLoss001Dto extends BaseEntity implements ProcessEntity {
      * @return
      */
     public String getAssetTypeFmt(){
-        return SysDatadictUtil.getNameFromDataDict(DictCode.证券品种,this.getStage());
+        return SysDatadictUtil.getNameFromDataDict(DictCode.证券品种,this.getAssetType());
     }
 
     /**

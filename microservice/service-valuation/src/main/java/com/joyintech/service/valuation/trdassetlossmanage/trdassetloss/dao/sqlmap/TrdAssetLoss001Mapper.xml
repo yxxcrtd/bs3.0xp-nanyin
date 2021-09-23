@@ -7,7 +7,7 @@
 		select
 			TRD_ASSET_LOSS.VAL_DATE valDate, 			/** 行情日 **/
 			TRD_ASSET_LOSS.FINPROD_ID finprodId, 			/** 金融产品代码 **/
-			Fin_Product.Finprod_Abbr finprodAbbr, 		/** 金融产品简称 **/
+			NVL(Fin_Product.Finprod_Abbr,Fin_Product.Finprod_Name) finprodAbbr, 		/** 金融产品简称 **/
 			TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType, /** 减值测算方式 **/
 			Fin_Product.Vdate vDate,  					/** 资产起息日 **/
 			Fin_Product.Mdate mDate, 					/** 资产到期日 **/
@@ -38,13 +38,13 @@
 			TRD_ASSET_LOSS.LOSS_INPUT_TYPE AS lossInputType 			/** 减值录入方式 **/
 		from TRD_ASSET_LOSS 	/** 资产减值流水 **/
 	  	left join Fin_Product   /** 标的类金融产品 **/
-	  	on TRD_ASSET_LOSS.Sec_Id = Fin_Product.FINPROD_MARKET_ID
+	  	on TRD_ASSET_LOSS.FINPROD_ID = Fin_Product.FINPROD_ID
 		LEFT JOIN FIN_PRODUCT_TYPE A
 		ON A.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
 		LEFT JOIN MST_CUSTOMER_INFO B
 		ON B.CUSTOMER_ID = FIN_PRODUCT.ISSUER
 		LEFT JOIN MST_CUSTOMER_INFO_ADD C
-		ON C.CUSTOMER_ID = C.CUSTOMER_ID
+		ON C.CUSTOMER_ID = B.CUSTOMER_ID
 	  	where TRD_ASSET_LOSS.Status = #{status_init_01}
 		<if test="finprodIdList != null and finprodIdList.size()>0">
 			AND TRD_ASSET_LOSS.Sec_Id in
