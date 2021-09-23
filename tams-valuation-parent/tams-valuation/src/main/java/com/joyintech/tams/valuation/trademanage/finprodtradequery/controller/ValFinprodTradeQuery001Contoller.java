@@ -191,7 +191,7 @@ public class ValFinprodTradeQuery001Contoller extends BaseController {
         }
         for(ValFinprodTradeQuery001Dto item:list){
             String bookDate = item.getBookDate();
-            String busiType = dto.getBusiTypeCode();
+            String busiType = item.getBusiTypeCode();
             if (StringUtil.isNotEmpty(bookDate)) {
                 Date bDate = DateUtil.parseDate(bookDate, "yyyy-MM-dd");
                 Date pDate = new Date();
