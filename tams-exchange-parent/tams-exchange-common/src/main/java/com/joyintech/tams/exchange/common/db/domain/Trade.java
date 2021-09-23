@@ -100,6 +100,11 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
     @NotNull
     @Digits(integer = 20, fraction = 4)
     @JsonSerialize(using = DoubleSerializerUtils.class)
+    private BigDecimal fullPrice;
+
+    @NotNull
+    @Digits(integer = 20, fraction = 4)
+    @JsonSerialize(using = DoubleSerializerUtils.class)
     private BigDecimal clearBalance;
 
     @NotNull
@@ -336,6 +341,14 @@ public class Trade implements Serializable, KeyMethodInterface<String> {
 
     public void setClearBalance(BigDecimal clearBalance) {
         this.clearBalance = clearBalance;
+    }
+
+    public BigDecimal getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(BigDecimal fullPrice) {
+        this.fullPrice = fullPrice;
     }
 
     public String getTradeTime() {
