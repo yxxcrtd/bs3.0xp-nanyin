@@ -826,10 +826,12 @@
     fpt.TYPE_6 assetType,
     fp.FINPROD_ID finprodId,
     fp.TRADE_MARKET,
-    fp.ISSUER
+    fp.ISSUER,
+    fpa.TRM_FUND_TYPE
     from
     FIN_PRODUCT fp
     left join FIN_PRODUCT_TYPE fpt on fpt.FINPROD_ID = fp.FINPROD_ID
+    left join FIN_PRODUCT_ADD fpa on fpa.FINPROD_ID = fp.FINPROD_ID
     where fp.FINPROD_MARKET_ID = #{finprodMarketId}
     </select>
     <select id="portfolioIdLink" resultType="java.util.Map">

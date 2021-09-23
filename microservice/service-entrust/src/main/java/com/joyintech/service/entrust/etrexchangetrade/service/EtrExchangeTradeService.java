@@ -219,6 +219,16 @@ public class EtrExchangeTradeService extends BaseService{
         //待分发逻辑处理
         BeanUtil.copyPropertiesIgnoreNull(etrEntrust, dto);
         BeanUtil.copyPropertiesIgnoreNull(etrEntrustAdd, dto);
+
+        etrEntrust.setBusinessModel(dto.getBusinessModel());
+        //根据投资目的与业务模式的对应关系入库时赋值
+        if(StringUtil.equals("Y1",dto.getBusinessModel())){
+            dto.setInvAim("AC");
+            etrEntrust.setInvAim("AC");
+        }else if(StringUtil.equals("Y2",dto.getBusinessModel())){
+            dto.setInvAim("FVTPL");
+            etrEntrust.setInvAim("FVTPL");
+        }
         // 自动分发
         List<EtrDistribute> etrDistributeList = new ArrayList<>();
         if (busiAutoEtrDispService != null) {
@@ -245,7 +255,8 @@ public class EtrExchangeTradeService extends BaseService{
         	baseDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
         	etrSinglePortfolioDto.setEntrustStatus(DictCodeListExt3.委托状态_待分发.getValue());// 指令状态
         }
-        
+
+
         // 股票竞价指令dto
         EtrStockBiddingDto etrStockBiddingDto = new EtrStockBiddingDto();
         if (DictCodeListExt3.上农商_指令业务类型_股票竞价指令.getValue().equals(baseDto.getEntrustType())) {

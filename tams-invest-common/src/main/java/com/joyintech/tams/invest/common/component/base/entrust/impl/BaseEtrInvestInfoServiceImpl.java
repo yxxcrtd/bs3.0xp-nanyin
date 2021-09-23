@@ -418,6 +418,21 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         return etrInvestInfoDto;
     }
 
+
+
+    /**
+     * 查询已经生效的委托
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public String findEtrWordInfo(String entrustId) {
+        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel(); 
+    }
+
     /**
      * 查询已经生效的委托 单体
      *
@@ -1137,6 +1152,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             BeanUtil.copyPropertiesIgnoreNull(entrustAdd,dto.getEtrEntrustAdd());
             entrustAdd.setWorkflowId(dto.getWorkFlowId());
             entrustAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            entrustAdd.setEntrustCreateSource(dto.getEtrEntrustAdd().getEntrustCreateSource());
             wflEtrEntrustAddMapper.insertSelective(entrustAdd);
             // 保存List<委托指令回购质押品>
             if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {

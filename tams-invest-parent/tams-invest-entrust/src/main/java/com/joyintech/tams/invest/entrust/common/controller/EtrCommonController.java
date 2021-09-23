@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
 import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
@@ -638,6 +639,45 @@ public class EtrCommonController extends BaseController {
 
     public BigDecimal getCostPrice(Map<String, Object> param){
         return etrCommonService.getCostPrice(param);
+    }
+
+
+    /**
+     * 获取资产SPPI模块是否有SPPI测试结果
+     */
+    @ResponseBody
+    @RequestMapping("getAssetInfoBySPPI")
+    public AjaxResult getAssetInfoBySPPI(@RequestBody Map<String, Object> param){
+        String assetStatusIsTestBySppi = etrCommonService.assetIsTestBySppi(param);
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        // 状态码 0 未测试 2 测试通过 3 测试不通过
+        if((StringUtil.equals(assetStatusIsTestBySppi,"2")||StringUtil.equals("3",assetStatusIsTestBySppi))){
+           if(StringUtil.equals(assetStatusIsTestBySppi,"3"))
+              //未通过
+               ajaxResult.setData("3");
+           else
+               ajaxResult.setData("2");
+        }else {
+            //未测试
+            ajaxResult.setData("0");
+         }
+        return ajaxResult;
+    }
+
+    /**
+     * 选择收取合同约定的现金流时查询sppi中资产情况
+     * @param param
+     * @return
+     */
+
+    @ResponseBody
+    @RequestMapping("getSppiInfoByY1")
+    public AjaxResult getSppiInfoByY1(@RequestBody Map<String, Object> param){
+         String sinal =  etrCommonService.getSppiInfoByY1(param);
+         AjaxResult ajaxResult = new AjaxResult();
+         ajaxResult.setData(sinal);
+         return ajaxResult;
     }
 
 }

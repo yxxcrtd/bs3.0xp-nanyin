@@ -19,9 +19,9 @@
             <Cell order="13" name="投标标位">bidPrice</Cell>
             <Cell order="14" name="完成额度">finishAmt</Cell>
             <Cell order="15" name="币种">otherCcy</Cell>
-            <Cell order="16" name="委托下达日期">entrustDateStr</Cell>
-            <Cell order="17" name="委托开始日期">vdateStr</Cell>
-            <Cell order="18" name="委托结束日期">mdateStr</Cell>
+            <Cell order="16" name="指令下达日期">entrustDateStr</Cell>
+            <Cell order="17" name="指令开始日期">vdateStr</Cell>
+            <Cell order="18" name="指令结束日期">mdateStr</Cell>
             <Cell order="19" name="备注">remark</Cell>
         </Row>
     </Worksheet>

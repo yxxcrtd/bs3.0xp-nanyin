@@ -86,8 +86,10 @@ import java.util.*;
             String key = dto.getProdId() + "," + dto.getAssetId()+","+dto.getInvAim();
             // map集合无key对应value值
             if (modEclResultProcessMap.get(key) == null) {
+                List<ModEclResultProcess> listProcess = new ArrayList<ModEclResultProcess>();
+                listProcess.add(dto);
                 // 放入map集合中
-                modEclResultProcessMap.put(key, Arrays.asList(dto));
+                modEclResultProcessMap.put(key, listProcess);
             }
             else {
                 // 获取对应value值

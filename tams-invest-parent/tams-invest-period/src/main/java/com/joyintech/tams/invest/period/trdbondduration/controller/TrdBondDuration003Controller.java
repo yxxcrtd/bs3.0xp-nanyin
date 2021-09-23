@@ -80,6 +80,7 @@ public class TrdBondDuration003Controller extends BaseController {
             PeriodCommonService.setEntityBussOrderToModel(model, entity.getBussTrdTransferOrder());
         }
         model.addAttribute(GlobalConstant.ENTITY, entity);
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         model.addAttribute("GEN_PAY_ORDERS_AUTO", CacheUtil.getSysParam("GEN_PAY_ORDERS_AUTO"));
         return super.init(model);
     }

@@ -82,12 +82,14 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         this.setSelectOptionToModel(model, BussinessDictCode.清算速度);
         this.setSelectOptionToModel(model, BussinessDictCode.投资目的);
         this.setSelectOptionToModel(model, BussinessDictCode.交易平台);
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
 
         // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
         // add by etliu 20210501 银行间场内场外拆分 end
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
@@ -100,6 +102,12 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         //配置单位 add by yeming 20210721 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         //配置单位 add by yeming 20210721 end
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
+
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("TodoList", !WorkFlowUtil.isNotFromToDoList());
         //流程代办

@@ -215,6 +215,9 @@ var calculateField;
                                 //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                                 object.riskCreditListCommonDto = result1.data;
+                                if(result.data.indexOf("xx")!=-1)
+                                    $("#businessModel").val("Y2").trigger('change');
+
                                 Joyin.confirm(result.data, function() {
                                     if(operateType === 'save') {
                                         WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
@@ -1703,7 +1706,7 @@ var calculateField;
         if (shortSellingSupported == '02') {
             $(".shortSellingSupported").hide();
         }
-        if(entrustId != '' && pageModel != PAGE_MODEL_REFERENCE){
+        if(entrustId&&pageModel != PAGE_MODEL_REFERENCE){
             Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getEntrustInfo', {'entrustId':entrustId,'bondFirstSign':bondFirstSign},function (data) {
                 // 基本要素信息由投资委托带出，其中有：委托代码、组合代码、资产代码、清算速度、交易方向、交易场所、交易平台、交易市场、投资目的等，不可编辑
                 // 金融要素信息由投资委托带出，其中有：币种、券面总额、净价、到期收益率、行权收益率等
@@ -1733,7 +1736,8 @@ var calculateField;
                     checkAndAssign("#tradePlat", etrEntrust.tradePlat); // 交易平台
                     checkAndAssign("#ps", etrEntrust.ps); // 交易方向
                     checkAndAssign("#invAim", etrEntrust.invAim); // 投资目的
-                    checkAndAssign("#ccy", etrEntrust.ccy); // 币种
+                    $("#businessModel").val(etrEntrust.businessModel).trigger('change');
+                     checkAndAssign("#ccy", etrEntrust.ccy); // 币种
                     if ($("#tradeAmt").val()) {
                     } else {
                         //委托金额大于cstp的劵面总额
@@ -2486,6 +2490,16 @@ var calculateField;
          */
         $('#TrdBondInvestTrade002_btn_calculate').click(function() {
             var paramObj = getCalcParam();
+
+            //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
+            if($('#businessModel').val()=="Y1"){
+               paramObj.invAim = "AC";
+            }else if($('#businessModel').val()=="Y2"){
+               paramObj.invAim = "FVTPL"
+            }else {
+               paramObj.invAim = "";
+            }
+
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
                 if (result && result.data) {
                     var data = result.data;

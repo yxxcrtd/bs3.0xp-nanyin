@@ -41,6 +41,7 @@
         <result column="ENTRUST_TYPE" property="entrustType" jdbcType="VARCHAR" />
         <result column="STOCK_ID" property="stockId" jdbcType="VARCHAR" />
         <result column="ENTRUST_CLASS" property="entrustClass" jdbcType="VARCHAR" />
+        <result column="BUSINESS_MODEL" property="businessModel" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
         ENTRUST_ID ENTRUST_ID, PORTFOLIO_ID PORTFOLIO_ID, FINPROD_ID FINPROD_ID, FINPROD_TYPE2 FINPROD_TYPE2, 
@@ -52,7 +53,7 @@
         PRICE PRICE, IS_ACCURATE IS_ACCURATE, INV_MANAGER_ID INV_MANAGER_ID, CALENDAR_ID CALENDAR_ID, 
         REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
         UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CHL_ID CHL_ID, SALE_CODE SALE_CODE, 
-        PRICE_MODEL PRICE_MODEL, ENTRUST_TYPE ENTRUST_TYPE, STOCK_ID STOCK_ID, ENTRUST_CLASS ENTRUST_CLASS
+        PRICE_MODEL PRICE_MODEL, ENTRUST_TYPE ENTRUST_TYPE, STOCK_ID STOCK_ID, ENTRUST_CLASS ENTRUST_CLASS ,BUSINESS_MODEL BUSINESS_MODEL
     </sql>
     <sql id="Sql_All_Data" >
         select 
@@ -136,6 +137,9 @@
             </if>
             <if test="invAim != null" >
                 INV_AIM,
+            </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
             </if>
             <if test="counterId != null" >
                 COUNTER_ID,
@@ -255,6 +259,9 @@
             </if>
             <if test="invAim != null" >
                 #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
             </if>
             <if test="counterId != null" >
                 #{counterId,jdbcType=VARCHAR},

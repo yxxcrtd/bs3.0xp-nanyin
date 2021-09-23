@@ -1,0 +1,3 @@
+delete from chb_datacheck_condition where checkruleid='CHB_PRD_DECLARE-00-0000-000000000003';
+insert into chb_datacheck_condition (CHECKCONDITIONID, CHECKRULEID, CHECKMETHOD, SRCPROPERTY, COMPARETO, OBJVALUE, REMARK, STATUS)
+values ('CHB_PRD_DECLARE-00-0000-000000000003', 'CHB_PRD_DECLARE-00-0000-000000000003', 'compareValueSysPara', 'SVR_IS_SUBSIDIARY', '==', '01', null, 'E');

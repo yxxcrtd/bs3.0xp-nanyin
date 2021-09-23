@@ -2180,7 +2180,8 @@
                 flag:'xyhg',
                 repPs: object.repPs,
                 tradeMarket: object.tradeMarket,
-                counterId:object.counterId
+                counterId:object.counterId,
+                term:object.term
             }
             var riskdata = {
                 tradeDirection: ['ps', 'EtrExchangeTrade001.ps'],

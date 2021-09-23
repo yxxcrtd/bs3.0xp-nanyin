@@ -97,4 +97,19 @@ public class SppiTest001Controller {
 	public SppiImportDto selectByBondId(String finprodId) {
 		return sppiTest001Service.selectByBondId(finprodId);
 	}
+
+
+    /**
+     * 查询中债导入详情
+     * @param finprodId
+     * @return
+     */
+    @GetMapping("getSppiInfoByY1")
+    public String getSppiInfoByY1(String finprodId) {
+        SppiImportDto temp = sppiTest001Service.selectByBondId(finprodId);
+        if(temp==null){
+            return "";
+        }
+        return sppiTest001Service.selectByBondId(finprodId).getBidPriceCon();
+    }
 }

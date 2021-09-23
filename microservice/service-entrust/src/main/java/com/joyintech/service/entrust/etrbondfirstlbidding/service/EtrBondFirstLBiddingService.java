@@ -344,6 +344,17 @@ public class EtrBondFirstLBiddingService extends BaseService<EtrBondFirstLBiddin
             BeanUtil.copyProperties(etrEntrust, dto.getEtrInvestPersonInfo());
             etrEntrust.setEntrustDate(dto.getEntrustDate());
             etrEntrust.setEntrustAmt(null);
+            etrEntrust.setBusinessModel(dto.getBusinessModel());
+             //根据投资目的与业务模式的对应关系入库时赋值
+            if(!StringUtil.isNotEmpty(dto.getInvAim())) {
+                if (StringUtil.equals("Y1", dto.getBusinessModel())) {
+                    dto.setInvAim("AC");
+                    etrEntrust.setInvAim("AC");
+                } else if (StringUtil.equals("Y2", dto.getBusinessModel())) {
+                    dto.setInvAim("FVTPL");
+                    etrEntrust.setInvAim("FVTPL");
+                }
+            }
             if (StringUtil.isNotEmpty(dto.getEntrustNum())) {
                 etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
             }

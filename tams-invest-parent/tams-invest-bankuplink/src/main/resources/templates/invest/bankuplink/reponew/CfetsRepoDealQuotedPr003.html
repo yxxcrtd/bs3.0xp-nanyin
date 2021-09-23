@@ -32,7 +32,7 @@
         <form class="layui-form joyin-form-wrap pro-module-form"
               id="CfetsRepoDealQuotedPrice003_submitForm">
             <div class="layui-form-item">
-                <a id="cfetsRepoDealQuotedPre002_duihua" class="layui-btn layui-btn-sm"
+                <a id="cfetsRepoDealQuotedPre003_duihua" class="layui-btn layui-btn-sm"
                    data-th-text="#{CfetsRepoDealQuotedPr001.wtcx.duihua}">对话</a>
             </div>
 <!--            <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
@@ -593,7 +593,7 @@
              id="CfetsRepoDealQuotedPrice003_btns_1">
             <a id="CfetsRepoDealQuotedPrice002_btn_fileupload"
                class="layui-btn layui-btn-sm">附件上传</a>
-            <a id="CfetsRepoDealQuotedPrice002_btn_riskcal"
+            <a id="CfetsRepoDealQuotedPrice003_btn_riskcal"
                class="layui-btn layui-btn-sm">风险试算</a>
             <a th:id="CfetsRepoDealQuotedPrice003_btn_save"
                class="layui-btn layui-btn-sm btn-save"
@@ -642,6 +642,11 @@
         //add by chenjiaxing 流程中展示组合的分配方式 20210917 start
         var distributionInit = /*[[${entity?.distribution}]]*/'';
         //add by chenjiaxing 流程中展示组合的分配方式 20210917 end
+        var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
+        var FINPROD_TYPE_TG_F02 = /*[[${FINPROD_TYPE_TG_F02}]]*/'';
+        var FINPROD_TYPE_TG_F03 = /*[[${FINPROD_TYPE_TG_F03}]]*/'';
+        var PS_03 = /*[[${PS_03}]]*/'';
+        var PS_04 = /*[[${PS_04}]]*/'';
     </script>
     <script th:src="@{/js/invest/bankuplink/reponew/CfetsRepoDealQuotedPr003.js}" type="text/javascript"></script>
 </div>
