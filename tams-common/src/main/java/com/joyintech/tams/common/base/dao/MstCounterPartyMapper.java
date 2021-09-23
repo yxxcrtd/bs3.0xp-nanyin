@@ -27,4 +27,6 @@ public interface MstCounterPartyMapper {
     MstCounterParty selectPType(@Param("counterId") String counterId);
     
     List<String> getInsCounterIdByName(Map<String,Object> map);
+
+    List<MstCounterParty> getCounterByName(String counterName);
 }

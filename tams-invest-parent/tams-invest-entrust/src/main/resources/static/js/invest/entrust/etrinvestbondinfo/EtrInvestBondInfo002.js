@@ -236,7 +236,7 @@
 
         }
         // 一体化对应etliu start
-        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="BUSSINSSMODEL"){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="01"){
            if(businessModel1=="Y1"){
               data.invAim = 'AC';
            }else if(businessModel1=="Y2"){
@@ -305,7 +305,7 @@
         // 投资目的
         var invAim = $("#invAim").val();
         // 根据投资目的与业务模式对应关系做转换
-        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="BUSSINSSMODEL"){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="01"){
             var businessModel = $("#businessModel").val();
             if(businessModel=="Y1"){
                invAim = "AC"
@@ -574,7 +574,7 @@
         });
 
         //根据参数 选择显示投资目的或者业务模式
-        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="BUSSINSSMODEL"){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="01"){
               $("#invAimDiv").hide();
               $("#businessModelDiv").show();
         }else{

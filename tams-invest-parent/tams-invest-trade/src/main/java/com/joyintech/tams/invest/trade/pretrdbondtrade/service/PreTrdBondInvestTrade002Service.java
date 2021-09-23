@@ -995,7 +995,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
                 BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
 
                 String sinal = tradeCommonService.getSppiInfoByY1(map) ;
-                if(StringUtil.equals("0",sinal)){
+                if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
                     if(position!=null){
                         confirmMsg += changeLineMark;
 

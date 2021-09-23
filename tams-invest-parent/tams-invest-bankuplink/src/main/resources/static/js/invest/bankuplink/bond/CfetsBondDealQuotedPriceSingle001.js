@@ -38,6 +38,7 @@
                     $('#CfetsBondDealQuotedPriceSingle001_remark').val(result.data.remark);
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_entrustAmt').val(result.data.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val(result.data.finprodId);
+                    $('#businessModel').val(result.data.businessModel);
                     // 区分画面打开模式
                     var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
 

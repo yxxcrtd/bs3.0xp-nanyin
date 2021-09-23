@@ -26,6 +26,7 @@ import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import org.springframework.stereotype.Repository;
 
 /**
  *  场内交易委托
@@ -35,7 +36,7 @@ import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
  * @see EtrExchangeTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrExchangeTradeMapper {
 
     /**
