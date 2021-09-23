@@ -272,5 +272,12 @@
 		<foreach collection="insTree" item="item" open="and sd.institution_code in (" close=")">
 			#{item,jdbcType=VARCHAR}
 		</foreach>
-    </select> 
+    </select>
+
+    <select id="getCounterByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+            <include refid="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.Base_Column_List" />
+        from MST_COUNTER_PARTY
+        where COUNTER_NAME = #{counterName,jdbcType=VARCHAR}
+    </select>
 </mapper>
