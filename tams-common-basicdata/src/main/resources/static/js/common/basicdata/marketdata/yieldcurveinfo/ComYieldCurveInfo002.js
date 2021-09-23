@@ -75,6 +75,8 @@ $(function() {
     	init();
     	//绑定联动事件 add by lishuping 20191008 start
         $('#curveCode').change(function(){
+            var curveTypeStr = $("#curveCode").select2('data')[0].object;
+            $('#curveType').val(curveTypeStr).trigger("change");;
             selectNK('curveCode','n','k');
         });
         //绑定联动事件 add by lishuping 20191008 end
