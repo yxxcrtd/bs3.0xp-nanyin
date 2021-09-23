@@ -504,5 +504,14 @@ public class TrdPlanCurrDuration001Dto extends TrdFundDurationCommonDto implemen
 	public void setQty(BigDecimal qty) {
 		this.qty = qty;
 	}
-    
+
+	private String typeFlag;
+
+	public String getTypeFlag() {
+		return typeFlag;
+	}
+
+	public void setTypeFlag(String typeFlag) {
+		this.typeFlag = typeFlag;
+	}
 }
