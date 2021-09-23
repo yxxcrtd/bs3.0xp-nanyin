@@ -114,29 +114,35 @@ public class RateInfoCommonService {
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 // 债项时，是否含有金融牌照 = 否
-                viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                if(viewRatingInfoSec != null){
+                    viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                }
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-                // 主体取对应发行人是否含有金融牌照
-                viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                if(viewRatingInfoSec != null){
+                    // 主体取对应发行人是否含有金融牌照
+                    viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                }
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
-                // 是否持有金融牌照= 上述比较返回结果.是否持有金融牌照
-                isFinLicence = resultDto.getIsFinLicence();
+                return resultDto;
             }
             else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(otype)) {
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 // 债项时，是否含有金融牌照 = 否
-                viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                if(viewRatingInfoSec != null){
+                    viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                }
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-                // 主体取对应发行人是否含有金融牌照
-                viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                if(viewRatingInfoSec != null){
+                    // 主体取对应发行人是否含有金融牌照
+                    viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                }
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
-                // 是否持有金融牌照= 上述比较返回结果.是否持有金融牌照
-                isFinLicence = resultDto.getIsFinLicence();
+                return resultDto;
             }else{
                 logger.warn("评级类型不支持，无法查询评级信息.资产代码为："+modAssetInfoDto.getFinprodId()+"，评级类型为："+otype);
                 return null;
@@ -162,6 +168,7 @@ public class RateInfoCommonService {
                 ocode=modAssetInfoDto.getSponsor();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                isFinLicence = modAssetInfoDto.getSponsorFinLicence();
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
                 //交易数据.最新评级结果 = 交易数据.主体评级
@@ -180,6 +187,9 @@ public class RateInfoCommonService {
                 ViewRatingInfoDto viewRatingInfoSponsor = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
+                if(resultDto == null){
+                    return null;
+                }
                 if(viewRatingInfoIssuer == resultDto){
                     isFinLicence = modAssetInfoDto.getIssueFinLicence();
                 }else if (viewRatingInfoFinancier == resultDto){
@@ -203,6 +213,9 @@ public class RateInfoCommonService {
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSponsor = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
+                if(resultDto == null){
+                    return null;
+                }
                 // 比较对象地址，确认采用哪个主体对应的是否持有金融牌照
                 if(resultDto ==viewRatingInfoIssuer){
                     isFinLicence = modAssetInfoDto.getIssueFinLicence();
