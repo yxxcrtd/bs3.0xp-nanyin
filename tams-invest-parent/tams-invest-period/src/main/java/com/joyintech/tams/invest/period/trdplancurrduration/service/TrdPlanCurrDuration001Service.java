@@ -149,6 +149,11 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
      */
     @Override
     public void doComplete(TrdPlanCurrDuration001Dto entity, OperationType type) {
+        if (StringUtil.equals(entity.getType(), "05")){
+            entity.setTypeFlag("01");
+        }else{
+            entity.setTypeFlag("02");
+        }
         entity.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
         if (OperationType.REVOKE == type) {
             dealEntityService.execute交易共通(entity, DictCodeListExt1.交易流程状态_撤销, false);

@@ -201,6 +201,11 @@ implements BaseProcessService<TrdFundDuration001Dto>{
     @Override
     public void doComplete(TrdFundDuration001Dto entity, OperationType type) {
         entity.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
+        if (StringUtil.equals(entity.getType(),"02")||StringUtil.equals(entity.getType(),"05")){
+            entity.setTypeFlag("01");
+        }else{
+            entity.setTypeFlag("02");
+        }
 ////        根据流程操作类型处理基础entity
 //        if (OperationType.REVOKE == type) {
 //            tradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_撤销.getValue());

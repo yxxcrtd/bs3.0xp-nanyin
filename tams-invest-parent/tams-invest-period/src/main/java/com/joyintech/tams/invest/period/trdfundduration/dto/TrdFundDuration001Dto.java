@@ -586,4 +586,15 @@ public class TrdFundDuration001Dto extends TrdFundDurationCommonDto implements P
     public void setUploadFileList(List<UploadFile> uploadFileList) {
         this.uploadFileList = uploadFileList;
     }
+
+
+    private String typeFlag;
+
+    public String getTypeFlag() {
+        return typeFlag;
+    }
+
+    public void setTypeFlag(String typeFlag) {
+        this.typeFlag = typeFlag;
+    }
 }

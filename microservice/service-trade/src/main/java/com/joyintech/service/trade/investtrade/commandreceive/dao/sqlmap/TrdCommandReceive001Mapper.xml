@@ -406,7 +406,7 @@
 
 	<select id="selectForPageFromCstp"
 			resultType="com.joyintech.service.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto">
-		select * from (
+		select DISTINCT * from (
 		select * from (
 		select wtpdp.trade_id entrustId,
 		'01' tradeType,

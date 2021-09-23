@@ -678,10 +678,18 @@
                                     finAssetIntInfoList = result.data;
                                     /* 计算 数量总数 */
                                     sumRegistShare = 0;
+                                    var trmFundType = $("#trmFundType").val();
                                     for (var i = 0; i < finAssetIntInfoList.length; i++) {
                                         sumRegistShare = JoyinMath.doAdd(sumRegistShare, finAssetIntInfoList[i].registShare);
                                         /*面值*/
                                         faceValue = finAssetIntInfoList[i].faceValue;
+                                        if($('#assetType').val() == FUND_ASSET_TYPE_F01&&$('#bonusMode').val() == BONUS_MODE_02){
+                                            if(trmFundType == '05'){
+                                                faceValue = '0.01';
+                                            }else  if(trmFundType == '01'){
+                                                faceValue = '100';
+                                            }
+                                        }
                                     }
                                     /*add by xr 加载表格前先计算净值*/
                                     var tradeAmt = $('#tradeAmt').val();
@@ -713,7 +721,7 @@
        var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
             var itemArr = ['qty','tradeAmt'];
-        } if( type=="01" || type == "04"){ // 红利再投确认
+        } else if( type=="01" || type == "04"){ // 红利再投确认
             var itemArr = ['qty','tradeAmt'];
         }else{
             var itemArr = ['tradeAmt'];
@@ -751,7 +759,6 @@
             sumObj[val] = 0;
         })
 //      分配
-        debugger;
         for (var i = 0; i < finAssetIntInfos.length; i++) {
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
             if((assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02)
@@ -811,6 +818,9 @@
                 var unitCprice = $("#unitCprice").val();
                 $.each(finAssetIntInfos, function(i, v) {
                     v.unitCprice = unitCprice;
+                    if($('#trmFundType').val()&&($('#trmFundType').val()=='05'||$('#trmFundType').val()=='01')){
+                        v.qty = JoyinMath.doDiv(v.tradeAmt,unitCprice);
+                    }
                     repoInfoTable.addRow(v);
                 });
             });
@@ -924,7 +934,21 @@
             }
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
-            triValueChange('unitCprice');
+            //triValueChange('unitCprice');
+            if(assetType == FUND_ASSET_TYPE_F01){
+                var trmFundType = $("#trmFundType").val();
+                if($('#bonusMode').val() == BONUS_MODE_02){
+                    if(trmFundType == '05'){
+                        triValueChange("unitCprice",'0.01');
+                    }else  if(trmFundType == '01'){
+                        triValueChange("unitCprice",'100');
+                    }else{
+                        triValueChange("unitCprice");
+                    }
+                }else{
+                    triValueChange("unitCprice");
+                }
+            }
             if(pageModel!=PAGE_MODEL_NEW){
                 triValueChange('exRightsDate');
             }
@@ -1015,6 +1039,7 @@
                                     {finprodMarketId: finprodMarketId }, function (result) {
                                         if (result.data) {
                                             tradeMarket = result.data.TRADE_MARKET;
+                                            triValueChange('trmFundType', result.data.TRM_FUND_TYPE);
                                             triValueChange('finprodMarketName', result.data.FINPRODMARKETNAME);
                                             triValueChange('finprodId', result.data.FINPRODID);
                                             triValueChange('issuer', result.data.ISSUER);
@@ -1041,10 +1066,22 @@
            var assetType = $("#assetType").val();
            if(assetType == FUND_ASSET_TYPE_F01){
                $(".unitCprice").hide();
+               var trmFundType = $("#trmFundType").val();
+               if($('#bonusMode').val() == BONUS_MODE_02){
+                   if(trmFundType == '05'){
+                       triValueChange("unitCprice",'0.01');
+                   }else  if(trmFundType == '01'){
+                       triValueChange("unitCprice",'100');
+                   }else{
+                       triValueChange("unitCprice");
+                   }
+               }else{
+                   triValueChange("unitCprice");
+               }
            }else{
                $(".unitCprice").show();
+               triValueChange("unitCprice");
            }
-           triValueChange("unitCprice");
        });
 
         // 道交易 新增 强成西 2019/03/26 start
