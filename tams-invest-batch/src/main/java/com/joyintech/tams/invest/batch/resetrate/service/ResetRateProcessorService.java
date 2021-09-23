@@ -245,8 +245,9 @@ public class ResetRateProcessorService extends BaseService{
                 BigDecimal preRateYield=ArithmeticUtil.doAdd(ArithmeticUtil.multiply(StringUtil.isNotEmpty(mstIntRateInfoDto.getIntRate())?mstIntRateInfoDto.getIntRate():BigDecimal.ZERO,StringUtil.isNotEmpty(finRateInfoDto.getCoefficient())?finRateInfoDto.getCoefficient():new BigDecimal(1)),StringUtil.isNotEmpty(finRateInfoDto.getSpreadRate())?finRateInfoDto.getSpreadRate():BigDecimal.ZERO);
                 BigDecimal yieldPre=StringUtil.isNotEmpty(finRateInfoDto.getLowestRate())?preRateYield.compareTo(finRateInfoDto.getLowestRate())>=0?preRateYield:finRateInfoDto.getLowestRate():preRateYield;
                 BigDecimal yieldNext=StringUtil.isNotEmpty(finRateInfoDto.getHighestRate())?yieldPre.compareTo(finRateInfoDto.getHighestRate())<=0?yieldPre:finRateInfoDto.getHighestRate():yieldPre;
-                finCashCalcRule.setYield(yieldNext);
+                //finCashCalcRule.setYield(yieldNext);
                 //-------modify by 裴家俊----2019/04/04--------start---------
+                finCashCalcRule.setYield(ArithmeticUtil.multiply(yieldNext,new BigDecimal(100)));
                 resultList.add(finCashCalcRule);
             }
         }
@@ -280,8 +281,9 @@ public class ResetRateProcessorService extends BaseService{
                 BigDecimal preRateYield=ArithmeticUtil.doAdd(ArithmeticUtil.multiply(StringUtil.isNotEmpty(mstIntRateInfoDto.getIntRate())?mstIntRateInfoDto.getIntRate():BigDecimal.ZERO,StringUtil.isNotEmpty(finRateInfoDto.getCoefficient())?finRateInfoDto.getCoefficient():new BigDecimal(1)),StringUtil.isNotEmpty(finRateInfoDto.getSpreadRate())?finRateInfoDto.getSpreadRate():BigDecimal.ZERO);
                 BigDecimal yieldPre=StringUtil.isNotEmpty(finRateInfoDto.getLowestRate())?preRateYield.compareTo(finRateInfoDto.getLowestRate())>=0?preRateYield:finRateInfoDto.getLowestRate():preRateYield;
                 BigDecimal yieldNext=StringUtil.isNotEmpty(finRateInfoDto.getHighestRate())?yieldPre.compareTo(finRateInfoDto.getHighestRate())<=0?yieldPre:finRateInfoDto.getHighestRate():yieldPre;
-                finCashCalcRule.setYield(yieldNext);
+                //finCashCalcRule.setYield(yieldNext);
                 //-------modify by 裴家俊----2019/04/04--------start---------
+                finCashCalcRule.setYield(ArithmeticUtil.multiply(yieldNext,new BigDecimal(100)));
                 resultList.add(finCashCalcRule);
             }
         }

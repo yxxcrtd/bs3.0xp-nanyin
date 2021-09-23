@@ -377,6 +377,12 @@ public class TrdProductDeal extends BaseEntity {
     private String portfolioId;
 
 
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+
     public String getPortfolioId() {
         return portfolioId;
     }
@@ -439,6 +445,11 @@ public class TrdProductDeal extends BaseEntity {
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal yesterdayPosition;
+
+
+
+
+
 
     /**
      * 取得 交易编号
@@ -1587,6 +1598,14 @@ public class TrdProductDeal extends BaseEntity {
 
     public BigDecimal getSharePaymentFee() {
         return sharePaymentFee;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 
     public void setSharePaymentFee(BigDecimal sharePaymentFee) {

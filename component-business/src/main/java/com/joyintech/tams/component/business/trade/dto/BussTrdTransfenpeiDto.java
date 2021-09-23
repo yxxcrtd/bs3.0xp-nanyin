@@ -157,8 +157,15 @@ public class BussTrdTransfenpeiDto {
      * 投资目的
      */
     private String investaim;
-    
-    /**
+
+
+	/**
+	 *业务模式
+	 */
+	private String businessModel;
+
+
+	/**
      * 获取 investaim
      * @return investaim.
      */
@@ -639,5 +646,13 @@ public class BussTrdTransfenpeiDto {
 
 	public void setbTradeId(String bTradeId) {
 		this.bTradeId = bTradeId;
+	}
+
+	public String getBusinessModel() {
+		return businessModel;
+	}
+
+	public void setBusinessModel(String businessModel) {
+		this.businessModel = businessModel;
 	}
 }

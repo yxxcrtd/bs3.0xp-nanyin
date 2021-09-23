@@ -398,6 +398,18 @@ public class EtrInvestBondInfoService extends BaseService<EtrInvestBondInfoDto> 
             etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             etrEntrust.setEntrustAmt(null);
             etrEntrust.setEntrustNum(dto.getEntrustNum().divide(new BigDecimal(100)));
+            etrEntrust.setBusinessModel(dto.getBusinessModel());
+            //根据投资目的与业务模式的对应关系入库时赋值
+            if(!StringUtil.isNotEmpty(dto.getInvAim())) {
+                if (StringUtil.equals("Y1", dto.getBusinessModel())) {
+                    dto.setInvAim("AC");
+                    etrEntrust.setInvAim("AC");
+                } else if (StringUtil.equals("Y2", dto.getBusinessModel())) {
+                    dto.setInvAim("FVTPL");
+                    etrEntrust.setInvAim("FVTPL");
+                }
+            }
+
             BeanUtil.copyProperties(etrEntrustAdd, dto);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_债券.getValue());
             etrEntrustAdd.setVdate(null);

@@ -9,6 +9,27 @@
  */
  
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.controller;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
+import com.joyintech.workflow.engine.WorkflowContext;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -131,7 +152,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
                 DictCode.行内资产三级分类,
                 DictCode.行内资产四级分类,
                /* 原因、zhuyongkang 2019/7/30  end*/
-                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的);
+                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的, BussinessDictCode.业务模式);
         
      // 一体化对应etliu start
 //        model.addAttribute("PS_PURCHASE_T04",DictCodeList.交易方向_申购.getValue());
@@ -139,7 +160,10 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         model.addAttribute("PS_T02",DictCodeList.交易方向_卖出.getValue());
      // 一体化对应etliu end
-        
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());

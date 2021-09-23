@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
@@ -92,12 +93,16 @@ public class EtrProject002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易方向);
         // 项目类资产五级分类改造 add by renping 2019-08-01 start
         this.setSelectOptionToModel(model, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类,
-        		DictCode.投资目的);
+        		DictCode.投资目的, BussinessDictCode.业务模式);
         // 项目类资产五级分类改造 add by renping 2019-08-01 end
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         RequestUtil.getPageParam();

@@ -51,8 +51,15 @@ public class TrdTransfenpeiDto extends BaseEntity{
 	 * 组合T+1日可用金额
 	 */
 	private BigDecimal bussTrdAvailableCashQueryavalibleCash1;
-	
-	
+
+
+	/**
+	 *业务模式
+	 */
+	private String businessModel;
+
+
+
 	public String getEntrustId() {
 		return entrustId;
 	}
@@ -108,4 +115,11 @@ public class TrdTransfenpeiDto extends BaseEntity{
 		this.bussTrdAvailableCashQueryavalibleCash1 = bussTrdAvailableCashQueryavalibleCash1;
 	}
 
+	public String getBusinessModel() {
+		return businessModel;
+	}
+
+	public void setBusinessModel(String businessModel) {
+		this.businessModel = businessModel;
+	}
 }

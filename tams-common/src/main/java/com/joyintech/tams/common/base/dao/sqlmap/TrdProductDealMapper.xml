@@ -404,6 +404,9 @@
             <if test="yesterdayPosition != null" >
                 YESTERDAY_POSITION,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
             <if test="tradeId != null" >
@@ -639,6 +642,9 @@
             </if>
             <if test="yesterdayPosition != null" >
                 #{yesterdayPosition,jdbcType=DECIMAL},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

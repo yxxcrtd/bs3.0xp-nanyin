@@ -62,6 +62,7 @@
             <result column="cpriceAmt" property="cpriceAmt" jdbcType="VARCHAR" />
             <result column="tradeAmount" property="intAmt" jdbcType="VARCHAR" />
             <result column="fpriceAmt" property="fpriceAmt" jdbcType="VARCHAR" />
+            <result column="businessModel" property="businessModel" jdbcType="VARCHAR" />
         </collection>
     </resultMap>
     <select id="getFinprodId" resultMap="finprodIdMap">
@@ -390,7 +391,9 @@
 		  t2.fprice_amt fpriceAmt,
 		  t2.cprice_amt cpriceAmt,
 		  t2.int_amt tradeAmount,
-		  t3.reg_date_amt do_entrust_money
+		  t3.reg_date_amt do_entrust_money  ,
+		  T1.BUSINESS_MODEL businessModel
+
 		FROM TRD_FIN_PRODUCT_DEAL_TOTAL T1
 		LEFT JOIN fin_product
 		ON T1.finprod_id     = fin_product.finprod_id

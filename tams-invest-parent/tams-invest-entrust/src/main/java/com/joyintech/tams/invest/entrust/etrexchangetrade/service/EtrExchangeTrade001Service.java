@@ -322,6 +322,17 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfo", map,
 				SelectOptionDto.class);
 	}
+
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String IsBondAsset(Map<String, Object> map) {
+		return restTemplate.postForObject(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/IsBondAsset", map,
+				String.class);
+	}
 	
 	 /**
      * 查询标的
