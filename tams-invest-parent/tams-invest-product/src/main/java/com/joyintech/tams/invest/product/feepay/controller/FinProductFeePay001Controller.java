@@ -123,18 +123,18 @@ public class FinProductFeePay001Controller extends BaseController {
         /*费用类型 guyunfei 20190923 end*/
         model.addAttribute("statusUndo", DictCodeListExt1.有效状态_待处理.getValue());
         
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
-        List<SelectOptionDto> options = selectDto.getOptions();
-        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
-        for (SelectOptionDto dto : options) {
-            if (StringUtil.equals(DictCodeListExt1.有效状态_待处理.getValue(), dto.getId())
-                || StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())) {
-                optionsNew.add(dto);
-            }
-        }
-        model.addAttribute(DictCode.有效状态.getValue(),
-            JsonUtils.objectArray2Json(optionsNew.toArray()));
-        
+//        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
+//        List<SelectOptionDto> options = selectDto.getOptions();
+//        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
+//        for (SelectOptionDto dto : options) {
+//            if (StringUtil.equals(DictCodeListExt1.有效状态_待处理.getValue(), dto.getId())
+//                || StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())) {
+//                optionsNew.add(dto);
+//            }
+//        }
+//        model.addAttribute(DictCode.有效状态.getValue(),
+//            JsonUtils.objectArray2Json(optionsNew.toArray()));
+        this.setSelectOptionToModel(model, DictCode.有效状态);
         Map<String, Object> map = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty(map.get("remType"))) {
         	model.addAttribute("finprodId", (String)map.get("finprodId"));

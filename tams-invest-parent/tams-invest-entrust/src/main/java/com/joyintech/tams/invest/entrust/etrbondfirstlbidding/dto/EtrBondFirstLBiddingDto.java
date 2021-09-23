@@ -349,6 +349,12 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * 交易对手名称
      */
     private String counterIdName;
+
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
     /**
      * 父页面的parentPageId，用于区分字典值控制字段
      */
@@ -741,7 +747,7 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      * @return 投资目的
      */
     @Override
-    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     public String getInvAim() {
         return super.getInvAim();
     }
@@ -1280,5 +1286,13 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust implements ProcessEntity
      */
     public void setBiddingRange(String biddingRange) {
         this.biddingRange = biddingRange;
+    }
+
+     public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

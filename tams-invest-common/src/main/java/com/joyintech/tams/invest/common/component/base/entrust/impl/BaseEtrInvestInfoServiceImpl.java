@@ -418,6 +418,21 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         return etrInvestInfoDto;
     }
 
+
+
+    /**
+     * 查询已经生效的委托
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public String findEtrWordInfo(String entrustId) {
+        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel(); 
+    }
+
     /**
      * 查询已经生效的委托 单体
      *

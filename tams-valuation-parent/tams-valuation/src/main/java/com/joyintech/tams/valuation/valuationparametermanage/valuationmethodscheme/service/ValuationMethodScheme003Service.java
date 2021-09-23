@@ -10,8 +10,13 @@
 
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.service;
 
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.joyintech.framework.export.CommonExportService;
@@ -21,6 +26,10 @@ import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodsche
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme003Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -99,6 +108,106 @@ public class ValuationMethodScheme003Service extends CommonExportService<Valuati
 	 */
 	public void updateByPrimaryKeySelective(ValuationMethodScheme003Dto dto) {
 		valuationMethodScheme003Mapper.updateByPrimaryKeySelective(dto);
+	}
+
+
+	/**
+	 * @Description:根据证券品种+投资目的 处理估值方法下拉框集合
+	 * @auther: yuzj
+	 * @date: 2021年9月22日
+	 * @param:
+	 * @return:
+	 */
+	public List<SelectOptionDto> getResultByInvAimAndSecType(List<SelectOptionDto> linkSelectOption, Map<String, Object> param){
+		//当投资目的为  收取合同现金流量为目的[AC]时，估值方法默认只可选择摊余成本法；
+		String invAim =param.get("invAim").toString();
+		String secType = param.get("secType").toString();
+		if(StringUtil.equals(invAim,DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue())){//FVTPL
+			if(StringUtil.equals(secType,DictCodeListExt1.证券品种_债券.getValue())
+					|| StringUtil.equals(secType,DictCodeListExt1.证券品种_其他债权类.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_模型法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_模型法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}else if(StringUtil.equals(secType,DictCodeListExt1.证券品种_股票.getValue())
+					|| StringUtil.equals(secType,DictCodeListExt1.证券品种_计划类资产_净值型.getValue())
+					|| StringUtil.equals(secType,DictCodeListExt1.证券品种_计划类资产_货币型.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}else if(StringUtil.equals(secType,DictCodeListExt1.证券品种_计划类资产_收益型.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}
+		}else if(StringUtil.equals(invAim,DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue())){//FVOCI
+			if(StringUtil.equals(secType,DictCodeListExt1.证券品种_债券.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_模型法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_模型法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}else if(StringUtil.equals(secType,DictCodeListExt1.证券品种_计划类资产_收益型.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+				zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}
+		}else if(StringUtil.equals(invAim,DictCodeListExt1.投资目的_摊余成本类.getValue())){ //AC
+			if(StringUtil.equals(secType,DictCodeListExt1.证券品种_债券.getValue())
+			      || StringUtil.equals(secType,DictCodeListExt1.证券品种_其他债权类.getValue())
+				  || StringUtil.equals(secType,DictCodeListExt1.证券品种_计划类资产_收益型.getValue())){
+				SelectOptionDto zqOptionDto = new SelectOptionDto();
+				zqOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
+				zqOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
+				linkSelectOption.add(zqOptionDto);
+			}
+		}
+
+		return  linkSelectOption;
+	}
+
+
+	/**
+	 * 通用联动查询
+	 * @param param : dict_code_parent,dict_code_child,item_code_parent
+	 * @return
+	 */
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	@DataSource(DataSourceType.OTHER)
+	public List<SelectOptionDto> getLinkSelectOption(Map<String, Object> param) {
+		return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
+						+ "/ValuationMethodScheme001/getLinkSelectOption",
+				param, SelectOptionDto.class);
 	}
 	
 

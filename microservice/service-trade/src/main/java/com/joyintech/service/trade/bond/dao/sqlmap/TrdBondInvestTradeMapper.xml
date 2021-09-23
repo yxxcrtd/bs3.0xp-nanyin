@@ -544,6 +544,7 @@
         <!-- 推荐方 新增 zhuyongkang 20191023 start -->
         <result column="REFUND_RATE"       property="refundRate"      jdbcType="DECIMAL" />
         <result column="REFUND_AMOUNT"       property="refundAmount"      jdbcType="DECIMAL" />
+        <result column="businessModel"       property="businessModel"      jdbcType="VARCHAR" />
         <association property="trdInvestPersonInfo" javaType="com.joyintech.service.trade.bond.dto.TrdInvestPersonInfoDto">
             <result column="TRADER"             property="trader"           jdbcType="VARCHAR" />
             <result column="COUNTER_ID"         property="counterId"        jdbcType="VARCHAR" />
@@ -587,6 +588,7 @@
         <!-- 撤销时无此字段 空指针 -->
             ,ptpd.REFUND_RATE*100 as REFUND_RATE
             ,ptpd.REFUND_AMOUNT as REFUND_AMOUNT
+            ,TRD_PRODUCT_DEAL.BUSINESS_MODEL as businessModel
         FROM TRD_FIN_PRODUCT_DEAL_TOTAL tpd
         LEFT JOIN TRD_DEAL_TOTAL_ADD tpda ON tpda.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID
         LEFT JOIN PA_TRD_FIN_PRODUCT_DEAL_TOTAL ptpd ON ptpd.TOTLE_TRADE_ID = tpd.TOTLE_TRADE_ID

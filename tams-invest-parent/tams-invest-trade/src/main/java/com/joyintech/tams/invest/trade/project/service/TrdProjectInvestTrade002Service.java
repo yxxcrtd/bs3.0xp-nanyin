@@ -238,7 +238,14 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, trade.getTrdFinProductDealTotal());
             trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-
+            trdFinProductDealTotal.setBusinessModel(entity.getBusinessModel());
+            if(!StringUtil.isNotEmpty(trdFinProductDealTotal.getInvAim())) {
+                if (StringUtil.equals("Y1", trdFinProductDealTotal.getBusinessModel())) {
+                    trdFinProductDealTotal.setInvAim("AC");
+                 } else if (StringUtil.equals("Y2", trdFinProductDealTotal.getBusinessModel())) {
+                    trdFinProductDealTotal.setInvAim("FVTPL");
+                }
+            }
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trade.getTrdProductDeal());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -489,6 +496,7 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
                 trdProductDealTotal.setPs(DictCodeList.交易方向_买入.getValue());
                 trdProductDealTotal.setPortfolioId(交易对手_子组合);//原来交易的交易对手
                 trdProductDealTotal.setIspayUnpaidint(null);//是否转让
+                trdProductDealTotal.setBusinessModel(entity.getBusinessModel());
 
                 trdProductDealTotal.setInvAim(entity.getTurnInvAim());
                 trdFinProductDealTotalMapper.insertSelective(trdProductDealTotal);

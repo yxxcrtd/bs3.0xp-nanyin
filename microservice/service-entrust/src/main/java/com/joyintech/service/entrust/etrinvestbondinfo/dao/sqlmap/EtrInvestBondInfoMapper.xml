@@ -498,6 +498,7 @@ SELECT interf.SECID id,
 		<result column="accAvailableCash"  property="accAvailableCash"/>
 		<result column="remark"  property="remark"/>
 		<result column="chlId"  property="chlId"/>
+		<result column="businessModel"  property="businessModel"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrinvestbondinfo.dto.BussEtrInvestPersonInfoDto">
 			<result column="invManagerId"  property="invManagerId"/>
 			<result column="trader"  property="trader"/>
@@ -546,8 +547,10 @@ SELECT interf.SECID id,
 				T1.CONTACT_INFO		 contactInfo,
 				T2.TRADER			 trader,
 				T1.INV_MANAGER_ID	 invManagerId,
-				T1.chl_id chlId
-			FROM
+				T1.chl_id chlId,
+		        T1.BUSINESS_MODEL  businessModel
+
+		FROM
 			    ETR_ENTRUST T1
 			LEFT JOIN
 				ETR_DISTRIBUTE T2
@@ -612,7 +615,9 @@ SELECT interf.SECID id,
 		T1.CONTACT_INFO		 contactInfo,
 		T2.TRADER			 trader,
 		T1.INV_MANAGER_ID	 invManagerId,
-		T1.chl_id chlId
+		T1.chl_id chlId ,
+		''  businessModel
+
 		FROM
 		WFL_ETR_ENTRUST T1
 		LEFT JOIN

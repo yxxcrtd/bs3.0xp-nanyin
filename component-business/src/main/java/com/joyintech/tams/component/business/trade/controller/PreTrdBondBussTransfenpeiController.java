@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,9 +87,10 @@ public class PreTrdBondBussTransfenpeiController extends BaseController {
         model.addAttribute("entityNameBussTrdTransferOrder", entityName);
         model.addAttribute(GlobalConstant.WORKFLOW_ID, this.getParam(GlobalConstant.WORKFLOW_ID));
         model.addAttribute("operationType", StringUtil.defaultString(this.getParam("operationType")));
-
+ 
         this.setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
-                , DictCode.登记托管机构, DictCode.分配方式);
+                , DictCode.登记托管机构, DictCode.分配方式, BussinessDictCode.业务模式);
+ 
         return "component/trade/BussTrdTransfenpei";
     }
 

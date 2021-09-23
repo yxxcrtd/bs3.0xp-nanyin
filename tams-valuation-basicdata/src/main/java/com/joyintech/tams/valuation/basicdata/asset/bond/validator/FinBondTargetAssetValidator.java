@@ -101,7 +101,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                             }
                             continue;
                         }
-                        if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())) {
+                        /*if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())) {
                             if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
                                 resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_001", entity.getFinprodId())));
                                 //break;
@@ -111,7 +111,7 @@ public class FinBondTargetAssetValidator implements BeanValidator{
                                 //break;
                             }
                             continue;
-                        }
+                        }*/
                     }
                 }
             }

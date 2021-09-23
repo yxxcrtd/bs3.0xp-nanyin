@@ -67,5 +67,14 @@ public interface ValuationMethodScheme004Mapper {
      * @return
      */
     ValuationMethodScheme004Dto getFinprodInfoByMarketId(Map<String, Object> pageParam);
+
+    /**
+     * @Description:根据资产代码获取证券品种
+     * @auther: yuzj
+     * @date: 2021/9/22
+     * @param:
+     * @return:
+     */
+    String  getSecTypeByFinprodId(String finprodId);
 	
 }

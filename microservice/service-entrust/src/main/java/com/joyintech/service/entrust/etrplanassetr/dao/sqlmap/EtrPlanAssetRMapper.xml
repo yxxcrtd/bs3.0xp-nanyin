@@ -424,6 +424,7 @@
 		<result column="accAvailableCash"  property="accAvailableCash"/>
 		<result column="remark"  property="remark"/>
 		<result column="invAim"  property="invAim"/>
+		<result column="businessModel"  property="businessModel"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrinvestbondinfo.dto.BussEtrInvestPersonInfoDto">
 		<result column="invManagerId"  property="invManagerId"/>
 		<result column="trader"  property="trader"/>
@@ -460,7 +461,8 @@
 				T1.CONTACT_INFO		 contactInfo,
 				T2.TRADER			 trader,
 				T1.INV_MANAGER_ID	 invManagerId,
-				T1.INV_AIM			 invAim
+				T1.INV_AIM			 invAim ,
+				''  businessModel
 			FROM
 				WFL_ETR_ENTRUST T1
 			LEFT JOIN
@@ -505,7 +507,8 @@
 		T1.CONTACT_INFO		 contactInfo,
 		T2.TRADER			 trader,
 		T1.INV_MANAGER_ID	 invManagerId,
-		T1.INV_AIM			 invAim
+		T1.INV_AIM			 invAim ,
+		T1.BUSINESS_MODEL    businessModel
 		FROM
 		ETR_ENTRUST T1
 		LEFT JOIN

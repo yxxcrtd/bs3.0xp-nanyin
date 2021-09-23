@@ -14,7 +14,12 @@ $(function() {
 //        return $.serializeToObject($("#submitForm"));
         var dto = {};
         dto.assetType = $("#assetType").val();
-        dto.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            dto.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            dto.assetDetailType = $("#depositeType").val();
+        }
         dto.isContainPledge = $("#isContainPledge").val();
         dto.lgd = $("#lgd").val();
         return dto;
@@ -53,7 +58,12 @@ $(function() {
         object.pageModel = pageModel;
         object.workflowId = workflowId;
         object.assetType = $("#assetType").val();
-        object.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            object.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            object.assetDetailType = $("#depositeType").val();
+        }
         object.isContainPledge = $("#isContainPledge").val();
         object.lgd = $("#lgd").val();
         object.seqno=SEQNO;
@@ -73,7 +83,12 @@ $(function() {
         object.pageModel = pageModel;
         object.workflowId = workflowId;
         object.assetType = $("#assetType").val();
-        object.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            object.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            object.assetDetailType = $("#depositeType").val();
+        }
         object.isContainPledge = $("#isContainPledge").val();
         object.lgd = $("#lgd").val();
         object.seqno=SEQNO;

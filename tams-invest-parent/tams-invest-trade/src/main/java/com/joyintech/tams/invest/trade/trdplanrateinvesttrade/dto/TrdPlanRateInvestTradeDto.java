@@ -304,6 +304,10 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
      */
     private String appAssetPositionStr;
 
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
 
     /**
@@ -1077,7 +1081,7 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
 		this.tradeAmtAndFee = tradeAmtAndFee;
 	}
     
-	@NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+//	@NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     @Override
     public String getInvAim() {
     	return super.getInvAim();
@@ -1118,6 +1122,11 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
         this.appAssetPositionStr = appAssetPositionStr;
     }
 
+     public String getBusinessModel() {
+        return businessModel;
+    }
 
-
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
 }

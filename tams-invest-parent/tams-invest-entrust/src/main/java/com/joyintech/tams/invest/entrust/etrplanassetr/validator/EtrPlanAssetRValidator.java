@@ -119,6 +119,10 @@ public class EtrPlanAssetRValidator implements EtrCommonValidator {
                 	errorList.add(new ValidMessage("委托金额超过了计划的融资金额！"));
                 }
             }
+            if(dto.getBusinessModel()==null||StringUtil.equals("",dto.getBusinessModel())){
+                errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
+            }
+
             if (entrustNum != null) {
                 if (entrustNum.compareTo(zero) <= 0) {
                     errorList.add(new ValidMessage("entrustNum", this.getMessage("ETR_X_008",this.getMessage("EtrPlanAssetR002.entrustNum"))));
