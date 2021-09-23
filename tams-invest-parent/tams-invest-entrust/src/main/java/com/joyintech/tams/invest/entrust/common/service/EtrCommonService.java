@@ -1639,7 +1639,7 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     public String assetIsTestBySppi(Map<String, Object> paramMap){
         return restTemplate.postForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/assetIsTestBySppi", paramMap,
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EntrustCommon/assetIsTestBySppi", paramMap,
                 String.class);
     }
 

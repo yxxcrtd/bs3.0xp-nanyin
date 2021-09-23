@@ -68,5 +68,4 @@ public interface EtrIbBondinfo001Mapper {
      */
     List<EtrTrdProductDealDto> getAllTradeListByFinprodId(Map<String, Object> map);
 
-    String assetIsTestBySppi(Map<String, Object> map);
 }
