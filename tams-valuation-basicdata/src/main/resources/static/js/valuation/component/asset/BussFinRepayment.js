@@ -383,6 +383,7 @@
      * @returns
      */
     function getPreviewParams() {
+        debugger;
         var param = {}
       //付息信息
         var param = {}
@@ -481,6 +482,11 @@
             }else{
                 param.isNoIssueAmtFlag='N';
                 param.issueAmt = $('#issueAmt').val();
+                //因债权类发行价单位为“万”，故需要调整，生成计划，值要对应
+                // if($('#issueAmt').val()){
+                //     param.issueAmt =JoyinMath.doMul($('#issueAmt').val(), 10000, 12);
+                // }
+
             }
             //param.issueAmt = $('#issueAmt').val();
         }else if(INT_ASSET_TYPE == FINPROD_TYPE_F01){
