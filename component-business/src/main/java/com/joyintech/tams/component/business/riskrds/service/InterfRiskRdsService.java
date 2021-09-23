@@ -1154,10 +1154,14 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             String groupId = String.valueOf(System.nanoTime());
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
-            infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
+            BigDecimal num = (BigDecimal)convert(dataMap.get("conNum"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
+            BigDecimal pri = (BigDecimal)convert(dataMap.get("conPrice"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
+            if (num != null && pri != null) {
+                infMap.put(PageFieldToInterfFactory.INF_AMOUNT, num.multiply(pri));
+            }
             // add by zhangrui1 正反同步交易特殊处理 end
             if(StringUtil.isNotEmpty(infMap.get(PageFieldToInterfFactory.INF_AMOUNT))) {
-                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal((String)infMap.get(PageFieldToInterfFactory.INF_AMOUNT)), new BigDecimal(100), 2));
+                infMap.put(PageFieldToInterfFactory.INF_TRADENUM, ArithmeticUtil.divide(new BigDecimal(infMap.get(PageFieldToInterfFactory.INF_AMOUNT).toString()), new BigDecimal(100), 2));
             }
             result.add(infMap);
             // 股票
@@ -1179,15 +1183,12 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             }
             // add by zhangrui1 债转股拼接事件编号 end
             // 金额=转股数*转股价格
-            BigDecimal num = (BigDecimal)convert(dataMap.get("conNum"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
-            BigDecimal pri = (BigDecimal)convert(dataMap.get("conPrice"), BigDecimal.class, obj -> new BigDecimal(obj.toString()));
             if (num != null && pri != null) {
                 infMap.put(PageFieldToInterfFactory.INF_AMOUNT, num.multiply(pri));
             }
             // add by zhangrui1 正反同步交易特殊处理 start
             infMap.put(GROUP_ID, groupId);
             infMap.put(IS_SYNC, BussinessDictCodeList.是否_是.getValue());
-            infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
             String entrustId = (String)CommonUtil.findValue(dataMap, "entrustId");
             if (!StringUtil.isEmpty(entrustId)
