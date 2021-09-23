@@ -243,4 +243,15 @@ public class RskValAssetCodeController {
     public void insertList(@RequestBody List<RskValtblAssetSubMapDtl> list){
         rskValAssetCodeService.insertList(list);
     }
+    /**
+     * 查询目标科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selecctRskValtblSubCodeList")
+    public List<String> selecctRskValtblSubCodeList(String subType){
+        return rskValAssetCodeService.selecctRskValtblSubCodeList(subType);
+    }
 }
