@@ -2,47 +2,47 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='XJGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGM','现金持仓规模','N','','admin','C001',sysdate,'admin',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('XJGM','现金持仓规模','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='XJGM';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','C001',sysdate,'admin',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','C001',sysdate,'admin',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','C001',sysdate,'admin',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','C001',sysdate,'admin',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','admin','C001',sysdate,'admin',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('XJGM','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
-V_CONTENT_01_02_03 CLOB := 'select m.PORTFOLIO_ID RKEY,nvl(sum(nvl(pspv.MARKET_VALUE,0)+nvl(pspv.TDY_INTINCEXP,0)),0) as  RVALUE  from PTL_PORTFOLIO m   
-LEFT JOIN PTL_CASH_POSITION n ON m.PORTFOLIO_ID=n.PORTFOLIO_ID AND  n.HODING_TYPE=''03'' AND n.CDATE =date''${valDate}''-1 
-LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1 
-where  m.PORTFOLIO_TYPE IN (''01'',''02'') AND m.MDATE>date''${valDate}''  group by m.PORTFOLIO_ID  
-union all  
-select t.PTL_BAG_ID as RKEY,  
+V_CONTENT_01_02_03 CLOB := 'select m.PORTFOLIO_ID RKEY,nvl(sum(nvl(pspv.MARKET_VALUE,0)+nvl(pspv.TDY_INTINCEXP,0)),0) as  RVALUE  from PTL_PORTFOLIO m
+LEFT JOIN PTL_CASH_POSITION n ON m.PORTFOLIO_ID=n.PORTFOLIO_ID AND  n.HODING_TYPE=''03'' AND n.CDATE =date''${valDate}''-1
+LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1
+where  m.PORTFOLIO_TYPE IN (''01'',''02'') AND m.MDATE>date''${valDate}''  group by m.PORTFOLIO_ID
+union all
+select t.PTL_BAG_ID as RKEY,
 ( select nvl(sum(nvl(pspv.MARKET_VALUE,0)+nvl(pspv.TDY_INTINCEXP,0)),0) as  TRADE_AMT from PTL_CASH_POSITION n
- LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1 
-where  n.HODING_TYPE=''03'' and n.CDATE =date''${valDate}''-1  AND n.PORTFOLIO_ID in (select t1.PORTFOLIO_ID from RSK_PORTFOLIO_PACKAGE_DTL t1  
-inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'' where t1.PTL_BAG_ID=t.PTL_BAG_ID) 
-)  
+ LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1
+where  n.HODING_TYPE=''03'' and n.CDATE =date''${valDate}''-1  AND n.PORTFOLIO_ID in (select t1.PORTFOLIO_ID from RSK_PORTFOLIO_PACKAGE_DTL t1
+inner join PTL_PORTFOLIO t2 on t1.PORTFOLIO_ID=t2.PORTFOLIO_ID and t2.MDATE>date''${valDate}'' where t1.PTL_BAG_ID=t.PTL_BAG_ID)
+)
 from RSK_PORTFOLIO_PACKAGE t';
 
 ----事后(日间)
 V_CONTENT_04 CLOB := 'SELECT sum(RVALUE) FROM (
     SELECT nvl(sum(nvl(pspv.MARKET_VALUE,0)+nvl(pspv.TDY_INTINCEXP,0)),0) as RVALUE from PTL_CASH_POSITION n
-    LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1 
+    LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''-1
     WHERE n.PORTFOLIO_ID in ${portfolioCode} and n.HODING_TYPE=''03'' and n.CDATE =date''${valDate}''-1 AND
     ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
-	UNION ALL
+  UNION ALL
     SELECT nvl(sum(pcpf.AMOUNT),0) as RVALUE from PTL_CASH_POSITION n
     LEFT JOIN PTL_CASH_POSITION_FLOW pcpf ON n.PORTFOLIO_ID = pcpf.PORTFOLIO_ID AND n.ACCT_ID = pcpf.ACCT_ID AND n.CDATE =pcpf.CDATE
-    WHERE n.PORTFOLIO_ID in ${portfolioCode} and n.HODING_TYPE=''03'' and n.CDATE =date''${valDate}''
-	AND n.ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
-	UNION ALL
-	select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
+    WHERE n.PORTFOLIO_ID in ${portfolioCode} and pcpf.HODING_TYPE=''03'' and n.CDATE =date''${valDate}''
+  AND n.ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
+  UNION ALL
+  select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
     where  PORTFOLIO_ID in ${portfolioCode} and HODING_TYPE=''01'' and CDATE >=date''${valDate}'' AND
     ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
     UNION ALL
@@ -52,25 +52,25 @@ V_CONTENT_04 CLOB := 'SELECT sum(RVALUE) FROM (
     pcpf.ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
     AND EXISTS (select * from TRD_PRODUCT_DEAL tpd where tpd.TOTLE_TRADE_ID = spn.TRADE_ID AND tpd.TRADE_DATE =date''${valDate}'')
     UNION ALL
-	select nvl(sum(pcpf.AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW pcpf
-	INNER JOIN STL_PAY_TEMP_ORDERS spn ON spn.ORDER_ID = pcpf.ORDER_ID
+  select nvl(sum(pcpf.AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW pcpf
+  INNER JOIN STL_PAY_TEMP_ORDERS spn ON spn.ORDER_ID = pcpf.ORDER_ID
     where  pcpf.PORTFOLIO_ID in ${portfolioCode} and pcpf.HODING_TYPE=''03'' and pcpf.CDATE >date''${valDate}'' AND
     pcpf.ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
-    AND EXISTS (select * from TRD_PRODUCT_TEMP_DEAL tpd where tpd.TOTLE_TRADE_ID = spn.TRADE_ID AND tpd.TRADE_DATE =date''${valDate}'')  
+    AND EXISTS (select * from TRD_PRODUCT_TEMP_DEAL tpd where tpd.TOTLE_TRADE_ID = spn.TRADE_ID AND tpd.TRADE_DATE =date''${valDate}'')
   )';
 
 ----事后(日终)
 V_CONTENT_05 CLOB := 'SELECT sum(RVALUE) FROM (
     SELECT nvl(sum(nvl(pspv.MARKET_VALUE,0)+nvl(pspv.TDY_INTINCEXP,0)),0) as RVALUE from PTL_CASH_POSITION n
-    LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}'' 
+    LEFT JOIN PTL_SEC_PIERCE_VALUTION pspv ON n.PORTFOLIO_ID = pspv.PORTFOLIO_ID AND n.ACCT_ID = pspv.FINPROD_ID AND pspv.CDATE =date''${valDate}''
     WHERE n.PORTFOLIO_ID in ${portfolioCode} and n.HODING_TYPE=''03'' and n.CDATE =date''${valDate}'' AND
     n.ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
-	UNION ALL
-	select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
+  UNION ALL
+  select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
     where  PORTFOLIO_ID in ${portfolioCode} and HODING_TYPE=''01'' and CDATE >=date''${valDate}'' AND
     ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
-	UNION ALL
-	select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
+  UNION ALL
+  select nvl(sum(AMOUNT),0) as  RVALUE from PTL_CASH_POSITION_FLOW
     where PORTFOLIO_ID in ${portfolioCode} and HODING_TYPE=''03'' and CDATE >date''${valDate}'' AND
     ACCT_ID in ( SELECT ACCT_NO from PTL_CAPACCT_INFO where PORTFOLIO_ID in ${portfolioCode}  AND ACCT_TYPE <> ''A06'')
   )';
