@@ -89,7 +89,7 @@ $(function () {
                {field:'baseTypeFt', title: '计费基数', sort: true,sortField:'baseType'},
                {field:'baseDateTypeCode', title: '计费日期类型', sort: true, visible:false},
                {field:'baseDateType', title: '计费日期类型', sort: true},
-               {field:'basis', title: '计算基础', sort: true},
+               {field:'basis', title: '计费基础', sort: true},
                {field:'effDate', title: '首次计提日', sort: true},
                {field:'payCycleCode', title: '付费规则', visible:false, sort: true},
 //               {field:'payCycle', title: '付费规则', sort: true},
