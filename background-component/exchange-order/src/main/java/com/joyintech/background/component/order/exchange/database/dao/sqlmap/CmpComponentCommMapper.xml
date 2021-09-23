@@ -30,7 +30,7 @@
         etr.CREATE_TIME createTime,etr.UPDATE_USER updateUser,etr.UPDATE_TIME updateTime,
         etr.ENTRUST_CLASS entrustClass,etr.FINPROD_TYPE2 finprodType2,etr.CCY ccy,etr.STOCK_ID stockId,
         etrAdd.SEC_ACCT_ID secAcctId, etrAdd.DEAL_CUR_ACCT dealCurAcct, etrAdd.ASSET_TYPE assetType,
-        etrAdd.TARGET_TYPE targetType, etrAdd.DEAL_MODE dealMode
+        etrAdd.TARGET_TYPE targetType, etrAdd.DEAL_MODE dealMode ,etr.BUSINESS_MODEL  businessModel
     </sql>
     <sql id="Sta_Column_list">
         sta.ENTRUST_ID entrustId,sta.TRADE_ID tradeId,sta.FINISH_DATE finishDate,sta.ENT_FINISH_AMT entFinishAmt
@@ -44,7 +44,17 @@
         where etr.ENTRUST_ID = #{entrustId,jdbcType=VARCHAR}
         union all
         select
-        <include refid="com.joyintech.background.component.order.exchange.database.dao.CmpComponentCommMapper.Etr_Column_List" />
+        etr.ENTRUST_TYPE entrustType,etr.ENTRUST_ID entrustId,etr.PORTFOLIO_ID portfolioId,
+        etr.FINPROD_ID finprodId,etr.TRADE_MARKET tradeMarket,etr.TRADE_PLAT tradePlat,etr.PS ps,
+        etr.INV_AIM invAim,etr.COUNTER_ID counterId,etr.COUNTER_TRADER counterTrader,
+        etr.CONTACT_INFO contactInfo,etr.ENTRUST_DATE entrustDate,etr.VDATE vdate,
+        etr.MDATE mdate,etr.ENTRUST_AMT entrustAmt,etr.ENTRUST_NUM entrustNum,
+        etr.ENTRUST_STATUS entrustStatus,etr.PRICE price,etr.INV_MANAGER_ID invManagerId,
+        etr.PRICE_MODEL priceModel,etr.CREATE_USER createUser,etr.CREATE_DEPT createDept,
+        etr.CREATE_TIME createTime,etr.UPDATE_USER updateUser,etr.UPDATE_TIME updateTime,
+        etr.ENTRUST_CLASS entrustClass,etr.FINPROD_TYPE2 finprodType2,etr.CCY ccy,etr.STOCK_ID stockId,
+        etrAdd.SEC_ACCT_ID secAcctId, etrAdd.DEAL_CUR_ACCT dealCurAcct, etrAdd.ASSET_TYPE assetType,
+        etrAdd.TARGET_TYPE targetType, etrAdd.DEAL_MODE dealMode ,''  businessModel
         from WFL_ETR_ENTRUST etr
         left join WFL_ETR_ENTRUST_ADD etrAdd
         on etr.ENTRUST_ID = etrAdd.ENTRUST_ID

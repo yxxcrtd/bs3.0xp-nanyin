@@ -56,6 +56,15 @@ public interface BaseEtrInvestInfoService {
     BaseEtrInvestInfoDto queryActiveMandate(String entrustId);
 
     /**
+     * 查询委托业务模式字段y
+     * @param entrustId String
+     * @return BaseEtrInvestInfoDto
+     * @see
+     * @since 1.0
+     */
+    String findEtrWordInfo(String entrustId);
+
+    /**
      * 新建委托 
      * <一句话功能简述> 
      * <功能详细描述>

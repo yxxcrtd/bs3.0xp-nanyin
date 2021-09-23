@@ -191,7 +191,21 @@
         }
         object.calculateField = calculateField;
         Joyin.ajaxJson(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade002/check', object, function (result) {
-            Joyin.confirm(result.data, function () {
+            if(result.data.indexOf("xx")!=-1) {
+                for(var i=0;i<object.bussTransfenpei.trdTransfenpeiDtoList.length;i++){
+                    object.bussTransfenpei.trdTransfenpeiDtoList[i].businessModel = "Y2";
+                    object.businessModel = "Y2";
+                }
+                var dataRows = table.getAllRows();
+                for(var i=0;i<table.getAllRows().length;i++){
+                     table.renderRow(i, {"businessModelStr": "出售"});
+                }
+           }else{
+                 for(var i=0;i<object.bussTransfenpei.trdTransfenpeiDtoList.length;i++){
+                     object.businessModel = object.bussTransfenpei.trdTransfenpeiDtoList[i].businessModel;
+                 }
+           }
+             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
                     WorkFlow.doSaveList(basePath + 'invest/trade/pretrdbondtrade/PreTrdBondInvestTrade002/save', object, "PreTrdBondInvestTrade002_btn_save","PreTrdBondInvestTrade002");
                 } else {
@@ -812,6 +826,7 @@
                             if(element.etrEntrust.entrustAmt){
                                 rowData.tradeAmtAndFee = element.etrEntrust.entrustAmt;//交易金额
                             }
+
                             if(element.etrEntrustAdd){
                                 rowData.secManageAcctId=element.etrEntrustAdd.secAcctId;
                                 if(element.etrEntrustAdd.windtypeone){

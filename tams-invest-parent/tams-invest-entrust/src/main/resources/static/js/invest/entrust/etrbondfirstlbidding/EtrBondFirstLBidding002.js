@@ -204,6 +204,7 @@
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
         var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+        var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
         Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
                 function(result) {
             $('#proAvailableCash').val(result.cashT).trigger('blur');
@@ -429,7 +430,15 @@
 	        saveOrSubmit('submit');
 	    });
 	   
-	    
+	    //根据参数 选择显示投资目的或者业务模式
+	    if(SHOW_INVAIM_OR_BUSSINSSMODEL=="BUSSINSSMODEL"){
+           $("#invAimDiv").hide();
+           $("#businessModelDiv").show();
+	    }else{
+	       $("#invAimDiv").show();
+           $("#businessModelDiv").hide();
+	    }
+
 	 // 代办显示点击查看风险试算结果  Start
         /**
          * 代办点击查看风险试算结果

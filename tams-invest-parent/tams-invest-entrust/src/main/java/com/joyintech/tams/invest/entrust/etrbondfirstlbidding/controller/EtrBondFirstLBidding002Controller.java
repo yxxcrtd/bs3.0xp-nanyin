@@ -102,6 +102,12 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         //配置单位 add by yeming 20210721 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         //配置单位 add by yeming 20210721 end
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
+
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("TodoList", !WorkFlowUtil.isNotFromToDoList());
         //流程代办

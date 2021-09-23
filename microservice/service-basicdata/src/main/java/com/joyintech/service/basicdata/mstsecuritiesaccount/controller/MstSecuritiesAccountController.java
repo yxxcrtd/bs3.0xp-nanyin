@@ -370,4 +370,19 @@ public class MstSecuritiesAccountController {
     public List<Map<String, Object>> getFaceValueList(@RequestBody Map<String, Object> map) throws Exception {
         return mstSecuritiesAccountService.getFaceValueList(map);
     }
+
+    /**
+     * 判断资产是不是债券
+     *
+     * @return List
+     * @throws Exception Exception
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("IsBondAsset")
+    public String IsBondAsset(@RequestBody Map<String, Object> map)
+    {
+        return mstSecuritiesAccountService.IsBondAsset(map);
+
+    }
 }
