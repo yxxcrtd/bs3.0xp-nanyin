@@ -120,6 +120,11 @@ public class TrdFundInvestTrade004Controller extends BaseController {
         setSelectOptionToModel(model, DictCode.基金类资产类型, DictCode.交易场所, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类, // 新增资产二三四级类型 王贵奇 2019/7/30
                 DictCode.交易方向, DictCode.清算速度, DictCode.币种, DictCode.交易所基金类型);
 
+        // ZGZGST-3010:场内基金交易交易方向 fuyongsheng 20210923 add start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易方向, this.getParam("parentPageId"));
+        // ZGZGST-3010:场内基金交易交易方向 fuyongsheng 20210923 add end
+
         // 场内基金改造 add by renping 20191117 start
         model.addAttribute("ps_T52", DictCodeListExt2.交易方向_认购.getValue());
         model.addAttribute("COUNTER_PARTY_ID_SHANGHAI",
