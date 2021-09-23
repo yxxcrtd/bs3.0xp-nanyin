@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import org.apache.commons.lang.StringUtils;
@@ -103,7 +104,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
     
     @Override
     public String init(Model model) {
-    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型);
+    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, BussinessDictCode.业务模式);
     	this.setPsSelectOptions(model);
     	this.setPriceModelSelectOptions(model);
     	this.setDeclaTypeSelectOptions(model);
@@ -1232,6 +1233,19 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public String initHq(Model model){
 
         return "invest/entrust/etrexchangetrade/EtrExchangeTradeHq";
+    }
+
+    /**
+     * 判断所选产是不是债券并且有没有通过中债sppi测试
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/IsBondAsset")
+    public AjaxResult IsBondAsset(){
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setData(etrExchangeTrade001Service.IsBondAsset(RequestUtil.getPageParam()));
+        ajaxResult.setData("2");
+         return ajaxResult;
     }
 }
 	

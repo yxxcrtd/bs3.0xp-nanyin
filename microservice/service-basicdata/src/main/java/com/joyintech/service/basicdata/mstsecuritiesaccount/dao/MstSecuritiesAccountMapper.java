@@ -204,4 +204,8 @@ public interface MstSecuritiesAccountMapper {
     List<Map<String, Object>> getFaceValueList(Map<String, Object> map);
     
     List<SelectOptionDto> getFuturesCompany(@Param("companyNo")String companyNo);
+
+    String IsBondAsset(Map<String, Object> map);
+
+    String QueryForTestStatus(Map<String, Object> map);
 }

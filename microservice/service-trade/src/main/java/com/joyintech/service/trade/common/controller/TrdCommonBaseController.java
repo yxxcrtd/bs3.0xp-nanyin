@@ -713,4 +713,14 @@ public class TrdCommonBaseController {
         }
         return parentPortfolioId;
     }
+
+    /**
+     * 根据委托代码查询生效的委托
+     *
+     * @return BaseEtrInvestInfoDto
+     */
+    @PostMapping("findEtrWordInfo")
+    public String findEtrWordInfo(@RequestBody String entrustId) {
+        return baseEtrInvestInfoServiceImpl.findEtrWordInfo(entrustId);
+    }
 }

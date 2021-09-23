@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.pretrdbondtrade.controller;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,9 +19,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
+import com.joyintech.tams.component.business.trade.controller.BussTrdAvailableCashQueryController;
+import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -96,6 +105,15 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
 
     @Autowired(required = false)
     private FinProductTypeMapper  finProductTypeMapper;
+    @Autowired
+    private TradeCommonService TradeCommonService;
+
+    @Autowired
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+    @Autowired
+    private DateCalService dateCalService;
 
     @Override
     public String init(Model model) {
@@ -285,7 +303,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
             DictCode.有效状态, DictCode.交易平台, DictCode.币种,
             DictCode.投资目的, DictCode.交易市场, DictCode.清算速度, DictCode.是否,
             DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,// 新增资产二、三、四级分类 王贵奇 2019/7/31
-            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式,DictCode.清算类型,DictCode.计息基础);
+            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式,DictCode.清算类型,DictCode.计息基础,BussinessDictCode.业务模式);
 
         model.addAttribute("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         model.addAttribute("TRADE_PLACE_02", DictCodeListExt1.交易场所_上海证券交易所.getValue());
@@ -492,7 +510,6 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
         if (ajaxResult != null) {
             return ajaxResult;
         }
-        
         return commonCheck(result, dto.getOperateType());  
     }
 

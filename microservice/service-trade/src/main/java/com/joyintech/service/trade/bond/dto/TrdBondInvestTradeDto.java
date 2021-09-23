@@ -182,6 +182,11 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
     private BigDecimal exchangeAmt;
 
     /**
+     *业务模式
+     */
+    private String businessModel;
+
+    /**
      * 父页面的parentPageId，用于区分字典值控制字段
      */
     private String parentPageId;
@@ -1033,5 +1038,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal {
 
     public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

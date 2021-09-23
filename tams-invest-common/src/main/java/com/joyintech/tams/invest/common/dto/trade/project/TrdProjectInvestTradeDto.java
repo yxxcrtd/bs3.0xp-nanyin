@@ -260,6 +260,11 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
     private String invAim;
 
     /**
+     *业务模式
+     */
+    private String businessModel;
+
+    /**
      * 获取 statusValid
      *
      * @return statusValid
@@ -1165,4 +1170,12 @@ public class TrdProjectInvestTradeDto extends BaseEntity {
 	public void setInvAim(String invAim) {
 		this.invAim = invAim;
 	}
+
+    public String getBusinessModel() {
+        return businessModel;
     }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
+}

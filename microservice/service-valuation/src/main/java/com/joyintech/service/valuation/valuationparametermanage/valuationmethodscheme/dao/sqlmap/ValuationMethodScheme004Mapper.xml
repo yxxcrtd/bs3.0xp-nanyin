@@ -229,5 +229,12 @@
         ) t 
             where t.finprodId = #{finprodId}
     </select>
+
+    <!--根据资产代码获取证券品种-->
+    <select id="getSecTypeByFinprodId" resultType="java.lang.String">
+        select type_18 from fin_product_Type  where finprod_id = #{finprodId}
+    </select>
+
+
 	
 </mapper>

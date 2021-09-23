@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.*;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
@@ -195,6 +196,11 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute(GlobalConstant.ENTITY, entity);
         

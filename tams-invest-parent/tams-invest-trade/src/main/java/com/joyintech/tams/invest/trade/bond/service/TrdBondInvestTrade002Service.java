@@ -1572,6 +1572,18 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
             // 金融产品交易信息DTO.金融产品交易Entity -> 金融产品交易业务流程表
             for (TrdProductDeal trdProductDeal : entity.getTrdProductDeals()) {
+
+                //处理业务模式与投资目的对应关系
+                for(TrdProductDeal temp : entity.getTrdProductDeals()){
+                    if(StringUtil.equals(entity.getBusinessModel(),"Y1")){
+                        temp.setInvAim("AC");
+                        temp.setBusinessModel(entity.getBusinessModel());
+                    }else if(StringUtil.equals(entity.getBusinessModel(),"Y2")){
+                        temp.setInvAim("FVTPL");
+                        temp.setBusinessModel(entity.getBusinessModel());
+                    }
+                }
+
                 trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
                 trdProductDeal.setIsCancel(DictCodeList.是否_否.getValue());
                 trdProductDealMapper.insertSelective(trdProductDeal);
@@ -2283,7 +2295,7 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
         // 投资目的
         if (StringUtil.isBlank(dto.getInvAim())) {
             ValidMessage validMessage = new ValidMessage("invAim",
-                getMessage("BUSS_COM_E_0038", getMessage("TrdBondInvestTrade002.invAim")));
+                getMessage("BUSS_COM_E_0038", getMessage("EtrBondFirstLBidding002.businessModel")));
             validMessageList.add(validMessage);
         }
         // 3.劵面总额
