@@ -132,6 +132,9 @@ public class TrdBondDuration002Controller extends BaseController {
 //                    JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
 //            }
 //        }
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
         model.addAttribute(GlobalConstant.ENTITY, entity);
         this.setSelectOptionToModel(model, DictCode.是否, DictCode.平安划款类型,DictCode.币种,DictCode.投资目的);
         model.addAttribute("CASH_CLASS_TYPE01", DictCodeList.现金流类型_中间收息.getValue());

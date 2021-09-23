@@ -505,9 +505,6 @@ from
         order by t.CREATE_TIME asc
     </select>
 
-    <select id="assetIsTestBySppi" resultType="java.lang.String">
-        select IS_SPPI_PASS from SPPI_IMPORT_DATA sid  inner join fin_product fp on fp.finprod_id = sid.BOND_ID
-        where  fp.finprod_Market_id = #{finprodId}
-    </select>
+
 
 </mapper>
