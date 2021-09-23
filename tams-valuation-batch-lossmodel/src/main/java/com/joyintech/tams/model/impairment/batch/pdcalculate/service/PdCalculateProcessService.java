@@ -10,6 +10,7 @@ import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.Impai
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.valuation.common.service.CalCommonService;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
@@ -43,6 +44,9 @@ public class PdCalculateProcessService {
     private final String BATCH_LOG_RESULTS = "logResults";
     @Autowired
     private ModLogsService modLogsService;
+
+    @Autowired
+    private CalCommonService calCommonService;
     /**
      * @Description:获取待处理资产信息List
      * @auther: yuzj
@@ -292,6 +296,12 @@ public class PdCalculateProcessService {
             //4.2 计算每个累积PD
             // 定义 变量.有效月度边际PD
             ModGradePdConfigDto modGradePdConfigDto = new ModGradePdConfigDto();
+            String PD违约概率小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                    "SYS_PARA_PD_DIGIT")) ? "6" : CacheUtil.getSysParam(
+                    "SYS_PARA_PD_DIGIT");
+            String PD违约概率小数尾数处理方式 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                    "SYS_PARA_PD_DIGIT_TYPE")) ? DictCodeList.估值舍入规则_四舍五入.getValue() : CacheUtil.getSysParam(
+                    "SYS_PARA_PD_DIGIT_TYPE");
             // 遍历年月列表
             for(int i = 0;  i < variablePdCalculateDto.getYearMonList().size() ; i++){
                 String yearMonStr = variablePdCalculateDto.getYearMonList().get(i);//年月 202107
@@ -398,13 +408,13 @@ public class PdCalculateProcessService {
                     // 交易数据i.前瞻前PD违约概率% = 前瞻前第12个月累积加权PD
                     aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreTwelveMonWeightedPd());
                     //交易数据i.前瞻后PD违约概率% = 第12个月累积加权PD
-                    aipcDto.setProspectivePd(variablePdCalculateDto.getTwelveMonWeightedPd());
+                    aipcDto.setProspectivePd(calCommonService.round(variablePdCalculateDto.getTwelveMonWeightedPd(), PD违约概率小数尾数处理方式, PD违约概率小数位));
                 }
                 else{
                     // 交易数据i.前瞻前PD违约概率% = 到期日累积加权PD
                     aipcDto.setPreProspectivePd(variablePdCalculateDto.getPreMdateWeightedPd());
                     //交易数据i.前瞻后PD违约概率% = 到期日累积加权PD
-                    aipcDto.setProspectivePd(variablePdCalculateDto.getMdateWeightedPd());
+                    aipcDto.setProspectivePd(calCommonService.round(variablePdCalculateDto.getMdateWeightedPd(), PD违约概率小数尾数处理方式, PD违约概率小数位));
                 }
 
             }
