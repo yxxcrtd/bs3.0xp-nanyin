@@ -4,18 +4,13 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.joyintech.tams.exchange.common.bean.*;
 import com.joyintech.tams.exchange.common.bean.investment.ReqRiskTrigger;
 import com.joyintech.tams.exchange.common.bean.investment.RiskOccupyBean;
 import com.joyintech.tams.exchange.common.bean.terminal.RTGSStatusBean;
 import com.joyintech.tams.exchange.common.cache.QuoteTickService;
-import com.joyintech.tams.exchange.common.constant.*;
 import com.joyintech.tams.exchange.common.constant.joyin.InvestmentAssetType1;
 import com.joyintech.tams.exchange.common.constant.joyin.Switches;
-import com.joyintech.tams.exchange.common.db.domain.*;
 import com.joyintech.tams.exchange.common.proto.QuoteProto;
-import com.joyintech.tams.exchange.common.utils.*;
-import com.joyintech.tams.exchange.datacommon.db.service.*;
 import com.joyintech.tams.exchange.service.trade.management.service.*;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
 import com.joyintech.tams.exchange.service.trade.processor.business.bond.BondHelper;
@@ -651,11 +646,11 @@ public class TradeHelper {
                 && EntrustUtils.isfairModeWithUnacceptInstructionForbid(commonManagement.getFairModeWithUnacceptInstruction())) {
             //公平交易开启
             Map<String, Instruction> instructionBeanMap = instructionService.queryInstructionByUserIdAndStockCode(order.getUserId(), order.getStockCode())
-                    .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
+                                                                            .stream().filter(instruction -> InvestmentUtils.hasSameDir(instruction, order)
                             && InstructionStatus.WAIT_RECEIVE.value.equals(instruction.getEntrustStatus())
                             && InvestmentUtils.isNormalTradeFromInstruction(instruction.getTradePlat())
                             && !InvestmentUtils.isInstructionProcessComplete(instruction))
-                    .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
+                                                                            .collect(Collectors.toMap(Instruction::getEntrustId, instructionBean -> instructionBean));
             if (instructionBeanMap.size() > 0) {
                 logger.debug("未接收且影响公平交易的相关指令: {}", JsonUtils.getJsonFromObject(instructionBeanMap));
                 order.setErrorMsg("存在公平指令未接收");

@@ -1,10 +1,6 @@
 package com.joyintech.tams.exchange.service.trade.processor.business.common;
 
 import com.google.common.base.Strings;
-import com.joyintech.tams.exchange.common.constant.*;
-import com.joyintech.tams.exchange.common.db.domain.*;
-import com.joyintech.tams.exchange.common.utils.*;
-import com.joyintech.tams.exchange.datacommon.db.service.*;
 import com.joyintech.tams.exchange.service.trade.processor.MessageSenderService;
 import com.joyintech.tams.exchange.service.trade.processor.account.AccountPositionHelper;
 import com.joyintech.tams.exchange.service.trade.processor.business.bond.BondHelper;
@@ -217,6 +213,7 @@ public class TradeCallbackHelper {
         tradeRecord.setTransCode(entrust.getBrokerEntrustId());
         tradeRecord.setCreateTime(now);
         tradeRecord.setUpdateTime(now);
+        tradeRecord.setFullPrice(bondHelper.getFullPriceByTradePrice(tradeRecord, entrust.getIsFullPrice(), instruction));
 
         //获取BusinessFlag
         if (IntegratedEntrustUtils.isIntegratedEntrust(tradeRecord.getEntrustProp())) {
@@ -318,7 +315,7 @@ public class TradeCallbackHelper {
                     unFrozenBalanceInstruction = instruction.getFrozenQuantity();
                 }
             }
-            logger.info("when trade repair instruction EntrustNum {},EntrustAmt {}, EntrustLeftAmt {}, FrozenQuantity {}", instruction.getEntrustNum(), instruction.getEntrustAmt(), instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity());
+            logger.info("when trade repair instruction EntrustNum {},EntrustAmt {}, EntrustLeftAmt {}, FrozenQuantity {}, unFrozenBalanceInstruction {}", instruction.getEntrustNum(), instruction.getEntrustAmt(), instruction.getEntrustLeftAmt(), instruction.getFrozenQuantity(),unFrozenBalanceInstruction);
         }
         //成交后处理持仓
         accountPositionHelper.handlePositionByTrade(entrust, tradeRecord.getTradeType(), tradeRecord.getTradedVolume());
