@@ -356,10 +356,10 @@
     <select id="findEffectiveData" resultType="com.joyintech.tams.invest.common.dto.trade.project.TrdProjectInvestTradeDto">
         select
         	<if test="PAGE_DATA_STATUS01 == statusValid">
-            	TPD.TRADE_ID bizCode, 
+            	TPD.TRADE_ID bizCode,
             </if>
             <if test="PAGE_DATA_STATUS01 != statusValid">
-            	deal.TOTLE_TRADE_ID bizCode, /*金融产品交易业务流程.交易编号*/
+            	deal.TOTLE_TRADE_ID bizCode, deal.BUSINESS_MODEL businessModel,/*金融产品交易业务流程.交易编号*/
             </if>
           '${statusValid}' statusValid,
           TPDA.ENTRUST_ID,/*金融产品交易附属业务流程.委托代码*/

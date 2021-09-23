@@ -754,6 +754,7 @@
         // 证券代码改变，清空数据来源
         $("#dataSource_" + currentTab).val('').trigger('change');
         var secId = $("#secId_" + currentTab).val();
+
         var ps = $("#ps_" + currentTab).val();
         if(secId) {
             var object = getSecIdSelectObjectData(secId);
@@ -2919,6 +2920,10 @@
 
         //初始化时，是否隐藏左上角内容
     var initPage = function(){
+             $("#businessModelDiv_jj").hide();
+             $("#businessModelDiv_gd").hide();
+             $("#businessModelDiv_dz").hide();
+
             initFlag = true;
             hideLeftTopPanel();
             if(parentPageModel==PAGE_MODEL_REFERENCE || parentPageModel==PAGE_MODEL_EDIT){
@@ -3064,8 +3069,9 @@
 
 
     $(function() {
-        debugger;
-        //按tab键定位按钮事件
+
+
+      //按tab键定位按钮事件
         var inp=$(".input-control").val();
         $(document).bind('keydown', function (e) {
             var e = window.event ? window.event : e;
@@ -3167,6 +3173,35 @@
         $("#secId_jj,#secId_dz,#secId_gd").change(function() {
             secIdChange();
             linkFindSecAmountInfo();
+            var secId = $("#secId_" + currentTab).val();
+            var param = {};
+            param.secId = secId;
+            if(secId){
+                Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/IsBondAsset', param, function(result) {
+                    //1 返回1代表所选资产不是债券 不处理
+                    if(result.data=='1') {
+                        $("#invAim_div_"+ currentTab).show();
+                        $("#businessModelDiv_"+ currentTab).hide();
+                    }else if(result.data=='2'){     //2 返回2代表所选资产是债券且中债sppi通过
+                         $("#invAim_div_"+ currentTab).hide();
+                         $("#businessModelDiv_"+ currentTab).show();
+                         $("#businessModel_" + currentTab).val("").trigger('change');
+                         $("#businessModel_" + currentTab).prop("disabled", false);
+
+                    }else if(result.data=='3'){       //3 返回3代表所选资产是债券且中债sppi不通过
+                        $("#invAim_div_"+ currentTab).hide();
+                        $("#businessModelDiv_"+ currentTab).show();
+                        $("#businessModel_" + currentTab).val("Y2").trigger('change');
+                        $("#businessModel_" + currentTab).prop("disabled", true);
+
+                    }else if(result.data=="4"){        //4 返回4代表所选资产是债券且没有进行中债sppi测试
+                        $("#invAim_div_"+ currentTab).hide();
+                        $("#businessModelDiv_"+ currentTab).show();
+                        Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                        $("#secId_" + currentTab).val("").trigger('change');
+                    }
+                });
+            }
         });
         // 交易场所
         $("#tradeMarket_jj,#tradeMarket_dz,#tradeMarket_gd").change(function() {
@@ -3257,6 +3292,14 @@
                 psChange(false);
             }
         });
+
+        // 资产代码变更时
+        $("#finprodName_jj").change(function() {
+            if (parentPageModel!=PAGE_MODEL_REFERENCE){  //解决场内交易指令流程代办显示为0
+                psChange(false);
+            }
+        });
+
         // 数据来源变更时
         $("#dataSource_jj,#dataSource_dz,#dataSource_gd").change(function() {
             dataSourceChange();

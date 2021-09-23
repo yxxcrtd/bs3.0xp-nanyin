@@ -540,6 +540,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private BigDecimal refundAmount;
 
+
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+
     public String getPreTradeId() {
         return preTradeId;
     }
@@ -2356,7 +2363,15 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
         return bidId;
     }
 
+
     public void setBidId(String bidId) {
         this.bidId = bidId;
+    }
+     public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

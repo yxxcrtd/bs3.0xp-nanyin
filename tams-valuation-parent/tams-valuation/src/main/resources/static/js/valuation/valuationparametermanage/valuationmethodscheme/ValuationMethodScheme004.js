@@ -149,15 +149,9 @@ $(function () {
 			}
 		}
 		//选择市值法时并且投资目的为收取合同现金流量及出售为目的，将估值第一市价改为市价来源，市价来源枚举值删除专家法，删除估值第二市价；
-		var traget1=document.getElementById("priceFristId");
-		var traget2=document.getElementById("priceSourceId");
 		if(valMethod == '01' && $("#invAim").val() == 'FVOCI'){
-			traget1.style.display="none";
-			traget2.style.display="inline";
 			/*$("#c_valuationPrice2").hide();*/
 		}else if((valMethod == '01' || valMethod == '03')  && $("#invAim").val() == 'FVTPL'){
-			traget1.style.display="none";
-			traget2.style.display="inline";
 			/*$("#c_valuationPrice2").hide();*/
 		}else if(valMethod == '05' && $("#invAim").val() == 'FVTPL'){
 			$("#c_valuationPrice").hide();

@@ -503,6 +503,7 @@
         <result column="listingDate"  property="listingDate"/>
         <result column="mainConsignee"  property="mainConsignee"/>
         <result column="biddingRange"  property="biddingRange"/>
+		<result column="businessModel"  property="businessModel"/>
 		<association property="etrInvestPersonInfo" javaType="com.joyintech.service.entrust.etrbondfirstlbidding.dto.BussEtrInvestPersonInfoDto">
 		<result column="invManagerId"  property="invManagerId"/>
 		<result column="trader"  property="trader"/>
@@ -542,7 +543,8 @@
         T6.PAYMENT_DATE paymentDate,
         T6.LISTING_DATE listingDate,
         T6.MAIN_CONSIGNEE mainConsignee,
-        T6.BIDDING_RANGE biddingRange
+        T6.BIDDING_RANGE biddingRange ,
+		'' businessModel
 	FROM
 		WFL_ETR_ENTRUST T1
 	LEFT JOIN
@@ -599,7 +601,8 @@
 		T6.PAYMENT_DATE paymentDate,
 		T6.LISTING_DATE listingDate,
 		T6.MAIN_CONSIGNEE mainConsignee,
-		T6.BIDDING_RANGE biddingRange
+		T6.BIDDING_RANGE biddingRange ,
+		T1.BUSINESS_MODEL  businessModel
 		FROM
 		ETR_ENTRUST T1
 		LEFT JOIN

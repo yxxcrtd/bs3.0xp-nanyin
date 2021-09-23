@@ -118,6 +118,32 @@
             });
         }
     }
+    
+ var changeBussnissModelByFinprodId = function(){
+     var finprodId = $('#finprodId').val();
+     if(finprodId){
+          var data = {finprodId:finprodId }
+          Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                if(result.data=='0') {
+                     Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                     $('#finprodId').val("").trigger('change');
+                     $("#businessModel").attr("disabled",false);
+                     $('#businessModel').val("").trigger('change');
+                 }else if(result.data=='3'){
+                     $('#businessModel').val("Y2").trigger('change');
+                     $("#businessModel").attr("disabled",true);
+                 }else if(result.data=='2') {
+                      $("#businessModel").attr("disabled",false);
+                      $('#businessModel').val("").trigger('change');
+                 }
+           });
+     }else{
+          $("#businessModel").attr("disabled",false);
+          $('#businessModel').val("").trigger('change');
+     }
+
+ }
+
   // 查询组合可用现金
     var getPtlCashPositionInfo = function(){
         var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val(), chlId:$("#chlId").val()}
@@ -152,7 +178,7 @@
     /**
 	 * 绑定事件
 	 */
-    $(function() {
+    $(function() { 
 
         var init = function(){
             $('#ps').change();
@@ -184,6 +210,16 @@
             object.finprodId =$('#finprodIdhid').val();
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F03',object,getriskdata());
         });
+
+        //根据参数 选择显示投资目的或者业务模式
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="BUSSINSSMODEL"){
+           $("#invAimDiv").hide();
+           $("#businessModelDiv").show();
+        }else{
+           $("#invAimDiv").show();
+           $("#businessModelDiv").hide();
+        }
+
         /**
 		 * 交易方向
 		 */
@@ -257,6 +293,10 @@
                 $('#assetType11').val('').trigger('change');
                 <!--、zhuyongkang 2019/7/29  end -->
             }
+            //增加业务模式的联动处理
+            if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+                changeBussnissModelByFinprodId();
+            //增加业务模式的联动处理
             ChannelAssetCommon.setChannelSelectObject($("#chlId"), data.finprodId, false, function () {
             });
         });

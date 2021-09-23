@@ -160,52 +160,7 @@ public class ValuationMethodScheme001Service extends CommonExportService<Valuati
                 + "/ValuationMethodScheme001/getIsdefault", null, boolean.class);
     }
 
-    /**
-     * @Description:根据投资目的处理估值方法下拉框集合
-     * @auther: yuzj
-     * @date: 2021/8/12
-     * @param:
-     * @return:
-     */
-	public List<SelectOptionDto> getResultByInvAim(List<SelectOptionDto> linkSelectOption,Map<String, Object> param){
-		//当投资目的为  收取合同现金流量为目的[AC]时，估值方法默认只可选择摊余成本法；
-		if(StringUtil.isNotEmpty(param.get("invAim")) && DictCodeListExt1.投资目的_摊余成本类.getValue().equals(param.get("invAim"))){
-			linkSelectOption = new ArrayList<>();
-			SelectOptionDto selectOptionDto = new SelectOptionDto();
-			selectOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
-			selectOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
-			linkSelectOption.add(selectOptionDto);
-		}
-		//当投资目的为收取合同现金流量及出售为目的[FVOCI]时，估值方法可选择市值法和摊余成本法
-		if(StringUtil.isNotEmpty(param.get("invAim")) && DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue().equals(param.get("invAim"))){
-			linkSelectOption = new ArrayList<>();
-			SelectOptionDto tycbSelectOptionDto = new SelectOptionDto();
-			tycbSelectOptionDto.setId(DictCodeListExt1.估值方法_摊余成本法.getValue());
-			tycbSelectOptionDto.setText(DictCodeListExt1.估值方法_摊余成本法.getCodeName());
-			SelectOptionDto szSelectOptionDto = new SelectOptionDto();
-			szSelectOptionDto.setId(DictCodeListExt1.估值方法_市值法.getValue());
-			szSelectOptionDto.setText(DictCodeListExt1.估值方法_市值法.getCodeName());
 
-			linkSelectOption.add(tycbSelectOptionDto);
-			linkSelectOption.add(szSelectOptionDto);
-		}
-		//当投资目的为出售资产为目的，估值方法的枚举值增加模型法
-		if(StringUtil.isNotEmpty(param.get("invAim")) && DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue().equals(param.get("invAim"))){
-			boolean isModel =true;
-			for(SelectOptionDto dto:linkSelectOption){
-				if(DictCodeListExt1.估值方法_模型法.getValue().equals(dto.getId())){
-					isModel=false;
-				}
-			}
-			if(isModel == true){//添加模型法
-				SelectOptionDto selectOptionDto = new SelectOptionDto();
-				selectOptionDto.setId(DictCodeListExt1.估值方法_模型法.getValue());
-				selectOptionDto.setText(DictCodeListExt1.估值方法_模型法.getCodeName());
-				linkSelectOption.add(selectOptionDto);
-			}
-		}
-		return  linkSelectOption;
-	}
 
 	/**
 	 * @Description:根据投资目的+估值方法过滤  估值市价_专家法

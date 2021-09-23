@@ -14,6 +14,7 @@ import com.joyintech.system.base.entity.SysPageDictlist;
 import com.joyintech.system.user.dao.UserMapper;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.*;
@@ -101,6 +102,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+
+    @Autowired
+    private BusiFinExercisePlanService busiFinExercisePlanService;
 
     /**
      * 日期计算
@@ -1633,6 +1637,59 @@ public class EtrCommonService extends BaseService<ITableRow> {
     }
 
 
+    public String assetIsTestBySppi(Map<String, Object> paramMap){
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrIbBondinfo001/assetIsTestBySppi", paramMap,
+                String.class);
+    }
+
+
+
+    public String getSppiInfoByY1(Map<String, Object> paramMap){
+        String finprodId = paramMap.get("finprodId").toString();
+        if(!StringUtil.isNotEmpty(paramMap.get("price"))){
+            return "0";
+        }
+        BigDecimal price = new BigDecimal(paramMap.get("price").toString());
+        Date platDate = DateUtil.platDateFromCache();
+
+        Boolean sinal = true;
+        //1 查询资产是否有行权计划
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("finprodId", finprodId);
+        param.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+        param.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        param.put("execType01", DictCodeList.行权状态_未行权.getValue());
+        param.put("execType02", DictCodeList.行权状态_已行权.getValue());
+        List<FinExercisePlan> finExercisePlanList = busiFinExercisePlanService.getfinExercisePlanByProductId(param);
+
+        for(FinExercisePlan finExercisePlan:finExercisePlanList) {
+            int count = 0;
+            if ((StringUtil.equals(finExercisePlan.getExerciseType(), "01") || StringUtil.equals(finExercisePlan.getExerciseType(), "02")) && DateUtil.compareDate(platDate, finExercisePlan.getActExerciseDate()) <= 0) {
+                count++;
+              break;
+            }
+            if(count==0)
+                return  "0";
+        }
+        //2 查询sppi中债中的使权不重大的购入价条件（小于第二个数字）
+        String bidPriceCon = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest001/getSppiInfoByY1?finprodId="
+                + finprodId, String.class);
+        if(bidPriceCon!=null) {
+            if (StringUtil.isNotEmpty(bidPriceCon)) {
+                bidPriceCon = bidPriceCon.split(",")[1];
+            }else {
+                return "1";
+            }
+            BigDecimal bidPriceCon2 = new BigDecimal(bidPriceCon);
+            if (price.compareTo(bidPriceCon2) < 0) {
+                return "2";
+            }
+        }else{
+            return "1";
+        }
+        return "2";
+    }
 
     /**
      * 组合现金信息
