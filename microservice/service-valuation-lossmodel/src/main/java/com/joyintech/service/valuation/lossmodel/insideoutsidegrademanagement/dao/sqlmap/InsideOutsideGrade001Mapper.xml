@@ -4,8 +4,8 @@
         namespace="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dao.InsideOutsideGrade001Mapper">
 
     <insert id="insert" parameterType="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto" >
-        insert into MOD_STANDARD_GRADE_MAPPING (SEQ_NO,GRADE_INST,O_TYPE,GRADE_RESULT,GRADE_STANDARD_RESULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
-        values (#{seqNo,jdbcType=VARCHAR}, #{gradeInst,jdbcType=VARCHAR}, #{oType,jdbcType=VARCHAR},
+        insert into MOD_STANDARD_GRADE_MAPPING (SEQ_NO,GRADE_INST,GRADE_RESULT,GRADE_STANDARD_RESULT,CREATE_USER,CREATE_DEPT,CREATE_TIME,UPDATE_USER,UPDATE_TIME)
+        values (#{seqNo,jdbcType=VARCHAR}, #{gradeInst,jdbcType=VARCHAR},
         #{gradeResult,jdbcType=VARCHAR}, #{gradeStandardResult,jdbcType=VARCHAR},
         #{createUser,jdbcType=VARCHAR},#{createDept,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
         #{updateTime,jdbcType=TIMESTAMP})
@@ -14,7 +14,6 @@
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from MOD_STANDARD_GRADE_MAPPING
         where GRADE_INST = #{gradeInst,jdbcType=VARCHAR}
-        and O_TYPE = #{oType,jdbcType=VARCHAR}
     </delete>
 
     <select id="checkData" resultType="int" parameterType="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto" >
@@ -24,9 +23,6 @@
         <if test="gradeInst!=null and gradeInst != ''">
             AND  GRADE_INST = #{gradeInst,jdbcType=VARCHAR}
         </if>
-        <if test="oType!=null and oType != ''">
-            AND  O_TYPE = #{oType,jdbcType=VARCHAR}
-        </if>
         <if test="gradeResult!=null and gradeResult != ''">
             AND  GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR}
         </if>
@@ -34,8 +30,7 @@
 
     <select id="getQueryData" resultType="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto">
         SELECT distinct
-        A.GRADE_INST AS gradeInst,
-        A.O_TYPE AS oType
+        A.GRADE_INST AS gradeInst
         FROM
         MOD_STANDARD_GRADE_MAPPING A
         WHERE
@@ -43,16 +38,12 @@
         <if test="gradeInst!=null and gradeInst != ''">
             AND  GRADE_INST = #{gradeInst,jdbcType=VARCHAR}
         </if>
-        <if test="oType!=null and oType != ''">
-            AND  O_TYPE = #{oType,jdbcType=VARCHAR}
-        </if>
-    </select>
+</select>
 
     <select id="getBySeqNo" resultType="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto">
         SELECT
         A.SEQ_NO AS seqNo,
         A.GRADE_INST AS gradeInst,
-        A.O_TYPE AS oType,
         A.GRADE_RESULT AS gradeResult,
         A.GRADE_STANDARD_RESULT AS gradeStandardResult,
         A.CREATE_USER AS createUser,
@@ -67,10 +58,27 @@
         <if test="gradeInst!=null and gradeInst != ''">
             AND  GRADE_INST = #{gradeInst,jdbcType=VARCHAR}
         </if>
-        <if test="oType!=null and oType != ''">
-            AND  O_TYPE = #{oType,jdbcType=VARCHAR}
-        </if>
         ORDER BY L.ORDER_NO
     </select>
 
+    <select id="getExportData" resultType="com.joyintech.service.valuation.lossmodel.insideoutsidegrademanagement.dto.InsideOutsideGrade001Dto">
+        SELECT
+        A.GRADE_INST AS gradeInst,
+        A.GRADE_RESULT AS gradeResult,
+        A.GRADE_STANDARD_RESULT AS gradeStandardResult
+        FROM
+        MOD_STANDARD_GRADE_MAPPING A
+        WHERE
+        1=1
+        <if test="gradeInst!=null and gradeInst != ''">
+            AND  GRADE_INST = #{gradeInst,jdbcType=VARCHAR}
+        </if>
+        <if test="list !=null and list.size>0">
+            and GRADE_INST IN
+            <foreach  item="item" index="index" collection="list"  open="(" separator="," close=")">
+                #{item.gradeInst}
+            </foreach>
+        </if>
+        ORDER BY GRADE_INST ASC
+    </select>
 </mapper>

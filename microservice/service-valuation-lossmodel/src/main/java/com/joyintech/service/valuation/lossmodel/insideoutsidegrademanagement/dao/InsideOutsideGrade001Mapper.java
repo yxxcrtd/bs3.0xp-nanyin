@@ -24,7 +24,7 @@ public interface InsideOutsideGrade001Mapper {
      */
     int insert(InsideOutsideGrade001Dto record);
 
-    int deleteByPrimaryKey(@Param("gradeInst") String gradeInst, @Param("oType") String oType);
+    int deleteByPrimaryKey(@Param("gradeInst") String gradeInst);
 
     int checkData(InsideOutsideGrade001Dto dto);
 
@@ -44,4 +44,14 @@ public interface InsideOutsideGrade001Mapper {
      * @return
      */
     List<InsideOutsideGrade001Dto> getBySeqNo(Map<String, Object> map);
+
+    /**
+     * 查询导出列表数据 <一句话功能简述> <功能详细描述>
+     *
+     * @param map
+     * @return List<InsideOutsideGrade001Dto>
+     * @see
+     * @since 1.0
+     */
+    List<InsideOutsideGrade001Dto> getExportData(Map<String, Object> map);
 }

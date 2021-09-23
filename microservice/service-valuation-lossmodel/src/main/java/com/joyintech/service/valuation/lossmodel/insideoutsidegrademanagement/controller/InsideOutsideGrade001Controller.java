@@ -64,7 +64,6 @@ public class InsideOutsideGrade001Controller {
             InsideOutsideGrade001Dto data = new InsideOutsideGrade001Dto();
             data.setSeqNo(IDGenerator.generate());
             data.setGradeInst(dto.getGradeInst());
-            data.setoType(dto.getoType());
             data.setGradeResult(item.getGradeResult());
             data.setGradeStandardResult(item.getGradeStandardResult());
             insideOutsideGrade001Service.insert(data);
@@ -84,7 +83,6 @@ public class InsideOutsideGrade001Controller {
             InsideOutsideGrade001Dto data = new InsideOutsideGrade001Dto();
             data.setSeqNo(IDGenerator.generate());
             data.setGradeInst(dto.getGradeInst());
-            data.setoType(dto.getoType());
             data.setGradeResult(item.getGradeResult());
             data.setGradeStandardResult(item.getGradeStandardResult());
             insideOutsideGrade001Service.insert(data);
