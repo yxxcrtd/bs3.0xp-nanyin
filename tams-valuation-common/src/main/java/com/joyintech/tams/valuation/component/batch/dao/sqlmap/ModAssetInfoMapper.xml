@@ -319,6 +319,7 @@
 		<if test="searchNum != null">
 			AND info.r &lt;= #{searchNum, jdbcType=NUMERIC}
 		</if>
+		order BY DEAL_DATE /**必须按日期升序排列，后续业务代码有要求**/
     </select>
     <!-- 曲线行情查询   -->
     <select id="selectYieldCurveInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModYeildCurveParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto">

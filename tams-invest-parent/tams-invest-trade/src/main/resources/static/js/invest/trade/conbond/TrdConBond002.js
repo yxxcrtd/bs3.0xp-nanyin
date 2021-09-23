@@ -300,7 +300,7 @@ var table;
                 riskparam.data =null;
             }
             /*交易对手必填*/
-            $('#etrInvestPersonInfo.counterId').attr('required',true);
+            $('#trdInvestPersonInfo_counterId').attr('required',true);
             star();
             window.BaseRiskMathComm.getparam(riskparam);
             }
