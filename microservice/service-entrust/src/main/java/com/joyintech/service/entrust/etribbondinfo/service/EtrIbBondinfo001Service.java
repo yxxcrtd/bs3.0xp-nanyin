@@ -263,4 +263,10 @@ public class EtrIbBondinfo001Service extends BaseService{
         }
         return costPrice;
     }
+
+
+
+    public String assetIsTestBySppi(Map<String, Object> map) {
+        return etrIbBondinfo001Mapper.assetIsTestBySppi(map);
+    }
 }

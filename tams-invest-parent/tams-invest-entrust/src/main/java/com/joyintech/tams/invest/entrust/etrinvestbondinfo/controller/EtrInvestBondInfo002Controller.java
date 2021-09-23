@@ -15,6 +15,7 @@ import java.util.*;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
@@ -111,6 +112,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));

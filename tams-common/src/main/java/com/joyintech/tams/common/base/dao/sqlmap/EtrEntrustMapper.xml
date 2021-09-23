@@ -137,6 +137,9 @@
             <if test="invAim != null" >
                 INV_AIM,
             </if>
+            <if test="businessModel != null" >
+                BUSINESS_MODEL,
+            </if>
             <if test="counterId != null" >
                 COUNTER_ID,
             </if>
@@ -255,6 +258,9 @@
             </if>
             <if test="invAim != null" >
                 #{invAim,jdbcType=VARCHAR},
+            </if>
+            <if test="businessModel != null" >
+                #{businessModel,jdbcType=VARCHAR},
             </if>
             <if test="counterId != null" >
                 #{counterId,jdbcType=VARCHAR},

@@ -82,12 +82,14 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         this.setSelectOptionToModel(model, BussinessDictCode.清算速度);
         this.setSelectOptionToModel(model, BussinessDictCode.投资目的);
         this.setSelectOptionToModel(model, BussinessDictCode.交易平台);
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
 
         // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
         // add by etliu 20210501 银行间场内场外拆分 end
+        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");

@@ -661,6 +661,11 @@
             var portfolioId = $('#portfolioId').val();
             var vdate = $('#vdate').val();
             var finprodId = $('#finprodId').val();
+            //增加业务模式的联动处理
+            if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+                changeBussnissModelByFinprodId();
+            //增加业务模式的联动处理
+
             if (finprodId) {
                 var data = $('#finprodId').select2('data')[0].object;
                 if (!data.finprodId) {
@@ -853,6 +858,15 @@
             getPtlSecPositionInfo();
             priceInitByInCpy();
         });
+
+       $("#businessModel").on("change", function () {
+            getPtlSecPositionInfo();
+            priceInitByInCpy();
+        });
+
+
+
+
         // 一体化对应etliu end
         $.fn.updateChosenArr = function updateChosenArr(obj) {
             var $this = $(this), arr = obj.dataResult || JSON.parse($this.attr('data-result') || '[]'), item = obj.item;
