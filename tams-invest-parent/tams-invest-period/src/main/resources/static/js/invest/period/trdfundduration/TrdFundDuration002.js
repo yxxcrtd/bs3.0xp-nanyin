@@ -721,7 +721,7 @@
        var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
             var itemArr = ['qty','tradeAmt'];
-        } if( type=="01" || type == "04"){ // 红利再投确认
+        } else if( type=="01" || type == "04"){ // 红利再投确认
             var itemArr = ['qty','tradeAmt'];
         }else{
             var itemArr = ['tradeAmt'];
