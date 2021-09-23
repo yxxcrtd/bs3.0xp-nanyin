@@ -113,7 +113,7 @@ public class CfetsBondDealQuotedPriceMuti001Controller extends BaseController {
     private BussCommonMapperDelegateService bussCommonMapperDelegateService;
     @Autowired
     private DateCalService dateCalService;
-    @Autowired
+
     /**
      * {@inheritDoc}
      */
