@@ -349,7 +349,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             //检验
             if (StringUtil.isNotEmpty(trdAssetLoss001Dto.getFinprodId())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getValDate())
-                    && StringUtil.isNotEmpty(trdAssetLoss001Dto.getPeroid())
+//                    && StringUtil.isNotEmpty(trdAssetLoss001Dto.getPeroid())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getStrDate())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getEndDate())) {
                 Map<String, Object> param = new HashMap<>();
@@ -363,7 +363,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                         trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("同一资产同一行情日不能维护两种减值测算方式!"));
                     }
                 }
-                param.put("peroid", trdAssetLoss001Dto.getPeroid());
+//                param.put("peroid", trdAssetLoss001Dto.getPeroid());
                 param.put("strDate", DateUtil.format(trdAssetLoss001Dto.getStrDate()));
                 List<TrdAssetLoss001Dto> tmpLsit2 = this.selectByFinprodIdAndValDate(param);
                 if (!StringUtil.isEmptyList(tmpLsit2)) {
@@ -421,23 +421,23 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     // 初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中
                     if (StringUtil.equals(rowData1.getFinprodId(), rowData2.getFinprodId())
                             && (rowData1.getValDate().compareTo(rowData2.getValDate()) == 0)
-                            && (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)) {
+                            /*&& (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)*/) {
                         if (rowData1.getStrDate().compareTo(rowData2.getStrDate()) >= 0 && rowData1.getStrDate().compareTo(rowData2.getEndDate()) <= 0) {
                             trdAssetLoss001DtoList.get(i).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                             trdAssetLoss001DtoList.get(k).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                         }
                     }
                     // 初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中
                     if (StringUtil.equals(rowData1.getFinprodId(), rowData2.getFinprodId())
                             && (rowData1.getValDate().compareTo(rowData2.getValDate()) == 0)
-                            && (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)) {
+                            /*&& (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)*/) {
                         if (rowData1.getEndDate().compareTo(rowData2.getStrDate()) >= 0 && rowData1.getEndDate().compareTo(rowData2.getEndDate()) <= 0) {
                             trdAssetLoss001DtoList.get(i).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                             trdAssetLoss001DtoList.get(k).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                         }
                     }
                 }
