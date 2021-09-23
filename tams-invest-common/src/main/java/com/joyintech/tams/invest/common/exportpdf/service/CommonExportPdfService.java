@@ -78,6 +78,8 @@ public class CommonExportPdfService<T> {
             //读取导出pdf配置
             if(configFile.startsWith("file:")){
                 configFile = configFile.replace("file:","");
+            }else if(configFile.startsWith("jar:file:")){
+                configFile = configFile.replace("jar:file:","");
             }
             logger.info("82行_导出pdf配置:"+configFile);
             WorkPage workPage = readXmlToJavaBean(configFile);
