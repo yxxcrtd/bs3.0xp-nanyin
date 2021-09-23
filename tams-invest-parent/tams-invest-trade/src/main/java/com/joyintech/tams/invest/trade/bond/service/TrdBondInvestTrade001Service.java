@@ -19,6 +19,8 @@ import java.util.Map;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradePdfDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,11 @@ import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
 
 @Service
 public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInvestTradeDto> {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * add by zengchengfa 20210803导出pdf共通
@@ -173,6 +180,7 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
      */
     public String getConfigFile(String pageId){
         String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/bond/conf/").toString();
+        logger.info("183行_getConfigFile:"+basePath);
         if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
             //场内
             return basePath + "export_conf_pdf002.xml";

@@ -56,7 +56,7 @@ $(function () {
             ,{field:'totleTradeId',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
             ,{field:'finprodMarketId',width:'15%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
             ,{field:'finprodAbbr',width:'15%',title:'资产简称'}//资产简称
-            ,{field:'chlName',width:'15%',title:'invest.channelId'}//通道
+            ,{field:'chlName',width:'15%',visible:false,title:'invest.channelId'}//通道
             ,{field:'assetTypeStr',sortField:'assetType',width:'15%',title:'TrdFundDuration001.finprodType'}//资产类型
             ,{field:'bonusModeStr',sortField:'bonusMode',width:'8%',title:'TrdFundDuration001.bonusMode'}//分红类型
             ,{field:'psStr',sortField:'ps',width:'8%',title:'TrdPlanNetDuration001.ps'}//交易方向
