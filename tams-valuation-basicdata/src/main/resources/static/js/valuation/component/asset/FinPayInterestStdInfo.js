@@ -621,6 +621,7 @@
      */
     function getPreviewParams() {
         //付息信息
+        debugger;
         var param = {}
             ,endTdayRule  = getElementById('endTdayRule').val()
             , payTdayRule = getElementById('payTdayRule').val()
@@ -630,6 +631,7 @@
             ,remark = getElementById('remark').val();
         param.finprodId = $("#finprodId").val();
         param.workflowId = $("#workflowId").val();
+        param.objectType = $("#objectType").val();//01债权类资产
         //资产类型
         param.finprodType2 = INT_ASSET_TYPE;
         param.finprodType = INT_ASSET_TYPE;
@@ -1231,13 +1233,13 @@
             $("#finPayInterestStdInfoDto_payMonth").select2('destroy').empty();
             $("#finPayInterestStdInfoDto_payMonth").textSelect()
         }
-        if(payCycle==INTPAY_CYCLE_08){//付息频率为不规则时，展示自定义说明
+        /*if(payCycle==INTPAY_CYCLE_08){//付息频率为不规则时，展示自定义说明
             getElementById('remark','div').show();
         }else{
             //隐藏并清空值
             getElementById('remark','div').hide();
             $("#remark").val("").trigger("change");
-        }
+        }*/
 
 
     }
