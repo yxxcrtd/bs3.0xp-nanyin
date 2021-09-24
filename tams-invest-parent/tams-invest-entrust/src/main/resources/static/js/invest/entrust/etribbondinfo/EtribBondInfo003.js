@@ -1103,21 +1103,19 @@
     function doRiskcal() {
         var object = getSearchParams();
         var checkParam = {};
-        checkParam.data = getriskdata();
+        checkParam = getriskdata();
         var param = [];
-
+        debugger
         if (checkParam.data.length > 0) {
             for(var index in checkParam.data){
                 var item = checkParam.data[index];
-                item.data.assetCode = object.finprodId;
-                item.data.finprodId = object.finprodId;
-                item.data.counterId = object.counterId;
-                item.data.ps = object.ps;
-                item.data.ccy = 'CNY';
-                item.data.portfolioId = item.data.portfolioCode;
-                item.data.price=object.price;
-                item.data.entrustNum=item.data.entrustNum;
-                param.push(item.data);
+                item.assetCode = object.finprodId;
+                item.finprodId = object.finprodId;
+                item.ps = object.ps;
+                item.ccy = 'CNY';
+                item.portfolioId = item.portfolioCode;
+                item.price=object.price;
+                param.push(item);
             }
         }
         window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', param, checkParam,riskMathRedisCallback003);
@@ -1130,8 +1128,10 @@
      * @returns
      */
     function riskMathRedisCallback003(object,cluflag) {
-        riskResultdata = object;
-        cluflag = cluflag;
+        EtrIbBondinfo003.riskResultdata = object;
+        parent.EtrIbBondinfo003.riskResultdata = object;
+        EtrIbBondinfo003.cluflag = cluflag;
+        parent.EtrIbBondinfo003.cluflag = cluflag;
         Joyin.dialog(JoyinUtil.getLabel('EtribBondInfo003Riskcal'), '/invest/entrust/etribbondinfo/EtribBondInfo003Riskcal/init', '60%', '75%',null);
     }
 
