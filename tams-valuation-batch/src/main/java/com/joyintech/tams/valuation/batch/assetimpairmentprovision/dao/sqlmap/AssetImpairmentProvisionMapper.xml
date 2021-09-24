@@ -329,6 +329,7 @@
 		with trdAssetLossNew as (
 			select
 				t.SEC_ID,
+				t.FINPROD_ID,
 				max(t.VAL_DATE) VAL_DATE
 			FROM TRD_ASSET_LOSS t
 			WHERE t.STATUS = #{TRADE_STATUS_01,jdbcType=VARCHAR}
