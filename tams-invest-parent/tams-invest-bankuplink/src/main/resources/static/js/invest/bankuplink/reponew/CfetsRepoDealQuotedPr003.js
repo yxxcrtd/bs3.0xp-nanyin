@@ -26,6 +26,8 @@
                 obj.portfolioCode = item.portfolioId;
                 obj.portfolioId = item.portfolioId;
                 obj.entrustId = item.entrustId;
+                obj.tradeAmt=item.fpriceAmt;
+                obj.prinAmt = item.fpriceAmt;
                 obj.fpriceAmt = item.fpriceAmt;
                 dataList.push(obj);
                 if(obj.fpriceAmt){
@@ -65,6 +67,7 @@
             valDate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
             mdate:$('#CfetsRepoDealQuotedPrice002_mSettleDate').val(),
             isEnabled:'01',
+            ps:$('#CfetsRepoDealQuotedPrice002_ps').val(),
             tradeDirection:$('#CfetsRepoDealQuotedPrice002_ps').val(),
             counterId:$('#CfetsRepoDealQuotedPrice002_counterId').val(),
             ccy:'CNY'
@@ -740,6 +743,11 @@
     function doRiskcal() {
         var object = $.serializeToObject("#CfetsRepoDealQuotedPrice003_submitForm")
         if (object) {
+            let counterId =  $('#CfetsRepoDealQuotedPrice002_counterId').val();
+            if(counterId == null || counterId === ''){
+                JoyinUtil.showMessage("请选择对手方","error");
+                return null;
+            }
             var checkParam = getRiskdata();
             if(!checkParam || !checkParam.data){
                 return null;
