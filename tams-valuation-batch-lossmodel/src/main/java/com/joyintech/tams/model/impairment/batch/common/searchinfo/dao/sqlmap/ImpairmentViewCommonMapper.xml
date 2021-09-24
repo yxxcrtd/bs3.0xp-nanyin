@@ -11,7 +11,7 @@
         NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
         <!--资产信息 -->
         fin.FINPROD_ID AS FINPROD_ID,
-        fin.FINPROD_ABBR AS FINPROD_ABBR,
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         fin.TRADE_MARKET AS TRADE_MARKET,
         fin.FINPROD_MARKET_ID AS FINPROD_MARKET_ID,
         fin.ISSUER AS ISSUER,
@@ -245,6 +245,7 @@
         VAL.PORTFOLIO_ID AS PORTFOLIO_ID, /** 组合代码 **/
         <!--资产信息 -->
         NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID, /** 金融产品代码 **/
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type, /** 金融产品类型 **/
         NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,/** 市场代码 **/
         NVL(fin.VDATE,trdfin.VDATE) AS VDATE, /** 起息日 **/
@@ -320,6 +321,7 @@
         NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
         --资产信息 -->
         NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID,
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type,
         NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,
         NVL(fin.VDATE,trdfin.VDATE) AS VDATE,
