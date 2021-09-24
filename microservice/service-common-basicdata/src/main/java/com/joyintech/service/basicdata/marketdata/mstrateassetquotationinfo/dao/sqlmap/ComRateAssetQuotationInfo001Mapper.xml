@@ -31,6 +31,9 @@
         <if test="valDate != null and valDate != ''">
             AND B.VAL_DATE =TO_DATE (#{valDate},'yyyy-MM-dd')
         </if>
+        <if test="valueSource != null and valueSource != ''">
+            AND B.VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+        </if>
     </select>
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SuggestDto">
 	    SELECT DISTINCT
