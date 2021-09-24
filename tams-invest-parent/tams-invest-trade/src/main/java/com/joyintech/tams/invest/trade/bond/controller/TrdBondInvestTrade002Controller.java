@@ -804,7 +804,7 @@ TrdBondInvestTrade002Controller extends BaseController {
                             dto.getFinprodId(), FinProduct.class).getCalendarId();
                     List<String> holidayList = dateCalService.getDealCalendarHoliday(dto.getTradeDate(), DateUtil.addDay(dto.getTradeDate(), 15), dateId);
                     map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(dto.getTradeDate(), 1, holidayList, "1")));
-                    BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
+                    BigDecimal position = new BigDecimal((String)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") );
 
                     String sinal = tradeCommonService.getSppiInfoByY1(map) ;
                     if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",dto.getBusinessModel())){
