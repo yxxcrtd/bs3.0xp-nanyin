@@ -67,7 +67,8 @@
         $('#TrdBondMarketTrade001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("TrdBondMarketTrade002"), basePath
                 + "invest/trade/bondmarkettrade/TrdBondMarketTrade002/init", "99%", "99%", {
-                pageModel : PAGE_MODEL_NEW
+                pageModel : PAGE_MODEL_NEW,
+                fpageId:pageId
             }, function() {
                 table.reload();
             });
