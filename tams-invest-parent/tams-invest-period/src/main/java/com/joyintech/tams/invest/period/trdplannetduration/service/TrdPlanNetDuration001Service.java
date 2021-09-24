@@ -26,6 +26,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
@@ -136,6 +137,13 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
      */
     @Override
     public void doUpdate(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+        }else{
+            AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
+        }
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
         if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
                 && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {
@@ -445,11 +453,23 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
 
     @Override
     public void doBack(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 
     @Override
     public void doRevoke(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 }
