@@ -254,7 +254,9 @@ public class StlDataGatherFund2Processor extends StlDataGatherProcessor {
 		}
 
 		// 单位净价
-		dealTotal.setUnitCprice(cqTotalTrdProductDealDto.getUnitCprice());
+		if (cqTotalTrdProductDealDto != null) {
+			dealTotal.setUnitCprice(cqTotalTrdProductDealDto.getUnitCprice());
+		}
 		
         return dealTotal;
     }
