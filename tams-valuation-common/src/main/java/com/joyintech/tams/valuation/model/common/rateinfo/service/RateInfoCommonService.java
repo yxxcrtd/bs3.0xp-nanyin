@@ -1,12 +1,14 @@
 package com.joyintech.tams.valuation.model.common.rateinfo.service;
 
-import com.joyintech.framework.constant.DictCodeList;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.dao.RateInfoCommonMapper;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
@@ -272,5 +274,54 @@ public class RateInfoCommonService {
             }
         }
         return result;
+    }
+
+    /**
+     * 根据资产类型+资产细分类获取系统参数兜底评级
+     * @param assetType 资产类型
+     * @param assetDetailType 资产细分类
+     * @return
+     */
+    public String getBottomRateInfo(String assetType, String assetDetailType){
+        String rateInfo = null;
+        if(DictCodeListExt1.证券品种_债券.getValue().equals(assetType)){
+            if(DictCodeList.债券类型_国债.getValue().equals(assetDetailType)
+                    || DictCodeList.债券类型_政策银行债.getValue().equals(assetDetailType)
+                    || DictCodeList.债券类型_地方政府债.getValue().equals(assetDetailType)){
+                // 系统参数-国债、政策性金融债、地方政府债兜底评级结果
+                rateInfo = CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_1);
+            }
+            else{
+                // 系统参数-除国债、政策性金融债、地方政府债外其他债券兜底评级结果
+                rateInfo =CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_2);
+            }
+        }
+        else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-其他债权资产兜底融资人评级
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.DELT_RIGHT_BOTTOM_RATE);
+        }
+        else if(DictCodeListExt1.证券品种_存款.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-存款资产兜底评级结果
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.DEPOSITE_BOTTOM_RATE);
+        }
+        else if(DictCodeListExt1.证券品种_回购.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-回购资产兜底评级结果
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.REPO_FINANCIER_RATE);
+        }
+
+        // 兜底评级结果(01:AA-,02:AA,03:AA+,04:AAA)，根据系统参数映射内部评级
+        if(DictCodeListExt3.兜底评级_AA_MINUS.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA_MINUS.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AA.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AA_PLUS.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA_PLUS.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AAA.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AAA.getValue();
+        }
+        return rateInfo;
     }
 }
