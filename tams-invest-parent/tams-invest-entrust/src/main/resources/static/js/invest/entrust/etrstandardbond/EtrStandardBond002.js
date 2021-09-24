@@ -32,14 +32,14 @@
             // 债券代码
             ,{field: 'finprodMarketId', width: 150, title: 'EtrStandardBond002.avaColModel.finProdId'}
             // 证券账户/通道
-            , {field: 'secAcctId', width: 150, title: function(){return JoyinUtil.getLabel("EtrStandardBond002.avaColModel.secAcctId")+JoyinUtil.getLabel("invest.channelId");}()}
+            , {field: 'secAcctId', width: 150, title:'EtrStandardBond002.avaColModel.secAcctId'}
             // 交易场所
             , {field: 'tradePlaceText', width: 150, title: 'EtrStandardBond002.avaColModel.tradePlace'}
             // 券面总额
             , {
                 field: 'posStrdPrinAmt',
                 width: 150,
-                title: 'EtrStandardBond002.avaColModel.posStrdPrinAmt',
+                title: 'EtrStandardBond002.avaColModel.posStrdPrinAmt1',
                 sortable: false,
                 type: 'money',
                 digit: 2
@@ -48,7 +48,7 @@
             , {
                 field: 'pledStrdPrinAmt',
                 width: 150,
-                title: 'EtrStandardBond002.avaColModel.pledStrdPrinAmt',
+                title: 'EtrStandardBond002.avaColModel.pledStrdPrinAmt1',
                 sortable: false,
                 type: 'money',
                 digit: 2
@@ -75,14 +75,14 @@
             // 债券代码
             ,{field: 'finprodMarketId', width: 150, title: 'EtrStandardBond002.pledgeColModel.finProdId', sortable: false}
             // 证券账户/通道
-            , {field: 'secAcctId', width: 150, title: function(){return JoyinUtil.getLabel("EtrStandardBond002.pledgeColModel.secAcctId")+JoyinUtil.getLabel("invest.channelId");}(),sortable: false}
+            , {field: 'secAcctId', width: 150, title: 'EtrStandardBond002.pledgeColModel.secAcctId',sortable: false}
             // 交易场所
             , {field: 'tradePlaceText',width: 150,title: 'EtrStandardBond002.pledgeColModel.tradePlace',sortable: false}
             // 可质押券面总额
             , {
                 field: 'pledStrdPrinAmt',
                 width: 150,
-                title: 'EtrStandardBond002.pledgeColModel.pledStrdPrinAmt',
+                title: 'EtrStandardBond002.pledgeColModel.pledStrdPrinAmt1',
                 sortable: false,
                 type: 'money',
                 digit: 2
@@ -491,8 +491,29 @@
         var object = $.serializeToObject('#submitForm',true);
         object.pageModel = pageModel;
         object.operateType = operateType;
-        object.pledgeBondList = pledgeBondTbl.getAllRows();
-        object.avaPledgeBondList = avaPledgeBondTBL.getAllRows();
+        //以元为落地单位存贮 edit by yeming 20210924 start
+        var tableData1  = pledgeBondTbl.getAllRows();
+        for (var i=0; i<tableData1.length; i++){
+            if(tableData1[i].pledStrdPrinAmt){
+                tableData1[i].pledStrdPrinAmt = JoyinMath.doMul(tableData1[i].pledStrdPrinAmt, 10000, 2) ;
+            }
+            if(tableData1[i].posStrdPrinAmt){
+                tableData1[i].posStrdPrinAmt = JoyinMath.doMul(tableData1[i].posStrdPrinAmt, 10000, 2) ;
+            }
+        }
+        object.pledgeBondList = tableData1;
+
+        var tableData2  = avaPledgeBondTBL.getAllRows();
+        for (var i=0; i<tableData1.length; i++){
+            if(tableData2[i].pledStrdPrinAmt){
+                tableData2[i].pledStrdPrinAmt = JoyinMath.doMul(tableData2[i].pledStrdPrinAmt, 10000, 2) ;
+            }
+            if(tableData2[i].posStrdPrinAmt){
+                tableData2[i].posStrdPrinAmt = JoyinMath.doMul(tableData2[i].posStrdPrinAmt, 10000, 2) ;
+            }
+        }
+        object.avaPledgeBondList = tableData2;
+        //以元为落地单位存贮 edit by yeming 20210924 end
         Joyin.ajaxJson(basePath + 'invest/entrust/etrstandardbond/EtrStandardBond002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {
