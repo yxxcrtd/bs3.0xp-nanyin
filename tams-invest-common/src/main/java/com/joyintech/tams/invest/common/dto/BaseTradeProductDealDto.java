@@ -171,7 +171,20 @@ public class BaseTradeProductDealDto {
      * 银行间上行报价编号
      */
     private String quoteId;
-    
+
+    /**
+     * 除权日
+     */
+    private Date exRightsDate;
+
+    public Date getExRightsDate() {
+        return exRightsDate;
+    }
+
+    public void setExRightsDate(Date exRightsDate) {
+        this.exRightsDate = exRightsDate;
+    }
+
     /**
      * 获取 quoteId
      * @return quoteId.
