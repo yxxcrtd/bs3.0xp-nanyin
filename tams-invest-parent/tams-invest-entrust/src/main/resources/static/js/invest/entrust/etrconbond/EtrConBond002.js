@@ -255,6 +255,13 @@
             	//window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
         		});*/
             var object = $.serializeToObject('#searchForm',true);
+            var purchBondTotal=$('#purchBondTotal').val();
+            if (purchBondTotal) {
+                if(entrustAmtUnit == '02' ){
+                    purchBondTotal=JoyinMath.doMul(purchBondTotal, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
+            object.purchBondTotal = purchBondTotal;
             window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F01',object,getriskdata());
 	    });
 
