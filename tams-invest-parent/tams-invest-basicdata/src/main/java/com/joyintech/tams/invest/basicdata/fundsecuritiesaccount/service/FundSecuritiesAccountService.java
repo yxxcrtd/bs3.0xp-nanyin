@@ -139,6 +139,9 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
     @Override
     public void doComplete(FundSecuritiesAccountDto entity, OperationType type) {
         String action=StringUtil.EMPTY;
+        if(StringUtil.isEmpty(entity.getSecAcctType())){
+            entity.setSecAcctType(DictCodeListExt3.证券账户类型_基金账户.getValue());
+        }
         if(OperationType.DELETE.equals(type)){
             action="delete";
         }

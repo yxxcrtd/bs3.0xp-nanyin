@@ -311,6 +311,7 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					autoTradeMapper.updateInterfCstpTrade(oritradeId, BusinessTypeUtil.BUSINESSTYPE_REPO);
 				}
 				catch (Exception e){
+					e.printStackTrace();
 					logger.info("下行交易处理失败,自动生成匹配信息开始");
 					Map<String,Object> map = new HashMap<>();
 					map.put("execId",oritradeId);

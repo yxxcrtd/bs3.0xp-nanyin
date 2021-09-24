@@ -100,7 +100,7 @@ public class FinInterestFactorValidator implements BeanValidator{
             //计划类
             if(null==dto.getLoadRate()){
                 resultList.add(new ValidMessage("loadRate",
-                        getMessage("COMMON_E_0057", getMessage("FinInterestFactor.loadRate"))));
+                        getMessage("COMMON_E_0057", getMessage("净投资收益率"))));//债权类资产修改为净投资收益率
             }
             if(null==dto.getInvestRate()){
                 resultList.add(new ValidMessage("investRate",

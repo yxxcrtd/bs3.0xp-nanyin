@@ -718,7 +718,7 @@ public class EtrPlanAssetCService extends CommonExportService<EtrPlanAssetCDto> 
                         map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
                     } else if (StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())
                             || StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())) {
-                        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
+                        map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
                     } else {
                         map.put("counterType", null);
                     }

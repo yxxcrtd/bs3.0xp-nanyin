@@ -385,26 +385,32 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	@RequestMapping("getValuationPrice")
 	public List<SelectOptionDto> getValuationPrice() {
 		Map<String, Object> param = RequestUtil.getPageParam();
-//		String tradeMarket = (String)param.get("tradeMarket");
-//		if(StringUtils.isNotEmpty(tradeMarket)) {
-//			param.put("dict_code_parent", DictCode.估值交易市场.getValue());
-//			param.put("dict_code_child", DictCode.估值市价.getValue());
-//			param.put("item_code_parent", param.get("tradeMarket"));
-//		}else {
+		List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
+		String tradeMarket = param.get("tradeMarket").toString();
+		//根据资产代码查询证券品种
+		String finprodType = param.get("finprodType").toString();
+		String finprodId = param.get("finprodId").toString();
+		String secType ="";
+		if(StringUtil.isNotEmpty(finprodType) && StringUtil.isNotEmpty(finprodId)){
+			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodType+"_"+finprodId);
+		}
+
+		//但证券品种为基金时，且交易场所为场外，市价来源特殊处理为 管理人报价07
+		if(StringUtil.isNotEmpty(secType) ){
+			if(DictCodeListExt1.证券品种_基金.getValue().equals(secType) && StringUtil.isNotEmpty(tradeMarket) &&
+					StringUtil.equals(tradeMarket,DictCodeListExt1.估值交易市场_场外.getValue())){
+				//管理人报价07
+				SelectOptionDto selectOptionDto = new SelectOptionDto();
+				selectOptionDto.setId(DictCodeList.估值市价_管理人报价.getValue());
+				selectOptionDto.setText(DictCodeList.估值市价_管理人报价.getCodeName());
+				selectOptionDtoList.add(selectOptionDto);
+				return selectOptionDtoList;
+			}
 			param.put("dict_code_parent", DictCode.证券品种.getValue());
 			param.put("dict_code_child", DictCode.估值市价.getValue());
-			param.put("item_code_parent", DictCodeListExt1.证券品种_债券.getValue());//  特殊类资产默认为债券
-//		}
-		if (StringUtil.isNotEmpty(param.get("finprodType"))){
-			if (StringUtil.equals(param.get("finprodType"),"F17")){
-				param.put("dict_code_parent", DictCode.证券品种.getValue());
-				param.put("dict_code_child", DictCode.估值市价.getValue());
-				param.put("item_code_parent", DictCodeListExt1.证券品种_计划类资产_收益型.getValue());
-			}
+			param.put("item_code_parent", param.get("secType"));
+			selectOptionDtoList = valuationMethodScheme004Service.getLinkSelectOption(param);
 		}
-		List<SelectOptionDto> selectOptionDtoList = valuationMethodScheme001Service.getLinkSelectOption(param);
-		//根据投资目的与估值方法过滤估值市价_专家法
-		selectOptionDtoList = valuationMethodScheme001Service.getResultByInvAimAndValuationMethod(selectOptionDtoList,param);
 		return selectOptionDtoList;
 	}
 }

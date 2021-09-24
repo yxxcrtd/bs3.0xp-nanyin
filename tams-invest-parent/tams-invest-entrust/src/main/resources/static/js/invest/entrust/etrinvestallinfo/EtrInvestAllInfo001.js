@@ -41,7 +41,7 @@
             entrustCreateSource = data.entrustCreateSource;
             //交易所（上交和深交）的指令
             if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
-                if (entrustCreateSource != null && entrustCreateSource == ENTRUST_CREATE_SOURCE_01) {
+                if (entrustCreateSource != null && entrustCreateSource == ENTRUST_CREATE_SOURCE_02) {
                     var entrustType = data.entrustType;
                     if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
                         || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19

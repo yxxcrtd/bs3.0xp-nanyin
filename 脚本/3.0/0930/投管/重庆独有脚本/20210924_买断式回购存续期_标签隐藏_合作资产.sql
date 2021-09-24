@@ -1,0 +1,4 @@
+
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='TrdRepoBuyoutDuration002' AND ELEMENT_ID = 'chlId_div';
+insert into SYS_ELEMENT_CONTROL (PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+values ('TrdRepoBuyoutDuration002','chlId_div','chlId_div','合作资产','02','02','02',null);

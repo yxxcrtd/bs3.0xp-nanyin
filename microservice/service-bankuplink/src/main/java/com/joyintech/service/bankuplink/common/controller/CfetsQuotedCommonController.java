@@ -24,6 +24,7 @@ import com.joyintech.service.bankuplink.common.dto.CfetsQuotedTradeCommonDto;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedCommonService;
 import com.joyintech.service.bankuplink.common.service.CfetsQuotedTradeCommonService;
 import com.joyintech.service.bankuplink.ibu.service.IbuComponentReceiveService;
+import com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
 import com.joyintech.system.base.entity.SysUser;
 import com.joyintech.system.base.entity.SysUserAdd;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
@@ -487,4 +488,8 @@ public class CfetsQuotedCommonController {
         return cfetsQuotedCommonService.isOpeQuotedPrice(param);
     }
 
+    @GetMapping("listIbuQuoteEntCrepPledge")
+    public List<CfetsRepoDealQuotedPrice003Dto> listIbuQuoteEntCrepPledge(String quoteId){
+        return cfetsQuotedCommonService.listIbuQuoteEntCrepPledge(quoteId);
+    }
 }

@@ -3175,19 +3175,22 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                     });
                     cfetsRepoDealQuotedPriceDto.setPledgeBondList(cfetsRepoPledgeBonds);
                 }
-                List<IbuQuoteEntCrepPledgeCommonDto> ibuQuoteEntCrepPledgeCommons = cstpCommonService.质押券拆分(cfetsRepoDealQuotedPriceDto);
+                //下行成交报文回来  直接取分配表信息 不需要重新拆分质押券
+                //List<IbuQuoteEntCrepPledgeCommonDto> ibuQuoteEntCrepPledgeCommons = cstpCommonService.质押券拆分(cfetsRepoDealQuotedPriceDto);
+                List<IbuQuoteEntCrepPledgeCommonDto> ibuQuoteEntCrepPledgeCommons = cstpCommonService.listIbuQuoteEntCrepPledge(trdRepoTrade002Dto.getQuoteId());
                 //质押券差费后按委托编号分组
                 if(!StringUtil.isEmptyList(ibuQuoteEntCrepPledgeCommons)){
                     Map<String, List<IbuQuoteEntCrepPledgeCommonDto>> mapByEntrustId = ibuQuoteEntCrepPledgeCommons.stream().collect(Collectors.groupingBy(IbuQuoteEntCrepPledgeCommonDto::getEntrustId));
                     for(PtlAllocationDto ptlAllocationDto:ptlAllocationDtos){
-                        pledgeBondInfoDtoList.clear();
+                        List<PledgeBondInfoDto> pledgeBondInfoDtoListdzh = new ArrayList<>();
                         List<IbuQuoteEntCrepPledgeCommonDto> ibuQuoteEntCrepPledgeCommons2 = (List<IbuQuoteEntCrepPledgeCommonDto>)mapByEntrustId.get(ptlAllocationDto.getEntrustId());
                         for(IbuQuoteEntCrepPledgeCommonDto item:ibuQuoteEntCrepPledgeCommons2){
                             PledgeBondInfoDto pledgeBondInfoDto = new PledgeBondInfoDto();
-                            pledgeBondInfoDto.setFinprodId(item.getPledgeFinprodId());
+                            pledgeBondInfoDto.setFinprodId(item.getFinprodId());
                             pledgeBondInfoDto.setBondCode(item.getBondCode());
-                            pledgeBondInfoDto.setAvaPledgePrin(item.getPledgeNumber());
-                            pledgeBondInfoDto.setPledgePrin(item.getPledgeNumber());
+                            BigDecimal pledgeNumber = ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal(100));
+                            pledgeBondInfoDto.setAvaPledgePrin(pledgeNumber);
+                            pledgeBondInfoDto.setPledgePrin(pledgeNumber);
                             pledgeBondInfoDto.setFirstNetPrice(item.getUnitCprice());
                             //共通里除以了100，不改共通
                             pledgeBondInfoDto.setPledgeRatio(ArithmeticUtil.multiply(item.getPledgeRatio(),new BigDecimal(100)));
@@ -3199,10 +3202,10 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
                                 pledgeBondInfoDto.setSecAcctId(qryPortfolioSecAcctId(secManageAcctIdMap));
                             }
                             pledgeBondInfoDto.setEntrustId(ptlAllocationDto.getEntrustId());
-                            pledgeBondInfoDtoList.add(pledgeBondInfoDto);
-                            pledgeBondInfoDtoResultList.addAll(pledgeBondInfoDtoList);
+                            pledgeBondInfoDtoListdzh.add(pledgeBondInfoDto);
+                            pledgeBondInfoDtoResultList.addAll(pledgeBondInfoDtoListdzh);
                         };
-                        mapPledgeBondInfoDtoByEntrustId.put(ptlAllocationDto.getEntrustId(),pledgeBondInfoDtoList);
+                        mapPledgeBondInfoDtoByEntrustId.put(ptlAllocationDto.getEntrustId(),pledgeBondInfoDtoListdzh);
                     };
                 }
             }

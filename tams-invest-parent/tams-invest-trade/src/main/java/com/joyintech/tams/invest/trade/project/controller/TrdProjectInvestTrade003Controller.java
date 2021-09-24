@@ -196,7 +196,7 @@ public class TrdProjectInvestTrade003Controller extends BaseController {
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         model.addAttribute("ACCT_TYPE_A01", DictCodeListExt1.资金账户类型_产品托管户.getValue());
         model.addAttribute("ACCT_TYPE_A07", DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         //展示投资目的或业务模式参数
         String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
         model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);

@@ -349,9 +349,12 @@ public class EntrustRdsCommonAop {
             String infCode = BussinessDictCodeListRds.接口系统ID_预占接口.getValue();
             if (listInfPs.contains(
                 CommonUtil.findValue(mapTrd, PageFieldToInterfFactory.INF_PS))
-            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917
+            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917 add start
             || mapTrd.containsKey("etrInvestRepoInfoDtos")
-            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917
+            // ZGZGST-2517:质押式回购多组合走预占批量接口 fuyongsheng 20210917 add end
+            // ZGZGST-2768:现券多组合指令走批量预占接口 fuyongsheng 20210917 add start
+            || mapTrd.containsKey("etrInvestBondInfoDtos")
+            // ZGZGST-2768:现券多组合指令走批量预占接口 fuyongsheng 20210917 add end
             ) {
                 logger.info(BATCH_INFO_LOG, infCode);
                 infCode = BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue();

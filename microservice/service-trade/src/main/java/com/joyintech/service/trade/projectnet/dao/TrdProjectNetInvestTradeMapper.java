@@ -7,12 +7,13 @@ import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
 import com.joyintech.tams.invest.common.dto.common.BussTrdTransferOrderBase;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public interface TrdProjectNetInvestTradeMapper {
     /**
      *

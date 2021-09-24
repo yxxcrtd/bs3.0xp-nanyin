@@ -118,6 +118,9 @@
 
 
      var changeBussnissModelByFinprodId = function(){
+         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
+             return;
+         }
          var finprodId = $('#finprodId').val();
          if(finprodId){
               var data = {finprodId:finprodId }

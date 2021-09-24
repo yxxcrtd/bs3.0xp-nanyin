@@ -112,7 +112,7 @@ public class EtrInvestBondInfo002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
-        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));

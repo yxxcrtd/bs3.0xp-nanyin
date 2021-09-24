@@ -60,6 +60,19 @@
         return object;
     };
 
+    $("#businessModel").on("change", function () {
+        var invAim;
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            var businessModel = $("#businessModel").val();
+            if(businessModel=="Y1"){
+                invAim = "AC"
+            }else{
+                invAim = "FVTPL"
+            }
+        }
+        $("#invAim").val(invAim);
+    });
+
     /**
      * 获取风险试算参数
      *
@@ -164,6 +177,33 @@
             $("#deviationDegree").text("");
         }
     }
+    var changeBussnissModelByFinprodId = function(){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
+            return;
+        }
+        var finprodId = $('#finprodId').val();
+        if(finprodId){
+            var data = {finprodId:finprodId }
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                if(result.data=='0') {
+                    Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                    //$('#finprodId').val("").trigger('change');
+                    $("#businessModel").attr("disabled",false);
+                    $('#businessModel').val("").trigger('change');
+                }else if(result.data=='3'){
+                    $('#businessModel').val("Y2").trigger('change');
+                    $("#businessModel").attr("disabled",true);
+                }else if(result.data=='2') {
+                    $("#businessModel").attr("disabled",false);
+                    $('#businessModel').val("").trigger('change');
+                }
+            });
+        }else{
+            $("#businessModel").attr("disabled",false);
+            $('#businessModel').val("").trigger('change');
+        }
+
+    }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
@@ -225,6 +265,14 @@
                     object.entrustNum = String(entrustNum);
                 } else {
                     return;
+                }
+            }
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+                var businessModel = $("#businessModel").val();
+                if(businessModel=="Y1"){
+                    object.invAim = "AC"
+                }else{
+                    object.invAim = "FVTPL"
                 }
             }
 
@@ -360,10 +408,6 @@
         }
         query("#portfolioId").change();
         query("#priceModel").trigger("change");
-        if (pageModel != PAGE_MODEL_REFERENCE) {
-            debugger;
-            query("#entrustNum").val(query("#entrustNum").val()/10000).trigger("change");
-        }
         
         initFlag = false;
         // 画星星
@@ -659,6 +703,14 @@
         if(!object){
             return;
         }
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            var businessModel = $("#businessModel").val();
+            if(businessModel=="Y1"){
+                object.invAim = "AC"
+            }else{
+                object.invAim = "FVTPL"
+            }
+        }
 
         Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
             if (operateType === "save") {
@@ -865,6 +917,7 @@
                 query("#finmdate").val(new Date(data.finmdate)).trigger("change");
                 query("#ccy").val(data.ccy).trigger("change").attr("disabled", true);
                 checkFinMdate();
+                changeBussnissModelByFinprodId();
                 calData();
             } else {
                 // 为空

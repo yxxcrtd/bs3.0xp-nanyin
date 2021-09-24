@@ -22,8 +22,8 @@
             <Cell order="11" name="发行人">issuer</Cell>
             <!-- add by 张普裕  2019/10/16 更新导出模板 end -->
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
-            <Cell order="12" name="资产推荐方">recommenderName</Cell>
-            <Cell order="13" name="母计划">parentPlanStr</Cell>
+<!--            <Cell order="12" name="资产推荐方">recommenderName</Cell>-->
+            <Cell order="12" name="母计划">parentPlanStr</Cell>
 			<!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         </Row>
     </Worksheet>

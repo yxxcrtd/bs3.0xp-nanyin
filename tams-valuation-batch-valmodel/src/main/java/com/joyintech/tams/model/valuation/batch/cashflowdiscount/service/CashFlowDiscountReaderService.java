@@ -147,21 +147,25 @@ public class CashFlowDiscountReaderService {
                         List<ModCashFlowPayRulesDto> modCashFlowPayRules = modValuationCommonService.getCashFlowPayRulesByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlowPayRules(modCashFlowPayRules);
 
-                        //查找评级信息
                         ViewRatingInfoDto rateInfo = null;
-                        if(modAssetGradeSpecialConfigMap!=null && modAssetGradeSpecialConfigMap.containsKey(item.getFinprodId())){
-                            ModAssetGradeSpecialConfig modAssetGradeSpecialConfig = modAssetGradeSpecialConfigMap.get(item.getFinprodId());
-                            rateInfo = rateInfoCommonService.getRatingInfoBySpecialConfig(item,modAssetGradeSpecialConfig,happenDate);
-                        }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key_detail)){
-                            ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key_detail);
-                            rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
-                        }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key)){
-                            ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key);
-                            rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
+                        //如果配置使用的是国债曲线族，则不查找评级信息
+                        if("01".equals(cashFlowDiscountReaderResult.getModCurveConfig().getCurveGroupCode())){
+                            logger.info("资产配置使用国债收益率，不需要取评级信息.资产代码："+cashFlowDiscountReaderResult.getModAssetInfoDto().getFinprodId());
                         }else{
-                            //TODO 打印日志，找不到评级配置
+                            if(modAssetGradeSpecialConfigMap!=null && modAssetGradeSpecialConfigMap.containsKey(item.getFinprodId())){
+                                ModAssetGradeSpecialConfig modAssetGradeSpecialConfig = modAssetGradeSpecialConfigMap.get(item.getFinprodId());
+                                rateInfo = rateInfoCommonService.getRatingInfoBySpecialConfig(item,modAssetGradeSpecialConfig,happenDate);
+                            }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key_detail)){
+                                ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key_detail);
+                                rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
+                            }else if(modAssetGradeConfigMap!=null && modAssetGradeConfigMap.containsKey(key)){
+                                ModAssetGradeConfig modAssetGradeConfig = modAssetGradeConfigMap.get(key);
+                                rateInfo = rateInfoCommonService.getRatingInfoByTypeConfig(item,modAssetGradeConfig,happenDate);
+                            }else{
+                                //TODO 打印日志，找不到评级配置
+                                logger.warn("资产配置中找不到评级配置.资产代码："+cashFlowDiscountReaderResult.getModAssetInfoDto().getFinprodId());
+                            }
                         }
-
                         //处理曲线信息
                         ModCurveConfig modCurveConfig = cashFlowDiscountReaderResult.getModCurveConfig();
                         Map<String, Object> paramCurveCode = new HashMap<>();

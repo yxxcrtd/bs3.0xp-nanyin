@@ -544,7 +544,10 @@ public class BaseRiskMathCommController extends BaseController {
     private void dealCheckRiskComm(Map<String, Object> map,Consumer<Object> var){
         if(map.get("data") instanceof List){
             ((List) map.get("data")).forEach(var);
-        }else{
+        }else if(map.get("data") instanceof LinkedHashMap && ((LinkedHashMap)map.get("data")).get("data") instanceof List){
+            ((List)((LinkedHashMap) map.get("data")).get("data")).forEach(var);
+        }
+        else{
             var.accept( null);
         }
     }

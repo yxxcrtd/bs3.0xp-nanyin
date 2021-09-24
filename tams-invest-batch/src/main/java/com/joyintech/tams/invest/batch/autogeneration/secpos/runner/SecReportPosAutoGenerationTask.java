@@ -14,6 +14,7 @@ import com.joyintech.batch.batchbase.baseclass.BatchBaseService;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.BatchDictCodeList;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
@@ -88,7 +89,10 @@ public class SecReportPosAutoGenerationTask extends BatchBaseService {
         try {
             //add by lpf for 组合持仓报表批处理改造 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
             //add by lpf for 估值穿透改造 S 将产品分为指定日期范围内的导入估值表 和没导入估值表的产品
-            String deptCode = batchExecuteInfo.getCreateUser() != null?MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            String deptCode=null;
+            if(MultilevelDataAuthorityUtil.isEnabled()){
+               deptCode = batchExecuteInfo.getCreateUser() != null?MultilevelDataAuthorityUtil.getOrganizationCode(batchExecuteInfo.getCreateUser()):null;
+            }
             List<Map<String,Object>> importValTableProdList = valRiftService.selectImportValTableProdList(batchDate,this.getProductIdList(),deptCode);
             List<String> importProdList = new ArrayList<>();
             List<String> unImportProdList = new ArrayList<>();
