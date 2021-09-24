@@ -22,30 +22,25 @@
 				rank() over (partition by oCode order by gradeDate desc) rk
 		FROM (
 			SELECT
-			OCODE,
-			MARKETID,
-			ORGID,
-			OTYPE,
-			GRADEORGID,
-			GRADEDATE,
-			NOTICEDATE,
-			SHORTLONGTERM,
-			<choose>
-				<!--评级展示类型	01 原始	02 标准    	默认原始-->
-				<when test="mstDisType != null and mstDisType == '02'">
-					MSTRATINGRESULT02 	GRADERESULT,
-				</when>
-				<otherwise>
-					MSTRATINGRESULT01 	GRADERESULT,
-				</otherwise>
-			</choose>
-			INPUTTYPE,
-			GRADEEXPECTATION,
-			DIRECTIONCHANGE, 
-			ISSUERRATETYPE,
-			INNEROUTER
-			FROM 
-				view_fin_product_rating
+			A.O_CODE AS OCODE,
+			fin.FINPROD_MARKET_ID AS MARKETID,
+			custInfo.CUSTOMER_ID ORGID,
+			A.O_TYPE AS OTYPE,
+			A.GRADE_ORG_ID AS GRADEORGID,
+			A.GRADE_DATE AS GRADEDATE,
+			A.NOTICE_DATE AS NOTICEDATE,
+			A.SHORT_LONG_TERM AS SHORTLONGTERM,
+			A.GRADE_RESULT AS GRADERESULT,
+			A.INPUT_TYPE AS INPUTTYPE,
+			A.GRADE_EXPECTATION AS GRADEEXPECTATION,
+			A.DIRECTION_CHANGE AS DIRECTIONCHANGE,
+			A.ISSUER_RATE_TYPE AS ISSUERRATETYPE,
+			'01' AS INNEROUTER
+			FROM MST_BOND_CREDIT_RATING A
+			LEFT JOIN FIN_PRODUCT fin
+				ON fin.FINPROD_MARKET_ID = A.O_CODE
+			LEFT JOIN MST_CUSTOMER_INFO custInfo
+				ON custInfo.CUSTOMER_ID = A.O_CODE
 			where 
 				1=1
 			<!--sql查询标识	默认查询全部，需要  “以市场代码查询债项最优先主体评级” 需单独sql注入，指示 marketId orgId 都不为空  -->
@@ -101,24 +96,30 @@
 		WHERE 1=1
  	</sql>				
 	<select id="queryForPage" resultType="com.joyintech.service.valuation.basicdata.commarketmanagement.dto.ComMarketManageDto" parameterType="java.util.HashMap">
-		SELECT * 
+		SELECT *
 		FROM(
-			SELECT 
-				TEMP.* , FP.FINPROD_NAME 	oCodeName
+			SELECT
+				TEMP.* , NVL(FP.FINPROD_ABBR,FP.FINPROD_NAME) 	oCodeName
 			FROM (
 				<include refid="searchProductRatingSql"/>
-			) TEMP LEFT JOIN FIN_PRODUCT FP ON TEMP.OCODE = FP.FINPROD_MARKET_ID 	
+			) TEMP LEFT JOIN FIN_PRODUCT FP ON TEMP.OCODE = FP.FINPROD_MARKET_ID
 			WHERE TEMP.OTYPE = '02'
 			<!--基准数据类型  01 最新 99 全部-->
 			<if test="baseDataType != null and baseDataType == '01'">
 				AND rk = 1
-			</if>	
+			</if>
 			UNION ALL
 			SELECT 
-				TEMP.* , MCN.CUSTOMER_NAME 	oCodeName
+				TEMP.* ,
+				CASE
+				WHEN FP.FINPROD_ID IS NULL
+				THEN NVL(MCN.CUSTOMER_ABBR,MCN.CUSTOMER_NAME)
+				ELSE NVL(FP.FINPROD_ABBR,FP.FINPROD_NAME)
+				END AS oCodeName
 			FROM (
 				<include refid="searchProductRatingSql"/>
-			) TEMP LEFT JOIN 	MST_CUSTOMER_INFO MCN ON TEMP.OCODE = MCN.CUSTOMER_ID 
+			) TEMP LEFT JOIN 	MST_CUSTOMER_INFO MCN ON TEMP.OCODE = MCN.CUSTOMER_ID
+			LEFT JOIN FIN_PRODUCT FP ON FP.FINPROD_MARKET_ID = TEMP.OCODE
 			WHERE TEMP.OTYPE = '01'
 			<!--基准数据类型  01 最新 99 全部-->
 			<if test="baseDataType != null and baseDataType == '01'">

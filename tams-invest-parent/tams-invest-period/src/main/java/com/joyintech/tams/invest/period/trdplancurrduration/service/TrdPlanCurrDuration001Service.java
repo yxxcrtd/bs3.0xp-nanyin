@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDuration001Dto;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -370,6 +371,12 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
 
     @Override
     public void doBack(TrdPlanCurrDuration001Dto entity) {
+        if("06".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 

@@ -381,12 +381,13 @@
             END subStockType,
             T1.IS_NETPRICE netPricFlag,
             T1.TRADE_PLAT tradePlat,
-        CASE
-        <!--WHEN T2.TYPE_8 = 'F20' THEN
-        T1.CONTRACT_MULTIPLIER-->
+        <!--CASE
+        WHEN T2.TYPE_8 = 'F20' THEN
+        T1.CONTRACT_MULTIPLIER
         ELSE
         null
-        END  contractMultiplier,
+        END -->
+        null contractMultiplier,
         T1.ETF_TYPE etfType,
         T1.TRM_FUND_TYPE trmFundType,
         T1.PUR_RED_ID purRedId,
