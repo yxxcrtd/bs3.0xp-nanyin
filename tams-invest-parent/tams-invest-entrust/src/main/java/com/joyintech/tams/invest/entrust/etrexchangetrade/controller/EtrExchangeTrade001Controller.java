@@ -104,7 +104,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
     
     @Override
     public String init(Model model) {
-    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, BussinessDictCode.业务模式);
+    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
     	this.setPsSelectOptions(model);
     	this.setPriceModelSelectOptions(model);
     	this.setDeclaTypeSelectOptions(model);

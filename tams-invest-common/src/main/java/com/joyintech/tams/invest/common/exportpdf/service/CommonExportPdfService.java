@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -455,12 +456,14 @@ public class CommonExportPdfService<T> {
                 tempPathDir.mkdirs();
             }
             File tempFile = new File(tempConfigFilePath);
-            InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+            String encoding = System.getProperty("file.encoding");
+            logger.info("当前系统编码格式为：" + encoding);
+            InputStreamReader reader = new InputStreamReader(in, Charset.forName(encoding));
             FileOutputStream outputStream = null;
             OutputStreamWriter oStreamWriter = null;
             try {
                 outputStream = new FileOutputStream(tempFile);
-                oStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+                oStreamWriter = new OutputStreamWriter(outputStream, Charset.forName(encoding));
                 char[] buf = new char[1024*8];
                 int len = 0;
                 while ((len = reader.read(buf)) != -1) {

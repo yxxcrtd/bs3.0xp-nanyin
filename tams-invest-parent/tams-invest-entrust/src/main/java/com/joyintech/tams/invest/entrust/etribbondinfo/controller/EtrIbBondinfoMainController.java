@@ -41,6 +41,10 @@ public class EtrIbBondinfoMainController extends BaseController{
         model.addAttribute("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("dan_etr_isshow",CacheUtil.getSysParam(BussinessConstant.SINGLE_ETR_ISSHOW));
 
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         return super.init(model);
     }
 }

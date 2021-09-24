@@ -195,6 +195,7 @@ public class TrdFundDurationDealEntity extends BaseService<TrdFundDuration001Dto
         } else {
             List<BaseTradeProductDealDto> baseTradeProductDealDtos1 = periodCommonService.findEffectiveDealForFund(entity.getpTradeId(),交易流程状态);
             for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos1) {
+                baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
                 if (baseTradeProductDealDto.getStlPayOrdersList() == null || baseTradeProductDealDto.getStlPayOrdersList().isEmpty()) {
                     periodCommonService.gen划款指令_BY_交易(baseTradeProductDealDto, "REVOKE");
                 }
@@ -230,6 +231,7 @@ public class TrdFundDurationDealEntity extends BaseService<TrdFundDuration001Dto
                 List<BaseTradeProductDealDto> total现金分红交易 = periodCommonService.findBTradeEffectiveDeal(entity.getpTradeId());
                 if (total现金分红交易 != null && !total现金分红交易.isEmpty()) {// 红利再投的除权登记交易时，这里应该检索不到数据，不处理
                     for (BaseTradeProductDealDto baseTradeProductDealDto : total现金分红交易) {
+                        baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
                         TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
                         deal1.setTradeId(deal1.getTradeId() + 'R');
                         deal1.setCreateUser(tradeDto.getCreateUser());
@@ -358,6 +360,7 @@ public class TrdFundDurationDealEntity extends BaseService<TrdFundDuration001Dto
             BeanUtils.copyProperties(baseTradeInfoDto.getStlPayOrders(), orders);
         }
         baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(new StlPayOrdersDto[]{orders}));
+        baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
         baseTradeProductDealDtos.add(baseTradeProductDealDto);
         getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
     }

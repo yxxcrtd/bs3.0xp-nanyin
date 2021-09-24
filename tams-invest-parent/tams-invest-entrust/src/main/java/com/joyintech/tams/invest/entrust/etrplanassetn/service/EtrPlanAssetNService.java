@@ -50,11 +50,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 计划类净值委托service 〈功能详细描述〉
@@ -456,17 +452,6 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
             }
             // ZGZGST-1835:根据导入文件交易对手名称查询Id fuyongsheng 20210901 start
             //交易对手
-
-            if (StringUtil.equals(Ps.split(":")[0], DictCodeList.交易方向_申购.getValue())
-                    ||StringUtil.equals(Ps.split(":")[0], DictCodeList.交易方向_赎回.getValue())){
-                dto.setCounterId(data.get(10).toString().trim());
-                String counterName = getCounterName(data.get(10).toString().trim());
-                dto.setCounterIdName(counterName);
-            }else{
-                dto.setCounterId(data.get(8).toString().trim());
-                String counterName = getCounterName(data.get(8).toString().trim());
-                dto.setCounterIdName(counterName);
-            }
             if (StringUtil.isNotBlank(data.get(8).toString())) {
                 Map<String, Object> map = new HashMap<>();
                 map.put("initValue", data.get(8).toString().trim());
@@ -703,91 +688,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                     }*/
 
                     //交易对手check
-                    message = etrCommonService.checkIsBlank(rowData.get(8).toString(), "EtrPlanAssetN003.counterId", lineNo);
-                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
-                    //交易对手输入格式是否正确check
-//                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
-//                        Map<String, Object> map = new HashMap<>();
-//                        map.put("initValue", rowData.get(8).toString());
-//                        map.put("page", 1);
-//                        map.put("length", 20);
-//                        map.put("counterType", null);
-//                        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-//                                ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-//                                map, SelectOptionDto.class);
-//                        if (selectOptionDtoPage.getRoot().isEmpty()) {
-//                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage(
-//                                    "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
-//                        }
-//                    }
-                    //交易对手是否符合交易方向的check
-                    if (StringUtil.isNotBlank(rowData.get(8).toString())) {
-                        String[] s2 = rowData.get(5).toString().split(":");
-                        if (StringUtil.equals(s2[0], DictCodeList.交易方向_买入.getValue())) {
-                            if (DictCodeList.是否_是.getValue().equals(CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL))) {
-                                Map<String, Object> map = new HashMap<>();
-                                map.put("initValue", rowData.get(8).toString());
-                                map.put("page", 1);
-                                map.put("length", 20);
-                                map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
-                                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                                        "/common/EntrustCommonPersonSelect/getCounterId", map, SelectOptionDto.class);
-                                if (!selectOptionDtoPage.getRoot().isEmpty()) {
-                                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0101", getMessage("EtrPlanAssetN003.counterId"), lineNo));
-                                }
-                            }
-                            //外部交易对手是否符合交易方向的check
-                            Map<String, Object> map2 = new HashMap<>();
-                            map2.put("initValue", rowData.get(8).toString());
-                            map2.put("page", 1);
-                            map2.put("length", 20);
-                            map2.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
-                            Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                                    "/common/EntrustCommonPersonSelect/getCounterId", map2, SelectOptionDto.class);
-                            if (selectOptionDtoPage2.getRoot().isEmpty()) {
-                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
-                            }
-
-                        }else if(StringUtil.equals(s2[0], DictCodeList.交易方向_卖出.getValue())){
-                           // 卖出时内部交易对手
-                            Map<String, Object> map2 = new HashMap<>();
-                            map2.put("initValue", rowData.get(8).toString());
-                            map2.put("page", 1);
-                            map2.put("length", 20);
-                            map2.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
-                            Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                                    "/common/EntrustCommonPersonSelect/getCounterId", map2, SelectOptionDto.class);
-                            if (selectOptionDtoPage2.getRoot().isEmpty()) {
-                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
-                            }
-                        }
-                        else if(StringUtil.equals(s2[0], DictCodeList.交易方向_申购.getValue())
-                                ||StringUtil.equals(s2[0], DictCodeList.交易方向_赎回.getValue())){
-                            // 申购与赎回时外部交易对手
-                            Map<String, Object> map2 = new HashMap<>();
-                            map2.put("initValue", rowData.get(8).toString());
-                            map2.put("page", 1);
-                            map2.put("length", 20);
-                            map2.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
-//                            Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-//                                    "/common/EntrustCommonPersonSelect/getCounterId", map2, SelectOptionDto.class);
-//                            if (selectOptionDtoPage2.getRoot().isEmpty()) {
-//                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
-//                            }
-                            //BSXQHD-2257
-                            //【计划类净值型指令】多对多指令导入，交易对手一直报必填报错
-                            //  要输入 组织机构代码或统一社会信用代码  进行 市场机构交易对手 校验。
-                            Page<SelectOptionDto> selectOptionDtoPage2 = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
-                                    "/common/EntrustCommonPersonSelect/getMarketInsCounterId", map2, SelectOptionDto.class);
-                            if (selectOptionDtoPage2.getRoot().isEmpty()) {
-                                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
-                            }else{
-                                SelectOptionDto dto = selectOptionDtoPage2.getRoot().get(0);
-                                rowData.add(10,dto.getId());
-                            }
-
-                        }
-                    }
+                    confirmmsg = checkCounter(confirmmsg, rowData, lineNo);
                 }
                 if (StringUtil.isBlank(confirmmsg)) {
                     jsonArrays.add(rowData);
@@ -819,6 +720,57 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
             errorMsg.setData(resultMap);
             return errorMsg;
         }
+    }
+
+    private String checkCounter(String confirmmsg, List<String> rowData, String lineNo) {
+        String counterStr = rowData.get(8).toString();
+        String ps = rowData.get(5).toString().split(":")[0];
+        String message = etrCommonService.checkIsBlank(counterStr, "EtrPlanAssetN003.counterId", lineNo);
+        confirmmsg = etrCommonService.StringAddByBr(confirmmsg, message);
+
+        //交易对手是否符合交易方向的check
+        if (StringUtil.isBlank(counterStr)) {
+            return confirmmsg;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("initValue", counterStr);
+        map.put("page", 1);
+        map.put("length", 20);
+        map.put("counterType", DictCodeListExt1.交易对手类型_内部交易对手.getValue());
+        Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
+                "/common/EntrustCommonPersonSelect/getCounterId", map, SelectOptionDto.class);
+
+        if (StringUtil.equals(ps, DictCodeList.交易方向_买入.getValue())){
+            if (DictCodeList.是否_是.getValue().equals(CacheUtil.getSysParam(BussinessConstant.IS_AUTO_GENERATE_NEGATE_DEAL))) {
+                if (!selectOptionDtoPage.getRoot().isEmpty()) {
+                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0101", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+                }
+            } else {
+                if (selectOptionDtoPage.getRoot().isEmpty()) {
+                    confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+                }
+            }
+        }
+        if (StringUtil.equals(ps, DictCodeList.交易方向_卖出.getValue())) {
+            if (selectOptionDtoPage.getRoot().isEmpty()) {
+                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+            }
+        }
+        // 申购与赎回时外部交易对手
+        if (StringUtil.equals(ps, DictCodeList.交易方向_申购.getValue())
+                || StringUtil.equals(ps, DictCodeList.交易方向_赎回.getValue())) {
+            map.put("counterType", DictCodeListExt1.交易对手类型_市场机构.getValue());
+            selectOptionDtoPage = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME +
+                    "/common/EntrustCommonPersonSelect/getCounterId", map, SelectOptionDto.class);
+            // BSXQHD-2257
+            //【计划类净值型指令】多对多指令导入，交易对手一直报必填报错
+            // 要输入 组织机构代码或统一社会信用代码  进行 市场机构交易对手 校验。
+            if (selectOptionDtoPage.getRoot().isEmpty()) {
+                confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0103", getMessage("EtrPlanAssetN003.counterId"), lineNo));
+            }
+        }
+        return confirmmsg;
     }
 
     /**

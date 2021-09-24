@@ -79,7 +79,7 @@
         , {field: 'psName', title: 'EtrProject002.ps',sortable : false, width: 150}
         ,{field:'entrustAmt', width:100, title: 'EtrProject002.entrustAmt', edit:false, sortable: false, required:true, type:'number', digit:2}
        ,{field:'chlId', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true,visible:false}
-        ,{field:'chlIdName', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true}
+        ,{field:'chlIdName', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true,visible:false}
         ,{field: 'counterId', title: 'EtrProject003.counterId', width: 120, edit: false,visible: false}
         ,{field: 'counterIdName', title: 'EtrProject003.counterId', width: 120,edit: false}
         ,{field:'prinAmt', width:100, title: 'EtrProject003.prinAmt', edit:false, sortable: false, required:true, type:'number', digit:2}

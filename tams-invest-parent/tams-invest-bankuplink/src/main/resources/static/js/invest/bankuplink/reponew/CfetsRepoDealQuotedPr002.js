@@ -15,6 +15,7 @@
         var obj = {
             timePoint:MY_SUP_TIME_TYPE_02,
             valDate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
+            mdate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
             portfolioCode:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
             portfolioId:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
             tradeAmount:$('#CfetsRepoDealQuotedPrice002_dealAmt').val(),
@@ -627,8 +628,14 @@
     function doRiskcal() {
         var object = $.serializeToObject("#CfetsRepoDealQuotedPrice002_submitForm")
         if(object){
+            let counterId =  $('#CfetsRepoDealQuotedPrice002_counterId').val();
+            if(counterId == null || counterId === ''){
+                JoyinUtil.showMessage("请选择对手方","error");
+                return null;
+            }
             var riskdata = getRiskdata();
-            var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F01";
+            object.mdate = object.tradeDate;
+            var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F07";
             if (riskdata && riskInterfUrl) {
                 window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackPr002);
             }
@@ -856,7 +863,6 @@
          * 风险试算
          */
         $('#CfetsRepoDealQuotedPrice002_btn_riskcal').click(function(){
-            debugger
             doRiskcal();
         });
         /**
