@@ -371,6 +371,7 @@ $(function() {
         }
     }
     var init = function(){
+
         star();
     }
 
@@ -537,9 +538,11 @@ $(function() {
 
     $(function() {
         init();
-        //修改  资产代码置灰
+        //修改  资产代码 境内外 置灰
         if(pageModel!=PAGE_MODEL_NEW){
             $('.btn-save').hide();
+            $('#finprodMarketId').attr('disabled',true).trigger('change');
+            $('#blnArea').attr('disabled',true).trigger('change');
         }
         // 绑定按钮事件
         $('#ValProfitproject002_btn_save').click(function() {

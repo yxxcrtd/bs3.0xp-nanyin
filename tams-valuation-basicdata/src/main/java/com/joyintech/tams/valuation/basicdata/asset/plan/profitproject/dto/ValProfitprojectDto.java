@@ -1384,4 +1384,8 @@ public class ValProfitprojectDto extends FinProduct implements ProcessEntity{
     public void setBaseFinProductBaseInfoList(List<BaseFinProductBaseInfoDto> baseFinProductBaseInfoList) {
         this.baseFinProductBaseInfoList = baseFinProductBaseInfoList;
     }
+
+    public String getUpdateTimeStampStr() {
+        return DateUtil.format(super.getUpdateTime(),"yyyy-MM-dd HH:mm:ss");
+    }
 }

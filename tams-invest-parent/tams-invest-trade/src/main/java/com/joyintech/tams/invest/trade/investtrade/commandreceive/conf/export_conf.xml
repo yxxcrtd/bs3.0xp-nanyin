@@ -5,8 +5,8 @@
             <Cell order="1" name="完成状态">otherEntrustStatus</Cell>
             <Cell order="2" name="指令下达日期">createTimeValStr</Cell>
             <Cell order="3" name="组合代码">portfolioId</Cell>
-            <Cell order="4" name="委托开始日">vdateStr</Cell>
-            <Cell order="5" name="委托结束日">mdateStr</Cell>
+            <Cell order="4" name="指令开始日期">vdateStr</Cell>
+            <Cell order="5" name="指令结束日期">mdateStr</Cell>
             <Cell order="6" name="组合名称">portfolioName</Cell>
             <Cell order="7" name="资产类型">otherFinprodType2</Cell>
             <Cell order="8" name="市场代码">finprodMarketId</Cell>

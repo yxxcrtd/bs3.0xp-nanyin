@@ -259,8 +259,8 @@ $(function () {
 					$("#c_priceTailMode").hide();
 		    		$("#c_priceClass").hide();
 		    		
-					$("#valuationPrice").val("08").trigger("change");
-		            $("#valuationPrice").attr("disabled", "disabled");
+/*					$("#valuationPrice").val("08").trigger("change");
+		            $("#valuationPrice").attr("disabled", "disabled");*/
 
 					/*$("#valuationPrice2").val("").trigger("change");*/
 					$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");

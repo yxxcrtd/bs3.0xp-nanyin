@@ -1231,6 +1231,15 @@
             $("#finPayInterestStdInfoDto_payMonth").select2('destroy').empty();
             $("#finPayInterestStdInfoDto_payMonth").textSelect()
         }
+        if(payCycle==INTPAY_CYCLE_08){//付息频率为不规则时，展示自定义说明
+            getElementById('remark','div').show();
+        }else{
+            //隐藏并清空值
+            getElementById('remark','div').hide();
+            $("#remark").val("").trigger("change");
+        }
+
+
     }
     /** add by yanya on 20210901 增加是否无明确融资金额**/
 
