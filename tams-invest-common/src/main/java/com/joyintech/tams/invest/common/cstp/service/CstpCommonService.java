@@ -400,5 +400,10 @@ public class CstpCommonService{
         return restTemplate.postForObject(ServiceApplication.PORTFOLIO_SERVICE_NAME + "/common/ptlposition/insertPosition",
                 ptlPositionHoldDto, Boolean.class);
     }
+
+    public List<IbuQuoteEntCrepPledgeCommonDto> listIbuQuoteEntCrepPledge(String quoteId){
+        return restTemplate.getForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/listIbuQuoteEntCrepPledge?quoteId="+quoteId,
+                 IbuQuoteEntCrepPledgeCommonDto.class);
+    }
 }
 
