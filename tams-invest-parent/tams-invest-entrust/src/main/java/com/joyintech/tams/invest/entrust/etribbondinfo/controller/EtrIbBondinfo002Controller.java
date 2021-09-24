@@ -89,6 +89,7 @@ public class EtrIbBondinfo002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.清算速度);
         this.setSelectOptionToModel(model, DictCode.价格模式);
         this.setSelectOptionToModel(model, DictCode.投资目的);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
@@ -141,7 +142,11 @@ public class EtrIbBondinfo002Controller extends BaseController {
             entity.setInvManagerId(LoginUserUtil.getUserName());
             model.addAttribute(GlobalConstant.ENTITY, entity);
             model.addAttribute("businessId", IDGenerator.generate());
-        }    
+        }
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         model.addAttribute("shortSellingSupported", CacheUtil.getSysParam("SHORT_SELLING_SUPPORTED"));

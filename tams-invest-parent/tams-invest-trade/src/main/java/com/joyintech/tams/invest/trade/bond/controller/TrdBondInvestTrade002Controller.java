@@ -381,7 +381,7 @@ TrdBondInvestTrade002Controller extends BaseController {
             DictCode.有效状态, DictCode.交易平台, DictCode.币种,
             DictCode.投资目的, DictCode.交易市场, DictCode.清算速度, DictCode.是否,
             DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,// 新增资产二、三、四级分类 王贵奇 2019/7/31
-            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,BussinessDictCode.业务模式);
+            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.业务模式);
 	    SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投资目的, null);
         if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
             List<SelectOptionDto> options = selectDto.getOptions(); 

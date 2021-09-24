@@ -1416,10 +1416,7 @@ public enum BussinessDictCode implements com.joyintech.framework.base.BaseDictCo
      * 组合估值方法
      */
     组合估值方法("PTL_VALUATION_METHOD"),
-    /**
-     * 业务模式
-     */
-    业务模式("BUSINESS_MODEL");
+
     ;
     /**
      * 对应于数据字典code

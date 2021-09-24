@@ -237,6 +237,14 @@ $(
             if (!object) {
                 return;
             }
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+                var businessModel = $("#businessModel").val();
+                if(businessModel=="Y1"){
+                    object.invAim = "AC"
+                }else{
+                    object.invAim = "FVTPL"
+                }
+            }
 
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
                 if (operateType === "save") {
