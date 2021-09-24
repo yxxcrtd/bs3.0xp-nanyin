@@ -254,7 +254,7 @@
         fin.COUPON_SPECIES AS COUPON_SPECIES, /** 息票品种 **/
         fin.ISSUE_PRICE AS ISSUE_PRICE, /** 发行价 **/
         fin.ISSUE_AMT AS ISSUE_AMT, /** 发行数量 **/
-        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
         cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
         fin.FINANCIER AS FINANCIER,
         cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
@@ -282,6 +282,9 @@
         ON fin.FINANCIER = cust2.CUSTOMER_ID
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
+        <!-- 回购交易对手关联对应机构代码 -->
+        LEFT JOIN MST_COUNTER_PARTY cpt
+        ON cpt.COUNTER_ID = trdfin.COUNTER_ID
         WHERE 1=1
         AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.DSC_COST_AMT != 0
@@ -326,7 +329,7 @@
         fin.COUPON_SPECIES AS COUPON_SPECIES,
         fin.ISSUE_PRICE AS ISSUE_PRICE,
         fin.ISSUE_AMT AS ISSUE_AMT,
-        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
         cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
         fin.FINANCIER AS FINANCIER,
         cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
@@ -365,6 +368,9 @@
         ON fin.FINANCIER = cust2.CUSTOMER_ID
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
+        <!-- 回购交易对手关联对应机构代码 -->
+        LEFT JOIN MST_COUNTER_PARTY cpt
+        ON cpt.COUNTER_ID = trdfin.COUNTER_ID
         WHERE 1=1
         AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.Portfolio_Id IS NULL
