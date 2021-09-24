@@ -251,7 +251,7 @@ public class IbuComponentRiskService extends BaseService {
                             ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                             reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
                             reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                            reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                            reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId()+ibuQuoteCrepPledgeDto.getFinprodMarketId());
                             reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
                             reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
                             reqRiskOccupy.setAssetType(
@@ -605,7 +605,7 @@ public class IbuComponentRiskService extends BaseService {
                         ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                         reqRiskOccupy.setEntrustCode(ibuQuoteCrepDto.getEntrustId());
                         reqRiskOccupy.setEventDate(DateUtil.format(ibuQuoteCrepDto.getQuoteDate()));
-                        reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId());
+                        reqRiskOccupy.setEventId(ibuQuoteCrepDto.getQuoteId()+ibuQuoteCrepPledgeDto.getFinprodMarketId());
                         reqRiskOccupy.setPortfolioCode(ibuQuoteCrepDto.getPortfolioId());
                         reqRiskOccupy.setPs(ibuQuoteCrepDto.getRepoPs());
                         reqRiskOccupy.setAssetType(
