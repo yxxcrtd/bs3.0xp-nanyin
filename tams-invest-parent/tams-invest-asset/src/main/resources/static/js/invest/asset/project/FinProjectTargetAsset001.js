@@ -78,7 +78,7 @@
             ,{field:'mdate',title:'FinProjectTargetAsset001.mdate',type:'date',width:150}//到期日
             ,{field:'intType',title:'FinProjectTargetAsset001.rateType',visible:false}//到期日
             ,{field:'rateTypeName',title:'FinProjectTargetAsset001.rateType',sortField:'INT_TYPE',width:150}//到期日
-            ,{field:'rate',title:'FinProjectTargetAsset001.rate',width:150}//收益率
+            ,{field:'rate',title:'FinProjectTargetAsset001.rate',width:150,type:'number', digit:2}//收益率
             ,{field:'basisName',title:'FinProjectTargetAsset001.basis',sortField:'basis',width:150}//计息基础
             ,{field:'financierName',title:'FinProjectTargetAsset002.financier',sortField:'financier',width:150}//融资人
             ,{field:'sponsorName',title:'FinProjectTargetAsset002.sponsor',sortField:'sponsor',width:150}//融资人
