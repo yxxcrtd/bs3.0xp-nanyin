@@ -88,12 +88,12 @@ public class PdCalculateProcessService {
                 //当前年月
                 variablePdCalculateDto.setNowYearMonStr(DateUtil.format(plateDate,"yyyyMM"));
                 //12个月后所在年月  从（当前月份+1月）开始往后推第12个月的年份月份
-                variablePdCalculateDto.setEndYearMonStr(DateUtil.format(DateUtil.addMonthDate(new Date(),12+1),"yyyyMM"));
+                variablePdCalculateDto.setEndYearMonStr(DateUtil.format(DateUtil.addMonthDate(plateDate,12+1),"yyyyMM"));
                 //资产是否有交易处于二三阶段 false
                 variablePdCalculateDto.setTtStage(false);
                 //遍历 交易数据
                 for(ModEclResultProcess aiPdDto :variablePdCalculateDto.getAssetImpairmentPdCalculateList()){
-                    if(StringUtil.isNotEmpty(aiPdDto.getFinStage()) && ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aiPdDto.getFinStage())){
+                    if(StringUtil.isNotEmpty(aiPdDto.getFinStage()) && !ModelDictCodeList.阶段_初始买入时_P1.getValue().equals(aiPdDto.getFinStage())){
                         //资产是否有交易处于二三阶段
                         variablePdCalculateDto.setTtStage(true);
                         break;
@@ -191,16 +191,16 @@ public class PdCalculateProcessService {
                 BigDecimal deciR6=ArithmeticUtil.divide(deciR3,deciR5,12);
                 BigDecimal deciR7 =ArithmeticUtil.multiply(new BigDecimal("0.12"),deciR6);
                 BigDecimal deciR8 =ArithmeticUtil.multiply(new BigDecimal("0.24"),ArithmeticUtil.subtract(BigDecimal.ONE,deciR6));
-                if(variablePdCalculateDto.getIsFinLicence() ==null){
-                    //=====记录计算错误日志=====start=====
-                    logMsg ="【PD计算批处理】：无法判断【机构名称】是否金融机构";
-                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+//                if(variablePdCalculateDto.getIsFinLicence() ==null){
+//                    //=====记录计算错误日志=====start=====
+//                    logMsg ="【PD计算批处理】：无法判断【机构名称】是否金融机构";
+//                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+//
+//                    //=====记录计算错误日志=====end=====
+//                    return null;
+//                }
 
-                    //=====记录计算错误日志=====end=====
-                    return null;
-                }
-
-                if("Y".equals(variablePdCalculateDto.getIsFinLicence())){
+                if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
                     //使用金融机构风险暴露的相关系数为
                     R =ArithmeticUtil.multiply(new BigDecimal("1.25"),ArithmeticUtil.doAdd(deciR7,deciR8));
                 }else{
