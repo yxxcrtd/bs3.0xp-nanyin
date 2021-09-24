@@ -1598,8 +1598,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             //将到期收益率除以100 update by zhangrui1 end
             //可转债
             if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())){
-                infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null);//可转债为申购券面总额
-                infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null);//可转债为申购券面总额
+                String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+                BigDecimal purchBondTotal = StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null;
+                if(StringUtil.equals(entrustAmtUnit,"02") && StringUtil.isNotEmpty(purchBondTotal)) {
+                    purchBondTotal = ArithmeticUtil.multiply(purchBondTotal,new BigDecimal("10000"));
+                }
+                infRiskRdsDto.setAmount(purchBondTotal);//可转债为申购券面总额
+                infRiskRdsDto.setTradeNum(purchBondTotal);//可转债为申购券面总额
             }
             //update by  zhangnian  20200326  start
             //债转股指令委托
@@ -2099,8 +2104,13 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setTradeMarketMode(finDto.getTradeMarketMode());
             //可转债
             if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())){
-                infRiskRdsDto.setAmount(finDto.getTradeAmt());//可转债为申购券面总额
-                infRiskRdsDto.setTradeNum(finDto.getTradeAmt());//可转债为申购券面总额
+                String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
+                BigDecimal tradeAmt = finDto.getTradeAmt();
+                if(StringUtil.equals(entrustAmtUnit,"02")) {
+                    tradeAmt = ArithmeticUtil.multiply(tradeAmt,new BigDecimal("10000"));
+                }
+                infRiskRdsDto.setAmount(tradeAmt);//可转债为申购券面总额
+                infRiskRdsDto.setTradeNum(tradeAmt);//可转债为申购券面总额
             }
             else if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
                 infRiskRdsDto.setAmount(finDto.getShareAmt());//可转债为申购券面总额
