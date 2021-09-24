@@ -405,9 +405,10 @@ public class ValuationMethodScheme003Controller extends BaseController {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		String tradeMarket = (String) param.get("tradeMarket");
 		String secType = (String)param.get("secType");
-		//但证券品种为其他债权类时
+		//但证券品种为基金时，且交易场所为场外，市价来源特殊处理为 管理人报价07
 		if(StringUtil.isNotEmpty(secType) ){
-			if(StringUtil.isNotEmpty(tradeMarket) && DictCodeListExt1.证券品种_基金.getValue().equals(secType) && DictCodeListExt1.证券品种_回购.getValue().equals(tradeMarket)){
+			if(DictCodeListExt1.证券品种_基金.getValue().equals(secType) && StringUtil.isNotEmpty(tradeMarket) &&
+					StringUtil.equals(tradeMarket,DictCodeListExt1.估值交易市场_场外.getValue())){
 				//管理人报价07
 				SelectOptionDto selectOptionDto = new SelectOptionDto();
 				selectOptionDto.setId(DictCodeList.估值市价_管理人报价.getValue());
@@ -418,17 +419,8 @@ public class ValuationMethodScheme003Controller extends BaseController {
 			param.put("dict_code_parent", DictCode.证券品种.getValue());
 			param.put("dict_code_child", DictCode.估值市价.getValue());
 			param.put("item_code_parent", param.get("secType"));
-			selectOptionDtoList = valuationMethodScheme001Service.getLinkSelectOption(param);
+			selectOptionDtoList = valuationMethodScheme003Service.getLinkSelectOption(param);
 		}
-//		if (Arrays.asList(DictCodeListExt1.证券品种_基金.getValue()).contains(param.get("secType"))&&StringUtils.isNotEmpty(tradeMarket)) {
-//			param.put("dict_code_parent", DictCode.估值交易市场.getValue());
-//			param.put("dict_code_child", DictCode.估值市价.getValue());
-//			param.put("item_code_parent", param.get("tradeMarket"));
-//		} else {
-//			param.put("dict_code_parent", DictCode.证券品种.getValue());
-//			param.put("dict_code_child", DictCode.估值市价.getValue());
-//			param.put("item_code_parent", param.get("secType"));
-//		}
         return selectOptionDtoList;
 	}
 

@@ -266,9 +266,9 @@ $(function () {
 	        }
 		],
 		done: function(data){
-//			if(data.length<1){
-//                layer.alert('没有符合条件的记录！');
-//			}
+			if(data.length<1){
+               layer.alert('没有符合条件的记录！');
+			}
 			if(data.length > 0 && data[0].schemeDescription != undefined){
 				$("#typeAssets-title-desc").text("方案描述：" + data[0].schemeDescription); // 方案描述
 			}else{
@@ -303,9 +303,6 @@ $(function () {
 		/** 事件绑定: 资产估值配置-查询 */
     	$("#ValuationMethodScheme003_btn_search").click(function(event){
     		typeAssetsTable.load();//重载表格 - 资产估值配置
-			if(data.length<1){
-                layer.alert('没有符合条件的记录！');
-			}
         });
 		
 		/**
@@ -462,11 +459,11 @@ $(function () {
 	        	}
 	        }
 		],
-//		done: function(data){
-//			if(data.length<1){
-//                layer.alert('没有符合条件的记录！');
-//			}
-//		},
+		done: function(data){
+			if(data.length<1){
+               layer.alert('没有符合条件的记录！');
+			}
+		},
 		dblclick:function(table, data) {
 			Joyin.dialog(JoyinUtil.getLabel("查看特殊资产估值"),
 		               basePath + "valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/init",
@@ -495,6 +492,9 @@ $(function () {
     	/** 事件绑定: 特殊资产估值配置-查询 */
     	$("#ValuationMethodScheme004_btn_search").click(function(event){
     		specialAssetsTable.load();//重载表格 - 特殊资产估值配置
+			/*if(data.length<1){
+				layer.alert('没有符合条件的记录！');
+			}*/
         });
     	
         /** 事件绑定: 特殊资产估值配置-导出 */
