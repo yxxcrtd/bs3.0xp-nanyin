@@ -21,10 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -457,17 +455,34 @@ public class CommonExportPdfService<T> {
                 tempPathDir.mkdirs();
             }
             File tempFile = new File(tempConfigFilePath);
+            InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
+            FileOutputStream outputStream = null;
+            OutputStreamWriter oStreamWriter = null;
             try {
-                FileOutputStream fos = new FileOutputStream(tempFile);
-                byte[] b = new byte[1024];
-                int count = 0;
-                while ((count=in.read(b)) != -1) {
-                    fos.write(b,0,count);
+                outputStream = new FileOutputStream(tempFile);
+                oStreamWriter = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
+                char[] buf = new char[1024*8];
+                int len = 0;
+                while ((len = reader.read(buf)) != -1) {
+                    oStreamWriter.write(new String(buf, 0 ,len));
                 }
-                in.close();
-                fos.close();// 保存数据
             } catch (IOException e) {
 
+            }finally {
+                try {
+                    if(oStreamWriter != null){
+                        oStreamWriter.close();
+                    }
+                    if(outputStream != null){
+                        outputStream.close();
+                    }
+                    if(reader != null){
+                        reader.close();
+                    }
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
