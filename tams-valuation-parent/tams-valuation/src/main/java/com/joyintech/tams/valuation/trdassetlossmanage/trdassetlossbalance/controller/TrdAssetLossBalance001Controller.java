@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
@@ -137,6 +138,20 @@ public class TrdAssetLossBalance001Controller extends BaseController {
                         + SystemGlobalConstant.POINT
                         + FileNameUtil.getFileExtName(outFile),
                 outFile, true);
+    }
+
+
+    /**
+     * @Description:获取资产代码下拉框
+     * @auther: yuzj
+     * @date: 2021/8/14
+     * @param:
+     * @return:
+     */
+    @RequestMapping("getAssetInfoSelectOption")
+    @ResponseBody
+    public Page<SelectOptionDto> getAssetInfoSelectOption() {
+        return  trdAssetLossBalance001Service.getAssetInfoSelectOption(RequestUtil.getPageParam());
     }
 }
 
