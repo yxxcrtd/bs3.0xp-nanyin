@@ -1560,6 +1560,11 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
 	//20210922 从DictCodeList迁移过来  by yflv end
 
 
+    估值市价_外管局(DictCode.估值市价, "10", "外管局"),
+    估值市价_央行(DictCode.估值市价, "11", "央行"),
+    估值市价_外汇交易中心(DictCode.估值市价, "12", "外汇交易中心"),
+
+
 
     ;
     /**

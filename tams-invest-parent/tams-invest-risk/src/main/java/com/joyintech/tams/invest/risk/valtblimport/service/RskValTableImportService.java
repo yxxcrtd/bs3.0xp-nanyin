@@ -741,6 +741,23 @@ public class RskValTableImportService extends CommonExportService<RskValtblAsset
         		   indexMap.put(processDto.getSubCode(), i++);
         	   }
            }
+           //针对已匹配资产科目，若系统中不存在，预览时不展示
+           Iterator<RskValtblAssetSubDto> itList = valHand_oneList.iterator();
+           List<String> subList= rskValAssetCode003Service.selecctRskValtblSubCodeList("01");
+           while (itList.hasNext()){
+               RskValtblAssetSubDto dtoit = itList.next();
+               if(StringUtil.equals(dtoit.getValType().getDesc(), ValType.ASSET.getDesc())
+                       && StringUtil.equals(dtoit.getIsMatch(), DictCodeListExt1.是否_是.getValue())
+                       && StringUtil.isNotEmpty(dtoit.getSubCode()) ){
+                   String subCode=dtoit.getSubCode();
+                   if(dtoit.getSubCode().length()>8){
+                       subCode=dtoit.getSubCode().substring(0, 8);
+                   }
+                   if(!subList.contains(subCode)){
+                       itList.remove();
+                   }
+               }
+           }
        }
 
        valHand_oneList.sort(Comparator.comparing(RskValtblAssetSubDto::getIsMatch,Comparator.nullsLast(String::compareTo)).thenComparing(RskValtblAssetSubDto::getValType).thenComparing(RskValtblAssetSubDto::getSubCode));

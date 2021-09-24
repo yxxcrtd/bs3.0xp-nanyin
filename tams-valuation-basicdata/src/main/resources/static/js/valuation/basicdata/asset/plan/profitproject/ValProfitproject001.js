@@ -63,7 +63,7 @@ $(function() {
             ,{field:'financier',width:160, sortField:"financier",title: '融资人'}
             ,{field:'dataSourceStr', width:150 ,sortField:"dataSource",title: 'ValProfitproject001.dataSource'}
             ,{field:'updateUser', width:150 ,sortField:"updateUser",title: 'ValProfitproject001.updateUser'}
-            ,{field:'updateTime', width:150 ,sortField:"updateTime",title: 'ValProfitproject001.updateTime',type:'date'}
+            ,{field:'updateTimeStampStr', width:170 ,sortField:"updateTime",title: 'ValProfitproject001.updateTime'}
             ,{field:'operation',width:150,title: 'SysCommon.operation', type:'action', buttons: ['edit',{clas: 'iconfont icon-copy',title: '复制'}, 'delt']}
         ]
     });    
