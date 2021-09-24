@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.trade.bond.service;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradePdfDto;
 import org.slf4j.Logger;
@@ -179,13 +181,20 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
      * @return
      */
     public String getConfigFile(String pageId){
-        String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/bond/conf/").toString();
-        logger.info("183行_getConfigFile:"+basePath);
+        String configFilePath = "";
+        String basePath = "com/joyintech/tams/invest/trade/bond/conf/";
+        String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+        String tempConfigFilePath="";
         if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
-            //场内
-            return basePath + "export_conf_pdf002.xml";
+            configFilePath = basePath + "export_conf_pdf002.xml";
+            tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf002.xml";
         }else{
-            return basePath + "export_conf_pdf001.xml";
+            configFilePath =  basePath + "export_conf_pdf001.xml";
+            tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf001.xml";
         }
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+        // 在临时目录下生成配置文件
+        commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+        return tempConfigFilePath;
     }
 }

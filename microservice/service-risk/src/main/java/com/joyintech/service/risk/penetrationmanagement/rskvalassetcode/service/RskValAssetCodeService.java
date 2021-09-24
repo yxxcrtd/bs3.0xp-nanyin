@@ -288,5 +288,15 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
             rskValtblAssetSubMapDtlMapper.insertList(newDataList);
         }
     }
+    /**
+     * 查询目标科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<String> selecctRskValtblSubCodeList(String subType){
+        return rskValAssetCodeMapper.selecctRskValtblSubCodeList(subType);
+    }
 
 }
