@@ -253,8 +253,10 @@ public class BMWEclCalculationProcessorService {
         modEclResult.setStage(entity.getFinStage());
         //数据来源
         modEclResult.setDataSource(dataSource);
-        //业务编号
-        modEclResult.setBussNo(entity.getTradeId());
+        // 买入时点评级
+        modEclResult.setPurchaseTimeGrade(entity.getResultDeal());
+        // 当前时点评级
+        modEclResult.setCurrentTimeGrade(entity.getResultCurrent());
     }
 
     /**
