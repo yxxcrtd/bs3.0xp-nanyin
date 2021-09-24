@@ -37,24 +37,24 @@ public class ComMarketManagementController {
         info = comMarketManagementService.selectForPage(page,length,pageParam);
         List<ComMarketManageDto> res=info.getRoot();
         Map<String, Object> map=new HashMap<String, Object>();
-        for(ComMarketManageDto dto:res){
-            String gradeDateStr = new SimpleDateFormat("yyyy-MM-dd").format(DateUtil.addDay(DateUtil.parse(dto.getGradeDate()), -1));
-            map.put("gradeDateStr", gradeDateStr);
-            map.put("oCode", dto.getoCode());
-            // START modify by wj 20200417 查询前次评级时 加这2参数 会导致查不到。
-            //map.put("gradeOrgId", dto.getGradeOrgId());
-            //map.put("shortLongTerm", dto.getShortLongTerm());
-            map.put("oType", dto.getoType());
-            if(StringUtil.isNotEmpty(dto.getNoticeDate())){
-                dto.setNoticeDate(new SimpleDateFormat("yyyy-MM-dd").format(DateUtil.parse(dto.getNoticeDate())));
-            }
-            pageinfo = comMarketManagementService.selectForPage(page,length,map);
-            if(!StringUtil.isEmptyList(pageinfo.getRoot())){
-                dto.setPreviousgradeDate(pageinfo.getRoot().get(0).getGradeDate());
-                dto.setPreviousgradeResultDis(pageinfo.getRoot().get(0).getGradeResult());
-                dto.setPreviousgradeOrgName(pageinfo.getRoot().get(0).getGradeOrgName());
-            }
-        }
+//        for(ComMarketManageDto dto:res){
+//            String gradeDateStr = new SimpleDateFormat("yyyy-MM-dd").format(DateUtil.addDay(DateUtil.parse(dto.getGradeDate()), -1));
+//            map.put("gradeDateStr", gradeDateStr);
+//            map.put("oCode", dto.getoCode());
+//            // START modify by wj 20200417 查询前次评级时 加这2参数 会导致查不到。
+//            //map.put("gradeOrgId", dto.getGradeOrgId());
+//            //map.put("shortLongTerm", dto.getShortLongTerm());
+//            map.put("oType", dto.getoType());
+//            if(StringUtil.isNotEmpty(dto.getNoticeDate())){
+//                dto.setNoticeDate(new SimpleDateFormat("yyyy-MM-dd").format(DateUtil.parse(dto.getNoticeDate())));
+//            }
+//            pageinfo = comMarketManagementService.selectForPage(page,length,map);
+//            if(!StringUtil.isEmptyList(pageinfo.getRoot())){
+//                dto.setPreviousgradeDate(pageinfo.getRoot().get(0).getGradeDate());
+//                dto.setPreviousgradeResultDis(pageinfo.getRoot().get(0).getGradeResult());
+//                dto.setPreviousgradeOrgName(pageinfo.getRoot().get(0).getGradeOrgName());
+//            }
+//        }
         info.setRoot(res);
         return info;
     }
