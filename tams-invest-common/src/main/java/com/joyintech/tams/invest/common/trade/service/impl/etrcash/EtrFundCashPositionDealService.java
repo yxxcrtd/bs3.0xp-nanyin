@@ -1167,9 +1167,16 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                         acctId = EtrCommonCashPositionDealService.select通道资金账户(chlId);
                     }
                 }
-                可用现金增加(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, false);
+                可用现金增加(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, true);
             }
-            if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
+            if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                //除权日增加预增现金
+                if(StringUtil.isNotEmpty(finProductTradeDto.getExRightsDate())) {
+                    for (StlPayOrdersDto dto : stlPayOrdersDtos) {
+                        dto.setSettleDate(finProductTradeDto.getExRightsDate());
+                    }
+                }
+                // 提交
                 if (StringUtil.isEmpty(entrustId)) { // 无委托
                     String acctId;
                     // 1.直投

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.joyintech.tams.valuation.batch.exchangecarryover.dto.ExchangeCarryoverEntity;
 import com.joyintech.tams.valuation.batch.exchangecarryover.dto.InterBalanceDto;
 import com.joyintech.tams.valuation.batch.profitandlossaccounting.dto.ProfitAndLossAccountingSubject;
+import org.springframework.stereotype.Repository;
 
 /**
  * 汇兑损益结转
@@ -13,6 +14,7 @@ import com.joyintech.tams.valuation.batch.profitandlossaccounting.dto.ProfitAndL
  * @author zhangwei
  * @createTime 2019-07-08 15:17
  */
+@Repository
 public interface ExchangeCarryoverMapper {
 
     List<ExchangeCarryoverEntity> selectBooksetId(Map<String, Object> map);

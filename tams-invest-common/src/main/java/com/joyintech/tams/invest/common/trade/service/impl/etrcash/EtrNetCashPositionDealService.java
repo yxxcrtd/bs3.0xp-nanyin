@@ -497,6 +497,11 @@ public class EtrNetCashPositionDealService extends EtrCashPositionBaseService {
         }
         if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
             if (StringUtil.isEmpty(entrustId)) { // 无委托
+                if(StringUtil.isNotEmpty(finProductTradeDto.getExRightsDate())){
+                    for(StlPayOrdersDto dto:stlPayOrdersDtos){
+                        dto.setSettleDate(finProductTradeDto.getExRightsDate());
+                    }
+                }
                 // 1.直投
                 // 预增现金(组合、托管户）：资金到账日增加到账金额
                 String acctId = EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(), deal.getCcy(),

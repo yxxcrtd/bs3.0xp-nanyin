@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
+import org.springframework.stereotype.Repository;
 
 
 /**   
@@ -19,7 +20,7 @@ import com.joyintech.framework.select.SuggestDto;
  * @author: junYin
  * @date: 2019-06-04 11:12
 */
-@Component
+@Repository
 public interface EtrNewStockMapper {
 
 

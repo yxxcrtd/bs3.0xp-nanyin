@@ -393,7 +393,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                 }else{
                     //不符合条件，不在区间内
                     trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("初始确认起始日和截止日应处于资产起息日和到期日区间中!"));
+                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("存在初始确认起始日和截止日与资产区间不符!"));
                 }
 
 
@@ -611,6 +611,19 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间!"));
                 }
             }
+
+            //判断初始确认起始日，初始确认截止日不能在资产起息日和资产到期日区间内
+            if( DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getmDate())<=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getmDate())<=0){
+                //符合条件，在区间内
+            }else{
+                //不符合条件，不在区间内
+                trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
+                trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("初始确认起始日和截止日应处于资产起息日和到期日区间中!"));
+            }
+
             //新建、修改录入，存“01 手工”;导入：存“02 wind接入”   03 中债接入  04模型
             trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值数据来源_中债接入.getValue());
             trdAssetLoss001DtoEclList.add(trdAssetLoss001Dto);

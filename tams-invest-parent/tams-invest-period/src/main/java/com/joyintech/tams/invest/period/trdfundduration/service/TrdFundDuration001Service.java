@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dto;
@@ -149,6 +150,13 @@ implements BaseProcessService<TrdFundDuration001Dto>{
      */
     @Override
     public void doUpdate(TrdFundDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+        }else{
+            AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
+        }
 //    	baseTradeProductDealCommServiceImpl.delete(entity.getWorkflowId());
         if (BussinessConstant.SUBMIT.equals(entity.getOperateType())) {
             periodCommonService.deleteWflByTradeId(entity.getTotleTradeId());
@@ -513,11 +521,23 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 
     @Override
     public void doBack(TrdFundDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 
     @Override
     public void doRevoke(TrdFundDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
 import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawBaseInfoSelectComDTO;
-
+import org.springframework.stereotype.Repository;
 
 
 /**
@@ -26,6 +26,7 @@ import com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawB
  * @see MoneyFundDealCountingDrawingMapper
  * @since 1.0
  */
+@Repository
 public interface MoneyFundDealCountingDrawingMapper {
     /**
      * 估值日非计提数据查询 
