@@ -7,7 +7,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.AssetInfoDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.AssetSideDetialRepoDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ModAssetGradeSpecialConfigDtoMapper {
     int deleteByPrimaryKey(String seqno);
 

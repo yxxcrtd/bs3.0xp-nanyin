@@ -10,6 +10,8 @@
 
 package com.joyintech.tams.valuation.component.business.dao;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Date;
 
 /**
@@ -20,6 +22,7 @@ import java.util.Date;
  * @see ValComBusinessMapper
  * @since 1.0
  */
+@Repository
 public interface ValComBusinessMapper {
 
     Date getMaxTradeDate(String finprodId);
