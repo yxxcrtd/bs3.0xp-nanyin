@@ -266,9 +266,9 @@ $(function () {
 	        }
 		],
 		done: function(data){
-			if(data.length<1){
+			/*if(data.length<1){
                layer.alert('没有符合条件的记录！');
-			}
+			}*/
 			if(data.length > 0 && data[0].schemeDescription != undefined){
 				$("#typeAssets-title-desc").text("方案描述：" + data[0].schemeDescription); // 方案描述
 			}else{
@@ -460,9 +460,9 @@ $(function () {
 	        }
 		],
 		done: function(data){
-			if(data.length<1){
+			/*if(data.length<1){
                layer.alert('没有符合条件的记录！');
-			}
+			}*/
 		},
 		dblclick:function(table, data) {
 			Joyin.dialog(JoyinUtil.getLabel("查看特殊资产估值"),
