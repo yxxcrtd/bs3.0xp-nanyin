@@ -113,6 +113,7 @@ $(function () {
                 object.configId = rowArr[0].configId;
                 object.isDefault = rowArr[0].isDefault;
                 object.seqNo = rowArr[0].seqNo;
+                object.decDate = rowArr[0].decDate;
                 object.operateType = "delete";
                 Joyin.ajaxJson(basePath + 'model/impairment/assetimpairmentmanagement/AssetImpairmentManagement001/check', object, function(result) {
                     if (result.data || result.messageType === 'info') {
