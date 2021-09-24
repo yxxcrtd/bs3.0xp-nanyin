@@ -875,15 +875,23 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			dto.setPortfolioId("合计");
 			dto.setTradeAmt(sumAmt);
 			datas.add(dto);
-			return commonExportPdfService.exportPdf(pageId,getConfigFile(),datas);
+			return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId),datas);
 		}
 
 		/**
 		 * 获取配置文件绝对路径 add by zengchengfa 20210803
 		 * @return
 		 */
-		public String getConfigFile(){
-			String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/investtrade/investdealquery/conf/").toString();
-			return basePath + "export_conf_pdf.xml";
+		public String getConfigFile(String pageId){
+			String configFilePath = "";
+			String basePath = "com/joyintech/tams/invest/trade/investtrade/investdealquery/conf/";
+			String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+			String tempConfigFilePath="";
+			configFilePath = basePath + "export_conf_pdf.xml";
+			tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf.xml";
+			InputStream in = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+			// 在临时目录下生成配置文件
+			commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+			return tempConfigFilePath;
 		}
 }

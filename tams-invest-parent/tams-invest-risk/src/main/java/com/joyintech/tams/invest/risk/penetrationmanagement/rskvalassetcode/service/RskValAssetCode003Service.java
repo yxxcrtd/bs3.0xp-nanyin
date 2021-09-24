@@ -165,4 +165,17 @@ public class RskValAssetCode003Service extends BaseService<RskValtblAssetSubMapD
                         + "/RskValAssetCode/selecctRskValtblSubjectSumCodeList",pageParam,
                 SelectOptionDto.class);
     }
+    /**
+     * 查询目标科目代码
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public  List<String> selecctRskValtblSubCodeList(String subType){
+        return  restTemplate.getForObject(ServiceApplication.RISK_SERVICE_NAME
+                        + "/RskValAssetCode/selecctRskValtblSubCodeList?subType="+subType,
+                List.class);
+    }
 }

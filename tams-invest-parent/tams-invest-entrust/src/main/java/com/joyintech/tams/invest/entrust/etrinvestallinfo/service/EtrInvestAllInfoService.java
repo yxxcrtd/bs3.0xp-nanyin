@@ -10,9 +10,11 @@
 
 package com.joyintech.tams.invest.entrust.etrinvestallinfo.service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.entrust.etrinvestallinfo.dto.EtrAllInfoExportPdfDto;
@@ -192,24 +194,35 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         List<EtrAllInfoExportPdfDto> datas = selectExportPdf(param);
         String assetType = param.get("assetType")==null?"":param.get("assetType").toString();
-        return commonExportPdfService.exportPdf(pageId,getConfigFile(assetType),datas);
+        return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId, assetType),datas);
     }
 
     /**
      * 获取配置文件绝对路径 add by zengchengfa 20210730
+     *
+     * @param pageId pageId
      * @param assetType 资产类型
      * @return
      */
-    public String getConfigFile(String assetType){
+    public String getConfigFile(String pageId, String assetType){
         String configFile ;
-        String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/entrust/etrinvestallinfo/conf/").toString();
+        String configFilePath = "";
+        String basePath = "com/joyintech/tams/invest/entrust/etrinvestallinfo/conf/";
+        String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+        String tempConfigFilePath="";
         if(DictCodeList.平安资产类型_债券.getValue().equalsIgnoreCase(assetType)){
-            configFile = basePath + "export_conf_pdf_bond.xml";
+            configFilePath = basePath + "export_conf_pdf_bond.xml";
+            tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf_bond.xml";
         }else if(DictCodeList.平安资产类型_质押式回购.getValue().equalsIgnoreCase(assetType)){
-            configFile = basePath + "export_conf_pdf_rep.xml";
+            configFilePath = basePath + "export_conf_pdf_rep.xml";
+            tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf_rep.xml";
         }else{
-            configFile = basePath + "export_conf_pdf_other.xml";
+            configFilePath = basePath + "export_conf_pdf_other.xml";
+            tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf_other.xml";
         }
-        return configFile;
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+        // 在临时目录下生成配置文件
+        commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+        return tempConfigFilePath;
     }
 }

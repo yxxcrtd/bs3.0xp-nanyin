@@ -121,4 +121,17 @@
 		select count(*) from RSK_VALTBL_ASSET_SUB_MAP
 		where ID = #{assetSubMapId} and  is_default='Y'
 	</select>
+	<!-- 查询目标科目代码 -->
+	<select id="selecctRskValtblSubCodeList" resultType="string">
+		SELECT
+		SUB_CODE
+		FROM
+		RSK_VALTBL_SUBJECT
+		<where>
+			<if test="subType != null and subType != ''">
+				AND SUB_TYPE = #{subType}
+			</if>
+		</where>
+		ORDER BY SUB_CODE asc
+	</select>
 </mapper>

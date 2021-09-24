@@ -61,5 +61,6 @@ public interface RskValAssetCodeMapper {
      * @return
      */
     int getAssetSubInfoIsDefault(@Param("assetSubMapId") String assetSubMapId);
+    List<String> selecctRskValtblSubCodeList(@Param("subType") String subType);
 
 }
