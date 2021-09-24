@@ -21,7 +21,9 @@ import java.util.stream.Collectors;
 import com.joyintech.background.component.uplink.interbank.business.dto.*;
 import com.joyintech.background.component.uplink.interbank.database.dao.IbuMainMapper;
 import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
+import com.joyintech.service.bankuplink.repo.dao.CfetsRepoDealQuotedPrice001Mapper;
 import com.joyintech.system.base.entity.SysUserAdd;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -180,6 +182,9 @@ public class CfetsQuotedCommonService extends BaseService {
     
     @Value("${application.rocketmq.topic.repo:trcms_pfms_tbank_repo}")
     private String repoTopic;
+
+    @Autowired
+    private CfetsRepoDealQuotedPrice001Mapper cfetsRepoDealQuotedPrice001Mapper;
 
     /**
      * 委托放弃处理
@@ -1294,5 +1299,9 @@ public class CfetsQuotedCommonService extends BaseService {
      */
     public boolean isOpeQuotedPrice(Map<String,Object> param){
         return ibuQuoteMapper.isOpeQuotedPrice(param)>0?true:false;
+    }
+
+    public List<CfetsRepoDealQuotedPrice003Dto> listIbuQuoteEntCrepPledge(String quoteId){
+        return cfetsRepoDealQuotedPrice001Mapper.listIbuQuoteEntCrepPledge(quoteId);
     }
 }

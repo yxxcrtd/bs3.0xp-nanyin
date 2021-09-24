@@ -266,9 +266,9 @@ $(function () {
 	        }
 		],
 		done: function(data){
-//			if(data.length<1){
-//                layer.alert('没有符合条件的记录！');
-//			}
+			if(data.length<1){
+               layer.alert('没有符合条件的记录！');
+			}
 			if(data.length > 0 && data[0].schemeDescription != undefined){
 				$("#typeAssets-title-desc").text("方案描述：" + data[0].schemeDescription); // 方案描述
 			}else{
@@ -303,9 +303,6 @@ $(function () {
 		/** 事件绑定: 资产估值配置-查询 */
     	$("#ValuationMethodScheme003_btn_search").click(function(event){
     		typeAssetsTable.load();//重载表格 - 资产估值配置
-			if(data.length<1){
-                layer.alert('没有符合条件的记录！');
-			}
         });
 		
 		/**
@@ -432,10 +429,10 @@ $(function () {
 			{field:'invAim', width:120, sortField:'invAimCode',title: '投资目的'},
 			{field:'valuationMethodCode', width:120, title: '估值方法Code', visible:false},
 			{field:'valuationMethod', width:120, sortField:'valuationMethodCode',title: '估值方法'},
-			{field:'valuationPriceCode', width:120, title: '估值第一市价Code', visible:false},
-			{field:'valuationPrice', width:120, sortField:'valuationPriceCode',title: '估值第一市价'},
-			{field:'valuationPrice2Code', width:120, title: '估值第二市价Code', visible:false},
-			{field:'valuationPrice2', width:120, sortField:'valuationPrice2Code',title: '估值第二市价'},
+			{field:'valuationPriceCode', width:120, title: '估值市价Code', visible:false},
+			{field:'valuationPrice', width:120, sortField:'valuationPriceCode',title: '估值市价'},
+/*			{field:'valuationPrice2Code', width:120, title: '估值第二市价Code', visible:false},
+			{field:'valuationPrice2', width:120, sortField:'valuationPrice2Code',title: '估值第二市价'},*/
 			{field:'valuationDate', sortField:'valuationDateCode',width:120, title: '行情日期'},
 			{field:'quotaDigit', width:120, title: '行情位数'},
 			{field:'priceTailMode', width:160, title: '行情尾数处理方式'},
@@ -462,11 +459,11 @@ $(function () {
 	        	}
 	        }
 		],
-//		done: function(data){
-//			if(data.length<1){
-//                layer.alert('没有符合条件的记录！');
-//			}
-//		},
+		done: function(data){
+			if(data.length<1){
+               layer.alert('没有符合条件的记录！');
+			}
+		},
 		dblclick:function(table, data) {
 			Joyin.dialog(JoyinUtil.getLabel("查看特殊资产估值"),
 		               basePath + "valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/init",
@@ -495,6 +492,9 @@ $(function () {
     	/** 事件绑定: 特殊资产估值配置-查询 */
     	$("#ValuationMethodScheme004_btn_search").click(function(event){
     		specialAssetsTable.load();//重载表格 - 特殊资产估值配置
+			/*if(data.length<1){
+				layer.alert('没有符合条件的记录！');
+			}*/
         });
     	
         /** 事件绑定: 特殊资产估值配置-导出 */

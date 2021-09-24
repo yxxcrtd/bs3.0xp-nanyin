@@ -152,7 +152,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
                 DictCode.行内资产三级分类,
                 DictCode.行内资产四级分类,
                /* 原因、zhuyongkang 2019/7/30  end*/
-                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的, BussinessDictCode.业务模式);
+                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的, DictCode.业务模式);
         
      // 一体化对应etliu start
 //        model.addAttribute("PS_PURCHASE_T04",DictCodeList.交易方向_申购.getValue());

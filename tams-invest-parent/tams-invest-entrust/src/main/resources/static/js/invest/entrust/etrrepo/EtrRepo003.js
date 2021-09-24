@@ -249,6 +249,8 @@
         }
         allDto.importFlow = true;
         allDto.selectedItem = objects;
+        allDto.pageModel = pageModel;
+        allDto.operateType = operateType;
         allDto.riskTrialRetDto = object.riskTrialRetDto;
         Joyin.ajaxJson(basePath + 'invest/entrust/etrrepo/EtrRepo003/check', allDto,
             function (result) {
