@@ -2,6 +2,7 @@ package com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.co
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.joyintech.framework.grid.Page;
@@ -109,20 +110,35 @@ public class ModGradePdConfig001Controller extends BaseController {
     @RequestMapping("deleteCheck")
     public AjaxResult deleteCheck(@RequestBody @Valid ModGradePdConfigDto dto, BindingResult result) {
         AjaxResult ajaxResult = new AjaxResult();
-//        //判断当前流程是否存在
-//        boolean resultList = modGradePdConfigService.checkBusinessDataInFlow(dto);
-//        if(resultList){
-//            //流程存在情况
-//            return new AjaxResult("该条数据在流程中，不能删除", MessageType.错误消息);
-//        }
-        Map<String, Object> map = RequestUtil.getPageParam();
-        map.put("seqNo",dto.getSeqNo());
-        map.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());//03为评级PD维护配置类型
-        int exists = modGradePdConfigService.checkBySeqNoAndType(map);
-        //评级PD维护是否被PD生成批处理调用过
-        if(exists>0) {
-            ajaxResult.setData(this.getMessage("当前PD评级数据已被使用，是否确认删除？", this.getMessage("SysCommon.save")));
-            return ajaxResult;
+        if(StringUtil.equals(dto.getOperateType(),"delete")){
+            Map<String, Object> map = RequestUtil.getPageParam();
+            map.put("seqNo",dto.getSeqNo());
+            map.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());//03为债券评级PD维护配置类型
+            int exists = modGradePdConfigService.checkBySeqNoAndType(map);
+            //评级PD维护是否被PD生成批处理调用过
+            if(exists>0) {
+                ajaxResult.setData(this.getMessage("当前PD评级数据已被使用，是否确认删除？", this.getMessage("SysCommon.save")));
+                return ajaxResult;
+            }
+        }else if(StringUtil.equals(dto.getOperateType(),"deleteAll")){
+            StringBuilder builderStr = new StringBuilder();
+            for(ModGradePdConfigDto pdDto: dto.getSelectedItem()){
+                Map<String, Object> map = new HashMap<>();
+                map.put("seqNo",pdDto.getSeqNo());
+                map.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());//03为债券评级PD维护配置类型
+                int exists = modGradePdConfigService.checkBySeqNoAndType(map);
+                //评级PD维护是否被PD生成批处理调用过
+                if(exists>0) {
+                    builderStr.append(pdDto.getVouchYear()+"-"+pdDto.getGradeResultStr()+",");
+
+                }
+            }
+            if(builderStr.toString().length()>0){
+                String msg = builderStr.toString().substring(0,builderStr.toString().length()-1);
+                msg= msg+"PD评级数据已被使用，是否确认删除？";
+                ajaxResult.setData(this.getMessage(msg, this.getMessage("SysCommon.save")));
+                return ajaxResult;
+            }
         }
         return new AjaxResult();
     }
