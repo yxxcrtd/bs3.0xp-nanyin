@@ -142,17 +142,17 @@
                         Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
                     }
                     else{
-                        finalSubmit();
+                        finalSubmit(object);
                     }
                 });
             }else{
-                finalSubmit();
+                finalSubmit(object);
             }
 
         }
     }
 
-    var finalSubmit =function (){
+    var finalSubmit =function (object){
 
         Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
