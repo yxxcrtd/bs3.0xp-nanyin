@@ -92,6 +92,11 @@ public class IbuQuoteEntCrepPledgeCommonDto {
      */
     private String repRegistOrg;
 
+    /**
+     * 质押金融产品代码
+     */
+    private String finprodId;
+
     public String getQuoteId() {
         return quoteId;
     }
@@ -202,6 +207,14 @@ public class IbuQuoteEntCrepPledgeCommonDto {
 
     public void setRepRegistOrg(String repRegistOrg) {
         this.repRegistOrg = repRegistOrg;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 }
 
