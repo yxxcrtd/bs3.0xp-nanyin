@@ -765,10 +765,12 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
             List<String> supStatList = new ArrayList<>();
             if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_指标预警提醒.getValue())) {
                 supStatList.add(BussinessDictCodeListRds.监督状态_触发预警.getValue());
+                param.put("remType",BussinessDictCodeList.提醒类型_小分类_指标预警提醒.getValue());
             }
             if(StringUtil.isEmpty(smallCategory) || StringUtil.equals(smallCategory, BussinessDictCodeList.提醒类型_小分类_指标违规提醒.getValue())) {
                 supStatList.add(BussinessDictCodeListRds.监督状态_触发超限.getValue());
                 supStatList.add(BussinessDictCodeListRds.监督状态_异常.getValue());
+                param.put("remType",BussinessDictCodeList.提醒类型_小分类_指标违规提醒.getValue());
             }
             param.put("PORTFOLIO_LEVEL_01", BussinessDictCodeListRds.组合层次_单组合.getValue());
             param.put("PORTFOLIO_LEVEL_02", BussinessDictCodeListRds.组合层次_组合包.getValue());
@@ -795,6 +797,7 @@ public class PaActiveRemind002Service extends BaseService<PaActiveRemind001Dto> 
         sysActivereminderInfo.setRemType((String)param.get("remType"));
         sysActivereminderInfo.setFinprodId((String)param.get("finprodId"));
         sysActivereminderInfo.setFinprodName((String)param.get("finprodName"));
+        sysActivereminderInfo.setRemark((String)param.get("remark"));
         sysActivereminderInfo.setFeeId((String)param.get("feeId"));
         sysActivereminderInfo.setMdate(DateUtil.parse((String)param.get("mdate")));
         sysActivereminderInfo.setEffflag(BussinessDictCodeList.是否_否.getValue());
