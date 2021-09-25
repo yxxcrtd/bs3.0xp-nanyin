@@ -99,7 +99,8 @@ public class EclCalculationTask extends BatchBaseService {
         lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         return batchBuilder.init(this)
-                .batch("step0", (BaseReader)eclCalculationDelReader,(BaseProcessor)eclCalculationDelProcessor, (BaseWriter)eclCalculationDelWriter)
+                // 统一在数据加载时直接删除数据
+//                .batch("step0", (BaseReader)eclCalculationDelReader,(BaseProcessor)eclCalculationDelProcessor, (BaseWriter)eclCalculationDelWriter)
                 .batch("step1", (BaseReader)eclCalculationReader,(BaseProcessor)eclCalculationProcessor, (BaseWriter)eclCalculationWriter)
                 .builder(this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
                         , lossModelCommonListener).run();

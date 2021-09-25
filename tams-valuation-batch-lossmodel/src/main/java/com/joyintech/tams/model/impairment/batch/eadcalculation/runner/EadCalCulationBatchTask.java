@@ -105,7 +105,8 @@ public class EadCalCulationBatchTask extends BatchBaseService {
         lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
         logger.info("批处理[" + this.getBatchTask().getTaskName() + "]开始。");
         return batchBuilder.init(this)
-                .batch("step0", (BaseReader)step0Reader,(BaseProcessor)step0Processor, (BaseWriter)step0Writer)
+                // 统一在数据加载时直接删除数据
+//                .batch("step0", (BaseReader)step0Reader,(BaseProcessor)step0Processor, (BaseWriter)step0Writer)
                 .batch("step1", (BaseReader)step1Reader,(BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
                 this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
                 ,lossModelCommonListener).run();

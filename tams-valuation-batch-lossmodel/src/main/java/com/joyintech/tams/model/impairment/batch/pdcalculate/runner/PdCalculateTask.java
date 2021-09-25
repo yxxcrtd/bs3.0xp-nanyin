@@ -128,10 +128,11 @@ public class PdCalculateTask extends BatchBaseService {
         step2Writer.setParams(params);
         lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
-        return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
-                (BaseProcessor)step1Processor, (BaseWriter)step1Writer).batch("step2",
-                (BaseReader)step2Reader, (BaseProcessor)step2Processor,
-                (BaseWriter)step2Writer).builder(
+        return batchBuilder.init(this)
+                // 统一在数据加载时直接删除数据
+//                .batch("step1", (BaseReader)step1Reader, (BaseProcessor)step1Processor, (BaseWriter)step1Writer)
+                .batch("step2", (BaseReader)step2Reader, (BaseProcessor)step2Processor, (BaseWriter)step2Writer)
+                .builder(
                 this.getBatchTask().getBeanName() + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),lossModelCommonListener).run();
 
     }

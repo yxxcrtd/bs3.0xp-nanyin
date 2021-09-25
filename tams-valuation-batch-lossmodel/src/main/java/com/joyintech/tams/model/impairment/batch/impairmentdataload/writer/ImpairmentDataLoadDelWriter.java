@@ -2,6 +2,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.writer;
 
 import com.joyintech.batch.batchbase.baseclass.BaseWriter;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ResultDto;
@@ -29,9 +30,13 @@ public class ImpairmentDataLoadDelWriter extends BaseWriter<ImpairmentDataLoadSt
         Date platDate = (Date)preParams.get("PLATE_DATE");
         Map<String,Object> params = new HashMap<>();
         params.put("searchDate", platDate);
+        // 取一个月之前的日期，同时清理一个月之前的数据
+        params.put("cleanDate", DateUtil.addDate(platDate,0,1,0));
         params.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         params.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         impairmentDataLoadMapper.deleteModEclResultProcess(params);
-
+        //2. 删除资产减值结果表
+        params.put("dataSource", ModelDictCodeList.模型数据来源_模型.getValue());
+        impairmentDataLoadMapper.deleteModEclResult(params);
     }
 }

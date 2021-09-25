@@ -35,4 +35,6 @@ public interface ImpairmentDataLoadMapper {
 
 	//非标外部评级查询-减值模型
 	ModRateDataDto selectOutRateData(Map<String,Object> paraMap);
+
+	int deleteModEclResult(Map<String, Object> params);
 }

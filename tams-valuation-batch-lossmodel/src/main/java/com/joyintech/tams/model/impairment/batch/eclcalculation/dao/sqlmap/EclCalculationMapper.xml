@@ -31,9 +31,17 @@ from
 	inner join MOD_VAL_BATCH_PARAMS b
 	    on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo}
 	    and b.FINPROD_ID = a.ASSET_ID
+	LEFT JOIN MOD_ECL_RESULT C
+		ON C.PROD_ID = A.PROD_ID
+		AND C.ASSET_ID = A.ASSET_ID
+		AND C.DEC_DATE = A.DEC_DATE
+		AND NVL(C.BUSS_NO,1) = NVL(A.TRADE_ID,1)
+		AND C.ALLOW_MODEL_COVER = 'N'
 where
 	a.DEC_DATE = #{searchDate, jdbcType=DATE}
 	and a.PROCESS = #{process,jdbcType=VARCHAR}
+	<!--去除手工新建的不允许模型覆盖的ECL对应交易/资产-->
+	AND C.SEQNO is null
 	<!--减值方案不为空，且为普华方案时 -->
 	<if test="lossType !=null and lossType == '02'">
 		AND PS IN ('T01','T35')
