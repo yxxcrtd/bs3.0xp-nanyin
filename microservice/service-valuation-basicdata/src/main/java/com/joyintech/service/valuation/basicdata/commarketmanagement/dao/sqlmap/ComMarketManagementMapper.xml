@@ -57,39 +57,39 @@
 			</if>
 			<!--对象代码-->
 			<if test="oCode != null and oCode != ''">	
-				AND OCODE = #{oCode,jdbcType=VARCHAR}
+				AND A.O_CODE = #{oCode,jdbcType=VARCHAR}
 			</if>
 			<!--评级机构-->
 			<if test="gradeOrgId != null and gradeOrgId != ''">	
-				AND GRADEORGID = #{gradeOrgId,jdbcType=VARCHAR}
+				AND A.GRADE_ORG_ID = #{gradeOrgId,jdbcType=VARCHAR}
 			</if>
 			<!--查询日期-->
 			<if test="gradeDateStr != null and gradeDateStr != ''">	
-				AND GRADEDATE <![CDATA[ <= ]]> to_date(#{gradeDateStr,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+				AND A.GRADE_DATE <![CDATA[ <= ]]> to_date(#{gradeDateStr,jdbcType=VARCHAR}, 'yyyy-mm-dd')
 			</if>
 			<!--查询日期 开始 -->
 			<if test="gradeDateStart != null and gradeDateStart != ''">	
-				AND GRADEDATE <![CDATA[ >= ]]> to_date(#{gradeDateStart,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+				AND A.GRADE_DATE <![CDATA[ >= ]]> to_date(#{gradeDateStart,jdbcType=VARCHAR}, 'yyyy-mm-dd')
 			</if>
 			<!--查询日期 结束 -->
 			<if test="gradeDateEnd != null and gradeDateEnd != ''">	
-				AND GRADEDATE <![CDATA[ <= ]]> to_date(#{gradeDateEnd,jdbcType=VARCHAR}, 'yyyy-mm-dd')
+				AND A.GRADE_DATE <![CDATA[ <= ]]> to_date(#{gradeDateEnd,jdbcType=VARCHAR}, 'yyyy-mm-dd')
 			</if>
 			<!--评级来源类型    内外部-->
 			<if test="gradeSourceType != null and gradeSourceType != ''">	
-				AND INNEROUTER = #{gradeSourceType,jdbcType=VARCHAR}
+				AND '01' = #{gradeSourceType,jdbcType=VARCHAR}
 			</if>
 			<!--评级类型    长短期-->
 			<if test="shortLongTerm != null and shortLongTerm != ''">	
-				AND shortLongTerm = #{shortLongTerm,jdbcType=VARCHAR}
+				AND A.SHORT_LONG_TERM = #{shortLongTerm,jdbcType=VARCHAR}
 			</if>
 			<!--评级对象类型  01 主体 02 债项-->
 			<if test="oType != null and oType != ''">
-				AND oType = #{oType,jdbcType=VARCHAR}
+				AND A.O_TYPE = #{oType,jdbcType=VARCHAR}
 			</if>
 			<!--评级结果 -->
 			<if test="gradeResult != null and gradeResult != ''">
-				AND MSTRATINGRESULT01 = #{gradeResult,jdbcType=VARCHAR}
+				AND A.GRADE_RESULT = #{gradeResult,jdbcType=VARCHAR}
 			</if>
 		) VFPR 
 		LEFT JOIN MST_CUSTOMER_INFO MCI ON MCI.CUSTOMER_ID=VFPR.GRADEORGID

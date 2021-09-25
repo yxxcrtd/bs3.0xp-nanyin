@@ -295,16 +295,19 @@ public class AssetImpairmentProvisionProcessorService {
 			params.put("invAim", acctEntity.getInvAim());
 			params.put("happenDate", acctEntity.getHappenDate());
 			// 定义 变量.减值模型ECL结果
-			ModEclResult modEclResult = assetImpairmentProvisionMapper.getModelEclResult(params);
-			if(modEclResult != null){
+			List<ModEclResult> modEclResultList = assetImpairmentProvisionMapper.getModelEclResult(params);
+			if(!CollectionUtils.isEmpty(modEclResultList)){
 				if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
-					// 变量.减值余额 = 减值模型ECL结果.前瞻后ECL预期信用损失
-					lossBalance = modEclResult.getProspectiveEcl();
+					for(ModEclResult item : modEclResultList){
+						// 变量.减值余额 = 变量.减值余额 + 减值模型ECL结果.前瞻后ECL预期信用损失
+						lossBalance = ArithmeticUtil.doAdd(lossBalance, item.getProspectiveEcl());
+					}
 					// 变量.是否走减值模型逻辑 = true
 					lossModFlag = true;
 				}
 				// 若采用毕马威方案，则ecl损失比例直接查询，无需重新计算
 				else if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+					ModEclResult modEclResult= modEclResultList.get(0);
 					// 定义 变量.ecl损失比例 =  减值模型ECL结果.ecl损失比例
 					BigDecimal eclRatio = modEclResult.getEclRatio();
 					// 变量.减值余额 = EAD * ECL信用损失比例 *-1

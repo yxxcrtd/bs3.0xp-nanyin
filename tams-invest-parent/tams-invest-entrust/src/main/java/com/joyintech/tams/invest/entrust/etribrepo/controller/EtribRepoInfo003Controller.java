@@ -206,6 +206,10 @@ public class EtribRepoInfo003Controller extends BaseController {
         if(dtoList.size()>0) {
             messages = etribRepoInfo003Validator.bussValid(dtoList.get(0));
             EtribRepoInfo003Dto dto = dtoList.get(0);
+            if(!StringUtil.isNotEmpty(dto.getPortfolioSeries()))
+                messages.add(new ValidMessage("portfolioSeries", "请输入组合系列。"));
+            if(!StringUtil.isNotEmpty(dto.getPriceModel()))
+                messages.add(new ValidMessage("priceModel", "请输入价格模式。"));
             if(!StringUtil.isNotEmpty(dto.getVdate()))
                 messages.add(new ValidMessage("vdate", "请输入指令开始日。"));
 			/*if(!StringUtil.isNotEmpty(dtoList.get(0).getTradePlat()))

@@ -818,7 +818,10 @@
 		end as ourdepositaccountnumber,
 		su.USER_NAME userName,
 		I.OURDEPOSITINSTITUTION ourdepositinstitution,
-		tpd.FINPROD_ID           finprodId
+		tpd.FINPROD_ID           finprodId,
+		I.TRADETIME  tradetime,
+		QUOTE.quote_type quotType,
+		fpt.TYPE_4 assetTypeOne
 		FROM
 		INTERF_CSTP_TRADE I
 		INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM INTERF_CSTP_TRADE GROUP BY EXECID) II ON II.EXECID =
@@ -840,20 +843,21 @@
 		LEFT JOIN (
 		SELECT i.EXECID ,listagg(nvl(iqb.ENTRUST_ID , nvl(iqc.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID,iqerr.ENTRUST_ID) )),
 		',')
-		WITHIN GROUP ( ORDER BY i.UPDATETIME DESC) AS ENTRUST_ID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID,iqc.SETT_TYPE
+		WITHIN GROUP ( ORDER BY i.UPDATETIME DESC) AS ENTRUST_ID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID,iqc.SETT_TYPE,iqb.quote_type  quote_type
 		FROM INTERF_CSTP_TRADE i
 		LEFT JOIN IBU_QUOTE_BOND_DET iqbd ON i.EXECID = iqbd.EXECID
 		LEFT JOIN IBU_QUOTE_BOND iqb ON iqbd.QUOTE_ID = iqb.QUOTE_ID
 		LEFT JOIN IBU_QUOTE_ETR_RE iqerb ON iqb.QUOTE_ID = iqerb.QUOTE_ID
 		LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
 		LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
-		GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE
+		GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE,iqb.quote_type
 		) QUOTE ON QUOTE.EXECID=I.EXECID
 		left join TRD_PRODUCT_DEAL tpd on I.EXECID = tpd.F_TRADE_ID
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
 		left join ETR_ENTRUST on ETR_ENTRUST.ENTRUST_ID = tpda.ENTRUST_ID
 		left join ptl_portfolio on ptl_portfolio.portfolio_id = ETR_ENTRUST.Portfolio_Id
 		left join fin_product fp on fp.finprod_market_id = ts.SECID and fp.finprod_type2 = 'F01'
+		LEFT JOIN FIN_PRODUCT_TYPE fpt ON fp.FINPROD_ID = fpt.FINPROD_ID
 		LEFT JOIN (select a.QUOTE_ID,
 		a.PLEDGE_RATIO,
 		a.PLEDGE_AMT,
@@ -963,6 +967,9 @@
 					<if test="entrustId != null and entrustId != ''">
 						and ENTRUST_ID = #{entrustId}
 					</if>
+					<if test="workflowId != null and workflowId != ''">
+						and WORKFLOW_ID != #{workflowId}
+					</if>
 				</where>
 			</when>
 			<otherwise>
@@ -973,6 +980,9 @@
 				<where>
 					<if test="entrustId != null and entrustId != ''">
 						and ENTRUST_ID = #{entrustId}
+					</if>
+					<if test="workflowId != null and workflowId != ''">
+						and WORKFLOW_ID != #{workflowId}
 					</if>
 				</where>
 			</otherwise>

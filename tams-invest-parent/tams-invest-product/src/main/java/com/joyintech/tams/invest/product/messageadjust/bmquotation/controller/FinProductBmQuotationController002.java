@@ -111,6 +111,7 @@ public class FinProductBmQuotationController002 extends BaseController {
         		model.addAttribute("PAGE_finprodId", finprodId);
         	}
         	//add by menghongwei 支持分档产品 20190626 end
+            model.addAttribute("PAGE_effDate",effDate);
             model.addAttribute("entity", dto);
         }
         else if(WorkFlowUtil.isNotFromToDoList() && !StringUtil.isNotEmpty(finprodId)){

@@ -84,6 +84,9 @@ public class CashFlowDiscount002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.资产分类);
         this.setSelectOptionToModel(model, DictCode.曲线族);
         this.setSelectOptionToModel(model, DictCode.平滑区间);
+        this.setSelectOptionToModel(model, DictCode.债券类型);
+        this.setSelectOptionToModel(model, DictCode.计划类资产类型);
+
         /** modify by yanya on 20210821 增加评级结果**/
         this.setSelectOptionToModel(model, DictCode.评级结果);
         model.addAttribute("YES",DictCodeList.是否_是.getValue());

@@ -462,6 +462,13 @@ var table;
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 start----------
             var object = $.serializeToObject('#submitForm', true);
+            var tradeAmt=$('#tradeAmt').val();
+            if (tradeAmt) {
+                if(entrustAmtUnit == '02' ){
+                    tradeAmt=JoyinMath.doMul(tradeAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+                }
+            }
+            object.tradeAmt = tradeAmt;
              window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/1/RSK002/F01', object,getriskdata());
             //-----------add by jjpei 2020-01-07 风险新版本 end----------
              window.BaseRiskMathComm.initBaseRiskMathCommPageCus(getriskdata());

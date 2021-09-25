@@ -344,6 +344,8 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
             BigDecimal dealedAmt = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt(
                     map);
             //验证下流程中
+            //去掉本身流程中的数据  如退回再提交
+            map.put("workflowId",cfetsBondDealDialogueQuoteDto.getWorkflowId());
             BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(map);
             BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
             BigDecimal avaAmt = BigDecimal.ZERO;
@@ -351,7 +353,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                 avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAvaNum(), new BigDecimal(10000)),dealedAmt),wflAmt);
             }else{
                 avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(
-                        cfetsBondDealDialogueQuoteDto.getEntrustAmt(), dealedAmt),wflAmt);
+                        ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAmt(),new BigDecimal(10000)), dealedAmt),wflAmt);
             }
             if (ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(), new BigDecimal(10000)).compareTo(avaAmt) > 0) {
                 String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+wflAmt:"";

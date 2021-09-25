@@ -95,18 +95,20 @@ from
 	MOD_ECL_RESULT_PROCESS a
 	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
 where
-	a.DEC_DATE = #{searchDate, jdbcType=DATE} and
-	a.PROCESS = #{process} and
-	a.RESULT_DEAL is null and
-	a.PS = #{ps}
+	a.DEC_DATE = #{searchDate, jdbcType=DATE}
+	and a.PROCESS = #{process}
+	and a.RESULT_DEAL is null
+	<!--减值方案不为空，且为普华方案时 -->
+	<if test="lossType !=null and lossType == '02'">
+		AND a.PS IN ('T01','T35')
+	</if>
 	</select>
 
 	<delete id="deleteModEclResultProcess" >
 		delete from MOD_ECL_RESULT_PROCESS
 		where
-		DEC_DATE = #{searchDate,jdbcType=DATE} and
-		PROCESS = #{process} and
-		exists(
+		( DEC_DATE = #{searchDate,jdbcType=DATE} OR DEC_DATE =#{cleanDate,jdbcType=DATE} )
+		AND exists(
 			select 1 from
 			MOD_VAL_BATCH_PARAMS
 			where
@@ -126,4 +128,18 @@ where
 		WHERE A.ISSUERSHORT = #{issuer,jdbcType=VARCHAR}
 	</select>
 
+
+	<delete id="deleteModEclResult" >
+		delete from MOD_ECL_RESULT
+		where 1=1
+			AND ( DEC_DATE = #{searchDate,jdbcType=DATE} OR DEC_DATE =#{cleanDate,jdbcType=DATE} )
+		    AND ( ALLOW_MODEL_COVER ='Y' OR ALLOW_MODEL_COVER IS NULL)
+			AND exists(
+					select 1 from
+						MOD_VAL_BATCH_PARAMS
+					where
+						MOD_VAL_BATCH_PARAMS.FINPROD_ID = MOD_ECL_RESULT.asset_id and
+						MOD_VAL_BATCH_PARAMS.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo}
+				)
+	</delete>
 </mapper>

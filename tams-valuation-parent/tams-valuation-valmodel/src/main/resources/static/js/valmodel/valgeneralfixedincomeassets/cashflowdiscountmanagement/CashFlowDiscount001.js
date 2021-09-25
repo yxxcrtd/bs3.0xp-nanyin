@@ -1,12 +1,29 @@
 $(function() {
 
+    $(function() {
+        initShow();
+    });
+
+    var initShow = function () {
+        var secTypeModel = $('#secTypeModel').val();
+        if(secTypeModel && secTypeModel==='13'){
+            $('#asset_detail_type_plan').show();
+            $('#asset_detail_type').hide();
+        }else{
+            $('#asset_detail_type').show();
+            $('#asset_detail_type_plan').hide();
+
+        }
+    };
+
+
     /**
      * 获取查询参数
      */
     var getSearchParams = function() {
         return {
             secTypeModel : $('#secTypeModel').val(),
-            secDetailTypeModel : $('#secDetailTypeModel').val(),
+            secDetailTypeModel : $('#secDetailTypeModel').val()?$('#secDetailTypeModel').val():$('#secDetailTypeModel_plan').val(),
             /** modify by yanya on 20210821 按照需求调整，增加查询日期，去除资产查询条件 start**/
             //finprodId : $('#finprodId').val(),
             qryDateBegin: $('#qryDate').startDate(),
@@ -48,7 +65,7 @@ $(function() {
                 { title: "生效日期", field: 'effDateStr',sortField:'effDate',sort : true},
                 { title: "失效日期", field: 'invalidDateStr',sortfield:'invalidDate',sort : true},
                 /** modify by yanya on 20210821 按照需求调整，增加失效日期 end**/
-                { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']}
+                { field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit','delt']}
                ],
         dblclick: function(table, data){
         	Joyin.dialog(JoyinUtil.getLabel("现金流折现模型曲线配置明细"), "/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount002/init",
@@ -69,6 +86,22 @@ $(function() {
                        table.reload();
                    });
              });
+
+    /**
+     * 绑定删除事件
+     */
+    table.bind('click', '.delt', function (data, index) {
+        var object = {selectedItem: [data], operateType: "delete"};
+        object.seqNo = data.seqNo;
+        object.operateType = "delete";
+        Joyin.ajaxJson(basePath + 'valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/check', object, function(result) {
+            Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001", JoyinUtil.getLabel("SysCommon.delete")), function () {
+                WorkFlow.doDeleteList('/valmodel/valgeneralfixedincomeassets/cashflowdiscountmanagement/CashFlowDiscount001/delete', object, "ValCashFlowDiscount001_btn_delete", "CashFlowDiscount002", function () {
+                    table.reload();//删除事件请求及回调函数
+                });
+            });
+        });
+    });
     /**
      * 新建资产大类评级配置
      */
@@ -84,6 +117,9 @@ $(function() {
                     null
             );
     });
+
+
+
 
    /**
    *删除
@@ -142,44 +178,17 @@ $(function() {
 
      // 资产类别事件
          var assetTypeChange = function() {
-         		if ($("#secTypeModel").val().startsWith("01")) {
-         			var itemFwd = [];
-         			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-         			for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-         				if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-         					continue;
-         				if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "08"
-         						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "09"
-         						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "011"
-         						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "013"
-         						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "023"
-                                && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "033"
-         						&& TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "024") {
-         					itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-         				}
-         			}
-         			$('#secDetailTypeModel').updateChosenArr({
-         				item : itemFwd,
-         				disabled : false
-         			});
-
-         		} else if ($("#secTypeModel").val().startsWith("13")) {
-         			var itemFwd = [];
-         			var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-                     for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                         if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                             continue;
-                         if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "08"
-                                 || TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "09") {
-                              itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                         }
-                     }
-         			$('#secDetailTypeModel').updateChosenArr({
-         				item : itemFwd,
-         				disabled : false
-         			});
-         		}
-         	};
+             var secTypeModel = $('#secTypeModel').val();
+             if(secTypeModel && secTypeModel==='13'){
+                 $('#asset_detail_type_plan').show();
+                 $('#asset_detail_type').hide();
+                 $('#secDetailTypeModel').val('');
+             }else{
+                 $('#asset_detail_type').show();
+                 $('#asset_detail_type_plan').hide();
+                 $('#secDetailTypeModel_plan').val('');
+             }
+         };
 
      $(function() {
             // 资产类别onchange事件

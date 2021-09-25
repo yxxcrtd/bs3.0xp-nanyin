@@ -1550,7 +1550,18 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     曲线来源_第三方曲线(DictCode.曲线来源,"02","第三方曲线"),
 
     共通业务类型_收益率曲线管理(DictCode.共通业务类型,"MOD13","收益率曲线管理"),
+
+    内部评级_AAA(DictCode.内部评级,"02","内部评级_AAA"),
+    内部评级_AA_PLUS(DictCode.内部评级,"04","内部评级_AA+"),
+    内部评级_AA(DictCode.内部评级,"05","内部评级_AA"),
+    内部评级_AA_MINUS(DictCode.内部评级,"06","内部评级_AA-"),
     内部评级_C(DictCode.内部评级,"24","内部评级_C"),
+
+    兜底评级_AAA(DictCode.系统参数兜底评级,"04","兜底评级_AAA"),
+    兜底评级_AA_PLUS(DictCode.系统参数兜底评级,"03","兜底评级_AA+"),
+    兜底评级_AA(DictCode.系统参数兜底评级,"02","兜底评级_AA"),
+    兜底评级_AA_MINUS(DictCode.系统参数兜底评级,"01","兜底评级_AA-"),
+
     
     //20210922 从DictCodeList迁移过来  by yflv start
     共通业务类型_资产要素信息维护(DictCode.共通业务类型,"MST26","资产要素信息维护"),

@@ -6,7 +6,7 @@
         A.ENTRUST_STATUS AS entrustStatus,
         A.PRICE * 100 AS price,
         ROUND(NVL(T5.FINISH_AMT,0)/(A.ENTRUST_AMT),4)*100 AS transactioncom,
-        ROUND(NVL(IQC.totalShareAmt,0)/(A.ENTRUST_AMT),4)*100 AS tradeFinishPercent,
+        ROUND(NVL(IQC.totalShareAmt, NVL(IQC2.totalShareAmt, 0))/(A.ENTRUST_AMT), 4)* 100 AS tradeFinishPercent,
         A.INV_MANAGER_ID AS invManagerId,
         (SELECT
         real_name
@@ -131,10 +131,9 @@
         LEFT JOIN SYS_USER H
         ON A.CREATE_USER = H.USER_NAME
         <!-- ADD BY YZG 成交进度计算 20201230 START-->
-        LEFT JOIN
-        (
+       <!-- LEFT JOIN (-->
         <!--多组合成交金额 需要查询比例表-->
-        SELECT
+       <!-- SELECT
         T2.ENTRUST_ID,
         SUM(NVL(T2.FPRICE_AMT, 0)) totalShareAmt
         FROM
@@ -150,9 +149,32 @@
         FROM IBU_QUOTE_CREP
         WHERE TRADE_STATUS = '07'
         GROUP BY ENTRUST_ID) IQC
-        ON IQC.ENTRUST_ID = A.ENTRUST_ID
+        ON IQC.ENTRUST_ID = A.ENTRUST_ID-->
         <!-- ADD BY YZG 成交进度计算 20201230 END-->
         <!--交易对手对应交易员信息 start-->
+        LEFT JOIN (
+        SELECT
+        T2.ENTRUST_ID,
+        SUM(NVL(T2.FPRICE_AMT, 0)) totalShareAmt
+        FROM
+        IBU_QUOTE_CREP T1
+        INNER JOIN IBU_QUOTE_ETR_RE T2 ON
+        T1.QUOTE_ID = T2.QUOTE_ID
+        WHERE
+        T1.TRADE_STATUS = '07'
+        GROUP BY
+        T2.ENTRUST_ID) IQC ON IQC.ENTRUST_ID = A.ENTRUST_ID
+        LEFT JOIN(
+        SELECT
+        ENTRUST_ID,
+        SUM(NVL(FPRICE_AMT, 0)) totalShareAmt
+        FROM
+        IBU_QUOTE_CREP
+        WHERE
+        TRADE_STATUS = '07'
+        GROUP BY
+        ENTRUST_ID) IQC2 ON
+        IQC2.ENTRUST_ID = A.ENTRUST_ID
         left join MST_CFETS_CUSTOMER_TRADER T2 ON T2.TRADER_ID = A.COUNTER_TRADER
         left join MST_CFETS_CUSTOMER_INFO T1 ON T1.PARTY_ID = T2.PARTY_ID
         LEFT JOIN PA_PTL_PORTFOLIO pp ON B.PORTFOLIO_ID = pp.PORTFOLIO_ID

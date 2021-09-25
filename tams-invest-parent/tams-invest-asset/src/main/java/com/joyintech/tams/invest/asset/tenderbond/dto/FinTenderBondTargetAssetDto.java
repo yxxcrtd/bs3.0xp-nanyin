@@ -381,7 +381,8 @@ public class FinTenderBondTargetAssetDto extends FinProduct implements ITableRow
 	}
 
 
-	public String getType12() {
+    @NotEmpty(fieldName = "FinBondTargetAsset002.type12" ,groups = {ValidateGroupEdit.class})
+    public String getType12() {
 		return type12;
 	}
 

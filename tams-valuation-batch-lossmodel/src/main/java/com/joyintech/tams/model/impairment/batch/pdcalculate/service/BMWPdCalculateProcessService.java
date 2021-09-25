@@ -15,6 +15,7 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
+import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class BMWPdCalculateProcessService {
     private final String BATCH_LOG_RESULTS = "logResults";
     @Autowired
     private ModLogsService modLogsService;
+
+    @Autowired
+    private RateInfoCommonService rateInfoCommonService;
 
     /**
      * @Description:获取待处理资产信息List
@@ -86,6 +90,7 @@ public class BMWPdCalculateProcessService {
             int tdyYear = DateUtil.getYear(DateUtil.format(plateDate));
 
             //评级结果--最新评级结果
+
             if(variablePdCalculateDto.getGradeResult() ==null){
                 //生成错误日志  --【批处理名称】：【机构名称/资产代码】无评级信息
                 //=====记录警告日志=====start=====
@@ -93,34 +98,8 @@ public class BMWPdCalculateProcessService {
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
                 // 警告：资产无对应评级信息
                 modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
-
                 //=====记录计算警告日志=====end=====
 
-                // 国债、政策性金融债、地方政府债兜底评级
-                if(DictCodeListExt1.证券品种_债券.getValue().equals(assetInfo.getModelAssetType())){
-                    if(DictCodeList.债券类型_国债.getValue().equals(assetInfo.getModelAssetDetailType())
-                    || DictCodeList.债券类型_政策银行债.getValue().equals(assetInfo.getModelAssetDetailType())
-                    || DictCodeList.债券类型_地方政府债.getValue().equals(assetInfo.getModelAssetDetailType())){
-                        // 系统参数-国债、政策性金融债、地方政府债兜底评级结果
-                        variablePdCalculateDto.setGradeResult(CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_1));
-                    }
-                    else{
-                        // 系统参数-除国债、政策性金融债、地方政府债外其他债券兜底评级结果
-                        variablePdCalculateDto.setGradeResult(CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_2));
-                    }
-                }
-                else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(assetInfo.getModelAssetType())){
-                    // 减值方案系统参数 = 系统参数-其他债权资产兜底融资人评级
-                    variablePdCalculateDto.setGradeResult(CacheUtil.getSysParam(GlobalConstant.DELT_RIGHT_BOTTOM_RATE));
-                }
-                else if(DictCodeListExt1.证券品种_存款.getValue().equals(assetInfo.getModelAssetType())){
-                    // 减值方案系统参数 = 系统参数-存款资产兜底评级结果
-                    variablePdCalculateDto.setGradeResult(CacheUtil.getSysParam(GlobalConstant.DEPOSITE_BOTTOM_RATE));
-                }
-                else if(DictCodeListExt1.证券品种_回购.getValue().equals(assetInfo.getModelAssetType())){
-                    // 减值方案系统参数 = 系统参数-回购资产兜底评级结果
-                    variablePdCalculateDto.setGradeResult(CacheUtil.getSysParam(GlobalConstant.REPO_FINANCIER_RATE));
-                }
             }
             //=====1.1初始化变量Dto=====end=====
 
@@ -147,12 +126,21 @@ public class BMWPdCalculateProcessService {
             ModGradePdConfigDto modGradePdConfigDto = pdCalculateMapper.selectModGradePdConfigList(params);
             //获取年份的评级PD配置列表
             if(modGradePdConfigDto ==null ) {
-                    //生成警告日志
-                    //=====记录计算错误日志=====start=====
-                    logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
-                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
-                    //=====记录计算错误日志=====end=====
-                    return resultDto;
+                    // 取系统兜底评级
+                    String bottomRateInfo = rateInfoCommonService.getBottomRateInfo(assetInfo.getModelAssetType(),assetInfo.getModelAssetDetailType());
+                    if(bottomRateInfo != null){
+                        params.put("gradeResult", bottomRateInfo);
+                        modGradePdConfigDto = pdCalculateMapper.selectModGradePdConfigList(params);
+                        variablePdCalculateDto.setGradeResult(bottomRateInfo);
+                    }
+                    else{
+                        //生成警告日志
+                        //=====记录计算错误日志=====start=====
+                        logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
+                        modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+                        //=====记录计算错误日志=====end=====
+                        return resultDto;
+                    }
             }
 
             // 资产对应的PD值 列表.add(查询PD结果)
@@ -244,10 +232,12 @@ public class BMWPdCalculateProcessService {
             }
             resultDto.setModEclResultProcessResultList(eclResultProcessResultList);
         } catch (Exception e) {
+
             //=====记录计算错误日志=====start=====
             logMsg ="【PD计算批处理】：计算异常";
             modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
             //=====记录计算错误日志=====end=====
+            e.printStackTrace();
             return resultDto;
         }
 

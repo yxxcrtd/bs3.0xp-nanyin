@@ -135,11 +135,13 @@
                                         <label class="layui-form-label form-label-wrap"
                                                data-th-text="#{ValProfitproject002.issueAmt}">发行规模</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" data-fixtype="2" unit="1" style="width: 90%;"
-                                                   class="layui-input form-input text-money" id="issueAmt"
+                                            <input type="text" data-fixtype="2" unit="1"
+                                                   class="layui-input form-input text-number" id="issueAmt"
                                                    name="issueAmt" data-th-value="${entity?.issueAmt}"
                                                    data-moneymemory="" data-th-data-textrange="2">
+<!--
                                             <span class="input-right-show">（万）</span>
+-->
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap layui-col-xs4">
@@ -339,7 +341,7 @@
                     <!--标的类型objectType：01 债权类资产  【标的类型用于区分‘无明确融资金额’按钮】-->
                     <div class="page-component"
                          th:data-path="@{/valuation/component/asset/FinPayInterestStdInfo/init}"
-                         th:data-params="|{entityName:'finPayInterestStdInfoDto1',entityNameFinInterestFactor:'finInterestFactorDto',finprodId:'${entity?.finprodId?:''}',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', objectType:'01',pageId:'${pageId}'}|"></div>
+                         th:data-params="|{entityName:'finPayInterestStdInfoDto',entityNameFinInterestFactor:'finInterestFactorDto',finprodId:'${entity?.finprodId?:''}',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', objectType:'01',pageId:'${pageId}'}|"></div>
                     <!-- 还本信息业务 -->
                     <div class="page-component"
                          th:data-path="@{/valuation/component/asset/BussFinRepayment/init}"

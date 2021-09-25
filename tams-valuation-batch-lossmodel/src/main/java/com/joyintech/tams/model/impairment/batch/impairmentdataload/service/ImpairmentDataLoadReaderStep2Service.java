@@ -2,8 +2,11 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
@@ -51,7 +54,8 @@ public class ImpairmentDataLoadReaderStep2Service {
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
-        para.put("ps", DictCodeList.交易方向_买入.getValue());
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        para.put("lossType", lossType);
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         // 定义 变量.返回结果
         List<ImpairmentDataLoadStep2ReaderDto> resultList = new ArrayList<ImpairmentDataLoadStep2ReaderDto>();
@@ -116,7 +120,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级配置信息";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
 
                 continue;
             }
@@ -130,7 +134,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级结果";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
                 continue;
             }
 

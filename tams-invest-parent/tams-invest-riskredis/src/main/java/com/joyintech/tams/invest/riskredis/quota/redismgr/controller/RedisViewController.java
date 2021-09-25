@@ -217,6 +217,13 @@ public class RedisViewController extends RedisBaseController {
             }
         }
         this.page = CacheUtil.getPage(this.pageId);
+
+        // add by etliu 20210925 start
+        if (page != null) {
+            this.request.setAttribute("localNeedWorkflow", page.getIsNeedWorkflow());
+        }
+        // add by etliu 20210925 end
+
         this.pageModel = StringUtil.getOrElse(this.getParam("pageModel"), "0");
         this.request.setAttribute("pageId", this.pageId);
         this.request.setAttribute("pageModelReference", "2");

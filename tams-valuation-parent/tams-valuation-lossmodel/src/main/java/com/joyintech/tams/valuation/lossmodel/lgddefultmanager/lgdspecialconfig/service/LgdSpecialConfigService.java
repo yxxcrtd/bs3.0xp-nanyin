@@ -22,6 +22,7 @@ import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.lgddefultmanager.lgdspecialconfig.dto.LgdSpecialConfigDto;
@@ -200,14 +201,9 @@ public class LgdSpecialConfigService extends  CommonExportService<LgdSpecialConf
     }
 
     public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
-        //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
-        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
-        if(StringUtil.equals(DictCodeListExt3.减值方案类型_普华.getValue(),lossType)){
-            return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPagePH", param, SelectOptionDto.class);
-        }else{
-            return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
-        }
-
+        // 去除回购类资产
+        param.put("notInAssetType", DictCodeListExt1.证券品种_回购.getValue());
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPage", param, SelectOptionDto.class);
     }
 
 

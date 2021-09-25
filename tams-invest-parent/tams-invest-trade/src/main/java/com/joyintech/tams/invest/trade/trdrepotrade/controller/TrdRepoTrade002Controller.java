@@ -641,7 +641,8 @@ public class TrdRepoTrade002Controller extends BaseController {
                         && StringUtil.equals(dto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue())))) {
             if (dto.getBussRepoSec() != null && dto.getBussRepoSec().getTotalPrinAmt() != null && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
                 BigDecimal prinAmt = dto.getPrinAmt() == null ? BigDecimal.ZERO : dto.getPrinAmt();//本金金额
-                BigDecimal totalPrinAmt = dto.getBussRepoSec() == null ? BigDecimal.ZERO : dto.getBussRepoSec().getTotalPrinAmt();//券面总额
+                //券面总额以万元为单位
+                BigDecimal totalPrinAmt = dto.getBussRepoSec() == null ? BigDecimal.ZERO : ArithmeticUtil.multiply(dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000));//券面总额
                 if (totalPrinAmt.compareTo(prinAmt) < 0) {//券面总额小于本金金额
                     confirmMsg += this.getMessage("TRD_E_00124") + changeLineMark;
                 }

@@ -31,7 +31,7 @@ $(function () {
         cellMinWidth : 100,
         rowno:true,
         cols:[
-            {field: 'executeDateStr', sortField: 'executeDate', width: 150, title: '业务日期'}
+            {field: 'executeDateStr', sortField: 'executeDate', width: 100, title: '业务日期'}
             , {field: 'seqNo', visible: false}
             , {field: 'taskId', visible: false}
             , {field: 'startDate', visible: false}
@@ -43,7 +43,7 @@ $(function () {
                 }
             }
             , {
-                field: 'status', width: 90, title: '执行状态', render: function (data, type, row, meta) {
+                field: 'status', width: 80, title: '执行状态', render: function (data, type, row, meta) {
                     if (data == 'UNR') {
                         return '未执行';
                     } else if (data == 'RUN') {
@@ -59,28 +59,28 @@ $(function () {
                 }
             }
             , {
-                field: 'processTime', width: 150, title: '处理时间（S）', render: function (data, type, row, meta) {
+                field: 'processTime', width: 120, title: '处理时间（S）', render: function (data, type, row, meta) {
                     if (row.status === 'UNR') {
                         return '';
                     }
                     return data*1/1000;
                 }
             }
-            , {field: 'createTimeString', sortField: 'createTime', width: 200, title: '启动时间', render: function (data, type, row) {
+            , {field: 'createTimeString', sortField: 'createTime', width: 120, title: '启动时间', render: function (data, type, row) {
                     if(row.status === 'UNR') {
                         return '';
                     }
                     return data;
                 }}
 
-            , {field: 'updateTimeString', sortField: 'updateTime', width: 200, title: '结束时间', render: function (data, type, row) {
+            , {field: 'updateTimeString', sortField: 'updateTime', width: 120, title: '结束时间', render: function (data, type, row) {
                     if(row.status === 'UNR' || row.status === 'RUN') {
                         return '';
                     }
                     return data;
                 }}
             , {
-                field: 'percent', title: '进度', width: 130, render: function (data, type, row, meta) {
+                field: 'percent', title: '进度', width: 100, render: function (data, type, row, meta) {
                     var status = row.status;
                     var percent = '0';
                     if (status == 'END' || status == 'EXP') {
@@ -98,30 +98,30 @@ $(function () {
                 }
             }
             , {
-                field: 'totalNum', title: '资产总数', width: 120, render: function (data, type, row, meta) {
+                field: 'totalNum', title: '资产总数', width: 90, render: function (data, type, row, meta) {
                     var html = '<a href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '">' + data + '</a>';
                     return html;
                 }
             }
             , {
-                field: 'successNum', title: '成功', width: 120, render: function (data, type, row, meta) {
+                field: 'successNum', title: '成功', width: 80, render: function (data, type, row, meta) {
                     var html = '<a style="color:blue;" href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '" data-execStatus="NOR">' + data + '</a>';
                     return html;
                 }
             }
             , {
-                field: 'errorNum', title: '失败', width: 120, render: function (data, type, row, meta) {
+                field: 'errorNum', title: '失败', width: 80, render: function (data, type, row, meta) {
                     var html = '<a style="color:red;" href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '" data-execStatus="EXP">' + data + '</a>';
                     return html;
                 }
             }
             , {
-                field: 'warnNum', title: '警告', width: 120, render: function (data, type, row, meta) {
-                    var html = '<a style="color:yellow;" href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '" data-execStatus="WARN">' + data + '</a>';
+                field: 'warnNum', title: '警告', width: 80, render: function (data, type, row, meta) {
+                    var html = '<a style="color:orange;" href="javascript:void(0);" class="detailName" data-seqno="' + row.seqNo + '" data-taskId="' + row.taskId + '" data-execStatus="WARN">' + data + '</a>';
                     return html;
                 }
             }
-            ,{field: 'realName', width: 100, title: '操作人'}
+            ,{field: 'realName', title: '操作人'}
         ]
     });
 

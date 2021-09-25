@@ -1598,13 +1598,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             //将到期收益率除以100 update by zhangrui1 end
             //可转债
             if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())){
-                String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
-                BigDecimal purchBondTotal = StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null;
-                if(StringUtil.equals(entrustAmtUnit,"02") && StringUtil.isNotEmpty(purchBondTotal)) {
-                    purchBondTotal = ArithmeticUtil.multiply(purchBondTotal,new BigDecimal("10000"));
-                }
-                infRiskRdsDto.setAmount(purchBondTotal);//可转债为申购券面总额
-                infRiskRdsDto.setTradeNum(purchBondTotal);//可转债为申购券面总额
+                infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null);//可转债为申购券面总额
+                infRiskRdsDto.setTradeNum(StringUtil.isNotEmpty(dataMap.get("purchBondTotal"))?dataMap.get("purchBondTotal") instanceof BigDecimal ?(BigDecimal)dataMap.get("purchBondTotal"):new BigDecimal(dataMap.get("purchBondTotal").toString()):null);//可转债为申购券面总额
             }
             //update by  zhangnian  20200326  start
             //债转股指令委托
@@ -2104,13 +2099,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setTradeMarketMode(finDto.getTradeMarketMode());
             //可转债
             if(StringUtil.equals(finDto.getPs(), DictCodeList.交易方向_申购.getValue())){
-                String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
-                BigDecimal tradeAmt = finDto.getTradeAmt();
-                if(StringUtil.equals(entrustAmtUnit,"02")) {
-                    tradeAmt = ArithmeticUtil.multiply(tradeAmt,new BigDecimal("10000"));
-                }
-                infRiskRdsDto.setAmount(tradeAmt);//可转债为申购券面总额
-                infRiskRdsDto.setTradeNum(tradeAmt);//可转债为申购券面总额
+                infRiskRdsDto.setAmount(finDto.getTradeAmt());//可转债为申购券面总额
+                infRiskRdsDto.setTradeNum(finDto.getTradeAmt());//可转债为申购券面总额
             }
             else if(StringUtil.equals(finDto.getPs(), DictCodeListExt3.交易方向_债转股.getValue())){
                 infRiskRdsDto.setAmount(finDto.getShareAmt());//可转债为申购券面总额
@@ -2275,6 +2265,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
             }
             //wangyang1 add by 增加期限金额 2021年9月10日 end
+            if(StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())) {
+                MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                if (StringUtil.isNotEmpty(mstCounterParty)) {
+                    if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                    }
+                }
+            }
         }
         if (StringUtil.isEmpty(infRiskRdsDto.getEventDate())) {
             infRiskRdsDto.setEventDate(

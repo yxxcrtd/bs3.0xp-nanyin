@@ -13,6 +13,7 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
+import com.joyintech.calculation.bonds.constant.AllocationType;
 import com.joyintech.calculation.bonds.constant.IntRateType;
 import com.joyintech.calculation.shell.AccurIntCalculator;
 import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
@@ -172,7 +173,7 @@ public class CashFlowDiscountProcessorService {
                     return result;
                 }
                 //处理风险溢价
-                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo);
+                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo,stepExecution);
                 //资产全价计算
                 //处理曲线代码
                 modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_现金流贴现法.getValue());
@@ -188,6 +189,16 @@ public class CashFlowDiscountProcessorService {
             BigDecimal accruedInterest = calAccruedInterest(entity, happenDate);
             //计算全价
             DisCountInputParameter disCountInputParameter = calDiscountFullPrice(entity, happenDate, modRiskPremium.getSpreadAdj(), calCurveInfo.get(curveCode));
+
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：估值日现金流信息列表：");
+            disCountInputParameter.getCashInfoDtoList().forEach(x->{
+                modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "起息日："+x.getTheoryStartDate()+"；期限："+x.getRemainingTerm()+";收益率："+x.getSpR());
+            });
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：估值日收益曲线数据列表：");
+            disCountInputParameter.getCurveInfoDto().getKeyPointDtoList().forEach(x->{
+                modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), x.getKeyPoint()+"-"+x.getYield());
+            });
+
             String resultSeqNo = IDGenerator.generate();
             modCurveResult.setSeqno(resultSeqNo);
             modCurveResult.setFinprodId(finprodId);
@@ -326,7 +337,7 @@ public class CashFlowDiscountProcessorService {
         return calCurveInfo;
     }
 
-    private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium, CashFlowDiscountReaderResult entity, Date calDate, BigDecimal price, Map<String, List<ModYieldCurveInfoDto>> calCurveInfoMap) {
+    private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium, CashFlowDiscountReaderResult entity, Date calDate, BigDecimal price, Map<String, List<ModYieldCurveInfoDto>> calCurveInfoMap, StepExecution stepExecution) {
         //点差
         BigDecimal spread = null;
         //反算后现金流折现法计算参数
@@ -340,11 +351,22 @@ public class CashFlowDiscountProcessorService {
             curveCode = next.getKey();
             List<ModYieldCurveInfoDto> value = next.getValue();
             DisCountInputParameter disCountInputParameter = calRiskPremium(entity, calDate, price, value);
+
             if (null == spread || spread.compareTo(disCountInputParameter.getSpread()) > 0) {
                 spread = disCountInputParameter.getSpread();
                 caldisCountInputParameter = disCountInputParameter;
             }
         }
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：基准日现金流信息列表：");
+        caldisCountInputParameter.getCashInfoDtoList().forEach(x->{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "起息日："+x.getTheoryStartDate()+"；期限："+x.getRemainingTerm()+";收益率："+x.getSpR());
+        });
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：基准日收益曲线数据列表：");
+        caldisCountInputParameter.getCurveInfoDto().getKeyPointDtoList().forEach(x->{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), x.getKeyPoint()+"-"+x.getYield());
+        });
+        //基准日收益率
+
         //处理评级信息
         handleRateInfo(modRiskPremium, entity.getViewRatingInfoDto(), curveCode);
         //处理定价其他属性值
@@ -598,11 +620,14 @@ public class CashFlowDiscountProcessorService {
                     return;
                 }
             });
+            secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             if (StringUtil.equals(modCashFlowCalRuleDto.getBasis(), DictCodeList.计息基础_A_A_平均分配.getValue())) {
                 secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A);
+                secInfoModel.setAllocationType(AllocationType.平均分配);
             }
             if (StringUtil.equals(modCashFlowCalRuleDto.getBasis(), DictCodeList.计息基础_A_A_按实际天数分配.getValue())) {
                 secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A_D);
+                secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             }
         }
         if (!StringUtil.isEmptyList(entity.getModCashFlowPayRules())) {

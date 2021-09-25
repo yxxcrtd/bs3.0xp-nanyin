@@ -47,7 +47,7 @@ $(function() {
             // ,{field:'operation',  title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ],
         searchOnInit :REM_TYPE && REM_TYPE == 'R7S1',
-        checkbox : false
+        checkbox : true
     });
     
     var exportExcel = function() {   
