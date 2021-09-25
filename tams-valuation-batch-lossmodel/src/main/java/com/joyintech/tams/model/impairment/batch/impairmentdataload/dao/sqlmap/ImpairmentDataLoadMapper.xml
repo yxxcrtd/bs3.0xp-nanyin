@@ -98,9 +98,10 @@ where
 	a.DEC_DATE = #{searchDate, jdbcType=DATE}
 	and a.PROCESS = #{process}
 	and a.RESULT_DEAL is null
-  	<if test="ps !=null and ps != ''">
-		and a.PS = #{ps}
-  	</if>
+	<!--减值方案不为空，且为普华方案时 -->
+	<if test="lossType !=null and lossType == '02'">
+		AND a.PS IN ('T01','T35')
+	</if>
 	</select>
 
 	<delete id="deleteModEclResultProcess" >

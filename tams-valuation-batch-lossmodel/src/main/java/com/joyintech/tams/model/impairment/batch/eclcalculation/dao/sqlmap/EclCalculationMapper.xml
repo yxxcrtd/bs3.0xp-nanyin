@@ -44,7 +44,7 @@ where
 	AND C.SEQNO is null
 	<!--减值方案不为空，且为普华方案时 -->
 	<if test="lossType !=null and lossType == '02'">
-		AND PS IN ('T01','T35')
+		AND a.PS IN ('T01','T35')
 	</if>
 	</select>
 

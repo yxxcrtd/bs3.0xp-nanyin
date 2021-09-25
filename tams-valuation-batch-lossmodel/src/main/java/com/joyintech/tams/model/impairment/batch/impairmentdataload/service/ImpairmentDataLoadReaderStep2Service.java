@@ -55,9 +55,7 @@ public class ImpairmentDataLoadReaderStep2Service {
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
-        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
-            para.put("ps", DictCodeList.交易方向_买入.getValue());
-        }
+        para.put("lossType", lossType);
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         // 定义 变量.返回结果
         List<ImpairmentDataLoadStep2ReaderDto> resultList = new ArrayList<ImpairmentDataLoadStep2ReaderDto>();
