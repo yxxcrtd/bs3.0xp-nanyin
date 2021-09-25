@@ -3,10 +3,21 @@ $(function () {
             if(pageModel == PAGE_MODEL_EDIT){
                 $("#secTypeModel").attr("disabled", true);
                 $("#secDetailTypeModel").attr("disabled", true);
+                $("#secDetailTypeModel_plan").attr("disabled", true);
                 /** modify by yanaya on 20210821 去除资产相关**/
                 //$("#finprodName").attr("disabled", true);
                 //$("#finprodId").attr("disabled", true);
             }
+
+            var secTypeModel = $('#secTypeModel').val();
+            if(secTypeModel && secTypeModel==='13'){
+                $('#asset_detail_type_plan').show();
+                $('#asset_detail_type').hide();
+            }else{
+                $('#asset_detail_type').show();
+                $('#asset_detail_type_plan').hide();
+            }
+
         };
 
 	/**
@@ -41,43 +52,16 @@ $(function () {
 
    // 资产类别事件
    var assetTypeChange = function() {
-        if ($("#secTypeModel").val().startsWith("01")) {
-            var itemFwd = [];
-            var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-            for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                    continue;
-                if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "08"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "09"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "011"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "013"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "023"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "033"
-                        && TEMP_MODEL_SEC_DETAIL_TYPE[i].id != "024") {
-                    itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                }
-            }
-            $('#secDetailTypeModel').updateChosenArr({
-                item : itemFwd,
-                disabled : false
-            });
-
-        } else if ($("#secTypeModel").val().startsWith("13")) {
-            var itemFwd = [];
-            var TEMP_MODEL_SEC_DETAIL_TYPE = JSON.parse(MODEL_SEC_DETAIL_TYPE);
-               for ( var i in TEMP_MODEL_SEC_DETAIL_TYPE) {
-                   if (!TEMP_MODEL_SEC_DETAIL_TYPE.hasOwnProperty(i))
-                       continue;
-                   if (TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "08"
-                           || TEMP_MODEL_SEC_DETAIL_TYPE[i].id == "09") {
-                        itemFwd.push(TEMP_MODEL_SEC_DETAIL_TYPE[i].id);
-                   }
-               }
-            $('#secDetailTypeModel').updateChosenArr({
-                item : itemFwd,
-                disabled : false
-            });
-        }
+       var secTypeModel = $('#secTypeModel').val();
+       if(secTypeModel && secTypeModel==='13'){
+           $('#asset_detail_type_plan').show();
+           $('#asset_detail_type').hide();
+           $('#secDetailTypeModel').val('');
+       }else{
+           $('#asset_detail_type').show();
+           $('#asset_detail_type_plan').hide();
+           $('#secDetailTypeModel_plan').val('');
+       }
     };
 
  var countCnyAmt = function() {
