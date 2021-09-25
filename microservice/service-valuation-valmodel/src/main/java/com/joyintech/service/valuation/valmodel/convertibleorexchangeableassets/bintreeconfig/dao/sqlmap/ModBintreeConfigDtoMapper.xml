@@ -275,10 +275,12 @@
     fp.FINPROD_NAME finprodName,
     fp.is_sus isSus,
     fp.is_right isRight,
-    fpadd.IS_RATE_ADJUST  isRateAdjust
+    fpadd.IS_RATE_ADJUST  isRateAdjust,
+    fpc.CON_SHARE_ID as conShareId
     FROM FIN_PRODUCT fp
     left join fin_product_type fpt on fp.FINPROD_ID=fpt.FINPROD_ID
     left join fin_product_add  fpadd on fp.finprod_id = fpadd.finprod_id
+    left join fin_product_convertible fpc on fp.FINPROD_ID = fpc.FINPROD_ID
     WHERE P_FINPROD_ID is null
     <if test="search != null and search != ''">
       and (fp.FINPROD_MARKET_ID like concat(concat('%',#{search}),'%')

@@ -42,11 +42,15 @@ $(function() {
 	};
 	var marketMultiChange = function() {
     	if ($("#marketMulti").val().startsWith("01")) {
+            $("#finprodProit").val("");
     		document.getElementById("finprodProit").disabled = true;
     		document.getElementById("finprodNetasset").disabled = false;
+
     	}else if ($("#marketMulti").val().startsWith("02")){
+            $("#finprodNetasset").val("");
     		document.getElementById("finprodNetasset").disabled = true;
     		document.getElementById("finprodProit").disabled = false;
+
     	}
 
 	};
@@ -136,9 +140,12 @@ $(function() {
         $('#finprodId').change(function(){
             if ($('#finprodId').val() != '') {//香港联合交易所
                 $('#finprodName').val($('#finprodId').select2('data')[0].text);
+                $('#finprodName1').val($('#finprodId').val());
+
                 $('#stockId').val($('#finprodId').select2('data')[0].object);
             }else{
                 $('#finprodName').val("");
+                $('#finprodName1').val("");
                 $('#stockId').val("");
             }
         });

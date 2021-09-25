@@ -177,6 +177,10 @@
         //获取指令执行被选中的数据
         var selArr = zlzxTable.getAllCheckedRows();
         if (date == 'cfetsRepoDealQuotedPre003') {
+            if (!selArr || selArr.length <= 1){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_043"));
+                return;
+            }
             if (selArr && selArr.length > 1) {
                 //是否满足如下条件：同一回购期限+同一方向+同一清算速度+同一交易账户（21位码/6位码）
                 var msg = "";
@@ -223,6 +227,10 @@
             }
         }
         if (date == 'cfetsRepoDealQuotedPre002') {
+            if (!selArr || selArr.length !== 1){
+                Joyin.error(JoyinUtil.getMessage("CFETS_COMMON_E_042"));
+                return;
+            }
             if (selArr) {
                 //单组合
                 if (selArr.length == 1) {

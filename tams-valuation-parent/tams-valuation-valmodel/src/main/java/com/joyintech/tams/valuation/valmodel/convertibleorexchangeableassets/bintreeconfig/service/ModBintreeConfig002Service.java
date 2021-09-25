@@ -153,7 +153,7 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
             SelectOptionDto stationDictVO = new SelectOptionDto();
             stationDictVO.setId(operationStation.getFinprodId());
             stationDictVO.setText(operationStation.getFinprodAbbr());
-            stationDictVO.setObject(operationStation.getFinprodMarketId());
+            stationDictVO.setObject(operationStation.getConShareId());
             return stationDictVO;
         }).collect(Collectors.toList());
 

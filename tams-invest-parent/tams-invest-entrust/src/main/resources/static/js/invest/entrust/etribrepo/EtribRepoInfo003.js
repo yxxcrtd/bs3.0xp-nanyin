@@ -872,6 +872,8 @@
         object.invManagerId = $('#invManagerId').val();
         object.entrustDate = object.vdate > object.finvdate.split(' ')[0] ?
         object.vdate: object.finvdate.split(' ')[0];
+        object.portfolioSeries = $('#portfolioSeries').val();
+        object.priceModel = $('#priceModel').val();
 
         object.finmdate = $('#finmdate').val();
         object.ccy = $('#ccy').val();
@@ -982,7 +984,9 @@
         // add by wanshiwei ZGZGST-2646:交易对手必填 20210915 end
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
+            var tradeAmt = $('#tradeAmt').val();
             var objects = new Array();
+            var totalEntrustAmt = 0;
             for (var index in bussCombDistribtList) {
                 var item = bussCombDistribtList[index];
                 var obj = {
@@ -998,6 +1002,9 @@
                     isEnabled: '01',
                     assetCode: $('#finprodIdhid').val()
                 }
+                if(item.entrustAmt){
+                    totalEntrustAmt = Number(totalEntrustAmt) + Number(item.entrustAmt)
+                }
                 // add by zhangrui1 交易对手影响风险试算 start
                 obj.counterId = $('#counterId').val();
                 obj.ps = $('#ps').val();
@@ -1012,6 +1019,10 @@
                     return;
                 }
                 //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add end
+                if(!obj.entrustAmt){
+                    Joyin.error(JoyinUtil.getMessage("请输入指令金额(第"+(Number(index)+1)+"行)。"));
+                    return;
+                }
                 var object = {
                     tradeDirection: ['ps', 'EtribRepoInfo003.ps'],
                     portfolioCode: ['portfolioId', 'EtribRepoInfo003.portfolioId'],
@@ -1022,6 +1033,10 @@
                 object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
                 // add by zhangrui1 交易对手影响风险试算 end
                 objects.push(object);
+            }
+            if(!tradeAmt || Number(tradeAmt) != Number(totalEntrustAmt)){
+                Joyin.error('指令金额应和各指令分配后指令金额相等');
+                return null;
             }
             return objects;
         } else {//若组合分配列表为空，则单个check
@@ -1204,5 +1219,12 @@
 
     $('#EtribRepoInfo003_btn_fileupload').click(function () {
         fileUpload();
+    });
+
+    $(function() {
+        // 组合系列变化,清空组合分配列表数据
+        $("#portfolioSeries").change(function () {
+           table.clear();
+        });
     });
 }());

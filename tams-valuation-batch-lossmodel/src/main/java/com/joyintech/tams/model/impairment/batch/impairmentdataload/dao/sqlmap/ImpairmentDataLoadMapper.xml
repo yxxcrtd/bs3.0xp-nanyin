@@ -95,10 +95,12 @@ from
 	MOD_ECL_RESULT_PROCESS a
 	inner join MOD_VAL_BATCH_PARAMS b on b.BATCH_EXEC_SEQNO = #{batchExedetailSeqNo} and b.FINPROD_ID = a.ASSET_ID
 where
-	a.DEC_DATE = #{searchDate, jdbcType=DATE} and
-	a.PROCESS = #{process} and
-	a.RESULT_DEAL is null and
-	a.PS = #{ps}
+	a.DEC_DATE = #{searchDate, jdbcType=DATE}
+	and a.PROCESS = #{process}
+	and a.RESULT_DEAL is null
+  	<if test="ps !=null and ps != ''">
+		and a.PS = #{ps}
+  	</if>
 	</select>
 
 	<delete id="deleteModEclResultProcess" >

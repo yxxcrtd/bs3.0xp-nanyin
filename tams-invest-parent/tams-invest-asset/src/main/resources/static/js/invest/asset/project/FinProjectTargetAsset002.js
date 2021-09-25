@@ -783,6 +783,15 @@ $(function() {
 	        getInterestFactorElementById('rateType').change(function(){
 	            repCouponSpecies();
 	        });
+            $('#finInterestFactorDto_rateType').change(function () {
+                var rateType = $('#finInterestFactorDto_rateType').val();
+                if (rateType == INT_TYPE_01) {
+                    $('#finInterestFactorDto_coefficient').val('');
+                }
+                if (rateType == INT_TYPE_02) {
+                    $('#finInterestFactorDto_coefficient').val('1');
+                }
+            });
             repCouponSpecies();
 	        getPayInterestStdInfoElementById('payCycle').change(function(){
 	            repCouponSpecies();
@@ -995,6 +1004,12 @@ $(function() {
         	$('#type11Div').hide();
         	$('#type12Div').hide();
         }*/
+        // $('#finInterestFactorDto_coefficient').change(function () {
+        //     var coefficient = $('#finInterestFactorDto_coefficient').val();
+        //     if (coefficient == '') {
+        //         $('#finInterestFactorDto_coefficient').val('1').trigger('change');
+        //     }
+        // });
         //负债类别change事件
         $('#repAssetType').change(function(){
             showReportInfo();

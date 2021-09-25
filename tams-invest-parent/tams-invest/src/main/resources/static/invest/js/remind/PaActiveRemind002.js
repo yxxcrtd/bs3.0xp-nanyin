@@ -152,7 +152,7 @@ $(function() {
     /**
      * 关闭按钮点击事件
      */
-    function closeRemind(remType, id, name, feeId, mdate, table){
+    function closeRemind(remType, id, name, feeId, mdate, remark, table){
         if(flag == true){
             Joyin.confirm(JoyinUtil.getMessage('FIN_E_0001'), function(){
                 Joyin.ajax(JoyinUtil.getRealPath('/invest/remind/PaActiveRemind002/closeRemind'),
@@ -162,6 +162,7 @@ $(function() {
                         finprodId : id,
                         feeId : feeId,
                         finprodName : name,
+                        remark : remark,
                         mdate : mdate
                     },
                     function(result){
@@ -595,6 +596,7 @@ $(function() {
                 {field:'indId',visible :false}
                 ,{field:'frequency',visible :false}
                 ,{field:'supFrequency',visible :false}
+                ,{field :'remType', visible : false}
                 ,{field:'portfolioId',title: 'PaActiveRemindss002.groupName',width:250}
                 ,{field:'groupName', title: 'PaActiveRemindss002.groupNameStr',width:250}
                 ,{field:'supTypeAbbr',sortField:"supType", title: 'PaActiveRemindss002.supType',width:100}
@@ -668,7 +670,23 @@ $(function() {
 //                  }
                 }
     			,{field:'mathProcess', title: 'PaActiveRemindss002.mathProcess',width:200,visible :false}
-                ,{field:'memo',width:200,title: 'PaActiveRemindss002.memo'} 
+                ,{field:'memo',width:200,title: 'PaActiveRemindss002.memo'}
+                ,{
+                    field : 'operating',
+                    title : 'PaActiveRemind002.operating',
+                    align : 'center',
+                    width : 200,
+                    render : function(data, type, row, meta) {
+                        var operating = ""
+                        if(row.dealF == "Y"){
+                            operating = operating+"<a id=\"PaActiveRemind002_btnDeal_action\" style='color: #fff;' class=\"layui-btn layui-btn-sm\">"+JoyinUtil.getLabel("PaActiveRemind002.deal")+"</a>"
+                        };
+                        if(row.closF == "Y"){
+                            operating = operating+"<a id=\"PaActiveRemind002_btnClose_action\" style='color: #fff;' class=\"layui-btn layui-btn-sm\">"+JoyinUtil.getLabel("PaActiveRemind002.close")+"</a>"
+                        };
+                        return operating
+                    },
+                }
             ],
             loadonce:true,
             searchOnInit:false
@@ -790,7 +808,7 @@ $(function() {
      * 关闭按钮绑定事件
      */
     tableR1.bind('click','#PaActiveRemind002_btnClose_action', function(row) {
-        closeRemind(row.remType, row.prodId, row.finprodName, row.feeId, row.mdateStr, tableR1);
+        closeRemind(row.remType, row.prodId, row.finprodName, row.feeId, row.mdateStr, null, tableR1);
     });
 
     /**
@@ -808,7 +826,7 @@ $(function() {
      * 关闭按钮绑定事件
      */
     tableR2.bind('click','#PaActiveRemind002_btnClose_action', function(row) {
-        closeRemind(row.remType, row.assetCode, row.assetName, row.feeId, row.mdateStr, tableR2);
+        closeRemind(row.remType, row.assetCode, row.assetName, row.feeId, row.mdateStr, null, tableR2);
     });
 
     /**
@@ -842,6 +860,10 @@ $(function() {
        if(row.remType=='R5S3') {
            dealRemind(row.url, row.lable, row.assetName, row.remType, row.days, row.feeId, row.menuId, tableR2, row.odateStr);
        }
+    });
+
+    tableR5.bind('click','#PaActiveRemind002_btnClose_action', function(row) {
+        closeRemind(row.remType, row.assetCode, row.assetName, row.feeId, row.mdateStr, row.remark, tableR5);
     });
 
     /**
@@ -910,4 +932,8 @@ $(function() {
 			$(this).hide();
 		});
 	});
+
+    tableR3.bind('click','#PaActiveRemind002_btnClose_action', function(row) {
+        closeRemind(row.remType, row.portfolioId, row.indId, row.feeId, row.mdateStr, row.supFrequency, tableR3);
+    });
 }());

@@ -1515,6 +1515,7 @@ public class FinDepositTargetDto extends FinProduct implements ITableRow, Proces
 	/**
 	 * 风险五级分类
 	 */
+	@NotEmpty(fieldName = "FinDepositTarget002.bondRiskType", groups = { ValidateGroupEdit.class })
 	private String bondRiskType;
 
 	public String getBondRiskType() {

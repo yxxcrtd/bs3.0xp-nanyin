@@ -59,7 +59,8 @@ $(function() {
                 return;
             }
         // }
-        var  couponSpecies = getInterestFactorElementById('couponSpecies').val();
+        //modify jinmaodong 2021-09-25 债权类资产不处理息票品种
+        //var  couponSpecies = getInterestFactorElementById('couponSpecies').val();
         var object = $.serializeToObject('#submitForm', true);
         object.operateType = operateType;
         object.pageModel = pageModel;
@@ -69,7 +70,8 @@ $(function() {
         }
         // 付息计划
         if(FinPayInterestStdInfo){
-            object.finPayInterestStdInfoDto.couponSpecies = couponSpecies;
+            //modify jinmaodong 2021-09-25 债权类资产不处理息票品种
+            // object.finPayInterestStdInfoDto.couponSpecies = couponSpecies;
             object.finPayInterestStdInfoDto.finCashPlanList = FinPayInterestStdInfo.getAllRows();
         }
         // 还本计划
@@ -85,28 +87,36 @@ $(function() {
             if (FinPayInterestStdInfo && !FinPayInterestStdInfo.check()) {
                 return ;
             }
-            //息票品种为贴现、零息时不作付息计划 、还本计划check
-            if(couponSpecies==COUPON_SPECIES_02||couponSpecies==COUPON_SPECIES_03){
-                if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){
-                    Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
-                        finalSava(object,operateType,result);
-                    });
-                }else{
+            //modify jinmaodong 2021-09-25 债权类资产不处理息票品种
+            if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){
+                Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
                     finalSava(object,operateType,result);
-                }
+                });
             }else{
-                if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG){
-                    Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
-                        if (FinPayInterestStdInfo && FinPayInterestStdInfo.comfirmCheck()&&FinPayInterestStdInfo.check()&&BussFinRepayment.isComfirmCheck()) {
-                            finalSava(object,operateType,result);
-                        }
-                    })
-                }else{
-                    if (FinPayInterestStdInfo && FinPayInterestStdInfo.comfirmCheck()&&FinPayInterestStdInfo.check()&&BussFinRepayment.isComfirmCheck()) {
-                        finalSava(object,operateType,result);
-                    }
-                }
+                finalSava(object,operateType,result);
             }
+            // // 息票品种为贴现、零息时不作付息计划 、还本计划check
+            // if(couponSpecies==COUPON_SPECIES_02||couponSpecies==COUPON_SPECIES_03){
+            //     if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){
+            //         Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
+            //             finalSava(object,operateType,result);
+            //         });
+            //     }else{
+            //         finalSava(object,operateType,result);
+            //     }
+            // }else{
+            //     if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG){
+            //         Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
+            //             if (FinPayInterestStdInfo && FinPayInterestStdInfo.comfirmCheck()&&FinPayInterestStdInfo.check()&&BussFinRepayment.isComfirmCheck()) {
+            //                 finalSava(object,operateType,result);
+            //             }
+            //         })
+            //     }else{
+            //         if (FinPayInterestStdInfo && FinPayInterestStdInfo.comfirmCheck()&&FinPayInterestStdInfo.check()&&BussFinRepayment.isComfirmCheck()) {
+            //             finalSava(object,operateType,result);
+            //         }
+            //     }
+            // }
         });
     }
 
@@ -337,9 +347,9 @@ $(function() {
             //付息要素隐藏
             showFinPayInterestStdInfoDiv();
             //息票品种
-            if(FinInterestFactor){
-                getInterestFactorElementById('couponSpecies').change(FinInterestFactor.handleCouponSpecies).trigger("change");
-            }
+            // if(FinInterestFactor){
+            //     getInterestFactorElementById('couponSpecies').change(FinInterestFactor.handleCouponSpecies).trigger("change");
+            // }
             //该资产存在交易 且为非 赋值界面
             if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG){
                 $('#vdate').attr('disabled',true).trigger('change');
@@ -347,7 +357,7 @@ $(function() {
                 $('#ccy').attr('disabled',true).trigger('change');
                 $('#finInterestFactorDto_loadRate').attr('disabled',true).trigger('change');
                 getInterestFactorElementById('rate').attr('disabled',true).trigger('change');
-                getInterestFactorElementById('couponSpecies').attr('disabled',true).trigger('change');
+                // getInterestFactorElementById('couponSpecies').attr('disabled',true).trigger('change');
                 getInterestFactorElementById('indexId').attr('disabled',true).trigger('change');
                 getInterestFactorElementById('coefficient').attr('disabled',true).trigger('change');
                 getInterestFactorElementById('spreadRate').attr('disabled',true).trigger('change');
