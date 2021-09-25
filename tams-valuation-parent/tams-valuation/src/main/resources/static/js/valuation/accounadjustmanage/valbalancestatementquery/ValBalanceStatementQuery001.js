@@ -238,19 +238,17 @@ $(function () {
         // 绑定按钮事件
         $('#ValBalanceStatementQuery001_btn_search').click(function() {
             booksetId = $('#booksetId').val();
-            valDate = $('#valDate').val();
-            var booksetIdParm = {
-                booksetId: $('#booksetId').val()
+            if(booksetId!=""){
+                valDate = $('#valDate').val();
+                var booksetIdParm = {
+                    booksetId: $('#booksetId').val()
+                }
+                Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/getBooksetName',booksetIdParm,function(result) {
+                    booksetName = result.data;
+                    var titleName='资产估值表';
+                    document.getElementById('titleName').innerHTML=booksetName+ '(' +booksetId+ ')' +titleName+valDate;
+                })
             }
-            Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/getBooksetName',booksetIdParm,function(result) {
-                booksetName = result.data;
-                var titleName='资产估值表';
-                document.getElementById('titleName').innerHTML=booksetName+ '(' +booksetId+ ')' +titleName+valDate;
-            })
-
-
-
-
 
             // 修复GZHSXT-1362：避免 输入不存在的账套，导致异常。
             var dataId = $("#booksetId").attr("data-id");// 从列表中选择的值
