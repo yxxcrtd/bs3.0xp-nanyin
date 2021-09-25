@@ -344,6 +344,8 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
             BigDecimal dealedAmt = cfetsBondDealQuotedPrice002Service.queryEntrustDealedAmt(
                     map);
             //验证下流程中
+            //去掉本身流程中的数据  如退回再提交
+            map.put("workflowId",cfetsBondDealDialogueQuoteDto.getWorkflowId());
             BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(map);
             BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
             BigDecimal avaAmt = BigDecimal.ZERO;
