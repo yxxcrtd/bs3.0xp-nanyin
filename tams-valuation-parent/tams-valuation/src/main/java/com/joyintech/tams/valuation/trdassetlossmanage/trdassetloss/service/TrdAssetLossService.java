@@ -20,6 +20,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.util.ExcelUtil;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -130,6 +131,8 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
     }
     public TrdAssetLoss001Dto selectByKey(String tradeId) {
         Map<String, Object> param = new HashMap<>();
+        param.put("status_init_01", DictCodeListExt1.交易状态_初始.getValue());
+        param.put("lossTestType_01", DictCodeListExt3.减值测算方式_外部评估.getValue());
         param.put("tradeId",tradeId);
         List<TrdAssetLoss001Dto>  result =  restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/selectByKey",
                 param, TrdAssetLoss001Dto.class);
