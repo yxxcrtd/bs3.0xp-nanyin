@@ -86,6 +86,12 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
         Page<ValBalanceStatementQuery001Dto> pages = valBalanceStatementQuery001Service.selectForPage(params);
         return pages;
     }
+
+    @PostMapping("/getBooksetName")
+    public String getBooksetName(@RequestBody Map<String, Object> params)
+    {
+        return valBalanceStatementQuery001Service.getBooksetName(params);
+    }
     
 //    @PostMapping("/selectSum/{page}/{length}")
 //    public Page<ValBalanceStatementQuery001Dto> selectSum(@RequestBody Map<String,Object> pageParam,
