@@ -68,6 +68,7 @@ union ALL
      ELSE  NVL(-1*n.TRADE_AMT,0)
      END ) TRADE_AMT from WFL_TRD_PRODUCT_DEAL_ADD m
   inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
+  INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
   INNER JOIN WFL_PA_TRD_PRODUCT_DEAL t2 on t2.TRADE_ID=n.TRADE_ID and t2.PA_BUSS_TYPE in (''20'',''74'')
   where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''03'')
     AND n.TRADE_STATUS = ''01''
