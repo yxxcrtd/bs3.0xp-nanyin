@@ -967,6 +967,9 @@
 					<if test="entrustId != null and entrustId != ''">
 						and ENTRUST_ID = #{entrustId}
 					</if>
+					<if test="workflowId != null and workflowId != ''">
+						and WORKFLOW_ID != #{workflowId}
+					</if>
 				</where>
 			</when>
 			<otherwise>
@@ -977,6 +980,9 @@
 				<where>
 					<if test="entrustId != null and entrustId != ''">
 						and ENTRUST_ID = #{entrustId}
+					</if>
+					<if test="workflowId != null and workflowId != ''">
+						and WORKFLOW_ID != #{workflowId}
 					</if>
 				</where>
 			</otherwise>
