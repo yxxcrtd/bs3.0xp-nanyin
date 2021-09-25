@@ -1831,7 +1831,7 @@
                     TPD.COUNTER_TRADER, /*对手方交易员*/
                     TO_CHAR(TPD.SETTLE_DATE,'yyyy-MM-dd') settleDate, /*结算日，交割日*/
                     SDL1.ITEM_VALUE AS deliveryType, /*结算方式*/
-                    NVL(TPD.SHARE_AMT,0)/10000 shareAmt, /* 券面*/
+                    NVL(TPD.SHARE_AMT,0)/10000*100 shareAmt, /* 券面*/
                     TPD.YIELD , /*到期收益率*/
                     TPD.EXER_YIELD, /*行权收益率*/
                     TPD.INT_AMT, /*利息总额，应计利息*/

@@ -17,10 +17,10 @@
                                    data-th-text="#{FinOptionTarget001.targetId}">标的代码</label>
                             <div class="layui-input-inline input-inline">
                                 <input type="text" id="targetId" name="targetId"
-                                       required="required" class="layui-input form-input"
+                                        class="layui-input form-input"
                                        placeholder="" maxlength="18"
                                        data-th-placeholder="#{SysCommon.placeholder}"
-                                       data-th-value="${entity?.targetId}" />
+                                       data-th-value="${entity?.targetId}" required/>
                             </div>
                         </div>
                         <div class="form-inline-wrap">
@@ -28,10 +28,10 @@
                                    data-th-text="#{FinOptionTarget001.targetName}">标的名称</label>
                             <div class="layui-input-inline input-inline">
                                 <input type="text" id="targetName" name="targetName"
-                                       required="required" class="layui-input form-input"
+                                       class="layui-input form-input" autocomplete="off"
                                        placeholder="" maxlength="100"
                                        data-th-placeholder="#{SysCommon.placeholder}"
-                                       data-th-value="${entity?.targetName}" />
+                                       data-th-value="${entity?.targetName}" required/>
                             </div>
                         </div>
                     </div>

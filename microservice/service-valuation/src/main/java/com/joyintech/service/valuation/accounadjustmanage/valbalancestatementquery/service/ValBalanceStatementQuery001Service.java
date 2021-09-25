@@ -158,4 +158,8 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
         return ExportUtil.export(exportFileDto.getFileName(), file, true);
     }
 
+    public String getBooksetName(Map<String, Object> params) {
+        String booksetName = bokBooksetMapper.getBooksetName(params);
+        return booksetName;
+    }
 }

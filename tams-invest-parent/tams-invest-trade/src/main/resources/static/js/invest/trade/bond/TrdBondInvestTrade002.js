@@ -2495,15 +2495,17 @@ var calculateField;
          */
         $('#TrdBondInvestTrade002_btn_calculate').click(function() {
             var paramObj = getCalcParam();
-
-            //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
-            if($('#businessModel').val()=="Y1"){
-               paramObj.invAim = "AC";
-            }else if($('#businessModel').val()=="Y2"){
-               paramObj.invAim = "FVTPL"
-            }else {
-               paramObj.invAim = "";
+            if (SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
+                //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
+                if($('#businessModel').val()=="Y1"){
+                    paramObj.invAim = "AC";
+                }else if($('#businessModel').val()=="Y2"){
+                    paramObj.invAim = "FVTPL"
+                }else {
+                    paramObj.invAim = "";
+                }
             }
+
 
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
                 if (result && result.data) {

@@ -172,7 +172,7 @@ public class ModGradePdConfigService extends BaseService<ModGradePdConfigDto> {
             //判断是否有重复数据，重复更新
             List<ModGradePdConfigDto> repetList = modGradePdConfigMapper.selectRepetList(dto);
             //处理前瞻前年度边际PD%字段   *100
-            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
             if(repetList.size()>0){
                 if("1".equals(type)){//覆盖数据
                     modGradePdConfigMapper.updateRepetDto(dto);
@@ -192,7 +192,7 @@ public class ModGradePdConfigService extends BaseService<ModGradePdConfigDto> {
      */
     public int insert(ModGradePdConfigDto dto) {
         //处理前瞻前年度边际PD%字段   *100
-        dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+        dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
         return modGradePdConfigMapper.insert(dto);
     }
     /**
@@ -203,7 +203,7 @@ public class ModGradePdConfigService extends BaseService<ModGradePdConfigDto> {
     public int update(ModGradePdConfigDto dto) {
         if(dto.getForwardYearPd() !=null){
             //处理前瞻前年度边际PD%字段   *100
-            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
         }
         return modGradePdConfigMapper.updateByPrimaryKey(dto);
     }

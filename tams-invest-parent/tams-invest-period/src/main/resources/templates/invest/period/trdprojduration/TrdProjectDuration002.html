@@ -229,7 +229,7 @@
                                         <select id="isClean" name="isClean"
                                                 class="layui-input form-input input-select"
                                                 data-th-data-result='${YES_OR_NO}' allowClear="true"
-                                                th:initValue="${entity?.isClean}"
+                                                th:initValue="${entity?.isClean?:YES_OR_NO_Y}"
                                                 data-th-placeholder="#{SysCommon.placeholder}" >
                                         </select>
                                     </div>

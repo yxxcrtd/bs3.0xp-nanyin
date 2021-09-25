@@ -94,6 +94,7 @@ public class TrdAssetLoss002Controller extends BaseController {
 
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE") == null ? "01" : CacheUtil.getSysParam("IS_SHOW_TYPE"));
         String finprodId = getParam("finprodId");
+        String  tradeId= getParam("tradeId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         if (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(workflowId)) {
             TrdAssetLoss001Dto dto = trdAssetLossService.getBussinessEntityByWorkflowId(
@@ -101,8 +102,8 @@ public class TrdAssetLoss002Controller extends BaseController {
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("workflowId", workflowId);
             model.addAttribute("businessId",workflowId);
-        }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(finprodId)) {
-            TrdAssetLoss001Dto dto = trdAssetLossService.selectByKey(finprodId);
+        }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(tradeId)) {
+            TrdAssetLoss001Dto dto = trdAssetLossService.selectByKey(tradeId);
             model.addAttribute(GlobalConstant.ENTITY, dto);
             model.addAttribute("finprodId", dto.getFinprodId());
             model.addAttribute("businessId",finprodId);
