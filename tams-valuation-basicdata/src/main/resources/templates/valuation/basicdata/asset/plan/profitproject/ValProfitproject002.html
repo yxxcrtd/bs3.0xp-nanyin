@@ -339,7 +339,7 @@
                     <!--标的类型objectType：01 债权类资产  【标的类型用于区分‘无明确融资金额’按钮】-->
                     <div class="page-component"
                          th:data-path="@{/valuation/component/asset/FinPayInterestStdInfo/init}"
-                         th:data-params="|{entityName:'finPayInterestStdInfoDto1',entityNameFinInterestFactor:'finInterestFactorDto',finprodId:'${entity?.finprodId?:''}',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', objectType:'01',pageId:'${pageId}'}|"></div>
+                         th:data-params="|{entityName:'finPayInterestStdInfoDto',entityNameFinInterestFactor:'finInterestFactorDto',finprodId:'${entity?.finprodId?:''}',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', objectType:'01',pageId:'${pageId}'}|"></div>
                     <!-- 还本信息业务 -->
                     <div class="page-component"
                          th:data-path="@{/valuation/component/asset/BussFinRepayment/init}"
