@@ -361,6 +361,11 @@ TrdBondInvestTrade002Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
+
         model.addAttribute("userId", LoginUserUtil.getUserName());
         //查看交易方向添加清理核销 add by wp 20210427 start
         if(StringUtil.equals(this.getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)) {
