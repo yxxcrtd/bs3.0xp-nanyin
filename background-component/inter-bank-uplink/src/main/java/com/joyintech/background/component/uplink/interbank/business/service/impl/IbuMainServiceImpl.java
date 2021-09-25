@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.joyintech.background.component.uplink.interbank.database.dao.*;
+import com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -74,12 +76,6 @@ import com.joyintech.background.component.uplink.interbank.common.CommonUtils;
 import com.joyintech.background.component.uplink.interbank.common.DictCodeList;
 import com.joyintech.background.component.uplink.interbank.common.IbuDictCode;
 import com.joyintech.background.component.uplink.interbank.common.QuoteResultException;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuMainMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.IbuQuoteMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteBond2Mapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteBondDetMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteCrepMapper;
-import com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteCrepPledgeMapper;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuIntfScheme;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBond;
 import com.joyintech.background.component.uplink.interbank.database.entity.IbuQuoteBondDet;
@@ -142,6 +138,9 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
     
     @Autowired
     private WflIbuQuoteCrepPledgeMapper wflIbuQuoteCrepPledgeMapper;
+
+    @Autowired
+    private WflIbuQuoteEtrReMapper wflIbuQuoteEtrReMapper;
     
     //region 对话报价和请求报价综合查询
     
@@ -2958,6 +2957,7 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
 		if (StringUtils.isNotEmpty(workflowId)) {
 			wflIbuQuoteBond2Mapper.deleteByWorkflowId(workflowId);
 			wflIbuQuoteBondDetMapper.deleteByWorkflowId(workflowId);
+            wflIbuQuoteEtrReMapper.deleteByWorkflowId(workflowId);
 		}
 		return true;
 	}
@@ -2968,6 +2968,7 @@ public class IbuMainServiceImpl extends BaseService<IbuQuoteBond> implements Ibu
 		if (StringUtils.isNotEmpty(workflowId)) {
 			wflIbuQuoteCrepMapper.deleteByWorkflowId(workflowId);
 			wflIbuQuoteCrepPledgeMapper.deleteByWorkflowId(workflowId);
+            wflIbuQuoteEtrReMapper.deleteByWorkflowId(workflowId);
 		}
 		return true;
 	}
