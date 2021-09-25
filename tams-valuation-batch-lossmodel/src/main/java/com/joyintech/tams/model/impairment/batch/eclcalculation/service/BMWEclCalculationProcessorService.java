@@ -354,8 +354,8 @@ public class BMWEclCalculationProcessorService {
                 if (specialLgdConfigMap != null && specialLgdConfigMap.get(assetId) != null) {
                     configDto = specialLgdConfigMap.get(assetId);
                 } else {
-                    // 债券类、存款类、回购类资产LGD违约损失率配置中取值：资产类型 + 质押券对应债券类型
-                    configDto = otherLgdConfigMap.get(entityDto.getModelAssetType() + GlobalConstant.UNDER_LINE + finDealPledgeDTOList.get(0).getSecDetailType());
+                    // 债押券资产类型 + 质押券资产细分类
+                    configDto = otherLgdConfigMap.get(finDealPledgeDTOList.get(0).getSecType() + GlobalConstant.UNDER_LINE + finDealPledgeDTOList.get(0).getSecDetailType());
                 }
                 if (configDto != null) {
                     // 变量.LGD最终值 = 取LGD界面维护值
