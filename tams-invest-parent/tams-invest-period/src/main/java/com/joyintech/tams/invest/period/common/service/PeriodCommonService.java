@@ -841,6 +841,7 @@ public class PeriodCommonService extends BaseService {
                 if (DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue().equals(inputDto.getFinprodType2())){
                     creditLinesInputDto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
+                    creditLinesInputDto.setFinprodId(null);
                     creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
                     creditLinesInputDto.setTradeStatus(status);
                     creditLinesInputDto.setTradeId(inputDto.getBusiCode());
