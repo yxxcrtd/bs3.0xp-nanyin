@@ -58,6 +58,8 @@ $(function () {
         checkbox:false,
         click:function(table, data) {
             $('#seqNo').val(data.seqNo);
+            var tradeId=data.tradeId;
+            document.getElementById('vocher').innerText='凭证信息:'+tradeId;
             if(!table2.table) {
                 table2.load();
             }
@@ -342,6 +344,7 @@ $(function () {
          * 绑定查看交易信息按钮事件
          */
         $('#ValBalanceStatementQuery002_btn_view').click(function() {
+            debugger;
             var tradeIds=document.getElementById('vocher').innerText;
             var index=tradeIds.indexOf(':');
             var tradeId=tradeIds.substring(index+1);
