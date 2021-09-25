@@ -13,6 +13,7 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.calculation.bonds.PaperIrReset;
 import com.joyintech.calculation.bonds.SecIntSchedule;
+import com.joyintech.calculation.bonds.constant.AllocationType;
 import com.joyintech.calculation.bonds.constant.IntRateType;
 import com.joyintech.calculation.shell.AccurIntCalculator;
 import com.joyintech.calculation.shell.param.AccurIntCalInParameter;
@@ -609,11 +610,14 @@ public class CashFlowDiscountProcessorService {
                     return;
                 }
             });
+            secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             if (StringUtil.equals(modCashFlowCalRuleDto.getBasis(), DictCodeList.计息基础_A_A_平均分配.getValue())) {
                 secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A);
+                secInfoModel.setAllocationType(AllocationType.平均分配);
             }
             if (StringUtil.equals(modCashFlowCalRuleDto.getBasis(), DictCodeList.计息基础_A_A_按实际天数分配.getValue())) {
                 secInfoModel.setBasis(com.joyintech.calculation.bonds.constant.Basis.A_A_D);
+                secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             }
         }
         if (!StringUtil.isEmptyList(entity.getModCashFlowPayRules())) {
