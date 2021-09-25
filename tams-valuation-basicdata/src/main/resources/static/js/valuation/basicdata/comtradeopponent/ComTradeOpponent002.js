@@ -361,8 +361,9 @@ $(function(){
         <!--update by chenjiaixng 交易对手改造 20210729 end-->
         var counterType =[COUNTER_TYPE_02,COUNTER_TYPE_03,COUNTER_TYPE_04];
         if(pageModel!=PAGE_MODEL_NEW){
+            //交易对手代码不允许修改
+            $(".counterId").attr("disabled",true);
             if(counterType.indexOf(initType)<0){
-                $(".counterId").attr("disabled",true);
                 $("#type2").attr("disabled",true);
             }
             $(".counterType").attr("disabled",true);
@@ -406,9 +407,9 @@ $(function(){
         var object = null;
         if(selectItem == COUNTER_TYPE_01){
             object = $.serializeToObject('#marketForm');
-            if(pageModel!=PAGE_MODEL_NEW){
-                object.counterId=counterId2 + "/" + object.counterId;
-            }
+            // if(pageModel!=PAGE_MODEL_NEW){
+            //     object.counterId=counterId2 + "/" + object.counterId;
+            // }
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             object.counterName = $("#customerId").select2('data')[0].object;
@@ -419,9 +420,9 @@ $(function(){
              object.selectStlCapacct = selectDto;
         }else if(selectItem == COUNTER_TYPE_02){
             object = $.serializeToObject('#manageForm');
-            if(pageModel!=PAGE_MODEL_NEW){
-                object.counterId=counterId2 + "/" + object.counterId;
-            }
+            // if(pageModel!=PAGE_MODEL_NEW){
+            //     object.counterId=counterId2 + "/" + object.counterId;
+            // }
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
@@ -431,9 +432,9 @@ $(function(){
             object.selectStlCapacct = selectDto;
         }else if(selectItem == COUNTER_TYPE_04){
             object = $.serializeToObject('#branchForm');
-            if(pageModel!=PAGE_MODEL_NEW){
-                object.counterId=counterId2 + "/" + object.counterId;
-            }
+            // if(pageModel!=PAGE_MODEL_NEW){
+            //     object.counterId=counterId2 + "/" + object.counterId;
+            // }
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
@@ -444,9 +445,9 @@ $(function(){
             // object.selectFinCash = serializeTable(table3);
         }else if(selectItem == COUNTER_TYPE_05){
             object = $.serializeToObject('#counterpartyForm');
-            if(pageModel!=PAGE_MODEL_NEW){
-                object.counterId=counterId2 + "/" + object.counterId;
-            }
+            // if(pageModel!=PAGE_MODEL_NEW){
+            //     object.counterId=counterId2 + "/" + object.counterId;
+            // }
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
@@ -457,9 +458,9 @@ $(function(){
         }else{
             /*object = $.serializeToObject('#branchForm');*/
             object = $.serializeToObject('#channelForm');
-            if(pageModel!=PAGE_MODEL_NEW){
-                object.counterId=counterId2 + "/" + object.counterId;
-            }
+            // if(pageModel!=PAGE_MODEL_NEW){
+            //     object.counterId=counterId2 + "/" + object.counterId;
+            // }
             var remarkObj = $.serializeToObject('#marketRemarksForm');
             $.extend(object,remarkObj);
             var selectDto= serializeTable(table2);
