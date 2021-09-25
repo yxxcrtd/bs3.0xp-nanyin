@@ -42,11 +42,15 @@ $(function() {
 	};
 	var marketMultiChange = function() {
     	if ($("#marketMulti").val().startsWith("01")) {
+            $("#finprodProit").val("");
     		document.getElementById("finprodProit").disabled = true;
     		document.getElementById("finprodNetasset").disabled = false;
+
     	}else if ($("#marketMulti").val().startsWith("02")){
+            $("#finprodNetasset").val("");
     		document.getElementById("finprodNetasset").disabled = true;
     		document.getElementById("finprodProit").disabled = false;
+
     	}
 
 	};
