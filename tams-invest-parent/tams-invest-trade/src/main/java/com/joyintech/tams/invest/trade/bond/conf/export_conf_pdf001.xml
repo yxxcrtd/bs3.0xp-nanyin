@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<WorkPage size="1000" fontSize="12" height="595" width="842" name="现券成交明细单">
+<WorkPage size="1000" fontSize="12" height="595" width="842" name="债券成交明细单">
     <Table type="1" fontSize="10" span="19" vertical="5" horizontal="1">
         <Row fontSize="8" vertical="5" horizontal="1">
             <Cell  order="1" name="组合代码">portfolioId</Cell>
