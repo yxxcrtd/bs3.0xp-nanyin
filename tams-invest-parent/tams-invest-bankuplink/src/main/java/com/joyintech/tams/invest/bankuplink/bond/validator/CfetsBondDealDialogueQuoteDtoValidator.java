@@ -351,7 +351,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                 avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAvaNum(), new BigDecimal(10000)),dealedAmt),wflAmt);
             }else{
                 avaAmt = ArithmeticUtil.subtract(ArithmeticUtil.subtract(
-                        cfetsBondDealDialogueQuoteDto.getEntrustAmt(), dealedAmt),wflAmt);
+                        ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getEntrustAmt(),new BigDecimal(10000)), dealedAmt),wflAmt);
             }
             if (ArithmeticUtil.multiply(cfetsBondDealDialogueQuoteDto.getAvaNum(), new BigDecimal(10000)).compareTo(avaAmt) > 0) {
                 String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+wflAmt:"";

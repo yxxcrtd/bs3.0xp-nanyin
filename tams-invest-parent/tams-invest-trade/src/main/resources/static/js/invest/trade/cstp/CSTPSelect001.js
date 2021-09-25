@@ -1864,7 +1864,7 @@ $(function(){
                             }
                         })
                         if(iserror){
-                        	return "所选业务编号为："+tableData.busiCode+"没有对应下行成交编号为："+tableCstp[0].execid+"所需质押券可用持仓";
+                        	return "所选业务编号为："+tableData.entrustId+"没有对应下行成交编号为："+tableCstp[0].execid+"所需质押券可用持仓";
                         }
                 	}
                 }
