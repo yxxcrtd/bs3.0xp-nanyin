@@ -163,6 +163,7 @@ public class EtrInvestAllInfoService extends BaseService<EtrInvestAllInfoDto> {
                 param.put("etrList",selectedItem);
             }
         }
+        param.put("assetBond", DictCodeList.平安资产类型_债券.getValue());
         return etrInvestAllInfoMapper.selectExportPdf(param);
     }
 }
