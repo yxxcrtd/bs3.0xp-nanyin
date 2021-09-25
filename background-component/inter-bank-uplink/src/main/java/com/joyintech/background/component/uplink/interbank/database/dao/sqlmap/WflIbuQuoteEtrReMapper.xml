@@ -26,17 +26,17 @@
     </sql>
     <sql id="Sql_All_Data" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
     </sql>
     <sql id="Sql_All_Effective_Data" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrReKey" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}
