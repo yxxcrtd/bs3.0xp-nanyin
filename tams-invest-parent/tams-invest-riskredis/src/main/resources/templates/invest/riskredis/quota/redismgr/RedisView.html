@@ -169,6 +169,13 @@
 		var REDIS_MODEL_PARAMVAL = /*[[${REDIS_MODEL_PARAMVAL}]]*/'';
 		var REDIS_MODEL_EVENT = /*[[${REDIS_MODEL_EVENT}]]*/'';
 		var REDIS_MODEL_PARAM_CONFIG = /*[[${REDIS_MODEL_PARAM_CONFIG}]]*/'';
+
+		// add by etliu 20210925 start
+		var localNeedWorkflow = /*[[${localNeedWorkflow}]]*/'01';
+		if (localNeedWorkflow) {
+			needWorkflow = localNeedWorkflow;
+		}
+		// add by etliu 20210925 end
 	</script>
 	<script
 			data-th-src="@{/js/invest/riskredis/quota/redismgr/RedisView.js}"

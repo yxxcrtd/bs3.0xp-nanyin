@@ -62,6 +62,9 @@
         <if test="initValue != null and initValue != ''">
             and fin.FINPROD_ID = #{initValue}
         </if>
+        <if test="notInAssetType != null and notInAssetType != ''">
+            and finType.TYPE_18 != #{notInAssetType}
+        </if>
     </select>
 
     <!-- 毕马威方案查询资产代码下拉框共通 -->
@@ -94,6 +97,9 @@
         <!-- 下拉框有初始值时，需要带initValue查询 -->
         <if test="initValue != null and initValue != ''">
             and fin.FINPROD_ID = #{initValue}
+        </if>
+        <if test="notInAssetType != null and notInAssetType != ''">
+            and finType.TYPE_18 != #{notInAssetType}
         </if>
 
     </select>
