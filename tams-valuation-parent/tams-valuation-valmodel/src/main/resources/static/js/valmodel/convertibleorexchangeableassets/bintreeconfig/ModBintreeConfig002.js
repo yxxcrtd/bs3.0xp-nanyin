@@ -136,9 +136,12 @@ $(function() {
         $('#finprodId').change(function(){
             if ($('#finprodId').val() != '') {//香港联合交易所
                 $('#finprodName').val($('#finprodId').select2('data')[0].text);
+                $('#finprodName1').val($('#finprodId').val());
+
                 $('#stockId').val($('#finprodId').select2('data')[0].object);
             }else{
                 $('#finprodName').val("");
+                $('#finprodName1').val("");
                 $('#stockId').val("");
             }
         });

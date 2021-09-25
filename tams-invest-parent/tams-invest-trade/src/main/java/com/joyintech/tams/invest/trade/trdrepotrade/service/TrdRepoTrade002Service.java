@@ -3294,7 +3294,8 @@ public class TrdRepoTrade002Service extends BaseService<TrdRepoTrade002Dto> impl
             // 证券托管户
             entity.setSecAcctId(repoCstpInfo.getOurdepositaccountnumber());
             // 回购类型：默认“质押式协议回购”
-            entity.setRepoType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+            //entity.setRepoType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
+            entity.setRepoType(DictCodeList.回购类型_质押式回购.getValue());
             // 清算速度 T+0
             entity.setSettleSpeedStr(BussinessDictCodeList.清算速度_T加0.getValue());
             // 交易日
