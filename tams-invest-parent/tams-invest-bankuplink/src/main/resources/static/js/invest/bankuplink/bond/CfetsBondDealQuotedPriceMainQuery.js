@@ -604,36 +604,36 @@
                 sortField: 'settldate',
                 width: '110',
                 type: 'date'
-            },
-            // , {field: 'settleSpeedStr', title: '清算速度', width: '150'}
-            // , {field: 'settTypeStr', title: '清算类型', sortField: 'settType', width: '110'}
-            // , {field: 'deliveryTypeStr', title: '结算方式', sortField: 'deliveryType', width: '110'}
-            // , {field: 'tradeDateStr', title: 'CSTPSelect001.tradedate1', sortField: 'tradedate', width: '110'}
-            // // // , {field: 'quoteTypeStr', title: '报价类型', sortField: 'tradedate', width: '110'}// TODO
-            // , {field: 'reference', title: '报价/订单编号', sortField: 'tradedate', width: '110'}
-            // // , {field: 'quoteTypeStr', title: '债券类型', sortField: 'tradedate', width: '110'}
-            // // , {field: 'quoteTypeStr', title: '债券币种', sortField: 'tradedate', width: '110'}
-            // , {field: 'ourcapitalbankname', width: 130, title: '本方资金开户行'}
-            // , {field: 'ourcapitalaccountname', width: 130, title: '本方资金账户户名'}
-            // , {field: 'ourcapitalaccountnumber', width: 130, title: '本方资金账号'}
-            // , {field: 'ourpaymentsystemcode', width: 130, title: '本方支付系统行号'}
-            // , {field: 'countercapitalaccountnumber', width: 130, title: '对手方资金账号'}
-            // , {field: 'counterpaymentsystemcode', width: 130, title: '对手方支付系统行号'}
-            // , {field: 'counterdepositaccountname', width: 130, title: '对手方托管账户户名'}
-            // , {field: 'counterdepositinstitution', width: 130, title: '对手方托管账户'}
-            // , {field: 'counterdepositaccountnumber', width: 130, title: '对手方托管机构'}
-            // // , {field: 'quoteTypeStr', title: '结算状态', sortField: 'tradedate', width: '110'}
-            // , {field: 'ourinstitutionchineseshortname', title: '本方代理机构', width: '100'}
-            // , {field: 'institutionchineseshortname', title: '对手方代理机构', width: '100'}
-            // , {field: 'principal', title: '每百元本金额', width: '170', type: 'money', digit: 4}
-            // , {field: 'totalprincipal', title: '本金额', width: '170', type: 'money', digit: 2}
+            }
+            , {field: 'settleSpeedStr', title: '清算速度', width: '150'}
+            , {field: 'settTypeStr', title: '清算类型', sortField: 'settType', width: '110'}
+            , {field: 'deliveryTypeStr', title: '结算方式', sortField: 'deliveryType', width: '110'}
+            , {field: 'tradeTime', title: '成交时间', sortField: 'tradeTime', width: '110'}
+            , {field: 'quoteTypeStr', title: '报价类型', sortField: 'quoteType', width: '110'}
+            , {field: 'reference', title: '报价/订单编号', sortField: 'reference', width: '110'}
+            , {field: 'assetTypeOneStr', title: '债券类型', sortField: 'assetTypeOne', width: '110'}
+            , {field: 'ccyStr', title: '债券币种', sortField: 'ccy', width: '110'}
+            , {field: 'ourcapitalbankname', width: 130, title: '本方资金开户行'}
+            , {field: 'ourcapitalaccountname', width: 130, title: '本方资金账户户名'}
+            , {field: 'ourcapitalaccountnumber', width: 130, title: '本方资金账号'}
+            , {field: 'ourpaymentsystemcode', width: 130, title: '本方支付账户户名'}
+            , {field: 'countercapitalaccountnumber', width: 130, title: '对手方资金账号'}
+            , {field: 'counterpaymentsystemcode', width: 130, title: '对手方支付系统行号'}
+            , {field: 'counterdepositaccountname', width: 130, title: '对手方托管账户户名'}
+            , {field: 'counterdepositinstitution', width: 130, title: '对手方托管账户'}
+            , {field: 'counterdepositaccountnumber', width: 130, title: '对手方托管机构'}
+            // , {field: 'quoteTypeStr', title: '结算状态', sortField: 'tradedate', width: '110'}
+            , {field: 'ourinstitutionchineseshortname', title: '本方代理机构', width: '100'}
+            , {field: 'institutionchineseshortname', title: '对手方代理机构', width: '100'}
+            , {field: 'principal', title: '每百元本金额', width: '170', type: 'money', digit: 4}
+            , {field: 'totalprincipal', title: '本金额', width: '170', type: 'money', digit: 2}
             // // , {field: 'quoteTypeStr', title: '净额清算状态', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '代理方交易员', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '作市类型', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '渠道', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '状态', sortField: 'tradedate', width: '110'}
-            // , {field: 'tradeMethod', title: '交易方式', width: '110'}
-            // , {field: 'matchStatusStr', title: 'CSTPSelect001.matchStatus', sortField: 'matchStatus', width: '100'}
+             , {field: 'tradeMethod', title: '交易方式', width: '110'}
+             , {field: 'matchStatusStr', title: 'CSTPSelect001.matchStatus', sortField: 'matchStatus', width: '100'}
         ]
         // ajax: {
         //     url: 'getCstpQryTableList',
