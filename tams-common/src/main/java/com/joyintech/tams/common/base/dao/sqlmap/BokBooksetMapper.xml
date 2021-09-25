@@ -44,6 +44,9 @@
         from BOK_BOOKSET
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
     </select>
+    <select id="getBooksetName" resultType="java.lang.String">
+        SELECT BOOKSET_NAME AS booksetName FROM BOK_BOOKSET where  BOOKSET_TYPE = '02' AND BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
         delete from BOK_BOOKSET
         where BOOKSET_ID = #{booksetId,jdbcType=VARCHAR}

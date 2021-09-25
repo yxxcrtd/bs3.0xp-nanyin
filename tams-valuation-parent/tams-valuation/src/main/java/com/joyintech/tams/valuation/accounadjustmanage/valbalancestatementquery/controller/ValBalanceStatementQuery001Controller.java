@@ -11,8 +11,7 @@
 package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.validation.Valid;
 
@@ -120,6 +119,16 @@ public class ValBalanceStatementQuery001Controller extends BaseController {
           {
         return valBalanceStatementQuery001Service.selectSum(RequestUtil.getParameters(getRequest()));
     }
+
+    @ResponseBody
+    @RequestMapping("getBooksetName")
+    public AjaxResult getBooksetName(@RequestBody Map<String, Object> param)
+    {
+        AjaxResult result = new AjaxResult();
+        result.setData(valBalanceStatementQuery001Service.getBooksetName(param));
+        return result;
+    }
+
     /**
      * 导出信息excel
      * @return excel
