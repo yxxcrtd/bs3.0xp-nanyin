@@ -98,13 +98,13 @@ public class TrdProjectInvestTradeEditDtoValidator implements TradeCommonValidat
             	errorList.add(new ValidMessage("settleDate",getMessage("BUSS_COM_E_0003",getMessage("TrdPlanRateInvestTrade002.settleDate"),getMessage("TrdPlanRateInvestTrade002.mdate"))));
             }
             // add BUG:TOUGUAN-1063,系统需要校验交易金额不可大于标的融资金额 start
-            /*if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs()) && StringUtil.isNotEmpty(dto.getPrinAmt())
+            if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(), dto.getPs()) && StringUtil.isNotEmpty(dto.getPrinAmt())
             		&& dto.getPrinAmt().compareTo(finProduct.getIssueAmt()) > 0) {
             	ValidMessage validMessage = new ValidMessage("prinAmt",
                         getMessage("BUSS_COM_E_0003", getMessage("TrdLendInvestTrade002.prin"),
                             getMessage("FinPlanProfitAsset002.issueAmt")));
                     errorList.add(validMessage);
-            }*/
+            }
             // // add BUG:TOUGUAN-1063,系统需要校验交易金额不可大于标的融资金额 end
         }
 

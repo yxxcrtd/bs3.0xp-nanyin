@@ -36,25 +36,6 @@ $(function() {
         });
     });
 
-	var init = function() {
-        Split(['#top_panel_dev', '#bottom_panel_dev'], {
-            sizes: [48, 44],
-            minSize: 100,
-            direction: 'vertical',
-        });
-
-        Split(['#left_bottom_panel_dev', '#right_bottom_panel_dev'], {
-           sizes: [35, 65],
-           minSize: [300,600],
-            direction: 'horizontal',
-        });
-		// //窗口容器的高度，设置为页面左右容器的高度
-		// var height = window.innerHeight - 50;
-        // $('.right_panel').css('height', height);
-        // $('.left_panel').css('height', height);
-    }
-
-
     /**
      * 风险试算
      * @returns
@@ -101,7 +82,6 @@ $(function() {
         if(!checkParam.data){
             return null;
         }
-        
         if (checkParam.data.length > 0) {
             for(var index in checkParam.data){
                 var item = checkParam.data[index];
@@ -112,14 +92,13 @@ $(function() {
                 item.data.entrustAmt=item.data.entrustAmt;
                 item.data.tradeMarket = object.tradeMarket;
                 item.data.repoTerm = object.repoTerm;
-                item.data.vdate = object.vdate,
-                item.data.mdate=object.mdate,
+                item.data.vdate = object.vdate;
+                item.data.mdate=object.mdate;
                 
                 param.push(item.data);
             }
         }
-//        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F07', param, checkParam,riskMathRedisCallback003);
-        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfBatchData/0/RSK002/F07',object,checkParam,riskMathRedisCallback003);
+        window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F07', param, checkParam,riskMathRedisCallback003);
     }
     /**
      * 风险试算的回调函数
@@ -226,10 +205,11 @@ $(function() {
 
                        });
                    });
-           }else{
-               Joyin.warn("请添加组合分配！");
-               return;
            }
+           // else{
+           //     Joyin.warn("请添加组合分配！");
+           //     return;
+           // }
        })
 
    }
@@ -290,8 +270,6 @@ $(function() {
      * 绑定事件
      */
     $(function () {
-        
-        init();
         /**
          * 附件上传
          */

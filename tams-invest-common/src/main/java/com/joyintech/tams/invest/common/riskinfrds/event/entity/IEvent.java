@@ -16,10 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.logging.Logger;
 
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.redis.common.entity.IValue;
 import com.joyintech.tams.invest.common.constantrds.BussinessConstantRds;
+import com.joyintech.tams.invest.common.redisinit.dto.ImplEventItem;
 import com.joyintech.tams.invest.common.riskinfrds.calendar.entity.ICalendar;
 
 /**
@@ -80,7 +82,11 @@ public interface IEvent extends Serializable {
                     mapData.getOrDefault(epr.formulaRelItem(), BigDecimal.ZERO).toString()));
             // add by zhangrui1 公式配置 end
             }else {
-                epr.setRelValue(new BigDecimal(mapData.getOrDefault(epr.getRelItem(), BigDecimal.ZERO).toString()));
+            	Object object = mapData.get(epr.getRelItem());
+            	if(object==null) {
+            		object = BigDecimal.ZERO;
+            	}
+                epr.setRelValue(new BigDecimal(object.toString()));
             }
         });
     }

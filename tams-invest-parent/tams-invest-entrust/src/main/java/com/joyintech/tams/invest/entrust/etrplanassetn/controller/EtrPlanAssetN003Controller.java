@@ -26,6 +26,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.tools.util.ValidationUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,7 +143,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
                     && (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())
                     || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue()))
                     && dto.getAssetAvailablePosition() != null
-                    && dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0) {
+                    && (dto.getEntrustNum()==null || dto.getEntrustNum().compareTo(dto.getAssetAvailablePosition()) > 0)) {
                 if (StringUtil.isNotBlank(confirmMessage)) {
                     confirmMessage.append("<br />");
                 }
@@ -199,8 +200,7 @@ public class EtrPlanAssetN003Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetNDto allDto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrPlanAssetNDto allDto, BindingResult br) throws Exception {
         List<EtrPlanAssetNDto> dtoList = allDto.getSelectedItem();
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {

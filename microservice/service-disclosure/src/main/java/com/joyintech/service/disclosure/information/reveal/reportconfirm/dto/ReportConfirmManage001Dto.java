@@ -5,6 +5,7 @@
 
 package com.joyintech.service.disclosure.information.reveal.reportconfirm.dto;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.joyintech.framework.annotation.PageId;
@@ -17,6 +18,7 @@ import com.joyintech.tams.disclosure.common.common.constant.DisclosureDictCode;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.annotation.PrimaryKey.Field;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
+import org.hibernate.service.spi.ServiceException;
 
 /**
  * 产品资产查询Dto
@@ -40,8 +42,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
 
     // 业务主键为空，则从data的json字符串（选中的row）中取 zhangyf 20190111 start
     @PrimaryKey(value = Field.PK_1)
-    String getPk()
-        throws Exception {
+    String getPk() throws IOException {
 
         if (StringUtil.isNotEmpty(seqno)) {
             return seqno;
@@ -50,7 +51,7 @@ public class ReportConfirmManage001Dto extends RepReveal implements ProcessEntit
         if (!StringUtil.isEmptyList(dtoList) && dtoList.get(0) != null && StringUtil.isNotEmpty(dtoList.get(0).getSeqno())) {
             return dtoList.get(0).getSeqno();
         }
-        throw new Exception("seqno or data.seqno Must not be empty !");
+        throw new ServiceException("seqno or data.seqno Must not be empty !");
     }
     // 业务主键为空，则从data的json字符串（选中的row）中取 zhangyf 20190111 end
 

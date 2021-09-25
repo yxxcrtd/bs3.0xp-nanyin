@@ -90,7 +90,7 @@ public class AccountCurrentRate001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<AccountCurrentRate001Dto> findPage()
-        throws Exception {
+          {
         return accountCurrentRate001Service.queryAccountCurrentRateList(
             RequestUtil.getPageParam());
     }
@@ -106,7 +106,7 @@ public class AccountCurrentRate001Controller extends BaseController {
     @RequestMapping("getAccount")
     @ResponseBody
     public List<SuggestDto> getAccount()
-        throws Exception {
+         {
         Map<String, Object> map = RequestUtil.getPageParam();
         return accountCurrentRate001Service.getAccount(map);
     }
@@ -121,7 +121,7 @@ public class AccountCurrentRate001Controller extends BaseController {
      */
     @RequestMapping(ACTION_EXPORT)
     public ResponseEntity<byte[]> export()
-        throws Exception {
+            throws IOException{
         String datas = this.getParam("datas");
         List<AccountCurrentRate001Dto> listdto;
         if (datas == null) {
@@ -155,7 +155,7 @@ public class AccountCurrentRate001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteCheck")
     public AjaxResult check(@Valid @RequestBody AccountCurrentRate001Dto dto, BindingResult result)
-        throws Exception {
+          {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -175,7 +175,7 @@ public class AccountCurrentRate001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("deleteList")
     public AjaxResult deleteList(@RequestBody AccountCurrentRate001Dto dto, BindingResult result)
-        throws Exception {
+          {
         String msg = getMessage("COMMON_I_0001");
         List<AccountCurrentRate001Dto> listDto = dto.getListAccountCurrentRate001Dto();
 

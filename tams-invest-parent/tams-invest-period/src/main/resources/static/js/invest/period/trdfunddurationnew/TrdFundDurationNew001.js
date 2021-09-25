@@ -72,7 +72,7 @@ $(function () {
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit']
                 ,render: function (data, type, row, meta) {
-                    if (row.updateFlag != '01')
+                    if (row.updateFlag != '01'||IsChongQing == 'Y')
                         return "";
                     else
                         //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
@@ -226,13 +226,41 @@ $(function () {
      * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();//请求参数
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+//        var paramObj = getSearchParams();//请求参数
+//        Joyin.exportExcel('export', paramObj);//导出（共通）
+
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+
     };
 
     var exportExcelTwo = function() {
-        var paramObj = getSearchParamsTwo();//请求参数
-        Joyin.exportExcel('exportConversion', paramObj);//导出（共通）
+//        var paramObj = getSearchParamsTwo();//请求参数
+//        Joyin.exportExcel('exportConversion', paramObj);//导出（共通）
+
+        if (tableTwo != null && tableTwo != '') {
+            var selArr = tableTwo.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParamsTwo();
+            Joyin.exportExcel('exportConversion', paramObj);
+        } else {
+            Joyin.exportExcel('exportConversion', {
+                datas : datas
+            });
+        }
+
     };
 
     /**

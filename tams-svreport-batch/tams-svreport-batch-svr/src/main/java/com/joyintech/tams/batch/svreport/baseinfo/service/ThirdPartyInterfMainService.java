@@ -71,7 +71,7 @@ public class ThirdPartyInterfMainService extends AutoSendCBBaseService{
 			}
 		} catch (Exception e) {
 			logger.error("交易对手信息接口批处理Error",e);
-			throw e;
+			throw new BusinessException(e);
 		}
 		logInfoBatchEnd();
 		return mapPara;

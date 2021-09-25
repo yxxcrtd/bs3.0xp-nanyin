@@ -1,6 +1,7 @@
 package com.joyintech.service.bankuplink.reponew.controller;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
 import com.joyintech.service.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001Dto;
@@ -80,5 +81,21 @@ public class CfetsRepoDealQuotedPr001Controller {
     @PostMapping("getCstpQryTableList")
     public List<CstpSelectDto> getCstpQryTableList(@RequestBody Map<String,Object> map) throws Exception{
         return cfetsRepoDealQuotedPr001Service.getCstpQryTableList(map);
+    }
+
+    /**
+     * 查询本方交易员列表
+     *
+     * @param param 入参
+     * @param page 页数
+     * @param length 步长
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryMySideTraderPage/{page}/{length}")
+    public Page<SelectOptionDto> queryMySideTraderPage(@RequestBody Map<String, Object> param, @PathVariable("page") int page,
+                                                       @PathVariable("length") int length){
+        return cfetsRepoDealQuotedPr001Service.queryMySideTraderPage(page,length,param);
     }
 }

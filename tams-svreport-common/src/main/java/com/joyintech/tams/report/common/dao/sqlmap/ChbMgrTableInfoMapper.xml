@@ -12,6 +12,7 @@
 		<result column="DATAOBJECT" property="dataObject"
 			jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="VARCHAR" />
+		<result column="DICT_MODE" property="dictMode" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="queryAllchbMgrTableInfo" resultMap="BaseResultMap"
 		parameterType="java.util.Map">
@@ -19,7 +20,8 @@
 		MGRTABLE_NAME,
 		MGRTABLE_CHI_NAME,
 		DATAOBJECT,
-		STATUS
+		STATUS,
+		DICT_MODE
 		FROM CHB_MGRTABLE_INFO
 		WHERE 1 = 1
 		<if test="statusList != null and statusList.size() > 0">
@@ -57,13 +59,15 @@
 		MGRTABLE_NAME, 
 		MGRTABLE_CHI_NAME,
 		DATAOBJECT, 
-		STATUS) VALUES
+		STATUS,
+		DICT_MODE) VALUES
 		(
-	    #{mgrtableID,jdbcType=VARCHAR},
+		#{mgrtableID,jdbcType=VARCHAR},
 		#{mgrTableName,jdbcType=VARCHAR},
 		#{mgrTableChiName,jdbcType=VARCHAR},
 		#{dataObject,jdbcType=VARCHAR},
-		'E'
+		'E',
+		#{dictMode,jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -92,7 +96,8 @@
 			MGRTABLE_CHI_NAME MGRTABLECHINAME,
 			DATAOBJECT DATAOBJECT,
 			STATUS STATUS,
-			HEADER_NUM HEADERNUM
+			HEADER_NUM HEADERNUM,
+			DICT_MODE DICTMODE
 		FROM CHB_MGRTABLE_INFO 
 		WHERE MGRTABLE_ID =
 		#{mgrTableId,jdbcType=VARCHAR}
@@ -106,7 +111,8 @@
 			MGRTABLE_CHI_NAME MGRTABLECHINAME,
 			DATAOBJECT DATAOBJECT,
 			STATUS STATUS,
-			HEADER_NUM HEADERNUM
+			HEADER_NUM HEADERNUM,
+			DICT_MODE DICTMODE
 		FROM CHB_MGRTABLE_INFO 
 		WHERE MGRTABLE_CHI_NAME =
 		#{mgrTableChiName,jdbcType=VARCHAR}

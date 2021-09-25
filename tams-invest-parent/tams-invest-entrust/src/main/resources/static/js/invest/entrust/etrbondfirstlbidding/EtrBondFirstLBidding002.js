@@ -116,6 +116,8 @@
         var finprodId = $('#finprodId').val();
         // 获取从一级新债日历获取到的mId值 By zhaodongdong start 20191116
         var mId = $('#mId').val();
+
+
         if(finprodId){
         
         	var data = $('#finprodId').select2('data')[0].object;
@@ -157,6 +159,11 @@
             $('#tradeMarket').val('').trigger('change').attr('disabled',false);
             $('#ccy').val(ccy).trigger('change').attr('disabled',false);
         }
+
+        //增加业务模式的联动处理
+        if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+            changeBussnissModelByFinprodId();
+        //增加业务模式的联动处理
         // 画星星
         star();
     });
@@ -197,6 +204,7 @@
   //查询组合可用现金
     var getPtlCashPositionInfo = function(){
         var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
+        var data = {portfolioId:$('#portfolioId').val(),ccy:$('#ccy').val(),vdate:$('#vdate').val(),calId:$('#calendarId').val()}
         Joyin.ajaxJson(basePath + 'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/getProAvailableCash',data,
                 function(result) {
             $('#proAvailableCash').val(result.cashT).trigger('blur');
@@ -204,7 +212,37 @@
         });
     }  
    
-    
+    var changeBussnissModelByFinprodId = function(){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
+            return;
+        }
+        var finprodId = $('#finprodId').val();
+        if(finprodId){
+             var data = {finprodId:finprodId,finprodType2:"F32" }
+             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                   if(result.data=='0') {
+                        Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                        // kuaisuzhushibiaoshi
+                        $('#finprodId').val("").trigger('change');
+                        $("#businessModel").attr("disabled",false);
+                        $('#businessModel').val("").trigger('change');
+                    }else if(result.data=='3'){
+                        $('#businessModel').val("Y2").trigger('change');
+                        $("#businessModel").attr("disabled",true);
+                    }else if(result.data=='2') {
+                         $("#businessModel").attr("disabled",false);
+                         $('#businessModel').val("").trigger('change');
+                    }
+              });
+        }else{
+             $("#businessModel").attr("disabled",false);
+             $('#businessModel').val("").trigger('change');
+        }
+
+    }
+
+
+
     /**
      * 保存或提交
      * 
@@ -213,19 +251,19 @@
      */
     function saveOrSubmit(operateType) {
     	//风险试算 start
-    	 var s;
-        if(typeof(BaseRiskMathComm) != 'undefined') {
-    	 if(BaseRiskMathComm) {
-             s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
-             if(!s && s != ''){
-                 return;
-             }
-             if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
-                 return;
-                }
-             }
-         }
-    	//风险试算 end
+    	//  var s;
+        // if(typeof(BaseRiskMathComm) != 'undefined') {
+    	//  if(BaseRiskMathComm) {
+        //      s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+        //      if(!s && s != ''){
+        //          return;
+        //      }
+        //      if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())){
+        //          return;
+        //         }
+        //      }
+        //  }
+    	// //风险试算 end
     	//校验数据  校验表格
     	var tableData  = table.getAllRows();
         if(operateType != 'save'){
@@ -305,6 +343,9 @@
         if(pageModel == PAGE_MODEL_EDIT&&entrustNum_old&&parseFloat(entrustNum_old) < parseFloat(entrustNum)){
             elementId = 'EtrBondFirstLBidding002_btn_total';
             //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
+        }
+        if(parentPageId){
+            object.parentPageId = parentPageId;
         }
         if (operateType === 'save') {
             WorkFlow.doSaveList(basePath+'invest/entrust/etrbondfirstlbidding/EtrBondFirstLBidding002/save',object,elementId||"EtrBondFirstLBidding002_btn_save");
@@ -392,7 +433,15 @@
 	        saveOrSubmit('submit');
 	    });
 	   
-	    
+	    //根据参数 选择显示投资目的或者业务模式
+	    if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+           $("#invAimDiv").hide();
+           $("#businessModelDiv").show();
+	    }else if(SHOW_INVAIM_OR_BUSSINSSMODEL=="01"){
+	       $("#invAimDiv").show();
+           $("#businessModelDiv").hide();
+	    }
+
 	 // 代办显示点击查看风险试算结果  Start
         /**
          * 代办点击查看风险试算结果
@@ -413,9 +462,15 @@
 	     * 风险试算
 	     */
 	    $('#EtrBondFirstLBidding002_btn_riskcal').click(function(){
-            //window.BaseRiskMathComm.initBaseRiskMathCommPage(getriskdata());
-        	var object = $.serializeToObject('#searchForm',true);
-            window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
+        	// var object = $.serializeToObject('#searchForm',true);
+            // var entrustNum=object.entrustNum;
+            // if (entrustNum) {
+            //     if(entrustAmtUnit == '02' ){
+            //         entrustNum=JoyinMath.doMul(entrustNum, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            //     }
+            // }
+            // object.entrustNum = entrustNum;
+            // window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/doInfData/0/RSK002/F17',object,getriskdata());
 
 	    });
 	    if(IS_SHOW_TYPE == '01'){

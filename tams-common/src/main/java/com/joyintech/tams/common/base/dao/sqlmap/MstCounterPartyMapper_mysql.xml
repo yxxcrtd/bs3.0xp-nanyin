@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.MstCounterPartyMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        <id column="COUNTER_ID" property="counterId" jdbcType="VARCHAR" />
+        <result column="COUNTER_TYPE" property="counterType" jdbcType="VARCHAR" />
+        <result column="COUNTER_NAME" property="counterName" jdbcType="VARCHAR" />
+        <result column="LINK_ID" property="linkId" jdbcType="VARCHAR" />
+        <result column="MANAGER_ID" property="managerId" jdbcType="VARCHAR" />
+        <result column="HEAD_BANK" property="headBank" jdbcType="VARCHAR" />
+        <result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+        <result column="CONTACT_WAY" property="contactWay" jdbcType="VARCHAR" />
+        <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="LINK_DEPT_CODE" property="linkDeptCode" jdbcType="VARCHAR" />
+        <result column="P_TYPE_ONE" property="pTypeOne" jdbcType="VARCHAR" />
+        <result column="P_TYPE_TWO" property="pTypeTwo" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        COUNTER_ID COUNTER_ID, COUNTER_TYPE COUNTER_TYPE, COUNTER_NAME COUNTER_NAME, LINK_ID LINK_ID, 
+        MANAGER_ID MANAGER_ID, HEAD_BANK HEAD_BANK, CONTACT CONTACT, CONTACT_WAY CONTACT_WAY, 
+        REMARK REMARK, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, 
+        UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, LINK_DEPT_CODE LINK_DEPT_CODE, 
+        P_TYPE_ONE P_TYPE_ONE, P_TYPE_TWO P_TYPE_TWO
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.Base_Column_List" />
+        from MST_COUNTER_PARTY
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.Base_Column_List" />
+        from MST_COUNTER_PARTY
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.MstCounterPartyMapper.Base_Column_List" />
+        from MST_COUNTER_PARTY
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from MST_COUNTER_PARTY
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        insert into MST_COUNTER_PARTY (COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, 
+            LINK_ID, MANAGER_ID, HEAD_BANK, 
+            CONTACT, CONTACT_WAY, REMARK, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME, LINK_DEPT_CODE, 
+            P_TYPE_ONE, P_TYPE_TWO)
+        values (#{counterId,jdbcType=VARCHAR}, #{counterType,jdbcType=VARCHAR}, #{counterName,jdbcType=VARCHAR}, 
+            #{linkId,jdbcType=VARCHAR}, #{managerId,jdbcType=VARCHAR}, #{headBank,jdbcType=VARCHAR}, 
+            #{contact,jdbcType=VARCHAR}, #{contactWay,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{linkDeptCode,jdbcType=VARCHAR}, 
+            #{pTypeOne,jdbcType=VARCHAR}, #{pTypeTwo,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        insert into MST_COUNTER_PARTY
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="counterId != null" >
+                COUNTER_ID,
+            </if>
+            <if test="counterType != null" >
+                COUNTER_TYPE,
+            </if>
+            <if test="counterName != null" >
+                COUNTER_NAME,
+            </if>
+            <if test="linkId != null" >
+                LINK_ID,
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID,
+            </if>
+            <if test="headBank != null" >
+                HEAD_BANK,
+            </if>
+            <if test="contact != null" >
+                CONTACT,
+            </if>
+            <if test="contactWay != null" >
+                CONTACT_WAY,
+            </if>
+            <if test="remark != null" >
+                REMARK,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="linkDeptCode != null" >
+                LINK_DEPT_CODE,
+            </if>
+            <if test="pTypeOne != null" >
+                P_TYPE_ONE,
+            </if>
+            <if test="pTypeTwo != null" >
+                P_TYPE_TWO,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="counterId != null" >
+                #{counterId,jdbcType=VARCHAR},
+            </if>
+            <if test="counterType != null" >
+                #{counterType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterName != null" >
+                #{counterName,jdbcType=VARCHAR},
+            </if>
+            <if test="linkId != null" >
+                #{linkId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="headBank != null" >
+                #{headBank,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null" >
+                #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="linkDeptCode != null" >
+                #{linkDeptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pTypeOne != null" >
+                #{pTypeOne,jdbcType=VARCHAR},
+            </if>
+            <if test="pTypeTwo != null" >
+                #{pTypeTwo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        insert into MST_COUNTER_PARTY(COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, 
+        HEAD_BANK, CONTACT, CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, 
+        UPDATE_TIME, LINK_DEPT_CODE, P_TYPE_ONE, P_TYPE_TWO)
+        select COUNTER_ID, COUNTER_TYPE, COUNTER_NAME, LINK_ID, MANAGER_ID, 
+            HEAD_BANK, CONTACT, CONTACT_WAY, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, 
+            #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, LINK_DEPT_CODE, P_TYPE_ONE, P_TYPE_TWO
+             from MST_COUNTER_PARTY
+             where 1 = 1 and COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        update MST_COUNTER_PARTY
+        <set >
+            <if test="counterType != null" >
+                COUNTER_TYPE = #{counterType,jdbcType=VARCHAR},
+            </if>
+            <if test="counterName != null" >
+                COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
+            </if>
+            <if test="linkId != null" >
+                LINK_ID = #{linkId,jdbcType=VARCHAR},
+            </if>
+            <if test="managerId != null" >
+                MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            </if>
+            <if test="headBank != null" >
+                HEAD_BANK = #{headBank,jdbcType=VARCHAR},
+            </if>
+            <if test="contact != null" >
+                CONTACT = #{contact,jdbcType=VARCHAR},
+            </if>
+            <if test="contactWay != null" >
+                CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                REMARK = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="linkDeptCode != null" >
+                LINK_DEPT_CODE = #{linkDeptCode,jdbcType=VARCHAR},
+            </if>
+            <if test="pTypeOne != null" >
+                P_TYPE_ONE = #{pTypeOne,jdbcType=VARCHAR},
+            </if>
+            <if test="pTypeTwo != null" >
+                P_TYPE_TWO = #{pTypeTwo,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.MstCounterParty" >
+        update MST_COUNTER_PARTY
+        set COUNTER_TYPE = #{counterType,jdbcType=VARCHAR},
+            COUNTER_NAME = #{counterName,jdbcType=VARCHAR},
+            LINK_ID = #{linkId,jdbcType=VARCHAR},
+            MANAGER_ID = #{managerId,jdbcType=VARCHAR},
+            HEAD_BANK = #{headBank,jdbcType=VARCHAR},
+            CONTACT = #{contact,jdbcType=VARCHAR},
+            CONTACT_WAY = #{contactWay,jdbcType=VARCHAR},
+            REMARK = #{remark,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            LINK_DEPT_CODE = #{linkDeptCode,jdbcType=VARCHAR},
+            P_TYPE_ONE = #{pTypeOne,jdbcType=VARCHAR},
+            P_TYPE_TWO = #{pTypeTwo,jdbcType=VARCHAR}
+        where COUNTER_ID = #{counterId,jdbcType=VARCHAR}
+    </update>
+    <select id="selectPType" resultType="com.joyintech.tams.common.base.entity.MstCounterParty"  parameterType="java.lang.String" >
+	  select '01' AS counterType,
+  info.customer_name as counterName,info.customer_id as linkId,
+  case when infoadd.customer_obj_type in ('01','05') then 'C02' 
+    when infoadd.customer_obj_type in ('02','04','06','07','08','09','10') then 'C06' 
+        when infoadd.customer_obj_type in ('03','11','12','13','14') then 'C04' 
+                when infoadd.customer_obj_type in ('15','16') then 'C03' 
+                   when infoadd.customer_obj_type in ('17') then 'C01' end pTypeOne,
+  case when infoadd.customer_obj_type in ('01','05') then 'C0200' 
+    when infoadd.customer_obj_type in ('02','04','06','07','08','09','10') then 'C0600' 
+        when infoadd.customer_obj_type in ('03','11') then 'C0401' 
+          when infoadd.customer_obj_type in ('12','13') then 'C0400' 
+              when infoadd.customer_obj_type in ('14') then 'C0402' 
+                when infoadd.customer_obj_type in ('15','16') then 'C0300' 
+                   when infoadd.customer_obj_type in ('17') then 'C0100' end pTypeTwo  
+	from mst_customer_info info
+	left join mst_customer_info_add infoadd
+	on info.customer_id=infoadd.customer_id
+	 where info.customer_id = #{counterId,jdbcType=VARCHAR}
+    </select>
+    
+    <select id = "getInsCounterIdByName" parameterType = "java.util.Map" resultType = "java.lang.String">
+		select mcp.counter_Id  
+		from MST_COUNTER_PARTY mcp
+		inner join sys_user su on mcp.create_user  = su.user_name
+		inner join sys_department sd on sd.dept_code =su.dept_code
+		where counter_name = #{counterName,jdbcType=VARCHAR}
+		<foreach collection="insTree" item="item" open="and sd.institution_code in (" close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>
+    </select> 
+</mapper>

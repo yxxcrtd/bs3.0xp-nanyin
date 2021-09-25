@@ -36,7 +36,7 @@ public class RepInterLogController {
     @PostMapping("findPage/{page}/{length}")
     public Page<RepInterLogDto> selectAll(@RequestBody Map<String, Object> param,
                                           @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return repInterLogService.selectForPage(page, length, param);
     }
     

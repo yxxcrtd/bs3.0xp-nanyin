@@ -15,6 +15,7 @@
 
     <properties>
         <jackson.version>2.9.2</jackson.version>
+        <framework.version>0.0.4</framework.version>
     </properties>
 
     <dependencies>
@@ -66,6 +67,11 @@
                     <artifactId>joyintech-workflow</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.joyintech</groupId>
+            <artifactId>tams-invest-common</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.joyintech</groupId>

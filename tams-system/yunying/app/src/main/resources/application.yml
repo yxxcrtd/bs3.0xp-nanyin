@@ -25,8 +25,8 @@ spring:
     validationQuery: SELECT 1 FROM DUAL
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
 #    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    username: CVR30INIT_TEST_MERGE
+    password: CVR30INIT_TEST_MERGE
     maxTotal: 10
     maxIdle: 10
     minIdle: 5
@@ -42,6 +42,12 @@ spring:
     multipart:
       maxFileSize: 10Mb
       maxRequestSize: 100Mb
+#静态资源配置:js和css变更时无需手工清缓存
+  resources:
+    chain:
+      strategy:
+        fixed:
+          enabled: true
 base:
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
@@ -56,6 +62,9 @@ base:
     logAbandoned: true
     connectionProperties: oracle.net.CONNECT_TIMEOUT=50000;oracle.net.ReadTimeout=50000
 interf:
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
   datasource:
     type: org.apache.commons.dbcp2.BasicDataSource
     driverClassName: oracle.jdbc.driver.OracleDriver
@@ -144,8 +153,10 @@ application:
   sysCode: TAMS
   menuPosition: top
   pageStep: 100
-  logoAbout: /image/logos/logo-about.png
-  logo: /image/logos/logo.png
+  logo: /image/logos/left-logo.png #系统图标，框架中会根据分辨率自动适配
+  minLogo: /image/logos/min-logo.png #系统图标，框架中会根据分辨率自动适配
+  leftMenuLogo: /image/logos/left-logo.png #系统图标，框架中会根据分辨率自动适配
+  topMenuLogo: /image/logos/top-logo.png #系统图标，框架中会根据分辨率自动适配
   sessionTimeout: 1800000
   joyinsso: false
   interfMaxCorePoolSize: 20
@@ -164,6 +175,11 @@ application:
   reportCbFeedBackHandleCountOneTime: 10000
   riskTestMaxCorePoolSize: 20
   riskTestmaxSubmitProductSize: 50
+  versionInfo:
+    systemVersion: V2.1.6
+    lastChromeVersion: 73
+    customerName: 某某银行
+  runOptimize: Y
 #  不使用服务注册中心,tams和tams-service-container分开部署的方式
 #  loadbalance: false
 #  micorservice:
@@ -233,6 +249,7 @@ application:
       valuationBasicdataService: http://127.0.0.1:${server.port}/tamsyy
       lossModelService: http://127.0.0.1:${server.port}/tamsyy
       valModelService: http://127.0.0.1:${server.port}/tamsyy
+      jixuService: http://127.0.0.1:28080/interf
 
 # 使用服务注册中心的方式
 #  loadbalance: true
@@ -280,29 +297,26 @@ spring:
   profiles: allinone
   thymeleaf:
     cache: false
-#   redis:
-#     database: 1
-#     password: joyin!234
-#     host: 192.168.90.198
-#     port: 6379
-#     timeout: 20000
   redis:
-    cluster:
-      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
+    database: 5
+    password: 123456
+    host: 192.168.60.40
+    port: 6379
+    timeout: 20000
+#  redis:
+#    cluster:
+#      nodes: 192.168.60.97:6379,192.168.60.97:6380,192.168.60.97:6381,192.168.60.97:6382,192.168.60.97:6383,192.168.60.97:6384
   redislock:
     redissonEnabled: false
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
-#    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
+    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
 application:
-  sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#  url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-  sqldiruserName: CVR30INIT_DEV
-  sqldirpassword: CVR30INIT_DEV
+  sqldirurl: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+  sqldiruserName: CVR30INIT
+  sqldirpassword: CVR30INIT
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -317,28 +331,27 @@ shiro:
 
 base:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
+  hostname: localhost
+  port: 28080
+  contextPath: /interf
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-#    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
-    username: CVR30INIT_DEV
-    password: CVR30INIT_DEV
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
+    username: CVR30INIT
+    password: CVR30INIT
 log:
   path: /home/tams/logs/tams
   level: debug
@@ -487,33 +500,33 @@ spring:
     port: 6379
     timeout: 20000
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
-    reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
+    reportSqlldrDatabaseName: 127.0.0.1:1521/orcl
 application:
-  url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+  url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
   username: CVR30INIT
   password: CVR30INIT
 base:
   datasource:
     driverClassName: oracle.jdbc.driver.OracleDriver
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 stresstest:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 interf:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 wind:
   datasource:
-    url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
+    url: jdbc:oracle:thin:@//127.0.0.1:1521/orcl
     username: CVR30INIT
     password: CVR30INIT
 log:

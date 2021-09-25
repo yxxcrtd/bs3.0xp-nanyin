@@ -19,35 +19,34 @@
                         <div class="pro-module-item">
                             <div class="layui-form-item">
                                 <div class="form-inline-wrap">
+                                    <label class="layui-form-label form-lable">资产类型</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select id="assetType" name="assetType"
+                                                class="layui-input form-input input-select"
+                                                data-th-data-result='${SEC_TYPE}' allowClear="true"
+                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                required="required" formatoption="true" readonly="readonly"
+                                                data-th-initvalue="${entity?.assetType}">
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable">资产名称</label>
                                     <div class="layui-input-inline input-inline">
-                                        <select type="text" id="finprodId" name="finprodId"
+                                        <select type="text" id="finprodId" name="finprodId" data-th-parentIds="assetType"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 required="required" data-formatoption="true"
-                                                data-th-data-url="@{/model/impairment/lgddefultmanager/lgdspecialconfig/LgdSpecialConfig002/getFinprodIdByLossType?lossType=01}"
+                                                data-th-data-url="@{/valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getAssetInfoSelectOption}"
                                                 data-th-initvalue="${entity?.finprodId}">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
-                                    <label class="layui-form-label form-lable">资产类型</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select id="assetType1" name="assetType1" disabled="disabled"
-                                                class="layui-input form-input input-select"
-                                                data-th-data-result='${FINPROD_TYPE}' allowClear="true"
-                                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                required="required" formatoption="true" readonly="readonly"
-                                                data-th-initvalue="${entity?.assetType1}">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable">流通场所</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="tradeMarket" name="tradeMarket"
-                                                class="layui-input form-input input-select"
+                                                class="layui-input form-input input-select" disabled
                                                 data-th-data-result='${TRADE_MARKET}' allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
                                                 formatoption="true" readonly="readonly" required="required"
@@ -107,7 +106,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable">减值行情日</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input class="layui-input form-input input-dateSelect" id="valDate" disabled="disabled"
+                                        <input class="layui-input form-input input-dateSelect" id="valDate"
                                                name="valDate" placeholder="请选择时间"
                                                data-th-value='${#dates.format(entity?.valDate,"yyyy-MM-dd")}'
                                                required="required">
@@ -134,7 +133,7 @@
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap" id="period_type">
-                                    <label class="layui-form-label form-lable">代偿期类型</label>
+                                    <label class="layui-form-label form-lable">待偿期类型</label>
                                     <div class="layui-input-inline input-inline">
                                         <select id="periodType" name="periodType"
                                                 class="layui-input form-input input-select"
@@ -151,7 +150,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-lable">待偿期（年）</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="peroid" name="peroid" data-th-value="${entity?.peroid}"
+                                        <input type="text" id="peroid" name="peroid" data-th-value="${entity?.peroid}" disabled
                                                required="required" class="layui-input form-input" text-number>
                                     </div>
                                 </div>
@@ -191,7 +190,7 @@
                                         <select type="text" id="termDescribe" name="termDescribe"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                                required="required" data-formatoption="true"
+                                                required="required" data-formatoption="false"
                                                 data-th-data-url="@{/valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/getTermDescribe}"
                                                 data-th-initvalue="${entity?.termDescribe}">
                                         </select>

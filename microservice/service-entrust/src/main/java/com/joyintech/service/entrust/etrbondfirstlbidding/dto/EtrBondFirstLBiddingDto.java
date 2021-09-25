@@ -198,6 +198,23 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
     private String finprodAbbr;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+    /**
      * finprodAbbr
      * @return finprodAbbr
      */
@@ -706,5 +723,13 @@ public class EtrBondFirstLBiddingDto extends EtrEntrust {
      */
     public void setBiddingRange(String biddingRange) {
         this.biddingRange = biddingRange;
+    }
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

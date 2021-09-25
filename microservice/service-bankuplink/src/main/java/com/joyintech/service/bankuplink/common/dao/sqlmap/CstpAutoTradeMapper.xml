@@ -26,7 +26,7 @@
     </update>
     
     <!--根据成交单编号查询上行报价回购委托信息  -->
-    <select id="queryRepoEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt">
+    <select id="queryRepoEntrustInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.EtrEntrustExt" useCache="false" flushCache="true">
     	SELECT PORTFOLIO_ID, ENTRUST_ID, OU_PARTY_ID,QUOTE_ID,CB_FPRICE_AMT,SC_FPRICE_AMT,CP_PARTY_ID ,CP_TRADER_ID cpTrader,REPO_PS ps,OU_TRADER_ID ouTrader FROM IBU_QUOTE_CREP WHERE EXECID = #{oritradeId,jdbcType=VARCHAR}
     </select>
 
@@ -40,7 +40,7 @@
 
 	<!--根据成交编号判断是否存在有效交易-->
 	<select id="isExistsTrade" resultType="com.joyintech.tams.common.base.entity.TrdProductDeal">
-		select t.trade_id from trd_product_deal t where t.f_trade_id = #{fTradeId,jdbcType=VARCHAR} and t.is_cancel = 'N' and substr(t.trade_id, -1) != 'R'
+		select t.trade_id from trd_product_deal t where t.f_trade_id = #{fTradeId,jdbcType=VARCHAR} and t.is_cancel = 'N' and substr(t.trade_id, -1) != 'R'  AND rownum = 1
 	</select>
 
 </mapper>

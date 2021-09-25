@@ -5,37 +5,8 @@
 
 package com.joyintech.tams.invest.trade.fund.controller;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.joyintech.framework.ajax.JoyinMessage;
-import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
-import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
-import com.joyintech.tams.common.base.entity.*;
-import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
-import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.client.ClientData;
-import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
-import com.joyintech.tams.systemtools.util.PageElementUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
@@ -46,31 +17,59 @@ import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
+import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
+import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
+import com.joyintech.tams.common.base.entity.StlSecAcctInfo;
+import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.BussTrdTransferOrderService;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import com.joyintech.tams.invest.trade.bond.dto.TrdBondInvestTradeDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeDto;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade002Service;
 import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade003Service;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 基金投资交易新建 〈功能详细描述〉
@@ -143,7 +142,10 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         setSelectOptionToModel(model,
             new DictCode[] {DictCode.基金类资产类型, DictCode.交易场所, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类, // 新增资产二三四级类型 王贵奇 2019/7/30
                 DictCode.交易方向, DictCode.清算速度, DictCode.币种, DictCode.交易所基金类型});
-
+        // ZGZGST-3010:场内基金交易交易方向 fuyongsheng 20210923 add start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易方向, this.getParam("parentPageId"));
+        // ZGZGST-3010:场内基金交易交易方向 fuyongsheng 20210923 add end
         // 场内基金改造 add by renping 20191117 start
         model.addAttribute("ps_T52", DictCodeListExt2.交易方向_认购.getValue());
         
@@ -166,8 +168,12 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         }
         model.addAttribute("COUNTER_PARTY_ID_SHANGHAI",counterPartyIdShangHai);
         model.addAttribute("COUNTER_PARTY_ID_SHENZHEN",counterPartyIdShenZhen);
-        
-        
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         model.addAttribute("TRADE_PLACE_03", DictCodeListExt1.交易场所_上海证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_04", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
         model.addAttribute("TRADE_PLACE_06", DictCodeListExt1.交易场所_OTC场外.getValue());
@@ -254,6 +260,11 @@ public class TrdFundInvestTrade002Controller extends BaseController {
             model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(tipiDto));
             model.addAttribute("businessId", workflowId);
             model.addAttribute("workflowId", workflowId);
+
+            // add by yeming 20210910 场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210910 场内场外拆分 end
         }
         else {
             String entrustId = this.getParam("entrustId");
@@ -269,6 +280,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         dto.setPrinAmt(eedto.getEntrustAmt());
                         dto.setTradeAmt(eedto.getEntrustAmt());
                         dto.setShareAmt(proavailablecash.compareTo(BigDecimal.ZERO) != 0? proavailablecash:eedto.getEntrustNum());
+                        if("T01".equals(eedto.getPs()))dto.setShareAmt(eedto.getEntrustNum());
                         dto.setFinprodMarketId(entrustDto.getFinprodMarketId());
                         dto.setUnitCprice(eedto.getPrice());
                         dto.setrFinprodId(entrustDto.getEtrEntrustAdd().getrFinprodId());
@@ -285,6 +297,18 @@ public class TrdFundInvestTrade002Controller extends BaseController {
                         }
                         model.addAttribute("entity_trdInvestPersonInfo", JsonUtils.object2Json(trdInvestPersonInfo));
                         model.addAttribute("entrustId", entrustId);
+                        //交易录单进来根据交易场所添加parentPageId
+                        if(StringUtil.isNotEmpty(eedto.getTradeMarket())){
+                            if(StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())
+                            ||StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                                model.addAttribute("parentPageId", "TrdFundInvestTradeEx001");
+                                PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, "TrdFundInvestTradeEx001");
+                            }else if(StringUtil.equals(eedto.getTradeMarket(), DictCodeListExt1.交易场所_OTC场外.getValue())){
+                                model.addAttribute("parentPageId", "TrdFundInvestTradeOff001");
+                                PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, "TrdFundInvestTradeOff001");
+                            }
+                        }
+
                     }
                     // 场内基金改造 add by renping 20191117 start
                     EtrEntrustAdd addDto = entrustDto.getEtrEntrustAdd();
@@ -313,11 +337,6 @@ public class TrdFundInvestTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
 
         return super.init(model);
     }
@@ -485,8 +504,7 @@ public class TrdFundInvestTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody TrdFundInvestTradeDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -518,6 +536,19 @@ public class TrdFundInvestTrade002Controller extends BaseController {
 //                    BussinessDictCodeListRds.接口系统ID_实占接口.getValue(),DictCodeList.平安资产类型_基金.getValue(),
 //                    (en)->interfRiskRdsService.sendRiskRdsData(dto,en));
             String ps = dto.getPs();
+            //add by zznn 20210909 start
+            //申购实占  处理下份额   相关指比按占比计算  redis资产实时规模信息amount和num 均置为交易金额 有问题
+            //针对场内
+            if(StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())||StringUtil.equals(dto.getTradeMarket(),DictCodeListExt1.交易场所_深圳证券交易所.getValue())){
+                if(StringUtil.equals(ps,DictCodeList.交易方向_申购.getValue())){
+                    if(StringUtil.equals(dto.getTrmFundType(),DictCodeListExt2.交易所基金类型_实时申赎货币基金.getValue())){
+                        dto.setShareAmt(ArithmeticUtil.multiply(dto.getTradeAmt(), new BigDecimal(100)));
+                    }else{
+                        dto.setShareAmt(ArithmeticUtil.divide(dto.getTradeAmt(), new BigDecimal(100),2));
+                    }
+                }
+            }
+            //add by zznn 20210909 end
             String infCode = BussinessDictCodeListRds.接口系统ID_实占接口.getValue();
             if (CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换申请) || CommonUtil.isType(ps, DictCodeListExt2.交易方向_转换赎回申请)) {
                 infCode = BussinessDictCodeListRds.接口系统ID_实占批量接口.getValue();

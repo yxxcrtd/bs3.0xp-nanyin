@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        <id column="C_S_A_LOG_ID" property="logId" jdbcType="VARCHAR" />
+        <result column="C_S_A_PAGE_ID" property="pageId" jdbcType="VARCHAR" />
+        <result column="C_S_A_ELEMENT_ID" property="elementId" jdbcType="VARCHAR" />
+        <result column="C_S_A_CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
+        <result column="C_S_A_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_A_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_A_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_A_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbSysActionlog" extends="BaseResultMap" >
+        <result column="METHOD_PARA" property="methodPara" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        LOG_ID as C_S_A_LOG_ID, PAGE_ID as C_S_A_PAGE_ID, ELEMENT_ID as C_S_A_ELEMENT_ID,
+        CLIENT_IP as C_S_A_CLIENT_IP, CREATE_USER as C_S_A_CREATE_USER, CREATE_TIME as C_S_A_CREATE_TIME,
+        UPDATE_USER as C_S_A_UPDATE_USER, UPDATE_TIME as C_S_A_UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        METHOD_PARA
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Blob_Column_List" />
+        from CHB_SYS_ACTIONLOG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Blob_Column_List" />
+        from CHB_SYS_ACTIONLOG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysActionlogMapper.Blob_Column_List" />
+        from CHB_SYS_ACTIONLOG
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SYS_ACTIONLOG
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_ACTIONLOG
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        insert into CHB_SYS_ACTIONLOG (LOG_ID, PAGE_ID, ELEMENT_ID,
+            CLIENT_IP, CREATE_USER, CREATE_TIME,
+            UPDATE_USER, UPDATE_TIME, METHOD_PARA
+            )
+        values (#{logId,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR}, #{elementId,jdbcType=VARCHAR},
+            #{clientIp,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{methodPara,jdbcType=CLOB}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        insert into CHB_SYS_ACTIONLOG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="logId != null" >
+                LOG_ID,
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID,
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID,
+            </if>
+            <if test="clientIp != null" >
+                CLIENT_IP,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="methodPara != null" >
+                METHOD_PARA,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="logId != null" >
+                #{logId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="clientIp != null" >
+                #{clientIp,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="methodPara != null" >
+                #{methodPara,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        insert into CHB_SYS_ACTIONLOG(LOG_ID, PAGE_ID, ELEMENT_ID, CLIENT_IP, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, METHOD_PARA)
+        select LOG_ID, PAGE_ID, ELEMENT_ID, CLIENT_IP, CREATE_USER,
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, METHOD_PARA
+             from CHB_SYS_ACTIONLOG
+             where STATUS = 'E' and LOG_ID = #{logId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        update CHB_SYS_ACTIONLOG
+        <set >
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="clientIp != null" >
+                CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="methodPara != null" >
+                METHOD_PARA = #{methodPara,jdbcType=CLOB},
+            </if>
+        </set>
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        update CHB_SYS_ACTIONLOG
+        <set >
+            <if test="logId != null" >
+                LOG_ID = #{logId,jdbcType=VARCHAR},
+            </if>
+            <if test="pageId != null" >
+                PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            </if>
+            <if test="elementId != null" >
+                ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            </if>
+            <if test="clientIp != null" >
+                CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="methodPara != null" >
+                METHOD_PARA = #{methodPara,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        update CHB_SYS_ACTIONLOG
+        set
+        LOG_ID = #{logId,jdbcType=VARCHAR},
+        PAGE_ID = #{pageId,jdbcType=VARCHAR},
+        ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+        CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        METHOD_PARA = #{methodPara,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        update CHB_SYS_ACTIONLOG
+        set PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            METHOD_PARA = #{methodPara,jdbcType=CLOB}
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysActionlog" >
+        update CHB_SYS_ACTIONLOG
+        set PAGE_ID = #{pageId,jdbcType=VARCHAR},
+            ELEMENT_ID = #{elementId,jdbcType=VARCHAR},
+            CLIENT_IP = #{clientIp,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where LOG_ID = #{logId,jdbcType=VARCHAR}
+    </update>
+</mapper>

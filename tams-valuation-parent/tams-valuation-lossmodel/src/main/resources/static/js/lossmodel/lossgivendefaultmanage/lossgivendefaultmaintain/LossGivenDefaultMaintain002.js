@@ -14,48 +14,30 @@ $(function() {
 //        return $.serializeToObject($("#submitForm"));
         var dto = {};
         dto.assetType = $("#assetType").val();
-        dto.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            dto.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            dto.assetDetailType = $("#depositeType").val();
+        }
         dto.isContainPledge = $("#isContainPledge").val();
         dto.lgd = $("#lgd").val();
         return dto;
     };
     //联动
     var assetTypeChange = function() {
-    	var traget1=document.getElementById("isContainPledgeDiv");
-    	var traget2=document.getElementById("assetDetailTypeDiv");
-        var traget3=document.getElementById("ckAssetDetailTypeDiv");
-        if ($("#assetType").val().startsWith("01") || $("#assetType").val().startsWith("09")) {
-            if(traget1.style.display=="inline"||traget1.style.display==""){
-                traget1.style.display="none";
-            }
-            if(traget2.style.display=="none"){
-                traget2.style.display="inline";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-
-        } else if ($("#assetType").val().startsWith("07")) {
-            if(traget1.style.display=="inline"){
-                traget1.style.display="none";
-            }
-            if(traget2.style.display=="none"){
-                traget2.style.display="inline";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-        }else if($("#assetType").val().startsWith("13")){
-            if(traget1.style.display=="none"){
-                traget1.style.display="inline";
-            }
-            if(traget2.style.display=="inline"){
-                traget2.style.display="none";
-            }
-            if(traget3.style.display=="inline"){
-                traget3.style.display="none";
-            }
-
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            $("#isContainPledgeDiv").hide();
+            $("#assetDetailTypeDiv").show();
+            $("#ckAssetDetailTypeDiv").hide();
+        } else if ($("#assetType").val() == "07") {
+            $("#isContainPledgeDiv").hide();
+            $("#assetDetailTypeDiv").hide();
+            $("#ckAssetDetailTypeDiv").show();
+        }else if($("#assetType").val() == "13"){
+            $("#isContainPledgeDiv").show();
+            $("#assetDetailTypeDiv").hide();
+            $("#ckAssetDetailTypeDiv").hide();
         }
 
 	};
@@ -76,7 +58,12 @@ $(function() {
         object.pageModel = pageModel;
         object.workflowId = workflowId;
         object.assetType = $("#assetType").val();
-        object.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            object.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            object.assetDetailType = $("#depositeType").val();
+        }
         object.isContainPledge = $("#isContainPledge").val();
         object.lgd = $("#lgd").val();
         object.seqno=SEQNO;
@@ -96,7 +83,12 @@ $(function() {
         object.pageModel = pageModel;
         object.workflowId = workflowId;
         object.assetType = $("#assetType").val();
-        object.assetDetailType = $("#assetDetailType").val();
+        if ($("#assetType").val() == "01" || $("#assetType").val() == "09") {
+            object.assetDetailType = $("#assetDetailType").val();
+        }
+        else{
+            object.assetDetailType = $("#depositeType").val();
+        }
         object.isContainPledge = $("#isContainPledge").val();
         object.lgd = $("#lgd").val();
         object.seqno=SEQNO;
@@ -105,9 +97,9 @@ $(function() {
         param.operateType = 'submit';
         Joyin.ajaxJson("/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/check",param,function(result){
             if(result){
-            	Joyin.confirm(result.data, function () {
+            	/*Joyin.confirm(result.data, function () {*/
             		WorkFlow.doSubmitList('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/save', object, "LossGivenDefaultMaintain002_btn_submit");
-                });
+                /*});*/
             }
         })
     };
@@ -123,7 +115,7 @@ $(function() {
         	param.seqno=SEQNO;
         	Joyin.ajax('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/checkIfUsed',param,function(dataNum){
                 if(dataNum=="Y"){
-                     Joyin.confirmMulti("本条LGD违约损失率已被使用，本次修改是否影响历史数据？",['是', '否'], function() {
+                     Joyin.confirmMulti("本次修改是否影响历史数据？",['是', '否'], function() {
                     	 Joyin.confirm("修改后需手工跑历史批处理！", function() {
                     		 doSave();
                     	 });
@@ -140,7 +132,7 @@ $(function() {
         	param.seqno=SEQNO;
         	Joyin.ajax('/model/impairment/lossgivendefaultmanage/lossgivendefaultmaintain/LossGivenDefaultMaintain002/checkIfUsed',param,function(dataNum){
                 if(dataNum=="Y"){
-                     Joyin.confirmMulti("本条LGD违约损失率已被使用，本次修改是否影响历史数据？",['是', '否'], function() {
+                     Joyin.confirmMulti("本次修改是否影响历史数据？",['是', '否'], function() {
                     	 Joyin.confirm("修改后需手工跑历史批处理！", function() {
                     		 doSubmit();
                     	 });

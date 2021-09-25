@@ -35,6 +35,7 @@ import com.joyintech.tams.invest.risk.creditmanagement.ceasset.dto.CreditLinesAs
 import com.joyintech.tams.invest.risk.creditmanagement.ceasset.service.CeAsset002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 
 
@@ -123,8 +124,7 @@ public class CeAsset002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
-    public AjaxResult save(@RequestBody CreditLinesAstDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody CreditLinesAstDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

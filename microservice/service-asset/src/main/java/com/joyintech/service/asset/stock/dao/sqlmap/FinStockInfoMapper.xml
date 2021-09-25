@@ -277,4 +277,12 @@
 			USER_NAME = #{userName}
 		</where>
 	</select>
+
+    <select id="getShOrZhCalendarId" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT CALENDAR_ID as code,
+        CALENDAR_NAME as name
+        FROM MST_CALENDAR_INFO
+        where CALENDAR_NAME = '沪港通&amp;深港通'
+    </select>
+
 </mapper>

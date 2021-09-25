@@ -159,6 +159,12 @@ public class FinPayInterestStdInfoDto extends FinCashPayRule {
      * 还本带息
      */
     private String isPayInt;
+
+    /**
+     * 标的资产类型 01 债权类资产
+     */
+    private String objectType;
+
     /**
      * 获取 payTdayRule
      * @return payTdayRule.
@@ -705,6 +711,14 @@ public class FinPayInterestStdInfoDto extends FinCashPayRule {
      */
     public void setIsPayInt(String isPayInt) {
         this.isPayInt = isPayInt;
+    }
+
+    public String getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
     }
 
     /**

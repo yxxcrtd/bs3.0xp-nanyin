@@ -17,6 +17,7 @@ import com.joyintech.framework.base.intf.IDictCode;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
@@ -24,6 +25,9 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.basicdata.asset.bond.dto.FinBondTargetAssetDto;
 import com.joyintech.tams.valuation.basicdata.asset.bond.service.FinBondTargetAssetService;
+import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
+import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
+import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -40,6 +44,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +63,12 @@ public class FinBondTargetAsset001Controller extends BaseController{
    
     @Autowired
     private FinBondTargetAssetService finBondTargetAssetService;
+
+    /**
+     * 流程组件
+     */
+    @Autowired
+    private MstWorkflowCommonService mstWorkflowCommonService;
     
     /**
      * 初始化数据字典下拉框
@@ -110,6 +121,12 @@ public class FinBondTargetAsset001Controller extends BaseController{
     @RequestMapping("check")
     public AjaxResult check(@RequestBody @Validated({
         ValidateGroupDelete.class}) FinBondTargetAssetDto dto, BindingResult result) {
+        //删除/批量删除流程中数据校验
+        AjaxResult checkResult = new AjaxResult();
+        checkResult= finBondTargetAssetService.deleteCheck(dto,checkResult);
+        if(checkResult.getErrorList().size()>0){
+            return checkResult;
+        }
         return commonCheck(result, dto.getOperateType());
     }
     
@@ -145,9 +162,11 @@ public class FinBondTargetAsset001Controller extends BaseController{
                 entity.getFinprodAbbr()+GlobalConstant.CLOSE_PARENTHESIS);
         });
         processParameter.setWorkFlowParameter(params);
-        String msg = finBondTargetAssetService.start(processParameter,
-            dto.getSelectedItem().toArray(
-                new FinBondTargetAssetDto[dto.getSelectedItem().size()]));
+        String msg ="";
+//        String msg = finBondTargetAssetService.start(processParameter,
+//            dto.getSelectedItem().toArray(
+//                new FinBondTargetAssetDto[dto.getSelectedItem().size()]));
+
         return new AjaxResult(msg);
     }
     

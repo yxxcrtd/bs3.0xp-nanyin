@@ -4,6 +4,8 @@ import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import com.joyintech.tams.common.base.entity.RskValtblStructMapDtlKey;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RskValtblStructMapDtlMapper {
     int deleteByPrimaryKey(RskValtblStructMapDtlKey key);
@@ -19,4 +21,7 @@ public interface RskValtblStructMapDtlMapper {
     int updateByPrimaryKeySelective(RskValtblStructMapDtl record);
 
     int updateByPrimaryKey(RskValtblStructMapDtl record);
+
+    void insertList(List<RskValtblStructMapDtl> list);
+
 }

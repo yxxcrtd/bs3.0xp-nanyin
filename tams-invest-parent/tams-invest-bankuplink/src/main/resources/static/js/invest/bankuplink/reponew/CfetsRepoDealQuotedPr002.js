@@ -5,6 +5,45 @@
     //试算结果
     var riskResultdata;
     var cluflag;
+
+    /**
+     * 获取风险试算参数
+     *
+     * @returns
+     */
+    function getRiskdata() {
+        var obj = {
+            timePoint:MY_SUP_TIME_TYPE_02,
+            valDate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
+            mdate:$('#CfetsRepoDealQuotedPrice002_tradeDate').val(),
+            portfolioCode:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
+            portfolioId:$('#CfetsRepoDealQuotedPrice002_portfolioName').val(),
+            tradeAmount:$('#CfetsRepoDealQuotedPrice002_dealAmt').val(),
+            isEnabled:'01',
+            assetCode:$('#finprodId').val(),
+            tradeDirection:$('#CfetsRepoDealQuotedPrice002_ps').val(),
+            counterId: $('#CfetsRepoDealQuotedPrice002_counterId').val(),
+            ccy:'CNY'
+        }
+        if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_03){
+            obj.assetType = FINPROD_TYPE_TG_F02;
+        }else if($('#CfetsRepoDealQuotedPrice002_ps').val() == PS_04){
+            obj.assetType = FINPROD_TYPE_TG_F03;
+        }else{
+            obj.assetType = null;
+        }
+        var object = {
+            valDate:['settleDate','TrdPlanRateInvestTrade002.settleDate'],
+            portfolioCode:['portfolioId','CfetsRepoDealQuotedPrice002.portfolioId'],
+            tradeAmount:['fpriceAmt','CfetsBondDealQuotedPrice002.dealAmt'],
+            tradeDirection:['ps','CfetsRepoDealQuotedPrice002.ps'],
+            counterId:['counterId', 'CfetsRepoDealQuotedPrice002.counterId'],
+            data:obj
+        }
+        return object;
+    }
+
+
     /**
 	 * 委托代码
 	 */
@@ -144,6 +183,9 @@
                 if (param[0].price) {
                     $("#CfetsRepoDealQuotedPrice002_price").val(param[0].price).trigger("change");
                 }
+                if (param[0].secAcctId) {
+                    $("#secAcctId").textSelect('setValue', param[0].secAcctId);//委托代码
+                }
                 /*添加限制*/
                 $("#CfetsRepoDealQuotedPrice002_entrustId").attr("disabled",true);
                 $("#CfetsRepoDealQuotedPrice002_portfolioName").attr("disabled",true);
@@ -249,15 +291,15 @@
                 // 折算比例
                 var pledgeRate = new BigNumber(row.pledgeRatio?row.pledgeRatio:100).dividedBy(new BigNumber(100));
                 /*计算券面总额合计，中债登券面总额合计，上清所券面总额合计*/
-                pledgePrinTotal = pledgePrinTotal.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
+                pledgePrinTotal = pledgePrinTotal.plus(pledgePrin.multipliedBy(divd));
                 if(row.repRegistOrg == '01'){
                     cbShareCtAmt = cbShareCtAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
                     cbDealAmt = cbDealAmt.plus(pledgePrin.multipliedBy(divd));
-                    zzTotalAmt = zzTotalAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate))
+                    zzTotalAmt = zzTotalAmt.plus(pledgePrin.multipliedBy(divd))
                 }else if(row.repRegistOrg == '02'){
                     scShareCtAmt = scShareCtAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
                     scDealAmt = scDealAmt.plus(pledgePrin.multipliedBy(divd));
-                    sqTotalAmt = sqTotalAmt.plus(pledgePrin.multipliedBy(divd).multipliedBy(pledgeRate));
+                    sqTotalAmt = sqTotalAmt.plus(pledgePrin.multipliedBy(divd));
                 }
             }
             dealAmt = cbDealAmt.plus(scDealAmt);
@@ -579,16 +621,42 @@
             window.BussRepoSec["bussRepoSec"].setInputParam(object);
         }
     };
+
     /**
-     * 获取风险试算参数
-     *
-     * @param operateType 操作类型（save，submit）
-     * @returns
+     * 单组合对话报价风险试算
      */
-    function getSearchParams() {
-        var object = $.serializeToObject("#CfetsRepoDealQuotedPrice002_submitForm");
-        return object;
+    function doRiskcal() {
+        var object = $.serializeToObject("#CfetsRepoDealQuotedPrice002_submitForm")
+        if(object){
+            let counterId =  $('#CfetsRepoDealQuotedPrice002_counterId').val();
+            if(counterId == null || counterId === ''){
+                JoyinUtil.showMessage("请选择对手方","error");
+                return null;
+            }
+            var riskdata = getRiskdata();
+            object.mdate = object.tradeDate;
+            var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F07";
+            if (riskdata && riskInterfUrl) {
+                window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackPr002);
+            }
+        }
     }
+
+    /**
+     * 单组合对话报价风险试算回调
+     */
+    function riskMathRedisCallbackPr002(object, paraCluflag) {
+        CfetsRepoDealQuotedPr002.riskResultdata = object;
+        CfetsRepoDealQuotedPr002.cluflag = paraCluflag;
+
+        var paramObj = {};
+        if (object) {
+            paramObj.riskResultdata = JSON.stringify(object);
+        }
+        paramObj.cluflag = paraCluflag;
+        Joyin.dialog("风险试算", "/component/common/BaseRiskMathCommDialog/init", "60%", "75%", paramObj);
+    }
+
     /**
      * 对外公开的接口
      */
@@ -604,6 +672,7 @@
     };
 
     $(function () {
+        $("#secAcctId").attr("disabled",true);
     	if(dialogueRecord){
     		$("#CfetsBondDealQuotedPrice002_dialogueRecord").html(dialogueRecord);
     		$("#dialogueRecord_div").show();
@@ -740,9 +809,11 @@
             var finprodIdhid = '';
             var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
             var termType = $("#CfetsRepoDealQuotedPrice002_term").val();
-            var vdate = $("#tradeDate").val();
+            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
             var ccy = "CNY";
-            parent.CfetsRepoDealQuotedPrHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
+            if(pageModel == PAGE_MODEL_NEW){
+                parent.CfetsRepoDealQuotedPrHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId, termType);
+            }
             window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
         });
         calculateActDays();
@@ -755,6 +826,11 @@
     	        $('#CfetsRepoDealQuotedPrice002_repoInfo_'+ps).toggle(true);
     	    }
             setBussRepoSecInput();
+            if(ps == '03'){
+                $('#bussRepoSec_btn_add').removeClass('layui-btn-disabled');
+            }else if(ps == '04'){
+                $('#bussRepoSec_btn_add').addClass('layui-btn-disabled');
+            }
     	});
         /**
          * 保存按钮按下处理
@@ -768,6 +844,15 @@
         $('#CfetsRepoDealQuotedPrice002_btn_submit').click(function(){
             submitAction();
         });
+
+
+        /**
+         * 重置按钮按下处理
+         */
+        $('#cfetsRepoDealQuotedPr002_chongzhi').click(function(){
+            document.location.reload();
+        });
+
         /**
          * 附件上传
          */
@@ -778,7 +863,7 @@
          * 风险试算
          */
         $('#CfetsRepoDealQuotedPrice002_btn_riskcal').click(function(){
-            /*doRiskcal();*/
+            doRiskcal();
         });
         /**
          * 对话按钮点击事件
@@ -902,7 +987,7 @@
      * 成交发送
      */
     var sendDeal = function (object){
-    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
+    	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_done", null, function(result){
             var index = window.parent.layer.getFrameIndex(window.name);
             window.parent.layer.close(index);
         })
@@ -936,22 +1021,36 @@
         object.operatorType = 'save';
         //构造质押券list
         handlepledgeBondList(object);
-        object.operation = "CfetsRepoDealQuotedPrice001.save"
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
-            if (result.data){
-                Joyin.confirm(result.data, function() {
-                	WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", null, function(result){
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
+        object.operation = "CfetsRepoDealQuotedPrice001.save";
+        if(pageModel != PAGE_MODEL_NEW){
+            Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
+                if (result.data){
+                    Joyin.confirm(result.data, function() {
+                        WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_save", 'CfetsRepoDealQuotedPr002', function(result){
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
                     })
-                })
-            }
-        });
+                }
+            });
+        }else{
+            parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre002Save(object);
+        }
     };
     /**
      * 提交
      */
     var submitAction = function(){
+        var s;
+        if (BaseRiskMathComm) {
+            s = BaseRiskMathComm.saveOrSubmitCheck("submit");
+            if (!s && s != "") {
+                return;
+            }
+            if (window.BaseRiskMathComm.isCalcConditionChanged(getRiskdata())) {
+                return;
+            }
+        }
         var object = $.serializeToObject('#CfetsRepoDealQuotedPrice002_submitForm');
         object.quoteId = $("#CfetsRepoDealQuotedPrice002_quoteId").val();
         object.tradeStatus = $("#CfetsRepoDealQuotedPrice002_tradeStatus").val();
@@ -959,16 +1058,20 @@
         object.operatorType = 'submit';
         //构造质押券list
         handlepledgeBondList(object);
-        Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
-            if (result.data){
-                Joyin.confirm(result.data, function() {
-                	WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", null, function(result){
-                        var index = window.parent.layer.getFrameIndex(window.name);
-                        window.parent.layer.close(index);
+        if(pageModel != PAGE_MODEL_NEW){
+            Joyin.ajaxJson(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/check', object, function(result) {
+                if (result.data){
+                    Joyin.confirm(result.data, function() {
+                        WorkFlow.doSubmitList(basePath + 'invest/bankuplink/repo/CfetsRepoDealQuotedPrice002/save', object, "CfetsRepoDealQuotedPrice002_btn_submit", 'CfetsRepoDealQuotedPr002', function(result){
+                            var index = window.parent.layer.getFrameIndex(window.name);
+                            window.parent.layer.close(index);
+                        })
                     })
-                })
-            }
-        });
+                }
+            });
+        }else{
+            parent.CfetsRepoDealQuotedPrMain.cfetsRepoDealQuotedPre002Sumbit(object);
+        }
     };
 
     /**
@@ -999,9 +1102,9 @@
                 item.bondCode = val.bondCode;
                 item.bondAbbrName =val.bondAbbrName;
                 if(!flag){
-                	item.avaPledgePrin =val.avaPledgePrin;
+                	item.avaPledgePrin =JoyinMath.doMul(val.avaPledgePrin,10000);
                 }
-                item.pledgePrin =val.pledgePrin;
+                item.pledgePrin = JoyinMath.doMul(val.pledgePrin, 10000);
                 item.pledgeRate = val.pledgeRatio;
                 item.netPrice = val.firstNetPrice;
                 item.repRegistOrgStr = val.repRegistOrgStr;
@@ -1030,7 +1133,18 @@
     var refreshFace = function(result){
         $("#CfetsRepoDealQuotedPrice002_pledgePrinTotal").val(result.pledgePrinTotal).trigger('blur');
         $("#CfetsRepoDealQuotedPrice002_shareCtAmt").val(result.shareCtAmt).trigger("blur");
-    }
+    };
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            var portfolioId = $("#CfetsRepoDealQuotedPrice002_portfolioName").val();
+            var vdate = $("#CfetsRepoDealQuotedPrice002_tradeDate").val();
+            var ccy = "CNY";
+            if(portfolioId && vdate){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+            //$("#CfetsBondDealQuotedPrice002_dialogueRecord").show();
+        }
+    },2000);
     window.CfetsRepoDealQuotedPr002 = {
         addPledgeBond: addPledgeBond,
         saveEntrustSelectData: saveEntrustSelectData,

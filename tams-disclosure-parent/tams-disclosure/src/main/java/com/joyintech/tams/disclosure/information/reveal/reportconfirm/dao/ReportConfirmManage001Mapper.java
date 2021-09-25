@@ -20,6 +20,7 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokFil
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokFileTransfer003Dto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.BokNetValueCfmFileDto;
 import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.ReportConfirmManage001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 
@@ -29,6 +30,7 @@ import com.joyintech.tams.disclosure.information.reveal.reportconfirm.dto.Report
  * @see ValNetValueConfirm001Mapper
  * @since 1.0
  */
+@Repository
 public interface ReportConfirmManage001Mapper {
     
     /**

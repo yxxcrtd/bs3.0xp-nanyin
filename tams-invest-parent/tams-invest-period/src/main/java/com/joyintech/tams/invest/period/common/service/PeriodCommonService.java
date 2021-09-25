@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.period.common.service;
 
+import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
@@ -40,9 +41,11 @@ import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration002Pr
 import com.joyintech.tams.invest.period.trdbondduration.dto.TrdBondDuration003ProcessDto;
 import com.joyintech.tams.invest.period.trdbuyoutduration.dto.TrdRepoBuyoutDuration002Dto;
 import com.joyintech.tams.invest.period.trddepoduration.dto.TrdDepoDuration001Dto;
+import com.joyintech.tams.invest.period.trdfundduration.dto.TrdFundDuration001Dto;
 import com.joyintech.tams.invest.period.trdirsduration.dto.TrdIRSDuration002ProcessDto;
 import com.joyintech.tams.invest.period.trdlendduration.dto.TrdLendDuration001Dto;
 import com.joyintech.tams.invest.period.trdoptionduration.dto.OptionDurationDetailDto;
+import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDuration001Dto;
 import com.joyintech.tams.invest.period.trdplanintduration.dto.TrdPlanInterestDurationProcessDto;
 import com.joyintech.tams.invest.period.trdprojduration.dto.TrdProjectDurationProcessDto;
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
@@ -482,6 +485,7 @@ public class PeriodCommonService extends BaseService {
 //            }
         }
         List<BaseTradeProductDealDto> result = new ArrayList<>();
+        if (tol != null){
         for(BaseTradeProductDealDto baseTradeProductDealDto:tol){
 //            更新汇总交易代码
             if(isTotal){
@@ -516,6 +520,7 @@ public class PeriodCommonService extends BaseService {
                 gen子组合划款指令_撤销用(temp,baseTradeProductDealDto);
             }
             result.addAll(temp);
+            }
         }
         return result;
     }
@@ -785,9 +790,10 @@ public class PeriodCommonService extends BaseService {
     }
     // add by etliu 20210426 权益类资产相关代码合并 end
 
-    public void executeOccupyCreditLines(Object object, String status, String method){
+    public AjaxResult executeOccupyCreditLines(Object object, String status, String method){
+        AjaxResult ar = new AjaxResult();
         if (StringUtil.equals(BussinessDictCodeList.监控授信开关_关.getValue(), CacheUtil.getSysParam(BussinessConstant.ISCREDIT))){
-            return;
+            return ar;
         }
         if (object != null){
             CreditLinesInputDto creditLinesInputDto = null;
@@ -825,7 +831,7 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto.setShareAmt(inputDto.getTrdFinProductDealTotal().getShareAmt());
                     creditLinesInputDto.setFinprodType2(inputDto.getTrdFinProductDealTotal().getFinprodType2());
                     // 券面总额
-                    creditLinesInputDto.setTradeAmt(inputDto.getfPriceAmt());
+                    creditLinesInputDto.setTradeAmt(inputDto.getQty());
                     creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
                 }
             }
@@ -914,6 +920,21 @@ public class PeriodCommonService extends BaseService {
                     creditLinesInputDto.setTradeDate(DateUtil.parse(inputDto.getArrivalDate()));
                 }
             }
+            // 计划类利率存续期-红利再投
+//            if (object instanceof TrdPlanCurrDuration001Dto){
+//                TrdPlanCurrDuration001Dto inputDto = (TrdPlanCurrDuration001Dto)object;
+//                if ("01".equals(inputDto.getType())){
+//                    creditLinesInputDto = new CreditLinesInputDto();
+//                    BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
+//                    creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+//                    creditLinesInputDto.setTradeStatus(status);
+//                    creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+//                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+//                    creditLinesInputDto.setShareAmt(inputDto.getQty());
+//                    creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
+//                    creditLinesInputDto.setTradeDate(inputDto.getReInvesDate());
+//                }
+//            }
             // 买断式回购存续期
             if (object instanceof TrdRepoBuyoutDuration002Dto){
                 TrdRepoBuyoutDuration002Dto inputDto = (TrdRepoBuyoutDuration002Dto)object;
@@ -950,7 +971,7 @@ public class PeriodCommonService extends BaseService {
                         }
                         // 资产类型在【不扣减授信参数】列表
                         if (assetTypeList.contains(astType)){
-                            return;
+                            return ar;
                         }
                         creditLinesInputDto.setTradeAmt(list.get(0).getPledgePrin());
                         //最新面值
@@ -1035,7 +1056,7 @@ public class PeriodCommonService extends BaseService {
             if (object instanceof OptionDurationDetailDto){
                 OptionDurationDetailDto inputDto = (OptionDurationDetailDto)object;
                 if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_卖出.getValue())){
-                    return;
+                    return ar;
                 }
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
@@ -1050,12 +1071,36 @@ public class PeriodCommonService extends BaseService {
                 creditLinesInputDto.setPs(DictCodeList.交易方向_到期.getValue());
                 creditLinesInputDto.setTgBusiType(DictCodeListExt3.平安资产类型_期权.getValue());
             }
+            // 基金存续期--红利再投 提交到流程占用，撤销释放
+//            if (object instanceof TrdFundDuration001Dto){
+//                TrdFundDuration001Dto inputDto = (TrdFundDuration001Dto)object;
+//                if (StringUtil.equals(inputDto.getType(),"04")||StringUtil.equals(inputDto.getType(),"01")){
+//                    creditLinesInputDto = new CreditLinesInputDto();
+//                    BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto, inputDto);
+//                    creditLinesInputDto.setTradeDate(inputDto.getSettleDate());
+//                    creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+//                    creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
+//                    creditLinesInputDto.setTradeId(inputDto.getTotleTradeId());
+//                    creditLinesInputDto.setTradeStatus(status);
+//                    creditLinesInputDto.setTradeAmt(inputDto.getTradeAmt());
+//                    creditLinesInputDto.setShareAmt(inputDto.getQty());
+//                    creditLinesInputDto.setTradeDate(inputDto.getReInvesDate());
+//                    creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_基金.getValue());
+//                }
+//            }
             boolean isCallCreditInterf = checkCallCreditInterf(creditLinesInputDto,status,method);
             if (isCallCreditInterf){
                 inputDtoList.add(creditLinesInputDto);
-                AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList, DictCodeListRsk.授信占用类别_实占.getValue());
+                if (inputDtoList.size() > 0){
+                    if ("check".equals(method)){
+                        ar = AllTradeCommonUtil.checkBeforeTradeComplete(inputDtoList);
+                    }else {
+                        AllTradeCommonUtil.handleBeforeTradeComplete(inputDtoList, DictCodeListRsk.授信占用类别_实占.getValue());
+                    }
+                }
             }
         }
+        return ar;
     }
 
     private boolean checkCallCreditInterf(CreditLinesInputDto creditLinesInputDto, String status, String method) {
@@ -1063,9 +1108,27 @@ public class PeriodCommonService extends BaseService {
             return false;
         }
         if ("doComplete".equals(method)){
-
+            if (DictCodeListExt1.交易状态_撤销.getValue().equals(status) && DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())){
+                return true;
+            }
             if (DictCodeList.交易方向_到期.getValue().equals(creditLinesInputDto.getPs())
                     || DictCodeList.交易方向_还本.getValue().equals(creditLinesInputDto.getPs())){
+                return true;
+            }
+        }else if("check".equals(method)){
+            if(DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())){
+                return true;
+            }
+        }else if("doInsert".equals(method)){
+            if(DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())){
+                return true;
+            }
+        }else if("doBack".equals(method)){
+            if(DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())){
+                return true;
+            }
+        }else if("doUpdate".equals(method)){
+            if(DictCodeList.交易方向_买入.getValue().equals(creditLinesInputDto.getPs())){
                 return true;
             }
         }

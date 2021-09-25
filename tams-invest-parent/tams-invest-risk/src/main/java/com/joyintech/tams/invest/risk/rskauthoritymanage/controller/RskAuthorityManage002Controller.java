@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.risk.rskauthoritymanage.dto.RskAuthorityManageD
 import com.joyintech.tams.invest.risk.rskauthoritymanage.service.RskAuthorityManageService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,7 +73,7 @@ public class RskAuthorityManage002Controller extends BaseController {
      * 初始化的查询条件
      */
    private static final IDictCode[] DICT_CODES = new DictCode[] {DictCode.角色岗位,
-            DictCode.平安资产类型, DictCode.交易场所,DictCode.授权类型
+            DictCode.平安资产类型, DictCode.交易场所,DictCode.授权类型,DictCode.交易方向
             // 资产类型改为授权类型 add by renping 2019-08-06  start
             , DictCode.授权类型一级, DictCode.授权类型二级
             // 资产类型改为授权类型 add by renping 2019-08-06  end
@@ -308,7 +309,7 @@ public class RskAuthorityManage002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskAuthorityManageDto> selectAll()
-        throws Exception {
+         {
         Page<RskAuthorityManageDto> page = rskAuthorityManageService.select(
             RequestUtil.getPageParam());
         return page;
@@ -349,8 +350,7 @@ public class RskAuthorityManage002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskAuthorityManageDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskAuthorityManageDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

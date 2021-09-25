@@ -4,8 +4,11 @@ import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.base.entity.SysBatchJob;
 import com.joyintech.service.valuation.lossmodel.batchtask.dto.BatchTaskDto;
 import com.joyintech.system.batch.batchmonitor.dto.BatchExecutingStatusDto;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,5 +31,27 @@ public interface ModImpairementBatchTaskMapper {
 
     int checkIsRunning(Map<String, Object> params);
 
-    Integer cleanBatchParams();
+    Integer cleanBatchParams(Map<String, Object> params);
+
+    /**
+     * 查询资产维度日志
+     * @param params
+     * @return
+     */
+    List<ModBatchLogDetailDTO> selectLogsDetail(Map<String, Object> params);
+
+
+    /**
+     * 普华方案查询所有资产信息
+     * @param execDate
+     * @return
+     */
+    List<String> getAssetInfoAllPH(@Param("execDate") Date execDate);
+
+    /**
+     * 毕马威方案查询所有资产信息
+     * @param execDate
+     * @return
+     */
+    List<String> getAssetInfoAllBMW(@Param("execDate") Date execDate);
 }

@@ -146,8 +146,8 @@ public class EtrBondFirstLBiddingDtoValidator implements BeanValidator{
                 errorList.add(new ValidMessage(getMessage("ETR_BOND_007")));
             }
             errorList.addAll(service.check(dto));
-            // ZGZGST-1232 fuyongsheng 20210820:增加SPPI测试 系统参数开关,Y:需要测试
-            if(DictCodeListExt1.是否_是.getValue().equals(CacheUtil.getSysParam("IS_NEED_SPPI_CHECK"))){
+            // ZGZGST-1232 fuyongsheng 20210820:增加SPPI测试 系统参数开关,Y:需要测试   继续增加开关 仅当页面展示投资目的时校验 add by yujinfa
+            if(DictCodeListExt1.是否_是.getValue().equals(CacheUtil.getSysParam("IS_NEED_SPPI_CHECK"))&&"01".equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"))){
                 //投资目的
                 if(StringUtil.isNotEmpty(dto.getInvAim())) {
                     if(StringUtil.equals(dto.getInvAim(), DictCodeListExt1.投资目的_摊余成本类.getValue())

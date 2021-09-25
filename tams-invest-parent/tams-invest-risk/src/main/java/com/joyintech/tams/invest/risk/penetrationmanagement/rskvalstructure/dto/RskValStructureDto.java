@@ -57,6 +57,10 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
      * 页面参数
      */
     private String pageModel;
+    /**
+     * 映射名称
+     */
+    private String oldStructName;
 
     
     public String getStructName() {
@@ -100,14 +104,34 @@ public class RskValStructureDto extends RskValtblStructMapDtl implements ITableR
         return SysDataUtil.getNameFromDataDict(DictCode.估值字段, super.getTgtIndex());
     }
 
-    public String getSrcColIndexLetter() throws Exception {
+    /*public String getSrcColIndexLetter(){
         if(StringUtil.isNotEmpty(this.getSrcColIndex())){
+            return this.getSrcColIndex();
+        }
+        return srcColIndexLetter;
+    }*/
+    public String getSrcColIndexLetter()  throws Exception {
+        String srcColIndexLetter="";
+        if(StringUtil.isNotEmpty(this.getSrcColIndex()) && this.getSrcColIndex().matches("\\d+")){
             return ExcelUtilForRisk.indexToColumn(Integer.parseInt(String.valueOf(this.getSrcColIndex())));
+        }else{
+            srcColIndexLetter= this.getSrcColIndex();
+        }
+        //保存时需要转换
+        if(StringUtil.isEmpty(srcColIndexLetter)){
+            srcColIndexLetter = this.srcColIndexLetter;
         }
         return srcColIndexLetter;
     }
-
     public void setSrcColIndexLetter(String srcColIndexLetter) {
         this.srcColIndexLetter = srcColIndexLetter;
+    }
+
+    public String getOldStructName() {
+        return oldStructName;
+    }
+
+    public void setOldStructName(String oldStructName) {
+        this.oldStructName = oldStructName;
     }
 }

@@ -21,7 +21,8 @@
             tradeAmount: entrustNum,
             assetType: fintype,
             isEnabled: '01',
-            assetCode: $('#finprodIdhid').val()
+            assetCode: $('#finprodIdhid').val(),
+            priceModel: $('#priceModel').val()
         }
         obj.counterId = $('#etrInvestPersonInfo_counterId').val();
         var object = {
@@ -127,43 +128,66 @@
                 object.closePrice = result;
             }, false);
         }*/
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         if (operateType === 'save') {// 指令暂存，去掉校验项  add by xxg 20210805
             WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
         }else{
-            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
-                    Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check', object,
-                        function (result) {
-                            if(isautobond == true){
-                                Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
-                                    Joyin.confirm(result.data, function () {
-                                        WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_submit");
-                                    });
-                                });
-                            }else{
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL==02){
+                Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
+                    if(resultSppi.data==2){
+                        Joyin.error("买入价格不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件）")
+                    }else if(resultSppi.data==1){
+                        Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
+                    }
+                    else{
+                        finalSubmit(object);
+                    }
+                });
+            }else{
+                finalSubmit(object);
+            }
+
+        }
+    }
+
+    var finalSubmit =function (object){
+
+        Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkAuthorization', object, function(result2) {
+                Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check', object,
+                    function (result) {
+                        if(isautobond == true){
+                            Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
                                 Joyin.confirm(result.data, function () {
                                     WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_submit");
                                 });
-                            }
-                        },false,function (result) {
-                            var disabledFlag = $('#invAim').attr('disabled');
-                            if(disabledFlag) return;
-                            var msg = result.errorList;
-                            var message ="";
-                            for(var i=0;i<msg.length;i++){
-                                message = msg[i];
-                                if(message.field!=null && message.field=='invAim'){
-                                    if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
-                                        $('#invAim').textSelect('setValue', "FVTPL");
-                                        break;
-                                    }
+                            });
+                        }else{
+                            Joyin.confirm(result.data, function () {
+                                WorkFlow.doSubmitList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_submit");
+                            });
+                        }
+                    },false,function (result) {
+                        var disabledFlag = $('#invAim').attr('disabled');
+                        if(disabledFlag) return;
+                        var msg = result.errorList;
+                        var message ="";
+                        for(var i=0;i<msg.length;i++){
+                            message = msg[i];
+                            if(message.field!=null && message.field=='invAim'){
+                                if(message.message!=null && message.message==JoyinUtil.getMessage("ETR_ERROR_0059")) {
+                                    $('#invAim').textSelect('setValue', "FVTPL");
+                                    break;
                                 }
                             }
+                        }
 
-                        });
-                });
+                    });
             });
-        }
+        });
+
     }
 
     var getIsautobond = function(){
@@ -198,10 +222,11 @@
     var getPtlSecPositionInfo = function () {
         var portfolioId1 = $('#portfolioId').val();
         var invAim1 = $('#invAim').val();
+        var businessModel1 = $('#businessModel').val();
         var secManageAcctId = $('#secManageAcctId').val();
         var chlId = $('#chlFinprodId').val();
         if (portfolioId1 == '' || portfolioId1 == null || typeof (portfolioId1) == undefined
-            || invAim1 == '' || invAim1 == null || typeof (invAim1) == undefined
+            || ((invAim1 == '' || invAim1 == null)&&(businessModel1 == '' || businessModel1 == null)) || typeof (invAim1) == undefined
             || (!secManageAcctId && !chlId)
         ) {
             $("#assetAvailablePosition").val('')
@@ -217,10 +242,19 @@
             finprodId: $('#finprodIdhid').val(),
             ccy: $('#ccy').val(),
             secAcctId: $("#secManageAcctId").val(),
-            chlId: $('#chlFinprodId').val()
+            chlId: $('#chlFinprodId').val() ,
+
         }
         // 一体化对应etliu start
-        data.invAim = $('#invAim').val();
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+           if(businessModel1=="Y1"){
+              data.invAim = 'AC';
+           }else if(businessModel1=="Y2"){
+              data.invAim  = 'FVTPL'
+           }
+        }else{
+           data.invAim = $('#invAim').val();
+        }
         // 一体化对应etliu end
 
         Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getAssetAvailablePosition', data,
@@ -230,6 +264,31 @@
             });
     }
 
+   var changeBussnissModelByFinprodId = function(){
+       var finprodId = $('#finprodId').val();
+       if(finprodId){
+            var data = {finprodId:finprodId }
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                  if(result.data=='0') {
+                       Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                       //$('#finprodId').val("").trigger('change');
+                       $("#businessModel").attr("disabled",false);
+                       $('#businessModel').val("").trigger('change');
+                   }else if(result.data=='3'){
+                       $('#businessModel').val("Y2").trigger('change');
+                       $("#businessModel").attr("disabled",true);
+                   }else if(result.data=='2') {
+                        $("#businessModel").attr("disabled",false);
+                        $('#businessModel').val("").trigger('change');
+                   }
+             });
+       }else{
+            $("#businessModel").attr("disabled",false);
+            $('#businessModel').val("").trigger('change');
+       }
+
+   }
+
     //到期日小于委托结束日，给出提示
     var checkFinMdate = function () {
         if ($('#finprodId').val()) {
@@ -238,6 +297,79 @@
                 Joyin.error(JoyinUtil.getMessage("ETR_X_007"));
                 $("#finprodId").val('').trigger('change');
             }
+        }
+    }
+    /**
+     * 11.交易对手选择内部投资组合时：
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     * b. 若投资目的选择公允价值计入其他综合收益或公允价值计入当期损益，净价默认带出该债券平台日期前一估值日的估价净价（取市场行情），可修改
+     */
+    var priceInitByInCpy = function () {
+        // 清空净价
+        $('#price').val('').trigger('blur').trigger('change');
+        // 委托开始日
+        var vdate = $("#vdate").val();
+        // 委托终止日
+        var mdate = $("#mdate").val();
+        // 投资目的
+        var invAim = $("#invAim").val();
+        // 根据投资目的与业务模式对应关系做转换
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            var businessModel = $("#businessModel").val();
+            if(businessModel=="Y1"){
+               invAim = "AC"
+            }else{
+               invAim = "FVTPL"
+            }
+        }
+        // 交易对手
+        var counterType;
+        if ($('#etrInvestPersonInfo_counterId').select2('data') && $('#etrInvestPersonInfo_counterId').select2('data')[0]) {
+            counterType = $('#etrInvestPersonInfo_counterId').select2('data')[0].object;
+        }
+        // 委托开始日或指令结束日不等于平台日期时
+        if (new Date(sysDate).DateDiff('d', vdate) !== 0
+            || new Date(sysDate).DateDiff('d', mdate) !== 0) {
+            return;
+        }
+        // 交易对手没有选择内部投资组合
+        if (counterType !== 'N') {
+            $('#price').val('');
+            return;
+        }
+        var finprodMarketId = $('#finprodId').val();
+        if (finprodMarketId) {
+            var data;
+            // 摊余成本类
+            if (invAim === 'AC') {
+                var portfolioId = $('#portfolioId').val();
+                if (portfolioId) {
+                    data = {
+                        sysdate: sysDate,
+                        finprodMarketId: finprodMarketId,
+                        invAim: invAim,
+                        portfolioId: portfolioId,
+                        chlId: $('#chlFinprodId').val()
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                // 其他综合收益或公允价值计入当期损益
+                data = {
+                    sysdate: sysDate,
+                    finprodMarketId: finprodMarketId,
+                    invAim: invAim
+                }
+            }
+            //投资目的选择公允价值计入其他综合收益或公允价值计入当期损益
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/getLastPriceByPara', data,
+                function (result) {
+                    if (result.data) {
+                        $('#price').val(result.data).trigger('blur').trigger('change');
+                    }
+                });
         }
     }
 
@@ -288,8 +420,6 @@
 					entrustNum = JoyinMath.doMul(entrustNum, unitNum, 2, JoyinMath.ROUND_HALF_UP);//万元转成元或不转换
                     //配置单位 edit by yeming 20210721 end
                     object.entrustNum = String(entrustNum);
-                } else {
-                    return;
                 }
             }
             if (typeof FileCommon != "undefined") {
@@ -406,6 +536,7 @@
         $('#EtrInvestBondInfo002_btn_save').click(function () {
             saveOrSubmit('save');
         });
+
         /**
          * 提交
          */
@@ -451,6 +582,16 @@
             // 画星星
             star();
         });
+
+        //根据参数 选择显示投资目的或者业务模式
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+              $("#invAimDiv").hide();
+              $("#businessModelDiv").show();
+        }else{
+           $("#invAimDiv").show();
+              $("#businessModelDiv").hide();
+        }
+
         /**
          * 交易场所
          */
@@ -467,6 +608,21 @@
          */
         $('#tradeMarketMode').change(function () {
             var tradeMarketMode = $('#tradeMarketMode').val();
+            if(tradeMarketMode=='')
+            {
+                //设置默认选中第一项
+                // $("#dealMode option:first").prop("selected", 'selected');
+                $('#tradeMarketMode').val('02').trigger('change');
+            }
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT && $('#tradeMarketMode').val() == SHARES_TRADE_MARKET_02){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == SHARES_TRADE_MARKET_02){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
+            
             if (tradeMarketMode == oneMarket) {
                 $('#ps').prop('disabled', true).val(T01).trigger('change');
             } else {
@@ -483,6 +639,9 @@
          * 交易方向
          */
         $('#ps').change(function () {
+                if(pageModel !== PAGE_MODEL_NEW && pageModel !== PAGE_MODEL_EDIT){
+                    return;
+                }
         	//交易对手和对手交易员清空 add by yzg 20200120 start
         	if(!initFlag && (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT)){
         		$('#etrInvestPersonInfo_counterId').val('').trigger('change');
@@ -577,6 +736,11 @@
             var portfolioId = $('#portfolioId').val();
             var vdate = $('#vdate').val();
             var finprodId = $('#finprodId').val();
+            //增加业务模式的联动处理
+            if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+                changeBussnissModelByFinprodId();
+            //增加业务模式的联动处理
+
             if (finprodId) {
                 var data = $('#finprodId').select2('data')[0].object;
                 if (!data.finprodId) {
@@ -745,6 +909,8 @@
             }
             getSecManageAvailableCash();
         });
+        // 交易对手
+        $('#etrInvestPersonInfo_counterId').change(priceInitByInCpy());
 
         /**
          * 证券托管户
@@ -765,7 +931,17 @@
          */
         $("#invAim").on("change", function () {
             getPtlSecPositionInfo();
+            priceInitByInCpy();
         });
+
+       $("#businessModel").on("change", function () {
+            getPtlSecPositionInfo();
+            priceInitByInCpy();
+        });
+
+
+
+
         // 一体化对应etliu end
         $.fn.updateChosenArr = function updateChosenArr(obj) {
             var $this = $(this), arr = obj.dataResult || JSON.parse($this.attr('data-result') || '[]'), item = obj.item;
@@ -801,7 +977,7 @@
             if (ps == T01 && ccy && portfolioId && vdate) {
                 getPtlCashPositionInfo();
             }
-
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -812,6 +988,7 @@
          */
         $('#mdate').change(function () {
             checkFinMdate();
+            priceInitByInCpy();
             if ($('#price').val()) {
                 calData('price');
             }
@@ -860,6 +1037,7 @@
             }else{
             	$('#settleSpreed').attr('disabled', false);
             }
+            priceInitByInCpy();
         });
         // by 赵东东 20200227 end
         /**
@@ -1129,7 +1307,7 @@
                         if (isInit || pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
                             break;
                         }
-                        if ($("#entrustId").val() != '') {
+                        if ($("#entrustId").val() != ''||tradeMarket === '05') {
                             $('#tradePlat').prop("disabled", true);
                         }
                         break;
@@ -1190,6 +1368,10 @@
                             $tradePlat.updateChosenArr({
                                 disabled: false
                             });
+                        }
+                        if($('#tradeMarket').val() === '05'){
+                            $('#tradePlat').val(SHARES_TRADE_PLATFORM_99).trigger('change').trigger('blur');;
+                            $('#tradePlat').prop("disabled",true);
                         }
                         break;
                 }

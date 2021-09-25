@@ -7,7 +7,7 @@ $(function () {
         var object = $.serializeToObject('#searchForm');
         object.pageModel = pageModel;
         object.operateType = operateType;
-        object.dataSource = '01';
+        object.dataSource = '05';
         if(object.preProspectivePd){
             var preProspectivePd = object.preProspectivePd/100;
             preProspectivePd = preProspectivePd.toFixed(6);
@@ -178,6 +178,12 @@ $(function () {
                 $('#tradeDate').val('').trigger('change');
                 /*$('#portfolioId').val('').trigger('change');*/
             }
+            if ($("#prodName1").val() &&  $('#prodName1').select2('data')[0] && $('#prodName1').select2('data')[0].object) {
+                var portfolioIdValue = $('#prodName1').select2('data')[0].object;
+                $('#portfolioId').val(portfolioIdValue).trigger('change');
+            }
+
+
             // 画星星
             star();
         });

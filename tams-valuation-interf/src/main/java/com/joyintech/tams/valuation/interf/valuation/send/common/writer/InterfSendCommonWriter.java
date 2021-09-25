@@ -10,24 +10,22 @@
 
 package com.joyintech.tams.valuation.interf.valuation.send.common.writer;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
+import com.joyintech.framework.util.DateUtil;
 import com.joyintech.tams.valuation.common.interf.base.constant.DictCodeInterfList;
 import com.joyintech.tams.valuation.common.interf.base.constant.TempConstant;
+import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
+import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
 import com.joyintech.tams.valuation.interf.valuation.send.assetmangementsys.vatflow.dto.ValAddTaxFlowprocessorResult;
 import com.joyintech.tams.valuation.interf.valuation.send.common.service.InterfSendFtpService;
+import com.joyintech.tams.valuation.interf.valuation.send.xmlCommon.util.XmlUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.tams.valuation.interf.core.InterfBaseWriter;
-import com.joyintech.tams.valuation.interf.core.entity.InterfExecuteInfo;
-import com.joyintech.tams.valuation.interf.valuation.send.common.entity.SendWriterEntity;
-import com.joyintech.tams.valuation.interf.valuation.send.xmlCommon.util.XmlUtil;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
 @Service
 @Scope("prototype")
 public class InterfSendCommonWriter extends InterfBaseWriter<ValAddTaxFlowprocessorResult> {
@@ -45,9 +43,9 @@ public class InterfSendCommonWriter extends InterfBaseWriter<ValAddTaxFlowproces
         // TODO Auto-generated method stub
         InterfExecuteInfo executeInfo = (InterfExecuteInfo)getParams().get("executeInfo");
         Date sysDate = new Date();
-        String filePath = executeInfo.getLocalRootPath()  + File.separator
+        String filePath = executeInfo.getLocalRootPath() + File.separator
                 + executeInfo.getSystemId() + File.separator + DateUtil.format(
-                sysDate, DateUtil.DEFAULT_OTHER_FORMAT);
+                executeInfo.getInterfDate(), DateUtil.DEFAULT_OTHER_FORMAT);
 
         File fFilePath = new File(filePath);
         if (!fFilePath.exists()) {
@@ -71,6 +69,10 @@ public class InterfSendCommonWriter extends InterfBaseWriter<ValAddTaxFlowproces
                 }
             }else{
                 xmlUtil.transfer2Xml(item.getDatas(), item.getTmpEName(), filePath, executeInfo.getInterfDate());
+                if (item.getDatas() != null && item.getDatas().size() > 0
+                        && DictCodeInterfList.接口服务器类型_SFTP.getValue().equals(executeInfo.getServerType())) {
+                    interfSendFtpService.doSend(executeInfo, item);
+                }
             }
         }
     }

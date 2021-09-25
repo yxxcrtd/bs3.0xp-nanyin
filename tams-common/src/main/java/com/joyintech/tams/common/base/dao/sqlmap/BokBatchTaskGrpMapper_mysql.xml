@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.BokBatchTaskGrpMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        <id column="TASK_GRP_ID" property="taskGrpId" jdbcType="VARCHAR" />
+        <result column="TASK_GRP_NAME" property="taskGrpName" jdbcType="VARCHAR" />
+        <result column="TASK_GRP_TYPE" property="taskGrpType" jdbcType="VARCHAR" />
+        <result column="P_TASK_GRP_ID" property="pTaskGrpId" jdbcType="VARCHAR" />
+        <result column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <result column="ORDER_NO" property="orderNo" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TASK_GRP_ID TASK_GRP_ID, TASK_GRP_NAME TASK_GRP_NAME, TASK_GRP_TYPE TASK_GRP_TYPE,
+        P_TASK_GRP_ID P_TASK_GRP_ID, TASK_ID TASK_ID, ORDER_NO ORDER_NO, CREATE_USER CREATE_USER,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokBatchTaskGrpMapper.Base_Column_List" />
+        from BOK_BATCH_TASK_GRP
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokBatchTaskGrpMapper.Base_Column_List" />
+        from BOK_BATCH_TASK_GRP
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.BokBatchTaskGrpMapper.Base_Column_List" />
+        from BOK_BATCH_TASK_GRP
+        where TASK_GRP_ID = #{taskGrpId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from BOK_BATCH_TASK_GRP
+        where TASK_GRP_ID = #{taskGrpId,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        insert into BOK_BATCH_TASK_GRP (TASK_GRP_ID, TASK_GRP_NAME, TASK_GRP_TYPE,
+            P_TASK_GRP_ID, TASK_ID, ORDER_NO,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{taskGrpId,jdbcType=VARCHAR}, #{taskGrpName,jdbcType=VARCHAR}, #{taskGrpType,jdbcType=VARCHAR},
+            #{pTaskGrpId,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, #{orderNo,jdbcType=DECIMAL},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        insert into BOK_BATCH_TASK_GRP
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="taskGrpId != null" >
+                TASK_GRP_ID,
+            </if>
+            <if test="taskGrpName != null" >
+                TASK_GRP_NAME,
+            </if>
+            <if test="taskGrpType != null" >
+                TASK_GRP_TYPE,
+            </if>
+            <if test="pTaskGrpId != null" >
+                P_TASK_GRP_ID,
+            </if>
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="taskGrpId != null" >
+                #{taskGrpId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskGrpName != null" >
+                #{taskGrpName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskGrpType != null" >
+                #{taskGrpType,jdbcType=VARCHAR},
+            </if>
+            <if test="pTaskGrpId != null" >
+                #{pTaskGrpId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                #{orderNo,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        insert into BOK_BATCH_TASK_GRP(TASK_GRP_ID, TASK_GRP_NAME, TASK_GRP_TYPE, P_TASK_GRP_ID,
+        TASK_ID, ORDER_NO, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT
+        )
+        select TASK_GRP_ID, TASK_GRP_NAME, TASK_GRP_TYPE, P_TASK_GRP_ID,
+            TASK_ID, ORDER_NO, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+
+             from BOK_BATCH_TASK_GRP
+             where 1 = 1 and TASK_GRP_ID = #{taskGrpId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        update BOK_BATCH_TASK_GRP
+        <set >
+            <if test="taskGrpName != null" >
+                TASK_GRP_NAME = #{taskGrpName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskGrpType != null" >
+                TASK_GRP_TYPE = #{taskGrpType,jdbcType=VARCHAR},
+            </if>
+            <if test="pTaskGrpId != null" >
+                P_TASK_GRP_ID = #{pTaskGrpId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskId != null" >
+                TASK_ID = #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="orderNo != null" >
+                ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TASK_GRP_ID = #{taskGrpId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.BokBatchTaskGrp" >
+        update BOK_BATCH_TASK_GRP
+        set TASK_GRP_NAME = #{taskGrpName,jdbcType=VARCHAR},
+            TASK_GRP_TYPE = #{taskGrpType,jdbcType=VARCHAR},
+            P_TASK_GRP_ID = #{pTaskGrpId,jdbcType=VARCHAR},
+            TASK_ID = #{taskId,jdbcType=VARCHAR},
+            ORDER_NO = #{orderNo,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where TASK_GRP_ID = #{taskGrpId,jdbcType=VARCHAR}
+    </update>
+</mapper>

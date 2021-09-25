@@ -1,3 +1,4 @@
+DELETE FROM sys_para WHERE PARA_CODE = 'LOSS_TYPE';
 insert into sys_para (SYSTEM_CODE, PARA_CODE, PARAM_VALUE, DATA_TYPE, DATA_SCOPE, REMARK, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE, UPDATE_FLG)
 values ('VAL', 'LOSS_TYPE', '02', null, null, '系统减值方案参数，01 毕马威；02 普华永道', 'yuzj1', null, sysdate, 'yuzj1', sysdate, null, '01');
 
@@ -13,6 +14,7 @@ values ('AssetImpairmentManagement002', 'RSK', '/model/impairment/assetimpairmen
 
 
 --数据字典评级类型全量更新MODEL_MAIN_GRADE_TYPE
+delete from SYS_DATADICT_LIST where dict_code = 'MODEL_MAIN_GRADE_TYPE';
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
 values ('MODEL_MAIN_GRADE_TYPE', '01', '主体', 1, '0', 'system', null, sysdate, 'system', sysdate, null);
 

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valuationparametermanage.valtrdaccountmfconfig.dto.ValTrdAccountmfConfig001Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  *  预提费用配置
@@ -15,6 +16,7 @@ import com.joyintech.service.valuation.valuationparametermanage.valtrdaccountmfc
  * @see ValTrdAccountmfConfig001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValTrdAccountmfConfig001Mapper {
     
 	/**

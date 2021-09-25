@@ -147,13 +147,13 @@ public class ModStageParaDto extends BaseEntity implements ITableRow, ProcessEnt
 	public String getElementsValueStr() {
 		String result = this.getElementsValue();
 		if(DictCodeListExt3.减值要素_公司评级信息低于.getValue().equals(this.getElements())) {
-			result = SysDataUtil.getNameFromDataDict(DictCode.评级结果, this.getElementsValue());
+			result = SysDataUtil.getNameFromDataDict(DictCode.内部评级, this.getElementsValue());
 		}else if(DictCodeListExt3.减值要素_风险五级分类.getValue().equals(this.getElements())){// 风险五级可多选
 			if(StringUtils.isNoneBlank(result)) {
 				String[] list = result.split(",");
 				result = "";
 				for (String item : list) {
-					result += SysDataUtil.getNameFromDataDict(DictCode.五级分类, item)+",";
+					result += SysDataUtil.getNameFromDataDict(DictCode.风险五级分类, item)+",";
 		        }
 				result = result.substring(0, result.length() - 1);
 			}

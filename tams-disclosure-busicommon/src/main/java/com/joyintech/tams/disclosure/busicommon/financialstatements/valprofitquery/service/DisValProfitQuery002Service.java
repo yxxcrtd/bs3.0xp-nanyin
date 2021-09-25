@@ -281,7 +281,7 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
      * @see
      * @since 1.0
      */
-    public List<DisValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws Exception {
+    public List<DisValProfitQuery001Dto> findPageAll(Map<String, Object> parameters) throws ParseException, CloneNotSupportedException {
         List<DisValProfitQuery001Dto> dtoList = this.selectListAll(parameters);
         return dtoList;
     }
@@ -296,8 +296,7 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-	public List<DisValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam)
-        throws Exception {
+	public List<DisValProfitQuery001Dto> selectListAll(Map<String, Object> pageParam) throws ParseException, CloneNotSupportedException {
     	// 查询表样
     	List<DisProfitCalculationDto> profitCalculationDtoList = valProfitQuery001Mapper.selectProfitCalculationDtoList();
     	List<DisValProfitQuery001Dto> list = new ArrayList<DisValProfitQuery001Dto>();
@@ -339,12 +338,12 @@ public class DisValProfitQuery002Service extends CommonExportService<DisValProfi
 		return retMap;
 	}
 
-	public static void main(String[] args) {
-		Map<String,String> map1 = new HashMap<String,String>();
-		map1.put("1", "123");
-		Map<String,String> map2 = map1;
-		map2.remove("1");
-		System.out.println(map1.size());
-		System.out.println(map2.size());
-	}
+//	public static void main(String[] args) {
+//		Map<String,String> map1 = new HashMap<String,String>();
+//		map1.put("1", "123");
+//		Map<String,String> map2 = map1;
+//		map2.remove("1");
+//		System.out.println(map1.size());
+//		System.out.println(map2.size());
+//	}
 }

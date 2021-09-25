@@ -61,7 +61,7 @@ public class MstIndexQuotationInfoService extends BaseService<MstIndexQuotationI
      * @since 1.0
      */
     public Page<MstIndexQuotationInfo001Dto> selectForPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
         return super.queryForPage(page,length,() -> mstIndexQuotationInfo001Mapper.queryForPage(map));
     }
 

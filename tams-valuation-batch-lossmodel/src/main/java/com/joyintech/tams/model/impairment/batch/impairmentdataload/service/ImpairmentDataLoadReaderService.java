@@ -3,9 +3,7 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
-import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
-import com.joyintech.tams.common.base.entity.ModConfigUseage;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
@@ -13,10 +11,9 @@ import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
-import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
@@ -35,12 +32,11 @@ public class ImpairmentDataLoadReaderService {
     @Autowired
     private ImpairmentDataLoadMapper impairmentDataLoadMapper;
     @Autowired
-    private ModParamsService modParamsService;
-    @Autowired
     private RateConfigCommonService rateConfigCommonService;
     @Autowired
     private RateInfoCommonService rateInfoCommonService;
-
+    @Autowired
+    private ModLogsService modLogsService;
     /**
      * 二叉树模型-reader
      * @param params
@@ -48,7 +44,7 @@ public class ImpairmentDataLoadReaderService {
      */
     public List<ImpairmentDataLoadStep1ReaderDto> createReaderList(Map<String, Object> params, StepExecution stepExecution) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        List<ModValBatchParams> listBatch = (List<ModValBatchParams>) params.get("listBatch");
         //1.读取需要进行处理的资产
         //资产代码集合
         List<String> finprodIdList = new ArrayList<String>();
@@ -65,6 +61,7 @@ public class ImpairmentDataLoadReaderService {
         para.put("SEC_TYPE_13", DictCodeListExt1.证券品种_其他债权类.getValue());
         para.put("finprodIdList", finprodIdList);
         List<ImpairmentDataLoadStep1ReaderDto> list = new ArrayList<>();
+        List<ImpairmentDataLoadStep1ReaderDto> listErrorDto = new ArrayList<>();
         // 减值方案系统参数
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
         if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
@@ -85,6 +82,7 @@ public class ImpairmentDataLoadReaderService {
                     searchPara.put("prodId", item.getProdId());
                     searchPara.put("portfolioId",item.getPortfolioId());
                     searchPara.put("finprodId",item.getFinprodId());
+                    searchPara.put("platDate",platDate);
                     // 调用方法查询首次买入日期，存入交割日，后续查询买入时点评级使用
                     item.setSettleDate(impairmentCommonService.queryFirstBuyDate(searchPara));
                 }
@@ -113,6 +111,8 @@ public class ImpairmentDataLoadReaderService {
             // 定义 查询参数.资产信息
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, entity);
+            modAssetInfoDto.setSecType(entity.getSecTypeModel());
+            modAssetInfoDto.setSecTypeDetail(entity.getSecDetailTypeModel());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -134,9 +134,18 @@ public class ImpairmentDataLoadReaderService {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,platDate);
-            }else if(configMap.get(entity.getFinprodId()) != null){
+            }else if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null
+                || configMap.get(entity.getSecTypeModel()) != null){
                 // 一般资产评级配置
-                ModAssetGradeConfig config = configMap.get(entity.getFinprodId());
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel()) != null){
+                    config = configMap.get(entity.getSecTypeModel()+entity.getSecDetailTypeModel());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(entity.getSecTypeModel());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型
@@ -156,8 +165,9 @@ public class ImpairmentDataLoadReaderService {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
+
+                listErrorDto.add(entity);
                 continue;
             }
             if(ratingInfoDto != null){
@@ -170,12 +180,15 @@ public class ImpairmentDataLoadReaderService {
             }
             else{
                 // 警告：资产无对应评级信息
-                String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        entity.getFinprodId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果信息";
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
+
+                listErrorDto.add(entity);
             }
         }
-
+        if(CollectionUtils.isNotEmpty(listErrorDto)){
+            list.removeAll(listErrorDto);
+        }
         return list;
     }
 

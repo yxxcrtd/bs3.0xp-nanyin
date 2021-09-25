@@ -22,6 +22,13 @@ public interface TrdInvestPersonInfo002Service {
     String DEFAULT_ENTITY_NAME = "trdInvestPersonInfo";
 
     /**
+     * 查询交易对手信息
+     * @param param 参数
+     * @return 交易对手
+     */
+    Page<SelectOptionDto> queryCounterId(Map<String, Object> param);
+
+    /**
      * 检索交易对手
      * @param param 参数
      * @return 交易对手

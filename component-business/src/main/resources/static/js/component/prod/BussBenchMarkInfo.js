@@ -51,11 +51,7 @@
     	else if(getElementById('publishType').val() === PUBLISH_TYPE_02) {
 			getElementById('rateType').trigger('change').prop('disabled', false);
             $("#rateTypeDiv").css('display','block');
-			getElementById('rate').trigger('change').prop('disabled', false);
-			getElementById('indexId').trigger('change').prop('disabled', false);
-			getElementById('coefficient').trigger('change').prop('disabled', false);
-			getElementById('spreadRate').trigger('change').prop('disabled', false);
-			getElementById('resetType').trigger('change').prop('disabled', false);
+            rateTypeChange();
 			getElementById('rateLower').val('').trigger('change').prop('disabled', true);
 			getElementById('rateLimit').val('').trigger('change').prop('disabled', true);
 		}
@@ -85,7 +81,7 @@
             getElementById('indexId').val('').trigger('change').prop('disabled', true);
             getElementById('coefficient').val('').trigger('change').prop('disabled', true);
             getElementById('spreadRate').val('').trigger('change').prop('disabled', true);
-            getElementById('resetType').trigger('change').prop('disabled', true);
+            getElementById('resetType').val('').trigger('change').prop('disabled', true);
         } else {
             getElementById('rate').val('').trigger('change').prop('disabled', true);
             getElementById('indexId').trigger('change').prop('disabled', false);
@@ -126,7 +122,7 @@
         } else {
             getElementById('div').show();
         }
-        getElementById('publishType').val('').trigger('change');
+        getElementById('publishType').val('02').trigger('change');
         getElementById('rateType').val('').trigger('change');
     }
     /**
@@ -143,7 +139,7 @@
         	else{
                 getElementById('div').show();
         	} 
-            getElementById('publishType').val('').trigger('change');
+            getElementById('publishType').val('02').trigger('change');
             getElementById('rateType').val('').trigger('change');
     	}
     }

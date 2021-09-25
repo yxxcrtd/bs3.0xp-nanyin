@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.HtmlUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,6 +127,15 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
             //多组合
             Map<String,Object> map = new HashMap<>();
             map.put("quoteId", quoteId);
+            //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
+            List<PtlAllocationDto> ptlAllocationList = cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map);
+            if(ptlAllocationList.size() > 0){
+                CfetsRepoDealQuotedPrice001Dto dto = cfetsRepoDealQuotedPrice002Service.queryEntrustInfoByEntrustId(
+                        ptlAllocationList.get(0).getEntrustId(), null);
+                cfetsRepoDealQuotedPrice001Dto.setTradeDate(dto.getVdate());
+                cfetsRepoDealQuotedPrice001Dto.setPortfolioSeries(dto.getPortfolioSeries());
+            }
+            //add by chenjiaxing 交易日期，组合系列初始化 20210913 start
             model.addAttribute(GlobalConstant.ENTITY,cfetsRepoDealQuotedPrice001Dto);
             //组合分配列表初始化
             cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(cfetsRepoDealQuotedPrice003Service.selectPortfolioInit(map));
@@ -162,6 +172,12 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
         cfetsRepoDealQuotedPrice002Service.单独处理页面质押券列表(cfetsRepoDealQuotedPrice001Dto);
         model.addAttribute("entity_bussRepoSecDto",cfetsRepoDealQuotedPrice001Dto.getBussRepoSec() == null ? null : JsonUtils.object2Json(cfetsRepoDealQuotedPrice001Dto.getBussRepoSec()));
         model.addAttribute("dialogueRecord", HtmlUtils.htmlUnescape(cfetsRepoDealQuotedPrice001Dto.getDialogueRecord()));
+        // 监督时分_交易监控
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         return super.init(model);
     }
 
@@ -272,7 +288,7 @@ public class CfetsRepoDealQuotedPr003Controller extends BaseController {
         }
         ProcessParameter<CfetsRepoDealQuotedPrice001Dto> processParameter = new ProcessParameter<CfetsRepoDealQuotedPrice001Dto>();
         WorkFlowParameter<CfetsRepoDealQuotedPrice001Dto> params = cfetsRepoDealQuotedPrice002Service.getWorkFlowParameter(cfetsRepoDealQuotedPrice001Dto);
-        params.setPageId("CfetsRepoDealQuotedPrice003");
+        params.setPageId("CfetsRepoDealQuotedPr003");
         params.setElementId(cfetsRepoDealQuotedPrice001Dto.getElementId());
         params.setBusinessType(DictCodeListExt3.共通业务类型_银行间上行.getValue());
         params.setBusinessCode(cfetsRepoDealQuotedPrice001Dto.getQuoteId());

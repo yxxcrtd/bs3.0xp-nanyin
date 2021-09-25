@@ -36,6 +36,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
 import com.joyintech.tams.common.base.dao.FinProductConvertibleMapper;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
@@ -109,6 +110,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 
     @Autowired
     FinProductAddMapper finProductAddMapper;
+
+	@Autowired
+	FinProductMapper finProductMapper;
 
 	/**
 	 * {@inheritDoc}
@@ -260,6 +264,8 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
         BaseEtrInvestInfoDto entity = restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/buildEtrFlow", dto,
             BaseEtrInvestInfoDto.class);
+		// 设置指令创建来源
+		entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
         entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         entity.setWorkFlowId(dto.getWorkflowId());
         restTemplate.postForObject(
@@ -315,6 +321,17 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		return restTemplate.postForPage(
 				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/getFinprodMarketInfo", map,
 				SelectOptionDto.class);
+	}
+
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String IsBondAsset(Map<String, Object> map) {
+		return restTemplate.postForObject(
+				ServiceApplication.BASICDATA_SERVICE_NAME + "/MstSecuritiesAccountInfo/IsBondAsset", map,
+				String.class);
 	}
 	
 	 /**
@@ -1666,6 +1683,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 				//检查资产是否存在且在指令范围资产类型内
 				return this.checkAstScope(dzImportDto, "EtrExchangeTrade001.secId");
 			});
+			//add by chenjiaxing 添加申报类型校验 20210907 start
+			if(StringUtil.equals(dzImportDto.getTradePlat(),DictCodeList.交易平台_大宗交易平台.getValue())){
+				checkElement(dzImportDto,promptMsg,null,obj-> {
+					return etrCommonService.checkIsBlank(dzImportDto.getDeclaType(), "EtrExchangeTrade001.priceModel2", lineNo);
+				});
+			}
+			//add by chenjiaxing 添加申报类型校验 20210907 end
 			// 委托方向
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPs(), "EtrExchangeTrade001.ps", lineNo);
@@ -1680,14 +1704,9 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 			checkElement(dzImportDto,promptMsg,null,obj-> {
 				return etrCommonService.checkIsBlank(dzImportDto.getPriceModel(), "EtrExchangeTrade001.priceModel", lineNo);
 			});
-			//add by chenjiaixng 添加指令价格非空校验 20210827 start
-			checkElement(dzImportDto,promptMsg,null,obj-> {
-				return etrCommonService.checkIsBlank(dzImportDto.getEntrustPrice() == null ? "" :dzImportDto.getEntrustPrice().toString(), "EtrExchangeTrade003.price", lineNo);
-			});
-			//add by chenjiaixng 添加指令价格非空校验 20210827 end
 			//add by chenjiaxing 校验投资目的不能为空 start
 			if (!StringUtil.isNotEmpty(dzImportDto.getInvAim()) && StringUtils.isNotEmpty(dzImportDto.getFinprodType2())
-					&&  (!dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) ||
+					&&  (!dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue()) &&
 					!dzImportDto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue()) )) {
 				checkElement(dzImportDto,promptMsg,null,obj-> {
 					return etrCommonService.checkIsBlank(dzImportDto.getInvAim() == null ? "" :dzImportDto.getInvAim().toString(),
@@ -1889,12 +1908,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
 		Map<String, Object> param = new HashMap<>();
 		param.put("portfolioId", t.getPortfolioId());
 		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 start
-		String tradeMarket = t.getFinprodId();
-		String[] arr = StringUtil.split(tradeMarket, ".");
-		if(StringUtil.equals(arr[1],"SH")){
-			param.put("tradeMarket", DictCodeListExt1.交易场所_上海证券交易所.getValue());
-		}else if(StringUtil.equals(arr[1],"SZ")){
-			param.put("tradeMarket", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+		if(StringUtil.isNotEmpty(t.getFinprodId())){
+			String tradeMarket = t.getFinprodId();
+			String[] arr = StringUtil.split(tradeMarket, ".");
+			if(StringUtil.equals(arr[1],"SH")){
+				param.put("tradeMarket", DictCodeListExt1.交易场所_上海证券交易所.getValue());
+			}else if(StringUtil.equals(arr[1],"SZ")){
+				param.put("tradeMarket", DictCodeListExt1.交易场所_深圳证券交易所.getValue());
+			}
 		}
 		//add by cehnjiaxing 导入联动券商账户时查询交易场所 20210826 end
 		List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
@@ -2011,26 +2032,26 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 List<String> rowData = objects.get(i);
                 // 委托开始日日期非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(11), "EtrExchangeTrade001.vdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
                 // 委托开始日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(11), "EtrExchangeTrade001.vdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.vdate", lineNo));
                 // 委托结束日日期非空
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsBlank(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+                        etrCommonService.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
                 // 委托结束日日期格式check
                 confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        etrCommonService.checkIsDate(rowData.get(12), "EtrExchangeTrade001.mdate", lineNo));
+                        etrCommonService.checkIsDate(rowData.get(13), "EtrExchangeTrade001.mdate", lineNo));
                 /**** 委托开始日与终止日必须是平台日 ***/
                 if (StringUtil.isBlank(confirmMsg)) {
-                    confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(11), rowData.get(12),
+                    confirmMsg = etrCommonService.checkIsPlateDate(rowData.get(12), rowData.get(13),
                             lineNo);
                 }
                 if (StringUtil.isBlank(confirmMsg)) {
                     // 委托开始日
-                    unit.setVdate(DateUtil.parse(rowData.get(11)));
+                    unit.setVdate(DateUtil.parse(rowData.get(12)));
                     // 委托结束日
-                    unit.setMdate(DateUtil.parse(rowData.get(12)));
+                    unit.setMdate(DateUtil.parse(rowData.get(13)));
                 } else {
                     // 设置提示信息
                     promptMsg = confirmMsg;
@@ -2125,10 +2146,15 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     List<SelectOptionDto> ptlSecAcctList = getPtlSecAcctInfo(param);
                     if (null != ptlSecAcctList && ptlSecAcctList.size() > 0) {
                         if (StringUtil.isNotEmpty(rowData.get(2))) {
-                            if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
-                                confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                                        getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
-                            }
+                        	if (rowData.get(2).contains(":")) {
+								if (ptlSecAcctList.stream().noneMatch(m -> m.getId().equals(rowData.get(2)))) {
+									confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+											getMessage("ETR_E_0017", getMessage("EtrExchangeTrade001.acctNo"), lineNo));
+								}
+							} else {
+								confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+										getMessage("ETR_E_0042", getMessage("EtrExchangeTrade001.acctNo"), getMessage("EtrExchangeTrade001.acctNoWithCorrectFormat"), lineNo));
+							}
                             //add by chenjiaixng 添加多券商资金账户时，资金账号代码必填校验 20210827 start
                         }else{
 							if(ptlSecAcctList.size() > 1) {
@@ -2158,14 +2184,14 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                     }
                 }
 				//add by chenjiaxing 校验投资目的不能为空 start
-				if (!StringUtil.isNotEmpty(rowData.get(13)) && StringUtils.isNotEmpty(unit.getFinprodType2())
+				if (!StringUtil.isNotEmpty(rowData.get(11)) && StringUtils.isNotEmpty(unit.getFinprodType2())
 						&&  !unit.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())) {
 					confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService
-							.checkIsBlank(rowData.get(13), "EtrExchangeTrade001.invAim", lineNo));
+							.checkIsBlank(rowData.get(11), "EtrExchangeTrade001.invAim", lineNo));
 				}
 				if (StringUtil.isBlank(confirmMsg)) {
 					// 投资目的
-					String priceModel = convertToItemCode(DictCode.投资目的.getValue(), rowData.get(13));
+					String priceModel = convertToItemCode(DictCode.投资目的.getValue(), rowData.get(11));
 					unit.setInvAim(priceModel);
 				} else {
 					// 设置提示信息
@@ -3553,6 +3579,13 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
                 entrustNum = quto;
             }
         }
+		else if (DictCodeList.交易方向_申购.getValue().equals(ps) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(finprodType2)){
+
+			FinProduct finProduct = finProductMapper.selectByPrimaryKey(finprodId);
+			if (Objects.nonNull(finProduct.getIssueAmt()) && Objects.nonNull(finProduct.getIssuePrice())) {
+				entrustNum = ArithmeticUtil.divide(finProduct.getIssueAmt(), finProduct.getIssuePrice(), 2);
+			}
+		}
         else if(DictCodeListExt2.交易方向_配股.getValue().equals(ps) || DictCodeListExt3.交易方向_配债.getValue().equals(ps)){
 
             List<String> othTypeList = new ArrayList<String>();
@@ -3594,7 +3627,35 @@ public class EtrExchangeTrade001Service extends CommonExportService<EtrExchangeT
         return restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrust", map,
                 WflEtrEntrust.class);
     }
+	/**
+	 *
+	 * @Description 查询流程及委托表中是否有同一股东下达的可转债申购指令
+	 * @Param [map]
+	 * @return java.util.List<java.lang.String>
+	 * @version 1.0
+	 * @see
+	 **/
+	public List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String,Object> map){
+		return restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrExchangeTrade/selectWflEntrustAddAndEtrEntrustAdd", map,
+				List.class);
+	}
 
+	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
+	/**
+	 * 1.6计算偏离度
+	 *
+	 * @param parameters 画面参数
+	 * @return 偏离度
+	 * @see
+	 * @since 1.0
+	 */
+	public String calcDeviationDegree(Map<String, Object> parameters) {
+		// 平台日
+		parameters.put("sysDate", DateUtil.format(iPlatformDate.getSysDate()));
 
+		return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/EtrExchangeTrade/calcDeviationDegree",
+				parameters, String.class);
+	}
+    //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
 
 }

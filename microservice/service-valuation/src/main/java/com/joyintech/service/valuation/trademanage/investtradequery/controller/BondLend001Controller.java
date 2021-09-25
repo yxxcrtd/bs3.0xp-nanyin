@@ -60,7 +60,7 @@ public class BondLend001Controller extends BaseController {
 //    }
         
     @PostMapping("/findByTradeId")
-    public BondLendDto findByTradeId(@RequestBody Map<String, Object> param) throws Exception {
+    public BondLendDto findByTradeId(@RequestBody Map<String, Object> param) {
         return bondLend001Service.findByTradeId(param);
     }
 }

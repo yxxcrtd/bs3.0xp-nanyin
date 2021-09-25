@@ -24,9 +24,17 @@
             var obj = {tradeDirection:$('#ps').val(),timePoint:MY_SUP_TIME_TYPE_02,valDate:sysDate,portfolioCode:$('#portfolioId').val(),tradeAmount:$('#entrustAmt').val(),assetType:fintype_zhg,isEnabled:'01'}
         }
         // add by zhangrui1 交易对手影响风险试算 start
-        obj.counterId = $('#etrInvestPersonInfo_counterId').val();
+        // ZGZGST-2951:修改交易对手元素Id fuyongsheng 20210918 edit start
+        obj.counterId = $('#counterId').val();
+        // ZGZGST-2951:修改交易对手元素Id fuyongsheng 20210918 edit end
         // add by zhangrui1 交易对手影响风险试算 end
         obj.repoTerm = $('#repoTerm').val();
+        //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
+        if(!obj.repoTerm){
+            Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
+            return;
+        }
+        //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add end
         var object = {tradeDirection:['ps','EtrIbRepoinfo002.ps'],portfolioCode:['portfolioId','EtrIbRepoinfo002.portfolioId'],tradeAmount:['entrustAmt','EtrIbRepoinfo002.entrustAmt'],assetType:['assetType1','EtrIbRepoinfo002.assetType1'],data:obj}
         // add by zhangrui1 交易对手影响风险试算 start
         object.counterId = ['counterId', 'EtrInvestPersonInfo.counterId'];
@@ -318,6 +326,11 @@
             if (param.remark) {
                 $("#remark").val(param.remark).trigger("change");//备注
             }
+            //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 start
+            if (param.counterId) {
+                $("#counterId").textSelect('setValue',param.counterId);
+            }
+            //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 end
             pageModel = PAGE_MODEL_EDIT;
             //operType = ENTRUST_RECORD_MODIFY;
         }

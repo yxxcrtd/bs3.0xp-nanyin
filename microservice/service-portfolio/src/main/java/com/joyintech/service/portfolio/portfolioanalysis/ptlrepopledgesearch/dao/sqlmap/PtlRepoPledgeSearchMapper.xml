@@ -680,7 +680,7 @@ FROM
 			</foreach>
 		</if>
 		/*查询日期*/
-		and TOTAL.SETTLE_DATE &lt;= date'2020-01-09'
+		and TOTAL.SETTLE_DATE &lt;= to_date(#{searchDate, jdbcType=VARCHAR}, 'yyyy-MM-dd')
 		group by TOTAL.PORTFOLIO_ID,
 		pp.PORTFOLIO_NAME,
 		fp.FINPROD_MARKET_ID,

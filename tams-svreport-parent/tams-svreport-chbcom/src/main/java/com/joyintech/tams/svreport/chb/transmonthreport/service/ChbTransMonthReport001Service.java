@@ -1242,8 +1242,7 @@ public class ChbTransMonthReport001Service extends SvrCommonExportService<ChbTra
         				//对债券评级进行特殊处理，即对1.1.a.a PPN等低流动性债券进行特殊处理
 	        			if (singleRule.getRuleCodeList().get(i).toUpperCase().equals("RATINGAA-|RATINGNULL")){
 	        				if(xyz.contains(pos.getAssettype2()) 
-	        						&& ((pos.getRating()!=null &&compareRating(pos.getRating(),singleRule.getRuleValueList().get(i)) < 0 )
-	        								  ||pos.getRating() == null)
+	        						&& (pos.getRating() == null ||(pos.getRating()!=null &&compareRating(pos.getRating(),singleRule.getRuleValueList().get(i)) < 0 ))
 										&& "02".equals(pos.getIssueMode())){
 	        					isPattern = true;
 	        				}else{

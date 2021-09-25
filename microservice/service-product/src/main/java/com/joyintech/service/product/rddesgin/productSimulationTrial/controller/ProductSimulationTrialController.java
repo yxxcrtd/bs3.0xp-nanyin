@@ -94,7 +94,7 @@ public class ProductSimulationTrialController {
 	public Page<ProductSimulationTrialDto> queryForPage(@RequestBody Map<String, Object> pageParam,
 														@PathVariable("page") int page,
 														@PathVariable("length") int length)
-			throws Exception {
+	{
 		return productSimulationTrialService.findPage(page, length, pageParam);
 	}
 	

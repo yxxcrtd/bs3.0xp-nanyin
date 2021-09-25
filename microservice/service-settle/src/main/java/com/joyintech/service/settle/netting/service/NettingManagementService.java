@@ -14,6 +14,8 @@ import com.joyintech.tams.invest.common.dto.settle.dvporder.DvpOrdersManagementD
 import com.joyintech.tams.invest.common.dto.settle.netting.NettingManagementDto;
 import com.joyintech.tams.invest.common.dto.settle.netting.NettingOrdersDto;
 import com.joyintech.tams.invest.common.dto.settle.netting.TransferMessageDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +29,13 @@ import java.util.Map;
  */
 @Service
 public class NettingManagementService extends BaseService<NettingManagementDto> {
-
+    private static final Logger logger = LoggerFactory.getLogger(NettingManagementService.class);
     @Autowired
     private NettingManagementMapper nettingManagementMapper;
 
 
     public Page<NettingManagementDto> findNettingTableData(int page, int length, Map<String, Object> param)
-            throws Exception {
+    {
         setParams(param);
         return queryForPage(page, length, () -> nettingManagementMapper.findNettingTableData(param));
     }
@@ -53,7 +55,8 @@ public class NettingManagementService extends BaseService<NettingManagementDto> 
 
 
         if (param.get("orderType") != null) {
-            System.out.println(param.get("orderType"));
+//            System.out.println(param.get("orderType"));
+            logger.info(String.valueOf(param.get("orderType")));
             param.put("orderType", StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("orderType")));
         }
         else {

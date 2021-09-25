@@ -15,7 +15,6 @@
             <Cell order="11" name="权益登记日股本">regDateAmt</Cell>
             <Cell order="12" name="分红金额">fpriceAmt</Cell>
             <Cell order="13" name="分红股本">shareAmt</Cell>
-            <Cell order="14" name="机构号">institutionName</Cell>
         </Row>
     </Worksheet>
 </Workbook>

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.common.base.entity.BokBussDetsub;
 import com.joyintech.tams.common.base.entity.BokStatDetPosiiton;
 import com.joyintech.tams.constant.DictCodeList;
@@ -26,7 +27,6 @@ import com.joyintech.tams.valuation.common.constants.BookConstant;
 import com.joyintech.tams.valuation.common.constants.DataIndexSequenceType;
 import com.joyintech.tams.valuation.common.constants.DictCodeBaseSubjectNatrue;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.common.utils.DBUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -421,7 +421,7 @@ public class ExchangeCarryoverProcessorService {
             // 凭证编号 (场景代码 + 发生日 + "汇兑损益结转" + 冲销标识)md5加密处理
             String bookId = item.getBooksetId() + item.getTableId() + item.getHappenDate()
                     + BookConstant.DEF_BOK_DETAIL_ID + item.getOffsetFlag();
-            bookId = MD5Util.string2MD5(bookId);
+            bookId = EncryptUtil.getInstance().md5(bookId);
             // 凭证说明 会计场景代码对应名称
             item.setBookId(bookId);
             // 冲正标识 正常交易

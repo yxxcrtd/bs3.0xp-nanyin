@@ -28,11 +28,12 @@
 	<select id="select" resultType="com.joyintech.service.basicdata.marketdata.yieldcurveinfo.dto.ComYieldCurveInfoDto">
 		select
 			MY.CURVE_DATE as curveDate,
-		    MC.REMARK AS curveName,
+		    MC.CURVE_NAME AS curveName,
+		    MC.REMARK AS remark,
 			MY.CURVE_CODE as curveCode,
 			MY.KEY_POINT as keyPoint,
 			MY.YIELD*100 as yield,
-			MY.CURVE_TYPE as curveType,
+			MC.INT_CURVE_TYPE as curveType,
 			MC.N as n,
 			MC.K as k
 		from  MST_YIELD_CURVE_INFO MY
@@ -44,6 +45,9 @@
 			</if>
 			<if test="curveType != null and curveType != ''">
 				AND MY.CURVE_TYPE = #{curveType,jdbcType=VARCHAR}
+			</if>
+			<if test="intCurveType != null and intCurveType != ''">
+				AND MC.INT_CURVE_TYPE = #{intCurveType,jdbcType=VARCHAR}
 			</if>
 			<if test="curveDate != null and curveDate != ''">
 				AND TO_CHAR(MY.CURVE_DATE,'yyyy-MM-dd') = #{curveDate}
@@ -60,7 +64,7 @@
 	<select id="getCurveName" resultType="com.joyintech.framework.select.SelectOptionDto">
 		select
 		CURVE_CODE id,
-		remark text,
+		CURVE_NAME text,
 		INT_CURVE_TYPE object
 		from   MST_CURVE_DEF
 		<where>

@@ -13,6 +13,8 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalsumname.service;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +47,14 @@ public class RskValSumname001Service extends BaseService<RskValSumnameDto>{
      * @since 1.0
      */
     public List<RskValSumnameDto> getSumName(Map<String, Object> map) {
-        return rskValSumnameMapper.getSumName(map);
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<RskValSumnameDto> list=rskValSumnameMapper.getSumName(map);
+            List<RskValSumnameDto> listDefault=rskValSumnameMapper.getSumNameDefault(map);
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValSumnameMapper.getSumName(map);
+        }
     }
     /**
      * <一句话功能简述>
@@ -58,7 +67,7 @@ public class RskValSumname001Service extends BaseService<RskValSumnameDto>{
      * @see
      * @since 1.0
      */
-    public Page<RskValSumnameDto> selectForPage(int page, int length, Map<String, Object> pageParam) throws Exception {
+    public Page<RskValSumnameDto> selectForPage(int page, int length, Map<String, Object> pageParam) {
         return super.queryForPage(page, length, () -> {
             rskValSumnameMapper.selectForPage(pageParam);
         });
@@ -78,5 +87,16 @@ public class RskValSumname001Service extends BaseService<RskValSumnameDto>{
     public boolean getCountById(RskValSumnameDto dto) {
         return rskValSumnameMapper.getCountById(dto)>0;
     }
-    
+    /*估值表汇总默认映射数
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public boolean getAssetSumInfoIsDefault(RskValSumnameDto dto) {
+        return rskValSumnameMapper.getAssetSumInfoIsDefault(dto)>0;
+    }
+
 }

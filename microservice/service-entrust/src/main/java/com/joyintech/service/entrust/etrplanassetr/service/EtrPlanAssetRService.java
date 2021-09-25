@@ -125,7 +125,7 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
      * @since 1.0
      */
     public Page<EtrPlanAssetRDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         String assetType1 =(String)param.get("assetType1");
         if(StringUtil.isNotEmpty(assetType1)){
             List<String> assetType1List = StringUtil.splitToList(",", assetType1);
@@ -315,6 +315,15 @@ public class EtrPlanAssetRService extends BaseService<EtrPlanAssetRDto> {
             etrEntrustAdd.setVdate(null);
             etrEntrustAdd.setMdate(null);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_计划类资产_利率型.getValue());
+            etrEntrust.setBusinessModel(dto.getBusinessModel());
+            //根据投资目的与业务模式的对应关系入库时赋值
+            if(StringUtil.equals("Y1",dto.getBusinessModel())){
+                dto.setInvAim("AC");
+                etrEntrust.setInvAim("AC");
+            }else if(StringUtil.equals("Y2",dto.getBusinessModel())){
+                dto.setInvAim("FVTPL");
+                etrEntrust.setInvAim("FVTPL");
+            }
             List<EtrDistribute> etrDistributeList = new ArrayList<>();
             if (StringUtil.isNotEmpty(dto.getEtrInvestPersonInfo().getTrader())) {
                 

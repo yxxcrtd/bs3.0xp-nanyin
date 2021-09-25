@@ -101,7 +101,20 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      * 账户来源
      */
     private String secAcctSource;
-    
+
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
     /**
      * 取得 金融产品类型（投管分类），债券、理财产品、基金、理财产品模板、理财产品分层
      *
@@ -527,6 +540,13 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private BigDecimal refundAmount;
 
+
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+
     public String getPreTradeId() {
         return preTradeId;
     }
@@ -631,6 +651,15 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
     
     private RiskCreditListCommonDto riskCreditListCommonDto;
 
+    /**
+     * 投标一级市场债券
+     */
+    private String oFinprodId;
+
+    /**
+     * 投标编号
+     */
+    private String bidId;
 
     public BigDecimal getBussTrdAvailableCashQueryavalibleCash() {
         return bussTrdAvailableCashQueryavalibleCash;
@@ -2320,5 +2349,29 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
 
     public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
+    }
+
+    public String getoFinprodId() {
+        return oFinprodId;
+    }
+
+    public void setoFinprodId(String oFinprodId) {
+        this.oFinprodId = oFinprodId;
+    }
+
+    public String getBidId() {
+        return bidId;
+    }
+
+
+    public void setBidId(String bidId) {
+        this.bidId = bidId;
+    }
+     public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
     }
 }

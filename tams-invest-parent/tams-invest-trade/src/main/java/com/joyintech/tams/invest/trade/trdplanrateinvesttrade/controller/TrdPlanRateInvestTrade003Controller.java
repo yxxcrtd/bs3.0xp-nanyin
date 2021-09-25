@@ -9,6 +9,8 @@
  */
 
 package com.joyintech.tams.invest.trade.trdplanrateinvesttrade.controller;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +18,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.util.*;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +41,6 @@ import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
@@ -141,7 +139,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
                 DictCode.清算速度,DictCode.币种,
                 DictCode.是否,
                 DictCode.分配方式,
-                DictCode.投资目的);
+                DictCode.投资目的, DictCode.业务模式);
 
         // 一体化对应etliu start
 //        model.addAttribute("PS_PURCHASE_T04",DictCodeList.交易方向_申购.getValue());
@@ -149,7 +147,10 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         model.addAttribute("PS_T02",DictCodeList.交易方向_卖出.getValue());
         // 一体化对应etliu end
-
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
@@ -406,12 +407,20 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
             //paramMap.put("calendarId", dto.getCalendarId());
             paramMap.put("chlId", dto.getChlId());
             paramMap.put("finprodId", dto.getFinprodId());
+            //考虑流程中被占用,是的情况
+            paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
 
             BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
             //融资金额
             BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            //流程中占用金额
+            BigDecimal positionFlow =null;
+            if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+                positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+            }
+            position= ArithmeticUtil.doAdd(position,positionFlow);
             position = com.joyintech.framework.util.ArithmeticUtil.doAdd(position, dto.getTradeAmt());
             //资产 融资金额、发行金额
             if (issueAmt.compareTo(position) < 0) {
@@ -428,7 +437,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody TrdPlanRateInvestTradeDto dto, BindingResult br) throws Exception {
+    public AjaxResult save(@RequestBody TrdPlanRateInvestTradeDto dto, BindingResult br) throws IOException, InstantiationException, WorkFlowException, InvocationTargetException, IllegalAccessException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -616,7 +625,7 @@ public class TrdPlanRateInvestTrade003Controller extends BaseController{
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_利率型_存续期);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     /**
      * 查询资产管理人 <功能详细描述>

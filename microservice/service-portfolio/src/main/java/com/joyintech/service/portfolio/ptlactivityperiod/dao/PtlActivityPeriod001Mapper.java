@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -28,6 +29,7 @@ import com.joyintech.service.portfolio.ptlactivityperiod.dto.PtlActivityPeriod00
  * @see PtlActivityPeriod001Mapper
  * @since 1.0
  */
+@Repository
 public interface PtlActivityPeriod001Mapper {
     /**
      * 分页查询

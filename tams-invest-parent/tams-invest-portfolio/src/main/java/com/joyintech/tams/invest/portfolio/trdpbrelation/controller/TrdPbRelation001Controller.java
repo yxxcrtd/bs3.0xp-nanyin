@@ -59,12 +59,10 @@ public class TrdPbRelation001Controller extends BaseController {
      * 分页查询
      * 
      * @return
-     * @throws Exception
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<TrdPbRelation001Dto> findPage()
-        throws Exception {
+    public Page<TrdPbRelation001Dto> findPage(){
         return trdPbRelation001Service.selectForPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -87,16 +85,13 @@ public class TrdPbRelation001Controller extends BaseController {
      * 删除
      * 
      * @param dto MstMarketInstitutionsDto
-     * @param br BindingResult
      * @return AjaxResult
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody TrdPbRelation001Dto dto)
-        throws Exception {
+    public AjaxResult delete(@RequestBody TrdPbRelation001Dto dto){
         String msg = "删除失败";
         int num = trdPbRelation001Service.delete(dto);
         if (num > 0) {
@@ -109,13 +104,11 @@ public class TrdPbRelation001Controller extends BaseController {
      * 导出信息excel
      * 
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<TrdPbRelation001Dto> listdto = trdPbRelation001Service.selectForExport(
             paraMap);

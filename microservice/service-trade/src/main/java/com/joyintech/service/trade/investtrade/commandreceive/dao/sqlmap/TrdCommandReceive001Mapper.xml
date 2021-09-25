@@ -72,7 +72,8 @@
 			decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUS_A.FINISH_AMT * 100,0),'F10',NVL(ETR_FINISH_STATUS_A.FINISH_AMT *
 			100,0),NVL(ETR_FINISH_STATUS_A.FINISH_AMT,0)) 
 		else
-			NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM*100)-
+			decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM*100),'F10',
+			    NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM*100),NVL(ETR_ENTRUST.ENTRUST_AMT,ETR_ENTRUST.ENTRUST_NUM))-
 			decode(ETR_ENTRUST_ADD.ASSET_TYPE,'F01',NVL(ETR_FINISH_STATUS_A.FINISH_AMT * 100,0),'F10',NVL(ETR_FINISH_STATUS_A.FINISH_AMT *
 			100,0),NVL(ETR_FINISH_STATUS_A.FINISH_AMT,0)) 
 		end as proAvailableCash,
@@ -95,6 +96,9 @@
 		ETR_ENTRUST_ADD.MATURE_YIELD matureYield,
 		ETR_ENTRUST_ADD.EXER_YIELD exerYield,
 		ETR_ENTRUST.PRICE_MODEL priceMode
+		<!-- add by zhangrui1 查询交易对手字段 start -->
+		,ETR_ENTRUST.COUNTER_ID counterId
+		<!-- add by zhangrui1 查询交易对手字段 end -->
 		FROM
 		ETR_DISTRIBUTE INNER JOIN ETR_ENTRUST
 		ON ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -114,6 +118,8 @@
 				ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustCompleted},#{entrustReceive},#{entrustClose})
 			AND
 				ETR_DISTRIBUTE.REC_STATUS IN(#{entrustCompleted},#{entrustReceive},#{entrustClose})
+			AND
+				(ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE is null or ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE != '02')
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (ETR_ENTRUST.FINPROD_TYPE2 IN(
 						<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -288,6 +294,9 @@
 		ETR_ENTRUST_ADD.MATURE_YIELD matureYield,
 		ETR_ENTRUST_ADD.EXER_YIELD exerYield,
 		ETR_ENTRUST.PRICE_MODEL priceMode
+		<!-- add by zhangrui1 查询交易对手字段 start -->
+		,ETR_ENTRUST.COUNTER_ID counterId
+		<!-- add by zhangrui1 查询交易对手字段 end -->
 		FROM
 		ETR_DISTRIBUTE INNER JOIN ETR_ENTRUST
 		ON ETR_DISTRIBUTE.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
@@ -308,6 +317,8 @@
 			ETR_ENTRUST.ENTRUST_STATUS IN(#{entrustCompleted},#{entrustReceive},#{entrustClose})
 			AND
 			ETR_DISTRIBUTE.REC_STATUS IN(#{entrustCompleted},#{entrustReceive},#{entrustClose})
+			AND
+			(ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE is null or ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE != '02')
 			<if test="finprodType2List != null and finprodType2List.size()>0">
 				AND ETR_ENTRUST_ADD.ASSET_TYPE IN(
 				<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -395,7 +406,7 @@
 
 	<select id="selectForPageFromCstp"
 			resultType="com.joyintech.service.trade.investtrade.commandreceive.dto.TrdCommandReceive001Dto">
-		select * from (
+		select DISTINCT * from (
 		select * from (
 		select wtpdp.trade_id entrustId,
 		'01' tradeType,
@@ -579,14 +590,29 @@
 		LEFT JOIN (SELECT ETR_FINISH_STATUS.ENTRUST_ID,sum(FINISH_AMT) AS FINISH_AMT FROM ETR_FINISH_STATUS GROUP BY
 		ENTRUST_ID) ETR_FINISH_STATUS_A
 		ON ETR_FINISH_STATUS_A.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
-		LEFT JOIN (SELECT ENTRUST_ID,TRADE_ID,
+		<!--前台指令重复-->
+		<!--LEFT JOIN (SELECT ENTRUST_ID,TRADE_ID,
 		sum(FINISH_AMT) AS FINISH_AMT
 		FROM ETR_FINISH_STATUS
 		GROUP BY ENTRUST_ID,TRADE_ID) ETR_FINISH_STATUS_B
 		ON ETR_FINISH_STATUS_B.ENTRUST_ID =
 		ETR_ENTRUST.ENTRUST_ID
 		AND ETR_FINISH_STATUS_B.TRADE_ID NOT IN
-		(SELECT CSTP_TRADE_ID FROM TRD_MATCH_INFO WHERE ENTRUST_ID= ETR_ENTRUST.ENTRUST_ID)
+		(SELECT CSTP_TRADE_ID FROM TRD_MATCH_INFO WHERE ENTRUST_ID= ETR_ENTRUST.ENTRUST_ID)-->
+		LEFT JOIN (
+		SELECT
+		ENTRUST_ID,
+		SUM(FINISH_AMT) AS FINISH_AMT
+		FROM
+		ETR_FINISH_STATUS
+		WHERE 	TRADE_ID NOT IN (
+		SELECT
+		CSTP_TRADE_ID
+		FROM
+		TRD_MATCH_INFO)
+		GROUP BY
+		ENTRUST_ID) ETR_FINISH_STATUS_B ON
+		ETR_FINISH_STATUS_B.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
 		INNER JOIN ETR_ENTRUST_ADD
 		ON ETR_ENTRUST_ADD.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
 		<where>
@@ -753,6 +779,8 @@
 				ETR_DISTRIBUTE.TRADER = #{loginUser}
 			AND
 				ETR_ENTRUST.ENTRUST_STATUS = #{entrustAwait}
+			AND
+				(ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE is null or ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE != '02')
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0">
 				AND (ETR_ENTRUST.FINPROD_TYPE2 IN(
 						<foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -898,6 +926,8 @@
 			ETR_ENTRUST.FINPROD_TYPE2 ='F36'
 			AND
 			ETR_ENTRUST.ENTRUST_STATUS = #{entrustAwait}
+			AND
+			(ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE is null or ETR_ENTRUST_ADD.ENTRUST_CREATE_SOURCE != '02')
 			<!-- <if test="finprodType2List != null and finprodType2List.size()>0">
                 AND (ETR_ENTRUST.FINPROD_TYPE2 IN(
                         <foreach item="item" index="index" collection="finprodType2List" separator=",">
@@ -1070,7 +1100,8 @@
 	<!-- 根据用户名得到真实姓名 -->
 	<select id="getRealNameByUserName" resultType="com.joyintech.tams.common.base.entity.User">
 		SELECT
-			T1.REAL_NAME realName
+			T1.REAL_NAME realName,
+			T1.USER_NAME userName
 		FROM 
 			SYS_USER T1
 		where 

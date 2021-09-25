@@ -2,14 +2,14 @@ var initFlag = false;
 $(function() {
 
     getoutDataTable();
-    $('#TrdRepoTrade004_btn_save').click(function () {
+    $('#CfetsRepoDealQuotedPr006_btn_save').click(function () {
         saveOrSubmit('save');
     });
-    $('#TrdRepoTrade004_btn_submit').click(function () {
+    $('#CfetsRepoDealQuotedPr006_btn_submit').click(function () {
         saveOrSubmit('submit');
     });
 
-    $('#TrdRepoTrade004_btn_ok').click(function () {
+    $('#CfetsRepoDealQuotedPr006_btn_ok').click(function () {
         outOk();
     });
     isShowDiv($('#ps').val());
@@ -274,7 +274,11 @@ var outOk = function () {
 
         //先将选入列表中的数据先添加到最终列表中
         var resultArrlist = [];//最终质押列表中bondCode list
-
+        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 start
+        for(var k = 0 ; k < inSelectedAllRows.length ; k++){
+            inSelectedAllRows[k].pledgePrin = inSelectedAllRows[k].pledgePrin * 10000;
+        }
+        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 end
         for (var k = resultTable.getAllRows().length - 1; k >= 0; k--) {
             resultArrlist.push(resultTable.getAllRows()[k].bondCode);
         }
@@ -389,16 +393,16 @@ function saveOrSubmit(operateType) {
                 if (FileCommon) {
                     object.uploadFileList = FileCommon.getUploadFileInfo();
                 }
-                Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/check', object, function (result) {
+                Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/check', object, function (result) {
                     Joyin.confirm(result.data, function () {
 
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/save', object, "TrdRepoTrade004_btn_save", "TrdRepoTrade004", function () {
+                            WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_save", "CfetsRepoDealQuotedPr006", function () {
 
                             });
                         }
                         else {
-                            WorkFlow.doSubmitList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/save', object, "TrdRepoTrade004_btn_submit", "TrdRepoTrade004", function () {
+                            WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_submit", "CfetsRepoDealQuotedPr006", function () {
 
                             });
                         }
@@ -424,16 +428,16 @@ function saveOrSubmit(operateType) {
         if (FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();
         }
-        Joyin.ajaxJson(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/check', object, function (result) {
+        Joyin.ajaxJson(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/check', object, function (result) {
             Joyin.confirm(result.data, function () {
 
                 if (operateType === 'save') {
-                    WorkFlow.doSaveList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/save', object, "TrdRepoTrade004_btn_save", "TrdRepoTrade004", function () {
+                    WorkFlow.doSaveList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_save", "CfetsRepoDealQuotedPr006", function () {
 
                     });
                 }
                 else {
-                    WorkFlow.doSubmitList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade004/save', object, "TrdRepoTrade004_btn_submit", "TrdRepoTrade004", function () {
+                    WorkFlow.doSubmitList(basePath + 'invest/bankuplink/reponew/CfetsRepoDealQuotedPr006/save', object, "CfetsRepoDealQuotedPr006_btn_submit", "CfetsRepoDealQuotedPr006", function () {
 
                     });
                 }

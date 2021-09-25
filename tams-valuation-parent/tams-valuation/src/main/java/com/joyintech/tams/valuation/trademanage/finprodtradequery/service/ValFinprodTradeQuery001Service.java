@@ -55,7 +55,7 @@ public class ValFinprodTradeQuery001Service extends CommonExportService<ValFinpr
      * @throws Exception
      */
     public Page<ValFinprodTradeQuery001Dto> findPage(Map<String, Object> params)
-        throws Exception {
+         {
         return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME + "/ValFinprodTradeQuery001/findPage",
             params, ValFinprodTradeQuery001Dto.class);
     }

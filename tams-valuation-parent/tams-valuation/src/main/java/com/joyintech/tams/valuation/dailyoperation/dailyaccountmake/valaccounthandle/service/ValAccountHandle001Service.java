@@ -181,7 +181,7 @@ public class ValAccountHandle001Service extends CommonExportService<ValAccountHa
      * @since 1.0
      */
     @DataSource(DataSourceType.OTHER)
-    public List<ValAccountHandle001Dto> findLogPage(Map<String, Object> map) throws Exception {
+    public List<ValAccountHandle001Dto> findLogPage(Map<String, Object> map)  {
         
 //        return valAccountHandle001Mapper.selectBatch(map);
     	return restTemplate.postForList(
@@ -319,7 +319,7 @@ public class ValAccountHandle001Service extends CommonExportService<ValAccountHa
      * @since 1.0
      */
 //    @SuppressWarnings("unchecked")
-	public List<ValAccountHandle002Dto> checkBokPosition(Map<String,Object> map) throws Exception{
+	public List<ValAccountHandle002Dto> checkBokPosition(Map<String,Object> map) {
 //    	List<String> list = (List<String>) map.get("prodList");
 //    	String sysDate = (String)map.get("endDate");
 //    	User user = SecurityUtil.getLoginUser();

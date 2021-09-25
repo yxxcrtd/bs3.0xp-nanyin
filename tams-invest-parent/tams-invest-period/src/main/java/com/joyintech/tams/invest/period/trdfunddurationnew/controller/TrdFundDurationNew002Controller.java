@@ -33,6 +33,7 @@ import com.joyintech.tams.invest.period.trdfunddurationnew.dto.TrdFundDurationNe
 import com.joyintech.tams.invest.period.trdfunddurationnew.service.TrdFundDurationNew001Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,8 +251,7 @@ public class TrdFundDurationNew002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-            ValidateGroupEdit.class}) TrdFundDurationNew001Dto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupEdit.class}) TrdFundDurationNew001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

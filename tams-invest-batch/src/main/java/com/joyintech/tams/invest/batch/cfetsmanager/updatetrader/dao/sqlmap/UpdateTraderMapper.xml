@@ -12,25 +12,26 @@
         and T2.COUNTER_NAME IS NULL
     </select>
     <select id="selectInfo" resultType="com.joyintech.tams.common.base.entity.MstCfetsCustomerInfo">
-        SELECT C.PARTY_CUSTOMER_ID partyCustomerId,
-               C.PARTY_ID partyId
-         FROM MST_CFETS_CUSTOMER_INFO A
-         LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
-         LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID
-        WHERE A.PARTY_ID = #{batchDate}
+            SELECT  A.PARTY_NAME partyName
+                     FROM MST_CFETS_CUSTOMER_INFO A
+                    WHERE A.PARTY_ID = #{batchDate};
     </select>
 
     <select id="selectCustomer01" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM MST_CUSTOMER_INFO
-        where CUSTOMER_TYPE != '01'
-        and CUSTOMER_ID = #{partyCustomerId}
+        FROM MST_CFETS_CUSTOMER_RELA B
+        WHERE B.MPARTY_ID = #{partyCustomerId}
     </select>
 
     <select id="selectCustomer02" resultType="java.lang.Integer">
         SELECT count(*)
-        FROM MST_CUSTOMER_INFO
-        where CUSTOMER_TYPE = '01'
-        and CUSTOMER_ID = #{partyCustomerId}
+        FROM MST_CFETS_CUSTOMER_RELA B
+        WHERE B.SPARTY_ID = #{partyCustomerId}
+          and B.MPARTY_ID is null
+    </select>
+
+    <select id="checkCustomerName" resultType="java.lang.String">
+        select CUSTOMER_ID from MST_CUSTOMER_INFO
+        where CUSTOMER_NAME = #{partyCustomerName}
     </select>
 </mapper>

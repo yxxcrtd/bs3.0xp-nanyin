@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.riskredis.quota.rskevent.dto.RskEvent003Dto;
 import com.joyintech.tams.invest.riskredis.quota.rskevent.service.RskEvent003Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,7 +71,7 @@ public class RskEvent003Controller extends BaseController {
 				// 获取风险事件关联指标参数
 				rskEvent003Dto = rskEvent003Service.selectEventRelParaByCode(eventCode)==null?new RskEvent003Dto():rskEvent003Service.selectEventRelParaByCode(eventCode);
 			}
-			if(StringUtil.isNotEmpty(this.getParam("eventCode"))){
+			if(StringUtil.isNotEmpty(this.getParam("eventCode")) && rskEvent003Dto != null){
 				rskEvent003Dto.setEventCode(this.getParam("eventCode"));
 				rskEvent003Dto.setEventName(this.getParam("eventName"));
 			}
@@ -91,7 +92,7 @@ public class RskEvent003Controller extends BaseController {
 	@DTXTransaction
 	@ResponseBody
 	@RequestMapping(PAGE_SAVE)
-	public AjaxResult save(@RequestBody RskEvent003Dto dto, BindingResult result) throws Exception {
+	public AjaxResult save(@RequestBody RskEvent003Dto dto, BindingResult result) throws WorkFlowException {
 		if (result.hasErrors()) {
 			return new AjaxResult(result);
 		}

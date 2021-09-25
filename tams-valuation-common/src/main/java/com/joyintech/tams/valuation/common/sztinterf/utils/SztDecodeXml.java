@@ -2,6 +2,8 @@ package com.joyintech.tams.valuation.common.sztinterf.utils;
 
 import com.joyintech.tams.valuation.common.sztinterf.constant.SztValConstant;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayInputStream;
@@ -11,7 +13,10 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 public class SztDecodeXml {
-	
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(SztDecodeXml.class);
 	/**
      * 加密加压
      * @param primStr
@@ -43,13 +48,13 @@ public class SztDecodeXml {
             gzip.write(primStr.getBytes(SztValConstant.深圳通_接口文件GBK编码));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }finally {
             if (gzip != null) {
                 try {
                     gzip.close();
                 }catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -101,13 +106,13 @@ public class SztDecodeXml {
                 decompressed = decompressed.substring(i);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         } finally {
             if (ginzip != null) {
                 try {
                     ginzip.close();
                 }catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }

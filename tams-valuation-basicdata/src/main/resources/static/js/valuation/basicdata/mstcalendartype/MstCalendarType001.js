@@ -113,7 +113,7 @@ $(function() {
         $('#MstCalendarType001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("MstCalendarType002"),
                         basePath + "valuation/basicdata/mstcalendartype/MstCalendarType002/init",
-                        "80%", "90%", {pageModel:PAGE_MODEL_NEW});
+                        "75%", "70%", {pageModel:PAGE_MODEL_NEW});
         });
         $('#MstCalendarType001_btn_holidays').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("MstCalendarType003"),

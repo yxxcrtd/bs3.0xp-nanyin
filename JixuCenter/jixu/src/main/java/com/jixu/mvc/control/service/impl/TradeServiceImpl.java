@@ -921,7 +921,7 @@ public class TradeServiceImpl implements TradeService{
 					container.setEntityObj(vdvList);
 				}catch(JNLException e){
 					container.setCorrectFlag(false);
-					container.setErrorMsg(e.getMessage());
+					container.setErrorMsg("交易提交失败");//e.getMessage());
 				}
 			}
 		}else{

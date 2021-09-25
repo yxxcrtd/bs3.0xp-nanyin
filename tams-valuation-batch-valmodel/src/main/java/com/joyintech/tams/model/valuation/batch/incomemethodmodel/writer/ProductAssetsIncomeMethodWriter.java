@@ -15,11 +15,10 @@ import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ModCurveResult;
 import com.joyintech.tams.common.base.entity.ModRiskPremium;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodResultDto;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.service.ProductAssetsIncomeMethodWriterService;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.batch.core.ExitStatus;
@@ -44,12 +43,8 @@ import java.util.Map;
 @Scope("prototype")
 public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsIncomeMethodResultDto> implements StepExecutionListener {
 
-    private final String BATCH_PARAMS_KEY = "params";
     @Autowired
 	private IncomeMethodMapper incomeMethodMapper;
-
-    @Autowired
-    private ProductAssetsIncomeMethodWriterService productAssetsIncomeMethodWriterService;
 
     private StepExecution stepExecution;
 
@@ -72,8 +67,6 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
     public void write(List<? extends ProductAssetsIncomeMethodResultDto> items)
             throws Exception {
         Map<String,Object> mapParam = this.getParams();
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)mapParam.get("BATCH_INFO");
-        String taskId =(String)mapParam.get("TASK_ID");
         List<ProductAssetsIncomeMethodResultDto> resultList = (List<ProductAssetsIncomeMethodResultDto>)items;
         List<ModCurveResult>   valuationResultList = new ArrayList<ModCurveResult>();
 //        List<ModRiskPremium>   makePriceResultList = new ArrayList<ModRiskPremium>();
@@ -96,10 +89,10 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         }
         //估值结果
         if (valuationResultList != null && valuationResultList.size() > 0) {
-            deleteValuationResultPremium(valuationResultList);
-            insertValuationResultPremium(valuationResultList);
+            deleteValuationResult(valuationResultList);
+            insertValuationResult(valuationResultList);
         }
-        //资产定价批操作
+//        资产定价批操作
 //        if (makePriceResultList != null && makePriceResultList.size() > 0) {
 //            deleteMakePriceResultPremium(makePriceResultList);
 //            insertMakePriceResultPremium(makePriceResultList);
@@ -150,16 +143,16 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 插入债券估值行情结果集
      * @param valuationResultList
      */
-    private void insertValuationResultPremium(List<ModCurveResult> valuationResultList) {
+    private void insertValuationResult(List<ModCurveResult> valuationResultList) {
         if (valuationResultList == null || valuationResultList.isEmpty()) {
             return;
         }
-        List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
+//        List<ModValBatchParams> modValBatchParamsList = new ArrayList<>();
         // 定义一个固定大小插入存放集合
         List<List<ModCurveResult>> list = DataHandleUtil.splitList(valuationResultList);
         for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.insertValuationResultPremium(listInsert);
+                incomeMethodMapper.insertValuationResult(listInsert);
             }
         }
 
@@ -169,7 +162,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
      * 删除债券估值行情结果集
      * @param listModRiskPremium
      */
-    private void deleteValuationResultPremium(List<ModCurveResult> listModRiskPremium) {
+    private void deleteValuationResult(List<ModCurveResult> listModRiskPremium) {
         if (listModRiskPremium == null || listModRiskPremium.isEmpty()) {
             return;
         }
@@ -177,16 +170,16 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
         List<List<ModCurveResult>> list = DataHandleUtil.splitList(listModRiskPremium);
         for (List<ModCurveResult> listInsert : list) {
             if (CollectionUtils.isNotEmpty(listInsert)) {
-                incomeMethodMapper.deleteValuationResultPremium(listInsert);
+                incomeMethodMapper.deleteValuationResult(listInsert);
             }
         }
     }
 
 
-//    /**
-//     * 插入资产定价结果集
-//     * @param makePriceResultList
-//     */
+    /**
+     * 插入资产定价结果集
+     * @param makePriceResultList
+     */
 //    private void insertMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
 //
 //        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
@@ -198,16 +191,16 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
 //        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
 //        for (List<ModRiskPremium> listInsert : list) {
 //            if (CollectionUtils.isNotEmpty(listInsert)) {
-//                incomeMethodMapper.insertMakePriceResultPremium(listInsert);
+//                incomeMethodMapper.insertModRiskPremium(listInsert);
 //            }
 //        }
 //
 //    }
 
-//    /**
-//     * 删除资产定价结果集
-//     * @param makePriceResultList
-//     */
+    /**
+     * 删除资产定价结果集
+     * @param makePriceResultList
+     */
 //    private void deleteMakePriceResultPremium(List<ModRiskPremium> makePriceResultList) {
 //        if (makePriceResultList == null || makePriceResultList.isEmpty()) {
 //            return;
@@ -216,7 +209,7 @@ public class ProductAssetsIncomeMethodWriter extends BaseWriter<ProductAssetsInc
 //        List<List<ModRiskPremium>> list = DataHandleUtil.splitList(makePriceResultList);
 //        for (List<ModRiskPremium> listInsert : list) {
 //            if (CollectionUtils.isNotEmpty(listInsert)) {
-//                incomeMethodMapper.deleteMakePriceResultPremium(listInsert);
+//                incomeMethodMapper.deleteModRiskPremium(listInsert);
 //            }
 //        }
 //    }

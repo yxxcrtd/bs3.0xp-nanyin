@@ -9,6 +9,7 @@ import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.dao.ModAssetInfoMapper;
 import com.joyintech.tams.valuation.component.common.utils.CheckObjectNullUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,9 +164,9 @@ public class ModValuationCommonService extends BaseService {
 	 */
 	public List<MstSharePrice> getStockMarketIntervalInfo(ModStockMarketParamsDto paraMap){
 		try{
-			if(null == paraMap.getSearchDate()||null==paraMap.getStartDate()){
-				logger.info("查询开始日、查询结束日不能为空！");
-				throw new Exception("查询开始日、查询结束日不能为空!");
+			if(null == paraMap.getSearchDate()||0==paraMap.getSearchNum()){
+				logger.info("查询结束日不能为空，查询数量不能为0！");
+				throw new Exception("查询结束日不能为空，查询数量不能为0!");
 			}
 			return modAssetInfoMapper.getStockMarketInfo(paraMap);
 		} catch (Exception e) {
@@ -220,6 +221,7 @@ public class ModValuationCommonService extends BaseService {
 	
 	/**
 	 * 曲线行情查询(按曲线代码进行分组，并按关键年限点进行升序排列)
+	 * 金茂东修改 ：
 	 * @param dto
 	 * @return
 	 */
@@ -232,7 +234,9 @@ public class ModValuationCommonService extends BaseService {
 			}
 			// 查询曲线行情信息
 			List<ModYieldCurveInfoDto> resultList = modAssetInfoMapper.selectYieldCurveInfo(dto);
-			//resultMap = resultList.stream().sorted(Comparator.comparing(ModYieldCurveInfoDto::getKeyPoint)).collect(Collectors.groupingBy(item -> item.curveCode, Collectors.toList()));
+			if(CollectionUtils.isEmpty(resultList)){
+				return resultMap;
+			}
 			resultMap = resultList.stream().collect(Collectors.groupingBy(item -> item.curveCode, Collectors.toList()));
 			List<ModYieldCurveInfoDto> tempList = new ArrayList<ModYieldCurveInfoDto>();
 			for(String key:resultMap.keySet()){

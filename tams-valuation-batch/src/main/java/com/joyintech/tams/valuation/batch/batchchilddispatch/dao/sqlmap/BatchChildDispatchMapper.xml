@@ -6,6 +6,7 @@
 	<!-- 删除批处理待处理任务表所有数据  -->
     <delete id="deleteAllOfTodo" parameterType="java.lang.String" >
         delete from BOK_BATCH_TASK_TODO
+        where 1=1
     </delete>
 	
 	<!-- 取得所有倒起息交易数据  -->

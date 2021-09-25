@@ -18,6 +18,7 @@ import java.util.Map;
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.web.PlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,8 @@ import com.joyintech.tams.valuation.common.dao.BaseCommonMapper;
 @Transactional(rollbackFor = Exception.class)
 public class BaseCommonService extends BaseService<ITableRow> {
 
+    @Autowired
+    private PlatformDate platformDate;
     /**
      * CommonMapper
      */
@@ -59,7 +62,7 @@ public class BaseCommonService extends BaseService<ITableRow> {
      * @return 当前系统平台日期
      */
     public String getSysDateString() {
-        return DateUtil.format(commonMapper.getNowSysDate());
+        return DateUtil.format(getSysDate());
     }
 
     /**
@@ -68,7 +71,8 @@ public class BaseCommonService extends BaseService<ITableRow> {
      * @return 当前系统平台日期
      */
     public Date getSysDate() {
-        return commonMapper.getNowSysDate();
+//        return commonMapper.getNowSysDate();
+        return platformDate.getSysDate();
     }
     
     /**

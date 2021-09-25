@@ -496,7 +496,7 @@
                         <select required type="text"
                                 id="CfetsRepoDealQuotedPrice002_basis" name="basis"
                                 class="layui-input form-input input-select"
-                                th:initValue="'A/365'"
+                                th:initValue="'A/365'" disabled
                                 data-th-data-result='${BASIS}' allowClear="true"
                                 formatoption="true"></select>
                     </div>
@@ -545,6 +545,7 @@
                 th:id="CfetsRepoDealQuotedPrice002_btn_cancel"
                 class="layui-btn layui-btn-sm btn-cancel"
                 data-th-text="#{SysCommon.cancel}">取消</a>
+            <a id="cfetsRepoDealQuotedPr002_chongzhi" class="layui-btn layui-btn-sm">重置</a>
         </div>
         <div class="row text-center" style="margin: 20px 0; display: none;"
              id="CfetsRepoDealQuotedPrice002_btns_2">
@@ -577,6 +578,11 @@
         var workflowIdBuss = /*[[${workflowId}]]*/'';
         var editOperation = /*[[${editOperation}]]*/'';
         var dialogueRecord = /*[[${dialogueRecord}]]*/'';
+        var MY_SUP_TIME_TYPE_02 = /*[[${MY_SUP_TIME_TYPE_02}]]*/'';
+        var FINPROD_TYPE_TG_F02 = /*[[${FINPROD_TYPE_TG_F02}]]*/'';
+        var FINPROD_TYPE_TG_F03 = /*[[${FINPROD_TYPE_TG_F03}]]*/'';
+        var PS_03 = /*[[${PS_03}]]*/'';
+        var PS_04 = /*[[${PS_04}]]*/'';
     </script>
     <script th:src="@{/js/invest/bankuplink/reponew/CfetsRepoDealQuotedPr002.js}" type="text/javascript"></script>
 </div>

@@ -5,10 +5,14 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,6 +66,8 @@ public class TrdBondDuration002Controller extends BaseController {
 
     @Autowired
     private CommonBusinessService commonBusinessService;
+    @Autowired
+    private FileAttachmentProcess fileAttachmentProcess;
 
     @Override
     public String init(Model model) {
@@ -116,6 +122,7 @@ public class TrdBondDuration002Controller extends BaseController {
         if (entity != null) {
             model.addAttribute("ps", change现金流类型To交易方向(entity.getCashType()));
             PeriodCommonService.setEntityBussOrderToModel(model, entity.getBussTrdTransferOrder());
+            model.addAttribute("tradeId",entity.getBusiCode());
         }
 //       2.0处理
 //        if (entity != null) {
@@ -125,6 +132,9 @@ public class TrdBondDuration002Controller extends BaseController {
 //                    JsonUtils.object2Json(entity.getBussTrdTransferOrder().get(0)));
 //            }
 //        }
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
         model.addAttribute(GlobalConstant.ENTITY, entity);
         this.setSelectOptionToModel(model, DictCode.是否, DictCode.平安划款类型,DictCode.币种,DictCode.投资目的);
         model.addAttribute("CASH_CLASS_TYPE01", DictCodeList.现金流类型_中间收息.getValue());
@@ -170,8 +180,7 @@ public class TrdBondDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondDuration002ProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdBondDuration002ProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -193,6 +202,11 @@ public class TrdBondDuration002Controller extends BaseController {
 //        	2.0
         	dto.setBaseTotalTradeInfoDto(trdBondDuration002Service.genFinProductTradeDto2(dto));
         }
+        // 将附件和当前业务对象绑定（更新附件的业务代码）
+        fileAttachmentProcess.updateBussinessNo(
+                dto.getUploadFileList().stream().map(UploadFile::getFileNo).collect(
+                        Collectors.toList()),
+                dto.getBusiCode());
         String msg = trdBondDuration002Service.start(processParameter, dto);
         return new AjaxResult(msg);
     }

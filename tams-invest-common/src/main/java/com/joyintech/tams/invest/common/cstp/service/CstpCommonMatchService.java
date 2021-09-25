@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.common.cstp.service;
 
 import com.joyintech.framework.JoyinRestTemplate;
+import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.TrdMatchInfoMapper;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -133,6 +135,8 @@ public class CstpCommonMatchService {
         //通过成交编号查询成交信息  先查债券  再查回购
         String execId = (String)map.get("execId");
         InterfTradSecdeal interfTradSecdeal = cstpCommonMatchMapper.getInterfTradSecdealByExecId(execId);
+        //匹配方式
+        String matchType = (String)map.get("matchType");
         if(null==interfTradSecdeal){
             InterfOpicsTradRepo interfOpicsTradRepo = cstpCommonMatchMapper.getInterfOpicsTradRepoByExecId(execId);
             if(null!=interfOpicsTradRepo){
@@ -156,6 +160,13 @@ public class CstpCommonMatchService {
                 map.put("interfOpicsTradRepo",interfOpicsTradRepo);
             }
         }else{
+            BigDecimal yppAmount = BigDecimal.ZERO;
+            if(StringUtil.equals(matchType,"1")){
+                //已匹配额度
+                BigDecimal matchAmount = cstpCommonMatchMapper.getMatchAmount(execId);
+                yppAmount = ArithmeticUtil.multiply(matchAmount==null?BigDecimal.ZERO:matchAmount,new BigDecimal(100));
+                interfTradSecdeal.setPrinamt(ArithmeticUtil.subtract(interfTradSecdeal.getPrinamt(),yppAmount));
+            }
             map.put("finprodType2", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
             map.put("ps",interfTradSecdeal.getPs());
             map.put("price",interfTradSecdeal.getPrice8());
@@ -206,6 +217,10 @@ public class CstpCommonMatchService {
                 trdPledgeMatchInfoMapper.insert(item);
             });
         }
+    }
+
+    public void deleteMatchInfo(Map<String,Object> map){
+        cstpCommonMatchMapper.deleteMatchInfo(map);
     }
 }
 

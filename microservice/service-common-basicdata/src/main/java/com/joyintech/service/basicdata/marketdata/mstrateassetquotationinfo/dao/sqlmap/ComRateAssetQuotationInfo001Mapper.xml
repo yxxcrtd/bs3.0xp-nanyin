@@ -31,6 +31,9 @@
         <if test="valDate != null and valDate != ''">
             AND B.VAL_DATE =TO_DATE (#{valDate},'yyyy-MM-dd')
         </if>
+        <if test="valueSource != null and valueSource != ''">
+            AND B.VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+        </if>
     </select>
     <select id="getAssetCode" resultType="com.joyintech.framework.select.SuggestDto">
 	    SELECT DISTINCT
@@ -138,6 +141,7 @@
         C.VAL_DATE valDate,
         A.CUSTOMER_NAME fundManager,
         C.VALUATION valuation,
+        C.FULL_VALUATION fullValuation,
         B.PROFIT_TYPE profitType,
         C.FINPROD_TYPE2 finprodType2,
         C.FINPROD_TYPE finprodType,

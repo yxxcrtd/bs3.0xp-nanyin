@@ -131,7 +131,10 @@ var calculateField;
 	        object.entrustPrice = entrustPrice; // 指令时的净价
 	        object.entrustYield = entrustYield; // 指令时的到期收益率
 	        object.entrustExerYield = entrustExerYield; // 指令时的行权收益率
-	        object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
+            // 是否随交易支付赋值 fuyongsheng 20210906 add start
+            object.isPayWithTrade = $("#isPayWithTrade").val()?$("#isPayWithTrade").val():YES_OR_NO_Y;//佣金是否随交易支付，默认为是
+            // 是否随交易支付赋值 fuyongsheng 20210906 add end
+            object.assetPosition = $("#bussTrdAvailableCashQuery_assetPosition").val(); // 资产可用持仓
 	        object.bondFirstSign = $("#bondFirstSign").val(); //中标结果页面进入的标识 add by gejiaao 2019/8/9
 	        object.deviation=  parseFloat($("#deviationDegreeLabel").text())/100;//偏离度获取界面值并将其转换为数值型by赵东东 2019.9.24
 	        var data = $("#chlId").find("option:selected").data("data");
@@ -153,6 +156,9 @@ var calculateField;
                 object.ownIntAmt = object.intAmt;
             }
             object.calculateField = calculateField;
+            if(parentPageId){
+                object.parentPageId = parentPageId;
+            }
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
                 if(isautobond == true){
                     Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
@@ -209,6 +215,9 @@ var calculateField;
                                 //授信占用额度
 //	                	Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
                                 object.riskCreditListCommonDto = result1.data;
+                                if(result.data.indexOf("xx")!=-1)
+                                    $("#businessModel").val("Y2").trigger('change');
+
                                 Joyin.confirm(result.data, function() {
                                     if(operateType === 'save') {
                                         WorkFlow.doSaveList(basePath + 'invest/trade/bond/TrdBondInvestTrade002/save', object, "TrdBondInvestTrade002_btn_save");
@@ -324,7 +333,8 @@ var calculateField;
             var currentCalcParam = getCalcParam();
             for ( var key in currentCalcParam) {
                 //---update by jjpei 20190731---排除riskMathFlag----
-                if (key == 'selectValue'||key=='riskMathFlag' || key=='remark') {
+                if (key == 'selectValue' || key == 'riskMathFlag' || key == 'remark' || key == 'isPayWithTrade'
+                    || key == 'exchangeIsPayWithTrade' || key == 'settleIsPayWithTrade' || key == 'stampDutyIsPayWithTrade') {
                     continue;
                 }
                 //---update by jjpei 20190731---排除riskMathFlag----
@@ -662,6 +672,10 @@ var calculateField;
                 			disabled: false
                 		});
                 	}
+                    if($('#tradeMarket').val() === '05'){
+                        $('#tradePlat').prop("disabled",true);
+                        checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
+                    }
                     break;
             }
         }
@@ -725,7 +739,15 @@ var calculateField;
             $("#refundRate").val('');
             $("#refundAmount").val('');
             $("#refundRate_div").hide();
-            $("#refundAmount_div").hide();
+            $("#refundAmount_div").hide();            //编辑模式或者新建模式下交易市场为二级市场时影响资产代码，对应资产不能为发行标的
+            if(pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT){
+                if ($('#finprodId').val != null && $('#finprodId').val != ''){
+                    var data = $('#finprodId').select2('data')[0].object;
+                    if (data && data.isIssueAsset == 'Y' && $("#tradeMarketMode").val() == '02'){
+                        $('#finprodId').val('').trigger("change");
+                    }
+                }
+            }
             if ($("#entrustId").val()) {
                 $("#ps").attr("disabled", true);
             }else if ($("#fTradeId").val()){
@@ -1384,6 +1406,7 @@ var calculateField;
      */
     $("#invAim").on("change", function () {
         updateCash();
+        //priceInitByInCpy();
         // 净价信息回显  吉林银行产品化需求  2019.12.2 马琳琳 start //
         if (IS_SHOW_CPRICE == 'Y') {
         	changeUnitCprice();
@@ -1589,7 +1612,9 @@ var calculateField;
         if ($("#yield_calc").val()) {
             paramObj.yield = $("#yield_calc").val();
         }
-
+        if($("#tradeMarketCash").val() == 0 ||$("#tradeMarketCash").val() == 0.00){
+            paramObj.tradeMarketCash = null;
+        }
         // 行权计算时用数据库中的理论行权日 add by renping 20191105 start
         if(paramObj.finprodId && ($("#ps").val() == PS_T03 || $("#ps").val() == PS_T39)) {
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getExerciseDate'), paramObj, function (result) {
@@ -1681,7 +1706,7 @@ var calculateField;
         if (shortSellingSupported == '02') {
             $(".shortSellingSupported").hide();
         }
-        if(entrustId != '' && pageModel != PAGE_MODEL_REFERENCE){
+        if(entrustId&&pageModel != PAGE_MODEL_REFERENCE){
             Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getEntrustInfo', {'entrustId':entrustId,'bondFirstSign':bondFirstSign},function (data) {
                 // 基本要素信息由投资委托带出，其中有：委托代码、组合代码、资产代码、清算速度、交易方向、交易场所、交易平台、交易市场、投资目的等，不可编辑
                 // 金融要素信息由投资委托带出，其中有：币种、券面总额、净价、到期收益率、行权收益率等
@@ -1711,7 +1736,8 @@ var calculateField;
                     checkAndAssign("#tradePlat", etrEntrust.tradePlat); // 交易平台
                     checkAndAssign("#ps", etrEntrust.ps); // 交易方向
                     checkAndAssign("#invAim", etrEntrust.invAim); // 投资目的
-                    checkAndAssign("#ccy", etrEntrust.ccy); // 币种
+                    $("#businessModel").val(etrEntrust.businessModel).trigger('change');
+                     checkAndAssign("#ccy", etrEntrust.ccy); // 币种
                     if ($("#tradeAmt").val()) {
                     } else {
                         //委托金额大于cstp的劵面总额
@@ -1913,7 +1939,7 @@ var calculateField;
             		Joyin.error(JoyinUtil.getMessage('FW_E_0006',[JoyinUtil.getLabel("TrdBondInvestTrade002.fpriceAmt")]));
             		return null;
             	}
-            	if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
+            	if (!$("#bondFirstSign").val() && (!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
                		 && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券账户']));
                		return null;
@@ -2057,8 +2083,13 @@ var calculateField;
                         }
                     } else {
                         if (pageModel != PAGE_MODEL_REFERENCE) {
-                            $('#integrateTradeAmt').prop("disabled", false).trigger("change");
-                            $('#ownTradeAmt').prop("disabled", false);
+                            if(isCstpSure){
+                                $('#ownTradeAmt').prop("disabled", true);
+                                $('#integrateTradeAmt').prop("disabled", true).trigger("change");
+                            }else{
+                                $('#ownTradeAmt').prop("disabled", false);
+                                $('#integrateTradeAmt').prop("disabled", false).trigger("change");
+                            }
                             //$('#settleSpeed').prop("disabled", false);
                         }
                     }
@@ -2207,7 +2238,42 @@ var calculateField;
             }
         });
     };
-
+    /**
+     *
+     * 若委托开始日和指令结束日均等于平台日期时：
+     * a．若投资目的选择摊余成本类，净价默认带出该债券平台日期前一估值日的摊销净价，可修改；
+     */
+//    var priceInitByInCpy = function () {
+//        // // 委托开始日
+//        // var vdate = $("#vdate").val();
+//        // // 委托终止日
+//        // var mdate = $("#mdate").val();
+//        // // 投资目的
+//        var invAim = $("#invAim").val();
+//        // // 委托开始日或指令结束日不等于平台日期时
+//        // if (new Date(platDate).DateDiff('d', vdate) !== 0
+//        //     || new Date(platDate).DateDiff('d', mdate) !== 0) {
+//        //     return;
+//        // }
+//        var portfolioId = $('#portfolioId').val();
+//        var finprodId = $('#finprodId').val();
+//        if (portfolioId && finprodId) {
+//            var data = {
+//                sysdate: platDate,
+//                portfolioId: portfolioId,
+//                finprodId:finprodId
+//            }
+//            //投资目的选择摊余成本
+//            if (invAim == 'AC') {
+//                Joyin.ajaxJson(basePath + 'invest/trade/bond/TrdBondInvestTrade002/getLastNetAmortizationPrice', data,
+//                    function (result) {
+//                        if(result.data){
+//                            $('#unitCprice').val(result.data).trigger('blur').trigger('change');
+//                        }
+//                    });
+//            }
+//        }
+//    }
     /**
      * 币种change事件
      */
@@ -2254,7 +2320,7 @@ var calculateField;
                 } else if (tradeMarket == TRADE_PLACE_02 || tradeMarket == TRADE_PLACE_03) {
                     // 选择【上海证券交易所】或【深圳证券交易所】时，
                     // 1)交易平台可自主选择;
-                    if($("#entrustId").val() != ''){
+                    if(/*$("#entrustId").val() != ''*/$('#tradeMarketMode').val()===SHARES_TRADE_MARKET_01){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
@@ -2298,7 +2364,7 @@ var calculateField;
                     // 1)交易平台可自主选择;
                     // 1)交易平台默认为其它，可改
                     checkAndAssign("#tradePlat", SHARES_TRADE_PLATFORM_99, false);
-                    if($("#entrustId").val() != ''){
+                    if($("#entrustId").val() != ''||tradeMarket === '05'){
                         $("#tradePlat").attr("disabled", true);
                     }else{
                         $("#tradePlat").attr("disabled", false);
@@ -2429,6 +2495,16 @@ var calculateField;
          */
         $('#TrdBondInvestTrade002_btn_calculate').click(function() {
             var paramObj = getCalcParam();
+
+            //根据业务模式与投资目的对应关系对投资目的赋值，不改变原来计算逻辑
+            if($('#businessModel').val()=="Y1"){
+               paramObj.invAim = "AC";
+            }else if($('#businessModel').val()=="Y2"){
+               paramObj.invAim = "FVTPL"
+            }else {
+               paramObj.invAim = "";
+            }
+
             Joyin.ajaxJson(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/calculateData'), paramObj, function (result) {
                 if (result && result.data) {
                     var data = result.data;
@@ -2531,9 +2607,11 @@ var calculateField;
                         if(v.feeType==FEE_TYPE_05&&v.feeAmt){
                             cntC++;
                             isPayWithTrade = v.isPayWithTrade;
-                            // add by wangguoxian 费用设置 20190808 start
-                            $("#isPayWithTrade").val(isPayWithTrade);
-                            // add by wangguoxian 费用设置 20190808 end
+                            if(isPayWithTrade){
+                                // add by wangguoxian 费用设置 20190808 start
+                                $("#isPayWithTrade").val(isPayWithTrade);
+                                // add by wangguoxian 费用设置 20190808 end
+                            }
                             commissionAmt = v.feeAmt;
                             $("#commissionAmtRate").val(v.feeRate).trigger("blur");
                             var feeAmt = v.feeAmt;
@@ -2949,7 +3027,11 @@ var calculateField;
                     if (result.prinamt && result.prinamt != ''){
                         $('#tradeAmt').val(JoyinMath.doDiv(result.prinamt,unitNum,2,JoyinMath.ROUND_HALF_UP)).trigger('blur').trigger('change');// 本金金额(券面总额)
                         if($('#tradeAmt').val()){
-                            $('#tradeAmt').attr('disabled', false); //成交编号以后，页面的券面总额被置灰，期望可以修改
+                            $('#tradeAmt').attr('disabled', true); //成交编号以后，页面的券面总额被置灰，期望可以修改
+                            if(isCstpSure){
+                                $('#ownTradeAmt').attr('disabled', true);
+                                $('#integrateTradeAmt').attr('disabled', true);
+                            }
                         }
                     }else{
                         $('#tradeAmt').val('').change();

@@ -2,6 +2,7 @@ package com.joyintech.tams.svreport.chbhz.inAssetInfoSub.service;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.dto.ChbCheckTableInfo;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.service.CommonCodeCheckBatchService;
 import com.joyintech.tams.common.svreport.datacheck.beforeinsert.util.SvrMaptoEntityUtil;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
@@ -275,7 +278,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 			// 当前批次报送时点集合
 			Map<String, List<Date>> dateMap = new HashMap<String, List<Date>>();
 			List<Date> dateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_资产要素信息登记.getValue(),
-					DictCodeListExt2.报送数据状态_新建.getValue(), dateMap, batchDate);
+					sub.getStatus(), dateMap, batchDate);
 			// 报送时点设置
 			if (CollectionUtils.isNotEmpty(dateList)) {
 				sub.setChbSubmitDeadline(dateList.get(0));
@@ -354,7 +357,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				session.rollback();
-				throw e;
+				throw new BusinessException(e);
 			} finally {
 				session.close();
 			}
@@ -378,7 +381,7 @@ public class InAssetInfoSubBatchService extends FileImpService {
 		if (assetInfoCompare == null || assetInfoToCompare == null) {
 			return false;
 		} else {
-			return JSON.toJSONString(assetInfoCompare).equals(JSON.toJSONString(assetInfoToCompare));
+			return JSON.toJSONString(assetInfoCompare,SerializerFeature.WriteNullStringAsEmpty).equals(JSON.toJSONString(assetInfoToCompare,SerializerFeature.WriteNullStringAsEmpty));
 		}
 	}
 

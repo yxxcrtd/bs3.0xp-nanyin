@@ -42,6 +42,7 @@ import com.joyintech.tams.invest.trade.fund.service.TrdFundInvestTrade003Service
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,6 +53,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -343,7 +346,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
     @RequestMapping("getcarryAmt")
     @ResponseBody
     public BigDecimal getcarryAmt(@RequestBody Map<String, Object> map)
-        throws Exception {
+         {
         return trdFundInvestTrade003Service.getcarryAmt(map);
     }
 
@@ -382,7 +385,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
             if (!isAuthorizationSoftcontrol) {
                 if (authorizationvalid(dto)){
                     ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合
-                    errorList.add(new ValidMessage(getMessage("TRD_E_0016", "副总裁/总裁助理")));
+                    errorList.add(new ValidMessage(getMessage("TRD_E_0016", "领导")));
                     ar.setErrorList(errorList);
                 }
             }
@@ -415,7 +418,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
         boolean isAuthorizationSoftcontrol = Boolean.parseBoolean(CacheUtil.getSysParam("IS_AUTHORIZATION_SOFTCONTROL"));
         if (isAuthorizationSoftcontrol) {
             if (authorizationvalid(dto)){
-                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                 joyinMessages.add(ms);
                 wr.setJoyinMessages(joyinMessages);
             } 
@@ -473,8 +476,7 @@ public class TrdFundInvestTrade005Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdFundInvestTradeConfirmDto dto, BindingResult br) throws InvocationTargetException, IllegalAccessException, IOException, InstantiationException, WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

@@ -12,9 +12,9 @@ $(function(){
             submitStatus=submitStatus.join();
         }
         var holderType = $('#holderType').val();
-    	if (holderType) {
-    		holderType = holderType.join();
-    	}
+        if (holderType) {
+            holderType = holderType.join();
+        }
         var status=$('#status').val();
         if(status){
             status=status.join();
@@ -108,11 +108,12 @@ $(function(){
         cols: [
             { title: "数据状态", field: 'statusName',width:100,sortField:'status'},
             { field: 'status',visible:false},
-            { title: "数据日期", field: 'updateTime', type: 'datetime'},
-            { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},
-            { title: "报送日期", field: 'submitTime', type: 'datetime'},
-            { title: "报送截止日", field: 'chbSubmitDeadline', type: 'datetime'},
-            { title: "反馈状态", field: 'submitFeedbackStatus',width:100,
+            { title: "数据日期", field: 'updateTimeStr',width:150,sortField:'updateTime'},
+            { title: "报送状态", field: 'submitStatusName',width:100 ,sortField:'submitStatus'},           
+            { title: "报送日期", field: 'submitTimeStr',width:150,sortField:'submitTime'},
+            { title: "报送截止日", field: 'chbSubmitDeadlineStr',width:150,sortField:'chbSubmitDeadline'},
+            { title: "反馈状态", field: 'submitFeedbackStatus',width:100,visible: false},
+            { title: "反馈状态", field: 'submitFeedbackStatusStr',width:100,sortField:'submitFeedbackStatus'/*界面查询性能优化,
                 render: function (data, type, row, meta) {
                     if(!row.submitFeedbackStatus){
                         return "";
@@ -132,11 +133,11 @@ $(function(){
                     if(row.submitFeedbackStatus=="05"){
                         return "<span class='debt-return'>审核文件下载失败</span>";
                     }
-                }
+                }*/
             },
             { title: "数据类型", field: 'type' ,sortField:'type',width:100},
             { field: 'submitStatus',visible:false},
-            { title: "报送流水号", field: 'sumitSeq',visible:false},
+            { title: "报送流水号", field: 'sumitSeq',width:150},
             { title: "登记银行代码", field: 'bankCode',width:160 },
             { title: "机构代码",field:'orgCode',width: 160},
             { title: "识别标识", field: 'indentifyMark',width:100 },
@@ -155,7 +156,7 @@ $(function(){
             /*{ title: "SPV登记编码", field: 'spvRegistCode',width: 128 },*/
             { title: "投资者名称", field: 'holderName', width: 109},
             { title: "性别", field: 'holderSex',width:75},
-            { title: "风险偏好", field: 'holderRiskPrefer',width:100,
+            { title: "风险偏好", field: 'holderRiskPrefer',width:100/*界面查询性能优化,
                 render: function (data, type, row, meta) {
                     if(!row.holderRiskPrefer){
                         return "";
@@ -175,7 +176,7 @@ $(function(){
                     if(row.holderRiskPrefer=="05"){
                         return "<span class='text-progress'>进取型</span>";
                     }
-                }
+                }*/
             },
             {title:"手机号码", field: 'holderCellphone', width: 120},
             {title:"固定电话", field: 'holderTelephone', width: 120},
@@ -187,13 +188,14 @@ $(function(){
     // 查询按钮点击事件
     $('#EquityInfoRegist001_btn_search').click(function() {
         /*if($('#searchForm').joyinvalid()) {*/
-            table.load();
+        table.load();
 //        }
     });
 
     // 导出中债Excel按钮点击事件
     $('#EquityInfoRegist001_btn_chbexport').click(function() {
-        exportMethod("0");
+//        exportMethod("0");
+        exportZZExcel();
     });
 
     // 导出查询结果按钮点击事件
@@ -209,20 +211,20 @@ $(function(){
             param = getPageParams();
             param.flag = flag;
             if(flag=="0" &&(param.status==null||param.status=='')){
-            	param.status="01,02";
+                param.status="01,02";
             }
             Joyin.exportExcel("export",param);
         }
         else{
-        	if(flag=="0")
-        		{
-        	for(var i=0;i<expArr.length;i++){
-        		if(expArr[i].status=="03"){
-        			Joyin.error("只能导出新建或修改状态的数据，请重新选择");
-        			return;
-        			}
-        		}
-        		}
+            if(flag=="0")
+            {
+                for(var i=0;i<expArr.length;i++){
+                    if(expArr[i].status=="03"){
+                        Joyin.error("只能导出新建或修改状态的数据，请重新选择");
+                        return;
+                    }
+                }
+            }
             var keyList = [];
             $.each(expArr, function(i, row) {
                 keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus);
@@ -255,21 +257,21 @@ $(function(){
         if(!expArr || expArr.length ==0){
             param = getPageParams();
             if (param.status==null||param.status==''){
-            	param.status='03';
+                param.status='03';
             }
             param.flag = "2";
             param.submitStatus='01';
             Joyin.exportExcel("export",param);
         }
         else{
-        	
-        	 for(var i=0;i<expArr.length;i++){
-                 if(expArr[i].status !="03"||expArr[i].submitStatus !="01"){
-                     Joyin.error("只能导出删除状态且未报送的数据，请重新选择");
-                     return;
-                 }
-             }
-        	 
+
+            for(var i=0;i<expArr.length;i++){
+                if(expArr[i].status !="03"||expArr[i].submitStatus !="01"){
+                    Joyin.error("只能导出删除状态且未报送的数据，请重新选择");
+                    return;
+                }
+            }
+
             var keyList = [];
             $.each(expArr, function(i, row) {
                 keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus);
@@ -279,6 +281,59 @@ $(function(){
             Joyin.exportExcel("exportDel",param);
         }
     });
+
+    //导出删除模板
+    $('#SvrEquityInfoRegist001_btn_exportDel').click(function(){
+        if(!table.isSearched()) {
+            return;
+        }
+        var expArr=table.getAllCheckedRows();
+        var param={};
+        if(!expArr || expArr.length ==0){
+            param = getPageParams();
+            if (param.status==null||param.status==''){
+                param.status='03';
+            }
+            param.flag = "2";
+            param.submitStatus='01';
+            // Joyin.exportExcel("export",param);
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"EquityInfoRegist001",paramKeys:JSON.stringify(param)},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
+        }
+        else{
+
+            for(var i=0;i<expArr.length;i++){
+                if(expArr[i].status !="03"||expArr[i].submitStatus !="01"){
+                    Joyin.error("只能导出删除状态且未报送的数据，请重新选择");
+                    return;
+                }
+            }
+
+            var keyList = [];
+            $.each(expArr, function(i, row) {
+                keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus);
+            });
+            param.expKeys = keyList.join(',')
+            param.flag = "2";
+            // Joyin.exportExcel("exportDel",param);
+            // 打开删除信息页面
+            Joyin.dialog(JoyinUtil.getLabel("SvrExportDeleteExcelConfirm001"),
+                basePath + "/chb/common/EquityExportDeleteExcelConfirm001/init",
+                "50%", "50%", {pageModel:PAGE_MODEL_NEW,orgPageId:"EquityInfoRegist001",expKeys:param.expKeys},function(){
+                    //防止出现查询转圈圈
+                    setTimeout(function(){table.reload();},100);
+                });
+        }
+    });
+
+
+
+
     //数据检查
     $('#EquityInfoRegist001_btn_checkData').click(dateCheckMethod);
     function dateCheckMethod(){
@@ -298,7 +353,7 @@ $(function(){
             }
             var paramObj = getPageParams()
             if(!status){
-                paramObj.status = '01,02'; 
+                paramObj.status = '01,02';
             }
             Joyin.ajax('reportCheck',paramObj, function(result){
                 window.checkResult = result;
@@ -308,10 +363,10 @@ $(function(){
         }
         var keyList = [];
         for(var i=0;i<checkArr.length;i++){
-        	//modify by wangmin 修改取数顺序 start 2018-07-12
+            //modify by wangmin 修改取数顺序 start 2018-07-12
 //          keyList.push(checkArr[i].submitStatus + '|' + checkArr[i].bankCode + '|' + checkArr[i].indentifyMark );
-        	keyList.push(checkArr[i].bankCode + '|' + checkArr[i].indentifyMark + '|' + checkArr[i].submitStatus );
-        	//modify by wangmin 修改取数顺序 end 2018-07-12
+            keyList.push(checkArr[i].bankCode + '|' + checkArr[i].indentifyMark + '|' + checkArr[i].submitStatus );
+            //modify by wangmin 修改取数顺序 end 2018-07-12
             if(checkArr[i].submitStatusName !="未报送"){
                 Joyin.error("数据检查只能检查未报送数据，请重新选择！");
                 return;
@@ -326,71 +381,71 @@ $(function(){
             window.checkResult = result;
             Joyin.checkData(dataTitle, checkUrl, {checkKeys: keyList.join(',')});
         })
-    
+
     }
     // 手工处理 
     $('#EquityInfoRegist001_btn_manual').click(function() {
-    	// debugger
+        // debugger
         var manArr=table.getAllCheckedRows();
         if(!manArr || manArr.length ==0){
-        	//modify by liubin 当不选择时默认选择符合查询条件的全部数据
-        	var submitStatus = $("#submitStatus").val();
-        	var submitFeedbackStatus = $("#submitFeedbackStatus").val();
-        	if(!((submitStatus && submitStatus.length == 1 &&submitStatus[0] == '01')
-        			|| (submitStatus && submitStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1)))){
-        		Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理");
-        		return;
-        	}
-        	var paramObj = getPageParams();
-        	paramObj.flag = "01";//判断是否选中记录
-        	Joyin.confirm("请确认是否要手工处理全部未报送记录？", function() {
-        		//add by liubin 页面添加滚动条
-        		
-        		Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
-        			layui.layer.open({type:3});
-    	            Joyin.ajax('update', {
-    	            	flag:'01',
-                    	key: JSON.stringify(paramObj),
-                    	selectedBatchGroup: '3073',
-        				selectedProductGroup: '',
-        				startDate: new Date(),
-        				endDate: new Date(),
-        				batchGroupType: '1',
-        				prodGroupType: '0',
-        				detailName: 'SFSGCL'
-    	            }, function() {
-    	                table.load();
-    	                layui.layer.closeAll();
-    	            });
-        		});
+            //modify by liubin 当不选择时默认选择符合查询条件的全部数据
+            var submitStatus = $("#submitStatus").val();
+            var submitFeedbackStatus = $("#submitFeedbackStatus").val();
+            if(!((submitStatus && submitStatus.length == 1 &&submitStatus[0] == '01')
+                || (submitStatus && submitStatus.indexOf('02')>-1 && submitFeedbackStatus && (submitFeedbackStatus.indexOf('02')>-1 ||  submitFeedbackStatus.indexOf('04')> -1)))){
+                Joyin.error("只能选择报送状态为未报送、或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理");
+                return;
+            }
+            var paramObj = getPageParams();
+            paramObj.flag = "01";//判断是否选中记录
+            Joyin.confirm("请确认是否要手工处理全部未报送记录？", function() {
+                //add by liubin 页面添加滚动条
+
+                Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+                    layui.layer.open({type:3});
+                    Joyin.ajax('update', {
+                        flag:'01',
+                        key: JSON.stringify(paramObj),
+                        selectedBatchGroup: '3073',
+                        selectedProductGroup: '',
+                        startDate: new Date(),
+                        endDate: new Date(),
+                        batchGroupType: '1',
+                        prodGroupType: '0',
+                        detailName: 'SFSGCL'
+                    }, function() {
+                        table.load();
+                        layui.layer.closeAll();
+                    });
+                });
 
 //        		layui.layer.open({type:3});
 //	            Joyin.ajaxJson('update', paramObj, function() {
 //	                table.load();
 //	                layui.layer.closeAll();
 //	            });
-	        });
+            });
 //            Joyin.error(JoyinUtil.getMessage('REPORT_COMMON_E_0017'));
 //            return;
         }else{
-	        var keyList = [];
-	        for(var i=0;i<manArr.length;i++){
-	            keyList.push(manArr[i].bankCode + '|' + manArr[i].indentifyMark + '|' + manArr[i].submitStatus+ '|' + manArr[i].sumitSeq);
-	//            if(manArr[i].submitStatusName !="未报送"){
-	            if (!(manArr[i].submitStatus == '01'
-	                || (manArr[i].submitStatus == '02' && (manArr[i].submitFeedbackStatus == '02' || manArr[i].submitFeedbackStatus == '04')))) {
-	//                Joyin.error("只能选择未报送的数据，请重新选择！");
-	                Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
-	                return;
-	            }
-	        };
-	        Joyin.confirm("请确认是否要手工处理选中记录？", function() {
-	        	layui.layer.open({type:3});
-	            Joyin.ajax('update', {updateKeys:keyList.join(',')}, function() {
-	                table.load();
-	                layui.layer.closeAll();
-	            });
-	        });
+            var keyList = [];
+            for(var i=0;i<manArr.length;i++){
+                keyList.push(manArr[i].bankCode + '|' + manArr[i].indentifyMark + '|' + manArr[i].submitStatus+ '|' + manArr[i].sumitSeq);
+                //            if(manArr[i].submitStatusName !="未报送"){
+                if (!(manArr[i].submitStatus == '01'
+                    || (manArr[i].submitStatus == '02' && (manArr[i].submitFeedbackStatus == '02' || manArr[i].submitFeedbackStatus == '04')))) {
+                    //                Joyin.error("只能选择未报送的数据，请重新选择！");
+                    Joyin.error("只能选择报送状态为未报送的数据，或报送状态为接口报送且反馈状态为发送失败和中债退回的数据进行手工处理，请重新选择！");
+                    return;
+                }
+            };
+            Joyin.confirm("请确认是否要手工处理选中记录？", function() {
+                layui.layer.open({type:3});
+                Joyin.ajax('update', {updateKeys:keyList.join(',')}, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+            });
         }
     });
     //liaochunyu add 2017-12-02 start
@@ -398,23 +453,23 @@ $(function(){
     $('#EquityInfoRegist001_btn_cancelManual').click(function() {
         var manArr=table.getAllCheckedRows();
         if(!manArr || manArr.length ==0){
-        	//add by liubin 
-        	var submitStatus = $("#submitStatus").val();
-        	if(!(submitStatus && submitStatus.length==1 && submitStatus[0] == '03')){
-        		 Joyin.error("只能选择手工处理的数据，请重新选择！");
-                 return;
-        	}
-        	var paramObj = getPageParams();
-        	paramObj.flag = "01";//判断是否选中记录
-        	Joyin.confirm("请确认是否取消手工处理全部未报送记录？", function() {
-        		 layui.layer.open({type:3});
-	            Joyin.ajaxJson('cancelMannul', paramObj, function() {
-	                table.load();
-	                layui.layer.closeAll();
-	            });
-	        });
+            //add by liubin
+            var submitStatus = $("#submitStatus").val();
+            if(!(submitStatus && submitStatus.length==1 && submitStatus[0] == '03')){
+                Joyin.error("只能选择手工处理的数据，请重新选择！");
+                return;
+            }
+            var paramObj = getPageParams();
+            paramObj.flag = "01";//判断是否选中记录
+            Joyin.confirm("请确认是否取消手工处理全部未报送记录？", function() {
+                layui.layer.open({type:3});
+                Joyin.ajaxJson('cancelMannul', paramObj, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
+            });
         }else{
-        	var keyList = [];
+            var keyList = [];
             for(var i=0;i<manArr.length;i++){
                 keyList.push((manArr[i].sumitSeq =='' ? null : manArr[i].sumitSeq) +'|'+ manArr[i].bankCode + '|' + manArr[i].indentifyMark);
                 if(manArr[i].submitStatusName !="手工处理"){
@@ -423,14 +478,14 @@ $(function(){
                 }
             };
             Joyin.confirm("请确认是否要取消手工处理选中记录？", function() {
-            	layui.layer.open({type:3});
+                layui.layer.open({type:3});
                 Joyin.ajaxJson('cancelMannul', {updateKeys:keyList.join(',')}, function() {
                     table.load();
                     layui.layer.closeAll();
                 });
             });
         }
-        
+
     });
     //liaochunyu add 2017-12-02 end
     //报送
@@ -451,12 +506,12 @@ $(function(){
                 return;
             }
             if(!status){
-                paramObj.status = '01,02'; 
+                paramObj.status = '01,02';
             }
             Joyin.ajax('sendBeforeCheck',paramObj, function(result){
                 if(!result || result.length ==0){
                     Joyin.confirm("按照已选择当前查询条件报送,是否确认！",function(){
-                    	layui.layer.open({type:3});
+                        layui.layer.open({type:3});
                         Joyin.ajaxJson('submitChb', getPageParams(), function() {
                             table.load();
                             layui.layer.closeAll();
@@ -486,7 +541,7 @@ $(function(){
         Joyin.ajax('sendBeforeCheck',{checkKeys:keyList.join(',')}, function(result){
             if(!result || result.length ==0){
                 Joyin.confirm("请确认是否要报送选中记录？", function() {
-                	layui.layer.open({type:3});
+                    layui.layer.open({type:3});
                     Joyin.ajaxJson('submitChb', {submitKeys:keyList.join(',')}, function() {
                         table.load();
                         layui.layer.closeAll();
@@ -504,12 +559,12 @@ $(function(){
 //            });
 //        });
     });
-    
+
     // add by etliu 20180824 start
     // 二次报送
     $('#EquityInfoRegist001_btn_submitAgain').click(function() {
         var paramObj = getPageParams();
-        
+
         var submitArr = table.getAllCheckedRows();
         if(submitArr.length === 0) {
             var submitStatus = $('#submitStatus').val();
@@ -524,22 +579,22 @@ $(function(){
                 Joyin.error("只能对数据状态为新建和修改的数据进行重新报送！");
                 return;
             }
-            if(submitFeedbackStatus && 
-                    (submitFeedbackStatus.indexOf('01') > 0
-                            || submitFeedbackStatus.indexOf('03') > 0
-                            || submitFeedbackStatus.indexOf('05') > 0)) {
+            if(submitFeedbackStatus &&
+                (submitFeedbackStatus.indexOf('01') > 0
+                    || submitFeedbackStatus.indexOf('03') > 0
+                    || submitFeedbackStatus.indexOf('05') > 0)) {
                 Joyin.error("只能对反馈状态为发送失败和中债退回的数据进行重新报送！");
                 return;
             }
-            
+
             if(!status){
-                paramObj.status = '01,02'; 
+                paramObj.status = '01,02';
             }
             if (!submitFeedbackStatus) {
-                paramObj.submitFeedbackStatus = '02,04'; 
+                paramObj.submitFeedbackStatus = '02,04';
             }
             Joyin.confirm("请确认是否要按照已选择当前查询条件进行二次报送？",function(){
-            	layui.layer.open({type:3});
+                layui.layer.open({type:3});
                 Joyin.ajaxJson('submitCbAgain', paramObj, function() {
                     table.load();
                     layui.layer.closeAll();
@@ -547,31 +602,31 @@ $(function(){
             });
             return ;
         }
-        
+
         var keyList = [];
         for (var i = 0; i < submitArr.length; i++) {
-        	var submitFeedbackStatus = submitArr[i].submitFeedbackStatus;
-        	var submitStatus = submitArr[i].submitStatus;
-        	if(submitStatus&&submitStatus.indexOf('01') > -1){
-        		 Joyin.error("未报送的数据不能进行二次报送！");
-                 return;
-        	}else if(!submitFeedbackStatus){
+            var submitFeedbackStatus = submitArr[i].submitFeedbackStatus;
+            var submitStatus = submitArr[i].submitStatus;
+            if(submitStatus&&submitStatus.indexOf('01') > -1){
+                Joyin.error("未报送的数据不能进行二次报送！");
+                return;
+            }else if(!submitFeedbackStatus){
                 Joyin.error("反馈状态为空的数据不能进行二次报送！");
                 return;
-        	}else if(submitFeedbackStatus&& 
-                    (submitFeedbackStatus.indexOf('01') > -1
-                            || submitFeedbackStatus.indexOf('03') > -1
-                            || submitFeedbackStatus.indexOf('05') > -1)){
-                    Joyin.error("只能对报送状态为接口报送且反馈状态为发送失败或中债退回的数据进行重新报送!");
-                    return;
-        	}
+            }else if(submitFeedbackStatus&&
+                (submitFeedbackStatus.indexOf('01') > -1
+                    || submitFeedbackStatus.indexOf('03') > -1
+                    || submitFeedbackStatus.indexOf('05') > -1)){
+                Joyin.error("只能对报送状态为接口报送且反馈状态为发送失败或中债退回的数据进行重新报送!");
+                return;
+            }
             keyList.push(submitArr[i].sumitSeq);
         };
-        
+
         paramObj.keyList = keyList.join(',');
-        
+
         Joyin.confirm("请确认是否要二次报送？",function(){
-        	layui.layer.open({type:3});
+            layui.layer.open({type:3});
             Joyin.ajaxJson('submitCbAgain', paramObj, function() {
                 table.load();
                 layui.layer.closeAll();
@@ -579,28 +634,225 @@ $(function(){
         });
     });
     // add by etliu 20180824 end
-    
+
     var init= function(){
         $('#updateTime').val('');
         $('#submitDate').val('');
 
         if(isMain=='01'){
             setTimeout(function() {
-            	if($('#submitStatus').val()=='02'||$('#submitStatus').val()=='03'){
-         		   $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
-         	   }else{
-         		  $('#submitDeadLine').val(searchDataStart+' - '+searchDataEnd);
-         	   }
+                if($('#submitStatus').val()=='02'||$('#submitStatus').val()=='03'){
+                    $('#submitDate').val(searchDataStart+' - '+searchDataEnd);
+                }else{
+                    $('#submitDeadLine').val(searchDataStart+' - '+searchDataEnd);
+                }
                 table.load();
             }, 500);
         }
-        
-      //报送前检查调用数据检查
+
+        //报送前检查调用数据检查
         if(indentifyMark){
             setTimeout(function() {
-                table.load();  
+                table.load();
             },500)
         }
     };
     init();
+    
+    
+    //导出中债excel
+    var exportZZExcel = function(flag) {
+    	var expArr=table.getAllCheckedRows();
+        
+        //先判断有没有勾选数据
+        if(!expArr || expArr.length ==0){
+            	var param = getPageParams();
+                param.status='01,02';
+                param.flag = "0";
+            	//没有勾选数据
+            	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
+            	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？
+//                Joyin.ajax('countExportNum',param,function(dataNum){
+//                    if(dataNum>500){
+//                         Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
+//                        	 exportAndDoManual(param);
+//                         });
+//                    }else{
+//                    	exportAndDoManual(param);
+//                    }
+//                });
+//        		Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0020"), function() {
+//                 	var param = getPageParams();
+//                     param.status='01,02';
+//                     param.flag = "0";
+                	//没有勾选数据
+                	//默认导出满足所选查询条件（包括空查询条件）的所有数据状态为“新建”且报送状态为“未报送”的数据。
+                	//导出成功后，系统弹出确认框“导出成功，是否自动标识未报送数据的报送状态为“手工处理”？
+                    // Joyin.ajax('countExportNum',param,function(dataNum){
+                    //     if(dataNum>100000){
+                    //          Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0016"), function() {
+                    //         	 exportAndDoManual(param);
+                    //          });
+                    //     }else{
+                    //     	Joyin.confirm("是否确认导出中债Excel?", function() {
+                    //     	     exportAndDoManual(param);
+                    //     	});
+                    //     }
+                    // });
+//                });
+            exportAndDoManual(param);
+        }else{
+        	//有勾选数据
+        	//先判断勾选的数据有没有包含有删除状态的数据
+          	 for(var i=0;i<expArr.length;i++){
+                 if(expArr[i].status =="03"){
+                	 //如果包含有删除状态的数据，给出提示并返回
+                     Joyin.error(JoyinUtil.getMessage("REPORT_MANUAL_0010"));
+                     return;
+                 }
+             }
+          	 //不包含有删除状态的数据
+          	 var showTip=false;
+          	 var doManualTip=false;
+          	for(var i=0;i<expArr.length;i++){
+          		if(expArr[i].submitStatus=="01"){
+          			doManualTip=true; 
+          		}
+          	}
+          	 for(var i=0;i<expArr.length;i++){
+          		 if(expArr[i].status =="02"||expArr[i].submitStatus!="01"){
+                     //若勾选数据中含有数据状态为“修改”或报送状态不为“未报送”的数据时
+                	 //赋值showTip为true，给出提示框
+                	 showTip=true;
+                     break;
+                 }
+                 
+             }
+          	 //根据提示状态判断
+          	if(showTip){
+          		//给出提示框【导出数据包含修改或已报送数据，请确认是否导出！】
+                Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0011"), function() {
+                	  //点击“是”导出数据并且手工处理，否则重新选择数据
+                	  exportZZ(doManualTip,expArr);
+                  });
+          	}else{
+          		//勾选的数据正常，不需要给出提示，直接导出数据并且手工处理
+          		exportZZ(doManualTip,expArr);
+          	}
+        }
+    	
+    }
+    function exportZZ(flag,expArr){
+    	//导出中债excel并且调用手工处理
+    	// var expArr=table.getAllCheckedRows();
+        $.each(expArr, function(i, v) {
+            v.sendStatus=v.sendStatusCode;
+            v.status=v.statusCode;
+            v.ccy=v.ccyCode;
+        });
+        var param = {};
+        var keyList = [];
+        $.each(expArr, function(i, row) {
+            keyList.push(row.bankCode + '|' + row.indentifyMark + '|' + row.submitStatus + '|' + row.sumitSeq);
+        });
+        param.status='01,02';
+        param.flag = "0";
+        param.keyList = JSON.stringify(expArr);
+        param.expKeys = keyList.join(',')
+        Joyin.exportExcel('export', param);
+       if(flag){
+	        Joyin.confirm(JoyinUtil.getMessage("REPORT_MANUAL_0012"), function() {
+	              Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+                     layui.layer.open({type:3});
+                   Joyin.ajax('update', {flag : '02',updateKeys:keyList.join(',')}, function() {
+                       table.load();
+                       layui.layer.closeAll();
+                   });
+                 });
+	          });
+       }
+    }
+    
+    function exportAndDoManual(param){
+    	// 添加后台批处理导出逻辑 zhangyf 20200113 start
+        Joyin.ajaxJson('checkExport', param, function(result){
+            if(result.data){
+                Joyin.confirm(JoyinUtil.getMessage("是否将导出数据的报送状态改为“手工处理”？"), function() {
+                    // 后台批处理导出
+                    Joyin.ajax('batchExportAndDoManual',
+                        {key: JSON.stringify(param),
+                            //busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
+                            selectedBatchGroup: '3074,3073',// 批处理id
+                            selectedProductGroup: '',
+                            startDate: new Date(),
+                            endDate: new Date(),
+                            batchGroupType: '1',
+                            prodGroupType: '0',
+                            detailName: '投资者身份信息登记-导出中债excel文件'},
+                        function(result2) {
+                            if(result2.data){
+                                Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+                            }else{
+                                Joyin.alert(result2.message);
+                            }
+                            table.load();
+                        }
+                    );
+                },null,function(){
+                    // 后台批处理导出
+                    Joyin.ajax('batchExport',
+                        {key: JSON.stringify(param),
+                            //busiConfirmDate: $('#holdDate').startDate()+' - '+$('#holdDate').endDate(),// 业务确认日期
+                            selectedBatchGroup: '3074',// 批处理id
+                            selectedProductGroup: '',
+                            startDate: new Date(),
+                            endDate: new Date(),
+                            batchGroupType: '1',
+                            prodGroupType: '0',
+                            detailName: '投资者身份信息登记-导出中债excel文件'},
+                        function(result2) {
+                            if(result2.data){
+                                Joyin.alert(JoyinUtil.getMessage("REPORT_MANUAL_0009"));
+                            }else{
+                                Joyin.alert(result2.message);
+                            }
+                            table.load();
+                        }
+                    );
+                });
+            } else {
+                // 无勾选导出，数量小于设置值走勾选逻辑
+                Joyin.ajax('searchInfo',
+                    param,
+                    function (result) {
+                            if (result && result.length > 0){
+                                exportZZ(true,result);
+                            }
+                    });
+            }
+        });
+    }
+    
+    function doManual(message,param){
+    	Joyin.confirm(message, function() {
+    		Joyin.ajax('checkConfirmMsgForAllManual', null, function() {
+    			layui.layer.open({type:3});
+	            Joyin.ajax('update', {
+	            	flag:'01',
+                	key: JSON.stringify(param),
+                	selectedBatchGroup: '3073',
+    				selectedProductGroup: '',
+    				startDate: new Date(),
+    				endDate: new Date(),
+    				batchGroupType: '1',
+    				prodGroupType: '0',
+    				detailName: 'SFSGCL'
+	            }, function() {
+	                table.load();
+	                layui.layer.closeAll();
+	            });
+    		});
+            }); 
+    }
+
 });

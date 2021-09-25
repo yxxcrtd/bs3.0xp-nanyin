@@ -12,9 +12,13 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.dto.EtrInvestInfoDto;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.BidOrderBidPriceDto;
@@ -74,9 +78,10 @@ public class PrimaryBiddingManage003Controller extends BaseController {
          if (!WorkFlowUtil.isNotFromToDoList()&&StringUtil.isNotEmpty(workflowId)) {
              model.addAttribute("workflowId", workflowId);
              entity= primaryBiddingManage003.getBussinessEntityByWorkflowId(workflowId);
-             if(entity.getAllBidPrinAmt() != null) {
-                 entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().multiply(new BigDecimal(10000)));//转成元
-             }
+//             不能直接在这修改，会将流程中的数据均改变
+//             if(entity.getAllBidPrinAmt() != null) {
+//                 entity.setAllBidPrinAmt(entity.getAllBidPrinAmt().multiply(new BigDecimal(10000)));//转成元
+//             }
          } else if (WorkFlowUtil.isNotFromToDoList() &&StringUtil.isNotEmpty(bidId)){
         	 entity=primaryBiddingManage003.getBussinessEntityByBidId(bidId);
              entity.setAllBidPrinAmt(ArithmeticUtil.multiply(new BigDecimal(map.get("allBidPrinAmt").toString()),new BigDecimal(10000)));
@@ -540,6 +545,18 @@ public class PrimaryBiddingManage003Controller extends BaseController {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
+        // add by zhangrui1 调用风险限额预占 start
+
+        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+            AjaxResult ar = TradeRdsCommonAop.doPreOccupy(dto,
+                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+                    BussinessDictCodeList.共同业务类型_中标结果维护.getValue());
+            if (ar != null) {
+                return ar;
+            }
+        }
+
+        // add by zhangrui1 调用风险限额预占 end
         ProcessParameter<TrdBiddingManage003Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<TrdBiddingManage003Dto> params = new WorkFlowParameter<>();
         params.setPageId(this.getPageId());

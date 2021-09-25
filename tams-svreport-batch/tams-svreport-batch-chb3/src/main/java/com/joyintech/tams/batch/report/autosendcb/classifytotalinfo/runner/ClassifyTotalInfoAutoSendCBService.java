@@ -64,7 +64,7 @@
 //            mainService.autoSendCB();
 //        }
 //        catch (Exception e) {
-//            e.printStackTrace();
+//           logger.error(e.getMessage(),e);
 //            getLogger().log(e);
 //        }
 //

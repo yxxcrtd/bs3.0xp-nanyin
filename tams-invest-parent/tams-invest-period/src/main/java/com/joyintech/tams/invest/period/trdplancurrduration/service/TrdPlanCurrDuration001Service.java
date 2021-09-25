@@ -25,6 +25,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.period.trdplancurrduration.dto.TrdPlanCurrDuration001Dto;
 import com.joyintech.workflow.engine.WorkflowContext;
@@ -33,6 +34,8 @@ import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +55,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCurrDuration001Dto> implements BaseProcessService<TrdPlanCurrDuration001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanCurrDuration001Service.class);
 
     private final String 非货币总集复核_BTN = "TrdFundDuration002_btn_total";
 
@@ -123,7 +130,7 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, false);
     }
@@ -143,6 +150,11 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
      */
     @Override
     public void doComplete(TrdPlanCurrDuration001Dto entity, OperationType type) {
+        if (StringUtil.equals(entity.getType(), "05")){
+            entity.setTypeFlag("01");
+        }else{
+            entity.setTypeFlag("02");
+        }
         entity.setUpdateUser(SecurityUtil.getLoginUser().getUserName());
         if (OperationType.REVOKE == type) {
             dealEntityService.execute交易共通(entity, DictCodeListExt1.交易流程状态_撤销, false);
@@ -359,6 +371,12 @@ public class TrdPlanCurrDuration001Service extends CommonExportService<TrdPlanCu
 
     @Override
     public void doBack(TrdPlanCurrDuration001Dto entity) {
+        if("06".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 

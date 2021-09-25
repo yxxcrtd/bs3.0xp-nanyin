@@ -47,7 +47,7 @@ public class FlowRiskSceneManageController {
 
     /** 根据条件查询情景列表，无分页 */
     @PostMapping("querycheck")
-    public List<SttScene> querycheck(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SttScene> querycheck(@RequestBody Map<String, Object> param) {
         return flowRiskSceneManageService.querycheck(param);
     }
 
@@ -58,7 +58,7 @@ public class FlowRiskSceneManageController {
      * @return &lt;SuggestDto&gt;
      */
     @PostMapping("getSceneSuggestList")
-    public List<SuggestDto> getSceneSuggestList(@RequestBody Map<String, Object> paramMap) throws Exception {
+    public List<SuggestDto> getSceneSuggestList(@RequestBody Map<String, Object> paramMap) {
         // 收不到参数
         //@RequestParam("fuzzyText")String fuzzyText
         Object fuzzyTextObj = paramMap.get("fuzzyText");
@@ -81,7 +81,7 @@ public class FlowRiskSceneManageController {
     //@GetMapping("/fuzzySelectScene")
     //public List<SelectOptionDto> fuzzySelectScene(@RequestParam("fuzzyText")String fuzzyText) throws Exception {
     @PostMapping("fuzzySelectScene")
-    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> queryProdIdInfo(@RequestBody Map<String, Object> param) {
         List<SelectOptionDto> resultList = new ArrayList<>();
         List<SttScene> dataList = null;
         Object sceneId = null;
@@ -128,7 +128,7 @@ public class FlowRiskSceneManageController {
      * @throws Exception 
      */
     @GetMapping("getAllSceneList")
-    public List<SttScene> getAllSceneList() throws Exception {
+    public List<SttScene> getAllSceneList() {
         return flowRiskSceneManageService.selectAll();
     }
 }

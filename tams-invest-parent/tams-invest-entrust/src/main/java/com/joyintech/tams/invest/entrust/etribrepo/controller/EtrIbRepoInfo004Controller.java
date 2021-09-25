@@ -96,6 +96,7 @@ public class EtrIbRepoInfo004Controller extends BaseController {
         model.addAttribute("fintype_zhg", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
         model.addAttribute("fintype_nhg", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
         model.addAttribute("TARGET_BACK_TYPE_H01", DictCodeList.回购类型_质押式协议回购.getValue());
+        model.addAttribute("TARGET_BACK_TYPE_H04", DictCodeList.回购类型_质押式回购.getValue());
         model.addAttribute("ps_03", DictCodeList.回购拆借方向_正回购.getValue());
         model.addAttribute("ps_04", DictCodeList.回购拆借方向_逆回购.getValue());
         return super.init(model);
@@ -203,6 +204,18 @@ public class EtrIbRepoInfo004Controller extends BaseController {
                 confirmMessage.append("<br />");
                 confirmMessage.append(getMessage("TRD_C_0002"));
             }
+
+            // add by wanshiwei ZGZGST-2657 6:添加委托金额校验--委托金额不低于10万 20210917 start
+            // modify by wanshiwei ZGZGST-2657 7：指令阶段不check
+            /*if (dto.getEntrustAmt().compareTo(BigDecimal.valueOf(100000)) == -1) {
+                if (StringUtil.isNotBlank(confirmMessage)) {
+                    confirmMessage.append("<br />");
+                }
+                confirmMessage.append(getMessage("ETR_E_0025", String.valueOf(i + 1)));
+                confirmMessage.append("<br />");
+                confirmMessage.append(getMessage("委托金额低于10万，是否继续？"));
+            }*/
+            // add by wanshiwei ZGZGST-2657 6:添加委托金额校验--委托金额不低于10万 20210917 end
         }
         // 授信软控 start
         if (joyinMessages.size() > 0 || messages.size() > 0) { 
@@ -261,7 +274,7 @@ public class EtrIbRepoInfo004Controller extends BaseController {
 //                dto.setZyqk(etrIbRepoInfo004Service.getZyqkId(dto.getZyqk()));
                 dto.setZyqk("999999");
             }
-            dto.setWorkflowParameter("new|||1|EtrIbRepoinfo002|EtrIbRepoMain_btn_submit|true");
+//            dto.setWorkflowParameter("new|||1|EtrIbRepoinfo002|EtrIbRepoMain_btn_submit|true");
         }
         // ----------add by yushilong 20200721 预占功能 start----------
         if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {

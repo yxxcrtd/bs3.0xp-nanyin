@@ -43,6 +43,12 @@
     //画面根据资产类型show or hide;
     var init = function(){
         showAll();
+        debugger;
+        if($('#objectType').val() && $('#objectType').val() === '01'){
+            getElementById('isNoIssueAmtFlag_div').show();
+        }else{
+            getElementById('isNoIssueAmtFlag_div').hide();
+        }
         //债券、存款类资产hide自定义说明
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F01 || INT_ASSET_TYPE==FINPROD_TYPE_F21 ||INT_ASSET_TYPE==FINPROD_TYPE_F17){
             getElementById('remark','div').hide();
@@ -615,6 +621,7 @@
      */
     function getPreviewParams() {
         //付息信息
+        debugger;
         var param = {}
             ,endTdayRule  = getElementById('endTdayRule').val()
             , payTdayRule = getElementById('payTdayRule').val()
@@ -624,6 +631,7 @@
             ,remark = getElementById('remark').val();
         param.finprodId = $("#finprodId").val();
         param.workflowId = $("#workflowId").val();
+        param.objectType = $("#objectType").val();//01债权类资产
         //资产类型
         param.finprodType2 = INT_ASSET_TYPE;
         param.finprodType = INT_ASSET_TYPE;
@@ -733,15 +741,21 @@
         //获取还本列表信息
         //存款类、计划类、项目类(主画面存款本金、融资金额)--issueAmt
         if(INT_ASSET_TYPE==FINPROD_TYPE_F07||INT_ASSET_TYPE==FINPROD_TYPE_F17 || INT_ASSET_TYPE==FINPROD_TYPE_F21){
-            var isNoIssueAmtFlag = getElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
-            if(isNoIssueAmtFlag){
-                //是否还本不带息
-                param.isNoIssueAmtFlag='Y';
-                param.issueAmt = 100;
+            // 如果是债权类资产才会根据无明确融资金额判断
+            if($('#objectType').val() && $('#objectType').val() === '01'){
+                var isNoIssueAmtFlag = getElementById('isNoIssueAmtFlag').next().hasClass('layui-form-onswitch');
+                if(isNoIssueAmtFlag){
+                    //是否还本不带息
+                    param.isNoIssueAmtFlag='Y';
+                    param.issueAmt = 100;
+                }else{
+                    param.isNoIssueAmtFlag='N';
+                    param.issueAmt = $('#issueAmt').val();
+                }
             }else{
-                param.isNoIssueAmtFlag='N';
                 param.issueAmt = $('#issueAmt').val();
             }
+
 
         }else if(INT_ASSET_TYPE == FINPROD_TYPE_F01){
             param.issueAmt = 100;
@@ -1219,6 +1233,15 @@
             $("#finPayInterestStdInfoDto_payMonth").select2('destroy').empty();
             $("#finPayInterestStdInfoDto_payMonth").textSelect()
         }
+        /*if(payCycle==INTPAY_CYCLE_08){//付息频率为不规则时，展示自定义说明
+            getElementById('remark','div').show();
+        }else{
+            //隐藏并清空值
+            getElementById('remark','div').hide();
+            $("#remark").val("").trigger("change");
+        }*/
+
+
     }
     /** add by yanya on 20210901 增加是否无明确融资金额**/
 

@@ -80,12 +80,10 @@ public class PtlCashFlowGapAnalysis001Controller extends BaseController {
 	 * 分页查询资金账户下拉框
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@RequestMapping("getFundAccount")
 	@ResponseBody
-    public List<SelectOptionDto> getAssetAccount()
-        throws Exception {
+    public List<SelectOptionDto> getAssetAccount(){
 		List<SelectOptionDto> fundAccountSelect = ptlCashFlowGapAnalysis001Service.getFundAccount(RequestUtil.getPageParam());
         return fundAccountSelect;
     }
@@ -93,12 +91,10 @@ public class PtlCashFlowGapAnalysis001Controller extends BaseController {
 	/**
      * 画面查询方法
      * @return 查询结果集
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlCashFlowGapAnalysis001Dto> selectAll()
-            throws Exception {
+    public Page<PtlCashFlowGapAnalysis001Dto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         Page<PtlCashFlowGapAnalysis001Dto> page = ptlCashFlowGapAnalysis001Service.selectForPage(map);
         return page;
@@ -109,26 +105,23 @@ public class PtlCashFlowGapAnalysis001Controller extends BaseController {
      * 导出现金流明细信息excel
      *
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception { 
+    public ResponseEntity<byte[]> export() {
         return ptlCashFlowGapAnalysis001Service.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
      
     /**
      * 导出汇总行
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @RequestMapping("/detailExport")
-    public ResponseEntity<byte[]> detailExport()
-        throws Exception {
+    public ResponseEntity<byte[]> detailExport(){
         Map<String,Object> param = RequestUtil.getPageParam(); 
         return ptlCashFlowGapAnalysis001Service.export(this.getPageId(),param);
         //return ptlCashFlowGapAnalysis001Service.detailExport(param);

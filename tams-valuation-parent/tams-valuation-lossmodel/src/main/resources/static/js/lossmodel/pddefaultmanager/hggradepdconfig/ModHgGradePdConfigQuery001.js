@@ -53,8 +53,8 @@ $(function () {
                     return data;
                 }}
             ,{field:'oTypeName',  title: '评级类型'}*/
-            ,{field:'gradeOrgName', digit: 4,   title: '评级结果',sortField:'gradeResult'}
-            ,{field:'forwardYearPd' ,width:250,type:"number",  title: '前瞻前年度边际PD%'}
+            ,{field:'gradeResultStr',   title: '评级结果',sortField:'gradeResult'}
+            ,{field:'forwardYearPd' ,width:250, title: '前瞻前年度边际PD%'}
             ,{field:'operation', width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
       });
@@ -131,7 +131,7 @@ $(function () {
      * 新建
      */
     function showDialog() {
-        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/init', '45%', '75%',function(){table.reload();});
+        Joyin.dialog('新建评级PD维护信息', basePath +'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/init', '45%', '75%',{pageModel:PAGE_MODEL_NEW},function(){table.reload();});
     }
 
     /**
@@ -145,7 +145,7 @@ $(function () {
     //导入按钮点击事件
     $('#ModHgGradePdConfig001_btn_import').click(function() {
 
-            Joyin.uploadFile(function(fileName) {
+            Joyin.uploadFile({pageId: 'PdDefaultManager001MTM'},function(fileName) {
                 Joyin.ajax(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig001/checkGradePdImportData'
                     ,{fileName: fileName}, function(result) {
                       if(result.data != undefined && result.data.indexOf("数据如下") > 0){
@@ -204,14 +204,16 @@ $(function () {
         var object = {selectedItem: [data], operateType:"delete",seqNo: data.seqNo};
         Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig001/deleteCheck', object, function(result) {
             if(result.data != undefined &&  result.data.indexOf("已被使用")>0){
+                Joyin.confirm("当前PD评级数据已被使用，是否确认删除？", function(){
                     Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
                         WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
                             table.reload();
                         });
                     });
+                });
             }else{
-                Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                    WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
+                Joyin.confirm("是否确认删除？", function(){
+                    WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
                         table.reload();
                     });
                 });
@@ -228,12 +230,31 @@ $(function () {
             Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
             return;
         }
-        var object = {selectedItem: selArr, operateType:"delete"};
-        Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
+        var object = {selectedItem: selArr, operateType:"deleteAll"};
+        Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig001/deleteCheck', object, function(result) {
+            if(result.data != undefined &&  result.data.indexOf("已被使用")>0){
+                Joyin.confirm(result.data, function(){
+                    Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
+                        WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
+                            table.reload();
+                        });
+                    });
+                });
+            }else{
+                Joyin.confirm("是否确认删除？", function(){
+                    WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002",function(){
+                        table.reload();
+                    });
+                });
+            }
+
+        });
+
+        /*Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
             WorkFlow.doDeleteList('/model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig001_btn_delete", "ModHgGradePdConfig002", function(){
                 table.reload();//删除事件请求及回调函数
             });
-        });
+        });*/
 
     };
 

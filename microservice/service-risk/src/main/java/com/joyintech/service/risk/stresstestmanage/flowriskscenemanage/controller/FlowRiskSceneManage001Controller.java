@@ -54,7 +54,7 @@ public class FlowRiskSceneManage001Controller {
     public Page<FlowRiskSceneManage001Dto> selectForPage(@RequestBody Map<String, Object> param,
                                                          @PathVariable("page") int page,
                                                          @PathVariable("length") int length)
-        throws Exception {
+    {
         param.put("isEnabled", MultilevelDataAuthorityUtil.isEnabled());
         return flowRiskSceneManage001Service.selectForPage(page, length, param);
     }
@@ -63,7 +63,7 @@ public class FlowRiskSceneManage001Controller {
      * 批量or单个情景启用停用 
      */
     @PostMapping("/updateScenesEffStatus")
-    public Integer updateScenesEffStatus(@RequestBody Map<String, Object> param) throws Exception {
+    public Integer updateScenesEffStatus(@RequestBody Map<String, Object> param) {
         // 收不到参数
         //@ModelAttribute(value="inputBean")  SceneBatchOperationPojo inputBean
         List<String> sceneIdList = null;
@@ -85,7 +85,7 @@ public class FlowRiskSceneManage001Controller {
      * 单个情景删除 
      */
     @PostMapping("/deleteScene")
-    public void deleteScene(@RequestBody Map<String, Object> param) throws Exception {
+    public void deleteScene(@RequestBody Map<String, Object> param) {
         // 收不到参数
         //@RequestParam("sceneId")String sceneId
         //@RequestBody FlowRiskSceneManage001Dto ?

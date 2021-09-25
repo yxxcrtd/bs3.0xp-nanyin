@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.joyintech.framework.base.entity.ProcessMark;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.workflow.engine.WorkflowContext;
 import org.apache.commons.collections.CollectionUtils;
@@ -33,18 +34,14 @@ import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.base.dto.UploadFile;
+import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectDto;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.common.base.entity.WflTrdFinProductDealTotal;
@@ -55,25 +52,40 @@ import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.trade.common.controller.TrdCommonController;
 import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.dto.TrdPlanRateInvestTradeDto;
 import com.joyintech.tams.invest.trade.trdplanrateinvesttrade.service.TrdPlanRateInvestTrade002Service;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 计划类资产投资交易新建
@@ -96,7 +108,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
     /**
      * 主键生成类
      */
-    @Autowired(required = false)
+    @Autowired
     private BaseGetBusinessId baseGetBusinessId;
     /**
      * 附件上传类
@@ -140,7 +152,7 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
                 DictCode.行内资产三级分类,
                 DictCode.行内资产四级分类,
                /* 原因、zhuyongkang 2019/7/30  end*/
-                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的);
+                DictCode.清算速度,DictCode.币种,DictCode.是否,DictCode.投资目的, DictCode.业务模式);
         
      // 一体化对应etliu start
 //        model.addAttribute("PS_PURCHASE_T04",DictCodeList.交易方向_申购.getValue());
@@ -148,7 +160,10 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         model.addAttribute("PS_T02",DictCodeList.交易方向_卖出.getValue());
      // 一体化对应etliu end
-        
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("YES_OR_NO_N", DictCodeList.是否_否.getValue());
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
@@ -398,12 +413,23 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
             //paramMap.put("calendarId", dto.getCalendarId());
             paramMap.put("chlId", dto.getChlId());
             paramMap.put("finprodId", dto.getFinprodId());
+            //考虑流程中被占用,是的情况
+            paramMap.put("isContainWfl",DictCodeListExt1.是或否_是.getValue());
+            //针对，流程中数据退回，然后又重新提交时，流程中占有应不包含该数据
+            paramMap.put("isnotContainTrds",dto.getTradeId());
             //获得资产维度的持仓
             Map<String, Object>  resultMap = bussTrdAvailableCashQueryService.getFinAvaPosition(paramMap);
+
 
             BigDecimal position = new BigDecimal((String) resultMap.get("POSITION"));
             //融资金额
             BigDecimal issueAmt = new BigDecimal((String)resultMap.get("ISSUEAMT"));
+            //流程中占用金额
+            BigDecimal positionFlow =null;
+            if(StringUtil.isNotEmpty(resultMap.get("POSITIONFLOW"))){
+                positionFlow=new BigDecimal((String) resultMap.get("POSITIONFLOW"));
+            }
+            position= ArithmeticUtil.doAdd(position,positionFlow);
             position = com.joyintech.framework.util.ArithmeticUtil.doAdd(position, dto.getPrinAmt());
             //资产 融资金额、发行金额
             if (issueAmt.compareTo(position) < 0) {
@@ -417,13 +443,12 @@ public class TrdPlanRateInvestTrade002Controller extends BaseController{
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) TrdPlanRateInvestTradeDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

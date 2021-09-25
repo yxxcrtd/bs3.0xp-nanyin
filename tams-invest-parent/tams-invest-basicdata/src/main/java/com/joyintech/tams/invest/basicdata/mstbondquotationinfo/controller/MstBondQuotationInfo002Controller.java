@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -94,15 +95,13 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * 新建页面查询资产代码
      * <功能详细描述>
      * @return list
-     * @throws Exception Exception
      * @see
      * @param param param
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getSecIdToNew")
-    public List<SuggestDto> getSecIdToNew(String param)
-        throws Exception{
+    public List<SuggestDto> getSecIdToNew(String param){
         List<SuggestDto> list = new ArrayList<SuggestDto>();
         for(SuggestDto dto:mstBondQuotationInfoService.getSecIdToNew(param)){
             if(dto!=null){
@@ -130,13 +129,11 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstBondQuotationInfoDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstBondQuotationInfoDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -170,14 +167,12 @@ public class MstBondQuotationInfo002Controller extends BaseController {
      * 资产代码的联想文本框事件
      * 
      * @return 查询的资产代码和资产名称列表
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getAssetCodeList")
-    public List<SelectOptionDto> getAssetCodeList()
-        throws Exception { 
+    public List<SelectOptionDto> getAssetCodeList(){
     	Map<String,Object> param = RequestUtil.getPageParam();
         List<SelectOptionDto> temp = mstBondQuotationInfoService.getFinprodAbbrOption(param);
         return temp;

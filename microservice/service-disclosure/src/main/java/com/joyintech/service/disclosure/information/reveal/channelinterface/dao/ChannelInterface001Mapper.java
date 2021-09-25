@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.service.disclosure.information.reveal.channelinterface.dto.ChannelInterfaceNew001Dto;
+import org.springframework.stereotype.Repository;
 
-
+@Repository
 public interface ChannelInterface001Mapper {
 	
 	

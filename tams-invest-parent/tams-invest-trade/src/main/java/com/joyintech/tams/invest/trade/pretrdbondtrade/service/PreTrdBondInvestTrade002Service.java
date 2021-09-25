@@ -19,8 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.common.base.dao.*;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -70,14 +74,6 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.SpringContextUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
-import com.joyintech.tams.common.base.dao.InterfTradSecdealMapper;
-import com.joyintech.tams.common.base.dao.StlSecAcctInfoMapper;
-import com.joyintech.tams.common.base.dao.TrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealAddPreMapper;
-import com.joyintech.tams.common.base.dao.TrdProductDealPreMapper;
-import com.joyintech.tams.common.base.dao.WflTrdFinProductDealTotalMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealAddPreMapper;
-import com.joyintech.tams.common.base.dao.WflTrdProductDealPreMapper;
 import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinDealPledgePre;
@@ -141,17 +137,21 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInvestTrade002Dto> implements BaseProcessService<PreTrdBondInvestTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(PreTrdBondInvestTrade002Service.class);
 
-
-
+    @Autowired
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+    @Autowired
+    private DateCalService dateCalService;
     @Autowired
     private TradeCommonService tradeCommonService;
 
-    /**
-     * DateCalService
-     */
-    @Autowired(required = false)
-    private DateCalService dateCalService;
+
 
 
     /**
@@ -181,8 +181,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
     @Autowired(required = false)
     private BaseGetBusinessId baseGetBusinessId;
 
-    @Autowired(required = false)
-    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
+    
     
     @Autowired
     private TrdFinProductDealTotalMapper TrdFinProductDealTotalMapper;
@@ -611,7 +610,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
                 WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             // 重新insert
             this.handleBussFlowData(entity);
@@ -662,6 +661,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
             TrdFinProductDealTotal.setWorkflowId(entity.getWorkflowId());
             // 是否撤销入否
             TrdFinProductDealTotal.setIsCancel(DictCodeList.是否_否.getValue());
+            TrdFinProductDealTotal.setBusinessModel(entity.getBusinessModel());
             //插入交易汇总表
             TrdFinProductDealTotalMapper.insertSelective(TrdFinProductDealTotal);
 
@@ -975,6 +975,40 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
         }
         // 买入交易需求要求添加组合T日现金剩余现金校验 add by yjm 2019-10-20 end
 
+
+
+        if (!StringUtil.equals(inputDto.getOperateType(), "revoke")) {
+            // 委托场合时
+            if (StringUtil.isNotEmpty(inputDto.getEntrustId())) {
+                Map<String,Object> map = new HashMap<>();
+                map.put("portfolioId",inputDto.getPortfolioId()) ;
+                map.put("tradeDate",inputDto.getTradeDate()) ;
+                map.put("acctTypeList","A01,A07") ;
+                map.put("ccy",inputDto.getCcy()) ;
+                map.put("tradeDate",inputDto.getTradeDate()) ;
+                map.put("finprodId",inputDto.getFinprodId()) ;
+                String dateId =  null;
+                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+                        inputDto.getFinprodId(), FinProduct.class).getCalendarId();
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(inputDto.getTradeDate(), DateUtil.addDay(inputDto.getTradeDate(), 15), dateId);
+                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(inputDto.getTradeDate(), 1, holidayList, "1")));
+                BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
+
+                String sinal = tradeCommonService.getSppiInfoByY1(map) ;
+                if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
+                    if(position!=null){
+                        confirmMsg += changeLineMark;
+
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+                    }else{
+                        confirmMsg += changeLineMark;
+
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+                    }
+                }
+            }
+        }
+
         if (StringUtil.isNotBlank(confirmMsg)) {
             AjaxResult wr = new AjaxResult();
             wr.setData(confirmMsg);
@@ -1137,6 +1171,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
     
 
     public BigDecimal getTongDaoCash(Map<String, Object> param) {
+        param.put("platDate",iPlatformDate.getSysDate());
         BigDecimal bigDecimal = restTemplate.postForObject(
             ServiceApplication.TRADE_SERVICE_NAME + "/TrdBondInvestTrade/getTongDaoCash", param, BigDecimal.class);
         return bigDecimal;
@@ -1741,7 +1776,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getYield() != null) {
@@ -1811,7 +1846,7 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
 
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         // --------add by 裴家俊 2019/03/28 费用查询----end---
     }

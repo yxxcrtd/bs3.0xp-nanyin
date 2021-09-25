@@ -17,6 +17,8 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.validation.annotation.Amount;
+import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
@@ -75,42 +77,50 @@ public class EquiteBusiDetails001Dto extends TableRow {
     /**
      * 销售合同号
      */
-    private String contractNo;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.contractNo",groups={ValidateGroupEdit.class})
+	private String contractNo;
 
     /**
      * 理财账号
      */
-    private String finAcc;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.finAcc",groups={ValidateGroupEdit.class})
+	private String finAcc;
 
     /**
      * 客户统一编号
      */
-    private String custContractNo;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.custContractNo",groups={ValidateGroupEdit.class})
+	private String custContractNo;
     
     /**
      * 识别标识
      */
-    private String indentifyMark;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.indentifyMark",groups={ValidateGroupEdit.class})
+	private String indentifyMark;
 
     /**
      * 客户姓名
      */
-    private String custName;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.custName",groups={ValidateGroupEdit.class})
+	private String custName;
 
     /**
      * 关联活期存款账号
      */
-    private String fundAcc;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.fundAcc",groups={ValidateGroupEdit.class})
+	private String fundAcc;
 
     /**
      * 关联账号开户所在地
      */
-    private String fundAccPlace;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.fundAccPlace",groups={ValidateGroupEdit.class})
+	private String fundAccPlace;
 
     /**
      * 是否代销
      */
-    private String isConsign;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.isConsign",groups={ValidateGroupEdit.class})
+	private String isConsign;
 
     /**
      * 代销机构代码
@@ -140,39 +150,46 @@ public class EquiteBusiDetails001Dto extends TableRow {
     /**
      * 业务种类
      */
-    private String busiType;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.busiType",groups={ValidateGroupEdit.class})
+	private String busiType;
 
     /**
      * 业务发生地所属监管
      */
-    private String busiFsa;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.busiFsa",groups={ValidateGroupEdit.class})
+	private String busiFsa;
     
     /**
      * 业务确认日期
      */
-    private Date equityConfDate;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.equityConfDate",groups={ValidateGroupEdit.class})
+	private Date equityConfDate;
 
     /**
      * 业务确认时间
      */
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.shareConfDatetime",groups={ValidateGroupEdit.class})
     private String shareConfDatetime;
 
     /**
      * 币种
      */
-    private String ccy;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.ccy",groups={ValidateGroupEdit.class})
+	private String ccy;
 
     /**
      * 金额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal amount;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.amount",groups={ValidateGroupEdit.class})
+	private BigDecimal amount;
 
     /**
      * 折算人民币金额（元）
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal amountCny;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.amountCny",groups={ValidateGroupEdit.class})
+	private BigDecimal amountCny;
 
     /**
      * 确认净值
@@ -184,23 +201,27 @@ public class EquiteBusiDetails001Dto extends TableRow {
      * 份额
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal shares;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.shares",groups={ValidateGroupEdit.class})
+	private BigDecimal shares;
 
     /**
      * 费用
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
-    private BigDecimal feeAmt;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.feeAmt",groups={ValidateGroupEdit.class})
+	private BigDecimal feeAmt;
 
     /**
      * 渠道
      */
-    private String channel;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.channel",groups={ValidateGroupEdit.class})
+	private String channel;
 
     /**
      * 交易柜员号
      */
-    private String tranTellName;
+	@NotEmpty(fieldName = "SvrEquityBusinessDetails002.tranTellName",groups={ValidateGroupEdit.class})
+	private String tranTellName;
 
     /**
      * 备注

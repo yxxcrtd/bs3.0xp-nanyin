@@ -10,6 +10,7 @@
 
 package com.joyintech.service.interf.core.service;
 
+import com.joyintech.service.interf.core.util.InterfException;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 
@@ -173,6 +174,5 @@ public abstract class ReceivedEsbService<T, F> extends InterfBaseEsbService<T, F
      * @see
      * @since 1.0
      */
-    public abstract T selectResponseData(F entity)
-        throws Exception;
+    public abstract T selectResponseData(F entity) throws InterfException, IllegalAccessException;
 }

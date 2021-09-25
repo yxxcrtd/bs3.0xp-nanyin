@@ -10,32 +10,14 @@
 
 package com.joyintech.tams.invest.entrust.etrproject.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-
 import com.alibaba.fastjson.JSONArray;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.entity.ProcessMark;
-import com.joyintech.framework.security.LoginUserUtil;
-import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.component.business.trade.BussChannelCommonService;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
-import com.joyintech.tams.invest.common.util.ExcelUtil;
-import com.joyintech.workflow.engine.exception.WorkFlowException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.security.User;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -46,14 +28,26 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.WflTrdProductDealMapper;
 import com.joyintech.tams.common.base.entity.WflTrdProductDeal;
 import com.joyintech.tams.component.business.common.service.BasRiskMathCommService;
+import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussChannelCommonService;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.util.ExcelUtil;
 import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.etrproject.dto.EtrProjectDto;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.poi.ss.usermodel.Cell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 项目类委托画面端service 〈功能详细描述〉
@@ -88,10 +82,9 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
     @Autowired
     private EtrCommonService etrCommonService;
     private BussChannelCommonService bussChannelCommonService;
-    
+
     @Autowired
     private WflTrdProductDealMapper wflTrdProductDealMapper;
-    
 
     /**
      * 工作流完成
@@ -101,7 +94,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         dto.setOperateType(operationType.toString());
         Date sysDate = DateUtil.platDateFromCache();
         dto.setEntrustDate(sysDate);
-        wflTrdProductDealMapper.deleteByWorkflowId(dto.getWorkflowId());
         basRiskMathCommService.insert(dto.getRiskTrialRetDto(), dto.getEntrustId());
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doComplete", dto,
@@ -136,11 +128,6 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
      */
     @Override
     public void doUpdate(EtrProjectDto dto) {
-    	WflTrdProductDeal wflTrdProductDeal = new WflTrdProductDeal();
-    	wflTrdProductDeal.setWorkflowId(dto.getWorkflowId());
-    	wflTrdProductDeal.setPs(dto.getPs());
-    	wflTrdProductDealMapper.updateByWorkflowIdSelective(wflTrdProductDeal);
-    	
         restTemplate.postForObject(
             ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrProject/doUpdate", dto,
             Integer.class);
@@ -301,7 +288,7 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
                 + "/EtrProject/searchIssueAmt?finprodId=" + finprodId,
             BigDecimal.class);
     }
-    
+
     /**
      * 新建页面组合代码联想下拉框 <功能详细描述>
      *
@@ -609,6 +596,9 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
                     message = etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrPlanAssetN002.mdate", lineNo);
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+                    // 委托开始、终止日是否是平台日check
+                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                            EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
                     //组合代码
                     message = etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrProject002.portfolioId", lineNo);
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
@@ -726,15 +716,10 @@ public class EtrProjectService extends CommonExportService<EtrProjectDto> implem
         confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsGtZero(data, labelName, indexId));
         return confirmMsg;
     }
-    
-    @Override
-    public void doDelete(String workflowId) {
-    	wflTrdProductDealMapper.deleteByWorkflowId(workflowId);
-    }
-    
+
     @Override
     public String generateTitle(EtrProjectDto entity, OperationType operationType) {
-    	return this.getMessage("EtrProject001") + "(" + entity.getPortfolioId() + ")"
+        return this.getMessage("EtrProject001") + "(" + entity.getPortfolioId() + ")"
                 + "-" + this.getMessage("EtrProject001.ps") + "-" + "("
                 + this.getMessage("EtrProject001.vdate") + ":" +DateUtil.format(entity.getVdate())
                 + ")-(" + this.getMessage("EtrProject001.mdate") + ":"

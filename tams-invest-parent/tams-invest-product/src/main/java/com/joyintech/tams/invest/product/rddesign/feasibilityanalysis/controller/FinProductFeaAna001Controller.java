@@ -73,7 +73,7 @@ public class FinProductFeaAna001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+    {
         return finProductFeaAna001Service.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
     }

@@ -6,14 +6,13 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.eclcalculation.listener.EclCalculationListener;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.processor.EclCalculationDelProcessor;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.processor.EclCalculationProcessor;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.reader.EclCalculationDelReader;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.reader.EclCalculationReader;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.writer.EclCalculationDelWriter;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.writer.EclCalculationWriter;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.listener.ImpairmentDataLoadListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -73,7 +72,7 @@ public class EclCalculationTask extends BatchBaseService {
     private EclCalculationDelWriter eclCalculationDelWriter;
 
     @Autowired
-    private EclCalculationListener eclCalculationListener;
+    private LossModelCommonListener lossModelCommonListener;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -97,11 +96,12 @@ public class EclCalculationTask extends BatchBaseService {
         eclCalculationDelReader.setParams(params);
         eclCalculationDelProcessor.setParams(params);
         eclCalculationDelWriter.setParams(params);
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         return batchBuilder.init(this)
                 .batch("step0", (BaseReader)eclCalculationDelReader,(BaseProcessor)eclCalculationDelProcessor, (BaseWriter)eclCalculationDelWriter)
                 .batch("step1", (BaseReader)eclCalculationReader,(BaseProcessor)eclCalculationProcessor, (BaseWriter)eclCalculationWriter)
                 .builder(this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-                        , eclCalculationListener).run();
+                        , lossModelCommonListener).run();
     }
 }

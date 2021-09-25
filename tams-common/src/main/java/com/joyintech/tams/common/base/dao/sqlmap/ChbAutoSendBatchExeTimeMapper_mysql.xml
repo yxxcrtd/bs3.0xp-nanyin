@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbAutoSendBatchExeTimeMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        <id column="TASK_ID" property="taskId" jdbcType="VARCHAR" />
+        <id column="TASK_EXE_TIME" property="taskExeTime" jdbcType="VARCHAR" />
+        <result column="TASK_NAME" property="taskName" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        TASK_ID TASK_ID, TASK_EXE_TIME TASK_EXE_TIME, TASK_NAME TASK_NAME, CREATE_USER CREATE_USER,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, CREATE_DEPT CREATE_DEPT
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbAutoSendBatchExeTimeMapper.Base_Column_List" />
+        from CHB_AUTO_SEND_BATCH_EXE_TIME
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbAutoSendBatchExeTimeMapper.Base_Column_List" />
+        from CHB_AUTO_SEND_BATCH_EXE_TIME
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTimeKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbAutoSendBatchExeTimeMapper.Base_Column_List" />
+        from CHB_AUTO_SEND_BATCH_EXE_TIME
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+        and TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTimeKey" >
+        delete from CHB_AUTO_SEND_BATCH_EXE_TIME
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+          and TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_AUTO_SEND_BATCH_EXE_TIME
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        insert into CHB_AUTO_SEND_BATCH_EXE_TIME (TASK_ID, TASK_EXE_TIME, TASK_NAME,
+            CREATE_USER, CREATE_TIME, UPDATE_USER,
+            UPDATE_TIME, CREATE_DEPT)
+        values (#{taskId,jdbcType=VARCHAR}, #{taskExeTime,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR},
+            #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP}, #{createDept,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        insert into CHB_AUTO_SEND_BATCH_EXE_TIME
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="taskId != null" >
+                TASK_ID,
+            </if>
+            <if test="taskExeTime != null" >
+                TASK_EXE_TIME,
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="taskId != null" >
+                #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskExeTime != null" >
+                #{taskExeTime,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        insert into CHB_AUTO_SEND_BATCH_EXE_TIME(TASK_ID, TASK_EXE_TIME, TASK_NAME, CREATE_USER,
+        CREATE_TIME, UPDATE_USER, UPDATE_TIME, CREATE_DEPT)
+        select TASK_ID, TASK_EXE_TIME, TASK_NAME, CREATE_USER,
+            CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME, CREATE_DEPT
+             from CHB_AUTO_SEND_BATCH_EXE_TIME
+             where STATUS = 'E' and TASK_ID = #{taskId,jdbcType=VARCHAR} and TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        update CHB_AUTO_SEND_BATCH_EXE_TIME
+        <set >
+            <if test="taskName != null" >
+                TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+        and TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        update CHB_AUTO_SEND_BATCH_EXE_TIME
+        <set >
+            <if test="taskId != null" >
+                TASK_ID = #{taskId,jdbcType=VARCHAR},
+            </if>
+            <if test="taskExeTime != null" >
+                TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR},
+            </if>
+            <if test="taskName != null" >
+                TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        update CHB_AUTO_SEND_BATCH_EXE_TIME
+        set
+        TASK_ID = #{taskId,jdbcType=VARCHAR},
+        TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR},
+        TASK_NAME = #{taskName,jdbcType=VARCHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbAutoSendBatchExeTime" >
+        update CHB_AUTO_SEND_BATCH_EXE_TIME
+        set TASK_NAME = #{taskName,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        where TASK_ID = #{taskId,jdbcType=VARCHAR}
+          and TASK_EXE_TIME = #{taskExeTime,jdbcType=VARCHAR}
+    </update>
+</mapper>

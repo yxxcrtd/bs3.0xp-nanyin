@@ -3,11 +3,9 @@ package com.joyintech.service.svrcom.loaninfomanagement.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.grid.Page;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.tams.svreport.infomanagement.service.OperationalInfo001Service;
 import com.joyintech.tams.svreport.loaninfomanagement.dto.OperationalLoanInfo001Dto;
@@ -65,9 +63,10 @@ public class OperationalLoanInfoController {
      * @param param
      * @return
      */
-    @PostMapping("/queryPbcAssetCode")
-	public List<SelectOptionDto> queryPbcAssetCode(@RequestBody Map<String, Object> param){
-		return operationalLoanInfo001Service.queryPbcAssetCode(param);
+    @PostMapping("/queryPbcAssetCode/{page}/{length}")
+	public Page<SelectOptionDto> queryPbcAssetCode(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                   @PathVariable("length") int length){
+		return operationalLoanInfo001Service.queryPbcAssetCode(param,page,length);
 	}
     @PostMapping("/queryPbcAssetType")
 	public String queryPbcAssetType(@RequestBody Map<String, Object> param){
@@ -103,8 +102,9 @@ public class OperationalLoanInfoController {
      * @param param
      * @return
      */
-    @PostMapping("/getAddressSelectOption")
-    public List<SelectOptionDto> getAddressSelectOption(@RequestBody Map<String, Object> param){
-        return operationalLoanInfo001Service.getAddressSelectOption(param);
+    @PostMapping("/getAddressSelectOption/{page}/{length}")
+    public Page<SelectOptionDto> getAddressSelectOption(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                        @PathVariable("length") int length){
+        return operationalLoanInfo001Service.getAddressSelectOption(param,page,length);
     }
 }

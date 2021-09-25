@@ -5,11 +5,15 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.system.constant.SystemGlobalConstant;
+import com.joyintech.framework.util.JsonUtils;
+import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.common.base.entity.FinPledgeDisplaceDetail;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.dto.PtlRepoPledgeSearchDto;
 import com.joyintech.tams.invest.portfolio.portfolioanalysis.ptlrepopledgesearch.service.PtlRepoPledgeSearch001Service;
 
@@ -25,6 +29,8 @@ import com.joyintech.framework.constant.GlobalConstant;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -178,8 +184,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlRepoPledgeSearchDto> selectAll()
-            throws Exception {
+    public Page<PtlRepoPledgeSearchDto> selectAll(){
         Map<String,Object> map = RequestUtil.getPageParam();
         return ptlRepoPledgeSearch001Service.selectForPage(map);
     }
@@ -195,8 +200,7 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
 
     @RequestMapping("exportCheck")
     @ResponseBody
-    public AjaxResult exportCheck()
-            throws Exception {
+    public AjaxResult exportCheck(){
         Page<PtlRepoPledgeSearchDto> result = ptlRepoPledgeSearch001Service.selectForPage(RequestUtil.getPageParam());
 //        if (result.getRoot().isEmpty()) {
 //            return new AjaxResult(getMessage("PTL_COM_E_0012"), MessageType.错误消息);
@@ -205,9 +209,23 @@ public class PtlRepoPledgeSearch001Controller extends BaseController {
     }
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-            throws Exception {
-        return ptlRepoPledgeSearch001Service.export(this.getPageId(),
-                RequestUtil.getParameters(getRequest()));
+    public ResponseEntity<byte[]> export() throws IOException {
+        String datas = this.getParam("datas");
+        if(datas==null) {
+            return ptlRepoPledgeSearch001Service.export(this.getPageId(),
+                    RequestUtil.getParameters(getRequest()));
+        }
+
+        List<PtlRepoPledgeSearchDto> param1 = JsonUtils.json2List(datas, PtlRepoPledgeSearchDto.class);
+        File outFile =  ptlRepoPledgeSearch001Service.makeFile(
+                "/com/joyintech/tams/invest/portfolio/portfolioanalysis/ptlrepopledgesearch/conf/export_conf.xml",
+                param1);
+        return ExportUtil.export(
+                this.getMessage(this.getPageId()) + SystemGlobalConstant.OPEN_PARENTHESIS
+                        + DateUtil.format(DateUtil.platDateFromCache())
+                        + SystemGlobalConstant.CLOSE_PARENTHESIS
+                        + SystemGlobalConstant.POINT
+                        + FileNameUtil.getFileExtName(outFile),
+                outFile, true);
     }
 }

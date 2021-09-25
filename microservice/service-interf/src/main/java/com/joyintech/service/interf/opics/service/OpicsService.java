@@ -42,8 +42,7 @@ public abstract class OpicsService extends InterfBaseService {
      * @see
      * @since 1.0
      */
-    public abstract void saveData()
-        throws Exception;
+    public abstract void saveData();
 
     /**
      * 执行数据接入

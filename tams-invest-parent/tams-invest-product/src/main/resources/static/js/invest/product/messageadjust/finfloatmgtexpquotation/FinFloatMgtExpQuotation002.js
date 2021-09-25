@@ -90,10 +90,10 @@
                             		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                             			if(result == false){
                             				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
-                                    			if(result == '02'){
-                            				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                            	                    return;
-                                    			}else{
+//                                    			if(result == '02'){
+//                            				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+//                            	                    return;
+//                                    			}else{
                                     				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                                         Joyin.confirm(result.data, function() {
                                     				if(operateType === 'save') {
@@ -104,7 +104,7 @@
                                                     }
                                                    });                                          
                                     			 });
-                                    		 }
+//                                    		 }
                             				 });
                             			}else{
                             				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
@@ -167,10 +167,10 @@
                                 		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                                 			if(result == false){
                                 				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
-                                        			if(result == '02'){
-                                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                                	                    return;
-                                        			}else{
+//                                        			if(result == '02'){
+//                                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+//                                	                    return;
+//                                        			}else{
                                         				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                                             Joyin.confirm(result.data, function() {
                                         				if(operateType === 'save') {
@@ -181,7 +181,7 @@
                                                         }
                                                        });                                          
                                         			 });
-                                        		 }
+//                                        		 }
                                 				 });
                                 			}else{
                                 				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
@@ -242,10 +242,10 @@
                 		Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/checkeffDate', object, function(result) {
                 			if(result == false){
                 				Joyin.ajax(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/getopenType', object, function(result) {
-                        			if(result == '02'){
-                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
-                	                    return;
-                        			}else{
+//                        			if(result == '02'){
+//                				       Joyin.error(JoyinUtil.getMessage("浮动管理费计提为算尾不算头，请选择开放计划开放开始日+1天作为生效日！"));
+//                	                    return;
+//                        			}else{
                         				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
                                             Joyin.confirm(result.data, function() {
                         				if(operateType === 'save') {
@@ -256,7 +256,7 @@
                                         }
                                        });                                          
                         			 });
-                        		 }
+//                        		 }
                 				 });
                 			}else{
                 				Joyin.ajaxJson(basePath + 'invest/product/messageadjust/finfloatmgtexpquotation/FinFloatMgtExpQuotation002/check', object, function(result) {
@@ -775,7 +775,8 @@
         	$('#indexId').val('').trigger('change').prop('disabled', false);
         	$('#coefficient').val('').trigger('change').prop('disabled', false);
         	$('#spreadRate').val('').trigger('change').prop('disabled', false);
-        	$('#resetType').val('').trigger('change').prop('disabled', false);
+			//当利率为空时，业绩基准重置规则要置灰
+        	$('#resetType').val('').trigger('change').prop('disabled', true);
         } else if( $('#rateType').val() === INT_TYPE_01) {
 			//update by dgf 20200116 需求变更,修改时候不允许修改这部分
 			/*if(pageModel==PAGE_MODEL_EDIT){
@@ -789,7 +790,9 @@
         	$('#spreadRate').val('').trigger('change').prop('disabled', true);
 //            getElementById('resetType').val('').trigger('change').prop('disabled', true);
             //当利率为固定利率时，业绩基准重置规则不要置灰
-        	$('#resetType').val('').trigger('change').prop('disabled', false);
+        	// $('#resetType').val('').trigger('change').prop('disabled', false);
+			//当利率为固定利率时，业绩基准重置规则要置灰
+			$('#resetType').val('').trigger('change').prop('disabled', true);
         } else {
         	$('#rate').val('').trigger('change').prop('disabled', true);
         	$('#indexId').trigger('change').prop('disabled', false);
@@ -855,14 +858,20 @@
 		});*/
     	//利率类型联动
     	$('#resetType').attr("disabled","disabled");
-    	$('#rateType').change(function(){
     		if($('#rateType').val() == '02'){
     			$('#resetType').removeAttr("disabled");
+				$('#rate').trigger('change').prop('disabled', false);
+				$('#indexId').val('').trigger('change').prop('disabled', false);
+				$('#coefficient').val('1.00').trigger('change').prop('disabled', false);
+				$('#rate').trigger('change').prop('disabled', true);
     		}
     		else if($('#rateType').val() == '01'){
     			$('#resetType').attr("disabled","disabled");
+				$('#rate').trigger('change').prop('disabled', false);
+				$('#indexId').val('').trigger('change').prop('disabled', true);
+				$('#coefficient').val('').trigger('change').prop('disabled', true);
+				$('#spreadRate').val('').trigger('change').prop('disabled', true);
     		}
-    	});
         // 绑定按钮事件
     	$('#FinFloatMgtExpQuotation002_btn_save').click(function(){
     		saveOrSubmit('save');

@@ -4,19 +4,6 @@
       layout:decorator="~{layout/default}">
 <head>
     <style type="text/css">
-        .layui-tab-title li {
-            display: inline-block;
-            vertical-align: middle;
-            font-size: 12px;
-            position: relative;
-            line-height: 30px;
-            min-width: 55px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s ease 0s;
-            padding: 0px 10px;
-        }
-
         .form-lable {
             width: 35%;
             padding: 0px 10px 0px 0px;
@@ -89,6 +76,18 @@
             border-radius: 25px !important;
             width: 100%;
         }
+        /* 单个控件按钮长度 */
+        .form-inline-wrap-btn {
+            display: inline-block;
+            float: left;
+            width: 30%;
+        }
+        /* 单个控件按钮长度 */
+        .form-inline-wrap-btn-row {
+            display: inline-block;
+            float: left;
+            width: 30%;
+        }
 
         .sgePortDiv .layui-input-inline {
             width: 100%;
@@ -107,81 +106,110 @@
         <div class="layui-tab-content">
             <!-- 指令执行 -->
             <div class="layui-tab-item layui-show">
-                <div class="layui-col-md12 form-button-area zlgl-transfer-form">
-                    <a id="cfetsRepoDealQuotedPr001_zlg1_tuihui" class="layui-btn layui-btn-sm"
-                       data-th-text="#{cfetsRepoDealQuotedPr001.zlg1.tuihui}">放弃</a>
-                    <a id="cfetsRepoDealQuotedPr001_zlg1_jieshou" class="layui-btn layui-btn-sm"
-                       data-th-text="#{cfetsRepoDealQuotedPr001.zlg1.jieshou}">接收</a>
-                </div>
-                <div class='joyin-form-wrap joyin-filter-form condition-area curr-form zlgl-transfer-form'>
-                    <form class="layui-form" id='searchForm_zlgl'>
+                <div class="joyin-form-wrap">
+                    <form class="layui-form" id="cfetsRepoDealQuotedPrice001_entrustOrder_form">
                         <div class="layui-form-item">
-                            <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="#{cfetsRepoDealQuotedPr001.zlg1.portfolioId}">组合代码</label>
-                                <div class="layui-input-inline input-inline">
-                                    <select type="text" name="portfolioId_zlgl" id="portfolioId_zlgl" multiple="true"
-                                            class="layui-input form-input input-select" placeholder="请输入内容"
-                                            th:placeholder="#{SysCommon.placeholder}"
-                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/selectPortfolioId}"
-                                            allowClear="true">
-                                    </select>
+                            <div class="form-inline-wrap-btn">
+                                <a id="cfetsRepoDealQuotedPr001_zlg1_jieshou" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.accept}">接收</a>
+                                <a id="cfetsRepoDealQuotedPr001_zlg1_tuihui" class="layui-btn layui-btn-sm" data-th-text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.giveup}">放弃</a>
+                            </div>
+                            <div class="form-inline-wrap" style="width:30%">
+                                <div class="layui-input-inline input-inline keywords-inline">
+                                    <input type="text" id="keywords-cfetsBond" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
+                                    <a id='CfetsRepoDealQuotedPrice001_entrustOrder_search' class="input-right-show" href='javascript:;' style='color: #4893e6; left: 92%; padding-top: 4px;'><i class='iconfont icon-search'></i></a>
                                 </div>
                             </div>
-                            <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="#{cfetsRepoDealQuotedPr001.zlg1.assetId}">资产代码</label>
-                                <div class="layui-input-inline input-inline">
-                                    <input type="text" id="assetId_zlgl" name="assetId_zlgl"
-                                           class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
-                                           data-th-placeholder="#{SysCommon.placeholder}"
-                                           data-th-data-url="@{/invest/asset/common/getAssetId(finprodType2=${FINPROD_TYPE_TG_F01})}"
-                                           data-idfield="code" data-keyfield="code"
-                                           data-th-data-effectivefieldsalias='|{"shortName":"#{FinBondTargetAsset002.finprodAbbr}","code":"#{FinBondTargetAsset002.finprodId}"}|'
-                                    >
-                                </div>
-                            </div>
-                            <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="#{CfetsBondDealQuotedPr001.zlgl.ps}">交易方向</label>
-                                <div class="layui-input-inline input-inline">
-                                    <select type="text" id="ps_zlgl" name="ps_zlgl"
-                                            class="layui-input form-input input-select"
-                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                            data-th-data-result='${PS}' allowClear="true" formatoption="true"></select>
-                                </div>
-                            </div>
-                            <div class="layui-inline layui-col-xs4 layui-col-md4  layui-col-sm4 layui-col-lg4">
-                                <label class="layui-form-label form-label"
-                                       th:text="#{CfetsBondDealQuotedPr001.zlgl.invManagerId}">投资经理</label>
-                                <div class="layui-input-inline input-inline">
-                                    <select type="text" name="invManagerId_zlgl" id="invManagerId_zlgl"
-                                            class="layui-input form-input input-select"
-                                            allowClear="true" placeholder="请输入内容"
-                                            data-th-placeholder="#{SysCommon.placeholder}"
-                                            data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getManagers}">
-                                    </select>
-                                </div>
-                            </div>
-                            <!-- 单选框 -->
                             <div class="form-inline-wrap-radio" style="padding-top: 3px;margin-left:20px">
-                                <label class="layui-form-label form-label"
-                                       th:text="#{CfetsBondDealQuotedPr001.zlgl.zlglStatus}">指令状态</label>
                                 <label class="form-label-wrap-radio">
                                     <input type="radio" name="zlglStatus" value="01" title="全部" checked>
                                 </label>
                                 <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="02"
-                                           th:title="#{CfetsRepoDealQuotedPr001.zlgl.two}">
+                                    <input type="radio" name="zlglStatus" value="02" th:title="#{CfetsRepoDealQuotedPrice001.entrustOrder.searchArea.unAcceptRadio}">
                                 </label>
                                 <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPrice001.zlgl.three}">
+                                    <input type="radio" name="zlglStatus" value="03" th:title="#{CfetsRepoDealQuotedPrice001.entrustOrder.searchArea.unComplete}">
                                 </label>
                                 <label class="form-label-wrap-radio">
-                                    <input type="radio" name="zlglStatus" value="04"
-                                           th:title="#{CfetsRepoDealQuotedPrice001.zlgl.four}">
+                                    <input type="radio" name="zlglStatus" value="04" th:title="#{CfetsRepoDealQuotedPrice001.entrustOrder.searchArea.completed}">
                                 </label>
+                            </div>
+                            <div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+                                <div  style="display: inline-block;float: left;">
+                                    <a class="layui-btn layui-btn-sm "  id="CfetsRepoDealQuotedPrice001_entrustOrder_btn_seach">查询</a>
+                                    <div id="selectorConditionFilter001" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; right:100px;background: #fff;z-index: 100 ;width:400px;">
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;"
+                                                   th:text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.portfolioId}">组合代码</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <select type="text" name="portfolioId" id ="portfolioId_zlgl" multiple="true"
+                                                        class="layui-input form-input input-select" placeholder="请输入内容"
+                                                        th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/selectPortfolioId}"
+                                                        allowClear="true">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;">交易方向</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <select type="text" id="ps_zlgl"name="ps" class="layui-input form-input input-select"
+                                                        placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                                        data-th-data-result='${PS}' allowClear="true" formatoption="true"></select>
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;"
+                                                   th:text="回购期限">回购期限</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <input type="text" id="term_zlgl" name="term"
+                                                       class="layui-input form-input" style="width: 208px;" placeholder="请输入内容"
+                                                       data-fixtype="2" data-textrange="2"
+                                                       th:placeholder="#{SysCommon.placeholder}">
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;">清算速度</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <select type="text" id="settleSpreed_zlgl" name="settleSpreed" class="layui-input form-input input-select"
+                                                        placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                                        data-th-data-result='${ACCOUNT_SPEED}' allowClear="true" formatoption="true"></select>
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;"
+                                                   th:text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.invManagerId}">投资经理</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <select type="text" name="invManagerId" id="invManagerId_zlgl"
+                                                        class="layui-input form-input input-select"
+                                                        allowClear="true" placeholder="请输入内容" multiple="true"
+                                                        data-th-placeholder="#{SysCommon.placeholder}"
+                                                        data-th-data-url="@{/invest/trade/investtrade/commanddispatcher/TrdCommandDispatcher001/getManagers}">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv">
+                                            <label class="layui-form-label form-label" style="width: 80px!important;padding-left:15px;"
+                                                   data-th-text="#{CfetsHisDealQuery001.Bond.entrustId}">委托代码</label>
+                                            <div class="layui-input-inline input-inline" style="width: 212px!important;padding-left: 15px;margin-right: 130px;">
+                                                <select  type="text" id="entrustId_zlgl" name="entrustId" class="layui-input form-input input-select" maxlength="60"
+                                                         placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                                         data-th-data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryEntrustInfoList?noLoginUserId=true}" formatoption = "false"></select>
+                                            </div>
+                                        </div>
+                                        <div class="sgePortDiv" style="text-align: center">
+                                            <a id="CfetsRepoDealQuotedPrice001_entrustOrder_btn_realseach" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                               data-th-text="确定">确定</a>
+                                            <a id="CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachClose" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                               data-th-text="取消">取消</a>
+                                            <a id="CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachReset" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                               data-th-text="重置">重置</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: inline-block;float: left; padding-left:10px;">
+                                    <a class="layui-btn layui-btn-sm btn-select" href="javascript:;" id="CfetsRepoDealQuotedPrice001_entrustOrder_btn_export">
+                                        导出
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -236,108 +264,106 @@
                 <span>交易方式</span>
                 <a id="cfetsRepoDealQuotedPre001_wtcx_duihua" class="layui-btn layui-btn-sm"
                    data-th-text="#{CfetsRepoDealQuotedPr001.wtcx.duihua}">对话</a>
-                <!--                <a id="cfetsRepoDealQuotedPr001_wtcx_qingqiu" class="layui-btn layui-btn-sm"
-                                   data-th-text="#{CfetsRepoDealQuotedPr001.wtcx.qingqiu}">请求</a>-->
                 <!-- 委托对话报价查询 -->
                 <div class="duihua">
-                    <div class="layui-col-md12 form-button-area wtcxdh-transfer-form">
-                    </div>
-                    <div class='joyin-form-wrap joyin-filter-form condition-area curr-form wtcxdh-transfer-form'>
-                        <form class="layui-form" id="searchForm_wtcxdh">
+                    <div class="joyin-form-wrap">
+                        <form class="layui-form" id="cfetsRepoDealQuotedPrice001_dayOffer_form">
+                            <input type="hidden" class="layui-input form-input" name="loginTraderId" th:value="${loginTraderId}"/>
                             <div class="layui-form-item">
-                                <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
-                                    <div class="layui-inline">
-                                        <label class="layui-form-label">回购期限(天)</label>
-                                        <div class="layui-input-inline" style="width: 60px;">
-                                            <input type="text" id="termStart_wtdh" name="term"
-                                                   class="layui-input form-input" style="width: 60px;"
-                                                   placeholder="请输入内容"
-                                                   data-fixtype="2" data-textrange="2"
-                                                   th:placeholder="#{SysCommon.placeholder}">
+                                <div class="form-inline-wrap-btn">
+                                    <a id="cfetsRepoDealQuotedPr001_wtdh_chenxiao" class="layui-btn layui-btn-sm layui-btn-warm">撤销</a>
+                                    <a id="cfetsRepoDealQuotedPrice001_wtdh_xiugai" class="layui-btn layui-btn-sm" >修改</a>
+                                    <a id="CfetsRepoDealQuotedPr002_btn_export" class="layui-btn layui-btn-sm">导出</a>
+                                </div>
+                                <div class="form-inline-wrap-btn" style="float: right; width: 10%;">
+                                    <div  style="display: inline-block;float: left;">
+                                        <div id="dayOfferSelectorConditionFilter001" style="margin-top: 10px;display:none;border: 1px solid #ccc;position: absolute; right:100px;background: #fff;z-index: 100 ;width:400px;">
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label">本方方向</label>
+                                                <div class="layui-input-inline input-inline">
+                                                    <select type="text" id="ps_wtcx" name="ps" class="layui-input form-input input-select psEmpty"
+                                                            placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+                                                            data-th-data-result='${PS}' allowClear="true" formatoption="true"></select>
+                                                </div>
+                                            </div>
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label">本方交易员</label>
+                                                <div class="layui-input-inline input-inline">
+                                                    <select type="text" id="mySideTrader_wtcx" name="mySideTrader"
+                                                            class="layui-input form-input input-select" placeholder="请输入内容"
+                                                            th:placeholder="#{SysCommon.placeholder}" parentIds="mySide" multiple="true"
+                                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
+                                                            formatoption="true" ></select>
+                                                </div>
+                                            </div>
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label">对手方</label>
+                                                <div class="layui-input-inline input-inline">
+                                                    <select type="text" id="counterId_wtcx" name="counterId"
+                                                            class="layui-input form-input input-select" multiple="true"
+                                                            th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}" allowClear="true"
+                                                            formatoption="true" ></select>
+                                                </div>
+                                            </div>
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label">对手方交易员</label>
+                                                <div class="layui-input-inline input-inline">
+                                                    <select type="text" id="counterTrader_wtcx" name="counterTrader" multiple="true"
+                                                            class="layui-input form-input input-select" parentIds="CfetsBondDealQuotedPrice002_counterId"
+                                                            th:placeholder="#{SysCommon.placeholder}" placeholder="请输入内容"
+                                                            th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
+                                                            formatoption="true" ></select>
+                                                </div>
+                                            </div>
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label"
+                                                       th:text="回购期限">回购期限</label>
+                                                <div class="layui-input-inline input-inline" >
+                                                    <input type="text" id="term_wtcx" name="term"
+                                                           class="layui-input form-input termEmpty" style="width: 208px;" placeholder="请输入内容"
+                                                           data-fixtype="2" data-textrange="2"
+                                                           th:placeholder="#{SysCommon.placeholder}">
+                                                </div>
+                                            </div>
+                                            <div class="sgePortDiv">
+                                                <label class="layui-form-label form-label">报价编号</label>
+                                                <div class="layui-input-inline input-inline">
+                                                    <input type="text" id="quoteId_wtcx" name="quoteId"
+                                                           class="layui-input form-input" style="width: 208px;" placeholder="请输入内容"
+                                                           data-fixtype="2" data-textrange="2"
+                                                           th:placeholder="#{SysCommon.placeholder}">
+                                                </div>
+                                            </div>
+
+                                            <div class="sgePortDiv" style="text-align: center">
+                                                <a id="CfetsRepoDealQuotedPrice001_dayOffer_btn_realseach" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                                   data-th-text="确定">确定</a>
+                                                <a id="CfetsRepoDealQuotedPrice001_dayOffer_btn_seachClose" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                                   data-th-text="取消">取消</a>
+                                                <a id="CfetsRepoDealQuotedPrice001_dayOffer_btn_seachReset" style="margin-left:40px" class="layui-btn layui-btn-sm"
+                                                   data-th-text="重置">重置</a>
+                                            </div>
                                         </div>
-                                        <div class="layui-form-mid">-</div>
-                                        <div class="layui-input-inline" style="width: 60px;">
-                                            <input type="text" id="termend_wtdh" name="term"
-                                                   class="layui-input form-input" style="width: 60px;"
-                                                   placeholder="请输入内容"
-                                                   data-fixtype="2" data-textrange="2"
-                                                   th:placeholder="#{SysCommon.placeholder}">
-                                        </div>
+                                        <a class="layui-btn layui-btn-sm "  id="CfetsRepoDealQuotedPrice001_dayOffer_btn_seach">查询</a>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
-                                    <label class="layui-form-label form-label">本方</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select type="text" id="ouPartyId" name="ouPartyId"
-                                                class="layui-input form-input input-select"
-                                                placeholder="请输入内容"
-                                                th:placeholder="#{SysCommon.placeholder}"
-                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideList}"
-                                                allowClear="true" formatoption="true">
-                                        </select>
+                                <div class="form-inline-wrap" style="width:30%">
+                                    <div class="layui-input-inline input-inline keywords-inline">
+                                        <input type="text" id="keywords-cfetsBondDay" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
+                                        <a id='CfetsRepoDealQuotedPrice001_dayOffer_search' class="input-right-show" href='javascript:;' style='color: #4893e6; left: 92%; padding-top: 3px;'><i class='iconfont icon-search'></i></a>
                                     </div>
                                 </div>
-                                <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
-                                    <label class="layui-form-label form-label">对手方</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select type="text" id="counterId" name="counterId"
-                                                class="layui-input form-input input-select"
-                                                th:placeholder="#{SysCommon.placeholder}"
-                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}"
-                                                allowClear="true" formatoption="true"></select>
-                                    </div>
-                                </div>
-                                <div class="layui-inline layui-col-md3 layui-col-xs3 layui-col-sm3 layui-col-lg3">
-                                    <label class="layui-form-label form-label">对手方机构</label>
-                                    <div class="layui-input-inline input-inline">
-                                        <select type="text" id="duishoufangjigou_wtdh" name="duishoufangjigou_wtdh"
-                                                class="layui-input form-input input-select"
-                                                th:placeholder="#{SysCommon.placeholder}"
-                                                th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryCounterSideList}"
-                                                allowClear="true" formatoption="true"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-form-item" style="padding-top: 0px;">
-                                <div class="form-inline-wrap-radio">
-                                    <label class="layui-form-label form-label"
-                                           th:text="交易状态">交易状态</label>
+                                <div class="form-inline-wrap-radio2">
                                     <label class="form-label-wrap-radio">
                                         <input type="radio" name="dayOfferStatus" value="whole" title="全部" checked>
                                     </label>
                                     <label class="form-label-wrap-radio">
-                                        <input type="radio" name="dayOfferStatus" value="undo"
-                                               th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.unDeal}">
+                                        <input type="radio" name="dayOfferStatus" value="undo" th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.unDeal}">
                                     </label>
                                     <label class="form-label-wrap-radio">
-                                        <input type="radio" name="dayOfferStatus" value="done"
-                                               th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.done}">
+                                        <input type="radio" name="dayOfferStatus" value="done" th:title="#{CfetsRepoDealQuotedPrice001.dayOffer.searchArea.done}">
                                     </label>
-                                    <label class="layui-form-label form-label"
-                                           th:text="本方方向">本方方向</label>
-                                    <label class="form-label-wrap-radio">
-                                        <input type="radio" name="benfangSide" value="whole" title="全部" checked>
-                                    </label>
-                                    <label class="form-label-wrap-radio">
-                                        <input type="radio" name="benfangSide" value="03"
-                                               th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
-                                    </label>
-                                    <label class="form-label-wrap-radio">
-                                        <input type="radio" name="benfangSide" value="04"
-                                               th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
-                                    </label>
-                                </div>
-                                <div class="form-inline-wrap-btn">
-                                    <a id="cfetsRepoDealQuotedPr001_wtdh_chenxiao"
-                                       class="layui-btn layui-btn-sm layui-btn-warm">撤销</a>
-                                    <a id="cfetsRepoDealQuotedPrice001_wtdh_xiugai"
-                                       class="layui-btn layui-btn-sm">修改</a>
-<!--                                    <a id="cfetsRepoDealQuotedPrice001_wtdh_jujue"
-                                       class="layui-btn layui-btn-sm">拒绝</a>
-                                    <a id="cfetsRepoDealQuotedPrice001_wtdh_chengjiao"
-                                       class="layui-btn layui-btn-sm">成交</a>-->
-                                    <a id="CfetsRepoDealQuotedPr002_btn_export"
-                                       class="layui-btn layui-btn-sm">导出</a>
                                 </div>
                             </div>
                         </form>
@@ -361,13 +387,10 @@
                                 <label class="layui-form-label form-label"
                                        th:text="#{cfetsRepoDealQuotedPr001.zlg1.assetId}">资产代码</label>
                                 <div class="layui-input-inline input-inline">
-                                    <select type="text" name="assetId_cjcx" id="assetId_cjcx"
-                                            class="layui-input form-input input-select" placeholder="请输入内容"
-                                            data-th-placeholder="#{SysCommon.placeholder}"
-                                            data-th-data-url="@{/invest/asset/common/getAssetId(finprodType2='F01')}"
-                                            data-idfield="code" data-keyfield="code"
-                                            data-th-data-effectivefieldsalias='|{"shortName":"#{cfetsRepoDealQuotedPr001.zlg1.assetAbbr}","code":"#{cfetsRepoDealQuotedPr001.zlg1.assetId}"}|'>
-                                    </select>
+                                    <input type="text" id="assetId_cjcx"  name="assetId_cjcx" class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                                           data-th-placeholder="#{SysCommon.placeholder}"  data-th-data-url="@{/invest/asset/common/getAssetId(finprodType2=${FINPROD_TYPE_TG_F01})}"
+                                           data-idfield="code" data-keyfield="code"
+                                           data-th-data-effectivefieldsalias='|{"shortName":"#{FinBondTargetAsset002.finprodAbbr}","code":"#{FinBondTargetAsset002.finprodId}"}|'>
                                 </div>
                             </div>
                             <div class="layui-inline layui-col-md4 layui-col-xs4 layui-col-sm4 layui-col-lg4">
@@ -392,34 +415,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="layui-form-item" style="padding-top: 0px;">
-                            <div class="form-inline-wrap-radio">
-                                <label class="layui-form-label form-label"
-                                       th:text="交易方式">交易方式</label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="tradeMode" value="01" title="全部" checked>
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="tradeMode" value="02"
-                                           th:title="#{CfetsRepoDealQuotedPr001.cjcx.two}">
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="tradeMode" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPr001.cjcx.three}">
-                                </label>
-                                <label class="layui-form-label form-label"
-                                       th:text="本方方向">本方方向</label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="benfangSide" value="01" title="全部" checked>
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="benfangSide" value="03"
-                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
-                                </label>
-                                <label class="form-label-wrap-radio">
-                                    <input type="radio" name="benfangSide" value="04"
-                                           th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
-                                </label>
+                        <div class="layui-form-item">
+                            <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
+                                <label class="layui-form-label form-label">交易方式</label>
+                                <input type="radio" name="tradeMode" value="01" title="全部" checked>
+                                <input type="radio" name="tradeMode" value="02" th:title="#{CfetsRepoDealQuotedPr001.cjcx.two}">
+                                <input type="radio" name="tradeMode" value="03" th:title="#{CfetsRepoDealQuotedPr001.cjcx.three}">
+                            </div>
+                            <div class="layui-col-sm8 layui-col-lg8">
+                                <label class="layui-form-label form-label" style="width: 19%">本方方向</label>
+                                <input type="radio" name="benfangSide" value="01" title="全部" checked>
+                                <input type="radio" name="benfangSide" value="03" th:title="#{CfetsRepoDealQuotedPr001.wtdh.four}">
+                                <input type="radio" name="benfangSide" value="04" th:title="#{CfetsRepoDealQuotedPr001.wtdh.five}">
                             </div>
                         </div>
                     </form>

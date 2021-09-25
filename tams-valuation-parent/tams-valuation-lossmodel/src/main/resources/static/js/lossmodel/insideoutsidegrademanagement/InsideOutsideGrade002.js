@@ -2,7 +2,6 @@ $(function () {
         var init=function() {
             if(pageModel == PAGE_MODEL_EDIT || pageModel == PAGE_MODEL_REFERENCE){
                 $("#gradeInst").attr("disabled", true);
-                $("#oType").attr("disabled", true);
             }
         };
 
@@ -15,7 +14,7 @@ $(function () {
         checkbox: false,
         height:'330px',
         cols:[
-              {field:'gradeResult',title: '外部评级',sortable:false, edit:true, editOption:{type:'select',formatoption:true,result: MAIN_GRADE_RESULT}} // initValue:ACCT_TYPE_A05
+            {field:'gradeResult',title: '外部评级',sortable:false, edit:true, editOption:{type:'select',formatoption:true,result: MAIN_GRADE_RESULT}} // initValue:ACCT_TYPE_A05
              ,{field:'gradeStandardResult',title: '内部评级',edit:true,sortable:false,editOption:{type:'select',formatoption:true,result: MODEL_STANDARD_GRADE_RESULT}} // ,initValue:IS_OPEN_01
              ,{field:'operation', title: 'SysCommon.operation',sortable:false,style:'text-align:left;', type:'action', buttons: ['delt']}
          ],
@@ -23,32 +22,38 @@ $(function () {
          editCell: function (value, row, field, cell, column) {
              if (column.field == 'gradeResult') {
                 var flag = true;
+                debugger;
                  // 控制外部评级的唯一性
                  if (typeof value != "undefined" && value) {
                         flag = checkUniqueData(value,column,row);
                         if(!flag){
-                            Joyin.error('该外部评级已配置，请重新选择！');
-                            row.gradeResult = null;
-                            table.renderRow(row.LAY_TABLE_INDEX,row);
+                            Joyin.error('该外部评级已配置，请重新输入！');
+                            setTimeout(function() {
+                                row.gradeResult = null;
+                                table.renderRow(row.LAY_TABLE_INDEX,row);
+                            }, 1000);
                         }else{
                              table.renderRow(row.LAY_TABLE_INDEX,row);
                         }
                         return flag;
                  }
-             }else if(column.field == 'gradeStandardResult'){
-                  // 控制内部评级的唯一性
-                   if (typeof value != "undefined" && value) {
-                        flag = checkUniqueData(value,column,row);
-                        if(!flag){
-                            Joyin.error('该内部评级已配置，请重新选择！');
-                            row.gradeStandardResult = null;
-                            table.renderRow(row.LAY_TABLE_INDEX,row);
-                        }else{
-                             table.renderRow(row.LAY_TABLE_INDEX,row);
-                        }
-                        return flag;
-                   }
              }
+             // else if(column.field == 'gradeStandardResult'){
+             //      // 控制内部评级的唯一性
+             //       if (typeof value != "undefined" && value) {
+             //            flag = checkUniqueData(value,column,row);
+             //            if(!flag){
+             //                Joyin.error('该内部评级已配置，请重新选择！');
+             //                setTimeout(function() {
+             //                    row.gradeStandardResult = null;
+             //                    table.renderRow(row.LAY_TABLE_INDEX,row);
+             //                }, 1000);
+             //            }else{
+             //                 table.renderRow(row.LAY_TABLE_INDEX,row);
+             //            }
+             //            return flag;
+             //       }
+             // }
          }
     });
 
@@ -142,7 +147,6 @@ function serializeTable(tables){
             // 获取seqNo
             if (pageModel == PAGE_MODEL_NEW || pageModel == PAGE_MODEL_EDIT) {
                 object.gradeInst = $('#gradeInst').val();
-                object.oType = $('#oType').val();
             }
 
         Joyin.ajaxJson(basePath + 'model/impairment/insideoutsidegrademanagement/InsideOutsideGrade002/check', object, function(result) {

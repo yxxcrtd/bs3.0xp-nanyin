@@ -60,7 +60,11 @@
                return "<div class='layui-progress layui-progress-big' style='margin-top:1px;'><div class='layui-progress-bar layui-bg-green' style='width:"+row.tradeFinishPercent+"%'><span class='layui-progress-text' style='color:black;'>"+row.tradeFinishPercent+"%</span></div></div>";
            }, width:'8%',sortable:false}
            ,{field:'invManagerName', width:100, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.invManagerId'}
-           ,{field:'portfolioId', width:120, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.portfolioId'}
+           ,{field:'portfolioId', width:120, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.portfolioId',
+                render : function(data, type, row, meta) {
+                    return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
+                }
+            }
            ,{field:'portfolioName', width:120, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.portfolioName'}
            ,{field:'secAcctName', width:120, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.secAcctId'}
            ,{field:'finprodMarketId', width:100, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.assetId'}
@@ -116,7 +120,17 @@
                     function(){table.reload();});
         },
     });
-    
+
+    /**
+     * 组合代码链接
+     */
+    entrustOrderTable.bind('click','.portfolioIdLink', function(row) {
+        // 在父页面全屏展示
+        Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),basePath
+            + "invest/portfolio/ptlmanagementinfo/PtlManagementInfo002/init", "98%", "95%",
+            {pageModel:PAGE_MODEL_REFERENCE, portfolioId:row.portfolioId});
+    });
+
     /**
      * 接收
      */
@@ -239,6 +253,9 @@
            ,{field:'yield',type:'number', width:120, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.matuYield', digit:4}
            ,{field:'prinAmtHun',type:'number', width:125, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.bondPosition'}
            ,{field:'assetTypeOneStr', width:90, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.bondType', sortField:"assetTypeOne"}
+           ,{field:'pendingPeriod',type:'number', width:120, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.pendingPeriod', digit:2}
+           ,{field:'gradeStr', width:90, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.grade'}
+           ,{field:'remark', width:150, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.remark'}
            ,{field:'cfetsQuoteId', width:200, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.offerId'}
            ,{field:'fTradeId', width:150, title: 'CfetsBondDealQuotedPrice001.dayOffer.table.dealId'}
            ,{field:'quoteId', visible: false}
@@ -581,18 +598,18 @@
             , {field: 'settlcurramt', title: '结算金额', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinterestamt', title: '应计利息', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinteresttotalamt', title: '应计利息总额', width: '170', type: 'money', digit: 2}
-            // , {
-            //     field: 'settldate',
-            //     title: '首次结算日',
-            //     sortField: 'settldate',
-            //     width: '110',
-            //     type: 'date'
-            // },
+            , {
+                field: 'settldate',
+                title: '首次结算日',
+                sortField: 'settldate',
+                width: '110',
+                type: 'date'
+            },
             // , {field: 'settleSpeedStr', title: '清算速度', width: '150'}
             // , {field: 'settTypeStr', title: '清算类型', sortField: 'settType', width: '110'}
             // , {field: 'deliveryTypeStr', title: '结算方式', sortField: 'deliveryType', width: '110'}
             // , {field: 'tradeDateStr', title: 'CSTPSelect001.tradedate1', sortField: 'tradedate', width: '110'}
-            // // , {field: 'quoteTypeStr', title: '报价类型', sortField: 'tradedate', width: '110'}// TODO
+            // // // , {field: 'quoteTypeStr', title: '报价类型', sortField: 'tradedate', width: '110'}// TODO
             // , {field: 'reference', title: '报价/订单编号', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '债券类型', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '债券币种', sortField: 'tradedate', width: '110'}

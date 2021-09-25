@@ -7,7 +7,7 @@
             <Cell order="3" name="生效日期">listDateStr</Cell>
             <Cell order="4" name="操作方式">operateTypeStr</Cell>
             <Cell order="5" name="操作方向">operatePsStr</Cell>
-            <Cell order="6" name="操作人">createUser</Cell>
+            <Cell order="6" name="操作人">updateUser</Cell>
             <Cell order="7" name="审批人">spr</Cell>
         </Row>
     </Worksheet>

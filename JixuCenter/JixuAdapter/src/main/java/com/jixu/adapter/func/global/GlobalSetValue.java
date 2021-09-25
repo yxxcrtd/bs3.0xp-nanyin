@@ -29,7 +29,7 @@ public class GlobalSetValue extends AdditionFunc{
 		return funcname;
 	}
 	
-	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap) throws Exception{
+	public String calFunc(String inputValue, HashMap<String, Object> colcfgMap){
 		String inputLine=genConvertFormula(inputValue, colcfgMap);
 		String[] lines=inputLine.split(",");
 		if(lines.length==3){
@@ -49,7 +49,7 @@ public class GlobalSetValue extends AdditionFunc{
 	
 	@Override
 	public String groupCal(String key, List<HashMap<String, Object>> sourceData)
-			throws Exception {
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}

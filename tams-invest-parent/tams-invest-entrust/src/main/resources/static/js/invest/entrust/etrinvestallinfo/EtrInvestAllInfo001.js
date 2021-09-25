@@ -38,7 +38,37 @@
             data.operateType = "dblclick";
             data.pageModel=PAGE_MODEL_REFERENCE;
             tradeMarket = data.tradeMarket;
+            entrustCreateSource = data.entrustCreateSource;
             //交易所（上交和深交）的指令
+            if(tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) {
+                if (entrustCreateSource != null && entrustCreateSource == ENTRUST_CREATE_SOURCE_02) {
+                    var entrustType = data.entrustType;
+                    if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
+                        || entrustType == ENTRUST_BUSS_TYPE_20 || entrustType == ENTRUST_BUSS_TYPE_19
+                        || entrustType == ENTRUST_BUSS_TYPE_18 || entrustType == ENTRUST_BUSS_TYPE_17) {
+                        pagePath = "invest/entrust/etragrereptrade/EtrAgreRepTrade001/init";
+                        Joyin.dialog(JoyinUtil.getLabel('EtrAgreRepTrade001.detail'), basePath + pagePath,
+                            "95%", "90%", {
+                                pageModel: PAGE_MODEL_REFERENCE,
+                                entrustId: data.entrustId,
+                            });//交易所协议回购指令详情
+                        return;
+                    }
+                    //债券申购进可转债页面
+                    if(data.assetType == F01 && data.ps == PS_T04 ){
+                        label='EtrConBond002.refrence';
+                        pagePath = '/invest/entrust/etrconbond/EtrConBond002/init'
+                    }else{
+                        label='EtrExchangeTrade001.detail';
+                        pagePath = "/invest/entrust/etrexchangetrade/EtrExchangeTrade001/init";
+                    }
+                    Joyin.dialog(JoyinUtil.getLabel(label),basePath+pagePath,
+                        "95%", "90%",data,
+                        function(){table.reload();});//交易所场内指令详情
+                    return;
+                }
+            }
+            /*//交易所（上交和深交）的指令
             if((tradeMarket == TRADE_PLACE_03 || tradeMarket == TRADE_PLACE_04) && data.assetType != F17) {
                 var entrustType = data.entrustType;
                 if(entrustType == ENTRUST_BUSS_TYPE_22 || entrustType == ENTRUST_BUSS_TYPE_21
@@ -64,8 +94,7 @@
                     "95%", "90%",data,
                     function(){table.reload();});//交易所指令详情
                 
-            }
-            else {
+            }*/
             if(data.assetType == F01 && data.ps != PS_T04 && data.ps != PS_T49){
                 Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrBond"),
                          basePath
@@ -234,15 +263,13 @@
                         entrustId:data.entrustId
                     },
                     function(){table.reload();});
-            }
-                else if(data.assetType == F19){
+            } else if(data.assetType == F19){
                     Joyin.dialog(JoyinUtil.getLabel("EtrInvestAllInfo001.etrProjectnet"),
                         basePath
                         + "invest/entrust/etrprojectnet/EtrProjectNet002/init",
                         "95%", "80%", data,
                         function(){table.reload();});
                 }
-            }
         },
         cols:[ 
              {field:'entrustId',visible:false}
@@ -288,6 +315,7 @@
             ,{field:'remark', title: 'EtrInvestAllInfo001.remark', width:'200',sortable:false}
             ,{field:'pbExportstatus', visible:false}
             ,{field:'pbExportstatusStr', title: 'EtrInvestAllInfo001.pbExportstatus', width:'150',sortField:"pbExportstatus", visible:false}
+            ,{field:'entrustCreateSource', visible:false}
         ],
     });
     

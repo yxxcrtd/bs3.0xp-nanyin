@@ -303,7 +303,8 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         BigDecimal etrFinish = EtrCommonCashPositionDealService.getEtrFinishAmt(etrEntrust.getEntrustId());
 
         // 交易场所
-        String tradePlace = entrustCommonDto.getEtrEntrust().getTradeMarket();
+        String tradePlace = entrustCommonDto.getEtrEntrust().getTradePlat() != null ?
+                entrustCommonDto.getEtrEntrust().getTradePlat() : entrustCommonDto.getEtrEntrust().getTradeMarket();
 
         // 通道代码
         String chlId = etrEntrust.getChlId();
@@ -360,7 +361,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
 //            }
         }
-        else if(DictCodeList.交易方向_卖出.getValue().equals(ps)){
+        else if(DictCodeList.交易方向_卖出.getValue().equals(ps)||DictCodeListExt2.交易方向_转换申请.getValue().equals(ps)){
 //            if (!StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
             EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDtoFromEtr(entrustCommonDto);
             if (etrEntrust.getTradeMarket().equals(BussinessDictCodeList.交易场所_上海证券交易所.getValue())
@@ -390,14 +391,15 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
             if (StringUtil.equals(tradePlace, BussinessDictCodeList.交易场所_场外.getValue())) {
                 // 1.直投
                 // 可用现金(组合、托管户):减少委托金额
-                if (StringUtil.isEmpty(chlId)) {
+                /*if (StringUtil.isEmpty(chlId)) {
                     acctId = EtrCommonCashPositionDealService.select组合托管户(etrEntrust.getPortfolioId(), etrEntrust.getCcy(),
                         DictCodeListExt2.资金账户类型_托管户.getValue());
 
                 }
                 // 2.通道一次性划款
                 // 可用现金(组合、通道):减少委托金额
-                else if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
+                else*/
+                if (StringUtil.isNotEmpty(chlId) && DictCodeListExt2.划款方式_一次性划款.getValue().equals(chlType)) {
                     acctId = EtrCommonCashPositionDealService.select通道资金账户(etrEntrust.getChlId());
                 }
                 // 3.通道逐笔划款
@@ -477,7 +479,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
         TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
@@ -540,7 +542,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 交易生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
@@ -630,6 +632,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 //                    etrCashPositionFlowDto.setAcctId(
 //                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
 //                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+//                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
                     etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
@@ -668,7 +671,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 交易生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
@@ -714,7 +717,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
@@ -796,7 +799,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
 //                    etrCashPositionFlowDto.setAcctId(
 //                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
 //                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
-                    etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getPayAcctNo());
+                    // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit start
+                    etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
+                    // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit end
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.无委托通道
@@ -837,7 +842,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
@@ -863,8 +868,10 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、托管户）：卖出交易日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
-                    etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                    /*etrCashPositionFlowDto.setAcctId(EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+                        deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));*/
+                    etrCashPositionFlowDto.setAcctId(
+                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道、无委托通道
@@ -907,9 +914,11 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                 // 可用现金(组合、资金账户）：卖出交易日增加交易金额
                 if (StringUtil.isEmpty(chlId)) {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
+//                    etrCashPositionFlowDto.setAcctId(
+//                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
+//                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
                     etrCashPositionFlowDto.setAcctId(
-                        EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
-                                deal.getCcy(), DictCodeListExt2.资金账户类型_托管户.getValue()));
+                            EtrCommonCashPositionDealService.select资金账户(finProductTradeDto.getTrdProductDeal().getSecManageAcctId(),deal.getCcy()));
                     etrPositionHoldDto.getPtlCashPositionFlows().add(etrCashPositionFlowDto);
                 }
                 // 2.委托通道、无委托通道
@@ -961,7 +970,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 委托代码
         String entrustId = finProductTradeDto.getEntrustId();
@@ -1014,7 +1023,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDealAdd dealAdd = finProductTradeDto.getTrdProductDealAdd();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 通道代码
         String chlId = finProductTradeDto.getTrdProductDeal().getChlId();
@@ -1065,7 +1074,9 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                     etrCashPositionFlowDto.setAmount(deal.getTradeAmt());
                     // ZGZGST-1997:处理赎回无划款指令场景 shulifu 20210903 edit start
                     if(!CollectionUtils.isEmpty(finProductTradeDto.getStlPayOrdersList())){
-                        etrCashPositionFlowDto.setAcctId(((BussTrdTransferOrderDto)finProductTradeDto.getStlPayOrdersList().get(0)).getRecAcctNo());
+                        // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit start
+                        etrCashPositionFlowDto.setAcctId(finProductTradeDto.getStlPayOrdersList().get(0).getMyAcctNo());
+                        // ZGZGST-2339:修改类型转换 fuyongsheng 20210909 edit end
                     }else{
                         etrCashPositionFlowDto.setAcctId(
                                 EtrCommonCashPositionDealService.select组合托管户(dealAdd.getPortfolioId(),
@@ -1114,7 +1125,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         List<StlPayOrdersDto> stlPayOrdersDtos = finProductTradeDto.getStlPayOrdersList();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 通道代码
         String chlId = finProductTradeDto.getTrdProductDeal().getChlId();
@@ -1156,9 +1167,16 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
                         acctId = EtrCommonCashPositionDealService.select通道资金账户(chlId);
                     }
                 }
-                可用现金增加(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, false);
+                可用现金增加(etrPositionHoldDto, stlPayOrdersDtos, etrCashPositionFlowDto, acctId, true);
             }
-            if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) { // 提交
+            if (DictCodeList.持仓类型_可用.equals(持仓类型) || etrPositionHoldDto.isNeedNegative()) {
+                //除权日增加预增现金
+                if(StringUtil.isNotEmpty(finProductTradeDto.getExRightsDate())) {
+                    for (StlPayOrdersDto dto : stlPayOrdersDtos) {
+                        dto.setSettleDate(finProductTradeDto.getExRightsDate());
+                    }
+                }
+                // 提交
                 if (StringUtil.isEmpty(entrustId)) { // 无委托
                     String acctId;
                     // 1.直投
@@ -1307,7 +1325,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 交易生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(
@@ -1342,7 +1360,7 @@ public class EtrFundCashPositionDealService extends EtrCashPositionBaseService {
         TrdProductDeal deal = finProductTradeDto.getTrdProductDeal();
 
         // 交易场所
-        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradePlat();
+        String tradePlace = finProductTradeDto.getTrdProductDeal().getTradeMarket();
 
         // 交易生成的持仓流水
         EtrSecPositionFlowDto etrSecPositionFlowDto = EtrCommonCashPositionDealService.getEtrSecPositionFlowDto(

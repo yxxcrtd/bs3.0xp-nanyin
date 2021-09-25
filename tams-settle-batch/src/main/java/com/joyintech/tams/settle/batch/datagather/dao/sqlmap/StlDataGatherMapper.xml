@@ -75,14 +75,18 @@
 			NVL(NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID), NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID)) ORDER_ID,
 			case when ptl.PROFIT_TYPE = '01' then 'FVTPL' else 'AC' end as invAim,
 			<include refid="settleTransDataSql"></include>
-			LEFT JOIN T_ENTRUSTHISTORY teh ON std.APPLY_TRADE_ID = teh.REPORT_NO and teh.ENTRUST_STATUS IN ('2', '5', '8')
-			LEFT JOIN T_ENTRUST te ON std.APPLY_TRADE_ID = te.REPORT_NO and te.ENTRUST_STATUS IN ('2', '5', '8')
-			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON std.APPLY_TRADE_ID = tieh.REPORT_NO and tieh.ENTRUST_STATUS IN ('2', '5', '8')
-			LEFT JOIN T_INTEGRATED_ENTRUST tie ON std.APPLY_TRADE_ID = tie.REPORT_NO and tie.ENTRUST_STATUS IN ('2', '5', '8')
+			LEFT JOIN T_ENTRUSTHISTORY teh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = teh.BROKER_ENTRUST_ID 
+				and teh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = teh.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+			LEFT JOIN T_ENTRUST te ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = te.BROKER_ENTRUST_ID 
+				and te.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = te.TRADING_DAY AND (std.TRADE_PLAT = '02' or std.TRADE_PLAT IS NULL)
+			LEFT JOIN T_INTEGRATED_ENTRUSTHISTORY tieh ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tieh.BROKER_ENTRUST_ID 
+				and tieh.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tieh.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
+			LEFT JOIN T_INTEGRATED_ENTRUST tie ON LTRIM(substr(std.APPLY_TRADE_ID, 5, length(std.APPLY_TRADE_ID)), '0') = tie.BROKER_ENTRUST_ID 
+				and tie.ENTRUST_STATUS IN ('2', '5', '6', '8') AND to_char(DEAL_DATE, 'yyyyMMdd') = tie.TRADING_DAY AND std.TRADE_PLAT IN ('03', '04', '05')
 			LEFT JOIN ETR_ENTRUST ee ON (ee.ENTRUST_ID = NVL(te.INSTRUCTION_ID, teh.INSTRUCTION_ID) OR ee.ENTRUST_ID = NVL(tie.INSTRUCTION_ID, tieh.INSTRUCTION_ID))
 			LEFT JOIN PTL_PORTFOLIO ptl ON (ptl.PORTFOLIO_ID = std.PORTFOLIO_ID)
 		<where>
-			(te.REPORT_NO IS NOT NULL OR teh.REPORT_NO IS NOT NULL OR tie.REPORT_NO IS NOT NULL OR tieh.REPORT_NO IS NOT NULL)
+			(te.BROKER_ENTRUST_ID IS NOT NULL OR teh.BROKER_ENTRUST_ID IS NOT NULL OR tie.BROKER_ENTRUST_ID IS NOT NULL OR tieh.BROKER_ENTRUST_ID IS NOT NULL)
 			<if test="dealDate != null">
 				AND std.DEAL_DATE = #{dealDate,jdbcType=DATE}
 			</if>
@@ -307,6 +311,7 @@
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
 		<include refid="settleTransDataSql"></include>
+		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
 		<where>
 			<!-- <if test="dealDate != null">
 				AND std.TRADE_DATE = #{dealDate,jdbcType=DATE}
@@ -330,7 +335,7 @@
            		</foreach>
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
-				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+				<foreach collection="finprodIdList" item="finprodId" open="AND (fp.PROFIT_TYPE = '03' or std.FINPROD_ID IN (" close="))" separator=",">
            			#{finprodId,jdbcType=VARCHAR}
            		</foreach>
 			</if>

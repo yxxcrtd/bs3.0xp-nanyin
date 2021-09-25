@@ -21,6 +21,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import com.joyintech.tams.invest.product.messageadjust.finfloatmgtexpquotation.dto.FinFloatMgtExpQuotation001Dto;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -122,18 +123,18 @@ public class FinProductFeePay001Controller extends BaseController {
         /*费用类型 guyunfei 20190923 end*/
         model.addAttribute("statusUndo", DictCodeListExt1.有效状态_待处理.getValue());
         
-        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
-        List<SelectOptionDto> options = selectDto.getOptions();
-        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
-        for (SelectOptionDto dto : options) {
-            if (StringUtil.equals(DictCodeListExt1.有效状态_待处理.getValue(), dto.getId())
-                || StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())) {
-                optionsNew.add(dto);
-            }
-        }
-        model.addAttribute(DictCode.有效状态.getValue(),
-            JsonUtils.objectArray2Json(optionsNew.toArray()));
-        
+//        SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.有效状态, null);
+//        List<SelectOptionDto> options = selectDto.getOptions();
+//        List<SelectOptionDto> optionsNew = new ArrayList<SelectOptionDto>();
+//        for (SelectOptionDto dto : options) {
+//            if (StringUtil.equals(DictCodeListExt1.有效状态_待处理.getValue(), dto.getId())
+//                || StringUtil.equals(DictCodeListExt1.有效状态_有效.getValue(), dto.getId())) {
+//                optionsNew.add(dto);
+//            }
+//        }
+//        model.addAttribute(DictCode.有效状态.getValue(),
+//            JsonUtils.objectArray2Json(optionsNew.toArray()));
+        this.setSelectOptionToModel(model, DictCode.有效状态);
         Map<String, Object> map = RequestUtil.getPageParam();
         if(StringUtil.isNotEmpty(map.get("remType"))) {
         	model.addAttribute("finprodId", (String)map.get("finprodId"));
@@ -257,13 +258,12 @@ public class FinProductFeePay001Controller extends BaseController {
      * @param inputDto 画面输入参数dto
      * @param finProductFeePay001Dto 
      * @return 撤销结果
-     * @throws Exception 异常信息
      * @see
      * @since 1.0
      */
     @RequestMapping("doRevoke")
     @ResponseBody
-    AjaxResult doRevoke(@RequestBody FinProductFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws Exception {
+    AjaxResult doRevoke(@RequestBody FinProductFeePay002Dto inputDto, TrdProductDeal finProductFeePay001Dto) throws WorkFlowException {
 
         ProcessParameter<FinProductFeePay002Dto> processParameter = new ProcessParameter<>();
         WorkFlowParameter<FinProductFeePay002Dto> workFlowParameter = new WorkFlowParameter<>();
@@ -345,8 +345,7 @@ public class FinProductFeePay001Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() {
         return finProductFeePay001Service.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
     }

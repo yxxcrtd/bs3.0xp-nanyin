@@ -41,13 +41,17 @@ public class TrdIRSDuration003DtoValidator implements PeriodCommonValidator {
         TrdIRSDuration003ProcessDto dto = (TrdIRSDuration003ProcessDto)value;
         String mdate = DateUtil.format(dto.getBeforeEndDate());
         errorList.addAll(bussTrdTransferOrderService.check(dto.getBussTrdTransferOrder()));
-        if (dto.getBeforeEndDate() != null
-            && dto.getBeforeEndDate().compareTo(dto.getMdate()) > 0) {
+
+        if (dto.getMdate() == null){
+            errorList.add(new ValidMessage("mdate",
+                    getMessage("FIN_PROD_M_004", getMessage("TrdIRSDuration003.mdate"))));
+        }
+        else if (DateUtil.compareDate(dto.getBeforeEndDate(),dto.getMdate()) > 0) {
             errorList.add(new ValidMessage("beforeEndDate",
                 getMessage("BUSS_COM_E_0003", getMessage("TrdIRSDuration003.beforeEndDate"),
                     getMessage("TrdIRSDuration003.mdate"))));
         }
-        if (dto.getBeforeEndPrin() != null
+        if (dto.getBeforeEndPrin() != null && dto.getRestPrin()!=null
             && dto.getBeforeEndPrin().compareTo(dto.getRestPrin()) > 0) {
             errorList.add(new ValidMessage("beforeEndPrin",
                 getMessage("BUSS_COM_E_0003", getMessage("TrdIRSDuration003.beforeEndPrin"),

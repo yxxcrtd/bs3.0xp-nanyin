@@ -13,7 +13,7 @@ package com.joyintech.tams.valuation.common.service;
 import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.framework.util.EncryptUtil;
 import com.joyintech.tams.constant.DictCodeListTableId;
 import com.joyintech.tams.systemtools.service.SystemToolService;
 import com.joyintech.tams.constant.DictCode;
@@ -26,7 +26,6 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.BokBookdetailCurrent;
 import com.joyintech.tams.common.base.entity.BokDetailId;
 import com.joyintech.tams.valuation.common.dao.BookAccountCommonMapper;
-import com.joyintech.tams.valuation.common.interf.base.util.MD5Util;
 import com.joyintech.tams.valuation.common.utils.ValStringUtil;
 
 /**
@@ -131,7 +130,7 @@ public class BookAccountCommonService {
 
         }
         // MD5转换
-        String md5BokDetailId = MD5Util.string2MD5(tempBokDetailId);
+        String md5BokDetailId = EncryptUtil.getInstance().md5(tempBokDetailId);
         valBokDetailId.setBokDetailId(md5BokDetailId);
         return md5BokDetailId;
     }
@@ -177,7 +176,7 @@ public class BookAccountCommonService {
                      + bookDetail.getOffsetFlag();
         }
         // modified by wangzhiang 20180807 end
-        bookId = MD5Util.string2MD5(bookId);
+        bookId = EncryptUtil.getInstance().md5(bookId);
         bookDetail.setBookId(bookId);
         return bookId;
     }

@@ -167,8 +167,7 @@ public class RskSupervisionPortfPoint003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(PAGE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) RskPortfolioPackage003Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) RskPortfolioPackage003Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

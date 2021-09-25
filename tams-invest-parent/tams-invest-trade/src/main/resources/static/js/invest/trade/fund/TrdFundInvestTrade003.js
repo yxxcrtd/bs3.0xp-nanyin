@@ -210,7 +210,8 @@ $(function () {
             cid: $('#calendarId').val(),
             portfolioId: $('#portfolioId').val(),
             finprodId: isChange && $('#ps').val() == ps_T66 ? $('#changeToFinprodMarketId').select2('data')[0].object.finprodId : $('#finprodId').select2('data')[0].object.finprodId,
-            secAcctId: $("#chlId").val()
+            secAcctId: $("#chlId").val(),
+            shuhuishareAmt: $("#shareAmt").val()
         }
         Joyin.ajaxJson(basePath + 'invest/trade/fund/TrdFundInvestTrade003/getcarryAmt', param,
             function (result) {
@@ -609,7 +610,7 @@ $(function () {
                 	}
                 }
             } else if ((ps == ps_T19)) {
-                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE && !isTodoList) {
+                if (unitCprice != null && unitCprice != '' && shareAmt && pageModel != PAGE_MODEL_REFERENCE) {
                     // var tradeAmtHid = shareAmt * unitCprice;
                     // $('#tradeAmt').val(tradeAmtHid).trigger('blur');
                     // $('#tradeAmtHid').val(tradeAmtHid).trigger('blur');
@@ -820,13 +821,15 @@ $(function () {
         if (ps == ps_T66 && pageModel != PAGE_MODEL_REFERENCE) {
             calcInShareAmt();
         }
-    	//add by yujiaping ZGBSS-915 基金申购确认交易 交易份额默认值 金额/单位净值 start
-    	if($('#ps').val() == ps_T05){
+        //modify by swwan ZGZGST-2135 份额字段不对，没考虑费用 基金申购确认交易 交易份额默认值 （金额-费用）/单位净值 start
+        //add by yujiaping ZGBSS-915 基金申购确认交易 交易份额默认值 金额/单位净值 start
+        if($('#ps').val() == ps_T05 && ($('#shareAmt').val() == null || $('#shareAmt').val() == '')) {
     		if($('#tradeAmt').val() && $('#unitCprice').val() ){
-    			$('#shareAmt').val($('#tradeAmt').val()/$('#unitCprice').val());
+                $('#shareAmt').val(($('#tradeAmt').val()-getPayWithTradeFee())/ $('#unitCprice').val()).trigger('blur');
     		}
     	} 
     	//add by yujiaping ZGBSS-915 基金申购确认交易 交易份额默认值 金额/单位净值 end
+        //modify by swwan ZGZGST-2135 份额字段不对，没考虑费用 基金申购确认交易 交易份额默认值 （金额-费用）/单位净值 end
     };
 
     /**

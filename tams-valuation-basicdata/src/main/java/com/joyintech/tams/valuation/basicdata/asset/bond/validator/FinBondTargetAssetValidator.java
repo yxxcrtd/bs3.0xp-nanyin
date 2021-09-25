@@ -79,29 +79,40 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         if (StringUtil.equals(dto.getOperateType(), "delete")) {
             if(null!=dto.getSelectedItem()&&!dto.getSelectedItem().isEmpty()){
                 for(FinBondTargetAssetDto entity : dto.getSelectedItem()){
-                    if(commonBusinessService.isTransInAsset(entity.getFinprodId()) != 0){
+                    if(commonBusinessService.isTransInAsset(entity.getFinprodId()) != 0 && !StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())){
                         if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
-                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_002", entity.getFinprodId())));
+                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_005", entity.getFinprodId())));
                             //break;
                         }
                         else {
-                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_003")));
+                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_006")));
                             //break;
                         }
                         continue;
-                    }
-                    if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())) {
-                        if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
-                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_001", entity.getFinprodId())));
-                            //break;
+                    }else{
+                        if(commonBusinessService.isTransInAsset(entity.getFinprodId()) != 0){
+                            if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
+                                resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_002", entity.getFinprodId())));
+                                //break;
+                            }
+                            else {
+                                resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_003")));
+                                //break;
+                            }
+                            continue;
                         }
-                        else {
-                            resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_004")));
-                            //break;
-                        }
-                        continue;
+                        /*if(!StringUtil.equals(DictCodeListExt3.估值数据来源_手工.getValue(), entity.getDataSource())) {
+                            if(StringUtil.equals(DictCodeList.是否_是.getValue(), dto.getBatchDelFlag())) {
+                                resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_001", entity.getFinprodId())));
+                                //break;
+                            }
+                            else {
+                                resultList.add(new ValidMessage("", getMessage("VAL_ASSET_DEL_INFO_004")));
+                                //break;
+                            }
+                            continue;
+                        }*/
                     }
-
                 }
             }
         }
@@ -115,9 +126,9 @@ public class FinBondTargetAssetValidator implements BeanValidator{
         //校验金融产品代码是否重复
         if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
             if(StringUtil.isNotEmpty(dto.getFinprodMarketId())){
-                if(finBondTargetAssetService.selectCountByfinprodId(dto.getFinprodMarketId())>0){
+                if(finBondTargetAssetService.selectCountByfinprodMarketId(dto.getFinprodMarketId())>0){
                     resultList.add(new ValidMessage("finprodMarketId",
-                            getMessage("BUSS_COM_E_0006", getMessage("FinBondTargetAsset002.finprodId"),
+                            getMessage("SEC_ERR_0001", getMessage("FinBondTargetAsset002.finprodId"),
                                     dto.getFinprodMarketId())));
                 }
             }

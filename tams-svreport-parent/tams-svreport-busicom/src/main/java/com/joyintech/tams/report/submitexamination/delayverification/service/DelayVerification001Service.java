@@ -16,7 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.ClusterCommandExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,6 +83,13 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
         //param.put("isNotCount", DictCodeList.是否_中债_是.getValue());
        //权限控制
 //        param.put("createDeptList",CommonUtil.getAuthorityDeptByUserName(null));
+
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            Boolean flag = MultilevelDataAuthorityUtil.isEnabled();
+            param.put("flag", flag);
+            List<String> listCode = LoginUserUtil.getTreeInstCode(); // 清空  取的用户的所有有权限机构
+            param.put("listCode", listCode);
+        }
         List<DelayVerification001Dto> dtoList ;
         if("CHB".equals(indexType)){
             dtoList = delayVerification001Mapper.searchDate(param);
@@ -117,8 +127,8 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
         //Map<String ,Object>param=new HashMap<String ,Object>();
         String indexTotal=(String)pageParam.get("indexTotal");
         String [] tableListPbc={"PBC_PRD_ACCOUNT_SUB","PBC_PRD_BASEINFO_SUB","PBC_INIT_PROD_RAISING_SUB"
-                ,"PBC_PRD_BASEINFO_END_SUB","PBC_PRD_ACCOUNT_END_SUB","PBC_PROD_RAISING_SUB","PBC_REPORT","PBC_REPORT"};
-        String [] reportIndexPbc={"18","19","20","21","22","23","24", "17"};
+                ,"PBC_PRD_BASEINFO_END_SUB","PBC_PRD_ACCOUNT_END_SUB","PBC_PROD_RAISING_SUB","PBC_REPORT","PBC_REPORT","PBC_PRD_BASEINFO_SUB_NEW","PBC_PRD_BASEINFO_END_SUB_NEW"};
+        String [] reportIndexPbc={"18","19","20","21","22","23","24", "17","32","33"};
        
        
         //在这里添加表名可以增加其Table的支持的列 因为现在字段不确定所以待后续更改
@@ -176,7 +186,7 @@ public class DelayVerification001Service extends BaseService<DelayVerification00
                 resultPage =super.queryForPage(pagenum,legth,()->delayVerification001Mapper.searchTablePbc(pageParam));
             }else{
                 // HIS表赋值  2019-05-31 高健
-                pageParam.put("hisTableId",tableId+"_HIS");
+               // pageParam.put("hisTableId",tableId+"_HIS");
                 resultPage =super.queryForPage(pagenum,legth,()->delayVerification001Mapper.searchTable(pageParam));
             }
         }

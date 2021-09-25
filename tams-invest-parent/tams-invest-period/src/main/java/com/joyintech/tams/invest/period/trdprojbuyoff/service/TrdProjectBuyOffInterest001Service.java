@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.period.trdprojbuyoff.service;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -87,8 +88,7 @@ public class TrdProjectBuyOffInterest001Service extends CommonExportService<TrdP
      * @since 1.0
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<ExcelValidDto> importData(String flieName)
-        throws Exception {
+    public List<ExcelValidDto> importData(String flieName) throws FileNotFoundException {
         // 检查文件名是否为空
         if (StringUtil.isNotEmpty(flieName)) {
             // 检查文件名是否包含项目类资产买断利率

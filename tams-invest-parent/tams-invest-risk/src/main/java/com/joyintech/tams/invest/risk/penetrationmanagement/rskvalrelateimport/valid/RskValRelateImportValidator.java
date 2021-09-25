@@ -13,6 +13,8 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,11 @@ import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalrelateimport.s
  */
 @Component
 public class RskValRelateImportValidator implements BeanValidator {
-    
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(RskValRelateImportValidator.class);
+
     /**
      * RskValRelateImport002Service
      */
@@ -65,7 +71,7 @@ public class RskValRelateImportValidator implements BeanValidator {
                             this.getMessage("RskValRelateImport002.subjectCodeCol"))));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             //add  by  张年  2019/07/31
             if (dto.getStartRow() == null) {

@@ -678,10 +678,18 @@
                                     finAssetIntInfoList = result.data;
                                     /* 计算 数量总数 */
                                     sumRegistShare = 0;
+                                    var trmFundType = $("#trmFundType").val();
                                     for (var i = 0; i < finAssetIntInfoList.length; i++) {
                                         sumRegistShare = JoyinMath.doAdd(sumRegistShare, finAssetIntInfoList[i].registShare);
                                         /*面值*/
                                         faceValue = finAssetIntInfoList[i].faceValue;
+                                        if($('#assetType').val() == FUND_ASSET_TYPE_F01&&$('#bonusMode').val() == BONUS_MODE_02){
+                                            if(trmFundType == '05'){
+                                                faceValue = '0.01';
+                                            }else  if(trmFundType == '01'){
+                                                faceValue = '100';
+                                            }
+                                        }
                                     }
                                     /*add by xr 加载表格前先计算净值*/
                                     var tradeAmt = $('#tradeAmt').val();
@@ -703,6 +711,7 @@
      * 表格联动
      */
     var resetTableData = function() {
+        var type = $("#type").val();
         // 利息明细根据基础数据联动
         var finAssetIntInfos = finAssetIntInfoList;
         if(!finAssetIntInfos){
@@ -711,6 +720,8 @@
         //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
        var assetType = $("#assetType").val();
         if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+            var itemArr = ['qty','tradeAmt'];
+        } else if( type=="01" || type == "04"){ // 红利再投确认
             var itemArr = ['qty','tradeAmt'];
         }else{
             var itemArr = ['tradeAmt'];
@@ -723,7 +734,9 @@
 //      初始化所有的钱和已分配的钱
         $.each(itemArr,function(index,val){
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
-            if (assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02) {
+            if ((assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02)
+                || ( type=="01" || type == "04") // 红利再投确认
+                 ) {
                 if (faceValue && val == 'qty') {
                     var value = $('#' + val).val();
                     var tradeAmt = $('#tradeAmt').val();
@@ -738,17 +751,19 @@
                 } else {
                     itemObj[val] = $('#' + val).val() || 0;
                 }
-            }else{
+            }
+            else{
                 itemObj[val] = $('#' + val).val() || 0;
             }
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
             sumObj[val] = 0;
         })
 //      分配
-        debugger;
         for (var i = 0; i < finAssetIntInfos.length; i++) {
             //现金分红的时候，列表中不展示分红份额字段，货币型红利再投显示
-            if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
+            if((assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02)
+                || ( type=="01" || type == "04") // 红利再投确认
+            ){
 
             }else{
                 finAssetIntInfos[i][qty]=" ";
@@ -803,6 +818,9 @@
                 var unitCprice = $("#unitCprice").val();
                 $.each(finAssetIntInfos, function(i, v) {
                     v.unitCprice = unitCprice;
+                    if($('#trmFundType').val()&&($('#trmFundType').val()=='05'||$('#trmFundType').val()=='01')){
+                        v.qty = JoyinMath.doDiv(v.tradeAmt,unitCprice);
+                    }
                     repoInfoTable.addRow(v);
                 });
             });
@@ -916,7 +934,21 @@
             }
 //            $('#unitCprice').attr("disabled","true");
 //        	triValueChange('unitCprice',1);
-            triValueChange('unitCprice');
+            //triValueChange('unitCprice');
+            if(assetType == FUND_ASSET_TYPE_F01){
+                var trmFundType = $("#trmFundType").val();
+                if($('#bonusMode').val() == BONUS_MODE_02){
+                    if(trmFundType == '05'){
+                        triValueChange("unitCprice",'0.01');
+                    }else  if(trmFundType == '01'){
+                        triValueChange("unitCprice",'100');
+                    }else{
+                        triValueChange("unitCprice");
+                    }
+                }else{
+                    triValueChange("unitCprice");
+                }
+            }
             if(pageModel!=PAGE_MODEL_NEW){
                 triValueChange('exRightsDate');
             }
@@ -980,6 +1012,11 @@
      * 画面加载完成
      */
     $(function() {
+        //通过来账分拣初始化的页面交易金额不可改变
+        if(pageModel==PAGE_MODEL_NEW&&isFromCheck&&isFromCheck=='true'){
+            $("#tradeAmt").attr("disabled",true);
+        }
+
         // 1.资产代码下拉框选择后，联动带出 币种、资产类型、资产名称、金融产品代码、发行人
         $('#finprodMarketId')
                 .change(
@@ -1002,6 +1039,7 @@
                                     {finprodMarketId: finprodMarketId }, function (result) {
                                         if (result.data) {
                                             tradeMarket = result.data.TRADE_MARKET;
+                                            triValueChange('trmFundType', result.data.TRM_FUND_TYPE);
                                             triValueChange('finprodMarketName', result.data.FINPRODMARKETNAME);
                                             triValueChange('finprodId', result.data.FINPRODID);
                                             triValueChange('issuer', result.data.ISSUER);
@@ -1028,10 +1066,22 @@
            var assetType = $("#assetType").val();
            if(assetType == FUND_ASSET_TYPE_F01){
                $(".unitCprice").hide();
+               var trmFundType = $("#trmFundType").val();
+               if($('#bonusMode').val() == BONUS_MODE_02){
+                   if(trmFundType == '05'){
+                       triValueChange("unitCprice",'0.01');
+                   }else  if(trmFundType == '01'){
+                       triValueChange("unitCprice",'100');
+                   }else{
+                       triValueChange("unitCprice");
+                   }
+               }else{
+                   triValueChange("unitCprice");
+               }
            }else{
                $(".unitCprice").show();
+               triValueChange("unitCprice");
            }
-           triValueChange("unitCprice");
        });
 
         // 道交易 新增 强成西 2019/03/26 start
@@ -1064,7 +1114,11 @@
             if (isNotNull(tradeAmt)&&isNotNull(sumRegistShare)) {
                 var assetType = $("#assetType").val();
                 if(assetType == FUND_ASSET_TYPE_F01 && $('#bonusMode').val() == BONUS_MODE_02){
-                    $("#qty").val(tradeAmt).trigger("blur");
+                    if(faceValue){
+                        $("#qty").val(JoyinMath.doDiv(tradeAmt, faceValue)).trigger("blur");
+                    }else{
+                        $("#qty").val(tradeAmt).trigger("blur");
+                    }
                 }
                 else{
                     var unitCprice = JoyinMath.doDiv(tradeAmt, sumRegistShare, 12, JoyinMath.ROUND_HALF_UP);
@@ -1114,6 +1168,28 @@
         $('#TrdFundDuration002_btn_submit').click(function() {
             saveOrSubmit('submit');
         });
+        //add by jiangpeng on 20210522 start TISHKBS-1803
+        $("#arriveDate").change(function () {
+            if(isTodo){
+                var index = layer.open({
+                    type: 1,
+                    icon : 16,
+                    area: ['200px', '100px'],
+                    content: '数据加载中',closeBtn: 0
+                });
+                var orderTabel = table.getAllRows();
+                for (var i = 0; i < orderTabel.length; i++) {
+                    orderTabel[i].settleDateText = $("#arriveDate").val();
+                    orderTabel[i].settleDate = $("#arriveDate").val();
+                }
+                table.clear(function () {
+                    layui.layer.close(index);
+                    table.addRow(orderTabel)
+                });
+
+            }
+        });
+        //add by jiangpeng on 20210522 end TISHKBS-1803
         setTimeout(function(){init();},0);
     });
 }());

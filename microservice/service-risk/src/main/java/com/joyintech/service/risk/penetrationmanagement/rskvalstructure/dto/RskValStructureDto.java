@@ -10,6 +10,7 @@
  
 package com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto;
 
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 
 /**
@@ -42,5 +43,4 @@ public class RskValStructureDto extends RskValtblStructMapDtl{
         this.structName = structName;
     }
 
-    
 }

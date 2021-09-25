@@ -32,8 +32,8 @@ var rsk = function() {
             ,{field:'indId',visible :false}
             ,{field:'supDate',type:'date',visible:false}
             ,{field:'indName', title: 'RskSupervisionRiskAnalyze001.indName'}
-            ,{field:'assetCode', title: 'RskSupervisionRiskAnalyze001.assetCode'}
-            ,{field:'assetName', title: 'RskSupervisionRiskAnalyze001.assetName'}
+            ,{field:'assetCode', title: 'RskSupervisionRiskAnalyze002.assetCode'}
+            ,{field:'assetName', title: 'RskSupervisionRiskAnalyze002.assetName'}
             ,{field:'warnCond', title: 'RskSupervisionRiskAnalyze001.warnCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'approveCond', title: 'RskSupervisionRiskAnalyze001.approveCond',render: RskQuotaCommon.transferWarnFoul}
             ,{field:'foulCond', title: 'RskSupervisionRiskAnalyze001.foulCond',render: RskQuotaCommon.transferWarnFoul}
@@ -48,8 +48,10 @@ var rsk = function() {
                 }
             }
             , {field: 'operation',title: 'SysCommon.operation', type: 'action',render:function(d, type, row, meta){
-	                return  '<a onclick="showSecValuation(\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
-					+ '\''+',\''+new Date(row.supDate).format('yyyy-MM-dd')+'\')"  style="cursor: pointer;cursor: pointer;display: block;width: 70px;background: #2693ff; color: #fff;border-radius: 2px;"><span >持仓明细</span></a>';
+                  if (row.isShow=='Y'){
+                    return  '<a onclick="showSecValuation(\''+ row.assetCode+'\''+',\''+row.assetName+'\''+',\''+row.indName
+                    + '\''+',\''+new Date(row.supDate).format('yyyy-MM-dd')+'\')"  style="cursor: pointer;cursor: pointer;display: block;width: 70px;background: #2693ff; color: #fff;border-radius: 2px;"><span >持仓明细</span></a>';
+                  }
                }
             }]
     });

@@ -1,17 +1,13 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.google.common.base.Strings;
-import com.joyintech.tams.exchange.common.db.domain.Entrust;
-import com.joyintech.tams.exchange.common.db.domain.FuturesInstrument;
 import com.joyintech.tams.exchange.common.db.domain.FuturesInstrumentMarginRateBean;
 import com.joyintech.tams.exchange.common.db.domain.FuturesInstrumentMarginRateBeanExample;
 import com.joyintech.tams.exchange.common.utils.JsonUtils;
 import com.joyintech.tams.exchange.datacommon.cache.impl.AsyncServiceImpl;
-import com.joyintech.tams.exchange.datacommon.db.mapper.FuturesInstrumentMarginRateMapper;
-import com.joyintech.tams.exchange.datacommon.db.mapper.IMybatisMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.FuturesInstrumentMarginRateMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.IMybatisMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.FuturesInstrumentMarginRateService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

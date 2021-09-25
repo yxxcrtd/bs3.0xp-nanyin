@@ -15,6 +15,8 @@ import com.joyintech.tams.invest.common.trade.service.TrdCommonBaseService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -89,6 +91,10 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
  */
 @Service
 public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInvestTrade002Dto> implements BaseProcessService<TrdProjectInvestTrade002Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdProjectInvestTrade002Service.class);
 
     @Autowired
     private TradeProductDealCommService baseTradeProductDealCommServiceImpl;
@@ -232,7 +238,14 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             TrdFinProductDealTotal trdFinProductDealTotal = new TrdFinProductDealTotal();
             BeanUtil.copyPropertiesIgnoreNull(trdFinProductDealTotal, trade.getTrdFinProductDealTotal());
             trdFinProductDealTotal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
-
+            trdFinProductDealTotal.setBusinessModel(entity.getBusinessModel());
+            if(!StringUtil.isNotEmpty(trdFinProductDealTotal.getInvAim())) {
+                if (StringUtil.equals("Y1", trdFinProductDealTotal.getBusinessModel())) {
+                    trdFinProductDealTotal.setInvAim("AC");
+                 } else if (StringUtil.equals("Y2", trdFinProductDealTotal.getBusinessModel())) {
+                    trdFinProductDealTotal.setInvAim("FVTPL");
+                }
+            }
             TrdProductDeal trdProductDeal = new TrdProductDeal();
             BeanUtil.copyPropertiesIgnoreNull(trdProductDeal, trade.getTrdProductDeal());
             trdProductDeal.setTradeStatus(DictCodeListExt1.交易状态_初始.getValue());
@@ -483,6 +496,7 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
                 trdProductDealTotal.setPs(DictCodeList.交易方向_买入.getValue());
                 trdProductDealTotal.setPortfolioId(交易对手_子组合);//原来交易的交易对手
                 trdProductDealTotal.setIspayUnpaidint(null);//是否转让
+                trdProductDealTotal.setBusinessModel(entity.getBusinessModel());
 
                 trdProductDealTotal.setInvAim(entity.getTurnInvAim());
                 trdFinProductDealTotalMapper.insertSelective(trdProductDealTotal);
@@ -1041,6 +1055,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         wflTrdDealTotalAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
 //        转换
 
+        wflTrdFinProductDealTotalMapper.insertSelective(wflTrdFinProductDealTotal);
+
         ////update by wangpeng 通道信息不登表
         String chlid = wflTrdProductDeal.getChlId();
         wflTrdProductDeal.setChlId(null);
@@ -1331,7 +1347,8 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         trdProductDeal.setCpriceAmt(entity.getCpriceAmt());
         trdProductDeal.setCcy(entity.getCcy());
         trdProductDeal.setPs(entity.getPs());
-        trdProductDeal.setTradeDate(DateTime.parse(entity.getTradeDate()).toDate());
+       // trdProductDeal.setTradeDate(DateTime.parse(entity.getTradeDate()).toDate());
+        trdProductDeal.setTradeDate(DateTime.parse(entity.getSettleDate()).toDate());
         trdProductDeal.setSettleDate(DateTime.parse(entity.getSettleDate()).toDate());
         trdProductDeal.setSettleSpeed(DictCodeList.清算速度_T_0.getValue().equals(entity.getSettleSpeed()) ? 0 : 1l);
         trdProductDeal.setPrinAmt(entity.getPrinAmt());
@@ -1396,7 +1413,7 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         saveDataWhenStartWorkflow(entity);
     }
@@ -1746,9 +1763,9 @@ public class TrdProjectInvestTrade002Service extends BaseService<TrdProjectInves
         if (StringUtil.equals(inputDto.getPs(), DictCodeList.交易方向_买入.getValue())
             && inputDto.getBussTrdAvailableCashQuery() != null && StringUtil.isEmpty(inputDto.getWorkflowId())) {
             //退回的流程重新提交的时候不用再进行金额校验 yjm  20190725
-            if (inputDto.getPrinAmt() != null
+            if (inputDto.getTradeAmt() != null
                 && inputDto.getBussTrdAvailableCashQuery().getAvalibleCash() != null
-                && inputDto.getPrinAmt().compareTo(
+                && inputDto.getTradeAmt().compareTo(
                     inputDto.getBussTrdAvailableCashQuery().getAvalibleCash()) == 1) {
 //               AjaxResult ar = new AjaxResult();
 //               ar.setData(this.getMessage("TRD_C_0002"));

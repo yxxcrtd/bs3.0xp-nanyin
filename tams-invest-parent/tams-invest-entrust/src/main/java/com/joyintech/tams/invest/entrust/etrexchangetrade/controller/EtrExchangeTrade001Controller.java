@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.joyintech.tams.common.base.entity.FinProductQuto;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.invest.entrust.etrexchangetrade.dto.*;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.joyintech.framework.ajax.AjaxResult;
@@ -102,7 +104,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
     
     @Override
     public String init(Model model) {
-    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型);
+    	this.setSelectOptionToModel(model, DictCode.交易方向, DictCode.投资目的, DictCode.交易场所, DictCode.目标类型, DictCode.申报类型, DictCode.业务模式);
     	this.setPsSelectOptions(model);
     	this.setPriceModelSelectOptions(model);
     	this.setDeclaTypeSelectOptions(model);
@@ -182,6 +184,9 @@ public class EtrExchangeTrade001Controller extends BaseController{
         setSettleSpreedSelectOptions(model);
         model.addAttribute("ACCOUNT_SPEED_01", DictCodeList.清算速度_T_0.getValue());
         model.addAttribute("ACCOUNT_SPEED_02", DictCodeList.清算速度_T_1.getValue());
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
         
         // 场内交易指令画面行情区域自动刷新时间（毫秒）
         long etrExchange_HqArea_refresh_period = 20000;
@@ -587,6 +592,60 @@ public class EtrExchangeTrade001Controller extends BaseController{
                 confirmMsg = "当前资产无配股配债额度，是否继续？";
             }
 
+        }
+
+        // etr_check_cash_switch 01 提示 02 禁止
+        if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_是.getValue())
+                && (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
+                    || DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())
+                    || DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs()))) {
+            Map<String,Object> param = new HashMap<String,Object>();
+            param.put("portfolioId",dto.getPortfolioId());
+            param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
+            dto.setAccAvailableCash(etrExchangeTrade001Service.selectAccAvailableCash(param));
+            if (StringUtil.isNotEmpty(dto.getAccAvailableCash()) && StringUtil.isNotEmpty(dto.getEntrustAmt())) {
+                if (dto.getAccAvailableCash().compareTo(dto.getEntrustAmt()) == -1) {
+                    confirmMsg = "组合可用现金不足，是否继续？";
+                }
+            }
+        }
+
+        // etr_check_pos_switch 01 提示 02 禁止
+        if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_是.getValue()) && (
+                DictCodeList.交易方向_卖出.getValue().equals(dto.getPs())
+                        || DictCodeList.交易方向_行权_回售.getValue().equals(dto.getPs())
+                        || DictCodeListExt3.交易方向_债转股.getValue().equals(dto.getPs())
+                        || DictCodeListExt3.交易方向_质押券入库.getValue().equals(dto.getPs()))) {
+            Map<String,Object> param = new HashMap<String,Object>();
+            param.put("portfolioId",dto.getPortfolioId());
+            param.put("finprodId",dto.getFinprodId());
+            param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
+            param.put("secAcctId",dto.getSecAcctId());
+            dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
+            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+                if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+                    confirmMsg = "可用持仓不足，是否继续？";
+                }
+            }
+        }
+
+        //正回购、质押券出库
+        // 委托指令组合的可用持仓不足时  01 提醒 02 禁止
+        if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_是.getValue()) &&
+                (DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs()))) {
+            Map<String,Object> param = new HashMap<String,Object>();
+            param.put("portfolioId",dto.getPortfolioId());
+            param.put("finprodId","XN_PRODID999");
+            if(null != dto.getSecAcctId()){
+                param.put("secAcctId", dto.getSecAcctId());
+            }
+            param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
+            dto.setAccAvailablePos(etrExchangeTrade001Service.selectAvailableNum(param));
+            if (StringUtil.isNotEmpty(dto.getAccAvailablePos()) && StringUtil.isNotEmpty(dto.getEntrustNum())) {
+                if (dto.getAccAvailablePos().compareTo(dto.getEntrustNum()) == -1) {
+                    confirmMsg = "标准券可用持仓不足，是否继续？";
+                }
+            }
         }
 
         if (StringUtil.isNotEmpty(confirmMsg)) {
@@ -1153,6 +1212,22 @@ public class EtrExchangeTrade001Controller extends BaseController{
 		return null;
 	}
 
+	//add by chenjiaxing 债券竞价交易计算偏离度 20210907 start
+    /**
+     * 1.6计算偏离度
+     *
+     * @param params 画面参数
+     * @return 偏离度
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("calcDeviationDegree")
+    @ResponseBody
+    public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
+        return etrExchangeTrade001Service.calcDeviationDegree(params);
+    }
+    //add by chenjiaxing 债券竞价交易计算偏离度 20210907 end
+
     /***
      * 初始化行情
      * @return
@@ -1161,6 +1236,19 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public String initHq(Model model){
 
         return "invest/entrust/etrexchangetrade/EtrExchangeTradeHq";
+    }
+
+    /**
+     * 判断所选产是不是债券并且有没有通过中债sppi测试
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/IsBondAsset")
+    public AjaxResult IsBondAsset(){
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.setData(etrExchangeTrade001Service.IsBondAsset(RequestUtil.getPageParam()));
+        ajaxResult.setData("2");
+         return ajaxResult;
     }
 }
 	

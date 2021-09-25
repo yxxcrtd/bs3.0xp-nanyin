@@ -9,12 +9,11 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div class='layui-fluid'>
-				<div class="layui-col-xs12 layui-col-md12 layui-col-sm12 layui-col-lg12 form-button-area" style="margin:10px;">
-				<a id="MstSecuritiesAccount001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}" >新建</a>
-		        <a id="MstSecuritiesAccount001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}" style="display:none;">删除</a>
-	   		</div>
-	   		<div class='joyin-form-wrap joyin-filter-form condition-area'>
+		<div class="layui-col-xs12 layui-col-md12 layui-col-sm12 layui-col-lg12 form-button-area" style="margin:10px;">
+			<a id="MstSecuritiesAccount001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}" >新建</a>
+			<a id="MstSecuritiesAccount001_btn_delete" class="layui-btn layui-btn-sm btn-delete" data-th-text="#{SysCommon.delete}" style="display:none;">删除</a>
+		</div>
+		<div class='joyin-form-wrap joyin-filter-form condition-area'>
 	   		<form class="layui-form" id="searchForm">
 	        	<div class="layui-form-item">
 	                <div class="layui-inline layui-col-xs4 layui-col-md4 layui-col-sm4 layui-col-lg4">
@@ -51,12 +50,10 @@
                         </div>
                     </div>
 	            </div>
-	            <div class="layui-form-item"><div class="layui-input-inline input-inline" style="height:30px;"></div></div>
 	        </form>
-	   		</div>
-	        <div>
-	            <table class="layui-table" id="dataTable"></table>
-	        </div>
+		</div>
+		<div>
+			<table class="layui-table" id="dataTable"></table>
 		</div>
     </div>
     <div layout:fragment="script">

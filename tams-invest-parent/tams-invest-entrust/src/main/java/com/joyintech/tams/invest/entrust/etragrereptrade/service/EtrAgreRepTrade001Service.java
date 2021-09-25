@@ -302,6 +302,8 @@ public class EtrAgreRepTrade001Service extends CommonExportService<EtrAgreRepTra
 				BaseEtrInvestInfoDto.class);
 		entity.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
 		entity.setWorkFlowId(dto.getWorkflowId());
+		// 设置指令创建来源
+		entity.getEtrEntrustAdd().setEntrustCreateSource(DictCodeListExt3.指令创建来源_场内实时.getValue());
 		restTemplate.postForObject(
 				ServiceApplication.ENTRUST_SERVICE_NAME + "/common/entrustcommonbase/doInsertEtrFlow", entity,
 				Boolean.class);

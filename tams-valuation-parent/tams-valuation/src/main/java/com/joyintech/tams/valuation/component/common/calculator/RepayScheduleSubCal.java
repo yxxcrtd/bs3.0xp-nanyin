@@ -53,7 +53,7 @@ public class RepayScheduleSubCal {
                                                               List<? extends FinCashCalcRule> liy,
                                                               List<FinCashPlanDto> lirs,
                                                               BigDecimal amt,
-                                                              String isUp, Class<T> class1) {
+                                                              String isUp, Class<T> class1) throws InstantiationException, IllegalAccessException {
         // 【变量】本金 =
         BigDecimal papi = amt;
 
@@ -150,7 +150,7 @@ public class RepayScheduleSubCal {
     public static <T extends FinCashPlanDetailDto> List<T> cal(Date startDate, Date endDate,
                                                               List<? extends FinCashCalcRule> liy,
                                                               List<FinCashPlanDto> lirs,
-                                                              BigDecimal amt, Class<T> class1) {
+                                                              BigDecimal amt, Class<T> class1) throws IllegalAccessException, InstantiationException {
         return cal(startDate, endDate, liy, lirs, amt, "0", class1);
     }
 }

@@ -139,6 +139,18 @@ public class TrdProjectInvestTrade002Dto extends TrdProjectInvestTradeDto implem
      */
     private String turnInvAim;
 
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
 
     public String getAppAvalibleCash() {
         return appAvalibleCash;

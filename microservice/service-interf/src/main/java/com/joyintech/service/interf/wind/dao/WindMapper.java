@@ -13,6 +13,7 @@ package com.joyintech.service.interf.wind.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 /**
  * wind表查询接口
@@ -23,6 +24,7 @@ import org.apache.ibatis.annotations.Param;
  * @see WindMapper
  * @since 1.0
  */
+@Repository
 public interface WindMapper<E> {
 
     /**

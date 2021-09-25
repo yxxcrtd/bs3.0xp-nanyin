@@ -26,6 +26,8 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -104,6 +106,11 @@ import com.joyintech.workflow.engine.service.BaseProcessService;
  */
 @Service
 public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondInfoDto> implements BaseProcessService<EtrInvestBondInfoDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(EtrInvestBondInfoService.class);
+
     /**
      * 风险试算组件Service
      */
@@ -473,6 +480,9 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
         dto1.setFinprodId((String)param.get("finprodId"));
         dto1.setCcy((String)param.get("ccy"));
         dto1.setSecAcctId((String)param.get("secAcctId"));
+        if(StringUtil.isEmpty(dto1.getSecAcctId())){
+            dto1.setSecAcctId((String)param.get("chlId"));
+        }
         dto1.setInvAim((String)param.get("invAim"));
         dto1.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
 //        var data = {portfolioId:portfolioId1,calId:$('#calendarId').val(),finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), secAcctId: $("#secManageAcctId").val(), chlId: $('#chlFinprodId').val()}
@@ -532,7 +542,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 BeanUtil.copyProperties(dto, nullDto);
             }
             catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return;
         }
@@ -963,7 +973,7 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         if (dto.getMatureYield() != null) {
@@ -1028,13 +1038,8 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
                 }
             }else {
                 DictCodeListExt3 basisDict3 = DictCodeListExt3.from(DictCode.计息基础, basis);
-                if (basisDict3 != null){
-                    switch (basisDict3) {
-                        case 计息基础_30U_360:
-                            secInfoModel.setBasis(Basis._30U_360);
-                            break;
-                    }
-
+                if (basisDict3 != null && basisDict3.equals(DictCodeListExt3.计息基础_30U_360)){
+                    secInfoModel.setBasis(Basis._30U_360);
                 }
             }
         }
@@ -1240,6 +1245,22 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
 	            ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getClosePriceByPara", paramMap,
 	            BigDecimal.class);
 	}
+
+    /**
+     * 查询上一日估值净价
+     *
+     * @author jiangpeng
+     */
+    public BigDecimal getLastPriceByPara(Map<String, Object> paramMap) {
+        if (StringUtil.isEmpty((String) paramMap.get("sysdate"))) {
+            paramMap.put("sysdate", iPlatformDate.getSysDateStr());
+        }
+        String sysdate = (String) paramMap.get("sysdate");
+        paramMap.put("sysdate", DateUtil.addDay(sysdate, -1));
+        return restTemplate.postForObject(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrInvestBondInfo/getLastPriceByPara", paramMap,
+                BigDecimal.class);
+    }
 
     /**
      * 导入数据文件
@@ -1502,6 +1523,9 @@ public class EtrInvestBondInfoService extends CommonExportService<EtrInvestBondI
             // 委托终止日格式check
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsDate(
                 rowData.get(2).toString(), "EtrInvestBondInfo004.mdate", lineNo));
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
             // 组合代码非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
                 rowData.get(3).toString(), "EtrInvestBondInfo004.portfolioId", lineNo));

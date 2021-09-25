@@ -7,7 +7,9 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.AssetInfoDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.AssetSideDetialRepoDto;
 import com.joyintech.service.valuation.lossmodel.assetratingallocation.specialassets.dto.ModAssetGradeSpecialConfigDto;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface ModAssetGradeSpecialConfigDtoMapper {
     int deleteByPrimaryKey(String seqno);
 
@@ -56,5 +58,14 @@ public interface ModAssetGradeSpecialConfigDtoMapper {
     List<AssetSideDetialRepoDto> queryGyieldList(Map<String, Object> map);
 
     String getSecTypeByFinprodId(Map<String, Object> map);
+
+    /**
+     * @Description:根据资产代码查询条数
+     * @auther: yuzj
+     * @date: 2021/9/8
+     * @param:
+     * @return:
+     */
+    Integer getSpecialCountByFinprodId(ModAssetGradeSpecialConfigDto dto);
 
 }

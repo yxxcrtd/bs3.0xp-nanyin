@@ -13,6 +13,7 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalstructure.service
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +46,14 @@ public class RskValStructuresService extends BaseService<RskValStructureDto>{
      * @since 1.0
      */
     public List<RskValStructureDto> getStructName(Map<String, Object> map) {
-        return rskValStructureMapper.getStructName(map);
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<RskValStructureDto> list=rskValStructureMapper.getStructName(map);
+            List<RskValStructureDto> listDefault=rskValStructureMapper.getStructNameDefault(map);
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValStructureMapper.getStructName(map);
+        }
     }
     /**
      * <一句话功能简述>
@@ -59,7 +67,7 @@ public class RskValStructuresService extends BaseService<RskValStructureDto>{
      * @since 1.0
      */
     public Page<RskValStructureDto> selectForPage(int page, int length,
-                                                  Map<String, Object> pageParam) throws Exception {
+                                                  Map<String, Object> pageParam) {
         return super.queryForPage(page, length, () -> {
             rskValStructureMapper.selectForPage(pageParam);
         });
@@ -78,6 +86,17 @@ public class RskValStructuresService extends BaseService<RskValStructureDto>{
      */
     public boolean getCountById(RskValStructureDto dto) {
         return rskValStructureMapper.getCountById(dto)>0;
+    }
+    /**
+     * 选中记录是否是默认模板
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public boolean getStructInfoIsDefault(RskValStructureDto dto) {
+        return rskValStructureMapper.getStructInfoIsDefault(dto)>0;
     }
     
 }

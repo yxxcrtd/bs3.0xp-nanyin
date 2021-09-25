@@ -123,7 +123,8 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
      * @see
      * @since 1.0
      */
-    public Page<EtrProjectDto> selectForPage(int page, int length, Map<String, Object> param) throws Exception {
+    public Page<EtrProjectDto> selectForPage(int page, int length, Map<String, Object> param)
+    {
         String portfolioId = (String)param.get("portfolioId");
         if(StringUtil.isNotEmpty(portfolioId)){
             param.put("portfolioIdList", StringUtil.splitToList(GlobalConstant.COMMA,portfolioId));
@@ -273,6 +274,14 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
         EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();
         EntrustCommonDto entrustCommonDto = new EntrustCommonDto();
         entrustCommonDto.setEtrEntrust(etrEntrust);
+        //根据投资目的与业务模式的对应关系入库时赋值
+        if(StringUtil.equals("Y1",dto.getBusinessModel())){
+            dto.setInvAim("AC");
+            etrEntrust.setInvAim("AC");
+        }else if(StringUtil.equals("Y2",dto.getBusinessModel())){
+            dto.setInvAim("FVTPL");
+            etrEntrust.setInvAim("FVTPL");
+        }
         entrustCommonDto.setEtrEntrustAdd(etrEntrustAdd);
         if (StringUtil.equals(operationType, "NEW")) {
             dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
@@ -288,6 +297,8 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
             etrEntrustAdd.setMdate(null);
             etrEntrustAdd.setAssetType(DictCodeList.平安资产类型_项目类资产.getValue());
             // 项目类资产五级分类改造 add by renping 2019-08-01 start
+
+            etrEntrust.setBusinessModel(dto.getBusinessModel());
             etrEntrustAdd.setAssetType1(dto.getType9());
             etrEntrustAdd.setAssetType10(dto.getType10());
             etrEntrustAdd.setAssetType11(dto.getType11());
@@ -572,7 +583,11 @@ public class EtrProjectService extends BaseService<EtrProjectDto> {
      */
     public String getCounterName(String counterId){
         MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
-        return mstCounterParty.getCounterName();
+        if (mstCounterParty != null){
+            return mstCounterParty.getCounterName();
+        }else {
+            return null;
+        }
     }
 
     public BaseEtrInvestInfoDto initBaseDto(EtrProjectDto dto){

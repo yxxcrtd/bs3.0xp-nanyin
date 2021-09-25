@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -86,6 +87,24 @@ public class Specialassets002Service extends CommonExportService<ModAssetGradeSp
     }
 
 
-    
-    
+    /**
+     * 根据资产代码查询条数
+     * @param
+     * @return
+     */
+    public Integer getSpecialCountByFinprodId(@RequestBody ModAssetGradeSpecialConfigDto  dto){
+        return restTemplate.postForObject(
+                ServiceApplication.LOSS_MODEL_SERVICE_NAME + "/Specialassets/getSpecialCountByFinprodId", dto,
+                Integer.class);
+    }
+
+
+    /**
+     * 查询资产代码下拉框
+     * @param param
+     * @return
+     */
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
+    }
 }

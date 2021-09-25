@@ -76,7 +76,7 @@ public class PayhsrccbvltService extends WindService<InterfPayhsrccbvlt> {
 	@DataSource(DataSourceType.MASERT)
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	@Override
-	public int insert(InterfPayhsrccbvlt entity) throws Exception {
+	public int insert(InterfPayhsrccbvlt entity) {
 		// 删除重复数据
 		//insertMapper.deleteByPrimaryKey(entity.getObjectId());
 		// 登陆接口表

@@ -12,16 +12,24 @@
     };
 
     $(function() {
-        // 使主动提醒画面自适应高度
-        $(window.parent.document).find("iframe").load(function(){
-            var main = $(window.parent.document).find("iframe");
-            var thisheight = $(window.parent.document).height() - 90;
-            main.height(thisheight);
-        });
 
         // 平台日更新
         SocketClient.subscribe('/sys/updateSysDate', function(msg) {
-            $('#quaryDate').val(msg.responseMessage);
+
+            if(isEJFRflag){
+                if(msg!=null && $.isArray(msg.responseMessage)){
+
+                        for(var i = 0;i<msg.responseMessage.length;i++ ){
+                            var item= msg.responseMessage[i];
+                                if(item && item.institutionCode && indexInstitutionCode && item.institutionCode== indexInstitutionCode) {
+                                    $('#quaryDate').val(item.curDateStr);
+                                    break;
+                                }
+                         }
+                }
+            }else{
+                $('#quaryDate').val(msg.responseMessage);
+            }
         });
 
     });

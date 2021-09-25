@@ -31,7 +31,7 @@ public class FxImixErrorInfoDto   implements Serializable {
 	
 	public String getObjectId() {
 		if (id != null) {
-			return id.toString();
+			return id;
 		}
 		return null;
 	}

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.select.SuggestDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,10 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
     */
    @Autowired
    private EtrCommonService etrCommonService;
-   
+
+    @Autowired
+    private EtrIbBondinfo002Service etrIbBondinfo002Service;
+
    /**
     * 日期相关
     */
@@ -191,36 +195,60 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
                     etrInvestBondInfoDto.setFinprodId(jsonObject.get("finprodId").toString());
                 }
             }
+//            // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 edit start
 //            // 证券账户
-//            if (StringUtil.isNotBlank(rowData.get(18).toString())) {
-//                etrInvestBondInfoDto.setSecAcctId(rowData.get(18).toString());
+//            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
 //                param = new HashMap<>();
-//                param.put("initValue", rowData.get(18).toString());
+//                param.put("initValue", rowData.get(15).toString());
 //                param.put("portfolioId", etrInvestBondInfoDto.getPortfolioId());
 //                param.put("tradeMarket", etrInvestBondInfoDto.getTradeMarket());
 //                param.put("page", 1);
 //                param.put("length", 20);
 //                List<SelectOptionDto> selectOptionDtoList = this.getSecManageAcctId(param);
 //                if (!StringUtil.isEmptyList(selectOptionDtoList)) {
-//                    etrInvestBondInfoDto.setSecManageAcctIdName(
+//                    etrInvestBondInfoDto.setSecAcctId(
 //                        selectOptionDtoList.get(0).getText());
 //                }
 //            }
-            // 通道
-            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
-                etrInvestBondInfoDto.setChlId(rowData.get(16).toString());
-                param = new HashMap<>();
-                param.put("initValue", rowData.get(16).toString());
-                param.put("page", 1);
-                param.put("length", 20);
-                selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                    param, SelectOptionDto.class);
-                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
-                    etrInvestBondInfoDto.setChlIdName(
-                        selectOptionDtoPage.getRoot().get(0).getText());
+//            // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 edit end
+
+            // 默认证券账户
+            if (StringUtil.isNotEmpty(etrInvestBondInfoDto.getPortfolioId()) && StringUtil.isNotEmpty(etrInvestBondInfoDto.getFinprodId())) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("portfolioId", etrInvestBondInfoDto.getPortfolioId());
+                map.put("finprodId", etrInvestBondInfoDto.getFinprodId());
+                String secAcctId = etrIbBondinfo002Service.qryPortfolioSecAcctId(map);
+                if (StringUtil.isNotEmpty(secAcctId)) {
+                    etrInvestBondInfoDto.setSecAcctId(secAcctId); // 证券账户
+                    param = new HashMap<>();
+                    param.put("initValue", secAcctId);
+                    param.put("portfolioId", etrInvestBondInfoDto.getPortfolioId());
+                    param.put("tradeMarket", etrInvestBondInfoDto.getTradeMarket());
+                    param.put("page", 1);
+                    param.put("length", 20);
+                    List<SelectOptionDto> selectOptionDtoList = this.getSecManageAcctId(param);
+                    if (!StringUtil.isEmptyList(selectOptionDtoList)) {
+                        etrInvestBondInfoDto.setSecManageAcctIdName(
+                            selectOptionDtoList.get(0).getText());
+                    }
                 }
             }
+
+//            // 通道
+//            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+//                etrInvestBondInfoDto.setChlId(rowData.get(16).toString());
+//                param = new HashMap<>();
+//                param.put("initValue", rowData.get(16).toString());
+//                param.put("page", 1);
+//                param.put("length", 20);
+//                selectOptionDtoPage = restTemplate.postForPage(
+//                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+//                    param, SelectOptionDto.class);
+//                if (!StringUtil.isEmptyList(selectOptionDtoPage.getRoot())) {
+//                    etrInvestBondInfoDto.setChlIdName(
+//                        selectOptionDtoPage.getRoot().get(0).getText());
+//                }
+//            }
             // 最低成交金额
 //            if (StringUtil.isNotBlank(rowData.get(13).toString())) {
 //                etrInvestBondInfoDto.setMinAmt(new BigDecimal(rowData.get(13).toString()));
@@ -231,21 +259,23 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
 //            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
 //                etrInvestBondInfoDto.setTradeMarket(rowData.get(16).toString().split(":")[0]);
 //            }
+            // ZGZGST-1631:计算全价需要交易市场 fuyongsheng 20210904 edit start
             // 交易市场固定为二级市场
-//            etrInvestBondInfoDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            etrInvestBondInfoDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
+            // ZGZGST-1631:计算全价需要交易市场 fuyongsheng 20210904 edit start
             // 交易平台
 //            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
 //                etrInvestBondInfoDto.setTradePlat(rowData.get(17).toString().split(":")[0]);
 //            }
             // 交易对手
-            etrInvestBondInfoDto.setCounterId(rowData.get(17).toString());
+            etrInvestBondInfoDto.setCounterId(rowData.get(15).toString());
             // 交易对手名称
-            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
-                String counterName = getCounterName(rowData.get(17).toString());
+            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
+                String counterName = getCounterName(rowData.get(15).toString());
                 etrInvestBondInfoDto.setCounterIdName(counterName);
             }
             // 备注
-            etrInvestBondInfoDto.setRemark(rowData.get(18).toString());
+            etrInvestBondInfoDto.setRemark(rowData.get(16).toString());
             etrInvestBondInfoDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
             etrInvestBondInfoDto.setInvManagerId(LoginUserUtil.getUserName());
             param = new HashMap<>();
@@ -373,6 +403,9 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             // 委托终止日格式check
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsDate(
                 rowData.get(2).toString(), "EtrInvestBondInfo004.mdate", lineNo));
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
             // 组合代码非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
                 rowData.get(3).toString(), "EtrInvestBondInfo004.portfolioId", lineNo));
@@ -482,31 +515,34 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
             // 交易场所非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, etrCommonService.checkIsBlank(
                     rowData.get(14).toString(), "EtrInvestBondInfo004.tradeMarket", lineNo));
-            // 通道存在
-            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
-                Map<String, Object> param = new HashMap<>();
-                param.put("initValue", rowData.get(16).toString());
-                param.put("page", 1);
-                param.put("length", 20);
-                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
-                    param, SelectOptionDto.class);
-                if (selectOptionDtoPage.getRoot().isEmpty()) {
-                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
-                        getMessage("ETR_E_0017", getMessage("invest.channelId"), lineNo));
-                }
-            }
+//            // 通道存在
+//            if (StringUtil.isNotBlank(rowData.get(16).toString())) {
+//                Map<String, Object> param = new HashMap<>();
+//                param.put("initValue", rowData.get(16).toString());
+//                param.put("page", 1);
+//                param.put("length", 20);
+//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                    ServiceApplication.COMMON_SERVICE_NAME + "/common/BussChannelCommonService/getChannelId",
+//                    param, SelectOptionDto.class);
+//                if (selectOptionDtoPage.getRoot().isEmpty()) {
+//                    confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+//                        getMessage("ETR_E_0017", getMessage("invest.channelId"), lineNo));
+//                }
+//            }
             // 交易对手存在时check对手存在
-            if (StringUtil.isNotBlank(rowData.get(17).toString())) {
+            if (StringUtil.isNotBlank(rowData.get(15).toString())) {
                 Map<String, Object> map = new HashMap<>();
-                map.put("initValue", rowData.get(17).toString());
+                map.put("initValue", rowData.get(15).toString());
                 map.put("page", 1);
                 map.put("length", 20);
                 map.put("innerTrade", false);
                 map.put("tradeMarket",DictCodeListExt1.交易场所_银行间);
-                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
-                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
-                    map, SelectOptionDto.class);
+//                Page<SelectOptionDto> selectOptionDtoPage = restTemplate.postForPage(
+//                    ServiceApplication.ENTRUST_SERVICE_NAME + "/common/EntrustCommonPersonSelect/getCounterId",
+//                    map, SelectOptionDto.class);
+                Page<SelectOptionDto>  selectOptionDtoPage = restTemplate.postForPage(
+                        ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/queryCounterSidePage",
+                        map, SelectOptionDto.class);
                 if (selectOptionDtoPage.getRoot().isEmpty()) {
                     confirmMsg = etrCommonService.StringAddByBr(confirmMsg, getMessage(
                         "ETR_E_0017", getMessage("etrInvestPersonInfo.counterId"), lineNo));
@@ -590,9 +626,19 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
      * @return
      */
     public String getCounterName(String counterId) {
-        return restTemplate.getForObject(
-                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrBondFirstLBidding/getCounterName?counterId=" + counterId,
-                String.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("initValue", counterId);
+        map.put("page", 1);
+        map.put("length", 20);
+        Page<SelectOptionDto>  selectOptionDtoPage = restTemplate.postForPage(
+                ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsQuotedCommon/queryCounterSidePage",
+                map, SelectOptionDto.class);
+
+        if (selectOptionDtoPage.getRoot().isEmpty()) {
+            return "";
+        }else{
+            return selectOptionDtoPage.getRoot().get(0).getText();
+        }
     }
     
     /**
@@ -1332,5 +1378,34 @@ public class EtrIbBondInfo004Service extends CommonExportService<EtrIbBondinfo00
         return true;
     }
 
-    
+    // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 add start
+    /**
+     * 查询证券托管户：联想框文本框
+     *
+     * @param parameters 画面参数
+     * @return 证券托管户：联想框文本框
+     * @see
+     * @since 1.0
+     */
+    public List<SelectOptionDto> getSecManageAcctId(Map<String, Object> parameters) {
+        List<SuggestDto> tempList = restTemplate.postForList(
+                ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrRepo/getSecManageAcctId",
+                parameters, SuggestDto.class);
+
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        if (!StringUtil.isEmptyList(tempList)) {
+            for (SuggestDto suggestDto : tempList) {
+                SelectOptionDto selectOptionDto = new SelectOptionDto();
+                selectOptionDto.setId(suggestDto.getCode());
+                selectOptionDto.setText(suggestDto.getName());
+                if (StringUtil.isNotBlank((String) parameters.get("portfolioId"))) {
+                    selectOptionDto.setParentId((String) parameters.get("portfolioId"));
+                }
+                resultList.add(selectOptionDto);
+            }
+        }
+
+        return resultList;
+    }
+    // ZGZGST-1631:计算全价需要证券账户 fuyongsheng 20210904 add end
 }

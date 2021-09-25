@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.joyintech.tams.valuation.component.batch.dao.ModAssetInfoMapper">
 
-	<select id="selectIncomeMethodAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+	<select id="selectIncomeMethodAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -10,6 +10,7 @@
 			A.VDATE VDATE,/**起息日**/
 			A.MDATE MDATE,/**到期日**/
 			A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
+			A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
 			D.TYPE_18 AS SEC_TYPE,/**证券品种**/
 			D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
 		FROM
@@ -17,14 +18,17 @@
 			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
 		WHERE
 			1 = 1
-			AND D.TYPE_18 = '01' AND (D.TYPE_1 = '033' OR (A.IS_SUS = '01' AND A.IS_RIGHT = '02'))/**优先股、不含权的永续债**/
+			AND (
+				(D.TYPE_18 = '01' AND D.TYPE_1 = '033')/**非可转、可交换、优先股且非永续**/
+				OR (D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'Y' AND A.IS_RIGHT = 'N')/**非可转、可交换、优先股且永续不含权**/
+			)
 			AND (
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
 			)
 			OR
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
 			)
 			)
 			<if test="finprodIdList != null and finprodIdList.size()>0 ">
@@ -40,7 +44,7 @@
 			</if>
 	</select>
 
-	<select id="selectBinaryTreeAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+	<select id="selectBinaryTreeAssetInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 			A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 			A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -52,21 +56,41 @@
 			C.CON_PRICE CON_PRICE,/**转股价格**/
 			A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
 			D.TYPE_18 AS SEC_TYPE,/**证券品种**/
-			D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
+			D.TYPE_1 AS SEC_TYPE_DETAIL, /**证券细分类**/
+			A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
+			F.TRADE_DATE AS lastTradeInDate,
+			SUM(G.UNIT_FPRICE * G.SHARE_AMT)/SUM(G.SHARE_AMT) AS lastTradeAvgFullPrice,/**最近买入交易日全价**/
+			SUM(CPRICE_AMT)/SUM(G.SHARE_AMT) AS lastTradeAvgClearPrice/**最近买入交易日净价**/
 		FROM
 			FIN_PRODUCT A /**标的类金融产品表**/
 			LEFT JOIN FIN_PRODUCT_CONVERTIBLE C ON A.FINPROD_ID = C.FINPROD_ID/**转股信息表**/
 			INNER JOIN FIN_PRODUCT_TYPE D ON A.FINPROD_ID = D.FINPROD_ID/**金融产品分类表**/
+			LEFT JOIN (
+				select FINPROD_ID,MAX(TRADE_DATE) AS TRADE_DATE from TRD_PRODUCT_DEAL E
+				where
+				1=1
+				<if test="finprodIdList != null and finprodIdList.size()>0 ">
+					AND E.FINPROD_ID IN(
+					<foreach item="item" index="index" collection="finprodIdList" separator=",">
+						#{item}
+					</foreach>
+					)
+				</if>
+				AND E.PS IN ('T01','T05')/**买入、申购**/
+				AND E.TRADE_DATE <![CDATA[ <= ]]>  #{searchDate,jdbcType=DATE}
+				GROUP BY FINPROD_ID
+			) F ON A.FINPROD_ID = F.FINPROD_ID
+			LEFT JOIN TRD_PRODUCT_DEAL G ON G.FINPROD_ID = F.FINPROD_ID AND G.TRADE_DATE = F.TRADE_DATE
 		WHERE
 			1 = 1
 			AND D.TYPE_18 = '01' AND (D.TYPE_1 = '028' OR D.TYPE_1 = '029')/**可转债、可交换债**/
 			AND (
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+			SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
 			)
 			OR
 			EXISTS (
-				SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+			SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
 			)
 			)
 			<if test="finprodIdList != null and finprodIdList.size()>0 ">
@@ -80,10 +104,23 @@
 				AND A.VDATE <![CDATA[ <= ]]> #{searchDate,jdbcType=DATE}/**起息日**/
 				AND A.MDATE <![CDATA[ >= ]]> #{searchDate,jdbcType=DATE}/**到期日**/
 			</if>
+		GROUP BY 	A.FINPROD_ID ,
+			A.FINPROD_ABBR ,
+			A.FINPROD_MARKET_ID ,
+			A.VDATE ,
+			A.MDATE ,
+			C.CON_FINPROD_ID ,
+			C.CON_VDATE ,
+			C.CON_PRICE ,
+			A.ISSUE_PRICE,
+			D.TYPE_18,
+			D.TYPE_1,
+			A.COUPON_SPECIES,
+			F.TRADE_DATE
 	</select>
 
     <!-- 获取现金流贴现法资产信息集合  -->
-    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
+    <select id="selectAssetInfo"  parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto">
 		SELECT
 		A.FINPROD_ID FINPROD_ID,/**金融产品代码**/
 		A.FINPROD_ABBR FINPROD_ABBR,/**金融产品简称**/
@@ -91,6 +128,7 @@
 		A.VDATE VDATE,/**起息日**/
 		A.MDATE MDATE,/**到期日**/
 		A.ISSUE_PRICE ISSUE_PRICE,/**发行价**/
+		A.COUPON_SPECIES AS COUPON_SPECIES,/***息票品种***/
 		D.TYPE_18 AS SEC_TYPE,/**证券品种**/
 		D.TYPE_1 AS SEC_TYPE_DETAIL /**证券细分类**/
 		FROM
@@ -100,19 +138,18 @@
 		1 = 1
 		AND (
 			(
-				D.TYPE_18 = '01' AND (
-				(D.TYPE_1 != '028' AND D.TYPE_1 != '029')/**可转债、可交换债**/ OR (A.IS_SUS = '01' AND A.IS_RIGHT = '01')/**包含永续含权债**/
-				)
+			(D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'N')/**非可转、可交换、优先股且非永续**/
+			OR (D.TYPE_18 = '01' AND D.TYPE_1 != '028' AND D.TYPE_1 != '029' AND D.TYPE_1 != '033' AND A.IS_SUS = 'Y' AND A.IS_RIGHT = 'Y')/**非可转、可交换、优先股且永续含权**/
 			)
 			OR D.TYPE_18 = '13' /**其他债权类资产**/
 		)
 		AND (
 		EXISTS (
-		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_PRICE = 'MOD' AND FINPROD_ID = A.FINPROD_ID
+		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL_SPECIAL	WHERE VALUATION_METHOD = '05' AND FINPROD_ID = A.FINPROD_ID
 		)
 		OR
 		EXISTS (
-		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_PRICE = 'MOD' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
+		SELECT 1 FROM BOK_VAL_SCHEME_DETAIL F WHERE VALUATION_METHOD = '05' AND D.TYPE_18 = F.SEC_TYPE AND (D.TYPE_1 = F.SEC_DETAIL_TYPE OR F.SEC_DETAIL_TYPE IS NULL)
 		)
 		)
 		<if test="finprodIdList != null and finprodIdList.size()>0 ">
@@ -250,31 +287,39 @@
     </select>
     <!-- 股票行情查询 -->
     <select id="getStockMarketInfo"  resultType="com.joyintech.tams.common.base.entity.MstSharePrice">
-    	SELECT A.CON_FINPROD_ID CON_FINPROD_ID,
-		       A.FINPROD_MARKET_ID FINPROD_MARKET_ID,
-		       A.DEAL_DATE DEAL_DATE,
-		       A.CLOSE_PRICE CLOSE_PRICE,
-		       A.PB PB,
-		       A.PE PE
-		  FROM
-			FIN_PRODUCT A
-			INNER JOIN  MST_SHARE_PRICE B ON A.FINPROD_MARKET_ID = B.SHARES_ID
-	    where 1=1
-	    <if test="stockIdList != null and stockIdList.size()>0 ">
-		   AND A.FINPROD_ID IN(
-		        <foreach item="item" index="index" collection="stockIdList" separator=",">
+		select
+			SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE
+		from (
+			select
+				SHARES_ID, DEAL_DATE, CLOSE_PRICE, PB, PE,rownum as r
+			from (
+				SELECT B.SHARES_ID,
+				B.DEAL_DATE,
+				B.CLOSE_PRICE,
+				B.PB          PB,
+				B.PE          PE
+				FROM MST_SHARE_PRICE B
+				INNER JOIN FIN_PRODUCT A
+				ON A.FINPROD_MARKET_ID = B.SHARES_ID
+				where 1 = 1
+				<if test="stockIdList != null and stockIdList.size()>0 ">
+					AND A.FINPROD_ID IN(
+					<foreach item="item" index="index" collection="stockIdList" separator=",">
 						#{item}
-				</foreach>
-		     )
+					</foreach>
+					)
+				</if>
+				<if test="searchDate != null">
+					and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
+				</if>
+				ORDER BY B.DEAL_DATE desc
+			)
+		) info
+		where 1=1
+		<if test="searchNum != null">
+			AND info.r &lt;= #{searchNum, jdbcType=NUMERIC}
 		</if>
-		<!-- 开始日期 -->
-		<if test="startDate != null">
-		  	AND B.DEAL_DATE >= #{startDate, jdbcType=DATE}
-		</if>
-		<if test="searchDate != null">
-		 	and B.DEAL_DATE &lt;= #{searchDate, jdbcType=DATE}
-		</if>
-		ORDER BY B.DEAL_DATE
+		order BY DEAL_DATE /**必须按日期升序排列，后续业务代码有要求**/
     </select>
     <!-- 曲线行情查询   -->
     <select id="selectYieldCurveInfo" parameterType="com.joyintech.tams.valuation.common.dto.modelDto.ModYeildCurveParamsDto" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModYieldCurveInfoDto">
@@ -293,12 +338,17 @@
 				</foreach>
 		     )
 		</if>
-		<!-- 开始日期 -->
+		<!-- 区间开始日期 -->
 		<if test="startDate != null">
 		  	AND A.CURVE_DATE >= #{startDate, jdbcType=DATE}
 		</if>
+		<!--区间结束日期-->
+		<if test="endDate != null">
+			AND A.CURVE_DATE &lt;= #{endDate, jdbcType=DATE}
+		</if>
+		<!--指定查询日期-->
 		<if test="searchDate != null">
-		 	and A.CURVE_DATE &lt;= #{searchDate, jdbcType=DATE}
+		 	and A.CURVE_DATE = #{searchDate, jdbcType=DATE}
 		</if>
 		ORDER BY A.CURVE_DATE,A.KEY_POINT
     </select>

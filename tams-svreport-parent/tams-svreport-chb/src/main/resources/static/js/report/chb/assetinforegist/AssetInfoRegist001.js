@@ -60,12 +60,27 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
 				{ title: "资产/负债类别",width:150 , field: 'assetType2',sortField:'assetType2'},
@@ -90,11 +105,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -105,7 +135,7 @@ $(function() {
 				{ title: "存款金额",width:100,sortField:'amt', field: 'amt', digit:2, type: 'money'},
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-				{ title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
+				{ title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 				{ title: "存款类型",width:100,sortField:'depoType', field: 'depoType'},
 //				{ title: "是否为结构性存款",width:150,sortField:'isStruct', field: 'isStruct'},
@@ -129,11 +159,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -144,7 +189,7 @@ $(function() {
 	            { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
 	            { title: "对手方",width:100,sortField:'rivalParty', field: 'rivalParty'},
 	            { title: "对手方类型",width:150,sortField:'rivalPartyType', field: 'rivalPartyType'},
-	            { title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
+	            { title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield', type: 'number', digit:5},
 	            { title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 	            { title: "回购标的类别",width:150,sortField:'targetType1', field: 'targetType1'},
 	            { title: "回购标的金额",width:150,sortField:'targetAmt', field: 'targetAmt', type: 'money', digit:2},
@@ -166,11 +211,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -208,11 +268,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -232,7 +307,7 @@ $(function() {
 //                { title: "项目期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 //delete by wm 删除中债不报送字段 end 20201031 
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "项目收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number' ,digit:5},
+                { title: "项目收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number' ,digit:5},
                 { title: "计息类型",width:150,sortField:'couponSpecies', field: 'couponSpecies'},
                 { title: "规则付息标识",width:150,sortField:'interestRuleFlag', field: 'interestRuleFlag'},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
@@ -241,7 +316,7 @@ $(function() {
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
                 { title: "基准利率种类",width:150,sortField:'basisType', field: 'basisType'},
                 { title: "是否有浮动因子",width:150,sortField:'floatFactorFlag', field: 'floatFactorFlag'},
-                { title: "浮动因子(%)",width:150,sortField:'floatFactor', field: 'floatFactor',type: 'number' ,digit:5},
+                { title: "浮动因子(%) ",width:150,sortField:'floatFactor', field: 'floatFactor',type: 'number' ,digit:5},
                 { title: "利差（BP）",width:150,sortField:'spreadRate', field: 'spreadRate',type: 'number' ,digit:5},
                 { title: "结构档次",width:150,sortField:'structGrade', field: 'structGrade'},
                 { title: "还本方式",width:150,sortField:'repaymentType', field: 'repaymentType'},
@@ -291,12 +366,12 @@ $(function() {
                 
                 { title: "选择权",width:150,sortField:'chose', field: 'chose'},
                 { title: "行权条件说明",width:150,sortField:'conditionCmm', field: 'conditionCmm'},
+                { title: "融资人所属地区",width:150,sortField:'finArea', field: 'finArea'},
                 
                 { title: "增信机构代码",width:150,sortField:'creditOrgCode', field: 'creditOrgCode'},
                 { title: "增信机构名称",width:150,sortField:'creditOrgName', field: 'creditOrgName'},
                 
-                { title: "融资人所属地区",width:150,sortField:'finArea', field: 'finArea'},
-                { title: "融资总费率(%)",width:150,sortField:'totalFeeRate', field: 'totalFeeRate',type: 'number' ,digit:5},
+                { title: "融资总费率(%) ",width:150,sortField:'totalFeeRate', field: 'totalFeeRate',type: 'number' ,digit:5},
                 { title: "融资人组织机构（社会信用）代码",width:150,sortField:'finOrgCode', field: 'finOrgCode'},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
@@ -316,11 +391,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'status', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -337,7 +427,7 @@ $(function() {
                 { title: "最短剩余期限（天）",width:150,sortField:'minRemainTerm', field: 'minRemainTerm'},
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-                { title: "贴现利率(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit:5},
+                { title: "贴现利率(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit:5},
                 //modify by wm 行业分类展示列修改  对应bug号 ZZOTZL-352 start
                 //{ title: "行业一级分类",width:150,sortField:'industryShares', field: 'industryShares'},
                 { title: "行业分类",width:150,sortField:'industryShares2', field: 'industryShares2'},
@@ -360,11 +450,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -382,14 +487,14 @@ $(function() {
                 
                 { title: "股权退出安排",width:150,sortField:'equityQuit', field: 'equityQuit',type: 'date'},
                 
-                { title: "投资企业类型（按规模划分）",width:200,sortField:'sharesType1', field: 'sharesType1'},
+			    { title: "投资企业类型（按规模划分）",width:200,sortField:'sharesType1', field: 'sharesType1'},
 			    { title: "投资企业类型（按技术领域划分）",width:200,sortField:'sharesType3', field: 'sharesType3'},
 			    { title: "投资企业类型（按经济类型划分）",width:200,sortField:'sharesType2', field: 'sharesType2'},
                 { title: "是否为质押融资",width:150,sortField:'isPledge', field: 'isPledge'},
                 
                 { title: "是否为债转股",width:150,sortField:'deptEquity', field: 'deptEquity'},
                 
-                { title: "备注",width:150,sortField:'remark', field: 'remark'},
+			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
 	var table07 = $('#dataTable07').joyintable({
@@ -407,11 +512,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -421,10 +541,10 @@ $(function() {
                 { title: "名称",width:150,sortField:'assetName', field: 'assetName'},
                 { title: "名义本金",width:150,sortField:'nomCapi', field: 'nomCapi', type: 'money'},
 				{ title: "标的类别",width:150,sortField:'targetType3', field: 'targetType3'},
-
+				
 				{ title: "持有目的",width:150,sortField:'holdPurpose', field: 'holdPurpose'},
 				
-				{ title: "备注",width:150,sortField:'remark', field: 'remark'},
+			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
 	var table08 = $('#dataTable08').joyintable({
@@ -442,11 +562,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -464,7 +599,7 @@ $(function() {
 	            { title: "期限(月）",width:100,sortField:'termMonth', field: 'termMonth'},
 				{ title: "发行机构主体信用评级",width:100,sortField:'partyGrade', field: 'partyGrade'},
 				{ title: "债券信用评级",width:100,sortField:'secCreditGradeType', field: 'secCreditGradeType'},
-                { title: "票面利率(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "票面利率(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
                 { title: "担保情况说明",width:150,sortField:'guaTypeRemark', field: 'guaTypeRemark'},
                 { title: "是否含权等特殊条款情况说明",width:150,sortField:'specialCmt', field: 'specialCmt'},
@@ -486,11 +621,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -501,7 +651,7 @@ $(function() {
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
 	            { title: "对手方",width:100,sortField:'rivalParty', field: 'rivalParty'},
-				{ title: "年利率(%)",width:100,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+				{ title: "年利率(%) ",width:100,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
 				{ title: "计息基础",width:100,sortField:'basis', field: 'basis'},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
@@ -521,11 +671,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -558,11 +723,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -573,16 +753,16 @@ $(function() {
                 { title: "合约名称",width:100,sortField:'contractName', field: 'contractName'},
                 { title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
                 { title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
-                { title: "票面利率(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "票面利率(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
-			    { title: "固定收益部分所占比例(%)",width:100,sortField:'incomeRatio', field: 'incomeRatio',type: 'number',digit:5},
-			    { title: "衍生金融工具所占比例(%)",width:100,sortField:'derInstrRatio', field: 'derInstrRatio',type: 'number',digit:5},
+			    { title: "固定收益部分所占比例(%) ",width:100,sortField:'incomeRatio', field: 'incomeRatio',type: 'number',digit:5},
+			    { title: "衍生金融工具所占比例(%) ",width:100,sortField:'derInstrRatio', field: 'derInstrRatio',type: 'number',digit:5},
 				{ title: "衍生金融工具具体投资方式",width:150 , field: 'derInstrInvType',sortField:'derInstrInvType'},
                 { title: "衍生金融工具挂钩标的资产",width:150,sortField:'derInstrTarget', field: 'derInstrTarget'},
                 { title: "利息结算方式",width:150,sortField:'acctMode', field: 'acctMode'},
                 { title: "含权情况说明",width:150,sortField:'specialCmt1', field: 'specialCmt1'},
-                { title: "结构化票据最高收益率(%)",width:150,sortField:'maxYield', field: 'maxYield',type: 'number',digit:5},
-                { title: "结构化票据最低收益率(%)",width:150,sortField:'minYield', field: 'minYield',type: 'number',digit:5},
+                { title: "结构化票据最高收益率(%) ",width:150,sortField:'maxYield', field: 'maxYield',type: 'number',digit:5},
+                { title: "结构化票据最低收益率(%) ",width:150,sortField:'minYield', field: 'minYield',type: 'number',digit:5},
                 { title: "挂钩标的资产基准价格",width:150,sortField:'basicPrice', field: 'basicPrice', type: 'money'},
                 { title: "挂钩标的资产登记日价格",width:150,sortField:'regDatePrice', field: 'regDatePrice', type: 'money'},
                 { title: "交易费",width:150,sortField:'tradeFee', field: 'tradeFee', type: 'money'},
@@ -604,11 +784,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -616,7 +811,7 @@ $(function() {
 				{ title: "交易流通场所",width:150 , field: 'tradeMarket',sortField:'tradeMarket'},
 				{ title: "币种",width:100 , field: 'ccy',sortField:'ccy'},
                 { title: "资管计划名称",width:150,sortField:'assetName', field: 'assetName'},
-
+                
                 { title: "是否由金融资产投资公司发行",width:250,sortField:'financialComissue', field: 'financialComissue'},
                 
                 { title: "资管计划发起人机构编码",width:100,sortField:'partyCode', field: 'partyCode'},
@@ -631,16 +826,18 @@ $(function() {
                 { title: "资管计划终止日期",width:150,sortField:'planEdate', field: 'planEdate', type: 'date'},
                 { title: "资管计划属性",width:150,sortField:'proProperty', field: 'proProperty'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "预期最高收益率(%)",width:150,sortField:'maxRate', field: 'maxRate',type: 'number',digit:5},
-                { title: "预期最低收益率(%)",width:150,sortField:'minRate', field: 'minRate'},
+                { title: "预期最高收益率(%) ",width:150,sortField:'maxRate', field: 'maxRate',type: 'number',digit:5},
+                { title: "预期最低收益率(%) ",width:150,sortField:'minRate', field: 'minRate'},
                 { title: "购买结构",width:150,sortField:'buyStruct', field: 'buyStruct'},
                 { title: "管理方式",width:150,sortField:'manageType', field: 'manageType'},
-                /*{ title: "是否掌控计划底层资产详情",width:150,sortField:'isCtrlBottom', field: 'isCtrlBottom'},*/
-                { title: "管理费率(%)",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate',type: 'number',digit:5},
-                { title: "托管费率(%)",width:150,sortField:'truFeeRate', field: 'truFeeRate',type: 'number',digit:5},
-                { title: "交易相关合计费率(%)",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate',type: 'number',digit:5},
-                { title: "中介服务机构合计费率(%)",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate',type: 'number',digit:5},
-                { title: "其他合计费率(%)",width:150,sortField:'otherFeeRate', field: 'otherFeeRate',type: 'number',digit:5},
+                //delete by wm 去除中债升级不需要字段 20201104 start
+                // { title: "是否掌控计划底层资产详情",width:150,sortField:'isCtrlBottom', field: 'isCtrlBottom'},
+                //delete by wm 去除中债升级不需要字段 20201104 end
+                { title: "管理费率(%) ",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate',type: 'number',digit:5},
+                { title: "托管费率(%) ",width:150,sortField:'truFeeRate', field: 'truFeeRate',type: 'number',digit:5},
+                { title: "交易相关合计费率(%) ",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate',type: 'number',digit:5},
+                { title: "中介服务机构合计费率(%) ",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate',type: 'number',digit:5},
+                { title: "其他合计费率(%) ",width:150,sortField:'otherFeeRate', field: 'otherFeeRate',type: 'number',digit:5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -659,11 +856,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -674,7 +886,7 @@ $(function() {
 			    { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
                 { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 { title: "资产价值",width:150,sortField:'assetValue', field: 'assetValue', type: 'money'},
-                { title: "资产收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
+                { title: "资产收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit:5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -693,11 +905,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -709,7 +936,7 @@ $(function() {
 				{ title: "起息日",width:100,sortField:'vdate', field: 'vdate', type: 'date'},
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
                 { title: "资产价值",width:150,sortField:'assetValue', field: 'assetValue', type: 'money'},
-                { title: "资产收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit: 5},
+                { title: "资产收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield',type: 'number',digit: 5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -728,11 +955,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -776,11 +1018,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -800,13 +1057,13 @@ $(function() {
                 { title: "投资运作终止日期",width:150,sortField:'planEdate', field: 'planEdate', type: 'date'},
                 { title: "委外投资属性",width:150,sortField:'proProperty', field: 'proProperty1'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "预期最高收益率(%)",width:150,sortField:'maxRate', field: 'maxRate', type: 'number',digit :5},
-                { title: "预期最低收益率(%)",width:150,sortField:'minRate', field: 'minRate', type: 'number',digit :5},
-                { title: "管理费率(%)",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate', type: 'number',digit :5},
-                { title: "托管费率(%)",width:150,sortField:'truFeeRate', field: 'truFeeRate', type: 'number',digit :5},
-                { title: "交易相关合计费率(%)",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate', type: 'number',digit :5},
-                { title: "中介服务机构合计费率(%)",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate', type: 'number',digit :5},
-                { title: "其他合计费率(%)",width:150,sortField:'otherFeeRate', field: 'otherFeeRate', type: 'number',digit :5},
+                { title: "预期最高收益率(%) ",width:150,sortField:'maxRate', field: 'maxRate', type: 'number',digit :5},
+                { title: "预期最低收益率(%) ",width:150,sortField:'minRate', field: 'minRate', type: 'number',digit :5},
+                { title: "管理费率(%) ",width:150,sortField:'mgrFeeRate', field: 'mgrFeeRate', type: 'number',digit :5},
+                { title: "托管费率(%) ",width:150,sortField:'truFeeRate', field: 'truFeeRate', type: 'number',digit :5},
+                { title: "交易相关合计费率(%) ",width:150,sortField:'tradeFeeRate', field: 'tradeFeeRate', type: 'number',digit :5},
+                { title: "中介服务机构合计费率(%) ",width:150,sortField:'agencyFeeRate', field: 'agencyFeeRate', type: 'number',digit :5},
+                { title: "其他合计费率(%) ",width:150,sortField:'otherFeeRate', field: 'otherFeeRate', type: 'number',digit :5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -825,11 +1082,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -840,7 +1112,7 @@ $(function() {
 			    { title: "名称",width:100,sortField:'assetName', field: 'assetName'},
                 { title: "期限(天）",width:150,sortField:'termDate', field: 'termDate',digit:0},
                 { title: "负债规模",width:150,sortField:'debtScale', field: 'debtScale'},
-                { title: "利率(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
+                { title: "利率(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
@@ -859,11 +1131,26 @@ $(function() {
 				{ field: 'registSeqno',visible:false},
 	            { field: 'status',visible:false},
 	            { field: 'sendStatus',visible:false},
+				{ field: 'sumitSeq',visible:false},
 				{ title: "数据状态",width:100 , field: 'statusName',sortField:'status'},
 				{ title: "数据日期",width:100 , field: 'statusDate',sortField:'statusDate', type: 'datetime'},
-				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus'},
+				{ title: "报送状态",width:100 , field: 'sendStatusName',sortField:'sendStatus',
+					render:function (value,visible,row,options) {
+						if(value == "接口报送"){
+							return '<a href="javascript:void(0)" class="sendStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送截止日",width:100 , field: 'chbSubmitDeadline',sortField:'chbSubmitDeadline', type: 'datetime'},
-				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus'},
+				{ title: "反馈状态",width:100 , field: 'submitFeedbackStatus',sortField:'submitFeedbackStatus',
+					render:function (value,visible,row,options) {
+						if(value == "发送中" || value == "发送异常"){
+							return '<a href="javascript:void(0)" class="feedbackStatusClass">'+value+'</a>';
+						}else{
+							return value;
+						}
+					}},
 				{ title: "报送日期",width:100 , field: 'submitTime', type: 'date',sortField:'submitTime', type: 'datetime'},
 				{ title: "行内资产/负债编码",width:150 , field: 'assetCode',sortField:'assetCode'},
 				{ title: "发行机构代码",width:150 , field: 'issuePartyId',sortField:'issuePartyId'},
@@ -878,7 +1165,7 @@ $(function() {
 				{ title: "到期日",width:100,sortField:'mdate', field: 'mdate', type: 'date'},
                 { title: "所属国家或地区",width:150,sortField:'countryArea', field: 'countryArea'},
                 { title: "是否有预期收益率",width:150,sortField:'rateFlag', field: 'rateFlag'},
-                { title: "项目收益率（利率）(%)",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
+                { title: "项目收益率（利率）(%) ",width:150,sortField:'assetYield', field: 'assetYield', type: 'number',digit :5},
                 { title: "付息频率（个月/次）",width:150,sortField:'intpayCycle', field: 'intpayCycle'},
                 { title: "融资人",width:150,sortField:'financie', field: 'financie'},
                 { title: "融资人组织机构（社会信用）代码",width:150,sortField:'finOrgCode', field: 'finOrgCode'},
@@ -907,6 +1194,70 @@ $(function() {
 			    { title: "备注",width:150,sortField:'remark', field: 'remark'},
 				]
 	});
+
+	//打开中债反馈文件管理页面
+	var openFeedbackFileFun = function(data, index){
+		Joyin.dialog(JoyinUtil.getLabel("中债反馈文件管理"),
+			basePath + "svreport/system/chbfeedbackfilemanagement/ChbFeedbackFileManagement001/init",
+			"95%", "96%", {		//pageModel:PAGE_MODEL_REFERENCE,
+				reportEtrType:SVR_REPORT_CODE,    //报表类型
+				handleStatus:FILE_HANDLE_STATUS,       //处理状态-未处理
+				repSeqNo:data.sumitSeq,       //报送流水号
+				// reportSendDate:'',
+				// reportAcceptDate:''
+			});
+	};
+	//绑定点击跳转发送状态信息查询页面
+	var openReportStatusInfoFun = function(data, index) {
+		Joyin.dialog(JoyinUtil.getLabel("发送状态信息查询"),
+			basePath + "svreport/system/reportstatusinfo/ReportStatusInfo001/init",
+			"95%", "96%", {       //pageModel:PAGE_MODEL_REFERENCE,
+				repType:SVR_REPORT_CODE,    //报表类型
+				registSeqNo:data.registSeqno,       //报送流水号
+			});
+	};
+
+	//绑定点击跳转反馈文件管理页面事件
+	table00.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table01.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table02.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table03.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table04.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table05.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table06.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table07.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table08.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table09.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table10.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table11.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table12.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table13.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table14.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table15.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table16.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table17.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	table18.bind('click', '.feedbackStatusClass', openFeedbackFileFun);
+	//绑定点击跳转反馈文件管理页面事件
+	table00.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table01.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table02.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table03.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table04.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table05.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table06.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table07.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table08.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table09.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table10.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table11.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table12.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table13.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table14.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table15.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table16.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table17.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+	table18.bind('click', '.sendStatusClass', openReportStatusInfoFun);
+
 	// 查询按钮点击事件
 	$('#SvrAssetInfoRegist001_btn_search').click(function() {
 		var assetTypes = $('#assetType').val();
@@ -937,7 +1288,7 @@ $(function() {
 //		}
 		var expArr = table.getAllCheckedRows();
 		var param = {};
-		if ((!expArr || expArr.length == 0)&&assetTypes==null) {
+		if ((!expArr || expArr.length == 0)&& (assetTypes==null || assetTypes=='' )) {
 			param = getSearchParams();
             param.flag = flag;
             if(flag=="0"){
@@ -1014,13 +1365,25 @@ $(function() {
 		var assetTypes = $('#assetType').val();
 		var table = getTable(assetTypes);
 		Joyin.exportExcel("export", param);
-        Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
-        	layui.layer.open({type:3});
-            Joyin.ajaxJson('manual', {keyList : JSON.stringify(expArr)}, function() {
-                table.load();
-                layui.layer.closeAll();
+		//判断所选导出的数据是否已经报送送成功，若报送成功，则无需"手工处理"，只对报送失败的数据进行处理
+        var isNotSendData = false;
+		for(var j=expArr.length-1;j>=0;j--){
+		    if(expArr[j].sendStatus=="01" || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回'))) {
+                  isNotSendData = true;//有未报送成功的数据
+            }
+            if(!(expArr[j].sendStatus == '01' || (expArr[j].sendStatus == '02' && (expArr[j].submitFeedbackStatus == '发送失败' || expArr[j].submitFeedbackStatus == '中债退回')))){
+                   expArr.splice(j,1);
+            }
+        }
+		if (isNotSendData){
+            Joyin.confirm("导出成功，是否自动标识未报送数据的报送状态为“手工处理”？", function() {
+            	layui.layer.open({type:3});
+                Joyin.ajaxJson('manual', {keyList : JSON.stringify(expArr)}, function() {
+                    table.load();
+                    layui.layer.closeAll();
+                });
             });
-        });
+		}
 	};
 
     //导出删除模板

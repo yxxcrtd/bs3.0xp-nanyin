@@ -163,9 +163,13 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
                 getCommonExcuteDtoByTrade(entity, 交易流程状态, baseTradeInfoDto,baseTradeProductDealDtos);
             });
             tradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos);
+            baseTradeProductDealCommServiceImpl.execute(tradeDto);
+//        子组合调用共通
+            execute交易共通子组合(entity,交易流程状态,false);
         } else {
             List<BaseTradeProductDealDto> baseTradeProductDealDtos1 = periodCommonService.findEffectiveDeal(entity.getpTradeId(),交易流程状态);
             for (BaseTradeProductDealDto baseTradeProductDealDto : baseTradeProductDealDtos1) {
+                baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
                 TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
                 deal1.setTradeId(deal1.getTradeId() + 'R');
                 if(deal1.getShareAmt() == null){ // if(deal1.getPrinAmt() != null){ 不能直接把本金设置给交易份额
@@ -179,11 +183,32 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
                 getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
             }
             tradeDto.setBaseTradeProductDealDtos(baseTradeProductDealDtos1);
+            baseTradeProductDealCommServiceImpl.execute(tradeDto);
+//        子组合调用共通
+            execute交易共通子组合(entity,交易流程状态,false);
+
+            if (!DictCodeList.交易方向_红利再投.getValue().equals(entity.getPs())) {// 撤销现金分红的除权登记交易时，同时撤销现金分红的持仓
+                List<BaseTradeProductDealDto> total现金分红交易 = periodCommonService.findBTradeEffectiveDeal(entity.getpTradeId());
+                if (total现金分红交易 != null && !total现金分红交易.isEmpty()) {// 红利再投的除权登记交易时，这里应该检索不到数据，不处理
+                    for (BaseTradeProductDealDto baseTradeProductDealDto : total现金分红交易) {
+                        baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
+                        TrdProductDeal deal1 = baseTradeProductDealDto.getTrdProductDeal();
+                        deal1.setTradeId(deal1.getTradeId() + 'R');
+                        deal1.setCreateUser(tradeDto.getCreateUser());
+                        deal1.setCreateTime(tradeDto.getCreateTime());
+                        deal1.setCreateDept(tradeDto.getCreateDept());
+                        deal1.setUpdateTime(tradeDto.getUpdateTime());
+                        deal1.setUpdateUser(tradeDto.getUpdateUser());
+                        getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
+                    }
+                    tradeDto.setBaseTradeProductDealDtos(total现金分红交易);
+                    baseTradeProductDealCommServiceImpl.execute(tradeDto);
+                    execute交易共通子组合(entity, 交易流程状态,true);
+                }
+            }
         }
 
-        baseTradeProductDealCommServiceImpl.execute(tradeDto);
-//        子组合调用共通
-        execute交易共通子组合(entity,交易流程状态);
+
     }
     /**
      * 根据交易dto组装共同dto
@@ -221,6 +246,7 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
         if (baseTradeInfoDto.getStlPayOrders() != null) {
             BeanUtils.copyProperties(baseTradeInfoDto.getStlPayOrders(), orders);
         }
+        baseTradeProductDealDto.setExRightsDate(entity.getExRightsDate());
         baseTradeProductDealDto.setStlPayOrdersList(Arrays.asList(new StlPayOrdersDto[]{orders}));
         baseTradeProductDealDtos.add(baseTradeProductDealDto);
         getInterfInputDto(entity, baseTradeProductDealDto, 交易流程状态);
@@ -592,7 +618,7 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
      *
      */
 //        子组合调用共同
-    public void execute交易共通子组合(TrdPlanNetDuration001Dto entity, DictCodeListExt1 交易流程状态){
+    public void execute交易共通子组合(TrdPlanNetDuration001Dto entity, DictCodeListExt1 交易流程状态, boolean 现金分红交易){
         // 调用业务组件.【金融产品交易共通.交易产品接口】
         FinProductTradeDto tradeDto = new FinProductTradeDto();
         tradeDto.setNeedSum(true);
@@ -613,7 +639,13 @@ public class TrdPlanNetDurationDealEntity extends BaseService<TrdPlanNetDuration
             Map<String,Object>map = new HashMap<>();
             map.put("statusValid", 交易流程状态.getValue());
             map.put("statusValid03", DictCodeListExt1.交易流程状态_撤销.getValue());
-            map.put("bizCode", entity.getpTradeId());
+//            map.put("bizCode", entity.getpTradeId());
+            if (现金分红交易) {
+                map.put("bTrade", entity.getpTradeId());
+            }
+            else {
+                map.put("bizCode", entity.getpTradeId());
+            }
             baseTradeProductDealDtos.addAll(periodCommonService.getChiledTradeProductDealInfo(map));
             // 调用投管接口 add by qcx 20190206 start
             baseTradeProductDealDtos.forEach(baseTradeProductDealDto -> {

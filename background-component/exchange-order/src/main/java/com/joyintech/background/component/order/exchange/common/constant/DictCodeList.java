@@ -300,6 +300,13 @@ public enum DictCodeList implements BaseDictCodeList {
     ),
     回购拆借方向_正回购(DictCode.回购拆借方向,"03","正回购"),
 	回购拆借方向_逆回购(DictCode.回购拆借方向,"04","逆回购"),
+
+    // add by wanshiwei 20210922：指令创建来源 start
+    指令创建来源_场内簿记(DictCode.指令创建来源, "01", "场内簿记"),
+    指令创建来源_场内实时(DictCode.指令创建来源, "02", "场内实时"),
+    指令创建来源_银行间簿记(DictCode.指令创建来源, "03", "银行间簿记"),
+    指令创建来源_银行间实时(DictCode.指令创建来源, "04", "银行间实时"),
+    // add by wanshiwei 20210922：指令创建来源 end
     ;
 
     /**

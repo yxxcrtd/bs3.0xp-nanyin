@@ -85,22 +85,20 @@ public class ValAssetBookParameter002Controller extends BaseController {
 	 * 下拉框 ： 参数代码
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("findParam")
-	public Page<SelectOptionDto> findParam() throws Exception {
+	public Page<SelectOptionDto> findParam() {
 		return valAssetBookParameter002Service.findParam(RequestUtil.getPageParam());
 	}
 	
 	/**
 	 * 通过参数名，获取参数值
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getParamValue")
-	public ValAssetBookParameter002Dto getParamValue() throws Exception {
+	public ValAssetBookParameter002Dto getParamValue() {
 		return valAssetBookParameter002Service.getParamValue(RequestUtil.getPageParam());
 	}
 

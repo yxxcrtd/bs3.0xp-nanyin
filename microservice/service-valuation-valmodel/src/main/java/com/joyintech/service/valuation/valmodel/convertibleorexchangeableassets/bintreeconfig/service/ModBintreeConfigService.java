@@ -20,6 +20,7 @@ import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,6 +145,18 @@ public class ModBintreeConfigService extends BaseService<ModBintreeConfigDto> {
 	public Page<SelectOptionDto> getCurveCode(int page, int length, Map<String, Object> param)
 			throws Exception {
 		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getCurveCode(param));
+	}
+
+	/**
+	 * 股票代码
+	 * @param page
+	 * @param length
+	 * @param assetInfoDto
+	 * @return
+	 * @throws Exception
+	 */
+	public Page<SelectOptionDto> getAssetInfo(int page, int length, Map<String, Object> param) throws Exception {
+		return super.queryForPageForSelectReturn(page, length, () -> modBintreeConfigDtoMapper.getAssetInfo(param));
 	}
    
 }

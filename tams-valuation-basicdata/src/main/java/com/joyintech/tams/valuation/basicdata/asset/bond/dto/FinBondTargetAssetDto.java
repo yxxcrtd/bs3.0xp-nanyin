@@ -965,7 +965,7 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
      */
     @Override
     @Length(fieldName = "FinBondTargetAsset002.finprodName", max = 200, groups = {ValidateGroupEdit.class})
-  //  @NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
+    //@NotEmpty(fieldName = "FinBondTargetAsset002.finprodName", groups = {ValidateGroupEdit.class})
     public String getFinprodName(){
         return super.getFinprodName();
     }
@@ -1830,12 +1830,12 @@ public class FinBondTargetAssetDto extends FinProduct implements ITableRow,Proce
 
     public String getRateStr() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00#");
-        return decimalFormat.format(this.getRate().setScale(2,BigDecimal.ROUND_HALF_UP));
+        return this.getRate()==null?"0.00":decimalFormat.format(this.getRate().setScale(2,BigDecimal.ROUND_HALF_UP));
     }
 
     public String getIssuePriceStr() {
         DecimalFormat decimalFormat = new DecimalFormat("0.00#");
-        return decimalFormat.format(this.getIssuePrice().setScale(2,BigDecimal.ROUND_HALF_UP));
+        return this.getIssuePrice()==null?"0.00":decimalFormat.format(this.getIssuePrice().setScale(2,BigDecimal.ROUND_HALF_UP));
     }
 
 

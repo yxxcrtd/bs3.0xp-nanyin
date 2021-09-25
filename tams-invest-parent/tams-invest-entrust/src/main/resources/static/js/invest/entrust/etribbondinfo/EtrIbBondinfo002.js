@@ -60,6 +60,19 @@
         return object;
     };
 
+    $("#businessModel").on("change", function () {
+        var invAim;
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            var businessModel = $("#businessModel").val();
+            if(businessModel=="Y1"){
+                invAim = "AC"
+            }else{
+                invAim = "FVTPL"
+            }
+        }
+        $("#invAim").val(invAim);
+    });
+
     /**
      * 获取风险试算参数
      *
@@ -68,7 +81,7 @@
      */
     function getSearchParams() {
         var object = $.serializeToObject("#searchForm");
-        object.entrustNum = object.entrustNum * 10000; //页面单位是万元
+        // object.entrustNum = object.entrustNum * 10000; //页面单位是万元
         return object;
     }
 
@@ -150,26 +163,56 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
+        if (query("#finprodIdhid").val() && query("#price").val()) {
+            var paramObj = {};
+            paramObj.finprodId = query("#finprodIdhid").val();
+            if(query("#finprodId").val()){
+                paramObj.finprodMarketId = query("#finprodId").val();
+            }
+            paramObj.unitCprice = query("#price").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
+            });
+        } else {
+            $("#deviationDegree").text("");
+        }
+    }
+    var changeBussnissModelByFinprodId = function(){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
             return;
         }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: query("#price").val(),
-                finprodId: query("#finprodId").val(),
-                vdate:query('#vdate').val()
-            }, function (result) {
-            if (result ) {
-                document.getElementById('deviationDegree').innerHTML ="<span style='color: red'>"+
-                    JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-            }
-        });
+        var finprodId = $('#finprodId').val();
+        if(finprodId){
+            var data = {finprodId:finprodId }
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                if(result.data=='0') {
+                    Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                    //$('#finprodId').val("").trigger('change');
+                    $("#businessModel").attr("disabled",false);
+                    $('#businessModel').val("").trigger('change');
+                }else if(result.data=='3'){
+                    $('#businessModel').val("Y2").trigger('change');
+                    $("#businessModel").attr("disabled",true);
+                }else if(result.data=='2') {
+                    $("#businessModel").attr("disabled",false);
+                    $('#businessModel').val("").trigger('change');
+                }
+            });
+        }else{
+            $("#businessModel").attr("disabled",false);
+            $('#businessModel').val("").trigger('change');
+        }
+
     }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
+        if(!calflag){
+            calflag =  query("input[name=calculateField]:checked").val();
+        }
+        if (!query("#"+calflag).val()) {
+            return;
+        }
         if (!initFlag) {
             let finvdate = query("#vdate").val();
             let finmdate = query("#mdate").val();
@@ -222,6 +265,14 @@
                     object.entrustNum = String(entrustNum);
                 } else {
                     return;
+                }
+            }
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+                var businessModel = $("#businessModel").val();
+                if(businessModel=="Y1"){
+                    object.invAim = "AC"
+                }else{
+                    object.invAim = "FVTPL"
                 }
             }
 
@@ -303,10 +354,18 @@
         }
     };
 
+
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            getLeftZHinfo();
+        }
+    },2000);
+
     /**
      * 初始化
      */
     var init = function () {
+        query("#calculateField_price").prop('checked', true);
         if (todoList == false) {
             query('#EtrIbBondinfo002_btn_fileupload').css('display', 'none');
             query('#EtrIbBondinfo002_btn_riskcal').css('display', 'none');
@@ -644,6 +703,14 @@
         if(!object){
             return;
         }
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            var businessModel = $("#businessModel").val();
+            if(businessModel=="Y1"){
+                object.invAim = "AC"
+            }else{
+                object.invAim = "FVTPL"
+            }
+        }
 
         Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
             if (operateType === "save") {
@@ -807,9 +874,7 @@
                 }
             }
             if (pageModel != PAGE_MODEL_REFERENCE) {
-                if (query("#price").val()) {
-                    calData("price");
-                }
+                calData();
             }
             // 画星星
             star();
@@ -852,9 +917,8 @@
                 query("#finmdate").val(new Date(data.finmdate)).trigger("change");
                 query("#ccy").val(data.ccy).trigger("change").attr("disabled", true);
                 checkFinMdate();
-                if (query("#price").val()) {
-                    calData("price");
-                }
+                changeBussnissModelByFinprodId();
+                calData();
             } else {
                 // 为空
                 query("#finprodIdhid").val("").trigger("change");
@@ -916,20 +980,14 @@
          */
         query("#mdate").change(function () {
             checkFinMdate();
-            if (query("#price").val()) {
-                calData("price");
-            }
+            calData();
         });
 
         /**
          * 清算速度
          */
         query("#settleSpreed").change(function () {
-            if (query("#price").val() || query("#exerYield").val() || query("#matureYield").val()) {
-                if (query("#price").val()) {
-                    calData("price");
-                }
-            }
+            calData();
         });
 
         /**
@@ -1021,10 +1079,8 @@
                 }
 
                 query('#finprodId').trigger("change"); // 触发star功能
-                
-                if (query("#price").val()) {
-                    calData("price");
-                }
+
+                calData();
             }
         });
 

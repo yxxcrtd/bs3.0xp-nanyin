@@ -24,7 +24,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    List<ModStockdivitrateConfig> selectStockIntrateByFinprodIds(List<String> finprodIds);
+    List<ModStockdivitrateConfig> selectStockIntrateByFinprodIds(@Param("finprodIds")List<String> finprodIds);
 
     /**
      * @Description:批量插入债券估值行情表
@@ -33,7 +33,7 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int insertValuationResultPremium(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
+    int insertValuationResult(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
     /**
      * @Description:批量删除债券估值行情表
      * @auther: yuzj
@@ -41,9 +41,35 @@ public interface IncomeMethodMapper {
      * @param:
      * @return:
      */
-    int deleteValuationResultPremium(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
+    int deleteValuationResult(@Param("valuationResultList")List<ModCurveResult> valuationResultList);
 
+    /**
+     * 插入债券估值行情
+     * @param listInsert
+     */
     void insertMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
 
+    /**
+     * 删除债券估值行情
+     * @param listInsert
+     */
     void deleteMstBondValuationInfo(List<MstBondValuationInfo> listInsert);
+
+//    /**
+//     * @Description:批量插入资产定价表
+//     * @auther: yuzj
+//     * @date: 2021/7/8
+//     * @param:
+//     * @return:
+//     */
+//    int insertModRiskPremium(@Param("makePriceResultPremium")List<ModRiskPremium> makePriceResultPremium);
+//    /**
+//     * @Description:批量删除资产定价表
+//     * @auther: yuzj
+//     * @date: 2021/7/8
+//     * @param:
+//     * @return:
+//     */
+//    int deleteModRiskPremium(@Param("makePriceResultList")List<ModRiskPremium> makePriceResultList);
+
 }

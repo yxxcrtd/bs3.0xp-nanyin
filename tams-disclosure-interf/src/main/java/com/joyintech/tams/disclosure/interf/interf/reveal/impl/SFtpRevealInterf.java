@@ -51,7 +51,6 @@ public class SFtpRevealInterf implements RevealInterf{
 				list.add(msg);
 			} catch (Exception e) {
 				logger.error("error",e);
-				e.printStackTrace();
 			}
 		}
 		
@@ -74,7 +73,7 @@ public class SFtpRevealInterf implements RevealInterf{
 	 * @return
 	 * @throws Exception
 	 */
-	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) throws Exception {
+	public Boolean ftpPushFile(RepFtpPath ftpPath,String filePath,String filename, String option) {
 		boolean flag = false;
 
 			

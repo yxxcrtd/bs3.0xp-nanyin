@@ -18,6 +18,7 @@ var table;
     	  data: (entity && entity.trdTransfenpeiDtoList) ? entity.trdTransfenpeiDtoList : [],
           searchOnInit:true,
           height:'225px',
+          page:false,
           cols:[
               {field:'entrustId',  width:100,title: 'TrdInvestFenPeiInfo.entrustId',edit:true, sortable:false,type:'text'}
               ,{field:'portfolioId', width:200,  title: 'TrdInvestFenPeiInfo.busiId',edit:true,sortable: false,
@@ -31,6 +32,8 @@ var table;
                ,{field:'cpriceAmt',width:100,  title: 'TrdInvestFenPeiInfo.cpriceAmt',sortable:false,type:'number', digit:2}
                ,{field:'intAmt',width:100, title: 'TrdInvestFenPeiInfo.intAmt',sortable:false,type:'number', digit:2}
                ,{field:'fpriceAmt',width:100, title: 'TrdInvestFenPeiInfo.fpriceAmt',sortable:false,type:'number', digit:2}
+               ,{field:'businessModel',width:100, title: '业务模式' , visible: false ,edit:false,editOption:{type:'select',formatoption:true,showField: 'text',result: BUSINESS_MODEL}}
+               ,{field:'businessModelStr',width:100, title: '业务模式'  ,edit:false,editOption:{type:'select',formatoption:true,showField: 'text',result: BUSINESS_MODEL}}
                ,{field:'bussTrdAvailableCashQueryavalibleCash', width:100,title: 'TrdInvestFenPeiInfo.bussTrdAvailableCashQueryavalibleCash',sortable:false,type:'number', digit:2}
                ,{field:'bussTrdAvailableCashQueryavalibleCash1',width:100, title: 'TrdInvestFenPeiInfo.bussTrdAvailableCashQueryavalibleCash1',sortable:false,type:'number', digit:2}
                ,{field:'operation', width:100,title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt']}
@@ -521,6 +524,10 @@ var table;
                             }
                             if(element.etrEntrust.invAim){
                                 rowData.investaim = element.etrEntrust.invAim;//投资目的
+                            }
+                             if(element.etrEntrust.businessModel){
+                                rowData.businessModelStr = element.etrEntrust.businessModel=='Y1'?'收取合同现金流':'出售';//
+                                rowData.businessModel = element.etrEntrust.businessModel //
                             }
                             if(element.etrEntrust.entrustAmt){
                                 rowData.tradeAmtAndFee = element.etrEntrust.entrustAmt;//交易金额

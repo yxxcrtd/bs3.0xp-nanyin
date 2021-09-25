@@ -6,7 +6,8 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.listener.ImpairmentDataLoadListener;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
+import com.joyintech.tams.model.impairment.batch.common.LossModelCommonListener;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.processor.ImpairmentDataLoadDelProcessor;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.processor.ImpairmentDataLoadProcessor;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.processor.ImpairmentDataLoadStep2Processor;
@@ -16,6 +17,7 @@ import com.joyintech.tams.model.impairment.batch.impairmentdataload.reader.Impai
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadDelWriter;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadStep2Writer;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.writer.ImpairmentDataLoadWriter;
+import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -91,7 +94,10 @@ public class ImpairmentDataLoadTask extends BatchBaseService {
     private ImpairmentDataLoadDelWriter impairmentDataLoadDelWriter;
 
     @Autowired
-    private ImpairmentDataLoadListener impairmentDataLoadListener;
+    private LossModelCommonListener lossModelCommonListener;
+
+    @Autowired
+    private ModParamsService modParamsService;
 
     @Override
     public JobExecution execute() throws BatchException {
@@ -108,6 +114,8 @@ public class ImpairmentDataLoadTask extends BatchBaseService {
 //        把执行日期当作平台日来替换处理
         params.put("PLATE_DATE", batchExecuteInfo.getExecuteDate());
         params.put("TASK_ID",batchExecuteInfo.getTaskId());
+        List<ModValBatchParams> listBatch = modParamsService.selectByBatchExecSeqno(batchExecuteInfo.getBatchExedetailSeqNo());
+        params.put("listBatch", listBatch);
         // 各步骤设置参数
         impairmentDataLoadReader.setParams(params);
         impairmentDataLoadProcessor.setParams(params);
@@ -118,12 +126,13 @@ public class ImpairmentDataLoadTask extends BatchBaseService {
         impairmentDataLoadDelReader.setParams(params);
         impairmentDataLoadDelProcessor.setParams(params);
         impairmentDataLoadDelWriter.setParams(params);
+        lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         return batchBuilder.init(this)
                 .batch("step0", (BaseReader)impairmentDataLoadDelReader,(BaseProcessor)impairmentDataLoadDelProcessor, (BaseWriter)impairmentDataLoadDelWriter)
                 .batch("step1", (BaseReader)impairmentDataLoadReader,(BaseProcessor)impairmentDataLoadProcessor, (BaseWriter)impairmentDataLoadWriter)
                 .batch("step2", (BaseReader)impairmentDataLoadStep2Reader,(BaseProcessor)impairmentDataLoadStep2Processor, (BaseWriter)impairmentDataLoadStep2Writer)
                 .builder(this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-                        , impairmentDataLoadListener).run();
+                        , lossModelCommonListener).run();
     }
 }

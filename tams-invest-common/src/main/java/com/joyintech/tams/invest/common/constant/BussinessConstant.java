@@ -233,6 +233,11 @@ public interface BussinessConstant {
     String VALUATION_FILTER_URL = "com.joyintech.tams.invest.risk.valtblimport.filtertools.";
 
     /**
+     * 估值表批量过滤器路径
+     */
+    String VALUATION_BATCH_FILTER_URL = "com.joyintech.tams.invest.batch.valbatchimport.filter.";
+
+    /**
      * 过滤器合并列
      */
     String VALUATION_FILTER_MERGECOL = "MergeColsFilter";
@@ -483,4 +488,14 @@ public interface BussinessConstant {
     
     //债券面值，暂定100
     static final int BOND_PRICE = 100;
+
+    /**
+     * 资产不满足中债报送数据时是否允许加券
+     */
+    String IS_PERMIT_ADDCOUPON = "IS_PERMIT_ADDCOUPON";
+
+    /**
+     * 中债导入估值表中文件名称拆分分隔符：估值表
+     */
+    String CHB_VAL_SPLIT_STR = "CHB_VAL_SPLIT_STR";
 }

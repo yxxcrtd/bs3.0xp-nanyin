@@ -235,28 +235,29 @@
                 MST_CUSTOMER_INFO.CUSTOMER_ID LIKE CONCAT('%', CONCAT(#{initValue}, '%'))
                 )
             </if>
-            <if test="IS_ASSTE_MANAGER != null and IS_ASSTE_MANAGER != ''">
-                AND MST_CUSTOMER_INFO.IS_ASSTE_MANAGER = #{IS_ASSTE_MANAGER}
-            </if>
-            <if test="IS_TRUSTER != null and IS_TRUSTER != ''">
-                AND MST_CUSTOMER_INFO.IS_TRUSTER = #{IS_TRUSTER}
-            </if>
-            <if test="IS_ISSUER != null and IS_ISSUER != ''">
-                AND MST_CUSTOMER_INFO.IS_ISSUER = #{IS_ISSUER}
-            </if>
-            <if test="IS_FINANCIER != null and IS_FINANCIER != ''">
-                AND MST_CUSTOMER_INFO.IS_FINANCIER = #{IS_FINANCIER}
-            </if>
-            <!-- 增加担保人查询条件 add by renping 20190930 start -->
-            <if test="IS_GUARANTEE != null and IS_GUARANTEE != ''">
-                AND MST_CUSTOMER_INFO.IS_GUARANTEE = #{IS_GUARANTEE}
-            </if>
-            <!-- 增加担保人查询条件 add by renping 20190930 end -->
-            <!-- 增加担保人查询条件 add by zhangnian 20191015 start -->
-            <if test="IS_INVEST_ADVISER != null and IS_INVEST_ADVISER != ''">
-                AND MST_CUSTOMER_INFO.IS_INVEST_ADVISER = #{IS_INVEST_ADVISER}
-            </if>
-            <!-- 增加担保人查询条件 add by zhangnian 20191015 end -->
+            <!--add jinmaodong 20210907和勇哥确认了，在选择融资人、发行人、担保人等机构得时候无需分组，客户自己选择即可-->
+<!--            <if test="IS_ASSTE_MANAGER != null and IS_ASSTE_MANAGER != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_ASSTE_MANAGER = #{IS_ASSTE_MANAGER}-->
+<!--            </if>-->
+<!--            <if test="IS_TRUSTER != null and IS_TRUSTER != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_TRUSTER = #{IS_TRUSTER}-->
+<!--            </if>-->
+<!--            <if test="IS_ISSUER != null and IS_ISSUER != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_ISSUER = #{IS_ISSUER}-->
+<!--            </if>-->
+<!--            <if test="IS_FINANCIER != null and IS_FINANCIER != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_FINANCIER = #{IS_FINANCIER}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 增加担保人查询条件 add by renping 20190930 start &ndash;&gt;-->
+<!--            <if test="IS_GUARANTEE != null and IS_GUARANTEE != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_GUARANTEE = #{IS_GUARANTEE}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 增加担保人查询条件 add by renping 20190930 end &ndash;&gt;-->
+<!--            &lt;!&ndash; 增加担保人查询条件 add by zhangnian 20191015 start &ndash;&gt;-->
+<!--            <if test="IS_INVEST_ADVISER != null and IS_INVEST_ADVISER != ''">-->
+<!--                AND MST_CUSTOMER_INFO.IS_INVEST_ADVISER = #{IS_INVEST_ADVISER}-->
+<!--            </if>-->
+<!--            &lt;!&ndash; 增加担保人查询条件 add by zhangnian 20191015 end &ndash;&gt;-->
         </where>
     </select>
     <select id="getAssetId" resultType="com.joyintech.framework.select.SuggestDto">

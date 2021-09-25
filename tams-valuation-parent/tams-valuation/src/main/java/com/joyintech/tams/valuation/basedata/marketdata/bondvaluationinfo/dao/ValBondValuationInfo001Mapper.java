@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.ValBondValuationInfo001Dto;
 import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.ValBondValuationInfo001SearchDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * ValBondValuationInfo001Mapper
@@ -22,6 +23,7 @@ import com.joyintech.tams.valuation.basedata.marketdata.bondvaluationinfo.dto.Va
  * @see ValBondValuationInfo001Mapper
  * @since 1.0
  */
+@Repository
 public interface ValBondValuationInfo001Mapper {
     
     /**

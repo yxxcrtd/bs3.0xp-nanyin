@@ -1,0 +1,1 @@
+update SYS_PARA set REMARK = '闭市后是否禁止下场内交易指令(Y：禁止 N：不禁止)' where PARA_CODE = 'etr_trade_time_switch';

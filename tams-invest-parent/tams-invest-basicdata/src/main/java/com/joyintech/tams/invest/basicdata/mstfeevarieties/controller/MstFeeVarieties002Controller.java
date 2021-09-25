@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -142,6 +143,7 @@ public class MstFeeVarieties002Controller extends BaseController {
         model.addAttribute("IS_USE_Y", DictCodeList.是否_是.getValue());
         model.addAttribute("FEETYPE_04", DictCodeList.费用品种类型_浮动差额中收.getValue());
         model.addAttribute("ORGTYPE_01", DictCodeListExt2.费用类型_本机构费用.getValue());
+        model.addAttribute("ORGTYPE_02", DictCodeListExt2.费用类型_其他机构费用.getValue());
         model.addAttribute("FEENAME_04", DictCodeList.费用品种类型_浮动差额中收.getCodeName());
 
         model.addAttribute("pageModelBak", getParam(GlobalConstant.DETAIL_PAGE_MODEL_KEY));
@@ -323,13 +325,12 @@ public class MstFeeVarieties002Controller extends BaseController {
      * @param dto 实体类
      * @param br 结果
      * @return 结果集
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstFeeVarietiesDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstFeeVarietiesDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

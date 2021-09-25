@@ -1,9 +1,11 @@
 package com.joyintech.service.basicdata.futuresdepositpercent.dao;
 import com.joyintech.service.basicdata.futuresdepositpercent.dto.FuturesDepositPercentDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
+@Repository
 public interface FuturesDepositPercentMapper {
     List<FuturesDepositPercentDto> selectForPage(Map<String, Object> param);
 

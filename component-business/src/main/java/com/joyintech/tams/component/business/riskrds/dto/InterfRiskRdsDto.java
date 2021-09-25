@@ -313,6 +313,11 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     private String isVirtual;
 
+    /**
+     * 机构代码
+     */
+    private String issuerCode;
+
     public BigDecimal getTdyAssetValue() {
         return tdyAssetValue;
     }
@@ -1179,5 +1184,54 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     public void setNotCalcAmount(Boolean notCalcAmount) {
         this.notCalcAmount = notCalcAmount;
+    }
+
+
+    public String getIssuerCode() {
+        return issuerCode;
+    }
+
+    public void setIssuerCode(String issuerCode) {
+        this.issuerCode = issuerCode;
+    }
+
+    /**
+     * 期限金额
+     */
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal termAmount;
+
+    public BigDecimal getTermAmount() {
+        return termAmount;
+    }
+
+    public void setTermAmount(BigDecimal termAmount) {
+        this.termAmount = termAmount;
+    }
+
+    /**
+     * 交易对手是否为空
+     */
+    private String isNullCounter;
+
+    public String getIsNullCounter() {
+        return isNullCounter;
+    }
+
+    public void setIsNullCounter(String isNullCounter) {
+        this.isNullCounter = isNullCounter;
+    }
+
+    /**
+     * 价格模式
+     */
+    private String priceModel;
+
+    public String getPriceModel() {
+        return priceModel;
+    }
+
+    public void setPriceModel(String priceModel) {
+        this.priceModel = priceModel;
     }
 }

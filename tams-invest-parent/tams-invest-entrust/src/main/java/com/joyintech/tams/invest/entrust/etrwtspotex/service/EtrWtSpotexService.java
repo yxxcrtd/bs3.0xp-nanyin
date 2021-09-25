@@ -287,7 +287,7 @@ public class EtrWtSpotexService extends CommonExportService<EtrWtSpotexDto> impl
 
     @Override
     public void setCellValue(String beanName, Cell cell, String propName, Object value) {
-        if (StringUtil.equals(propName, "transactioncom")) {
+        if (StringUtil.equals(propName, "tradeFinishAmt")) {
             cell.setCellValue(value + "%");
         }
     }

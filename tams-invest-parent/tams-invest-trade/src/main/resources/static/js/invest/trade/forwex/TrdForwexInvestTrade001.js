@@ -88,6 +88,7 @@
             ,{field:'finprodId', visible: false}
             ,{field:'tradeId1', visible: false}
         ],
+        initSort: {field: 'tradeDate',type: 'desc'}
     });
   
     var exportExcel = function(){

@@ -71,5 +71,5 @@ public interface AssetImpairmentManagement001Mapper {
     List<SelectOptionDto> getBusiNumByLossResult(Map<String, Object> param);
 
 
-
+    String getFirstActionType(String workflowId);
 }

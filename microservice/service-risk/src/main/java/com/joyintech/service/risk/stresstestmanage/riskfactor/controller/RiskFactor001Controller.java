@@ -44,7 +44,7 @@ public class RiskFactor001Controller {
      */
     @PostMapping("findPage/{page}/{length}")
     public Page<RiskFactor001Dto> selectAll(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return RiskFactor001Service.selectForPage(page, length, param);
     }
     /**
@@ -54,7 +54,7 @@ public class RiskFactor001Controller {
      * @since 1.0
      */
     @PostMapping("selectRiskFactorMap")
-    public List<SelectOptionDto> selectRiskFactorMap(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> selectRiskFactorMap(@RequestBody Map<String, Object> param) {
 
         return RiskFactor001Service.selectRiskFactorMap(param);
     }
@@ -65,7 +65,7 @@ public class RiskFactor001Controller {
      * @since 1.0
      */
     @PostMapping("selectRiskFactorMap2")
-    public List<SelectOptionDto> selectRiskFactorMap2(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> selectRiskFactorMap2(@RequestBody Map<String, Object> param) {
 
         return RiskFactor001Service.selectRiskFactorMap2(param);
     }
@@ -77,7 +77,7 @@ public class RiskFactor001Controller {
      */
 
     @PostMapping("selectRiskFactorMapType1")
-    public List<SelectOptionDto> selectRiskFactorMapType1(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> selectRiskFactorMapType1(@RequestBody Map<String, Object> param) {
 
         return RiskFactor001Service.selectRiskFactorMapType1(param);
     }
@@ -88,7 +88,7 @@ public class RiskFactor001Controller {
      * @since 1.0
      */
     @PostMapping("selectRiskFactorMapType2")
-    public List<SelectOptionDto> selectRiskFactorMapType2(@RequestBody Map<String, Object> param) throws Exception {
+    public List<SelectOptionDto> selectRiskFactorMapType2(@RequestBody Map<String, Object> param) {
 
         return RiskFactor001Service.selectRiskFactorMapType2(param);
     }
@@ -102,7 +102,7 @@ public class RiskFactor001Controller {
     @DTXTransaction
     @DataSource(DataSourceType.STRESSTEST)
     @PostMapping("update")
-    public void update(@RequestBody RiskFactor001Dto dto) throws Exception {
+    public void update(@RequestBody RiskFactor001Dto dto) {
 
         RiskFactor001Service.update(dto);
 

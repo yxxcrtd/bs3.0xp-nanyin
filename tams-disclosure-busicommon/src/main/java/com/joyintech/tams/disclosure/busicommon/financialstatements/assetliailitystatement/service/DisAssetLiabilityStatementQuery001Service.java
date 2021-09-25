@@ -31,6 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.file.SafelyFile;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -751,7 +752,7 @@ public class DisAssetLiabilityStatementQuery001Service extends CommonExportServi
 	public ResponseEntity<byte[]> exportExcel(DisAssetLiabilityStatementQuery001SearchDto dto)
 			throws ParseException, IOException {
 		ExportFileDto exportFileDto = createExcel(dto);
-		File file = new File(exportFileDto.getFilePath());
+		File file = new SafelyFile(exportFileDto.getFilePath());
 		return ExportUtil.export(exportFileDto.getFileName(), file, true);
 	}
 
@@ -848,7 +849,7 @@ public class DisAssetLiabilityStatementQuery001Service extends CommonExportServi
 		try {
 		    
             //针对weblogic环境部署，FileNameUtil.getTplFile无法获取tpl文件夹下模版。
-            File templeteFile = new File(tplPath);
+            File templeteFile = new SafelyFile(tplPath);
             //文件存在情况,直接该路径获取文件流
             if (templeteFile.exists()) {
                 stream = new FileInputStream(templeteFile);

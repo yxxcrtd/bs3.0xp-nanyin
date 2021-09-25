@@ -493,4 +493,19 @@ public class EtrIbRepo001Dto extends BaseEntity {
 	public void setPledgeStockName(String pledgeStockName) {
 		this.pledgeStockName = pledgeStockName;
 	}
+
+	//add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 start
+    /**
+     * 交易对手代码
+     */
+    private String counterId;
+
+    public String getCounterId() {
+        return counterId;
+    }
+
+    public void setCounterId(String counterId) {
+        this.counterId = counterId;
+    }
+    //add by chenjiaxing ZGZGST-2609 指令管理-银行间指令-银行间质押式回购指令画面，交易对手显示不对 20210916 end
 }

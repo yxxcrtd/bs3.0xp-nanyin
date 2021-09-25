@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 功能:人行报表模板Mapper
@@ -14,6 +15,7 @@ import com.joyintech.tams.svreport.pbc.report.dto.PbcReportTemplateDto;
  * @创建时间：2019年3月5日
  * @修改记录：
  */
+@Repository
 public interface PbcReportTemplateMapper {
     int deleteByPrimaryKey(String tempuuid);
 

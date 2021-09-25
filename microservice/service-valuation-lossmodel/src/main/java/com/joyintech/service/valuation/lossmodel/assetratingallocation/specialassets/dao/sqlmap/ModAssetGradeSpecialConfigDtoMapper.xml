@@ -1312,6 +1312,13 @@
     where A.FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
   </select>
 
+  <!--根据资产代码查询条数-->
+  <select id="getSpecialCountByFinprodId"  resultType="java.lang.Integer">
+		select count(1)
+        	from MOD_ASSET_GRADE_SPECIAL_CONFIG A
+        WHERE
+        	A.FINPROD_ID=#{finprodId,jdbcType=VARCHAR}
+  </select>
 
 
 

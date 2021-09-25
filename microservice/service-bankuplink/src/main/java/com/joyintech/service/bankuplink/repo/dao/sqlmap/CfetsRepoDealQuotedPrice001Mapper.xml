@@ -79,7 +79,8 @@
             MST_CFETS_CUSTOMER_RELA.SPARTY_ID = nvl(G.PARTY_ID, GG.PARTY_ID))
             )                                                       mySideTraderName,
                C.TERM_TYPE,
-               A.VDATE vdate
+               A.VDATE vdate,
+        pp.PORTFOLIO_SERIES portfolioSeries
         FROM
             ETR_ENTRUST A
         INNER JOIN
@@ -141,6 +142,7 @@
 	    <!--交易对手对应交易员信息 start-->
 	    left join  MST_CFETS_CUSTOMER_TRADER T2 ON T2.TRADER_ID = A.COUNTER_TRADER
 	    left join MST_CFETS_CUSTOMER_INFO T1 ON T1.PARTY_ID = T2.PARTY_ID
+        LEFT JOIN PA_PTL_PORTFOLIO pp ON B.PORTFOLIO_ID = pp.PORTFOLIO_ID
         <!--交易对手对应交易员信息 end-->
         where
             A.ENTRUST_STATUS IN (#{entrustStatusUnAccept}, #{entrustStatusAccept}, #{entrustStatusComple})
@@ -281,7 +283,62 @@
                 </otherwise>
             </choose>
     </select>
-    
+
+    <!-- ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start-->
+    <select id="queryHisEntrustInfoList" resultType="com.joyintech.framework.select.SuggestDto">
+        SELECT
+        ETR_ENTRUST.ENTRUST_ID code,
+        ETR_ENTRUST.ENTRUST_ID name
+        FROM
+        ETR_ENTRUST
+        LEFT JOIN
+        ETR_ENTRUST_ADD C
+        ON
+        ETR_ENTRUST.ENTRUST_ID = C.ENTRUST_ID
+        LEFT JOIN
+        ETR_DISTRIBUTE E
+        ON
+        ETR_ENTRUST.ENTRUST_ID = E.ENTRUST_ID
+        LEFT JOIN
+        (
+        SELECT
+        ENTRUST_ID,
+        SUM(FINISH_AMT) AS FINISH_AMT
+        FROM
+        ETR_QUOTE_FINISH_STATUS
+        GROUP BY
+        ENTRUST_ID) T5
+        ON
+        ETR_ENTRUST.ENTRUST_ID = T5.ENTRUST_ID
+        WHERE
+        ETR_ENTRUST.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
+        and ETR_ENTRUST.TRADE_MARKET = #{tradeMarket}
+        <choose>
+            <when test="initValue != null and initValue != ''">
+                and ETR_ENTRUST.ENTRUST_ID = #{initValue}
+            </when>
+            <otherwise>
+                AND E.TRADER = #{loginUserId}
+                AND ETR_ENTRUST.ENTRUST_STATUS = #{entrustStatusAccept}
+                AND NVL(T5.FINISH_AMT,0) &lt; ETR_ENTRUST.ENTRUST_AMT
+                <if test="platDate != null">
+                    and ETR_ENTRUST.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+                    and ETR_ENTRUST.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+                </if>
+                <if test="search != null and !search.equals('')">
+                    AND ETR_ENTRUST.ENTRUST_ID like concat('%',concat(#{search},'%'))
+                </if>
+                <if test="ps != null and !ps.equals('')">
+                    AND ETR_ENTRUST.PS = #{ps}
+                </if>
+                <if test="settleSpreed != null and settleSpreed != ''">
+                    AND DECODE(C.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+                </if>
+            </otherwise>
+        </choose>
+    </select>
+    <!--ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end -->
+
     <select id="queryPledgeBondList" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
         SELECT
             fp.FINPROD_ID                                        AS finprodId,
@@ -736,7 +793,9 @@
     		   qcph.PLEDGE_FINPROD_ID,
     		   fp.FINPROD_ABBR,
     		   (qcph.PLEDGE_RATIO * 100) PLEDGE_RATIO,
-    		   qcph.PLEDGE_AMT PLEDGE_AMT
+    		   qcph.PLEDGE_AMT PLEDGE_AMT,
+    		   qch.ZZ_TOTAL_AMT zzTotalAmt,
+    		   qch.SQ_TOTAL_AMT sqTotalAmt
     	FROM IBU_QUOTE_CREP_HIS qch
     	LEFT JOIN IBU_QUOTE_CREP_PLEDGE_HIS qcph
     	ON qch.QUOTE_ID = qcph.QUOTE_ID and qch.VERSION = qcph.VERSION
@@ -1046,6 +1105,25 @@
         <where>
             <if test="finprodId !=null and finprodId != ''">
                 fp.FINPROD_ID  = #{finprodId}
+            </if>
+        </where>
+    </select>
+
+    <select id="listIbuQuoteEntCrepPledge" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
+        SELECT
+        iqecp.QUOTE_ID,
+        iqecp.ENTRUST_ID,
+        iqecp.PORTFOLIO_ID,
+        iqecp.PLEDGE_FINPROD_ID finprodId,
+        iqecp.PLEDGE_NUMBER,
+        iqecp.PLEDGE_RATIO,
+        iqecp.fp.FINPROD_MARKET_ID bondCode
+        FROM
+        IBU_QUOTE_ENT_CREP_PLEDGE  iqecp
+        LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = iqecp.PLEDGE_FINPROD_ID
+        <where>
+            <if test="quoteId != null and quoteId != ''">
+                iqecp.QUOTE_ID = #{quoteId}
             </if>
         </where>
     </select>

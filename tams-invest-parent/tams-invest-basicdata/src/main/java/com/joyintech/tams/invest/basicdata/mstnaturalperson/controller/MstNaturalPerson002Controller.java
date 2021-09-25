@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.invest.basicdata.mstnaturalperson.controller;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -109,15 +110,14 @@ public class MstNaturalPerson002Controller extends BaseController {
      * @param dto 保存参数
      * @param br 保存参数
      * @return 保存返回信息
-     * @throws Exception 抛出异常
+     * @throws WorkFlowException 抛出异常
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstNaturalPerson001Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstNaturalPerson001Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

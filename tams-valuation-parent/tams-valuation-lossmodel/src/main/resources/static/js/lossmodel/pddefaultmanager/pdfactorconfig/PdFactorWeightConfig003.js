@@ -30,6 +30,20 @@ $(function () {
             $('#vouchQuarter').attr("disabled", true);*/
         }
     };
+
+    $("#optimisticWeight").bind('change',function(){
+       if($("#optimisticWeight").val() && $("#basicWeight").val()){
+           var num = 100 - $("#optimisticWeight").val() - $("#basicWeight").val();
+           $("#pessimismWeight").val(JoyinMath.doAdd(num,0,2));
+       }
+    });
+
+    $("#basicWeight").bind('change',function(){
+        if($("#optimisticWeight").val() && $("#basicWeight").val()){
+            var num = 100 - $("#optimisticWeight").val() - $("#basicWeight").val();
+            $("#pessimismWeight").val(JoyinMath.doAdd(num,0,2));
+        }
+    });
     
     $(function () {
         //初始化画面

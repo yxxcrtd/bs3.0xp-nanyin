@@ -14,11 +14,6 @@ public class ModStandardGradeMapping extends BaseEntity {
     private String gradeInst;
 
     /**
-     * 评级类型
-     */
-    private String oType;
-
-    /**
      * 外部评级结果
      */
     private String gradeResult;
@@ -58,22 +53,6 @@ public class ModStandardGradeMapping extends BaseEntity {
      */
     public void setGradeInst(String gradeInst) {
         this.gradeInst = gradeInst == null ? null : gradeInst.trim();
-    }
-
-    /**
-     * 取得 评级类型
-     * @return 评级类型
-     */
-    public String getoType() {
-        return oType;
-    }
-
-    /**
-     * 设置 评级类型
-     * @param oType 评级类型
-     */
-    public void setoType(String oType) {
-        this.oType = oType == null ? null : oType.trim();
     }
 
     /**

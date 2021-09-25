@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  * 债券基础信息
- *
+ * 
  * @author HuangJian
  * @version 1.0 2018年6月28日
  * @see SecBaseInfoRecService
@@ -54,7 +54,7 @@ public class SecBaseInfoRecService {
     private TemplateAnalysisForXMLService templateAnalysisForXMLService;
     @Autowired
     private InterfCommonService interfCommonService;
-
+    
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public SecBaseInfoRecProcessorRecCommonResult execute(TemplateSourceFlgDTO templateSourceFlgDTO,
@@ -65,7 +65,7 @@ public class SecBaseInfoRecService {
         TemplateCheckReturnResult returnResult = new TemplateCheckReturnResult();
         // 1、文件读取解析
         returnResult = templateAnalysisForXMLService.execute(acctEntity);
-
+        
         // 2、进行数据有效性的check,并生出进入日志表的数据结构
         listValSecBaseInfo = returnResult.getT(ValSecBaseInfo.class);
         // 3、更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
@@ -90,7 +90,7 @@ public class SecBaseInfoRecService {
 
     /**
      * 更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
-     *
+     * 
      * @param listValSecBaseInfo List<ValSecBaseInfo>
      * @return Map<String,Object>
      * @see
@@ -142,7 +142,7 @@ public class SecBaseInfoRecService {
 
     /**
      * 接收 标的类金融产品 T1
-     *
+     * 
      * @param dto
      * @return
      * @see
@@ -177,7 +177,7 @@ public class SecBaseInfoRecService {
         // 交易场所 = A.交易场所
         result.setTradeMarket(dto.getTradePlace());
         // 发行人 = A.发行人
-        result.setIssuer(dto.getPublisher());
+        result.setIssuer(dto.getPublisher()); //暂时不解析，后续再确认
         // 发行日 = A.起息日
         result.setIdate(dto.getVdate());
         // 起息日 = A.起息日
@@ -201,9 +201,10 @@ public class SecBaseInfoRecService {
         result.setRegistOrg(dto.getRegistOrg());
         /** modify by dongjun on 20181017 含权债摊销日 = 系统参数.行权债摊销目标日是否为行权日 start**/
         result.setExeDate(CacheUtil.getSysParam("ISSECTOEXEDATE"));//modify by dongjun on 20181023
+        result.setIsSus(dto.getIsSus());
         /** modify by dongjun on 20181017 含权债摊销日 = 系统参数.行权债摊销目标日是否为行权日 end**/
         /** modify by dongjun on 20181017 end**/
-
+        
         /**modify by wujie on 20181126 start
          * remark:
          * 含权债时:取【系统参数.含权债摊销摊销日】
@@ -275,7 +276,7 @@ public class SecBaseInfoRecService {
 
     /**
      * 接收 金融产品分类 T2
-     *
+     * 
      * @param dto ValSecBaseInfo
      * @return ValFinProductType
      * @see
@@ -289,7 +290,7 @@ public class SecBaseInfoRecService {
 //        result.setFinprodType(DictCodeListExt1.金融产品类型_债券.getValue());
         // 分类1，金融产品类型为债券时，设为债券二级类型 =债券类型
         result.setType1(dto.getBondType());
-
+        
         /**add by wujie on 20180822 start**/
         // 分类2 = 调用共通方法查询核算分类
         FinProductClass fdto = new FinProductClass();
@@ -302,7 +303,7 @@ public class SecBaseInfoRecService {
         //境内外
         fdto.setBlnArea(dto.getInOut());
         result.setType2(interfCommonService.getFinanceProductClass(fdto));
-
+        
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
         // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
@@ -314,7 +315,7 @@ public class SecBaseInfoRecService {
 
 //    /**
 //     * 接收 现金流信息 T3
-//     *
+//     * 
 //     * @param dto ValSecBaseInfo
 //     * @return ValCashInfo
 //     * @see
@@ -332,7 +333,7 @@ public class SecBaseInfoRecService {
 //        String cashId = InterfHelper.getMd5CashId_(dto.getAssetId(),DictCodeListExt1.金融产品类型_债券.getValue()
 //        		,DictCodeListExt1.现金流二级类型_本金.getValue());
 //        /**modify by wujie on 20190121 end**/
-//
+//        
 //        result.setCashId(cashId);
 //        // 现金流一级类型 = 数据字典：现金流一级类型.行权
 //        result.setCashType1(DictCodeListExt1.现金流一级类型_行权.getValue());
@@ -350,10 +351,10 @@ public class SecBaseInfoRecService {
 //        result.setBranch(InterfCommonConstant.分支序号_默认);
 //        return result;
 //    }
-
+    
 //    /**
 //     * 浮动利率初始化
-//     *
+//     * 
 //     * @param dto ValSecBaseInfo
 //     * @return ValCashCalcRule
 //     * @see
@@ -362,18 +363,18 @@ public class SecBaseInfoRecService {
 //    private FloatingInterestRateCommonResult getFloatingInterestRateCommonResult(ValSecBaseInfo dto) {
 //    	FloatingInterestRateDto floatDto = new FloatingInterestRateDto();
 //		floatDto.setFloatingInterestRateNo(dto.getIntRateId());
-//    	floatDto.setInitRate(dto.getInitRate());//初始利率INIT_RATE,输入.资产标的信息.初始利率
-//    	floatDto.setCoefficient(dto.getRatio());//系数COEFFICIENT,输入.资产标的信息.系数
-//    	floatDto.setSpreadRate(dto.getProfitSub());//利差 SPREAD_RATE,输入.资产标的信息.利差
-//    	floatDto.setSpreadMax(dto.getRateMax());//利率上限SPREAD_MAX,输入.资产标的信息.利率上限
-//    	floatDto.setSpreadMin(dto.getRateMin());//利率下限SPREAD_MIN,输入.资产标的信息.利率下限
+//    	floatDto.setInitRate(dto.getInitRate());//初始利率INIT_RATE,输入.资产标的信息.初始利率                                              
+//    	floatDto.setCoefficient(dto.getRatio());//系数COEFFICIENT,输入.资产标的信息.系数                                                
+//    	floatDto.setSpreadRate(dto.getProfitSub());//利差 SPREAD_RATE,输入.资产标的信息.利差                                                
+//    	floatDto.setSpreadMax(dto.getRateMax());//利率上限SPREAD_MAX,输入.资产标的信息.利率上限                                              
+//    	floatDto.setSpreadMin(dto.getRateMin());//利率下限SPREAD_MIN,输入.资产标的信息.利率下限                                      
 //    	FloatingInterestRateCommonResult result = interfCommonService.floatingInterestRateInitialization(floatDto);
 //        return result;
 //    }
 
     /**
      * 接收 现金流计算规则
-     *
+     * 
      * @param dto ValSecBaseInfo
      * @return ValCashCalcRule
      * @see
@@ -421,6 +422,8 @@ public class SecBaseInfoRecService {
             FinProductConvertible result = new FinProductConvertible();
             result.setFinprodId(dto.getAssetId());//金融产品代码
             result.setConFinprodId(dto.getConFinprodId());//转股产品代码
+            result.setConShareId(dto.getComShareId());//转股市场代码
+            result.setConVdate(dto.getConVdate());//转股起始日
             result.setConPrice(dto.getConPrice());//转股价格
             result.setResalePrice(dto.getResalePrice());//回售触发价
             result.setRedeemPrice(dto.getRedeemPrice());//赎回触发价

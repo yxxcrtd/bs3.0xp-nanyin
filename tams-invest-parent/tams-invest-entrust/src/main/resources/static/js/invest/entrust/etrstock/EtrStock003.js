@@ -357,7 +357,7 @@
             temp.operateType = operateType;
             temp.pageModel = pageModel;
             if (operateType === 'submit') {
-                temp.elementId = 'EtrFund002_btn_submit';
+                temp.elementId = 'EtrStock002_btn_submit';
             }
         }
         Joyin.ajaxJson(basePath + 'invest/entrust/etrstock/EtrStock003/check', objects, function(

@@ -10,6 +10,8 @@
  
 package com.joyintech.tams.valuation.fileupload.dao;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Map;
 
 /**
@@ -20,6 +22,7 @@ import java.util.Map;
  * @see DataFileUpload002Mapper
  * @since 1.0
  */
+@Repository
 public interface DataFileUpload002Mapper {
 
     /**

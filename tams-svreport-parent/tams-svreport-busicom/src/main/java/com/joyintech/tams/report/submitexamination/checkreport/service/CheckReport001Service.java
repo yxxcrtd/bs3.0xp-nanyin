@@ -104,6 +104,10 @@ public class CheckReport001Service extends BaseService<CheckReport001Dto> {
         // 机构代码
         pageParam.put("orgCodeList",
             StringUtil.splitToList(GlobalConstant.COMMA, (String)pageParam.get("orgCode")));
+        // 检查结果
+        pageParam.put("checkResultList",
+                StringUtil.splitToList(GlobalConstant.COMMA, (String)pageParam.get("checkResult")));
+
         int page = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_PAGE).toString());
         int legth = Integer.parseInt(pageParam.get(GlobalConstant.PARAM_LENGTH).toString());
         Page<CheckReport001Dto> pageList = 

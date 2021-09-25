@@ -149,6 +149,19 @@ public class TradeBaseDto extends TrdProductDeal {
 	public void setmDate(String mDate) {
 		this.mDate = mDate;
 	}
+	//--------------资产转仓部分字段---------------------
+	/**
+	 * 转仓编号
+	 */
+	private String zcId;
+
+	public String getZcId() {
+		return zcId;
+	}
+
+	public void setZcId(String zcId) {
+		this.zcId = zcId;
+	}
 
     // add by zhangrui1 拆借回购等没有资产的需要传日历代码 start
     /**

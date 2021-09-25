@@ -32,8 +32,8 @@ $(function(){
 				{ field: 'seqno',visible:false},
 				{ title: "资产代码", field: 'finprodId',sortField:'FINPROD_ID',align:'center',width:180 },
 				{ title: "资产名称", field: 'finprodName',sortField:'FINPROD_NAME',align:'center',width:200},
-				{ title: "标的公司上市状态", field: 'stockBordsttusStr',sortField:'STOCK_BORDSTTUS',align:'center',width:150},
 				{ title: "标的股票代码", field: 'stockId',sortField:'STOCK_ID',align:'center',width:150},
+				{ title: "标的公司上市状态", field: 'stockBordsttusStr',sortField:'STOCK_BORDSTTUS',align:'center',width:150},
 				{ title: "可比公司", field: 'compOrgname',sortField:'COMP_ORG',align:'center',width:200},
 				{ title: "可比公司股票代码", field: 'compStockid',sortField:'COMP_STOCKID',align:'center',width:150},
 				{ title: "市场乘数方法", field: 'marketMultiStr',sortField:'MARKET_MULTI',align:'center',width:200},
@@ -42,7 +42,7 @@ $(function(){
 				//{ title: "可比公司市盈率", field: 'compPE',sortable:false,type:'number',align:'center',width:160},
 				{ title: "标的公司每股收益", field: 'finprodProit',sortField:'FINPROD_PROIT',type:'number',align:'center',width:180},
 				{ title: "标的公司每股净资产", field: 'finprodNetasset',sortField:'FINPROD_NETASSET',type:'number',align:'center',width:200},
-				{ title: "连续股息率", field: 'smoothsection',sortField:'SMOOTHSECTION',type:'number',align:'center',width:100},
+				{ title: "连续股息率%", field: 'smoothsection',sortField:'SMOOTHSECTION',type:'number',align:'center',width:100,},
 				{ title: "二叉树步数", field: 'bintreeStep',sortField:'BINTREE_STEP',align:'center',width:100},
 				{ title: "无风险利率曲线名称", field: 'curveCodeStr',sortField:'CURVE_CODE',align:'center',width:200},
 				{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit'],align:'center'}

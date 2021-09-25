@@ -70,7 +70,7 @@ implements BaseProcessService<RskPortAutoRelatePoint002Dto> {
 				try {
 					Thread.sleep(6000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 				logger.info("----------->修改规则后处理自动关联与redis初始化任务--------------");
 				List<String> indIdList=bussRuleService.queryRuleRelInd(entity);

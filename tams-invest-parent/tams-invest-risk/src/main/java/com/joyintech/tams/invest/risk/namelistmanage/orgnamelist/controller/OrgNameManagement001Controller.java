@@ -15,6 +15,7 @@ import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgName
 import com.joyintech.tams.invest.risk.namelistmanage.orgnamelist.service.OrgNameManagementService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,7 +62,7 @@ public class OrgNameManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskAccessListDto> selectAll()
-        throws Exception {
+    {
         Page<RskAccessListDto> page = orgNameManagementService.selectForPage(
             RequestUtil.getParameters(getRequest()));
         return page;
@@ -96,8 +97,7 @@ public class OrgNameManagement001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody @Validated({
-            ValidateGroupDelete.class}) RskAccessListDto dto, BindingResult br)
-            throws Exception {
+            ValidateGroupDelete.class}) RskAccessListDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

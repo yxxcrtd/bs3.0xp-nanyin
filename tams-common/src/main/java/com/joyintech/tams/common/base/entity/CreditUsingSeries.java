@@ -394,4 +394,16 @@ public class CreditUsingSeries extends BaseEntity {
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId == null ? null : portfolioId.trim();
     }
+    /**
+     * 顶层金融产品代码
+     */
+    private String pFinprodId;
+
+    public String getpFinprodId() {
+        return pFinprodId;
+    }
+
+    public void setpFinprodId(String pFinprodId) {
+        this.pFinprodId = pFinprodId;
+    }
 }

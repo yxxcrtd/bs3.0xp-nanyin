@@ -1,0 +1,3 @@
+DELETE FROM DATA_AUTH_MAPPER_CONFIG where page_id = 'PbcReportFileManage001';
+insert into DATA_AUTH_MAPPER_CONFIG (SQL_ID, FILTER_TYPE, IS_NEST, JOIN_COLUMN_NAME, FILTER_SQL, SYSTEM_CODE, PAGE_ID, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, ADD_COLUMN, ADD_COLUMN_NAME, DATA_TYPE)
+values ('com.joyintech.tams.svreport.pbc.classic.data.dao.PbcDataFileMapper.queryPage', '1', '01', null, 'select base99.*,base99.ORG_CODE as belongInstitutionCode from ( %s ) base99 where base99.ORG_CODE in %s', 'SVR', 'PbcReportFileManage001', 'admin', null, sysdate, 'admin', sysdate, null, null, null);

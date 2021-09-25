@@ -44,6 +44,7 @@
         <!--添加分类字段9-12 lishuping 2018/7/18 end-->
         <!-- 增加推荐方与推荐费率 add by renping 20191014 start -->
         FPR.RECOMMENDER recommender,
+        A.UPDATE_USER as updateUser,
         MCP.COUNTER_NAME recommenderName
         <!-- 增加推荐方与推荐费率 add by renping 20191014 end -->
         FROM
@@ -73,7 +74,7 @@
                 #{type,jdbcType=VARCHAR}
             </foreach>
         </if>
-        AND A.FINPROD_TYPE2 = #{FINPROD_TYPE_TG_F17, jdbcType = VARCHAR}
+        AND A.FINPROD_TYPE = #{FINPROD_TYPE_TG_F17, jdbcType = VARCHAR}
         AND A.PROFIT_TYPE in (#{PROFIT_TYPE_01},#{PROFIT_TYPE_03})
         <if test="profitType != null and profitType != ''">
             AND A.PROFIT_TYPE = #{profitType, jdbcType = VARCHAR}

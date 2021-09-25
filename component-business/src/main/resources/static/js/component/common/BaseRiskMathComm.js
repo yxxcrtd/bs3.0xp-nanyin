@@ -967,7 +967,7 @@
     }
     
     var saveOrSubmitCheck = function(mes){
-        if(mes == 'save'&&etr_save_riskcheck&&parent&&parent.pageId&&parent.pageId.toUpperCase().indexOf("ETR") == 0)
+        if(mes == 'save'&&etr_save_riskcheck=='N'&&parent&&parent.pageId&&parent.pageId.toUpperCase().indexOf("ETR") == 0)
             return true;
         if(mes == 'save'){
             mes = JoyinUtil.getLabel("SysCommon.save");
@@ -1138,6 +1138,21 @@
                                 ["风险生成要素", "生成风险试算"]));
                             return true;
                         }
+                        // ZGZGST-2518:质押式回购指令组合系列指令风险试算元素变化check fuyongsheng 20210914 add start
+                        else if (typeof currentCalcConditionObj[key] == "object") {
+                            for (var i in currentCalcConditionObj[key]) {
+                                if (i == "createTime" || i == "updateTime" || i == 'index') {
+                                    continue;
+                                }
+                                if (typeof currentCalcConditionObj[key][i] != "object"
+                                    && calcConditionObjBackUp[key][i] != currentCalcConditionObj[key][i]) {
+                                    Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                                        ["风险生成要素", "生成风险试算"]));
+                                    return true;
+                                }
+                            }
+                        }
+                        // ZGZGST-2518:质押式回购指令组合系列指令风险试算元素变化check fuyongsheng 20210914 add end
                     }
                 }
                 // 组合风险试算参数更改检验	王贵奇	2019/8/19	开始
@@ -1200,8 +1215,10 @@
                 for ( var key in currentCalcConditionObj) {
                     if (typeof currentCalcConditionObj[key] != "object"
                         && currentCalcConditionObj[key] != calcConditionObjBackUp[key]) {
-                        Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
-                            ["风险生成要素", "生成风险试算"]));
+                        // ZGZGST-2951:方法返回后已有提示弹窗,删除重复弹窗 fuyongsheng 20210923 edit start
+                        // Joyin.error(JoyinUtil.getMessage("BUSS_COM_E_0013",
+                        //     ["风险生成要素", "生成风险试算"]));
+                        // ZGZGST-2951:方法返回后已有提示弹窗,删除重复弹窗 fuyongsheng 20210923 edit end
                         return true;
                     }
                 }

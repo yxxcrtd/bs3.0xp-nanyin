@@ -14,44 +14,61 @@
 <body>
      <div layout:fragment="content">
 
-         <div class="form-button-area">
-             <!-- add by yanya on 20210701 去除曲线管理界面生失效按钮 start-->
-             <!--
-             <a id="MstCurveDefManage001_btn_eff" class="layui-btn layui-btn-sm">生效</a>
-             <a id="MstCurveDefManage001_btn_inEff" class="layui-btn layui-btn-sm">失效</a>
-             -->
-             <!-- add by yanya on 20210701 去除曲线管理界面生失效按钮 end-->
-        </div>
+         <div class="form-button-area" filter="false" export="false">
+             <a id="MstCalendarType001_btn_add" class="layui-btn layui-btn-sm btn-create" data-th-text="#{SysCommon.create}">新建</a>
+             <!--<a id="MstCalendarType001_btn_del" class="layui-btn layui-btn-sm btn-delete">删除</a>-->
+         </div>
 
        <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form"  id="submitForm">
             <div class="layui-form-item">
-                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
-                    <label class="layui-form-label form-lable" data-th-text="#{MstCurveDefManage001.curveCode}">曲线代码</label>
-                     <div class="layui-input-inline input-inline">
-	                 <select type="text" id="curveCode" name="curveCode" class="layui-input form-input input-select"
-                             data-th-data-url="@{/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage001/getCurveCode}" allowClear="true"
-		                     placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-		                     formatoption = "true">
+            <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                <label class="layui-form-label form-lable" data-th-text="#{MstCurveDefManage001.curveCode}">曲线代码</label>
+                <div class="layui-input-inline input-inline">
+                    <select type="text" id="curveCode" name="curveCode" class="layui-input form-input input-select"
+                            data-th-data-url="@{/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage001/getCurveCode}" allowClear="true"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            formatoption = "true">
                         <option></option>
-                     </select>
-                    </div>
-                </div>
-                <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
-                    <label class="layui-form-label form-lable" data-th-text="#{MstCurveDefManage001.curveType}">曲线类型</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="intCurveType" name="intCurveType"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${CURVE_TYPE}' allowClear="true"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                formatoption = "true" >
-                            <option></option>
-                        </select>
-                    </div>
+                    </select>
                 </div>
             </div>
+            <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                <label class="layui-form-label form-lable" data-th-text="#{MstCurveDefManage001.curveType}">曲线类型</label>
+                <div class="layui-input-inline input-inline">
+                    <select type="text" id="intCurveType" name="intCurveType"
+                            class="layui-input form-input input-select"
+                            data-th-data-result='${CURVE_TYPE}' allowClear="true"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            formatoption = "true" >
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                <label class="layui-form-label form-lable">曲线名称</label>
+                <div class="layui-input-inline input-inline">
+                    <input type="text" id="curveName" name="curveName"
+                           class="layui-input form-input"
+                           data-th-placeholder="#{SysCommon.placeholder}" value="">
+                </div>
+            </div>
+
+            <div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg3">
+                <label class="layui-form-label form-lable" >曲线来源</label>
+                <div class="layui-input-inline input-inline">
+                    <select type="text" id="valueSource" name="valueSource"
+                            class="layui-input form-input input-select"
+                            data-th-data-result='${CURVE_SOURCE}' allowClear="true"
+                            placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                            formatoption = "true" >
+                        <option></option>
+                    </select>
+                </div>
+            </div>
+        </div>
         </form>
-           <!--<a id="MstCurveDefManage001_btn_reset" class="layui-btn layui-btn-sm">重置</a>-->
         </div>
         <div>
             <table class="layui-table" id="dataTable"></table>

@@ -11,6 +11,7 @@ import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -157,7 +158,10 @@ public class TrdProjectDuration002Controller extends BaseController {
 //        setSelectOptionToModel(model, DictCode.是否, DictCode.币种, DictCode.划款类型);
         setSelectOptionToModel(model, DictCode.是否, DictCode.币种, DictCode.平安划款类型);
      // 一体化对应etliu end
-
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("GEN_PAY_ORDERS_AUTO", CacheUtil.getSysParam("GEN_PAY_ORDERS_AUTO"));
         model.addAttribute(GlobalConstant.ENTITY, entity);
         model.addAttribute("acctNoList", JsonUtils.object2Json(bussTrdTransferOrderService.queryAcctList(null)));
@@ -189,8 +193,7 @@ public class TrdProjectDuration002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdProjectDurationProcessDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdProjectDurationProcessDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

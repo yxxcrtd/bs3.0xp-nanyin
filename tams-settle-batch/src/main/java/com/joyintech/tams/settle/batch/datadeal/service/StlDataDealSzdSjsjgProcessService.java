@@ -762,13 +762,15 @@ public class StlDataDealSzdSjsjgProcessService {
 			// 临时表流水号
 			settleTransData.setSeqNo(szdSjsjg.getSeqno());
             
+			
+			if(null != funcion) {
+				if(!funcion.apply(szdSjsjg, settleTransData, settleTransDataAdd)) {
+					continue;
+				}
+			}
             // 日终过来的文件结算价格就是全价的，需要反算净价总额、应计利息总额
-            stlDownDataDealService.calc(settleTransData);
-
-            if(null != funcion) {
-                if(!funcion.apply(szdSjsjg, settleTransData, settleTransDataAdd)) {
-                    continue;
-                }
+            if (StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue(), settleTransData.getFinprodType2())) {
+                stlDownDataDealService.calc(settleTransData);
             }
 
             StlDownDataDealWriteBaseDto stlDownDataDealWriteBaseDto = new StlDownDataDealWriteBaseDto();

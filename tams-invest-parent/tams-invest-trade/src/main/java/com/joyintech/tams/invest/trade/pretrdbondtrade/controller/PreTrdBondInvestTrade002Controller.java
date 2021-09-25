@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.trade.pretrdbondtrade.controller;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,11 +19,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.FinProductTypeMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
+import com.joyintech.tams.component.business.trade.controller.BussTrdAvailableCashQueryController;
+import com.joyintech.tams.invest.trade.common.service.TradeCommonService;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -95,6 +105,15 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
 
     @Autowired(required = false)
     private FinProductTypeMapper  finProductTypeMapper;
+    @Autowired
+    private TradeCommonService TradeCommonService;
+
+    @Autowired
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+    @Autowired
+    private DateCalService dateCalService;
 
     @Override
     public String init(Model model) {
@@ -284,7 +303,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
             DictCode.有效状态, DictCode.交易平台, DictCode.币种,
             DictCode.投资目的, DictCode.交易市场, DictCode.清算速度, DictCode.是否,
             DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,// 新增资产二、三、四级分类 王贵奇 2019/7/31
-            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式,DictCode.清算类型,DictCode.计息基础);
+            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.分配方式,DictCode.清算类型,DictCode.计息基础,DictCode.业务模式);
 
         model.addAttribute("TRADE_PLACE_01", DictCodeListExt1.交易场所_银行间.getValue());
         model.addAttribute("TRADE_PLACE_02", DictCodeListExt1.交易场所_上海证券交易所.getValue());
@@ -422,7 +441,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("isExerYieldDivShow")
     @ResponseBody
     public String isExerYieldDivShow(@RequestParam Map<String, Object> paramMap) {
-        return trdBondInvestTrade002Service.isExerYieldDivShow(paramMap);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.isExerYieldDivShow(paramMap));
     }
 
     /**
@@ -450,7 +469,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("calcDeviationDegree")
     @ResponseBody
     public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.calcDeviationDegree(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.calcDeviationDegree(params));
     }
 
     /**
@@ -491,7 +510,6 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
         if (ajaxResult != null) {
             return ajaxResult;
         }
-        
         return commonCheck(result, dto.getOperateType());  
     }
 
@@ -507,7 +525,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
     @SuppressWarnings("unchecked")
 	@RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody PreTrdBondInvestTrade002Dto dto)   throws Exception {
+    AjaxResult save(@RequestBody PreTrdBondInvestTrade002Dto dto) throws WorkFlowException {
 
         String msg = "";
 //        Object[] fenpeiDto = dto.getBussTrdTransfenpeiDto();
@@ -607,7 +625,7 @@ public class PreTrdBondInvestTrade002Controller extends BaseController {
         BussinessCodeParameter codeParameter = new BussinessCodeParameter();
         codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_债券买入);
         String index=baseGetBusinessId.buildBussinessCode(codeParameter);
-        return index;
+        return StringUtil.trimHtmlTag(index);
     }
     // add by zhanggenglin 质押式回购多组合 20190813 end
 

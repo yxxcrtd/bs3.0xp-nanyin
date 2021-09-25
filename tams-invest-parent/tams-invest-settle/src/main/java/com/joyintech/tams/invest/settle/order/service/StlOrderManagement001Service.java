@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,6 +37,10 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
  **/
 @Service
 public class StlOrderManagement001Service extends CommonExportService<StlOrderManagement001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(StlOrderManagement001Service.class);
 
     public Page<StlOrderManagement001Dto> findOrderData(Map<String, Object> pageParam) {
         return restTemplate.postForPage(ServiceApplication.SETTLE_SERVICE_NAME + "/StlOrderManagement/findOrderData",
@@ -55,7 +62,7 @@ public class StlOrderManagement001Service extends CommonExportService<StlOrderMa
 
     /**
      * 重新发送指令接口
-     * @param model
+     * @param orderIds
      * @return
      * @see
      * @since 1.0
@@ -120,7 +127,7 @@ public class StlOrderManagement001Service extends CommonExportService<StlOrderMa
         List<UploadFile> uploadFiles = new ArrayList<>();
         for(String seqNo:seqNoList){
             SysUploadFileInfo file = joyinFSMapper.selectByPrimaryKey(seqNo);
-            UploadFile f = new UploadFile(null, file.getSeqNo(), new File(file.getPath()));
+            UploadFile f = new UploadFile(null, file.getSeqNo(), new SafelyFile(file.getPath()));
             f.setFileName(file.getFileName());
             joyinDFSTemplate.fetch(file);
             uploadFiles.add(f);
@@ -138,15 +145,15 @@ public class StlOrderManagement001Service extends CommonExportService<StlOrderMa
             }
             String exportFilePath = CacheUtil.getSysParam("upload_file_path");
             String zipFileName = param.get("bizCode").toString() + ".zip";
-            outFile = new File(exportFilePath + File.separator + zipFileName);
+            outFile = new SafelyFile(exportFilePath + File.separator + zipFileName);
             // 导出路径不存在则重新生成
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
             try {
-                ZipFileUtil.compressZip(outFile, false, exportFiles.toArray(new File[] {}));
+                ZipFileUtil.compressZip(outFile, false, exportFiles.toArray(new SafelyFile[] {}));
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
             return ExportUtil.export(outFile.getName(), outFile, true);
         }

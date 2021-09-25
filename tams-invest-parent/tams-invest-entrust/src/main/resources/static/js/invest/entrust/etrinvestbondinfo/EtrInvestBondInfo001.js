@@ -81,7 +81,7 @@
      * 新建
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init?parentPageId=' + pageId, '98%', '95%',function(){table.reload();});
+        Joyin.dialog(JoyinUtil.getLabel('EtrInvestBondInfo002'), basePath +'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/init', '98%', '95%',{parentPageId:pageId},function(){table.reload();});
     }
     /**
      * 定义数据表格
@@ -164,6 +164,7 @@
     table.bind('click', '.edit', function(data, index) {
         data.operateType = "edit";
         data.pageModel=PAGE_MODEL_EDIT;
+        data.parentPageId=pageId;
         //走check会校验dto，所以抽出一个新的editCheck方法
         Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/checkEdit', data, function(result) {
             Joyin.dialog(JoyinUtil.getLabel("EtrInvestBondInfo002.edit"),

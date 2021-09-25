@@ -35,7 +35,7 @@ public class InterfCUSDEP1207Service extends SendEsbService<InterfCUSDEP1207InEn
      */
     @Override
     public InterfCUSDEP1207InEntity preparedLocalData(Object param)
-        throws Exception {
+    {
         CusdepOrderDto dto = (CusdepOrderDto)param;
         InterfCUSDEP1207InEntity inEntity = new InterfCUSDEP1207InEntity();
         inEntity.setDto(dto);
@@ -47,7 +47,7 @@ public class InterfCUSDEP1207Service extends SendEsbService<InterfCUSDEP1207InEn
      */
     @Override
     public int saveInterfData(InterfCUSDEP1207InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 
@@ -56,7 +56,7 @@ public class InterfCUSDEP1207Service extends SendEsbService<InterfCUSDEP1207InEn
      */
     @Override
     public int saveBusinessData(InterfCUSDEP1207InEntity entity)
-        throws Exception {
+    {
         return 0;
     }
 }

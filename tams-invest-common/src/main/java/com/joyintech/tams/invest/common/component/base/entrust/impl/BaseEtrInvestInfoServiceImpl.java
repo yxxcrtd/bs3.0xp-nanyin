@@ -418,6 +418,21 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
         return etrInvestInfoDto;
     }
 
+
+
+    /**
+     * 查询已经生效的委托
+     *
+     * @param
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @Override
+    public String findEtrWordInfo(String entrustId) {
+        return etrEntrustMapper.selectByPrimaryKey(entrustId).getBusinessModel(); 
+    }
+
     /**
      * 查询已经生效的委托 单体
      *
@@ -1089,12 +1104,13 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             // 委托指令查询
             EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustId);
             //退回备注不覆盖之前的备注 edit by xueying 20200725 start
-            String remark = etrEntrust.getRemark();
-            if (StringUtil.isNotBlank(remark)) {
-                reason = remark + "\n" + "退回原因：" + reason;
-            }
-            else {
-                reason = "退回原因：" + reason;
+            // update by qk start HFZG-6 质押式回购退回，指令分发详情页面中的备注显示异常
+            String remark=StringUtil.isEmpty(etrEntrust.getRemark()) ? "" : etrEntrust.getRemark();
+            // update by qk end HFZG-6 质押式回购退回，指令分发详情页面中的备注显示异常
+            if(StringUtil.isNotBlank(reason)){
+                reason=remark+"\n"+"退回原因：" + reason;
+            }else{
+                reason="退回原因：" + reason;
             }
             // 更改委托状态
             etrEntrust.setRemark(reason);
@@ -1136,6 +1152,7 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
             BeanUtil.copyPropertiesIgnoreNull(entrustAdd,dto.getEtrEntrustAdd());
             entrustAdd.setWorkflowId(dto.getWorkFlowId());
             entrustAdd.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
+            entrustAdd.setEntrustCreateSource(dto.getEtrEntrustAdd().getEntrustCreateSource());
             wflEtrEntrustAddMapper.insertSelective(entrustAdd);
             // 保存List<委托指令回购质押品>
             if (dto.getEtrPledgeList() != null && dto.getEtrPledgeList().size() > 0) {

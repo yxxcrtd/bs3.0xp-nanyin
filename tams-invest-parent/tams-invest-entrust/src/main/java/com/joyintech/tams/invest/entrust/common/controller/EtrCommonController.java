@@ -11,6 +11,7 @@ import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.TrdProductDealDto;
 import com.joyintech.tams.invest.common.risk.service.RiskNamListCommonValidatorService;
 import com.joyintech.tams.invest.entrust.common.dto.EtrFinProductCommonDto;
@@ -166,7 +167,7 @@ public class EtrCommonController extends BaseController {
 //        if (isAuthorizationSoftcontrol) {
 //            boolean isRiskAuthorize = 授权是否匹配(trdProductDeal);
 //            if (StringUtil.isNotEmpty(isRiskAuthorize) && isRiskAuthorize) {
-//                JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+//                JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
 //                joyinMessages.add(ms);
 //                wr.setJoyinMessages(joyinMessages);
 //            }
@@ -517,7 +518,7 @@ public class EtrCommonController extends BaseController {
                 Map<String, Object> params = CommonBusinessService.setParams(counterId, prinAmt, LoginUserUtil.getUserName(),
                         平安资产类型, null, tradeMarket, ps,finprodId, null);
                 if (commonBusinessService != null && commonBusinessService.是否超过副总额额度_指令用(params)) {
-                    JoyinMessage ms = new JoyinMessage("交易本金金额超过副总裁/总裁助理授权额度，是否确认提交!", MessageType.确认消息);
+                    JoyinMessage ms = new JoyinMessage("交易本金金额超过领导授权额度，是否确认提交!", MessageType.确认消息);
                     joyinMessages.add(ms);
                     wr.setJoyinMessages(joyinMessages);
                 }
@@ -526,8 +527,7 @@ public class EtrCommonController extends BaseController {
         }
         catch (Exception e) {
             logger.info("执行风险相关交易共通check出现异常，异常信息如下：");
-            logger.info(e.getMessage());
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
 
         return wr;
@@ -639,6 +639,45 @@ public class EtrCommonController extends BaseController {
 
     public BigDecimal getCostPrice(Map<String, Object> param){
         return etrCommonService.getCostPrice(param);
+    }
+
+
+    /**
+     * 获取资产SPPI模块是否有SPPI测试结果
+     */
+    @ResponseBody
+    @RequestMapping("getAssetInfoBySPPI")
+    public AjaxResult getAssetInfoBySPPI(@RequestBody Map<String, Object> param){
+        String assetStatusIsTestBySppi = etrCommonService.assetIsTestBySppi(param);
+        AjaxResult ajaxResult = new AjaxResult();
+        List<ValidMessage> errorList = new ArrayList<>();
+        // 状态码 0 未测试 2 测试通过 3 测试不通过
+        if((StringUtil.equals(assetStatusIsTestBySppi,"2")||StringUtil.equals("3",assetStatusIsTestBySppi))){
+           if(StringUtil.equals(assetStatusIsTestBySppi,"3"))
+              //未通过
+               ajaxResult.setData("3");
+           else
+               ajaxResult.setData("2");
+        }else {
+            //未测试
+            ajaxResult.setData("0");
+         }
+        return ajaxResult;
+    }
+
+    /**
+     * 选择收取合同约定的现金流时查询sppi中资产情况
+     * @param param
+     * @return
+     */
+
+    @ResponseBody
+    @RequestMapping("getSppiInfoByY1")
+    public AjaxResult getSppiInfoByY1(@RequestBody Map<String, Object> param){
+         String sinal =  etrCommonService.getSppiInfoByY1(param);
+         AjaxResult ajaxResult = new AjaxResult();
+         ajaxResult.setData(sinal);
+         return ajaxResult;
     }
 
 }

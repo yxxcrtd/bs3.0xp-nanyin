@@ -1,5 +1,6 @@
 package com.joyintech.service.product.common.controller;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,7 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
 	@PostMapping("insertFinProductCommon")
-	public void insertFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+	public void insertFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
 	    finProductCommonService.insertFinProductCommon(finProductCommonInfoDto);
 	}
 	
@@ -199,7 +200,7 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
     @PostMapping("updateFinProductCommon")
-    public void updateFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws Exception{
+    public void updateFinProductCommon(@RequestBody FinProductCommonInfoDto finProductCommonInfoDto) throws InvocationTargetException, IllegalAccessException {
         finProductCommonService.updateFinProductCommon(finProductCommonInfoDto);
     }
     
@@ -212,7 +213,8 @@ public class FinProductCommonController {
     @Transactional
     @DTXTransaction
     @GetMapping("deleteFinProductCommon")
-    public void deleteFinProductCommon(String finprodId) throws Exception{
+    public void deleteFinProductCommon(String finprodId)
+    {
         finProductCommonService.deleteFinProductCommon(finprodId);
     }
 
@@ -426,4 +428,10 @@ public class FinProductCommonController {
     public String getTradeid(@RequestBody Map<String, Object> map) {
         return finProductCommonService.getTradeid(map);
     }
-}
+
+    @PostMapping("getUserNameList")
+    public List<SelectOptionDto> getUserNameList(@RequestBody Map<String, Object> param) {
+//        Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("roleName", DictCodeListExt2.角色岗位_产品设计岗.getValue());
+        return finProductCommonService.getUserNameList(param);
+    }}

@@ -211,6 +211,20 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
     private String counterIdName;
 
     /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
+
+    /**
      * 获取 counterIdName
      * 
      * @return counterIdName.
@@ -250,6 +264,7 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
      * 完成额度
      */
     @JsonSerialize(using=BigDecimalSerializer.class)
+    @Amount(fieldName = "EtrInvestBondInfo002.finishAmt", groups = {ValidateGroupEdit.class})
     private BigDecimal finishAmt;
     
     /**
@@ -1280,7 +1295,7 @@ public class EtrInvestBondInfoDto extends EtrEntrust implements ProcessEntity {
      * @return 投资目的
      */
     @Override
-    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     public String getInvAim() {
         return super.getInvAim();
     }

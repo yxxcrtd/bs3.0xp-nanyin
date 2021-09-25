@@ -11,15 +11,14 @@
 package com.joyintech.interf.bankname.riskinterf.service;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.dao.EtrEntrustAddMapper;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.common.base.dao.FinTradeProductMapper;
-import com.joyintech.tams.common.base.entity.EtrEntrust;
-import com.joyintech.tams.common.base.entity.EtrEntrustAdd;
-import com.joyintech.tams.common.base.entity.FinTradeProduct;
-import com.joyintech.tams.common.base.entity.FinTradeProductKey;
+import com.joyintech.tams.common.base.dao.MstCounterPartyMapper;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.constant.InterfUtil;
 import com.joyintech.tams.component.business.riskrds.core.BaseRiskRdsService;
@@ -116,6 +115,9 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
      */
     @Autowired
     private FinTradeProductMapper finTradeProductMapper;
+
+    @Autowired
+    private MstCounterPartyMapper mstCounterPartyMapper;
 
     @Autowired
     private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
@@ -265,6 +267,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 secdto.setPriceAmt(new BigDecimal("100"));
                 secdto.setPs(BussinessDictCodeList.交易方向_卖出.getValue());
                 secdto.setEventId(secdto.getEventId()+secdto.getPs());
+
+                // add by etliu 20210907 start
+                // 债转股两笔的预占编号是 指令编号 + 交易方向
+                secdto.setPreOccupyCode(secdto.getEntrustCode() + BussinessDictCodeList.交易方向_卖出.getValue());
+                // add by etliu 20210907 end
+
                 requestList.add(secdto);
                //股票买入
                 if(entity.get("conShareId")!=null) {
@@ -281,6 +289,12 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     stockdto.setAssetType(BussinessDictCodeList.平安资产类型_股票.getValue());
                     stockdto.setPs(BussinessDictCodeList.交易方向_买入.getValue());
                     stockdto.setEventId(stockdto.getEventId()+stockdto.getPs());
+
+                    // add by etliu 20210907 start
+                    // 债转股两笔的预占编号是 指令编号 + 交易方向
+                    stockdto.setPreOccupyCode(secdto.getEntrustCode() + BussinessDictCodeList.交易方向_买入.getValue());
+                    // add by etliu 20210907 end
+
                     requestList.add(stockdto);
                 }
             }else if (StringUtil.equals(CommonUtil.findValue(entity,"ps"),DictCodeList.交易方向_到期续做.getValue())){
@@ -455,6 +469,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         //委托编号
         String entrustCode = finDto.getEntrustCode();
         EtrEntrust etrEntrust = etrEntrustMapper.selectByPrimaryKey(entrustCode);
+        finDto.setTradeMarketMode(DictCodeListExt1.交易市场_二级市场.getValue());
         if(StringUtil.isNotEmpty(etrEntrust)) {
             if(StringUtil.equals(etrEntrust.getTradeMarket(),DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
                 finDto.setCalendarCode("04");
@@ -524,9 +539,26 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     }
                 }
                 finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                finDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
+                //获取交易对手的市场机构代码
+                if(StringUtil.isNotEmpty(finDto.getCounterId())) {
+                    MstCounterParty mstCounterParty =  mstCounterPartyMapper.selectByPrimaryKey(finDto.getCounterId());
+                    if(StringUtil.isNotEmpty(mstCounterParty)) {
+                        finDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }
+                }
+                //wangyang1 add by 增加期限金额 2021年9月10日 start
+                if (StringUtil.isNotEmpty(finDto.getAmount()) && StringUtil.isNotEmpty(finDto.getOneDay())){
+                    finDto.setTermAmount(ArithmeticUtil.multiply(finDto.getAmount(),new BigDecimal(finDto.getOneDay())));
+                }
+                if (StringUtil.isNotEmpty(finDto.getCounterId())){
+                    finDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+                }else{
+                    finDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+                }
+                //wangyang1 add by 增加期限金额 2021年9月10日 end
                 return finDto;
             }
-
 
             finDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             finDto.setAssetType2(finDto.getPs());
@@ -588,7 +620,16 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     }
                 }
             }
-
+            //wangyang1 add by 增加期限金额 2021年9月10日 start
+            if (StringUtil.isNotEmpty(finDto.getAmount()) && StringUtil.isNotEmpty(finDto.getOneDay())){
+                finDto.setTermAmount(ArithmeticUtil.multiply(finDto.getAmount(),new BigDecimal(finDto.getOneDay())));
+            }
+            if (StringUtil.isNotEmpty(finDto.getCounterId())){
+                finDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                finDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
+            //wangyang1 add by 增加期限金额 2021年9月10日 end
         }
         return finDto;
     }

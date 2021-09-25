@@ -11,7 +11,7 @@
         NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
         <!--资产信息 -->
         fin.FINPROD_ID AS FINPROD_ID,
-        fin.FINPROD_ABBR AS FINPROD_ABBR,
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         fin.TRADE_MARKET AS TRADE_MARKET,
         fin.FINPROD_MARKET_ID AS FINPROD_MARKET_ID,
         fin.ISSUER AS ISSUER,
@@ -39,7 +39,8 @@
         deal.SETTLE_DATE AS SETTLE_DATE,
         deal.TRADE_DATE AS TRADE_DATE,
         deal.MDATE AS PLAN_END_DATE,
-        deal.IS_CLEAN AS IS_CLEAN
+        deal.IS_CLEAN AS IS_CLEAN,
+        ACC.INV_AIM AS invAim
         FROM FIN_PRODUCT fin
         INNER JOIN FIN_PRODUCT_TYPE typ
         ON fin.FINPROD_ID = typ.FINPROD_ID
@@ -67,6 +68,7 @@
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND deal.IS_CANCEL = 'N'
         AND deal.TRADE_STATUS = '01'
         AND typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13})
@@ -80,14 +82,15 @@
         )
         AND ACC.INV_AIM IN ('AC','FVOCI')
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (fin.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR fin.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
             )
+            AND deal.SETTLE_DATE <![CDATA[<=]]> #{searchDate}
         </if>
 
     </select>
@@ -242,6 +245,7 @@
         VAL.PORTFOLIO_ID AS PORTFOLIO_ID, /** 组合代码 **/
         <!--资产信息 -->
         NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID, /** 金融产品代码 **/
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type, /** 金融产品类型 **/
         NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,/** 市场代码 **/
         NVL(fin.VDATE,trdfin.VDATE) AS VDATE, /** 起息日 **/
@@ -251,7 +255,7 @@
         fin.COUPON_SPECIES AS COUPON_SPECIES, /** 息票品种 **/
         fin.ISSUE_PRICE AS ISSUE_PRICE, /** 发行价 **/
         fin.ISSUE_AMT AS ISSUE_AMT, /** 发行数量 **/
-        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
         cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
         fin.FINANCIER AS FINANCIER,
         cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
@@ -279,7 +283,11 @@
         ON fin.FINANCIER = cust2.CUSTOMER_ID
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
+        <!-- 回购交易对手关联对应机构代码 -->
+        LEFT JOIN MST_COUNTER_PARTY cpt
+        ON cpt.COUNTER_ID = trdfin.COUNTER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.DSC_COST_AMT != 0
         AND VAL.CDATE = #{searchDate} -1
         AND VAL.INV_AIM IN ('AC','FVOCI','999999')
@@ -291,10 +299,10 @@
         AND NVL(fin.VDATE,trdfin.VDATE) <![CDATA[<=]]> #{searchDate}
         AND NVL(NVL(fin.MDATE,trdfin.MDATE) , #{searchDate}+1)<![CDATA[>]]> #{searchDate}
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (VAL.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR VAL.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -313,6 +321,7 @@
         NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID) AS PORTFOLIO_ID,
         --资产信息 -->
         NVL(fin.FINPROD_ID,trdfin.FINPROD_ID) AS FINPROD_ID,
+        NVL(fin.FINPROD_ABBR,fin.FINPROD_NAME) AS FINPROD_ABBR,/** 金融产品简称 **/
         NVL(fin.Finprod_Type,trdfin.Finprod_Type) AS Finprod_Type,
         NVL(fin.FINPROD_MARKET_ID,trdfin.FINPROD_ID) AS FINPROD_MARKET_ID,
         NVL(fin.VDATE,trdfin.VDATE) AS VDATE,
@@ -322,7 +331,7 @@
         fin.COUPON_SPECIES AS COUPON_SPECIES,
         fin.ISSUE_PRICE AS ISSUE_PRICE,
         fin.ISSUE_AMT AS ISSUE_AMT,
-        NVL(fin.ISSUER, trdfin.COUNTER_ID) AS ISSUER, /** 发行人/交易对手（回购）**/
+        NVL(fin.ISSUER, cpt.LINK_ID) AS ISSUER, /** 发行人/交易对手对应市场机构（回购）**/
         cust1.IS_FIN_LICENCE AS ISSUER_FIN_LICENCE,
         fin.FINANCIER AS FINANCIER,
         cust2.IS_FIN_LICENCE AS FINANCIER_FIN_LICENCE,
@@ -361,21 +370,25 @@
         ON fin.FINANCIER = cust2.CUSTOMER_ID
         LEFT JOIN MST_CUSTOMER_INFO_ADD cust3
         ON fin.SPONSOR = cust3.CUSTOMER_ID
+        <!-- 回购交易对手关联对应机构代码 -->
+        LEFT JOIN MST_COUNTER_PARTY cpt
+        ON cpt.COUNTER_ID = trdfin.COUNTER_ID
         WHERE 1=1
+        AND bok.ACCT_MODE != '03'  /**除去货币型产品**/
         AND VAL.Portfolio_Id IS NULL
         AND DEAL.PS IN ('T01','T35')
-        AND ACC.INV_AIM != 'FVTPL'
-        AND DEAL.TRADE_DATE = #{searchDate}
+        AND (ACC.INV_AIM IS NULL OR ACC.INV_AIM IN ('AC','FVOCI'))
+        AND DEAL.SETTLE_DATE = #{searchDate}
         AND (
         typ.TYPE_18 IN (#{SEC_TYPE_01}，#{SEC_TYPE_13}) --债券、其他债权类
         OR (typ.TYPE_18 = #{SEC_TYPE_07} AND typ.TYPE_1 IN ('01','03')) --存款类资产：存放同业、同业借款
         OR (typ.TYPE_18 = #{SEC_TYPE_09} AND typ.TYPE_1 IN ('02','04')) --回购类资产：质押式逆回购、买断式逆回购
         )
         <if test="finprodIdList != null and finprodIdList.size > 0">
-            AND (a.FINPROD_ID IN
+            AND (DEAL.FINPROD_ID IN
             <foreach collection="finprodIdList" item="item" index="index" open="( " close=" )" separator=",">
                 <if test="(index % 998) == 0">
-                    null) OR a.FINPROD_ID in (
+                    null) OR DEAL.FINPROD_ID in (
                 </if>
                 #{item}
             </foreach>
@@ -385,19 +398,20 @@
 
     <!-- 查询资产首次买入日期 -->
     <select id="queryFirstBuyDate" resultType="java.util.Date">
-		SELECT MIN(A.TRADE_DATE)
+		SELECT MIN(A.SETTLE_DATE)
 		FROM TRD_PRODUCT_DEAL A
 		INNER JOIN BOK_DEAL_ACCOUNTING ACC
 		 ON ACC.BUSI_NO = A.TRADE_ID
 		WHERE A.PS='T01'
 			AND A.FINPROD_ID=#{finprodId}
-		  	AND A.TRADE_DATE <![CDATA[>=]]> NVL(
+		  	AND A.SETTLE_DATE <![CDATA[>=]]> NVL(
 				(
 						SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
 						WHERE B.DSC_COST_AMT = 0
 							AND B.FINPROD_ID=#{finprodId}
 						  	AND B.PORTFOLIO_ID=#{portfolioId}
-				),A.TRADE_DATE
+				            AND B.CDATE <![CDATA[<]]> #{platDate}
+                ),A.SETTLE_DATE
 			)
 			AND ACC.BOOKSET_ID = #{prodId}
 	</select>

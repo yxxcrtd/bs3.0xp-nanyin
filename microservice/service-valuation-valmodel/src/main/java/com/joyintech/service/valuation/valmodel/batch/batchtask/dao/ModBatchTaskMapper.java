@@ -2,10 +2,13 @@ package com.joyintech.service.valuation.valmodel.batch.batchtask.dao;
 
 import com.joyintech.framework.base.entity.SysBatchGrpPrdlink;
 import com.joyintech.framework.base.entity.SysBatchJob;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchAssetInfoDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchExecutingStatusDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.BatchTaskDto;
 import com.joyintech.service.valuation.valmodel.batch.batchtask.dto.ModValBatchAssetInfoDto;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
+import com.joyintech.tams.valuation.common.batch.batchTasks.ModBatchLogDetailDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,21 +32,24 @@ public interface ModBatchTaskMapper {
 
     int checkIsRunning(Map<String, Object> params);
 
-    Integer cleanBatchParams();
+    Integer cleanBatchParams(Map<String, Object> params);
 
     List<BatchAssetInfoDto> getAssetInfo(Map<String, Object> param);
 
     List<BatchAssetInfoDto> getAssetInfoImpairment(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getLossKpmgAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getLossKpmgAssetInfo(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getLossPwcAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getLossPwcAssetInfo(Map<String, Object> param);
 
-    List<BatchAssetInfoDto> getValAssetInfo(Map<String, Object> param);
+    List<SelectOptionDto> getValAssetInfo(Map<String, Object> param);
 
+    List<BatchAssetInfoDto> getAllAssetInfo(Object o);
 
-
-
-
+    /**
+     *
+     * @param params
+     */
+    List<ModBatchLogDetailDTO> selectLogsDetail(Map<String, Object> params);
 
 }

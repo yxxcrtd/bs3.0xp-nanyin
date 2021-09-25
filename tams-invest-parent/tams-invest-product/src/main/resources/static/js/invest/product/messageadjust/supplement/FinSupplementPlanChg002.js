@@ -34,6 +34,7 @@ $(function() {
 		
   	   Joyin.ajax(basePath + 'invest/product/messageadjust/supplement/FinSupplementPlanChg002/getAccrDate',
   	         getParam(), function(result){
+  	   	debugger;
             	$("#newAccrDate").val(result).trigger("change");
          });
 	}
@@ -53,7 +54,8 @@ $(function() {
 
 	  	 
 	     if(Date.ofDate($("#newAccrDate").val())>=Date.ofDate($("#accrEndDate").val())){
-             Joyin.error(JoyinUtil.getMessage(FIN_PROD_E_0227));
+             // Joyin.error(JoyinUtil.getMessage(FIN_PROD_E_0227));
+			 Joyin.error(JoyinUtil.getMessage("新的回补日必须小于区间结束日期!"));
              return ;
 	     } else{
 	         top.returnData=$("#newAccrDate").val();

@@ -19,10 +19,10 @@
                 , {field: 'amount', width: "200", title: '持有本金', type: 'money', sortable:false}
                 , {field: 'returnAmount', width: "200", title: '还本金额', type: 'money', sortable:false}
                 , {field: 'calcRuleString', width: "200", title: '付息周期', sortable:false}
-                , {field: 'invAim', width: "200", title: '投资目的', sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM},edit:true}
+                , {field: 'invAim', width: "200", title: '投资目的', sortable:false,editOption:{type:'select',formatoption:true,result: INV_AIM},edit:true ,visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false}
                 , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
-                , {field: 'yield', width: "200", title: '借款利率(%)', type: 'money', sortable:false}
+                , {field: 'yield', width: "200", title: '计提利率(%)', type: 'money', sortable:false}
                 , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                 , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                 , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}
@@ -109,7 +109,7 @@
                     , {field: 'calcRuleString', width: "200", title: '付息周期', sortable:false}
                     , {field: 'vDate', width: "200", title: '计息开始日', sortable:false}
                     , {field: 'mDate', width: "200", title: '计息结束日', sortable:false}
-                    , {field: 'yield', width: "200", title: '借款利率(%)', type: 'money', sortable:false}
+                    , {field: 'yield', width: "200", title: '计提利率(%)', type: 'money', sortable:false}
                     , {field: 'repaymentUnpayInterest', width: "200", title: '区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                     , {field: 'actrRepaymentUnpayInterest', width: "200", title: '实际区间未付利息', type: 'money', sortable:false,visible:intAmtUnpayFlag}
                     , {field: 'theoryAmt', width: "200", title: '理论本息总额', type: 'money', sortable:false}

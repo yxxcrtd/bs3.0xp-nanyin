@@ -136,6 +136,21 @@ public class CfetsRepoDealQuotedPr006Controller extends BaseController {
                             trdRepoTrade001DtoPage.getRoot().stream().filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0).collect(Collectors.toList())));
         }
         model.addAttribute("noBranchNoValue", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
+        //add by chenjiaxing 质押券置换流程中缺少信息 20210913 start
+        if(StringUtils.isNotBlank(this.getParam("ouTraderId"))){
+            dto.setTrader(this.getParam("ouTraderId").toString());
+        }
+        if(StringUtils.isNotBlank(this.getParam("cpPartyId"))){
+            dto.setCounterId(this.getParam("cpPartyId").toString());
+        }
+        if(StringUtils.isNotBlank(this.getParam("cpTraderId"))){
+            dto.setCounterTrader(this.getParam("cpTraderId").toString());
+        }
+        if(StringUtils.isNotBlank(this.getParam("fTradeId"))){
+            model.addAttribute("fTradeId",this.getParam("fTradeId"));
+            dto.setfTradeId(this.getParam("fTradeId"));
+        }
+        //add by chenjiaxing 质押券置换流程中缺少信息 20210913 end
         model.addAttribute("entity", dto);
         // 人员信息
         model.addAttribute("entity_trdInvestPersonInfo",
@@ -159,9 +174,6 @@ public class CfetsRepoDealQuotedPr006Controller extends BaseController {
         Date sysDate = DateUtil.platDateFromCache();
         String formatDate = DateUtil.format(sysDate);
         model.addAttribute("formatDate",formatDate);
-        if(StringUtils.isNotBlank(this.getParam("fTradeId"))){
-            model.addAttribute("fTradeId",this.getParam("fTradeId"));
-        }
         if(StringUtils.isNotBlank(tradeId)){
             model.addAttribute("tradeId",tradeId);
         }
@@ -290,4 +302,17 @@ public class CfetsRepoDealQuotedPr006Controller extends BaseController {
         return map;
     }
 
+    /**
+     * 查询本方交易员列表
+     *
+     * @return 本方交易员列表
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("/queryMySideTraderList")
+    public Page<SelectOptionDto> queryMySideTraderList(){
+        Page<SelectOptionDto> a = cfetsRepoDealQuotedPr006Service.queryMySideTraderPage(RequestUtil.getPageParam());
+        return a;
+    }
 }

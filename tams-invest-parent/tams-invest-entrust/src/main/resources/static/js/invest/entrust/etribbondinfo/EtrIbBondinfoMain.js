@@ -39,24 +39,6 @@ $(
             });
         });
 
-        var init = function () {
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [48, 44],
-                minSize: 100,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [35, 65],
-                minSize: [300, 600],
-                direction: "horizontal"
-            });
-            // //窗口容器的高度，设置为页面左右容器的高度
-            // var height = window.innerHeight - 50;
-            // $('.right_panel').css('height', height);
-            // $('.left_panel').css('height', height);
-        };
-
         /**
          * 风险试算
          * @returns
@@ -255,6 +237,14 @@ $(
             if (!object) {
                 return;
             }
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+                var businessModel = $("#businessModel").val();
+                if(businessModel=="Y1"){
+                    object.invAim = "AC"
+                }else{
+                    object.invAim = "FVTPL"
+                }
+            }
 
             Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
                 if (operateType === "save") {
@@ -299,7 +289,7 @@ $(
                 rightDiv.attr("style", "position: absolute; left: 0px; top:0px; width: 100%; height:100%;background: #fff; z-index: 100");
                 rightDiv.attr("flag","0");
             }else{
-                rightDiv.attr("style", defaultStyle);
+                rightDiv.attr("style", " float:right; width:57.5%; height:100%; display: inline-block;");
                 rightDiv.attr("flag","1");
             }
             if(flag === "narrow"){
@@ -314,7 +304,6 @@ $(
          * 绑定事件
          */
         $(function () {
-            init();
             /**
              * 附件上传
              */

@@ -302,7 +302,8 @@ public class ValAccountsAdjustAccountEntry003Controller extends BaseController {
     @ResponseBody
     @RequestMapping(path = "findDictCodeList")
     public List<SelectOptionDto> findDictCodeList(String dictCode) {
-        System.out.println("dictCode==" + dictCode);
+//        System.out.println("dictCode==" + dictCode);
+        getLogger().info("dictCode==" + dictCode);
         List<SelectOptionDto> dtos = new ArrayList<>();
         if(!StringUtil.isNotEmpty(dictCode)){
             return dtos;

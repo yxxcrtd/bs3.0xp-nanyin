@@ -65,7 +65,7 @@ public class ValAssetCategories002Controller {
      */
     @PostMapping("update")
     public void update(@RequestBody ValAssetCategories002Dto dto) throws Exception {
-        valAssetCategories002Service.update(dto);
+        valAssetCategories002Service.updateBySeqNo(dto);
     }
 
     /**

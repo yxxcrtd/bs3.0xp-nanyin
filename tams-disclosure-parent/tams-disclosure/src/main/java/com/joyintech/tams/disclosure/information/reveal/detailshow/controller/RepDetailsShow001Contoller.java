@@ -9,6 +9,7 @@
 */
 package com.joyintech.tams.disclosure.information.reveal.detailshow.controller;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,8 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
@@ -48,6 +47,7 @@ import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.RepReveal;
+import com.joyintech.tams.common.util.JacksonUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.getprdinfoselect.service.GetPrdInfoSelectService;
 import com.joyintech.tams.disclosure.busicommon.infodisclosure.repcheck.service.RepCheckInfoService;
@@ -123,8 +123,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getPrdInfoSelect")
 	@ResponseBody
-    public Page<SelectOptionDto> getPrdInfoSelect()
-        throws Exception {
+    public Page<SelectOptionDto> getPrdInfoSelect(){
 	    Map<String, Object> param=RequestUtil.getPageParam();
 	    if(param.get("repId")!=null){
 	        repDetailsShow001Service.getRandgeRule(param);
@@ -142,8 +141,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getCusInfoSelect")
 	@ResponseBody
-	public Page<SelectOptionDto> getCusInfoSelect()
-			throws Exception {
+	public Page<SelectOptionDto> getCusInfoSelect() {
 		Map<String, Object> param=RequestUtil.getPageParam();
 		Page<SelectOptionDto> cusInfoSelect = getPrdInfoSelectService.getCusInfoSelect(param);
 		return cusInfoSelect;
@@ -161,7 +159,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     @ResponseBody
     public String getDictSelect(String DictCode){
         Map<String,Object> map = repDetailsShow001Service.getCatchDetail(DictCode);
-        String json = JSONObject.toJSONString(map);        
+        String json = JacksonUtil.toJSONString(map);        
         return json;
     }
     
@@ -218,7 +216,8 @@ public class RepDetailsShow001Contoller extends BaseController {
         	if(params.get("portnum") != null) {
         		
         		if(params.get("portnum").toString().indexOf("[")==0){
-        			prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
+        			//prdList = JSONArray.parseArray(params.get("portnum").toString(),String.class);
+        			prdList =JacksonUtil.toJavaObjectList(params.get("portnum").toString(),String.class);
         		}else{
         			prdList.add(params.get("portnum").toString().replace("\"", ""));
         		}
@@ -268,7 +267,7 @@ public class RepDetailsShow001Contoller extends BaseController {
             }
         }catch (Exception e) {
             value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error("error:",e);
         }
         finally{
@@ -291,7 +290,7 @@ public class RepDetailsShow001Contoller extends BaseController {
             }
         }catch (MalformedURLException e) {
             value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//            e.printStackTrace();
+//            logger.error(e.getMessage(),e);
             logger.error("error:",e);
         }finally{
             //return value;
@@ -310,7 +309,7 @@ public class RepDetailsShow001Contoller extends BaseController {
      * @since 1.0
      */
     @RequestMapping("mergeExport")
-    public ResponseEntity<byte[]> mergeExport() throws Exception {
+    public ResponseEntity<byte[]> mergeExport() throws IOException {
         return repDetailsShow001Service.mergeExport(RequestUtil.getPageParam());
     }
     
@@ -336,7 +335,7 @@ public class RepDetailsShow001Contoller extends BaseController {
     @SuppressWarnings("unused")
 	@ResponseBody
     @RequestMapping("/querySameCount")
-    public AjaxResult querySameCount() throws Exception{
+    public AjaxResult querySameCount() {
     	String msg = StringUtil.EMPTY;
     	Map<String, Object>params = RequestUtil.getPageParam();
     	int count = repDetailsShow001Service.querySameCount(params);
@@ -382,7 +381,6 @@ public class RepDetailsShow001Contoller extends BaseController {
 //               }
            }catch (Exception e) {
                value.setMessage("生成失败:"+e.getMessage(), MessageType.错误消息);
-//               e.printStackTrace();
                logger.error("error:",e);
            }
            finally{
@@ -420,8 +418,7 @@ public class RepDetailsShow001Contoller extends BaseController {
 	 */
 	@RequestMapping("getProdSeriesList")
 	@ResponseBody
-    public List<SelectOptionDto> getProdSeriesList()
-        throws Exception {
+    public List<SelectOptionDto> getProdSeriesList(){
 	    Map<String, Object> param=RequestUtil.getPageParam();
 	    if(param.get("repId")!=null){
 	        repDetailsShow001Service.getRandgeRule(param);

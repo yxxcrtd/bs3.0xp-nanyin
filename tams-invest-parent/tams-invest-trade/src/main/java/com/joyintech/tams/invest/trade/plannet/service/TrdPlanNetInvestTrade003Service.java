@@ -50,6 +50,8 @@ import com.joyintech.workflow.engine.entity.FlowEntity;
 import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -71,6 +73,10 @@ import java.util.Map;
  */
 @Service
 public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInvestTradeConfirmDto> implements BaseProcessService<TrdPlanNetInvestTradeConfirmDto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetInvestTrade003Service.class);
 
     /**
      * 附件信息共通Service
@@ -238,8 +244,7 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
            		 try {
 					WorkFlowUtil.deleteProcess(flow.getSeqNo(), flow.getWorkflowId());
 				} catch (WorkFlowException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+                     logger.error(e.getMessage(),e);
 				}
            	 }
             }
@@ -538,7 +543,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
      * @since 1.0
      */
     private void prepareEntity(TrdPlanNetInvestTradeConfirmDto dto) {
-        dto.setActPortfolioId(dto.getPortfolioId());
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            dto.setActPortfolioId(dto.getPortfolioId());
+        }
         dto.setPortfolioId(AllTradeCommonUtil.exchangePortfolio(dto.getPortfolioId()));
 
         // 一体化对应etliu start
@@ -605,15 +612,16 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
         // 组合交易表
         List<PtlTrade> ptlTrades = new ArrayList<>();
         // 组合交易表
-        PtlTrade ptlTrade = new PtlTrade();
-        ptlTrade.setPortfolioId(dto.getPortfolioId());
-        ptlTrade.setBusiNo(dto.getTradeId());
-        ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
-        ptlTrade.setBusiId(dto.getFinprodId());
-        ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
-        ptlTrade.setSettleDate(dto.getSettleDate());
-        ptlTrades.add(ptlTrade);
-        if (!dto.getPortfolioId().equals(dto.getActPortfolioId())) {
+        if(StringUtil.isEmpty(dto.getActPortfolioId())) {
+            PtlTrade ptlTrade = new PtlTrade();
+            ptlTrade.setPortfolioId(dto.getPortfolioId());
+            ptlTrade.setBusiNo(dto.getTradeId());
+            ptlTrade.setBusiTable(DictCodeList.业务表_金融产品表.getValue());
+            ptlTrade.setBusiId(dto.getFinprodId());
+            ptlTrade.setBusiType(DictCodeList.共通业务类型_计划类资产_净值型_交易.getValue());
+            ptlTrade.setSettleDate(dto.getSettleDate());
+            ptlTrades.add(ptlTrade);
+        } else {
             // 组合交易表
             PtlTrade ptlTrade1 = new PtlTrade();
             ptlTrade1.setPortfolioId(dto.getActPortfolioId());
@@ -706,32 +714,35 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
     @Autowired
     private CommonBusinessService commonBusinessService;
 
-    @Override
-    public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
-        Map<String, Object> variables = new HashMap<>();
-        TrdPlanNetInvestTradeConfirmDto dto = this.getBussinessEntity(entity);
-        if (taskId != null) {
-            try {
-              /*  return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getPrinAmt(), LoginUserUtil.getUserName(),
-                        DictCodeList.平安资产类型_计划类资产_净值型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-                        // 资产类型改为授权类型 add by renping 2019-08-06  start
-                        , dto.getFinprodId()
-                        // 资产类型改为授权类型 add by renping 2019-08-06  end
-                        );*/
-      Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTradeAmt(),LoginUserUtil.getUserName(),
-          DictCodeList.平安资产类型_计划类资产_净值型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
-          , dto.getFinprodId() ,entity.getWorkflowId());
-      params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
-      return commonBusinessService.是否需要上级审批(params);
-            }
-            catch (WorkFlowException e) {
-                // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
-                throw new WorkFlowException(e);
-            }
-        }
-        else {
-            return null;
-        }
-//        return null;
-    }
+    // delete by etliu 20210917 start
+    // 只需要对申请环节做授权检查，确认以及到账环节不需要授权检查
+//    @Override
+//    public Map<String, Object> getRuntimeVariables(ProcessMark entity, String taskId) throws WorkFlowException {
+//        Map<String, Object> variables = new HashMap<>();
+//        TrdPlanNetInvestTradeConfirmDto dto = this.getBussinessEntity(entity);
+//        if (taskId != null) {
+//            try {
+//              /*  return commonBusinessService.是否需要上级审批(dto.getCounterId(), dto.getPrinAmt(), LoginUserUtil.getUserName(),
+//                        DictCodeList.平安资产类型_计划类资产_净值型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+//                        // 资产类型改为授权类型 add by renping 2019-08-06  start
+//                        , dto.getFinprodId()
+//                        // 资产类型改为授权类型 add by renping 2019-08-06  end
+//                        );*/
+//      Map<String, Object> params = CommonBusinessService.setParams(dto.getCounterId(), dto.getTradeAmt(),LoginUserUtil.getUserName(),
+//          DictCodeList.平安资产类型_计划类资产_净值型.getValue(), dto.getType6(), dto.getTradeMarket(), dto.getPs()
+//          , dto.getFinprodId() ,entity.getWorkflowId());
+//      params.put("riskTrialRetDto", dto.getRiskTrialRetDto());
+//      return commonBusinessService.是否需要上级审批(params);
+//            }
+//            catch (WorkFlowException e) {
+//                // 未设置授权或设置成不授权时，抛出异常，当前用户只能退回
+//                throw new WorkFlowException(e);
+//            }
+//        }
+//        else {
+//            return null;
+//        }
+////        return null;
+//    }
+    // delete by etliu 20210917 end
 }

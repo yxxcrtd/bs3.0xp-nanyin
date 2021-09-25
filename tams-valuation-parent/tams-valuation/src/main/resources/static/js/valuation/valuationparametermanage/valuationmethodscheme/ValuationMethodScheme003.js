@@ -155,16 +155,25 @@ $(function () {
 			$("#valuationMethod").val("01").trigger("change");
             $("#valuationMethod").attr("disabled", "disabled");
 			
-		}else if(secType === '04' || secType === '05') {// 利率互换和外汇
-			$("#c_tradeMarket").hide();
+		}else if(secType === '04' ) {// 利率互换
+			$("#c_tradeMarket").show();
+			$("#c_secDetailType").hide();
+			$("#c_invAim").hide();
+			$("#c_valuationSource").show();
+
+			$("#valuationMethod").val("05").trigger("change");
+            $("#valuationMethod").attr("disabled", "disabled");
+			
+		}else if(secType === '05' ) {// 外汇
+			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
 			$("#c_invAim").hide();
 			$("#c_valuationSource").show();
 //			$("#c_modelName").show();
-			
-			$("#valuationMethod").val("05").trigger("change");
-            $("#valuationMethod").attr("disabled", "disabled");
-			
+
+			$("#valuationMethod").val("01").trigger("change");
+			$("#valuationMethod").attr("disabled", "disabled");
+
 		} else if(secType === '06') {// 股票
 			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
@@ -234,7 +243,7 @@ $(function () {
 			$("#c_secDetailType").hide();
 			$("#c_secDetailTypePlan").hide();
 
-			$("#c_tradeMarket").hide();
+			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
 			$("#c_invAim").show();
 			$("#invAim").disabled=false;
@@ -259,8 +268,8 @@ $(function () {
 					$("#c_priceTailMode").hide();
 		    		$("#c_priceClass").hide();
 		    		
-					$("#valuationPrice").val("08").trigger("change");
-		            $("#valuationPrice").attr("disabled", "disabled");
+/*					$("#valuationPrice").val("08").trigger("change");
+		            $("#valuationPrice").attr("disabled", "disabled");*/
 
 					/*$("#valuationPrice2").val("").trigger("change");*/
 					$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");

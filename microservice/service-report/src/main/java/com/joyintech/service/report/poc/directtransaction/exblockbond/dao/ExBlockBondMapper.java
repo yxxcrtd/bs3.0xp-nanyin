@@ -1,6 +1,7 @@
 package com.joyintech.service.report.poc.directtransaction.exblockbond.dao;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.report.poc.directtransaction.exblockbond.dto.ExBlockBondDto;
@@ -8,7 +9,7 @@ import com.joyintech.service.report.poc.directtransaction.exblockbond.dto.ExBloc
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public interface ExBlockBondMapper {
 	
 	ExBlockBondDto search(Map<String, String> map);

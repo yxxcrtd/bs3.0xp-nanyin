@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -110,8 +111,16 @@ public class BussRepoSecController extends BaseController {
                 if( entity.getTotalPrinAmt()  != null){
                     entity.setTotalPrinAmt(ArithmeticUtil.divide(entity.getTotalPrinAmt(),new BigDecimal(10000),4));
                 }
-                //add by chenjiaxing 质押券回购初始化报错
-                if(!(entity.getPledgeBondList() == null)){
+                //add by chenjiaxing 质押券回购初始化报错,报价界面回复初始化时质押券多除了10000  ，ZGZGST-2401 CfetsRepoDealQuotedPr006
+                if(StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006")){
+                    entity.setTotalPrinAmt(ArithmeticUtil.multiply(entity.getTotalPrinAmt(),new BigDecimal(10000)));
+                }
+                if(!(entity.getPledgeBondList() == null) && (!StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice002")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice002")
+                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPrice003")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPrice003")
+                        && !StringUtil.equals(entity.getPageFrom(),"CfetsRepoDealQuotedPr006")
+                        && !StringUtil.equals(pageFrom,"CfetsRepoDealQuotedPr006"))){
                     for (PledgeBondInfoDto dto : entity.getPledgeBondList()) {
                         if (dto.getAvaPledgePrin() != null) {
                             dto.setAvaPledgePrin(ArithmeticUtil.divide(dto.getAvaPledgePrin(), new BigDecimal(10000),4));
@@ -125,6 +134,12 @@ public class BussRepoSecController extends BaseController {
                 model.addAttribute("entity", entity);
             }
         }
+        // 佣金
+        model.addAttribute("FEE_TYPE_05", BussinessDictCodeList.费用类型_佣金.getValue());
+        // 交易手续费
+        model.addAttribute("FEE_TYPE_06", BussinessDictCodeList.费用类型_交易手续费.getValue());
+        // 结算手续费
+        model.addAttribute("FEE_TYPE_08", BussinessDictCodeList.费用类型_结算手续费.getValue());
         //add by gaopeng 2019/10/12 start
         model.addAttribute("entrustId", entrustId);
         //add by gaopeng 2019/10/12 end

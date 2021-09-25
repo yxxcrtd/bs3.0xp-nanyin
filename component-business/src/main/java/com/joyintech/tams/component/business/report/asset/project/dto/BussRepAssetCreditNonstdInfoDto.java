@@ -214,6 +214,7 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
     * 担保人与融资人关系  中债新增 20200403 end
     */
     private String repRelationFinan;
+
     
     /**
      * 获取 repAssetType
@@ -291,13 +292,13 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
     }
     
     //还本付息情况说明
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repRepayCmt", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repRepayCmt", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepRepayCmt(){
         return super.getRepRepayCmt();
     }
     
     //融资人
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinancier", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinancier", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepFinancier(){
         return super.getRepFinancier();
     }
@@ -309,28 +310,28 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
     }
     
     //外部评级机构名称及对融资人评级结果
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repFcrGradeOut", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repFcrGradeOut", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepFcrGradeOut(){
         return super.getRepFcrGradeOut();
     }
     //融资项目
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinanceProj", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repFinanceProj", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepFinanceProj(){
         return super.getRepFinanceProj();
     }
     //重点监控行业和领域类别说明
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repMonTypeComm", max = 256, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repMonTypeComm", max = 256, groups = {ValidateGroupEdit.class})
     public String getRepMonTypeComm(){
         return super.getRepMonTypeComm();
     }
     
     //担保情况说明
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repGuaTypeRemark", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repGuaTypeRemark", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepGuaTypeRemark(){
         return super.getRepGuaTypeRemark();
     }
     //资产内部评级
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repInGrade", max = 20, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repInGrade", max = 20, groups = {ValidateGroupEdit.class})
     public String getRepInGrade(){
         return super.getRepInGrade();
     }
@@ -340,7 +341,7 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
         return super.getRepChose();
     }
     //行权条件说明
-    @Length(fieldName = "BussRepAssetCreditNonstdInfo.repConditionCmm", max = 200, groups = {ValidateGroupEdit.class})
+    //@Length(fieldName = "BussRepAssetCreditNonstdInfo.repConditionCmm", max = 200, groups = {ValidateGroupEdit.class})
     public String getRepConditionCmm(){
         return super.getRepConditionCmm();
     }
@@ -821,4 +822,6 @@ public class BussRepAssetCreditNonstdInfoDto extends RepAssetCreditNonstd{
 	public void setRepBasicAssetType(String repBasicAssetType) {
 		this.repBasicAssetType = repBasicAssetType;
 	}
+
+
 }

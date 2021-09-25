@@ -32,7 +32,13 @@
         cols:[
             {field:'entrustId',visible:false},
             {field:'entrustStatus', visible:false},
-            {field:'entrustStatusStr', title:'状态',width:'10%',sortField:"entrustStatus"},
+            {field:'entrustStatusStr', title:'状态',width:'10%',sortField:"entrustStatus",
+                render : function(data, type, row, meta) {
+                    if (data == '待接收'){
+                        return '已生效';
+                    }
+                }
+            },
             {field:'portfolioId', title: '自主专户代码', width:'10%',sortField:"portfolioId"}
             ,{field:'finprodMarketId', title: '底层资产代码', width:'10%',sortField:"finprodMarketId"}
             ,{field:'type6Str', title: '资产一级分类', width:'10%',sortField:"entrustStatus"}
@@ -116,10 +122,6 @@
                 var selArr = table.getAllCheckedRows();
             }
             for(var i=0; i<selArr.length; i++){
-                // if(selArr[i].entrustStatusStr == '待接收'){
-                //     Joyin.error('不能对待接收的数据进行关闭操作');
-                //     return;
-                // }
                 if(selArr[i].entrustStatusStr == '已关闭'){
                     Joyin.error('已关闭状态的数据不允许再次关闭');
                     return;

@@ -9,38 +9,21 @@
  */
 package com.joyintech.tams.invest.trade.lend.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.Valid;
-
-import com.joyintech.tams.common.base.entity.TrdProductDeal;
-import com.joyintech.framework.util.*;
-import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
-import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
-import com.joyintech.tams.invest.common.CommonUtil;
-import com.joyintech.tams.invest.common.constant.BussinessConstant;
-import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
-import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
+import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
+import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.CommonUtil;
+import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
@@ -51,6 +34,18 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 拆借投资交易新建
@@ -83,6 +78,12 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
         TrdLendInvestTradeDto dto = new TrdLendInvestTradeDto();
 
+        this.setSelectOptionToModel(model, DictCode.交易场所);
+        // add by wangpeng 20210525 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        // add by wangpeng 20210525 银行间场内场外拆分 end
+
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
             || (!WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotBlank(workflowId))) {
             dto = trdLendInvestTrade002Service.getBussinessEntityByWorkflowId(
@@ -108,6 +109,10 @@ public class TrdLendInvestTrade002Controller extends BaseController {
                 // 根据工作流代码查询交易编号
                 dto.setTradeId(trdLendInvestTrade002Service.selectTradeIdByWorkflowId(workflowId));
             }
+            // add by yeming 20210914 银行间场内场外拆分 start
+            model.addAttribute("parentPageId",dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            // add by yeming 20210914 银行间场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdLendInvestTrade002Service.getTrdLendInvestTradeDto(tradeId);
@@ -155,14 +160,8 @@ public class TrdLendInvestTrade002Controller extends BaseController {
         //add by lizhi 是否限制划款指令开关 2020年2月26日  end
         model.addAttribute("PINAN_ASSET_TYPE_F08",DictCodeList.平安资产类型_拆借.getValue());
 
-        this.setSelectOptionToModel(model, DictCode.交易场所);
         this.setSelectOptionToModel(model, DictCode.期限品种_内部拆借);
         this.setSelectOptionToModel(model, DictCode.清算速度);
-
-        // add by wangpeng 20210525 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        // add by wangpeng 20210525 银行间场内场外拆分 end
         
         return super.init(model);
     }
@@ -248,8 +247,7 @@ public class TrdLendInvestTrade002Controller extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdLendInvestTradeDto dto)
-        throws Exception {
+    AjaxResult save(@RequestBody TrdLendInvestTradeDto dto) throws Exception {
         if (StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
                 BussinessCodeParameter codeParameter = new BussinessCodeParameter();

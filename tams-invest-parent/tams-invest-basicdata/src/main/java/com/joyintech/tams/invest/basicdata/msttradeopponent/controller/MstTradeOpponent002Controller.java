@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -471,15 +472,14 @@ public class MstTradeOpponent002Controller extends BaseController {
      * @param dto 请求实体类
      * @param br 验证的错误
      * @return 错误集合
-     * @throws Exception 错误
+     * @throws WorkFlowException 错误
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping(OPERATE_TYPE_SAVE)
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) MstTradeOpponentDto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) MstTradeOpponentDto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

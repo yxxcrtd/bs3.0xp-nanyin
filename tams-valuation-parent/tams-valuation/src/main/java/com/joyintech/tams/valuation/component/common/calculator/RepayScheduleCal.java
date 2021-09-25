@@ -51,7 +51,7 @@ public class RepayScheduleCal {
      * @since 1.0
      */
     public static <T extends FinCashPlanDto> List<T> cal(AssetCommonInfoDto scai, List<T> lirs, FinCashPayRule is,
-                           List<? extends FinCashCalcRule> lyield, BigDecimal amt, Class<T> class1, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException {
+                           List<? extends FinCashCalcRule> lyield, BigDecimal amt, Class<T> class1, Class<? extends FinCashPlanDetailDto> classdetail) throws ParseException, InstantiationException, IllegalAccessException {
 
         BigDecimal curAmt = new BigDecimal(amt.toPlainString());
         for (FinCashPlanDto rsd : lirs) {

@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.risktrial.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class SupervisionCalcSvcWithMix {
 	@Autowired
 	private SupervisionCalcDao supervisionCalcDao;
 	
-	public Object getIndicatorParamValue(String sql, SystemParam sysParam,String detailJson) throws Exception{
+	public Object getIndicatorParamValue(String sql, SystemParam sysParam,String detailJson) throws IOException {
 		String sqlNew = sysParam.replaceForString(sql);
 		List<Map<String, Object>> resultSet = supervisionCalcDao.selectOne(sqlNew);
 		if(resultSet.size() > 0) {

@@ -29,13 +29,13 @@ import com.joyintech.tams.invest.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001
 import com.joyintech.tams.invest.bankuplink.reponew.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.bankuplink.reponew.dto.EtrFinProductDto;
 import com.joyintech.tams.invest.bankuplink.reponew.dto.RepoQuoteInfoDto;
+import com.joyintech.tams.invest.common.component.base.group.BasePtlCashPositionInfoService;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
-import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +70,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
     @Autowired
     private PtlPortfolioMapper ptlPortfolioMapper;
     @Autowired(required = false)
-    private BaseEtrCashPositionCommService baseEtrCashPositionCommService;
+    private BasePtlCashPositionInfoService basePtlCashPositionInfoService;
     @Autowired
     private FinProductMapper finProductMapper;
     @Autowired(required = false)
@@ -105,7 +105,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         param.put("platDate", iPlatformDate.getSysDateStr());
         param.put("loginUserId", LoginUserUtil.getUserName());
         // 投资经理
-        Object invManagerIdObj = param.get("invManagerId_zlgl");
+        Object invManagerIdObj = param.get("invManagerId");
         if (invManagerIdObj != null) {
             param.put("invManagerIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)invManagerIdObj));
@@ -114,7 +114,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
             param.put("invManagerIdList", new ArrayList<>());
         }
         // 组合代码
-        Object portfolioIdObj = param.get("portfolioId_zlgl");
+        Object portfolioIdObj = param.get("portfolioId");
         if (portfolioIdObj != null) {
             param.put("portfolioIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
@@ -123,20 +123,26 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         else {
             param.put("portfolioIdList", new ArrayList<>());
         }
-
-        // 资产代码
-        Object assetIdObj = param.get("assetId_zlgl");
-        if (assetIdObj != null) {
-            param.put("assetIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)assetIdObj));
-            param.put("assetId",null);
+        Object entrustIdObj = param.get("entrustId");
+        if (entrustIdObj != null) {
+            param.put("entrustIdMultiple",
+                    StringUtil.splitToList(GlobalConstant.COMMA, (String)entrustIdObj));
+            param.put("entrustId",null);
         }
         else {
-            param.put("assetIdList", new ArrayList<>());
+            param.put("entrustIdMultiple", new ArrayList<>());
+        }
+        String keywords = "";
+        if(param.containsKey("keywords")){
+            keywords =(String) param.get("keywords");
+            param.remove("keywords");
         }
         List<CfetsRepoDealQuotedPr001Dto> list = restTemplate.postForList(
                 ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/queryZlzxList",
                 param, CfetsRepoDealQuotedPr001Dto.class);
+        if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
+            list = (List<CfetsRepoDealQuotedPr001Dto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));
+        }
         return list;
     }
 
@@ -371,17 +377,16 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         }
         if (StringUtil.isNotEmpty((String)param.get("finprodId"))) {
             // 资产可用券面总额
-            EtrSecPositionDto etrSecPositionDto= new EtrSecPositionDto();
-            etrSecPositionDto.setCdate(tradeDate);
-            etrSecPositionDto.setFinprodId((String)param.get("finprodId"));
-            etrSecPositionDto.setPortfolioId((String)param.get("portfolioId"));
+            PtlSecPositionFlowDto ptlSecPositionFlowDto= new PtlSecPositionFlowDto();
+            ptlSecPositionFlowDto.setCdate(tradeDate);
+            ptlSecPositionFlowDto.setFinprodId((String)param.get("finprodId"));
+            ptlSecPositionFlowDto.setPortfolioId((String)param.get("portfolioId"));
 
-            etrSecPositionDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
+            ptlSecPositionFlowDto.setCcy(DictCodeList.币种_人民币_CNY.getValue());
 
-            etrSecPositionDto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            result.put("assetAvailableEntrustAmt", getAssetAvailablePosition(etrSecPositionDto).divide(new BigDecimal(100)));
+            ptlSecPositionFlowDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+            result.put("assetAvailableEntrustAmt", getAssetAvailablePosition(ptlSecPositionFlowDto).divide(new BigDecimal(100)));
             // 资产持仓券面总额
-            PtlSecPositionFlowDto ptlSecPositionFlowDto = new PtlSecPositionFlowDto();
             ptlSecPositionFlowDto.setCdate(tradeDate);
             ptlSecPositionFlowDto.setPortfolioId((String)param.get("portfolioId"));
 //            if (StringUtil.isBlank(ptlSecPositionFlowDto.getPortfolioId())) {
@@ -465,22 +470,22 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         Map<String, Object> result = new HashMap<>();
         dto.setAcctType(acctTypeList);
 
-        if (baseEtrCashPositionCommService != null) {
+        if (basePtlCashPositionInfoService != null) {
             BigDecimal cashT = BigDecimal.ZERO;
             //期货保证金单独处理
             if(param.containsKey("acctType")&&StringUtil.equals(param.get("acctType"),DictCodeListExt1.资金账户类型_期货资金账户.getValue())){
                 acctTypeList.clear();
                 acctTypeList.add(DictCodeListExt1.资金账户类型_期货资金账户.getValue());
-                BigDecimal cashQH = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                BigDecimal cashQH = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
                 cashT = ArithmeticUtil.doAdd(cashT, cashQH == null ? BigDecimal.ZERO : cashQH);
             }else{
-                BigDecimal cashT3 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                BigDecimal cashT3 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
                 result.put("cashT3", cashT3); // 托管户可用
                 cashT = ArithmeticUtil.doAdd(cashT, cashT3 == null ? BigDecimal.ZERO : cashT3);
 
                 acctTypeList.clear();
                 acctTypeList.add(DictCodeListExt1.资金账户类型_券商资金账户.getValue());
-                BigDecimal cashT4 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                BigDecimal cashT4 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
                 result.put("cashT4", cashT4);// 交易所资金账户可用
                 cashT = ArithmeticUtil.doAdd(cashT, cashT4 == null ? BigDecimal.ZERO : cashT4);
             }
@@ -493,7 +498,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
                 }
                 dto.setAcctType(null);
                 dto.setChlFinprodId((String)param.get("chlFinprodId"));
-                BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto);
+                BigDecimal cashT2 = basePtlCashPositionInfoService.queryUsableCashPosition(dto);
                 result.put("cashT2", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道可用
                 //组合T日可用现金不加通道可用现金
                 //cashT = ArithmeticUtil.doAdd(cashT, cashT2);
@@ -510,7 +515,7 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
                 dto2.setAcctType(acctTypeList);
                 dto2.setPortfolioId((String)param.get("portfolioId"));
                 dto2.setCcy((String)param.get("ccy"));
-                BigDecimal cashT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
+                BigDecimal cashT1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);
                 if (StringUtil.isNotEmpty(param.get("chlFinprodId"))) {
                     FinProductAdd finProductAdd = finProductAddMapper.selectByPrimaryKey((String)param.get("chlFinprodId"));
                     result.put("payType", "02");
@@ -520,14 +525,14 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
                     dto2.setAcctType(null);
                     //组合T日可用现金不加通道可用现金
                     dto2.setChlFinprodId((String)param.get("chlFinprodId"));
-                    BigDecimal cashT2 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);
+                    BigDecimal cashT2 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);
                     result.put("cashT21", cashT2 == null ? BigDecimal.ZERO : cashT2);// 通道T+1可用
                 }
                 result.put("cashT1", cashT1 == null ? result.get("cashT") : cashT1);// 组合T+1日可用
 
                 acctTypeList.clear();
                 acctTypeList.add(DictCodeListExt1.资金账户类型_产品托管户.getValue());
-                BigDecimal cashTT1 = baseEtrCashPositionCommService.qryCommandAvailableCash(dto2);//组合托管户T+1可用
+                BigDecimal cashTT1 = basePtlCashPositionInfoService.queryUsableCashPosition(dto2);//组合托管户T+1可用
                 result.put("cashTT1", cashTT1 == null ? BigDecimal.ZERO : cashTT1);// 组合托管户T+1可用
 
             }
@@ -535,10 +540,9 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         return result;
     }
 
-    public BigDecimal getAssetAvailablePosition(EtrSecPositionDto dto) {
-        if (baseEtrCashPositionCommService != null) {
-            dto.setHodingType(DictCodeListExt1.持仓类型_委托指令可用.getValue());
-            return baseEtrCashPositionCommService.qryAvailablePosition(dto);
+    public BigDecimal getAssetAvailablePosition(PtlSecPositionFlowDto dto) {
+        if (basePtlSecPositionInfoService != null) {
+            return basePtlSecPositionInfoService.queryUsableSecPosition(dto);
         }
         return null;
     }
@@ -550,6 +554,11 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
      */
     public EtrFinProductCommonDto findCashAmountInfo(Map<String, Object> paramMap) {
         EtrFinProductCommonDto dto = new EtrFinProductCommonDto();
+
+        //银行间日历
+        if(!StringUtil.isNotEmpty(paramMap.get("calId"))){
+            paramMap.put("calId", "03");
+        }
 
         Map<String, Object> result = new HashMap<>();
         /**

@@ -4,11 +4,11 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.dao.ImpairmentViewCommonMapper;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ModStandardGradeMapping;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchLogResult;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.ImpairmentCalculationCommonService;
@@ -176,36 +176,6 @@ public class ImpairmentCommonService extends BaseService{
 			}
 		}
 		return latestMapRating;
-	}
-
-	/**
-	 * 批处理错误/警告日志记载
-	 * @param stepExecution 异常信息
-	 * @param execInfo 批处理执行任务信息
-	 * @param finprodId 资产代码
-	 * @param msg 消息
-	 * @param logType 日志类型
-	 */
-	// 组装日志上下文信息
-	public void sendLogContextInfo(StepExecution stepExecution, SysBatchExecInfo execInfo,
-								   String finprodId, String msg, String logType, String logKey) {
-		ModValBatchLogResult logrst = new ModValBatchLogResult();
-		logrst.setFinprodId(finprodId);
-		logrst.setBatchExecSeqno(execInfo.getBatchExedetailSeqNo());
-		logrst.setTaskId(execInfo.getTaskId());
-		logrst.setMsg(msg);
-		logrst.setType(logType);
-		if (stepExecution.getJobExecution().getExecutionContext().get(logKey) != null) {
-			List<ModValBatchLogResult> mvbLogRst = (List<ModValBatchLogResult>)stepExecution.getJobExecution()
-				.getExecutionContext().get(logKey);
-			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
-		}
-		else {
-			List<ModValBatchLogResult> mvbLogRst = new ArrayList<>();// 异常信息定义
-			mvbLogRst.add(logrst);
-			stepExecution.getJobExecution().getExecutionContext().put(logKey, mvbLogRst);
-		}
 	}
 
 	/**

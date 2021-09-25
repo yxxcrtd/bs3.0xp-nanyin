@@ -98,10 +98,10 @@ $(function() {
              ,{field:'vdate', title: 'FinPlanProfitAsset001.vDate',type:'date'}
              ,{field:'mdate', title: 'FinPlanProfitAsset001.mDate',type:'date'}
              ,{field:'manager',title: 'FinPlanProfitAsset001.manager'}
-             ,{field:'trusteeId',title: 'FinPlanProfitAsset002.trusteeId'}
+             ,{field:'trusteeId',visible :false}
              ,{field:'issuer',title: 'FinPlanProfitAsset002.issuer'}
              // 增加推荐方与推荐费率 add by renping 20191014 start
-             ,{field:'recommenderName',  title: 'FinPlanProfitAsset002.recommender', width:150,  sortField:'recommender'}
+             ,{field:'recommenderName',  title: 'FinPlanProfitAsset002.recommender', visible:false,width:150,  sortField:'recommender'}
              ,{field:'parentPlanStr',  title: 'FinPlanProfitAsset002.parentPlan', width:150, sort:false}
              // 增加推荐方与推荐费率 add by renping 20191014 end
              // 调整操作列宽 by 赵东东 2019.10.29

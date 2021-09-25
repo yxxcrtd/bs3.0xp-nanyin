@@ -90,7 +90,7 @@
                 //         "href='javascript:openOperateWindow(\"" + row.finprodId + "\")'>" + data||'' + "</a>";
                 // }
             }
-            , {field: 'chlFinprodId', width: 200, title: '合作资产'}
+            , {field: 'chlFinprodId', width: 200, title: '合作资产', visible:!ElementsControl.includes("chlFinprodId") }
             , {field: 'statusValid', visible: false}
             , {field: 'type6', visible: false}
             , {field: 'workflowId', visible: false}

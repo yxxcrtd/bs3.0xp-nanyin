@@ -239,6 +239,12 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
 
     private String calculateField;
 
+    /**
+     *业务模式
+     */
+    private String businessModel;
+
+
     public String getCalculateField() {
         return calculateField;
     }
@@ -910,5 +916,13 @@ public class PreTrdBondInvestTrade002Dto extends TrdFinProductDealTotal implemen
 		this.bussTransfenpei = bussTransfenpei;
 	}
 
-	
+    @Override
+    public String getBusinessModel() {
+        return businessModel;
+    }
+
+    @Override
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
 }

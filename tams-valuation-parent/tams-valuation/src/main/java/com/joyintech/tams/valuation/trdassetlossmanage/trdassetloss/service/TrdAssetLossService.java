@@ -253,6 +253,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     }
                 } else {
                     trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
+                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("模板内资产代码"+rowData.get(0).toString()+"、在系统内未找到对应资产代码匹配!"));
                 }
             }
             if (!StringUtil.isNotEmpty(rowData.get(0))) {
@@ -271,7 +272,6 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             if (StringUtil.isNotEmpty(rowData.get(1))) {
                 trdAssetLoss001Dto.setLossTestType(this.getCode(rowData.get(1).toString()));
                 if (StringUtil.equals(DictCodeListExt3.减值测算方式_外部评估.getValue(), this.getCode(rowData.get(1).toString()))) {
-                    trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值录入方式_按比例减值.getValue());
                     if (!StringUtil.isNotEmpty(rowData.get(7))) {
                         trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("减值测算方式为外部评估，减值比例不能为空!"));
                         trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
@@ -349,7 +349,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             //检验
             if (StringUtil.isNotEmpty(trdAssetLoss001Dto.getFinprodId())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getValDate())
-                    && StringUtil.isNotEmpty(trdAssetLoss001Dto.getPeroid())
+//                    && StringUtil.isNotEmpty(trdAssetLoss001Dto.getPeroid())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getStrDate())
                     && StringUtil.isNotEmpty(trdAssetLoss001Dto.getEndDate())) {
                 Map<String, Object> param = new HashMap<>();
@@ -363,7 +363,7 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                         trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("同一资产同一行情日不能维护两种减值测算方式!"));
                     }
                 }
-                param.put("peroid", trdAssetLoss001Dto.getPeroid());
+//                param.put("peroid", trdAssetLoss001Dto.getPeroid());
                 param.put("strDate", DateUtil.format(trdAssetLoss001Dto.getStrDate()));
                 List<TrdAssetLoss001Dto> tmpLsit2 = this.selectByFinprodIdAndValDate(param);
                 if (!StringUtil.isEmptyList(tmpLsit2)) {
@@ -383,6 +383,20 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
                     trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间!!"));
                 }
+
+                //判断初始确认起始日，初始确认截止日不能在资产起息日和资产到期日区间内
+                if( DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                        DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getmDate())<=0 &&
+                        DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                        DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getmDate())<=0){
+                    //符合条件，在区间内
+                }else{
+                    //不符合条件，不在区间内
+                    trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
+                    trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("存在初始确认起始日和截止日与资产区间不符!"));
+                }
+
+
             }
             //新建、修改录入，存“01 手工”;导入：存“02 wind接入”   03 中债接入  04模型
             trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值数据来源_wind接入.getValue());
@@ -407,23 +421,23 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     // 初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中
                     if (StringUtil.equals(rowData1.getFinprodId(), rowData2.getFinprodId())
                             && (rowData1.getValDate().compareTo(rowData2.getValDate()) == 0)
-                            && (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)) {
+                            /*&& (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)*/) {
                         if (rowData1.getStrDate().compareTo(rowData2.getStrDate()) >= 0 && rowData1.getStrDate().compareTo(rowData2.getEndDate()) <= 0) {
                             trdAssetLoss001DtoList.get(i).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                             trdAssetLoss001DtoList.get(k).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                         }
                     }
                     // 初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中
                     if (StringUtil.equals(rowData1.getFinprodId(), rowData2.getFinprodId())
                             && (rowData1.getValDate().compareTo(rowData2.getValDate()) == 0)
-                            && (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)) {
+                            /*&& (rowData1.getPeroid().compareTo(rowData2.getPeroid()) == 0)*/) {
                         if (rowData1.getEndDate().compareTo(rowData2.getStrDate()) >= 0 && rowData1.getEndDate().compareTo(rowData2.getEndDate()) <= 0) {
                             trdAssetLoss001DtoList.get(i).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(i).setRemark(trdAssetLoss001DtoList.get(i).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                             trdAssetLoss001DtoList.get(k).setCheckStatusStr(CHECK_STATUS_STR_BTG);
-                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日相同代偿期的初始确认日到截止日区间中。"));
+                            trdAssetLoss001DtoList.get(k).setRemark(trdAssetLoss001DtoList.get(k).getRemark().append("模板中的数据存在重复性:初始确认截止日不能出现在相同资产相同行情日的初始确认日到截止日区间中。"));
                         }
                     }
                 }
@@ -597,6 +611,19 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
                     trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("新建减值流水的初始确认日与初始确认截止日的区间，不能包含相同资产、相同行情日、相同代偿期的有效流水的初始确认日到截止日区间!"));
                 }
             }
+
+            //判断初始确认起始日，初始确认截止日不能在资产起息日和资产到期日区间内
+            if( DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getmDate())<=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getmDate())<=0){
+                //符合条件，在区间内
+            }else{
+                //不符合条件，不在区间内
+                trdAssetLoss001Dto.setCheckStatusStr(CHECK_STATUS_STR_BTG);
+                trdAssetLoss001Dto.setRemark(trdAssetLoss001Dto.getRemark().append("初始确认起始日和截止日应处于资产起息日和到期日区间中!"));
+            }
+
             //新建、修改录入，存“01 手工”;导入：存“02 wind接入”   03 中债接入  04模型
             trdAssetLoss001Dto.setLossInputPattern(DictCodeListExt3.减值数据来源_中债接入.getValue());
             trdAssetLoss001DtoEclList.add(trdAssetLoss001Dto);
@@ -878,11 +905,11 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
         List<SelectOptionDto> linkSelectOptionList = new ArrayList<>();
         //1D、1M、2M、3M、4M、5M、6M、7M、8M、9M、10M、11M、1Y
         String[] termDescribeArr = {"1D","1M","2M","3M","4M","5M","6M","7M","8M","9M","10M","11M","1Y"};
-        String[] termDescribeNameArr = {"一天","一个月","两个月","三个月","四个月","五个月","六个月","七个月","八个月","九个月","十个月","十一个月","一年"};
+//        String[] termDescribeNameArr = {"一天","一个月","两个月","三个月","四个月","五个月","六个月","七个月","八个月","九个月","十个月","十一个月","一年"};
         for(int i=0;i<termDescribeArr.length;i++){
             SelectOptionDto selectOptionDto = new SelectOptionDto();
             selectOptionDto.setId(termDescribeArr[i]);
-            selectOptionDto.setText(termDescribeNameArr[i]);
+            selectOptionDto.setText(termDescribeArr[i]);
             linkSelectOptionList.add(selectOptionDto);
         }
         return linkSelectOptionList;
@@ -892,6 +919,10 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
     public  FinExercisePlan queryFinExercisePlan(Map<String, Object> param){
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME + "/TrdAssetLoss/queryFinExercisePlan",
                 param, FinExercisePlan.class);
+    }
+
+    public Page<SelectOptionDto> getAssetInfoSelectOption(Map<String, Object> param) {
+        return restTemplate.postForPage(ServiceApplication.VALUATION_SERVICE_NAME+"/LossModCommon/getModAssetInfoPageBMW", param, SelectOptionDto.class);
     }
 
 

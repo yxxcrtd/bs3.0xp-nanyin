@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SelectOptionDto;
@@ -54,7 +55,19 @@ public interface CfetsBondDealQuotedPriceMapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryEntrustInfoList(Map<String, Object> map);
-    
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param map 入参
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    List<SuggestDto> queryHisEntrustInfoList(Map<String, Object> map);
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 根据查询查询符合条件的报价编号
      * 
@@ -113,5 +126,15 @@ public interface CfetsBondDealQuotedPriceMapper {
 	List<CfetsBondDealRequestQuoteDto> getCfetsBondDealRequestQuoteDtoList(Map<String, Object> param);
 
     List<SelectOptionDto> getfinprodIdForAdd(Map<String, Object> param);
-    
+
+    /**
+     * 分页查询结果
+     * @param map 查询参数
+     * @return 分页查询结果
+     * @see
+     * @since 1.0
+     */
+    List<CstpSelectDto> getCstpQryTableList(Map<String,Object> map);
+
+    BigDecimal getWflEntrustDealedAmt(Map<String,Object> map);
 }

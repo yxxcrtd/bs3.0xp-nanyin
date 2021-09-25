@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
 import com.joyintech.component.svrreport.chb.dto.ChbPrdRaisetotSubDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.svreport.chbsd.prdraisetotsub.service.SdProdRaisetotBatchService;
@@ -176,7 +177,7 @@ public class RaiseTotalRegist001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-    public AjaxResult doSubmit(@RequestBody Map<String, Object> param)  throws Exception{
+    public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
         List<RaiseTotalRegist001Dto> list=new ArrayList<RaiseTotalRegist001Dto>();
         // 选择行数据时
@@ -187,7 +188,6 @@ public class RaiseTotalRegist001Controller extends BaseController{
                         RaiseTotalRegist001Dto.class);
             }
             catch (IOException e) {
-                // e.printStackTrace();
                 logger.error(e.getMessage(), e);
             }
         }else{
@@ -206,7 +206,11 @@ public class RaiseTotalRegist001Controller extends BaseController{
             dataList.add(target);
         }
 
-        sdProdRaisetotBatchService.sendBatchCommon(dataList);
+        SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+        if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+            sendDataCheckType = SendDataCheckType.重新报送;
+        }
+        sdProdRaisetotBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
         return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
     }

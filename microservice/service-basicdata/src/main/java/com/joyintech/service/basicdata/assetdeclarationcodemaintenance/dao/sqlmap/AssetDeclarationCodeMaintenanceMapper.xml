@@ -243,4 +243,69 @@
 			and OTH_TYPE = #{othCodeType,jdbcType=VARCHAR}
 		</if>
 	</select>
+
+
+	<!-- 根据资产代码类型联动资产代码下拉框 -->
+	<select id="getFinprodList" resultType="com.joyintech.framework.select.SelectOptionDto">
+	  select* from (
+
+		SELECT
+		a.FINPROD_ID id,
+		a.FINPROD_ABBR text,
+		'FINPROD_TYPE_TG' as col,
+		a.finprod_type2 parentId
+		FROM FIN_PRODUCT a
+		WHERE 1 = 1
+		<choose>
+			<when test="assetsType != null and assetsType != ''">
+				<![CDATA[and a.finprod_type2 in (select REGEXP_SUBSTR(str, '[^,]+', 1, LEVEL) STR from (select #{assetsType} as str from dual) CONNECT BY LEVEL <= REGEXP_COUNT(str, '[^,]+'))]]>
+			</when>
+			<when test="assetsType1 != null and assetsType1 != ''">
+				and a.finprod_type2 in ('')
+			</when>
+			<otherwise>
+				and a.finprod_type2 in ('F01','F07','F18')
+			</otherwise>
+		</choose>
+		<if test="finprodId !=null and finprodId != ''">
+			AND (upper(a.FINPROD_ID) like concat(concat('%', upper(#{finprodId,jdbcType=VARCHAR})), '%') OR upper(a.FINPROD_ABBR) like concat(concat('%', upper(#{finprodId,jdbcType=VARCHAR})), '%'))
+		</if>
+		<!-- add by dubaojun 2020-07-30 画面资产代码展示为市场代码 start -->
+		<if test="initValue !=null and initValue != ''">
+			AND a.FINPROD_ID = #{initValue,jdbcType=VARCHAR}
+		</if>
+		<!-- add by dubaojun 2020-07-30 画面资产代码展示为市场代码 end -->
+		<!-- add by dubaojun 2020-07-31 只有上交所和深交所的资产才能查询 start -->
+ 		<!-- add by dubaojun 2020-07-31 只有上交所和深交所的资产才能查询 end -->
+
+		union all
+
+		SELECT
+		a.FINPROD_ID id,
+		a.FINPROD_ABBR text,
+		'FINPROD_TYPE_TG' as col,
+		a.finprod_type2 parentId
+		FROM FIN_PRODUCT a
+		WHERE 1 = 1   AND a.PROFIT_TYPE = '02'
+		<choose>
+			<when test="assetsType1 != null and assetsType1 != ''">
+				and a.finprod_type2 in ('F17','F27')
+ 			</when>
+			<otherwise>
+				and a.finprod_type2 in ('')
+			</otherwise>
+		</choose>
+
+		<if test="finprodId !=null and finprodId != ''">
+			AND (upper(a.FINPROD_ID) like concat(concat('%', upper(#{finprodId,jdbcType=VARCHAR})), '%') OR upper(a.FINPROD_ABBR) like concat(concat('%', upper(#{finprodId,jdbcType=VARCHAR})), '%'))
+		</if>
+		<!-- add by dubaojun 2020-07-30 画面资产代码展示为市场代码 start -->
+		<if test="initValue !=null and initValue != ''">
+			AND a.FINPROD_ID = #{initValue,jdbcType=VARCHAR}
+		</if>
+		<!-- add by dubaojun 2020-07-30 画面资产代码展示为市场代码 end -->
+		<!-- add by dubaojun 2020-07-31 只有上交所和深交所的资产才能查询 start -->
+		<!-- add by dubaojun 2020-07-31 只有上交所和深交所的资产才能查询 end -->
+		)   	order by parentId, id
+	</select>
 </mapper>

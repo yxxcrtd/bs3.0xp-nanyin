@@ -10,9 +10,8 @@
 
 package com.joyintech.tams.invest.asset.stock.valid;
 
-//import com.joyintech.component.svrreport.chb.chbcommoncheck.ChbDataCheckCommonUtil;
+import com.joyintech.framework.base.intf.Page;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
@@ -20,12 +19,10 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
-import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
 import com.joyintech.tams.invest.asset.stock.dto.FinStockInfoDto;
-import com.joyintech.workflow.engine.util.WorkFlowUtil;
+import com.joyintech.tams.invest.asset.stock.service.FinStockInfoService;
+import com.joyintech.tams.invest.common.service.InvDataCheckService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,8 +56,10 @@ public class FinStockInfoValidator implements BeanValidator {
     @Autowired
     MstWorkflowCommonService mstWorkflowCommonService;
 
-//    @Autowired
-//    private ChbDataCheckCommonUtil chbDataCheckCommonUtil;
+    @Autowired
+    private InvDataCheckService chbInvDataCheckService;
+
+    private Page page;
 
     /**
      * {@inheritDoc}
@@ -106,14 +105,22 @@ public class FinStockInfoValidator implements BeanValidator {
                                this.getMessage("FinStockInfo001.shOrZh"))));
                    }
                }
-                //中债,3个投资阶段选其他,备注必填
-                if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
-                    dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())
-                    || dto.getBussRepEquityInfoDto().getRepPartyType2().equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue())
-                || dto.getBussRepEquityInfoDto().getRepPartyType3().equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue()))
-                    && StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepRemark())){
-                    errorList.add(new ValidMessage(this.getMessage("BUSS_COM_CRE_003")));
-                }
+               if (null != this.page && null != this.page.getElementcontrol("bussRepStockInfo") && this.page.getElementcontrol("bussRepStockInfo").getIsShow()) {
+                   //中债,3个投资阶段选其他,备注必填
+                   if((dto.getBussRepEquityInfoDto().getRepSharesType().equals(DictCodeListExt2.股票类型_其他.getValue())||
+                           dto.getBussRepEquityInfoDto().getRepPartyType1().equals(DictCodeListExt2.发行机构类型_按规模划分_其他.getValue())
+                           || dto.getBussRepEquityInfoDto().getRepPartyType2().equals(DictCodeListExt2.发行机构类型_按经济类型划分_其他.getValue())
+                           || dto.getBussRepEquityInfoDto().getRepPartyType3().equals(DictCodeListExt2.发行机构类型_按技术领域划分_其他.getValue()))
+                           && StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepRemark())){
+                       errorList.add(new ValidMessage(this.getMessage("BUSS_COM_CRE_003")));
+                   }
+                   //中债的交易流通场所必填
+                   if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepTradeMarket())){
+                       errorList.add(
+                               new ValidMessage("bussRepEquityInfoDto.repTradeMarket",this.getMessage("FW_E_0006", getMessage("BussRepEquityInfo.repTradeMarket"))));
+                   }
+               }
+
                /* //中债的行业必填
                 if(StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustry()) || StringUtil.isEmpty(dto.getBussRepEquityInfoDto().getRepIndustryLevel2())){
                     errorList.add(
@@ -211,9 +218,12 @@ public class FinStockInfoValidator implements BeanValidator {
 
                    //总股本大于等于流通股本check
                }
-               // errorList = chbDataCheckCommonUtil.chbCheckCommon(errorList, value, null, "1302", ValidMessage.class);
+                errorList = chbInvDataCheckService.chbCheckCommon(errorList, value, null, "1302");
             }
 
+            if(StringUtil.equals(dto.getTradeMarket(),"12") && StringUtil.isEmpty(dto.getShOrZh())) {
+                errorList.add(new ValidMessage("shOrZh","交易场所为香港联合交易所时，港股通市场必填。"));
+            }
         return errorList;
     }
 

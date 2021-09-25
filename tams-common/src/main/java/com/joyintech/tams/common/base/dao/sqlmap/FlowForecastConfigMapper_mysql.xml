@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FlowForecastConfigMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        <id column="QUERY_DATE" property="queryDate" jdbcType="DATE" />
+        <id column="DEP_TYPE" property="depType" jdbcType="VARCHAR" />
+        <id column="FLOW_TYPE" property="flowType" jdbcType="VARCHAR" />
+        <id column="TARGET_TYPE" property="targetType" jdbcType="VARCHAR" />
+        <result column="TARGET_TIMEONE" property="targetTimeone" jdbcType="DECIMAL" />
+        <result column="TARGET_TIMETWO" property="targetTimetwo" jdbcType="DECIMAL" />
+        <result column="TARGET_TIMETHREE" property="targetTimethree" jdbcType="DECIMAL" />
+        <result column="TARGET_TIMEFOUR" property="targetTimefour" jdbcType="DECIMAL" />
+        <result column="TARGET_TIMEFIVE" property="targetTimefive" jdbcType="DECIMAL" />
+        <result column="TARGET_TIMESIX" property="targetTimesix" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        QUERY_DATE QUERY_DATE, DEP_TYPE DEP_TYPE, FLOW_TYPE FLOW_TYPE, TARGET_TYPE TARGET_TYPE, 
+        TARGET_TIMEONE TARGET_TIMEONE, TARGET_TIMETWO TARGET_TIMETWO, TARGET_TIMETHREE TARGET_TIMETHREE, 
+        TARGET_TIMEFOUR TARGET_TIMEFOUR, TARGET_TIMEFIVE TARGET_TIMEFIVE, TARGET_TIMESIX TARGET_TIMESIX, 
+        CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, 
+        UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FlowForecastConfigMapper.Base_Column_List" />
+        from FLOW_FORECAST_CONFIG
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FlowForecastConfigMapper.Base_Column_List" />
+        from FLOW_FORECAST_CONFIG
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfigKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.FlowForecastConfigMapper.Base_Column_List" />
+        from FLOW_FORECAST_CONFIG
+        where QUERY_DATE = #{queryDate,jdbcType=DATE}
+          and DEP_TYPE = #{depType,jdbcType=VARCHAR}
+          and FLOW_TYPE = #{flowType,jdbcType=VARCHAR}
+          and TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfigKey" >
+        delete from FLOW_FORECAST_CONFIG
+        where QUERY_DATE = #{queryDate,jdbcType=DATE}
+          and DEP_TYPE = #{depType,jdbcType=VARCHAR}
+          and FLOW_TYPE = #{flowType,jdbcType=VARCHAR}
+          and TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        insert into FLOW_FORECAST_CONFIG (QUERY_DATE, DEP_TYPE, FLOW_TYPE, 
+            TARGET_TYPE, TARGET_TIMEONE, TARGET_TIMETWO, 
+            TARGET_TIMETHREE, TARGET_TIMEFOUR, TARGET_TIMEFIVE, 
+            TARGET_TIMESIX, CREATE_USER, CREATE_DEPT, 
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME
+            )
+        values (#{queryDate,jdbcType=DATE}, #{depType,jdbcType=VARCHAR}, #{flowType,jdbcType=VARCHAR}, 
+            #{targetType,jdbcType=VARCHAR}, #{targetTimeone,jdbcType=DECIMAL}, #{targetTimetwo,jdbcType=DECIMAL}, 
+            #{targetTimethree,jdbcType=DECIMAL}, #{targetTimefour,jdbcType=DECIMAL}, #{targetTimefive,jdbcType=DECIMAL}, 
+            #{targetTimesix,jdbcType=DECIMAL}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, 
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        insert into FLOW_FORECAST_CONFIG
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="queryDate != null" >
+                QUERY_DATE,
+            </if>
+            <if test="depType != null" >
+                DEP_TYPE,
+            </if>
+            <if test="flowType != null" >
+                FLOW_TYPE,
+            </if>
+            <if test="targetType != null" >
+                TARGET_TYPE,
+            </if>
+            <if test="targetTimeone != null" >
+                TARGET_TIMEONE,
+            </if>
+            <if test="targetTimetwo != null" >
+                TARGET_TIMETWO,
+            </if>
+            <if test="targetTimethree != null" >
+                TARGET_TIMETHREE,
+            </if>
+            <if test="targetTimefour != null" >
+                TARGET_TIMEFOUR,
+            </if>
+            <if test="targetTimefive != null" >
+                TARGET_TIMEFIVE,
+            </if>
+            <if test="targetTimesix != null" >
+                TARGET_TIMESIX,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="queryDate != null" >
+                #{queryDate,jdbcType=DATE},
+            </if>
+            <if test="depType != null" >
+                #{depType,jdbcType=VARCHAR},
+            </if>
+            <if test="flowType != null" >
+                #{flowType,jdbcType=VARCHAR},
+            </if>
+            <if test="targetType != null" >
+                #{targetType,jdbcType=VARCHAR},
+            </if>
+            <if test="targetTimeone != null" >
+                #{targetTimeone,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimetwo != null" >
+                #{targetTimetwo,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimethree != null" >
+                #{targetTimethree,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimefour != null" >
+                #{targetTimefour,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimefive != null" >
+                #{targetTimefive,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimesix != null" >
+                #{targetTimesix,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        insert into FLOW_FORECAST_CONFIG(QUERY_DATE, DEP_TYPE, FLOW_TYPE, TARGET_TYPE, TARGET_TIMEONE, 
+        TARGET_TIMETWO, TARGET_TIMETHREE, TARGET_TIMEFOUR, TARGET_TIMEFIVE, TARGET_TIMESIX, 
+        CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+        select QUERY_DATE, DEP_TYPE, FLOW_TYPE, TARGET_TYPE, TARGET_TIMEONE, 
+            TARGET_TIMETWO, TARGET_TIMETHREE, TARGET_TIMEFOUR, TARGET_TIMEFIVE, TARGET_TIMESIX, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from FLOW_FORECAST_CONFIG
+             where 1 = 1 and QUERY_DATE = #{queryDate,jdbcType=DATE} and DEP_TYPE = #{depType,jdbcType=VARCHAR} and FLOW_TYPE = #{flowType,jdbcType=VARCHAR} and TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        update FLOW_FORECAST_CONFIG
+        <set >
+            <if test="targetTimeone != null" >
+                TARGET_TIMEONE = #{targetTimeone,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimetwo != null" >
+                TARGET_TIMETWO = #{targetTimetwo,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimethree != null" >
+                TARGET_TIMETHREE = #{targetTimethree,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimefour != null" >
+                TARGET_TIMEFOUR = #{targetTimefour,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimefive != null" >
+                TARGET_TIMEFIVE = #{targetTimefive,jdbcType=DECIMAL},
+            </if>
+            <if test="targetTimesix != null" >
+                TARGET_TIMESIX = #{targetTimesix,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where QUERY_DATE = #{queryDate,jdbcType=DATE}
+          and DEP_TYPE = #{depType,jdbcType=VARCHAR}
+          and FLOW_TYPE = #{flowType,jdbcType=VARCHAR}
+          and TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FlowForecastConfig" >
+        update FLOW_FORECAST_CONFIG
+        set TARGET_TIMEONE = #{targetTimeone,jdbcType=DECIMAL},
+            TARGET_TIMETWO = #{targetTimetwo,jdbcType=DECIMAL},
+            TARGET_TIMETHREE = #{targetTimethree,jdbcType=DECIMAL},
+            TARGET_TIMEFOUR = #{targetTimefour,jdbcType=DECIMAL},
+            TARGET_TIMEFIVE = #{targetTimefive,jdbcType=DECIMAL},
+            TARGET_TIMESIX = #{targetTimesix,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where QUERY_DATE = #{queryDate,jdbcType=DATE}
+          and DEP_TYPE = #{depType,jdbcType=VARCHAR}
+          and FLOW_TYPE = #{flowType,jdbcType=VARCHAR}
+          and TARGET_TYPE = #{targetType,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -10,14 +10,18 @@
  
 package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.service;
 
+import com.joyintech.tams.common.base.entity.RskValtblStructMapDtl;
 import com.joyintech.tams.invest.common.util.ExcelUtilForRisk;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.export.CommonExportService;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+
+import java.util.List;
 
 /**
  * 〈一句话功能简述〉
@@ -37,7 +41,7 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @see
      * @since 1.0
      */
-    public int insert(RskValStructureDto dto) throws Exception {
+    public int insert(RskValStructureDto dto)  throws Exception {
         dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/insert",
@@ -52,7 +56,14 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
      * @since 1.0
      */
     public int update(RskValStructureDto dto) throws Exception {
-        dto.setSrcColIndex(String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter())));
+    	String srcColIndex = "";
+    	if(StringUtil.isNotEmpty(dto.getSrcColIndex())&&dto.getSrcColIndex().matches("^[\\d]+$")) {
+    		srcColIndex = dto.getSrcColIndex();
+    	}
+    	else {
+    		srcColIndex = String.valueOf(ExcelUtilForRisk.columnToIndex(dto.getSrcColIndexLetter()));	
+    	}
+    	dto.setSrcColIndex(srcColIndex);
         return restTemplate.postForObject(
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/update",
             dto,Integer.class);
@@ -93,5 +104,18 @@ public class RskValStructure003Service extends CommonExportService<RskValStructu
             ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/delete",
             dto,Integer.class);
     }
+    /**
+     * <一句话功能简述>
+     * <功能详细描述>
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    public Boolean insertList(List<RskValtblStructMapDtl> list) {
+        return restTemplate.postForObject(
+                ServiceApplication.RISK_SERVICE_NAME +"/RskValStructure003/insertList",
+                list,Boolean.class);
+    }
+
 
 }

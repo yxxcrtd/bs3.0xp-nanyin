@@ -146,7 +146,7 @@
                     )) = 0)
                 </if>
                     <if test="entrustId != null and entrustId != ''">
-                        AND wtpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                        AND wtpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     AND wptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
 		             <if test="repoType != null and repoType != ''">
@@ -268,7 +268,7 @@
                         )) = 0)
                     </if>
                     <if test="entrustId != null and entrustId != ''">
-                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                        AND tpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
@@ -403,7 +403,7 @@
                     )) = 0)
                 </if>
                     <if test="entrustId != null and entrustId != ''">
-                        AND tpda.ENTRUST_ID like CONCAT(#{entrustId}, '%')
+                        AND tpda.ENTRUST_ID like CONCAT('%', CONCAT(#{entrustId}, '%'))
                     </if>
                     AND ptpd.PA_BUSS_TYPE IN (#{PINAN_BUSINESS_TYPE_19}, #{PINAN_BUSINESS_TYPE_20})
                       <if test="repoType != null and repoType != ''">
@@ -544,7 +544,7 @@
 
     <select id="getSecManageAcctId" resultType="com.joyintech.framework.select.SuggestDto">
         SELECT
-            A.ACCT_NO hidCode,
+            distinct A.ACCT_NO hidCode,
             A.ACCT_NO code,
             B.SEC_ACCT_NAME name,
             B.SEC_ACCT_NAME shortName,
@@ -553,6 +553,10 @@
                       PTL_SEC_ACCT A
           INNER JOIN STL_SEC_ACCT_INFO B
                   ON  A.ACCT_NO = B.SEC_ACCT_ID
+        <if test="finprodName !=null and finprodName !='' ">
+            LEFT JOIN FIN_PRODUCT FP
+            ON FP.FINPROD_ID =#{finprodName,jdbcType=VARCHAR}
+        </if>
         <where>
             <if test="portfolioId !=null and portfolioId !='' ">
                 PORTFOLIO_ID = #{portfolioId, jdbcType=VARCHAR}
@@ -570,6 +574,9 @@
             </if>
             <if test="tradeMarket != null and tradeMarket != ''">
              	AND TRADE_PLACE =#{tradeMarket}
+            </if>
+            <if test="finprodName !=null and finprodName !='' ">
+                AND FP.REGIST_ORG = B.REGIST_ORG
             </if>
         </where>
     </select>
@@ -1073,7 +1080,7 @@
     <!--通过成交编号和委托编号查找匹配的质押券-->
     <select id="getMatchpledgeBondInfo" resultType="com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto">
         SELECT
-            T1.MATCH_NUM facetotalamt ,
+            T1.MATCH_NUM*100 facetotalamt ,
             T2.SECID secid,
             T2.CONVRATE convrate,
             T3.FINPROD_ABBR secname,

@@ -35,7 +35,7 @@ public class BussRepAssetCreditNonstdInfoImplService extends BaseService<BussRep
      */
     @Override
     public IDictCode[] getInitDictCode() {
-        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.收受益权类型,
+        return new DictCode[] {DictCode.资产_负债二级类别,DictCode.交易流通场所,DictCode.交易流通场所_中债,DictCode.收受益权类型,
             DictCode.重点监控行业和领域类别,DictCode.担保方式,DictCode.资产评级,
             DictCode.发行机构类型_按技术领域划分,DictCode.发行机构类型_按规模划分,DictCode.发行机构类型_按经济类型划分
             ,DictCode.机构所属行业一级分类,DictCode.机构所属行业二级分类,DictCode.行政区划_市,DictCode.资产评级,DictCode.人行机构规模,DictCode.受让形式};

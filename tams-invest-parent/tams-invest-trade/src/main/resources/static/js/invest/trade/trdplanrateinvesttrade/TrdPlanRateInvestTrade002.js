@@ -161,10 +161,12 @@ var etrAmt = '';
 	        Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/check', object, function(result1) {
 	            Joyin.ajaxJson(basePath + 'invest/trade/trdplanrateinvesttrade/TrdPlanRateInvestTrade002/check', object, function(result) {
 	                var message = '';
-	                if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQuery && object.bussTrdAvailableCashQuery.avalibleCash && Number(object.bussTrdAvailableCashQuery.avalibleCash) < Number(object.prinAmt)){
+	                if (object.ps === PS_T01 && object.prinAmt && object.bussTrdAvailableCashQuery && object.bussTrdAvailableCashQuery.avalibleCash && Number(object.bussTrdAvailableCashQuery.avalibleCash) < Number(object.tradeAmt)){
 	                    message = JoyinUtil.getMessage("TRD_C_0002");
 	                }else if (object.ps === PS_T02 && object.prinAmt && object.bussTrdAvailableCashQuery && object.bussTrdAvailableCashQuery.assetPosition && Number(object.bussTrdAvailableCashQuery.assetPosition) < Number(object.prinAmt)){
-                        message = JoyinUtil.getMessage("TRD_C_0007");
+                        var errorMessage = JoyinUtil.getMessage("TRD_C_0007_001");
+                        Joyin.error(errorMessage);
+                        return ;
                     }
 	                else{
 	                    message = JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.save"));
@@ -701,6 +703,16 @@ var etrAmt = '';
         $('#TrdPlanRateInvestTrade002_btn_save').click(function() {
             saveOrSubmit('save');
         });
+
+        //根据参数 选择显示投资目的或者业务模式
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+           $("#invAimDiv").hide();
+           $("#businessModelDiv").show();
+        }else{
+           $("#invAimDiv").show();
+           $("#businessModelDiv").hide();
+        }
+
         /**
          * 资产改变
          */

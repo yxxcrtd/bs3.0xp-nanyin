@@ -10,6 +10,7 @@
 
 package com.joyintech.tams.report.submitmanagement.investorsholdinforegist.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +38,33 @@ public interface InvestorsHoldInfoRegist001Mapper {
      * @since 1.0
      */
     List<InvestorsHoldInfoRegist001Dto> selectAllData(Map<String,Object> map);
+    // add by zcw 优化start
+    /**
+     *
+     * 查询页面数据不加拍下一
+     * @param map 查询条件
+     * @return 结果列表
+     * @see
+     * @since 1.0
+     */
+    List<InvestorsHoldInfoRegist001Dto> selectAllDataNoOrder(Map<String,Object> map);
+
+    /**
+     * 优化批量插入履历表
+     * @param list 数据集
+     * @see
+     * @since 1.0
+     */
+    void insertInvestorsHoldInfoRegistHisBetter(@Param("dtos")List<InvestorsHoldInfoRegist001Dto> dtos);
+
+    /**
+     * 删除履历表中已报送数据
+     * @param list 数据集
+     * @see
+     * @since 1.0
+     */
+    void deleteSubmitRegistBetter(@Param("dtos")List<InvestorsHoldInfoRegist001Dto> dtos);
+    // add by zcw 优化end
 
     /**
      * 批量插入履历表
@@ -260,4 +288,16 @@ public interface InvestorsHoldInfoRegist001Mapper {
     void updateInvestorsHoldInfoRegistSendStatus(List<InvestorsHoldInfoRegist001Dto> investRegistUpdateList);
     
     int selectNoendCountByTaskBeanName(String beanname);
+
+    int countExportNum(Map<String,Object> map);
+    
+    
+    int insertSubmitStatusDto(ChbSubmitStatus dto);
+    
+    
+    int updateSubmitStatusToSuccess(String seqno);
+    
+    List<InvestorsHoldInfoRegist001Dto>  selectAllNeedToHisData(List<InvestorsHoldInfoRegist001Dto> subList);
+    
+    int insertInvestorsHoldInfoRegistHisBatch(InvestorsHoldInfoRegist001Dto model);
 }

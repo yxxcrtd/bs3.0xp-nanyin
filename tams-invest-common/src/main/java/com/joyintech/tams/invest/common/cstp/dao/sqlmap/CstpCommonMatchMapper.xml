@@ -298,4 +298,18 @@ FROM
         SELECT #{sysDate,jdbcType=VARCHAR} || lpad(CSTP_MATCH_SEQNO.NEXTVAL, 4, '0')
         FROM DUAL
     </select>
+
+    <delete id="deleteMatchInfo">
+        delete from TRD_MATCH_INFO where CSTP_TRADE_ID =  #{execId}
+    </delete>
+
+    <select id="getMatchAmount" resultType="java.math.BigDecimal">
+        SELECT
+            SUM(MATCH_NUM)
+        FROM
+            TRD_MATCH_INFO tmi
+        where CSTP_TRADE_ID =  #{execId}
+        GROUP BY
+            CSTP_TRADE_ID
+    </select>
 </mapper>

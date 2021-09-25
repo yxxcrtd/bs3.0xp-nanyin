@@ -9,6 +9,8 @@
  */
 package com.joyintech.tams.invest.entrust.etrstandardbond.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +43,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doInsert(EtrStandardBond002Dto entity, OperationType operationType) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmptyList(entity.getPledgeBondList())) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doInsert",
+                    entity, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**
@@ -51,7 +59,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doUpdate(EtrStandardBond002Dto input) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmptyList(input.getPledgeBondList())) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doUpdate",
+                    input, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**
@@ -61,7 +75,13 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
      */
     @Override
     public void doDelete(String workflowId) {
-        // do nothing
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 start
+        Long insertCount = 0L;
+        if (!StringUtil.isEmpty(workflowId)) {
+            insertCount += restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/doDelete",
+                    workflowId, Long.class);
+        }
+        // add by chenjiaxing 20210906 数据进入质押券入库流程表 end
     }
 
     /**
@@ -105,7 +125,18 @@ public class EtrStandardBond002Service extends BaseService<EtrStandardBond002Dto
         params.put("userId", SecurityUtil.getLoginUser().getUserName());
         list = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectAvaPledgeBondList",
                 params, EtrStandardBond002Dto.class);
-        
+        //万元展示 add by yeming 20210924 start
+        if(StringUtil.isNotEmpty(list)) {
+            for (EtrStandardBond002Dto dto : list) {
+                if (dto.getPosStrdPrinAmt() != null) {
+                    dto.setPosStrdPrinAmt(dto.getPosStrdPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));
+                }
+                if (dto.getPledStrdPrinAmt() != null) {
+                    dto.setPledStrdPrinAmt(dto.getPledStrdPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));
+                }
+            }
+        }
+        //万元展示 add by yeming 20210924 start
 //        List<EtrStandardBond002Dto> pledList = restTemplate.postForList(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectPledgeBondList",
 //            params, EtrStandardBond002Dto.class);
 //        

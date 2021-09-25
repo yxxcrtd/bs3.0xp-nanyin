@@ -56,7 +56,7 @@ $(function () {
             ,{field:'totleTradeId',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
             ,{field:'finprodMarketId',width:'15%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
             ,{field:'finprodAbbr',width:'15%',title:'资产简称'}//资产简称
-            ,{field:'chlName',width:'15%',title:'invest.channelId'}//通道
+            ,{field:'chlName',width:'15%',visible:false,title:'invest.channelId'}//通道
             ,{field:'assetTypeStr',sortField:'assetType',width:'15%',title:'TrdFundDuration001.finprodType'}//资产类型
             ,{field:'bonusModeStr',sortField:'bonusMode',width:'8%',title:'TrdFundDuration001.bonusMode'}//分红类型
             ,{field:'psStr',sortField:'ps',width:'8%',title:'TrdPlanNetDuration001.ps'}//交易方向
@@ -119,7 +119,7 @@ $(function () {
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit'],
                 render: function (data, type, row, meta) {
-                    if (row.updateFlag != '01')
+                    if (row.updateFlag != '01' ||IsChongQing == 'Y')
                         return "";
                     else
                         //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
@@ -226,13 +226,41 @@ $(function () {
      * 导出选中的表格数据
      */
     var exportExcel = function() {
-        var paramObj = getSearchParams();//请求参数
-        Joyin.exportExcel('export', paramObj);//导出（共通）
+//        var paramObj = getSearchParams();//请求参数
+//        Joyin.exportExcel('export', paramObj);//导出（共通）
+
+        if (table != null && table != '') {
+            var selArr = table.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParams();
+            Joyin.exportExcel('export', paramObj);
+        } else {
+            Joyin.exportExcel('export', {
+                datas : datas
+            });
+        }
+
     };
 
     var exportExcelTwo = function() {
-        var paramObj = getSearchParamsTwo();//请求参数
-        Joyin.exportExcel('exportConversion', paramObj);//导出（共通）
+//        var paramObj = getSearchParamsTwo();//请求参数
+//        Joyin.exportExcel('exportConversion', paramObj);//导出（共通）
+
+        if (tableTwo != null && tableTwo != '') {
+            var selArr = tableTwo.getAllCheckedRows();
+            var datas = JSON.stringify(selArr);
+        }
+        if (!selArr || selArr.length == 0) {
+            var paramObj = getSearchParamsTwo();
+            Joyin.exportExcel('exportConversion', paramObj);
+        } else {
+            Joyin.exportExcel('exportConversion', {
+                datas : datas
+            });
+        }
+
     };
 
     /**

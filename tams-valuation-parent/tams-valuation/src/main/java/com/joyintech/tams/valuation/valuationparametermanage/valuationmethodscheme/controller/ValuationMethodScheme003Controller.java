@@ -137,14 +137,13 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findScheme")
-	public List<SelectOptionDto> findScheme() throws Exception {
+	public List<SelectOptionDto> findScheme() {
 		return valuationMethodScheme001Service.findScheme(RequestUtil.getPageParam());
 	}
 
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme003Dto dto, BindingResult bindingResult)
-			throws Exception {
+	public AjaxResult check(@RequestBody @Validated({ValidateGroupEdit.class}) ValuationMethodScheme003Dto dto, BindingResult bindingResult) {
 //        List<ValuationMethodScheme003Dto> list = listdto.getListValuationMethodSchemeDto();
 //        ValuationMethodScheme003Dto dto = list.get(0);
 		String msg = StringUtil.EMPTY;
@@ -315,7 +314,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getTradeMarket")
-	public List<SelectOptionDto> getTradeMarket() throws Exception {
+	public List<SelectOptionDto> getTradeMarket() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.证券品种.getValue());
 		param.put("dict_code_child", DictCode.估值交易市场.getValue());
@@ -331,7 +330,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getInvAim")
-	public List<SelectOptionDto> getInvAim() throws Exception {
+	public List<SelectOptionDto> getInvAim() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.证券品种.getValue());
 		param.put("dict_code_child", DictCode.投资目的.getValue());
@@ -348,7 +347,7 @@ public class ValuationMethodScheme003Controller extends BaseController {
     /** modify by dongjun on 20181218 start**/
 	@ResponseBody
 	@RequestMapping("getSecDetailType")
-	public Page<SelectPageOptionDto> getSecDetailType() throws Exception {
+	public Page<SelectPageOptionDto> getSecDetailType() {
 		Map<String, Object> param = RequestUtil.getPageParam();
 		param.put("dict_code_parent", DictCode.估值交易市场.getValue());
 		param.put("dict_code_child", DictCode.债券类型.getValue());
@@ -365,50 +364,30 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationMethod")
-	public List<SelectOptionDto> getValuationMethod() throws Exception {
+	public List<SelectOptionDto> getValuationMethod(){
 		List<SelectOptionDto> linkSelectOption = new ArrayList<>();
 		Map<String, Object> param = RequestUtil.getPageParam();
-		//估值方法根据投资目的联动
-		if(StringUtil.isNotEmpty(param.get("invAim"))){
-			param.put("dict_code_parent", DictCode.投资目的.getValue());
-			param.put("dict_code_child", DictCode.估值方法.getValue());
-			param.put("item_code_parent", param.get("invAim"));
-			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
+		if(StringUtil.isNotEmpty(param.get("invAim")) && StringUtil.isNotEmpty(param.get("secType"))){
+			//如果估值方法需要根据证券品种和投资目的共同联动的，故使用配置不方便，直接后台处理
+			linkSelectOption = valuationMethodScheme003Service.getResultByInvAimAndSecType(linkSelectOption,param);
+		}else{
+			////估值方法根据投资目的联动
+			if(StringUtil.isNotEmpty(param.get("invAim"))){
+				param.put("dict_code_parent", DictCode.投资目的.getValue());
+				param.put("dict_code_child", DictCode.估值方法.getValue());
+				param.put("item_code_parent", param.get("invAim"));
+				linkSelectOption =valuationMethodScheme003Service.getLinkSelectOption(param);
+			}
+
+			//估值方法根据证券品种联动
+			//当证券品种为01债券时，使用投资目的进行联动
+			if(StringUtil.isNotEmpty(param.get("secType")) ){
+				param.put("dict_code_parent", DictCode.证券品种.getValue());
+				param.put("dict_code_child", DictCode.估值方法.getValue());
+				param.put("item_code_parent", param.get("secType"));
+				linkSelectOption =valuationMethodScheme003Service.getLinkSelectOption(param);
+			}
 		}
-
-		//估值方法根据证券品种联动
-		//当证券品种为01债券时，使用投资目的进行联动
-		if(StringUtil.isNotEmpty(param.get("secType")) && !param.get("secType").toString().equals(DictCodeListExt1.证券品种_债券.getValue())){
-			param.put("dict_code_parent", DictCode.证券品种.getValue());
-			param.put("dict_code_child", DictCode.估值方法.getValue());
-			param.put("item_code_parent", param.get("secType"));
-			linkSelectOption =valuationMethodScheme001Service.getLinkSelectOption(param);
-		}
-
-//		param.put("dict_code_parent", DictCode.证券品种.getValue());
-//		param.put("dict_code_child", DictCode.估值方法.getValue());
-//		param.put("item_code_parent", param.get("secType"));
-//		param.put("dict_code_parent", DictCode.投资目的.getValue());
-//		param.put("dict_code_child", DictCode.估值方法.getValue());
-//		param.put("item_code_parent", param.get("invAim"));
-
-       	// ---  以投资目的维度联动
-//		if(Arrays.asList(DictCodeListExt1.证券品种_计划类资产_收益型.getValue()).contains(param.get("secType"))&&
-//				Arrays.asList(DictCodeListExt1.投资目的_摊余成本类.getValue(),DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
-//			param.put("dict_code_parent", DictCode.投资目的.getValue());
-//			param.put("item_code_parent", param.get("invAim"));
-//		}
-//		if(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()).contains(param.get("secType"))){
-//			param.put("dict_code_parent", DictCode.投资目的.getValue());
-//			param.put("item_code_parent", param.get("invAim"));
-//		}
-//		return valuationMethodScheme00301Service.getLinkSelectOption(param);
-//		if (Arrays.asList(DictCodeListExt1.投资目的_公允价值变动计入其他综合收益.getValue()).contains(param.get("invAim"))){
-//			//过滤掉 估值方法_摊余成本法
-//			linkSelectOption.stream().filter(item -> !StringUtil.equals(item.getId(),DictCodeListExt1.估值方法_市值成本孰低法.getValue())).collect(Collectors.toList());
-//		}
-		//投资目的联动处理start
-//		linkSelectOption = valuationMethodScheme001Service.getResultByInvAim(linkSelectOption,param);
 		//投资目的联动处理end
 		return linkSelectOption;
 	}
@@ -421,14 +400,15 @@ public class ValuationMethodScheme003Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getValuationPrice")
-	public List<SelectOptionDto> getValuationPrice() throws Exception {
+	public List<SelectOptionDto> getValuationPrice() {
 		List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
 		Map<String, Object> param = RequestUtil.getPageParam();
 		String tradeMarket = (String) param.get("tradeMarket");
 		String secType = (String)param.get("secType");
-		//但证券品种为其他债权类时
+		//但证券品种为基金时，且交易场所为场外，市价来源特殊处理为 管理人报价07
 		if(StringUtil.isNotEmpty(secType) ){
-			if(StringUtil.isNotEmpty(tradeMarket) && DictCodeListExt1.证券品种_基金.getValue().equals(secType) && DictCodeListExt1.证券品种_回购.getValue().equals(tradeMarket)){
+			if(DictCodeListExt1.证券品种_基金.getValue().equals(secType) && StringUtil.isNotEmpty(tradeMarket) &&
+					StringUtil.equals(tradeMarket,DictCodeListExt1.估值交易市场_场外.getValue())){
 				//管理人报价07
 				SelectOptionDto selectOptionDto = new SelectOptionDto();
 				selectOptionDto.setId(DictCodeList.估值市价_管理人报价.getValue());
@@ -439,17 +419,8 @@ public class ValuationMethodScheme003Controller extends BaseController {
 			param.put("dict_code_parent", DictCode.证券品种.getValue());
 			param.put("dict_code_child", DictCode.估值市价.getValue());
 			param.put("item_code_parent", param.get("secType"));
-			selectOptionDtoList = valuationMethodScheme001Service.getLinkSelectOption(param);
+			selectOptionDtoList = valuationMethodScheme003Service.getLinkSelectOption(param);
 		}
-//		if (Arrays.asList(DictCodeListExt1.证券品种_基金.getValue()).contains(param.get("secType"))&&StringUtils.isNotEmpty(tradeMarket)) {
-//			param.put("dict_code_parent", DictCode.估值交易市场.getValue());
-//			param.put("dict_code_child", DictCode.估值市价.getValue());
-//			param.put("item_code_parent", param.get("tradeMarket"));
-//		} else {
-//			param.put("dict_code_parent", DictCode.证券品种.getValue());
-//			param.put("dict_code_child", DictCode.估值市价.getValue());
-//			param.put("item_code_parent", param.get("secType"));
-//		}
         return selectOptionDtoList;
 	}
 

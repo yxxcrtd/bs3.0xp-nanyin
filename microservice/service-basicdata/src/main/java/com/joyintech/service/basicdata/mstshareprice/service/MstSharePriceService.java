@@ -57,7 +57,8 @@ public class MstSharePriceService extends BaseService<MstSharePriceDto>{
      * @see
      * @since 1.0
      */
-    public Page<MstSharePriceDto> selectForPage(int page,int length,Map<String, Object> pageParam) throws Exception {
+    public Page<MstSharePriceDto> selectForPage(int page,int length,Map<String, Object> pageParam)
+    {
         return super.queryForPage(page,length,()-> mstSharePrice001Mapper.select(pageParam));
     }
     /**

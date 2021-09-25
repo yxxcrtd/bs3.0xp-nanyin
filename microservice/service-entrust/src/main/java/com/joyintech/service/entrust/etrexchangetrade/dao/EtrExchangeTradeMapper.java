@@ -26,6 +26,7 @@ import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade002Dto
 import com.joyintech.service.entrust.etrexchangetrade.dto.EtrExchangeTrade003Dto;
 import com.joyintech.tams.invest.common.trade.dto.FinCashPlanDto;
 import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
+import org.springframework.stereotype.Repository;
 
 /**
  *  场内交易委托
@@ -35,7 +36,7 @@ import com.joyintech.tams.invest.common.trade.dto.SecInfoModelDto;
  * @see EtrExchangeTradeMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrExchangeTradeMapper {
 
     /**
@@ -279,4 +280,10 @@ public interface EtrExchangeTradeMapper {
 	List<SubEqutityDto> getsubEqutity(Map<String, Object> map);
 
     List<WflEtrEntrust> selectWflEntrust(Map<String, Object> map);
+
+	List<String> selectWflEntrustAddAndEtrEntrustAdd(Map<String, Object> map);
+
+    //add by chenjiaxing 20210907 债券竞价交易添加偏离度 start
+	BigDecimal getLastNetPrice(Map<String, Object> param);
+	//add by chenjiaxing 20210907 债券竞价交易添加偏离度 end
 }

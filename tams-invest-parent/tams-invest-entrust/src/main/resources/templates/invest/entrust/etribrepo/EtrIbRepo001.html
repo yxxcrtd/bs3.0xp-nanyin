@@ -4,19 +4,9 @@
 	layout:decorator="~{layout/default}">
 <head>
 <style type="text/css">
-.layui-tab-title li {
-	display: inline-block;
-	vertical-align: middle;
-	font-size: 12px;
-	position: relative;
-	line-height: 30px;
-	min-width: 55px;
-	text-align: center;
-	cursor: pointer;
-	transition: all 0.2s ease 0s;
-	padding: 0px 10px;
+html {
+	overflow: hidden;
 }
-
 .form-lable {
 	width: 35%;
 	padding: 0px 10px 0px 0px;
@@ -119,10 +109,10 @@
 					</div>
 					<div class='joyin-form-wrap joyin-filter-form condition-area curr-form cc-transfer-form'>
 					<form class="layui-form"  id='searchForm_cc'>
-						<div class="layui-form-item">
-							<div class="form-inline-wrap" style="width:30%;margin-top: 6px">
+						<div class="layui-form-item" style="display: flex;align-items: center;">
+							<div class="form-inline-wrap" style="width:30%">
 									<div class="layui-input-inline input-inline keywords-inline">
-										<input type="text" id="keywords-entrustOrder" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索">
+										<input type="text" id="keywords-entrustOrder" name="keywords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input form-input keywords" placeholder="关键字搜索" style="height:8px;">
 										<a id='EtrIbRepo001_cc_search' class="input-right-show" href='javascript:;' ><i class='iconfont icon-search'></i></a>
 									</div>
 								</div>
@@ -179,11 +169,12 @@
 										<div class="sgePortDiv">
 											<label class="layui-form-label form-lable" style="width: 80px!important;padding-left:15px;" data-th-text="#{EtrRepo002.termType}">期限品种</label>
 											<div class="layui-input-inline input-inline">
-												<input type="text" id="termType" name="termType" parentIds="tradeMarket" allowClear="true"
+												<select type="text" id="termType" name="termType" parentIds="tradeMarket" allowClear="true"
 													   class="layui-input form-input input-select"
 													   data-th-placeholder="#{SysCommon.placeholder}"
 													   data-th-data-result='${TERM_TYPE_REBACK}'
 													   data-th-initvalue="${entity?.termType}">
+												</select>
 											</div>
 										</div>
 										<div class="sgePortDiv">

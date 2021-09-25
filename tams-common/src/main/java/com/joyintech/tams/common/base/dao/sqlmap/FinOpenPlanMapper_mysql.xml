@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.FinOpenPlanMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        <id column="CASH_ID" property="cashId" jdbcType="VARCHAR" />
+        <id column="OPEN_TYPE" property="openType" jdbcType="VARCHAR" />
+        <id column="OPEN_DATE_END" property="openDateEnd" jdbcType="DATE" />
+        <result column="OPEN_DATE_STR_UN" property="openDateStrUn" jdbcType="DATE" />
+        <result column="OPEN_DATE_END_UN" property="openDateEndUn" jdbcType="DATE" />
+        <result column="OPEN_VDATE_UN" property="openVdateUn" jdbcType="DATE" />
+        <result column="OPEN_MDATE_UN" property="openMdateUn" jdbcType="DATE" />
+        <result column="OPEN_DATE_STR" property="openDateStr" jdbcType="DATE" />
+        <result column="OPEN_VDATE" property="openVdate" jdbcType="DATE" />
+        <result column="OPEN_MDATE" property="openMdate" jdbcType="DATE" />
+        <result column="FINPROD_ID" property="finprodId" jdbcType="VARCHAR" />
+        <result column="BRANCH" property="branch" jdbcType="DECIMAL" />
+        <result column="OPEN_STATUS" property="openStatus" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="OPEN_NDATE" property="openNdate" jdbcType="DATE" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        CASH_ID CASH_ID, OPEN_TYPE OPEN_TYPE, OPEN_DATE_END OPEN_DATE_END, OPEN_DATE_STR_UN OPEN_DATE_STR_UN,
+        OPEN_DATE_END_UN OPEN_DATE_END_UN, OPEN_VDATE_UN OPEN_VDATE_UN, OPEN_MDATE_UN OPEN_MDATE_UN,
+        OPEN_DATE_STR OPEN_DATE_STR, OPEN_VDATE OPEN_VDATE, OPEN_MDATE OPEN_MDATE, FINPROD_ID FINPROD_ID,
+        BRANCH BRANCH, OPEN_STATUS OPEN_STATUS, CREATE_USER CREATE_USER, CREATE_DEPT CREATE_DEPT,
+        CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME, OPEN_NDATE OPEN_NDATE
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenPlanMapper.Base_Column_List" />
+        from FIN_OPEN_PLAN
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenPlanMapper.Base_Column_List" />
+        from FIN_OPEN_PLAN
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlanKey" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.FinOpenPlanMapper.Base_Column_List" />
+        from FIN_OPEN_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+        and OPEN_DATE_END = #{openDateEnd,jdbcType=DATE}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlanKey" >
+        delete from FIN_OPEN_PLAN
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+          and OPEN_DATE_END = #{openDateEnd,jdbcType=DATE}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        insert into FIN_OPEN_PLAN (CASH_ID, OPEN_TYPE, OPEN_DATE_END,
+            OPEN_DATE_STR_UN, OPEN_DATE_END_UN, OPEN_VDATE_UN,
+            OPEN_MDATE_UN, OPEN_DATE_STR, OPEN_VDATE,
+            OPEN_MDATE, FINPROD_ID, BRANCH,
+            OPEN_STATUS, CREATE_USER, CREATE_DEPT,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            OPEN_NDATE
+            )
+        values (#{cashId,jdbcType=VARCHAR}, #{openType,jdbcType=VARCHAR}, #{openDateEnd,jdbcType=DATE},
+            #{openDateStrUn,jdbcType=DATE}, #{openDateEndUn,jdbcType=DATE}, #{openVdateUn,jdbcType=DATE},
+            #{openMdateUn,jdbcType=DATE}, #{openDateStr,jdbcType=DATE}, #{openVdate,jdbcType=DATE},
+            #{openMdate,jdbcType=DATE}, #{finprodId,jdbcType=VARCHAR}, #{branch,jdbcType=DECIMAL},
+            #{openStatus,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{openNdate,jdbcType=DATE}
+            )
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        insert into FIN_OPEN_PLAN
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                CASH_ID,
+            </if>
+            <if test="openType != null" >
+                OPEN_TYPE,
+            </if>
+            <if test="openDateEnd != null" >
+                OPEN_DATE_END,
+            </if>
+            <if test="openDateStrUn != null" >
+                OPEN_DATE_STR_UN,
+            </if>
+            <if test="openDateEndUn != null" >
+                OPEN_DATE_END_UN,
+            </if>
+            <if test="openVdateUn != null" >
+                OPEN_VDATE_UN,
+            </if>
+            <if test="openMdateUn != null" >
+                OPEN_MDATE_UN,
+            </if>
+            <if test="openDateStr != null" >
+                OPEN_DATE_STR,
+            </if>
+            <if test="openVdate != null" >
+                OPEN_VDATE,
+            </if>
+            <if test="openMdate != null" >
+                OPEN_MDATE,
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID,
+            </if>
+            <if test="branch != null" >
+                BRANCH,
+            </if>
+            <if test="openStatus != null" >
+                OPEN_STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="openNdate != null" >
+                OPEN_NDATE,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="cashId != null" >
+                #{cashId,jdbcType=VARCHAR},
+            </if>
+            <if test="openType != null" >
+                #{openType,jdbcType=VARCHAR},
+            </if>
+            <if test="openDateEnd != null" >
+                #{openDateEnd,jdbcType=DATE},
+            </if>
+            <if test="openDateStrUn != null" >
+                #{openDateStrUn,jdbcType=DATE},
+            </if>
+            <if test="openDateEndUn != null" >
+                #{openDateEndUn,jdbcType=DATE},
+            </if>
+            <if test="openVdateUn != null" >
+                #{openVdateUn,jdbcType=DATE},
+            </if>
+            <if test="openMdateUn != null" >
+                #{openMdateUn,jdbcType=DATE},
+            </if>
+            <if test="openDateStr != null" >
+                #{openDateStr,jdbcType=DATE},
+            </if>
+            <if test="openVdate != null" >
+                #{openVdate,jdbcType=DATE},
+            </if>
+            <if test="openMdate != null" >
+                #{openMdate,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="openStatus != null" >
+                #{openStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="openNdate != null" >
+                #{openNdate,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        insert into FIN_OPEN_PLAN(CASH_ID, OPEN_TYPE, OPEN_DATE_END, OPEN_DATE_STR_UN, OPEN_DATE_END_UN,
+        OPEN_VDATE_UN, OPEN_MDATE_UN, OPEN_DATE_STR, OPEN_VDATE, OPEN_MDATE, FINPROD_ID,
+        BRANCH, OPEN_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+        OPEN_NDATE
+        )
+        select CASH_ID, OPEN_TYPE, OPEN_DATE_END, OPEN_DATE_STR_UN, OPEN_DATE_END_UN,
+            OPEN_VDATE_UN, OPEN_MDATE_UN, OPEN_DATE_STR, OPEN_VDATE, OPEN_MDATE, FINPROD_ID,
+            BRANCH, OPEN_STATUS, CREATE_USER, CREATE_DEPT, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME,
+            OPEN_NDATE
+             from FIN_OPEN_PLAN
+             where 1 = 1 and CASH_ID = #{cashId,jdbcType=VARCHAR} and OPEN_TYPE = #{openType,jdbcType=VARCHAR} and OPEN_DATE_END = #{openDateEnd,jdbcType=DATE}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        update FIN_OPEN_PLAN
+        <set >
+            <if test="openDateStrUn != null" >
+                OPEN_DATE_STR_UN = #{openDateStrUn,jdbcType=DATE},
+            </if>
+            <if test="openDateEndUn != null" >
+                OPEN_DATE_END_UN = #{openDateEndUn,jdbcType=DATE},
+            </if>
+            <if test="openVdateUn != null" >
+                OPEN_VDATE_UN = #{openVdateUn,jdbcType=DATE},
+            </if>
+            <if test="openMdateUn != null" >
+                OPEN_MDATE_UN = #{openMdateUn,jdbcType=DATE},
+            </if>
+            <if test="openDateStr != null" >
+                OPEN_DATE_STR = #{openDateStr,jdbcType=DATE},
+            </if>
+            <if test="openVdate != null" >
+                OPEN_VDATE = #{openVdate,jdbcType=DATE},
+            </if>
+            <if test="openMdate != null" >
+                OPEN_MDATE = #{openMdate,jdbcType=DATE},
+            </if>
+            <if test="finprodId != null" >
+                FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null" >
+                BRANCH = #{branch,jdbcType=DECIMAL},
+            </if>
+            <if test="openStatus != null" >
+                OPEN_STATUS = #{openStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="openNdate != null" >
+                OPEN_NDATE = #{openNdate,jdbcType=DATE},
+            </if>
+        </set>
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+        and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+        and OPEN_DATE_END = #{openDateEnd,jdbcType=DATE}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.FinOpenPlan" >
+        update FIN_OPEN_PLAN
+        set OPEN_DATE_STR_UN = #{openDateStrUn,jdbcType=DATE},
+            OPEN_DATE_END_UN = #{openDateEndUn,jdbcType=DATE},
+            OPEN_VDATE_UN = #{openVdateUn,jdbcType=DATE},
+            OPEN_MDATE_UN = #{openMdateUn,jdbcType=DATE},
+            OPEN_DATE_STR = #{openDateStr,jdbcType=DATE},
+            OPEN_VDATE = #{openVdate,jdbcType=DATE},
+            OPEN_MDATE = #{openMdate,jdbcType=DATE},
+            FINPROD_ID = #{finprodId,jdbcType=VARCHAR},
+            BRANCH = #{branch,jdbcType=DECIMAL},
+            OPEN_STATUS = #{openStatus,jdbcType=VARCHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            OPEN_NDATE = #{openNdate,jdbcType=DATE}
+        where CASH_ID = #{cashId,jdbcType=VARCHAR}
+          and OPEN_TYPE = #{openType,jdbcType=VARCHAR}
+          and OPEN_DATE_END = #{openDateEnd,jdbcType=DATE}
+    </update>
+</mapper>

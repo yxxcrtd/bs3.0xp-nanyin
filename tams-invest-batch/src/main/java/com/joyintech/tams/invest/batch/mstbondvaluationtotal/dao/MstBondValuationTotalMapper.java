@@ -1,8 +1,11 @@
 package com.joyintech.tams.invest.batch.mstbondvaluationtotal.dao;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.Date;
 import java.util.Map;
 
+@Repository
 public interface MstBondValuationTotalMapper {
 
 	void deleteByDate(Map<String, Object> param);

@@ -47,7 +47,7 @@
 											<input type="text" name="finprodMarketId" id="finprodMarketId"
 												   data-th-value="${entity?.finprodMarketId}"
 												   class="layui-input form-input" placeholder="请输入内容"
-												   data-th-placeholder="#{SysCommon.placeholder}" maxlength="18">
+												   data-th-placeholder="#{SysCommon.placeholder}" maxlength="20">
 											<!--新建画面中，资产代码改为可手输 guyunfei 2019/09/04 end-->
 										</div>
 									</div>
@@ -505,9 +505,9 @@
 						th:data-path="@{/component/asset/BussFinRepayment/init}"
 						th:data-params="|{entityName:'bussFinRepaymentDto',entityNameFinInterestFactor:'finInterestFactorDto',entityNameFinPayInterestStdInfo:'finPayInterestStdInfoDto',finprodId:'${entity?.finprodId?:''}',vdate:'${#dates.format(entity?.vdate,'yyyy-MM-dd')}',workflowId:'${workflowId?:''}',int_asset_type:'${INT_ASSET_TYPE}', pageId:'${pageId}'}|"></div>
 					<!--  认购信息业务-->
-					<div class="page-component"
-						th:data-path="@{/component/project/BussSubscriptionInfo/init}"
-						th:data-params="|{entityName:'bussSubscriptionInfoDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId ?: ''}', pageId:'${pageId}'}|"></div>
+<!--					<div class="page-component"-->
+<!--						th:data-path="@{/component/project/BussSubscriptionInfo/init}"-->
+<!--						th:data-params="|{entityName:'bussSubscriptionInfoDto',finprodId:'${entity?.finprodId?:''}',workflowId:'${workflowId ?: ''}', pageId:'${pageId}'}|"></div>-->
 					<!-- 附件信息 -->
 					<div class="page-component"
 						th:data-path="@{/component/core/FileCommon/init}"

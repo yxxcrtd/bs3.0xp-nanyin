@@ -27,6 +27,7 @@ import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,6 +82,13 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         this.setSelectOptionToModel(model, BussinessDictCode.清算速度);
         this.setSelectOptionToModel(model, BussinessDictCode.投资目的);
         this.setSelectOptionToModel(model, BussinessDictCode.交易平台);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate", DateUtil.format(sysDate));
         String entrustId = getParam("entrustId");
@@ -93,6 +101,12 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         //配置单位 add by yeming 20210721 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         //配置单位 add by yeming 20210721 end
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
+
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         model.addAttribute("TodoList", !WorkFlowUtil.isNotFromToDoList());
         //流程代办
@@ -117,7 +131,12 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             model.addAttribute("bidPriceList", StringUtil.isEmptyList(dto.getBidPriceList()) ? null : JsonUtils.object2Json(dto.getBidPriceList()));
             model.addAttribute("person_entity", JsonUtils.object2Json(dto.getEtrInvestPersonInfo()));
             model.addAttribute("businessId",workflowId);
-        
+
+            // add by yeming 20210914 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, dto.getParentPageId());
+            // add by yeming 20210914 银行间场内场外拆分 end
         }else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(entrustId)) {
             //编辑页面
             EtrBondFirstLBiddingDto dto = firstService.selectByKey(entrustId,finprodId,portfolioId);
@@ -177,12 +196,6 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
-
         //配置单位 add by yeming 20210721 start
         model.addAttribute("entrustAmtUnit", entrustAmtUnit);
         //配置单位 add by yeming 20210721 end
@@ -200,8 +213,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         return firstService.getentrustIdAdd(RequestUtil.getPageParam());
     }
 
@@ -215,8 +227,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         return firstService.getfinprodIdForAdd(RequestUtil.getPageParam());
     }
     /**
@@ -276,8 +287,7 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrBondFirstLBiddingDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }
@@ -287,16 +297,16 @@ public class EtrBondFirstLBidding002Controller extends BaseController {
             String code = bussGetBussinessIdService !=null ? bussGetBussinessIdService.buildBussinessCode(param):IDGenerator.generate();
             dto.setEntrustId(code);
         }
-        // ----------add by yushilong 20200721 预占功能 start----------
-        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
-                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
-                    DictCodeListExt2.平安资产类型_一级市场债.getValue());
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }
-        }
-        // ----------add by yushilong 20200721 预占功能 end----------
+//        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, dto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doPreOccupy(dto,
+//                    BussinessDictCodeListRds.接口系统ID_预占接口.getValue(),
+//                    DictCodeListExt2.平安资产类型_一级市场债.getValue());
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        // ----------add by yushilong 20200721 预占功能 end----------
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();
         params.setPageId(this.getPageId());

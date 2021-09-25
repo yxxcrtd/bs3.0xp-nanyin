@@ -186,8 +186,8 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     /**
      * 金融产品名称
      */
-    @NotEmpty(fieldName="TrdPlanRateInvestTrade001.portfolioName",groups = {ValidateGroupEdit.class})
-    @Length(fieldName="TrdPlanRateInvestTrade001.portfolioName",max=200,groups = {ValidateGroupEdit.class,
+    @NotEmpty(fieldName="TrdPlanRateInvestTrade001.finprodName",groups = {ValidateGroupEdit.class})
+    @Length(fieldName="TrdPlanRateInvestTrade001.finprodName",max=200,groups = {ValidateGroupEdit.class,
         ValidateGroupDelete.class})
     private String finprodName;
     /**
@@ -304,6 +304,10 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
      */
     private String appAssetPositionStr;
 
+    /**
+     *业务模式
+     */
+    private String businessModel;
 
 
     /**
@@ -665,6 +669,8 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     }
 
 
+    private String totleTradeId;
+
     /**
      * 设置主键
      * {@inheritDoc}
@@ -672,7 +678,11 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
     @Override
     @PrimaryKey(Field.PK_1)
     public String getTotleTradeId(){
-        return StringUtil.isNotEmpty(super.getTotleTradeId())?super.getTotleTradeId():IDGenerator.generate();
+        return totleTradeId;
+    }
+
+    public void setTotleTradeId(String totleTradeId) {
+        this.totleTradeId = totleTradeId;
     }
     /**
      * 业务类型
@@ -1071,7 +1081,7 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
 		this.tradeAmtAndFee = tradeAmtAndFee;
 	}
     
-	@NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
+//	@NotEmpty(fieldName = "EtrInvestBondInfo002.invAim", groups = {ValidateGroupEdit.class})
     @Override
     public String getInvAim() {
     	return super.getInvAim();
@@ -1112,6 +1122,11 @@ public class TrdPlanRateInvestTradeDto extends WflTrdProductDeal implements Proc
         this.appAssetPositionStr = appAssetPositionStr;
     }
 
+     public String getBusinessModel() {
+        return businessModel;
+    }
 
-
+    public void setBusinessModel(String businessModel) {
+        this.businessModel = businessModel;
+    }
 }

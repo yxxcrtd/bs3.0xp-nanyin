@@ -46,6 +46,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -121,7 +122,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	/**
 	 * 查询账套组
 	 * @return 套账日期
-	 * @throws Exception
 	 * @see
 	 */
 	@RequestMapping("findBooksetGroup")
@@ -134,7 +134,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	 * 检索账套代码(只取理财账套)
 	 *
 	 * @return 账套代码联想框内容
-	 * @throws Exception
 	 * @see
 	 * @since 1.0
 	 */
@@ -146,8 +145,7 @@ public class ValProfitQuery001Controller extends BaseController {
 
     @ResponseBody
     @RequestMapping("findPage")
-    public List<ValProfitQuery001Dto> selectBalanceStatement()
-        throws Exception {
+    public List<ValProfitQuery001Dto> selectBalanceStatement() throws ParseException {
 		Map<String, Object> paraMap = RequestUtil.getParameters(getRequest());
 		// 报表维度为单账套
 		if (DictCodeListExt2.批处理账套类型_账套.getValue().equals(String.valueOf(paraMap.get("reportDimen")))) {
@@ -164,7 +162,6 @@ public class ValProfitQuery001Controller extends BaseController {
      * 检索账套代码(只取理财账套)
      * 
      * @return 账套代码联想框内容
-     * @throws Exception
      * @see
      * @since 1.0
      */
@@ -224,12 +221,11 @@ public class ValProfitQuery001Controller extends BaseController {
 	/**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception{
+    public ResponseEntity<byte[]> export() throws IOException, ParseException {
 		Map<String, Object> paraMap = RequestUtil.getPageParam();
 		if (DictCodeListExt2.批处理账套类型_账套组.getValue().equals(paraMap.get("reportDimen"))) {
 			List<SysBatchGrpPrdlink> list = valAssetBook001Service.findAllProduct(paraMap);
@@ -243,7 +239,6 @@ public class ValProfitQuery001Controller extends BaseController {
 	 * 联动：报表期限类型 - 季度 半年
 	 * 
 	 * @return
-	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping("getTermLink")
@@ -268,12 +263,11 @@ public class ValProfitQuery001Controller extends BaseController {
      * 获取默认日期信息
      * 
      * @return ValProfitQuery001Dto
-     * @throws Exception exception
      */
     @ResponseBody
     @RequestMapping("getDateInfo")
     public ValProfitQuery001Dto getDateInfo()
-        throws Exception {
+         {
     	Map<String, Object> params = RequestUtil.getPageParam();
     	params.put("booksetGroup", this.getParam("booksetGroup"));
     	params.put("reportTermType", this.getParam("reportTermType"));

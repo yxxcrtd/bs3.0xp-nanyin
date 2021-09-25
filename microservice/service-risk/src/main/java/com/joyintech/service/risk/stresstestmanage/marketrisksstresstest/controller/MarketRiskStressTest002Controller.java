@@ -59,7 +59,7 @@ public class MarketRiskStressTest002Controller {
      */
     @PostMapping("selectProdForPage/{page}/{length}")
     public Page<MarketRiskStressTest002Dto> selectProdForPage(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return marketRiskStressTest002Service.selectProdForPage(page, length, param);
     }
     
@@ -73,7 +73,7 @@ public class MarketRiskStressTest002Controller {
      */
     @PostMapping("selectFacForPage/{page}/{length}")
     public Page<MarketRiskStressTest002Dto> selectFacForPage(@RequestBody Map<String, Object> param,
-                                            @PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+                                            @PathVariable("page") int page, @PathVariable("length") int length) {
         return marketRiskStressTest002Service.selectFacForPage(page, length, param);
     }
     

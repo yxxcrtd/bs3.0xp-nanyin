@@ -90,7 +90,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 	 */
 	@PostMapping("findShadowPrice/{page}/{length}")
 	public Page<ShadowPriceScheme001Dto> findShadowPrice(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return shadowPriceScheme001Service.findShadowPrice(page, length, pageParam);
 	}
 
@@ -102,7 +102,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 	 */
 	@PostMapping("findShadowPriceDetial/{page}/{length}")
 	public Page<ShadowPriceScheme002Dto> findShadowPriceDetial(@RequestBody Map<String, Object> pageParam,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length){
 		return shadowPriceScheme002Service.findShadowPriceDetial(page, length, pageParam);
 	}
 
@@ -157,7 +157,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
 
 	
 	@PostMapping("insert")
-    public void insert(@RequestBody ShadowPriceScheme001Dto dto) throws Exception {
+    public void insert(@RequestBody ShadowPriceScheme001Dto dto) {
 		shadowPriceScheme001Service.doComplete(dto,OperationType.NEW);
     }
     
@@ -169,7 +169,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("update")
-    public void update(@RequestBody ShadowPriceScheme001Dto dto) throws Exception{
+    public void update(@RequestBody ShadowPriceScheme001Dto dto) {
     	shadowPriceScheme001Service.doComplete(dto,OperationType.MODIFY);
     }
     
@@ -181,7 +181,7 @@ public class ShadowPriceScheme001Controller extends BaseController {
      * @since 1.0
      */
     @PostMapping("delete")
-    public void delete(@RequestBody ShadowPriceScheme001Dto dto) throws Exception{
+    public void delete(@RequestBody ShadowPriceScheme001Dto dto) {
     	shadowPriceScheme001Service.doComplete(dto,OperationType.DELETE);
     }
 }

@@ -12,6 +12,7 @@ package com.joyintech.tams.disclosure.interf.interf.common.imp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.JDBCType;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +20,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.joyintech.framework.constant.GlobalConstant;
@@ -53,7 +57,7 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
  */
 @Component(value="disImportGenerator")
 public final class ImportGenerator {
-
+    private static final Logger logger = LoggerFactory.getLogger(ImportGenerator.class);
     public static List<ImpColumn> createImpTableColumns(String tableName) {
 
         TableStructService tableService = SpringContextUtil.getBean(TableStructService.class);
@@ -227,13 +231,12 @@ public final class ImportGenerator {
      * @return 导入是否成功
      */
     public static boolean importToDB(ImpTable table, String path, String dataFileName,
-                                     List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName)
-        throws Exception {
+                                     List<String> content, Integer reportInterfOneTimeSqlLdrCommitCount, String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (!path.endsWith("/")) {
-            path = path + "/";
+            path = path + File.separator;
         }
         String absoultPath = path + dataFileName;
-        File tmpFile = new File(absoultPath);
+        File tmpFile = new SafelyFile(absoultPath);
         FileUtils.writeLines(tmpFile, "UTF-8", content);
 
         // 系统是否使用的db2数据库
@@ -259,7 +262,7 @@ public final class ImportGenerator {
 
             String importFullPath = REP_DB2_SERVER_FTP_FILEPATH;
             if (!StringUtil.endsWith(importFullPath, "/")) {
-                importFullPath = importFullPath + "/";
+                importFullPath = importFullPath + File.separator;;
             }
             importFullPath = importFullPath + dataFileName;
 
@@ -289,9 +292,11 @@ public final class ImportGenerator {
             param.setRows(reportInterfOneTimeSqlLdrCommitCount);
 
             // add by etliu 20180926 start
-            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());
+//            System.out.println("DatabaseName重置前值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置前值：" + param.getDatabaseName());
             param.setDatabaseName(reportSqlldrDatabaseName);
-            System.out.println("DatabaseName重置后值：" + param.getDatabaseName());
+//            System.out.println("DatabaseName重置后值：" + param.getDatabaseName());
+            logger.info("DatabaseName重置后值：" + param.getDatabaseName());
             // add by etliu 20180926 end
 
             // add by etliu 20181018 start
@@ -315,7 +320,6 @@ public final class ImportGenerator {
      *
      * @param table 导入表配置
      * @param path 路径
-     * @param dataFileName 数据文件名
      * @param content 导入数据内容
      * @throws Exception 异常
      * @return 导入是否成功
@@ -324,8 +328,7 @@ public final class ImportGenerator {
                                            Integer reportInterfOneTimeSqlLdrDataCount,
                                            Integer reportInterfOneTimeSqlLdrCommitCount,
                                            String sqlDataFileExtension,
-                                           String reportSqlldrDatabaseName)
-        throws Exception {
+                                           String reportSqlldrDatabaseName) throws IOException, InterruptedException {
         if (StringUtil.isEmptyList(content)) {
             return true;
         }

@@ -448,6 +448,9 @@
 			<if test="orgClass != null and orgClass !='' ">
 				AND A.ORG_CLASS = #{orgClass,jdbcType=VARCHAR}
 			</if>
+			<if test="accountingClass != null and accountingClass !='' ">
+				AND A.ACCOUNTING_CLASS = #{accountingClass,jdbcType=VARCHAR}
+			</if>
 			<if test="finprodType == 'F17' ">
 				AND A.PROFIT_TYPE = #{profitType,jdbcType=VARCHAR}
 			</if>
@@ -1095,6 +1098,9 @@
 				</if>
 				<if test="orgClass != null and orgClass !='' ">
 					AND A.ORG_CLASS = #{orgClass,jdbcType=VARCHAR}
+				</if>
+				<if test="accountingClass != null and accountingClass !='' ">
+					AND A.ACCOUNTING_CLASS = #{accountingClass,jdbcType=VARCHAR}
 				</if>
 				<if test="finprodType == 'F17' ">
 					AND A.PROFIT_TYPE = #{profitType,jdbcType=VARCHAR}

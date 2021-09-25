@@ -98,6 +98,7 @@
     
     <delete id="deleteThisDayDay" parameterType="java.lang.String" >
     	delete from PAYHSRCSECOPTION
+    	where 1=1
     </delete>
     
 </mapper>

@@ -17,7 +17,7 @@
             //付息周期
             , {field: 'calcRuleString', width: "90", title: 'IntDetailDuration.calcRuleString', sortable:false}
 //          投资目的
-            , {field: 'invAimString', width: "200", title: '投资目的/是否融入',sortable:false}
+            , {field: 'invAimString', width: "200", title: '投资目的/是否融入',sortable:false,visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false}
             //持有面额
             , {field: 'qty', width: "200", title: 'IntDetailDuration.holdAmt', type: 'money', sortable:false}
             //还本金额
@@ -96,7 +96,7 @@
             cols:JSON.stringify([
                 {field: 'prinAmtTheory', width: "200", title: '还本金额', type: 'money', sortable:false}
                 , {field: 'calcRuleString', width: "90", title: '付息周期', sortable:false}
-                , {field: 'invAimString', width: "200", title: '投资目的/是否融入', sortable:false}
+                , {field: 'invAimString', width: "200", title: '投资目的/是否融入', sortable:false,visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false}
                 , {field: 'vDate', width: "120", title: '计息开始日', sortable:false}
                 , {field: 'mDate', width: "120", title: '计息结束日', sortable:false}
                 , {field: 'yield', width: "150", title: '票面利率(%)', type: 'money', sortable:false}
@@ -186,11 +186,12 @@
 //        	非最后一个
         	else {
 //        		计算占比
-        		var prop = JoyinMath.doDiv(finAssetIntInfos[i].amount, sumAmount, 12, JoyinMath.ROUND_HALF_UP);
+                debugger;
+        		// var prop = JoyinMath.doDiv(finAssetIntInfos[i].amount, sumAmount, 12, JoyinMath.ROUND_HALF_UP);
 //        		根据占比处理所有的钱
         		$.each(itemArr,function(index,val){
 //        			计算当前需要的钱
-        			var thisNum = JoyinMath.doMul(itemObj[val], prop, 2, JoyinMath.ROUND_HALF_UP);
+        			var thisNum = JoyinMath.doDiv(JoyinMath.doMul(itemObj[val], finAssetIntInfos[i].amount, 12, JoyinMath.ROUND_HALF_UP), sumAmount,2, JoyinMath.ROUND_HALF_UP);
 //        			处理已分配的钱
         			sumObj[val] = JoyinMath.doAdd(sumObj[val], thisNum);
 //        			把钱放入对应数据
@@ -338,6 +339,9 @@
          */
         var object = $.serializeToObject('#informationForm', true);
         object.operateType = operateType;
+        if(FileCommon) {
+            object.uploadFileList = FileCommon.getUploadFileInfo();
+        }
         Joyin.ajaxJson(basePath + 'invest/period/trdbondduration/TrdBondDuration002/check', object, function (result) {
             Joyin.confirm(result.data, function () {
                 if (operateType === 'save') {

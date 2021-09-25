@@ -5,6 +5,21 @@
 
 package com.joyintech.service.common.core.controller;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.joyintech.framework.annotation.DTXTransaction;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.util.DateUtil;
@@ -13,8 +28,25 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.common.core.dto.AutoCouponDto;
 import com.joyintech.service.common.core.dto.InfChinamutualfunddescriptionDto;
 import com.joyintech.service.common.core.dto.InterfPayhsrcsecinfoDto;
+import com.joyintech.service.common.core.dto.InterfStockInfoDto;
 import com.joyintech.service.common.core.service.SysCoreService;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.common.base.entity.FinProductTypeConfig;
+import com.joyintech.tams.common.base.entity.InfCmoneymarketfscarryoverm;
+import com.joyintech.tams.common.base.entity.InterfBondMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfCbonddescription;
+import com.joyintech.tams.common.base.entity.InterfCbondindustrywind;
+import com.joyintech.tams.common.base.entity.InterfCbondspecialconditions;
+import com.joyintech.tams.common.base.entity.InterfCmfunddescrip;
+import com.joyintech.tams.common.base.entity.InterfCmfundnav;
+import com.joyintech.tams.common.base.entity.InterfFMarketInfo;
+import com.joyintech.tams.common.base.entity.InterfFloatcouprate;
+import com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecoption;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecrating;
+import com.joyintech.tams.common.base.entity.InterfPayhsrcsecschedule;
+import com.joyintech.tams.common.base.entity.InterfStdsecConRadio;
+import com.joyintech.tams.common.base.entity.MstCustomerInfoAdd;
 import com.joyintech.tams.component.base.core.MstWorkflowCommonService;
 import com.joyintech.tams.component.base.core.dto.WflSpecialValidInputParameter;
 import com.joyintech.tams.component.base.core.dto.WflValidInputParameter;
@@ -25,14 +57,6 @@ import com.joyintech.tams.invest.common.component.base.core.MstFileCommonService
 import com.joyintech.tams.invest.common.dto.MstFileInputParameter;
 import com.joyintech.tams.invest.common.dto.MstFileOutputParameter;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author 何阳阳
@@ -660,5 +684,71 @@ public class SysCoreController {
     @GetMapping("isBondExerciseAsset")
     public int isBondExerciseAsset(String finprodId) {
         return sysCoreService.isBondExerciseAsset(finprodId);
+    }
+
+    /**
+     * 通过留痕表查询流程中数据,返回list
+     * add by jiangpeng on 20210514 ZGBSSE-388
+     * @param input 查询条件
+     * @return list
+     */
+    @PostMapping("getDataEntityFromProcessMarkList")
+    public List<ProcessMark> getDataEntityFromProcessMarkList(@RequestBody WflValidInputParameter input) {
+        if (null != mstWorkflowCommonService) {
+            return mstWorkflowCommonService.getDataEntityFromProcessMarkList(input);
+        }
+        return null;
+    }
+    
+    /**
+     * 获取wind资产信息(股票) <功能详细描述>
+     *
+     * @param secid
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("selectWindStockAssetByStockCode")
+    public InterfStockInfoDto selectWindStockAssetByStockCode(String stockCode) {
+        return sysCoreService.selectWindStockAssetByStockCode(stockCode);
+    }
+    
+    /**
+     * 获取wind资产信息(股票) <功能详细描述>
+     *
+     * @return
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("selectWindStockAsset")
+    public List<InterfStockInfoDto> selectWindStockAsset(@RequestBody Map<String,Object> map) {
+        return sysCoreService.selectWindStockAsset(map);
+    }
+    
+    /**
+     * 自动加券(股票) <功能详细描述>
+     *
+     * @param dto
+     * @see
+     * @since 1.0
+     */
+    @Transactional
+    @DTXTransaction
+    @PostMapping("autoStockCouponSave")
+    public void autoStockCouponSave(@RequestBody InterfStockInfoDto dto) {
+        sysCoreService.autoStockCouponSave(dto);
+    }
+
+    /**
+     * 资产是否存在交易(存在撤销交易也算交易)
+     *
+     * @param finprodId 金融产品代码
+     * @return 交易笔数
+     * @see
+     * @since 1.0
+     */
+    @GetMapping("isTransInAssetTwo")
+    public int isTransInAssetTwo(String finprodId) {
+        return sysCoreService.isTransInAssetTwo(finprodId);
     }
 }

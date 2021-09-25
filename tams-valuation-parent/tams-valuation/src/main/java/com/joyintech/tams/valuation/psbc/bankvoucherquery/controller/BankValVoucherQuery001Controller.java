@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.psbc.bankvoucherquery.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.tams.valuation.psbc.bankvoucherquery.dto.BankValVoucherQuery001Dto;
 import com.joyintech.tams.valuation.psbc.bankvoucherquery.dto.BankValVoucherQuery001SearchDto;
 import com.joyintech.tams.valuation.psbc.bankvoucherquery.service.BankValVoucherQuery001Service;
@@ -199,10 +201,15 @@ public class BankValVoucherQuery001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() throws ParseException, IOException {
         String datas = this.getParam("datas");
         Map<String, Object> params= this.getRequestMap();
-        BankValVoucherQuery001SearchDto dto = (BankValVoucherQuery001SearchDto)JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        BankValVoucherQuery001SearchDto dto = null;
+        try {
+            dto = (BankValVoucherQuery001SearchDto) JsonUtils.map2entity(params, BankValVoucherQuery001SearchDto.class);
+        } catch (Exception e) {
+            throw new BusinessException(e);
+        }
         List<BankValVoucherQuery001Dto> listdto;
         if (datas == null) {
             listdto = valVoucherQuery001Service.selectAll(dto);

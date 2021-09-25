@@ -239,6 +239,18 @@ public class TrdLendInvestTradeDto extends TrdProductDeal implements ProcessEnti
     private String calendarId;
     // add by dubaojun 2020-08-27 风险接口需要到期日和交易日历 end
 
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
 
     /**
      * 获取 riskTrialRetDto

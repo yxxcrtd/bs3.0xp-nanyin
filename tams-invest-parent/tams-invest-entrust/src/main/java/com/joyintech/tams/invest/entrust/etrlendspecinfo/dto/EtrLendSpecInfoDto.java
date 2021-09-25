@@ -157,7 +157,18 @@ public class EtrLendSpecInfoDto extends EtrEntrust implements ProcessEntity {
     private Long settleSpreed;
 
     private String settleSpreedStr;
-    
+    /**
+     * 父页面的parentPageId，用于区分字典值控制字段
+     */
+    private String parentPageId;
+
+    public String getParentPageId() {
+        return parentPageId;
+    }
+
+    public void setParentPageId(String parentPageId) {
+        this.parentPageId = parentPageId;
+    }
     /**
      * 获取 riskTrialRetDto
      * @return riskTrialRetDto.

@@ -18,6 +18,7 @@ import com.joyintech.tams.valuation.basicdata.commarketmanagement.dto.ComMarketM
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -288,6 +289,7 @@ implements BaseProcessService<ComMarketManagementDto>{
 		//评级结果
 		if (StringUtil.isNotEmpty(list.get(index))) {
 			String lastStr = getEffDictKey(list.get(index).trim(), DictCode.评级结果);
+//			String lastStr = list.get(index).trim();
 			if (StringUtil.isNotEmpty(lastStr)) {
 				dto.setGradeResult(lastStr);
 			}
@@ -388,21 +390,40 @@ implements BaseProcessService<ComMarketManagementDto>{
 	 */
 	private void checkEffData(List<ComMarketManagementDto> datas, List<ExcelValidDto> excelValidList) {
 		Map<String, List<ComMarketManagementDto>> maps = datas.stream().collect(Collectors.groupingBy(ComMarketManagementDto::getoType));
+		// 定义 变量.市场代码集合
+		List<ComMarketManagementDto> secIdList = new ArrayList<ComMarketManagementDto>();
 		List<ComMarketManagementDto> finprodList = maps.get(DictCodeList.评级类型_债项评级.getValue());
-		List<ComMarketManagementDto> customList = maps.get(DictCodeList.评级类型_主体评级.getValue());
-		List<ComMarketManagementDto> existFinprodList = getFinprodLists(finprodList);
-		Map<String, List<ComMarketManagementDto>> finprodMap = new HashMap<>();
-		if(!StringUtil.isEmptyList(existFinprodList)) {
-			finprodMap = existFinprodList.stream().collect(Collectors.groupingBy(ComMarketManagementDto::getoCode));
+		// 债项评级不为空，先存入市场代码集合
+		if(CollectionUtils.isNotEmpty(finprodList)){
+			secIdList.addAll(finprodList);
 		}
-		List<ComMarketManagementDto> existCustomList = getCustomerLists(customList);
+		List<ComMarketManagementDto> customList = maps.get(DictCodeList.评级类型_主体评级.getValue());
+
+		// 定义 变量.机构信息Map集合
 		Map<String, List<ComMarketManagementDto>> customMap = new HashMap<>();
-		if(!StringUtil.isEmptyList(existCustomList)) {
-			customMap = existCustomList.stream().collect(Collectors.groupingBy(ComMarketManagementDto::getoCode));
+		// 定义 变量.标的信息Map集合
+		Map<String, List<ComMarketManagementDto>> finprodMap = new HashMap<>();
+		// 先取主体评级对应评级机构信息，对应进行分组
+		if(CollectionUtils.isNotEmpty(customList)){
+			List<ComMarketManagementDto> existCustomList = getCustomerLists(customList);
+			if(!StringUtil.isEmptyList(existCustomList)) {
+				customMap = existCustomList.stream().collect(Collectors.groupingBy(ComMarketManagementDto::getoCode));
+			}
+			// 存入 变量.金融产品代码集合，由于债券主体代码对应市场代码，故债券还需对比标的信息
+			secIdList.addAll(customList);
+		}
+		// 变量.市场代码集合 不为空
+		if(CollectionUtils.isNotEmpty(secIdList)){
+			// 根据市场代码查询对应标的信息
+			List<ComMarketManagementDto> existFinprodList = getFinprodLists(secIdList);
+			if(!StringUtil.isEmptyList(existFinprodList)) {
+				finprodMap = existFinprodList.stream().collect(Collectors.groupingBy(ComMarketManagementDto::getoCode));
+			}
 		}
 		for (int i = 0; i < datas.size(); i++ ) {
 			if(StringUtil.equals(DictCodeList.评级类型_主体评级.getValue(), datas.get(i).getoType())) {
-				if(!customMap.containsKey(datas.get(i).getoCode())) {
+				// 判断机构信息Map集合 和 标的信息Map集合是否都不包含
+				if(!customMap.containsKey(datas.get(i).getoCode()) && !finprodMap.containsKey(datas.get(i).getoCode())) {
 					ExcelValidDto excelValidDto = new ExcelValidDto(datas.get(i).getoCode(), String.valueOf(i + 2), "对象代码不存在！");
 					excelValidList.add(excelValidDto);
 				}

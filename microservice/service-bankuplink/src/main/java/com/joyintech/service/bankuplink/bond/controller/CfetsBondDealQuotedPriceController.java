@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
@@ -155,7 +157,25 @@ public class CfetsBondDealQuotedPriceController {
                                                       @PathVariable("length") int length){
         return cfetsBondDealQuotedPriceService.queryEntrustInfoList(page,length,param);
     }
-    
+
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add start
+    /**
+     * 根据查询查询符合条件的历史委托列表
+     *
+     * @param param 入参
+     * @param page 页数
+     * @param length 步长
+     * @return 委托列表
+     * @see
+     * @since 1.0
+     */
+    @PostMapping("queryHisEntrustInfoList/{page}/{length}")
+    public Page<SuggestDto> queryHisEntrustInfoList(@RequestBody Map<String, Object> param,@PathVariable("page") int page,
+                                                      @PathVariable("length") int length){
+        return cfetsBondDealQuotedPriceService.queryHisEntrustInfoList(page,length,param);
+    }
+    // ZGZGST-1936:CFETS历史报价查询-指令代码使用文本框 fuyongsheng 20210904 add end
+
     /**
      * 根据查询查询符合条件的报价编号
      * 
@@ -1090,5 +1110,25 @@ public class CfetsBondDealQuotedPriceController {
             throws Exception {
         Page<SelectOptionDto> temp = cfetsBondDealQuotedPriceService.getfinprodIdForAdd(page,length,param);
         return temp;
+    }
+
+
+    /**
+     * 成交查询
+     * @param map 查询
+     * @return 分页查询结果
+     * @throws Exception 异常
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @PostMapping("getCstpQryTableList")
+    public List<CstpSelectDto> getCstpQryTableList(@RequestBody Map<String,Object> map) throws Exception{
+        return cfetsBondDealQuotedPriceService.getCstpQryTableList(map);
+    }
+
+    @PostMapping("getWflEntrustDealedAmt")
+    public BigDecimal getWflEntrustDealedAmt(@RequestBody Map<String, Object> map){
+        return cfetsBondDealQuotedPriceService.getWflEntrustDealedAmt(map);
     }
 }

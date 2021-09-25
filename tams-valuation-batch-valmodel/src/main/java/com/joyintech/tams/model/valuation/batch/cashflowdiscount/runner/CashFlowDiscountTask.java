@@ -15,10 +15,12 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
-import com.joyintech.tams.model.valuation.batch.cashflowdiscount.listener.CashFlowDiscountListener;
+import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.processor.CashFlowDiscountProcessor;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.reader.CashFlowDiscountTaskReader;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.writer.CashFlowDiscountWriter;
+import com.joyintech.tams.model.valuation.batch.common.ValModelCommonListener;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -68,7 +70,7 @@ public class CashFlowDiscountTask extends BatchBaseService {
     private CashFlowDiscountWriter step1Writer;
 
     @Autowired
-    private CashFlowDiscountListener cashFlowDiscountListener;
+    private ValModelCommonListener valModelCommonListener;
     
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -86,17 +88,18 @@ public class CashFlowDiscountTask extends BatchBaseService {
         Map<String, Object> params = new HashMap<>();
 
         // 待处理列表list
-        params.put("BATCH_INFO", batchExecuteInfo);
-        params.put("HAPPEN_DATE", batchExecuteInfo.getExecuteDate());
+        params.put(ValComponentConstant.BATCH_EXECUTEINFO, batchExecuteInfo);
+        params.put(ValComponentConstant.EXECUTE_DATE, batchExecuteInfo.getExecuteDate());
         // 各步骤设置参数
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
-        
+        valModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
+
         logger.info("批处理[" + this.getBatchTask().getTaskName() + "]开始。");
         return batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
-                this.getBatchTask().getBeanName() + this.getBatchTask().getTaskId(),cashFlowDiscountListener).run();
+                this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId(),valModelCommonListener).run();
     }
 
 }

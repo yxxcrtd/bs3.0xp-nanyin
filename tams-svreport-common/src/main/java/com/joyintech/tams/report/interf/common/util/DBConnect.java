@@ -167,7 +167,6 @@ public class DBConnect {
 				result.add(entity);
 			}
 		} catch (SQLException e) {
-//			e.printStackTrace();
 			logger.error("数据读取数据出错...SQL：" + sql);
             logger.error(e.getMessage(),e);
 		} 

@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.joyintech.component.svrreport.chb.contant.SendDataCheckType;
+import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.svreport.chb.proddurationreg.dto.ProdDurationReg001Dto;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +87,8 @@ public class EmployeeInfoReg001Controller extends BaseController {
 			model.addAttribute("searchDataEnd", map.get("searchDataEnd"));
 			model.addAttribute("isMain", "01");
 		}
+		model.addAttribute("SVR_REPORT_CODE", DictCodeListExt2.报表名称_从业人员登记.getValue());
+		model.addAttribute("FILE_HANDLE_STATUS", DictCodeListExt3.中债一二三期文件处理状态_未处理.getValue());
         super.setSelectOptionToModel(model, 
         		DictCode.报送状态,
         		DictCode.报送反馈状态,
@@ -168,6 +175,11 @@ public class EmployeeInfoReg001Controller extends BaseController {
 	   			dtoList = page.getRoot();
 	   		}
 	   	}
+	   if(!CollectionUtils.isEmpty(dtoList)){
+		   for(EmployeeInfoReg001Dto dto : dtoList){
+			   dto.setBelongInstitutionCode(null);
+		   }
+	   }
 	   	//根据从业人员类型导出不同模板
 	   	createFile(sourceFiles,dtoList);
 	    // 导出路径不存在则重新生成
@@ -245,7 +257,7 @@ public class EmployeeInfoReg001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/submitChb", method = RequestMethod.POST)
-	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) throws Exception {
+	public AjaxResult doSubmit(@RequestBody Map<String, Object> param) {
 
 		List<EmployeeInfoReg001Dto> list = new ArrayList<EmployeeInfoReg001Dto>();
 		// 选择行数据时
@@ -274,7 +286,11 @@ public class EmployeeInfoReg001Controller extends BaseController {
 			dataList.add(target);
 		}
 
-		sdEmployInfoBatchService.sendBatchCommon(dataList);
+		SendDataCheckType sendDataCheckType = SendDataCheckType.报送;
+		if (StringUtil.equals(param.get("opertionType"), "reSubmitChb")){
+			sendDataCheckType = SendDataCheckType.重新报送;
+		}
+		sdEmployInfoBatchService.sendBatchCommon(dataList, sendDataCheckType);
 
 		return new AjaxResult(this.getMessage("REPORT_COMMON_I_0018"));
 	}

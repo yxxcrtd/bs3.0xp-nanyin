@@ -483,7 +483,8 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             param.put("portfolioId", dto.getPortfolioId());
             param.put("ccy", dto.getCcy());
             param.put("vdate", dto.getVdate());
-            Map<String, Object> proAvailableCash = getProAvailableCash(param);
+//            Map<String, Object> proAvailableCash = getProAvailableCash(param);
+            Map<String, Object> proAvailableCash = etrCommonService.getProAvailableCash(param);
             dto.setEtrAvailableCash(BigDecimal.valueOf(Double.valueOf(proAvailableCash.get("cashT").toString())));
             //指令可用持仓
             EtrSecPositionDto etrSecPositionDto = new EtrSecPositionDto();
@@ -594,6 +595,10 @@ public class EtrBondFirstBiddingService extends CommonExportService<EtrBondFirst
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
             message = etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrBondFirstLBidding002.mdate", lineNo);
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg, message);
+
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
 
             //组合代码
             message = etrCommonService.checkIsBlank(rowData.get(3).toString(), "EtrBondFirstLBidding002.portfolioId", lineNo);

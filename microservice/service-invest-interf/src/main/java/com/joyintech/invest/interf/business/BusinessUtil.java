@@ -16,6 +16,8 @@ import com.joyintech.invest.interf.common.core.entity.InterfDataDictInfo;
 import com.joyintech.invest.interf.common.core.service.InvestInterfCommonService;
 import com.joyintech.invest.interf.common.core.service.InvestInterfDataDictService;
 import com.joyintech.invest.interf.common.core.utility.WebserviceIntefUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 投管接口业务共通
@@ -26,6 +28,10 @@ import com.joyintech.invest.interf.common.core.utility.WebserviceIntefUtil;
  * @create: 2020-02-08 11:41
  **/
 public class BusinessUtil {
+    /**
+     * 日志
+     */
+    private static Logger logger = LoggerFactory.getLogger(BusinessUtil.class);
 
     /**
      * 发起方系统代码
@@ -61,7 +67,7 @@ public class BusinessUtil {
             rstMsg = prop.getProperty((StringUtil.isNotEmpty(finprodType2)? String.valueOf(finprodType2):"") +( StringUtil.isNotEmpty(ps)? "."+ps:"")+( StringUtil.isNotEmpty(excType)? "."+excType:"") + (StringUtil.isNotEmpty(
                     isInnerTrade) ? "."+isInnerTrade:""));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return  rstMsg;
     }

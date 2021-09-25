@@ -4,11 +4,12 @@ import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.service.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.StockQuotationDto;
 import com.joyintech.service.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.dto.AssetInfoDto;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 
-
+@Repository
 public interface ModBintreeConfigDtoMapper {
     int deleteByPrimaryKey(String seqno);
     
@@ -36,4 +37,6 @@ public interface ModBintreeConfigDtoMapper {
     List<SelectOptionDto> getMarketId(Map<String, Object> map);
 
     List<SelectOptionDto> getCurveCode(Map<String, Object> map);
+
+    List<SelectOptionDto> getAssetInfo( Map<String, Object> param);
 }

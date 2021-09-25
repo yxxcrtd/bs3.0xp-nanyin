@@ -1,18 +1,20 @@
 package com.joyintech.service.risk.valtblimport.dao;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
 import com.joyintech.service.risk.valtblimport.dto.PreOccupActualDetailDto;
 import com.joyintech.service.risk.valtblimport.dto.PreOccupationChangeDto;
 import com.joyintech.service.risk.valtblimport.dto.ValTableImpRiskDto;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 估值表导入-预占实占变更Mapper
  * @author zhangpei
  * 20201222
  */
+@Repository
 public interface PreOccupationChangeMapper {
 	/**
 	 * 获取估值日期自主管理专户的汇总值
@@ -69,5 +71,6 @@ public interface PreOccupationChangeMapper {
 	 * @return
 	 */
 	List<ValTableImpRiskDto> queryImpRiskInfo(Map<String,Object> paramMap);
- 
+
+	String selectId (String id);
 }

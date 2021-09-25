@@ -1,20 +1,23 @@
 package com.joyintech.tams.model.valuation.batch.incomemethodmodel.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.common.base.entity.ModStockdivitrateConfig;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dao.IncomeMethodMapper;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.dto.ProductAssetsIncomeMethodReaderDto;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
 import com.joyintech.tams.valuation.component.batch.service.ModValuationCommonService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,9 +53,9 @@ public class ProductAssetsIncomeMethodReaderService {
      * @return:
      */
     public List<ProductAssetsIncomeMethodReaderDto> createList(Map<String, Object> params, StepExecution stepExecution){
-        Date plateDate = (Date)params.get("PLATE_DATE");//平台日
-        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get("BATCH_INFO");
-        String taskId = params.get("TASK_ID").toString();
+        Date plateDate = (Date)params.get(ValComponentConstant.EXECUTE_DATE);//平台日
+        SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo)params.get(ValComponentConstant.BATCH_EXECUTEINFO);
+        String taskId = batchExecuteInfo.getTaskId();
         List<ProductAssetsIncomeMethodReaderDto> productAssetsIncomeMethodReaderDtoList = new ArrayList<>();
 
         //1.初始化批处理参数
@@ -74,7 +77,7 @@ public class ProductAssetsIncomeMethodReaderService {
         //3.初始化日志
         if (CollectionUtils.isNotEmpty(preReaderDtoList)){
             assetIds = preReaderDtoList.stream().map((x)->x.getFinprodId()).collect(Collectors.toList());
-            modLogsService.batchInitLogs(taskId,batchExecuteInfo.getBatchExedetailSeqNo(), assetIds);
+//            modLogsService.batchInitLogs(taskId,batchExecuteInfo.getBatchExedetailSeqNo(), assetIds);
         }else{
             return productAssetsIncomeMethodReaderDtoList;
         }
@@ -95,8 +98,11 @@ public class ProductAssetsIncomeMethodReaderService {
             if(modStockdivitrateConfigMap!=null&&modStockdivitrateConfigMap.containsKey(methodReaderDto.getFinprodId())){
                 productAssetsIncomeMethodReaderDto.setModStockdivitrateConfig(modStockdivitrateConfigMap.get(methodReaderDto.getFinprodId()));
             }else{
-                modLogsService.error(methodReaderDto.getFinprodId(), batchExecuteInfo.getTaskId(), taskId, "资产未配置预期股息增长率，跳过该资产的模型计算.");
-                continue;
+                ModStockdivitrateConfig config = new ModStockdivitrateConfig();
+                config.setFinprodId(methodReaderDto.getFinprodId());
+                config.setStockIntrate(BigDecimal.ZERO);
+                productAssetsIncomeMethodReaderDto.setModStockdivitrateConfig(config);
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),methodReaderDto.getFinprodId(), "【收益法模型批处理】：资产未配置预期股息增长率，默认使用0作为增长率计算.");
             }
 
             //3.2组装-资产现金流计划集合
@@ -110,6 +116,7 @@ public class ProductAssetsIncomeMethodReaderService {
             //3.4组装-现金流支付规则集合
             List<ModCashFlowPayRulesDto> modCashFlowPayRulesList = modValuationCommonService.getCashFlowPayRulesByFinprodId(methodReaderDto.getFinprodId());
             productAssetsIncomeMethodReaderDto.setModCashFlowPayRulesList(modCashFlowPayRulesList);
+            productAssetsIncomeMethodReaderDtoList.add(productAssetsIncomeMethodReaderDto);
         }
 
         return productAssetsIncomeMethodReaderDtoList;

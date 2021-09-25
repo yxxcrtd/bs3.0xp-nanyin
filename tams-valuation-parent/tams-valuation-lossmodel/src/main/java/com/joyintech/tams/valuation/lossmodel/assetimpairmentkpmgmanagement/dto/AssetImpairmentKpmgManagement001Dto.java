@@ -180,8 +180,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getAssetTypeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.资产五级分类, assetType))?
-                SysDataUtil.getNameFromDataDict(DictCode.资产五级分类, assetType):assetType;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.证券品种, assetType))?
+                SysDataUtil.getNameFromDataDict(DictCode.证券品种, assetType):assetType;
     }
 
     public void setAssetType(String assetType) {
@@ -233,8 +233,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getPurchaseTimeGradeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.评级结果, purchaseTimeGrade))?
-                SysDataUtil.getNameFromDataDict(DictCode.评级结果, purchaseTimeGrade):purchaseTimeGrade;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.内部评级, purchaseTimeGrade))?
+                SysDataUtil.getNameFromDataDict(DictCode.内部评级, purchaseTimeGrade):purchaseTimeGrade;
     }
 
     public void setPurchaseTimeGrade(String purchaseTimeGrade) {
@@ -246,8 +246,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getCurrentTimeGradeFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.评级结果, currentTimeGrade))?
-                SysDataUtil.getNameFromDataDict(DictCode.评级结果, currentTimeGrade):currentTimeGrade;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.内部评级, currentTimeGrade))?
+                SysDataUtil.getNameFromDataDict(DictCode.内部评级, currentTimeGrade):currentTimeGrade;
     }
 
     public void setCurrentTimeGrade(String currentTimeGrade) {
@@ -349,8 +349,8 @@ public class AssetImpairmentKpmgManagement001Dto extends BaseEntity implements P
     }
 
     public String getDataSourceFmt() {
-        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.模型数据来源, dataSource))?
-                SysDataUtil.getNameFromDataDict(DictCode.模型数据来源, dataSource):dataSource;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.减值数据来源, dataSource))?
+                SysDataUtil.getNameFromDataDict(DictCode.减值数据来源, dataSource):dataSource;
     }
 
     public void setDataSource(String dataSource) {

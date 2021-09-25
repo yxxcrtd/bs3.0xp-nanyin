@@ -83,10 +83,18 @@
     var cols = [
         {
             /* 组合代码 */
+            field: 'portfolioSeries', width: 100, title: 'EtribRepoInfo003.portfolioId', sortable: false,visible:false,edit: true,
+            editOption: {
+                childrenIds : 'portfolioId'
+            }
+        },
+        {
+            /* 组合代码 */
             field: 'portfolioId', width: 100, title: 'EtribRepoInfo003.portfolioId', edit: true, sortable: false,
             editOption: {
                 type: 'select',
                 id: 'portfolioId',
+                parentIds:'portfolioSeries',
 //                childrenIds : 'portfolioId',
                 multiple: false,
                 showField: 'text',
@@ -217,6 +225,16 @@
         },
         
         editCell: function (value, data, field, cell, column) {
+            //add by chenjiaxing 校验组合系列有没有填，组合下拉框值只取此组合系列下的 20210915 start
+            var portfolioSeries = $('#portfolioSeries').val();
+            if(portfolioSeries == "" || portfolioSeries == null){
+                Joyin.error("请输入组合系列！");
+                return;
+            }else{
+                data.portfolioSeries = $('#portfolioSeries').val();
+                table.renderRow(data.LAY_TABLE_INDEX, {"portfolioSeries": data.portfolioSeries});
+            }
+            //add by chenjiaxing 校验组合系列有没有填，组合下拉框值只取此组合系列下的 20210915 end
             if (field == "entrustAmt") {
                 refreshTradAmt();
             }
@@ -923,6 +941,10 @@
      * @returns
      */
     function doReset() {
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 starts
+        $('#portfolioSeries').val("").trigger('change');
+        $('#trader').val("").trigger('change');
+        //add by chenjiaxing 20210914 重置按钮使用部分元素未清空 20210914 end
         $("#ps").val('').trigger('change');
         $("#tradeAmt").val('').trigger('change');
         $("#settleSpeed").val('').trigger('change');
@@ -951,6 +973,13 @@
             JoyinUtil.showMessage("请选择交易方向","error");
             return null;
         }
+        // add by wanshiwei ZGZGST-2646:交易对手必填 20210915 start
+        let counterId = $('#counterId').val();
+        if(counterId == null || counterId === ''){
+            JoyinUtil.showMessage("请选择交易对手","error");
+            return null;
+        }
+        // add by wanshiwei ZGZGST-2646:交易对手必填 20210915 end
         var bussCombDistribtList = $.serializeToObject('#searchForm').bussCombDistribtList;
         if (bussCombDistribtList.length > 0) {
             var objects = new Array();
@@ -976,6 +1005,13 @@
                 obj.price = $('#price').val();
                 obj.ccy = 'CNY';
                 // add by zhangrui1 交易对手影响风险试算 end
+                //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add start
+                obj.repoTerm = $('#repoTerm').val();
+                if(!obj.repoTerm){
+                    Joyin.error(JoyinUtil.getMessage("请输入回购期限"));
+                    return;
+                }
+                //ZGZGST-2518:提示输入回购期限 fuyongsheng 20210906 add end
                 var object = {
                     tradeDirection: ['ps', 'EtribRepoInfo003.ps'],
                     portfolioCode: ['portfolioId', 'EtribRepoInfo003.portfolioId'],
@@ -1055,6 +1091,10 @@
                 item.data.portfolioId = item.data.portfolioCode;
                 item.data.price=object.price;
                 item.data.entrustAmt=item.data.entrustAmt;
+                item.data.tradeMarket = object.tradeMarket;
+                item.data.repoTerm = object.repoTerm;
+                item.data.vdate = object.vdate;
+                item.data.mdate=object.mdate;
                 param.push(item.data);
             }
         }
@@ -1068,8 +1108,8 @@
      * @returns
      */
     function riskMathRedisCallback003(object,cluflag) {
-        riskResultdata = object;
-        cluflag = cluflag;
+        EtrIbRepoinfo003.riskResultdata = object;
+        EtrIbRepoinfo003.cluflag = cluflag;
         Joyin.dialog(JoyinUtil.getLabel('EtribRepoInfo003Riskcal'), '/invest/entrust/etribrepo/EtribRepoInfo003Riskcal/init', '60%', '75%',null);
     }
 

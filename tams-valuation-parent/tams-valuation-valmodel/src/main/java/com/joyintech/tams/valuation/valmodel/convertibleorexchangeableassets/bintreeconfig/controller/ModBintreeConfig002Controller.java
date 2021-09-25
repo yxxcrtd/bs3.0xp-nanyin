@@ -23,6 +23,7 @@ import com.joyintech.tams.common.base.entity.CreditTagInfo;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.service.ModBintreeConfig002Service;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -71,7 +72,6 @@ public class ModBintreeConfig002Controller extends BaseController {
          }
          //修改
          else if (WorkFlowUtil.isNotFromToDoList() && StringUtil.isNotEmpty(this.getParam("seqno"))) {
-
         	 ModBintreeConfigDto CreditTagInfo = modBintreeConfig002Service.getBussinessEntityByIndId(creditTagId);
         	 model.addAttribute("SEQNO", this.getParam("seqno"));
              model.addAttribute(GlobalConstant.ENTITY, CreditTagInfo);
@@ -80,6 +80,7 @@ public class ModBintreeConfig002Controller extends BaseController {
              ModBintreeConfigDto creditTagInfo = new ModBintreeConfigDto();
              creditTagInfo.setSmoothsection(new BigDecimal("0.00"));
              creditTagInfo.setBintreeStep(new BigDecimal("100"));
+             creditTagInfo.setCurveCode(ModelDictCodeList.曲线代码_中债国债到期收益率曲线.getValue());
              model.addAttribute(GlobalConstant.ENTITY, creditTagInfo);
          }
         model.addAttribute("YES_OR_NO_Y", DictCodeList.是否_是.getValue());
@@ -101,10 +102,10 @@ public class ModBintreeConfig002Controller extends BaseController {
         return commonCheck(result, dto.getOperateType());
     }
     @ResponseBody
-    @RequestMapping("getcompStockidForBintree")
-    public List<SelectOptionDto> getcompStockidForBintree(@RequestParam Map<String, Object> params) {
+    @RequestMapping("getStockAssetInfo")
+    public Page<SelectOptionDto> getStockAssetInfo(@RequestParam Map<String, Object> params) {
       
-        return modBintreeConfig002Service.getcompStockidForBintree(params);
+        return modBintreeConfig002Service.getStockAssetInfo(params);
     }
     @ResponseBody
     @RequestMapping("getMarketId")
@@ -154,5 +155,18 @@ public class ModBintreeConfig002Controller extends BaseController {
         processParameter.setWorkFlowParameter(params);
         String msg = modBintreeConfig002Service.start(processParameter, dto);
         return new AjaxResult(msg);
+    }
+
+
+    /**
+     * 查询债券资产信息
+     * @param params
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("getSecAssetInfo")
+    public List<SelectOptionDto> getSecAssetInfo(@RequestParam Map<String, Object> params) {
+
+        return modBintreeConfig002Service.getSecAssetInfo(params);
     }
 }

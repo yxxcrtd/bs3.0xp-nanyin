@@ -6,10 +6,12 @@ $(function () {
      * 获取查询参数
      */
     var getSearchParams = function () {
+        debugger;
         return {
             finProdMarketId: $('#finProdMarketId').val(),
             finProdName: $('#finProdName').val(),
-            valDate: $('#valDate').val()
+            valDate: $('#valDate').val(),
+            valueSource: $('#valueSource option:selected').val()
         }
     };
     /**

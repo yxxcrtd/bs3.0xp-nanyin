@@ -79,10 +79,15 @@
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable-wrap">证券细分类</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select id="typeAsstes_secDetailType" name="secDetailType"
+                                            <!--<select id="typeAsstes_secDetailType" name="secDetailType"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" multiple="multiple"
                                                 data-th-data-result="${BOND_TYPE}">
+                                            </select>-->
+                                            <select id="typeAsstes_secDetailType" name="secDetailType" class="layui-input form-input input-select"
+                                                    allowClear="true" placeholder="请输入"  multiple="multiple"
+                                                     parentIds="typeAsstes_secType"
+                                                    data-th-data-url="@{/valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme001/getSecDetailTypeBySecTypeList}">
                                             </select>
                                         </div>
                                     </div>
@@ -150,7 +155,7 @@
                                     <div class="layui-inline layui-col-md6">
                                         <label class="layui-form-label form-lable-wrap">投资目的</label>
                                         <div class="layui-input-inline input-inline">
-                                            <select id="typeAsstes_invAim" name="invAim"
+                                            <select id="specialAsstes_invAim" name="invAim"
                                                 class="layui-input form-input input-select" allowClear="true"
                                                 placeholder="请输入内容" multiple="multiple" formatoption = "false"
                                                 data-th-data-result="${INV_AIM}">

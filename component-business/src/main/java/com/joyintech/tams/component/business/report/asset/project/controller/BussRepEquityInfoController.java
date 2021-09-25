@@ -55,6 +55,7 @@ public class BussRepEquityInfoController extends BaseController{
         setSelectOptionToModel(model, bussRepEquityInfoService.getInitDictCode());
         setSelectOptionToModel(model, new DictCode[]{DictCode.机构所属行业一级分类, DictCode.机构所属行业二级分类,DictCode.是否_中债});
         model.addAttribute("YES", DictCodeList.是否_中债_是.getValue());
+        model.addAttribute("NO", DictCodeList.是否_中债_否.getValue());
         //中债报送关联上级页面数据字典
         if (StringUtil.isNotEmpty(this.getParam("svr_asset_type_second_level"))){
             model.addAttribute("SVR_ASSET_TYPE_SECOND_LEVEL",this.getParam("svr_asset_type_second_level"));

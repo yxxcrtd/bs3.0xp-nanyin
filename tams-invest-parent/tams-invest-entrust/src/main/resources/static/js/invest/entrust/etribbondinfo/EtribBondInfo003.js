@@ -8,6 +8,7 @@
     var initFlag = false;
     var cluflag;
     var businessId;
+    var fprice;
 
     let doOther = {
         star : function () {
@@ -315,9 +316,7 @@
                         query('#availableNum').val(result);
                     });
                 checkFinMdate();
-                if (query('#price').val()) {
-                    calData('price');
-                }
+                calData();
             } else {
                 // 为空
                 query('#finprodIdhid').val('').trigger('change');
@@ -433,16 +432,16 @@
             sortable: false,
             type: 'number',
             digit: 2
-        }, {/*证券账户*/
-            field: 'secManageAcctId',
-            width: 100,
-            title: 'EtribBondInfo003.secAcct',
-            edit:true,
-            sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
-                multiple: false, showField:'text',searchable: true,
-                url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
-            }
+        // }, {/*证券账户*/
+        //     field: 'secManageAcctId',
+        //     width: 100,
+        //     title: 'EtribBondInfo003.secAcct',
+        //     edit:true,
+        //     sortable: false,
+        //     editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId',
+        //         multiple: false, showField:'text',searchable: true,
+        //         url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
+        //     }
         },  {/*投资目的*/
             field: 'invAim',
             width: 100,
@@ -575,13 +574,10 @@
 
 
     var init = function () {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        table.reload();
+        query("#calculateField_price").prop('checked', true);
         if(calculateField){
             query("#calculateField_" + calculateField).attr("checked", true);
         }
-
         if (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) {
             $('#EtribBondInfo003_btn_reset').css('display', 'none');
         }
@@ -694,9 +690,7 @@
         } else {
             query("#secAcctId").val('999999');
         }
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
         //左下行情信息联动
         var chlFinprodId = query("#chlFinprodId").val();
         var finprodIdhid = query("#finprodIdhid").val();
@@ -783,7 +777,7 @@
             ps = temp.ps;
             temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
-            temp.secAcctId = item.secManageAcctId;
+            // temp.secAcctId = item.secManageAcctId;
             temp.proAvailableCash = item.proAvailableCash;
             temp.accAvailableCash = item.secManageAvailablePosition;
             temp.assetAvailablePosition  = item.assetAvailableEntrustAmt;
@@ -864,20 +858,14 @@
      */
     query("#mdate").change(function () {
         checkFinMdate();
-        if (query("#price").val()) {
-            calData("price");
-        }
+        calData();
     });
 
     /**
      * 清算速度
      */
     query("#settleSpeed").change(function () {
-        if (query("#price").val() || query("#exerYield").val() || query("#matureYield").val()) {
-            if (query("#price").val()) {
-                calData("price");
-            }
-        }
+        calData();
     });
 
     /**
@@ -1115,21 +1103,19 @@
     function doRiskcal() {
         var object = getSearchParams();
         var checkParam = {};
-        checkParam.data = getriskdata();
+        checkParam = getriskdata();
         var param = [];
-
+        debugger
         if (checkParam.data.length > 0) {
             for(var index in checkParam.data){
                 var item = checkParam.data[index];
-                item.data.assetCode = object.finprodId;
-                item.data.finprodId = object.finprodId;
-                item.data.counterId = object.counterId;
-                item.data.ps = object.ps;
-                item.data.ccy = 'CNY';
-                item.data.portfolioId = item.data.portfolioCode;
-                item.data.price=object.price;
-                item.data.entrustNum=item.data.entrustNum;
-                param.push(item.data);
+                item.assetCode = object.finprodId;
+                item.finprodId = object.finprodId;
+                item.ps = object.ps;
+                item.ccy = 'CNY';
+                item.portfolioId = item.portfolioCode;
+                item.price=object.price;
+                param.push(item);
             }
         }
         window.BaseRiskMathComm.initBaseRiskMathRedis(basePath + 'riskrds/interf/batchRiskTrialRds/0/F01', param, checkParam,riskMathRedisCallback003);
@@ -1142,8 +1128,10 @@
      * @returns
      */
     function riskMathRedisCallback003(object,cluflag) {
-        riskResultdata = object;
-        cluflag = cluflag;
+        EtrIbBondinfo003.riskResultdata = object;
+        parent.EtrIbBondinfo003.riskResultdata = object;
+        EtrIbBondinfo003.cluflag = cluflag;
+        parent.EtrIbBondinfo003.cluflag = cluflag;
         Joyin.dialog(JoyinUtil.getLabel('EtribBondInfo003Riskcal'), '/invest/entrust/etribbondinfo/EtribBondInfo003Riskcal/init', '60%', '75%',null);
     }
 
@@ -1214,26 +1202,29 @@
      * 净值偏离度
      */
     function calDeviationDegree() {
-        document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-            '0.0000%' +"</span>";
-        if(!query("#price").val()||!query("#finprodId").val()||!query('#vdate').val()){
-            return;
-        }
-        Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calDeviationDegree",
-            {
-                price: query("#price").val(),
-                finprodId: query("#finprodId").val(),
-                vdate:query('#vdate').val()
-            }, function (result) {
-                if (result ) {
-                    document.getElementById('deviationDegree').innerHTML = "<span style='color: red'>"+
-                            JoyinUtil.formatNumber(result, 4, null, 2) + '%' +"</span>";
-                }
+        if (query("#finprodIdhid").val() && query("#price").val()) {
+            var paramObj = {};
+            paramObj.finprodId = query("#finprodIdhid").val();
+            if(query("#finprodId").val()){
+                paramObj.finprodMarketId = query("#finprodId").val();
+            }
+            paramObj.unitCprice = query("#price").val();
+            Joyin.ajax(JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade003/calcDeviationDegree'), paramObj, function (data) {
+                $("#deviationDegree").text(data);
             });
+        } else {
+            $("#deviationDegree").text("");
+        }
     }
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
+        if(!calflag){
+            calflag =  query("input[name=calculateField]:checked").val();
+        }
+        if (!query("#"+calflag).val()) {
+            return;
+        }
         if (!initFlag) {
             let finvdate = query("#vdate").val();
             let finmdate = query("#mdate").val();
@@ -1298,17 +1289,20 @@
                     });
                 }
             }
+            fprice = "";
             Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtribBondInfo003/calData", object, function (result) {
                 if (result && result.data) {
                     var data = result.data;
                     if (data.price) {
+                        fprice = data.unitFprice;
                         query("#price").val(data.price).trigger("blur");
-                        query("#fpriceAmt").val(data.unitFprice).trigger("blur");
+                        query("#fpriceAmt").val(data.unitFprice).trigger("blur").trigger('change');
                         // 根据净价计算净价偏离度
                         calDeviationDegree();
                     } else {
+                        fprice = "";
                         query("#price").val("");
-                        query("#fpriceAmt").val("");
+                        query("#fpriceAmt").val("").trigger("blur").trigger('change');
                     }
                     if (pageModel != PAGE_MODEL_REFERENCE) {
                         query("#exerYield").val(data.exerYield).trigger("blur");
@@ -1356,14 +1350,14 @@
      * 全价change
      */
     query("#fpriceAmt").change(function () {
-        var fpriceAmt = query('#fpriceAmt').val();
-        if(!fpriceAmt){
+        // var fpriceAmt = query('#fpriceAmt').val();
+        if(!fprice||fprice==''){
             return;
         }
         var datas = table.getAllRows();
         for (var i in datas) {
-            if(query('#fpriceAmt').val()&&datas[i].entrustNum){
-                datas[i].settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fpriceAmt,100,6),JoyinMath.doMul(10000,datas[i].entrustNum,2),2);
+            if(fprice&&fprice!=''&&datas[i].entrustNum){
+                datas[i].settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fprice,100,14),JoyinMath.doMul(10000,datas[i].entrustNum,2),2);
             }
             table.renderRow(i, datas[i]);
         }
@@ -1376,8 +1370,8 @@
      */
     function calSettleAmt (value, data) {
         var rowData = {};
-        if(query('#fpriceAmt').val()&&data.entrustNum){
-            rowData.settleAmt = JoyinMath.doMul(JoyinMath.doDiv(query('#fpriceAmt').val(),100,6),JoyinMath.doMul(10000,data.entrustNum,2),2);
+        if(fprice&&fprice!=''&&data.entrustNum){
+            rowData.settleAmt = JoyinMath.doMul(JoyinMath.doDiv(fprice,100,14),JoyinMath.doMul(10000,data.entrustNum,2),2);
         }
         table.renderRow(data.LAY_TABLE_INDEX, rowData);
     }

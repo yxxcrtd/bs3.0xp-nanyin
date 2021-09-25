@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -34,6 +35,8 @@ import com.joyintech.tams.systemtools.util.CommonUtil;
 @Service
 public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001Dto> {
 
+	@Autowired
+	private InvestorsHoldInfo001Service investorsHoldInfo001Service;
     /**
      *
      * 业务画面查询
@@ -86,7 +89,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	return restTemplate.postForList(
@@ -101,15 +104,16 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      * @return 处理结果
      */
 	public AjaxResult checkConfirmMsgForImportData(String fileName){
-    	Map<String,Object> param = new HashMap<String,Object>();
-    	param.put("bankCode", CommonUtil.getUserBankCode());
-    	param.put("deptCode", CommonUtil.getDeptCode());
-    	param.put("orgCode", CommonUtil.getOrgCode());
-    	param.put("dataList", ExcelUtil.getDataList(fileName));
-    	return restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfo/checkConfirmMsgForImportData", 
-	       		param,
-	       		SvrAjaxResult.class);
+//    	Map<String,Object> param = new HashMap<String,Object>();
+//    	param.put("bankCode", CommonUtil.getUserBankCode(null));
+//    	param.put("deptCode", CommonUtil.getDeptCode());
+//    	param.put("orgCode", CommonUtil.getOrgCode());
+//    	param.put("dataList", ExcelUtil.getDataList(fileName));
+////    	return restTemplate.postForObject(
+////	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfo/checkConfirmMsgForImportData",
+////	       		param,
+////	       		SvrAjaxResult.class);
+    	return investorsHoldInfo001Service.checkConfirmMsgForImportData(ExcelUtil.getDataList(fileName),CommonUtil.getUserBankCode(null),CommonUtil.getDeptCode(),CommonUtil.getOrgCode());
     }
     
     
@@ -124,7 +128,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
     	return restTemplate.postForList(
@@ -144,17 +148,21 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      	Map<String,Object> param = new HashMap<String,Object>();
     	param.put("dataList", ExcelUtil.getDataList(fileName));
     	param.put("tempList", ExcelUtil.getTempList(fileName));
-    	param.put("bankCode", CommonUtil.getUserBankCode());
+    	param.put("bankCode", CommonUtil.getUserBankCode(null));
     	param.put("deptCode", CommonUtil.getDeptCode());
     	param.put("orgCode", CommonUtil.getOrgCode());
-    	return restTemplate.postForObject(
-	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfo/checkConfirmMsgForChbImportData", 
-	       		param,
-	       		SvrAjaxResult.class);
-    }
+
+//    	return restTemplate.postForObject(
+//	       		SvrServiceApplication.CHB3_SERVICE_NAME + "/InvestorsHoldInfo/checkConfirmMsgForChbImportData",
+//	       		param,
+//	       		SvrAjaxResult.class);
+		return investorsHoldInfo001Service.checkConfirmMsgForChbImportData(ExcelUtil.getDataList(fileName),ExcelUtil.getTempList(fileName),CommonUtil.getUserBankCode(null),
+				CommonUtil.getDeptCode(),CommonUtil.getOrgCode());
+
+	}
     
     /**
-     * 
+     *
      * 保存操作
      * <功能详细描述>
      * @param dto 数据
@@ -165,7 +173,7 @@ public class InvestorsHoldInfoMService extends BaseService<InvestorsHoldInfo001D
      */
     public void doSaveOrUpdate(InvestorsHoldInfo001Dto dto) {
     	 if(StringUtil.equals(dto.getPageModel(),GlobalConstant.DETAIL_PAGE_MODEL_NEW)){
-    		 dto.setRegistBankCode(CommonUtil.getUserBankCode());
+    		 dto.setRegistBankCode(CommonUtil.getUserBankCode(null));
     		 dto.setOrgCode(CommonUtil.getOrgCode());
     		 dto.setDeptCode(CommonUtil.getDeptCode());
     		 dto.setCreateDept(dto.getDeptCode()!=null?dto.getDeptCode():dto.getOrgCode());

@@ -106,7 +106,7 @@ public class InvestImpMainService extends AutoSendCBBaseService{
 //    		}
     	}catch (Exception e) {
              logger.error("投资交易表上游数据接入批处理Error",e);
-             throw e;
+             throw new BusinessException(e);
         }
 		logger.debug("投资交易表上游数据接入批处理");
 		logInfoBatchEnd();

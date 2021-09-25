@@ -47,6 +47,13 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		List<SzdSjsjg> szdSjsjgList = new ArrayList<SzdSjsjg>();
     		// 开始处理
     		for (StlDataCreateDto stlDataCreateDto : stlDataCreateReaderDto.getStlDataCreateDtoList()) {
+    			// add by etliu 20210917 start
+    			// 申请编号字段值修改 = 四位固定字符 + 日间成交的申请编号
+				if (StringUtil.isNotBlank(stlDataCreateDto.getOrderNo())) {
+					stlDataCreateDto.setOrderNo("RZJS" + stlDataCreateDto.getOrderNo());
+				}
+				// add by etliu 20210917 end
+
     			// 成交明细.金融产品类型（投管） = 数据字典.金融产品类型（投管）.债券 and 成交明细.交易场所 = 数据字典.交易场所.上海证券交易所
     			if (StringUtil.equals(stlDataCreateDto.getFinprodTypeTg(), DictCodeListExt1.金融产品类型_投管用_债券.getValue()) && 
     					StringUtil.equals(stlDataCreateDto.getTradeMarket(), DictCodeListExt1.交易场所_上海证券交易所.getValue())) {
@@ -116,9 +123,11 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		stlDataCreateWriteDto.setSjsmx0SzdSjsmxList(sjsmx0SzdSjsmxList);
     		stlDataCreateWriteDto.setSjsmx1SzdSjsmxList(sjsmx1SzdSjsmxList);
     		stlDataCreateWriteDto.setSzdSjsjgList(szdSjsjgList);
-    		stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
+//    		stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
     	}
-    	stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
+    	if (stlDataCreateReaderDto != null) {
+			stlDataCreateWriteDto.setTradeDate(stlDataCreateReaderDto.getTradeDate());
+		}
     	return stlDataCreateWriteDto;
     }
     
@@ -137,17 +146,29 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_601);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
+    		// modify by etliu 20210917 start
+			// 国债、公司债以外默认605
+    		else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_611);
     		}
+    		else {
+				szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_605);
+			}
+			// modify by etliu 20210917 end
     	}
     	else {
     		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_003);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
+			// modify by etliu 20210917 start
+			// 国债、公司债以外默认605
+			else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_004);
     		}
+			else {
+				szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_605);
+			}
+			// modify by etliu 20210917 end
     	}
     	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_000);
@@ -238,17 +259,29 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_601);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
+			// modify by etliu 20210917 start
+			// 国债、公司债以外默认605
+			else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_公司债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_611);
     		}
+			else {
+				szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_605);
+			}
+			// modify by etliu 20210917 end
     	}
     	else {
     		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_003);
     		}
-    		if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
+			// modify by etliu 20210917 start
+			// 国债、公司债以外默认605
+			else if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_企业债.getValue())) {
     			szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_004);
     		}
+			else {
+				szdJsmx.setYwlx(StlDataDealProcessConstant.YWLX_605);
+			}
+			// modify by etliu 20210917 end
     	}
     	if (StringUtil.equals(stlDataCreateDto.getType6(), DictCodeListStl.WIND一级分类_含债券一级分类等_国债.getValue())) {
     		szdJsmx.setQsbz(StlDataDealProcessConstant.QSBZ_000);
@@ -332,6 +365,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsmx.setMxzqzh(stlDataCreateDto.getSecAcctId());
     	szdSjsmx.setMxddbh(stlDataCreateDto.getOrderNo());
     	szdSjsmx.setMxywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsmx.setMxzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
     		szdSjsmx.setMxcjsl(ArithmeticUtil.multiply(new BigDecimal(stlDataCreateDto.getShareAmt()), new BigDecimal(100)));
     		szdSjsmx.setMxqssl(szdSjsmx.getMxcjsl());
@@ -413,6 +449,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsmx.setMxzqzh(stlDataCreateDto.getSecAcctId());
     	szdSjsmx.setMxddbh(stlDataCreateDto.getOrderNo());
     	szdSjsmx.setMxywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsmx.setMxzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
     		szdSjsmx.setMxcjsl(ArithmeticUtil.multiply(new BigDecimal(stlDataCreateDto.getShareAmt()), new BigDecimal(100)));
     		szdSjsmx.setMxqssl(szdSjsmx.getMxcjsl());
@@ -579,6 +618,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsmx.setMxzqzh(stlDataCreateDto.getSecAcctId());
     	szdSjsmx.setMxddbh(stlDataCreateDto.getOrderNo());
     	szdSjsmx.setMxywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsmx.setMxzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
     		szdSjsmx.setMxcjsl(new BigDecimal(stlDataCreateDto.getShareAmt()));
     		szdSjsmx.setMxqssl(szdSjsmx.getMxcjsl());
@@ -733,6 +775,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsmx.setMxddbh(stlDataCreateDto.getOrderNo());
     	szdSjsmx.setMxzqlb(StlDataDealProcessConstant.SJSMX_ZQLB_00);
     	szdSjsmx.setMxywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsmx.setMxzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getPs(), DictCodeList.交易方向_买入.getValue())) {
     		szdSjsmx.setMxcjsl(new BigDecimal(stlDataCreateDto.getShareAmt()));
     		szdSjsmx.setMxqssl(szdSjsmx.getMxcjsl());
@@ -912,6 +957,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsmx.setMxzqzh(stlDataCreateDto.getSecAcctId());
     	szdSjsmx.setMxddbh(stlDataCreateDto.getOrderNo());
     	szdSjsmx.setMxywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsmx.setMxzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getType7(), DictCodeList.回购拆借方向_正回购.getValue())) {
     		szdSjsmx.setMxcjsl(ArithmeticUtil.multiply(ArithmeticUtil.divide(new BigDecimal(stlDataCreateDto.getPrinAmt()), new BigDecimal(100), 2), new BigDecimal(-1)));
     		szdSjsmx.setMxqssl(szdSjsmx.getMxcjsl());
@@ -957,6 +1005,9 @@ public class StlDataCreateProcessor extends BaseProcessor<NeedOperateEntity, Stl
     	szdSjsjg.setJgzqzh(stlDataCreateDto.getSecAcctId());
     	szdSjsjg.setJgddbh(stlDataCreateDto.getOrderNo());
     	szdSjsjg.setJgywlsh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 start
+		szdSjsjg.setJgzxbh(stlDataCreateDto.getTradeId());
+		// add by etliu 20210917 end
     	if (StringUtil.equals(stlDataCreateDto.getType7(), DictCodeList.回购拆借方向_正回购.getValue())) {
     		szdSjsjg.setJgcjsl(ArithmeticUtil.multiply(ArithmeticUtil.divide(new BigDecimal(stlDataCreateDto.getPrinAmt()), new BigDecimal(100), 2), new BigDecimal(-1)));
     		szdSjsjg.setJgqssl(szdSjsjg.getJgcjsl());

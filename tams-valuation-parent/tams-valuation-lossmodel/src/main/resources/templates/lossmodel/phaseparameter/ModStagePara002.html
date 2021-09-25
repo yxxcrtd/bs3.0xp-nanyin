@@ -66,7 +66,7 @@
             <label class="layui-form-label form-lable mst-lable">参数值</label>
 			<div class="layui-input-inline input-inline">
 				<select type="text" id="selectRateValue" name="selectRateValue"
-					data-th-data-result='${MAIN_GRADE_RESULT}'
+					data-th-data-result='${MODEL_STANDARD_GRADE_RESULT}'
 					data-th-initValue="${entity?.elementsValue}"
 					class="layui-input form-input input-select" allowClear="true"
 					placeholder="请输入内容"
@@ -78,7 +78,7 @@
 			<div class="layui-input-inline input-inline">
 				<select type="text" id="selectRskValue" name="selectRskValue"
 					multiple="true"
-					data-th-data-result='${FIVE_CLASS_CLASSIFICATION}'
+					data-th-data-result='${BOND_RISK_TYPE}'
 					data-th-initValue="${entity?.elementsValue}"
 					class="layui-input form-input input-select" allowClear="true"
 					placeholder="请输入内容"

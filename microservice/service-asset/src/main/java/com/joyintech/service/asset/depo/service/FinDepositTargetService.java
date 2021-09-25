@@ -142,7 +142,7 @@ public class FinDepositTargetService extends BaseService<FinDepositTargetDto>{
      * @since 1.0
      */
     public Page<FinDepositTargetDto> selectForPage(int page, int length, Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> finDepositTargetMapper.queryForPage(pageParam));
     }
     

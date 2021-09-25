@@ -3,6 +3,7 @@ package com.joyintech.service.bankuplink.reponew.service;
 import com.joyintech.background.component.uplink.interbank.business.dto.RepoQuoteExtDto;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.*;
 import com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.service.bankuplink.ibu.dto.RepoQuoteInfoDto;
@@ -129,6 +130,9 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
         if(StringUtil.isNotEmpty((String)map.get("ps"))){
             map.replace("ps", StringUtil.splitToList(",", (String)map.get("ps")));
         }
+        if(StringUtil.isNotEmpty((String)map.get("benfangSide")) && StringUtil.equals((String)map.get("benfangSide"),"01")){
+            map.put("benfangSide","");
+        }
         map.put("TRADE_STATUS", BussinessDictCodeList.交易状态_初始.getValue());
         map.put("PARTMATCH", BussinessDictCodeList.匹配状态_部分匹配.getValue());
         map.put("acctType",BussinessDictCodeList.资金账户类型_托管账户.getValue());
@@ -208,5 +212,19 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
 
 
         return bondQuoteInfoDto;
+    }
+
+    /**
+     * 查询本方交易员列表
+     *
+     * @param param 入参
+     * @return 交易员列表
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> queryMySideTraderPage(int page, int length,
+                                                       Map<String, Object> param) {
+        return this.queryForPageForSelectReturn(page, length,
+                () -> cfetsRepoDealQuotedPr001Mapper.queryMySideTraderList(param));
     }
 }

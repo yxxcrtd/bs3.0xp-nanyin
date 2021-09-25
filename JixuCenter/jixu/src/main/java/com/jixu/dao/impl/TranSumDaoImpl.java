@@ -189,7 +189,7 @@ public class TranSumDaoImpl extends CommFuncDAOImpl implements TranSumDao{
 		String sql="select distinct cusip from JXT_TRAN_SUM where portfolio=:portfolio";
 		String[] params={"portfolio"};
 		Object[] values = {portfolio};
-		return this.getPageSqlData(sql.toString(), params, values, false, pages, null);
+		return this.getPageSqlData(sql, params, values, false, pages, null);
 	}
 	
 	/**

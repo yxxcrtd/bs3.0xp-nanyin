@@ -152,7 +152,12 @@
       and CODE_TYPE = #{codeType,jdbcType=VARCHAR}
   </update>
   <select id="queryForPage" resultType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
-	select
+      SELECT insideProdId,
+      max(pbcProjectCodeExternal) pbcProjectCodeExternal,
+      max(pbcAssetPoolCodeExternal) pbcAssetPoolCodeExternal,
+      max(pbcProjectCodeSystem) pbcProjectCodeSystem,
+      max(pbcAssetPoolCodeSystem) pbcAssetPoolCodeSystem
+      FROM (select
 		t1.INSIDE_PROD_ID as insideProdId,
 		decode(t1.CODE_TYPE,#{codeTypeProduct},t1.PBC_CODE,null) as pbcProjectCodeExternal,
 		decode(t1.CODE_TYPE,#{codeTypeAssets},t1.PBC_CODE,null) as pbcAssetPoolCodeExternal,
@@ -182,8 +187,8 @@
 		</if>
 		<if test="pbcAssetPoolCode !=null and pbcAssetPoolCode !=''">
 			and t3.PBC_ACCOUNT_ID=#{pbcAssetPoolCode}
-		</if>
-		order by t1.UPDATE_TIME desc  
+		</if>) s
+      group by insideProdId
   </select>
     <select id="queryReportList" resultType="com.joyintech.tams.report.system.peoplebankcodepoolmanagement.dto.ProPeoplebankcodeManagement001Dto">
 	select

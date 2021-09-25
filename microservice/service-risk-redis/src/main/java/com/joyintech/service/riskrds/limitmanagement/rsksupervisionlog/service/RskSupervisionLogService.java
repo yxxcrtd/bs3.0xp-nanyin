@@ -38,7 +38,7 @@ public class RskSupervisionLogService extends BaseService<RskSupervisionLogDto> 
      */
     public Page<RskSupervisionLogDto> selectForPage(int page, int length,
                                                     Map<String, Object> pageParam)
-        throws Exception {
+    {
         return super.queryForPage(page, length,
             () -> rskSupervisionLogMapper.selectLog(pageParam));
     }

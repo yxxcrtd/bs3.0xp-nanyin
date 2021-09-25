@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 
 import org.apache.log4j.Logger;
 public class MD5Util {
-	
+
 	/**
 	 * 日志
 	 */
@@ -16,7 +16,7 @@ public class MD5Util {
             md5 = MessageDigest.getInstance("MD5");
         }
         catch (Exception e) {
-            System.out.println(e.toString());
+//            System.out.println(e.toString());
             logger.error("",e);
             return "";
         }

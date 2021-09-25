@@ -1,12 +1,14 @@
 package com.joyintech.tams.valuation.model.common.rateinfo.service;
 
-import com.joyintech.framework.constant.DictCodeList;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
 import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.dao.RateInfoCommonMapper;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
@@ -99,40 +101,50 @@ public class RateInfoCommonService {
         String isFinLicence = null;
         //债券的处理逻辑
         if (DictCodeListExt1.证券品种_债券.getValue().equals(sectype)) {
-            isFinLicence = DictCodeList.是否_否.getValue();
+            //评级主体代码设置为债券市场代码
+            ocode=modAssetInfoDto.getFinprodMarketId();
             if (ModelDictCodeList.模型_评级类型_债项评级.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
+                isFinLicence = DictCodeList.是否_否.getValue();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_主体评级.getValue().equals(otype)) {
+                isFinLicence = modAssetInfoDto.getIssueFinLicence();
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-
+                // 债项时，是否含有金融牌照 = 否
+                if(viewRatingInfoSec != null){
+                    viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                }
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                if(viewRatingInfoSec != null){
+                    // 主体取对应发行人是否含有金融牌照
+                    viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                }
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
+                return resultDto;
             }
             else if (ModelDictCodeList.模型_评级类型_较低值.getValue().equals(otype)) {
-                //评级主体代码设置为债券市场代码
-                ocode=modAssetInfoDto.getFinprodMarketId();
                 otype = ModelDictCodeList.模型_评级类型_债项评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSec = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-
+                // 债项时，是否含有金融牌照 = 否
+                if(viewRatingInfoSec != null){
+                    viewRatingInfoSec.setIsFinLicence(DictCodeList.是否_否.getValue());
+                }
                 //交易数据.最新评级结果 = 交易数据.主体评级
-                ocode=modAssetInfoDto.getIssuer();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                if(viewRatingInfoSec != null){
+                    // 主体取对应发行人是否含有金融牌照
+                    viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
+                }
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoSec,viewRatingInfoIssuer);
+                return resultDto;
             }else{
                 logger.warn("评级类型不支持，无法查询评级信息.资产代码为："+modAssetInfoDto.getFinprodId()+"，评级类型为："+otype);
                 return null;
@@ -158,6 +170,7 @@ public class RateInfoCommonService {
                 ocode=modAssetInfoDto.getSponsor();
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 resultDto =  getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
+                isFinLicence = modAssetInfoDto.getSponsorFinLicence();
             }
             else if (ModelDictCodeList.模型_评级类型_较高值.getValue().equals(otype)) {
                 //交易数据.最新评级结果 = 交易数据.主体评级
@@ -176,6 +189,9 @@ public class RateInfoCommonService {
                 ViewRatingInfoDto viewRatingInfoSponsor = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
 
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
+                if(resultDto == null){
+                    return null;
+                }
                 if(viewRatingInfoIssuer == resultDto){
                     isFinLicence = modAssetInfoDto.getIssueFinLicence();
                 }else if (viewRatingInfoFinancier == resultDto){
@@ -199,6 +215,9 @@ public class RateInfoCommonService {
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoSponsor = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
                 resultDto =  impairmentCalculationCommonService.maxRating(viewRatingInfoIssuer,viewRatingInfoFinancier,viewRatingInfoSponsor);
+                if(resultDto == null){
+                    return null;
+                }
                 // 比较对象地址，确认采用哪个主体对应的是否持有金融牌照
                 if(resultDto ==viewRatingInfoIssuer){
                     isFinLicence = modAssetInfoDto.getIssueFinLicence();
@@ -255,5 +274,54 @@ public class RateInfoCommonService {
             }
         }
         return result;
+    }
+
+    /**
+     * 根据资产类型+资产细分类获取系统参数兜底评级
+     * @param assetType 资产类型
+     * @param assetDetailType 资产细分类
+     * @return
+     */
+    public String getBottomRateInfo(String assetType, String assetDetailType){
+        String rateInfo = null;
+        if(DictCodeListExt1.证券品种_债券.getValue().equals(assetType)){
+            if(DictCodeList.债券类型_国债.getValue().equals(assetDetailType)
+                    || DictCodeList.债券类型_政策银行债.getValue().equals(assetDetailType)
+                    || DictCodeList.债券类型_地方政府债.getValue().equals(assetDetailType)){
+                // 系统参数-国债、政策性金融债、地方政府债兜底评级结果
+                rateInfo = CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_1);
+            }
+            else{
+                // 系统参数-除国债、政策性金融债、地方政府债外其他债券兜底评级结果
+                rateInfo =CacheUtil.getSysParam(GlobalConstant.BOND_BOTTOM_RATE_2);
+            }
+        }
+        else if(DictCodeListExt1.证券品种_其他债权类.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-其他债权资产兜底融资人评级
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.DELT_RIGHT_BOTTOM_RATE);
+        }
+        else if(DictCodeListExt1.证券品种_存款.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-存款资产兜底评级结果
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.DEPOSITE_BOTTOM_RATE);
+        }
+        else if(DictCodeListExt1.证券品种_回购.getValue().equals(assetType)){
+            // 减值方案系统参数 = 系统参数-回购资产兜底评级结果
+            rateInfo = CacheUtil.getSysParam(GlobalConstant.REPO_FINANCIER_RATE);
+        }
+
+        // 兜底评级结果(01:AA-,02:AA,03:AA+,04:AAA)，根据系统参数映射内部评级
+        if(DictCodeListExt3.兜底评级_AA_MINUS.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA_MINUS.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AA.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AA_PLUS.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AA_PLUS.getValue();
+        }
+        else if(DictCodeListExt3.兜底评级_AAA.getValue().equals(rateInfo)){
+            rateInfo = DictCodeListExt3.内部评级_AAA.getValue();
+        }
+        return rateInfo;
     }
 }

@@ -24,6 +24,8 @@ import java.util.Map;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.service.SystemToolService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +62,10 @@ import com.joyintech.tams.valuation.common.utils.DBUtil;
  */
 @Service(value="serviceValueAddedTaxService")
 public class ValueAddedTaxService {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(ValueAddedTaxService.class);
 
     /**
      * DBUtil
@@ -519,7 +525,7 @@ public class ValueAddedTaxService {
                 resultDate = formatter.parse(DateString);
             }
             catch (ParseException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(),e);
             }
         }
 

@@ -65,7 +65,7 @@ public class CurrentDeposit001Service extends CommonExportService<CurrentDeposit
      * @see
      * @since 1.0
      */
-    public Page<CurrentDepositDto> selectByTradeId3(int page, int length,  String tradeId) throws Exception{
+    public Page<CurrentDepositDto> selectByTradeId3(int page, int length,  String tradeId) {
         return super.queryForPage(page, length, ()->currentDeposit001Mapper.selectByTradeId3(tradeId));
     }
     
@@ -79,7 +79,7 @@ public class CurrentDeposit001Service extends CommonExportService<CurrentDeposit
      * @see
      * @since 1.0
      */
-    public List<CurrentDepositDto> selectByTradeId4(String tradeId) throws Exception{
+    public List<CurrentDepositDto> selectByTradeId4(String tradeId){
         return currentDeposit001Mapper.selectByTradeId3(tradeId);
     }
 }

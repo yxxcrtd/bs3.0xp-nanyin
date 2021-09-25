@@ -3,15 +3,18 @@ package com.joyintech.tams.invest.trade.common.service;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.FinCashPlanMapper;
 import com.joyintech.tams.common.base.dao.FinProductAddMapper;
+import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.common.base.entity.FinProductType;
 import com.joyintech.tams.common.base.entity.FinProductTypeKey;
+import com.joyintech.tams.component.business.bond.BusiFinExercisePlanService;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -93,6 +96,8 @@ public class TradeCommonService extends BaseService {
     @Autowired
     private InterfComponentService interfComponentService;
 
+    @Autowired
+    private BusiFinExercisePlanService busiFinExercisePlanService;
     /**
      * DateCalService
      */
@@ -143,7 +148,7 @@ public class TradeCommonService extends BaseService {
                                                     DictCodeListExt1.平安划款类型_DVP划款.getValue()), "1");
                     if(cusdepOrderDto == null || cusdepOrderDto.getErrMsg() != null 
                         || StringUtil.equals(cusdepOrderDto.isResult(), false)){
-                        throw new RuntimeException("请求发送异常...");
+                        throw new BusinessException("请求发送异常...");
                     }
                 }
             });
@@ -631,10 +636,38 @@ public class TradeCommonService extends BaseService {
                 if (lastPrice == null){
                     lastPrice = BigDecimal.ONE;
                 }
+                if("24".equals(inputDto.getType10())){
+                    if ("01".equals(inputDto.getTrmFundType())) {
+                        lastPrice = new BigDecimal(100);
+                    }else if("05".equals(inputDto.getTrmFundType())){
+                        lastPrice = new BigDecimal(0.01);
+                    }else{
+                        lastPrice = BigDecimal.ONE;
+                    }
+                }
                 creditLinesInputDto.setNetPrice(lastPrice);
                 creditLinesInputDto.setShareAmt(ArithmeticUtil.divide(creditLinesInputDto.getTradeAmt(),lastPrice,2));
             }
-
+            if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_买入.getValue())) {
+                creditLinesInputDto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
+                creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
+                if(StringUtil.isNotEmpty(inputDto.getTrdInvestPersonInfo()))
+                    creditLinesInputDto.setCounterId(inputDto.getTrdInvestPersonInfo().getCounterId());
+                creditLinesInputDto.setTradeStatus(status);
+                creditLinesInputDto.setNetPrice(inputDto.getUnitCprice());
+                List<CreditLinesInputDto> list = new ArrayList<>();
+                CreditLinesInputDto dto = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto,creditLinesInputDto);
+                dto.setPs(DictCodeList.交易方向_申购.getValue());
+                list.add(dto);
+                CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                BeanUtil.copyPropertiesIgnoreNull(dto1,creditLinesInputDto);
+                dto1.setPs(DictCodeList.交易方向_申购确认.getValue());
+                dto1.setIsSpecial("true");
+                list.add(dto1);
+                creditLinesInputDto.setInputDtoList(list);
+            }
             if (StringUtil.equals(DictCodeListExt2.交易方向_转换赎回申请.getValue(),inputDto.getPs())
                     || StringUtil.equals(DictCodeListExt2.交易方向_转换申请.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
@@ -673,7 +706,8 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setIsSpecial("true");
             }
             if (StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回确认.getValue())
-                    || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())) {
+                    || StringUtil.equals(inputDto.getPs(),DictCodeList.交易方向_赎回到账.getValue())
+                    || StringUtil.equals(DictCodeList.交易方向_卖出.getValue(),inputDto.getPs())) {
                 creditLinesInputDto = new CreditLinesInputDto();
                 BeanUtil.copyPropertiesIgnoreNull(creditLinesInputDto,inputDto);
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
@@ -1072,7 +1106,8 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
                 creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
                 creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-                creditLinesInputDto.setFinprodId(creditLinesInputDto.getTradeId());
+                //质押式回购交易授信标签  按无标的处理
+                //creditLinesInputDto.setFinprodId(creditLinesInputDto.getTradeId());
                 creditLinesInputDto.setTgBusiType(DictCodeList.平安资产类型_质押式回购.getValue());
                 creditLinesInputDto.setPsPayment(inputDto.getRepoType());
                 creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -1094,12 +1129,15 @@ public class TradeCommonService extends BaseService {
                 if (!StringUtil.isEmptyList(pledgeBondInfoDtoList)){
                     List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
                     // 质押券面总额
-                    BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    //BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    BigDecimal totalAmt= BigDecimal.ZERO;
                     // 需要扣减额度的券面总额
                     BigDecimal supAmt = BigDecimal.ZERO;
                     for (PledgeBondInfoDto pledgeBondInfoDto : pledgeBondInfoDtoList) {
+                        BigDecimal divide = ArithmeticUtil.divide(ArithmeticUtil.multiply(pledgeBondInfoDto.getPledgePrin(), pledgeBondInfoDto.getPledgeRatio()), new BigDecimal(100), 2);
+                        totalAmt = ArithmeticUtil.doAdd(totalAmt,divide);
                         if(riskCreditListCommonValidatorService.checkCallCredit(pledgeBondInfoDto.getFinprodId())){
-                            supAmt = ArithmeticUtil.doAdd(supAmt,pledgeBondInfoDto.getPledgePrin());
+                            supAmt = ArithmeticUtil.doAdd(supAmt, divide);
                         }
                     }
                     /*BigDecimal supAmt = pledgeBondInfoDtoList.stream().filter(item ->{
@@ -1239,6 +1277,7 @@ public class TradeCommonService extends BaseService {
                         || DictCodeList.交易方向_申购.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_认购.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeList.交易方向_认购确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_配股.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeList.交易方向_赎回确认.getValue().equals(creditLinesInputDto.getPs())
                         || DictCodeListExt2.交易方向_转换申请.getValue().equals(creditLinesInputDto.getPs())
@@ -1256,7 +1295,9 @@ public class TradeCommonService extends BaseService {
                         || DictCodeListExt2.交易方向_转换赎回确认.getValue().equals(creditLinesInputDto.getPs())){
                     return true;
                 }
-                if(DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs()))return true;
+                if(DictCodeList.交易方向_申购确认.getValue().equals(creditLinesInputDto.getPs())
+                        || DictCodeList.交易方向_认购确认.getValue().equals(creditLinesInputDto.getPs()))return true;
+
             }
         }
         // 买入、申购，退回时，释放授信
@@ -1280,4 +1321,65 @@ public class TradeCommonService extends BaseService {
         }
         return false;
     }
+
+    /**
+     * 查询生效业务模式字段
+     * @param entrustId
+     * @return
+     */
+    public String findEtrWordInfo(String entrustId) {
+        return restTemplate.postForObject(ServiceApplication.TRADE_SERVICE_NAME + "/common/trdcommonbase/findEtrWordInfo", entrustId,
+                String.class);
+    }
+
+    /**
+     *
+     * @param paramMap
+     * @return
+     */
+
+    public String getSppiInfoByY1(Map<String, Object> paramMap){
+        String finprodId = paramMap.get("finprodId").toString();
+        if(!StringUtil.isNotEmpty(paramMap.get("price"))){
+            return "0";
+        }
+        BigDecimal price = new BigDecimal(paramMap.get("price").toString());
+        Date platDate = DateUtil.platDateFromCache();
+
+        Boolean sinal = true;
+        //1 查询资产是否有行权计划
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("finprodId", finprodId);
+        param.put("psT03", DictCodeList.交易方向_行权_回售.getValue());
+        param.put("cashType2", DictCodeListExt1.现金流二级类型_本金.getValue());
+        param.put("execType01", DictCodeList.行权状态_未行权.getValue());
+        param.put("execType02", DictCodeList.行权状态_已行权.getValue());
+        List<FinExercisePlan> finExercisePlanList = busiFinExercisePlanService.getfinExercisePlanByProductId(param);
+        if(finExercisePlanList==null||finExercisePlanList.size()==0){
+            return "0";
+        }else if((StringUtil.equals(finExercisePlanList.get(0).getExerciseType(),"01")||StringUtil.equals(finExercisePlanList.get(0).getExerciseType(),"02"))&&DateUtil.compareDate(platDate,finExercisePlanList.get(0).getActExerciseDate())<=0){
+
+        }else{
+            return "0";
+        }
+
+        //2 查询sppi中债中的使权不重大的购入价条件（小于第二个数字）
+        String bidPriceCon = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest001/getSppiInfoByY1?finprodId="
+                + finprodId, String.class);
+        if(bidPriceCon!=null) {
+            if (StringUtil.isNotEmpty(bidPriceCon)) {
+                bidPriceCon = bidPriceCon.split(",")[1];
+            }else {
+                return "1";
+            }
+            BigDecimal bidPriceCon2 = new BigDecimal(bidPriceCon);
+            if (price.compareTo(bidPriceCon2) < 0) {
+                return "2";
+            }
+        }else{
+            return "1";
+        }
+        return "2";
+    }
+
 }

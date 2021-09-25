@@ -117,7 +117,7 @@ public class TransformationController001 extends BaseController {
     @ResponseBody
     public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response,
                                  ModelMap model)
-        throws Exception {
+         {
 //    	ResultData result  = new ResultData();
 //    	AjaxResult ajaxResult = null;
 //    	
@@ -263,7 +263,7 @@ public class TransformationController001 extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         String datas = this.getParam("datas");
         String exportType = this.getParam("exportType");
         List<BalanceTransplantDto> list = dataTransplantCommonService.queryBalanceTransplantList(datas);

@@ -1276,4 +1276,54 @@
         </where>
     </select>
 
+    <select id="selectWflEntrustAddAndEtrEntrustAdd" resultType="java.lang.String">
+        with acctid as (
+            select ssai.SEC_ACCT_ID from STL_SEC_ACCT_INFO ssai
+            where ssai.BOND_ID = (
+                select ssai2.BOND_ID from STL_SEC_ACCT_INFO ssai2
+                where ssai2.SEC_ACCT_ID = #{secAcctId,jdbcType=VARCHAR}
+            )
+        )
+        <!-- 查询委托指令附属表中是否已经存在该证券账户发布的此债券的申购委托 -->
+        select ee.entrust_id entrustId
+        from etr_entrust_add eea
+        left join etr_entrust ee
+            on eea.entrust_id = ee.entrust_id
+        where
+            eea.SEC_ACCT_ID in (select SEC_ACCT_ID from acctid)
+            and ee.finprod_id = #{finprodId,jdbcType=VARCHAR}
+            and ee.ps = #{ps,jdbcType=VARCHAR}
+            and ee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            and ee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+
+        UNION
+        <!-- 查询委托指令流程表中是否已经存在该证券账户发布的此债券的申购委托 -->
+        select weea.entrust_id entrustId
+        from wfl_etr_entrust_add weea
+        left join wfl_etr_entrust wee
+            on weea.entrust_id = wee.entrust_id
+        where
+            weea.sec_acct_id in (select SEC_ACCT_ID from acctid)
+            and wee.finprod_id = #{finprodId,jdbcType=VARCHAR}
+            and weea.workflow_status = '01'
+            and wee.ps = #{ps,jdbcType=VARCHAR}
+            and wee.FINPROD_TYPE2 = #{finprodType2,jdbcType=VARCHAR}
+            and wee.trade_plat = #{tradePlat,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getLastNetPrice" resultType="java.math.BigDecimal">
+        SELECT
+            NETPRICE
+        FROM
+            MST_BOND_VALUATION_INFO
+        WHERE
+            SEC_ID = #{finprodMarketId}
+            AND VALUE_SOURCE = #{VALUATION_SOURCE}
+            AND VALUE_DATE = (
+                SELECT MAX(VALUE_DATE) FROM MST_BOND_VALUATION_INFO
+                WHERE VALUE_DATE &lt; #{sysDate,jdbcType=DATE}
+                    AND SEC_ID = #{finprodMarketId}
+                    AND VALUE_SOURCE = #{VALUATION_SOURCE}
+            )
+    </select>
 </mapper>

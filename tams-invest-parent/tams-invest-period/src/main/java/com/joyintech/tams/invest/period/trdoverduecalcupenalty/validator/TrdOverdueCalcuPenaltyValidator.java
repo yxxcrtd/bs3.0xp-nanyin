@@ -15,6 +15,7 @@ import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
 import com.joyintech.tams.invest.period.trdoverduecalcupenalty.dto.TrdOverdueCalcuPenaltyDto;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -58,6 +59,23 @@ public class TrdOverdueCalcuPenaltyValidator implements BeanValidator {
             pk = pk+dto.getLiBranch();
         }
         List<ValidMessage> messageList = new ArrayList<>();
+        if (StringUtil.equals(BussinessDictCodeList.是否_是.getValue(), dto.getIsAccrPenaltyInt())) {
+            if (StringUtil.isEmpty(dto.getPenaltyBaseType())) {
+                messageList.add(new ValidMessage("是否计提罚息为是的时候，罚息计息本金不能为空！"));
+            }
+            if (dto.getYield() == null) {
+                messageList.add(new ValidMessage("是否计提罚息为是的时候，罚息利率不能为空！！"));
+            }
+            if (StringUtil.isEmpty(dto.getFxvdate())) {
+                messageList.add(new ValidMessage("是否计提罚息为是的时候，罚息起始日不能为空！"));
+            }
+            if (StringUtil.isEmpty(dto.getFxmdate())) {
+                messageList.add(new ValidMessage("是否计提罚息为是的时候，罚息截止日不能为空！"));
+            }
+            if (StringUtil.isEmpty(dto.getIsRushBack())) {
+                messageList.add(new ValidMessage("是否计提罚息为是的时候，截止后是否冲回不能为空！"));
+            }
+        }
         if(StringUtil.equals("revoke",dto.getMode())){
 //            check流程中（防止重复撤销）
             WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();

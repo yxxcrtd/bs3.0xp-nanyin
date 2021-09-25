@@ -1,8 +1,8 @@
 package com.joyintech.tams.valuation.component.batch.service;
 
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParams;
-import com.joyintech.tams.valuation.common.batch.batchTasks.ModValBatchParamsExample;
-import com.joyintech.tams.valuation.component.batch.dao.ModBatchParams2Mapper;
+import com.joyintech.tams.common.base.dao.ModValBatchParamsMapper;
+import com.joyintech.tams.common.base.entity.ModValBatchParams;
+import com.joyintech.tams.common.base.entity.ModValBatchParamsExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import java.util.List;
 public class ModParamsService {
 
     @Autowired
-    private ModBatchParams2Mapper modValBatchParamsMapper;
+    private ModValBatchParamsMapper modValBatchParamsMapper;
 
     /**
      * 查询参数列表
@@ -27,7 +27,7 @@ public class ModParamsService {
      * @return
      */
     public List<ModValBatchParams> selectAllParamsByDate(Date busiDate) {
-        // 查询条件
+//        // 查询条件
         ModValBatchParamsExample example = new ModValBatchParamsExample();
         ModValBatchParamsExample.Criteria criteria = example.createCriteria();
         criteria.andExecDateEqualTo(busiDate);

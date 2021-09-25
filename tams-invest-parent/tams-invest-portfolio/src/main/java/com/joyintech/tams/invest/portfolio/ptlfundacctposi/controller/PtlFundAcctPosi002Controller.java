@@ -60,7 +60,9 @@ public class PtlFundAcctPosi002Controller extends BaseController{
         model.addAttribute("CDATE", getParam("cdate"));
         List<SelectOptionDto> psList = makeAllFloatRate();
         model.addAttribute("PS", JsonUtils.objectArray2Json(psList.toArray()));
-//        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用, DictCode.交易方向);
+        // ZGZGST-2524:添加金融产品类型字典查询 fuyongsheng 20210913 edit start
+        super.setSelectOptionToModel(model, DictCode.金融产品类型_投管用);
+        // ZGZGST-2524:添加金融产品类型字典查询 fuyongsheng 20210913 edit end
         return super.init(model);
     }
 
@@ -87,14 +89,12 @@ public class PtlFundAcctPosi002Controller extends BaseController{
      * 页面查询，表格分页
      * <功能详细描述>
      * @return Page
-     * @throws Exception Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("findPage")
-    public Page<PtlFundAcctPosiDto> selectAllMstCaptialAccount()
-        throws Exception {
+    public Page<PtlFundAcctPosiDto> selectAllMstCaptialAccount(){
         return ptlFundAcctPosiService.selectForPage1(RequestUtil.getPageParam());
     }
     
@@ -102,14 +102,12 @@ public class PtlFundAcctPosi002Controller extends BaseController{
     /**
      * 导出信息excel
      * @return excel
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
 
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export(){
         return ptlFundAcctPosiService.export(this.getPageId(),
             RequestUtil.getParameters(getRequest()));
 

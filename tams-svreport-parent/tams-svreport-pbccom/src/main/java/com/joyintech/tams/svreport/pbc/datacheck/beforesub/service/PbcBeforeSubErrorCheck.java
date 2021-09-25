@@ -94,7 +94,7 @@ public class PbcBeforeSubErrorCheck {
             chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
             chbReportCheck.setRepCode(DictCodeListExt2.报表名称_产品基本信息.getValue());
             chbReportCheck.setRepName(DictCodeListExt2.报表名称_产品基本信息.getCodeName());
-            chbReportCheck.setValidKey("产品代码:"+m.get("PBC_PROD_ID"));
+            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID"));
             chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
                 DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
             chbReportCheck.setDataTime(checkdate);
@@ -110,6 +110,62 @@ public class PbcBeforeSubErrorCheck {
         logger.info("人行产品基本要素错误检查结束.");
         return resultList;
     }
-    
+
+
+    /**
+     *
+     * 人行产品基本要素错误检查
+     * @param checkdate
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<CheckReport001Dto> checkPrdBaseInfoSubNew(Date checkdate,List<String> listProd,Map<String, List<ChbCheckRuleout>> mapRuleout) {
+        logger.info("人行产品基本要素错误检查开始.");
+        List<CheckReport001Dto> resultList = new ArrayList<CheckReport001Dto>();
+
+        // 读取规则
+        List<CheckRule> listRules = dataCheckService.queryCheckRules("PBC_PRD_BASEINFO_SUB_NEW");
+
+        //读取数据，查询登记表数据
+        List<Map<String,Object>> listData = pbcBeforeSubErrorCheckMapper.selectPrdBaseInfoNewSub(checkdate,listProd);
+        List<Map<String,String>> listDataStr=new ArrayList<Map<String,String>>();
+        for(Map<String,Object> singleMap:listData){
+            Map <String,String> smap=new HashMap<String,String>();
+            for(String singlekey:singleMap.keySet()){
+                smap.put(singlekey, singleMap.get(singlekey)==null?null:singleMap.get(singlekey).toString());
+            }
+            listDataStr.add(smap);
+        }
+        // 数据校验
+        List<Map<String, String>> listError = DataCheckService.checkDataList(listDataStr, listRules);
+
+        for ( Map<String,String> m:listError ) {
+            //增加例外情况过滤
+            if(mapRuleout.containsKey(m.get("PROD_ID"))){
+                continue;
+            }
+            //不合格的数据加入到不合格列表
+            CheckReport001Dto chbReportCheck = new CheckReport001Dto();
+            chbReportCheck.setCheckSeqno(IDGenerator.generate(32));
+            chbReportCheck.setRefseqno(m.get("REGIST_SEQNO"));
+            chbReportCheck.setRepCode(DictCodeListExt2.报表名称_新人行产品基本信息.getValue());
+            chbReportCheck.setRepName(DictCodeListExt2.报表名称_新人行产品基本信息.getCodeName());
+            chbReportCheck.setValidKey("产品代码:"+m.get("PROD_ID"));
+            chbReportCheck.setCheckResult(SysDataUtil.getCodeFromDataDictByName(
+                    DictCode.检查结果, DictCodeListExt2.检查结果_检查不通过.getCodeName()));
+            chbReportCheck.setDataTime(checkdate);
+            String errorInfo=m.get("ERRMSG");
+            if(!errorInfo.equals("")){
+                chbReportCheck.setErrorInfo(errorInfo);
+                resultList.add(chbReportCheck);
+            }
+
+            //将报送表中数据设置成待维护
+            pbcBeforeSubErrorCheckMapper.updatePrdBaseInfoNewSub(m.get("REGIST_SEQNO"));
+        }
+        logger.info("人行产品基本要素错误检查结束.");
+        return resultList;
+    }
     
 }

@@ -78,7 +78,7 @@
                 //配置单位 edit by yeming 20210721 end
             edit:true, sortable: false, type:'number', digit: 4 }
         ,{field:'secManageAcctId', width:100,  title: 'EtrInvestBondInfo003.secManageAcctId',edit:true,sortable: false,
-            editOption:{type:'select', parentIds:'portfolioId,tradeMarket', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
+            editOption:{type:'select', parentIds:'portfolioId,tradeMarket,finprodName', id:'secManageAcctId', multiple: false, showField:'text',searchable: true,
                 url: JoyinUtil.getRealPath('/invest/trade/bond/TrdBondInvestTrade002/getSecManageAcctId')
            }
         }
@@ -101,6 +101,12 @@
         addclick: function(row) {
         	row.invAim = $('#invAim').val();
         },
+        beforeEditCell:function (preVal, field, rowData){
+            if(field=="secManageAcctId"){
+                if($('#chlFinprodId').val())return false;
+            }
+            return true;
+        },
         editCell : function(value, data, field, cell, column){
             if (field == "portfolioId"){
                 var rowData = {};
@@ -122,7 +128,7 @@
                 	});
                 }
                 if(value != null && value != '' && ($('#ps').val() == T02 ||$('#ps').val() == T03 ||$('#ps').val() == T39) && $('#ccy').val() != ''
-                   && $('#finprodId').val() != '' && rowData.secManageAcctId != '' && $('#invAim').val() != ''){
+                   && $('#finprodId').val() != '' && (rowData.secManageAcctId != ''||$('#chlFinprodId').val()) && $('#invAim').val() != ''){
                 	var datas = {portfolioId: data.portfolioId, calId:$('#calendarId').val(), 
             				finprodId:$('#finprodIdhid').val(),ccy:$('#ccy').val(), invAim: data.invAim,
             				secAcctId: data.secManageAcctId, chlId: $('#chlFinprodId').val()};
@@ -246,6 +252,13 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        if(object.settleSpreed=='01'){
+            object.settleSpreed=0;
+        }else if(object.settleSpreed=='02'){
+            object.settleSpreed=1;
+        }else if(object.settleSpreed=='03'){
+            object.settleSpreed=2;
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.entrustId = $('#entrustId').val();
@@ -273,9 +286,9 @@
         for(var index in object.bussCombDistribtList){
         	var item = object.bussCombDistribtList[index];
         	var temp = JSON.parse(JSON.stringify(object));
-            if (temp.priceModel){
-                temp.priceModel = '';
-            }
+            // if (temp.priceModel){
+            //     temp.priceModel = '';
+            // }
         	// 指令授信 start
             temp.inputValue1 = 'F01';
             temp.finprodType2 = 'F01';
@@ -457,7 +470,7 @@
     /**
      * 组合可用现金和资产可用持仓的联动
      */
-    $('#finprodId,#ps,#ccy').change(function(){
+    $('#finprodId,#ps,#ccy,#chlFinprodId').change(function(){
     	var rowsData = table.getAllRows();
     	if(rowsData.length>0 && $('#ccy').val() != ''){
     		switch($('#ps').val()){

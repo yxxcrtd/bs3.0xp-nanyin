@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.joyintech.framework.file.SafelyFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -46,6 +49,10 @@ import com.joyintech.tams.report.common.util.ReportGlobalConstant;
  */
 @Component
 public class PbcClassicsDataFileHelper {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(PbcClassicsDataFileHelper.class);
 
     public static final String OperateType_ADD="01";
     public static final String OperateType_MODIFY="02";
@@ -74,12 +81,12 @@ public class PbcClassicsDataFileHelper {
     
     // 手工处理和取消手工处理一次性处理的数据条数
     public static final Integer COMMIT_CONSTANTS = 800;
-	
+
     private static SysSeqService sysSeqService;
     @Autowired
     public void setSysSeqService(SysSeqService sysSeqLogic) {
     	PbcClassicsDataFileHelper.sysSeqService = sysSeqLogic;
-    }	
+    }
     /**
      * 生成文件
      * @param datas
@@ -108,7 +115,7 @@ public class PbcClassicsDataFileHelper {
     	String rootdir = SvrDataUtil.getSysParam("SVR_PBC_DAT_FILEPATH");
     	// 手工生成的文件存入temporary文件夹
     	if (manualFlag) {
-    		rootdir += "temporary/";
+    		rootdir += "temporary" +File.separator;
     	}
     	List<String> result = new ArrayList<String>();
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -127,6 +134,8 @@ public class PbcClassicsDataFileHelper {
         String seq = getSeqByNum(filePath,num,seqMap,seqCode,seqDate);
     	//dat文件写入
     	BufferedWriter writer = null;
+		FileOutputStream fos = null;
+		FileOutputStream fosx = null;
     	// 人行dat生成文件编码
     	String SVR_DAT_FILE_ENCODE = CacheUtil.getAppParamCache(GlobalConstant.SYS_PARA_KEY,ReportGlobalConstant.SVR_DAT_FILE_ENCODE);
     	if (StringUtil.isEmpty(SVR_DAT_FILE_ENCODE)) {
@@ -141,8 +150,9 @@ public class PbcClassicsDataFileHelper {
             File file = null;
 
             
-            file = new File(fullPath + "/"+ dataType + ".dat");
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
+            file = new SafelyFile(fullPath + "/"+ dataType + ".dat");
+			fos = new FileOutputStream(file,true);
+            writer = new BufferedWriter(new OutputStreamWriter(fos, SVR_DAT_FILE_ENCODE));
             
             for (LinkedHashMap<String,String> data:datas ) {
                 if ( fileSize>=maxFileSize ) {
@@ -157,8 +167,9 @@ public class PbcClassicsDataFileHelper {
                         result.add(fullPath);
                         createFolder(fullPath,type);
 //                        file = new File(fullPath + "/"+type + ".dat");
-                        file = new File(fullPath + "/"+dataType + ".dat");
-                        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file,true), SVR_DAT_FILE_ENCODE));
+                        file = new SafelyFile(fullPath + "/"+dataType + ".dat");
+                        fosx = new FileOutputStream(file,true);
+                        writer = new BufferedWriter(new OutputStreamWriter(fosx, SVR_DAT_FILE_ENCODE));
                         // 【dat文件生成留痕】如果创建新的文件，则需要创建新的数据的key集合 
                         dataValueList = new ArrayList<String>();
                 	}
@@ -180,46 +191,52 @@ public class PbcClassicsDataFileHelper {
                 		sb.append("|");
                 	}
                 }
-                writer.write(sb.substring(0,sb.length()-1).toString());//删除最后一个“|”
+                writer.write(sb.substring(0,sb.length()-1));//删除最后一个“|”
                 writer.flush();
                 writer.newLine();
                 fileSize = file.length();
                 
                 // 【dat文件生成留痕】key=目录名文件名，value=数据的key集合 
-				if (!pathfilenameDatakeylistMap.containsKey(fullPath + "/"+ dataType + ".dat")) {
-					pathfilenameDatakeylistMap.put(fullPath + "/"+ dataType + ".dat", dataValueList);
+				if (!pathfilenameDatakeylistMap.containsKey(fullPath + File.separator+ dataType + ".dat")) {
+					pathfilenameDatakeylistMap.put(fullPath + File.separator+ dataType + ".dat", dataValueList);
 				}
             }
         } catch (IOException e) {
-            e.printStackTrace();
+			logger.error(e.getMessage(),e);
         } finally {
             try {
                 if ( writer!=null )
                     writer.close();
+                if (fos != null){
+                	fos.close();
+				}
+				if (fosx != null){
+					fosx.close();
+				}
             } catch (IOException e) {
-                e.printStackTrace();
+				logger.error(e.getMessage(),e);
             }
         }
+
         return result;
     }
     
     
     public static void createFolder(String folderName,String type){
     	//生成文件夹
-    	File fp = new File(folderName);
+    	File fp = new SafelyFile(folderName);
         if ( !fp.exists())
            fp.mkdirs();
         //生成各类型的空文件
         init();
         DATAMAP.get(type);
         for(String dataType:DATAMAP.get(type)){
-        	File file = new File(folderName + "/"+dataType + ".dat");
+        	File file = new SafelyFile(folderName + File.separator+dataType + ".dat");
         	if(!file.exists()){
 				try {
 					file.createNewFile();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
         	}
         }

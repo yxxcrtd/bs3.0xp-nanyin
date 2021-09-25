@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.assetsamortize.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class ValAssetsAmortizeSet001Controller extends BaseController {
     @RequestMapping("findPage")
     @ResponseBody
     public Page<ValAssetsAmortizeSet001Dto> findPage()
-        throws Exception {
+         {
         return valAssetsAmortizeSet001Service.findPage(RequestUtil.getPageParam());
     }
 
@@ -120,8 +121,7 @@ public class ValAssetsAmortizeSet001Controller extends BaseController {
      * @since 1.0
      */
     @RequestMapping(ACTION_EXPORT)
-    public ResponseEntity<byte[]> export()
-        throws Exception {
+    public ResponseEntity<byte[]> export() throws IOException {
         String datas = this.getParam("datas");
         Map<String, Object> paraMap = RequestUtil.getPageParam();
         List<ValAssetsAmortizeSet001Dto> listdto;
@@ -158,7 +158,7 @@ public class ValAssetsAmortizeSet001Controller extends BaseController {
     @RequestMapping("deleteCheck")
     public AjaxResult check(@Valid @RequestBody ValAssetsAmortizeSet001Dto dto,
                             BindingResult result)
-        throws Exception {
+         {
         if (result != null && result.hasErrors()) {
             return new AjaxResult(result);
         }
@@ -178,7 +178,7 @@ public class ValAssetsAmortizeSet001Controller extends BaseController {
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
     public AjaxResult delete(@RequestBody ValAssetsAmortizeSet001Dto dto, BindingResult br)
-        throws Exception {
+          {
 
         // 启动流程
         ProcessParameter<ValAssetsAmortizeSet001Dto> proParam = new ProcessParameter<>();

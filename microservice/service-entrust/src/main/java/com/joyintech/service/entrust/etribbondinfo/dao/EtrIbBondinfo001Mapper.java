@@ -16,6 +16,7 @@ import com.joyintech.service.entrust.etribbondinfo.dto.EtrTrdProductDealDto;
 import com.joyintech.tams.common.base.entity.FinExercisePlan;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @see EtrIbBondinfo001Mapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface EtrIbBondinfo001Mapper {
     /**
      * 产品持仓信息分页查询
@@ -66,4 +67,5 @@ public interface EtrIbBondinfo001Mapper {
      * @return
      */
     List<EtrTrdProductDealDto> getAllTradeListByFinprodId(Map<String, Object> map);
+
 }

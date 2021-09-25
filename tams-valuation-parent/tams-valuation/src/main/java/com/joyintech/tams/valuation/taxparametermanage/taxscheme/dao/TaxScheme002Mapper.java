@@ -13,6 +13,7 @@ package com.joyintech.tams.valuation.taxparametermanage.taxscheme.dao;
 import java.util.Map;
 
 import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme002Dto;
+import org.springframework.stereotype.Repository;
 
 /**
  * 税务方案 
@@ -21,6 +22,7 @@ import com.joyintech.tams.valuation.taxparametermanage.taxscheme.dto.TaxScheme00
  * @see TaxScheme002Mapper
  * @since 1.0
  */
+@Repository
 public interface TaxScheme002Mapper {
 
 	TaxScheme002Dto selectByPrimaryKey(String schId);

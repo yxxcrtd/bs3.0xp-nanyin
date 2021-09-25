@@ -57,7 +57,7 @@
             ,{field:'portfolioId', width:'12%', title: 'TrdPlanCcyInvestTrade001.portfolioId',
                 render : function(data, type, row, meta) {
                 return "<a  class='pro-link portfolioIdLink' style='cursor: pointer;'>"+row.portfolioId+"</ a>";
-            },sortField:"tpd.PORTFOLIO_ID"}
+            },sortField:"PORTFOLIO_ID"}
             ,{field:'portfolioName', width:'12%', title: 'TrdPlanCcyInvestTrade001.portfolioName',sortField:"PORTFOLIO_NAME"}
             ,{field:'finprodMarketId', width:'12%', title: 'TrdPlanCcyInvestTrade001.finprodId',
                 render : function(data, type, row, meta) {
@@ -79,8 +79,8 @@
             ,{field:'ps',visible:false}
             ,{field:'psStr', width:100, title: 'TrdPlanCcyInvestTrade001.ps',sortField:"PS"}
             ,{field:'tradeDate', width:100, title: 'TrdPlanCcyInvestTrade001.tradeDate',type:'date',sortField:"TRADE_DATE"}
-            ,{field:'tradeAmt', width:100, title: 'TrdPlanCcyInvestTrade001.tradeAmt',sortField:"PRIN_AMT"}
-            ,{field:'shareAmt', width:100, title: 'TrdPlanCcyInvestTrade001.shareAmt',sortField:"SHARE_AMT"}
+            ,{field:'tradeAmt', width:100, title: 'TrdPlanCcyInvestTrade001.tradeAmt',sortField:"PRIN_AMT",type:'number', digit:2}
+            ,{field:'shareAmt', width:100, title: 'TrdPlanCcyInvestTrade001.shareAmt',sortField:"SHARE_AMT",type:'number', digit:2}
             ,{field:'ccy',visible:false}
             ,{field:'ccyStr', width:'10%', title: 'TrdPlanCcyInvestTrade001.ccy',sortField:"tpd.CCY"}
             ,{field:'remark', width:'20%', title: 'TrdPlanCcyInvestTrade001.remark',sortable:false}
@@ -102,6 +102,7 @@
 //            }]
             }
         ],
+        initSort: {field: 'TRADE_DATE',type: 'desc'}
     });
   
     /**

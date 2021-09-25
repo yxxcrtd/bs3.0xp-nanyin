@@ -87,9 +87,24 @@ $(function() {
             return;
         }
         var data = {selectedItem: selArr, operateType:type};
-        Joyin.ajaxJson(basePath + 'model/impairment/phaseparameter/ModStagePara001/setStageParaSwitch', data, function (result) {
-
+        Joyin.ajaxJson(basePath + 'model/impairment/phaseparameter/ModStagePara001/useCheck', data, function(result) {
+            if(type==='on'){
+                Joyin.confirm("请确认是否启用?", function(){
+                    Joyin.ajaxJson(basePath + 'model/impairment/phaseparameter/ModStagePara001/setStageParaSwitch', data, function (result) {
+                        table.reload();
+                    });
+                });
+            }else{
+                Joyin.confirm("请确认是否停用?", function(){
+                    Joyin.ajaxJson(basePath + 'model/impairment/phaseparameter/ModStagePara001/setStageParaSwitch', data, function (result) {
+                        table.reload();
+                    });
+                });
+            }
         });
+
+
+
 
 
         /*Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){

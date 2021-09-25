@@ -10,7 +10,9 @@
             finprodId: $('#finprodId').val(),
             vDate: $('#queryDate').startDate(),
             mDate: $('#queryDate').endDate(),
-            stage: $('#stage').val()
+            stage: $('#stage').val(),
+            assetType: $('#assetType').val(),
+            lossInputType: $('#lossInputType').val()
         };
         if(object.finprodId){
             object.finprodId = object.finprodId.join(',');
@@ -99,8 +101,12 @@
         },
         cols:[
             {field: 'valDate', title: '减值行情日', type: 'date', width: '10%', sortField: "valDate"}
+            ,{field: 'assetTypeFmt', title: '资产类型', type: 'date', width: '10%', sortField: "assetType"}
             , {field: 'finprodId', title: '资产代码', width: '10%', sortField: "finprodId"}
-            , {field: 'finprodAbbr', title: '产品名称', width: '10%', sortField: "finprodAbbr"}
+            , {field: 'finprodAbbr', title: '资产名称', width: '10%'}
+            , {field: 'tradeMarketFmt', title: '流通场所', width: '10%', sortField: "tradeMarket"}
+            , {field: 'issuerName', title: '发行人/机构名称', width: '10%'}
+            , {field: 'insitituteCode', title: '统一社会信用代码/组织机构代码', width: '10%'}
             , {field: 'lossTestType', title: '减值测算方式', width: '10%', sortField: "lossTestType",visible: false}
             , {field: 'lossTestTypeStr', title: '减值测算方式', width: '10%', sortField: "lossTestType"}
             , {field: 'overDays', title: '逾期天数', width: '10%', sortField: "valDate"}
@@ -110,13 +116,17 @@
             , {field: 'assetExerciseDate', title: '资产行权日', type: 'date', width: '10%', sortField: "valDate"}
             , {field: 'strDate', title: '初始确认起始日', type: 'date', width: '10%', sortField: "strDate"}
             , {field: 'endDate', title: '初始确认截止日', type: 'date', width: '10%', sortField: "endDate"}
+            , {field: 'peroidType', title: '待偿期类型', width: '10%', sortField: "peroidType"}
             , {field: 'peroid', title: '待偿期（年）', width: '10%', sortField: "peroid"}
+            , {field: 'termDescribe', title: '期限描述', width: '10%', sortField: "termDescribe"}
             , {field: 'stage', title: '减值阶段', width: '10%', sortField: "stage",visible: false}
             , {field: 'stageStr', title: '减值阶段', width: '10%', sortField: "stage"}
             , {field: 'lossRatio', title: '减值比例%', width: '10%', sortField: "lossRatio"}
             , {field: 'pdValue', title: 'PD违约概率%', width: '10%', sortField: "pdValue"}
             , {field: 'lgdValue', title: 'LGD违约损失率%', width: '10%', sortField: "lgdValue"}
             , {field: 'eclVaule', title: 'ECL预期信用损失比例%', width: '10%', sortField: "eclVaule"}
+            , {field: 'remark', title: '备注', width: '10%', sortField: "remark"}
+            , {field: 'lossInputTypeFmt', title: '数据来源', width: '10%', sortField: "lossInputType"}
             , {field: 'tradeId', title: '交易编号', width: '10%', sortField: "tradeId", visible: false}
             ,{field:'operation', width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ],
@@ -158,7 +168,7 @@
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete",tradeId: data.tradeId,valDate:data.valDate};
+        var object = {selectedItem: [data], operateType:"delete",finprodId: data.finprodId,valDate:data.valDate};
         Joyin.ajaxJson(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss001/deleteCheck', object, function(result) {
             Joyin.confirm("是否确认删除？", function () {
                 WorkFlow.doDeleteList(basePath + 'valuation/trdassetlossmanage/trdassetloss/TrdAssetLoss002/save', object, "TrdAssetLoss001_btn_delete", "TrdAssetLoss002", function () {
@@ -235,7 +245,7 @@
             }
 
             var checkObj = {};
-            checkObj.tradeId = selArr[0].tradeId;
+            checkObj.finprodId = selArr[0].finprodId;
             checkObj.finprodId = selArr[0].finprodId;
             checkObj.valDate = selArr[0].valDate;
             checkObj.invalidDate = selArr[0].invalidDate;

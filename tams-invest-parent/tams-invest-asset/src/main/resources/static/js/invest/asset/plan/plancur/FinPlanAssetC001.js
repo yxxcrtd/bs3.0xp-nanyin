@@ -93,11 +93,11 @@ $(function() {
             ,{field:'mdate',width:150, title: 'FinPlanAssetC001.mDate',type:'date'}
             ,{field:'manager', sortField:"manager",title: 'FinPlanAssetC002.manager'}
             // add by  2019/9/29 张普裕 查询条件新增发行人 ，托管人   start
-            ,{field:'trusteeId', sortField:"trusteeId",width:150,title: 'FinPlanAssetC002.trusteeId'}
+            ,{field:'trusteeId',visible :false}
             ,{field:'issuer', sortField:"issuer",width:150,title: 'FinPlanAssetC002.issuer'}
             // add by  2019/9/29 张普裕 查询条件新增发行人 ，托管人   end
             // 增加推荐方与推荐费率 add by renping 20191014 start
-            ,{field:'recommenderName',  title: 'FinPlanAssetC002.recommender', width:150, sortField:'recommender'}
+            ,{field:'recommenderName',  title: 'FinPlanAssetC002.recommender',visible: false, width:150, sortField:'recommender'}
             // 增加推荐方与推荐费率 add by renping 20191014 start
             ,{field:'operation',title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]

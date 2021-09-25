@@ -132,7 +132,21 @@
         ON A.CREATE_USER = H.USER_NAME
         <!-- ADD BY YZG 成交进度计算 20201230 START-->
         LEFT JOIN
-        (SELECT ENTRUST_ID,SUM(nvl(FPRICE_AMT,0)) totalShareAmt
+        (
+        <!--多组合成交金额 需要查询比例表-->
+        SELECT
+        T2.ENTRUST_ID,
+        SUM(NVL(T2.FPRICE_AMT, 0)) totalShareAmt
+        FROM
+        IBU_QUOTE_CREP T1
+        INNER JOIN IBU_QUOTE_ETR_RE T2 ON
+        T1.QUOTE_ID = T2.QUOTE_ID
+        WHERE
+        T1.TRADE_STATUS = '07'
+        GROUP BY
+        T2.ENTRUST_ID
+        UNION
+        SELECT ENTRUST_ID,SUM(nvl(FPRICE_AMT,0)) totalShareAmt
         FROM IBU_QUOTE_CREP
         WHERE TRADE_STATUS = '07'
         GROUP BY ENTRUST_ID) IQC
@@ -151,17 +165,20 @@
         AND A.FINPROD_TYPE2 in (#{FINPROD_TYPE2_Z},#{FINPROD_TYPE2_N})
         AND E.TRADER = #{loginUserId}
         <if test="zlglStatus != null and zlglStatus.equals('02')">
-            AND A.ENTRUST_STATUS = #{entrustStatusUnAccept}
+            AND A.ENTRUST_STATUS = #{zlglStatus}
         </if>
         <if test="zlglStatus != null and zlglStatus.equals('03')">
-            AND A.ENTRUST_STATUS = #{entrustStatusAccept}
+            AND A.ENTRUST_STATUS = #{zlglStatus}
             AND NVL(T5.FINISH_AMT,0) &lt; A.ENTRUST_AMT
         </if>
         <if test="zlglStatus != null and zlglStatus.equals('04')">
-            AND ((A.ENTRUST_STATUS = #{entrustStatusAccept}
+            AND ((A.ENTRUST_STATUS = #{zlglStatus}
             AND NVL(T5.FINISH_AMT,0) &gt;= A.ENTRUST_AMT)
             OR A.ENTRUST_STATUS = #{entrustStatusComple}
             )
+        </if>
+        <if test="portfolioId != null and portfolioId != ''">
+            AND A.PORTFOLIO_ID = #{portfolioId}
         </if>
         <if test="portfolioIdList != null and portfolioIdList.size() > 0">
             AND A.PORTFOLIO_ID IN
@@ -169,14 +186,14 @@
                 #{item}
             </foreach>
         </if>
-        <if test="assetIdList != null and assetIdList.size() > 0">
-            AND fp.FINPROD_MARKET_ID IN
-            <foreach collection="assetIdList" item="item" open="(" close=")" separator=",">
-                #{item}
-            </foreach>
+        <if test="term != null and term != ''">
+            AND C.TERM_DAYS = #{term}
         </if>
-        <if test="ps_zlgl != null and ps_zlgl != ''">
-            AND A.PS = #{ps_zlgl}
+        <if test="settleSpreed != null and settleSpreed != ''">
+            AND DECODE(C.SETTLE_SPREED, 0, '01', 1, '02') = #{settleSpreed}
+        </if>
+        <if test="ps != null and ps != ''">
+            AND A.PS = #{ps}
         </if>
         <if test="invManagerIdList != null and invManagerIdList.size() > 0">
             AND A.INV_MANAGER_ID IN
@@ -184,7 +201,37 @@
                 #{item}
             </foreach>
         </if>
-        order by A.VDATE desc
+        <!--委托代码支持多选-->
+        <if test="entrustIdMultiple != null and entrustIdMultiple.size() > 0">
+            and A.ENTRUST_ID in
+            <foreach collection="entrustIdMultiple" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="entrustId != null and entrustId != ''">
+            AND A.ENTRUST_ID LIKE CONCAT('%', CONCAT(#{entrustId}, '%'))
+        </if>
+        <if test="platDate != null">
+            AND A.VDATE &lt;= to_date(#{platDate}, 'yyyy-MM-dd')
+            AND A.MDATE &gt;= to_date(#{platDate}, 'yyyy-MM-dd')
+        </if>
+        <if test="keywords != null and keywords != ''">
+            AND (H.USER_NAME LIKE '%'||#{keywords}||'%'
+            OR A.PORTFOLIO_ID LIKE '%'||#{keywords}||'%'
+            OR B.PORTFOLIO_NAME LIKE '%'||#{keywords}||'%'
+            OR C.SEC_ACCT_ID LIKE '%'||#{keywords}||'%'
+            OR A.PS LIKE '%'||#{keywords}||'%'
+            OR A.VDATE LIKE '%'||#{keywords}||'%'
+            OR A.MDATE LIKE '%'||#{keywords}||'%'
+            OR A.ENTRUST_ID LIKE '%'||#{keywords}||'%')
+        </if>
+        <if test="entrustIdList != null and entrustIdList.size() > 0">
+            and A.ENTRUST_ID not in
+            <foreach collection="entrustIdList" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by A.PS,C.TERM_TYPE,C.SETTLE_SPREED,C.SEC_ACCT_ID desc
     </select>
 
     <select id="queryZyqglList" resultType="com.joyintech.service.bankuplink.reponew.dto.CfetsRepoDealQuotedPr001Dto">
@@ -345,11 +392,10 @@
         </if>
     </select>
 
-    <select id="getCstpQryTableList" resultType="com.joyintech.service.trade.cstp.dto.CstpSelectDto">
+    <select id="getCstpQryTableList" resultType="com.joyintech.service.bankuplink.cstp.dto.CstpSelectDto">
         select distinct aa.* from(
         SELECT
         /*add by chenjiaxing 质押式回购改造 20210819*/
-        I.COUNTERTRADERNAME counterTraderName,/*对方交易员*/
         I.SETTLDATE settldate, /*首次结算日*/
         I.SETTLDATE2 settldate2,/*到期结算日*/
         ptl_portfolio.Portfolio_Id portfolioId,/*组合代码*/
@@ -359,8 +405,6 @@
         I.TRADEMETHOD tradeMethod,/*交易方式*/
         I.SETTLCURRENCY settlcurrency,/*结算币种*/
         I.EXECTYPE execType,/*成交状态*/
-        I.OURINSTITUTIONCODE ourinstitutioncode, /*本方*/
-        I.COUNTERINSTITUTIONCODE counterinstitutioncode,/*对手方*/
         I.OURCAPITALBANKNAME ourcapitalbankname, /*资金开户行*/
         I.OURCAPITALACCOUNTNAME ourcapitalaccountname, /*资金账户户名*/
         I.OURCAPITALACCOUNTNUMBER ourcapitalaccountnumber, /*资金账号*/
@@ -384,9 +428,15 @@
         tpd.TRADE_ID tradeId,
         tpd.F_TRADE_ID fTradeId,
         tpd.R_TRADE_ID rTradeId,
-        mcci2.PARTY_NAME cpPartyName,/*对手方机构*/
-        /*add by chenjiaxing 质押式回购改造 20210819 end*/
-        I.OURTRADERNAME ourTradeName,/*本方交易员*/
+        iqcc.CP_PARTY_ID cpPartyId,
+        iqcc.CP_TRADER_ID cpTraderId,
+        iqcc.OU_PARTY_ID ouPartyId,
+        iqcc.OU_TRADER_ID ouTraderId,
+        iqcc.EXT_CPTRADER_NAME exeCpTraderId,
+        iqcc.EXT_OUTRADER_NAME exeOuTraderId,
+        iqcc.EXT_CPPARTY_NAME exeCpPartyId,
+        iqcc.EXT_OUPARTY_NAME exeOuPartyId,
+         /*add by chenjiaxing 质押式回购改造 20210819 end*/
         decode(I.BUSINESSTYPE,'BOND',
         (select TRADE_MARKET from fin_product where FINPROD_market_ID = ts.SECID),
         'REPO',decode(tr.market, 'IB', '01', 'SH', '03', 'SZ', '04')) market,
@@ -435,7 +485,8 @@
         else COUNTERDEPOSITACCOUNTNUMBER
         end as ourdepositaccountnumber,
         su.USER_NAME userName,
-        I.OURDEPOSITINSTITUTION ourdepositinstitution
+        I.OURDEPOSITINSTITUTION ourdepositinstitution,
+        tpd.FINPROD_ID           finprodId
         FROM
         INTERF_CSTP_TRADE I
         INNER JOIN (SELECT EXECID ,MAX(UPDATETIME) UPDATETIME FROM INTERF_CSTP_TRADE GROUP BY EXECID) II ON II.EXECID =
@@ -466,10 +517,10 @@
         LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
         GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE
         ) QUOTE ON QUOTE.EXECID=I.EXECID
-        left join ETR_ENTRUST on ETR_ENTRUST.ENTRUST_ID = QUOTE.ENTRUST_ID
-        left join ptl_portfolio on ptl_portfolio.portfolio_id = ETR_ENTRUST.Portfolio_Id
         left join TRD_PRODUCT_DEAL tpd on I.EXECID = tpd.F_TRADE_ID
         LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
+        left join ETR_ENTRUST on ETR_ENTRUST.ENTRUST_ID = tpda.ENTRUST_ID
+        left join ptl_portfolio on ptl_portfolio.portfolio_id = ETR_ENTRUST.Portfolio_Id
         LEFT JOIN (select a.QUOTE_ID,
                     a.PLEDGE_RATIO,
                     a.PLEDGE_AMT,
@@ -478,12 +529,27 @@
                     from IBU_QUOTE_CREP_PLEDGE a
                     left join FIN_PRODUCT b
                     on b.FINPROD_ID = a.PLEDGE_FINPROD_ID)iqcp ON iqcp.QUOTE_ID = QUOTE.QUOTEID
-        LEFT JOIN( SELECT C.PARTY_CUSTOMER_ID,
-                    C.PARTY_NAME,
-                    A.PARTY_ID
-                    FROM MST_CFETS_CUSTOMER_INFO A
-                    LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
-                    LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID) mcci2 on mcci2.PARTY_ID = I.COUNTERINSTITUTIONCODE
+        left join (Select A.EXECID,
+                    A.OU_PARTY_ID,
+                    A.OU_TRADER_ID,
+                    A.CP_PARTY_ID,
+                    A.CP_TRADER_ID,
+                    M1.TRADER_NAME AS EXT_OUTRADER_NAME,
+                    M2.TRADER_NAME AS EXT_CPTRADER_NAME,
+                    N1.PARTY_ABBR  AS EXT_OUPARTY_NAME,
+                    N2.PARTY_ABBR  AS EXT_CPPARTY_NAME,
+                    A.CREATE_USER,
+                    A.UPDATE_USER
+                    from IBU_QUOTE_CREP A
+                    left join SYS_USER f on A.OU_TRADER_ID = f.USER_NAME
+                    left join SYS_USER_ADD fa on fa.USER_ID = f.USER_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_TRADER M1
+                    ON M1.TRADER_ID = NVL(fa.IBU_TRADER, A.OU_TRADER_ID)
+                    LEFT JOIN MST_CFETS_CUSTOMER_TRADER M2 ON M2.TRADER_ID = A.CP_TRADER_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_INFO N1 ON N1.PARTY_ID = A.OU_PARTY_ID
+                    LEFT JOIN MST_CFETS_CUSTOMER_INFO N2 ON N2.PARTY_ID = A.CP_PARTY_ID
+                    WHERE NOT EXISTS(SELECT 1 FROM WFL_IBU_QUOTE_CREP WIQC WHERE WIQC.QUOTE_ID = A.QUOTE_ID)) iqcc
+                    on iqcc.EXECID = i.EXECID
         <where>
             AND I.BUSINESSTYPE in ('BOND','REPO')
             <if test="finprodType != null and !''.equals(finprodType)">
@@ -547,6 +613,15 @@
             <if test="entrustTradelimitdays !=null and entrustTradelimitdays !='' ">
                 and I.TRADELIMITDAYS = #{entrustTradelimitdays}
             </if>
+            <if test="loginUserId != null and loginUserId != '' ">
+                and (iqcc.CREATE_USER = #{loginUserId,jdbcType=VARCHAR}
+                or iqcc.UPDATE_USER = #{loginUserId,jdbcType=VARCHAR}
+                )
+            </if>
+            and tpd.FINPROD_TYPE2 IN ('F02', 'F03')
+            AND tpd.TRADE_STATUS = '01'
+            AND tpd.TRADE_MARKET in ('01')
+            AND (tpd.IS_CANCEL is null or tpd.IS_CANCEL = 'N')
         </where>
         ) aa
         <where>
@@ -565,6 +640,37 @@
             <if test="tradelimitdays!=null and tradelimitdays!='' ">
                 and aa.tradelimitdays = #{tradelimitdays}
             </if>
+            <if test="benfangSide!=null and benfangSide!='' ">
+                and aa.side = #{benfangSide}
+            </if>
         </where>
+    </select>
+
+    <select id="queryMySideTraderList" resultType="com.joyintech.framework.select.SelectOptionDto">
+        SELECT distinct MST_CFETS_CUSTOMER_TRADER.TRADER_ID   id,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME text,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID   parentId
+        FROM (SELECT MST_CFETS_CUSTOMER_TRADER.TRADER_ID,
+        MST_CFETS_CUSTOMER_TRADER.TRADER_NAME,
+        MST_CFETS_CUSTOMER_TRADER.MPARTY_ID
+        FROM MST_CFETS_CUSTOMER_TRADER
+        INNER JOIN(
+        SELECT nvl(t2.mparty_id,t1.party_id) PARTY_ID from MST_CFETS_CUSTOMER_INFO t1 LEFT JOIN MST_CFETS_CUSTOMER_RELA t2
+        on t1.party_id = t2.sparty_id
+        WHERE 1 = 1
+        ) t3 on MST_CFETS_CUSTOMER_TRADER.PARTY_ID = t3.PARTY_ID
+        ) MST_CFETS_CUSTOMER_TRADER
+        WHERE 1 = 1
+        <if test="param != null and !param.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{param},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{param},'%')))
+        </if>
+        <if test="search != null and !search.equals('')">
+            AND	(MST_CFETS_CUSTOMER_TRADER.TRADER_ID like concat('%',concat(#{search},'%'))
+            or MST_CFETS_CUSTOMER_TRADER.TRADER_NAME like concat('%',concat(#{search},'%')))
+        </if>
+        <if test="initValue != null and initValue != ''">
+            AND MST_CFETS_CUSTOMER_TRADER.TRADER_ID = #{initValue}
+        </if>
     </select>
 </mapper>

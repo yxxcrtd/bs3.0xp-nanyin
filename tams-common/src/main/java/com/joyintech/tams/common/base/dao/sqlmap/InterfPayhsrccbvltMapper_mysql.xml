@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.InterfPayhsrccbvltMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        <id column="SECID" property="secid" jdbcType="VARCHAR" />
+        <id column="CDATE" property="cdate" jdbcType="VARCHAR" />
+        <id column="VALUE_SOURCE" property="valueSource" jdbcType="VARCHAR" />
+        <id column="SOURCE" property="source" jdbcType="VARCHAR" />
+        <result column="ENCASH_YEARS" property="encashYears" jdbcType="DECIMAL" />
+        <result column="MDPRICE" property="mdprice" jdbcType="DECIMAL" />
+        <result column="MCPRICE" property="mcprice" jdbcType="DECIMAL" />
+        <result column="M_MDURATION" property="mMduration" jdbcType="DECIMAL" />
+        <result column="M_CNVXTY" property="mCnvxty" jdbcType="DECIMAL" />
+        <result column="MBASISVALUE" property="mbasisvalue" jdbcType="DECIMAL" />
+        <result column="BASISVALUE" property="basisvalue" jdbcType="DECIMAL" />
+        <result column="MSPRD_D" property="msprdD" jdbcType="DECIMAL" />
+        <result column="MSPRD_CNVXTY" property="msprdCnvxty" jdbcType="DECIMAL" />
+        <result column="MYIELD_D" property="myieldD" jdbcType="DECIMAL" />
+        <result column="MYIELD_CNVXTY" property="myieldCnvxty" jdbcType="DECIMAL" />
+        <result column="MYIELD" property="myield" jdbcType="DECIMAL" />
+        <result column="VAR" property="var" jdbcType="DECIMAL" />
+        <result column="CVAR" property="cvar" jdbcType="DECIMAL" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        SECID SECID, CDATE CDATE, VALUE_SOURCE VALUE_SOURCE, SOURCE SOURCE, ENCASH_YEARS ENCASH_YEARS, 
+        MDPRICE MDPRICE, MCPRICE MCPRICE, M_MDURATION M_MDURATION, M_CNVXTY M_CNVXTY, MBASISVALUE MBASISVALUE, 
+        BASISVALUE BASISVALUE, MSPRD_D MSPRD_D, MSPRD_CNVXTY MSPRD_CNVXTY, MYIELD_D MYIELD_D, 
+        MYIELD_CNVXTY MYIELD_CNVXTY, MYIELD MYIELD, VAR VAR, CVAR CVAR, CREATE_USER CREATE_USER, 
+        CREATE_DEPT CREATE_DEPT, CREATE_TIME CREATE_TIME, UPDATE_USER UPDATE_USER, UPDATE_TIME UPDATE_TIME
+    </sql>
+    <sql id="Sql_All_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrccbvltMapper.Base_Column_List" />
+        from INTERF_PAYHSRCCBVLT
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrccbvltMapper.Base_Column_List" />
+        from INTERF_PAYHSRCCBVLT
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvltKey" >
+        select 
+        <include refid="com.joyintech.tams.common.base.dao.InterfPayhsrccbvltMapper.Base_Column_List" />
+        from INTERF_PAYHSRCCBVLT
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvltKey" >
+        delete from INTERF_PAYHSRCCBVLT
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        insert into INTERF_PAYHSRCCBVLT (SECID, CDATE, VALUE_SOURCE, 
+            SOURCE, ENCASH_YEARS, MDPRICE, 
+            MCPRICE, M_MDURATION, M_CNVXTY, 
+            MBASISVALUE, BASISVALUE, MSPRD_D, 
+            MSPRD_CNVXTY, MYIELD_D, MYIELD_CNVXTY, 
+            MYIELD, VAR, CVAR, 
+            CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            UPDATE_USER, UPDATE_TIME)
+        values (#{secid,jdbcType=VARCHAR}, #{cdate,jdbcType=VARCHAR}, #{valueSource,jdbcType=VARCHAR}, 
+            #{source,jdbcType=VARCHAR}, #{encashYears,jdbcType=DECIMAL}, #{mdprice,jdbcType=DECIMAL}, 
+            #{mcprice,jdbcType=DECIMAL}, #{mMduration,jdbcType=DECIMAL}, #{mCnvxty,jdbcType=DECIMAL}, 
+            #{mbasisvalue,jdbcType=DECIMAL}, #{basisvalue,jdbcType=DECIMAL}, #{msprdD,jdbcType=DECIMAL}, 
+            #{msprdCnvxty,jdbcType=DECIMAL}, #{myieldD,jdbcType=DECIMAL}, #{myieldCnvxty,jdbcType=DECIMAL}, 
+            #{myield,jdbcType=DECIMAL}, #{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, 
+            #{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+            #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        insert into INTERF_PAYHSRCCBVLT
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                SECID,
+            </if>
+            <if test="cdate != null" >
+                CDATE,
+            </if>
+            <if test="valueSource != null" >
+                VALUE_SOURCE,
+            </if>
+            <if test="source != null" >
+                SOURCE,
+            </if>
+            <if test="encashYears != null" >
+                ENCASH_YEARS,
+            </if>
+            <if test="mdprice != null" >
+                MDPRICE,
+            </if>
+            <if test="mcprice != null" >
+                MCPRICE,
+            </if>
+            <if test="mMduration != null" >
+                M_MDURATION,
+            </if>
+            <if test="mCnvxty != null" >
+                M_CNVXTY,
+            </if>
+            <if test="mbasisvalue != null" >
+                MBASISVALUE,
+            </if>
+            <if test="basisvalue != null" >
+                BASISVALUE,
+            </if>
+            <if test="msprdD != null" >
+                MSPRD_D,
+            </if>
+            <if test="msprdCnvxty != null" >
+                MSPRD_CNVXTY,
+            </if>
+            <if test="myieldD != null" >
+                MYIELD_D,
+            </if>
+            <if test="myieldCnvxty != null" >
+                MYIELD_CNVXTY,
+            </if>
+            <if test="myield != null" >
+                MYIELD,
+            </if>
+            <if test="var != null" >
+                VAR,
+            </if>
+            <if test="cvar != null" >
+                CVAR,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createDept != null" >
+                CREATE_DEPT,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="secid != null" >
+                #{secid,jdbcType=VARCHAR},
+            </if>
+            <if test="cdate != null" >
+                #{cdate,jdbcType=VARCHAR},
+            </if>
+            <if test="valueSource != null" >
+                #{valueSource,jdbcType=VARCHAR},
+            </if>
+            <if test="source != null" >
+                #{source,jdbcType=VARCHAR},
+            </if>
+            <if test="encashYears != null" >
+                #{encashYears,jdbcType=DECIMAL},
+            </if>
+            <if test="mdprice != null" >
+                #{mdprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mcprice != null" >
+                #{mcprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mMduration != null" >
+                #{mMduration,jdbcType=DECIMAL},
+            </if>
+            <if test="mCnvxty != null" >
+                #{mCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="mbasisvalue != null" >
+                #{mbasisvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="basisvalue != null" >
+                #{basisvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="msprdD != null" >
+                #{msprdD,jdbcType=DECIMAL},
+            </if>
+            <if test="msprdCnvxty != null" >
+                #{msprdCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="myieldD != null" >
+                #{myieldD,jdbcType=DECIMAL},
+            </if>
+            <if test="myieldCnvxty != null" >
+                #{myieldCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="myield != null" >
+                #{myield,jdbcType=DECIMAL},
+            </if>
+            <if test="var != null" >
+                #{var,jdbcType=DECIMAL},
+            </if>
+            <if test="cvar != null" >
+                #{cvar,jdbcType=DECIMAL},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createDept != null" >
+                #{createDept,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        insert into INTERF_PAYHSRCCBVLT(SECID, CDATE, VALUE_SOURCE, SOURCE, ENCASH_YEARS, 
+        MDPRICE, MCPRICE, M_MDURATION, M_CNVXTY, MBASISVALUE, BASISVALUE, MSPRD_D, MSPRD_CNVXTY, 
+        MYIELD_D, MYIELD_CNVXTY, MYIELD, VAR, CVAR, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+        UPDATE_USER, UPDATE_TIME)
+        select SECID, CDATE, VALUE_SOURCE, SOURCE, ENCASH_YEARS, 
+            MDPRICE, MCPRICE, M_MDURATION, M_CNVXTY, MBASISVALUE, BASISVALUE, MSPRD_D, MSPRD_CNVXTY, 
+            MYIELD_D, MYIELD_CNVXTY, MYIELD, VAR, CVAR, CREATE_USER, CREATE_DEPT, CREATE_TIME, 
+            #{updateUser,jdbcType=VARCHAR} UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} UPDATE_TIME
+             from INTERF_PAYHSRCCBVLT
+             where 1 = 1 and SECID = #{secid,jdbcType=VARCHAR} and CDATE = #{cdate,jdbcType=VARCHAR} and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR} and SOURCE = #{source,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        update INTERF_PAYHSRCCBVLT
+        <set >
+            <if test="encashYears != null" >
+                ENCASH_YEARS = #{encashYears,jdbcType=DECIMAL},
+            </if>
+            <if test="mdprice != null" >
+                MDPRICE = #{mdprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mcprice != null" >
+                MCPRICE = #{mcprice,jdbcType=DECIMAL},
+            </if>
+            <if test="mMduration != null" >
+                M_MDURATION = #{mMduration,jdbcType=DECIMAL},
+            </if>
+            <if test="mCnvxty != null" >
+                M_CNVXTY = #{mCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="mbasisvalue != null" >
+                MBASISVALUE = #{mbasisvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="basisvalue != null" >
+                BASISVALUE = #{basisvalue,jdbcType=DECIMAL},
+            </if>
+            <if test="msprdD != null" >
+                MSPRD_D = #{msprdD,jdbcType=DECIMAL},
+            </if>
+            <if test="msprdCnvxty != null" >
+                MSPRD_CNVXTY = #{msprdCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="myieldD != null" >
+                MYIELD_D = #{myieldD,jdbcType=DECIMAL},
+            </if>
+            <if test="myieldCnvxty != null" >
+                MYIELD_CNVXTY = #{myieldCnvxty,jdbcType=DECIMAL},
+            </if>
+            <if test="myield != null" >
+                MYIELD = #{myield,jdbcType=DECIMAL},
+            </if>
+            <if test="var != null" >
+                VAR = #{var,jdbcType=DECIMAL},
+            </if>
+            <if test="cvar != null" >
+                CVAR = #{cvar,jdbcType=DECIMAL},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.InterfPayhsrccbvlt" >
+        update INTERF_PAYHSRCCBVLT
+        set ENCASH_YEARS = #{encashYears,jdbcType=DECIMAL},
+            MDPRICE = #{mdprice,jdbcType=DECIMAL},
+            MCPRICE = #{mcprice,jdbcType=DECIMAL},
+            M_MDURATION = #{mMduration,jdbcType=DECIMAL},
+            M_CNVXTY = #{mCnvxty,jdbcType=DECIMAL},
+            MBASISVALUE = #{mbasisvalue,jdbcType=DECIMAL},
+            BASISVALUE = #{basisvalue,jdbcType=DECIMAL},
+            MSPRD_D = #{msprdD,jdbcType=DECIMAL},
+            MSPRD_CNVXTY = #{msprdCnvxty,jdbcType=DECIMAL},
+            MYIELD_D = #{myieldD,jdbcType=DECIMAL},
+            MYIELD_CNVXTY = #{myieldCnvxty,jdbcType=DECIMAL},
+            MYIELD = #{myield,jdbcType=DECIMAL},
+            VAR = #{var,jdbcType=DECIMAL},
+            CVAR = #{cvar,jdbcType=DECIMAL},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where SECID = #{secid,jdbcType=VARCHAR}
+          and CDATE = #{cdate,jdbcType=VARCHAR}
+          and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+          and SOURCE = #{source,jdbcType=VARCHAR}
+    </update>
+</mapper>

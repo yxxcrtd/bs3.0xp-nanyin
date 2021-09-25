@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.risk.penetrationmanagement.rskvalassetcode.val
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.framework.constant.GlobalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,10 @@ public class RskValtblAssetSubMapValidator implements BeanValidator{
                 resultList.add(new ValidMessage("name",
                     getMessage("RSK_W_0001", getMessage("RskValAssetCode002.id"),dto.getId())));
             }
+            //选中记录是默认配置时
+            if (rskValAssetCode001Service.getAssetSubInfoIsDefault(dto.getId())>0) {
+                resultList.add(new ValidMessage(this.getMessage("RSK_W_00775", getMessage("RskValAssetCode002.id"),dto.getId())));
+            }
         }
         if(StringUtil.isNotEmpty(dto.getName())){
             if(rskValAssetCode002Service.selecctCountByName(dto.getName(), dto.getId())>0){
@@ -54,6 +59,13 @@ public class RskValtblAssetSubMapValidator implements BeanValidator{
                     getMessage("BUSS_COM_E_0006", getMessage("RskValAssetCode002.name"))));
             }
         }
+        if(StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_EDIT)){
+            //选中记录
+            if (rskValAssetCode001Service.getAssetSubInfoIsDefault(dto.getId())>0) {
+                resultList.add(new ValidMessage(this.getMessage("RSK_W_00774", getMessage("RskValAssetCode002.id"),dto.getId())));
+            }
+        }
+
         return resultList;
     }
 }

@@ -1,13 +1,16 @@
 package com.joyintech.service.entrust.common.service;
 
+import com.joyintech.background.component.common.pack.common.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.component.base.entrust.impl.BaseEtrInvestInfoServiceImpl;
 import com.joyintech.tams.invest.common.dto.BaseEtrInvestInfoDto;
 import com.joyintech.tams.invest.common.entrust.dto.EntrustCommonDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -17,6 +20,7 @@ import java.util.Map;
  * 封装添加流程中数据需求的增删改
  */
 @Component
+@Lazy(false)
 public class WFlowCommonService {
     private static BaseEtrInvestInfoServiceImpl baseEtrInvestInfoServiceImpl; // 流程数据相关修改
     private static BaseEtrCashPositionCommService baseEtrCashPositionCommService; // 持仓处理

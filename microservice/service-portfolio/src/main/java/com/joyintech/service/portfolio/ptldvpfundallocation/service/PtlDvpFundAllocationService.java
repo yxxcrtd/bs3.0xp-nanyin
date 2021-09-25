@@ -115,7 +115,7 @@ public class PtlDvpFundAllocationService extends BaseService<PtlDvpFundAllocatio
      * @throws Exception 异常
      */
     public Page<PtlDvpFundAllocationDto> findPage(int page, int length, Map<String, Object> map)
-        throws Exception {
+    {
 
         // 组合代码
         if (map.get("portfolioId") != null

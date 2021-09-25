@@ -3,6 +3,7 @@ package com.joyintech.tams.invest.risk.creditmanagement.creditrightsmanagement.c
 import java.util.ArrayList;
 import java.util.List;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +70,7 @@ public class CreditRightsManagement001Controller extends BaseController{
 	@ResponseBody
     @RequestMapping("findPage")
     public Page<CreditRightsManagementDto> selectAllMstCaptialAccount()
-        throws Exception {
+    {
         Page<CreditRightsManagementDto> page = creditRightsManagementService.selectForPage(RequestUtil.getPageParam());
         return page;
     }
@@ -100,7 +101,7 @@ public class CreditRightsManagement001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping(ACTION_DELETE)
-    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) CreditRightsManagementDto dto, BindingResult br) throws Exception{
+    public AjaxResult delete(@RequestBody @Validated({ValidateGroupDelete.class}) CreditRightsManagementDto dto, BindingResult br) throws WorkFlowException {
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
@@ -130,7 +131,7 @@ public class CreditRightsManagement001Controller extends BaseController{
      * @since 1.0
      */
     @RequestMapping("export")
-    public ResponseEntity<byte[]> export() throws Exception {
+    public ResponseEntity<byte[]> export() {
         return creditRightsManagementService.export(this.getPageId(),RequestUtil.getParameters(getRequest()));
     }
     

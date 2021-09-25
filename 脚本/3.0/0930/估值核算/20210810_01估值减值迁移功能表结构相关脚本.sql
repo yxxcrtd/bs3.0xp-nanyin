@@ -227,7 +227,8 @@ create table MOD_CONFIG_USEAGE
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
-   UPDATE_USER          VARCHAR2(20)         not null
+   UPDATE_USER          VARCHAR2(20)         not null,
+   UPDATE_TIME          TIMESTAMP            not null
 );
 
 comment on table MOD_CONFIG_USEAGE is
@@ -248,6 +249,8 @@ comment on column MOD_CONFIG_USEAGE.CREATE_TIME is
 '创建时间';
 comment on column MOD_CONFIG_USEAGE.UPDATE_USER is
 '更新人';
+comment on column MOD_CONFIG_USEAGE.UPDATE_TIME is
+'更新时间';
 commit;
 
 --标的类金融产品附属表添加是否含有利率调整权字段
@@ -679,9 +682,9 @@ create table MOD_ECL_RESULT_PROCESS
    FIN_STAGE            VARCHAR2(50),
    EMA_SHARE_AMT        NUMBER(30,4),
    EAD                  NUMBER(30,4),
-   PRE_PROSPECTIVE_PD   NUMBER(30,6),
-   PROSPECTIVE_PD       NUMBER(30,6),
-   LGD                  NUMBER(30,6),
+   PRE_PROSPECTIVE_PD   NUMBER(30,14),
+   PROSPECTIVE_PD       NUMBER(30,14),
+   LGD                  NUMBER(30,14),
    PRE_PROSPECTIVE_ECL  NUMBER(30,4),
    PROSPECTIVE_ECL      NUMBER(30,4),
    PROCESS              VARCHAR2(50)         not null,
@@ -1056,10 +1059,10 @@ create table MOD_ECL_RESULT
    INT_OVERDUE_DAY      NUMBER(20,2)                   null,
    PURCHASE_TIME_GRADE  varchar(50)                    null,
    CURRENT_TIME_GRADE   varchar(50)                    null,
-   PRE_PROSPECTIVE_PD   NUMBER(30,6)                 null,
-   PROSPECTIVE_PD       NUMBER(30,6)                 null,
+   PRE_PROSPECTIVE_PD   NUMBER(30,14)                 null,
+   PROSPECTIVE_PD       NUMBER(30,14)                 null,
    STAGE                varchar(50)                    null,
-   LGD                  NUMBER(30,6)                 null,
+   LGD                  NUMBER(30,14)                 null,
    EAD                  NUMBER(30,4)                 null,
    PRE_PROSPECTIVE_ECL  NUMBER(30,4)                 null,
    PROSPECTIVE_ECL      NUMBER(30,4)                 null,
@@ -1308,7 +1311,7 @@ create table MOD_GRADE_PD_CONFIG
    GRADE_ORG_ID         VARCHAR2(50),
    O_TYPE               VARCHAR2(50),
    GRADE_RESULT         VARCHAR2(50),
-   FORWARD_YEAR_PD      NUMBER(30,6),
+   FORWARD_YEAR_PD      NUMBER(30,14),
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
@@ -1397,7 +1400,7 @@ create table MOD_LGD_SPECIAL_CONFIG
    SEQNO                VARCHAR2(50)         not null,
    FINPROD_ID           VARCHAR2(50),
    FINPROD_NAME         VARCHAR2(200),
-   LGD                  NUMBER(30,6),
+   LGD                  NUMBER(30,14),
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
@@ -1488,7 +1491,7 @@ create table MOD_LGD_CONFIG
    ASSET_TYPE           VARCHAR2(50),
    ASSET_DETAIL_TYPE    VARCHAR2(50),
    IS_CONTAIN_PLEDGE    VARCHAR2(50),
-   LGD                  NUMBER(30,6),
+   LGD                  NUMBER(30,14),
    CREATE_USER          VARCHAR2(20)         not null,
    CREATE_DEPT          VARCHAR2(32),
    CREATE_TIME          TIMESTAMP            not null,
@@ -1602,7 +1605,6 @@ create index MOD_ASEET_MAPPING_INDEX1 on MOD_ASEET_MAPPING (MAPPING_TYPE, INPUT1
 create index MOD_ASEET_MAPPING_INDEX2 on MOD_ASEET_MAPPING (MAPPING_TYPE, OUTPUT5);
 
 alter table MOD_ASSET_GRADE_CONFIG modify asset_type not null;
-alter table MOD_ASSET_GRADE_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_CONFIG modify o_type not null;
 alter table MOD_ASSET_GRADE_CONFIG modify create_time not null;
 alter table MOD_ASSET_GRADE_CONFIG modify update_user not null;
@@ -1614,7 +1616,6 @@ create index MOD_ASSET_GRADE_CONFIG_INDEX on MOD_ASSET_GRADE_CONFIG (ASSET_TYPE,
 
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify finprod_name not null;
-alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify grade_org_id not null;
 alter table MOD_ASSET_GRADE_SPECIAL_CONFIG modify o_type not null;
 
 drop index MOD_SPECIAL_CONFIG_INDEX;

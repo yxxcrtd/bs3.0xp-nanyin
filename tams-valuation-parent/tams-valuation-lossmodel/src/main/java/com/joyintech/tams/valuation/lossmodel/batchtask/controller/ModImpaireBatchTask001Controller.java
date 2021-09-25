@@ -63,8 +63,6 @@ public class ModImpaireBatchTask001Controller extends BaseController {
     @ResponseBody
     public Page<SelectOptionDto> getAssetInfo() {
         Map<String, Object> pageParam = RequestUtil.getPageParam();
-        //带入系统参数 01毕马威 02普华
-        pageParam.put("lossType",CacheUtil.getSysParam(DictCode.减值方案类型.getValue()));
         return modImpaireBatchTask001Service.getAssetInfo(pageParam);
     }
 

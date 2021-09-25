@@ -14,9 +14,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +66,10 @@ import com.joyintech.tams.systemtools.dfs.JoyinDFSTemplate;
 @PageId("ReportConfirmManage003")
 @RequestMapping("/disclosure/information/reveal/reportconfirm/ReportConfirmManage003")
 public class ReportConfirmManage003Contoller extends BaseController {
+	/**
+	 * 日志
+	 */
+	private static Logger logger = LoggerFactory.getLogger(ReportConfirmManage003Contoller.class);
 
 	/**
 	 * 
@@ -128,7 +135,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping("findPage")
     @ResponseBody
-    public Page<BokFileTransfer003Dto> findPage() throws Exception{
+    public Page<BokFileTransfer003Dto> findPage(){
 //        return valNetValueConfirm003Service.findPage(RequestUtil.getPageParam());
         return null;
     }
@@ -150,8 +157,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/uploadFile")
 	@ResponseBody
-	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult uploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 	    AjaxResult res = new AjaxResult();
 //		try {
 //		    reportConfirmManage003Service.readFile(request);
@@ -189,24 +195,23 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@RequestMapping(value = "/batchUploadFile")
 	@ResponseBody
-	public AjaxResult batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model)
-			throws Exception {
+	public AjaxResult batchUploadFile(HttpServletRequest request, HttpServletResponse response, ModelMap model){
 	    AjaxResult value = new AjaxResult();
 	    //获取所有错误信息
 	    List<ValidMessage> checkList = new ArrayList<ValidMessage>();
 	 // 画面ID
-        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID));
+        String pageId = StringUtil.trim(request.getParameter(GlobalConstant.PAGE_ID)==null?"":request.getParameter(GlobalConstant.PAGE_ID));
     	// 获取本地ZIP包路径
-		String filePath = request.getParameter("fileName");
+		String filePath = request.getParameter("fileName")==null?"":request.getParameter("fileName");
 		//获取解压在服务器上的路径
         String localFilePath = CacheUtil.getSysParam(ReportGlobalConstant.DECOMPRESS_FILEPATH);
-        File localFilePath1 = new File(localFilePath);
+        File localFilePath1 = new SafelyFile(localFilePath);
 		if(!localFilePath1.exists()){
 			localFilePath1.mkdirs();
 		}
 		try{
 			//解压zip格式文件 (File originFile, String targetDir)
-			boolean deczip =  FileUtil.decompressZip(new File(filePath), localFilePath);
+			boolean deczip =  FileUtil.decompressZip(new SafelyFile(filePath), localFilePath);
 			//获取解压后本地文件全路径
 			List<String> listFileName = getAllFile(localFilePath,false);
 			for(int i=0; i<listFileName.size(); i++){
@@ -220,14 +225,14 @@ public class ReportConfirmManage003Contoller extends BaseController {
 				if(flag){
 					//创建服务器上的上传路径
 					String path = FileNameUtil.createUploadFilePath("");
-					File filepath1 = new File(path);
+					File filepath1 = new SafelyFile(path);
 					if(!filepath1.exists()){
 						filepath1.mkdirs();
 					}
 					String localFileName = getLocalFileName(listFileName.get(i));
-					File file = new File(localFileName);
+					File file = new SafelyFile(localFileName);
 					String uploadFilePath = dealUploadFilePath(localFileName);
-					File localFile = new File(uploadFilePath);
+					File localFile = new SafelyFile(uploadFilePath);
 					//读取、写入文件
 					FileInputStream fis = null;
 					FileOutputStream fos = null;
@@ -251,7 +256,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 						}
 						catch (Exception e)
 						{
-							e.printStackTrace();
+							logger.error(e.getMessage(),e);
 						}
 
 					}
@@ -296,7 +301,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 			String msg = "批量上传披露文件错误";
 			checkList.add(new ValidMessage(msg));
 			value = new AjaxResult(msg, MessageType.错误消息);
@@ -346,7 +351,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
         while (entry.hasMoreElements()) {
             zipEntry = entry.nextElement();
             String fileName = zipEntry.getName();
-            File outputFile = new File(targetDir + fileName);
+            File outputFile = new SafelyFile(targetDir + fileName);
             if (zipEntry.isDirectory()) {
                 FileUtils.forceMkdir(outputFile);
                 continue;
@@ -368,7 +373,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				logger.error(e.getMessage(),e);
 			}
 			finally {
 				if(outputStream!=null)
@@ -438,7 +443,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	    if (!sPath.endsWith(File.separator)) {  
 	        sPath = sPath + File.separator;  
 	    }  
-	    File dirFile = new File(sPath);  
+	    File dirFile = new SafelyFile(sPath);  
 	    //如果dir对应的文件不存在，或者不是一个目录，则退出  
 	    if (!dirFile.exists() || !dirFile.isDirectory()) {  
 	        return false;  
@@ -474,7 +479,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	public static boolean deleteFile(String sPath) {  
 		boolean flag = false;
 	    flag = false;  
-	    File file = new File(sPath);  
+	    File file = new SafelyFile(sPath);  
 	    // 路径为文件且不为空则进行删除  
 	    if (file.isFile() && file.exists()) {  
 	        file.delete();  
@@ -560,7 +565,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 * 获取本地上传文件名称并返回数组
 	 */
 	public static String[] getFileDetail(String fileName){
-		File file = new File(fileName);
+		File file = new SafelyFile(fileName);
 		String b = file.getName();
 		// modifed by zhangyf 20190422 start
 		// int endIndex = b.lastIndexOf(".pdf");
@@ -574,7 +579,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 * 获取本地文件名称
 	 */
 	public static String getLocalFileName(String filePath){
-		File file = new File(filePath);
+		File file = new SafelyFile(filePath);
 		String localFileNmae = file.getName();
 		return localFileNmae;
 	}
@@ -610,7 +615,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     public static List<String> getAllFile(String directoryPath,boolean isAddDirectory) {
         List<String> list = new ArrayList<String>();
-        File baseFile = new File(directoryPath);
+        File baseFile = new SafelyFile(directoryPath);
         if (baseFile.isFile() || !baseFile.exists()) {
             return list;
         }
@@ -643,8 +648,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = PAGE_SAVE, method = RequestMethod.POST)
-	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo)
-			throws Exception {
+	public ExcelImpResultDto save(HttpServletRequest request, @RequestBody ExcelImpFileInfoDto impFileInfo){
 		return null;
 	}
 	
@@ -662,8 +666,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/downloadFile")
     @ResponseBody
-    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request)
-            throws Exception { 
+    public ResponseEntity<byte[]> downloadFile(HttpServletRequest request){
 //           return valNetValueConfirm003Service.downloadFile(request);
            return null;
     }
@@ -681,8 +684,7 @@ public class ReportConfirmManage003Contoller extends BaseController {
      */
     @RequestMapping(value = "/deleteFile")
     @ResponseBody
-    public void deleteFile(HttpServletRequest request)
-            throws Exception { 
+    public void deleteFile(HttpServletRequest request) {
 //           valNetValueConfirm003Service.deleteFile(request);
     }
 }

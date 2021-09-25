@@ -54,6 +54,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -2630,6 +2631,14 @@ public class IbuComponentCommonService extends BaseService {
         dto.setAvaNum(ArithmeticUtil.divide(ibuQuoteCrepDto.getShareAmt(), new BigDecimal(10000), 2));
         dto.setCbShareCtAmt(ibuQuoteCrepDto.getCbShareCtAmt());// 中债折算券面金额
         dto.setScShareCtAmt(ibuQuoteCrepDto.getScShareCtAmt());// 上清折算券面金额
+        //add by chenjiaxing 界面未展示中债上清面额 20210915 start
+        if(ibuQuoteCrepDto.getZzTotalAmt() != null){
+            dto.setZzTotalAmt(ibuQuoteCrepDto.getZzTotalAmt());
+        }
+        if(ibuQuoteCrepDto.getSqTotalAmt() != null){
+            dto.setSqTotalAmt(ibuQuoteCrepDto.getSqTotalAmt());
+        }
+        //add by chenjiaxing 界面未展示中债上清面额 20210915 end
         dto.setDealAmt(ibuQuoteCrepDto.getFpriceAmt());// 全价总额
         // dto.setShareCtAmt(ibuQuoteCrepDto.getShareCtAmt());// 折算券面金额
         if (!StringUtil.isNotEmpty(dto.getShareCtAmt())) {
@@ -3321,5 +3330,69 @@ public class IbuComponentCommonService extends BaseService {
             }
         }
         return ibuQuoteEntCrepPledges;
+    }
+
+    /**
+     *  上行返回报文 质押券需要关联上组合信息
+     * @param cfetsRepoDealQuotedPrice003Dtos
+     * @param ibuQuoteCrepPledgeDtos
+     * @return
+     */
+    public List<CfetsRepoDealQuotedPrice003Dto> 报文返回券关联组合拆分(List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003Dtos,List<IbuQuoteCrepPledgeDto> ibuQuoteCrepPledgeDtos){
+        List<CfetsRepoDealQuotedPrice003Dto>  result =  new ArrayList<>();
+        //返回报文  按质押券分组
+        //交易金额按组合分组
+        Map<String,Object> pledgeNumberTotalGroupByPtlMap = new HashMap<>();
+        //报文返回质押券
+        Map<String,Object> pledgNumberTotalByPtlMap = new HashMap<>();
+        Map<String, List<CfetsRepoDealQuotedPrice003Dto>> map = cfetsRepoDealQuotedPrice003Dtos.stream().collect(Collectors.groupingBy(CfetsRepoDealQuotedPrice003Dto::getFinprodId));
+        for (Map.Entry<String, List<CfetsRepoDealQuotedPrice003Dto>> entry : map.entrySet()) {
+            pledgeNumberTotalGroupByPtlMap.put(entry.getKey(),entry.getValue().stream().map(CfetsRepoDealQuotedPrice003Dto::getPledgeNumber).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        Map<String, List<IbuQuoteCrepPledgeDto>> map2 = ibuQuoteCrepPledgeDtos.stream().collect(Collectors.groupingBy((a -> a.getPledgeFinprodId())));
+        for (Map.Entry<String, List<IbuQuoteCrepPledgeDto>> entry : map2.entrySet()) {
+            pledgNumberTotalByPtlMap.put(entry.getKey(),entry.getValue().stream().map(IbuQuoteCrepPledgeDto::getPledgeNumber).reduce(BigDecimal.ZERO, BigDecimal::add));
+        }
+        Map<String, CfetsRepoDealQuotedPrice003Dto> maxpledgeNumberMap = cfetsRepoDealQuotedPrice003Dtos.parallelStream().collect(Collectors.groupingBy(a -> a.getFinprodId()
+                ,Collectors.collectingAndThen(Collectors.reducing((c1, c2) -> (c1.getPledgeNumber().compareTo(c2.getPledgeNumber())>=0) ? c1 : c2), Optional::get)));
+        for(CfetsRepoDealQuotedPrice003Dto item : cfetsRepoDealQuotedPrice003Dtos){
+            BigDecimal pledgeNumberTotal  = (BigDecimal) pledgeNumberTotalGroupByPtlMap.get(item.getFinprodId());
+            for(IbuQuoteCrepPledgeDto item2 : ibuQuoteCrepPledgeDtos){
+                if(StringUtil.equals(item.getFinprodId(),item2.getPledgeFinprodId())){
+                    String key = item.getFinprodId();
+                    CfetsRepoDealQuotedPrice003Dto resultDto = new CfetsRepoDealQuotedPrice003Dto();
+                    resultDto.setQuoteId(item.getQuoteId());
+                    resultDto.setEntrustId(item.getEntrustId());
+                    resultDto.setPortfolioId(item.getPortfolioId());
+                    resultDto.setFinprodId(item.getFinprodId());
+                    BigDecimal pledgeNumber  = ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getPledgeNumber(),item2.getPledgeNumber()),pledgeNumberTotal,2, RoundingMode.HALF_DOWN);
+                    //尾差处理
+                    if(pledgNumberTotalByPtlMap.containsKey(key)){
+                        BigDecimal pledgePrinTotal = new BigDecimal(pledgNumberTotalByPtlMap.get(key).toString());
+                        if(pledgePrinTotal.compareTo(BigDecimal.ZERO)>=0){
+                            pledgNumberTotalByPtlMap.put(key,ArithmeticUtil.subtract(pledgePrinTotal,pledgeNumber));
+                        }
+                    }
+                    resultDto.setPledgeNumber(pledgeNumber);
+                    resultDto.setPledgePrin(ArithmeticUtil.multiply(pledgeNumber,new BigDecimal("100")));// 质押数量
+                    resultDto.setPledgeRate(ArithmeticUtil.multiply(item2.getPledgeRatio(), BigDecimal.valueOf(100)));// 质押率*/
+                    resultDto.setNetPrice(item2.getUnitCprice());
+                    resultDto.setBondCode(item2.getFinprodMarketId());
+                    result.add(resultDto);
+                }
+            }
+        }
+        //尾差处理  尾差放在指令的交易金额最大的记录
+        result.stream().forEach(item -> {
+            if(maxpledgeNumberMap.containsKey(item.getFinprodId())){
+                CfetsRepoDealQuotedPrice003Dto keyValue = maxpledgeNumberMap.get(item.getFinprodId());
+                String key = item.getFinprodId();
+                if (pledgNumberTotalByPtlMap.containsKey(key)&&StringUtil.equals(item.getEntrustId(),keyValue.getEntrustId())) {
+                    item.setPledgeNumber(ArithmeticUtil.doAdd(item.getPledgeNumber(),new BigDecimal(pledgNumberTotalByPtlMap.get(key).toString())));
+                    item.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal(100)));
+                }
+            }
+        });
+        return result;
     }
 }

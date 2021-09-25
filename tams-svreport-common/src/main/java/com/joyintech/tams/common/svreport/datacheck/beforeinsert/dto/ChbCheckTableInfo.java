@@ -12,33 +12,35 @@ import com.joyintech.framework.util.StringUtil;
  * @since 2020-10-13
  */
 public enum ChbCheckTableInfo {
-	从业人员登记表SUB("CHB_EMPLOYEE_INFO_SUB", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}),
-    个人发行登记表SUB("CHB_PRD_ISSUE_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
-    募集总量登记SUB("CHB_PRD_RAISETOT_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
-    投资交易表登记SUB("CHB_INVEST_TRADE_SUB", true, null, new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}),
-    资产要素登记表SUB("CHB_ASSET_INFO_SUB", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
-    资产估值信息登记表SUB("CHB_AST_VAL_SUB", true, null, new String[] {"ASSET_CODE", "VAL_DATE"}),
-    个人产品申报登记SUB("CHB_PRD_DECLARE_SUB", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
-    产品存续登记表SUB("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}),
-    底层资产持仓信息登记表SUB("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}),
-    终止登记SUB("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}),
+	从业人员登记表SUB("CHB_EMPLOYEE_INFO_SUB", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}, ""),
+    个人发行登记表SUB("CHB_PRD_ISSUE_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
+    募集总量登记SUB("CHB_PRD_RAISETOT_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
+    投资交易表登记SUB("CHB_INVEST_TRADE_SUB", true, null, new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}, ""),
+    资产要素登记表SUB("CHB_ASSET_INFO_SUB", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, ""),
+    资产估值信息登记表SUB("CHB_AST_VAL_SUB", true, null, new String[] {"ASSET_CODE", "VAL_DATE"}, ""),
+    个人产品申报登记SUB("CHB_PRD_DECLARE_SUB", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, ""),
+    产品存续登记表SUB("CHB_PRD_DEAL_SUB", true, null, new String[] {"PROD_ID", "MDATE"}, ""),
+    底层资产持仓信息登记表SUB("CHB_BOT_AST_POS_SUB", true, null, new String[] {"POS_DATE", "ASSET_CODE", "PLAN_ASSET_ID"}, ""),
+    终止登记SUB("CHB_PRD_END_SUB", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
 
     /*文件接入*/
-    资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
-    个人发行登记表INFO("CHB_PRD_BASEINFO", true, "PROD_ID", new String[] {"PROD_ID"}),
-    个人产品申报登记INFO("CHB_PRD_DECLARE_INFO", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
-    底层资产持仓信息登记INFO("CHB_BOT_AST_POS", true, null, new String[] {"POS_DATE","ASSET_CODE","PLAN_ASSET_ID"}),
+    资产要素登记表INFO("CHB_ASSET_INFO", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, ""),
+    个人发行登记表INFO("CHB_PRD_BASEINFO", true, "PROD_ID", new String[] {"PROD_ID"}, ""),
+    产品存续登记表("CHB_PRD_DEAL", true, null, new String[] {"PROD_ID", "MDATE"}, ""),
+    个人产品申报登记INFO("CHB_PRD_DECLARE_INFO", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, ""),
+    底层资产持仓信息登记INFO("CHB_BOT_AST_POS", true, null, new String[] {"POS_DATE","ASSET_CODE","PLAN_ASSET_ID"}, ""),
+	从业人员登记表INFO("CHB_EMPLOYEE_INFO", true, "", new String[] {"EMPLOYEE_TYPE","IDENTIFY_NUMBER"}, ""),
 
 	/*杭州TMP*/
-    募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}),
-    个人发行登记TMP("CHB_PRD_ISSUE_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}),
-    底层资产持仓信息登记TMP("CHB_BOT_AST_POS_SUB_TMP", true, null, new String[] {"PLAN_ASSET_ID", "ASSET_CODE", "POS_DATE"}),
-    投资交易表登记TMP("CHB_INVEST_TRADE_SUB_TMP", true, "TRADE_CODE", new String[] {"PROD_ID", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}),
-    资产估值信息登记TMP("CHB_AST_VAL_SUB_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}),
-    产品存续登记TMP("CHB_PRD_DEAL_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE", "MDATE"}),
-    个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}),
-    终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}),
-    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"});
+    募集总量登记TMP("CHB_PRD_RAISETOT_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_RAISETOT_SUB"),
+    个人发行登记TMP("CHB_PRD_ISSUE_SUB_TMP", true, "PROD_ID", new String[] {"PROD_ID"}, "CHB_PRD_ISSUE_SUB"),
+    底层资产持仓信息登记TMP("CHB_BOT_AST_POS_SUB_TMP", true, null, new String[] {"PLAN_ASSET_ID", "ASSET_CODE", "POS_DATE"}, "CHB_BOT_AST_POS_SUB"),
+    投资交易表登记TMP("CHB_INVEST_TRADE_SUB_TMP", true, "TRADE_CODE", new String[] {"PROD_REGIST_CODE", "TRADE_CODE", "ASSET_CODE", "CUR_ASSET_TYPE"}, "CHB_INVEST_TRADE_SUB"),
+    资产估值信息登记TMP("CHB_AST_VAL_SUB_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE","VAL_DATE"}, "CHB_AST_VAL_SUB"),
+    产品存续登记TMP("CHB_PRD_DEAL_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE", "MDATE"}, "CHB_PRD_DEAL_SUB"),
+    个人产品申报登记TMP("CHB_PRD_DECLARE_SUB_TMP", true, "PROD_INS_ID", new String[] {"PROD_INS_ID"}, "CHB_PRD_DECLARE_SUB"),
+    终止登记TMP("CHB_PRD_END_SUB_TMP", true, "PROD_ID", new String[] {"PROD_REGIST_CODE"}, "CHB_PRD_END_SUB"),
+    资产要素登记TMP("CHB_ASSET_INFO_TMP", true, "ASSET_CODE", new String[] {"ASSET_CODE"}, "CHB_ASSET_INFO_SUB");
 
     /**
      * 根据tableName获取枚举对象
@@ -53,6 +55,18 @@ public enum ChbCheckTableInfo {
             }
         }
         return null;
+    }
+
+    /**
+     * 根据tableName获取枚举对象
+     * @param tableName 表名
+     * @return 校验对象
+     */
+    public static String genDataType(String tableName){
+    	/***【统一数据维护】监管区域客户组别导入时，报空指针异常 leiepeng 20210511***/
+        ChbCheckTableInfo tableInfo = genChbCheckTableInfo(tableName);
+        return null!=tableInfo? 
+        		(StringUtil.isNotEmpty(tableInfo.getDataType()) ? tableInfo.getDataType() : tableInfo.getTableName()):tableName;
     }
 
     /**
@@ -73,6 +87,11 @@ public enum ChbCheckTableInfo {
     private final String[] checkEuplicatedKeys;
 
     /**
+     * TMP使用，指向SUB校验
+     */
+    private String dataType;
+
+    /**
      * 私有化构造器
      * 
      * @param tableName 表名
@@ -80,11 +99,12 @@ public enum ChbCheckTableInfo {
      * @param bussinessKey 业务主键
      * @param checkEuplicatedKeys 校验数据重复的字段
      */
-    private ChbCheckTableInfo(String tableName, boolean needCodeCheck, String bussinessKey, String[] checkEuplicatedKeys) {
+    private ChbCheckTableInfo(String tableName, boolean needCodeCheck, String bussinessKey, String[] checkEuplicatedKeys, String dataType) {
         this.tableName = tableName;
         this.needCodeCheck = needCodeCheck;
         this.bussinessKey = bussinessKey;
         this.checkEuplicatedKeys = checkEuplicatedKeys;
+        this.dataType = dataType;
     }
 
     /**
@@ -121,5 +141,13 @@ public enum ChbCheckTableInfo {
      */
     public String[] getCheckEuplicatedKeys() {
         return checkEuplicatedKeys;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 }

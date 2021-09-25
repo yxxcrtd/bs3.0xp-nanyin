@@ -5,12 +5,14 @@
 
 package com.joyintech.tams.invest.period.trdplannetduration.service;
 
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
+import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
@@ -24,6 +26,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
+import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.component.business.trade.BaseTradeProductDealCommService;
 import com.joyintech.tams.invest.period.common.service.PeriodCommonService;
@@ -33,7 +36,11 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +48,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.period.common.service.PeriodCommonService.setWorkflowId;
 
@@ -54,6 +62,10 @@ import static com.joyintech.tams.invest.period.common.service.PeriodCommonServic
  */
 @Service
 public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNetDuration001Dto> implements BaseProcessService<TrdPlanNetDuration001Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(TrdPlanNetDuration001Service.class);
 
     /**
      * 业务编号
@@ -69,6 +81,13 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
 
     @Autowired
     private PeriodCommonService periodCommonService;
+    
+    /**
+     * 附件上传类
+     */
+    @Autowired(required = false)
+    private FileAttachmentProcess fileAttachmentProcess;
+
 
     /**
      * 划款指令共通
@@ -99,6 +118,12 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
      */
     @Override
     public void doInsert(TrdPlanNetDuration001Dto entity, OperationType type) {
+    	 if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
+                 && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {
+             // 将附件和当前业务对象绑定（更新附件的业务代码）
+             fileAttachmentProcess.updateBussinessNo(
+                     entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getTotleTradeId());
+         }
         if (BussinessConstant.SUBMIT.equals(entity.getOperateType())) {
             setWorkflowId(entity.getBaseTotalTradeInfoDto(), entity.getWorkflowId());
         }
@@ -112,7 +137,20 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
      */
     @Override
     public void doUpdate(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+        }else{
+            AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
+        }
         entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+        if (CollectionUtils.isNotEmpty(entity.getUploadFileList())
+                && com.joyintech.framework.util.StringUtil.isNotEmpty(entity.getTotleTradeId())) {
+            // 将附件和当前业务对象绑定（更新附件的业务代码）
+            fileAttachmentProcess.updateBussinessNo(
+                    entity.getUploadFileList().stream().map(UploadFile::getFileNo).collect(Collectors.toList()), entity.getTotleTradeId());
+        }
         setWorkflowId(entity.getBaseTotalTradeInfoDto(), entity.getWorkflowId());
         ProcessMark newEntity = null;
         try {
@@ -126,7 +164,7 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
             WorkflowContext.getProcessMarkService().insertIntoProcessMark(newEntity);
         }
         catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, false);
     }
@@ -164,6 +202,10 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
         // 插入Entity对应的业务流程DB中, 并删除流程表中的数据
         restTemplate.postForObject(ServiceApplication.PERIOD_SERVICE_NAME + "/TrdPlanNetDuration/doComplete", entity,
             String.class);
+
+        if(StringUtil.equals(CacheUtil.getSysParam("ISChongQing"),DictCodeList.是否_是.getValue())) {
+            return;
+        }
         // 除权登记生成总集复核数据
         if (!(StringUtil.equals(entity.getMode(), "revoke")||StringUtil.equals(entity.getMode(), "REVOKE")) && StringUtil.equals(entity.getType(), "02")) {
             // 设置工作流代码
@@ -186,13 +228,14 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
                 periodCommonService.autoDealQtyForSubmit(entity.getFinAssetIntInfoList(), entity.getRegistShare(),
                     entity.getQty());
                 entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
+                entity.setCreateUser(entity.getFinAssetIntInfoList().get(0).getCreateUser());
                 try {
                     // 启动流程
                     WorkFlowUtil.startProcess(param,"","", entity.getCreateUser(),OperationType.NEW,false,entity);
                     // 设置为提交 插入流程表
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
             }
         }
@@ -410,11 +453,23 @@ public class TrdPlanNetDuration001Service extends CommonExportService<TrdPlanNet
 
     @Override
     public void doBack(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 
     @Override
     public void doRevoke(TrdPlanNetDuration001Dto entity) {
+        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+            for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
+                AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
+            }
+            return;
+        }
         AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), entity.getTotleTradeId());
     }
 }

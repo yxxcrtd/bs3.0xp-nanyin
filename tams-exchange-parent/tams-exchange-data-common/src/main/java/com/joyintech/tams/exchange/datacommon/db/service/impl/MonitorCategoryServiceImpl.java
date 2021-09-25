@@ -1,9 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
-import com.google.common.base.Strings;
 import com.joyintech.tams.exchange.common.db.domain.MonitorCategory;
-import com.joyintech.tams.exchange.common.db.domain.Order;
-import com.joyintech.tams.exchange.datacommon.db.mapper.MonitorCategoryMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.MonitorCategoryMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.MonitorCategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

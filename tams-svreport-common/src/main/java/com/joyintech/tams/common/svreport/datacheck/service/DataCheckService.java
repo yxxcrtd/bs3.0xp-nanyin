@@ -46,7 +46,7 @@ import com.joyintech.tams.common.svreport.datacheck.dto.CheckRule;
  */
 @Service
 public class DataCheckService {
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private static Logger logger = LoggerFactory.getLogger(DataCheckService.class);
     
     @Autowired
     private CheckRuleMapper checkRuleMapper;
@@ -103,10 +103,10 @@ public class DataCheckService {
                         }
                     }
                     catch (SecurityException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     mapClassMethod.put(r.getCheckclass(),mapMethod);
                 }
@@ -186,10 +186,10 @@ public class DataCheckService {
                     }
                 }
                 catch (SecurityException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(),e);
                 }
                 mapClassMethod.put(r.getCheckclass(),mapMethod);
             }
@@ -264,10 +264,10 @@ public class DataCheckService {
                         }
                     }
                     catch (SecurityException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(),e);
                     }
                     mapClassMethod.put(r.getCheckclass(),mapMethod);
                 }
@@ -327,13 +327,13 @@ public class DataCheckService {
             ret = (boolean)method.invoke(null,data, condition);
         }
         catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return ret;
 
@@ -355,13 +355,13 @@ public class DataCheckService {
             ret = (boolean)method.invoke(null,data, rule);
         }
         catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         return ret;
 
@@ -448,10 +448,10 @@ public class DataCheckService {
             }
         }
         catch (SecurityException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         
         Map<String,List<CheckCondition>> mapConditions = new HashMap<String,List<CheckCondition>>();
@@ -531,7 +531,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -630,7 +630,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;
@@ -652,7 +652,7 @@ public class DataCheckService {
      * @see
      * @since 1.0
      */
-    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype,List<String>columns) {
+    public List<CheckRule> queryCheckRulesByDataTypeAndColumns(String datatype) {
         
         String baseCheckLib = "com.joyintech.tams.common.svreport.datacheck.service.BaseCheckLib";
         Map<String,Method> mapMethod = new HashMap<String,Method>();
@@ -663,10 +663,10 @@ public class DataCheckService {
             }
         }
         catch (SecurityException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         
         Map<String,List<CheckCondition>> mapConditions = new HashMap<String,List<CheckCondition>>();
@@ -746,7 +746,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"检查条件中方法的目标格式错误!["+r.getCheckconditionid()+"]");
                     continue;
@@ -847,7 +847,7 @@ public class DataCheckService {
             if ( "isCustomizedString".equals(r.getCheckmethod()) ) {
                 String format = r.getObjvalue();
                 try {
-                    Pattern.compile(format);
+                    Pattern.compile(Pattern.quote(format));
                 } catch (Exception e) {
                     logger.error("检查规则错误："+r.getCheckmethod()+"方法的目标格式错误!["+r.getCheckruleid()+"]");
                     continue;

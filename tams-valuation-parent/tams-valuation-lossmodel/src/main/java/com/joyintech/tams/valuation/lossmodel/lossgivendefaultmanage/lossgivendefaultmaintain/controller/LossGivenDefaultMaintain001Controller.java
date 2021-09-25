@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.framework.util.*;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.dto.ModLgdConfigDto;
 import com.joyintech.tams.valuation.lossmodel.lossgivendefaultmanage.lossgivendefaultmaintain.service.LossGivenDefaultMaintain001Service;
@@ -36,12 +37,6 @@ import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
-import com.joyintech.framework.util.DateUtil;
-import com.joyintech.framework.util.ExportUtil;
-import com.joyintech.framework.util.FileNameUtil;
-import com.joyintech.framework.util.JsonUtils;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
 import com.joyintech.tams.constant.DictCode;
@@ -70,10 +65,15 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
-        // 画面参数设置
-//    	super.setSelectOptionToModel(model, DictCode.资产类型);
         super.setSelectOptionToModel(model, DictCode.证券品种);
         model.addAttribute("entityName", StringUtil.defaultString(this.getParam("entityName"), "fileCommonDto"));
+        ModLgdConfigDto entity = new  ModLgdConfigDto();
+        //初始化值数据
+        entity.setAssetType(DictCodeListExt1.证券品种_债券.getValue());
+        model.addAttribute("entity",entity);
+        // 减值方案系统参数lossType 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        model.addAttribute("lossType",lossType);
         return super.init(model);
     }
     @ResponseBody
@@ -127,9 +127,20 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
          } else {
              listdto = JsonUtils.json2List(datas, ModLgdConfigDto.class);
          }
-         File outFile = lossGivenDefaultMaintain001Service.makeFile(
-                 "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf.xml",
-                 listdto);
+         //根据系统参数显示导出文件列名
+         //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
+         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        File outFile = null;
+         if(StringUtil.equals(DictCodeListExt3.减值方案类型_毕马威.getValue(),lossType)){
+             outFile = lossGivenDefaultMaintain001Service.makeFile(
+                     "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf_bmw.xml",
+                     listdto);
+         }else{
+             outFile = lossGivenDefaultMaintain001Service.makeFile(
+                     "/com/joyintech/tams/valuation/lossmodel/lossgivendefaultmanage/lossgivendefaultmaintain/conf/export_conf_ph.xml",
+                     listdto);
+         }
+
          return ExportUtil.export(
                  this.getMessage(DateUtil.format(new Date())+"_LGD违约损失率维护")
                          + SystemGlobalConstant.POINT + FileNameUtil.getFileExtName(outFile),
@@ -148,9 +159,10 @@ public class LossGivenDefaultMaintain001Controller extends BaseController{
     @RequestMapping("getSecTypeOption")
     public List<SelectOptionDto> getSecTypeOption() throws Exception {
         Map<String, Object> param = RequestUtil.getPageParam();
-        //type 01 毕马威  02 普华永道
-        //当为01时，资产类型显示回购09 和存款07
-//        param.put("type","01");
+        //当为02时，资产类型不显示回购09 和存款07
+        //根据系统参数带入需要查询的数据  带入系统参数 01毕马威 02普华
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        param.put("lossType",lossType);
         List<SelectOptionDto> linkSelectOption = lossGivenDefaultMaintain001Service.getLinkSelectOption(param);
         return linkSelectOption;
     }

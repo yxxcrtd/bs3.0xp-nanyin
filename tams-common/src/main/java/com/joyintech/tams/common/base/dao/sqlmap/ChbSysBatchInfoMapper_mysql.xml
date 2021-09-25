@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper_mysql" >
+    <resultMap id="BaseResultMap" type="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        <id column="C_S_B_I_BATCH_ID" property="batchId" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_BEAN_NAME" property="beanName" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_JOB_ID" property="jobId" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_BATCH_START_DATE" property="batchStartDate" jdbcType="DATE" />
+        <result column="C_S_B_I_BATCH_END_DATE" property="batchEndDate" jdbcType="DATE" />
+        <result column="C_S_B_I_LOG_FILE_CODE" property="logFileCode" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_TASK_STATUS" property="taskStatus" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OPERATOR" property="operator" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_START_MODE" property="startMode" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM1" property="otherParam1" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM2" property="otherParam2" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM3" property="otherParam3" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM4" property="otherParam4" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM5" property="otherParam5" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM6" property="otherParam6" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM7" property="otherParam7" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM8" property="otherParam8" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM9" property="otherParam9" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_OTHER_PARAM10" property="otherParam10" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_STATUS" property="status" jdbcType="CHAR" />
+        <result column="C_S_B_I_CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="C_S_B_I_UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="C_S_B_I_UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" extends="BaseResultMap" >
+        <result column="PRD_ID_LIST" property="prdIdList" jdbcType="CLOB" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        BATCH_ID as C_S_B_I_BATCH_ID, BEAN_NAME as C_S_B_I_BEAN_NAME, JOB_ID as C_S_B_I_JOB_ID,
+        BATCH_START_DATE as C_S_B_I_BATCH_START_DATE, BATCH_END_DATE as C_S_B_I_BATCH_END_DATE,
+        LOG_FILE_CODE as C_S_B_I_LOG_FILE_CODE, TASK_STATUS as C_S_B_I_TASK_STATUS, OPERATOR as C_S_B_I_OPERATOR,
+        START_MODE as C_S_B_I_START_MODE, OTHER_PARAM1 as C_S_B_I_OTHER_PARAM1, OTHER_PARAM2 as C_S_B_I_OTHER_PARAM2,
+        OTHER_PARAM3 as C_S_B_I_OTHER_PARAM3, OTHER_PARAM4 as C_S_B_I_OTHER_PARAM4, OTHER_PARAM5 as C_S_B_I_OTHER_PARAM5,
+        OTHER_PARAM6 as C_S_B_I_OTHER_PARAM6, OTHER_PARAM7 as C_S_B_I_OTHER_PARAM7, OTHER_PARAM8 as C_S_B_I_OTHER_PARAM8,
+        OTHER_PARAM9 as C_S_B_I_OTHER_PARAM9, OTHER_PARAM10 as C_S_B_I_OTHER_PARAM10, STATUS as C_S_B_I_STATUS,
+        CREATE_USER as C_S_B_I_CREATE_USER, CREATE_TIME as C_S_B_I_CREATE_TIME, UPDATE_USER as C_S_B_I_UPDATE_USER,
+        UPDATE_TIME as C_S_B_I_UPDATE_TIME
+    </sql>
+    <sql id="Blob_Column_List" >
+        PRD_ID_LIST
+    </sql>
+    <sql id="Sql_All_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Blob_Column_List" />
+        from CHB_SYS_BATCH_INFO
+    </sql>
+    <sql id="Sql_All_Effective_Data" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Blob_Column_List" />
+        from CHB_SYS_BATCH_INFO
+        where STATUS = 'E'
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+        select
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Base_Column_List" />
+        ,
+        <include refid="com.joyintech.tams.common.base.dao.ChbSysBatchInfoMapper.Blob_Column_List" />
+        from CHB_SYS_BATCH_INFO
+        where BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from CHB_SYS_BATCH_INFO
+        where BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </delete>
+    <delete id="deleteByWorkflowId" parameterType="java.lang.String" >
+        delete from CHB_SYS_BATCH_INFO
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        insert into CHB_SYS_BATCH_INFO (BATCH_ID, BEAN_NAME, JOB_ID,
+            BATCH_START_DATE, BATCH_END_DATE, LOG_FILE_CODE,
+            TASK_STATUS, OPERATOR, START_MODE,
+            OTHER_PARAM1, OTHER_PARAM2, OTHER_PARAM3,
+            OTHER_PARAM4, OTHER_PARAM5, OTHER_PARAM6,
+            OTHER_PARAM7, OTHER_PARAM8, OTHER_PARAM9,
+            OTHER_PARAM10, STATUS, CREATE_USER,
+            CREATE_TIME, UPDATE_USER, UPDATE_TIME,
+            PRD_ID_LIST)
+        values (#{batchId,jdbcType=VARCHAR}, #{beanName,jdbcType=VARCHAR}, #{jobId,jdbcType=VARCHAR},
+            #{batchStartDate,jdbcType=DATE}, #{batchEndDate,jdbcType=DATE}, #{logFileCode,jdbcType=VARCHAR},
+            #{taskStatus,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, #{startMode,jdbcType=VARCHAR},
+            #{otherParam1,jdbcType=VARCHAR}, #{otherParam2,jdbcType=VARCHAR}, #{otherParam3,jdbcType=VARCHAR},
+            #{otherParam4,jdbcType=VARCHAR}, #{otherParam5,jdbcType=VARCHAR}, #{otherParam6,jdbcType=VARCHAR},
+            #{otherParam7,jdbcType=VARCHAR}, #{otherParam8,jdbcType=VARCHAR}, #{otherParam9,jdbcType=VARCHAR},
+            #{otherParam10,jdbcType=VARCHAR}, #{status,jdbcType=CHAR}, #{createUser,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{prdIdList,jdbcType=CLOB})
+    </insert>
+    <insert id="insertSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        insert into CHB_SYS_BATCH_INFO
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="batchId != null" >
+                BATCH_ID,
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME,
+            </if>
+            <if test="jobId != null" >
+                JOB_ID,
+            </if>
+            <if test="batchStartDate != null" >
+                BATCH_START_DATE,
+            </if>
+            <if test="batchEndDate != null" >
+                BATCH_END_DATE,
+            </if>
+            <if test="logFileCode != null" >
+                LOG_FILE_CODE,
+            </if>
+            <if test="taskStatus != null" >
+                TASK_STATUS,
+            </if>
+            <if test="operator != null" >
+                OPERATOR,
+            </if>
+            <if test="startMode != null" >
+                START_MODE,
+            </if>
+            <if test="otherParam1 != null" >
+                OTHER_PARAM1,
+            </if>
+            <if test="otherParam2 != null" >
+                OTHER_PARAM2,
+            </if>
+            <if test="otherParam3 != null" >
+                OTHER_PARAM3,
+            </if>
+            <if test="otherParam4 != null" >
+                OTHER_PARAM4,
+            </if>
+            <if test="otherParam5 != null" >
+                OTHER_PARAM5,
+            </if>
+            <if test="otherParam6 != null" >
+                OTHER_PARAM6,
+            </if>
+            <if test="otherParam7 != null" >
+                OTHER_PARAM7,
+            </if>
+            <if test="otherParam8 != null" >
+                OTHER_PARAM8,
+            </if>
+            <if test="otherParam9 != null" >
+                OTHER_PARAM9,
+            </if>
+            <if test="otherParam10 != null" >
+                OTHER_PARAM10,
+            </if>
+            <if test="status != null" >
+                STATUS,
+            </if>
+            <if test="createUser != null" >
+                CREATE_USER,
+            </if>
+            <if test="createTime != null" >
+                CREATE_TIME,
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER,
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME,
+            </if>
+            <if test="prdIdList != null" >
+                PRD_ID_LIST,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="batchId != null" >
+                #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="beanName != null" >
+                #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="jobId != null" >
+                #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchStartDate != null" >
+                #{batchStartDate,jdbcType=DATE},
+            </if>
+            <if test="batchEndDate != null" >
+                #{batchEndDate,jdbcType=DATE},
+            </if>
+            <if test="logFileCode != null" >
+                #{logFileCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null" >
+                #{taskStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null" >
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="startMode != null" >
+                #{startMode,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam1 != null" >
+                #{otherParam1,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam2 != null" >
+                #{otherParam2,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam3 != null" >
+                #{otherParam3,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam4 != null" >
+                #{otherParam4,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam5 != null" >
+                #{otherParam5,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam6 != null" >
+                #{otherParam6,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam7 != null" >
+                #{otherParam7,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam8 != null" >
+                #{otherParam8,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam9 != null" >
+                #{otherParam9,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam10 != null" >
+                #{otherParam10,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=CHAR},
+            </if>
+            <if test="createUser != null" >
+                #{createUser,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateUser != null" >
+                #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="prdIdList != null" >
+                #{prdIdList,jdbcType=CLOB},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertBasicByBasicInfo" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        insert into CHB_SYS_BATCH_INFO(BATCH_ID, BEAN_NAME, JOB_ID, BATCH_START_DATE, BATCH_END_DATE,
+        LOG_FILE_CODE, TASK_STATUS, OPERATOR, START_MODE, OTHER_PARAM1, OTHER_PARAM2, OTHER_PARAM3,
+        OTHER_PARAM4, OTHER_PARAM5, OTHER_PARAM6, OTHER_PARAM7, OTHER_PARAM8, OTHER_PARAM9,
+        OTHER_PARAM10, STATUS, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME, PRD_ID_LIST
+        )
+        select BATCH_ID, BEAN_NAME, JOB_ID, BATCH_START_DATE, BATCH_END_DATE,
+            LOG_FILE_CODE, TASK_STATUS, OPERATOR, START_MODE, OTHER_PARAM1, OTHER_PARAM2, OTHER_PARAM3,
+            OTHER_PARAM4, OTHER_PARAM5, OTHER_PARAM6, OTHER_PARAM7, OTHER_PARAM8, OTHER_PARAM9,
+            OTHER_PARAM10, #{status,jdbcType=VARCHAR} as STATUS, CREATE_USER, CREATE_TIME, #{updateUser,jdbcType=VARCHAR} as UPDATE_USER, #{updateTime,jdbcType=TIMESTAMP} as UPDATE_TIME, PRD_ID_LIST
+
+             from CHB_SYS_BATCH_INFO
+             where STATUS = 'E' and BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        update CHB_SYS_BATCH_INFO
+        <set >
+            <if test="beanName != null" >
+                BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="jobId != null" >
+                JOB_ID = #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchStartDate != null" >
+                BATCH_START_DATE = #{batchStartDate,jdbcType=DATE},
+            </if>
+            <if test="batchEndDate != null" >
+                BATCH_END_DATE = #{batchEndDate,jdbcType=DATE},
+            </if>
+            <if test="logFileCode != null" >
+                LOG_FILE_CODE = #{logFileCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null" >
+                TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null" >
+                OPERATOR = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="startMode != null" >
+                START_MODE = #{startMode,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam1 != null" >
+                OTHER_PARAM1 = #{otherParam1,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam2 != null" >
+                OTHER_PARAM2 = #{otherParam2,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam3 != null" >
+                OTHER_PARAM3 = #{otherParam3,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam4 != null" >
+                OTHER_PARAM4 = #{otherParam4,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam5 != null" >
+                OTHER_PARAM5 = #{otherParam5,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam6 != null" >
+                OTHER_PARAM6 = #{otherParam6,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam7 != null" >
+                OTHER_PARAM7 = #{otherParam7,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam8 != null" >
+                OTHER_PARAM8 = #{otherParam8,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam9 != null" >
+                OTHER_PARAM9 = #{otherParam9,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam10 != null" >
+                OTHER_PARAM10 = #{otherParam10,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="prdIdList != null" >
+                PRD_ID_LIST = #{prdIdList,jdbcType=CLOB},
+            </if>
+        </set>
+        where BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowIdSelective" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        update CHB_SYS_BATCH_INFO
+        <set >
+            <if test="batchId != null" >
+                BATCH_ID = #{batchId,jdbcType=VARCHAR},
+            </if>
+            <if test="beanName != null" >
+                BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            </if>
+            <if test="jobId != null" >
+                JOB_ID = #{jobId,jdbcType=VARCHAR},
+            </if>
+            <if test="batchStartDate != null" >
+                BATCH_START_DATE = #{batchStartDate,jdbcType=DATE},
+            </if>
+            <if test="batchEndDate != null" >
+                BATCH_END_DATE = #{batchEndDate,jdbcType=DATE},
+            </if>
+            <if test="logFileCode != null" >
+                LOG_FILE_CODE = #{logFileCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskStatus != null" >
+                TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="operator != null" >
+                OPERATOR = #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="startMode != null" >
+                START_MODE = #{startMode,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam1 != null" >
+                OTHER_PARAM1 = #{otherParam1,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam2 != null" >
+                OTHER_PARAM2 = #{otherParam2,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam3 != null" >
+                OTHER_PARAM3 = #{otherParam3,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam4 != null" >
+                OTHER_PARAM4 = #{otherParam4,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam5 != null" >
+                OTHER_PARAM5 = #{otherParam5,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam6 != null" >
+                OTHER_PARAM6 = #{otherParam6,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam7 != null" >
+                OTHER_PARAM7 = #{otherParam7,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam8 != null" >
+                OTHER_PARAM8 = #{otherParam8,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam9 != null" >
+                OTHER_PARAM9 = #{otherParam9,jdbcType=VARCHAR},
+            </if>
+            <if test="otherParam10 != null" >
+                OTHER_PARAM10 = #{otherParam10,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null" >
+                STATUS = #{status,jdbcType=CHAR},
+            </if>
+            <if test="updateUser != null" >
+                UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null" >
+                UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="prdIdList != null" >
+                PRD_ID_LIST = #{prdIdList,jdbcType=CLOB},
+            </if>
+        </set>
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByWorkflowId" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        update CHB_SYS_BATCH_INFO
+        set
+        BATCH_ID = #{batchId,jdbcType=VARCHAR},
+        BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+        JOB_ID = #{jobId,jdbcType=VARCHAR},
+        BATCH_START_DATE = #{batchStartDate,jdbcType=DATE},
+        BATCH_END_DATE = #{batchEndDate,jdbcType=DATE},
+        LOG_FILE_CODE = #{logFileCode,jdbcType=VARCHAR},
+        TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+        OPERATOR = #{operator,jdbcType=VARCHAR},
+        START_MODE = #{startMode,jdbcType=VARCHAR},
+        OTHER_PARAM1 = #{otherParam1,jdbcType=VARCHAR},
+        OTHER_PARAM2 = #{otherParam2,jdbcType=VARCHAR},
+        OTHER_PARAM3 = #{otherParam3,jdbcType=VARCHAR},
+        OTHER_PARAM4 = #{otherParam4,jdbcType=VARCHAR},
+        OTHER_PARAM5 = #{otherParam5,jdbcType=VARCHAR},
+        OTHER_PARAM6 = #{otherParam6,jdbcType=VARCHAR},
+        OTHER_PARAM7 = #{otherParam7,jdbcType=VARCHAR},
+        OTHER_PARAM8 = #{otherParam8,jdbcType=VARCHAR},
+        OTHER_PARAM9 = #{otherParam9,jdbcType=VARCHAR},
+        OTHER_PARAM10 = #{otherParam10,jdbcType=VARCHAR},
+        STATUS = #{status,jdbcType=CHAR},
+        UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+        PRD_ID_LIST = #{prdIdList,jdbcType=CLOB}
+        where WORKFLOW_ID = #{workflowId, jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        update CHB_SYS_BATCH_INFO
+        set BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            JOB_ID = #{jobId,jdbcType=VARCHAR},
+            BATCH_START_DATE = #{batchStartDate,jdbcType=DATE},
+            BATCH_END_DATE = #{batchEndDate,jdbcType=DATE},
+            LOG_FILE_CODE = #{logFileCode,jdbcType=VARCHAR},
+            TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            OPERATOR = #{operator,jdbcType=VARCHAR},
+            START_MODE = #{startMode,jdbcType=VARCHAR},
+            OTHER_PARAM1 = #{otherParam1,jdbcType=VARCHAR},
+            OTHER_PARAM2 = #{otherParam2,jdbcType=VARCHAR},
+            OTHER_PARAM3 = #{otherParam3,jdbcType=VARCHAR},
+            OTHER_PARAM4 = #{otherParam4,jdbcType=VARCHAR},
+            OTHER_PARAM5 = #{otherParam5,jdbcType=VARCHAR},
+            OTHER_PARAM6 = #{otherParam6,jdbcType=VARCHAR},
+            OTHER_PARAM7 = #{otherParam7,jdbcType=VARCHAR},
+            OTHER_PARAM8 = #{otherParam8,jdbcType=VARCHAR},
+            OTHER_PARAM9 = #{otherParam9,jdbcType=VARCHAR},
+            OTHER_PARAM10 = #{otherParam10,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=CHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+            PRD_ID_LIST = #{prdIdList,jdbcType=CLOB}
+        where BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.joyintech.tams.common.base.entity.ChbSysBatchInfo" >
+        update CHB_SYS_BATCH_INFO
+        set BEAN_NAME = #{beanName,jdbcType=VARCHAR},
+            JOB_ID = #{jobId,jdbcType=VARCHAR},
+            BATCH_START_DATE = #{batchStartDate,jdbcType=DATE},
+            BATCH_END_DATE = #{batchEndDate,jdbcType=DATE},
+            LOG_FILE_CODE = #{logFileCode,jdbcType=VARCHAR},
+            TASK_STATUS = #{taskStatus,jdbcType=VARCHAR},
+            OPERATOR = #{operator,jdbcType=VARCHAR},
+            START_MODE = #{startMode,jdbcType=VARCHAR},
+            OTHER_PARAM1 = #{otherParam1,jdbcType=VARCHAR},
+            OTHER_PARAM2 = #{otherParam2,jdbcType=VARCHAR},
+            OTHER_PARAM3 = #{otherParam3,jdbcType=VARCHAR},
+            OTHER_PARAM4 = #{otherParam4,jdbcType=VARCHAR},
+            OTHER_PARAM5 = #{otherParam5,jdbcType=VARCHAR},
+            OTHER_PARAM6 = #{otherParam6,jdbcType=VARCHAR},
+            OTHER_PARAM7 = #{otherParam7,jdbcType=VARCHAR},
+            OTHER_PARAM8 = #{otherParam8,jdbcType=VARCHAR},
+            OTHER_PARAM9 = #{otherParam9,jdbcType=VARCHAR},
+            OTHER_PARAM10 = #{otherParam10,jdbcType=VARCHAR},
+            STATUS = #{status,jdbcType=CHAR},
+            UPDATE_USER = #{updateUser,jdbcType=VARCHAR},
+            UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+        where BATCH_ID = #{batchId,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -84,9 +84,11 @@ public class DataSourceMsg extends MsgExecuteService{
 		}else{
 			BeanUtils.copyProperties(dataSource, olddataSource, "id");
 			adapterDao.updateEntityBean(olddataSource);
-			msgcontainer.setObjID(olddataSource.getId());
 			msgcontainer.setEntityObj(olddataSource);
-			msgcontainer.setErrorMsg("id:"+olddataSource.getId()+" 修改成功");
+			if (olddataSource != null){
+				msgcontainer.setObjID(olddataSource.getId());
+				msgcontainer.setErrorMsg("id:"+olddataSource.getId()+" 修改成功");
+			}
 		}
 	}
 

@@ -13,11 +13,11 @@
                 if (result){
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustAmt').val(result.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val(result.finprodId);
-                    $('#CfetsBondDealQuotedPriceSingle002_portfolioName').attr('disabled', true).textSelect('setValue',result.portfolioId);
+                    $('#CfetsBondDealQuotedPriceSingle002_portfolioId').attr('disabled', true).textSelect('setValue',result.portfolioId);
                     $('#CfetsBondDealQuotedPriceSingle002_mySide').attr('disabled', true).textSelect('setValue',result.mySide);
                     $('#CfetsBondDealQuotedPriceSingle002_mySideTrader').textSelect('setValue',result.mySideTrader);
                     $('#CfetsBondDealQuotedPriceSingle002_ps').val(result.ps).trigger('change').attr('disabled', true);
-                    $('#CfetsBondDealQuotedPriceSingle002_finprodName').attr('disabled', true).textSelect('setValue',result.finprodMarketId);
+                    $('#CfetsBondDealQuotedPriceSingle002_finprodId').attr('disabled', true).textSelect('setValue',result.finprodMarketId);
                     $('#CfetsBondDealQuotedPriceSingle002_settleCcy').val(result.settleCcy == null ? CNY : result.settleCcy);
                     $('#CfetsBondDealQuotedPriceSingle002_settleSpreed').val(result.settleSpreed).trigger('change').attr('disabled', true);
                     $('#CfetsBondDealQuotedPriceSingle002_settleDate').val(result.settleDateStr).attr('disabled', true);
@@ -25,6 +25,7 @@
                     $('#CfetsBondDealQuotedPriceSingle002_effDate').val(result.effDate);
                     $('#CfetsBondDealQuotedPriceSingle002_remark').val(result.remark);
                     $('#CfetsBondDealQuotedPriceSingle002_secManageAcctId').textSelect('setValue',result.secManageAcctId);
+                    $("#CfetsBondDealQuotedPriceSingle002_hidden_calculateField").val(result.calculateField);
                 }
             });
         }
@@ -63,8 +64,8 @@
         var portfolioId = $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val();
         var vdate = $('#CfetsBondDealQuotedPriceSingle002_tradeDate').val();
         var ccy= $("#CfetsBondDealQuotedPriceSingle002_settleCcy").val();
-        if(window.EtrInitCash){
-            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        if(window.CfetsRepoDealQuotedPrInitCash){
+            window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
         }
     };
 
@@ -270,6 +271,14 @@
     };
     
     $(function () {
+        var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel').val();
+        if (quotaPageModel && quotaPageModel == 'new'){
+            $('#CfetsBondDealQuotedPriceSingle002_btn_done').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_refuse').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_save').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_submit').toggle(false);
+            $('#CfetsBondDealQuotedPriceSingle002_btn_cancel').toggle(false);
+        }
         // 初始化页面
         var entrustId = $('#CfetsBondDealQuotedPriceSingle002_hidden_entrustId').val();
         if (entrustId && entrustId != ''){
@@ -390,6 +399,23 @@
     }
 
     var reset = function () {
+        $("#CfetsBondDealQuotedPriceSingle002_entrustId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_portfolioId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_finprodId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_ps").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleType").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleSpreed").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_tradeDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleDate").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_settleMethod").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_secManageAcctId").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_avaNum").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_mySide").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_mySideTrader").val("").trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle002_remark").val("").trigger("change");
+        table.clear();
+        layui.form.render(); // reload layui
+        pageModel = PAGE_MODEL_NEW;
     };
 
     var getriskdata = function () {
@@ -429,6 +455,9 @@
         if(!object.finprodId){
             object.finprodId = $('#CfetsBondDealQuotedPriceSingle002_hidden_finprodId').val();
         }
+        if(!object.calculateField) {
+            object.calculateField = $("#CfetsBondDealQuotedPriceSingle002_hidden_calculateField").val();
+        }
         object.operatorType = operateType;
         var orgList = table.getAllRows();
         if(orgList != null && orgList.length>0){
@@ -462,5 +491,27 @@
         saveRiskResultdata: saveRiskResultdata,
         saveCluflag: saveCluflag
     }
+
+    window.componentLoadCallback = function(isDone, pagePath, params) {
+        if (isDone) {
+            var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
+            var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
+            var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
+            if(window.CfetsRepoDealQuotedPrInitCash){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+        }
+    };
+
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
+            var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
+            var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
+            if(window.CfetsRepoDealQuotedPrInitCash){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+        }
+    },2000);
 
 }());

@@ -26,6 +26,7 @@ import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
+import com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade001Service;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTrade001Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeExportMail001Dto;
 import com.joyintech.tams.invest.trade.trdrepotrade.dto.TrdRepoTradeExportPdfDto;
@@ -153,6 +154,7 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
     public ResponseEntity<byte[]> exportMailModel(Map<String, Object> selectParam) throws IOException {
     	Workbook wb =null;
 	    InputStream stream = null;
+		FileOutputStream out = null;
         try {
 			selectParam.put("branchNo", Long.valueOf(CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE)));
 			List<TrdRepoTradeExportMail001Dto> finDealPledgeList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
@@ -231,7 +233,8 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
 			    if (!file.getParentFile().exists()) {
 			        file.getParentFile().mkdirs();
 			    }
-			    wb.write(new FileOutputStream(file));
+				out = new FileOutputStream(file);
+			    wb.write(out);
 			    String exportFileName =  "正回购交易查询" 
 			        + GlobalConstant.OPEN_PARENTHESIS + DateUtil.getCurrentDate()
 			        + GlobalConstant.CLOSE_PARENTHESIS + GlobalConstant.POINT
@@ -245,6 +248,9 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
             if (wb != null) {
             	wb.close();
             }
+			if (out != null) {
+				out.close();
+			}
 		}
         return null;
     }
@@ -316,12 +322,20 @@ public class TrdRepoTrade001Service extends CommonExportService<TrdRepoTrade001D
 	 * @return
 	 */
 	public String getConfigFile(String pageId){
-		String basePath = this.getClass().getClassLoader().getResource("com/joyintech/tams/invest/trade/trdrepotrade/conf/").toString();
+		String configFilePath = "";
+		String basePath = "com/joyintech/tams/invest/trade/trdrepotrade/conf/";
+		String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+		String tempConfigFilePath="";
 		if(pageId.equalsIgnoreCase("TrdRepoTradeEx001")){
-			//场内
-			return basePath + "export_conf_pdf002.xml";
+			configFilePath = basePath + "export_conf_pdf002.xml";
+			tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf002.xml";
 		}else{
-			return basePath + "export_conf_pdf001.xml";
+			configFilePath =  basePath + "export_conf_pdf001.xml";
+			tempConfigFilePath = tempPath + "/" + pageId + '_' + "export_conf_pdf001.xml";
 		}
+		InputStream in = this.getClass().getClassLoader().getResourceAsStream(configFilePath);
+		// 在临时目录下生成配置文件
+		commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+		return tempConfigFilePath;
 	}
 }

@@ -13,6 +13,7 @@ package com.joyintech.service.risk.penetrationmanagement.rskvalassetcode.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.select.SelectOptionDto;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -44,6 +45,22 @@ public interface RskValAssetCodeMapper {
     void deleteById(@Param("id") String id);
     
     int getCountByPtl(@Param("assetSubMapId") String assetSubMapId);
-    
-    
+
+    List<SelectOptionDto> selecctRskValtblSubjectSumCodeList(Map<String, Object> pageParam);
+
+    /**
+     * 估值表科目配置，默认配置
+     * @param pageParam
+     * @return
+     */
+    List<RskValtblAssetSubMapDto> selectForPageDefault(Map<String, Object> pageParam);
+
+    /**
+     * 估值表科目配置，默认数
+     * @param assetSubMapId
+     * @return
+     */
+    int getAssetSubInfoIsDefault(@Param("assetSubMapId") String assetSubMapId);
+    List<String> selecctRskValtblSubCodeList(@Param("subType") String subType);
+
 }

@@ -153,7 +153,7 @@ public class ContractualSetImpl implements ContractualSetService {
 	 * @param setCash	需要结转多少钱
 	 * @throws Exception
 	 */
-	private void saveToCash(BkCashRcpy bkCashRcpy, double setCash, Date ledgerDate) throws Exception{
+	private void saveToCash(BkCashRcpy bkCashRcpy, double setCash, Date ledgerDate){
 		double remainLocal = bkCashRcpy.getFxremainbal();
 		double remainFunc = bkCashRcpy.getRemainbal();
 		double remainUnits=bkCashRcpy.getUremainbal();

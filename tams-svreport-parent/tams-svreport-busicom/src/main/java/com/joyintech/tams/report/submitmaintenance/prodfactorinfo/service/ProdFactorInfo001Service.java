@@ -530,7 +530,6 @@ public class ProdFactorInfo001Service extends CommonExportService<ProdFactorInfo
 //                                entities1, "prodInsId", false, 2);
 //                        }
 //                        catch (Exception e) {
-//                            e.printStackTrace();
 //                        }
 //                        List<ExcelValidDto> checkResult1 = result1.getValidResultList();
 //                        if (checkResult1.isEmpty()) {
@@ -667,7 +666,6 @@ public class ProdFactorInfo001Service extends CommonExportService<ProdFactorInfo
 //                                entities2, "prodInsId", false, 2);
 //                        }
 //                        catch (Exception e) {
-//                            e.printStackTrace();
 //                        }
 //                        List<ExcelValidDto> checkResult2 = result2.getValidResultList();
 //                        List<ExcelValidDto> excelValidList = perProDisRegist001Service.checkDataBySelf(
@@ -790,7 +788,6 @@ public class ProdFactorInfo001Service extends CommonExportService<ProdFactorInfo
 //                                entities3, "prodInsId", false, 2);
 //                        }
 //                        catch (Exception e) {
-//                            e.printStackTrace();
 //                        }
 //                        List<ExcelValidDto> checkResult3 = result3.getValidResultList();
 //                        if (checkResult3.isEmpty()) {

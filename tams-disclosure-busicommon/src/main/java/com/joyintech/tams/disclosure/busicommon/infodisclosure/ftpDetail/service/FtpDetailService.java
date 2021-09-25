@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.csii.dc.client.util.FileUtil;
 import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.util.BeanUtil;

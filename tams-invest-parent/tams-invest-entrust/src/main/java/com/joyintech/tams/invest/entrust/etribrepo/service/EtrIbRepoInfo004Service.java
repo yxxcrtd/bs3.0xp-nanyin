@@ -8,6 +8,7 @@ import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.entity.TrdProductDeal;
 import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.constant.DictCodeList;
@@ -264,7 +265,7 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
     public AjaxResult checkImportData(String fileName) {
         List<List<String>> objects = ExcelUtil.getTempList(fileName);
 
-        if (objects.size() > 100) {
+        if (objects.size() > 101) {
             Map<String, Object> resultMap = new HashMap<>();
             resultMap.put("errorMsg", getMessage("ETR_E_0021"));
             AjaxResult wr = new AjaxResult();
@@ -320,6 +321,9 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsDate(rowData.get(2).toString(), "EtrRepo003.mdate",
                     lineNo));
+            // 委托开始、终止日是否是平台日check
+            confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
+                    EtrCommonService.checkIsPlateDate(rowData.get(1).toString(), rowData.get(2).toString(),lineNo));
             // 组合代码非空
             confirmMsg = etrCommonService.StringAddByBr(confirmMsg,
                 etrCommonService.checkIsBlank(rowData.get(3).toString(),

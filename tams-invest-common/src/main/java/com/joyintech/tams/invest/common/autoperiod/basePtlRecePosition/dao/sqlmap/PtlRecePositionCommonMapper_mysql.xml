@@ -266,7 +266,7 @@
         and post.INV_AIM=#{INV_AIM}
         and post.CDATE=#{PLAT_DATE}
         and post.HODING_TYPE=#{POSITION_TYPE_SJ}
-        and rec_type='03'
+        and post.rec_type='03'
     </select>
 
     <select id="getRepayAmtList" resultType="com.joyintech.tams.invest.common.autoperiod.basePtlRecePosition.dto.PtlRecePositionDto">
@@ -287,7 +287,7 @@
         and post.INV_AIM=#{INV_AIM}
         and post.CDATE=#{PLAT_DATE}
         and post.HODING_TYPE=#{POSITION_TYPE_SJ}
-        and rec_type=#{REC_TYPE_03}
+        and post.rec_type=#{REC_TYPE_03}
         group by repay.WITHOUT_BRANCH,post.PORTFOLIO_ID
     </select>
 

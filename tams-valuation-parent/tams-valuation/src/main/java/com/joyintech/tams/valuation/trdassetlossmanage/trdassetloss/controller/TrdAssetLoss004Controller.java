@@ -130,6 +130,13 @@ public class TrdAssetLoss004Controller extends BaseController {
                 message.append("检查结果：不通过 " + "行数：" + rownum);
                 messages.add(new ValidMessage(message.toString()));
             }*/
+            //判断：如果存在不通过数据，则提示 存在校验不通过数据，无法保存！
+            if(StringUtil.equals(CHECK_STATUS_STR_BTG,dto.getCheckStatusStr())){
+                messages.add(new ValidMessage("存在校验不通过数据，无法保存！"));
+                AjaxResult errorRs = new AjaxResult();
+                errorRs.setErrorList(messages);
+                return errorRs;
+            }
             wflValidInputParameter.setBusinessDataPk1(dto.getFinprodId());
             if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
                 message.append(this.getMessage("BUSS_COM_E_0041") + "资产：" + dto.getFinprodId());

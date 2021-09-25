@@ -78,7 +78,7 @@ public class ValuationMethodScheme004Service extends CommonExportService<Valuati
      * @return
      * @throws Exception
      */
-	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) throws Exception {
+	public List<SelectOptionDto> findFinprod(Map<String, Object> parameters) {
 		List<ValuationMethodScheme004Dto>  resultList = valuationMethodScheme004Mapper.selectFinprod(parameters);
 		List<SelectOptionDto> selectOptionList = new ArrayList<>();
 		if(CollectionUtils.isNotEmpty(resultList)) {
@@ -127,4 +127,14 @@ public class ValuationMethodScheme004Service extends CommonExportService<Valuati
 		return valuationMethodScheme004Mapper.getFinprodInfo(pageParam);
 	}
 
+	/**
+	 * @Description:根据资产代码获取证券品种
+	 * @auther: yuzj
+	 * @date: 2021/9/22
+	 * @param:
+	 * @return:
+	 */
+	public String  getSecTypeByFinprodId(String finprodId) {
+		return valuationMethodScheme004Mapper.getSecTypeByFinprodId(finprodId);
+	}
 }

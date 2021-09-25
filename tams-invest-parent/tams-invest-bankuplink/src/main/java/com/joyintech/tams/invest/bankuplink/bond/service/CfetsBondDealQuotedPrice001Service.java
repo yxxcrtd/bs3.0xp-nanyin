@@ -24,7 +24,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.joyintech.tams.component.business.basicdata.dto.BusiFinProductRatingDto;
+import com.joyintech.tams.component.business.basicdata.service.BusiProductRatingService;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
+import com.joyintech.tams.constant.DictCodeList;
 import com.netflix.discovery.converters.Auto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -39,6 +42,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
@@ -81,6 +85,7 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * CFETS现券买卖报价
@@ -94,6 +99,12 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 public class CfetsBondDealQuotedPrice001Service extends CommonExportService<CfetsBondDealEntrustOrderDto>  {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * 外汇交易中心行情接口地址
+     */
+    @Value("${MarketInfoInterf.cmdsUrl}")
+    private String MarketInfoInterf_cmdsUrl;
 
     /**
      * {@linkplain}
@@ -133,6 +144,12 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
     private CommonBusinessService commonBusinessService;
 
     /**
+     * 产品评级共通
+     */
+    @Autowired(required = false)
+    private BusiProductRatingService busiProductRatingService;
+
+    /**
      * 根据查询条件查询委托列表
      * 
      * @param param 入参
@@ -163,16 +180,16 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
         	param.put("portfolioIdList",
                     StringUtil.splitToList(GlobalConstant.COMMA, (String)param.get("portfolioIdList")));
         }
-        // 组合代码
-        Object portfolioIdObj = param.get("portfolioId");
-        if (portfolioIdObj != null) {
-            param.put("portfolioIdList",
-                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
-            param.put("portfolioId",null);
-        }
-        else {
-            param.put("portfolioIdList", new ArrayList<>());
-        }
+//        // 组合代码
+//        Object portfolioIdObj = param.get("portfolioId");
+//        if (portfolioIdObj != null) {
+//            param.put("portfolioIdList",
+//                    StringUtil.splitToList(GlobalConstant.COMMA, (String)portfolioIdObj));
+//            param.put("portfolioId",null);
+//        }
+//        else {
+//            param.put("portfolioIdList", new ArrayList<>());
+//        }
         Object entrustIdObj = param.get("entrustId");
         if (entrustIdObj != null) {
             param.put("entrustIdMultiple",
@@ -309,6 +326,19 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
 		}
 		List<BondQuoteInfoDto> res = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME
                 + "/CfetsBondDealQuotedPrice/getDayOfferTableList",param, BondQuoteInfoDto.class);
+
+        // 债项评级
+        for(BondQuoteInfoDto dto : res ){
+            Map<String,Object> zxparam = new HashMap<String,Object>();
+            zxparam.put("oCode", dto.getFinprodMarketId());
+            zxparam.put("oType", DictCodeList.评级类型_债项评级.getValue());
+            //查询评级类型是债项评级的数据
+            List<BusiFinProductRatingDto> zxList = busiProductRatingService.getZxBestRatingByMarketId(zxparam);
+            if(zxList != null && zxList.size()>0){
+                //只取第一条数据
+                dto.setGrade(zxList.get(0).getGradeResult());
+            }
+        }
          if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(res)){
         	 res = (List<BondQuoteInfoDto>) getKeyWordsList(res,keywords,(String) param.get("keycols"));
          }
@@ -1505,7 +1535,7 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
             param.remove("keywords");
         }
         param.put("loginUserId", LoginUserUtil.getUserName());
-        List<CstpSelectDto>list = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsRepoDealQuotedPr001/getCstpQryTableList",
+        List<CstpSelectDto>list = restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME + "/CfetsBondDealQuotedPrice/getCstpQryTableList",
                 param, CstpSelectDto.class);
         if(StringUtil.isNotEmpty(keywords)&&!StringUtil.isEmptyList(list)){
             list = (List<CstpSelectDto>) getKeyWordsList(list,keywords,(String) param.get("keycols"));
@@ -1513,5 +1543,34 @@ public class CfetsBondDealQuotedPrice001Service extends CommonExportService<Cfet
         return list;
     }
 
+
+    /**
+     * 查询债券行情信息
+     * @param pageParam
+     * @return
+     */
+    public Map<String, Object> findQuotations(Map<String, Object> pageParam) {
+        String secCode = (String) pageParam.get("seccode");
+        String url = MarketInfoInterf_cmdsUrl+"/rest/markinfo/sec/getMarkinfoBySecCode?seccode=" + secCode;
+        return getMarketInfo(url);
+    }
+
+    /**
+     * 请求市场行情数据接口
+     * @param url
+     * @return
+     */
+    public Map<String,Object> getMarketInfo(String url){
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(1000);
+        factory.setReadTimeout(1000);
+        RestTemplate template = new RestTemplate(factory);
+        try {
+            Map<String, Object> quoteMap = template.getForObject(url, Map.class);
+            return quoteMap;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

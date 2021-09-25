@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/10/14 0014 10:51
  **/
 @Repository
-public  interface AutoCouponMapper {
+public interface AutoCouponMapper {
 
     //接口表查询债券信息
     List<String> queryInterfPayhsrcsecinfo(Date nowSysDate);

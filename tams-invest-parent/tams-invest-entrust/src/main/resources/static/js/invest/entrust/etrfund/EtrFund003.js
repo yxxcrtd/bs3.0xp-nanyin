@@ -12,7 +12,9 @@
                 trdProductDeal.tradeAmt = item.entrustAmt;
                 trdProductDeal.unitCprice  = item.price;
                 trdProductDeal.shareAmt  = item.entrustNum;
-                if (item.ps == T04) {
+                // ZGZGST-2255:增加交易方向认购 fuyongsheng 20210908 edit start
+                if (item.ps == T04 || item.ps == T52) {
+                // ZGZGST-2255:增加交易方向认购 fuyongsheng 20210908 edit end
                     var obj = {
                         tradeDirection : item.ps,
                         timePoint : MY_SUP_TIME_TYPE_02,
@@ -408,7 +410,7 @@
         title : 'SysCommon.operation',
         sortable: false,
         render : function(data, type, row, meta) {
-            return '<a class="layui-btn layui-btn-sm uploadFile" >上传附件</a> ';
+            return '<a class="layui-btn layui-btn-sm uploadFile" style="color:#FFFFFF">上传附件</a> ';
         },
         width : 150
     }

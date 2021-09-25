@@ -23,11 +23,6 @@ public class InsideOutsideGrade001Dto extends BaseEntity implements ProcessEntit
     private String gradeInst;
 
     /**
-     * 对象类型
-     */
-    private String oType;
-
-    /**
      * 外部评级
      */
     private String gradeResult;
@@ -61,14 +56,6 @@ public class InsideOutsideGrade001Dto extends BaseEntity implements ProcessEntit
 
     public void setGradeInst(String gradeInst) {
         this.gradeInst = gradeInst;
-    }
-
-    public String getoType() {
-        return oType;
-    }
-
-    public void setoType(String oType) {
-        this.oType = oType;
     }
 
     public String getGradeResult() {

@@ -61,7 +61,7 @@ public class ComYieldCurveInfo002Controller extends BaseController{
     @Override
     public String init(Model model) {
         //添加曲线利率类型数据字典 add by lishuping 20191008 start
-        this.setSelectOptionToModel(model, DictCode.曲线代码);
+//        this.setSelectOptionToModel(model, DictCode.曲线代码);
         this.setSelectOptionToModel(model, DictCode.收益率曲线类型,DictCode.收益率曲线,DictCode.曲线利率类型);
         //添加曲线利率类型数据字典 add by lishuping 20191008 end
         String curveCode = getParam("curveCode");
@@ -75,7 +75,7 @@ public class ComYieldCurveInfo002Controller extends BaseController{
             Map<String,Object> pageParam=new HashMap<>();
             pageParam.put("curveCode", curveCode);
             pageParam.put("curveDate", curveDate);
-            pageParam.put("curveType", curveType);
+            pageParam.put("intCurveType", curveType);
             pageParam.put("remark", curveType);
             List<ComYieldCurveInfoDto> selectAllList = comYieldCurveInfoService.selectAllList(pageParam);
             if(selectAllList!=null && selectAllList.size()>0){

@@ -25,12 +25,14 @@ $(function(){
                     seqno: data.seqno
                 });
         },
+        limit:100,
         rowno: false, // 显示行号
         searchOnInit: false, //初始化的时候就请求后台数据
         cols:[	
 				{ field: 'seqno',visible:false},
-				{ title: "资产类别", field: 'assetTypeStr',sortField:'BOND_TYPE',align:'center'},
-				{ title: "债券类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center'},
+				{ title: "资产类别", field: 'assetTypeStr',sortField:'ASSET_TYPE',align:'center'},
+				{ title: "债券/存款类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center',visible:$('#lossType').val()== "01"},
+                { title: "债券类型", field: 'assetDetailTypeStr',sortField:'ASSET_DETAIL_TYPE',align:'center',visible:$('#lossType').val()== "02"},
 				{ title: "是否含有抵质押物", field: 'isContainPledgeStr',sortField:'IS_CONTAIN_PLEDGE',align:'center'},
 				{ title: "LGD%", field: 'lgd',sortField:'LGD',type:'number',align:'center'},
 				{ field: 'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit'],align:'center'}
@@ -46,6 +48,10 @@ $(function(){
         });
 	// 查询按钮
 	$('#LossGivenDefaultMaintain001_btn_search').click(function(){
+        if($("#assetcode").val().length ==0){
+            layer.msg("请选择资产类别！");
+            return;
+        }
 		table.load();
 	})
 	// 导出按钮

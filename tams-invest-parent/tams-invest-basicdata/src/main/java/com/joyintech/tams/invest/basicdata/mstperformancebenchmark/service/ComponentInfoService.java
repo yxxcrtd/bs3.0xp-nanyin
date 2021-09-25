@@ -51,7 +51,7 @@ public class ComponentInfoService extends CommonExportService<ComponentInfoDto>{
      * @see
      * @since 1.0
      */
-    public List<ComponentInfoDto> selectComponentInfoPage(Map<String, Object> pageParam) throws Exception {
+    public List<ComponentInfoDto> selectComponentInfoPage(Map<String, Object> pageParam) {
         String workflowId=(String)pageParam.get("workflowId");
         //进入代办之后数据需要用workflowId找值，数据此时并没有加到数据库里面
         if(StringUtil.isNotEmpty(workflowId)){

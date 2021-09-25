@@ -10,23 +10,11 @@
 
 package com.joyintech.tams.valuation.common.interf.base.service.baseinfo.cprd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.entity.FinCashCalcRule;
 import com.joyintech.tams.common.base.entity.FinCashInfo;
 import com.joyintech.tams.common.base.entity.FinCashPayRule;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.common.interf.base.constant.InterfCommonConstant;
 import com.joyintech.tams.valuation.common.interf.base.dto.CPrdBaseInfoValCommonResult;
@@ -36,13 +24,22 @@ import com.joyintech.tams.valuation.common.interf.base.dto.TemplateSourceFlgDTO;
 import com.joyintech.tams.valuation.common.interf.base.service.common.TemplateAnalysisForXMLService;
 import com.joyintech.tams.valuation.common.interf.base.util.InterfHelper;
 import com.joyintech.tams.valuation.common.interf.tempTables.entity.ValPrdFeeInfoC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Scope("prototype")
 public class CPrdFeeInfoTemplateRecService {
 	/**
 	 * 货币型产品费用基本信息模板处理service <功能详细描述>
-	 * 
+	 *
 	 * @param param
 	 * @return
 	 * @see
@@ -92,7 +89,7 @@ public class CPrdFeeInfoTemplateRecService {
 
 	/**
 	 * 04-费用基础信息
-	 * 
+	 *
 	 * @param listValPrdFeeInfoN
 	 *            货币型产品费用基础信息
 	 * @return 现金流信息List + 现金流计算规则List + 现金流支付规则List+账务明细代码List
@@ -182,10 +179,10 @@ public class CPrdFeeInfoTemplateRecService {
 //		return valBokDetailId;
 //	}
 	/**modify by niuqianyu on 20190118 end**/
-	
+
 	/**
 	 * 现金流支付规则 接收 <一句话功能简述>
-	 * 
+	 *
 	 * @param dto
 	 *            04-费用基础信息
 	 * @return 现金流支付规则
@@ -209,7 +206,7 @@ public class CPrdFeeInfoTemplateRecService {
 		/**modify by niuqianyu on 20190118 start**/
 //		// 金融产品类型 = F16：理财产品
 //		valCashPayRule.setFinprodType(DictCodeListExt1.金融产品类型_理财产品.getValue());
-		
+
 		// 金融产品类型 = T4.金融产品类型
 		valCashPayRule.setFinprodType(T4.getFinprodType());
 		/**modify by niuqianyu on 20190118 end**/
@@ -221,8 +218,8 @@ public class CPrdFeeInfoTemplateRecService {
 	}
 
 	/**
-	 * 现金流计算规则 接收 <一句话功能简述> 
-	 * 
+	 * 现金流计算规则 接收 <一句话功能简述>
+	 *
 	 * @param dto
 	 *            04-费用基础信息
 	 * @return 现金流计算规则
@@ -240,7 +237,11 @@ public class CPrdFeeInfoTemplateRecService {
 		// 生效利率 = D.初始费率
 		valCashCalcRule.setYield(dto.getInitRate());
 		// 计算基础 = D.计费基础
-		valCashCalcRule.setBasis(dto.getChargeBase());
+        if (StringUtil.equals(dto.getChargeBase(), DictCodeList.计息基础_A_A.getValue())) {
+            valCashCalcRule.setBasis(DictCodeListExt1.计息基础_A_A_D.getValue());
+        } else {
+            valCashCalcRule.setBasis(dto.getChargeBase());
+        }
 		// 基数类型 = D.计费基数
 		valCashCalcRule.setBaseType(dto.getChargeBasis());
 		// 基数日期类型 = D.计费基数日期类型
@@ -250,7 +251,7 @@ public class CPrdFeeInfoTemplateRecService {
 		/**modify by niuqianyu on 20190118 start**/
 //		// 金融产品类型 = F16：理财产品
 //		valCashCalcRule.setFinprodType(DictCodeListExt1.金融产品类型_理财产品.getValue());
-		
+
 		// 金融产品类型 = T4.金融产品类型
 		valCashCalcRule.setFinprodType(T4.getFinprodType());
 		/**modify by niuqianyu on 20190118 end**/
@@ -261,7 +262,7 @@ public class CPrdFeeInfoTemplateRecService {
 
 	/**
 	 * 现金流信息 接收 <一句话功能简述>
-	 * 
+	 *
 	 * @param dto
 	 *            04-费用基础信息
 	 * @return 现金流信息
@@ -273,14 +274,14 @@ public class CPrdFeeInfoTemplateRecService {
 		/**modify by niuqianyu on 20190118 start**/
 		// 现金流代码 = MD5加密(D.产品代码+D.费用ID)
 //		valCashInfo.setCashId(InterfHelper.getMd5CashId_(dto.getProdId() , dto.getFeeId()));
-		
+
 		String cashId = null;
 		if(StringUtil.equals(dto.getFinprodType(), DictCodeListExt1.金融产品类型_理财子产品.getValue())){
             cashId = InterfHelper.getMd5CashId_(dto.getProdId() + new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate()),
                 dto.getFeeId());
         } else {
             cashId = InterfHelper.getMd5CashId_(dto.getProdId() , dto.getFeeId());
-        }     
+        }
         valCashInfo.setCashId(cashId);
 		/**modify by niuqianyu on 20190118 end**/
 		// 现金流一级类型 = 03:费用
@@ -292,13 +293,13 @@ public class CPrdFeeInfoTemplateRecService {
 		/**modify by niuqianyu on 20190118 start**/
 //		// 金融产品类型 = F16：理财产品
 //		valCashInfo.setFinprodType(DictCodeListExt1.金融产品类型_理财产品.getValue());
-		
+
 		// 金融产品类型 = D.金融产品类型
 		valCashInfo.setFinprodType(dto.getFinprodType());
-		
+
 //		// 分支序号 = 设置全局变量(默认为0）
 //		VAlCashInfo.setBranch(InterfCommonConstant.分支序号_默认);
-		
+
 		Long branch = null;
         if(StringUtil.equals(dto.getFinprodType(), DictCodeListExt1.金融产品类型_理财子产品.getValue())){
             branch = Long.valueOf(new SimpleDateFormat("yyyyMMdd").format(dto.getProdVdate()));

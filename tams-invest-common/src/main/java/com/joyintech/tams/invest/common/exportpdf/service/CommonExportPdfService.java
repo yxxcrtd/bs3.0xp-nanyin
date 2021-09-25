@@ -1,5 +1,6 @@
 package com.joyintech.tams.invest.common.exportpdf.service;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.itextpdf.text.*;
@@ -14,12 +15,15 @@ import com.joyintech.tams.invest.common.exportpdf.model.*;
 import com.joyintech.tams.invest.common.util.XmlParseUtil;
 import com.joyintech.tools.util.ListUtils;
 import com.sun.javafx.font.FontFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -31,6 +35,11 @@ import java.util.List;
  */
 @Service
 public class CommonExportPdfService<T> {
+
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 数据展示方式 1.横向展示
@@ -70,9 +79,14 @@ public class CommonExportPdfService<T> {
             //读取导出pdf配置
             if(configFile.startsWith("file:")){
                 configFile = configFile.replace("file:","");
+            }else if(configFile.startsWith("jar:file:")){
+                configFile = configFile.replace("jar:file:","");
             }
             WorkPage workPage = readXmlToJavaBean(configFile);
-            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
+            // String filePath = CacheUtil.getSysParam("export_pdf_path");
+            String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             exportFileName = workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
             String fileName = filePath+"/"+ exportFileName;
             createPdfTable(workPage,list);
@@ -82,6 +96,8 @@ public class CommonExportPdfService<T> {
             if (!outFile.getParentFile().exists()) {
                 outFile.getParentFile().mkdirs();
             }
+            // 删除临时目录下的配置文件
+            deleteTempConfigFile(configFile);
         }catch (Exception e){
             throw new BusinessException(e);
         }finally {
@@ -110,7 +126,10 @@ public class CommonExportPdfService<T> {
                 document.setPageSize(pageSize);
             }
             //pdf文件生成目录
-            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit start
+//            String filePath = CacheUtil.getSysParam("export_pdf_path");
+            String filePath = CacheUtil.getSysParam("access_exportfilepath");
+            //ZGZGST-2869:修改pdf导出文件临时路径 fuyongsheng 20210918 edit end
             //建立一个书写器
             fileName = filePath+"/"+workPage.getName()+"("+DateUtil.getSysDate()+").pdf";
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
@@ -421,6 +440,66 @@ public class CommonExportPdfService<T> {
      */
     private WorkPage readXmlToJavaBean(String configFilePath){
         return XmlParseUtil.readXmlToJavaBean(configFilePath, WorkPage.class);
+    }
+
+    /**
+     * 创建临时目录下配置文件
+     * @param in
+     * @param tempPath
+     * @param tempConfigFilePath
+     * @return
+     */
+    public void createTempConfigFile(InputStream in, String tempPath, String tempConfigFilePath){
+        if(null != in){
+            File tempPathDir = new File(tempPath);
+            if (!tempPathDir.exists()) {
+                tempPathDir.mkdirs();
+            }
+            File tempFile = new File(tempConfigFilePath);
+            String encoding = System.getProperty("file.encoding");
+            logger.info("当前系统编码格式为：" + encoding);
+            InputStreamReader reader = new InputStreamReader(in, Charset.forName(encoding));
+            FileOutputStream outputStream = null;
+            OutputStreamWriter oStreamWriter = null;
+            try {
+                outputStream = new FileOutputStream(tempFile);
+                oStreamWriter = new OutputStreamWriter(outputStream, Charset.forName(encoding));
+                char[] buf = new char[1024*8];
+                int len = 0;
+                while ((len = reader.read(buf)) != -1) {
+                    oStreamWriter.write(new String(buf, 0 ,len));
+                }
+            } catch (IOException e) {
+
+            }finally {
+                try {
+                    if(oStreamWriter != null){
+                        oStreamWriter.close();
+                    }
+                    if(outputStream != null){
+                        outputStream.close();
+                    }
+                    if(reader != null){
+                        reader.close();
+                    }
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 删除临时目录下的配置文件
+     * @param tempConfigFilePath
+     * @return
+     */
+    public void deleteTempConfigFile(String tempConfigFilePath){
+        File tempFile = new File(tempConfigFilePath);
+        if(tempFile.exists()){
+            tempFile.delete();
+        }
     }
 
 }

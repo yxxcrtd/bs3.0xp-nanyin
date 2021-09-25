@@ -1,23 +1,18 @@
 package com.joyintech.tams.valuation.lossmodel.pddefaultmanager.hggradepdconfig.service;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.util.*;
-
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.ajax.JoyinMessage;
 import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.export.CommonExportService;
-import com.joyintech.framework.util.*;
+import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.util.FileNameUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.util.ExcelUtil;
-//import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
-//import com.joyintech.tams.invest.common.util.ExcelUtil;
-//import com.joyintech.tams.model.common.constant.ServiceApplication;
-//import com.joyintech.tams.model.impairment.lgddefultmanager.lgdspecialconfig.dto.LgdSpecialConfigDto;
-//import com.joyintech.tams.model.impairment.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.tams.systemtools.dto.ExcelValidDto;
+import com.joyintech.tams.systemtools.util.ExcelUtil;
+import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.lossmodel.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
@@ -26,9 +21,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.joyintech.tams.valuation.common.constants.ServiceApplication;
-import com.joyintech.framework.grid.Page;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+// import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
+//import com.joyintech.tams.invest.common.util.ExcelUtil;
+//import com.joyintech.tams.model.common.constant.ServiceApplication;
+//import com.joyintech.tams.model.impairment.lgddefultmanager.lgdspecialconfig.dto.LgdSpecialConfigDto;
+//import com.joyintech.tams.model.impairment.pddefaultmanager.gradepdconfig.dto.ModGradePdConfigDto;
 
 
 /**
@@ -57,13 +63,6 @@ public class ModHgGradePdConfigService extends CommonExportService<ModGradePdCon
      */
     public Page<ModGradePdConfigDto> selectForPage(Map<String, Object> pageParam) throws Exception {
         Page<ModGradePdConfigDto> pageList = restTemplate.postForPage(ServiceApplication.LOSS_MODEL_SERVICE_NAME+"/ModHgGradePdConfig/findPage", pageParam, ModGradePdConfigDto.class);
-        for(ModGradePdConfigDto mpd:pageList.getRoot()){
-            //组装数据
-            if(StringUtils.isNotBlank(mpd.getGradeResult())){
-                mpd.setGradeOrgName(SysDataUtil.getNameFromDataDict(DictCode.评级结果,mpd.getGradeResult()));//组装评级机构名称
-            }
-
-        }
         return pageList;
     }
 

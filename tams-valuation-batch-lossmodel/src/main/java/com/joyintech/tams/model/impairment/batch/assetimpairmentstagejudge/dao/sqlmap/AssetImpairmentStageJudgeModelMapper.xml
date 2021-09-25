@@ -7,7 +7,7 @@
         A.ELEMENTS_VALUE AS itemValue
         FROM MOD_STAGE_PARA A
         WHERE 1=1
-        AND A.STATUS = 'Y'
+        AND A.STATUS = '01'
     </select>
 
     <select id="assetImpairmentStageJudgeList" resultType="com.joyintech.tams.common.base.entity.ModEclResultProcess">
@@ -110,11 +110,14 @@
     <select id="assetImpairmentStageJudgeT2322List" resultType="com.joyintech.tams.valuation.common.dto.modelDto.ModRepayAndInterestDto">
         SELECT
         A.MDATE AS planEndDate,
-        A.PS AS dealSide
+        A.PS AS dealSide,
+        A.SETTLE_DATE AS tradeDate
         FROM TRD_PRODUCT_DEAL A
         WHERE FINPROD_ID  = #{assetId,jdbcType=VARCHAR}
         AND IS_CLEAN = 'Y'
         AND PS IN('T23','T22')
+        AND A.IS_CANCEL ='N'
+        AND A.SETTLE_DATE <![CDATA[<=]]> #{execDate}
     </select>
 
     <!-- 获取资产现金流计划集合  -->
@@ -134,7 +137,7 @@
         FROM FIN_CASH_PLAN A
 		INNER JOIN FIN_CASH_INFO B
 		ON A.CASH_ID = B.CASH_ID
-		AND B.CASH_TYPE_2 = 'C02'
+		AND B.CASH_TYPE_2 IN ('C01','C02')
         WHERE A.FINPROD_ID= #{finprodId,jdbcType=VARCHAR}
         ORDER BY A.MDATE
 	</select>

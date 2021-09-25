@@ -48,6 +48,8 @@ import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,6 +68,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class FinProductFeePay004Service extends BaseService<FinProductFeePay005Dto> implements BaseProcessService<FinProductFeePay005Dto> {
+    /**
+     * 日志
+     */
+    private Logger logger = LoggerFactory.getLogger(FinProductFeePay004Service.class);
 
     /**
      * {@linkplain}
@@ -1053,7 +1059,7 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
         try {
             dtoList = JsonUtils.json2List((String) map.get("finProductFee"), FinProductFeePay001Dto.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(),e);
         }
         if (CollectionUtils.isNotEmpty(dtoList)) {
             for (FinProductFeePay001Dto dto : dtoList) {
@@ -1062,6 +1068,10 @@ public class FinProductFeePay004Service extends BaseService<FinProductFeePay005D
                 requestMap.put("ptlId", dto.getPtlId());
                 requestMap.put("feeType", dto.getFeeType());
                 requestMap.put("calcEndDate", DateUtil.format(dto.getPositionEndDate()));
+                // add by jiangpeng on 20210507 start
+                // TISHKBS-2109 【产品费用支付】-待确认数据进行确认时，报错
+                requestMap.put("calcStartDate", DateUtil.format(dto.getPositionStartDate()));
+                // add by jiangpeng on 20210507 end
                 requestMap.put("finprodId", dto.getFinprodId());
                 requestMap.put("feeId", dto.getFeeId());
                 requestMap.put("flag", DictCodeList.是否_是.getValue());

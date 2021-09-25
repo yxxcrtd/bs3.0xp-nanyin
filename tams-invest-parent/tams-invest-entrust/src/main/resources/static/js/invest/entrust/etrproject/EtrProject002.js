@@ -114,7 +114,37 @@
             $('#accAvailableCash').val(result.cashT3).trigger('blur');
             $('#channelAvailableCash').val(result.cashT2).trigger('blur');
         });
-    }  
+    }
+
+
+     var changeBussnissModelByFinprodId = function(){
+         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
+             return;
+         }
+         var finprodId = $('#finprodId').val();
+         if(finprodId){
+              var data = {finprodId:finprodId }
+              Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                    if(result.data=='0') {
+                         Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                         $('#finprodId').val("").trigger('change');
+                         $("#businessModel").attr("disabled",false);
+                         $('#businessModel').val("").trigger('change');
+                     }else if(result.data=='3'){
+                         $('#businessModel').val("Y2").trigger('change');
+                         $("#businessModel").attr("disabled",true);
+                     }else if(result.data=='2') {
+                          $("#businessModel").attr("disabled",false);
+                          $('#businessModel').val("").trigger('change');
+                     }
+               });
+         }else{
+              $("#businessModel").attr("disabled",false);
+              $('#businessModel').val("").trigger('change');
+         }
+
+     }
+
     //查询组合可用持仓
     var getPtlSecPositionInfo = function(){
         if (!$('#finprodIdhid').val()) {
@@ -167,6 +197,14 @@
             if ($('#finprodId').val()){
             $('#finprodId').change();
         }
+        }
+        //根据参数 选择显示投资目的或者业务模式
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+           $("#invAimDiv").hide();
+           $("#businessModelDiv").show();
+        }else{
+           $("#invAimDiv").show();
+           $("#businessModelDiv").hide();
         }
         /**
          * 保存
@@ -275,6 +313,10 @@
                 // 项目类资产五级分类改造 add by renping 2019-08-01 end
                 refreshPosition();
             }
+            //增加业务模式的联动处理
+            if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+                changeBussnissModelByFinprodId();
+            //增加业务模式的联动处理
         });
 
         $("#chlId").change(refreshPosition)

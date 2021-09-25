@@ -40,12 +40,14 @@
         object.operateType = operateType;
         Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/check', object, function(result) {
             if(result.data.indexOf("影响历史")>0){
-                Joyin.confirm("修改后需手工跑历史批处理！", function () {
-                    if (operateType === 'save') {
-                        WorkFlow.doSaveList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModGradePdConfig002_btn_save");
-                    } else if(operateType === 'submit'){
-                        WorkFlow.doSubmitList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig002_btn_submit");
-                    }
+                Joyin.confirm("本次修改是否影响历史数据？", function () {
+                    Joyin.confirm("修改后需手工跑历史批处理！", function () {
+                        if (operateType === 'save') {
+                            WorkFlow.doSaveList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModGradePdConfig002_btn_save");
+                        } else if(operateType === 'submit'){
+                            WorkFlow.doSubmitList(basePath + 'model/impairment/pddefaultmanager/hggradepdconfig/ModHgGradePdConfig002/save', object, "ModHgGradePdConfig002_btn_submit");
+                        }
+                    });
                 });
             }else{
                 if (operateType === 'save') {
@@ -60,7 +62,7 @@
     function　init(){
 
         //初始化评级结果
-        initGradeResult();
+        // initGradeResult();
         var operateTypeTh = $('#operateType').val();
         /*alert(pageModel+"================="+operateTypeTh);*/
         //编辑模式资产代码、估值日期、资产简称不可编辑
@@ -75,22 +77,22 @@
         }
     }
 
-    function initGradeResult() {
-        var gr = $('#gradeResult').val();
-        var itemFwd = [];
-        var inArr =['AAA+','AAA','AAA-','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB','B','CCC','CC','C','D'];
-        var TEMP_MAIN_GRADE_RESULT = JSON.parse(MODEL_STANDARD_GRADE_RESULT);
-        for ( var i in TEMP_MAIN_GRADE_RESULT) {
-            if (inArr.indexOf(TEMP_MAIN_GRADE_RESULT[i].text) >-1) {
-                itemFwd.push(TEMP_MAIN_GRADE_RESULT[i].id);
-            }
-        }
-        $('#gradeResult').updateChosenArr({
-            item : itemFwd,
-            disabled : false
-        });
-        $('#gradeResult').val(gr);
-    };
+    // function initGradeResult() {
+    //     var gr = $('#gradeResult').val();
+    //     var itemFwd = [];
+    //     var inArr =['AAA+','AAA','AAA-','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB','B','CCC','CC','C','D'];
+    //     var TEMP_MAIN_GRADE_RESULT = JSON.parse(MODEL_STANDARD_GRADE_RESULT);
+    //     for ( var i in TEMP_MAIN_GRADE_RESULT) {
+    //         if (inArr.indexOf(TEMP_MAIN_GRADE_RESULT[i].text) >-1) {
+    //             itemFwd.push(TEMP_MAIN_GRADE_RESULT[i].id);
+    //         }
+    //     }
+    //     $('#gradeResult').updateChosenArr({
+    //         item : itemFwd,
+    //         disabled : false
+    //     });
+    //     $('#gradeResult').val(gr);
+    // };
 
 
 

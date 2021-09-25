@@ -23,7 +23,8 @@
             <input type="hidden" id="businessId" name="businessId" th:value="${businessId?: ''}">
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_hidden_entrustId" th:value="${entity?.entrustId}" />
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_hidden_finprodId" th:value="${entity?.finprodId}" />
-            <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_settleCcy" name="settleCcy" th:value="${CNY}"/>
+            <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_settleCcy" name="settleCcy" th:value="${entity?.settleCcy?:CNY}"/>
+            <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_hidden_calculateField" name="calculateField" th:value="${calcTypeUnitCprice}" />
             <input type="hidden" name="quotaPageModel" id="CfetsBondDealQuotedPriceSingle002_hidden_quotaPageModel" th:value="${entity?.quotaPageModel}" />
             <input type="hidden" name="checkType" id="CfetsBondDealQuotedPriceSingle002_hidden_checkType" th:value="${entity?.checkType}" />
             <input type="hidden" name="quoteId" th:value="${entity?.quoteId}" />
@@ -33,7 +34,7 @@
             <input type="hidden" id="CfetsBondDealQuotedPriceSingle002_hidden_entrustAmt" name="entrustAmt" th:value="${entity?.entrustNum}" />
             <input type="hidden" name="workflowId" th:value="${entity?.workflowId}" />
             <div class="layui-tab-item layui-show" style="height:30px;" id="cash_div">
-                <iframe th:src="@{/invest/entrust/EtrCommonController/initCash}" width="100%"
+                <iframe th:src="@{/invest/bankuplink/reponew/CfetsRepoDealQuotedPrInitCash/initCash}" width="100%"
                         height="100%" frameborder="0" style="border:none;"></iframe>
             </div>
 
@@ -271,6 +272,8 @@
                 <a id="CfetsBondDealQuotedPriceSingle002_btn_clinchDeal" th:if="${isRevert } eq ${YES_OR_NO_Y}" class="layui-btn layui-btn-sm btn-submit" data-th-text="#{CfetsRepoDealQuotedPrice003.clinchDeal}">成交</a>
                 <a id="CfetsBondDealQuotedPriceSingle002_btn_cancel" class="layui-btn layui-btn-sm btn-cancel" data-th-text="#{SysCommon.cancel}">取消</a>
             </div>
+            <div id="baseRiskMathComm" class="page-component" style="display: none;"  th:data-path="@{/component/common/BaseRiskMathComm/init}"
+                 th:data-params="|{workflowId: '${workflowId}',entityName:'riskTrialRetDto',tradeId:'${tradeId}'}|"></div>
         </form>
     </div>
 </div>

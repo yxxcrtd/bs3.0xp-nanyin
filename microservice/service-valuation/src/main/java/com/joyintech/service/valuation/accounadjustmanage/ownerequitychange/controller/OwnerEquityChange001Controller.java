@@ -10,6 +10,7 @@
  
 package com.joyintech.service.valuation.accounadjustmanage.ownerequitychange.controller;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +59,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
      * @since 1.0
      */
     @PostMapping("selectList")
-    public List<OwnerEquityChange001Dto> selectList(@RequestBody Map<String, Object> pageParam)
-        throws Exception {
+    public List<OwnerEquityChange001Dto> selectList(@RequestBody Map<String, Object> pageParam) throws ParseException {
 
         OwnerEquityChange001Dto dto = null;
         if(pageParam.get("OwnerEquityChange001Dto")!=null){
@@ -81,7 +81,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
     @ResponseBody
     @RequestMapping("/getBooksetId2")
     public List<SuggestDto> getBooksetId2()
-        throws Exception {
+    {
         String param = super.getRequest().getParameter("param");
         return valAssetBook001Service.getBooksetId2(param);
     }
@@ -94,7 +94,7 @@ public class OwnerEquityChange001Controller  extends BaseController {
      */
     @ResponseBody
     @RequestMapping("getTermLink")
-    public List<SelectOptionDto> getTradeMarket() throws Exception {
+    public List<SelectOptionDto> getTradeMarket() {
         Map<String, Object> param = RequestUtil.getPageParam();
         String reportTermType = (String) param.get("reportTermType");
 

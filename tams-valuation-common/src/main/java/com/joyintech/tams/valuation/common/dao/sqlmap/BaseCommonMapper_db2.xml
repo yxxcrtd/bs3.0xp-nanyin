@@ -12,9 +12,11 @@
     
     <update id="updatePlateDate" parameterType="date">
         UPDATE SYS_DATE SET CUR_DATE = #{date}, UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP
+        WHERE 1=1
     </update>
     <update id="updateSysdate">
         UPDATE SYS_DATE SET CUR_DATE = CUR_DATE + 1 day, UPDATE_USER = 'batch', update_time = CURRENT_TIMESTAMP
+        WHERE 1=1
     </update>
     
     <select id="getSequenceIndexData" parameterType="java.util.Map"

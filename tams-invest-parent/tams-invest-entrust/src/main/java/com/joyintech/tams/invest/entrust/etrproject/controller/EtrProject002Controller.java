@@ -12,15 +12,15 @@ package com.joyintech.tams.invest.entrust.etrproject.controller;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
-import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,8 +47,6 @@ import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -95,12 +93,16 @@ public class EtrProject002Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易方向);
         // 项目类资产五级分类改造 add by renping 2019-08-01 start
         this.setSelectOptionToModel(model, DictCode.行内资产二级分类, DictCode.行内资产三级分类, DictCode.行内资产四级分类,
-        		DictCode.投资目的);
+        		DictCode.投资目的, DictCode.业务模式);
         // 项目类资产五级分类改造 add by renping 2019-08-01 end
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         String entrustId = getParam("entrustId");
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         RequestUtil.getPageParam();
@@ -145,14 +147,12 @@ public class EtrProject002Controller extends BaseController {
      * 获取组合代码联想文本框信息 <功能详细描述>
      * 
      * @return
-     * @throws Exception
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrProjectService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -160,15 +160,13 @@ public class EtrProject002Controller extends BaseController {
     /**
      * 获取新建界面的资产代码联想下拉框框
      * 
-     * @param param
      * @return
      * @see
      * @since 1.0
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrProjectService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -185,13 +183,13 @@ public class EtrProject002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/searchType")
     public String searchType(String finprodId){
-        return etrProjectService.searchType(finprodId);
+        return StringUtil.trimHtmlTag(etrProjectService.searchType(finprodId));
     }
     /**
      * 
      * 组合可用现金查询
      * <功能详细描述>
-     * @param dto
+     * @param param
      * @return
      * @see
      * @since 1.0
@@ -262,12 +260,11 @@ public class EtrProject002Controller extends BaseController {
      * @param dto dto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrProjectDto dto, BindingResult br)
-        throws Exception {
+    public AjaxResult save(@RequestBody EtrProjectDto dto, BindingResult br) throws Exception {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

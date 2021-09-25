@@ -43,7 +43,7 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig> {
 	@Autowired
 	private FinFlowForecastConfigMapper flowForecastConfigMapper;
 
-	public Page<FinFlowForecastConfig> findForecast(Map<String, Object> param, int page, int length) throws Exception {
+	public Page<FinFlowForecastConfig> findForecast(Map<String, Object> param, int page, int length) {
 		String depType = (String) param.get("depType");
 		if (StringUtil.equals(DictCodeListExt2.流动性预测维护_部门类型_产品管理处.getValue(), depType)) {
 			Page<FinFlowForecastConfig> pageFlowForecastConfig = super.queryForPage(page, length,
@@ -96,7 +96,7 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig> {
 	}
 
 	public Page<FinFlowForecastConfig> findReserveDetail(Map<String, Object> param, int page, int length)
-			throws Exception {
+	{
 		// 查询历史记录
 		List<FinFlowForecastConfig> reserveDetailList = flowForecastConfigMapper.findReserveDetailList(param);
 		// 新建返回结果
@@ -132,7 +132,7 @@ public class FinFlowForecastService extends BaseService<FinFlowForecastConfig> {
 	}
 
 	public Page<FinFlowForecastDealAmontDto> findNetValueOpenforecast(Map<String, Object> param, int page, int length)
-			throws Exception {
+	{
 		Page<FinFlowForecastDealAmontDto> pageFlowForecastDealAmontDto = new Page<FinFlowForecastDealAmontDto>();
 		List<FinFlowForecastDealAmontDto> list = flowForecastConfigMapper.findNetValueOpenforecast(param);
 		List<FinFlowForecastDealAmontDto> relist = new ArrayList<FinFlowForecastDealAmontDto>();

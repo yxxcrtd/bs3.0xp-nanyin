@@ -30,7 +30,7 @@ public class PtlPldgeSummarySerchService extends BaseService<PtlPldgeSummaryDto>
      * @throws Exception 异常信息
      */
     public Page<PtlPldgeSummaryDto> pledgeSummaryFindPage(int page, int length, Map<String, Object> pageParam)
-            throws Exception {
+    {
         if(StringUtil.isNotEmpty(pageParam.get("counterId"))){
             pageParam.put("counterIdList",StringUtil.splitToList(GlobalConstant.COMMA,(String)pageParam.get("counterId")));
         }

@@ -10,10 +10,12 @@
 
 package com.joyintech.tams.invest.trade.trdrepotrade.controller;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.invest.common.CommonUtil;
@@ -24,6 +26,7 @@ import com.joyintech.tams.invest.trade.common.aop.TradeRdsCommonAop;
 import com.joyintech.tams.invest.common.pagemenusplit.PageMenuSplitUtil;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -119,6 +122,13 @@ public class TrdRepoTrade002Controller extends BaseController {
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
         String isSubmit = this.getParam("isSubmit");
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         TrdRepoTrade002Dto dto = new TrdRepoTrade002Dto();
 
         if (StringUtil.equals(workflowStatus, DictCodeListExt1.交易流程状态_流程中.getValue())
@@ -131,6 +141,12 @@ public class TrdRepoTrade002Controller extends BaseController {
                 // 根据工作流代码查询交易编号
                 dto.setTradeId(trdRepoTrade002Service.selectTradeIdByWorkflowId(workflowId));
             }
+
+            // add by yeming 20210914 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, dto.getParentPageId());
+            // add by yeming 20210914 银行间场内场外拆分 end
         } else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdRepoTrade002Service.getTrdRepoTradeDto(tradeId);
 
@@ -232,13 +248,7 @@ public class TrdRepoTrade002Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.回购类型, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
-
+        model.addAttribute("userId", LoginUserUtil.getUserName());
         return super.init(model);
     }
 
@@ -623,6 +633,21 @@ public class TrdRepoTrade002Controller extends BaseController {
                 }
             }
         }
+        // add by jiangpeng on 20210519 start TISHKBS-807
+        if (StringUtil.equals(DictCodeList.回购拆借方向_逆回购.getValue(), dto.getPs())
+                && (StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_银行间债券市场.getValue())
+                    || ((StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_上海证券交易所.getValue())
+                            ||StringUtil.equals(dto.getTradeMarket(), DictCodeList.交易流通场所_深圳证券交易所.getValue()))
+                        && StringUtil.equals(dto.getRepoType(), DictCodeList.回购类型_质押式协议回购.getValue())))) {
+            if (dto.getBussRepoSec() != null && dto.getBussRepoSec().getTotalPrinAmt() != null && !StringUtil.isEmptyList(dto.getBussRepoSec().getPledgeBondList())) {
+                BigDecimal prinAmt = dto.getPrinAmt() == null ? BigDecimal.ZERO : dto.getPrinAmt();//本金金额
+                BigDecimal totalPrinAmt = dto.getBussRepoSec() == null ? BigDecimal.ZERO : dto.getBussRepoSec().getTotalPrinAmt();//券面总额
+                if (totalPrinAmt.compareTo(prinAmt) < 0) {//券面总额小于本金金额
+                    confirmMsg += this.getMessage("TRD_E_00124") + changeLineMark;
+                }
+            }
+        }
+        // add by jiangpeng on 20210519 end TISHKBS-807
     	if (!StringUtil.equals("null", confirmMsg) && confirmMsg.length() > 0) {
 			AjaxResult wr = new AjaxResult();
 			wr.setData(confirmMsg);
@@ -642,8 +667,7 @@ public class TrdRepoTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws Exception {
         //万元转换 add  by yeming 20210817 start
         if(dto.getBussRepoSec() != null){
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){

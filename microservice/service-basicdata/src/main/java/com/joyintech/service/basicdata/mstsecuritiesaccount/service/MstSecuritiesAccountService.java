@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.background.component.common.pack.common.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
      * @throws Exception 异常信息
      */
     public Page<MstSecuritiesAccountDto> selectForPage(int page, int length,Map<String, Object> param)
-        throws Exception {
+    {
         return super.queryForPage(page, length, () -> mstSecuritiesAccountMapper.select(param));
     }
     
@@ -346,5 +347,22 @@ public class MstSecuritiesAccountService extends BaseService<MstSecuritiesAccoun
 
     public List<Map<String, Object>> getFaceValueList(Map<String, Object> map) {
         return mstSecuritiesAccountMapper.getFaceValueList(map);
+    }
+
+    public String IsBondAsset(Map<String, Object> map) {
+        Boolean sinal = StringUtil.equals(mstSecuritiesAccountMapper.IsBondAsset(map),"F01");
+        if(!sinal){
+            return "1";
+        }else{
+           String testStatus = "";
+           testStatus = mstSecuritiesAccountMapper.QueryForTestStatus(map);
+           if(StringUtil.equals("2",testStatus)){
+               return "2";
+           }else if(StringUtil.equals("3",testStatus)){
+               return "3";
+           }else {
+               return "4";
+           }
+        }
     }
 }

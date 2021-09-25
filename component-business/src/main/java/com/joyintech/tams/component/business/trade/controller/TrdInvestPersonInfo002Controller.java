@@ -17,6 +17,7 @@ import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.RequestUtil;
 
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,6 +57,7 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
     
     @Autowired(required=false)
     private BussEtrInvestPersonInfoService bussEtrInvestPersonInfoService;
+
     /**
      * {@inheritDoc}
      */
@@ -77,11 +79,33 @@ public class TrdInvestPersonInfo002Controller extends BaseController {
 
             entity.setTraderDept(LoginUserUtil.getDeptCode());
         }
+        // ZGZGST-2008: fuyongsheng 20210918 add start
+        // 1、投资经理指定外部交易对手，交易员不能修改为内部交易对手，可以修改为其他外部交易对手
+        // 2、投资经理没有指定交易对手，交易员可以选择外部交易对手，不能选择内部交易对手
+        // 3、投资经理指定内部交易对手，交易员不能修改交易对手
+        // 4、无指令交易录入，交易员可以选择外部交易对手和内部交易对手
+        else{
+            if(StringUtil.isNotEmpty(entity.getCounterId())){
+                Map<String, Object> params = new HashMap<>();
+                params.put("counterId", entity.getCounterId());
+                Page<SelectOptionDto> result = trdInvestPersonInfo002Service.queryCounterId(params);
+                if(!result.getRoot().isEmpty()){
+                    String object = (String)result.getRoot().get(0).getObject();
+                    entity.setIsOutTrade(DictCodeList.是否_否.getValue().equals(object) ?
+                            Boolean.FALSE.toString() : Boolean.TRUE.toString());
+                    model.addAttribute("innerTrade", DictCodeList.是否_否.getValue().equals(object) ?
+                            Boolean.TRUE.toString() : Boolean.FALSE.toString());
+                }
+            }else{
+                model.addAttribute("innerTrade", Boolean.FALSE.toString());
+            }
+            // ZGZGST-2008: fuyongsheng 20210918 add end
+        }
         HashMap<String, Object> param = new HashMap<>();
 //        model.addAttribute("COUNTER_ID_LIST",
 //            JsonUtils.object2Json(trdInvestPersonInfo002Service.selectCounterId(param).toArray()));
         model.addAttribute("entity", entity);
-        model.addAttribute("innerTrade", getParam("innerTrade"));
+//        model.addAttribute("innerTrade", getParam("innerTrade"));
         // add by wangguoxian 增加交易对手类型传参 20190713 start
         model.addAttribute("counterType", getParam("counterType"));
         // add by wangguoxian 增加交易对手类型传参 20190713 end

@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.lossmodel.lossgivendefaultmaintain.dto.ModLgdConfigDto;
+import org.springframework.stereotype.Repository;
 
+@Repository(value="serviceModLgdConfigDtoMapper")
 public interface ModLgdConfigDtoMapper {
     int deleteByPrimaryKey(String seqno);
 

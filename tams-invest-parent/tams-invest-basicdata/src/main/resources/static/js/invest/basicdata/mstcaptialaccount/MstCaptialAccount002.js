@@ -362,6 +362,7 @@
 
         
         //双录校验
+        if(dooubleRecord == '01'){
         JoyinWorkFlow.doCheckOnSubmit = function (object) {
         	var param = $.serializeToObject('#informationForm', true);
             if(param.accountType){
@@ -378,6 +379,7 @@
             },false);
 
             return checkResult;
+        }
         };
     });
 }());

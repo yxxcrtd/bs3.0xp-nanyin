@@ -3,6 +3,7 @@
      * 获取查询参数
      */
     var getSearchParams = function() {
+        debugger;
         var objDiv= $("#FinBondTargetAsset001_DIV");
         var param = $.serializeToObject('#searchForm');
         //	查询条件换成资产二级分类多选项 -wangguiqi on 2019/7/18 -end
@@ -184,7 +185,7 @@
      * @returns
      */
     function showDialog() {
-        Joyin.dialog(JoyinUtil.getLabel('FinBondTargetAsset002.newTitle'), '../FinBondTargetAsset002/init', '98%', '98%');
+        Joyin.dialog(JoyinUtil.getLabel('债券信息新建'), '../FinBondTargetAsset002/init', '98%', '98%');
     }
 
     /**
@@ -209,7 +210,7 @@
                 var selArr = table.getAllCheckedRows();
             }
             if (!selArr || selArr.length == 0) {
-                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                Joyin.error(JoyinUtil.getMessage("请至少选择1条记录进行删除!"));
                 return;
             }
             var object = {selectedItem: selArr, operateType:"delete", batchDelFlag:YES_OR_NO_Y};

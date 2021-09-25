@@ -495,8 +495,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                     logger.info(getMessage("==========开始处理数据,交易或指令编号: "+inputDto.getTradeId()+",释放规则：先进先出=========="));
                     // 当前释放份额(剩余释放份额)
                     BigDecimal shareAmtTotal = inputDto.getShareAmt();
-                    BigDecimal 已占用额度 = creditLinesAst.getHapCreditAmt();
-                    BigDecimal 机构释放额度 = creditLinesAst.getHapCreditAmt();
+                    BigDecimal 已占用额度 = creditLinesDealsMapper.getOccupiedQuota(inputDto);
                     CreditLinesInputDto linesInputDto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(linesInputDto,inputDto);
                     // 释放金额
@@ -517,7 +516,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmt);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmt.multiply(item.getNetPrice()));
                         }else {
                             // 前置交易剩余待释放份额
                             item.setShareAmt(shareAmt.subtract(shareAmtTotal));
@@ -526,7 +524,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmtTotal);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmtTotal.multiply(item.getNetPrice()));
                             // 剩余释放份额
                             shareAmtTotal = BigDecimal.ZERO;
                         }
@@ -541,6 +538,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                         generateDealResult(linesInputDto,creditLinesAst,releaseAmt,releaseAmt,occupy, occupyType);
                     }
                     // 资产系列授信占用列表
+                    已占用额度 = creditLinesDealsMapper.getOccupiedQuota1(inputDto);
                     List<CreditUsingSeries> seriesList = creditLinesDealsMapper.findCreditUsingSeriesByFin(inputDto);
                     for (CreditUsingSeries item : seriesList){
                         BigDecimal releaseAmt;
@@ -557,7 +555,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmt);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmt.multiply(item.getNetPrice()));
                         }else {
                             // 前置交易剩余待释放份额
                             item.setShareAmt(shareAmt.subtract(shareAmtTotal));
@@ -566,7 +563,6 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
                             // 当前释放份额
                             linesInputDto.setShareAmt(shareAmtTotal);
                             已占用额度 = 已占用额度.subtract(releaseAmt);
-                            机构释放额度 = 机构释放额度.subtract(shareAmtTotal.multiply(item.getNetPrice()));
                             // 剩余释放份额
                             shareAmtTotal = BigDecimal.ZERO;
                         }
@@ -1209,6 +1205,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setEntrustId(creditLinesInputDto.getEntrustId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_资产授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingAst item = new CreditUsingAst();
@@ -1230,6 +1227,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingAstList.add(item);
         }else if (StringUtil.equals(BussinessDictCodeList.授信配置代码_系列授信.getValue(),creditLines.getCreditMstId())){
             CreditUsingSeries item = new CreditUsingSeries();
@@ -1252,6 +1250,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setShareAmt(creditLinesInputDto.getShareAmt());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
             item.setPortfolioId(creditLinesInputDto.getPortfolioId());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingSeriesList.add(item);
         }else {
             CreditUsingCustomerMst item = new CreditUsingCustomerMst();
@@ -1272,6 +1271,7 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
             item.setCreditOccureType(occupyType);
             item.setEntrustId(creditLinesInputDto.getEntrustId());
             item.setStatus(DictCodeListExt1.交易状态_初始.getValue());
+            item.setpFinprodId(creditLinesInputDto.getpFinprodId());
             this.creditUsingCustomerMstList.add(item);
         }
     }
@@ -1743,25 +1743,30 @@ public class CreditLinesUpdateImpl extends CreditLinesUpdateAbs {
         creditLinesOutputDtoList.add(outputDto);
         // STEP  1 处理基础数据（资产授信数据，额度校验规则、机构授信数据）
         findBasicData(inputDto);
-        if (creditLinesAst == null && oneStepInfo != null && oneStepInfo.getDeductObj() == null){
+        if (creditLinesAst == null && (oneStepInfo != null && oneStepInfo.getDeductObj() == null || creditLinesOrg == null && creditLinesOrgItem == null)){
             return outputDto;
         }
-        //处理 净值型、货币型、基金的申购确认
+        //处理 当授信对象为金额时 申购/认购 的待释放份额为0
+        if (creditLinesAst!=null
+                && (BussinessDictCodeList.授信对象_金额.getValue().equals(creditLinesAst.getCreditObj())||"03".equals(creditLinesAst.getCreditType()))
+                && (DictCodeList.交易方向_申购.getValue().equals(inputDto.getPs())
+                || DictCodeList.交易方向_认购.getValue().equals(inputDto.getPs()))) {
+            inputDto.setShareAmt(BigDecimal.ZERO);
+        }
+        //处理 净值型、货币型、基金的申购/认购确认
         if(StringUtil.isNotEmpty(inputDto.getIsSpecial()) && "true".equals(inputDto.getIsSpecial())){
-            if(creditLinesAst!=null) {
-                if (creditLinesAst.getCreditObj().equals(BussinessDictCodeList.授信对象_份额.getValue())) {
-                    BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
-                    BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
-                    inputDto.setShareAmt(objShareAmt.abs());
-                    inputDto.setTradeAmt(BigDecimal.ZERO);
-                    occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
-                }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
-                    inputDto.setTradeAmt(BigDecimal.ZERO);
-                }else{
-                    return outputDto;
-                }
-                inputDto.setEntrustId(null);
+            if (creditLinesAst!=null && BussinessDictCodeList.授信对象_份额.getValue().equals(creditLinesAst.getCreditObj())) {
+                BigDecimal yuanShareAmt = creditLinesDealsMapper.getShareAmt(inputDto.getEntrustId());
+                BigDecimal objShareAmt = inputDto.getShareAmt().subtract(yuanShareAmt);
+                inputDto.setShareAmt(objShareAmt.abs());
+                inputDto.setTradeAmt(BigDecimal.ZERO);
+                occupy=objShareAmt.compareTo(BigDecimal.ZERO)>0?true:false;
+            }else if(StringUtil.equals(BussinessConstant.RELEASE_MODE_01,CacheUtil.getSysParam(BussinessConstant.RELEASE_MODE))){
+                inputDto.setTradeAmt(BigDecimal.ZERO);
+            }else{
+                return outputDto;
             }
+            inputDto.setEntrustId(null);
         }
         // STEP  2 计算占用额度
         cal占用额度(inputDto);

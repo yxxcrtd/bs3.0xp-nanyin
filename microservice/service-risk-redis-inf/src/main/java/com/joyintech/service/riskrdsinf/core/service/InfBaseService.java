@@ -720,7 +720,7 @@ public abstract class InfBaseService<V> {
     	}
 
     	String assetCode = (String) request.get("assetCode");
-		BigDecimal unitNet = consumer == null ? BigDecimal.ONE : consumer.handle();
+		BigDecimal unitNet = consumer == null ?BigDecimal.ONE : consumer.handle();
 		if (unitNet == null) {
 			// 如果基金净值没有则按1计算
 			getLogger().debug("没有取到{}的净值，按1计算", assetCode);
@@ -730,7 +730,10 @@ public abstract class InfBaseService<V> {
     			|| BigDecimal.ZERO.compareTo(new BigDecimal(amountObj.toString())) == 0) {
     		if(trdNumObj == null) trdNumObj = BigDecimal.ZERO;
     		BigDecimal trdNum = trdNumObj instanceof BigDecimal ? (BigDecimal) trdNumObj : new BigDecimal(trdNumObj.toString());
-    		BigDecimal amount = trdNum.multiply(unitNet);
+            BigDecimal amount = trdNum.multiply(unitNet);
+            if (unitNet.compareTo(BigDecimal.ONE)==0){
+                amount = StringUtil.isNotEmpty(request.get("totalFaceAmt"))?new BigDecimal(request.get("totalFaceAmt").toString()):amount;
+            }
     		request.put(AMOUNTKEY, amount);
     	}
     	else if (trdNumObj == null || StringUtil.isEmpty(trdNumObj.toString())

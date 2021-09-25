@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.tams.common.base.entity.FinProductAdd;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.valuation.common.interf.base.batch.dao.ValFinProductAddBatchMapper;
 import com.joyintech.tams.valuation.interf.valuation.recv.common.service.AssetmanageRecvCommonService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +66,12 @@ public class NPlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>
      */
     @Autowired
     private  ValFinProductTypeBatchMapper  valFinProductTypeBatchMapper;
+
+    /**
+     * 标的类金融产品附属表
+     */
+    @Autowired
+    private ValFinProductAddBatchMapper valFinProductAddBatchMapper;
 
     /**
      * 日志
@@ -215,7 +223,30 @@ public class NPlannedAssetBaseInfoRecWriter extends InterfBaseWriter<BaseEntity>
                 }
                 
             }
-            
+
+           //标的类金融产品附属表
+            List<FinProductAdd> listValFinProductAdd = result.getListValFinProductAdd();
+            // 入库
+            if (CollectionUtils.isNotEmpty(listValFinProductAdd)) {
+                // 定义一个固定大小插入存放集合
+                List<FinProductAdd> listInsert = new ArrayList<FinProductAdd>();
+                for (FinProductAdd e : listValFinProductAdd) {
+                    // 小于最大值
+                    if (listInsert.size() < maxSqlNum) {
+                        listInsert.add(e);
+                    } else if (listInsert.size() >= maxSqlNum) {
+                        valFinProductAddBatchMapper.deleteBatch(listInsert);
+                        valFinProductAddBatchMapper.insertBatch(listInsert);
+                        listInsert.clear();
+                        listInsert.add(e);
+                    }
+                }
+                // 如果循环结束，小于最大值
+                if (CollectionUtils.isNotEmpty(listInsert)) {
+                    valFinProductAddBatchMapper.deleteBatch(listInsert);
+                    valFinProductAddBatchMapper.insertBatch(listInsert);
+                }
+            }
 
             // 日志
             List<ValInterflog> valInterflog = result.getValInterflog();

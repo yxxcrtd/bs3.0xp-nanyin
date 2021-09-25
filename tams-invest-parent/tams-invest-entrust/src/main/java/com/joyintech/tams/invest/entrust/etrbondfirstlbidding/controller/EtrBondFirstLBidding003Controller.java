@@ -189,17 +189,17 @@ public class EtrBondFirstLBidding003Controller extends BaseController {
             }
             dto.setWorkflowParameter("new|||1|EtrBondFirstLBidding002|EtrBondFirstLBidding002_btn_submit|true");
         }
-        // ----------add by yushilong 20200721 预占功能 start----------
-        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
-            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
-                    DictCodeListExt2.平安资产类型_一级市场债.getValue(),
-                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
-                    false, null);
-            if (StringUtil.isNotEmpty(ar)) {
-                return ar;
-            }
-        }
-        // ----------add by yushilong 20200721 预占功能 end----------
+//        // ----------add by yushilong 20200721 预占功能 start----------
+//        if (StringUtil.equals(BussinessConstant.SUBMIT, allDto.getOperateType())) {
+//            AjaxResult ar = EntrustRdsCommonAop.doListPreOccupy(allDto.getSelectedItem(),
+//                    DictCodeListExt2.平安资产类型_一级市场债.getValue(),
+//                    BussinessDictCodeListRds.接口系统ID_预占批量接口.getValue(),
+//                    false, null);
+//            if (StringUtil.isNotEmpty(ar)) {
+//                return ar;
+//            }
+//        }
+//        // ----------add by yushilong 20200721 预占功能 end----------
 
         ProcessParameter<EtrBondFirstLBiddingDto> processParameter = new ProcessParameter<EtrBondFirstLBiddingDto>();
         WorkFlowParameter<EtrBondFirstLBiddingDto> params = new WorkFlowParameter<EtrBondFirstLBiddingDto>();

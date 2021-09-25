@@ -1,15 +1,22 @@
 (function () {
     var getEtrInfo = false;
     $(".layui-tab").show();
+    var fetsRepoDealQuotedPrice001_entrustOrderTable_loading;
+    var fetsRepoDealQuotedPrice001_dayOfferTable_loading;
     /**
      * 获取指令执行查询参数
      */
     var genzlzxTableParam = function () {
-        var pageParam = $.serializeToObject('#searchForm_zlgl');
-        if (pageParam.portfolioId_zlgl && pageParam.portfolioId_zlgl != '') {
-            pageParam.portfolioId_zlgl = pageParam.portfolioId_zlgl.join(",");
+        var pageParam = $.serializeToObject('#cfetsRepoDealQuotedPrice001_entrustOrder_form');
+        if (pageParam.invManagerId && pageParam.invManagerId != '') {
+            pageParam.invManagerId = pageParam.invManagerId.join(",");
         } else {
-            pageParam.portfolioId_zlgl = null;
+            pageParam.invManagerId = null;
+        }
+        if (pageParam.portfolioId && pageParam.portfolioId != '') {
+            pageParam.portfolioId = pageParam.portfolioId.join(",");
+        } else {
+            pageParam.portfolioId = null;
         }
         var cols = [];
         $.each(zlzxTable.options.cols, function (i, val) {
@@ -34,7 +41,6 @@
                 return genzlzxTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -76,6 +82,7 @@
                 title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.portfolioName'
             }
             , {field: 'secAcctName', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId'}
+            , {field: 'secAcctId', width: 120, title: 'CfetsRepoDealQuotedPrice001.entrustOrder.table.secAcctId',visible: false}
             , {field: 'settleSpreedStr', width: 90, title: '清算速度', sortField: "settleSpreed"}
             , {
                 field: 'psStr',
@@ -138,7 +145,10 @@
                     }
                 }
             }
-        ]
+        ],
+        done:function(allData){
+            layui.layer.close(fetsRepoDealQuotedPrice001_entrustOrderTable_loading);
+        },
     });
     /**
      * 接收
@@ -262,7 +272,6 @@
                 return genzyqglTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -293,7 +302,32 @@
      * 获取委托查询对话查询参数
      */
     var genwtdhbjTableParam = function () {
-        var pageParam = $.serializeToObject('#searchForm_wtcxdh');
+        var pageParam = $.serializeToObject('#cfetsRepoDealQuotedPrice001_dayOffer_form');
+        if (pageParam.mySideTrader && pageParam.mySideTrader != '') {
+            pageParam.mySideTrader = pageParam.mySideTrader.join(",");
+        } else {
+            pageParam.mySideTrader = null;
+        }
+        if (pageParam.counterId && pageParam.counterId != '') {
+            pageParam.counterId = pageParam.counterId.join(",");
+        } else {
+            pageParam.counterId = null;
+        }
+        if (pageParam.counterTrader && pageParam.counterTrader != '') {
+            pageParam.counterTrader = pageParam.counterTrader.join(",");
+        } else {
+            pageParam.counterTrader = null;
+        }
+        var cols = [];
+        $.each(wtdhbjTable.options.cols,function(i,val){
+            if(val.visible==false){
+
+            }else{
+                cols.push(val.field);
+            }
+        })
+        cols.push("quoteId");
+        pageParam.keycols = cols.join(",");
         return pageParam;
     };
 
@@ -308,7 +342,6 @@
                 return genwtdhbjTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -375,7 +408,7 @@
                 title: '交易金额',
                 type: "money"
             }
-            , {field: 'term', width: 90, title: '回购期限'}
+            , {field: 'term', width: 90, title: '回购期限（天）'}
             , {field: 'rate', width: 130, title: 'CfetsRepoDealQuotedPrice001.dayOffer.table.rate'}
             , {
                 field: 'bondCode',
@@ -482,6 +515,9 @@
                 }
             }
         ],
+        done:function(allData){
+            layui.layer.close(fetsRepoDealQuotedPrice001_dayOfferTable_loading);
+        },
         dblclick: function (table, data) {
             // 判断交易状态
             var object = data;
@@ -497,7 +533,8 @@
                 quoteId: data.quoteId,
                 workflowStatus: data.validStatus,
                 workflowId: data.workflowId,
-                quotaPageModel: 'edit'  //add by zhangnian 20210116  双击进去默认做修改操作
+                quotaPageModel: 'edit', //add by zhangnian 20210116  双击进去默认做修改操作
+                operation: object.operation
             }, function () {
                 wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
             });
@@ -540,7 +577,6 @@
                 return gencjcxTableParam();
             }
         },
-        height: 180,
         searchOnInit: true,
         page: false,
         loadonce: true,
@@ -550,8 +586,8 @@
             , {field: 'portfolioName', title: 'CSTPSelect001.portfolioName', width: '100', visible: false}
             , {field: 'execid', title: 'CSTPSelect001.execid', width: '200'}
             , {field: 'psStr', title: '本方方向', sortField: 'side', width: '100'}
-            , {field: 'ourinstitutioncode', title: '本方', width: '100'}
-            , {field: 'counterinstitutioncode', title: '对手方', width: '100'}
+            , {field: 'exeOuPartyId', title: '本方', width: '100'}
+            , {field: 'exeCpPartyId', title: '对手方', width: '100'}
             , {field: 'cpPartyName', title: '对手方机构', width: '100'}
             , {field: 'tradecashamt', title: 'CSTPSelect001.tradecashamt', width: '170', type: 'money'}
             , {field: 'tradelimitdaysStr', title: 'CSTPSelect001.tradelimitdays', width: '150'}
@@ -560,9 +596,9 @@
             , {field: 'symbol', title: '名称', width: '150'}
             , {field: 'pledgeRateStr', title: '折算比例(%)', width: '120'}
             , {field: 'lastqty', title: '券面总计（万元）', width: '210', type: 'money', digit: 2}
-            , {field: 'ourTradeName', title: '本方交易员', width: '100'}
+            , {field: 'exeOuTraderId', title: '本方交易员', width: '100'}
             , {field: 'ourinstitutionchineseshortname', title: '本方代理机构', width: '100'}
-            , {field: 'counterTraderName', title: '对手方交易员', width: '100'}
+            , {field: 'exeCpTraderId', title: '对手方交易员', width: '100'}
             , {field: 'institutionchineseshortname', title: '对手方代理机构', width: '100'}
             , {field: 'settleSpeedStr', title: '清算速度', width: '100'}
             , {
@@ -618,12 +654,17 @@
             , {field: 'acctNo', title: 'CSTPSelect001.secAccount', width: '150',visible: false}
             , {field: 'businesstypeStr', title: 'CSTPSelect001.finprodType', sortField: 'businesstype', width: '120',visible: false}
             , {field: 'securityid', title: '期限类型', width: '120',visible: false}
-            , {field: 'entrustId', width: '120',visible: true}
-            , {field: 'tradeId', width: '120',visible: true}
-            , {field: 'fTradeId', width: '120',visible: true}
-            , {field: 'rTradeId', width: '120',visible: true}
-            , {field: 'ps', sortField: 'side', visible: true}
-            , {field: 'settleSpeed', title: '清算速度', width: '100'}
+            , {field: 'entrustId', width: '120',visible: false}
+            , {field: 'tradeId', width: '120',visible: false}
+            , {field: 'fTradeId', width: '120',visible: false}
+            , {field: 'rTradeId', width: '120',visible: false}
+            , {field: 'ouPartyId', width: '120',visible: false}
+            , {field: 'ouTraderId', width: '120',visible: false}
+            , {field: 'cpPartyId', width: '120',visible: false}
+            , {field: 'cpTraderId', width: '120',visible: false}
+            , {field: 'ps', sortField: 'side', visible: false}
+            , {field: 'finprodId', sortField: 'finprodId', visible: false}
+            , {field: 'settleSpeed', title: '清算速度', width: '100', visible: false}
             , {
                 field: 'settleDate',
                 title: 'CSTPSelect001.settleDate',
@@ -741,6 +782,7 @@
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.zyqgl-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
+        $('.wtcxdh-transfer-form .btn-select-wrapper').hide();
         $('.wtcxdh-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_filter').hide();
         $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_export').hide();
@@ -778,12 +820,52 @@
             });
         });
 
-        /**
+/*        /!**
          * 指令执行查询按钮点击事件
-         */
+         *!/
         $('.zlgl-transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
             zlzxTable.load();
+        });*/
+        /**
+         * 指令执行查询弹出框
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seach').click(function() {
+            $('#dayOfferSelectorConditionFilter001').hide();
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            if($("#selectorConditionFilter001").css("display")=="none"){
+                $("#selectorConditionFilter001").show();
+            }
+            else{
+                $("#selectorConditionFilter001").hide();
+            }
         });
+        /**
+         * 指令执行查询弹出框关闭
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachClose').click(function() {
+            $("#selectorConditionFilter001").hide();
+        });
+        /**
+         * 委托指令查询弹出框查询
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_realseach').click(function() {
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
+            $("#selectorConditionFilter001").hide();
+        });
+        /**
+         * 委托指令查询弹出框重置
+         */
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_btn_seachReset').click(function() {
+            $("#portfolioId_zlgl").empty();
+            $("#ps_zlgl").val("").trigger("change");
+            $("#term_zlgl").val("");
+            $("#settleSpreed_zlgl").val("").trigger("change");
+            $("#invManagerId_zlgl").empty();
+            $("#entrustId_zlgl").empty();
+            $("#entrustDate_zlgl").val("");
+        });
+
         /**
          * 质押券管理查询按钮点击事件
          */
@@ -798,11 +880,74 @@
             wtdhbjTable.load();
         });
         /**
-         * 委托查询报价查询按钮点击事件
+         * 委托指令放大镜点击事件
          */
-        $('.wtcxbj-transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
-            /*wtcxqqTable.load();*/
+        $('#CfetsRepoDealQuotedPrice001_entrustOrder_search').click(function(){
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
         });
+        /**
+         * 委托指令radio点击事件
+         */
+        $("[name=zlglStatus]").click(function(){
+            fetsRepoDealQuotedPrice001_entrustOrderTable_loading = layui.layer.open({type:3});
+            zlzxTable.table ? zlzxTable.reload() : zlzxTable.load();
+        });
+        /**
+         * 当日报价放大镜点击事件
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_search').click(function(){
+            fetsRepoDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+        });
+        /**
+         * 当日报价radio点击事件
+         */
+        $("[name=dayOfferStatus]").click(function(){
+            fetsRepoDealQuotedPrice001_dayOfferTable_loading = layui.layer.open({type:3});
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+        });
+        /**
+         * 当日报价查询弹出框
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seach').click(function() {
+            $('#selectorConditionFilter001').hide();
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            if($("#dayOfferSelectorConditionFilter001").css("display")=="none"){
+                $("#dayOfferSelectorConditionFilter001").show();
+            }
+            else{
+                $("#dayOfferSelectorConditionFilter001").hide();
+            }
+        });
+
+        /**
+         * 当日报价查询弹出框关闭
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seachClose').click(function() {
+            $("#dayOfferSelectorConditionFilter001").hide();
+        });
+        /**
+         *当日报价查询弹出框查询
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_realseach').click(function() {
+            wtdhbjTable.table ? wtdhbjTable.reload() : wtdhbjTable.load();
+            $("#dayOfferSelectorConditionFilter001").hide();
+        });
+
+        /**
+         * 当日报价查询弹出框重置
+         */
+        $('#CfetsRepoDealQuotedPrice001_dayOffer_btn_seachReset').click(function() {
+            $("#ps_wtcx").val("").trigger("change");
+            $("#mySideTrader_wtcx").empty();
+            $("#counterId_wtcx").empty();
+            $("#counterTrader_wtcx").empty();
+            $(".termEmpty_wtcx").val("");
+            $("#quoteId_wtcx").val("");
+        });
+
+
         /**
          * 成交查询查询按钮点击事件
          */

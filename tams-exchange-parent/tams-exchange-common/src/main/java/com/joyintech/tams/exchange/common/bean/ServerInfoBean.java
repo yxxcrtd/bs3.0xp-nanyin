@@ -22,6 +22,7 @@ public class ServerInfoBean {
      */
     private String entrustTopicName;//委托主题名称
     private String tradeTopicName;//成交主题名称
+    private String incomeTradeTopic;//固收协议回购成交主推主题名
 
     private String ufxTradeClientName; //ufx配置文件交易节点
     private String ufxSubClientName; //ufx配置文件订阅节点
@@ -129,6 +130,14 @@ public class ServerInfoBean {
 
     public void setTradeTopicName(String tradeTopicName) {
         this.tradeTopicName = tradeTopicName;
+    }
+
+    public String getIncomeTradeTopic() {
+        return incomeTradeTopic;
+    }
+
+    public void setIncomeTradeTopic(String incomeTradeTopic) {
+        this.incomeTradeTopic = incomeTradeTopic;
     }
 
     public String getUfxTradeClientName() {

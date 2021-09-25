@@ -11,7 +11,7 @@ public class StockInfoDto extends BaseEntity {
      */
     private BigDecimal stockPrice;
     /**
-     * 可转股flag
+     * 可转股flag:1-转股；0-不转股
      */
     private int stockFlg;
     /**

@@ -92,7 +92,7 @@
                                                 class="layui-input form-input input-select" placeholder="请输入内容"
                                                 th:placeholder="#{SysCommon.placeholder}"
                                                 th:data-url="@{/invest/trade/fund/TrdFundInvestTrade002/getFinprodId(parentPageId=${parentPageId})}"
-                                                allowClear="true" required="required"
+                                                allowClear="true" parentIds="ps" required="required"
                                                 th:initValue="${entity?.finprodMarketId}"></select>
                                         </div>
                                     </div>
@@ -282,7 +282,7 @@
                                         <label class="layui-form-label form-label-wrap"
                                                th:text="#{TrdFundInvestTrade002.purSpeed}">确认速度</label>
                                         <div class="layui-input-inline input-inline delaytime-inline-wrap">
-                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;padding:0px;">T+</label>
                                             <input type="text" disabled id="settleSpreed" name="settleSpreed"  th:value="${entity?.settleSpreed}" class="layui-input form-input"
                                                    style="float: left;display: inline-block; width: 85%;"/>
                                         </div>
@@ -358,7 +358,7 @@
                                         <label class="layui-form-label form-label-wrap purSpeed"
                                                data-th-text="#{FinFundTarget002.purSpeed}">申购确认速度</label>
                                         <div class="layui-input-inline input-inline delaytime-inline-wrap">
-                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;padding:0px;">T+</label>
                                             <input type="text" id="purSpeed" name="purSpeed"  th:value="${entity?.purSpeed}" class="layui-input form-input"
                                                    disabled onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
                                                    style="float: left;display: inline-block; width: 89%;"/>
@@ -368,7 +368,7 @@
                                         <label class="layui-form-label form-label-wrap redSpeed"
                                                data-th-text="#{FinFundTarget002.redSpeed}">赎回确认速度</label>
                                         <div class="layui-input-inline input-inline delaytime-inline-wrap">
-                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;">T+</label>
+                                            <label class="layui-form-label form-label-wrap rate-text" style="float: left;display: inline-block;width: 6%;padding:0px;">T+</label>
                                             <input type="text" id="redSpeed" name="redSpeed"  th:value="${entity?.redSpeed}" class="layui-input form-input"
                                                    disabled onkeyup="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'')}else{this.value=parseInt(this.value.replace(/\D/g,''))}" onafterpaste="if(this.value.length<=1){this.value=this.value.replace(/[^0-9]/g,'0')}else{this.value=parseInt(this.value.replace(/\D/g,''))}"
                                                    style="float: left;display: inline-block; width: 89%;"/>

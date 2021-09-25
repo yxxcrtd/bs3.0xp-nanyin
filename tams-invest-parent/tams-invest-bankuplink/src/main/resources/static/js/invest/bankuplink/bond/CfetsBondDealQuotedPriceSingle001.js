@@ -38,6 +38,7 @@
                     $('#CfetsBondDealQuotedPriceSingle001_remark').val(result.data.remark);
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_entrustAmt').val(result.data.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val(result.data.finprodId);
+                    $('#businessModel').val(result.data.businessModel);
                     // 区分画面打开模式
                     var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
 
@@ -135,7 +136,7 @@
                         }
                     }
                     entrustIdChangeFlag = false;
-                    calcAmt("01");
+                    calcAmt($("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val());
                 }
             });
         }
@@ -229,8 +230,8 @@
         var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
         var sysDateT1 = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
         var calId = '';
-        if (todoList == false&&parent.parent.EtrIbBondinfoHq) {
-            parent.parent.EtrIbBondinfoHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
+        if (todoList == false&&parent.parent.CfetsBondDealQuotedPriceHq) {
+            parent.parent.CfetsBondDealQuotedPriceHq.querySecinfo(finprodIdhid,portfolioId,chlFinprodId,ccy,sysDateT1,calId);
         }
     };
 
@@ -245,8 +246,8 @@
         var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
         var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
         var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
-        if(window.EtrInitCash){
-            window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+        if(window.CfetsRepoDealQuotedPrInitCash){
+            window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
         }
     };
 
@@ -434,6 +435,9 @@
         if(workflowId || (pageModel == PAGE_MODEL_REFERENCE || pageModel == PAGE_MODEL_EDIT) && !(quotaPageModel && (quotaPageModel == 'dialogueResponse'))){//流程中、修改、查看
             $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.4);
         }
+        if(quotaPageModel == "new"){
+            $('#CfetsBondDealQuotedPriceSingle001_entrustId_search').css('opacity',0.0);
+        }
 
         /**
          * 券面总额
@@ -455,8 +459,8 @@
             calDeviationDegree();
             var portfolioIds = [];
             portfolioIds.push($("#CfetsBondDealQuotedPriceSingle001_portfolioId").val());
-            if(parent.parent.EtrIbBondinfoHq){
-                parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,$('#CfetsBondDealQuotedPriceSingle001_settleCcy').val(),
+            if(parent.parent.CfetsBondDealQuotedPriceHq){
+                parent.parent.CfetsBondDealQuotedPriceHq.calCanBuyAmount(portfolioIds,$('#CfetsBondDealQuotedPriceSingle001_settleCcy').val(),
                     $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val(),$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val());
             }
             calcAmt('01');
@@ -469,8 +473,8 @@
             calDeviationDegree();
             var portfolioIds = [];
             portfolioIds.push($("#CfetsBondDealQuotedPriceSingle001_portfolioId").val());
-            if(parent.parent.EtrIbBondinfoHq){
-                parent.parent.EtrIbBondinfoHq.calCanBuyAmount(portfolioIds,$('#CfetsBondDealQuotedPriceSingle001_settleCcy').val(),
+            if(parent.parent.CfetsBondDealQuotedPriceHq){
+                parent.parent.CfetsBondDealQuotedPriceHq.calCanBuyAmount(portfolioIds,$('#CfetsBondDealQuotedPriceSingle001_settleCcy').val(),
                     $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val(),$('#CfetsBondDealQuotedPriceSingle001_unitCprice').val());
             }
         });
@@ -885,7 +889,7 @@
         $("#CfetsBondDealQuotedPriceSingle001_mySideTrader").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterId").val("").trigger("change");
         $("#CfetsBondDealQuotedPriceSingle001_counterTrader").val("").trigger("change");
-        $("#CfetsBondDealQuotedPriceSingle001_remark").val(sysDate).trigger("change");
+        $("#CfetsBondDealQuotedPriceSingle001_remark").val("").trigger("change");
         layui.form.render(); // reload layui
         pageModel = PAGE_MODEL_NEW;
     };
@@ -927,6 +931,9 @@
         if(!object.finprodId){
             object.finprodId = $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val();
         }
+        if(!object.calculateField) {
+            object.calculateField = $("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val();
+        }
         object.operatorType = operateType;
         return object;
     }
@@ -960,11 +967,22 @@
             var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
             var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
             var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
-            if(window.EtrInitCash){
-                window.EtrInitCash.queryCash(ccy,vdate,portfolioId);
+            if(window.CfetsRepoDealQuotedPrInitCash){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
             }
         }
     };
 
+    setTimeout(function(){
+        if(pageModel != PAGE_MODEL_NEW){
+            calDeviationDegree();
+            var portfolioId = $("#CfetsBondDealQuotedPriceSingle001_portfolioId").val();
+            var vdate = $('#CfetsBondDealQuotedPriceSingle001_tradeDate').val();
+            var ccy= $("#CfetsBondDealQuotedPriceSingle001_settleCcy").val();
+            if(window.CfetsRepoDealQuotedPrInitCash){
+                window.CfetsRepoDealQuotedPrInitCash.queryCash(ccy,vdate,portfolioId);
+            }
+        }
+    },2000);
 
 }());

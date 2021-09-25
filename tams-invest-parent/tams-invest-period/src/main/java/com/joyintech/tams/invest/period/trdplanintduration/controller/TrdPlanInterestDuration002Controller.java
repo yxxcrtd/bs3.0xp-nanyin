@@ -12,6 +12,7 @@ import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.common.FinAssetIntInfo;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -159,7 +160,9 @@ public class TrdPlanInterestDuration002Controller extends BaseController {
         model.addAttribute("COLLECT_TYPE_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
         // add by renping 2019-10-15 添加通道费 end
         model.addAttribute("F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
-        
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
      // 一体化对应etliu start
 //        setSelectOptionToModel(model, DictCode.是否, DictCode.币种, DictCode.划款类型);
         setSelectOptionToModel(model, DictCode.是否, DictCode.币种, DictCode.平安划款类型);
@@ -197,8 +200,7 @@ public class TrdPlanInterestDuration002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({ValidateGroupEdit.class}) TrdPlanInterestDurationProcessDto dto,
-                           BindingResult br)
-        throws Exception {
+                           BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

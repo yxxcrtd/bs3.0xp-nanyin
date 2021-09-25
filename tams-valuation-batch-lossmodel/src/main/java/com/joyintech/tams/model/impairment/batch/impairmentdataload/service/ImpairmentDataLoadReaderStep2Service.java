@@ -2,22 +2,16 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
-import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
-import com.joyintech.tams.common.base.entity.ModConfigUseage;
-import com.joyintech.tams.common.base.entity.ModEclResultProcess;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
-import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep1ReaderDto;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dto.ImpairmentDataLoadStep2ReaderDto;
-import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModAssetInfoDto;
+import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
 import com.joyintech.tams.valuation.component.batch.service.ModParamsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import com.joyintech.tams.valuation.model.common.rateconfig.service.RateConfigCommonService;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 import com.joyintech.tams.valuation.model.common.rateinfo.service.RateInfoCommonService;
@@ -26,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ImpairmentDataLoadReaderStep2Service {
@@ -41,6 +34,9 @@ public class ImpairmentDataLoadReaderStep2Service {
     private RateConfigCommonService rateConfigCommonService;
     @Autowired
     private RateInfoCommonService rateInfoCommonService;
+    @Autowired
+    private ModLogsService modLogsService;
+
 
     /**
      * 二叉树模型-reader
@@ -77,6 +73,10 @@ public class ImpairmentDataLoadReaderStep2Service {
             ModConfigUseage modConfigUseage = new ModConfigUseage();
             ModAssetInfoDto modAssetInfoDto = new ModAssetInfoDto();
             BeanUtil.copyPropertiesIgnoreNull(modAssetInfoDto, item);
+            modAssetInfoDto.setSecType(item.getModelAssetType());
+            modAssetInfoDto.setFinprodId(item.getAssetId());
+            modAssetInfoDto.setSecTypeDetail(item.getModelAssetDetailType());
+            modAssetInfoDto.setFinprodMarketId(item.getMarketId());
             // 定义 变量.评级信息
             ViewRatingInfoDto ratingInfoDto = null;
             // 特殊资产评级配置不为空时
@@ -92,8 +92,17 @@ public class ImpairmentDataLoadReaderStep2Service {
 
                 // 查询对应评级信息
                 ratingInfoDto  = rateInfoCommonService.getRatingInfoBySpecialConfig(modAssetInfoDto,specialConfig,item.getTradeDate());
-            }else if(configMap.get(item.getAssetId()) != null){
-                ModAssetGradeConfig config = configMap.get(item.getAssetId());
+            }else if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null
+                    || configMap.get(item.getModelAssetType()) != null){
+                ModAssetGradeConfig config = new ModAssetGradeConfig();
+                // 资产类型+资产细分类
+                if(configMap.get(item.getModelAssetType()+item.getModelAssetDetailType()) != null){
+                    config = configMap.get(item.getModelAssetType()+item.getModelAssetDetailType());
+                }
+                // 否则，直接根据资产类型取值
+                else{
+                    config = configMap.get(item.getModelAssetType());
+                }
                 //定义 配置流水号 = LGD参数Dto.流水号
                 modConfigUseage.setConfigSeqno(config.getSeqno());
                 //定义 配置类型 = LGD参数Dto.配置类型
@@ -107,8 +116,8 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级配置信息";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        item.getAssetId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+
                 continue;
             }
             if(ratingInfoDto != null){
@@ -116,12 +125,12 @@ public class ImpairmentDataLoadReaderStep2Service {
                 item.setResultDeal(ratingInfoDto.getRating());
                 // 添加到返回结果List中
                 readerDto.setModEclResultProcess(item);
+                resultList.add(readerDto);
             }
             else{
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级结果";
-                impairmentCommonService.sendLogContextInfo(stepExecution, batchExecuteInfo,
-                        item.getAssetId(), msg, ModelDictCodeList.批处理执行结果_异常结束.getValue(), "ERRORS");
+                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
                 continue;
             }
 

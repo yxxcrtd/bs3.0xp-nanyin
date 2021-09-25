@@ -74,9 +74,9 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
         while (paramNames.hasMoreElements()){
             String key=paramNames.nextElement();
             if("valDate".equals(key)&& StringUtil.isNotEmpty(request.getParameter(key))){
-                model.addAttribute(key,DateUtil.format(DateUtil.parse(request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN)+" - "+DateUtil.format(DateUtil.parse(request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN));
+                model.addAttribute(key,DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN)+" - "+DateUtil.format(DateUtil.parse(request.getParameter(key)==null?"":request.getParameter(key)),DateUtil.DEFAULT_DATE_FORMAT_EN));
             }else {
-                model.addAttribute(key, request.getParameter(key));
+                model.addAttribute(key, request.getParameter(key)==null?"":request.getParameter(key));
             }
         }
         this.setSelectOptionToModel(model, BussinessDictCodeRds.监督类型,BussinessDictCodeRds.单位,BussinessDictCodeRds.监督状态);
@@ -95,7 +95,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPage")
     public Page<RskSupervisionRiskAnalyzeDto> selectAll()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPage(map);
         return page;
@@ -135,7 +135,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
     @ResponseBody
     @RequestMapping("findPageInit")
     public Page<RskSupervisionRiskAnalyzeDto> selectAllInit()
-            throws Exception {
+             {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<RskSupervisionRiskAnalyzeDto> page = rskSupervisionRiskAnalyzeService.selectForPageInit(map);
         return page;
@@ -152,7 +152,7 @@ public class RskSupervisionRiskAnalyze001Controller extends BaseController  {
 
     @RequestMapping("export")
     public ResponseEntity<byte[]> export()
-            throws Exception {
+             {
         return rskSupervisionRiskAnalyzeService.export(this.getPageId(),
                 RequestUtil.getParameters(getRequest()));
 

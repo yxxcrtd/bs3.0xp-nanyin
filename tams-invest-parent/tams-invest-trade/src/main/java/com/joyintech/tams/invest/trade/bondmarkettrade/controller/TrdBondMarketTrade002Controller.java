@@ -75,6 +75,9 @@ public class TrdBondMarketTrade002Controller extends BaseController {
         String totalTradeId = this.getParam("totleTradeId");
         String finprodId = this.getParam("finprodId");
         String appearMarketId = this.getParam("appearMarketId");
+        if (StringUtil.isNotEmpty(this.getParam("fpageId"))){
+            model.addAttribute("fpageId", this.getParam("fpageId"));
+        }
         if (StringUtil.isNotEmpty(workflowId)){
             //流程中
             dto = trdBondMarketTrade002Service.getBussinessEntityByWorkflowId(
@@ -114,8 +117,7 @@ public class TrdBondMarketTrade002Controller extends BaseController {
      */
     @RequestMapping("save")
     @ResponseBody
-    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto)
-            throws Exception {
+    AjaxResult save(@RequestBody TrdBondMarketTradeDto dto) throws Exception {
         dto.setTotleTradeId(trdBondMarketTrade002Service.genTradeId());
         dto.setBusiType(DictCodeList.共通业务类型_债券类资产交易.getValue());
         ProcessParameter<TrdBondMarketTradeDto> processParameter = new ProcessParameter<>();

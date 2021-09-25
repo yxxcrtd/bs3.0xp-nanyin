@@ -34,7 +34,7 @@ $(function() {
         cols: [
             {field: 'seqno', visible: false}
             , {field: 'vouchYear', title: '年份',sortable:false}
-            , {field: 'combinedFactor', title: '综合系数',sortable:false}
+            , {field: 'combinedFactor', title: '综合因子',sortable:false}
             , {field: 'action', width: 200, title: 'SysCommon.operation', type: 'action', buttons: ['edit', 'delt']}
         ]
     });
@@ -45,16 +45,14 @@ $(function() {
      */
     table.bind('click', '.edit', function (data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
-        Joyin.ajaxJson(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/check', data, function (result) {
-            Joyin.dialog('前瞻因子维护编辑',
-                basePath + "model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/init",
-                "45%", "75%", {
-                    pageModel: PAGE_MODEL_EDIT,
-                    seqno: data.seqno
-                }, function () {
-                    table.reload();
-                });
-        });
+        Joyin.dialog('前瞻因子维护编辑',
+            basePath + "model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig002/init",
+            "45%", "75%", {
+                pageModel: PAGE_MODEL_EDIT,
+                seqno: data.seqno
+            }, function () {
+                table.reload();
+            });
     });
     
 	/**
@@ -66,14 +64,14 @@ $(function() {
             if(result.data.indexOf("前瞻因子")>0){
 				Joyin.confirm(result.data, function(){
                 	Joyin.confirm("重新跑批后影响历史减值结果，是否确认删除？", function(){
-						WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorConfig001_btn_delete", "PdFactorConfig002",function(){
+						WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorKpmgConfig001_btn_delete", "PdFactorKpmgConfig002",function(){
                     		table.reload();
                 		});
 					});
             	});	
 			}else{
 				Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
-                	WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorConfig001_btn_delete", "PdFactorConfig002",function(){
+                	WorkFlow.doDeleteList(basePath + 'model/impairment/pddefaultmanager/pdfactorkpmgconfig/PdFactorKpmgConfig001/delete', object, "PdFactorKpmgConfig001_btn_delete", "PdFactorKpmgConfig002",function(){
                     	table.reload();
                 	});
             	});

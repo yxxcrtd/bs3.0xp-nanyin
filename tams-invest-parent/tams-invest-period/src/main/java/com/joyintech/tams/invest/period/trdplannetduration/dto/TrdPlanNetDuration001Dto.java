@@ -11,6 +11,7 @@
 package com.joyintech.tams.invest.period.trdplannetduration.dto;
 
 import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.dto.UploadFile;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
@@ -100,6 +101,12 @@ public class TrdPlanNetDuration001Dto extends TrdFundDurationCommonDto implement
      * 备注
      */
     private String remark;
+    
+    /**
+     * 附件上传
+     */
+    private List<UploadFile> uploadFileList;
+    
     /**
      * 权益登记日
      */
@@ -480,5 +487,23 @@ public class TrdPlanNetDuration001Dto extends TrdFundDurationCommonDto implement
     @Override
     public void setChlId(String chlId) {
         this.chlId = chlId;
+    }
+    
+    /**
+     * 获取 uploadFileList
+     *
+     * @return uploadFileList
+     */
+    public List<UploadFile> getUploadFileList() {
+        return uploadFileList;
+    }
+
+    /**
+     * 设置 uploadFileList
+     *
+     * @param uploadFileList uploadFileList
+     */
+    public void setUploadFileList(List<UploadFile> uploadFileList) {
+        this.uploadFileList = uploadFileList;
     }
 }

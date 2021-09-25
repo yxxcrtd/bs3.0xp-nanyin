@@ -79,7 +79,7 @@
         , {field: 'psName', title: 'EtrProject002.ps',sortable : false, width: 150}
         ,{field:'entrustAmt', width:100, title: 'EtrProject002.entrustAmt', edit:false, sortable: false, required:true, type:'number', digit:2}
        ,{field:'chlId', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true,visible:false}
-        ,{field:'chlIdName', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true}
+        ,{field:'chlIdName', width:100, title: 'invest.channelId', edit:false, sortable: false, required:true,visible:false}
         ,{field: 'counterId', title: 'EtrProject003.counterId', width: 120, edit: false,visible: false}
         ,{field: 'counterIdName', title: 'EtrProject003.counterId', width: 120,edit: false}
         ,{field:'prinAmt', width:100, title: 'EtrProject003.prinAmt', edit:false, sortable: false, required:true, type:'number', digit:2}
@@ -133,6 +133,15 @@
             });
     });
 
+
+    function getSettleSpeed(settleSpeedStr) {
+        var settleSpeed = 0;
+        if(settleSpeedStr) {
+            settleSpeed = settleSpeedStr.replace("T+","");
+        }
+        return settleSpeed
+    }
+
     /**
      * 保存或提交
      * 
@@ -176,7 +185,7 @@
             temp.entrustNum  = item.entrustNum;
             temp.counterId  = item.counterId;
             temp.prinAmt  = item.prinAmt;
-            temp.settleSpeed  = item.settleSpeed;
+            temp.settleSpeed  = getSettleSpeed(item.settleSpeed);
             temp.investRate  = item.investRate;
             temp.chlId =item.chlId;
             temp.assetAvailablePosition  = item.assetAvailablePosition;
@@ -193,7 +202,7 @@
             if (operateType === 'submit') {
                 //     temp.elementId = 'EtrPlanAssetN003_btn_save';
                 // }else {
-                temp.elementId = 'EtrProject002_btn_submit';
+                temp.elementId = 'EtrProject003_btn_submit';
             }
             if(object.riskTrialRetDto[index])
                 temp.riskTrialRetDto = [object.riskTrialRetDto[index]];
@@ -210,9 +219,9 @@
                 function(result) {
                     Joyin.confirm(result.data,function() {
                         if (operateType === 'save') {
-                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_save");
+                            WorkFlow.doSaveList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_save");
                         } else {
-                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject002_btn_submit","EtrProject002");
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrproject/EtrProject003/save',allDto,"EtrProject003_btn_submit","EtrProject003");
                         }
                     });
                 });

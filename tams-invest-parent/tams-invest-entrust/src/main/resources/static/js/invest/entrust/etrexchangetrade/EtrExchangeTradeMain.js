@@ -45,36 +45,78 @@ var correctData;
           return;
       }
       //TODO 风险和授信
-//      Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/check', object, function(result1) {
-          Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTrade001/check',object,
-              function(result) {
-                  Joyin.confirm(result.data,function() {
-                      if (object.operateType === 'save') {
-                          WorkFlow.doSaveList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_save",null,function() {
-                              if (EtrExchangeTrade001) {
-                                  EtrExchangeTrade001.doReset(true);
-                              }
-                              //报错后风险试算标识置为01
-                              // if(BaseRiskMathComm) {
-                              //     BaseRiskMathComm.resetRiskMathFlag();
-                              // }
-                              JoyinUtil.disableButton("EtrExchangeTrade001_btn_save", false);
-                          })
-                      }else {
-                          WorkFlow.doSubmitList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_submit",null,function() {
-                              if (EtrExchangeTrade001) {
-                                  EtrExchangeTrade001.doReset(true);
-                              }
-                              //提交后风险试算标识置为01
-                              // if(BaseRiskMathComm) {
-                              //     BaseRiskMathComm.resetRiskMathFlag();
-                              // }
-                              JoyinUtil.disableButton("EtrExchangeTrade001_btn_submit", false);
-                          })
-                      }
-                  });
-              });
-//      })
+      var businessModel = object.businessModel;
+      if(businessModel!="Y1"){
+           Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTrade001/check',object,
+               function(result) {
+                   Joyin.confirm(result.data,function() {
+                       if (object.operateType === 'save') {
+                           WorkFlow.doSaveList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_save",null,function() {
+                               if (EtrExchangeTrade001) {
+                                   EtrExchangeTrade001.doReset(true);
+                               }
+                               //报错后风险试算标识置为01
+                               // if(BaseRiskMathComm) {
+                               //     BaseRiskMathComm.resetRiskMathFlag();
+                               // }
+                               JoyinUtil.disableButton("EtrExchangeTrade001_btn_save", false);
+                           })
+                       }else {
+                           WorkFlow.doSubmitList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_submit",null,function() {
+                               if (EtrExchangeTrade001) {
+                                   EtrExchangeTrade001.doReset(true);
+                               }
+                               //提交后风险试算标识置为01
+                               // if(BaseRiskMathComm) {
+                               //     BaseRiskMathComm.resetRiskMathFlag();
+                               // }
+                               JoyinUtil.disableButton("EtrExchangeTrade001_btn_submit", false);
+                           })
+                       }
+                   });
+               });
+        }else {
+
+                    Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
+                             if(resultSppi.data==2){
+                                          Joyin.error("买入价格不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件）")
+                                      }else if(resultSppi.data==1)
+                                          Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
+                                       else{
+                             Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTrade001/check',object,
+                                 function(result) {
+                                     Joyin.confirm(result.data,function() {
+                                         if (object.operateType === 'save') {
+                                             WorkFlow.doSaveList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_save",null,function() {
+                                                 if (EtrExchangeTrade001) {
+                                                     EtrExchangeTrade001.doReset(true);
+                                                 }
+                                                 //报错后风险试算标识置为01
+                                                 // if(BaseRiskMathComm) {
+                                                 //     BaseRiskMathComm.resetRiskMathFlag();
+                                                 // }
+                                                 JoyinUtil.disableButton("EtrExchangeTrade001_btn_save", false);
+                                             })
+                                         }else {
+                                             WorkFlow.doSubmitList(basePath+'/invest/entrust/etrexchangetrade/EtrExchangeTrade001/save',object,"EtrExchangeTrade001_btn_submit",null,function() {
+                                                 if (EtrExchangeTrade001) {
+                                                     EtrExchangeTrade001.doReset(true);
+                                                 }
+                                                 //提交后风险试算标识置为01
+                                                 // if(BaseRiskMathComm) {
+                                                 //     BaseRiskMathComm.resetRiskMathFlag();
+                                                 // }
+                                                 JoyinUtil.disableButton("EtrExchangeTrade001_btn_submit", false);
+                                             })
+                                         }
+                                     });
+                                 });
+
+
+                          }
+                        });
+
+        }
       
   }
   
@@ -363,37 +405,6 @@ var importEtr = function() {
 }
 
 $(function() {
-
-	var init = function() {
-
-        if(pageModel==PAGE_MODEL_NEW){
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [48, 44],
-                minSize: 100,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [25, 75],
-                minSize: [200, 700],
-                direction: "horizontal"
-            });
-        }else{
-            Split(["#top_panel_dev", "#bottom_panel_dev"], {
-                sizes: [0, 90],
-                minSize: 0,
-                direction: "vertical"
-            });
-
-            Split(["#left_bottom_panel_dev", "#right_bottom_panel_dev"], {
-                sizes: [0, 100],
-                minSize: [0, 0],
-                direction: "horizontal"
-            });
-        }
-	}
-	
-	init();
 	
 	 // 绑定提交按钮
     $('#EtrExchangeTrade001_btn_submit').click(function() {

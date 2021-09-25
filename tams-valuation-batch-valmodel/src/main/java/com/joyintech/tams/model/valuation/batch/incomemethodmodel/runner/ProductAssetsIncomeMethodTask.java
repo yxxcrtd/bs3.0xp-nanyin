@@ -6,10 +6,11 @@ import com.joyintech.batch.batchbase.baseclass.entity.NeedToWriteEntity;
 import com.joyintech.batch.batchbase.exception.BatchException;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.constant.GlobalConstant;
-import com.joyintech.tams.model.valuation.batch.incomemethodmodel.listener.ProductAssetsIncomeMethodListener;
+import com.joyintech.tams.model.valuation.batch.common.ValModelCommonListener;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.processor.ProductAssetsIncomeMethodProcessor;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.reader.ProductAssetsIncomeMethodReader;
 import com.joyintech.tams.model.valuation.batch.incomemethodmodel.writer.ProductAssetsIncomeMethodWriter;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.JobExecution;
@@ -61,7 +62,7 @@ public class ProductAssetsIncomeMethodTask extends BatchBaseService{
     private ProductAssetsIncomeMethodWriter step1Writer;
 
     @Autowired
-    private ProductAssetsIncomeMethodListener productAssetsIncomeMethodListener;
+    private ValModelCommonListener valModelCommonListener;
 
 
     /**
@@ -80,20 +81,19 @@ public class ProductAssetsIncomeMethodTask extends BatchBaseService{
 
         // 设置此task的序列任务公用的params参数
         Map<String, Object> params = new HashMap<>();
-        params.put("BATCH_INFO", batchExecuteInfo);
-
+        params.put(ValComponentConstant.BATCH_EXECUTEINFO, batchExecuteInfo);
 //        把执行日期当作平台日来替换处理
-        params.put("PLATE_DATE", batchExecuteInfo.getExecuteDate());
-        params.put("TASK_ID",batchExecuteInfo.getTaskId());
+        params.put(ValComponentConstant.EXECUTE_DATE, batchExecuteInfo.getExecuteDate());
         // 各步骤设置参数
         step1Reader.setParams(params);
         step1Processor.setParams(params);
         step1Writer.setParams(params);
+        valModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
         JobExecution jobExecution = batchBuilder.init(this).batch("step1", (BaseReader)step1Reader,
             (BaseProcessor)step1Processor, (BaseWriter)step1Writer).builder(
                     this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
-        , productAssetsIncomeMethodListener).run();
+        , valModelCommonListener).run();
 
 
 

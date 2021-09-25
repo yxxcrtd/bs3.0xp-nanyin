@@ -1,6 +1,7 @@
 package com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.json.JsonSanitizer;
 import com.joyintech.framework.base.intf.DataDict;
 import com.joyintech.framework.base.intf.DataDictItem;
 import com.joyintech.framework.export.CommonExportService;
@@ -13,13 +14,20 @@ import com.joyintech.framework.util.ArithmeticUtil;
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.riskredis.quota.rsksupervisionriskanalyze.dto.RskSupervisionRiskAnalyzeDto;
 import org.apache.poi.ss.usermodel.Cell;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -35,8 +43,17 @@ import java.util.Map;
  **/
 @Service
 public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSupervisionRiskAnalyzeDto> {
+	/**
+	 * 日志
+	 */
+	private Logger logger = LoggerFactory.getLogger(RskSupervisionRiskAnalyzeService.class);
+
 	/*@Autowired
 	private RoleCommonService roleCommonService;*/
+
+	@Autowired
+	private FinProductMapper finProductMapper;
+
     /**
      * 查询界面询事件
      *
@@ -104,6 +121,12 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
         Page<RskSupervisionRiskAnalyzeDto> page = restTemplate.postForPage(
                 ServiceApplication.RISK_RDS_SERVICE_NAME + "/RskSupervisionRiskAnalyze/findPageMx",
                 map, RskSupervisionRiskAnalyzeDto.class);
+		for (RskSupervisionRiskAnalyzeDto dto:page.getRoot()){
+			FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getAssetCode());
+			if (StringUtil.isNotEmpty(finProduct)){
+				dto.setIsShow(DictCodeList.是否_是.getValue());
+			}
+		}
         return page;
     }
 
@@ -214,12 +237,12 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
 			}
 			return pageList;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
     }
 
-    public String transferSupVal(String value,String foulValue,String indCellType) throws Exception{
+    public String transferSupVal(String value,String foulValue,String indCellType) throws IOException {
     	if(!StringUtil.isNotEmpty(value)){
     		return value;
     	}
@@ -229,7 +252,7 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	}
     	else{
     		ObjectMapper mapper = new ObjectMapper();
-    		Map<?, ?>  detailJson= mapper.readValue(foulValue, Map.class);
+    		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(foulValue), Map.class);
         	Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
         	String curunit=valueConvertUnit((String)vThreshold1Map.get("unit"));
         	if("PERCENT".equals((String)vThreshold1Map.get("unit"))){
@@ -248,10 +271,10 @@ public class RskSupervisionRiskAnalyzeService extends CommonExportService<RskSup
     	return wg;
     }
     
-    public String transferWarnFoul(String value,String indCellType) throws Exception{
+    public String transferWarnFoul(String value,String indCellType) throws IOException {
     	String wg=StringUtil.EMPTY;
     	ObjectMapper mapper = new ObjectMapper();
-		Map<?, ?>  detailJson= mapper.readValue(value, Map.class);
+		Map<?, ?>  detailJson= mapper.readValue(JsonSanitizer.sanitize(value), Map.class);
 	
     	Map<?, ?> vThreshold1Map = (Map<?, ?>)detailJson.get("threshold_1");
 		if (StringUtil.isNotEmpty(value)) {

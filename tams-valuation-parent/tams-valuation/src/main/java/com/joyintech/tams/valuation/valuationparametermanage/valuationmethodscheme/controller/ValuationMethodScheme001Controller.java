@@ -11,12 +11,12 @@
 package com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.controller;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.joyintech.framework.util.*;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,10 +38,6 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme001Dto;
-import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme002Dto;
-import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme003Dto;
-import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme004Dto;
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.service.ValuationMethodScheme001Service;
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.service.ValuationMethodScheme002Service;
 import com.joyintech.tams.valuation.valuationparametermanage.valuationmethodscheme.service.ValuationMethodScheme003Service;
@@ -52,6 +48,8 @@ import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
+
+import static java.util.Comparator.comparing;
 
 /**
  * 估值方法方案-主界面
@@ -98,7 +96,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findScheme")
-	public Page<ValuationMethodScheme001Dto> findScheme() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findScheme() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSchemeByPage(RequestUtil.getPageParam());
 		return page;
@@ -112,7 +110,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findSchemeDetail")
-	public Page<ValuationMethodScheme001Dto> findSchemeDetail() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSchemeDetail() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSchemeDetailByPage(RequestUtil.getPageParam());
 		return page;
@@ -126,7 +124,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findSpecialScheme")
-	public Page<ValuationMethodScheme001Dto> findSpecialScheme() throws Exception {
+	public Page<ValuationMethodScheme001Dto> findSpecialScheme() {
 		Page<ValuationMethodScheme001Dto> page = valuationMethodScheme001Service
 				.findSpecialAssetsByPage(RequestUtil.getPageParam());
 		return page;
@@ -143,7 +141,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("check")
-	public AjaxResult check(@RequestBody ValuationMethodScheme001Dto dto, BindingResult result) throws Exception {
+	public AjaxResult check(@RequestBody ValuationMethodScheme001Dto dto, BindingResult result) {
 		String msg = StringUtils.EMPTY;
 		Map<String, Object> params = Maps.newHashMap();
 		params.put("schemeId", dto.getSchemeId());
@@ -312,7 +310,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportTypeAssets")
-	public ResponseEntity<byte[]> exportTypeAssets() throws Exception {
+	public ResponseEntity<byte[]> exportTypeAssets() {
 
 		List<ValuationMethodScheme001Dto> dtoList = valuationMethodScheme001Service
 				.findSchemeDetail(RequestUtil.getPageParam());
@@ -335,7 +333,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("exportSpecialAssets")
-	public ResponseEntity<byte[]> exportSpecialAssets() throws Exception {
+	public ResponseEntity<byte[]> exportSpecialAssets(){
 
 		List<ValuationMethodScheme001Dto> dtoList = valuationMethodScheme001Service
 				.findSpecialAssets(RequestUtil.getPageParam());
@@ -358,7 +356,7 @@ public class ValuationMethodScheme001Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("findFinprod")
-	public List<SelectOptionDto> findFinprod() throws Exception {
+	public List<SelectOptionDto> findFinprod() {
 		return valuationMethodScheme001Service.findFinprod(RequestUtil.getPageParam());
 	}
 
@@ -397,5 +395,44 @@ public class ValuationMethodScheme001Controller extends BaseController {
 		}
 		return new AjaxResult(msg);
 	}
+
+	/**
+	 * 联动：证券品种 - 证券明细分类 获得证券明细分类
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("getSecDetailTypeBySecTypeList")
+	public List<SelectOptionDto> getSecDetailTypeBySecTypeList() throws Exception {
+		List<SelectOptionDto> selectOptionDtoList =  new ArrayList<SelectOptionDto>();
+		Map<String, Object> param = RequestUtil.getPageParam();
+		//因为使用List而不是page,会导致分页循环查询，避免循环查询
+		if(param.get("page").toString().equals("1")){
+			String[] secTypeArr = param.get("secType").toString().split(",");
+			for(String secType:secTypeArr){
+				if(StringUtil.equals(DictCodeListExt1.证券品种_其他债权类.getValue(),secType)){
+					Map<String, Object> paramA = new HashMap<>();
+					paramA.put("dict_code_parent", DictCode.证券品种.getValue());
+					paramA.put("dict_code_child", DictCode.计划类资产类型.getValue());
+					paramA.put("item_code_parent", secType);
+					selectOptionDtoList.addAll(valuationMethodScheme001Service.getLinkSelectOption(paramA));
+				}else{
+					Map<String, Object> paramB = new HashMap<>();
+					paramB.put("dict_code_parent", DictCode.证券品种.getValue());
+					paramB.put("dict_code_child", DictCode.债券类型.getValue());
+					paramB.put("item_code_parent", secType);
+					selectOptionDtoList.addAll(valuationMethodScheme001Service.getLinkSelectOption(paramB));
+				}
+			}
+		}
+
+		selectOptionDtoList = selectOptionDtoList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(
+				// 利用 TreeSet 的排序去重构造函数来达到去重元素的目的  根据id
+				() -> new TreeSet<>(Comparator.comparing(SelectOptionDto::getId))), ArrayList::new));
+
+		return selectOptionDtoList;
+	}
+
 
 }

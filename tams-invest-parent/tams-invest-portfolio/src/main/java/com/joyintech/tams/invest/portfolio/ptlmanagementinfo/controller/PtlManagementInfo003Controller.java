@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,10 +103,16 @@ public class PtlManagementInfo003Controller extends BaseController{
         if(map.get("search") != null &&!map.get("search").toString().isEmpty()){
             for(int i = list.size()-1; i>=0; i--){
                 //实现模糊查询
-                if(!Pattern.matches(".*"+map.get("search").toString()+".*", list.get(i).getId())
-                    && !Pattern.matches(".*"+map.get("search").toString()+".*", list.get(i).getText())){
+//                if(!Pattern.matches(Pattern.quote(".*"+map.get("search").toString()+".*"), list.get(i).getId())
+//                    && !Pattern.matches(Pattern.quote(".*"+map.get("search").toString()+".*"), list.get(i).getText())){
+//                    list.remove(i);
+//                }
+                // add by meifaxin 20210924 start
+                if(!list.get(i).getId().toLowerCase().contains(map.get("search").toString().toLowerCase())
+                        && !list.get(i).getText().toLowerCase().contains(map.get("search").toString().toLowerCase())) {
                     list.remove(i);
                 }
+                // add by meifaxin 20210924 end
             }
         }else if(map.get("initValue") != null && StringUtil.isNotEmpty(map.get("initValue").toString())){
             for(int i = list.size()-1; i>=0; i--){
@@ -132,7 +139,7 @@ public class PtlManagementInfo003Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("getPortPage")
-    public List<PtlManagementInfoDto> getPortPage() throws Exception{
+    public List<PtlManagementInfoDto> getPortPage() {
         return ptlManagementInfo001Service.getPortPage(
             RequestUtil.getParameters(getRequest()));
     }
@@ -286,8 +293,7 @@ public class PtlManagementInfo003Controller extends BaseController{
     @ResponseBody
     @RequestMapping("save")
     public AjaxResult save(@RequestBody @Validated({
-        ValidateGroupEdit.class}) PtlManagementInfo003Dto dto, BindingResult br)
-        throws Exception {
+        ValidateGroupEdit.class}) PtlManagementInfo003Dto dto, BindingResult br) throws WorkFlowException {
         if (br.hasErrors()) {
             return new AjaxResult(br);
         }

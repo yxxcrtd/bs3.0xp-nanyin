@@ -43,7 +43,7 @@ public class OpicsBuyBackTradeService extends OpicsService {
      */
     @Override
     public void saveData()
-        throws Exception {
+    {
         Map<String, Object> params = new HashMap<>();
         params.put(InterfConstant.CDATE, getSysDate());
         params.put("type", DictCodeListExt1.金融产品类型_投管用_债券.getValue());

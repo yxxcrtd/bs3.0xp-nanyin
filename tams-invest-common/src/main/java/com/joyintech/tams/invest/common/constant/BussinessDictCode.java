@@ -215,6 +215,11 @@ public enum BussinessDictCode implements com.joyintech.framework.base.BaseDictCo
     */
     二级资产类别("ASSET_TYPE_SECOND_LEVEL"),
     /**
+     * 机构类型
+     */
+    机构类型("DEPTTYPE"),
+
+    /**
     * 机构类型(按规模划分)
     */
     机构类型_按规模划分("PARTY_TYPE1"),
@@ -1410,7 +1415,8 @@ public enum BussinessDictCode implements com.joyintech.framework.base.BaseDictCo
     /**
      * 组合估值方法
      */
-    组合估值方法("PTL_VALUATION_METHOD")
+    组合估值方法("PTL_VALUATION_METHOD"),
+
     ;
     /**
      * 对应于数据字典code

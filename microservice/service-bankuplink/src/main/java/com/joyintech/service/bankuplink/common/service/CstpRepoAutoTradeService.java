@@ -3,6 +3,7 @@ package com.joyintech.service.bankuplink.common.service;
 import com.joyintech.background.component.uplink.interbank.business.dto.ResultBaseDto;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.framework.util.JsonUtils;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.bankuplink.common.dao.CstpAutoTradeMapper;
 import com.joyintech.service.bankuplink.common.dao.CstpTradeMapper;
@@ -10,6 +11,8 @@ import com.joyintech.service.bankuplink.common.dto.TrdRepoTrade002Dto;
 import com.joyintech.service.bankuplink.common.util.BusinessTypeUtil;
 import com.joyintech.tams.common.base.dao.*;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.component.base.core.impl.dao.BaseGetBussinessIdMapper;
@@ -201,8 +204,14 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 		}
 		// 查询抵押品债券信息
 		List<InterfTradRepoasstDto> repoasst = autoTradeMapper.queryRepoAsst(oritradeId);
-		if (StringUtil.isNotEmpty(entrust)
-				&& !StringUtil.isEmptyList(repoasst)) {
+		if (StringUtil.isNotEmpty(entrust)) {
+			//正回购必须有质押券
+			if(StringUtil.equals(entrust.getPs(), DictCodeList.回购拆借方向_正回购.getValue())&&StringUtil.isEmptyList(repoasst)){
+				String msg = "抵押品债券不存在！";
+				resultBaseDto.setErrMsg(msg);
+				logger.info(msg);
+				return;
+			}
 			// 判断是否已经生成了交易
 			TrdProductDeal deal = autoTradeMapper.isExistsTrade(oritradeId);
 			if (!StringUtil.isNotEmpty(deal)) {
@@ -251,14 +260,18 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 							ServiceApplication.PINGAN_SERVICE_NAME+ "/invest/trade/trdrepotrade/TrdRepoTrade002/repoAutoTrade",
 							repoTradeDto, Map.class);
 					//登录匹配情况 ptlAllocationDtos  add by zhangnian 20210316 start
-					List<PtlAllocationDto> ptlAllocations = (List<PtlAllocationDto>)resultMap.get("ptlAllocationDtos");
+					List<Map<String,Object>> ptlAllocations = (List<Map<String,Object>>)resultMap.get("ptlAllocationDtos");
 					if(!StringUtil.isEmptyList(ptlAllocations)){
 						ptlAllocations.forEach(item -> {
+							PtlAllocationDto ptlAllocationDto = null;
+							try{
+								ptlAllocationDto = (PtlAllocationDto)JsonUtils.map2entity(item, PtlAllocationDto.class);
+							}catch (Exception e){}
 							TrdMatchInfo trdMatchInfo = new TrdMatchInfo();
 							trdMatchInfo.setSeqno(cstpMapper.selectSeqNo());
 							trdMatchInfo.setCstpTradeId(oritradeId);
-							trdMatchInfo.setEntrustId(item.getEntrustId());
-							trdMatchInfo.setMatchNum(item.getFpriceAmt());
+							trdMatchInfo.setEntrustId(ptlAllocationDto.getEntrustId());
+							trdMatchInfo.setMatchNum(ptlAllocationDto.getFpriceAmt());
 							trdMatchInfo.setMatchType(matchType);
 							trdMatchInfo.setTradeDate(DateUtil.parse(interfCstpTrade.getTradedate()));
 							trdMatchInfoMapper.insert(trdMatchInfo);
@@ -266,16 +279,20 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					}
 					//登录匹配情况 ptlAllocationDtos  add by zhangnian 20210316 end
 					//登录匹配质押券
-					List<PledgeBondInfoDto> pledgeBondInfoDtos = (List<PledgeBondInfoDto>)resultMap.get("pledgeBondInfoDtos");
+					List<Map<String,Object>> pledgeBondInfoDtos = (List<Map<String,Object>>)resultMap.get("pledgeBondInfoDtos");
 					if(!StringUtil.isEmptyList(pledgeBondInfoDtos)){
 						pledgeBondInfoDtos.forEach(item -> {
+							PledgeBondInfoDto pledgeBondInfoDto = null;
+							try{
+								pledgeBondInfoDto = (PledgeBondInfoDto)JsonUtils.map2entity(item, PledgeBondInfoDto.class);
+							}catch (Exception e){}
 							TrdPledgeMatchInfo trdPledgeMatchInfo = new TrdPledgeMatchInfo();
 							trdPledgeMatchInfo.setSeqno(cstpCommonMatchMapper.selectSeqNo(DateUtil.getSysDate()));
 							trdPledgeMatchInfo.setCstpTradeId(oritradeId);
-							trdPledgeMatchInfo.setEntrustId(item.getEntrustId());
-							trdPledgeMatchInfo.setSecAcctId(item.getSecAcctId());
-							trdPledgeMatchInfo.setPledgeFinprodId(item.getFinprodId());
-							trdPledgeMatchInfo.setMatchNum(item.getPledgePrin());
+							trdPledgeMatchInfo.setEntrustId(pledgeBondInfoDto.getEntrustId());
+							trdPledgeMatchInfo.setSecAcctId(pledgeBondInfoDto.getSecAcctId());
+							trdPledgeMatchInfo.setPledgeFinprodId(pledgeBondInfoDto.getFinprodId());
+							trdPledgeMatchInfo.setMatchNum(pledgeBondInfoDto.getPledgePrin());
 							trdPledgeMatchInfo.setMatchType(matchType);
 							trdPledgeMatchInfo.setTradeDate(DateUtil.parse(interfCstpTrade.getTradedate()));
 							trdPledgeMatchInfoMapper.insert(trdPledgeMatchInfo);
@@ -287,15 +304,20 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 					repoRecord.setTradeid(interfcstpTradRepo.getTradeid());
 					repoRecord.setDealFeeamt(resultMap.containsKey("dealFeeamt")?(BigDecimal) resultMap.get("dealFeeamt"):null);
 					repoRecord.setSettFeeamt(resultMap.containsKey("settFeeamt")?(BigDecimal) resultMap.get("settFeeamt"):null);
-					repoMapper.updateByPrimaryKeySelective(repoRecord);
+					if(null!=repoRecord.getDealFeeamt()||null!=repoRecord.getSettFeeamt()){
+						repoMapper.updateByPrimaryKeySelective(repoRecord);
+					}
 					// 最后修改接口表中的数据来源,用于撤销
 					autoTradeMapper.updateInterfCstpTrade(oritradeId, BusinessTypeUtil.BUSINESSTYPE_REPO);
 				}
 				catch (Exception e){
+					e.printStackTrace();
 					logger.info("下行交易处理失败,自动生成匹配信息开始");
 					Map<String,Object> map = new HashMap<>();
 					map.put("execId",oritradeId);
 					map.put("matchType", matchType);
+					//删除已经匹配的数据
+					cstpCommonMatchService.deleteMatchInfo(map);
 					cstpCommonMatchService.dealMatchEntrust(map);
 					logger.info("下行交易处理失败,自动生成匹配信息结束");
 					resultBaseDto.setErrMsg(e.getMessage());
@@ -307,7 +329,7 @@ public class CstpRepoAutoTradeService extends BaseService<TrdRepoTrade002Dto> {
 				logger.info(msg);
 			}
 		} else {
-			String msg = "无报价的指令代码或抵押品债券不存在！";
+			String msg = "没有对应的报价信息!";
 			resultBaseDto.setErrMsg(msg);
 			logger.info(msg);
 		}

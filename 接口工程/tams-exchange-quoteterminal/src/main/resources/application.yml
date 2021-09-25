@@ -1,0 +1,79 @@
+server:
+  port: 9999
+  address: 0.0.0.0
+
+spring:
+  cache:
+    type: redis
+  redis:
+    database: 0
+    cluster:
+      nodes: 192.168.90.77:8004,192.168.90.77:8005,192.168.90.77:8006,192.168.90.77:8007,192.168.90.77:8008,192.168.90.77:8009
+
+scheduled:
+  quote:
+    task: 10000
+    stock:
+      start: 30 4 9 ? *  MON-FRI
+      end: 0 45 16 ? *  MON-FRI
+      time: 0905-1900
+      flush: 3000
+wd:
+  login:
+    ip: 10.100.3.163
+    port: 6221
+    username: dev_test
+    password: dev_test
+ctp:
+  pszNsAddress: tcp://180.168.146.187:10110
+  brokerId: 9999
+  userId: 159887
+  password: 891026Ljp
+  syncReqTimeout: 30
+  traderFrontUrl: tcp://180.168.146.187:10101
+  authCode:
+  appId:
+  exchanges: SHFE,DCE,CZCE,CFFEX,INE
+
+quote:
+  enable: true # 是否启动双源模式，当前节点挂掉，会切换到另一个存活行情源
+  node: #行情节点信息配置
+    name: tong_shen #行情源名称配置 tong_shen 通神  guo_jin 国金
+    weight: 1 #节点权重配置， 数值越大，优先级越高
+    interval: 3000 #节点token更新频率
+
+sse:
+  binary:
+    active: false
+    ip: 0.0.0.0
+    port: 5016
+    heartbeatInterval: 5
+    senderCompId: JOYIN
+    targetCompId: MDGW
+    version: 00.40
+    reconnect: 10
+    reconnectInterval: 30
+    filePath: D:\HQ
+  file:
+    active: true             #是否启动文件行情服务
+    quoteDir: D:\HQ           #行情落地文件目录
+    cpxx: cpxx0202            #产品信息文件前缀，根据提供文件进行配置版本期次，仅用于获取涨跌停价格 -- cpxx0202、cpxx0201、cpxx0102、cpxx
+    stockName: mktdt90.txt    #股票行情文件
+    stockEnable: true
+    bondName: mktdt92.txt     #债券行情文件
+    bondEnable: true
+    optionName: mktdt93.txt   #期权行情文件
+    optionEnable: false       #暂不支持 -- 默认配置false不启用
+
+szse:
+  binary:
+    active: true  #是否启用深证流行情服务
+    ip: 127.0.0.1 #对应通神（国金）行情分发程序所在ip地址
+    port: 9201    #行情分发程序配置行情行情分发端口
+    password: N000227Q0007  # 无需配置，默认配置即可
+    heartbeatInterval: 10   # 行情终端与行情分发程序心跳间隔时间（s）
+    senderCompId: Zork_XBL_2.54 # 默认配置即可
+    targetCompId: N000227Q0008 #  默认配置即可
+    version: 1.02   # 行情网关版本号，默认即可
+    reconnect: 3    # 行情终端主动重连次数，超过次数即不在重连
+    reconnectInterval: 30 #重连间隔时间（s）

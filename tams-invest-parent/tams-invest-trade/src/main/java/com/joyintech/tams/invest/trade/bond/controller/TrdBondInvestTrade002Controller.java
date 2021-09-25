@@ -12,11 +12,17 @@ package com.joyintech.tams.invest.trade.bond.controller;
 
 import static com.joyintech.tams.invest.trade.bond.service.TrdBondInvestTrade002Service.getBussinessCodeParameter;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
 import com.joyintech.tams.component.business.riskrds.dto.InterfRiskRdsDto;
 import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsService;
 import com.joyintech.tams.component.business.trade.dto.BussTrdTransfenpeiDto;
@@ -29,6 +35,7 @@ import com.joyintech.tams.invest.trade.pretrdbondtrade.dto.PreTrdBondInvestTrade
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
 
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,6 +125,12 @@ TrdBondInvestTrade002Controller extends BaseController {
     @Autowired
     private TrdCommonController trdCommonController;
 
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private DateCalService dateCalService  ;
+    
     @Value("${flag:false}")
     private boolean flag;
     
@@ -138,6 +151,13 @@ TrdBondInvestTrade002Controller extends BaseController {
         String bondFirstSign = this.getParam("bondFirstSign");
         String isCstp = this.getParam("isCstp");
         String isCstpSure = this.getParam("isCstpSure");
+
+        // add by etliu 20210501 银行间场内场外拆分 start
+        model.addAttribute("parentPageId", this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
+        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
+        // add by etliu 20210501 银行间场内场外拆分 end
+
         //配置单位 add by yeming 20210723 start
         String entrustAmtUnit = CacheUtil.getSysParam("entrustAmtUnit");
         model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
@@ -156,6 +176,12 @@ TrdBondInvestTrade002Controller extends BaseController {
             if (StringUtil.isNotEmpty(dto.getBondFirstSign())){
                 model.addAttribute("bondFirstSign",dto.getBondFirstSign());
             }
+
+            // add by yeming 20210913 银行间场内场外拆分 start
+            model.addAttribute("parentPageId", dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, dto.getParentPageId());
+            PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, dto.getParentPageId());
+            // add by yeming 20210913 银行间场内场外拆分 end
         }
         else if (StringUtil.isNotEmpty(tradeId)) {
             dto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(tradeId);
@@ -203,6 +229,12 @@ TrdBondInvestTrade002Controller extends BaseController {
             dto.setYield(BigDecimal.valueOf(Double.valueOf(yield == null ? "0" : yield)));
             model.addAttribute("bondFirstSign",bondFirstSign);
             model.addAttribute("winPrinAmt",winPrinAmtBig);
+            // add by zhangrui1 差分预占需要字段 start
+            String oFinprodId = this.getParam("oFinprodId");
+            dto.setoFinprodId(oFinprodId);
+            String bidId = this.getParam("bidId");
+            dto.setBidId(bidId);
+            // add by zhangrui1 差分预占需要字段 end
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
@@ -216,6 +248,10 @@ TrdBondInvestTrade002Controller extends BaseController {
             model.addAttribute("tradeId", dto.getTotleTradeId());
             //---------add by zxjjpei 风险试算需要交易编号 20200325 start------
             model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?this.getParam("entrustId"):dto.getTotleTradeId());
+            if(StringUtil.equals(dto.getOperateType(),"revoke")){
+                model.addAttribute("tradeEntrustId", dto.getTotleTradeId()==null?null:dto.getTotleTradeId().substring(0, dto.getTotleTradeId().length() - 1));
+
+            }
             //---------add by zxjjpei 风险试算需要交易编号 20200325 end------
         }
         if (StringUtil.isNotBlank(workflowId)) {
@@ -325,12 +361,6 @@ TrdBondInvestTrade002Controller extends BaseController {
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
 
-        // add by etliu 20210501 银行间场内场外拆分 start
-        model.addAttribute("parentPageId", this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
-        PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易平台, this.getParam("parentPageId"));
-        // add by etliu 20210501 银行间场内场外拆分 end
-
         model.addAttribute("userId", LoginUserUtil.getUserName());
         //查看交易方向添加清理核销 add by wp 20210427 start
         if(StringUtil.equals(this.getParam("pageModel"), GlobalConstant.DETAIL_PAGE_MODEL_REFERENCE)) {
@@ -351,7 +381,7 @@ TrdBondInvestTrade002Controller extends BaseController {
             DictCode.有效状态, DictCode.交易平台, DictCode.币种,
             DictCode.投资目的, DictCode.交易市场, DictCode.清算速度, DictCode.是否,
             DictCode.行内资产二级分类,DictCode.行内资产三级分类,DictCode.行内资产四级分类,// 新增资产二、三、四级分类 王贵奇 2019/7/31
-            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式);
+            DictCode.WIND一级分类_含债券一级分类等, BussinessDictCode.缴款方式,DictCode.业务模式);
 	    SelectDto selectDto = this.getSelectDataFromDataDic(DictCode.投资目的, null);
         if (selectDto != null && !StringUtil.isEmptyList(selectDto.getOptions())) {
             List<SelectOptionDto> options = selectDto.getOptions(); 
@@ -524,7 +554,7 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("isExerYieldDivShow")
     @ResponseBody
     public String isExerYieldDivShow(@RequestParam Map<String, Object> paramMap) {
-        return trdBondInvestTrade002Service.isExerYieldDivShow(paramMap);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.isExerYieldDivShow(paramMap));
     }
 
     /**
@@ -553,7 +583,7 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("getProfitType")
     @ResponseBody
     public String getProfitType(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.getProfitType(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.getProfitType(params));
     }
    //货币型产品投资目的默认显示摊余成本 add by liupeilin 2020-01-15 end
 
@@ -568,7 +598,7 @@ TrdBondInvestTrade002Controller extends BaseController {
     @RequestMapping("calcDeviationDegree")
     @ResponseBody
     public String calcDeviationDegree(@RequestParam Map<String, Object> params) {
-        return trdBondInvestTrade002Service.calcDeviationDegree(params);
+        return StringUtil.trimHtmlTag(trdBondInvestTrade002Service.calcDeviationDegree(params));
     }
 
     /**
@@ -594,7 +624,7 @@ TrdBondInvestTrade002Controller extends BaseController {
         if (!StringUtil.isEmptyList(planList)) {
             for (FinExercisePlan planDto : planList) {
                 if (planDto.getActExerciseDate().compareTo(inputDto.getSettleDate()) == 0) {
-                    ajaxResult.setData(DateUtil.format(planDto.getExerciseDate()));;
+                    ajaxResult.setData(DateUtil.format(planDto.getActExerciseDate()));;
                 }
             }
         }
@@ -755,6 +785,40 @@ TrdBondInvestTrade002Controller extends BaseController {
 //                    confirmMsg += getMessage("TRD_C_0005");
 //                }
 //            }
+
+
+
+
+            if (!StringUtil.equals(dto.getOperateType(), "revoke")) {
+                // 委托场合时    查询资产可用持仓
+                if (StringUtil.isNotEmpty(dto.getEntrustId())) {
+                    Map<String,Object> map = new HashMap<>();
+                    map.put("portfolioId",dto.getPortfolioId()) ;
+                    map.put("tradeDate",dto.getTradeDate()) ;
+                    map.put("acctTypeList","A01,A07") ;
+                    map.put("ccy",dto.getCcy()) ;
+                    map.put("tradeDate",dto.getTradeDate()) ;
+                    map.put("finprodId",dto.getFinprodId()) ;
+                    String dateId =  null;
+                    dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+                            dto.getFinprodId(), FinProduct.class).getCalendarId();
+                    List<String> holidayList = dateCalService.getDealCalendarHoliday(dto.getTradeDate(), DateUtil.addDay(dto.getTradeDate(), 15), dateId);
+                    map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(dto.getTradeDate(), 1, holidayList, "1")));
+                    BigDecimal position = new BigDecimal((String)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") );
+
+                    String sinal = tradeCommonService.getSppiInfoByY1(map) ;
+                    if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",dto.getBusinessModel())){
+                        if(position!=null){
+                            confirmMsg += changeLineMark;
+                            confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+                        }else{
+                            confirmMsg += changeLineMark;
+                            confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+                        }
+                    }
+                }
+            }
+
 
             if (StringUtil.isNotBlank(confirmMsg)) {
                 ajaxResult = new AjaxResult();
@@ -977,4 +1041,16 @@ TrdBondInvestTrade002Controller extends BaseController {
     public Map<String,Object> secAutoTrade(@RequestBody TrdBondInvestTradeDto entity) {
         return trdBondInvestTrade002Service.secAutoTrade(entity);
     }
-}
+
+    /**
+     *  查询平台日前摊销净价
+     *
+     * @author yangxiaoteng
+     */
+    @ResponseBody
+    @RequestMapping("getLastNetAmortizationPrice")
+    public AjaxResult getLastNetAmortizationPrice(@RequestBody Map<String, Object> param){
+        AjaxResult result = new AjaxResult();
+        result.setData(trdBondInvestTrade002Service.getLastNetAmortizationPrice(param));
+        return result;
+    }}

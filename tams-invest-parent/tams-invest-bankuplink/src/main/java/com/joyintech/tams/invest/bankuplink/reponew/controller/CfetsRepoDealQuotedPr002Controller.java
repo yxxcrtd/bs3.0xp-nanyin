@@ -22,7 +22,6 @@ import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice001Dto;
 import com.joyintech.tams.invest.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto;
-import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice001Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice002Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice003Service;
 import com.joyintech.tams.invest.bankuplink.repo.service.CfetsRepoDealQuotedPrice004Service;
@@ -186,6 +185,12 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
         cfetsRepoDealQuotedPrice002Service.单独处理页面质押券列表(cfetsRepoDealQuotedPrice001Dto);
         model.addAttribute("entity_bussRepoSecDto",cfetsRepoDealQuotedPrice001Dto.getBussRepoSec() == null ? null : JsonUtils.object2Json(cfetsRepoDealQuotedPrice001Dto.getBussRepoSec()));
         model.addAttribute("dialogueRecord",HtmlUtils.htmlUnescape(cfetsRepoDealQuotedPrice001Dto.getDialogueRecord()));
+        // 监督时分_交易监控
+        model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F02", DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue());
+        model.addAttribute("FINPROD_TYPE_TG_F03", DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
+        model.addAttribute("PS_03", DictCodeListExt3.交易方向_正回购.getValue());
+        model.addAttribute("PS_04", DictCodeListExt3.交易方向_逆回购.getValue());
         return super.init(model);
     }
 
@@ -278,7 +283,13 @@ public class CfetsRepoDealQuotedPr002Controller extends BaseController {
         }
         // 处理质押品信息
         this.handlePledgeList(cfetsRepoDealQuotedPrice001Dto);
-
+        //可质押券和质押券  以万元为单位显示
+        if (!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice001Dto.getPledgeBondList())&&null!=operation) {
+            cfetsRepoDealQuotedPrice001Dto.getPledgeBondList().forEach(obj -> {
+                obj.setPledgePrin(ArithmeticUtil.divide(obj.getPledgePrin(),new BigDecimal(10000),2));
+                obj.setAvaPledgePrin(ArithmeticUtil.divide(obj.getAvaPledgePrin(),new BigDecimal(10000),2));
+            });
+        }
         return cfetsRepoDealQuotedPrice001Dto;
     }
 

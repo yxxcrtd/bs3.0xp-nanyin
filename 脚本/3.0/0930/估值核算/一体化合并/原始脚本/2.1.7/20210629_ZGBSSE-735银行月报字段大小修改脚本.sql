@@ -1,0 +1,1 @@
+alter table CHB_MONTH_ASSET_POSITION modify assettype2  VARCHAR2(50);

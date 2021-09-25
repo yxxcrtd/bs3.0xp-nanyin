@@ -52,7 +52,7 @@ public class PtlRealTimeValuationController {
      */
     @PostMapping("calcIndicator")
     public Map<IndicatorName, Object> calcIndicator(@RequestBody MockCalcIndicatorParameter param)
-        throws Exception {
+    {
         return ptlRealTimeValuationService.calcIndicator(param.getMockPtlPortfolioDto(),
             param.getMockPtlSecValuationDtoList(), param.getMockPtlPortfolioValuationDtoList(),
             param.getMockPtlCashPositionDto(), param.getMockAssetInfoDtoList(),
@@ -70,7 +70,7 @@ public class PtlRealTimeValuationController {
      */
     @PostMapping("calcPeriodIndicator")
     public Map<IndicatorName, Object> calcPeriodIndicator(@RequestBody MockCalcIndicatorParameter param)
-        throws Exception {
+    {
         return ptlRealTimeValuationService.calcPeriodIndicator(param.getMockPtlPortfolioDto(),
             param.getMockPtlSecValuationDtoList(), param.getMockPtlPortfolioValuationDtoList(),
             param.getMockPtlCashPositionDto(), param.getMockAssetInfoDtoList(),
@@ -89,7 +89,7 @@ public class PtlRealTimeValuationController {
      */
     @PostMapping("valuationMain")
     public MockCalcAssetValuationResult valuationMain(@RequestBody MockCalcAssetValuationParameter param)
-        throws Exception {
+    {
         return ptlRealTimeValuationService.valuationMain(param.getMockAssetInfoDtoList(),
             param.getMockPtlPortfolioDto(), param.getMockPtlSecValuationDtoList(),
             param.getMockPtlPortfolioValuationDtoList(), param.getMockPtlFeePositionDtoList(),

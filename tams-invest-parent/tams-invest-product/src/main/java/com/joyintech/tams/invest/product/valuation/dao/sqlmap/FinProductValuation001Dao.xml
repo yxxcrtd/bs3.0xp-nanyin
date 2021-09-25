@@ -4,10 +4,12 @@
 
 	<delete id="deleteValuation">
 		DELETE FROM PRD_VALUATION
+		WHERE 1=1
 	</delete>
 	
 	<delete id="deleteValuationDetail">
 		DELETE FROM PRD_VALUATION_DETAIL
+		WHERE 1=1
 	</delete>
 	
 	<select id="selectForPage" resultType="com.joyintech.tams.invest.product.valuation.dto.FinProductValuation001Dto">

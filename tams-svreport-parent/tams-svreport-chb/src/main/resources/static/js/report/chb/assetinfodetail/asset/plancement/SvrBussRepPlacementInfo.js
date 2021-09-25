@@ -126,11 +126,15 @@
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",false);
                 $("#issueAmt").attr("disabled",false);
                 $("#svrBussRepPlacementInfoDto_targetType1").val('01').trigger("change");
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', true);
+                $("#targetAmt").prop('required', true);
             }else if(assetTvalue=='1107'||assetTvalue=='1901'){
                 $("#svrBussRepPlacementInfoDto_targetType1").val('').trigger("change");
                 $("#svrBussRepPlacementInfoDto_targetType1").attr("disabled",true);
                 $("#issueAmt").attr("disabled",true);
                 $("#issueAmt").val('');
+                $("#svrBussRepPlacementInfoDto_targetType1").prop('required', false);
+                $("#targetAmt").prop('required', false);
             }
         }
         initplace();

@@ -70,6 +70,14 @@
             }
             initFlag =false;
 
+            //根据参数 选择显示投资目的或者业务模式
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+               $("#invAimDiv").hide();
+               $("#businessModelDiv").show();
+            }else{
+               $("#invAimDiv").show();
+               $("#businessModelDiv").hide();
+            }
             setRepayFlag($("#finprodId").val());
         }
 
@@ -183,7 +191,7 @@
         });
 
         $('#payUnpaidintAmt').on('change',function(){
-            intAmtCalcu()
+           // intAmtCalcu()
         });
         /**
          * 清算速度变更
@@ -554,11 +562,11 @@
                 }
                 Joyin.ajaxJson(basePath + "invest/trade/project/TrdProjectInvestTrade002/findRepayFlag", object, function (result) {
                     if(result.repayIntFlag===YES_OR_NO_N){//是还本不带息场景，显示累计未付利息
-                        $('#repayIntAmt_div').show();
+                        //$('#repayIntAmt_div').show();
                         unPayIntAmtCal();//初始化累计还本不带息金额
                         $('#ispayUnpaidint').val(YES_OR_NO_Y).trigger('change');
                     }else{//不是则隐藏
-                        $('#repayIntAmt_div').hide();
+                       // $('#repayIntAmt_div').hide();
                         $('#payUnpaidintAmt').val('').trigger('blur');
                         $('#ispayUnpaidint').val('').trigger('blur');
                     }
@@ -715,7 +723,7 @@
             ){
                 object.finprodId=$('#finprodMarketId').select2("data")[0].object.finprodId;
                 Joyin.ajaxJson(basePath+ "invest/trade/project/TrdProjectInvestTrade002/getUnpayIntAmt",object,function(result){
-                    $('#payUnpaidintAmt').val(result.data).trigger('blur');
+                   // $('#payUnpaidintAmt').val(result.data).trigger('blur');
 
                 });
             }else{

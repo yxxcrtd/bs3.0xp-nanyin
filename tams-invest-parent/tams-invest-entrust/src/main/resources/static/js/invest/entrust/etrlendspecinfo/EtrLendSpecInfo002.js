@@ -65,7 +65,9 @@
         object.ps = $('#ps').val();
         object.inputValue1 = PINAN_ASSET_TYPE_F08;
         object.inputValue2 = $('#ps').val();
-
+        if(parentPageId){
+            object.parentPageId = parentPageId;
+        }
         //指令暂存，去除校验  add by xxg 20210802
         if (operateType === 'save') {
             WorkFlow.doSaveList(basePath+'invest/entrust/etrlendspecinfo/EtrLendSpecInfo002/save',object,"EtrLendSpecInfo002_btn_save");

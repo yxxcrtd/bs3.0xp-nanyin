@@ -54,7 +54,7 @@ public class PtlSingleAssetPositionAnalysisController {
     @PostMapping("findPage/{page}/{length}")
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectAll(@RequestBody Map<String, Object> param,
                                                                 @PathVariable("page") int page, @PathVariable("length") int length)
-            throws Exception {
+    {
         return ptlSingleAssetPositionAnalysisService.selectForPage(page,length,param);
     }
     /**
@@ -66,7 +66,7 @@ public class PtlSingleAssetPositionAnalysisController {
      */
     @PostMapping("findList")
     public List<PtlSingleAssetPositionAnalysis001Dto> selectAllList(@RequestBody Map<String, Object> param)
-            throws Exception {
+    {
         return ptlSingleAssetPositionAnalysisService.selectForList(param);
     }
     /**
@@ -94,7 +94,7 @@ public class PtlSingleAssetPositionAnalysisController {
     @PostMapping("findPageForExport/{page}/{length}")
     public Page<PtlSingleAssetPositionAnalysis001Dto> selectForExport(@RequestBody Map<String, Object> param,
             @PathVariable("page") int page, @PathVariable("length") int length)
-                    throws Exception {
+    {
         return ptlSingleAssetPositionAnalysisService.selectForExport(page, length, param);
     }
 }

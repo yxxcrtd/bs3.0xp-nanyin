@@ -97,7 +97,7 @@ public class TransformRule001Service extends CommonExportService<TransformRule00
 				return null;
 			}
 		} else {
-	        String status = (String)map.get("status");
+	        String status = (String)map.get("dataStatus");
 	        if (StringUtil.isNotBlank(status)) {
 	        	map.put("statusList", StringUtil.splitToList(GlobalConstant.COMMA, status));
 	        }

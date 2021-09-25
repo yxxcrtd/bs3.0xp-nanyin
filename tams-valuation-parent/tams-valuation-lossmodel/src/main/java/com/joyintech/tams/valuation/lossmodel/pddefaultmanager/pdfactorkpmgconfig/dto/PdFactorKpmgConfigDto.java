@@ -49,8 +49,8 @@ public class PdFactorKpmgConfigDto extends BaseEntity implements ITableRow, Proc
      * 选中的数据
      */
     private transient List<PdFactorKpmgConfigDto> selectedItem;
-    
-    
+
+	@PrimaryKey(Field.PK_1)
 	public String getSeqno() {
 		return seqno;
 	}
@@ -59,7 +59,7 @@ public class PdFactorKpmgConfigDto extends BaseEntity implements ITableRow, Proc
 		this.seqno = seqno;
 	}
 	
-	@PrimaryKey(Field.PK_1)
+	@PrimaryKey(Field.PK_2)
 	@NotEmpty(fieldName = "PdFactorKpmgConfig001.vouchYear", groups = {ValidateGroupEdit.class})
 	public String getVouchYear() {
 		return vouchYear;

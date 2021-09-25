@@ -153,7 +153,7 @@ public class UpTrInqSec002Controller extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("getfinprodIdForAdd")
-	public List<SelectOptionDto> getfinprodIdForAdd() throws Exception {
+	public List<SelectOptionDto> getfinprodIdForAdd(){
 		List<SelectOptionDto> temp = upTrInqSec002Service.getfinprodIdForAdd(RequestUtil.getPageParam());
 		return temp;
 	}
@@ -211,6 +211,6 @@ public class UpTrInqSec002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("getFinprodName")
     public String getFinprodName(String finprodId){
-        return upTrInqSec002Service.getFinprodName(finprodId);
+        return StringUtil.trimHtmlTag(upTrInqSec002Service.getFinprodName(finprodId));
     }
 }

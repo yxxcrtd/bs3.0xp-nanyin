@@ -27,7 +27,7 @@
 	    1=1
 		<if test="searchDate != null">
 			AND T1.EFF_DATE <![CDATA[<=]]> #{searchDate}
-			AND T1.INVALID_DATE <![CDATA[>=]]> #{searchDate}
+			AND (T1.INVALID_DATE <![CDATA[>]]> #{searchDate} OR T1.INVALID_DATE IS NULL)
 		</if>
 	</where>
 	</select>
@@ -148,9 +148,9 @@
 		delete from MST_BOND_VALUATION_INFO where
 		<foreach collection="list" item="item" separator=" or " index="index">
 			(
-			SEC_ID = #{secId,jdbcType=VARCHAR}
-			and VALUE_DATE = #{valueDate,jdbcType=DATE}
-			and VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR}
+			SEC_ID = #{item.secId,jdbcType=VARCHAR}
+			and VALUE_DATE = #{item.valueDate,jdbcType=DATE}
+			and VALUE_SOURCE = #{item.valueSource,jdbcType=VARCHAR}
 			)
 		</foreach>
 	</delete>
@@ -171,16 +171,16 @@
 		)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
-			#{secId,jdbcType=VARCHAR}, #{valueDate,jdbcType=DATE}, #{valueSource,jdbcType=VARCHAR},
-			#{lastPeriod,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{netprice,jdbcType=DECIMAL},
-			#{mDuration,jdbcType=DECIMAL}, #{mConvexity,jdbcType=DECIMAL}, #{bpvalue,jdbcType=DECIMAL},
-			#{sduration,jdbcType=DECIMAL}, #{scnvxty,jdbcType=DECIMAL}, #{interestDuration,jdbcType=DECIMAL},
-			#{interestCnvxty,jdbcType=DECIMAL}, #{bpyield,jdbcType=DECIMAL}, #{inputType,jdbcType=VARCHAR},
-			#{createUser,jdbcType=VARCHAR}, #{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
-			#{updateUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{mbpvalue,jdbcType=DECIMAL},
-			#{var,jdbcType=DECIMAL}, #{cvar,jdbcType=DECIMAL}, #{mduration,jdbcType=DECIMAL},
-			#{implicitGrade,jdbcType=VARCHAR}, #{implicitHgrade,jdbcType=VARCHAR}, #{netvaluationExercise,jdbcType=DECIMAL},
-			#{netvaluationRecommended,jdbcType=DECIMAL}
+			#{item.secId,jdbcType=VARCHAR}, #{item.valueDate,jdbcType=DATE}, #{item.valueSource,jdbcType=VARCHAR},
+			#{item.lastPeriod,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.netprice,jdbcType=DECIMAL},
+			#{item.mDuration,jdbcType=DECIMAL}, #{item.mConvexity,jdbcType=DECIMAL}, #{item.bpvalue,jdbcType=DECIMAL},
+			#{item.sduration,jdbcType=DECIMAL}, #{item.scnvxty,jdbcType=DECIMAL}, #{item.interestDuration,jdbcType=DECIMAL},
+			#{item.interestCnvxty,jdbcType=DECIMAL}, #{item.bpyield,jdbcType=DECIMAL}, #{item.inputType,jdbcType=VARCHAR},
+			#{item.createUser,jdbcType=VARCHAR}, #{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP},
+			#{item.updateUser,jdbcType=VARCHAR}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.mbpvalue,jdbcType=DECIMAL},
+			#{item.var,jdbcType=DECIMAL}, #{item.cvar,jdbcType=DECIMAL}, #{item.mduration,jdbcType=DECIMAL},
+			#{item.implicitGrade,jdbcType=VARCHAR}, #{item.implicitHgrade,jdbcType=VARCHAR}, #{item.netvaluationExercise,jdbcType=DECIMAL},
+			#{item.netvaluationRecommended,jdbcType=DECIMAL}
 		</foreach>
 	</insert>
 
@@ -188,8 +188,8 @@
 		delete from fin_product_valuation where
 		<foreach collection="list" item="item" separator=" or " index="index">
 			(
-				FINPROD_ID = #{finprodId,jdbcType=VARCHAR}
-				and VAL_DATE = #{valueDate,jdbcType=DATE}
+				FINPROD_ID = #{item.finprodId,jdbcType=VARCHAR}
+				and VAL_DATE = #{item.valueDate,jdbcType=DATE}
 			)
 		</foreach>
 	</delete>
@@ -204,13 +204,13 @@
 		FULL_VALUATION, VALUE_SOURCE)
 		<foreach collection="list" item="item" separator="from dual union all select" open="select * from (select "
 				 close="from dual)">
-			(#{finprodId,jdbcType=VARCHAR}, #{valDate,jdbcType=DATE}, #{finprodType,jdbcType=VARCHAR},
-			#{finprodType2,jdbcType=VARCHAR}, #{publishDate,jdbcType=DATE}, #{valuation,jdbcType=DECIMAL},
-			#{day7YearYield,jdbcType=DECIMAL}, #{yearYield,jdbcType=DECIMAL}, #{totalValue,jdbcType=DECIMAL},
-			#{inputType,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR},
-			#{createDept,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR},
-			#{updateTime,jdbcType=TIMESTAMP}, #{restNetValue,jdbcType=DECIMAL}, #{cShares,jdbcType=DECIMAL},
-			#{fullValuation,jdbcType=DECIMAL}, #{valueSource,jdbcType=VARCHAR})
+			(#{item.finprodId,jdbcType=VARCHAR}, #{item.valDate,jdbcType=DATE}, #{item.finprodType,jdbcType=VARCHAR},
+			#{item.finprodType2,jdbcType=VARCHAR}, #{item.publishDate,jdbcType=DATE}, #{item.valuation,jdbcType=DECIMAL},
+			#{item.day7YearYield,jdbcType=DECIMAL}, #{item.yearYield,jdbcType=DECIMAL}, #{item.totalValue,jdbcType=DECIMAL},
+			#{item.inputType,jdbcType=VARCHAR}, #{item.remark,jdbcType=VARCHAR}, #{item.createUser,jdbcType=VARCHAR},
+			#{item.createDept,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateUser,jdbcType=VARCHAR},
+			#{item.updateTime,jdbcType=TIMESTAMP}, #{item.restNetValue,jdbcType=DECIMAL}, #{item.cShares,jdbcType=DECIMAL},
+			#{item.fullValuation,jdbcType=DECIMAL}, #{item.valueSource,jdbcType=VARCHAR})
 		</foreach>
 	</insert>
 

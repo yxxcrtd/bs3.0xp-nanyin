@@ -122,7 +122,7 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
      * @since 1.0
      */
     public Page<EtrPlanAssetCDto> selectForPage(int page, int length, Map<String, Object> param)
-        throws Exception {
+    {
         param.put("FINPROD_TYPE2", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         param.put("PROFIT_TYPE", DictCodeList.收益类型_货币型.getValue());
         String portfolioId = (String)param.get("portfolioId");
@@ -534,14 +534,16 @@ public class EtrPlanAssetCService extends BaseService<EtrPlanAssetCDto>{
             if(iPlatformDate != null){
                 etrEntrust.setEntrustDate(iPlatformDate.getSysDate());
             }
-            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
+            // ZGZGST-2045: 计划类货币性指令买入方向用EntrustAmt fuyongsheng 20210907 edit start
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_卖出.getValue())){
                 etrEntrust.setEntrustAmt(dto.getEntrustAmt2());
                 etrEntrust.setEntrustNum(dto.getEntrustNum2());
             }
-            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
+            if(StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_申购.getValue()) || StringUtil.equals(dto.getPs(), DictCodeList.交易方向_赎回.getValue())){
                 etrEntrust.setEntrustAmt(dto.getEntrustAmt());
                 etrEntrust.setEntrustNum(dto.getEntrustNum());
             }
+            // ZGZGST-2045: 计划类货币性指令买入方向用EntrustAmt fuyongsheng 20210907 edit end
             entity.setEtrEntrust(etrEntrust);
             // etrEntrustAdd
             EtrEntrustAdd etrEntrustAdd = new EtrEntrustAdd();

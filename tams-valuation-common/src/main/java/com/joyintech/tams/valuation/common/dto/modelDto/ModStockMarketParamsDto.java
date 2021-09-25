@@ -17,7 +17,11 @@ public class ModStockMarketParamsDto {
 	
 	//查询日期/查询结束日期
 	private Date searchDate;
-	
+	/**
+	 * 需查询的数据条数
+	 */
+	private long searchNum;
+
 	public List<String> getStockIdList() {
 		return stockIdList;
 	}
@@ -36,9 +40,12 @@ public class ModStockMarketParamsDto {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	
-	
-	
-	
-	
+
+	public long getSearchNum() {
+		return searchNum;
+	}
+
+	public void setSearchNum(long searchNum) {
+		this.searchNum = searchNum;
+	}
 }

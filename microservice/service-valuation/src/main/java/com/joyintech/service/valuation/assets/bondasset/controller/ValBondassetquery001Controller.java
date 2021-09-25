@@ -71,7 +71,7 @@ public class ValBondassetquery001Controller {
 	 */
 	@PostMapping("findPage/{page}/{length}")
 	public Page<ValBondassetquery001Dto> findPage(@RequestBody Map<String, Object> param,
-			@PathVariable("page") int page, @PathVariable("length") int length) throws Exception {
+			@PathVariable("page") int page, @PathVariable("length") int length) {
 		return valBondassetquery001Service.findPage(page, length, param);
 	}
 
@@ -84,7 +84,7 @@ public class ValBondassetquery001Controller {
 	 * @since 1.0
 	 */
 	@PostMapping("/findPageout")
-	public List<ValBondassetquery001Dto> findPageout(@RequestBody Map<String, Object> params) throws Exception {
+	public List<ValBondassetquery001Dto> findPageout(@RequestBody Map<String, Object> params) {
 		return valBondassetquery001Service.findPageout(params);
 	}
 
@@ -98,7 +98,7 @@ public class ValBondassetquery001Controller {
 	 * @since 1.0
 	 */
 	@PostMapping("/getDataInWorklow")
-	public int getDataInWorklow(@RequestBody ProcessMark processMark) throws Exception {
+	public int getDataInWorklow(@RequestBody ProcessMark processMark){
 		return valBondassetquery001Service.getDataInWorklow(processMark);
 	}
 	
@@ -114,7 +114,7 @@ public class ValBondassetquery001Controller {
 	@Transactional
 	@DTXTransaction
 	@PostMapping("/doComplete")
-	public void doComplete(@RequestBody ValBondassetquery001Dto entity) throws Exception {
+	public void doComplete(@RequestBody ValBondassetquery001Dto entity) {
 		valBondassetquery001Service.doComplete(entity);
 	}
 	

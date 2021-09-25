@@ -42,7 +42,7 @@ public class FlowForecastReportController {
     public Page<FlowCommonDto> selectReserve(@RequestBody Map<String, Object> param,
                                              @PathVariable("page") int page,
                                              @PathVariable("length") int length)
-        throws Exception {
+    {
         return flowForecastReportService.selectReserve(page, length, param);
     }
 
@@ -59,7 +59,7 @@ public class FlowForecastReportController {
     public Page<FlowCommonDto> selectForcast(@RequestBody Map<String, Object> param,
                                              @PathVariable("page") int page,
                                              @PathVariable("length") int length)
-        throws Exception {
+    {
         return flowForecastReportService.selectForcast(page, length, param);
     }
 

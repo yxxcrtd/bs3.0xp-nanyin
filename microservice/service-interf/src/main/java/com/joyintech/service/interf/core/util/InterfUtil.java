@@ -12,6 +12,7 @@ package com.joyintech.service.interf.core.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.joyintech.framework.file.SafelyFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
@@ -102,7 +104,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     public static CompositeData changeEntityToESBData(Object entity)
-        throws Exception {
+            throws InterfException, InvocationTargetException, IllegalAccessException {
         // 源数据为空时返回空
         if (entity == null) {
             return null;
@@ -149,7 +151,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     public static <T> T parseESBDataToEntity(CompositeData data, Class<T> clz)
-        throws Exception {
+            throws IllegalAccessException, InstantiationException, InterfException, ClassNotFoundException, InvocationTargetException {
         // 数据为空或者受体类不存在时返回空
         if (data == null || data.size() == 0 || clz == null) {
             return null;
@@ -258,7 +260,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     private static List<Object> getArrayList(Array arr, Class<?> mdClz)
-        throws Exception {
+            throws ClassNotFoundException, InstantiationException, InterfException, IllegalAccessException, InvocationTargetException {
         List<Object> eList = new ArrayList<>();
         for (int i = 0; i < arr.size(); i++ ) {
             Object e = parseESBDataToEntity(arr.getStruct(i), mdClz);
@@ -277,8 +279,7 @@ public final class InterfUtil {
      * @see
      * @since 1.0
      */
-    private static void invoke(Method md, Object entity, Field field)
-        throws Exception {
+    private static void invoke(Method md, Object entity, Field field) throws InvocationTargetException, IllegalAccessException {
         Class<?>[] clzs = md.getParameterTypes();
         if (clzs == null || clzs.length == 0) {
             md.invoke(entity);
@@ -329,8 +330,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     @SuppressWarnings("unchecked")
-    public static Array getArray(Method md, Object entity)
-        throws Exception {
+    public static Array getArray(Method md, Object entity) throws InvocationTargetException, IllegalAccessException, InterfException {
         if (!md.getName().startsWith("get")) {
             return null;
         }
@@ -371,8 +371,7 @@ public final class InterfUtil {
      * @see
      * @since 1.0
      */
-    public static Field getField(java.lang.reflect.Method md, Object entity)
-        throws Exception {
+    public static Field getField(java.lang.reflect.Method md, Object entity) throws InterfException, InvocationTargetException, IllegalAccessException {
         EsbFieldType tp = md.getAnnotation(EsbFieldType.class);
         if (tp == null || EsbFieldType.ARRAY.equals(tp.value())) {
             return null;
@@ -507,7 +506,7 @@ public final class InterfUtil {
      * @since 1.0
      */
     public static boolean createFolder(String path) {
-        File file = new File(path);
+        File file = new SafelyFile(path);
         if (!file.isDirectory()) {
             try {
                 if (file.mkdirs()) {
@@ -582,7 +581,7 @@ public final class InterfUtil {
      * @see
      * @since 1.0
      */
-    public static void changeFolderPermission(File dirFile)
+    public static void changeFolderPermission(SafelyFile dirFile)
         throws IOException {
         Set<PosixFilePermission> perms = new HashSet<>();
         perms.add(PosixFilePermission.OWNER_READ);
@@ -652,14 +651,19 @@ public final class InterfUtil {
      * @see
      * @since 1.0
      */
-    public static FileAccessConfig getFileAccessConfig(InterfFileLog entity)
-        throws Exception {
+    public static FileAccessConfig getFileAccessConfig(InterfFileLog entity) throws IllegalAccessException {
         // 设置文件下载连接配置
         String server = entity.getIp();
         int port = Integer.parseInt(entity.getPort());
         String username = entity.getUserName();
         String password = entity.getPassword();
-        FileAccessConfig config = new FileAccessConfig(server, port, username, password);
+        FileAccessConfig config = null;
+        try {
+            config = new FileAccessConfig(server, port, username, password);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            throw new IllegalAccessException ();
+        }
         StringBuilder buffer = new StringBuilder();
         buffer.append("Access:{server:").append(server).append(",port:").append(port).append(
             ",username:").append(username).append(",password:").append(password).append("}");

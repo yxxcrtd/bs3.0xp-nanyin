@@ -19,6 +19,7 @@ import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -109,6 +110,9 @@ public class EtrFund003Controller extends BaseController {
         model.addAttribute("T01", DictCodeList.交易方向_买入.getValue());
         model.addAttribute("T02", DictCodeList.交易方向_卖出.getValue());
         model.addAttribute("T52", DictCodeListExt2.交易方向_认购.getValue());
+        // ZGZGST-2255:T65没有赋值,导致风险试算无结果 fuyongsheng 2021090408 add atart
+        model.addAttribute("T65", DictCodeListExt2.交易方向_转换申请.getValue());
+        // ZGZGST-2255:T65没有赋值,导致风险试算无结果 fuyongsheng 2021090408 add end
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_基金.getValue());
         PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
         pageElementConfigDto.setPageId("BaseRiskMathComm");
@@ -211,12 +215,11 @@ public class EtrFund003Controller extends BaseController {
      * @param allDto EtrFundDto
      * @param br br
      * @return 结果
-     * @throws Exception 异常
+     * @throws WorkFlowException 异常
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrFundDto allDto, BindingResult br)
-            throws Exception {
+    public AjaxResult save(@RequestBody EtrFundDto allDto, BindingResult br) throws Exception {
         AjaxResult ajaxResult = this.check(allDto, br);
         if (!StringUtil.isEmptyList(ajaxResult.getErrorList())) {
             return ajaxResult;

@@ -47,7 +47,14 @@
         T1.REMARK               remark,
         T1.PRICE_MODEL          priceModel,
         NVL(T5.FINISH_AMT,0)    finishAmt,
-        round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),2) transactioncom
+        <!-- 考虑 /0 的问题 modify by wanshiwei 20210910 start -->
+        (
+            case
+                when NVL(NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),0) = 0 then 0
+                else round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),2)
+            end
+        ) transactioncom
+        <!-- 考虑 /0 的问题 modify by wanshiwei 20210910 end -->
         FROM ETR_ENTRUST T1
         LEFT JOIN PTL_PORTFOLIO T2 ON
         T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
@@ -134,7 +141,14 @@
         T1.REMARK               remark,
         T1.PRICE_MODEL          priceModel,
         NVL(T5.FINISH_AMT,0)    finishAmt,
-        round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),2) transactioncom
+        <!-- 考虑 /0 的问题 modify by wanshiwei 20210910 start -->
+        (
+            case
+                when NVL(NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),0) = 0 then 0
+                else round(NVL(T5.FINISH_AMT,0)/NVL(T1.ENTRUST_AMT,T1.ENTRUST_NUM),2)
+            end
+        ) transactioncom
+        <!-- 考虑 /0 的问题 modify by wanshiwei 20210910 end -->
         FROM WFL_ETR_ENTRUST T1
         LEFT JOIN PTL_PORTFOLIO T2 ON
         T1.PORTFOLIO_ID = T2.PORTFOLIO_ID
@@ -229,6 +243,7 @@
         <where>
             FINPROD_MARKET_ID IS NOT NULL AND
             FINPROD_TYPE2 = #{planasset}
+            AND TRADE_MARKET != '12'
             <if test="param != null and !param.equals('')">
                 and (FINPROD_MARKET_ID like concat('%',concat(#{param},'%'))
                 or FINPROD_NAME like concat('%',concat(#{param},'%')))
@@ -290,6 +305,7 @@
         <where>
             T1.FINPROD_MARKET_ID IS NOT NULL AND
             T1.FINPROD_TYPE2 = #{planasset}
+            AND TRADE_MARKET != '12'
             <if test="search != null and !search.equals('')">
                 and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
                 or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))
@@ -355,7 +371,7 @@
   		from PTL_CASH_POSITION
   		where
   			(HODING_TYPE=#{POSITION_TYPE_01} or HODING_TYPE=#{POSITION_TYPE_03}) and PORTFOLIO_ID=#{portfolioId}
-  			and CDATE=(select cur_date from sys_date) and CHL_FINPROD_ID=#{TongDao}
+  			and CDATE= #{platDate,jdbcType=DATE} and CHL_FINPROD_ID=#{TongDao}
   	</select>
     <select id="selectByKey" resultMap="selByKeyResult">
         SELECT

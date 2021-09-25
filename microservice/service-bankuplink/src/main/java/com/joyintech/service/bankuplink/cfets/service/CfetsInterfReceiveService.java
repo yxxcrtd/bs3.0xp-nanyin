@@ -47,6 +47,7 @@ import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.cstp.service.CstpCommonService;
 import com.joyintech.tams.invest.common.dto.common.PtlAllocationDto;
+import com.joyintech.tams.invest.common.dto.cstp.IbuQuoteEntCrepPledgeCommonDto;
 import com.joyintech.tams.invest.common.service.DateCalCommonService;
 import com.joyintech.tools.collectors.JoyinCollectors;
 import org.codehaus.plexus.util.StringUtils;
@@ -703,25 +704,47 @@ public class CfetsInterfReceiveService {
                 }
                 CfetsRepoDealQuotedPrice001Dto cfetsRepoDealQuotedPrice001Dto = new CfetsRepoDealQuotedPrice001Dto();
                 BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice001Dto,ibuQuoteCrepDto);
-                
-                cfetsRepoDealQuotedPrice001Dto.setPs(ibuQuoteCrepDto.getRepoPs());
-                
+                //报文回来的券 跟 组合关联上
+                //查找回购报价指令质押品
+                List<CfetsRepoDealQuotedPrice003Dto> cfetsRepoDealQuotedPrice003Dtos = cfetsRepoDealQuotedPrice001Mapper.listIbuQuoteEntCrepPledge(quoteId);
                 List<CfetsRepoDealQuotedPrice003Dto> pledgeBondList = new ArrayList<>();
-                ibuQuoteCrepPledgeDtoList.forEach(item -> {
-                    CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
-                    BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,item);
-                    cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
-                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
-                    cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
-                    cfetsRepoDealQuotedPrice003Dto.setPledgeRate(ArithmeticUtil.multiply(item.getPledgeRatio(), BigDecimal.valueOf(100)));
-                    pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
-                });
                 cfetsRepoDealQuotedPrice001Dto.setIsDzh("Y");
                 cfetsRepoDealQuotedPrice001Dto.setPledgeBondList(pledgeBondList);
                 cfetsRepoDealQuotedPrice001Dto.setPtlAllocationList(ptlAllocations);
                 cfetsRepoDealQuotedPrice001Dto.setIsKtg(isKtg);
                 cfetsRepoDealQuotedPrice001Dto.setIsMq("Y");
-                ibuQuoteEntCrepPledges= ibuComponentCommonService.质押券拆分(cfetsRepoDealQuotedPrice001Dto);
+                cfetsRepoDealQuotedPrice001Dto.setVersion(ibuQuoteCrepDto.getVersion());
+                if(!StringUtil.isEmptyList(cfetsRepoDealQuotedPrice003Dtos)){
+                    pledgeBondList = ibuComponentCommonService.报文返回券关联组合拆分(cfetsRepoDealQuotedPrice003Dtos, ibuQuoteCrepPledgeDtoList);
+                    //转换
+                    if(!StringUtil.isEmptyList(pledgeBondList)){
+                        for (CfetsRepoDealQuotedPrice003Dto item : pledgeBondList) {
+                            IbuQuoteEntCrepPledgeDto ibuQuoteEntCrepPledge = new IbuQuoteEntCrepPledgeDto();
+                            BeanUtil.copyPropertiesIgnoreNull(ibuQuoteEntCrepPledge,item);
+                            ibuQuoteEntCrepPledge.setQuoteId(item.getQuoteId());
+                            ibuQuoteEntCrepPledge.setVersion(ibuQuoteCrepDto.getVersion());// 版本号
+                            ibuQuoteEntCrepPledge.setEntrustId(item.getEntrustId());
+                            ibuQuoteEntCrepPledge.setPortfolioId(item.getPortfolioId());
+                            ibuQuoteEntCrepPledge.setPledgeFinprodId(item.getFinprodId());
+                            ibuQuoteEntCrepPledge.setBondCode(item.getBondCode());
+                            ibuQuoteEntCrepPledge.setBranch(0L);// 分支*/
+                            ibuQuoteEntCrepPledge.setPledgeRatio(ArithmeticUtil.divide(item.getPledgeRate(), new BigDecimal(100), 4));// 质押率*/
+                            ibuQuoteEntCrepPledge.setUnitCprice(item.getNetPrice());
+                            ibuQuoteEntCrepPledges.add(ibuQuoteEntCrepPledge);
+                        }
+                    }
+                }else{
+                    for (IbuQuoteCrepPledgeDto item : ibuQuoteCrepPledgeDtoList) {
+                        CfetsRepoDealQuotedPrice003Dto cfetsRepoDealQuotedPrice003Dto = new CfetsRepoDealQuotedPrice003Dto();
+                        BeanUtil.copyPropertiesIgnoreNull(cfetsRepoDealQuotedPrice003Dto,item);
+                        cfetsRepoDealQuotedPrice003Dto.setFinprodId(item.getPledgeFinprodId());
+                        cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
+                        cfetsRepoDealQuotedPrice003Dto.setPledgePrin(ArithmeticUtil.multiply(item.getPledgeNumber(),new BigDecimal("100")));
+                        cfetsRepoDealQuotedPrice003Dto.setPledgeRate(ArithmeticUtil.multiply(item.getPledgeRatio(), BigDecimal.valueOf(100)));
+                        pledgeBondList.add(cfetsRepoDealQuotedPrice003Dto);
+                    }
+                    ibuQuoteEntCrepPledges= ibuComponentCommonService.质押券拆分(cfetsRepoDealQuotedPrice001Dto);
+                }
                 resultDto.setIbuQuoteEtrReDtoList(ibuQuoteEtrRes);
                 resultDto.setIbuQuoteEntCrepPledgeDtoList(ibuQuoteEntCrepPledges);
             }

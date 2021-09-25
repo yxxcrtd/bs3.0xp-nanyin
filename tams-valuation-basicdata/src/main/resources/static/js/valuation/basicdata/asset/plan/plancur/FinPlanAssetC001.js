@@ -199,7 +199,7 @@ $(function() {
                 Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
                 return;
             }
-            var object = {selectedItem: selArr, operateType:"delete"};
+            var object = {selectedItem: selArr, operateType:"delete",batchDelFlag:YES_OR_NO_Y};
             Joyin.ajaxJson(basePath + 'valuation/basicdata/asset/plan/plancur/FinPlanAssetC001/check', object, function(result) {
                 Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                         WorkFlow.doDeleteList(basePath + 'valuation/basicdata/asset/plan/plancur/FinPlanAssetC001/delete', object,

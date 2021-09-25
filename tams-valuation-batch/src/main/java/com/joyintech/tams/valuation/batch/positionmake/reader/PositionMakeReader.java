@@ -255,11 +255,11 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
             if (CollectionUtils.isNotEmpty(ptlSecValutionListWithNoTd)) {
                 Map<String, PtlSecValutionWithOtherFieldDto> dtoMap = new HashMap<>();
                 ptlSecValutionListWithNoTd.forEach(item -> {
-                    dtoMap.put(item.getPortfolioId() + item.getFinprodId(), item);
+                    dtoMap.put(item.getPortfolioId() + item.getFinprodId()+item.getInvAim(), item);
                 });
                 for (PtlSecValutionWithOtherFieldDto item : listCostInfoC) {
                     // 如果该组合代码+资产代码在组合资产信息A中不存在，则A.add(B);
-                    String key =item.getPortfolioId()+item.getFinprodId();
+                    String key =item.getPortfolioId()+item.getFinprodId()+item.getInvAim();
                     if(!dtoMap.containsKey(key)){
                         ptlSecValutionListWithNoTd.add(item);
                     }
@@ -1074,6 +1074,23 @@ public class PositionMakeReader extends BaseReader<PositionMakeReaderResult> {
             bokPositionPrdfee.setTdyIntincexpAdd(dto.getTdyIntincexpAddB());
 
             result.add(bokPositionPrdfee);
+        }
+
+        //手工凭证
+        sqlMap.put("cdFlag",DictCodeList.借贷方向_借.getValue());
+        sqlMap.put("C03", DictCodeListExt1.现金流二级类型_固定管理费.getValue());
+        sqlMap.put("C04", DictCodeListExt1.现金流二级类型_浮动管理费.getValue());
+        sqlMap.put("C05", DictCodeListExt1.现金流二级类型_托管费.getValue());
+        sqlMap.put("C06", DictCodeListExt1.现金流二级类型_销售费.getValue());
+        sqlMap.put("C09", DictCodeListExt1.现金流二级类型_外包服务费.getValue());
+        sqlMap.put("C10", DictCodeListExt1.现金流二级类型_代销费.getValue());
+        sqlMap.put("subjectType02", DictCodeListExt2.科目类别_负债类.getValue());
+        sqlMap.put("finprodTypeF26", DictCodeListExt1.金融产品类型_通道.getValue());
+        sqlMap.put("booksetType02", DictCodeList.账套类别_理财账套.getValue());
+        sqlMap.put("bookType03", DictCodeList.凭证类型_手工.getValue());
+        List<BokPositionPrdfee> resultManual = positionMakeWithoutDispatchMapper.getManualList(sqlMap);
+        if (resultManual != null && !resultManual.isEmpty()) {
+            result.addAll(resultManual);
         }
 
         return result;

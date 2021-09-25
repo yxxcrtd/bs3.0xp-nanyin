@@ -48,7 +48,7 @@ public class MstYieldCurveInfoController {
     @RequestMapping("/selectForPage/{page}/{length}")
     public Page<MstYieldCurveInfoDto> selectForPage(@RequestBody Map<String, Object> pageParam, @PathVariable("page") int page,
                                                     @PathVariable("length") int length)
-        throws Exception {
+    {
         return mstYieldCurveInfoService.selectForPage(page, length, pageParam);
     }
 

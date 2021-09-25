@@ -98,4 +98,8 @@ public interface CreditLinesUpdateMapper {
     List<Map<String, Object>> findPledgeBondInfo(Map<String, Object> param);
 
     BigDecimal getShareAmt(String bTradeId);
+
+    BigDecimal getOccupiedQuota(CreditLinesInputDto inputDto);
+
+    BigDecimal getOccupiedQuota1(CreditLinesInputDto inputDto);
 }

@@ -5,6 +5,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.valuation.valmodel.convertibleorexchangeableassets.bintreeconfig.dto.ModBintreeConfigDto;
 import com.joyintech.tams.valuation.common.constants.ServiceApplication;
@@ -76,30 +77,19 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
        return result;
 
    }
-   public List<SelectOptionDto> getcompStockidForBintree(Map<String, Object> parameters) {
-   	
-		List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
-		
-		AssetInfoDto qAssetInfoDto=new AssetInfoDto();
-		if(parameters.get("search")!=null&&!"".equals(parameters.get("search"))){
-			qAssetInfoDto.setSearch(parameters.get("search").toString());
-		}
-		if(parameters.get("initValue")!=null&&!"".equals(parameters.get("initValue"))){
-			qAssetInfoDto.setInitValue(parameters.get("initValue").toString());
-		}
-		qAssetInfoDto.setType8List(Arrays.asList(DictCodeListExt1.金融产品类型_投管用_股票.getValue()));
-		List<AssetInfoDto> aseetS = restTemplate.postForList(
-				ServiceApplication.CUSTOMER_INTERF_NAME + "/interf/ModelCallOnInvest/getAssetNoClassify", qAssetInfoDto,
-				AssetInfoDto.class);
-		resultList = aseetS.stream().map(operationStation -> {
-			SelectOptionDto stationDictVO = new SelectOptionDto();
-			stationDictVO.setId(operationStation.getFinprodId());
-			stationDictVO.setText(operationStation.getFinprodAbbr());
-			return stationDictVO;
-		}).collect(Collectors.toList());
 
-		return resultList;
+    /**
+     * 查询股票资产信息
+     * @param parameters
+     * @return
+     */
+   public Page<SelectOptionDto> getStockAssetInfo(Map<String, Object> parameters) {
+       Page<SelectOptionDto> pageList =  restTemplate.postForPage(
+               ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getStockAssetInfo",parameters,
+               SelectOptionDto.class);
+       return pageList;
    }
+
 
     /**
      * 查询机构
@@ -137,4 +127,37 @@ public class ModBintreeConfig002Service extends CommonExportService<ModBintreeCo
                 ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/selectByFinprodId",
                 dto, ModBintreeConfigDto.class);
     }
+
+
+    /**
+     * 查询债券资产信息
+     * @param parameters
+     * @return
+     */
+    public List<SelectOptionDto> getSecAssetInfo(Map<String, Object> parameters) {
+
+        List<SelectOptionDto> resultList = new ArrayList<SelectOptionDto>();
+        AssetInfoDto qAssetInfoDto = new AssetInfoDto();
+        if (parameters.get("search") != null && !"".equals(parameters.get("search"))) {
+            qAssetInfoDto.setSearch(parameters.get("search").toString());
+        }
+        if (parameters.get("initValue") != null && !"".equals(parameters.get("initValue"))) {
+            qAssetInfoDto.setInitValue(parameters.get("initValue").toString());
+        }
+        qAssetInfoDto.setType18List(Arrays.asList(DictCodeListExt1.证券品种_债券.getValue()));
+        qAssetInfoDto.setType1List(Arrays.asList(DictCodeList.债券类型_可转债.getValue(), DictCodeList.债券类型_可交换债.getValue()));
+        List<AssetInfoDto> aseetS = restTemplate.postForList(
+                ServiceApplication.VAL_MODEL_SERVICE_NAME + "/ModBintreeConfig/getAssetNoClassify", qAssetInfoDto,
+                AssetInfoDto.class);
+        resultList = aseetS.stream().map(operationStation -> {
+            SelectOptionDto stationDictVO = new SelectOptionDto();
+            stationDictVO.setId(operationStation.getFinprodId());
+            stationDictVO.setText(operationStation.getFinprodAbbr());
+            stationDictVO.setObject(operationStation.getFinprodMarketId());
+            return stationDictVO;
+        }).collect(Collectors.toList());
+
+        return resultList;
+    }
+
 }

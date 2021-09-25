@@ -312,6 +312,8 @@ $(function() {
                 //置灰付息计划生成计划按钮
                 /*$('#finPayInterestStdInfoDto_btn_generationPlan').off('click').prop('disabled', true).addClass('layui-btn-disabled');*/
             }
+
+            window.BussAssetFiveType.doAssetFiveTypeChange(IS_SHOW_TYPE,'F01','type9','type10','type11','type12','type4','type5');
         }
     }
     var init = function(){

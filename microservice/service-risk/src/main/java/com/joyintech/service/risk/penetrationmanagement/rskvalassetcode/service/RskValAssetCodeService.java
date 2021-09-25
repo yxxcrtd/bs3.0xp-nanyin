@@ -10,18 +10,21 @@
  
 package com.joyintech.service.risk.penetrationmanagement.rskvalassetcode.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.framework.security.MultilevelDataAuthorityUtil;
+import com.joyintech.framework.select.SelectOptionDto;
+import com.joyintech.service.risk.penetrationmanagement.rskvalstructure.dto.RskValStructureDto;
+import com.joyintech.tams.common.base.entity.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.tams.common.base.dao.RskValtblAssetSubMapDtlMapper;
 import com.joyintech.tams.common.base.dao.RskValtblAssetSubMapMapper;
-import com.joyintech.tams.common.base.entity.RskValtblAssetSubMap;
-import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtl;
-import com.joyintech.tams.common.base.entity.RskValtblAssetSubMapDtlKey;
-import com.joyintech.tams.common.base.entity.RskValtblSubject;
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -52,9 +55,20 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
     
     @Autowired
     private RskValtblAssetSubMapDtlMapper   rskValtblAssetSubMapDtlMapper;
-    
+    /**
+     * 长sql最大一次插入或者更新条数
+     */
+    @Value("${application.reportInsertLongCount}")
+    public int reportInsertLongCount;
     public List<RskValtblAssetSubMapDto> selectAll(Map<String,Object> map){
-        return rskValAssetCodeMapper.selectForPage(map);
+        if(MultilevelDataAuthorityUtil.isEnabled()){
+            List<RskValtblAssetSubMapDto> list=rskValAssetCodeMapper.selectForPage(map);
+            List<RskValtblAssetSubMapDto> listDefault=rskValAssetCodeMapper.selectForPageDefault(map);
+            list.addAll(listDefault);
+            return list;
+        }else {
+            return rskValAssetCodeMapper.selectForPage(map);
+        }
     }
     /**
      * 初始化查询
@@ -83,7 +97,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      * @since 1.0
      */
     public Page<RskValtblAssetSubMapDtlDto> findPageDtl(int page, int length,
-                                                       Map<String, Object> pageParam) throws Exception {
+                                                       Map<String, Object> pageParam) {
              return super.queryForPage(page, length, () -> {
                  rskValAssetCodeMapper.selectDtl(pageParam);
              });
@@ -160,7 +174,7 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
      */
     public void saveAssetCodeDtl(RskValtblAssetSubMapDtlDto dto){
         if(StringUtil.isNotEmpty(dto.getSrcCode())){
-            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode().toString());
+            List<String> srcCodeList = StringUtil.splitToList(null, dto.getSrcCode());
             for(String srcCode:srcCodeList){
                 RskValtblAssetSubMapDtl record = new RskValtblAssetSubMapDtl();
                 record.setId(dto.getId());
@@ -209,5 +223,80 @@ public class RskValAssetCodeService extends BaseService<RskValtblAssetSubMapDtlD
     public int getCountByPtl(String assetSubMapId){
         return rskValAssetCodeMapper.getCountByPtl(assetSubMapId);
     }
-    
+    /**
+     * 查询目标汇总科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public Page<SelectOptionDto> selecctRskValtblSubjectSumCodeList(int page, int length, Map<String, Object> pageParam){
+        return super.queryForPageForSelectReturn(page,length,() -> rskValAssetCodeMapper.selecctRskValtblSubjectSumCodeList(pageParam));
+    }
+
+    /**
+     * 查询所有已配置科目代码
+     * @param page
+     * @param length
+     * @param pageParam
+     * @return
+     */
+    public List<RskValtblAssetSubMapDtlDto> findListDtl(Map<String, Object> pageParam) {
+           return rskValAssetCodeMapper.selectDtl(pageParam);
+    }
+    /**
+     * 估值表资产科目映射默认数
+     * <功能详细描述>
+     * @param assetSubMapId
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public int getAssetSubInfoIsDefault(String assetSubMapId){
+        return rskValAssetCodeMapper.getAssetSubInfoIsDefault(assetSubMapId);
+    }
+    /**
+     * 新建映射明细
+     * <功能详细描述>
+     * @param dto
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public void insertList(List<RskValtblAssetSubMapDtl> list){
+        //分批次插入数据库
+        int maxDataCountOneTime = reportInsertLongCount;
+        //插入list大小
+        int dataCount = list.size();
+        //若需要插入的数据比最大插入的数据少，则直接全部插入
+        if (dataCount <= maxDataCountOneTime) {
+            rskValtblAssetSubMapDtlMapper.insertList(list);
+            return ;
+        }
+
+        List<RskValtblAssetSubMapDtl> newDataList = new ArrayList<RskValtblAssetSubMapDtl>();
+        newDataList.addAll(list);
+
+        // 分批处理
+        int part = dataCount / maxDataCountOneTime; // 分批数
+        for (int i = 0; i < part; i++ ) {
+            rskValtblAssetSubMapDtlMapper.insertList(newDataList.subList(0, maxDataCountOneTime));
+            newDataList.subList(0, maxDataCountOneTime).clear();
+        }
+        // 最后剩下的数据
+        if (CollectionUtils.isNotEmpty(newDataList)) {
+            rskValtblAssetSubMapDtlMapper.insertList(newDataList);
+        }
+    }
+    /**
+     * 查询目标科目代码
+     * <功能详细描述>
+     * @return
+     * @see
+     * @since 1.0
+     */
+    public List<String> selecctRskValtblSubCodeList(String subType){
+        return rskValAssetCodeMapper.selecctRskValtblSubCodeList(subType);
+    }
+
 }

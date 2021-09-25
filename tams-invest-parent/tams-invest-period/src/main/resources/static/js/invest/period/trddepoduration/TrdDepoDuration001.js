@@ -72,7 +72,7 @@ $(function() {
                 JoyinUtil.getRealPath(url),
                 "98%", "95%",data,function(){table.reload();});
         },
-        sortfont:true,
+        sortfont:false,
         cols:[
             {field:'statusValidStr',width:'8%',sortField:"statusValid", title: 'TrdDepoDuration001.pageDataStatus'}
             ,{field:'busiCode',width:'12%', title: 'TrdDepoDuration001.busiCode'}
@@ -87,16 +87,16 @@ $(function() {
             ,{field:'remainPrinAmt',width:'20%', title: 'TrdDepoDuration001.remainPrinAmt',type:'money'}
             ,{field:'fpriceAmt',width:'20%', title: 'TrdDepoDuration001.fpriceAmt',type:'money'}
             ,{field:'pTradeId',  title: 'TrdDepoDuration001.pTradeId',visible:false} //金融产品代码
-            ,{field:'tradeAmt',width:'20%', title: 'TrdDepoDuration001.tradeAmt',type:'money'}
+            ,{field:'tradeAmt',width:'20%', sortField:'TRADE_AMT',title: 'TrdDepoDuration001.tradeAmt',type:'money'}
             ,{field:'assetType',visible: false}
             ,{field:'assetType',visible: false}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit']
                 ,render: function (data, type, row, meta) {
-                // ZGZGST-1537: 有效不展示确认按钮 fuyongsheng 20210830 add start
-                if (row.statusValid == '05')
+                // ZGZGST-1537: 有效和撤销状态不展示确认按钮 fuyongsheng 20210830 add start
+                if (row.statusValid == PAGE_DATA_STATUS_05 || row.statusValid == PAGE_DATA_STATUS_06)
                     return "";
                 else
-                // ZGZGST-1537: 有效不展示确认按钮 fuyongsheng 20210830 add end
+                // ZGZGST-1537: 有效和撤销状态不展示确认按钮 fuyongsheng 20210830 add end
                 //modifiled by liupengfei for 多级法人改造 确认按钮权限控制 S
                 if(purviewElements.indexOf('_edit')!=-1){
                     return '<i class="btn iconfont edit icon-circle-correct_fill" title="确认"></i>';
@@ -138,7 +138,7 @@ $(function() {
         $('#TrdDepoDuration001_btn_search').click(function() {
             table.load();
             $('#TrdDepoDuration001_btn_revoke').show();
-            $('#TrdDepoDuration001_btn_draw').show();
+//            $('#TrdDepoDuration001_btn_draw').show();
         });
 
         $('#TrdDepoDuration001_btn_export').click(function() {

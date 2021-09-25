@@ -11,9 +11,11 @@ import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.calculation.util.BasicUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.base.entity.SysBatchTask;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.entity.ModBatchLogs;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.common.utils.ArithmeticUtil1;
 import com.joyintech.tams.model.impairment.batch.eadcalculation.dao.EadCalculationBatchMapper;
@@ -23,9 +25,11 @@ import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowPayRulesDto;
 import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -52,23 +56,19 @@ public class EadCalCulationBatchProcessorService {
     @Autowired
     private EadCalculationBatchMapper eadCalculationBatchMapper;
 
-
+    private StepExecution stepExecution;
     @Autowired
     private ModLogsService modLogsService;
 
-    public EadCalCulationResultDto execute(Map<String, Object> param) {
+    public EadCalCulationResultDto execute(Map<String, Object> param, StepExecution execution) {
+
         logger.info("---------EAD计算Processor业务层开始---------");
+        stepExecution = execution;
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
         SysBatchTask batchtask = (SysBatchTask) param.get("BATCHTASK");
         // 定义返回list
         EadCalCulationResultDto result = new EadCalCulationResultDto();
 
-        // 批处理上下文日志处理
-        ExecutionContext executionContext = (ExecutionContext) param.get("executionContext");
-        List<EadErrorParams> errors = (List<EadErrorParams>) executionContext.get("ERRORS");
-        if (errors == null) {
-            errors = new ArrayList<EadErrorParams>();
-        }
         // 获取reader返回值
         EadCalculationReaderDto readerDto = (EadCalculationReaderDto) param.get(GlobalConstant.READER_RESULT);
         Date excuteDate = (Date) param.get(GlobalConstant.HAPPEN_DATE); // 发生日：批处理任务执行信息.处理日（发生日）
@@ -150,12 +150,14 @@ public class EadCalCulationBatchProcessorService {
                     if (DateUtil.compareDate(itemServicing.getPayDate(), excuteDate) < 0) {
                         // 资产收息交易列表比那里
                         for (ModEclResultProcess item22 : listT22) {
+                            //if (资产付息交易i.计息截止日 == 资产付息计划i.计息截止日 && 资产付息交易i.是否结清 == 已结清)
                             if (DateUtil.compareDate(item22.getPlanEndDate(), itemServicing.getMdate()) == 0 &&
-                                    DictCodeList.是否_否.getValue().equals(item22.getIsClean())) {
+                                    DictCodeList.是否_是.getValue().equals(item22.getIsClean())) {
                                 isInterestTrade = true;
                                 break;
                             }
                             // 如果存在交易且未结清
+                            //if (资产付息交易i.计息截止日 == 资产付息计划i.计息截止日 && 资产付息交易i.是否结清 == 未结清)
                             if (DateUtil.compareDate(item22.getPlanEndDate(), itemServicing.getMdate()) == 0 &&
                                     DictCodeList.是否_否.getValue().equals(item22.getIsClean())) {
                                 isInterestTrade = true;
@@ -205,7 +207,7 @@ public class EadCalCulationBatchProcessorService {
                                 dto.setPortfolioId(readerDto.getPortfolioId());
                                 dto.setAssetId(readerDto.getAssetId());
                                 dto.setModelAssetType(readerDto.getModelAssetType());
-                                dto.setCashType(DictCodeListExt1.现金流二级类型_利息.getValue());
+                                dto.setCashType(DictCodeListExt1.现金流二级类型_本金.getValue());
                                 dto.setPlanEndDate(itemdebt.getMdate());
                                 dto.setAmtReceived(isNullBigDecimal(item23.getTradeAmt()));
                                 dto.setAccountAmt(isNullBigDecimal(itemdebt.getIntAmt()));
@@ -219,7 +221,7 @@ public class EadCalCulationBatchProcessorService {
                             dto.setPortfolioId(readerDto.getPortfolioId());
                             dto.setAssetId(readerDto.getAssetId());
                             dto.setModelAssetType(readerDto.getModelAssetType());
-                            dto.setCashType(DictCodeListExt1.现金流二级类型_利息.getValue());
+                            dto.setCashType(DictCodeListExt1.现金流二级类型_本金.getValue());
                             dto.setPlanEndDate(itemdebt.getMdate());
                             dto.setAccountAmt(isNullBigDecimal(itemdebt.getIntAmt()));
                             AssetLimitsList.add(dto);
@@ -304,9 +306,10 @@ public class EadCalCulationBatchProcessorService {
                         //定义变量： 每百元应收金额  = 资产逾期交易.应收金额 / 资产发行规模 * 100
                         BigDecimal perhandrudAmt = BigDecimal.ZERO;
                         if (assetIntAmt.compareTo(BigDecimal.ZERO) != 0) {
-                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), ArithmeticUtil.multiply(assetIntAmt, BigDecimal.valueOf(100)), 2, RoundingMode.HALF_UP);
+//                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), ArithmeticUtil.multiply(assetIntAmt, BigDecimal.valueOf(100)));
+                            perhandrudAmt = ArithmeticUtil.divide(item.getAccountAmt(), assetIntAmt);
                         }
-                        receivableAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply(limitTradeInMobileNum, perhandrudAmt)), NumberEnum.MONEY);
+                        receivableAmt = ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply( NumberEnum.MONEY.getCode(),null, limitTradeInMobileNum, perhandrudAmt));
                     } else {
                         receivableAmt = ArithmeticUtil.round(ArithmeticUtil.doAdd(receivableAmt, ArithmeticUtil.multiply(limitTradeInMobileNum, item.getAccountAmt())), NumberEnum.MONEY);
                     }
@@ -337,13 +340,9 @@ public class EadCalCulationBatchProcessorService {
                 });
             }
         } catch (Exception e) {
-            logger.error("【EAD计算批处理】：计算错误");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(readerDto.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：计算错误");
-            errors.add(eadErrorParams);
-            executionContext.put("ERRORS", errors);
+            String msg = "【EAD计算批处理】：计算错误";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), msg);
             return result;
         }
         // 四、计算每笔交易的单位EAD(债券是百元、项目类资产是单位)
@@ -360,13 +359,9 @@ public class EadCalCulationBatchProcessorService {
                 itemIn.setPaperRate(readerDto.getCashFlowCalRuleList().get(0).getYield());
                 //nvl(买入交易i.到期收益率，买入交易.票面利率)
                 if (null == itemIn.getYield() && null == itemIn.getPaperRate()) {
-                    logger.error("【EAD计算批处理】：资产无折现率");
-                    EadErrorParams eadErrorParams = new EadErrorParams();
-                    eadErrorParams.setFinprodId(readerDto.getAssetId());
-                    eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-                    eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无折现率");
-                    errors.add(eadErrorParams);
-                    executionContext.put("ERRORS", errors);
+                    String msg = "【EAD计算批处理】：资产无折现率";
+                    logger.error(msg);
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), msg);
                 }
                 BigDecimal tempRate;
 //                if (ModelDictCodeList.模型_证券品种_债券.getValue().equals(itemIn.getType8())) {
@@ -375,15 +370,24 @@ public class EadCalCulationBatchProcessorService {
                 } else {// 如果 证券品种为其他
                     tempRate = itemIn.getPaperRate();
                 }
-                PriceYieldOutParameter yieldPriceOutParameter = calaYieldByPriceCalculator(readerDto, excuteDate, tempRate, param, errors);
+                PriceYieldOutParameter yieldPriceOutParameter = calaYieldByPriceCalculator(readerDto, excuteDate, tempRate, param);
                 if (null == yieldPriceOutParameter) {
-                    executionContext.put("ERRORS", errors);
                     break;
                 }
                 // 获取买入全价
                 BigDecimal fullPrice = yieldPriceOutParameter.getFullPrice();
+                BigDecimal EAD = BigDecimal.ZERO;
                 //4.4 计算每笔交易对应EAD
-                itemIn.setEad(ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), fullPrice), unPrincipleAndInterest.get(itemIn.getTradeId())));
+                if(DictCodeListExt1.证券品种_债券.getValue().equals(readerDto.getModelAssetType())){
+                    // EAD = 移动平均后份额 * 全价 + 应收未收本息和
+                    EAD = ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), fullPrice), unPrincipleAndInterest.get(itemIn.getTradeId()));
+                }
+                else{
+                    // EAD = 全价/发行规模 * 移动平均后份额 + 应收未收本息和
+                    EAD = ArithmeticUtil.doAdd(ArithmeticUtil.multiply(itemIn.getEmaShareAmt(), ArithmeticUtil.divide(fullPrice, itemIn.getIssueAmt())), unPrincipleAndInterest.get(itemIn.getTradeId()));
+                }
+                // 保留4位小数，四舍五入
+                itemIn.setEad(ArithmeticUtil.round(EAD,4, RoundingMode.HALF_UP));
                 // '“03 EAD计算”，此批处理主要加载数据。
                 itemIn.setProcess(ModelDictCodeList.模型_减值过程_EAD计算.getValue());
             }
@@ -402,7 +406,7 @@ public class EadCalCulationBatchProcessorService {
      * @param excuteDate
      * @return
      */
-    private PriceYieldOutParameter calaYieldByPriceCalculator(EadCalculationReaderDto entity, Date excuteDate, BigDecimal yeild, Map<String, Object> param, List<EadErrorParams> errors) {
+    private PriceYieldOutParameter calaYieldByPriceCalculator(EadCalculationReaderDto entity, Date excuteDate, BigDecimal yeild, Map<String, Object> param) {
         SysBatchExecInfo batchExecuteInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
         SysBatchTask batchtask = (SysBatchTask) param.get("BATCHTASK");
         PriceYieldOutParameter priceYieldOutParameter = null;
@@ -441,12 +445,9 @@ public class EadCalCulationBatchProcessorService {
                 secInfoModel.setAllocationType(AllocationType.按实际天数分配);
             }
         } else {
-            logger.error("【EAD计算批处理】：资产无计息基础");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(entity.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无计息基础");
-            errors.add(eadErrorParams);
+            String msg = "【EAD计算批处理】：资产无计息基础";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
             return priceYieldOutParameter;
         }
         DictCodeList bondsTypeDict = DictCodeList.from(DictCode.息票品种, entity.getCouponSpecies());
@@ -476,12 +477,10 @@ public class EadCalCulationBatchProcessorService {
         }
         // 判断资产有无付息频率
         if (StringUtil.isEmpty(modCashFlowPayRule.getPayCycle())) {
-            logger.error("【EAD计算批处理】：资产无付息频率");
-            EadErrorParams eadErrorParams = new EadErrorParams();
-            eadErrorParams.setFinprodId(entity.getAssetId());
-            eadErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-            eadErrorParams.setErrorMsg("【EAD计算批处理】：资产无付息频率");
-            errors.add(eadErrorParams);
+            String msg = "【EAD计算批处理】：资产无付息频率";
+            logger.error(msg);
+            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getAssetId(), msg);
+
             return priceYieldOutParameter;
         }
         if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
@@ -502,8 +501,7 @@ public class EadCalCulationBatchProcessorService {
         List<SecIntSchedule> invScheduleList = new ArrayList<>();
         List<ModCashFlowDto> intSchList = new ArrayList<ModCashFlowDto>();
         for (ModCashFlowDto item : entity.getCashFlowList()) {
-            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())
-                    && item.getVdateUnadjust() != null) {
+            if (StringUtil.equals(item.getCashType2(), DictCodeListExt1.现金流二级类型_利息.getValue())) {
                 SecIntSchedule schedule = new SecIntSchedule();
                 schedule.setTheoryStartDate(toLocalDate(item.getVdateUnadjust()));
                 schedule.setTheoryCutoffDate(toLocalDate(item.getMdateUnadjust()));
@@ -579,33 +577,33 @@ public class EadCalCulationBatchProcessorService {
 
     public static boolean isNotFomartSec(List<ModCashFlowDto> secIntScheduleList, ModCashFlowPayRulesDto modCashFlowPayRule) {
         // 根据【实际起始日】排序付息计划
-        Collections.sort(secIntScheduleList, (o1, o2) -> o1.getVdateUnadjust().compareTo(o2.getVdateUnadjust()));
+        Collections.sort(secIntScheduleList, (o1, o2) -> o1.getVdate().compareTo(o2.getVdate()));
 
         if (StringUtil.equals(DictCodeList.频率_月.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 1);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 1);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else if (StringUtil.equals(DictCodeList.频率_季.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 3);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 3);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else if (StringUtil.equals(DictCodeList.频率_半年.getValue(), modCashFlowPayRule.getPayCycle())) {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addMonthDate(she.getVdateUnadjust(), 6);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addMonthDate(she.getVdate(), 6);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }
         } else {
             for (ModCashFlowDto she : secIntScheduleList) {
-                Date mDate = DateUtil.addYear(she.getVdateUnadjust(), 1);
-                if (mDate.compareTo(she.getMdateUnadjust()) != 0) {
+                Date mDate = DateUtil.addYear(she.getVdate(), 1);
+                if (mDate.compareTo(she.getMdate()) != 0) {
                     return false;
                 }
             }

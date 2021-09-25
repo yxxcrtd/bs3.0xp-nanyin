@@ -331,7 +331,9 @@
             )
             and T2.PORTFOLIO_ID <include refid="com.joyintech.service.period.trdbondduration.dao.TrdBondDurationMapper.portfolioAth"/>
             <if test="busiCode != null and busiCode != ''">
-                AND (instr(T1.TOTLE_TRADE_ID, #{busiCode}) > 0)
+                <!-- ZGZGST-1611:TRD_PRODUCT_DEAL表的业务编号字段使用TRADE_ID fuyongsheng 20210907 edit start-->
+                AND (instr(T1.TRADE_ID, #{busiCode}) > 0)
+                <!-- ZGZGST-1611:TRD_PRODUCT_DEAL表的业务编号字段使用TRADE_ID fuyongsheng 20210907 edit end-->
             </if>
             <if test="portfolioId != null and portfolioId.size() >0">
                 AND  (T2.PORTFOLIO_ID IN

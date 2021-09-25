@@ -1,7 +1,7 @@
 package com.joyintech.tams.exchange.datacommon.db.service.impl;
 
 import com.joyintech.tams.exchange.common.bean.WorkFlowDto;
-import com.joyintech.tams.exchange.datacommon.db.mapper.TrdExchangeWorkflowMapper;
+import com.joyintech.tams.exchange.datacommon.db.dao.TrdExchangeWorkflowMapper;
 import com.joyintech.tams.exchange.datacommon.db.service.TrdExchangeWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

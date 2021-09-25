@@ -51,7 +51,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 查询
      * @param pageParam Map
      * @return Page类
-     * @throws Exception 异常信息
      */
     public Page<FundSecuritiesAccountDto> selectForPage(Map<String, Object> pageParam){
         return restTemplate.postForPage(
@@ -79,7 +78,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 双击修改界面
      * @param secAcctId String
      * @return Page类
-     * @throws Exception 异常信息
      */
     public FundSecuritiesAccountDto selectBySecAcctId(String secAcctId) {
         return restTemplate.getForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -127,12 +125,10 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      *
      * @param request request
      * @return 导入文件信息
-     * @throws Exception 异常
      * @see
      * @since 1.0
      */
-    public FundSecuritiesAccountDto fileUpload(HttpServletRequest request) 
-        throws Exception{
+    public FundSecuritiesAccountDto fileUpload(HttpServletRequest request) {
         return restTemplate.postForObject(
             ServiceApplication.BASICDATA_SERVICE_NAME + "/FundSecuritiesAccountInfo/uploadFile",
             request,FundSecuritiesAccountDto.class);
@@ -143,6 +139,9 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
     @Override
     public void doComplete(FundSecuritiesAccountDto entity, OperationType type) {
         String action=StringUtil.EMPTY;
+        if(StringUtil.isEmpty(entity.getSecAcctType())){
+            entity.setSecAcctType(DictCodeListExt3.证券账户类型_基金账户.getValue());
+        }
         if(OperationType.DELETE.equals(type)){
             action="delete";
         }
@@ -178,7 +177,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 检查基金账户账号是否用过
      * @param dto FundSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkBySecAcctId(FundSecuritiesAccountDto dto) {
         int count=0;
@@ -191,7 +189,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 检查基金账户名称是否用过
      * @param dto FundSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkBySecAcctName(FundSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -203,7 +200,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 检查资金结算账户是否存在
      * @param dto FundSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkByTrdAcctId(FundSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -215,7 +211,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 删除时检查数据是否被使用过
      * @param dto FundSecuritiesAccountDto
      * @return Page类
-     * @throws Exception 异常信息
      */
     public int checkCodeIsUse(FundSecuritiesAccountDto dto) {
         return restTemplate.postForObject(ServiceApplication.BASICDATA_SERVICE_NAME
@@ -227,7 +222,6 @@ public class FundSecuritiesAccountService extends CommonExportService<FundSecuri
      * 批量删除时检查数据是否被使用过
      * @param item List<FundSecuritiesAccountDto>
      * @return Page类
-     * @throws Exception 异常信息
      */
     public List<FundSecuritiesAccountDto> checkAllCodeIsUse(List<FundSecuritiesAccountDto> item) {
         return restTemplate.postForList(ServiceApplication.BASICDATA_SERVICE_NAME

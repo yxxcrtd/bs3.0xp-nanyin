@@ -51,8 +51,7 @@ public class InterfLC0008Service extends ReceivedEsbService<InterfLc0007OutEntit
      * {@inheritDoc}
      */
     @Override
-    public InterfLc0007OutEntity selectResponseData(InterfLc0008InEntity entity)
-        throws Exception {
+    public InterfLc0007OutEntity selectResponseData(InterfLc0008InEntity entity) throws InterfException {
         // 异常检测
         InterfLc0007OutEntity outEntity = checkExce(entity);
         // 设置接口输出entity
@@ -66,8 +65,7 @@ public class InterfLC0008Service extends ReceivedEsbService<InterfLc0007OutEntit
      * {@inheritDoc}
      */
     @Override
-    public int saveInterfData(InterfLc0008InEntity entity)
-        throws Exception {
+    public int saveInterfData(InterfLc0008InEntity entity) throws InterfException {
         // 异常检测
         checkExce(entity);
         // 接口表更新
@@ -84,7 +82,7 @@ public class InterfLC0008Service extends ReceivedEsbService<InterfLc0007OutEntit
      */
     @Override
     public int saveBusinessData(InterfLc0008InEntity entity)
-        throws Exception {
+    {
         // 不登录业务表
         return 0;
     }

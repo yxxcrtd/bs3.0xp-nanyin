@@ -174,6 +174,9 @@ public class FundPayRuleMoneyFundRecService {
         //分支序号
         result.setBranch(InterfCommonConstant.分支序号_默认);
         result.setEndTdayRule(dto.getTdayRule());
+        /*add by sunshuaishuai 20210428 start*/
+        result.setCalcRule(DictCodeList.推算方式_起息日向后.getValue());
+        /*add by sunshuaishuai 20210428 end*/
         return result;
     }
 }

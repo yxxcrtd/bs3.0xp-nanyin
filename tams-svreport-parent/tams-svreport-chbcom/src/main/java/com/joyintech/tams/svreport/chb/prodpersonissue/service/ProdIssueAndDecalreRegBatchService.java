@@ -83,7 +83,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
     @Autowired
     private ChbCommonCheckService chbCommonCheckService;
     
-    public void generateIssueData(Date batchTime,List<String> prodIds,boolean isSynchronizeTask){
+    public void generateIssueData(Date batchTime,List<String> prodIds,boolean isSynchronizeTask,String InstitutionCode){
 		setBatchBeanName(BatchBeanName.产品发行申报登记报送);
 		logInfoBatchStart();
   		// 产品超过500全产品跑当天批
@@ -91,7 +91,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             prodIds = null;
         }
         //申报登记
-        createSubAction(batchTime,prodIds);
+        createSubAction(batchTime,InstitutionCode, prodIds);
 		//生成发行登记
         createIssueAction(batchTime,prodIds);
 		logInfoBatchEnd();
@@ -157,16 +157,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                 sub.setIssuePartyId(issuePartyId);
             }
             
-            // 产品发行登记报送时点:募集起始日期
-            if(sub.getRaiseVdate()!=null){ 
-                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(), 
-                        DictCodeListExt2.报送数据状态_新建.getValue(), dateMap,
-                        sub.getRaiseVdate());
-                if (CollectionUtils.isNotEmpty(issueDateList)) {
-                    sub.setChbSubmitDeadline(issueDateList.get(0));
-                    sub.setSubmitDeadline(issueDateList.get(1));
-                }
-            }
+
             // 已登记
             if (regMap.get(sub.getProdId()) != null) {
                 //删除未报送的数据
@@ -200,6 +191,17 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                     sub.setStatus(DictCodeListExt2.报送数据状态_新建.getValue());
                 }
             }
+
+            // 产品发行登记报送时点:募集起始日期
+            if(sub.getRaiseVdate()!=null){
+                List<Date> issueDateList = ChbDeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品发行登记.getValue(),
+                        sub.getStatus(), dateMap,
+                        sub.getRaiseVdate());
+                if (CollectionUtils.isNotEmpty(issueDateList)) {
+                    sub.setChbSubmitDeadline(issueDateList.get(0));
+                    sub.setSubmitDeadline(issueDateList.get(1));
+                }
+            }
         }
         
     	//update by leipeng 插入的数据获取表 内的实际登记编码
@@ -228,14 +230,14 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
      * @return void
      * @version 1.7 2019年5月22日
      */
-    public void createSubAction(Date batchTime,List<String> prodInfos){
+    public void createSubAction(Date batchTime,String InstitutionCode,List<String> prodInfos){
     	//add by leipeng 20200628 多法人模式改造
     	String model_type = null;
     	if(CommonUtil.isBAmodel()){
     		model_type = "01";
     	}
         //查询申报登记数据
-        List<PerProDeclareRegDto> list = perProDeclareReg001Mapper.selectPerProdListEx(DateUtil.format(batchTime),model_type,prodInfos);
+        List<PerProDeclareRegDto> list = perProDeclareReg001Mapper.selectPerProdListEx(DateUtil.format(batchTime),model_type,InstitutionCode,prodInfos);
         Map<String,PerProDeclareRegDto> regMap = new HashMap<String,PerProDeclareRegDto>();
         if(!CollectionUtils.isEmpty(list)){
             //查询申报已登记数据
@@ -343,11 +345,11 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
             if(single.getRaisePstrdate()!=null){
                 if (DictCodeListExt2.募集方式_中债_公募.getValue().equals(single.getRaiseType())){
                     declare=DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(), 
-                            DictCodeListExt2.细分类别_公募.getValue(),DictCodeListExt2.报送数据状态_新建.getValue(),
+                            DictCodeListExt2.细分类别_公募.getValue(),single.getStatus(),
                             declaredateMap, list.get(i).getRaisePstrdate(), SVReportGlobalConstant.SUBMIT_TIME);
                 } else if (DictCodeListExt2.募集方式_中债_私募.getValue().equals(single.getRaiseType())){
                         declare=DeadlineUtil.getChbEndDate(DictCodeListExt2.报表名称_产品申报登记.getValue(), 
-                                DictCodeListExt2.细分类别_私募.getValue(),DictCodeListExt2.报送数据状态_新建.getValue(),
+                                DictCodeListExt2.细分类别_私募.getValue(),single.getStatus(),
                                 declaredateMapP, list.get(i).getRaisePstrdate(), SVReportGlobalConstant.SUBMIT_TIME);
                 } else {
                     logger.error("产品代码："+single.getProdId()+"的募集方式接入错误！");
@@ -365,7 +367,9 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
            Map<String,String> data = svrDBUtil.getAllRegCode();
            
            for (PerProDeclareRegDto PerProDeclareRegDto : subInsertDataList ) {
-        	   PerProDeclareRegDto.setIssuePartyId(data.get(PerProDeclareRegDto.getProdId()));
+               if(StringUtil.isNotEmpty(data.get(PerProDeclareRegDto.getProdId()))){
+                   PerProDeclareRegDto.setIssuePartyId(data.get(PerProDeclareRegDto.getProdId()));
+               }
            }
    		}
 		// add by dubaojun 2020-10-14 入库前需要进行数据检验，检验错误的数据不入库 start
@@ -728,7 +732,7 @@ public class ProdIssueAndDecalreRegBatchService  extends SvrCBBaseService{
                     isSynchronizeTask = false;
                 }
             }
-        	generateIssueData(executeDate,prodList,isSynchronizeTask);
+        	generateIssueData(executeDate,prodList,isSynchronizeTask,null);
         } catch (Exception e) {
         	logger.error(e.getMessage(),e);
             throw new BusinessException(e);

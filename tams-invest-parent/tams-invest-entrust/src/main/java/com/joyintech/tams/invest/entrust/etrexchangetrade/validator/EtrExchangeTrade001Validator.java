@@ -267,8 +267,10 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			}
 
 			// etr_check_cash_switch 01 不提示 02 提示 禁止交易
-			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue()) && (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
-					|| DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs()))) {
+			if (CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_CASH_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())
+					&& (DictCodeList.交易方向_买入.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_配债.getValue().equals(dto.getPs())
+					|| DictCodeListExt2.交易方向_配股.getValue().equals(dto.getPs()) || DictCodeList.交易方向_申购.getValue().equals(dto.getPs())
+					|| DictCodeListExt3.交易方向_逆回购.getValue().equals(dto.getPs()))) {
 				Map<String,Object> param = new HashMap<String,Object>();
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("ccy",DictCodeList.币种_人民币_CNY.getValue());
@@ -356,7 +358,9 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 			}
 			
 			//正回购、质押券出库
-			if ((DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs())) && CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
+			// 委托指令组合的可用持仓不足时  01 提醒 02 禁止
+			if ((DictCodeListExt3.交易方向_正回购.getValue().equals(dto.getPs()) || DictCodeListExt3.交易方向_质押券出库.getValue().equals(dto.getPs()))
+					&& CacheUtil.getSysParam(BussinessConstant.ETR_CHECK_POS_SWITCH).equals(DictCodeListExt1.是或否_否.getValue())) {
 				Map<String,Object> param = new HashMap<String,Object>();
 				param.put("portfolioId",dto.getPortfolioId());
 				param.put("finprodId","XN_PRODID999");
@@ -382,14 +386,46 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				param.put("finprodType2",dto.getFinprodType2());
 				param.put("othType",DictCodeListExt3.金融产品其他代码类型_新股申购代码.getValue());
 				param.put("entrustId",dto.getEntrustId());
+				param.put("tradePlat",dto.getTradePlat());
 				List<WflEtrEntrust>  list = etrExchangeTrade001Service.selectWflEntrust(param);
 				if (list.size()>0){
 					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0061")));
 				}
 
+				// 同一股东只允许下达一次同一只新股申购指令
+				List<String> strList = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
+				if (strList.size()>0){
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0064")));
+				}
+
 				BigDecimal entrustNum = etrExchangeTrade001Service.getEntrustNum(param);
 				if (etrExchangeTrade001Service.getFinProductQutoInfo(param).size()>0&&entrustNum.compareTo(dto.getEntrustNum())<0) {
 					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0059")));
+				}
+			}
+			// 可转债申购
+			if (DictCodeList.交易方向_申购.getValue().equals(dto.getPs()) && DictCodeListExt1.金融产品类型_投管用_债券.getValue().equals(dto.getFinprodType2()) && DictCodeList.交易平台_竞价撮合平台.getValue().equals(dto.getTradePlat())) {
+				Map<String, Object> param = new HashMap<String, Object>();
+				param.put("finprodId", dto.getFinprodId());//金融产品代码
+				param.put("entrustId",dto.getEntrustId());
+				param.put("portfolioId",dto.getPortfolioId());
+				param.put("cDate",DateUtil.getSysDate());
+
+				param.put("secAcctId",dto.getSecAcctId());
+				param.put("ps",dto.getPs());
+				param.put("finprodType2",dto.getFinprodType2());
+				param.put("tradePlat",dto.getTradePlat());
+
+				// 同一股东只允许下达一次可转债信用申购指令
+				List<String> list = etrExchangeTrade001Service.selectWflEntrustAddAndEtrEntrustAdd(param);
+				if (list.size()>0){
+					errorList.add(new ValidMessage(getMessage("ETR_ERROR_0062")));
+				}
+
+				// 可转债申购下指令数量不能大于实际可转债总数量
+				BigDecimal entrustNum = etrExchangeTrade001Service.getEntrustNum(param);
+				if (entrustNum.compareTo(dto.getEntrustNum())<0) {
+					errorList.add(new ValidMessage("entrustNum", getMessage("ETR_ERROR_0063")));
 				}
 			}
 

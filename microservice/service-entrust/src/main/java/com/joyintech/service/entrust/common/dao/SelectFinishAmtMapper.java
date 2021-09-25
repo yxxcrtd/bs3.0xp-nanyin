@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * 〈一句话功能简述〉
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Component;
  * @see SelectFinishAmtMapper
  * @since 1.0
  */
-@Component
+@Repository
 public interface SelectFinishAmtMapper {
 
     /**

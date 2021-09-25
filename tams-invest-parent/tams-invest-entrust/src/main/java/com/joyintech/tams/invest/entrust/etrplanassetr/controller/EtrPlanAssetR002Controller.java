@@ -19,10 +19,12 @@ import com.joyintech.framework.base.entity.ProcessMark;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.common.constant.BussinessDictCode;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.entrust.common.aop.EntrustRdsCommonAop;
 import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
 import com.joyintech.tams.systemtools.util.PageElementUtil;
+import com.joyintech.workflow.engine.exception.WorkFlowException;
 import com.joyintech.workflow.engine.WorkflowContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,12 +100,16 @@ public class EtrPlanAssetR002Controller extends BaseController {
                 , DictCode.行内资产二级分类
                 , DictCode.行内资产三级分类
                 , DictCode.行内资产四级分类
-                , DictCode.投资目的);
+                , DictCode.投资目的, DictCode.业务模式);
                 /*原因、zhuyongkang 2019/7/29  start */
         this.setSelectOptionToModel(model, DictCode.币种);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
-        
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+       //展示投资目的或业务模式参数
      // 一体化对应etliu start
 //        model.addAttribute("T04", DictCodeList.交易方向_申购.getValue());
 //        model.addAttribute("T06", DictCodeList.交易方向_赎回.getValue());
@@ -171,8 +177,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getentrustIdAdd")
-    public Page<SelectOptionDto> getentrustIdAdd()
-        throws Exception {
+    public Page<SelectOptionDto> getentrustIdAdd(){
         Page<SelectOptionDto> temp = etrPlanAssetService.getentrustIdAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -186,8 +191,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/getfinprodIdForAdd")
-    public Page<SelectOptionDto> getfinprodIdForAdd() 
-        throws Exception {
+    public Page<SelectOptionDto> getfinprodIdForAdd() {
         Page<SelectOptionDto> temp = etrPlanAssetService.getfinprodIdForAdd(RequestUtil.getPageParam());
         return temp;
     }
@@ -203,7 +207,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
     @ResponseBody
     @RequestMapping("/searchType")
     public String searchType(String finprodId){
-        return etrPlanAssetService.searchType(finprodId);
+        return StringUtil.trimHtmlTag(etrPlanAssetService.searchType(finprodId));
     }
     /**
      * 
@@ -303,7 +307,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
      */
     @ResponseBody
     @RequestMapping("save")
-    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws Exception{//去除指令暂存校验 add by xxg 20210802
+    public AjaxResult save(@RequestBody EtrPlanAssetRDto dto, BindingResult br) throws Exception {//去除指令暂存校验 add by xxg 20210802
         if(br.hasErrors()){
             return new AjaxResult(br);
         }
