@@ -142,7 +142,8 @@
 		from Fin_Product /** 标的类金融产品 **/
 		where
 		(Fin_Product.FINPROD_MARKET_ID like concat(#{finprodId},'%'))
-		AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01}))
+		<!--估值核算使用Finprod_Type   AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01})) -->
+		AND (Fin_Product.Finprod_Type in (#{TYPE_TOUGUAN_F01}))
 	</select>
 	<insert id="insertSelective" parameterType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto" >
 		insert into TRD_ASSET_LOSS
