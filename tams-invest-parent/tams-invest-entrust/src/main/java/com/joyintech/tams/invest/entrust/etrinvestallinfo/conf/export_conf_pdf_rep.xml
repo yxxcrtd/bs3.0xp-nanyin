@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<WorkPage size="6" name="质押式回购交易审批表">
+<WorkPage size="6" name="回购交易审批表">
     <Table type="2" span="6" fontSize="8" padding="5" vertical="5" horizontal="1">
         <Row padding="5" vertical="5" horizontal="1">
             <Cell order="1" colspan="6" name="审批要素">审批要素</Cell>

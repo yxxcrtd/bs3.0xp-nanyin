@@ -8,30 +8,30 @@
      * 定义数据表格
      */
     var cols = [
-        {field: 'valDate', title: '减值行情日', type: 'date', width: '10%', sortField: "valDate"}
-        , {field: 'finprodId', title: '金融产品代码', width: '10%', sortField: "finprodId",visible: false}
-        , {field: 'finprodAbbr', title: '金融产品简称', width: '10%', sortField: "finprodAbbr"}
-        , {field: 'assetType1', title: '资产类型', width: '10%', sortField: "assetType1",visible: false}
-        , {field: 'assetType1Str', title: '资产类型', width: '10%', sortField: "assetType1Str"}
-        , {field: 'vDate', title: '资产起息日', type: 'date', width: '10%', sortField: "vDate"}
-        , {field: 'mDate', title: '资产到期日', type: 'date', width: '10%', sortField: "mDate"}
-        , {field: 'assetExerciseDate', title: '资产行权日', type: 'date', width: '10%', sortField: "assetExerciseDate"}
-        , {field: 'strDate', title: '初始确认起始日', type: 'date', width: '10%', sortField: "strDate"}
-        , {field: 'endDate', title: '初始确认截止日', type: 'date', width: '10%', sortField: "endDate"}
-        , {field: 'lossTestType', title: '减值测算方式', width: '10%', sortField: "lossTestType",visible: false}
-        , {field: 'lossTestTypeStr', title: '减值测算方式', width: '10%', sortField: "lossTestTypeStr"}
-        , {field: 'stage', title: '减值阶段', width: '10%', sortField: "stage",visible: false}
-        , {field: 'stageStr', title: '减值阶段', width: '10%', sortField: "stageStr"}
-        , {field: 'overDays', title: '逾期天数', width: '10%', sortField: "overDays"}
-        , {field: 'pdValue', title: 'PD违约概率%', width: '10%', sortField: "pdValue"}
-        , {field: 'lgdValue', title: 'LGD违约损失率%', width: '10%', sortField: "lgdValue"}
-        , {field: 'eclVaule', title: 'ECL预期信用损失比例%', width: '10%', sortField: "eclVaule"}
-        , {field: 'peroid', title: '待偿期（年）', width: '10%', sortField: "peroid"}
-        , {field: 'lossInputPattern', title: '减值录入方式', width: '10%', sortField: "lossInputPattern",visible: false}
-        , {field: 'lossInputPatternStr', title: '减值录入方式', width: '10%', sortField: "lossInputPatternStr"}
-        , {field: 'lossRatio', title: '减值比例%', width: '10%', sortField: "lossRatio"}
+        {field: 'valDate', title: '减值行情日', type: 'date', sortable:false,width: '10%'}
+        , {field: 'finprodId', title: '金融产品代码', sortable:false,width: '10%',visible: false}
+        , {field: 'finprodAbbr', title: '金融产品简称',sortable:false, width: '10%'}
+        , {field: 'assetType1', title: '资产类型', width: '10%', sortable:false,visible: false}
+        , {field: 'assetType1Str', title: '资产类型', width: '10%' ,sortable:false}
+        , {field: 'vDate', title: '资产起息日', type: 'date', sortable:false,width: '10%' }
+        , {field: 'mDate', title: '资产到期日', type: 'date', sortable:false,width: '10%' }
+        , {field: 'assetExerciseDate', title: '资产行权日', sortable:false,type: 'date', width: '10%'}
+        , {field: 'strDate', title: '初始确认起始日', sortable:false,type: 'date', width: '10%'}
+        , {field: 'endDate', title: '初始确认截止日', sortable:false,type: 'date', width: '10%'}
+        , {field: 'lossTestType', title: '减值测算方式',sortable:false, width: '10%',visible: false}
+        , {field: 'lossTestTypeStr', title: '减值测算方式',sortable:false, width: '10%'}
+        , {field: 'stage', title: '减值阶段',sortable:false, width: '10%',visible: false}
+        , {field: 'stageStr', title: '减值阶段', sortable:false,width: '10%'}
+        , {field: 'overDays', title: '逾期天数', sortable:false,width: '10%'}
+        , {field: 'pdValue', title: 'PD违约概率%', sortable:false,width: '10%'}
+        , {field: 'lgdValue', title: 'LGD违约损失率%', sortable:false,width: '10%'}
+        , {field: 'eclVaule', title: 'ECL预期信用损失比例%', sortable:false,width: '10%'}
+        , {field: 'peroid', title: '待偿期（年）',sortable:false, width: '10%'}
+        , {field: 'lossInputPattern', title: '减值录入方式', width: '10%',sortable:false,visible: false}
+        , {field: 'lossInputPatternStr', title: '减值录入方式', sortable:false,width: '10%'}
+        , {field: 'lossRatio', title: '减值比例%', sortable:false,width: '10%'}
         , {
-            field: 'checkStatusStr', title: '检查结果',width:'10%',render: function (data, type, row, meta) {
+            field: 'checkStatusStr', title: '检查结果',width:'10%',sortable:false,render: function (data, type, row, meta) {
                 if (data == "不通过") {
                     return '<span style="color: red">'+data+'</span>';
                 }else{
@@ -39,8 +39,8 @@
                 }
             }
         }
-        , {field: 'tradeId', title: '交易编号', width: '10%', sortField: "tradeId", visible: false}
-        , {field: 'remark', title: '备注', width: '10%', sortField: "remark"}
+        , {field: 'tradeId', title: '交易编号', width: '10%', sortable:false, visible: false}
+        , {field: 'remark', title: '备注', width: '10%', sortable:false}
     ];
     var table = $("#dataTable").joyintable({
         data: trdAssetLossList == null || trdAssetLossList == '' ? null : JSON.parse(trdAssetLossList),

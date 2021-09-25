@@ -16,10 +16,7 @@ import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt3;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
 import com.joyintech.tams.invest.bankuplink.bond.service.CfetsBondDealQuotedPriceSingle001Service;
 import com.joyintech.tams.invest.bankuplink.common.service.CfetsQuotedCommonService;
@@ -90,7 +87,7 @@ public class CfetsBondDealQuotedPriceSingle001Controller extends BaseController 
     @Override
     public String init(Model model) {
         this.setSelectOptionToModel(model, BussinessDictCode.交易方向, BussinessDictCode.清算速度,
-                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种);
+                BussinessDictCode.结算方式, BussinessDictCode.清算类型, BussinessDictCode.币种, DictCode.业务模式);
 
         model.addAttribute("ACCOUNT_SPEED_0", BussinessDictCodeList.清算速度_T加0.getValue());
         model.addAttribute("ACCOUNT_SPEED_1", BussinessDictCodeList.清算速度_T加1.getValue());
@@ -231,6 +228,11 @@ public class CfetsBondDealQuotedPriceSingle001Controller extends BaseController 
         if (!isInit&&!StringUtil.isNotEmpty(cfetsBondDealDialogueQuoteDto.getCalculateField())) {
             cfetsBondDealDialogueQuoteDto.setCalculateField(DictCodeListExt3.债券计算模式_单位净价.getValue());
         }
+
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("assetTypeOne",cfetsBondDealDialogueQuoteDto.getAssetTypeOne());
 
         model.addAttribute("PRICE_MODEL",cfetsBondDealDialogueQuoteDto.getPriceModel());
