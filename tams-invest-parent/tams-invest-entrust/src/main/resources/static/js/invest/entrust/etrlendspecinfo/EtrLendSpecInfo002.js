@@ -192,7 +192,7 @@
         $('#ps').change(function(){
             if($('#ps').val()==T33){
                 $('#proAvailableCash_div').show();
-              //  $('#proAvailableCash1_div').show();
+                $('#proAvailableCash1_div').show();
                 // $('#accAvailableCash_div').show();
                 var portfolioId = $('#portfolioId').val();
                 var ccy = $('#ccy').val();
@@ -201,7 +201,7 @@
                 }
             }else{
                 $('#proAvailableCash_div').hide();
-              //  $('#proAvailableCash1_div').hide();
+                $('#proAvailableCash1_div').hide();
                 // $('#accAvailableCash_div').hide();
             }
         });
