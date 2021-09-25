@@ -172,4 +172,8 @@ public class ValBalanceStatementQuery001Service extends CommonExportService<ValB
     public ValBalanceStatementQuery001Dto selectCorrespondingFrame(Map<String, Object> parameters) {
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValBalanceStatementQuery001/selectCorrespondingFrame", parameters, ValBalanceStatementQuery001Dto.class);
     }
+
+    public String getBooksetName(Map<String, Object> params) {
+        return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/ValBalanceStatementQuery001/getBooksetName", params, String.class);
+    }
 }

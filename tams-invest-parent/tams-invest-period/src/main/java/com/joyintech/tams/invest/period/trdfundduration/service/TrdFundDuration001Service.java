@@ -521,7 +521,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 
     @Override
     public void doBack(TrdFundDuration001Dto entity) {
-        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+        if(("03".equals(entity.getType())||"06".equals(entity.getType())) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
             for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
                 AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
             }

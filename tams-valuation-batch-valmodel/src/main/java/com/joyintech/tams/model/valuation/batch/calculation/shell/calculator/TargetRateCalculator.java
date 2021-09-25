@@ -26,18 +26,18 @@ public class TargetRateCalculator implements Calculator<TargetRateInputParameter
 	@Override
 	public TargetRateOutputParameter calculate(TargetRateInputParameter input) {
 		input.check();
-		
-		//左侧期限INDEX = -1	
+
+		//左侧期限INDEX = -1
 		int leftTermIndex =-1;
-		//右侧期限INDEX = -1	
+		//右侧期限INDEX = -1
 		int rightTermIndex = -1;
-		//目标收益率 = 0	
+		//目标收益率 = 0
 		BigDecimal targetYield = BigDecimal.ZERO;
-		
+
 		List<KeyPointDto> keyPointDtoList = input.getKeyPointDtoList();
 
 		if(keyPointDtoList.size() == 1){
-			logger.warn("【现金流贴现算法】-插值计算提供的曲线行情仅存在一个关键年限点，直接返回该数据.");
+			logger.warn("【插值算法】-插值计算提供的曲线行情仅存在一个关键年限点，直接返回该数据.");
 			targetYield = keyPointDtoList.get(0).getYield();
 		}else{
 
