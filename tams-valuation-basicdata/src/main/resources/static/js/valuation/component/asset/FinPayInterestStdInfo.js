@@ -60,6 +60,7 @@
         getElementById('payMonth_div').hide();
         getElementById('dayValue_div').hide();
     }
+    debugger;
     /**
      * 定义数据表格
      */
