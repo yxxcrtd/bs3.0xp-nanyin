@@ -111,7 +111,7 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      */
     public void doComplete(ModGradePdConfigDto entity, String type) {
         //处理前瞻前年度边际PD%字段   /100
-        entity.setForwardYearPd(ArithmeticUtil.divide(entity.getForwardYearPd(), new BigDecimal("100"),6));
+        entity.setForwardYearPd(ArithmeticUtil.divide(entity.getForwardYearPd(), new BigDecimal("100"),14));
         if (StringUtil.equals(entity.getOperateType(), "DELETE")) {//删除操作
             modCkGradePdConfigMapper.deleteByPrimaryKey(entity.getSeqNo());
         }
@@ -163,7 +163,7 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
             //判断是否有重复数据，重复更新
             List<ModGradePdConfigDto> repetList = modCkGradePdConfigMapper.selectRepetList(dto);
             //处理前瞻前年度边际PD%字段   /100
-            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
             if(repetList.size()>0){
                 if("1".equals(type)){//覆盖数据
                     modCkGradePdConfigMapper.updateRepetDto(dto);
@@ -183,7 +183,7 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
      */
     public int insert(ModGradePdConfigDto dto) {
         //处理前瞻前年度边际PD%字段   /100
-        dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+        dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
         return modCkGradePdConfigMapper.insert(dto);
     }
     /**
@@ -194,7 +194,7 @@ public class ModCkGradePdConfigService extends BaseService<ModGradePdConfigDto> 
     public int update(ModGradePdConfigDto dto) {
         if(dto.getForwardYearPd() !=null){
             //处理前瞻前年度边际PD%字段   /100
-            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),6));
+            dto.setForwardYearPd(ArithmeticUtil.divide(dto.getForwardYearPd(), new BigDecimal("100"),14));
         }
         return modCkGradePdConfigMapper.updateByPrimaryKey(dto);
     }
