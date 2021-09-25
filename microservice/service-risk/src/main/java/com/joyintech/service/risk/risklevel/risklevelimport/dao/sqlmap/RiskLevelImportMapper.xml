@@ -4,7 +4,9 @@
 	<!-- 主画面查询 -->   
 	<select id="selectForPage" resultType="com.joyintech.service.risk.risklevel.risklevelimport.dto.RiskLevelImportDto">
 		select* from(
-			select arl.FINPROD_MARKET_ID finprodMarketId,
+			select
+				   fd.FINPROD_ID,
+			       arl.FINPROD_MARKET_ID finprodMarketId,
 				   fd.FINPROD_TYPE2 assetsType,
 				   arl.FINPROD_NAME finprodName,
 				   arl.BOND_RISK_TYPE bondRiskType,
@@ -22,14 +24,14 @@
 				</foreach>
 			</if>
 			<if test="bondRiskType != null and !bondRiskType.isEmpty()">
-				AND risk.BOND_RISK_TYPE IN
+				AND risk.bondRiskType IN
 				<foreach item="item" collection="bondRiskType" index="index"
 						 open="(" separator="," close=")">
 					#{item}
 				</foreach>
 			</if>
 			<if test="finprodName != null and !finprodName.isEmpty()">
-				AND risk.FINPROD_NAME IN
+				AND risk.FINPROD_ID IN
 				<foreach item="item" collection="finprodName" index="index"
 						 open="(" separator="," close=")">
 					#{item}
