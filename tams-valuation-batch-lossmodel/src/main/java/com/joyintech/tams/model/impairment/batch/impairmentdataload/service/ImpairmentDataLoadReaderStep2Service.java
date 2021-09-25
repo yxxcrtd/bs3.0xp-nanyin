@@ -2,8 +2,11 @@ package com.joyintech.tams.model.impairment.batch.impairmentdataload.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.BeanUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.constant.ModelDictCodeList;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.impairmentdataload.dao.ImpairmentDataLoadMapper;
@@ -51,7 +54,10 @@ public class ImpairmentDataLoadReaderStep2Service {
         Map<String, Object> para = new HashMap<String, Object>();
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
-        para.put("ps", DictCodeList.交易方向_买入.getValue());
+        String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
+        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
+            para.put("ps", DictCodeList.交易方向_买入.getValue());
+        }
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         // 定义 变量.返回结果
         List<ImpairmentDataLoadStep2ReaderDto> resultList = new ArrayList<ImpairmentDataLoadStep2ReaderDto>();
