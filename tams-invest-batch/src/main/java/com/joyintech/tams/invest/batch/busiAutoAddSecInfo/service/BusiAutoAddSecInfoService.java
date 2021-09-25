@@ -21,6 +21,7 @@ import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradePr
 import com.joyintech.tams.invest.batch.busiAutoAddSecInfo.dto.BusiAutoAddTradeProductDealRedisDto;
 import com.joyintech.tams.invest.common.CommonUtil;
 import com.joyintech.tams.invest.common.autoperiod.common.AutoPeriodCommonService;
+import com.joyintech.tams.invest.common.constant.FinalString;
 import com.joyintech.tams.invest.common.constant.ValDictCodeList;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -33,7 +34,6 @@ import com.joyintech.tams.invest.common.redisinit.service.RiskRedisInitService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.AllTradeCommonInputDto;
 import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
-import com.joyintech.tams.valuation.common.interf.base.constant.FinalString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;

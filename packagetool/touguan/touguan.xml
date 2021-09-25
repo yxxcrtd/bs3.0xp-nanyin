@@ -75,6 +75,5 @@
         <module>../../tams-invest-parent</module>
         <module>../../tams-system/touguan/app</module>
         <module>../../tams-common-basicdata</module>
-        <module>../../tams-valuation-common</module>
     </modules>
 </project>

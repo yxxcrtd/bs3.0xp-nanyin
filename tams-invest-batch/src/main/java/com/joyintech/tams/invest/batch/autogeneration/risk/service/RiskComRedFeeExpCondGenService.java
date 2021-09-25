@@ -10,18 +10,17 @@
 
 package com.joyintech.tams.invest.batch.autogeneration.risk.service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.invest.batch.autogeneration.risk.dao.RiskComRedFeeExpCondGenMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.csii.dc.client.util.StringUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.tams.invest.batch.autogeneration.risk.dao.RiskComRedFeeExpCondGenMapper;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 强制赎回费征收条件落地批处理Service
