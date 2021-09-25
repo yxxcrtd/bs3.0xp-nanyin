@@ -61,6 +61,9 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
                 if (vdate.after(mdate)) {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
                 }
+                if(finvdate != null && vdate.before(finvdate)){
+                    errorList.add(new ValidMessage("vdate",this.getMessage("ETR_X_006")+DateUtil.format(finvdate)));
+                }
                 if(finmdate != null && mdate.after(finmdate)){
                     errorList.add(new ValidMessage("mdate",this.getMessage("ETR_X_007")+DateUtil.format(finmdate)));
                 }
