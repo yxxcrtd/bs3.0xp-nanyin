@@ -66,9 +66,13 @@ public class CashFlowDiscount001Controller extends BaseController {
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model) {
+        this.setSelectOptionToModel(model, DictCode.计划类资产类型);
         this.setSelectOptionToModel(model, DictCode.资产类型);
         this.setSelectOptionToModel(model, DictCode.资产分类);
         this.setSelectOptionToModel(model, DictCode.证券品种);
+        this.setSelectOptionToModel(model, DictCode.债券类型);
+
+
         return super.init(model);
     }
 
