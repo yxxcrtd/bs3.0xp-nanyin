@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper" >
+<mapper namespace="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper" >
     <resultMap id="BaseResultMap" type="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrRe" >
         <id column="QUOTE_ID" property="quoteId" jdbcType="VARCHAR" />
         <id column="VERSION" property="version" jdbcType="DECIMAL" />
@@ -26,17 +26,17 @@
     </sql>
     <sql id="Sql_All_Data" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
     </sql>
     <sql id="Sql_All_Effective_Data" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.joyintech.background.component.uplink.interbank.database.entity.WflIbuQuoteEtrReKey" >
         select 
-        <include refid="com.joyintech.background.component.uplink.interbank.database.base.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
+        <include refid="com.joyintech.background.component.uplink.interbank.database.dao.WflIbuQuoteEtrReMapper.Base_Column_List" />
         from WFL_IBU_QUOTE_ETR_RE
         where QUOTE_ID = #{quoteId,jdbcType=VARCHAR}
           and VERSION = #{version,jdbcType=DECIMAL}

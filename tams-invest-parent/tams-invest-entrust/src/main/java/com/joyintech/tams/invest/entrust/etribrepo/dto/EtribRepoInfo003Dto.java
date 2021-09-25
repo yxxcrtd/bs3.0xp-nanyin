@@ -614,6 +614,7 @@ public class EtribRepoInfo003Dto  extends EtrEntrust implements ProcessEntity {
 		this.bussRepoSec = bussRepoSec;
 	}
 
+    @NotEmpty(fieldName = "EtribRepoInfo003.portfolioName", groups = {ValidateGroupEdit.class})
     public String getPortfolioSeries() {
         return portfolioSeries;
     }

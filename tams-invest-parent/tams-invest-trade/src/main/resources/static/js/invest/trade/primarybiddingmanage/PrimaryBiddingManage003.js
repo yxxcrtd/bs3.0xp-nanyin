@@ -43,7 +43,7 @@
                  return getSearchParams();
              }
          },*/
-    	 data:entity==null?[]:entity.bidOrderBidPriceList==null?[]:entity.bidOrderBidPriceList,
+    	 data:PrimaryBiddingManage003_entity==null?[]:PrimaryBiddingManage003_entity.bidOrderBidPriceList==null?[]:PrimaryBiddingManage003_entity.bidOrderBidPriceList,
         searchOnInit:true,
         cols:cols,
         checkbox:false,
@@ -58,17 +58,17 @@
         if(FileCommon) {
             object.uploadFileList = FileCommon.getUploadFileInfo();
         }
-        if(null!=entity){
-        	object.bidId=entity.bidId;
-        	object.bidDate=entity.bidDate;
-        	object.finprodAbbr=entity.finprodAbbr;
-        	object.finprodMarketId=entity.finprodMarketId;
-        	object.tradeMarket=entity.tradeMarket;
-            object.counterId=entity.counterId;
+        if(null!=PrimaryBiddingManage003_entity){
+        	object.bidId=PrimaryBiddingManage003_entity.bidId;
+        	object.bidDate=PrimaryBiddingManage003_entity.bidDate;
+        	object.finprodAbbr=PrimaryBiddingManage003_entity.finprodAbbr;
+        	object.finprodMarketId=PrimaryBiddingManage003_entity.finprodMarketId;
+        	object.tradeMarket=PrimaryBiddingManage003_entity.tradeMarket;
+            object.counterId=PrimaryBiddingManage003_entity.counterId;
 
             // add by zhangrui1 start
-            object.entrustId = entity.entrustId;
-            object.portfolioId = entity.bidOrderBidPriceList[0].portfolioId;
+            object.entrustId = PrimaryBiddingManage003_entity.entrustId;
+            object.portfolioId = PrimaryBiddingManage003_entity.bidOrderBidPriceList[0].portfolioId;
             // add by zhangrui1 end
         }
         //万元转换 add by yeming 20210730 start
@@ -184,8 +184,8 @@
             data.winType = $("#winType").val();
             data.winPrinAmt = JoyinMath.doMul($("#winPrinAmt").val(), 10000 , 2) ;
             data.finprodId = $("#finprodId").val();
-            data.counterId = entity.counterId;
-            data.bidId = entity.bidId;
+            data.counterId = PrimaryBiddingManage003_entity.counterId;
+            data.bidId = PrimaryBiddingManage003_entity.bidId;
             if ($("#isWin").val() != 'N') {
                 Joyin.ajaxJson(basePath + 'invest/trade/primarybiddingmanage/PrimaryBiddingManage003/checkBidPrice', object, function (result) {
                     Joyin.ajaxJson(basePath + 'invest/trade/primarybiddingmanage/PrimaryBiddingManage003/findBidPrice', data, function (retPrice) {

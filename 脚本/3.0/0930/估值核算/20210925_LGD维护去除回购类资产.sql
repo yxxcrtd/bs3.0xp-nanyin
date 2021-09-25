@@ -1,0 +1,5 @@
+--删除LGD维护界面，资产类型下拉框中的回购类资产
+DELETE FROM SYS_PAGE_DICTLIST T WHERE T.PAGE_ID = 'LossGivenDefaultMaintain001' AND T.DICT_ITEM_VAL = '09';
+
+--删除LGD配置表中回购类资产对应配置信息
+DELETE FROM MOD_LGD_CONFIG T WHERE T.ASSET_TYPE='09';

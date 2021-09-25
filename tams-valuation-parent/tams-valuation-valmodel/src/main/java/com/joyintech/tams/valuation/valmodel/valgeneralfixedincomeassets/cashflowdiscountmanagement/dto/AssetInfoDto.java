@@ -84,6 +84,16 @@ public class AssetInfoDto {
 	/*一到五级分类List 查询时传参用 end*/
 	private String search;
 	private String initValue;
+	private String conShareId;//转股代码
+
+	public String getConShareId() {
+		return conShareId;
+	}
+
+	public void setConShareId(String conShareId) {
+		this.conShareId = conShareId;
+	}
+
 	public String getFinprodId() {
 		return finprodId;
 	}

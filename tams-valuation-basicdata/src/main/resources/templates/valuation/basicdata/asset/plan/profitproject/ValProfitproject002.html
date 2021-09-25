@@ -135,11 +135,13 @@
                                         <label class="layui-form-label form-label-wrap"
                                                data-th-text="#{ValProfitproject002.issueAmt}">发行规模</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" data-fixtype="2" unit="1" style="width: 90%;"
-                                                   class="layui-input form-input text-money" id="issueAmt"
+                                            <input type="text" data-fixtype="2" unit="1"
+                                                   class="layui-input form-input text-number" id="issueAmt"
                                                    name="issueAmt" data-th-value="${entity?.issueAmt}"
                                                    data-moneymemory="" data-th-data-textrange="2">
+<!--
                                             <span class="input-right-show">（万）</span>
+-->
                                         </div>
                                     </div>
                                     <div class="form-inline-wrap layui-col-xs4">

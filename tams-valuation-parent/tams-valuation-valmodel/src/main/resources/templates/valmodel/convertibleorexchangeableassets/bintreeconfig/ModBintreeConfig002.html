@@ -12,7 +12,7 @@
 		<form class="layui-form joyin-form-wrap pro-module-form" id="submitForm">
 			<div class="layui-form-item">
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">资产代码</label>
+					<label class="layui-form-label form-lable">资产名称</label>
 					<div class="layui-input-inline input-inline">
 						<!--<input type="text" id="finprodId" name="finprodId"
 							class="layui-input form-input" placeholder="请输入内容"
@@ -25,7 +25,7 @@
 								data-th-initvalue="${entity?.finprodId}"> </select>
 					</div>
 				</div>
-				<div class="layui-inline layui-col-md6">
+				<div class="layui-inline layui-col-md6" style="display: none;">
 					<label class="layui-form-label form-lable">资产名称</label>
 					<div class="layui-input-inline input-inline">
 						<input id="finprodName" name="finprodName"
@@ -33,6 +33,16 @@
 							data-th-value="${entity?.finprodName}"
 							class="layui-input form-input" placeholder="请输入内容"
 							data-th-placeholder="#{SysCommon.placeholder}" required/>
+					</div>
+				</div>
+				<div class="layui-inline layui-col-md6" >
+					<label class="layui-form-label form-lable">资产代码</label>
+					<div class="layui-input-inline input-inline">
+						<input id="finprodName1" name="finprodName"
+							   type="text" disabled="true"
+							   data-th-value="${entity?.finprodName}"
+							   class="layui-input form-input" placeholder="请输入内容"
+							   data-th-placeholder="#{SysCommon.placeholder}" required/>
 					</div>
 				</div>
 			</div>

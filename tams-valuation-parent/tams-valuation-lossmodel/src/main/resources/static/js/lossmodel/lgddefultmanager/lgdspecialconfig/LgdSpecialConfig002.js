@@ -64,12 +64,8 @@
     };
     
     function　init(){
-        //编辑模式资产代码、估值日期、资产简称不可编辑
-        if (pageModel == PAGE_MODEL_EDIT) {
-            /*$('#vouchYear').attr("disabled", true);
-            $('#gradeOrgId').attr("disabled", true);
-            $('#oType').attr("disabled", true);
-            $('#gradeResult').attr("disabled", true);*/
+        if (pageModel != PAGE_MODEL_NEW) {
+            $('#finprodName').attr("disabled", true);
         }
     }
 
