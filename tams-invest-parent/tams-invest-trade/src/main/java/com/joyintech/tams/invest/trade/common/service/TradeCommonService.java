@@ -1106,7 +1106,8 @@ public class TradeCommonService extends BaseService {
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_实占.getValue());
                 creditLinesInputDto.setEntrustId(inputDto.getEntrustId());
                 creditLinesInputDto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue());
-                creditLinesInputDto.setFinprodId(creditLinesInputDto.getTradeId());
+                //质押式回购交易授信标签  按无标的处理
+                //creditLinesInputDto.setFinprodId(creditLinesInputDto.getTradeId());
                 creditLinesInputDto.setTgBusiType(DictCodeList.平安资产类型_质押式回购.getValue());
                 creditLinesInputDto.setPsPayment(inputDto.getRepoType());
                 creditLinesInputDto.setPs(DictCodeList.交易方向_买入.getValue());
@@ -1128,12 +1129,15 @@ public class TradeCommonService extends BaseService {
                 if (!StringUtil.isEmptyList(pledgeBondInfoDtoList)){
                     List<String> assetTypeList = Arrays.asList(CacheUtil.getSysParam(BussinessConstant.CREDIT_ASSET_TYPE_F03).split(","));
                     // 质押券面总额
-                    BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    //BigDecimal totalAmt = pledgeBondInfoDtoList.stream().map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
+                    BigDecimal totalAmt= BigDecimal.ZERO;
                     // 需要扣减额度的券面总额
                     BigDecimal supAmt = BigDecimal.ZERO;
                     for (PledgeBondInfoDto pledgeBondInfoDto : pledgeBondInfoDtoList) {
+                        BigDecimal divide = ArithmeticUtil.divide(ArithmeticUtil.multiply(pledgeBondInfoDto.getPledgePrin(), pledgeBondInfoDto.getPledgeRatio()), new BigDecimal(100), 2);
+                        totalAmt = ArithmeticUtil.doAdd(totalAmt,divide);
                         if(riskCreditListCommonValidatorService.checkCallCredit(pledgeBondInfoDto.getFinprodId())){
-                            supAmt = ArithmeticUtil.doAdd(supAmt,pledgeBondInfoDto.getPledgePrin());
+                            supAmt = ArithmeticUtil.doAdd(supAmt, divide);
                         }
                     }
                     /*BigDecimal supAmt = pledgeBondInfoDtoList.stream().filter(item ->{

@@ -100,7 +100,7 @@ public class EtrPlanAssetR002Controller extends BaseController {
                 , DictCode.行内资产二级分类
                 , DictCode.行内资产三级分类
                 , DictCode.行内资产四级分类
-                , DictCode.投资目的, BussinessDictCode.业务模式);
+                , DictCode.投资目的, DictCode.业务模式);
                 /*原因、zhuyongkang 2019/7/29  start */
         this.setSelectOptionToModel(model, DictCode.币种);
         Date sysDate = DateUtil.platDateFromCache();

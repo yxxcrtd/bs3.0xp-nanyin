@@ -63,7 +63,12 @@ public class TrdAvailableCashQueryService {
 
     public Map<String, BigDecimal> getAvailableCash(Map<String, Object> param) {
         Map<String, BigDecimal> ret = new HashMap<>();
-        Date tradeDate = DateUtil.parse((String)param.get("tradeDate"));
+        Date tradeDate = null;
+        if(param.get("tradeDate") instanceof Long ){
+            tradeDate = new Date((Long)param.get("tradeDate"));
+        }else {
+            tradeDate = DateUtil.parse((String)param.get("tradeDate"));
+        }
         Date tradeDateNext = DateUtil.parse((String)param.get("tradeDateNext"));
         if (tradeDateNext == null) {
             tradeDateNext = DateUtil.addDay(tradeDate, 1);

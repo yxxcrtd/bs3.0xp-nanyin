@@ -7,6 +7,7 @@ import java.util.Map;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.valuationparametermanage.valtrdaccountmfconfig.dto.ValTrdAccountmfConfig001Dto;
 import com.joyintech.system.base.entity.SysWflBusinessList;
+import org.springframework.stereotype.Repository;
 
 /**
  *  预提费用配置
@@ -16,6 +17,7 @@ import com.joyintech.system.base.entity.SysWflBusinessList;
  * @see ValTrdAccountmfConfig002Mapper
  * @since 1.0
  */
+@Repository
 public interface ValTrdAccountmfConfig002Mapper {
     
 	/**

@@ -52,6 +52,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -127,7 +128,8 @@ public class CashFlowDiscountProcessorService {
                     return result;
                 }
             }
-            if (null == entity.getViewRatingInfoDto()) {
+            //配置的曲线族不为国债曲线族，且不存在评级信息
+            if (null == entity.getViewRatingInfoDto()&&!"01".equals(entity.getModCurveConfig().getCurveGroupCode())) {
                 modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：资产无评级，采用最小利差法反算.");
             }
             //资产定价基准价格,基准日恒定为起息日
@@ -170,7 +172,7 @@ public class CashFlowDiscountProcessorService {
                     return result;
                 }
                 //处理风险溢价
-                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo);
+                modRiskPremium = handleModRiskPremium(modRiskPremium, entity, assetPriceBaseDate, assetPriceBasePrice, calCurveInfo,stepExecution);
                 //资产全价计算
                 //处理曲线代码
                 modRiskPremium.setModMethod(ModelDictCodeList.模型_估值模型名称_现金流贴现法.getValue());
@@ -216,8 +218,8 @@ public class CashFlowDiscountProcessorService {
 				mstBondValuationInfo.setSecId(modAssetInfoDto.getFinprodMarketId()); //市场代码
 				mstBondValuationInfo.setValueDate(happenDate);//估值日
 				mstBondValuationInfo.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());//估值来源
-				mstBondValuationInfo.setPrice(disCountInputParameter.getFullprice()); //估值全价
-				mstBondValuationInfo.setNetprice(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest));//估值净价
+				mstBondValuationInfo.setPrice(disCountInputParameter.getFullprice().setScale(2, RoundingMode.HALF_UP)); //估值全价
+				mstBondValuationInfo.setNetprice(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));//估值净价
 				mstBondValuationInfo.setInputType(DictCodeListExt1.录入方式_批处理生成.getValue()); //录入方式 待定 测试 interf
 				mstBondValuationInfo.setCreateUser("batch"); //
 				mstBondValuationInfo.setUpdateUser("batch");
@@ -233,7 +235,7 @@ public class CashFlowDiscountProcessorService {
 				finProductValuation.setValueSource(DictCodeListExt1.估值来源_模型法_MOD.getValue());
 				finProductValuation.setValDate(happenDate);
 				finProductValuation.setPublishDate(happenDate);
-				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest));
+				finProductValuation.setValuation(ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest).setScale(2, RoundingMode.HALF_UP));
 				finProductValuation.setCreateUser("batch"); //
 				finProductValuation.setUpdateUser("batch");
 				finProductValuation.setCreateTime(DateUtil.now());
@@ -243,7 +245,7 @@ public class CashFlowDiscountProcessorService {
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("现金流贴现批处理processor相关业务处理异常:资产代码=" + modAssetInfoDto.getFinprodId() + "====" + e.getMessage());
-            modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：计算错误.");
+            modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),finprodId, "【现金流贴现模型批处理】：计算错误,错误信息："+e.getMessage());
         }
         return result;
 
@@ -264,7 +266,7 @@ public class CashFlowDiscountProcessorService {
             ModCurveConfig modCurveConfig = entity.getModCurveConfig();
             paramCurveCode.put("curveGroupCode", modCurveConfig.getCurveGroupCode());
             //MOD_CURVE_CONFIG与MOD_CURVE_MAPPING曲线类型不一样  需要转换
-            paramCurveCode.put("curveType", StringUtil.equals(modCurveConfig.getCurveType(), "01") ? "SP" : "MA");
+            paramCurveCode.put("curveType", modCurveConfig.getCurveType());
             paramCurveCode.put("graderesult", modRiskPremium.getGradeResult());
             List<String> curveCodes = cashFlowDiscountMapper.getCurveCode(paramCurveCode);
             if (!StringUtil.isEmptyList(curveCodes)) {
@@ -324,7 +326,7 @@ public class CashFlowDiscountProcessorService {
         return calCurveInfo;
     }
 
-    private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium, CashFlowDiscountReaderResult entity, Date calDate, BigDecimal price, Map<String, List<ModYieldCurveInfoDto>> calCurveInfoMap) {
+    private ModRiskPremium handleModRiskPremium(ModRiskPremium modRiskPremium, CashFlowDiscountReaderResult entity, Date calDate, BigDecimal price, Map<String, List<ModYieldCurveInfoDto>> calCurveInfoMap, StepExecution stepExecution) {
         //点差
         BigDecimal spread = null;
         //反算后现金流折现法计算参数
@@ -338,11 +340,22 @@ public class CashFlowDiscountProcessorService {
             curveCode = next.getKey();
             List<ModYieldCurveInfoDto> value = next.getValue();
             DisCountInputParameter disCountInputParameter = calRiskPremium(entity, calDate, price, value);
+
             if (null == spread || spread.compareTo(disCountInputParameter.getSpread()) > 0) {
                 spread = disCountInputParameter.getSpread();
                 caldisCountInputParameter = disCountInputParameter;
             }
         }
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：基准日现金流信息列表：");
+        caldisCountInputParameter.getCashInfoDtoList().forEach(x->{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "起息日："+x.getTheoryStartDate()+"；期限："+x.getRemainingTerm()+";收益率："+x.getSpR());
+        });
+        modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：基准日收益曲线数据列表：");
+        caldisCountInputParameter.getCurveInfoDto().getKeyPointDtoList().forEach(x->{
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), x.getKeyPoint()+"-"+x.getYield());
+        });
+        //基准日收益率
+
         //处理评级信息
         handleRateInfo(modRiskPremium, entity.getViewRatingInfoDto(), curveCode);
         //处理定价其他属性值

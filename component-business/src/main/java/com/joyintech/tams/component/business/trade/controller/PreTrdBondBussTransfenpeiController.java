@@ -89,7 +89,7 @@ public class PreTrdBondBussTransfenpeiController extends BaseController {
         model.addAttribute("operationType", StringUtil.defaultString(this.getParam("operationType")));
  
         this.setSelectOptionToModel(model, DictCode.WIND一级分类_含债券一级分类等
-                , DictCode.登记托管机构, DictCode.分配方式, BussinessDictCode.业务模式);
+                , DictCode.登记托管机构, DictCode.分配方式, DictCode.业务模式);
  
         return "component/trade/BussTrdTransfenpei";
     }

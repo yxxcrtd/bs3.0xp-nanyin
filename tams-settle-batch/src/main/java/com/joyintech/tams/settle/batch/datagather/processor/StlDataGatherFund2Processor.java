@@ -252,6 +252,11 @@ public class StlDataGatherFund2Processor extends StlDataGatherProcessor {
 		else {
 			dealTotal.setPayType(DictCodeList.分红方式_现金分红.getValue());
 		}
+
+		// 单位净价
+		if (cqTotalTrdProductDealDto != null) {
+			dealTotal.setUnitCprice(cqTotalTrdProductDealDto.getUnitCprice());
+		}
 		
         return dealTotal;
     }
@@ -334,6 +339,10 @@ public class StlDataGatherFund2Processor extends StlDataGatherProcessor {
 
         // 成交编号
         trdProductDealDto.setDealId(settleTransDataDto.getTradeId());
+
+		// 单位净价
+		trdProductDealDto.setUnitCprice(dealTotal.getUnitCprice());
+
         return trdProductDealDto;
     }
 

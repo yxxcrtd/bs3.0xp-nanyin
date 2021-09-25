@@ -34,9 +34,9 @@ $(function() {
             ,{field:'oCode', sortable:false,  title: 'ComMarketManagement.secId'}//对象代码
             ,{field:'oCodeName',  title: 'ComMarketManagement.finprodName'}//对象名称
             ,{field:'gradeDate',sortable:false,title: 'ComMarketManagement.gradeDate',type:'date'}//当前评级日期
-            ,{field:'gradeResult', sortable:false, title: 'ComMarketManagement.gradeResult'}//当前评级结果
-            ,{field:'previousgradeDate',sortable:false,title: 'ComMarketManagement.previousgradeDate',type:'date'}//前次评级日期
-            ,{field:'previousgradeResultDis', sortable:false, title: 'ComMarketManagement.previousgradeResultDis'}//前次评级结果
+            ,{field:'gradeResultDis', sortable:false, title: 'ComMarketManagement.gradeResult'}//当前评级结果
+            // ,{field:'previousgradeDate',sortable:false,title: 'ComMarketManagement.previousgradeDate',type:'date'}//前次评级日期
+            // ,{field:'previousgradeResult', sortable:false, title: 'ComMarketManagement.previousgradeResultDis'}//前次评级结果
             ,{field:'shortLongTermName', sortable:false, title: 'ComMarketManagement.shortLongTerm'}//评级类型
             ,{field:'noticeDate',sortable:false,   title: 'ComMarketManagement.announcementDate',type:'date'}//公告日期
             ,{field:'gradeExpectationStr',sortable:false, title: 'ComMarketManagement.gradeExpectation'}//评级展望
@@ -47,7 +47,7 @@ $(function() {
             // ,{field:'operation',  title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['edit', 'delt']}
         ],
         searchOnInit :REM_TYPE && REM_TYPE == 'R7S1',
-        checkbox : false
+        checkbox : true
     });
     
     var exportExcel = function() {   
@@ -105,7 +105,7 @@ $(function() {
          */
         $('#ComMarketManagement001_btn_import').click(function() {
             Joyin.confirm("请确认是否要导入数据？", function() {
-                Joyin.uploadFile(function(fileName) {
+                Joyin.uploadFile({pageId: 'ComMarketManagement'}, function(fileName) {
                     Joyin.ajax(basePath +"valuation/basicdata/commarketmanagement/ComMarketManagement/importFile", {
                         fileName : fileName
                     },function(result){

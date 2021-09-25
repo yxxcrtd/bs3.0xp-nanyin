@@ -138,12 +138,12 @@
 					</div>
 				</div>
 				<div class="layui-inline layui-col-md6">
-					<label class="layui-form-label form-lable">连续股息率</label>
+					<label class="layui-form-label form-lable">连续股息率%</label>
 					<div class="layui-input-inline input-inline">
 						<input id="smoothsection" name="smoothsection"
 							class="layui-input form-input text-number" allowClear="true"
 							data-th-placeholder="#{SysCommon.placeholder}" 
-							data-th-value="${entity?.smoothsection}" required/>
+							data-th-value="${entity?.smoothsection}*100" required/>
 					</div>
 				</div>
 			</div>

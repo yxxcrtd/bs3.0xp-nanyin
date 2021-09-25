@@ -109,7 +109,15 @@ public class EtrInvestBondInfoValidator implements EtrCommonValidator {
             }*/
             // 交易所债一级市场时，交易平台非必填 add by renping 20191105 start
 
-            if(dto.getBusinessModel()==null||StringUtil.equals("",dto.getBusinessModel())){ errorList.add(new ValidMessage("businessModel", "请输入业务模式")); }
+            if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
+                if(!StringUtil.isNotEmpty(dto.getBusinessModel())){
+                    errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
+                }
+            }else{
+                if(!StringUtil.isNotEmpty(dto.getInvAim())){
+                    errorList.add(new ValidMessage("businessModel", "请输入投资目的"));
+                }
+            }
 
             if (!((StringUtil.equals(dto.getTradeMarket(),
                 DictCodeListExt1.交易场所_上海证券交易所.getValue())

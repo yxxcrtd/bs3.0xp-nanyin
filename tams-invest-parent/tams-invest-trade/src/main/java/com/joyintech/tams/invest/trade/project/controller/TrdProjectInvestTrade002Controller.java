@@ -191,7 +191,7 @@ public class TrdProjectInvestTrade002Controller extends BaseController {
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_交易监控.getValue());
         model.addAttribute("FINPROD_TYPE_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
         model.addAttribute("collectType_01", DictCodeListExt2.收取方式_回款前扣除.getValue());
-        this.setSelectOptionToModel(model, BussinessDictCode.业务模式);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         setSelectOptionToModel(model, DICT_CODES);
         model.addAttribute(GlobalConstant.ENTITY, entity);
         

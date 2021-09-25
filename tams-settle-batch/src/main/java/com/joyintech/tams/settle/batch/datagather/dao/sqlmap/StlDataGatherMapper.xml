@@ -311,6 +311,7 @@
 			resultType="com.joyintech.tams.settle.batch.datagather.dto.SettleTransDataDto">
 		SELECT
 		<include refid="settleTransDataSql"></include>
+		left join FIN_PRODUCT fp on std.FINPROD_ID = fp.FINPROD_ID
 		<where>
 			<!-- <if test="dealDate != null">
 				AND std.TRADE_DATE = #{dealDate,jdbcType=DATE}
@@ -334,7 +335,7 @@
            		</foreach>
 			</if>
 			<if test="finprodIdList != null and finprodIdList.size() > 0">
-				<foreach collection="finprodIdList" item="finprodId" open="AND std.FINPROD_ID IN (" close=")" separator=",">
+				<foreach collection="finprodIdList" item="finprodId" open="AND (fp.PROFIT_TYPE = '03' or std.FINPROD_ID IN (" close="))" separator=",">
            			#{finprodId,jdbcType=VARCHAR}
            		</foreach>
 			</if>

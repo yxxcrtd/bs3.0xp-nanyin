@@ -2083,8 +2083,13 @@ var calculateField;
                         }
                     } else {
                         if (pageModel != PAGE_MODEL_REFERENCE) {
-                            $('#integrateTradeAmt').prop("disabled", false).trigger("change");
-                            $('#ownTradeAmt').prop("disabled", false);
+                            if(isCstpSure){
+                                $('#ownTradeAmt').prop("disabled", true);
+                                $('#integrateTradeAmt').prop("disabled", true).trigger("change");
+                            }else{
+                                $('#ownTradeAmt').prop("disabled", false);
+                                $('#integrateTradeAmt').prop("disabled", false).trigger("change");
+                            }
                             //$('#settleSpeed').prop("disabled", false);
                         }
                     }
@@ -3023,6 +3028,10 @@ var calculateField;
                         $('#tradeAmt').val(JoyinMath.doDiv(result.prinamt,unitNum,2,JoyinMath.ROUND_HALF_UP)).trigger('blur').trigger('change');// 本金金额(券面总额)
                         if($('#tradeAmt').val()){
                             $('#tradeAmt').attr('disabled', true); //成交编号以后，页面的券面总额被置灰，期望可以修改
+                            if(isCstpSure){
+                                $('#ownTradeAmt').attr('disabled', true);
+                                $('#integrateTradeAmt').attr('disabled', true);
+                            }
                         }
                     }else{
                         $('#tradeAmt').val('').change();

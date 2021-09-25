@@ -3,9 +3,11 @@ package com.joyintech.sso.config.dao;
 import com.joyintech.sso.config.dto.SsoPlatformDto;
 import com.joyintech.sso.config.pojo.SsoPlatform;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface SsoPlatformMapper {
 
     /**

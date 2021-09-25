@@ -31,7 +31,7 @@ import java.util.*;
  */
 @Component
 public class FinPayInterestStdInfoValidator implements BeanValidator{
-
+    private static final String OBJECTTYPE_ZQ = "01";//债权类资产
     /**
      * {@inheritDoc}
      */
@@ -77,7 +77,9 @@ public class FinPayInterestStdInfoValidator implements BeanValidator{
                 }
             }
         //当付息频率改为自定义时，画面.自定义说明改为必填。否则，画面.自定义说明为非必填
-        if(StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_计划类资产.getValue())){
+        //债券类资产当选择付息频率为不规则时，没有自定义说明选项，故不用校验提示   objectType：01债券类资产
+        if(StringUtil.equals(finprodType, DictCodeListExt1.金融产品类型_计划类资产.getValue())
+                && !StringUtil.equals(dto.getObjectType(),OBJECTTYPE_ZQ)){
          // 一体化对应etliu start
 //            if(StringUtil.equals(dto.getPayCycle(), DictCodeList.支付频率_付息频率_不规则.getValue())){
             if(StringUtil.equals(dto.getPayCycle(), DictCodeList.频率_不规则.getValue())){

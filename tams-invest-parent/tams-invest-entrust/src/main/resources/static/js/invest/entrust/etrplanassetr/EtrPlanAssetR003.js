@@ -83,7 +83,7 @@
     , {field : 'ccyStr', title: 'EtrPlanAssetR001.ccy', width:'10%',sortField:"ccy", sortable: false}// 币种
 	, {field : 'entrustAmt',title : 'EtrPlanAssetR002.entrustAmt',type : 'number',width : '10%',id : 'entrustAmt', sortable: false}// 委托金额
 	, {field : 'entrustNum',title : 'EtrPlanAssetR002.entrustNum',type : 'number',id : 'entrustNum',width : '10%', sortable: false}// 委托本金
-	, {field : 'chlIdName',title : 'invest.channelId',width : '10%',id : 'chlId', sortable: false}// 通道
+	, {field : 'chlIdName',title : 'invest.channelId',width : '10%',id : 'chlId', visible:false,sortable: false}// 通道
 	, {field : 'finprodName', title: 'EtrPlanAssetR001.finprodName', width:'10%',sortField:"finprodName", sortable: false}
 	, {field : 'assetType1',title : 'EtrPlanAssetR001.assetType1',width : '10%',visible : false, sortable: false}// 资产二级分类
 	, {field : 'assetType10',title : 'EtrPlanAssetR001.assetType10',width : '10%',visible : false, sortable: false}// 资产三级分类

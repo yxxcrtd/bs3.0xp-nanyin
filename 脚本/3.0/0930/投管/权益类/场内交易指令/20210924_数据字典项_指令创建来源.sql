@@ -1,0 +1,5 @@
+--添加数据字典项:指令创建来源
+
+DELETE FROM SYS_DATADICT WHERE DICT_CODE = 'ENTRUST_CREATE_SOURCE';
+insert into SYS_DATADICT(DICT_CODE,SYSTEM_CODE, DICT_CNNAME, DICT_ENNAME, UPDATE_FLG, CREATE_USER, CREATE_TIME, UPDATE_USER, UPDATE_TIME) 
+values('ENTRUST_CREATE_SOURCE','ETR','指令创建来源','','02','system',to_date('2021/9/18', 'yyyy/mm/dd'),'system',to_date('2021/9/18', 'yyyy/mm/dd'));

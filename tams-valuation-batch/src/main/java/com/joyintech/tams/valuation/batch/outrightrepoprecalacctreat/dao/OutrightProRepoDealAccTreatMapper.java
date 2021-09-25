@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.joyintech.tams.valuation.batch.outrightrepoprecalacctreat.dto.BokDetailIdOutRightPro;
 import com.joyintech.tams.valuation.batch.outrightrepoprecalacctreat.dto.FinDealPledgeOutRightPro;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OutrightProRepoDealAccTreatMapper {
 
     /**

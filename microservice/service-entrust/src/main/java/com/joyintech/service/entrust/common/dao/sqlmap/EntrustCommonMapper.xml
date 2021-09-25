@@ -7,5 +7,8 @@
 		from  fin_product   fp
 		left join SPPI_IMPORT_DATA sid on fp.finprod_id = sid.BOND_ID
 		where  fp.finprod_Market_id = #{finprodId}
+		<if test="finprodType2 !=null and finprodType2 !='' ">
+			and fp.FINPROD_TYPE2 = #{finprodType2}
+		</if>
 	</select>
 </mapper>

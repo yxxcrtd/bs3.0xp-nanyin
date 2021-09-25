@@ -75,6 +75,9 @@ public class TrdBondMarketTrade002Controller extends BaseController {
         String totalTradeId = this.getParam("totleTradeId");
         String finprodId = this.getParam("finprodId");
         String appearMarketId = this.getParam("appearMarketId");
+        if (StringUtil.isNotEmpty(this.getParam("fpageId"))){
+            model.addAttribute("fpageId", this.getParam("fpageId"));
+        }
         if (StringUtil.isNotEmpty(workflowId)){
             //流程中
             dto = trdBondMarketTrade002Service.getBussinessEntityByWorkflowId(

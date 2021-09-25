@@ -100,7 +100,7 @@ $(function() {
         object.compStockid = $("#compStockid").val();
         object.finprodProit = $("#finprodProit").val();
         object.finprodNetasset = $("#finprodNetasset").val();
-        object.smoothsection = $("#smoothsection").val();
+        object.smoothsection = $("#smoothsection").val()/100;
         object.bintreeStep = $("#bintreeStep").val();
         object.curveCode = $("#curveCode").val();
         object.seqno=SEQNO;

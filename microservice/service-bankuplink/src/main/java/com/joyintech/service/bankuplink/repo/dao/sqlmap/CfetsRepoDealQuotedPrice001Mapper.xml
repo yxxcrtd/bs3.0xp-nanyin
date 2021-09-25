@@ -1111,17 +1111,19 @@
 
     <select id="listIbuQuoteEntCrepPledge" resultType="com.joyintech.service.bankuplink.repo.dto.CfetsRepoDealQuotedPrice003Dto">
         SELECT
-            QUOTE_ID,
-            ENTRUST_ID,
-            PORTFOLIO_ID,
-            PLEDGE_FINPROD_ID finprodId,
-            PLEDGE_NUMBER,
-            PLEDGE_RATIO
+        iqecp.QUOTE_ID,
+        iqecp.ENTRUST_ID,
+        iqecp.PORTFOLIO_ID,
+        iqecp.PLEDGE_FINPROD_ID finprodId,
+        iqecp.PLEDGE_NUMBER,
+        iqecp.PLEDGE_RATIO,
+        iqecp.fp.FINPROD_MARKET_ID bondCode
         FROM
-        IBU_QUOTE_ENT_CREP_PLEDGE
+        IBU_QUOTE_ENT_CREP_PLEDGE  iqecp
+        LEFT JOIN FIN_PRODUCT fp ON fp.FINPROD_ID = iqecp.PLEDGE_FINPROD_ID
         <where>
             <if test="quoteId != null and quoteId != ''">
-                  QUOTE_ID = #{quoteId}
+                iqecp.QUOTE_ID = #{quoteId}
             </if>
         </where>
     </select>
