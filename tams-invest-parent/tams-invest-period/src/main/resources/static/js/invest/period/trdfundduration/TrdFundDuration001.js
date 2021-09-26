@@ -52,24 +52,24 @@ $(function () {
          */
         sortfont:true,
         cols:[
-            {field:'statusValidStr',sortField:'statusValid',width:'8%',title: 'TrdFundDuration001.pageDataStatus'} //数据状态
-            ,{field:'totleTradeId',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
-            ,{field:'finprodMarketId',width:'15%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
-            ,{field:'finprodAbbr',width:'15%',title:'资产简称'}//资产简称
-            ,{field:'chlName',width:'15%',visible:false,title:'invest.channelId'}//通道
+            {field:'statusValidStr',sortField:'STATUSVALID',width:'8%',title: 'TrdFundDuration001.pageDataStatus'} //数据状态
+            ,{field:'totleTradeId',sortField:'TOTLE_TRADE_ID',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
+            ,{field:'finprodMarketId',sortField:'FINPROD_MARKET_ID',width:'15%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
+            ,{field:'finprodAbbr',sortField:'FINPRODABBR',width:'15%',title:'资产简称'}//资产简称
+            ,{field:'chlName',sortField:'chlName',width:'15%',visible:false,title:'invest.channelId'}//通道
             ,{field:'assetTypeStr',sortField:'assetType',width:'15%',title:'TrdFundDuration001.finprodType'}//资产类型
             ,{field:'bonusModeStr',sortField:'bonusMode',width:'8%',title:'TrdFundDuration001.bonusMode'}//分红类型
             ,{field:'psStr',sortField:'ps',width:'8%',title:'TrdPlanNetDuration001.ps'}//交易方向
-            ,{field:'registDate',width:'10%',title:'TrdFundDuration001.registDate',type:'date'}//登记日
-            ,{field:'exRightsDate',width:'10%',title:'TrdFundDuration001.exRightsDate',type:'date'}//除权日
-            ,{field:'arriveDate',width:'10%',title:'TrdFundDuration001.arriveDate',type:'date'}//到账日
-            ,{field:'reInvesDate',width:'10%',title:'TrdFundDuration001.reInvesDate',type:'date'}//再投日
-            ,{field:'registShare',width:'10%',title:'TrdFundDuration001.registShare',type:'money'}//登记份额
-            ,{field:'unitCprice',width:'10%',title:'TrdFundDuration001.unitCprice',type:'money',digit: 4}//单位分红净值
-            ,{field:'tradeAmt',width:'10%',title:'TrdFundDuration001.tradeAmt',type:'money'}//交易金额
-            ,{field:'qty',width:'10%',title:'TrdFundDuration001.qty',type:'money'}//交易净值
+            ,{field:'registDate',sortField:'registDate',width:'10%',title:'TrdFundDuration001.registDate',type:'date'}//登记日
+            ,{field:'exRightsDate',sortField:'exRightsDate',width:'10%',title:'TrdFundDuration001.exRightsDate',type:'date'}//除权日
+            ,{field:'arriveDate',sortField:'arriveDate',width:'10%',title:'TrdFundDuration001.arriveDate',type:'date'}//到账日
+            ,{field:'reInvesDate',sortField:'reInvesDate',width:'10%',title:'TrdFundDuration001.reInvesDate',type:'date'}//再投日
+            ,{field:'registShare',sortField:'registShare',width:'10%',title:'TrdFundDuration001.registShare',type:'money'}//登记份额
+            ,{field:'unitCprice',sortField:'unitCprice',width:'10%',title:'TrdFundDuration001.unitCprice',type:'money',digit: 4}//单位分红净值
+            ,{field:'tradeAmt',sortField:'tradeAmt',width:'10%',title:'TrdFundDuration001.tradeAmt',type:'money'}//交易金额
+            ,{field:'qty',sortField:'qty',width:'10%',title:'TrdFundDuration001.qty',type:'money'}//交易净值
             // 多级法人改造 add by caiqun 20200615
-            ,{field: 'institutionName', width:150, title: '机构名称',sortField:'institutionName',visible:AUTHORITY_TYPE=='02'}
+            ,{field: 'institutionName',sortField:'institutionName', width:150, title: '机构名称',sortField:'institutionName',visible:AUTHORITY_TYPE=='02'}
             // 多级法人改造 add by caiqun 20200615
             ,{field: 'operation', title: 'SysCommon.operation', type: 'action', buttons: ['edit'],
                 render: function (data, type, row, meta) {
@@ -106,12 +106,12 @@ $(function () {
         sortfont:true,
         cols:[
             {field:'statusValidStr',sortField:'statusValid',width:'8%',title: 'TrdFundDuration001.pageDataStatus'} //数据状态
-            ,{field:'totleTradeId',sortField:'totleTradeId',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
-            ,{field:'finprodMarketId',sortField:'finprodMarketId',width:'10%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
+            ,{field:'totleTradeId',sortField:'TOTLE_TRADE_ID',width:'15%',title: 'TrdFundDuration001.busiCode'}//业务编号
+            ,{field:'finprodMarketId',sortField:'FINPROD_MARKET_ID',width:'10%',title:'TrdFundDuration001.finprodMarketId'}//资产代码
             ,{field:'finprodMarketName',sortField:'finprodMarketName',width:'10%',title:'TrdFundDuration001.finprodMarketName'}//资产名称
             ,{field:'conversionTypeStr',sortField:'conversionType',width:'10%',title:'TrdFundObversion001.conversionType'}//折算类型
             ,{field:'conversionTime',sortField:'conversionTime',width:'10%',title:'TrdFundObversion001.conversionTime',type:'date'}//份额折算日
-            ,{field:'conversionRat',sortField:'conversionRat',width:'10%',title:'TrdFundObversion001.conversionRat',type:'money',digit: 8}//折算比例
+            ,{field:'conversionRat',sortField:'CONVERSION_RAT',width:'10%',title:'TrdFundObversion001.conversionRat',type:'money',digit: 8}//折算比例
             ,{field:'bconUnitCprice',sortField:'bconUnitCprice',width:'18%',title:'TrdFundObversion001.bconUnitCprice',type:'money',digit: 4}//单位分红净值
             ,{field:'afterUnitCprice',sortField:'afterUnitCprice',width:'18%',title:'TrdFundObversion001.afterUnitCprice',type:'money'}//交易金额
             // 多级法人改造 add by caiqun 20200615

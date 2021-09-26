@@ -106,8 +106,12 @@ public class PtlFundAcctPosiDto extends PtlCashPosition {
 	 * 产品/资产名称
 	 */
 	private String finprodAbbr;
-	
-	
+
+	/**
+	 * 账户类型
+	 */
+	private String acctType;
+
 	public String getPortfolioName() {
 		return portfolioName;
 	}
@@ -238,5 +242,13 @@ public class PtlFundAcctPosiDto extends PtlCashPosition {
 
 	public void setIsSummary(String isSummary) {
 		this.isSummary = isSummary;
+	}
+
+	public String getAcctType() {
+		return acctType;
+	}
+
+	public void setAcctType(String acctType) {
+		this.acctType = acctType;
 	}
 }

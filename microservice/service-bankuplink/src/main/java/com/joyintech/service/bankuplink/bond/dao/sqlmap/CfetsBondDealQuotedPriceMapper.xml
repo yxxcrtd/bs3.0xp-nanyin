@@ -787,12 +787,12 @@
 		<!--decode(I.BUSINESSTYPE,'BOND',I.LASTQTY-ts.Prinamt,'REPO',I.LASTQTY-tr.Repoamt) lastqtyready-->
 		,decode(I.BUSINESSTYPE,'BOND',I.PRICE,'REPO',I.PRICE*100) price/*回购利率*/
 		,decode(I.BUSINESSTYPE, 'BOND', I.DIRTYPRICE, 'REPO', '') dirtyprice
-		,decode(I.BUSINESSTYPE, 'BOND', I.UNDERLYINGYIELD2*100, 'REPO', '') underlyingyield2
+		,decode(I.BUSINESSTYPE, 'BOND', I.YIELD2*100, 'REPO', '') underlyingyield2
 		,I.TRADEDATE tradedate/*成交时间*/
 		,decode(I.BUSINESSTYPE, 'BOND', I.ACCRUEDINTERESTAMT, 'REPO', '') accruedinterestamt
 		,I.ACCRUEDINTERESTTOTALAMT accruedinteresttotalamt/*回购利息*/
 		,I.TRADECASHAMT tradecashamt/*交易金额*/
-		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.SETTLCURRAMT2) settlcurramt2/*到期结算金额*/
+		,decode(I.BUSINESSTYPE, 'BOND', I.SETTLCURRAMT, 'REPO', I.SETTLCURRAMT2) settlcurramt2/*到期结算金额*/
 		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.TRADELIMITDAYS) tradelimitdays/*回购期限*/
 		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.CASHHOLDINGDAYS) cashholdingdays/*实际占款天数*/
 		,ROUND(NVL(decode(I.BUSINESSTYPE, 'BOND', NVL(tmi.SUMMATCHNUM*100, 0), 'REPO', NVL(tmi.SUMMATCHNUM, 0)), 0)/
