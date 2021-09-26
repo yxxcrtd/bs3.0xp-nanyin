@@ -16,6 +16,21 @@
         <result column="UPDATE_TIME" property="updateTime" jdbcType="DECIMAL" />
     </resultMap>
     
+    <resultMap id="InterfTradeConfigResult" type="com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeConfigDto" >
+        <result column="INTERF_NAME" property="interfName" jdbcType="VARCHAR" />
+        <result column="INTERF_CODE" property="interfCode" jdbcType="VARCHAR" />
+        <result column="INTERF_SOURCE" property="interfSource" jdbcType="VARCHAR" />
+        <result column="INTERF_SYSTEM" property="interfSystem" jdbcType="VARCHAR" />
+        <result column="INTERF_STATUS" property="interfStatus" jdbcType="VARCHAR" />
+        <result column="BUSINESS_SERVICE" property="businessService" jdbcType="VARCHAR" />
+        <result column="BUSINESS_METHOD" property="businessMethod" jdbcType="VARCHAR" />
+        <result column="CREATE_USER" property="createUser" jdbcType="VARCHAR" />
+        <result column="CREATE_DEPT" property="createDept" jdbcType="VARCHAR" />
+        <result column="CREATE_TIME" property="createTime" jdbcType="VARCHAR" />
+        <result column="UPDATE_USER" property="updateUser" jdbcType="VARCHAR" />
+        <result column="UPDATE_TIME" property="updateTime" jdbcType="DECIMAL" />
+    </resultMap>
+    
 	<!-- 查询满足条件的交易接口日志 -->
 	<select id="searchInterfTradeLog" resultMap="InterfTradeLogResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeLogDto">
 		select * from INTERF_TRADE_LOG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR}
@@ -28,4 +43,9 @@
 	  			#{item, jdbcType=VARCHAR}
 		</foreach>
 	</update>
+	
+	<!-- 查询满足条件的交易接口配置 -->
+	<select id="searchInterfTradeConfig" resultMap="InterfTradeConfigResult" parameterType="com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeConfigDto">
+		select * from INTERF_TRADE_CONFIG where INTERF_STATUS=#{interfStatus,jdbcType=VARCHAR} and INTERF_SYSTEM=#{interfSystem,jdbcType=VARCHAR} and INTERF_CODE=#{interfCode,jdbcType=VARCHAR}
+	</select>
 </mapper>
