@@ -142,7 +142,8 @@
 		from Fin_Product /** 标的类金融产品 **/
 		where
 		(Fin_Product.FINPROD_MARKET_ID like concat(#{finprodId},'%'))
-		AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01}))
+		<!--估值核算使用Finprod_Type   AND (Fin_Product.Finprod_Type2 in (#{TYPE_TOUGUAN_F01})) -->
+		AND (Fin_Product.Finprod_Type in (#{TYPE_TOUGUAN_F01}))
 	</select>
 	<insert id="insertSelective" parameterType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto" >
 		insert into TRD_ASSET_LOSS
@@ -316,33 +317,53 @@
 	</update>
 	<select id="selectByKey" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">
 		select
-		  TRD_ASSET_LOSS.SEC_ID finprodId,             	   /** 金融产品代码 **/
-		  Fin_Product.FINPROD_TYPE assetType1,             /** 金融产品类型 **/
-		  Fin_Product.Vdate vDate,                         /** 资产起息日 **/
-		  Fin_Product.Mdate mDate,                         /** 资产到期日 **/
+		TRD_ASSET_LOSS.VAL_DATE valDate, 			/** 行情日 **/
+		TRD_ASSET_LOSS.FINPROD_ID finprodId, 			/** 金融产品代码 **/
+		NVL(Fin_Product.Finprod_Abbr,Fin_Product.Finprod_Name) finprodAbbr, 		/** 金融产品简称 **/
+		TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType, /** 减值测算方式 **/
+		Fin_Product.Vdate vDate,  					/** 资产起息日 **/
+		Fin_Product.Mdate mDate, 					/** 资产到期日 **/
+		Fin_Product.finprod_id realFinprodId,
+		Fin_Product.Finprod_Type,
+		TRD_ASSET_LOSS.STR_DATE strDate , 			/** 日期起始日 **/
+		TRD_ASSET_LOSS.END_DATE endDate , 			/** 日期截止日 **/
+		TRD_ASSET_LOSS.Peroid peroid , 				/** 待偿期(年) **/
+		TRD_ASSET_LOSS.STAGE stage,					/** 减值阶段 **/
+		decode(TRD_ASSET_LOSS.LOSS_TEST_TYPE,#{lossTestType_01},NULL,TRD_ASSET_LOSS.Ecl_Vaule*100) eclVaule, /** ECL预期信用损失比例% **/
 
-		  TRD_ASSET_LOSS.VAL_DATE valDate,                 /** 减值行情日 **/
-		  TRD_ASSET_LOSS.STR_DATE strDate,                 /** 初始确认起始日 **/
-		  TRD_ASSET_LOSS.END_DATE endDate,                 /** 初始确认截止日 **/
-		  TRD_ASSET_LOSS.PEROID peroid,       	           /** 待偿期（年）% **/
-		  TRD_ASSET_LOSS.STAGE stage,       	           /** 减值阶段 **/
+		(
+		select min(EXERCISE_DATE) from FIN_EXERCISE_PLAN
+		where FIN_EXERCISE_PLAN.Exercise_Date >= TRD_ASSET_LOSS.VAL_DATE and FIN_EXERCISE_PLAN.Finprod_Id = Fin_Product.Finprod_Id
+		) as assetExerciseDate,                  	/** 资产行权日 **/
 
-
-		  TRD_ASSET_LOSS.LOSS_TEST_TYPE lossTestType,      /** 减值测算方式 **/
-		  TRD_ASSET_LOSS.Loss_Input_Type lossInputPattern, /** 减值录入方式 **/
-
-		  TRD_ASSET_LOSS.LOSS_RATIO * 100 lossRatio,       /** 减值比例% **/
-		  TRD_ASSET_LOSS.PD_VAULE * 100 pdValue,           /** PD违约概率% **/
-		  TRD_ASSET_LOSS.Lgd_Vaule * 100 lgdValue,         /** LGD违约损失率% **/
-		  TRD_ASSET_LOSS.ECL_VAULE * 100 eclVaule,         /** ECL预期信用损失比例% **/
-		  TRD_ASSET_LOSS.Trade_Id tradeId                  /** 交易编号 **/
-
-		from TRD_ASSET_LOSS        /** 资产减值流水 **/
-		  left join Fin_Product    /** 标的类金融产品 **/
-		  on TRD_ASSET_LOSS.SEC_ID = Fin_Product.FINPROD_MARKET_ID
+		TRD_ASSET_LOSS.LOSS_RATIO * 100 lossRatio,  /** 减值比例% **/
+		TRD_ASSET_LOSS.PD_VAULE * 100 pdValue, 		/** PD违约概率% **/
+		TRD_ASSET_LOSS.Lgd_Vaule * 100 lgdValue, 	/** LGD违约损失率% **/
+		TRD_ASSET_LOSS.Trade_Id tradeId,				/** 交易编号 **/
+		A.TYPE_18 AS assetType,				/** 资产类型 **/
+		Fin_Product.Trade_Market,				/** 流通场所 **/
+		NVL(B.CUSTOMER_ABBR,B.CUSTOMER_NAME) AS issuerName,				/** 发行人名称/机构名称 **/
+		C.INSITITUTE_CODE AS insitituteCode,				/** 统一社会信用代码/组织机构代码 **/
+		TRD_ASSET_LOSS.Peroid_Type,				/** 待偿期类型 **/
+		TRD_ASSET_LOSS.Term_Describe AS termDescribe,				/** 期限描述 **/
+		TRD_ASSET_LOSS.REMARK,			/** 备注 **/
+		TRD_ASSET_LOSS.LOSS_INPUT_TYPE AS lossInputType 			/** 减值录入方式 **/
+		from TRD_ASSET_LOSS 	/** 资产减值流水 **/
+		left join Fin_Product   /** 标的类金融产品 **/
+		on TRD_ASSET_LOSS.FINPROD_ID = Fin_Product.FINPROD_ID
+		LEFT JOIN FIN_PRODUCT_TYPE A
+		ON A.FINPROD_ID = FIN_PRODUCT.FINPROD_ID
+		LEFT JOIN MST_CUSTOMER_INFO B
+		ON B.CUSTOMER_ID = FIN_PRODUCT.ISSUER
+		LEFT JOIN MST_CUSTOMER_INFO_ADD C
+		ON C.CUSTOMER_ID = B.CUSTOMER_ID
 		  where 1 = 1
+		and TRD_ASSET_LOSS.Status = #{status_init_01}
 		<if test="finprodId != null and !finprodId.equals('')">
 			AND (TRD_ASSET_LOSS.FINPROD_ID = #{finprodId})
+		</if>
+		<if test="tradeId != null and !tradeId.equals('')">
+			AND (TRD_ASSET_LOSS.Trade_Id = #{tradeId})
 		</if>
 	</select>
 	<select id="selectForPagePreView" resultType="com.joyintech.service.valuation.trdassetlossmanage.trdassetloss.dto.TrdAssetLoss001Dto">

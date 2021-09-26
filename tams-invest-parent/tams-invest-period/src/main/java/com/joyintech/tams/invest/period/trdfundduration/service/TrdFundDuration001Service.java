@@ -277,7 +277,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 //           处理数据参数
             getWorkFlowPatameter(entity);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
+            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), false);
         }
         else{
 //            非货币红利再投
@@ -521,7 +521,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 
     @Override
     public void doBack(TrdFundDuration001Dto entity) {
-        if("03".equals(entity.getType()) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
+        if(("03".equals(entity.getType())||"06".equals(entity.getType())) && StringUtil.isNotEmpty(entity.getBussTrdTransferOrder())){
             for (BussTrdTransferOrderDto dto : entity.getBussTrdTransferOrder()){
                 AllTradeCommonUtil.deletePosition(entity.getRevokeReason(), dto.getOrderId());
             }

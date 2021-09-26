@@ -250,6 +250,16 @@ public class EtrRepoCashPositionDealService extends EtrCashPositionBaseService {
                     etrPositionHoldDto.getPtlSecPositionFlows().addAll(
                             EtrCommonCashPositionDealService.findNegateSecFlowByEntrustId(
                                     finProductTradeDto.getTrdProductDeal().getTradeId(), finProductTradeDto.getTrdProductDeal().getTradeId()));
+                    //update by zznn 20210925 start
+                    //从数据库取值时已经取反   撤销时又置反   不改共通  故这里置反一次
+                    if(!StringUtil.isEmptyList(etrPositionHoldDto.getPtlSecPositionFlows())){
+                        List<EtrSecPositionFlowDto> ptlSecPositionFlows = etrPositionHoldDto.getPtlSecPositionFlows();
+                        ptlSecPositionFlows.forEach(item ->{
+                            item.setAmount(item.getAmount().negate());
+                        });
+                        etrPositionHoldDto.setPtlSecPositionFlows(ptlSecPositionFlows);
+                    }
+                    //update by zznn 20210925 end
                 }
             }
         }

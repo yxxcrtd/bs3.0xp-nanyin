@@ -73,7 +73,8 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         BigDecimal intOverdueDay = BigDecimal.ZERO;  // 利息逾期天数
 
         SysBatchExecInfo sysBatchExecInfo = (SysBatchExecInfo) param.get("BATCH_INFO");
-
+        // 定义 变量.是否未做过风险五级分类判断，用于风险五级分类防止重复提示信息
+        boolean fiveRiskFlag = true;
         //第1步骤：key：三阶段_绝对_风险五级分类   P3_01_04
         try {
             itemValue = (String) param.get(itemKey);
@@ -82,6 +83,7 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                 if (StringUtil.isEmpty(resultProcess.getRiskLevelFive())) {
                     // 警告	取不到风险五级分类	【批处理名称】：资产无风险五级分类
                     modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.");
+                    fiveRiskFlag = false;
                 } else if (StringUtil.isNotEmpty(resultProcess.getRiskLevelFive()) && riskList.contains(resultProcess.getRiskLevelFive())) {
                     finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
                     resultProcess.setFinStage(finStage);
@@ -220,9 +222,11 @@ public class AssetImpairmentStageJudgeModelProcessorService {
         itemKey = "P2_01_04";
         try {
             itemValue = (String) param.get(itemKey);
+            // 是否存在指标，且资产是否有风险五级分类
             if (StringUtil.isNotEmpty(itemValue)) {
                 List<String> riskList = Arrays.asList(itemValue.split(","));
-                if (StringUtil.isEmpty(resultProcess.getRiskLevelFive())) {
+                //
+                if (StringUtil.isEmpty(resultProcess.getRiskLevelFive()) && fiveRiskFlag) {
                     // 警告	取不到风险五级分类	【批处理名称】：资产无风险五级分类
                     modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.");
                 } else if (StringUtil.isNotEmpty(resultProcess.getRiskLevelFive()) && riskList.contains(resultProcess.getRiskLevelFive())) {

@@ -721,8 +721,8 @@
 				FP.FINPROD_NAME finprodAbbr,/*债券简称*/
 				SDL1.ITEM_VALUE ps,/*交易方向*/
 				SDL3.ITEM_VALUE tradeMarket,/*交易场所*/
-				SDL4.ITEM_VALUE settleSpreed,/*清算速度*/
-				EE.ENTRUST_AMT entrustAmt, /*指令金额*/
+				EEA.SETTLE_SPREED settleSpreed,/*清算速度*/
+				(CASE WHEN EEA.ASSET_TYPE = #{assetBond} THEN EE.ENTRUST_NUM*100 ELSE  NVL(EE.ENTRUST_AMT,EE.ENTRUST_NUM*100) END) entrustAmt, /*指令金额*/
 				SWBN1.OPINIONS jbyj,/*经办意见*/
 				TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') jbrq,/*经办审批日期*/
 				SWBN2.OPINIONS fhyj,/*复核意见*/

@@ -55,9 +55,7 @@ public class ImpairmentDataLoadReaderStep2Service {
         para.put("searchDate", platDate);
         para.put("process", ModelDictCodeList.模型_减值过程_数据加载.getValue());
         String lossType = CacheUtil.getSysParam(DictCode.减值方案类型.getValue());
-        if (DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)) {
-            para.put("ps", DictCodeList.交易方向_买入.getValue());
-        }
+        para.put("lossType", lossType);
         para.put("batchExedetailSeqNo", batchExecuteInfo.getBatchExedetailSeqNo());
         // 定义 变量.返回结果
         List<ImpairmentDataLoadStep2ReaderDto> resultList = new ArrayList<ImpairmentDataLoadStep2ReaderDto>();
@@ -122,7 +120,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级配置信息";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
 
                 continue;
             }
@@ -136,7 +134,7 @@ public class ImpairmentDataLoadReaderStep2Service {
             else{
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+item.getAssetId()+"】未能匹配到相应的评级结果";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getAssetId(), msg);
                 continue;
             }
 

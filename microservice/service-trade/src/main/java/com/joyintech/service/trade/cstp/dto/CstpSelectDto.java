@@ -434,4 +434,24 @@ public class CstpSelectDto extends InterfCstpTrade{
     }
 
     //add by chenjiaxing 质押式回购改造 end
+
+    private String quoteType;
+
+    public String getQuoteType() {
+        return quoteType;
+    }
+
+    public void setQuoteType(String quoteType) {
+        this.quoteType = quoteType;
+    }
+
+    private String assetTypeOne;
+
+    public String getAssetTypeOne() {
+        return assetTypeOne;
+    }
+
+    public void setAssetTypeOne(String assetTypeOne) {
+        this.assetTypeOne = assetTypeOne;
+    }
 }

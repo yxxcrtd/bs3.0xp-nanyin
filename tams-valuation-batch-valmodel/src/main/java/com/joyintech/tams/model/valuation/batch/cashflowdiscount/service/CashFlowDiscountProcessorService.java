@@ -189,6 +189,16 @@ public class CashFlowDiscountProcessorService {
             BigDecimal accruedInterest = calAccruedInterest(entity, happenDate);
             //计算全价
             DisCountInputParameter disCountInputParameter = calDiscountFullPrice(entity, happenDate, modRiskPremium.getSpreadAdj(), calCurveInfo.get(curveCode));
+
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：估值日现金流信息列表：");
+            disCountInputParameter.getCashInfoDtoList().forEach(x->{
+                modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "起息日："+x.getTheoryStartDate()+"；期限："+x.getRemainingTerm()+";收益率："+x.getSpR());
+            });
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：估值日收益曲线数据列表：");
+            disCountInputParameter.getCurveInfoDto().getKeyPointDtoList().forEach(x->{
+                modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), x.getKeyPoint()+"-"+x.getYield());
+            });
+
             String resultSeqNo = IDGenerator.generate();
             modCurveResult.setSeqno(resultSeqNo);
             modCurveResult.setFinprodId(finprodId);

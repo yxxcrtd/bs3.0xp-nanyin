@@ -424,6 +424,10 @@
             $("#avaFundsDateDiv").show();
             $("#vpayDateDiv").show();
             $("#mpayDateDiv").show();
+            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
+            $(".div_position").show();
+            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
+
             calcAvaFundsDate();
             if (!isInit) {
                 $("#fTradeId").val("").trigger("change");
@@ -453,6 +457,9 @@
             $("#avaFundsDateDiv").hide();
             $("#vpayDateDiv").hide();
             $("#mpayDateDiv").hide();
+            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
+            $(".div_position").hide();
+            //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
             //交易日历默认为银行间
             if (pageModel==PAGE_MODEL_NEW) {
             	$("#calendarId").val('03').trigger("change");
@@ -1971,6 +1978,11 @@
      * 画面加载完成
      */
     $(function () {
+        //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  start
+        if(parentPageId=='TrdRepoTradeIb001'){ //从银行间质押式回购交易菜单跳过去的时候
+            $("#tradeMarket").textSelect('setValue', TRADE_PLACE_01);
+        }
+        //add by meifaxin 2021-9-25 银行间业务交易删除首期交收日、到期交收日、资产可用持仓  end
     	// 是否显示划款指令
         if(GEN_PAY_ORDERS_AUTO=='01'){
         	$('#bussTrdTransferOrder_div').hide() ;
