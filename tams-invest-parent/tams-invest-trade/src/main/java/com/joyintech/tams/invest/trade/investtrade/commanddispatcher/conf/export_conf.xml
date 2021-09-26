@@ -20,8 +20,10 @@
             <Cell order="14" name="完成额度">finishAmt</Cell>
             <Cell order="15" name="币种">otherCcy</Cell>
             <Cell order="16" name="指令下达日期">entrustDateStr</Cell>
-            <Cell order="17" name="指令开始日期">vdateStr</Cell>
-            <Cell order="18" name="指令结束日期">mdateStr</Cell>
+            <!-- mody by meifaxin  2021-9-26 start -->
+            <Cell order="17" name="指令开始日">vdateStr</Cell>
+            <Cell order="18" name="指令终止日">mdateStr</Cell>
+            <!-- mody by meifaxin  2021-9-26 end -->
             <Cell order="19" name="备注">remark</Cell>
         </Row>
     </Worksheet>

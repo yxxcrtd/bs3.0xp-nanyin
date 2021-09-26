@@ -29,6 +29,7 @@
                 obj.tradeAmt=item.fpriceAmt;
                 obj.prinAmt = item.fpriceAmt;
                 obj.fpriceAmt = item.fpriceAmt;
+                obj.rebackPrice = item.price;
                 dataList.push(obj);
                 if(obj.fpriceAmt){
                     fpriceAmtTotal = Number(fpriceAmtTotal) + Number(obj.fpriceAmt);

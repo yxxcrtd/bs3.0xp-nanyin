@@ -408,7 +408,7 @@ public class ValuationMethodScheme004Controller extends BaseController {
 			}
 			param.put("dict_code_parent", DictCode.证券品种.getValue());
 			param.put("dict_code_child", DictCode.估值市价.getValue());
-			param.put("item_code_parent", param.get("secType"));
+			param.put("item_code_parent", secType);
 			selectOptionDtoList = valuationMethodScheme004Service.getLinkSelectOption(param);
 		}
 		return selectOptionDtoList;

@@ -682,6 +682,9 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 					}
 				}
 			}
+			zipOut.flush();
+			zipOut.close();
+			fos.close();
 			HttpHeaders headers = new HttpHeaders();
 			fileName = new String(fileName.getBytes("UTF-8"), "iso-8859-1");// 为了解决中文名称乱码问题
 			headers.setContentDispositionFormData("attachment", fileName);
@@ -694,30 +697,23 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		catch (Exception e) {
 			logger.info(fileName + "zip生成失败！");
 			logger.error(e.getMessage(),e);
+			return null;
 		}finally {
 			try {
+				if (input != null){
+					input.close();
+				}
 				if (zipOut != null){
-					zipOut.flush();
 					zipOut.close();
 				}
 				if (fos != null){
 					fos.close();
 				}
-				if (input != null){
-					input.close();
-				}
 				} catch (IOException e) {
 					logger.error(e.getMessage(),e);
 				}
-			if (input != null){
-				try {
-					input.close();
-				} catch (IOException e) {
-					logger.error(e.getMessage(),e);
-				}
-			}
 		}
-		return null;
+//		return null;
 	}
 	    
 	    /**

@@ -104,6 +104,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustId(cfetsBondDealDialogueQuote.getEntrustId());
                         cfetsBondDealDialogueQuoteDoneDto.setAvaNum(cfetsBondDealDialogueQuote.getAvaNum());
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustAvaNum(cfetsBondDealDialogueQuote.getEntrustNum());
+                        cfetsBondDealDialogueQuoteDoneDto.setWorkflowId(cfetsBondDealDialogueQuoteDto.getWorkflowId());
                         指令额度判断(cfetsBondDealDialogueQuoteDoneDto,isDzh,"new",validList);
                         if(!StringUtil.isEmptyList(validList)){
                             return validList;
@@ -197,6 +198,7 @@ public class CfetsBondDealDialogueQuoteDtoValidator implements BeanValidator {
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustId(cfetsBondDealDialogueQuote.getEntrustId());
                         cfetsBondDealDialogueQuoteDoneDto.setAvaNum(cfetsBondDealDialogueQuote.getAvaNum());
                         cfetsBondDealDialogueQuoteDoneDto.setEntrustAmt(cfetsBondDealDialogueQuote.getEntrustAmt());
+                        cfetsBondDealDialogueQuoteDoneDto.setWorkflowId(cfetsBondDealDialogueQuoteDto.getWorkflowId());
                         指令额度判断(cfetsBondDealDialogueQuoteDoneDto,isDzh,"done",validList);
                         if(!StringUtil.isEmptyList(validList)){
                             return validList;

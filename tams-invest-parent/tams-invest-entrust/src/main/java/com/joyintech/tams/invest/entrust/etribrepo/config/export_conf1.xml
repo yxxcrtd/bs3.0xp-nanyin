@@ -17,7 +17,7 @@
             <Cell order="13" name="指令开始日">vdateStr</Cell>
             <Cell order="14" name="指令终止日">mdateStr</Cell>
             <Cell order="15" name="已完成额度（万元）">finishAmt</Cell>
-            <Cell order="16" name="交易完成度">transactioncom</Cell>
+            <Cell order="16" name="交易完成度%">transactioncom</Cell>
             <Cell order="17" name="备注">remark</Cell>
         </Row>
     </Worksheet>
