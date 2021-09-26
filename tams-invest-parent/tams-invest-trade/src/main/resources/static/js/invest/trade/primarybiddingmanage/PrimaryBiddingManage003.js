@@ -198,6 +198,7 @@
                             retPrice[row].bidPrinAmt = JoyinMath.doDiv(retPrice[row].bidPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
                             retPrice[row].theWinPrinAmt = JoyinMath.doDiv(retPrice[row].theWinPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
                             retPrice[row].winPrinAmt = JoyinMath.doDiv(retPrice[row].winPrinAmt,entrustAmtUnit == '02'? 10000:1,4,JoyinMath.ROUND_HALF_UP);
+                            retPrice[row].isFrozenPosition = "N";
                             //配置单位 add by yeming 20210723 end
                             table.addRow(retPrice[row]);
                         }
