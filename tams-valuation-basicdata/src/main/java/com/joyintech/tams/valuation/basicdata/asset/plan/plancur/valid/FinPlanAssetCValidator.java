@@ -173,13 +173,13 @@ public class FinPlanAssetCValidator implements BeanValidator {
                     }
                     if (StringUtil.equals("02",dto.getBussFinIntPayDto().getPayCycle())){
                         if (StringUtil.isEmpty(dto.getBussFinIntPayDto().getDayValue())){
-                            errorList.add(new ValidMessage("请输入分红日。"));
+                            errorList.add(new ValidMessage("bussFinIntPayDto.dayValue",getMessage("请输入分红日。")));
                         }
                         if (StringUtil.isEmpty(dto.getBussFinIntPayDto().getEndTdayRule())){
-                            errorList.add(new ValidMessage("请输入营业日准则。"));
+                            errorList.add(new ValidMessage("bussFinIntPayDto.endTdayRule",getMessage("请输入营业日准则。")));
                         }
                         if (StringUtil.isEmpty(dto.getBussFinIntPayDto().getIsCompoundInt())){
-                            errorList.add(new ValidMessage("请输入是否按日复利。"));
+                            errorList.add(new ValidMessage("bussFinIntPayDto.isCompoundInt",getMessage("请输入是否按日复利。")));
                         }
                     }
                 }
