@@ -1,6 +1,6 @@
 -- 菜单管理功能
 DELETE FROM SYS_MENU WHERE MENU_ID = 'SYSTEM_001_001_006';
-INSERT INTO SYS_MENU VALUES ('SYSTEM_001_001_006', 'SYS', 'jyicon-menu-config', 'SYSTEM_001_001', 'SysMenu001', 6, '02', '菜单管理', 'system', null, sysdate, 'system', sysdate);
+INSERT INTO SYS_MENU VALUES ('SYSTEM_001_001_006', 'SYS', null, 'SYSTEM_001_001', 'SysMenu001', 6, '02', '菜单管理', 'system', null, sysdate, 'system', sysdate);
 
 DELETE FROM SYS_PAGE WHERE PAGE_ID = 'SysMenu001';
 INSERT INTO SYS_PAGE VALUES ('SysMenu001', 'SYS', '/system/menu/SysMenu001', 'system/menu/SysMenu001', 'SYSTEM_001_001_006', null, null, '02', '02', '菜单列表', 'system','',sysdate, 'system',sysdate);
