@@ -63,6 +63,10 @@ public class ValDlTarget extends BaseEntity {
      * 利率类型
      */
     private String rateType;
+    /**
+     * 资产发行方
+     */
+    private String prinAgent;
 
     /**
      * 拆借利率
@@ -414,7 +418,7 @@ public class ValDlTarget extends BaseEntity {
     public void setCapiProfFeature(String capiProfFeature) {
         this.capiProfFeature = capiProfFeature == null ? null : capiProfFeature.trim();
     }
-    
+
     private String belongInstitutionCode;
 
     public String getBelongInstitutionCode() {
@@ -424,5 +428,12 @@ public class ValDlTarget extends BaseEntity {
     public void setBelongInstitutionCode(String belongInstitutionCode) {
         this.belongInstitutionCode = belongInstitutionCode;
     }
-    
+
+    public String getPrinAgent() {
+        return prinAgent;
+    }
+
+    public void setPrinAgent(String prinAgent) {
+        this.prinAgent = prinAgent;
+    }
 }

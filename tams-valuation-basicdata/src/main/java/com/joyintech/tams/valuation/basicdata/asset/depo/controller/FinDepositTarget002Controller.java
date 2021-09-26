@@ -237,6 +237,7 @@ public class FinDepositTarget002Controller extends BaseController {
         // 系统页面表IS_NEED_WORKFLOW 是否走流程，01-是，02-否
         //封装标的类金融产品基础组件需要的DTO
         //dto = finDepositTargetService.encapBaseFinProductBaseInfoList(dto);
+        dto.setIssuer(dto.getOrgClass());
         String msg = finDepositTargetService.start(parameter, dto);
         return new AjaxResult(msg);
     }

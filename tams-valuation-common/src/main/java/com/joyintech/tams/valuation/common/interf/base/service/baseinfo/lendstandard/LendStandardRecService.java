@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * 拆借标的 ValDlTarget
- * 
+ *
  * @author HuangJian
  * @version 1.0 2018年7月23日
  * @see LendStandardRecService
@@ -50,13 +50,13 @@ public class LendStandardRecService {
      */
     @Autowired
     private TemplateAnalysisForXMLService templateAnalysisForXMLService;
-    
+
     @Autowired
     private InterfCommonService interfCommonService;
 
     /**
      * LendStandardCommonResult
-     * 
+     *
      * @param templateSourceFlgDTO TemplateSourceFlgDTO
      * @param acctEntity TemplateOrderInfoReaderResult
      * @return LendStandardCommonResult
@@ -71,7 +71,7 @@ public class LendStandardRecService {
         TemplateCheckReturnResult returnResult = new TemplateCheckReturnResult();
         // 1、文件读取解析
         returnResult = templateAnalysisForXMLService.execute(acctEntity);
-        
+
         // 2、进行数据有效性的check,并生出进入日志表的数据结构
         listValDlTarget = returnResult.getT(ValDlTarget.class);
 
@@ -85,7 +85,7 @@ public class LendStandardRecService {
                 (List<FinTradeProduct>)map.get("valTradeFinProduct"));
             //金融产品分类list
             result.setListValFinProductType((List<FinProductType>)map.get("valFinProductType"));
-            
+
             /**add by wujie on 20180823 start**/
             // 现金流信息List
             List<FinCashInfo> listValCashInfo = (List<FinCashInfo>)map.get("ValCashInfo");
@@ -109,7 +109,7 @@ public class LendStandardRecService {
             //add by sunshuaishuai on 20210322 end
 
             /**add by wujie on 20180823 end**/
-            
+
         }
 
         // 添加日志
@@ -120,7 +120,7 @@ public class LendStandardRecService {
 
     /**
      * 更具有效数据，进行数据的编辑，并生成进入业务表的数据结构
-     * 
+     *
      * @param listValDlTarget List<ValDlTarget>
      * @return Map<String,Object>
      * @see
@@ -132,7 +132,7 @@ public class LendStandardRecService {
         List<FinTradeProduct> listValTradeFinProduct = new ArrayList<FinTradeProduct>();
         List<FinProduct> listValFinProduct = new ArrayList<FinProduct>();
         List<FinProductType> listValFinProductType = new ArrayList<FinProductType>();
-        
+
         /**add by wujie on 20180823 start**/
         List<FinCashInfo> listValCashInfo = new ArrayList<FinCashInfo>();
         List<FinCashCalcRule> listValCashCalcRule = new ArrayList<FinCashCalcRule>();
@@ -170,7 +170,7 @@ public class LendStandardRecService {
             //金融产品分类
             FinProductType valFinProductType = this.getValFinProductType(item);
             listValFinProductType.add(valFinProductType);
-            
+
             /**add by wujie on 20180823 start**/
             // 现金流信息-收息
             FinCashInfo valCashInfo = getValCashInfo(item,DictCodeList.交易方向_收息.getValue());
@@ -179,11 +179,11 @@ public class LendStandardRecService {
             // 现金流计算规则-收息计算规则
             FinCashCalcRule valCashCalcRule = getValCashCalcRule(item,valCashInfo);
             listValCashCalcRule.add(valCashCalcRule);
-            
+
             // 现金流信息-本金
             valCashInfo = getValCashInfo(item,DictCodeList.交易方向_还本.getValue());
             listValCashInfo.add(valCashInfo);
-            
+
             /**add by wujie on 20180823 end**/
 
             //modify by sunshuaishuai on 20210322 增加标的类金融产品扩展表 增加现金流利率信息list start
@@ -217,7 +217,7 @@ public class LendStandardRecService {
 
     /**
      * 交易类金融产品 T1
-     * 
+     *
      * @param dto ValDlTarget
      * @return ValTradeFinProduct
      * @see
@@ -271,7 +271,7 @@ public class LendStandardRecService {
         //收益类型 = 数据字典：收益类型.预期收益
         result.setProfitType(DictCodeList.收益类型_收益型.getValue());
         /**add by wujie on 20190115 end**/
-        
+
         return result;
 
     }
@@ -299,6 +299,8 @@ public class LendStandardRecService {
         finProduct.setProfitType(DictCodeList.收益类型_收益型.getValue());
         //市场代码 = A.拆借标的代码
         finProduct.setFinprodMarketId(dto.getDlId());
+        //存/借款机构
+        finProduct.setIssuer(dto.getPrinAgent());
         //币种 = A.币种
         finProduct.setCcy(dto.getCcy());
         //起息日  = A.起息日
@@ -322,7 +324,7 @@ public class LendStandardRecService {
 
     /**
      * 接收 金融产品分类表 T2
-     * 
+     *
      * @param dto ValDlTarget
      * @return ValFinProductType
      * @see
@@ -343,9 +345,13 @@ public class LendStandardRecService {
         fdto.setFinprodType(dto.getBusiType());
         //资产类型
         fdto.setAssetType(dto.getAssetClass());
+        //3.0特殊处理
+        fdto.setAccountingClass(dto.getValClas());
+        result.setType2(dto.getValClas());
+
         //机构核算分类
-        fdto.setOrgClass(dto.getValClas());
-        result.setType2(interfCommonService.getFinanceProductClass(fdto));
+//        fdto.setOrgClass(dto.getValClas());
+//        result.setType2(interfCommonService.getFinanceProductClass(fdto));
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
         // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
@@ -358,7 +364,7 @@ public class LendStandardRecService {
 
     /**
      * T3 现金流信息
-     * 
+     *
      * @param dto 01-基础信息
      * @return 现金流信息
      * @see
@@ -391,10 +397,10 @@ public class LendStandardRecService {
         valCashInfo.setBranch(InterfCommonConstant.分支序号_默认);
         return valCashInfo;
     }
-    
+
     /**
      * 现金流计算规则
-     * 
+     *
      * @param dto 01-基础信息
      * @return 现金流计算规则
      * @see

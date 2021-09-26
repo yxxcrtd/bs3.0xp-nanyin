@@ -636,8 +636,22 @@
             var riskdata = getRiskdata();
             object.mdate = object.tradeDate;
             var riskInterfUrl = basePath + "riskrds/interf/doInfData/1/RSK002/F07";
+
+            var param = {};
+            param.prinAmt = object.dealAmt;
+            param.portfolioId = object.portfolioId;
+            param.mdate = object.mSettleDate;
+            param.tradeDate = object.tradeDate;
+            param.ps = object.ps;
+            param.shareAmt = object.dealAmt;
+            param.tradeMarket = '01';
+            param.counterId = object.counterId;
+            param.rebackPrice = object.price;
+            param.termTypeReback = object.termType;
+            param.entrustId = object.entrustId;
+
             if (riskdata && riskInterfUrl) {
-                window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallbackPr002);
+                window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, param, riskdata, riskMathRedisCallbackPr002);
             }
         }
     }

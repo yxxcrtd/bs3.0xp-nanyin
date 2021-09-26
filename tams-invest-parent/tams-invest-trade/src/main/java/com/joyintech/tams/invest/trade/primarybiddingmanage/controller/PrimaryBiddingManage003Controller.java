@@ -144,6 +144,9 @@ public class PrimaryBiddingManage003Controller extends BaseController {
              if(dto.getWinPrinAmt() != null) {
                  dto.setWinPrinAmt(dto.getWinPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成万元
              }
+             if(StringUtil.isEmpty(dto.getIsFrozenPosition())){
+                 dto.setIsFrozenPosition("N");
+             }
          }
          //配置单位 edit by yeming 20210805 end
          if (entity.getTrdInvestPersonInfo() != null) {

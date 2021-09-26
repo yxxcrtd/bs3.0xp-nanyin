@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='GMZDDDZZQHJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GMZDDDZZQHJJ','产品所投资资产单只证券或单只公募证券投资基金规模','N','','ysfu','C001',sysdate,'ysfu',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('GMZDDDZZQHJJ','产品所投资资产单只证券或单只公募证券投资基金规模','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='GMZDDDZZQHJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','ysfu','C001',sysdate,'ysfu',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('GMZDDDZZQHJJ','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -66,7 +66,7 @@ V_CONTENT_04 CLOB := 'select nvl(sum(nvl(RVALUE, 0)),0) as RVALUE,s1.FINPROD_ID 
  (
  select m.FINPROD_ID ,n.FINPROD_NAME,NVL(SUM(NVL(m.MARKET_VALUE,0)+nvl(m.TDY_INTINCEXP, 0)),0) as RVALUE from PTL_SEC_PIERCE_VALUTION m
   INNER  JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 IN (''F01'',''F06'')
-  inner join FIN_PRODUCT_TYPE t3 on n.finprod_id = t3.finprod_id 
+  inner join FIN_PRODUCT_TYPE t3 on n.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
   where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}'' -1 group by m.FINPROD_ID,n.FINPROD_NAME
 union all
@@ -138,7 +138,7 @@ union ALL
   -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
-  +nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T22'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T23'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -148,10 +148,10 @@ union ALL
   -nvl(sum(decode(n.PS,''T49'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT
     from  TRD_PRODUCT_DEAL n
    INNER  JOIN FIN_PRODUCT m on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 IN (''F01'',''F06'')
-   inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id 
+   inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id
    --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
       LEFT JOIN TRD_PRODUCT_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
-    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}'' 
+    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''
     and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
     group by n.FINPROD_ID,m.FINPROD_NAME
 union ALL
@@ -161,7 +161,7 @@ union ALL
   -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
-  +nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T22'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T23'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -171,10 +171,10 @@ union ALL
   -nvl(sum(decode(n.PS,''T49'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0) as  TRADE_AMT
     from  TRD_PRODUCT_TEMP_DEAL n
    INNER  JOIN FIN_PRODUCT m on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 IN (''F01'',''F06'')
-   inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id 
+   inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id
    --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
       LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
-    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}'' 
+    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''
     and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
     group by n.FINPROD_ID,m.FINPROD_NAME
 
@@ -185,7 +185,7 @@ union ALL
   -nvl(sum(decode(n.PS,''T03'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T04'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   +nvl(sum(decode(n.PS,''T52'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
-  +nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
+  -nvl(sum(decode(n.PS,''T11'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T19'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T22'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
   -nvl(sum(decode(n.PS,''T23'',decode(TRADE_STATUS,''03'',n.TRADE_AMT*-1,n.TRADE_AMT))),0)
@@ -197,9 +197,9 @@ union ALL
   inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
   INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
   INNER  JOIN FIN_PRODUCT s on n.FINPROD_ID=s.FINPROD_ID and s.FINPROD_TYPE2 IN (''F01'',''F06'')
-  inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id 
+  inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
-  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' 
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}''
   and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
   group by n.FINPROD_ID,s.FINPROD_NAME
 union ALL
@@ -209,7 +209,7 @@ union ALL
   inner join WFL_TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.TRADE_STATUS != ''03''
   INNER JOIN SYS_WFL_BUSINESS_LIST swbl on n.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
   INNER  JOIN FIN_PRODUCT s on n.FINPROD_ID=s.FINPROD_ID and s.FINPROD_TYPE2 IN (''F01'',''F06'')
-  inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id 
+  inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
   where n.counter_id in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS =''T02''
   AND EXISTS (SELECT 1 FROM SYS_PARA WHERE PARA_CODE = ''is_auto_generate_negate_deal'' AND PARAM_VALUE = ''Y'')

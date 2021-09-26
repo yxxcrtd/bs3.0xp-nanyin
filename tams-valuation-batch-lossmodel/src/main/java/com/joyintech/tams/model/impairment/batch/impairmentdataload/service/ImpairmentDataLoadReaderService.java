@@ -165,7 +165,7 @@ public class ImpairmentDataLoadReaderService {
             else{
                 // 警告：资产无对应资产评级配置
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级配置信息";
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
 
                 listErrorDto.add(entity);
                 continue;
@@ -182,8 +182,10 @@ public class ImpairmentDataLoadReaderService {
                 // 警告：资产无对应评级信息
                 String msg = "【资产减值过程加载批处理】：资产【"+entity.getFinprodId()+"】未能匹配到相应的评级结果信息";
                 modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getFinprodId(), msg);
-
-                listErrorDto.add(entity);
+                if (DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)) {
+                    // 取系统兜底评级
+                    entity.setResultCurrent(rateInfoCommonService.getBottomRateInfo(entity.getSecTypeModel(), entity.getSecDetailTypeModel()));
+                }
             }
         }
         if(CollectionUtils.isNotEmpty(listErrorDto)){

@@ -108,8 +108,10 @@ $(function () {
             $('#transferInformation').show();
             if (ps == ps_T52) {
                 $('#settleSpreed1_div').hide();
+                $('#trdFundFTradeId').hide();
             } else {
                 $('#settleSpreed1_div').show();
+                $('#trdFundFTradeId').show();
             }
             $('#settleSpreed2_div').show();
             $('#confirmDate').hide();
@@ -152,6 +154,9 @@ $(function () {
             $('#tradeAmt_div').hide();
             $('#shareAmt').attr("disabled", false);
             $(".channelAmt_class").hide();
+            if (ps == ps_T06) {
+                $('#trdFundFTradeId').show();
+            }
             if (!initFlag) {
                 $('#tradeAmt').val("");
                 $("#channelAmt").val("");
@@ -195,6 +200,7 @@ $(function () {
             $('#transferInformation').show();
             $('#settleSpreed1_div').hide();
             $('#settleSpreed2_div').hide();
+            $('#trdFundFTradeId').hide();
             $('#confirmDate').show();
             $('#trdDate').hide();
             if ($('#type6').val() == type_01) {
@@ -243,6 +249,7 @@ $(function () {
             $('#transferInformation').show();
             $('#settleSpreed1_div').hide();
             $('#settleSpreed2_div').hide();
+            $('#trdFundFTradeId').hide();
             $('#confirmDate').show();
             $('#trdDate').hide();
             if ($('#type6').val() == type_01) {

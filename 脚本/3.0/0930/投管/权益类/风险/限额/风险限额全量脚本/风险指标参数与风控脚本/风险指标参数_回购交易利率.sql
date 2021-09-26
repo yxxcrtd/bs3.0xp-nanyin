@@ -62,6 +62,7 @@ and A.TRADE_STATUS=''01''
 and substr(A.TRADE_ID,length(A.TRADE_ID),length(A.TRADE_ID)-1)!=''R''
 inner join FIN_TRADE_PRODUCT B
 on A.FINPROD_ID = B.FINPROD_ID
+INNER JOIN SYS_WFL_BUSINESS_LIST swbl on A.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
 where A.FINPROD_TYPE2 in (''F02'',''F03'')
 AND A.PS IN (''T01'',''T02'')
 and C.PORTFOLIO_ID IN ${portfolioCode}

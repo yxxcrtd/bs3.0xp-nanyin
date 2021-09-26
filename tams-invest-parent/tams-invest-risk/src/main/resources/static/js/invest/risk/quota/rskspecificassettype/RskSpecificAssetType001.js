@@ -104,11 +104,13 @@ $(function() {
         $('#RskSpecificAssetType001_btn_export').click(function() {
             exportExcel();
         });
+        <!--mody by   meifaxin  2021-9-26 弹出框高度不够，导致审批人弹框无法看到确定按钮 start-->
         $('#RskSpecificAssetType001_btn_add').click(function() {
             Joyin.dialog(JoyinUtil.getLabel("RskSpecificAssetType001"),
                 basePath + "invest/risk/quota/rskspecificassettype/RskSpecificAssetType002/init",
-                "98%", "68%", {pageModel:PAGE_MODEL_NEW});
+                "85%", "85%", {pageModel:PAGE_MODEL_NEW});
         });
+        <!--mody by   meifaxin  2021-9-26 弹出框高度不够，导致审批人弹框无法看到确定按钮 end-->
         $('#RskSpecificAssetType001_btn_delete').click(function() {
             if(table!=null && table!=''){
                 var selArr = table.getAllCheckedRows();

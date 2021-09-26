@@ -156,6 +156,7 @@ public class CashFlowDiscountProcessorService {
                 if (null == modRiskPremium2) {
                     isAssetPrice = true;
                     assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
+                    assetPriceBaseDate = modAssetInfoDto.getVdate();
                 } else {
                     BeanUtil.copyPropertiesIgnoreNull(modRiskPremium, modRiskPremium2);
                 }
@@ -223,6 +224,9 @@ public class CashFlowDiscountProcessorService {
             result.setModCurveResult(modCurveResult);
             result.setModCurveResultDetails(modCurveResultDetails);
             result.setModRiskPremium(modRiskPremium);
+
+            modLogsService.info((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entity.getModAssetInfoDto().getFinprodId(), "【现金流贴现模型批处理】：全价："+disCountInputParameter.getFullprice()+"，净价："+ArithmeticUtil.subtract(modCurveResult.getFullPrice(), accruedInterest)+"，点差："+modRiskPremium.getSpread());
+
 
             if(modAssetInfoDto.getSecType().equals(DictCodeListExt1.证券品种_债券.getValue())){
 				MstBondValuationInfo mstBondValuationInfo = new MstBondValuationInfo();
@@ -439,14 +443,17 @@ public class CashFlowDiscountProcessorService {
         disCountInputParameter.setCalDate(DateUtil.dateToLocal(calDate));
         if (!StringUtil.isEmptyList(entity.getModCashFlows())) {
             List<CashInfoDto> cashInfoDtoList = new ArrayList<>();
+            //设置未来现金流
             entity.getModCashFlows().stream().forEach(item -> {
-                CashInfoDto cashInfoDto = new CashInfoDto();
-                BeanUtil.copyPropertiesIgnoreNull(cashInfoDto, item);
-                cashInfoDto.setActualCutoffDate(DateUtil.dateToLocal(item.getMdate()));
-                cashInfoDto.setActualStartDate(DateUtil.dateToLocal(item.getVdate()));
-                cashInfoDto.setTheoryCutoffDate(DateUtil.dateToLocal(item.getMdateUnadjust()));
-                cashInfoDto.setTheoryStartDate(DateUtil.dateToLocal(item.getVdateUnadjust()));
-                cashInfoDtoList.add(cashInfoDto);
+                if(item.getMdate().compareTo(calDate)>0){
+                    CashInfoDto cashInfoDto = new CashInfoDto();
+                    BeanUtil.copyPropertiesIgnoreNull(cashInfoDto, item);
+                    cashInfoDto.setActualCutoffDate(DateUtil.dateToLocal(item.getMdate()));
+                    cashInfoDto.setActualStartDate(DateUtil.dateToLocal(item.getVdate()));
+                    cashInfoDto.setTheoryCutoffDate(DateUtil.dateToLocal(item.getMdateUnadjust()));
+                    cashInfoDto.setTheoryStartDate(DateUtil.dateToLocal(item.getVdateUnadjust()));
+                    cashInfoDtoList.add(cashInfoDto);
+                }
             });
             disCountInputParameter.setCashInfoDtoList(cashInfoDtoList);
         }
