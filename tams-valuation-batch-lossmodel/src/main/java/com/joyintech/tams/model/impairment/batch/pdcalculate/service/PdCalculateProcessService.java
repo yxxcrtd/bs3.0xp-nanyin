@@ -265,13 +265,13 @@ public class PdCalculateProcessService {
                         factorConfigDto.setConfigType(modPdFactorConfigDto.getConfigType());
                         pdConfigList.add(factorConfigDto);
 
-                    }else{
+                    }
+                    else{
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
                         logMsg ="【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度前瞻因子未维护";
                         modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
                          //=====记录计算错误日志=====end=====
-                        return resultDto;
                     }
                 }
                 // PD配置最终结果存入Map
