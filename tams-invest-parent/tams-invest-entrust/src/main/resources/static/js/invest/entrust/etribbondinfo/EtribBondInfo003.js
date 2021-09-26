@@ -786,7 +786,7 @@
             objects.push(temp);
         }
         if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
-            JoyinUtil.showMessage("多组合劵面总额不等！" + tradeAmt + ":" + parseFloat(object.tradeAmt), "error")
+            JoyinUtil.showMessage("各组合分配的券面总额汇总不等于总的券面总额!", "error")
             return null;
         }
         param = JSON.parse(JSON.stringify(object));
