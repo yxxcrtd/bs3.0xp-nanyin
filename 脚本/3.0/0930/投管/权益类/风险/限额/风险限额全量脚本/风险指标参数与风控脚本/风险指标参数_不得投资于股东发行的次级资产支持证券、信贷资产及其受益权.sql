@@ -8,18 +8,18 @@ INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('BDTZCJZDZXDJQSYQ','不得投资于�
   UNION all
   SELECT ''03'' ID ,''信贷资产及其收受益权'' TEXT FROM DUAL
   UNION all
-  SELECT ''04'' ID ,''非信贷资产及其收受益权'' TEXT FROM DUAL','ysfusp','C001',sysdate,'ysfusp',sysdate,'','','N','String', '','REDIS', '');
+  SELECT ''04'' ID ,''非信贷资产及其收受益权'' TEXT FROM DUAL','cdj','C001',sysdate,'cdj',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='BDTZCJZDZXDJQSYQ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','ysfusp','C001',sysdate,'ysfusp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('BDTZCJZDZXDJQSYQ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -28,7 +28,7 @@ FROM FIN_PRODUCT m
 INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
 INNER JOIN FIN_PRODUCT_ADD  s ON m.FINPROD_ID = s.FINPROD_ID
 INNER JOIN MST_CUSTOMER_INFO_ADD A ON A.CUSTOMER_ID = m.Issuer
-WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --1.特定资产类型设置中是否信贷资产为是的债券和项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -37,7 +37,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   INNER JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID
-  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --2.没有进行特定资产设置或是否信贷资产为否  且 type_7为1204和1205的项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -45,7 +45,7 @@ UNION ALL
   INNER JOIN MST_CUSTOMER_INFO_ADD A ON  A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18''
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
   SELECT m.FINPROD_ID  RKEY, ''04||非信贷资产及其收受益权'' RVALUE
   FROM FIN_PRODUCT m
@@ -53,7 +53,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''';
+  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')';
 
 ----事后(日间)
 V_CONTENT_04 CLOB := 'WITH ASSET AS (
@@ -62,7 +62,7 @@ FROM FIN_PRODUCT m
 INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
 INNER JOIN FIN_PRODUCT_ADD  s ON m.FINPROD_ID = s.FINPROD_ID
 INNER JOIN MST_CUSTOMER_INFO_ADD A ON A.CUSTOMER_ID = m.Issuer
-WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --1.特定资产类型设置中是否信贷资产为是的债券和项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -71,7 +71,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   INNER JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID
-  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --2.没有进行特定资产设置或是否信贷资产为否  且 type_7为1204和1205的项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -79,7 +79,7 @@ UNION ALL
   INNER JOIN MST_CUSTOMER_INFO_ADD A ON  A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18''
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
   SELECT m.FINPROD_ID  RKEY, ''04||非信贷资产及其收受益权'' RVALUE
   FROM FIN_PRODUCT m
@@ -87,7 +87,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 )
 SELECT RKEY, RVALUE, RKEYCN FROM (
 SELECT SUM(NVL(SHARE_AMT,0)) SHARE_AMT, RKEY, RVALUE, FINPROD_NAME RKEYCN FROM (
@@ -256,7 +256,7 @@ FROM FIN_PRODUCT m
 INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
 INNER JOIN FIN_PRODUCT_ADD  s ON m.FINPROD_ID = s.FINPROD_ID
 INNER JOIN MST_CUSTOMER_INFO_ADD A ON A.CUSTOMER_ID = m.Issuer
-WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+WHERE n.TYPE_8 = ''F01'' AND TYPE_6 = ''B13'' AND TYPE_7 IN (''16'', ''17'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --1.特定资产类型设置中是否信贷资产为是的债券和项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -265,7 +265,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   INNER JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID
-  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where r.Is_Credit_Asset = ''Y''AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
 --2.没有进行特定资产设置或是否信贷资产为否  且 type_7为1204和1205的项目类资产
   SELECT m.FINPROD_ID  RKEY, ''03||信贷资产及其收受益权'' RVALUE
@@ -273,7 +273,7 @@ UNION ALL
   INNER JOIN MST_CUSTOMER_INFO_ADD A ON  A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18''
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where n.type_8 =''F06''AND n.type_7 in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 UNION ALL
   SELECT m.FINPROD_ID  RKEY, ''04||非信贷资产及其收受益权'' RVALUE
   FROM FIN_PRODUCT m
@@ -281,7 +281,7 @@ UNION ALL
     OR (A.CUSTOMER_ID = m.Financier and  m.finprod_type2 = ''F18'')
   INNER JOIN FIN_PRODUCT_TYPE n ON m.FINPROD_ID = n.FINPROD_ID AND n.BRANCH = 0
   LEFT JOIN RSK_SPECIFIC_ASSET_TYPE r ON n.FINPROD_ID = r.FINPROD_ID and r.Is_Credit_Asset=''N''
-  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = ''${insitituteCode}''
+  where n.type_8 =''F06''AND n.type_7 not in (''1204'',''1205'') AND A.INSITITUTE_CODE = (select i.insititute_code from sys_institution i where i.institution_type = ''01'')
 )
 SELECT RKEY, RVALUE, RKEYCN FROM (
 SELECT SUM(NVL(SHARE_AMT,0)) SHARE_AMT, RKEY, RVALUE, FINPROD_NAME RKEYCN FROM (
@@ -513,10 +513,10 @@ INSERT INTO RSK_EVENT VALUES ('EVENT_ID_BDTZCJZDZXDJQSYQ_07','不得投资于股
          
  
 DELETE FROM RSK_EVENT_ITEM_RULE WHERE EVENT_CODE = 'EVENT_ID_BDTZCJZDZXDJQSYQ_07';
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','assetType','54abe79ac5244414ac9fc8432de951e9','','F01,F17,F06','IN','','','','admin','C001',SYSDATE,'ysfu',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','eventType','54abe79ac5244414ac9fc8432de951e9','','0,1,2','IN','','','','admin','C001',SYSDATE,'ysfu',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','issuerCode','54abe79ac5244414ac9fc8432de951e9','','888888888','=','','','','admin','C001',SYSDATE,'ysfu',SYSDATE);
-INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','ps','54abe79ac5244414ac9fc8432de951e9','','T01,T04,T20,T46,T47,T48,T52','IN','','','','admin','C001',SYSDATE,'ysfu',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','assetType','a5a11e1ff85245b9a3151c629d1d71ef','','F01,F17,F06','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','eventType','a5a11e1ff85245b9a3151c629d1d71ef','','0,1,2','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','isShareHolder','a5a11e1ff85245b9a3151c629d1d71ef','','Y','=','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
+INSERT INTO RSK_EVENT_ITEM_RULE VALUES('EVENT_ID_BDTZCJZDZXDJQSYQ_07','ps','a5a11e1ff85245b9a3151c629d1d71ef','','T01,T04,T20,T46,T47,T48,T52','IN','','','','cdj','C001',SYSDATE,'cdjsp',SYSDATE);
 
 DELETE FROM RSK_EVENT_PARA_REL WHERE EVENT_CODE = 'EVENT_ID_BDTZCJZDZXDJQSYQ_07';
 INSERT INTO RSK_EVENT_PARA_REL VALUES('BDTZCJZDZXDJQSYQ','EVENT_ID_BDTZCJZDZXDJQSYQ_07','01','+','custom','','jjpei','99999',SYSDATE,'jjpei',SYSDATE,'0','');
