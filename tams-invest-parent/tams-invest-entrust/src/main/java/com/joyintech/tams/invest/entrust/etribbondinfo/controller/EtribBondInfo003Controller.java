@@ -108,6 +108,7 @@ public class EtribBondInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
         this.setSelectOptionToModel(model, DictCode.组合系列);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         Date sysDate = DateUtil.platDateFromCache();
         String workflowId = getParam(GlobalConstant.WORKFLOW_ID);
         EtribBondInfo003Dto entity = null;
@@ -145,7 +146,10 @@ public class EtribBondInfo003Controller extends BaseController {
         model.addAttribute("N", DictCodeList.是否_否.getValue());
         model.addAttribute("Y", DictCodeList.是否_是.getValue());
         model.addAttribute("CCY", DictCodeList.币种_人民币_CNY.getValue());
-        
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("MY_SUP_TIME_TYPE_02", DictCodeListExt1.监督时分_委托监控.getValue());
         model.addAttribute("fintype", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
@@ -253,8 +257,13 @@ public class EtribBondInfo003Controller extends BaseController {
                 messages.add(new ValidMessage("请输入组合代码(第"+(i+1)+"行)。"));
             if(!StringUtil.isNotEmpty(dtoList.get(i).getEntrustNum()))
                 messages.add(new ValidMessage("请输入券面总额(第"+(i+1)+"行)。"));
-			if(!StringUtil.isNotEmpty(dtoList.get(i).getInvAim()))
-				messages.add(new ValidMessage("请输入投资目的(第"+(i+1)+"行)。"));
+            if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
+                if(!StringUtil.isNotEmpty(dtoList.get(i).getBusinessModel()))
+                    messages.add(new ValidMessage("请输入业务模式(第"+(i+1)+"行)。"));
+            }else{
+                if(!StringUtil.isNotEmpty(dtoList.get(i).getInvAim()))
+                    messages.add(new ValidMessage("请输入投资目的(第"+(i+1)+"行)。"));
+            }
             if(!StringUtil.isNotEmpty(dtoList.get(i).getSecAcctId()))
                 messages.add(new ValidMessage("请输入证券账户(第"+(i+1)+"行)。"));
             if(chlId && StringUtil.isNotEmpty(dtoList.get(i).getSecAcctId()))

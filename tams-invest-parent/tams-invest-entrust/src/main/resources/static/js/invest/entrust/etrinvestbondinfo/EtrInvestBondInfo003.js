@@ -66,7 +66,9 @@
            }
         }
         ,{field:'invAim', width:100, title: 'EtrInvestBondInfo002.invAim', sortable: false, edit:true
-          	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} }
+          	 ,editOption:{type:'select',id:"invAim",formatoption:true,result:INV_AIM} , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false }
+        ,{field:'businessModel', width:100, title: '业务模式', sortable: false, edit:true
+            ,editOption:{type:'select',id:"businessModel",formatoption:true,result:BUSINESS_MODEL} , visible:SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false }
         ,{field:'entrustNum', width:100, title: function(){
                 //配置单位 edit by yeming 20210721 start
             if (entrustAmtUnit == "01 "){
@@ -99,7 +101,17 @@
         searchOnInit: true,
         checkbox:false,
         addclick: function(row) {
-        	row.invAim = $('#invAim').val();
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=='01'){
+                row.invAim = $('#invAim').val();
+            }else{
+                row.businessModel = $('#businessModel').val();
+                if($('#businessModel').val()=="Y1"){
+                    row.invAim = 'AC';
+                }else if($('#businessModel').val()=="Y2"){
+                    row.invAim  = 'FVTPL'
+                }
+            }
+
         },
         beforeEditCell:function (preVal, field, rowData){
             if(field=="secManageAcctId"){
@@ -319,37 +331,56 @@
         }
 	
         var isautobond = EtrInvestBondInfo002.getIsautobond();
-        if(objects.length>0){
-            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/check',objects,
-                    function(result) {
-               if(isautobond == true){
-                    Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
-                        Joyin.confirm(result.data,function() {
-                             WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
-                         });
-                    });
-               } else{
-                     Joyin.confirm(result.data,function() {
-                         WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
-                     });
-               }
+
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL==02){
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
+                if(resultSppi.data==2){
+                    Joyin.error("买入价格不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件）")
+                }else if(resultSppi.data==1){
+                    Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
+                }
+                else{
+                    finalSubmit(object,objects);
+                }
             });
         }else{
+            finalSubmit(object,objects);
+        }
+
+    }
+
+    var finalSubmit = function (object,objects) {
+        if(objects.length>0){
+            Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/check',objects,
+                function(result) {
+                    if(isautobond == true){
+                        Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
+                            Joyin.confirm(result.data,function() {
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
+                            });
+                        });
+                    } else{
+                        Joyin.confirm(result.data,function() {
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
+                        });
+                    }
+                });
+        }else{
             Joyin.ajaxJson(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/check',object,
-                    function(result) {
+                function(result) {
 
                     if(isautobond == true){
                         Joyin.alert("资产第一次接入系统，请确认并完善【债券标的】页面资产要素完整！",1,function () {
                             Joyin.confirm(result.data,function() {
-                                 WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
-                             });
+                                WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
+                            });
                         });
                     }else{
                         Joyin.confirm(result.data,function() {
-                             WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
-                         });
+                            WorkFlow.doSubmitList(basePath+'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo003/save',objects,"EtrInvestBondInfo003_btn_submit","EtrInvestBondInfo003");
+                        });
                     }
-             });
+                });
         }
     }
     /**
