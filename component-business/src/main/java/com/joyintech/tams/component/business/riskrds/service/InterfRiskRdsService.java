@@ -2145,6 +2145,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 			//添加期限品种 add by wz 20200509
             //infRiskRdsDto.setVarietyCode(StringUtil.equals(finDto.getTradeMarket(),DictCodeListExt1.交易场所_银行间.getValue())?"D"+(String) dataMap.get("termTypeReback"):(String) dataMap.get("termTypeReback"));
             infRiskRdsDto.setVarietyCode((String) dataMap.get("termTypeReback"));
+            if(StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())) {
+                MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                if (StringUtil.isNotEmpty(mstCounterParty)) {
+                    if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                    }
+                }
+            }
         }
         if(StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融出.getValue())){
