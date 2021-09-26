@@ -167,6 +167,12 @@
             <if test="publishDate != null" >
                 PUBLISH_DATE = #{publishDate,jdbcType=DATE},
             </if>
+            <if test="valueSource != null" >
+                VALUE_SOURCE = #{valueSource,jdbcType=VARCHAR},
+            </if>
+            <if test="fullValuation != null" >
+                FULL_VALUATION = #{fullValuation,jdbcType=DECIMAL},
+            </if>
             <if test="valuation != null" >
                 VALUATION = #{valuation,jdbcType=DECIMAL},
             </if>
