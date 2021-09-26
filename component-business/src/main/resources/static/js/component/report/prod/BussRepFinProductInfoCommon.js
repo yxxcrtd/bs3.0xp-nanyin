@@ -283,7 +283,13 @@
 			if(data.repRaiseAmtPlan){
 				 $("#bussFinProductSaleParamDto_raiseAmtPlan").val(data.repRaiseAmtPlan);	
 			}
-			// 募集金额改成元 yzg 20191126 end 
+			// 募集金额改成元 yzg 20191126 end
+			if (typeof pageModel !== 'undefined'
+            			&& (pageModel === PAGE_MODEL_EDIT || pageModel === PAGE_MODEL_NEW)) {
+            	 if(svrIsSubsidiary  && svrIsSubsidiary == '01'){
+                     $("#bussRepFinProductInfoDto_isFhxgcp").val('').trigger('change');
+                 }
+            }
 		})
 	}
 	//根据行内标识码获取申报登记信息
