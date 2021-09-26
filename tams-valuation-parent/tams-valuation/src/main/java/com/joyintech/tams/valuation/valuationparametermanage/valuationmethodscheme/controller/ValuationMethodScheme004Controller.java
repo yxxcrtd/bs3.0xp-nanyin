@@ -345,8 +345,8 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		String finprodType = param.get("finprodType").toString();
 		String finprodId = param.get("finprodId").toString();
 		String secType ="";
-		if(StringUtil.isNotEmpty(finprodType) && StringUtil.isNotEmpty(finprodId)){
-			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodType+"_"+finprodId);
+		if( StringUtil.isNotEmpty(finprodId)){
+			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodId);
 		}
 
 		if(StringUtil.isNotEmpty(secType)){

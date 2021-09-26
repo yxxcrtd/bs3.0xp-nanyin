@@ -157,19 +157,25 @@ $(function(){
 	    }else{
 	        $('a.btn-table-add').css('display','');
 	    }
-	    if(temp == COUNTER_TYPE_01){//资管产品类型
+	    if(temp == COUNTER_TYPE_01){//市场机构类型
             $(".branch").css("display","none");
             $(".managementProduct").css("display","none");
             $(".channelPlan").css("display","none");
             $(".counterparty").css("display","none");
             $(".marketInstitutions").show();
+            if (ISChongQing != null && ISChongQing == 'Y') {
+                $("#marketInstitutions_pType_div").hide();
+            }
             $("#counterType").val(temp).trigger("change");
-        }else if(temp == COUNTER_TYPE_02){//市场机构类型
+        }else if(temp == COUNTER_TYPE_02){//资管产品类型
             $(".branch").css("display","none");
             $(".marketInstitutions").css("display","none");
             $(".channelPlan").css("display","none");
             $(".counterparty").css("display","none");
             $(".managementProduct").show();
+            if (ISChongQing != null && ISChongQing == 'Y') {
+                $("#managementProduct_pType_div").hide();
+            }
             $("#counterType2").val(temp).trigger("change");
         }else if(temp == COUNTER_TYPE_04){//分行类型
             $(".managementProduct").css("display","none");

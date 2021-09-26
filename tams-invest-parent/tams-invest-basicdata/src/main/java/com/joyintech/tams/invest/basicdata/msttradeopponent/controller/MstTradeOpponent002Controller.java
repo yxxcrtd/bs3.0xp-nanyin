@@ -42,9 +42,7 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.listener.FileAttachmentProcess;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.select.SuggestDto;
-import com.joyintech.framework.util.IDGenerator;
-import com.joyintech.framework.util.RequestUtil;
-import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
 import com.joyintech.tams.component.business.core.service.BaseGetBusinessId;
@@ -177,6 +175,7 @@ public class MstTradeOpponent002Controller extends BaseController {
         model.addAttribute("C0300", DictCodeListExt2.客户二级类型_非金融企业.getValue());
         model.addAttribute("C06", DictCodeListExt2.客户一级类型_境外.getValue());
         model.addAttribute("C0600", DictCodeListExt2.客户二级类型_境外.getValue());
+        model.addAttribute("ISChongQing", CacheUtil.getSysParam("ISChongQing"));
         
         return super.init(model);
     }
