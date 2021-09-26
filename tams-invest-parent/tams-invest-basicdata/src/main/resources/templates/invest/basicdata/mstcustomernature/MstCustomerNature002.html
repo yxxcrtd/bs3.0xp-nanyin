@@ -34,13 +34,15 @@
        <div class="joyin-form-wrap joyin-filter-form condition-area">
         <form class="layui-form"  id="submitForm">
 				<div class="layui-form-item">
+					<!-- mody by meifaxin 2021-9-26 客户类型字段改为选填 start -->
+					<!-- mody by  meifaxin 2021-9-26 客户类型字段改为选填 end -->
 					<div class="layui-inline layui-col-xs4 layui-col-sm4 layui-col-md4 layui-col-lg4">
 						<label class="layui-form-label form-lable"
 							data-th-text="#{MstCustomerNature002.customerType}">客户类型</label>
 						<div class="layui-input-inline input-inline">
 							<select formatoption = "true" type="text" id="customerType" maxlength="50"
-							name="customerType"class="layui-input form-input input-select" 
-							data-th-data-result='${CUSTOMER_TYPE}' required
+							name="customerType"class="layui-input form-input input-select"
+							data-th-data-result='${CUSTOMER_TYPE}'
 							allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}">
 							</select>
 						</div>

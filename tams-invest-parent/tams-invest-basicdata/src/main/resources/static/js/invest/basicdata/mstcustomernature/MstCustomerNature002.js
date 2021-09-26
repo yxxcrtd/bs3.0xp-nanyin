@@ -262,21 +262,33 @@ $(function() {
 	matchTable.load();
     $('#MstCustomerNature002_btn_search').click(function() {
     	var customerType = $('#customerType').val();
-    	if(customerType){
-            table.load();
-            var data = customerCharaterData.map(a => Object.assign({}, a));
-            if(customerType == CUSTOMER_TYPE_02){
-            	var idx = data.indexOf(data.find(function(element){ return element.customerCharater === typeValue_12;}));
-            	if(idx != -1){
-            	 data.splice(idx, 1);
-               }
+        //mody by  meifaxin 2021-9-26 客户类型字段改为选填 start
+        table.load();
+        var data = customerCharaterData.map(a => Object.assign({}, a));
+        if(customerType == CUSTOMER_TYPE_02){
+            var idx = data.indexOf(data.find(function(element){ return element.customerCharater === typeValue_12;}));
+            if(idx != -1){
+                data.splice(idx, 1);
             }
-            customerCharaterTable.options.data = data;
-            customerCharaterTable.reload();
-    	}else{
-    		Joyin.error(JoyinUtil.getMessage("COMMON_E_0057",JoyinUtil.getLabel("MstCustomerNature002.customerType")));
-            return;
-    	}
+        }
+        customerCharaterTable.options.data = data;
+        customerCharaterTable.reload();
+    	// if(customerType){
+        //     table.load();
+        //     var data = customerCharaterData.map(a => Object.assign({}, a));
+        //     if(customerType == CUSTOMER_TYPE_02){
+        //     	var idx = data.indexOf(data.find(function(element){ return element.customerCharater === typeValue_12;}));
+        //     	if(idx != -1){
+        //     	 data.splice(idx, 1);
+        //        }
+        //     }
+        //     customerCharaterTable.options.data = data;
+        //     customerCharaterTable.reload();
+    	// }else{
+    	// 	Joyin.error(JoyinUtil.getMessage("COMMON_E_0057",JoyinUtil.getLabel("MstCustomerNature002.customerType")));
+        //     return;
+    	// }
+        //mody by  meifaxin 2021-9-26 客户类型字段改为选填 end
     });
    $('#MstCustomerNature002_btn_match').click(function(){
 	   match();
