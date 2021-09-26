@@ -83,7 +83,7 @@ $(function() {
                         ,{field:'unfinishedAmt', width:200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
                         ,{field:'secAcctName', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId', visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -199,7 +199,7 @@ $(function() {
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
                         ,{field:'secAcctName', width:'10%', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId', visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -312,7 +312,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'secAcctName', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -418,7 +418,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'planTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
@@ -632,7 +632,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'depoTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
@@ -741,7 +741,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'projectTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
