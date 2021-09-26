@@ -171,9 +171,9 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
             wr.setData(resultMap);
             return wr;
         } else {
-            if (null == objects.get(0) || objects.get(0).size() != 6) {
+            if (null == objects.get(0) || objects.get(0).size() != 8) {
                 Map<String, Object> resultMap = new HashMap<>();
-                resultMap.put("errorMsg", "数据格式错误，数据格式需要6列。");
+                resultMap.put("errorMsg", "数据格式错误，数据格式需要8列。");
                 AjaxResult wr = new AjaxResult();
                 wr.setData(resultMap);
                 return wr;
@@ -198,12 +198,16 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
                         }
 					}
                     //估值日期 必填
-                    if (!StringUtil.isNotEmpty(rowData.get(2))){
+                    if (!StringUtil.isNotEmpty(rowData.get(3))){
                         errorMsg.append("估值日期 必填！");
                     }
                     //估值 必填
-                    if (!StringUtil.isNotEmpty(rowData.get(3))){
-                        errorMsg.append("估值 必填！");
+                    if (!StringUtil.isNotEmpty(rowData.get(4))){
+                        errorMsg.append("全价估值（每百元） 必填！");
+                    }
+
+                    if (!StringUtil.isNotEmpty(rowData.get(5))){
+                        errorMsg.append("净价估值（每百元） 必填！");
                     }
                     if (StringUtil.isNotEmpty(errorMsg.toString())){
                         errorMsg.append("<br />");
@@ -223,7 +227,7 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
                     for (int k = i - 1; k >= 1; k--) {
                         List<String> list2 = objects.get(k);
                         //资产代码、估值日期，相同时为重复数据
-                        if ((StringUtil.equals(list1.get(0), list2.get(0)) && StringUtil.equals(list1.get(2), list2.get(2)))) {
+                        if ((StringUtil.equals(list1.get(0), list2.get(0)) && StringUtil.equals(list1.get(3), list2.get(3)))) {
                             isRepeat = true;
                             break;
                         }
@@ -272,21 +276,29 @@ public class ComRateAssetQuotationInfo001Service extends CommonExportService<Com
 		    if (StringUtil.isNotEmpty(rowData.get(1))) {
 		        mstRateAssetQuotationInfo001Dto.setFinProdName(rowData.get(1).toString());
 		    }
-		    // 估值日期【2】
-		    if (StringUtil.isNotEmpty(rowData.get(2))) {
-		        mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(2).toString()));
-		    }
-		    // 估值【3】
+		    //估值来源【2】
+            if (StringUtil.isNotEmpty(rowData.get(2))) {
+                mstRateAssetQuotationInfo001Dto.setValueSource(rowData.get(2).toString());
+            }
+		    // 估值日期【3】
 		    if (StringUtil.isNotEmpty(rowData.get(3))) {
-		        mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(3).toString()));
+		        mstRateAssetQuotationInfo001Dto.setValDate(DateUtil.parse(rowData.get(3).toString()));
 		    }
-		    // 导入日【4】
+		    // 全价估值【4】
 		    if (StringUtil.isNotEmpty(rowData.get(4))) {
-		        mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(4).toString()));
+		        mstRateAssetQuotationInfo001Dto.setFullValuation(new BigDecimal(rowData.get(4).toString()));
 		    }
-		    // 备注【5】
-		    if (StringUtil.isNotEmpty(rowData.get(5))) {
-		        mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(5).toString());
+            // 净价估值【5】
+            if (StringUtil.isNotEmpty(rowData.get(5))) {
+                mstRateAssetQuotationInfo001Dto.setValuation(new BigDecimal(rowData.get(5).toString()));
+            }
+		    // 导入日【6】
+		    if (StringUtil.isNotEmpty(rowData.get(6))) {
+		        mstRateAssetQuotationInfo001Dto.setPublishDate(DateUtil.parse(rowData.get(6).toString()));
+		    }
+		    // 备注【7】
+		    if (StringUtil.isNotEmpty(rowData.get(7))) {
+		        mstRateAssetQuotationInfo001Dto.setRemark(rowData.get(7).toString());
 		    }
 		    Map<String, Object> paramMap = new HashMap<>();
 		    paramMap.put("finProdMarketId", mstRateAssetQuotationInfo001Dto.getFinprodId());
