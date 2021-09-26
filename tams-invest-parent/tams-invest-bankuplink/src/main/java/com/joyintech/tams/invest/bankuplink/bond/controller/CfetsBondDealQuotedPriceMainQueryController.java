@@ -901,4 +901,11 @@ public class CfetsBondDealQuotedPriceMainQueryController extends BaseController 
             this.fileName = fileName;
         }
     }
+
+
+    @RequestMapping("exportPdf")
+    public ResponseEntity<byte[]> exportPdf(){
+        return cfetsBondDealQuotedPriceSingleService.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+    }
+
 }
