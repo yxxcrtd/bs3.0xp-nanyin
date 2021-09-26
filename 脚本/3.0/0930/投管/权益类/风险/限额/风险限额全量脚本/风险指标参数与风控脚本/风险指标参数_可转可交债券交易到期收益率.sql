@@ -2,25 +2,26 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='KZKJZQJYDQSYL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQJYDQSYL','可转可交债券交易到期收益率','N','','wp','C001',sysdate,'wp',sysdate,'','','N','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQJYDQSYL','可转可交债券交易到期收益率','N','','system','',sysdate,'system',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='KZKJZQJYDQSYL';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','01', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','02', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','03', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','04', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQJYDQSYL','05', 'SQL','SELECT 1 FROM DUAL', 'portfolioCode,assetCode','N','system','',sysdate,'system',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
 V_CONTENT_01_02_03 CLOB := 'select 1 from dual';
 
 ----事后(日间)
-V_CONTENT_04 CLOB := 'select A.FINPROD_ID||'',''||A.TRADE_ID AS RKEY, A.YIELD AS RVALUE
+V_CONTENT_04 CLOB := 'select RKEY,SUM(RVALUE) RVALUE,RKEYCN from(
+select A.FINPROD_ID RKEY, A.YIELD AS RVALUE,B.FINPROD_NAME RKEYCN
 --1.交易表
 from TRD_PRODUCT_DEAL  A
 inner join TRD_PRODUCT_DEAL_ADD C
@@ -39,7 +40,7 @@ and C.PORTFOLIO_ID IN ${portfolioCode}
 and A.TRADE_DATE = DATE''${valDate}''
 union all
 --2.日间交易表
-select A.FINPROD_ID||'',''||A.TRADE_ID AS RKEY, A.YIELD AS RVALUE
+select A.FINPROD_ID RKEY, A.YIELD AS RVALUE,B.FINPROD_NAME RKEYCN
 from TRD_PRODUCT_TEMP_DEAL  A
 inner join TRD_PRODUCT_TEMP_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
@@ -57,7 +58,7 @@ and C.PORTFOLIO_ID IN ${portfolioCode}
 and A.TRADE_DATE = DATE''${valDate}''
 union all
 --3.流程交易表
-select A.FINPROD_ID||'',''||A.TRADE_ID AS RKEY, A.YIELD AS RVALUE
+select A.FINPROD_ID RKEY, A.YIELD AS RVALUE,B.FINPROD_NAME RKEYCN
 from WFL_TRD_PRODUCT_DEAL  A
 inner join WFL_TRD_PRODUCT_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
@@ -75,7 +76,7 @@ and C.PORTFOLIO_ID IN ${portfolioCode}
 and A.TRADE_DATE = DATE''${valDate}''
 union all
 --4.内部卖出流程中交易表
-select A.FINPROD_ID||'',''||A.TRADE_ID AS RKEY, A.YIELD AS RVALUE
+select A.FINPROD_ID RKEY, A.YIELD AS RVALUE,B.FINPROD_NAME RKEYCN
 from WFL_TRD_PRODUCT_DEAL  A
 inner join WFL_TRD_PRODUCT_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
@@ -91,10 +92,12 @@ and B.TRADE_MARKET in (''03'',''04'')
 and D.TYPE_6 in (''B14'',''B15'')
 and A.counter_id IN ${portfolioCode}
 and A.TRADE_DATE = DATE''${valDate}''
-AND EXISTS (SELECT 1 FROM SYS_PARA WHERE PARA_CODE = ''is_auto_generate_negate_deal'' AND PARAM_VALUE = ''Y'')';
+AND EXISTS (SELECT 1 FROM SYS_PARA WHERE PARA_CODE = ''is_auto_generate_negate_deal'' AND PARAM_VALUE = ''Y'')
+) group by RKEY, RKEYCN';
 
 ----事后(日终)
-V_CONTENT_05 CLOB := 'select A.FINPROD_ID||'',''||A.TRADE_ID AS RKEY, A.YIELD AS RVALUE
+V_CONTENT_05 CLOB := 'select RKEY,SUM(RVALUE) RVALUE,RKEYCN from(
+select A.FINPROD_ID AS RKEY, A.YIELD AS RVALUE,B.FINPROD_NAME RKEYCN
 from TRD_PRODUCT_DEAL  A
 inner join TRD_PRODUCT_DEAL_ADD C
 on A.TRADE_ID=C.TRADE_ID
@@ -109,7 +112,8 @@ AND A.PS IN (''T01'',''T02'')
 and B.TRADE_MARKET in (''03'',''04'')
 and D.TYPE_6 in (''B14'',''B15'')
 and C.PORTFOLIO_ID IN ${portfolioCode}
-and A.TRADE_DATE = DATE''${valDate}''';
+and A.TRADE_DATE = DATE''${valDate}''
+) group by RKEY, RVALUE, RKEYCN';
 BEGIN
     UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'KZKJZQJYDQSYL' and PARA_GRANULARITY in('01','02','03');
 
