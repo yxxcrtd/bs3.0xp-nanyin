@@ -1792,4 +1792,13 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         return cfetsBondDealQuotedPriceMapper.getWflEntrustDealedAmt(map);
     }
 
+    public List<CstpSelectDto> selectExportPdf(Map<String, Object> map) {
+        if (StringUtil.isNotEmpty(map.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)map.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                map.put("execidList",selectedItem);
+            }
+        }
+        return cfetsBondDealQuotedPriceMapper.selectExportPdf(map);
+    }
 }
