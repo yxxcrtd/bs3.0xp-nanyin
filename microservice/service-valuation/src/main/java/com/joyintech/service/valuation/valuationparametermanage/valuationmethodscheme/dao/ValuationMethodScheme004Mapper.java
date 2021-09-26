@@ -13,6 +13,7 @@ package com.joyintech.service.valuation.valuationparametermanage.valuationmethod
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.service.valuation.valuationparametermanage.valuationmethodscheme.dto.ValuationMethodScheme004Dto;
@@ -75,6 +76,6 @@ public interface ValuationMethodScheme004Mapper {
      * @param:
      * @return:
      */
-    String  getSecTypeByFinprodId(String finprodId);
+    String  getSecTypeByFinprodId(@Param("finprodId")String finprodId);
 	
 }
