@@ -154,15 +154,17 @@
 		from MOD_PD_FACTOR_CONFIG A
 		inner join
 		(
-		select
-		A2.VOUCH_YEAR as VOUCH_YEAR,
-		max(A2.VOUCH_QUARTER) as VOUCH_QUARTER
-		from MOD_PD_FACTOR_CONFIG A2
-		where A2.VOUCH_YEAR =(select max(A1.VOUCH_YEAR) from MOD_PD_FACTOR_CONFIG A1 where A1.VOUCH_YEAR &gt;= #{yearStr,jdbcType=VARCHAR})
-		and TO_NUMBER(A2.VOUCH_QUARTER) &gt;= TO_NUMBER(#{quarterStr,jdbcType=VARCHAR})
-		and  rownum=1
-		group by A2.VOUCH_YEAR,A2.VOUCH_QUARTER order by A2.VOUCH_QUARTER desc
-
+			SELECT * FROM (
+				select
+					A2.VOUCH_YEAR ,
+					A2.VOUCH_QUARTER
+				from MOD_PD_FACTOR_CONFIG A2
+				where 1=1
+				AND (A2.VOUCH_YEAR = #{yearStr} AND A2.VOUCH_QUARTER &lt;=#{quarterStr})
+				OR (A2.VOUCH_YEAR &lt; #{yearStr} )
+				order by A2.VOUCH_YEAR DESC,A2.VOUCH_QUARTER DESC
+			)
+			WHERE ROWNUM = 1
 		) C
 		on A.VOUCH_YEAR=C.VOUCH_YEAR
 		and A.VOUCH_QUARTER =C.VOUCH_QUARTER
