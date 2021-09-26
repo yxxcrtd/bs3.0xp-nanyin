@@ -11,6 +11,8 @@
 package com.joyintech.tams.invest.entrust.etrinvestallinfo.service;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -193,6 +195,21 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
     public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
         List<EtrAllInfoExportPdfDto> datas = selectExportPdf(param);
+        DecimalFormat df = new DecimalFormat("#0.00##");
+        datas.forEach(exportPdfDto -> {
+            if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
+                exportPdfDto.setEntrustAmt(new BigDecimal(df.format(exportPdfDto.getEntrustAmt())));
+            }
+            if(StringUtil.isNotEmpty(exportPdfDto.getEntrustNum())){
+                exportPdfDto.setEntrustNum(new BigDecimal(df.format(exportPdfDto.getEntrustNum())));
+            }
+            if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
+                exportPdfDto.setPrice(new BigDecimal(df.format(exportPdfDto.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP))));
+            }
+            if(StringUtil.isNotEmpty(exportPdfDto.getConRatio())){
+                exportPdfDto.setConRatio(df.format(new BigDecimal(exportPdfDto.getConRatio()).setScale(2, BigDecimal.ROUND_HALF_UP)));
+            }
+        });
         String assetType = param.get("assetType")==null?"":param.get("assetType").toString();
         return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId, assetType),datas);
     }
