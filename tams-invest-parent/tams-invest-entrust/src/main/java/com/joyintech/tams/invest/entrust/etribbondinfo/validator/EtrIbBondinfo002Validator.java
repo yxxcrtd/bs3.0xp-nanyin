@@ -61,6 +61,9 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
                 if (vdate.after(mdate)) {
                     errorList.add(new ValidMessage("vdate", this.getMessage("ETR_X_005")));
                 }
+                if(finvdate != null && vdate.before(finvdate)){
+                    errorList.add(new ValidMessage("vdate",this.getMessage("ETR_X_006")+DateUtil.format(finvdate)));
+                }
                 if(finmdate != null && mdate.after(finmdate)){
                     errorList.add(new ValidMessage("mdate",this.getMessage("ETR_X_007")+DateUtil.format(finmdate)));
                 }
@@ -136,6 +139,15 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
             }
             //指定价格模式下净价不能为空
             errorList.addAll(etrIbBondinfo002Service.check(dto));
+        }
+        if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
+            if(!StringUtil.isNotEmpty(dto.getBusinessModel())){
+                errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
+            }
+        }else{
+            if(!StringUtil.isNotEmpty(dto.getInvAim())){
+                errorList.add(new ValidMessage("invAim", "请输入投资目的"));
+            }
         }
         return errorList;
     }

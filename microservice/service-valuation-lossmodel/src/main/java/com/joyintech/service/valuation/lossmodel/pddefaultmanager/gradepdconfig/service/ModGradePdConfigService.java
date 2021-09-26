@@ -120,7 +120,7 @@ public class ModGradePdConfigService extends BaseService<ModGradePdConfigDto> {
      */
     public void doComplete(ModGradePdConfigDto entity, String type) {
         //处理前瞻前年度边际PD%字段   *100
-        entity.setForwardYearPd(ArithmeticUtil.divide(entity.getForwardYearPd(), new BigDecimal("100"),6));
+        entity.setForwardYearPd(ArithmeticUtil.divide(entity.getForwardYearPd(), new BigDecimal("100"),14));
         if (StringUtil.equals(entity.getOperateType(), "DELETE")) {//删除操作
             modGradePdConfigMapper.deleteByPrimaryKey(entity.getSeqNo());
         }

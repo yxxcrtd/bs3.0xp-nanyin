@@ -616,10 +616,10 @@ public class TrdAssetLossService extends CommonExportService<TrdAssetLoss001Dto>
             }
 
             //判断初始确认起始日，初始确认截止日不能在资产起息日和资产到期日区间内
-            if( DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
-                    DateUtil.compareDate(DateUtil.parse(rowData.get(2).toString()),trdAssetLoss001Dto.getmDate())<=0 &&
-                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
-                    DateUtil.compareDate(DateUtil.parse(rowData.get(3).toString()),trdAssetLoss001Dto.getmDate())<=0){
+            if( DateUtil.compareDate(DateUtil.parse(rowData.get(5).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(5).toString()),trdAssetLoss001Dto.getmDate())<=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(6).toString()),trdAssetLoss001Dto.getvDate())>=0 &&
+                    DateUtil.compareDate(DateUtil.parse(rowData.get(6).toString()),trdAssetLoss001Dto.getmDate())<=0){
                 //符合条件，在区间内
             }else{
                 //不符合条件，不在区间内

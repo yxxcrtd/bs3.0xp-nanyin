@@ -5,7 +5,7 @@ package com.joyintech.tams.invest.interf.trade.common;
  * 
  * @author yflv
  * @version 1.0 2021年09月23日
- * @see Result
+ * @see Message
  * @since 1.0
  */
 public class Message {

@@ -257,6 +257,8 @@ public class BMWEclCalculationProcessorService {
         modEclResult.setPurchaseTimeGrade(entity.getResultDeal());
         // 当前时点评级
         modEclResult.setCurrentTimeGrade(entity.getResultCurrent());
+        // 是否允许模型覆盖 = 是
+        modEclResult.setAllowModelCover(DictCodeList.是否_是.getValue());
     }
 
     /**

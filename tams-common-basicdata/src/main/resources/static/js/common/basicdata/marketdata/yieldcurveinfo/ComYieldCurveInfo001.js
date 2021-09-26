@@ -30,6 +30,7 @@ $(function() {
                      "95%", "90%", {pageModel:PAGE_MODEL_REFERENCE,
             	                     curveCode:data.curveCode,
                                      curveDate:curveDate,
+                                     keyPoint:data.keyPoint,
                                      curveType:data.curveType});
          },
         /*
@@ -65,6 +66,7 @@ $(function() {
                      "95%", "90%", {pageModel:PAGE_MODEL_EDIT,
             	                     curveCode:data.curveCode,
             	                     curveDate:curveDate,
+                                     keyPoint:data.keyPoint,
                                      curveType:data.curveType},function() {
                                      table.reload();
                      });

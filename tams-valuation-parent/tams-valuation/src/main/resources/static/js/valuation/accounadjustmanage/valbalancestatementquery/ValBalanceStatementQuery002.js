@@ -58,6 +58,8 @@ $(function () {
         checkbox:false,
         click:function(table, data) {
             $('#seqNo').val(data.seqNo);
+            var tradeId=data.tradeId;
+            document.getElementById('vocher').innerText='凭证信息:'+tradeId;
             if(!table2.table) {
                 table2.load();
             }
@@ -82,11 +84,11 @@ $(function () {
             ,{field:'cdFlag', width:150, title: '借贷'}
             ,{field:'ccyFmt', width:150, title: '原币币种'}
             ,{field:'bCcyFmt', width:150, title: '记账币种'}
-            ,{field:'happenAmt', type:"money", digit: 4, width:150,  title: '原币金额'}
-            ,{field:'bHappenAmt', type:"money", digit: 4, width:150, title: '本币金额'}
+            ,{field:'happenAmt', type:"money", digit: 2, width:150,  title: '原币金额'}
+            ,{field:'bHappenAmt', type:"money", digit: 2, width:150, title: '本币金额'}
             ,{field:'happenNumber', type:"money", digit: 4, width:150, title: '数量'}
-            ,{field:'marketValue', type:"money",digit: 4, width:150, title: '原币余额'}
-            ,{field:'valuePercent',type:"money",digit: 4, width:150,  title: '本币余额'}
+            ,{field:'marketValue', type:"money",digit: 2, width:150, title: '原币余额'}
+            ,{field:'valuePercent',type:"money",digit: 2, width:150,  title: '本币余额'}
             ,{field:'tradeId', width:150, title: '业务编号',render : function(data, type, row, meta) {
                     return "<a id='table1Yewu' class='pro-link closePriceLink' style='cursor: pointer;'>"+data+"</ a>";
                 }}
@@ -152,8 +154,8 @@ $(function () {
             ,{field:'cdFlag',width:150,  title: '借贷'}
             ,{field:'ccyFmt', width:150, title: '原币币种'}
             ,{field:'bCcyFmt', width:150, title: '记账币种'}
-            ,{field:'happenAmt', type:"money", digit: 4, width:150,  title: '原币金额'}
-            ,{field:'bHappenAmt', type:"money", digit: 4, width:150, title: '本币金额'}
+            ,{field:'happenAmt', type:"money", digit: 2, width:150,  title: '原币金额'}
+            ,{field:'bHappenAmt', type:"money", digit: 2, width:150, title: '本币金额'}
             ,{field:'happenNumber', type:"money", digit: 4, width:150, title: '数量'}
             ,{field:'tradeId', width:150, title: '业务编号'}
             ,{field:'offsetFlag', width:150, title: '冲销标识'}
@@ -185,7 +187,7 @@ $(function () {
             ,{field:'finprodAbbr', width:150, title: '资产简称'}
             ,{field:'finprodType', width:150, title: '资产类型'}
             ,{field:'tradePlay',width:150, title: '交易平台'}
-            ,{field:'tradeAmt', type:"money",digit: 4, width:150, title: '券面总额/交易金额'}
+            ,{field:'tradeAmt', type:"money",digit: 2, width:150, title: '券面总额/交易金额'}
             ,{field:'tradeDate', width:150, title: '交易日期',type:'date'}
             ,{field:'busiType', width:150, title: '业务类型'}
             ,{field:'psCode', width:150, title: '交易方向'}
@@ -342,6 +344,7 @@ $(function () {
          * 绑定查看交易信息按钮事件
          */
         $('#ValBalanceStatementQuery002_btn_view').click(function() {
+            debugger;
             var tradeIds=document.getElementById('vocher').innerText;
             var index=tradeIds.indexOf(':');
             var tradeId=tradeIds.substring(index+1);

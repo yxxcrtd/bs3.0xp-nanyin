@@ -11,7 +11,9 @@
 package com.joyintech.tams.component.business.riskrds.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import com.joyintech.system.base.entity.SysInstitution;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.tams.common.base.entity.FinProductConvertible;
@@ -34,4 +36,10 @@ public interface RiskRdsTrialCommonMapper {
      * @return 债转股维护信息
      */
     List<FinProductConvertible> selectConvertible(List<String> finprodIdList);
+
+    /**
+     * 是否股东发行
+     * @return
+     */
+    String getIsShareholderIssue(Map<String,Object> map);
 }

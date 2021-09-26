@@ -54,7 +54,7 @@ public interface AssetImpairmentProvisionMapper {
      * @param params
      * @return
      */
-    ModEclResult getModelEclResult(Map<String, Object> params);
+    List<ModEclResult> getModelEclResult(Map<String, Object> params);
 
     /**
      * 模型法减值资产明细查询 <功能详细描述>

@@ -277,7 +277,7 @@ implements BaseProcessService<TrdFundDuration001Dto>{
 //           处理数据参数
             getWorkFlowPatameter(entity);
             entity.setBaseTotalTradeInfoDto(genFinProductTradeDto(entity));
-            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), true);
+            dealEntityService.saveDataWhenStartWorkflow(entity, OperationType.NEW, DictCodeListExt1.交易流程状态_流程中.getValue(), false);
         }
         else{
 //            非货币红利再投

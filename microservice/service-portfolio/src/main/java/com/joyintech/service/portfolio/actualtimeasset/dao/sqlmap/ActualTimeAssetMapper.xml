@@ -265,6 +265,7 @@
 						#{secManageAcctId,jdbcType=VARCHAR}
 					</foreach>)
 				</if>
+				and t5.type_8 is not null
 			</where>
 					group by t.PORTFOLIO_ID, pp.PORTFOLIO_NAME, NVL(NVL(chl.FINPROD_MARKET_ID, chl1.FINPROD_MARKET_ID), t.SEC_ACCT_ID ), t4.SEC_ACCT_NAME, chl.FINPROD_ABBR, chl1.FINPROD_ABBR, t.FINPROD_ID, fp.FINPROD_MARKET_ID, fp.FINPROD_ABBR,
 					t5.TYPE_9, t5.TYPE_10, t5.TYPE_11, t5.TYPE_12, t5.TYPE_8, t5.TYPE_7, T5.TYPE_6, mv.marketPrice,	fp.trade_market

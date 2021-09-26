@@ -87,14 +87,15 @@ $(function() {
             if (FinPayInterestStdInfo && !FinPayInterestStdInfo.check()) {
                 return ;
             }
+            finalSava(object,operateType,result);
             //modify jinmaodong 2021-09-25 债权类资产不处理息票品种
-            if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){
-                Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
-                    finalSava(object,operateType,result);
-                });
-            }else{
-                finalSava(object,operateType,result);
-            }
+//            if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){
+//                Joyin.confirm(JoyinUtil.getMessage('FIN_ASSET_W_0002'),function(){
+//                    finalSava(object,operateType,result);
+//                });
+//            }else{
+//                finalSava(object,operateType,result);
+//            }
             // // 息票品种为贴现、零息时不作付息计划 、还本计划check
             // if(couponSpecies==COUPON_SPECIES_02||couponSpecies==COUPON_SPECIES_03){
             //     if(isTransInAsset && YES_OR_NO_Y != COPY_FLAG ){

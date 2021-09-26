@@ -21,7 +21,6 @@ import com.joyintech.tams.common.base.dao.RskPreOccupyInfoMapper;
 import com.joyintech.tams.common.base.entity.RskPreOccupyInfo;
 import com.joyintech.tams.invest.batch.valrift.dao.ValRiftMapper;
 import com.joyintech.tams.invest.batch.valrift.dto.*;
-import com.joyintech.tams.valuation.common.utils.DataHandleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -811,8 +810,12 @@ public class ValRiftService {
         param.put("dateMax",supDate);
         param.put("deptCode", deptCode);
         List<Map<String,Object>> resultList = new ArrayList<>();
+        // update by caiqun 2021-09-24 DataHandleUtil在估值代码里，不能使用，并且sql已对语句过长做了处理 start
+        param.put("productIdList",productIdList);
+        //查询产品对应最小跑批日期
+        resultList.addAll(valRiftMapper.selectImportValTableProdList(param));
         //防止语句过长
-        if(productIdList == null || productIdList.size()<800) {
+        /*if(productIdList == null || productIdList.size()<800) {
             param.put("productIdList",productIdList);
             //查询产品对应最小跑批日期
             resultList.addAll(valRiftMapper.selectImportValTableProdList(param));
@@ -828,8 +831,8 @@ public class ValRiftService {
                     resultList.addAll(evryResList);
                 }
             }
-        }
-
+        }*/
+        // update by caiqun 2021-09-24 DataHandleUtil在估值代码里，不能使用，并且sql已对语句过长做了处理 end
         return resultList;
     }
 }

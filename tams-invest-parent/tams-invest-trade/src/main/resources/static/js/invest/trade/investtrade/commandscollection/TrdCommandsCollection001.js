@@ -83,7 +83,7 @@ $(function() {
                         ,{field:'unfinishedAmt', width:200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
                         ,{field:'secAcctName', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId', visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -199,7 +199,7 @@ $(function() {
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF01', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
                         ,{field:'secAcctName', width:'10%', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId', visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -312,7 +312,7 @@ $(function() {
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'secAcctName', title: 'TrdStock002.secAcctId', sortField: "secAcctId"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                     ],
                 });
                 
@@ -418,7 +418,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'planTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF02', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF02', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
@@ -632,7 +632,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'depoTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', width:'10%', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
@@ -741,7 +741,7 @@ $(function() {
                         ,{field:'finprodName', width:'15%', title: 'TrdFundInvestTrade001.finprodName',sortField:"finprodName"}
                         ,{field:'projectTypeStr', width:'10%', title: 'TrdCommandsCollection002.type6',sortField:"type6"}
                         ,{field:'psStr',  width:'10%', title: 'TrdFundInvestTrade001.ps',sortField:"ps"}
-                        ,{field:'chlName', width:'10%', title: 'invest.channelId',sortField:"chlId"}
+                        ,{field:'chlName', width:'10%', title: 'invest.channelId',visible:false,sortField:"chlId"}
                         ,{field:'entrustAmt', width: 200, title: 'TrdCommandsCollection002.entrustAmtF07', type: 'number', sortField:"entrustAmt"}
                         ,{field:'unfinishedAmt', width: 200, title: 'TrdCommandsCollection002.unfinishedAmtF07', type: 'number', sortField:"unfinishedAmt"}
                         ,{field:'ccyStr', title: 'TrdFundInvestTrade001.ccy',sortField:"ccy"}
@@ -1618,9 +1618,9 @@ $(function() {
         var tradeMarket02345Selections = [];
         var dealMode0123Selections = [];
         ps01Selections.push(PS_SELECTIONS[0].id);
-        ps01Selections.push(PS_SELECTIONS[1].id);
+        ps01Selections.push(PS_SELECTIONS[3].id);
         psF01Selections.push(PS_SELECTIONS[0].id);
-        psF01Selections.push(PS_SELECTIONS[1].id);
+        psF01Selections.push(PS_SELECTIONS[3].id);
         // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 start
         psF02Selections.push(PS_SELECTIONS[6].id);
         psF02Selections.push(PS_SELECTIONS[11].id);
@@ -1629,18 +1629,18 @@ $(function() {
         psF02Selections.push(PS_SELECTIONS[91].id);
         // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 end
         psF04Selections.push(PS_SELECTIONS[0].id);
-        psF04Selections.push(PS_SELECTIONS[1].id);
         psF04Selections.push(PS_SELECTIONS[3].id);
-        psF04Selections.push(PS_SELECTIONS[5].id);
+        psF04Selections.push(PS_SELECTIONS[6].id);
+        psF04Selections.push(PS_SELECTIONS[11].id);
         psF08Selections.push(BACK_LEND_SELECTIONS[0].id);
         psF08Selections.push(BACK_LEND_SELECTIONS[1].id);
         psF10Selections.push(BACK_LEND_SELECTIONS[2].id);
         psF10Selections.push(BACK_LEND_SELECTIONS[3].id);
         psF11Selections.push(PS_SELECTIONS[0].id);
-        psF11Selections.push(PS_SELECTIONS[1].id);
-        psF11Selections.push(PS_SELECTIONS[94].id);
-        psF11Selections.push(PS_SELECTIONS[95].id);
-        psF11Selections.push(PS_SELECTIONS[97].id);
+        psF11Selections.push(PS_SELECTIONS[3].id);
+        psF11Selections.push(PS_SELECTIONS[103].id);
+        psF11Selections.push(PS_SELECTIONS[105].id);
+        psF11Selections.push(PS_SELECTIONS[104].id);
         tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[2].id);
         tradeMarket12Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket124Selections.push(TRADE_PLACE_SELECTIONS[1].id);
@@ -1651,9 +1651,9 @@ $(function() {
         tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[0].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[2].id);
-        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[3].id);
+        // tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[3].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[1].id);
-        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[5].id);
+        // tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[5].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[0].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[1].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[2].id);

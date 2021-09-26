@@ -59,7 +59,7 @@
                 <div class="form-inline-wrap" style=" width: 50%; padding:0px;">
                     <label class="layui-form-label form-label-wrap" data-th-text="#{CfetsBondDealQuotedPriceSingle.entrustId}">指令代码</label>
                     <div class="layui-input-inline input-inline">
-                        <select required type="text" id="CfetsBondDealQuotedPriceSingle001_entrustId" name="entrustId"
+                        <select required disabled type="text" id="CfetsBondDealQuotedPriceSingle001_entrustId" name="entrustId"
                                 class="layui-input form-input input-select" placeholder="请输入内容" parentIds="CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel,CfetsBondDealQuotedPriceSingle001_mySide,CfetsBondDealQuotedPriceSingle001_ps,CfetsBondDealQuotedPriceSingle001_finprodId,CfetsBondDealQuotedPriceSingle001_settleSpreed"
                                 th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryEntrustInfoList}"
                                 allowClear="true" th:initValue="${entity?.entrustId}" formatoption="false"></select>
@@ -338,20 +338,6 @@
                     </div>
                 </div>
 
-
-                <div th:if="${SHOW_INVAIM_OR_BUSSINSSMODEL} =='02' " class="form-inline-wrap" id = "businessModelDiv">
-                    <label class="layui-form-label form-label-wrap"
-                           data-th-text="#{EtrBondFirstLBidding002.businessModel}">业务模式</label>
-                    <div class="layui-input-inline input-inline">
-                        <select type="text" id="businessModel" name="businessModel"
-                                class="layui-input form-input input-select"
-                                data-th-data-result='${BUSINESS_MODEL}' allowClear="true"
-                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                required="required" formatoption="true"   disabled
-                                data-th-initValue="${entity?.businessModel}">
-                        </select>
-                    </div>
-                </div>
             </div>
 
             <div class="layui-form-item">
@@ -375,6 +361,22 @@
                                 th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryMySideTraderList}" allowClear="true"
                                 formatoption="true"
                                 th:initValue="${entity?.counterTrader}"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div th:if="${SHOW_INVAIM_OR_BUSSINSSMODEL} =='02' " class="form-inline-wrap" id = "businessModelDiv">
+                    <label class="layui-form-label form-label-wrap"
+                           data-th-text="#{EtrBondFirstLBidding002.businessModel}">业务模式</label>
+                    <div class="layui-input-inline input-inline">
+                        <select type="text" id="CfetsBondDealQuotedPriceSingle001_businessModel" name="businessModel"
+                                class="layui-input form-input input-select"
+                                data-th-data-result='${BUSINESS_MODEL}' allowClear="true"
+                                placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                required="required" formatoption="true"   disabled
+                                data-th-initValue="${entity?.businessModel}">
+                        </select>
                     </div>
                 </div>
             </div>

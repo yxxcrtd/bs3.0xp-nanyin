@@ -10,6 +10,8 @@
 
 package com.joyintech.service.entrust.etrinvestallinfo.dto;
 
+import com.joyintech.tams.constant.DictCodeList;
+
 import java.math.BigDecimal;
 
 /**
@@ -106,6 +108,12 @@ public class EtrInvestAllInfoExportPdfDto {
 	 * 证券账户
 	 */
 	private String secAcctId;
+
+	/**
+	 * 清算速度
+	 */
+	private Long settleSpreed;
+
 	/**
 	 * 清算速度
 	 */
@@ -312,8 +320,25 @@ public class EtrInvestAllInfoExportPdfDto {
 		this.secAcctId = secAcctId;
 	}
 
+	public Long getSettleSpreed() {
+		return settleSpreed;
+	}
+
+	public void setSettleSpreed(Long settleSpreed) {
+		this.settleSpreed = settleSpreed;
+	}
+
 	public String getSettleSpreedStr() {
-		return settleSpreedStr;
+		if (this.getSettleSpreed() == null) {
+			return null;
+		}
+		if(this.getSettleSpreed() == 0){
+			return DictCodeList.清算速度_T_0.getCodeName();
+		}else if(this.getSettleSpreed() == 1){
+			return DictCodeList.清算速度_T_1.getCodeName();
+		}else{
+			return DictCodeList.清算速度_T_2.getCodeName();
+		}
 	}
 
 	public void setSettleSpreedStr(String settleSpreedStr) {

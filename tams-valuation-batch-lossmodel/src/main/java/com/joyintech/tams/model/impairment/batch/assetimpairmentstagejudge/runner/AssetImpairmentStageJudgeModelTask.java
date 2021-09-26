@@ -86,7 +86,9 @@ public class AssetImpairmentStageJudgeModelTask extends BatchBaseService {
         modelDelWriter.setParams(params);
         lossModelCommonListener.setBatchExecuteInfo(batchExecuteInfo);
 
-        JobExecution jobExecution = batchBuilder.init(this).batch("step0",(BaseReader)modelDelReader,(BaseProcessor)modelDelProcessor,(BaseWriter)modelDelWriter)
+        JobExecution jobExecution = batchBuilder.init(this)
+                // 统一在数据加载时直接删除数据
+//                .batch("step0",(BaseReader)modelDelReader,(BaseProcessor)modelDelProcessor,(BaseWriter)modelDelWriter)
                 .batch("step1",(BaseReader)modelReader,(BaseProcessor)modelProcessor, (BaseWriter)modelWriter).builder(
                 this.getBatchTask().getBeanName()  + GlobalConstant.UNDER_LINE + this.getBatchTask().getTaskId()
                 , lossModelCommonListener).run();

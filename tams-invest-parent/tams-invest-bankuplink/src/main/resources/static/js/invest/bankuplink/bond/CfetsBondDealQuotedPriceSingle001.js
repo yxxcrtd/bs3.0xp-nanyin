@@ -36,6 +36,7 @@
                 if (result.data){
                     entrustIdChangeFlag = true;
                     $('#CfetsBondDealQuotedPriceSingle001_remark').val(result.data.remark);
+                    $('#CfetsBondDealQuotedPriceSingle001_businessModel').val(result.data.businessModel).trigger("change");
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_entrustAmt').val(result.data.entrustNum);
                     $('#CfetsBondDealQuotedPriceSingle001_hidden_finprodId').val(result.data.finprodId);
                     $('#businessModel').val(result.data.businessModel);
@@ -142,6 +143,7 @@
         }
         else {
             $('#CfetsBondDealQuotedPriceSingle001_remark').val("");
+            $('#CfetsBondDealQuotedPriceSingle001_businessModel').val("").trigger("change");
             var quotaPageModel = $('#CfetsBondDealQuotedPriceSingle001_hidden_quotaPageModel').val();
             //add by yzg 20210116 委托代码清空联动清空 start
             if(!quotaPageModel || (quotaPageModel != 'dialogueResponse')){
