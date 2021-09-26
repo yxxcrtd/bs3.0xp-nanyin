@@ -138,6 +138,7 @@ public class FinDepositTargetService extends CommonExportService<FinDepositTarge
         // 标的类金融产品entity
         FinProduct finProduct = new FinProduct();
         BeanUtil.copyPropertiesIgnoreNull(finProduct, dto);
+        finProduct.setIssuer(dto.getOrgClass());
         // 简称存全称
         finProduct.setFinprodAbbr(dto.getFinprodName());
         //默认本金收益特征为保本，默认为是，入库时转化成01

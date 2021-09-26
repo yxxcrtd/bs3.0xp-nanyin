@@ -411,4 +411,29 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		}
 		return selectOptionDtoList;
 	}
+
+	/**
+	 * 联动：证券品种 - 获得投资目的
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("getInvAim")
+	public List<SelectOptionDto> getInvAim() {
+		Map<String, Object> param = RequestUtil.getPageParam();
+		//根据资产代码查询证券品种
+		String finprodId = param.get("finprodId").toString();
+		String secType ="";
+		if( StringUtil.isNotEmpty(finprodId)){
+			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodId);
+		}
+		param.put("dict_code_parent", DictCode.证券品种.getValue());
+		param.put("dict_code_child", DictCode.投资目的.getValue());
+		param.put("item_code_parent", secType);
+		return valuationMethodScheme004Service.getLinkSelectOption(param);
+	}
+
+
+
 }

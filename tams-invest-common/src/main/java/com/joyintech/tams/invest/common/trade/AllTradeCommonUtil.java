@@ -9,15 +9,6 @@ import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.jdbc.datasource.DynamicDataSourceHolder;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
-import com.joyintech.framework.JoyinRestTemplate;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.security.SecurityUtil;
 import com.joyintech.framework.util.*;
@@ -47,14 +38,6 @@ import com.joyintech.tams.invest.common.trade.dto.CreditLinesOutputDto;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.common.trade.service.BaseEtrCashPositionCommService;
 import com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService;
-//import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
-//import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
-import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
-import com.joyintech.tams.invest.common.valuationinterf.dto.BokTradeBuildInputDto;
-//import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
-//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
-//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
-//import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
 import com.joyintech.workflow.engine.WorkflowContext;
 import com.joyintech.workflow.engine.dao.WorkflowMapper;
 import com.joyintech.workflow.engine.dto.WflStatusDto;
@@ -65,6 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -73,6 +57,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.joyintech.tams.invest.common.trade.service.impl.etrcash.EtrCommonCashPositionDealService.getSeqNo;
+
+//import com.joyintech.tams.invest.common.util.ValItemValueGenUtil;
+//import com.joyintech.tams.invest.common.valuationinterf.ValuationInterfService;
+//import com.joyintech.tams.valuation.api.service.ValInterfCommonServiceApi;
+//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelFeeInfo;
+//import com.joyintech.tams.valuation.common.interf.base.dto.ChannelProdDeal;
+//import com.joyintech.tams.valuation.common.interf.howmany.dto.TrdProductDealDto;
 
 /**
  * 所有交易都要调用的共通Util
@@ -869,6 +860,10 @@ public class AllTradeCommonUtil {
                         	}
                         }
                         trdProductDealMapper.insert(deal);
+                        // add  by  meifaxin 2021-9-26 busiType插入后值被修改了，重新赋值改回来  tart
+                        //busiType入库之后被重新赋值，赋值回来
+                        deal.setBusiType(busiType);
+                        // add  by  meifaxin 2021-9-26 busiType插入后值被修改了，重新赋值改回来  end
                         deal.setChlId(chlid);
                         // 反向金融产品交易附属表登陆
                         trdProductDealAddMapper.insert(trdProductDealAdd);
