@@ -595,7 +595,7 @@
             , {field: 'underlyingyield2', title: '到期收益率(%)', width: '100', type: 'money', digit: 4}
             , {field: 'strikeyield', title: '行权收益率(%)', width: '100', type: 'money', digit: 4}
             , {field: 'tradecashamt', title: 'CSTPSelect001.tradecashamt', width: '170', type: 'money', digit: 2}
-            , {field: 'settlcurramt', title: '结算金额', width: '170', type: 'money', digit: 2}
+            , {field: 'settlcurramt2', title: '结算金额', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinterestamt', title: '应计利息', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinteresttotalamt', title: '应计利息总额', width: '170', type: 'money', digit: 2}
             , {

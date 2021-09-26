@@ -388,13 +388,11 @@ public class ValuationMethodScheme004Controller extends BaseController {
 		List<SelectOptionDto> selectOptionDtoList = new ArrayList<>();
 		String tradeMarket = param.get("tradeMarket").toString();
 		//根据资产代码查询证券品种
-		String finprodType = param.get("finprodType").toString();
 		String finprodId = param.get("finprodId").toString();
 		String secType ="";
-		if(StringUtil.isNotEmpty(finprodType) && StringUtil.isNotEmpty(finprodId)){
-			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodType+"_"+finprodId);
+		if( StringUtil.isNotEmpty(finprodId)){
+			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodId);
 		}
-
 		//但证券品种为基金时，且交易场所为场外，市价来源特殊处理为 管理人报价07
 		if(StringUtil.isNotEmpty(secType) ){
 			if(DictCodeListExt1.证券品种_基金.getValue().equals(secType) && StringUtil.isNotEmpty(tradeMarket) &&
