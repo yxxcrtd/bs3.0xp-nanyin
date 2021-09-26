@@ -345,9 +345,13 @@ public class LendStandardRecService {
         fdto.setFinprodType(dto.getBusiType());
         //资产类型
         fdto.setAssetType(dto.getAssetClass());
+        //3.0特殊处理
+        fdto.setAccountingClass(dto.getValClas());
+        result.setType2(dto.getValClas());
+
         //机构核算分类
-        fdto.setOrgClass(dto.getValClas());
-        result.setType2(interfCommonService.getFinanceProductClass(fdto));
+//        fdto.setOrgClass(dto.getValClas());
+//        result.setType2(interfCommonService.getFinanceProductClass(fdto));
         // 分类3 = 调用共通方法查询税务分类
         result.setType3(interfCommonService.getFinanceProductTaxClass(fdto));
         // 分类18 = 调用共通方法查询证券品种 add by yanya on 20210828
