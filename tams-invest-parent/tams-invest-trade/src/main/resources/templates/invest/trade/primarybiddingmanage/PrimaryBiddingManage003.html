@@ -125,7 +125,7 @@
                                        <input type="text" id="isWin" name="isWin"
                                        required="required" class="layui-input form-input input-checkbox"
                                        data-th-data-result='${YES_OR_NO}'
-                                       data-th-initValue='${entity?.isWin}'/>
+                                       data-th-initValue='${entity?.isWin?:"Y"}'/>
                                     </div>
                                 </div>
                                 <div class="form-inline-wrap">
@@ -135,7 +135,7 @@
 				                            data-th-data-result='${WIN_TYPE}' formatoption="true"
 				                            required="required" allowClear="true" 
 				                            data-th-placeholder="#{SysCommon.placeholder}"
-				                            data-th-initValue='${entity?.winType}'>
+				                            data-th-initValue='${entity?.winType?:"01"}'>
 				                    	</select>
                                     </div>
                                 </div>
