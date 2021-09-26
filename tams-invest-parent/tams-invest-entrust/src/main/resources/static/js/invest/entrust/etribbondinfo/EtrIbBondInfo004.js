@@ -142,6 +142,18 @@
      * @returns
      */
     function saveOrSubmit(operateType) {
+        var s;
+        if(typeof(BaseRiskMathComm) != 'undefined') {
+            if (BaseRiskMathComm) {
+                s = BaseRiskMathComm.saveOrSubmitCheck(operateType);
+                if (!s && s != '') {
+                    return;
+                }
+                if (window.BaseRiskMathComm.isCalcConditionChanged(getriskdata())) {
+                    return;
+                }
+            }
+        }
         //校验数据  校验表格
         var tableData = table.getAllRows();
         if (tableData.length == 0) {

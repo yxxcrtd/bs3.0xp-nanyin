@@ -13,9 +13,13 @@
 		    <!--<li  th:if="${isShowMyHome} and  ${lossType} eq '02'" class="layui-this">&nbsp;
 			    <span data-th-text="前瞻因子维护">前瞻因子维护</span>
 		    </li>-->
-		  <li class="layui-this">&nbsp;
+		  <li  th:if="${lossType} eq '01'" class="layui-this">&nbsp;
+			  <span data-th-text="综合因子维护">综合因子维护</span>
+		  </li>
+		  <li  th:if="${lossType} eq '02'" class="layui-this">&nbsp;
 			  <span data-th-text="前瞻因子维护">前瞻因子维护</span>
 		  </li>
+
 		    <li>&nbsp;
 			    <span data-th-text="债券、其他债权评级PD维护">债券、其他债权评级PD维护</span>
 		    </li>

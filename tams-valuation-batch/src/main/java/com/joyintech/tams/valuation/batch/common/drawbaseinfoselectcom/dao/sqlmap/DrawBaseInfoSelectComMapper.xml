@@ -58,6 +58,8 @@
 	
 	<select id="selectDrawBaseInfoFromHis" resultType="com.joyintech.tams.valuation.batch.common.drawbaseinfoselectcom.dto.DrawBaseInfoSelectComDTO"
 		parameterType="java.util.Map">
+		SELECT B.*,numPL+numPR as numP3 FROM
+		(
 		SELECT
 			A.TASK_ID,
 			A.BOOKSET_ID,
@@ -76,14 +78,23 @@
 			A.STANDARD_CCY,
 			A.MDATE,
 			A.IS_BACK_VALUE
+		    <!-- ADD BY chufengjie ON 20210926 FOR 估值核算系统VAS3.0-930-基线需求 Start  -->
 			<!-- add by caoguo  on 20201019 start remark:资产减值 -->
-			,(SELECT COUNT(1) 
-				FROM TRD_ASSET_LOSS TT 
-			  WHERE TT.SEC_ID = MR.SEC_ID 
-			    AND TT.VAL_DATE = MR.VAL_DATE 
-			    AND TT.STAGE = #{stageP3}
-			    AND TT.status = #{TRADE_STATUS_01}) AS numP3
+			,(SELECT COUNT(1)
+				FROM TRD_ASSET_LOSS TT
+				WHERE TT.SEC_ID = MR.SEC_ID
+				AND TT.VAL_DATE = MR.VAL_DATE
+				AND TT.STAGE = #{stageP3}
+				AND TT.status = #{TRADE_STATUS_01}
+		      ) AS numPL
+			,(SELECT COUNT(1)
+				FROM MOD_ECL_RESULT MER
+				WHERE MER.ASSET_ID = ME.ASSET_ID
+				AND MER.DEC_DATE = ME.DEC_DATE
+				AND MER.STAGE = #{stageP3}
+			 ) AS numPR
 			<!-- add by caoguo on 20201019 end -->
+		    <!-- ADD BY chufengjie ON 20210926 FOR 估值核算系统VAS3.0-930-基线需求 End  -->
 		FROM(
 			SELECT
 				E.BOOKSET_ID,
@@ -160,14 +171,28 @@
 					SEC_ID	
 				) MR
 			 ON finProduct.FINPROD_MARKET_ID = MR.SEC_ID
-		<!-- ADD BY CAOGUO ON 20201031 FOR 资产减值 Start  -->		
+		<!-- ADD BY CAOGUO ON 20201031 FOR 资产减值 Start  -->
+		<!-- ADD BY chufengjie ON 20210926 FOR 估值核算系统VAS3.0-930-基线需求 Start  -->
+		LEFT JOIN (
+			SELECT
+			MAX(DEC_DATE) DEC_DATE,
+			ASSET_ID
+			FROM
+			MOD_ECL_RESULT
+			WHERE
+			DEC_DATE <![CDATA[ <= ]]> #{HAPPEN_DATE}
+			GROUP BY
+			ASSET_ID
+		) ME
+		ON finProduct.FINPROD_MARKET_ID = ME.ASSET_ID
+		<!-- ADD BY chufengjie ON 20210926 FOR 估值核算系统VAS3.0-930-基线需求 End  -->
 		WHERE
 		A.rank = 1
 		AND (A.NUM_AMT_HAPPEN_DATE<![CDATA[ > ]]> 0
 		OR A.O_AMT_HAPPEN_DATE <![CDATA[ > ]]> 0
 		OR A.HAPPEN_DATE = #{HAPPEN_DATE}
 		OR A.IS_BACK_VALUE = #{isBackValue}
-		OR (A.ONWAY_DATE IS NOT NULL AND A.ONWAY_DATE <![CDATA[ >= ]]> #{HAPPEN_DATE}))
+		OR (A.ONWAY_DATE IS NOT NULL AND A.ONWAY_DATE <![CDATA[ >= ]]> #{HAPPEN_DATE})))B
 	</select>
 	
 </mapper>

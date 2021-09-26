@@ -116,10 +116,28 @@ public class CstpCommonMatchRepoImplService{
         Map<String,Object> secByPtlMap = new HashMap<>();
         //成交质押券信息
         List<InterfTradRepoasstDto> interfTradRepoasstDtos = cstpCommonMatchMapper.getInterfTradRepoasst(execId);
+        BigDecimal matchAmount = cstpCommonMatchMapper.getMatchAmount(execId);
         //成交后折算后总金额
-        BigDecimal repoAssetConversionDealAmtTotal = interfTradRepoasstDtos.stream().map(InterfTradRepoasstDto::getFacetotalamt).reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal repoamt = interfOpicsTradRepo.getRepoamt();
+        //减去已匹配的回购金额
+        repoamt = ArithmeticUtil.subtract(repoamt,matchAmount);
+        //已匹配的券面总额
+        BigDecimal repoAssetConversionDealAmtTotal = BigDecimal.ZERO;
         BigDecimal positionGroupByPtl = BigDecimal.ZERO;
+        //去掉已匹配的券面总额
+        List<InterfTradRepoasstDto> interfTradRepoasstDtosMatch = cstpCommonMatchMapper.listRepMatchNum(execId);
+        if(!StringUtil.isEmptyList(interfTradRepoasstDtos)){
+            for (InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos) {
+                if(!StringUtil.isEmptyList(interfTradRepoasstDtosMatch)){
+                    for (InterfTradRepoasstDto tradRepoasstDtosMatch : interfTradRepoasstDtosMatch) {
+                        if(StringUtil.equals(interfTradRepoasstDto.getFinprodId(),tradRepoasstDtosMatch.getFinprodId())){
+                            interfTradRepoasstDto.setFacetotalamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getFacetotalamt(),ArithmeticUtil.multiply(tradRepoasstDtosMatch.getFacetotalamt(),new BigDecimal(100))));
+                        }
+                    }
+                }
+                repoAssetConversionDealAmtTotal = ArithmeticUtil.doAdd(repoAssetConversionDealAmtTotal,ArithmeticUtil.multiply(interfTradRepoasstDto.getFacetotalamt(),interfTradRepoasstDto.getConvrate()));
+            }
+        }
         for(InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos){
             //券面总额(百元)
             BigDecimal facetotalamt = ArithmeticUtil.divide(interfTradRepoasstDto.getFacetotalamt(),new BigDecimal(100),2);
@@ -233,8 +251,21 @@ public class CstpCommonMatchRepoImplService{
         //该list  默认第一个为中债  第二个为上清  下行接口逗号隔开处理
         List<String> acctNoList = (List<String>)map.get("acctNoList");
         List<InterfTradRepoasstDto> interfTradRepoasstDtos = cstpCommonMatchMapper.getInterfTradRepoasst(execId);
+        BigDecimal matchAmount = cstpCommonMatchMapper.getMatchAmount(execId);
         //成交后折算后总金额
         BigDecimal repoAssetConversionDealAmtTotal = interfTradRepoasstDtos.stream().map(InterfTradRepoasstDto::getDealamt).reduce(BigDecimal.ZERO, BigDecimal::add);
+        repoAssetConversionDealAmtTotal = ArithmeticUtil.subtract(repoAssetConversionDealAmtTotal,matchAmount);
+        //去掉已匹配的金额
+        List<InterfTradRepoasstDto> interfTradRepoasstDtosMatch = cstpCommonMatchMapper.listRepMatchNum(execId);
+        if(!StringUtil.isEmptyList(interfTradRepoasstDtos)&&!StringUtil.isEmptyList(interfTradRepoasstDtosMatch)){
+            for (InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos) {
+                for (InterfTradRepoasstDto tradRepoasstDtosMatch : interfTradRepoasstDtosMatch) {
+                    if(StringUtil.equals(interfTradRepoasstDto.getFinprodId(),tradRepoasstDtosMatch.getFinprodId())){
+                        interfTradRepoasstDto.setDealamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getDealamt(),tradRepoasstDtosMatch.getFacetotalamt()));
+                    }
+                }
+            }
+        }
         BigDecimal repoamt = interfOpicsTradRepo.getRepoamt();
         for(InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos){
             //交易金额
@@ -291,7 +322,9 @@ public class CstpCommonMatchRepoImplService{
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                trdPledgeMatchInfo.setMatchNum(subSec);
+                //逆回购 质押券匹配表 存金额  否则手工匹配剩余金额无法计算
+                trdPledgeMatchInfo.setMatchNum(matchNum);
+                //trdPledgeMatchInfo.setMatchNum(subSec);
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdPledgeMatchInfos.add(trdPledgeMatchInfo);
@@ -315,7 +348,7 @@ public class CstpCommonMatchRepoImplService{
     private BigDecimal 券面折算本金(BigDecimal initValue,BigDecimal rate,BigDecimal dealNum,BigDecimal total){
         initValue = ArithmeticUtil.multiply(initValue,new BigDecimal(100));
         dealNum = ArithmeticUtil.multiply(dealNum,new BigDecimal(100));
-       return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),ArithmeticUtil.multiply(dealNum,rate)),total,2);
+       return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),dealNum),total,2);
     }
 
     /**
@@ -327,7 +360,7 @@ public class CstpCommonMatchRepoImplService{
      * @return
      */
     private BigDecimal 券面折算匹配额度(BigDecimal initValue,BigDecimal rate,BigDecimal dealNum,BigDecimal total){
-        return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),ArithmeticUtil.multiply(dealNum,rate)),ArithmeticUtil.divide(total,new BigDecimal(100),2),2);
+        return ArithmeticUtil.divide(ArithmeticUtil.multiply(ArithmeticUtil.multiply(initValue,rate),dealNum),ArithmeticUtil.divide(total,new BigDecimal(100),2),2);
     }
 
     /**
@@ -339,7 +372,7 @@ public class CstpCommonMatchRepoImplService{
      * @return
      */
     private BigDecimal 本金折算券面(BigDecimal initValue,BigDecimal rate,BigDecimal dealAmt,BigDecimal total){
-        return ArithmeticUtil.divide(ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),ArithmeticUtil.multiply(dealAmt,rate),2),new BigDecimal(100),2);
+        return ArithmeticUtil.divide(ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),dealAmt,2),new BigDecimal(100),2);
     }
 
     private String  处理证券账户(String isKtg,String registOrg,List<String> acctNoList) {

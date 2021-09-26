@@ -18,6 +18,7 @@ import com.joyintech.tams.component.business.riskrds.service.InterfRiskRdsServic
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeListRds;
 import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
@@ -103,6 +104,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         this.setSelectOptionToModel(model, DictCode.投资目的);
         this.setSelectOptionToModel(model, DictCode.交易平台);
         this.setSelectOptionToModel(model, DictCode.价格模式);
+        this.setSelectOptionToModel(model, DictCode.业务模式);
         Date sysDate = DateUtil.platDateFromCache();
         model.addAttribute("sysDate",DateUtil.format(sysDate));
         model.addAttribute("bankRoom", DictCodeListExt1.交易场所_银行间.getValue());
@@ -130,6 +132,7 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         model.addAttribute("aim01", DictCodeListExt1.投资目的_公允价值变动计入当期损益.getValue());
         model.addAttribute("aim02", DictCodeListExt1.投资目的_摊余成本类.getValue());
         model.addAttribute("N", DictCodeList.是否_否.getValue());
+        model.addAttribute("PRICEMODEL_03", DictCodeListExt2.价格模式_市价指令.getValue());
         model.addAttribute("isShowType", CacheUtil.getSysParam("IS_SHOW_TYPE")==null?"01":CacheUtil.getSysParam("IS_SHOW_TYPE"));
         String entrustId = getParam("entrustId");
         String finprodId = getParam("finprodId");
@@ -178,7 +181,10 @@ public class EtrInvestBondInfo003Controller extends BaseController {
         Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
         isEleShow.putAll(map);
         model.addAttribute("isEleShow", isEleShow);
-
+        //展示投资目的或业务模式参数
+        String SHOW_INVAIM_OR_BUSSINSSMODEL = CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL");
+        model.addAttribute("SHOW_INVAIM_OR_BUSSINSSMODEL", SHOW_INVAIM_OR_BUSSINSSMODEL);
+        //展示投资目的或业务模式参数
         // add by etliu 20210501 银行间场内场外拆分 start
         model.addAttribute("parentPageId", this.getParam("parentPageId"));
         PageMenuSplitUtil.handlePageSelectDictList(model, DictCode.交易场所, this.getParam("parentPageId"));
