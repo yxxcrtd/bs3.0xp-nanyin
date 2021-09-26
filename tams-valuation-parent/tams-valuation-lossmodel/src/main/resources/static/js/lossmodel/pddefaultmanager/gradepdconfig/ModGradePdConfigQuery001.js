@@ -54,7 +54,7 @@ $(function () {
                 }}
             ,{field:'oTypeName',  title: '评级类型'}*/
             ,{field:'gradeResultStr',  title: '评级结果',sortField:'gradeResult'}
-            ,{field:'forwardYearPd' ,width:250,  title: '前瞻前年度边际PD%'}
+            ,{field:'forwardYearPd' ,width:250,  title: '前瞻前年度边际PD%',type:"number", digit:4}
             ,{field:'operation', width:200,title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
       });
