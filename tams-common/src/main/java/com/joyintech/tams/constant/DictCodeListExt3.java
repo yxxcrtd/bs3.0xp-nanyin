@@ -1555,7 +1555,7 @@ public enum DictCodeListExt3 implements BaseDictCodeList {
     内部评级_AA_PLUS(DictCode.内部评级,"04","内部评级_AA+"),
     内部评级_AA(DictCode.内部评级,"05","内部评级_AA"),
     内部评级_AA_MINUS(DictCode.内部评级,"06","内部评级_AA-"),
-    内部评级_C(DictCode.内部评级,"24","内部评级_C"),
+    内部评级_C(DictCode.内部评级,"26","内部评级_C"),
 
     兜底评级_AAA(DictCode.系统参数兜底评级,"04","兜底评级_AAA"),
     兜底评级_AA_PLUS(DictCode.系统参数兜底评级,"03","兜底评级_AA+"),

@@ -156,6 +156,7 @@ public class CashFlowDiscountProcessorService {
                 if (null == modRiskPremium2) {
                     isAssetPrice = true;
                     assetPriceBasePrice = modAssetInfoDto.getIssuePrice();//发行价
+                    assetPriceBaseDate = modAssetInfoDto.getVdate();
                 } else {
                     BeanUtil.copyPropertiesIgnoreNull(modRiskPremium, modRiskPremium2);
                 }

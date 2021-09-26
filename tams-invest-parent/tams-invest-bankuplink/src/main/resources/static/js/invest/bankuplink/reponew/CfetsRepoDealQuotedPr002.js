@@ -640,15 +640,15 @@
             var param = {};
             param.prinAmt = object.dealAmt;
             param.portfolioId = object.portfolioId;
-            param.mdate = object.tradeDate;
+            param.mdate = object.mSettleDate;
             param.tradeDate = object.tradeDate;
             param.ps = object.ps;
             param.shareAmt = object.dealAmt;
-            param.settleDate = object.mSettleDate;
             param.tradeMarket = '01';
             param.counterId = object.counterId;
             param.rebackPrice = object.price;
             param.termTypeReback = object.termType;
+            param.entrustId = object.entrustId;
 
             if (riskdata && riskInterfUrl) {
                 window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, param, riskdata, riskMathRedisCallbackPr002);

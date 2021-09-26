@@ -1085,7 +1085,7 @@
                 msg = JoyinUtil.getMessage('FIN_ASSET_E_0010', JoyinUtil.getLabel("FinPayInterestStdInfo.asset.vdate"));
             }
             if(lastMdateUnadjust != newParam.mdate){
-                msg = JoyinUtil.getMessage('VAL_FIN_ASSET_E_0011');
+                msg = JoyinUtil.getMessage('FIN_ASSET_E_0011', JoyinUtil.getLabel("FinPayInterestStdInfo.asset.mdate"));
             }
             $.each(list,function(index,obj){
                 var vdateUnadjust = new Date(obj.vdate).format('yyyy-MM-dd');

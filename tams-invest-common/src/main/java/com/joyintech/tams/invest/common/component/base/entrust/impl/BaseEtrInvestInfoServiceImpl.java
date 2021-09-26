@@ -58,6 +58,12 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
     private EtrEntrustAddMapper etrEntrustAddMapper;
 
     /**
+     * 指令废弃表
+     */
+    @Autowired
+    private EtrEntrustBackupMapper etrEntrustBackupMapper;
+    
+    /**
      * 委托指令回购质押品Mapper
      */
     @Autowired
@@ -1277,17 +1283,22 @@ public class BaseEtrInvestInfoServiceImpl implements BaseEtrInvestInfoService {
 //            if(StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已退回.getValue()) ||
 //                    StringUtil.equals(etr.getEntrustStatus(), DictCodeList.委托状态_已撤回.getValue())){
 //            }
+            /**
+             * 此处，流程启动时，检查指令有效表，发现有数据，正常情况为已退回或已撤回状态的数据，转移至备份表
+             */
             // 有效数据转移
             etrEntrustMapper.deleteByPrimaryKey(dto.getEtrEntrust().getEntrustId());
             etrEntrustAddMapper.deleteByPrimaryKey(dto.getEtrEntrustAdd().getEntrustId());
             // 转移至废弃表
-            etrEntrustMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
-            etrEntrustAddMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertFromQuery(dto.getEtrEntrust().getEntrustId());
+            etrEntrustBackupMapper.insertAddFromQuery(dto.getEtrEntrust().getEntrustId());
             // 使用退回或撤回状态
             dto.getEtrEntrust().setEntrustStatus(etr.getEntrustStatus());
         }else{
             dto.getEtrEntrust().setEntrustStatus(DictCodeListExt3.委托状态_流程中.getValue());
         }
+        
+        // 指令流程表入库
         return newDelegateFlow(dto);
     }
 }
