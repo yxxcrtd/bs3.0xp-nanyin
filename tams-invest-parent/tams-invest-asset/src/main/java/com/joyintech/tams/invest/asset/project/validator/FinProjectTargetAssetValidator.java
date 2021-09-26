@@ -221,7 +221,9 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
 
         if (dto.getOperateType() != null && !StringUtil.equals(dto.getOperateType(), "delete")) {
             //信贷及非标资产报送信息
-            dto.getBussRepAssetCreditNonstdInfoDto().setRepPartRedemFlag(coverNo(dto.getBussRepAssetCreditNonstdInfoDto().getRepPartRedemFlag()));
+            if (dto.getBussRepAssetCreditNonstdInfoDto() != null) {
+                dto.getBussRepAssetCreditNonstdInfoDto().setRepPartRedemFlag(coverNo(dto.getBussRepAssetCreditNonstdInfoDto().getRepPartRedemFlag()));
+            }
             resultList = chbInvDataCheckService.chbCheckCommon(resultList, dto, null, dto.getRepAssetType());
         }
 
