@@ -68,7 +68,7 @@ V_CONTENT_04 CLOB := 'select nvl(sum(nvl(RVALUE, 0)),0) as RVALUE,s1.FINPROD_ID 
   INNER  JOIN FIN_PRODUCT n on m.FINPROD_ID=n.FINPROD_ID and n.FINPROD_TYPE2 IN (''F01'',''F06'')
   inner join FIN_PRODUCT_TYPE t3 on n.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
-  where m.PORTFOLIO_ID in (''WJGF802'')  and  m.CDATE =date''2021-07-09'' -1 group by m.FINPROD_ID,n.FINPROD_NAME
+  where m.PORTFOLIO_ID in ${portfolioCode}  and  m.CDATE =date''${valDate}'' -1 group by m.FINPROD_ID,n.FINPROD_NAME
 union all
 --债券保证金划款，后续没有申购确认的交易
 SELECT T.FINPROD_ID,T2.FINPROD_NAME,nvl(sum(decode(T.PS,''T50'',decode(T.TRADE_STATUS,''03'',T.prin_amt*-1,T.prin_amt))),0) TRADE_AMT
@@ -76,10 +76,10 @@ SELECT T.FINPROD_ID,T2.FINPROD_NAME,nvl(sum(decode(T.PS,''T50'',decode(T.TRADE_S
  INNER JOIN TRD_PRODUCT_DEAL_ADD T1 ON T.trade_id = T1.trade_id
  INNER JOIN FIN_PRODUCT T2 on T.FINPROD_ID = T2.FINPROD_ID
  INNER JOIN TRD_FIN_PRODUCT_DEAL_TOTAL T3 on T.TOTLE_TRADE_ID = T3.TOTLE_TRADE_ID
- WHERE T1.PORTFOLIO_ID in (''WJGF802'')
+ WHERE T1.PORTFOLIO_ID in ${portfolioCode}
    AND T.PS = ''T50''
    AND T.FINPROD_TYPE2 = ''F01''
-   AND T.TRADE_DATE <= date''2021-07-09''
+   AND T.TRADE_DATE <= date''${valDate}''
    AND NOT EXISTS (
       -- 没有后续申购确认交易
       SELECT 1 FROM TRD_PRODUCT_DEAL TRD WHERE T3.TOTLE_TRADE_ID = TRD.B_TRADE_ID AND TRD.TRADE_STATUS = ''01''
@@ -101,10 +101,10 @@ SELECT T.FINPROD_ID,T2.FINPROD_NAME,NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT
  INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD T1 ON T.trade_id = T1.trade_id
  INNER JOIN FIN_PRODUCT T2 on T.FINPROD_ID = T2.FINPROD_ID
  INNER JOIN SYS_WFL_BUSINESS_LIST swbl on T1.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
- WHERE T1.PORTFOLIO_ID in (''WJGF802'')
+ WHERE T1.PORTFOLIO_ID in ${portfolioCode}
    AND T.PS = ''T50''
    AND T.FINPROD_TYPE2 = ''F01''
-   AND T.TRADE_DATE = date''2021-07-09''
+   AND T.TRADE_DATE = date''${valDate}''
   group by T.FINPROD_ID,T2.FINPROD_NAME
 union all
  --没有撤销记录的申购确认交易
@@ -113,7 +113,7 @@ SELECT T.FINPROD_ID,T2.FINPROD_NAME,NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT
  INNER JOIN TRD_PRODUCT_DEAL_ADD T1 ON T.trade_id = T1.trade_id
  INNER JOIN FIN_PRODUCT T2 on T.FINPROD_ID = T2.FINPROD_ID
  WHERE T.TRADE_STATUS = ''01''
-   AND T1.PORTFOLIO_ID in (''WJGF802'')
+   AND T1.PORTFOLIO_ID in ${portfolioCode}
    AND T.PS = ''T05''
    AND T.FINPROD_TYPE2 = ''F01''
    AND NOT EXISTS ( SELECT 1 FROM TRD_PRODUCT_DEAL TRD WHERE T.TRADE_ID = TRD.P_TRADE_ID AND TRD.TRADE_STATUS = ''03'')
@@ -125,9 +125,9 @@ SELECT T.FINPROD_ID,T2.FINPROD_NAME,NVL(SUM(NVL(T.prin_amt, 0)), 0) TRADE_AMT
  INNER JOIN WFL_TRD_PRODUCT_DEAL_ADD T1 ON T.trade_id = T1.trade_id
  INNER JOIN FIN_PRODUCT T2 on T.FINPROD_ID = T2.FINPROD_ID
  INNER JOIN SYS_WFL_BUSINESS_LIST swbl on T1.WORKFLOW_ID = swbl.SEQ_NO and swbl.PROCESS_STATE != ''BACK''
- WHERE T1.PORTFOLIO_ID in (''WJGF802'')
+ WHERE T1.PORTFOLIO_ID in ${portfolioCode}
    AND T.PS = ''T05''
-   AND T.TRADE_DATE = date''2021-07-09''
+   AND T.TRADE_DATE = date''${valDate}''
    AND T.FINPROD_TYPE2 = ''F01''
    group by T.FINPROD_ID,T2.FINPROD_NAME
    --其他交易方向
@@ -151,7 +151,7 @@ union ALL
    inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id
    --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
       LEFT JOIN TRD_PRODUCT_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
-    where  n1.PORTFOLIO_ID in (''WJGF802'')  and n.TRADE_DATE=date''2021-07-09''
+    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''
     and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
     group by n.FINPROD_ID,m.FINPROD_NAME
 union ALL
@@ -174,7 +174,7 @@ union ALL
    inner join FIN_PRODUCT_TYPE t3 on m.finprod_id = t3.finprod_id
    --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
       LEFT JOIN TRD_PRODUCT_TEMP_DEAL_ADD n1 ON n.TRADE_ID =n1.TRADE_ID
-    where  n1.PORTFOLIO_ID in (''WJGF802'')  and n.TRADE_DATE=date''2021-07-09''
+    where  n1.PORTFOLIO_ID in ${portfolioCode}  and n.TRADE_DATE=date''${valDate}''
     and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
     group by n.FINPROD_ID,m.FINPROD_NAME
 
@@ -199,7 +199,7 @@ union ALL
   INNER  JOIN FIN_PRODUCT s on n.FINPROD_ID=s.FINPROD_ID and s.FINPROD_TYPE2 IN (''F01'',''F06'')
   inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
-  where m.PORTFOLIO_ID in (''WJGF802'') and n.TRADE_DATE=date''2021-07-09''
+  where m.PORTFOLIO_ID in ${portfolioCode} and n.TRADE_DATE=date''${valDate}''
   and n.PS in (''T01'',''T02'',''T03'',''T04'',''T52'',''T11'',''T19'',''T22'',''T23'',''T25'',''T26'',''T39'',''T49'')
   group by n.FINPROD_ID,s.FINPROD_NAME
 union ALL
@@ -211,7 +211,7 @@ union ALL
   INNER  JOIN FIN_PRODUCT s on n.FINPROD_ID=s.FINPROD_ID and s.FINPROD_TYPE2 IN (''F01'',''F06'')
   inner join FIN_PRODUCT_TYPE t3 on s.finprod_id = t3.finprod_id
   --and t3.type_10 not in (''B01'',''B02'',''B03'',''B12'',''B001'')
-  where n.counter_id in (''WJGF802'') and n.TRADE_DATE=date''2021-07-09'' and n.PS =''T02''
+  where n.counter_id in ${portfolioCode} and n.TRADE_DATE=date''${valDate}'' and n.PS =''T02''
   AND EXISTS (SELECT 1 FROM SYS_PARA WHERE PARA_CODE = ''is_auto_generate_negate_deal'' AND PARAM_VALUE = ''Y'')
   group by n.FINPROD_ID,s.FINPROD_NAME
  ) s1  group by s1.FINPROD_ID,s1.FINPROD_NAME';
