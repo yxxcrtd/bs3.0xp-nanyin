@@ -1620,7 +1620,7 @@ $(function() {
         ps01Selections.push(PS_SELECTIONS[0].id);
         ps01Selections.push(PS_SELECTIONS[3].id);
         psF01Selections.push(PS_SELECTIONS[0].id);
-        psF01Selections.push(PS_SELECTIONS[1].id);
+        psF01Selections.push(PS_SELECTIONS[3].id);
         // modify by wanshiwei ZGZGST-2586 基金tab交易方向枚举值应该为申购/赎回/买入/卖出/产品违约赎回 20210912 start
         psF02Selections.push(PS_SELECTIONS[6].id);
         psF02Selections.push(PS_SELECTIONS[11].id);
@@ -1651,9 +1651,9 @@ $(function() {
         tradeMarket012Selections.push(TRADE_PLACE_SELECTIONS[1].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[0].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[2].id);
-        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[3].id);
+        // tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[3].id);
         tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[1].id);
-        tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[5].id);
+        // tradeMarket02345Selections.push(TRADE_PLACE_SELECTIONS[5].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[0].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[1].id);
         dealMode0123Selections.push(DEAL_MODE_SELECTIONS[2].id);
