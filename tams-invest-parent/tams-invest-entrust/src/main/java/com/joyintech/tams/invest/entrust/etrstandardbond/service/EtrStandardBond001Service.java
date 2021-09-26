@@ -9,6 +9,8 @@
  */
 package com.joyintech.tams.invest.entrust.etrstandardbond.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +65,18 @@ public class EtrStandardBond001Service extends CommonExportService<EtrStandardBo
         selectParam.put("userId", SecurityUtil.getLoginUser().getUserName());
         Page<EtrStandardBond001Dto> page = restTemplate.postForPage(ServiceApplication.ENTRUST_SERVICE_NAME + "/EtrStandardBond/selectSearchDataList",
             selectParam, EtrStandardBond001Dto.class);
-        
+        //万元展示 add by yeming 20210926 start
+        if(StringUtil.isNotEmpty(page.getRoot())) {
+            for (EtrStandardBond001Dto dto : page.getRoot()) {
+                if (dto.getPosStrdPrinAmt() != null) {
+                    dto.setPosStrdPrinAmt(dto.getPosStrdPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));
+                }
+                if (dto.getPledStrdPrinAmt() != null) {
+                    dto.setPledStrdPrinAmt(dto.getPledStrdPrinAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));
+                }
+            }
+        }
+        //万元展示 add by yeming 20210926 start
         return page;
     }
 

@@ -7,8 +7,8 @@
             <Cell order="3" name="交易场所">tradePlaceText</Cell>
             <Cell order="4" name="债券代码">finprodMarketId</Cell>
             <Cell order="5" name="债券名称">finProdName</Cell>
-            <Cell order="6" name="持仓券面总额">posStrdPrinAmt</Cell>
-            <Cell order="7" name="可质押券面总额">pledStrdPrinAmt</Cell>
+            <Cell order="6" name="持仓券面总额/万元">posStrdPrinAmt</Cell>
+            <Cell order="7" name="可质押券面总额/万元">pledStrdPrinAmt</Cell>
             <Cell order="8" name="折算比例%">scale</Cell>
         </Row>
     </Worksheet>
