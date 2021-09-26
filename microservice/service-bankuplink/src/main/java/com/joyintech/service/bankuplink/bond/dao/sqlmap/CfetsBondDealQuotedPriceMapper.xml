@@ -732,7 +732,7 @@
 	<select id="getCstpQryTableList" resultType="com.joyintech.service.trade.cstp.dto.CstpSelectDto">
 		select distinct aa.* from(
 		SELECT
-		I.COUNTERTRADERNAME counterTraderName,/*对方交易员*/
+		I.COUNTERTRADERNAME countertradername,/*对方交易员*/
 		I.SETTLDATE settldate, /*首次结算日*/
 		I.SETTLDATE2 settldate2,/*到期结算日*/
 		ptl_portfolio.Portfolio_Id portfolioId,/*组合代码*/
@@ -768,7 +768,7 @@
 		tpd.F_TRADE_ID fTradeId,
 		tpd.R_TRADE_ID rTradeId,
 		mcci2.PARTY_NAME cpPartyName,/*对手方机构*/
-		I.OURTRADERNAME ourTradeName,/*本方交易员*/
+		I.OURTRADERNAME ourtradername,/*本方交易员*/
 		decode(I.BUSINESSTYPE,'BOND',
 		(select TRADE_MARKET from fin_product where FINPROD_market_ID = ts.SECID),
 		'REPO',decode(tr.market, 'IB', '01', 'SH', '03', 'SZ', '04')) market,
@@ -787,12 +787,12 @@
 		<!--decode(I.BUSINESSTYPE,'BOND',I.LASTQTY-ts.Prinamt,'REPO',I.LASTQTY-tr.Repoamt) lastqtyready-->
 		,decode(I.BUSINESSTYPE,'BOND',I.PRICE,'REPO',I.PRICE*100) price/*回购利率*/
 		,decode(I.BUSINESSTYPE, 'BOND', I.DIRTYPRICE, 'REPO', '') dirtyprice
-		,decode(I.BUSINESSTYPE, 'BOND', I.UNDERLYINGYIELD2*100, 'REPO', '') underlyingyield2
+		,decode(I.BUSINESSTYPE, 'BOND', I.YIELD2*100, 'REPO', '') underlyingyield2
 		,I.TRADEDATE tradedate/*成交时间*/
 		,decode(I.BUSINESSTYPE, 'BOND', I.ACCRUEDINTERESTAMT, 'REPO', '') accruedinterestamt
 		,I.ACCRUEDINTERESTTOTALAMT accruedinteresttotalamt/*回购利息*/
 		,I.TRADECASHAMT tradecashamt/*交易金额*/
-		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.SETTLCURRAMT2) settlcurramt2/*到期结算金额*/
+		,decode(I.BUSINESSTYPE, 'BOND', I.SETTLCURRAMT, 'REPO', I.SETTLCURRAMT2) settlcurramt2/*到期结算金额*/
 		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.TRADELIMITDAYS) tradelimitdays/*回购期限*/
 		,decode(I.BUSINESSTYPE, 'BOND', '', 'REPO', I.CASHHOLDINGDAYS) cashholdingdays/*实际占款天数*/
 		,ROUND(NVL(decode(I.BUSINESSTYPE, 'BOND', NVL(tmi.SUMMATCHNUM*100, 0), 'REPO', NVL(tmi.SUMMATCHNUM, 0)), 0)/
@@ -871,7 +871,7 @@
 		A.PARTY_ID
 		FROM MST_CFETS_CUSTOMER_INFO A
 		LEFT JOIN MST_CFETS_CUSTOMER_RELA B ON A.PARTY_ID = B.SPARTY_ID
-		LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID) mcci2 on mcci2.PARTY_ID = I.COUNTERINSTITUTIONCODE
+		LEFT JOIN MST_CFETS_CUSTOMER_INFO C ON B.MPARTY_ID = C.PARTY_ID) mcci2 on mcci2.PARTY_CUSTOMER_ID = I.COUNTERINSTITUTIONCODE
 		<where>
 			AND I.BUSINESSTYPE = 'BOND'
 			<if test="ps != null and !''.equals(ps)">

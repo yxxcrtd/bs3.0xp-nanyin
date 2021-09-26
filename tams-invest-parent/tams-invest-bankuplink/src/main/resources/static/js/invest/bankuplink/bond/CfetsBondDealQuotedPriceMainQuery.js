@@ -586,16 +586,16 @@
             , {field: 'psStr', title: '本方方向', sortField: 'side', width: '100'}
             , {field: 'counterinstitutioncode', title: '对手方', width: '100'}
             , {field: 'cpPartyName', title: '对手方机构', width: '100'}
-            , {field: 'counterTraderName', title: '对手方交易员', width: '100'}
+            , {field: 'countertradername', title: '对手方交易员', width: '100'}
             , {field: 'ourinstitutioncode', title: '本方', width: '100'}
-            , {field: 'ourTraderName', title: '本方交易员', width: '100'}
+            , {field: 'ourtradername', title: '本方交易员', width: '100'}
             , {field: 'lastqty', title: '券面总计（万元）', width: '100', type: 'money', digit: 2}
             , {field: 'price', title: '净价', width: '100', type: 'money', digit: 4}
-            , {field: 'dirtyPrice', title: '全价', width: '100', type: 'money', digit: 4}
+            , {field: 'dirtyprice', title: '全价', width: '100', type: 'money', digit: 4}
             , {field: 'underlyingyield2', title: '到期收益率(%)', width: '100', type: 'money', digit: 4}
             , {field: 'strikeyield', title: '行权收益率(%)', width: '100', type: 'money', digit: 4}
             , {field: 'tradecashamt', title: 'CSTPSelect001.tradecashamt', width: '170', type: 'money', digit: 2}
-            , {field: 'settlcurramt', title: '结算金额', width: '170', type: 'money', digit: 2}
+            , {field: 'settlcurramt2', title: '结算金额', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinterestamt', title: '应计利息', width: '170', type: 'money', digit: 2}
             , {field: 'accruedinteresttotalamt', title: '应计利息总额', width: '170', type: 'money', digit: 2}
             , {
