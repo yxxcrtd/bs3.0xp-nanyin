@@ -271,7 +271,7 @@
             Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
                   if(result.data=='0') {
                        Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
-                       //$('#finprodId').val("").trigger('change');
+                       $('#finprodId').val("").trigger('change');
                        $("#businessModel").attr("disabled",false);
                        $('#businessModel').val("").trigger('change');
                    }else if(result.data=='3'){

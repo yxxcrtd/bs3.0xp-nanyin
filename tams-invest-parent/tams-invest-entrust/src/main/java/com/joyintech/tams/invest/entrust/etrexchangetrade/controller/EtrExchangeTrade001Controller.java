@@ -1247,7 +1247,7 @@ public class EtrExchangeTrade001Controller extends BaseController{
     public AjaxResult IsBondAsset(){
         AjaxResult ajaxResult = new AjaxResult();
         ajaxResult.setData(etrExchangeTrade001Service.IsBondAsset(RequestUtil.getPageParam()));
-        ajaxResult.setData("2");
+//        ajaxResult.setData("2");
          return ajaxResult;
     }
 }
