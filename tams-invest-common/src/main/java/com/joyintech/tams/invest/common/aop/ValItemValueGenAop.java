@@ -56,7 +56,7 @@ public class ValItemValueGenAop {
             return;
         }
 
-        logger.info("估值核算相关字段值获取设值aop处理开始--------------------------------");
+//        logger.info("估值核算相关字段值获取设值aop处理开始--------------------------------");
         
         Object paramObject = joinPoint.getArgs()[0];
         
@@ -285,7 +285,7 @@ public class ValItemValueGenAop {
                 targetTalbleObj.setRegistOrg(registOrg);
             }
         }
-        logger.info("估值核算相关字段值获取设值aop处理结束--------------------------------");
+//        logger.info("估值核算相关字段值获取设值aop处理结束--------------------------------");
     }
 
     /**
