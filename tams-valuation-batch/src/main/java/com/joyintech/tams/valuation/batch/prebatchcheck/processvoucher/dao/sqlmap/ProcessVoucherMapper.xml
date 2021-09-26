@@ -3,7 +3,7 @@
 <mapper namespace="com.joyintech.tams.invest.batch.prebatchcheck.processvoucher.dao.ProcessVoucherMapper">
 
     <select id="selectProcessVoucherList" parameterType="java.util.Map"
-            resultType="com.joyintech.tams.invest.common.prebatch.dto.SysPrebatchResultDetail">
+            resultType="com.joyintech.tams.valuation.prebatch.dto.SysPrebatchResultDetail">
             /*获取最新的留痕表信息*/
             with tempA as(
 	            select a.*,rank() over(partition by a.workflow_id order by a.HIS_NO desc) as rank
