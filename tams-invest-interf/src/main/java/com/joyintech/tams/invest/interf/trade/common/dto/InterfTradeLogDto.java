@@ -1,14 +1,13 @@
 package com.joyintech.tams.invest.interf.trade.common.dto;
 
 import com.joyintech.framework.base.BaseEntity;
-import com.joyintech.tams.invest.interf.trade.common.Result;
 
 /**
  * 交易接口日志DTO
  * 
  * @author yflv
  * @version 1.0 2021年09月23日
- * @see Result
+ * @see InterfTradeLogDto
  * @since 1.0
  */
 public class InterfTradeLogDto extends BaseEntity{

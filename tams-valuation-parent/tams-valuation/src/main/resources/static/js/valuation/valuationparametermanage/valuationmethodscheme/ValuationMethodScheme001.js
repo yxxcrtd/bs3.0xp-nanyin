@@ -242,7 +242,7 @@ $(function () {
 			{field:'valuationMethodCode', width:120, title: '估值方法Code', visible:false},
 			{field:'valuationMethod', width:120,sortField:'valuationMethodCode', title: '估值方法'},
 			{field:'valuationPriceCode', width:120, title: '估值市价Code', visible:false},
-			{field:'valuationPrice', width:120, sortField:'valuationPriceCode', title: '估值市价'},
+			{field:'valuationPrice', width:120, sortField:'valuationPriceCode', title: '市价来源'},
 			{field:'quotaDigit', width:120, title: '行情位数'},
 			{field:'priceTailMode', width:160, title: '行情尾数处理方式'},
 	        {field:'priceClass', width:160, title: '价格类型'},

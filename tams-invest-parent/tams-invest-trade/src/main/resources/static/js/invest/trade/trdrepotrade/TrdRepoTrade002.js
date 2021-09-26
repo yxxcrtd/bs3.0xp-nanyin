@@ -266,6 +266,19 @@
 //	                Joyin.ajaxJson(basePath + 'invest/trade/TrdCommonController/delLinesDeal',result1.data,function(result2) {});
 	            	object.riskCreditListCommonDto = result1.data;
 	            	Joyin.confirm(result.data, function () {
+                        //质押券信息 面额万元改成元为单位
+                        if(object.bussRepoSec){
+                            if(object.bussRepoSec.totalPrinAmt){
+                                object.bussRepoSec.totalPrinAmt = JoyinMath.doMul(object.bussRepoSec.totalPrinAmt,10000);
+                            }
+                            if(object.bussRepoSec.pledgeBondList&&obj.bussRepoSec.pledgeBondList.length>0){
+                                $.each(object.bussRepoSec.pledgeBondList, function(index,item){
+                                    item.avaPledgePrin = JoyinMath.doMul(item.avaPledgePrin,10000);
+                                    item.pledgePrin = JoyinMath.doMul(item.pledgePrin,10000);
+                                    item.prin = JoyinMath.doMul(item.prin,10000);
+                                });
+                            }
+                        }
 	                    if (operateType === 'save') {
 	                        WorkFlow.doSaveList(basePath + 'invest/trade/trdrepotrade/TrdRepoTrade002/save', object, "TrdRepoTrade002_btn_save");
 	                    } else {
@@ -1509,7 +1522,7 @@
         if (fTradeId == null) {
             var fTradeId = $('#fTradeId').val();
         }
-        $('#repoType').attr('disabled', false);
+        //$('#repoType').attr('disabled', false);
         $('#ps').attr('disabled', false);
         $("#vdate").attr('disabled', false);
         $('#mdate').attr('disabled', false);
@@ -1561,7 +1574,7 @@
                             $('#portfolioId').attr('disabled', false);
                         }
                     }
-                    if (result.prodtype && result.prodtype != ''){
+                    /*if (result.prodtype && result.prodtype != ''){
                         $('#repoType').val(result.prodtype).trigger('change');// 回购类型
                         if($('#repoType').val()){
                             $('#repoType').attr('disabled', true);
@@ -1569,7 +1582,7 @@
                     }else{
                         deleteSelect('repoType');
                         $('#repoType').attr('disabled', false);
-                    }
+                    }*/
                     if(result.market){
                         $('#tradeMarket').val(result.market).trigger('change');//交易场所
                         if($('#tradeMarket').val()){
@@ -1831,6 +1844,8 @@
                             window.BussRepoSec["bussRepoSec"].reloadPledgeBond('');
                         }
                     }
+                    $('#repoType').val(TARGET_BACK_TYPE_H04).trigger('change');
+                    $('#repoType').attr('disabled',true);
                     //成交编号   通道置灰
                     $('#chlId').attr('disabled',true);
                     $('#bussRepoSec_btn_add').addClass('layui-btn-disabled').off();

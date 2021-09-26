@@ -594,15 +594,15 @@
 				(EE.PRICE-MBVI.NETPRICE)/MBVI.NETPRICE deviation,/*价格偏离度*/
 				EE.REMARK remark, /*备注*/
 				SWBN1.OPINIONS jbyj,/*经办意见*/
-				TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') jbrq,/*经办审批日期*/
+				CASE WHEN SWBN1.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END jbrq,/*经办审批日期*/
 				SWBN2.OPINIONS fhyj,/*复核意见*/
-				TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fhrq,/*复核审批日期*/
+				CASE WHEN SWBN2.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fhrq,/*复核审批日期*/
 				SWBN3.OPINIONS fkyj,/*风控意见*/
-				TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fjrq,/*风控审批日期*/
+				CASE WHEN SWBN3.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fkrq,/*风控审批日期*/
 				SWBN4.OPINIONS fgyj,/*分管负责人意见*/
-				TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fgrq,/*分管负责人审批日期*/
+				CASE WHEN SWBN4.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fgrq,/*分管负责人审批日期*/
 				SWBN5.OPINIONS zgyj,/*资管部意见*/
-				TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') zgrq/*资管部审批日期*/
+				CASE WHEN SWBN5.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END zgrq/*资管部审批日期*/
 				FROM ETR_ENTRUST EE
 				LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID = EEA.ENTRUST_ID
 				LEFT JOIN FIN_PRODUCT FP ON EE.FINPROD_ID = FP.FINPROD_ID
@@ -658,15 +658,15 @@
 				(SELECT WM_CONCAT(EP.PLEDGE_RATIO*100) FROM ETR_PLEDGE EP WHERE EE.ENTRUST_ID = EP.ENTRUST_ID) conRatio,/*折算比列*/
 				EE.REMARK remark, /*备注*/
 				SWBN1.OPINIONS jbyj,/*经办意见*/
-				TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') jbrq,/*经办审批日期*/
+				CASE WHEN SWBN1.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END jbrq,/*经办审批日期*/
 				SWBN2.OPINIONS fhyj,/*复核意见*/
-				TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fhrq,/*复核审批日期*/
+				CASE WHEN SWBN2.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fhrq,/*复核审批日期*/
 				SWBN3.OPINIONS fkyj,/*风控意见*/
-				TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fjrq,/*风控审批日期*/
+				CASE WHEN SWBN3.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fkrq,/*风控审批日期*/
 				SWBN4.OPINIONS fgyj,/*分管负责人意见*/
-				TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fgrq,/*分管负责人审批日期*/
+				CASE WHEN SWBN4.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fgrq,/*分管负责人审批日期*/
 				SWBN5.OPINIONS zgyj,/*资管部意见*/
-				TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') zgrq/*资管部审批日期*/
+				CASE WHEN SWBN5.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END zgrq/*资管部审批日期*/
 				FROM ETR_ENTRUST EE
 				LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID = EEA.ENTRUST_ID
 				LEFT JOIN FIN_PRODUCT FP ON EE.FINPROD_ID = FP.FINPROD_ID
@@ -724,15 +724,15 @@
 				EEA.SETTLE_SPREED settleSpreed,/*清算速度*/
 				(CASE WHEN EEA.ASSET_TYPE = #{assetBond} THEN EE.ENTRUST_NUM*100 ELSE  NVL(EE.ENTRUST_AMT,EE.ENTRUST_NUM*100) END) entrustAmt, /*指令金额*/
 				SWBN1.OPINIONS jbyj,/*经办意见*/
-				TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') jbrq,/*经办审批日期*/
+				CASE WHEN SWBN1.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN1.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END jbrq,/*经办审批日期*/
 				SWBN2.OPINIONS fhyj,/*复核意见*/
-				TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fhrq,/*复核审批日期*/
+				CASE WHEN SWBN2.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN2.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fhrq,/*复核审批日期*/
 				SWBN3.OPINIONS fkyj,/*风控意见*/
-				TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fjrq,/*风控审批日期*/
+				CASE WHEN SWBN3.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN3.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fkrq,/*风控审批日期*/
 				SWBN4.OPINIONS fgyj,/*分管负责人意见*/
-				TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') fgrq,/*分管负责人审批日期*/
+				CASE WHEN SWBN4.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN4.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END fgrq,/*分管负责人审批日期*/
 				SWBN5.OPINIONS zgyj,/*资管部意见*/
-				TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') zgrq/*资管部审批日期*/
+				CASE WHEN SWBN5.CREATE_TIME IS NOT NULL THEN TO_CHAR(SWBN5.CREATE_TIME,'yyyy"年"MM"月"dd"日"') ELSE '  年  月  日' END zgrq/*资管部审批日期*/
 				FROM ETR_ENTRUST EE
 				LEFT JOIN ETR_ENTRUST_ADD EEA ON EE.ENTRUST_ID = EEA.ENTRUST_ID
 				LEFT JOIN FIN_PRODUCT FP ON EE.FINPROD_ID = FP.FINPROD_ID

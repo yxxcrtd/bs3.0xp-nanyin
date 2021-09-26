@@ -388,21 +388,23 @@
                 width : 150,
                 edit : false,
                 type : 'number',
-                digit:2
+                digit:4
             }, {
                 field : 'intPrinAmt',
                 title : 'FinPayInterestStdInfo.prinAmt',
                 sortable : false,
                 width : 150,
                 edit : false,
-                type : 'number'
+                type : 'number',
+                digit:4
             }, {
                 field : 'intAmt',
                 title : 'FinPayInterestStdInfo.intAmt',
                 sortable : false,
                 width : 150,
                 edit : true,
-                type : 'number'
+                type : 'number',
+                digit:4
             }, {
                 field : 'vdateY',
                 type : 'date',

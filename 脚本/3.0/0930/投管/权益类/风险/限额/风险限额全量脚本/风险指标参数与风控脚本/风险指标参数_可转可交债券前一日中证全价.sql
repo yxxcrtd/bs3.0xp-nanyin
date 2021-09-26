@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='KZKJZQQYRZZQJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQQYRZZQJ','可转可交债券前一日中证全价','N','','wp','C001',sysdate,'wp',sysdate,'','','N','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('KZKJZQQYRZZQJ','可转可交债券前一日中证全价','N','','system','',sysdate,'system',sysdate,'','','N','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='KZKJZQQYRZZQJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','wp','C001',sysdate,'wp',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('KZKJZQQYRZZQJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','system','',sysdate,'system',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -33,9 +33,9 @@ FROM
 )where rk=1';
 
 ----事后(日间)
-V_CONTENT_04 CLOB := 'SELECT secid AS RKEY,price AS RVALUE
+V_CONTENT_04 CLOB := 'SELECT secid AS RKEY,price AS RVALUE,FINPROD_NAME RKEYCN
 FROM
-(SELECT t2.FINPROD_ID as secid,t1.PRICE as price,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
+(SELECT t2.FINPROD_ID as secid,t2.FINPROD_NAME,t1.PRICE as price,rank() over (partition by t2.FINPROD_ID,t2.FINPROD_NAME order by t1.VALUE_DATE desc) rk
  FROM MST_BOND_VALUATION_INFO t1
  inner JOIN FIN_PRODUCT t2
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
@@ -49,9 +49,9 @@ FROM
 )where rk=1';
 
 ----事后(日终)
-V_CONTENT_05 CLOB := 'SELECT secid AS RKEY,price AS RVALUE
+V_CONTENT_05 CLOB := 'SELECT secid AS RKEY,price AS RVALUE,FINPROD_NAME RKEYCN
 FROM
-(SELECT t2.FINPROD_ID as secid,t1.PRICE as price,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
+(SELECT t2.FINPROD_ID as secid,t2.FINPROD_NAME,t1.PRICE as price,rank() over (partition by t2.FINPROD_ID,t2.FINPROD_NAME order by t1.VALUE_DATE desc) rk
  FROM MST_BOND_VALUATION_INFO t1
  inner JOIN FIN_PRODUCT t2
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID

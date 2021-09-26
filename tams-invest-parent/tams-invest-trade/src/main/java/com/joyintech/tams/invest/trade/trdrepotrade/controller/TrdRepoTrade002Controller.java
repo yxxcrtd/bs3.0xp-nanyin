@@ -670,7 +670,7 @@ public class TrdRepoTrade002Controller extends BaseController {
     @ResponseBody
     AjaxResult save(@RequestBody TrdRepoTrade002Dto dto) throws Exception {
         //万元转换 add  by yeming 20210817 start
-        if(dto.getBussRepoSec() != null){
+        /*if(dto.getBussRepoSec() != null){
             if( dto.getBussRepoSec().getTotalPrinAmt()  != null){
                 dto.getBussRepoSec().setTotalPrinAmt(ArithmeticUtil.multiply( dto.getBussRepoSec().getTotalPrinAmt(),new BigDecimal(10000)));
             }
@@ -685,7 +685,7 @@ public class TrdRepoTrade002Controller extends BaseController {
                     pledgeBond.setPrin(ArithmeticUtil.multiply(pledgeBond.getPrin(), new BigDecimal(10000)));
                 }
             }
-        }
+        }*/
         //万元转换 add  by yeming 20210817 end
         if (StringUtil.isBlank(dto.getTradeId())) {
             if (baseGetBusinessId != null) {
