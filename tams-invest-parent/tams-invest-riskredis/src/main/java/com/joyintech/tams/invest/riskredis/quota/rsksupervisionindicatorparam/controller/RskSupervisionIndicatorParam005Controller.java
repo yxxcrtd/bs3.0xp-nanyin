@@ -146,7 +146,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 		String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
 		List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(category)&&StringUtil.equals(category, "WIND")){
-        	if(null == parentId) {
+        	if(StringUtil.isEmpty(parentId)) {
         		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.机构所属行业一级分类, null);
         		for(SelectOptionDto optionDto:selectDto1.getOptions()){
         			TreeNode node = new TreeNode();
@@ -222,7 +222,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
         String initValue = request.getParameter("initValue")==null?"":request.getParameter("initValue");
         List<String> initValueList = StringUtil.splitToList(",",initValue);
         if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_授权分类.getValue())){
-        	if(null == parentId) {
+        	if(StringUtil.isEmpty(parentId)) {
         		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.授权资产一级分类, null);
         		for(SelectOptionDto optionDto:selectDto1.getOptions()){
         			TreeNode node = new TreeNode();
@@ -289,7 +289,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 				}
 			}
         }else if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_资管分类.getValue())){
-        	if(null == parentId) {
+        	if(StringUtil.isEmpty(parentId)) {
         		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.资管一级分类, null);
         		for(SelectOptionDto optionDto:selectDto1.getOptions()){
         			TreeNode node = new TreeNode();
@@ -366,7 +366,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 				}
             }
         }else if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_中债分类.getValue())){
-        	if(null == parentId) {
+        	if(StringUtil.isEmpty(parentId)) {
         		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.中债_监管一级分类, null);
         		for(SelectOptionDto optionDto:selectDto1.getOptions()){
         			TreeNode node = new TreeNode();
@@ -569,7 +569,7 @@ public class RskSupervisionIndicatorParam005Controller extends BaseController {
 				}
             }
         }else if(StringUtil.isNotEmpty(assetType)&&StringUtil.equals(assetType, BussinessDictCodeListRds.资产类型分类_债券wind分类.getValue())){
-        	if(null == parentId) {
+        	if(StringUtil.isEmpty(parentId)) {
         		SelectDto selectDto1 = this.getSelectDataFromDataDic(BussinessDictCodeRds.WIND一级分类_含债券一级分类等, null);
         		for(SelectOptionDto optionDto:selectDto1.getOptions()){
         			TreeNode node = new TreeNode();

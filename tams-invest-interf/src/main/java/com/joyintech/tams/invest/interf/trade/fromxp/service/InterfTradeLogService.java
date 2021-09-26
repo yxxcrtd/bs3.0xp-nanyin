@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.interf.trade.fromxp.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,23 +20,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.joyintech.framework.base.BaseService;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.invest.interf.trade.common.Constants;
 import com.joyintech.tams.invest.interf.trade.common.InterfThreadPool;
-import com.joyintech.tams.invest.interf.trade.common.Result;
+import com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeConfigDto;
 import com.joyintech.tams.invest.interf.trade.common.dto.InterfTradeLogDto;
+import com.joyintech.tams.invest.interf.trade.common.util.SpringReflectUtils;
 import com.joyintech.tams.invest.interf.trade.fromxp.dao.InterfTradeLogMapper;
 /**
  * 交易接口日志Service
  * 
  * @author yflv
  * @version 1.0 2021年09月23日
- * @see Result
+ * @see InterfTradeLogService
  * @since 1.0
  */
 @Service
 public class InterfTradeLogService extends BaseService<InterfTradeLogDto> {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Map<String, InterfTradeConfigDto> CONFIG_MAP = new ConcurrentHashMap<String, InterfTradeConfigDto>();
 
     /**
      * 获取mapper对象
@@ -69,6 +73,10 @@ public class InterfTradeLogService extends BaseService<InterfTradeLogDto> {
 		InterfThreadPool pool = new InterfThreadPool(Constants.INTERF_THREAD_NUMBER);
     	try {
         	for(InterfTradeLogDto interfTradeLogDto:interfTradeLogDtoList) {
+        		if(StringUtil.isEmpty(interfTradeLogDto.getInterfCode())) {
+        			logger.warn("接口编码为空，不可调用业务系统，对象：{}",interfTradeLogDto.toString());
+        			continue;
+        		}
         		RunTask task = new RunTask(interfTradeLogDto);
         		pool.submit(task);
         	}
@@ -87,8 +95,32 @@ public class InterfTradeLogService extends BaseService<InterfTradeLogDto> {
 		@Override
 		public void run() {
 			try {
-				//TODO 调用投管业务系统
 				logger.info(interfTradeLogDto.toString());
+				InterfTradeConfigDto interfTradeConfigDto = CONFIG_MAP.get(interfTradeLogDto.getInterfCode());
+				if(interfTradeConfigDto==null) {
+					InterfTradeConfigDto where = new InterfTradeConfigDto();
+					where.setInterfCode(interfTradeLogDto.getInterfCode());
+					where.setInterfSystem(interfTradeLogDto.getInterfSystem());
+					where.setInterfStatus(Constants.INTERF_CONFIG_STATUS_ENABLE);
+					List<InterfTradeConfigDto> interfTradeConfigDtoList = interfTradeLogMapper.searchInterfTradeConfig(where);
+					if(interfTradeConfigDtoList==null || interfTradeConfigDtoList.size()<=0) {
+						logger.warn("接口编码:{}，没有配置业务处理映射关系或映射关系不可用",interfTradeLogDto.getInterfCode());
+						return ;
+					}
+					interfTradeConfigDto = interfTradeConfigDtoList.get(0);
+					CONFIG_MAP.put(interfTradeLogDto.getInterfCode(),interfTradeConfigDto);
+				}
+				String serviceName = interfTradeConfigDto.getBusinessService();
+				String methodName = interfTradeConfigDto.getBusinessMethod();
+				if(StringUtil.isEmpty(serviceName)) {
+					logger.warn("接口配置:{}，没有配置业务系统服务名",interfTradeConfigDto.getInterfCode());
+					return ;
+				}
+				if(StringUtil.isEmpty(methodName)) {
+					methodName = Constants.INTERF_DEFAULT_METHOD;
+				}
+				Object[] params = {interfTradeLogDto.getId(),interfTradeLogDto.getInterfMsg()};
+				SpringReflectUtils.springInvokeMethod(serviceName, methodName, params);
 			} catch (Exception e) {
 				logger.error(e.getMessage());
     		} finally {
