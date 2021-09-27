@@ -65,4 +65,6 @@ public interface CfetsRepoDealQuotedPr001Mapper {
      * @since 1.0
      */
     List<SelectOptionDto> queryMySideTraderList(Map<String, Object> map);
+
+    List<CstpSelectDto> selectExportPdf(Map<String, Object> map);
 }

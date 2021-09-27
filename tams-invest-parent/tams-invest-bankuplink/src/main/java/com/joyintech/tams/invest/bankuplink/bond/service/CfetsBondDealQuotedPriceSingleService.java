@@ -9,6 +9,7 @@ import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.ArithmeticUtil;
+import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.PtlPortfolioMapper;
@@ -17,21 +18,26 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.bankuplink.bond.dto.BondQuoteInfoDto;
 import com.joyintech.tams.invest.bankuplink.bond.dto.CfetsBondDealDialogueQuoteDto;
+import com.joyintech.tams.invest.bankuplink.cstp.dto.CstpSelectDto;
 import com.joyintech.tams.invest.bankuplink.reponew.dto.EtrFinProductCommonDto;
 import com.joyintech.tams.invest.bankuplink.reponew.service.CfetsRepoDealQuotedPr001Service;
 import com.joyintech.tams.invest.common.component.base.group.BasePtlSecPositionInfoService;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +55,9 @@ public class CfetsBondDealQuotedPriceSingleService extends CommonExportService<B
 
     @Autowired
     private CfetsRepoDealQuotedPr001Service cfetsRepoDealQuotedPr001Service;
+
+    @Autowired
+    private CommonExportPdfService commonExportPdfService;
 
     @Override
     public void doComplete(CfetsBondDealDialogueQuoteDto cfetsBondDealDialogueQuoteDto, OperationType operationType) {
@@ -208,4 +217,47 @@ public class CfetsBondDealQuotedPriceSingleService extends CommonExportService<B
                 BigDecimal.class);
     }
 
+    public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
+        List<CstpSelectDto> datas = selectExportPdf(param);
+        if(!StringUtil.isEmptyList(datas)){
+            //汇总交易金额
+            CstpSelectDto dto = new CstpSelectDto();
+            dto.setPortfolioId("合计");
+            BigDecimal dirtyprice = datas.stream().map(CstpSelectDto::getDirtyprice).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal lastqty = datas.stream().map(CstpSelectDto::getLastqty).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal settlcurramt2 = datas.stream().map(CstpSelectDto::getSettlcurramt2).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal accruedinteresttotalamt = datas.stream().map(CstpSelectDto::getAccruedinteresttotalamt).reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setDirtyprice(dirtyprice);
+            dto.setLastqty(lastqty);
+            dto.setSettlcurramt2(settlcurramt2);
+            dto.setAccruedinteresttotalamt(accruedinteresttotalamt);
+            datas.add(dto);
+        }
+        return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId),datas);
+    }
+
+    /**
+     * 导出pdf数据 add by zengchengfa 20210803
+     * @param param
+     * @return
+     */
+    public List<CstpSelectDto> selectExportPdf(Map param){
+        return restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsBondDealQuotedPrice/selectExportPdf",
+                param,CstpSelectDto.class);
+    }
+
+    /**
+     * 获取配置文件绝对路径 add by zengchengfa 20210803
+     * @return
+     */
+    public String getConfigFile(String pageId){
+        String basePath = "com/joyintech/tams/invest/bankuplink/bond/conf/export_conf_pdf.xml";
+        String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+        String tempConfigFilePath= tempPath + "/" + pageId + '_' + "export_conf_pdf.xml";
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(basePath);
+        // 在临时目录下生成配置文件
+        commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+        return tempConfigFilePath;
+    }
 }

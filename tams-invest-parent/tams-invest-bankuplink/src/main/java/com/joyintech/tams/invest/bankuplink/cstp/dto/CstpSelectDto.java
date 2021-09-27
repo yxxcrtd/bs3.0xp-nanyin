@@ -527,6 +527,9 @@ public class CstpSelectDto extends InterfCstpTrade{
      * @return settleSpeedStr
      */
     public String getDeliveryTypeStr() {
+        if(!StringUtil.isNotEmpty(this.getDeliveryType())){
+            return "";
+        }
         //0-券款对付 03
         //4-见券付款 02
         //5-见款付券 01
