@@ -8,7 +8,6 @@ public class FinDealPledgeDTO {
      * 质押金融产品代码
      */
     private String pledgeFinprodId;
-
     /**
      * 质押金融产品类型
      */
@@ -33,6 +32,11 @@ public class FinDealPledgeDTO {
      * 证券细分类
      */
     private String secDetailType;
+
+    /**
+     * 质押率
+     */
+    private BigDecimal pledgeRatio;
 
     public String getPledgeFinprodId() {
         return pledgeFinprodId;
@@ -82,4 +86,19 @@ public class FinDealPledgeDTO {
         this.secDetailType = secDetailType;
     }
 
+    /**
+     * @return pledgeRatio
+     */
+    public BigDecimal getPledgeRatio() {
+        return pledgeRatio;
+    }
+
+    /**
+     * 设置 pledgeRatio
+     *
+     * @param pledgeRatio pledgeRatio
+     */
+    public void setPledgeRatio(BigDecimal pledgeRatio) {
+        this.pledgeRatio = pledgeRatio;
+    }
 }

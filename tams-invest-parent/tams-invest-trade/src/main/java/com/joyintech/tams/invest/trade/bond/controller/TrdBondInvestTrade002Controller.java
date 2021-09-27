@@ -235,6 +235,8 @@ TrdBondInvestTrade002Controller extends BaseController {
             String bidId = this.getParam("bidId");
             dto.setBidId(bidId);
             // add by zhangrui1 差分预占需要字段 end
+            BigDecimal bidPrice = new BigDecimal(this.getParam("bidPrice")).divide(new BigDecimal(100));
+            dto.setBidPrice(bidPrice);
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
@@ -790,41 +792,6 @@ TrdBondInvestTrade002Controller extends BaseController {
 //                    confirmMsg += getMessage("TRD_C_0005");
 //                }
 //            }
-
-
-
-
-            if (!StringUtil.equals(dto.getOperateType(), "revoke")) {
-                // 委托场合时    查询资产可用持仓
-                if (StringUtil.isNotEmpty(dto.getEntrustId())) {
-                    Map<String,Object> map = new HashMap<>();
-                    map.put("portfolioId",dto.getPortfolioId()) ;
-                    map.put("tradeDate",dto.getTradeDate()) ;
-                    map.put("acctTypeList","A01,A07") ;
-                    map.put("ccy",dto.getCcy()) ;
-                    map.put("tradeDate",dto.getTradeDate()) ;
-                    map.put("finprodId",dto.getFinprodId()) ;
-                    String dateId =  null;
-                    dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
-                            dto.getFinprodId(), FinProduct.class).getCalendarId();
-                    List<String> holidayList = dateCalService.getDealCalendarHoliday(dto.getTradeDate(), DateUtil.addDay(dto.getTradeDate(), 15), dateId);
-                    map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(dto.getTradeDate(), 1, holidayList, "1")));
-                    BigDecimal position = new BigDecimal((String)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") );
-
-                    String sinal = tradeCommonService.getSppiInfoByY1(map) ;
-                    if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",dto.getBusinessModel())){
-                        if(position!=null){
-                            confirmMsg += changeLineMark;
-                            confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
-                        }else{
-                            confirmMsg += changeLineMark;
-                            confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
-                        }
-                    }
-                }
-            }
-
-
             if (StringUtil.isNotBlank(confirmMsg)) {
                 ajaxResult = new AjaxResult();
                 ajaxResult.setData(confirmMsg);

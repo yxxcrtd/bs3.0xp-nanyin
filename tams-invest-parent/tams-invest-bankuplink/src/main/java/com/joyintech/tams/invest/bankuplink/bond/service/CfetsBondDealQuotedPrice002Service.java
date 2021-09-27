@@ -18,6 +18,8 @@ import com.joyintech.framework.exception.BusinessException;
 import com.joyintech.framework.security.LoginUserUtil;
 import com.joyintech.framework.util.*;
 import com.joyintech.framework.validation.ValidMessage;
+import com.joyintech.tams.common.base.dao.EtrEntrustMapper;
+import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.common.base.entity.MstBondValuationInfo;
 import com.joyintech.tams.component.business.core.dto.WflValidInputParameter;
 import com.joyintech.tams.component.business.core.service.MstWorkflowCommonService;
@@ -66,6 +68,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
 
     @Autowired
     private MstWorkflowCommonService mstWorkflowCommonServie;
+
+    @Autowired
+    private EtrEntrustMapper etrEntrustMapper;
 
     /**
      * 根据委托代码查询委托基本信息
@@ -1045,5 +1050,9 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
         return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
                         + "/CfetsBondDealQuotedPrice/getWflEntrustDealedAmt",
                 map, BigDecimal.class);
+    }
+
+    public EtrEntrust getEtrEntrust(String entrustId){
+       return  etrEntrustMapper.selectByPrimaryKey(entrustId);
     }
 }

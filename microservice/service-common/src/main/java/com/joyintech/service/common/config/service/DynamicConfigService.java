@@ -54,6 +54,7 @@ public class DynamicConfigService extends BaseService {
             return jsonStr;
         }else{
             // 默认用户级别
+            map.put("dynId",dynId);
             map.put("userName", userName);
             List<Map> list = dynamicConfigMapper.selectUserDynByDynId(map);
             String jsonStr = "";

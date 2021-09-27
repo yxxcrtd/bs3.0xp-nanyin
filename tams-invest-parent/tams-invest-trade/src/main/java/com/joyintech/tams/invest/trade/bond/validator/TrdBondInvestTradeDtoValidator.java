@@ -20,6 +20,9 @@ import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.InterfTradSecdeal;
 import com.joyintech.tams.common.base.entity.TrdTradeFeeDetail;
+import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
+import com.joyintech.tams.component.business.common.service.DateCalService;
+import com.joyintech.tams.component.business.trade.BussTrdAvailableCashQueryService;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tools.collectors.JoyinCollectors;
@@ -79,6 +82,15 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
     
     @Autowired(required = false)
     private BaseEtrInvestInfoService baseEtrInvestInfoService;
+
+    @Autowired
+    private BussCommonMapperDelegateService bussCommonMapperDelegateService;
+
+    @Autowired
+    private DateCalService dateCalService  ;
+
+    @Autowired(required = false)
+    private BussTrdAvailableCashQueryService bussTrdAvailableCashQueryService;
 
     @Value("${flag:false}")
     private boolean flag;
@@ -171,6 +183,40 @@ public class TrdBondInvestTradeDtoValidator implements TradeCommonValidator {
                 errorList.add(validMessage);
             }
         }
+
+        //业务模式情况下
+        if (StringUtil.equals("02", CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"))) {
+            // 委托场合时    查询资产可用持仓
+            if (StringUtil.isNotEmpty(inputDto.getBusinessModel())) {
+                Map<String,Object> map = new HashMap<>();
+                map.put("portfolioId",inputDto.getPortfolioId()) ;
+                map.put("tradeDate",inputDto.getTradeDate()) ;
+                map.put("acctTypeList","A01,A07") ;
+                map.put("ccy",inputDto.getCcy()) ;
+                map.put("tradeDate",inputDto.getTradeDate()) ;
+                map.put("finprodId",inputDto.getFinprodId()) ;
+                String dateId =  null;
+                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+                        inputDto.getFinprodId(), FinProduct.class).getCalendarId();
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(inputDto.getTradeDate(), DateUtil.addDay(inputDto.getTradeDate(), 15), dateId);
+                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(inputDto.getTradeDate(), 1, holidayList, "1")));
+                BigDecimal position = new BigDecimal((String)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") );
+                map.put("price",inputDto.getUnitCprice());
+                Map<String,Object> sinal = tradeCommonService.getSppiInfoByY1(map) ;
+                if(StringUtil.equals("2",sinal.get("result"))&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
+                    String confirmMsg ="";
+                    if(position!=null){
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+                    }else{
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+                    }
+                    errorList.add(new ValidMessage("businessModel",confirmMsg));
+                }
+            }else{
+                errorList.add(new ValidMessage("businessModel","请输入业务模式"));
+            }
+        }
+
         // ZGZGST-1232 fuyongsheng 20210820:增加SPPI测试 系统参数开关,Y:需要测试
         if(DictCodeListExt1.是否_是.getValue().equals(CacheUtil.getSysParam("IS_NEED_SPPI_CHECK"))){
             //投资目的

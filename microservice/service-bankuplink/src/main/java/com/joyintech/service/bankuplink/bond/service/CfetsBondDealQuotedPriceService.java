@@ -1776,9 +1776,6 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                 break;
             }
         }
-        if(StringUtil.isNotEmpty((String)map.get("ps"))){
-            map.replace("ps", StringUtil.splitToList(",", (String)map.get("ps")));
-        }
         if(StringUtil.isNotEmpty((String)map.get("benfangSide")) && StringUtil.equals((String)map.get("benfangSide"),"01")){
             map.put("benfangSide","");
         }
@@ -1792,4 +1789,13 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
         return cfetsBondDealQuotedPriceMapper.getWflEntrustDealedAmt(map);
     }
 
+    public List<CstpSelectDto> selectExportPdf(Map<String, Object> map) {
+        if (StringUtil.isNotEmpty(map.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)map.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                map.put("execidList",selectedItem);
+            }
+        }
+        return cfetsBondDealQuotedPriceMapper.selectExportPdf(map);
+    }
 }

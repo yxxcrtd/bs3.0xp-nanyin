@@ -45,6 +45,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -865,6 +866,17 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 		 */
 		public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
 			List<TrdInvestDealQueryPdfDto> datas = selectExportPdfList(param);
+			DecimalFormat df2 = new DecimalFormat("#0.00##");
+			datas.forEach(exportPdfDto -> {
+				// 券面总额/交易金额
+				if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
+					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+				}
+				// 交易价格
+				if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
+					exportPdfDto.setUnitCprice(new BigDecimal(df2.format(exportPdfDto.getUnitCprice())));
+				}
+			});
 			//汇总交易金额
 			BigDecimal sumAmt = datas.stream().map(TrdInvestDealQueryPdfDto::getTradeAmt).reduce(BigDecimal.ZERO, BigDecimal::add);
 			TrdInvestDealQueryPdfDto dto = new TrdInvestDealQueryPdfDto();

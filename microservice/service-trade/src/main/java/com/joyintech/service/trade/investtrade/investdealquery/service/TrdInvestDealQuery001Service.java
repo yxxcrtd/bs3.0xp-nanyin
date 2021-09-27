@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto;
 import com.joyintech.tams.constant.DictCodeListExt3;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -164,75 +165,87 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 	    if(!list.isEmpty()){
             for(TrdInvestDealQuery001Dto dto:list){
                 String finType2=dto.getFinprodType2();
-                if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_债券.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_基金.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_存款.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_拆入.getValue())
-                        || StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_拆出.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_拆借.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
-                        || StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_质押式回购.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())
-                        || StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_买断式回购.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())){
-                    dto.setFinprodType2(DictCodeList.平安资产类型_项目类资产.getValue());
-                }
-                else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())){
-                    FinProduct finProduct=finProductMapper.selectByPrimaryKey(dto.getFinprodId());
-                    if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
-                        dto.setFinprodType2(DictCodeList.平安资产类型_计划类资产_净值型.getValue());
-                    }
-                    else if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
-                        dto.setFinprodType2(DictCodeList.平安资产类型_计划类资产_利率型.getValue());
-                    }else if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
-                        dto.setFinprodType2(DictCodeList.平安资产类型_计划类资产_货币型.getValue());
-                    }
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_即期.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_外汇即期.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_远期.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_外汇远期.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_掉期.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_外汇掉期.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_债券借贷.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_债券借贷.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_利率互换.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_股票.getValue());
-                }
-                else if (StringUtil.equals(finType2, DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
-                    dto.setFinprodType2(DictCodeListExt2.平安资产类型_一级市场债.getValue());
-                }
-				// add by etliu 20210421 权益类资产相关代码合并 start
-				else if (StringUtil.equals(finType2, DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
-					dto.setFinprodType2(DictCodeListExt3.平安资产类型_权益类资产.getValue());
-				}
-				// add by etliu 20210421 权益类资产相关代码合并 end
+				dto.setFinprodType2(transferFinprodType2(finType2, dto.getFinprodId()));
             }    
         }
 	    return list;
 	}
-	
+
+	/**
+	 * 将金融产品类型转换为平安资产类型
+	 * @param finType2
+	 * @param finprodId
+	 * @return
+	 */
+	private String transferFinprodType2(String finType2, String finprodId){
+		if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+			return DictCodeList.平安资产类型_债券.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_基金.getValue())){
+			return DictCodeList.平安资产类型_基金.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_存款.getValue())){
+			return DictCodeList.平安资产类型_存款.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_拆入.getValue())
+				|| StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_拆出.getValue())){
+			return DictCodeList.平安资产类型_拆借.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())
+				|| StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())){
+			return DictCodeList.平安资产类型_质押式回购.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())
+				|| StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())){
+			return DictCodeList.平安资产类型_买断式回购.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue())){
+			return DictCodeList.平安资产类型_项目类资产.getValue();
+		}
+		else if(StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue())){
+			FinProduct finProduct=finProductMapper.selectByPrimaryKey(finprodId);
+			if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_净值型.getValue())){
+				return DictCodeList.平安资产类型_计划类资产_净值型.getValue();
+			}
+			else if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_收益型.getValue())){
+				return DictCodeList.平安资产类型_计划类资产_利率型.getValue();
+			}
+			else if(StringUtil.equals(finProduct.getProfitType(), DictCodeList.收益类型_货币型.getValue())){
+				return DictCodeList.平安资产类型_计划类资产_货币型.getValue();
+			}
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_即期.getValue())) {
+			return DictCodeListExt2.平安资产类型_外汇即期.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_远期.getValue())) {
+			return DictCodeListExt2.平安资产类型_外汇远期.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_掉期.getValue())) {
+			return DictCodeListExt2.平安资产类型_外汇掉期.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())) {
+			return DictCodeListExt2.平安资产类型_债券借贷.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())) {
+			return DictCodeListExt2.平安资产类型_债券借贷.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_利率互换.getValue())) {
+			return DictCodeListExt2.平安资产类型_利率互换.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt1.金融产品类型_投管用_股票.getValue())) {
+			return DictCodeListExt2.平安资产类型_股票.getValue();
+		}
+		else if (StringUtil.equals(finType2, DictCodeListExt2.金融产品类型_投管用_一级投标债券.getValue())) {
+			return DictCodeListExt2.平安资产类型_一级市场债.getValue();
+		}
+		// add by etliu 20210421 权益类资产相关代码合并 start
+		else if (StringUtil.equals(finType2, DictCodeListExt3.金融产品类型_投管用_权益类资产.getValue())){
+			return DictCodeListExt3.平安资产类型_权益类资产.getValue();
+		}
+		// add by etliu 20210421 权益类资产相关代码合并 end
+		return StringUtil.EMPTY;
+	}
+
 	/**
      * check是否为转仓交易
      * 
@@ -366,6 +379,13 @@ public class TrdInvestDealQuery001Service extends BaseService<TrdInvestDealQuery
 				param.put("tradeIdList",selectedItem);
 			}
 		}
-		return trdInvestDealQuery001Mapper.selectExportPdfList(param);
+		List<TrdInvestDealQueryPdfDto> pdfDtos = trdInvestDealQuery001Mapper.selectExportPdfList(param);
+		// ZGZGST-3548:将金融产品类型转换为平安资产类型 fuyongsheng 20210927 edit start
+		if(CollectionUtils.isNotEmpty(pdfDtos)){
+			pdfDtos.forEach(pdfDto-> pdfDto.setFinprodType2(transferFinprodType2(pdfDto.getFinprodType2(),
+					pdfDto.getFinprodId())));
+		}
+		// ZGZGST-3548:将金融产品类型转换为平安资产类型 fuyongsheng 20210927 edit end
+		return pdfDtos;
 	}
 }

@@ -3,6 +3,9 @@ package com.joyintech.tams.valuation.accounadjustmanage.valbalancestatementquery
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.json.BigDecimalSerializer;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -95,7 +98,8 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
     }
 
     public String getFinprodType() {
-        return finprodType;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.金融产品类型, finprodType))?
+                SysDataUtil.getNameFromDataDict(DictCode.金融产品类型,finprodType):finprodType;
     }
 
     public void setFinprodType(String finprodType) {

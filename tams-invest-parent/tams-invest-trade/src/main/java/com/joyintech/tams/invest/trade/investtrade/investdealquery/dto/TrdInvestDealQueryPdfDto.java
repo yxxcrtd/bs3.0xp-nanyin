@@ -1,5 +1,8 @@
 package com.joyintech.tams.invest.trade.investtrade.investdealquery.dto;
 
+import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.tams.constant.DictCode;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -110,7 +113,7 @@ public class TrdInvestDealQueryPdfDto {
     }
 
     public String getFinprodTypeStr() {
-        return finprodTypeStr;
+        return SysDataUtil.getNameFromDataDict(DictCode.平安资产类型, this.getFinprodType2());
     }
 
     public void setFinprodTypeStr(String finprodTypeStr) {

@@ -674,7 +674,7 @@ public class EtrCommonController extends BaseController {
     @ResponseBody
     @RequestMapping("getSppiInfoByY1")
     public AjaxResult getSppiInfoByY1(@RequestBody Map<String, Object> param){
-         String sinal =  etrCommonService.getSppiInfoByY1(param);
+         Map<String,Object> sinal =  etrCommonService.getSppiInfoByY1(param);
          AjaxResult ajaxResult = new AjaxResult();
          ajaxResult.setData(sinal);
          return ajaxResult;

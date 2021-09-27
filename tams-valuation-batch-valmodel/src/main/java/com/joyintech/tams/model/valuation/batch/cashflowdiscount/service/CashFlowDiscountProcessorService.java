@@ -680,9 +680,11 @@ public class CashFlowDiscountProcessorService {
             }
         }
         accurIntCalInParameter.setSecInfoModel(secInfoModel);
-        if (!StringUtil.isEmptyList(entity.getModCashFlows())) {
+        if (!StringUtil.isEmptyList(entity.getModCashFlowsOld())) {
             List<SecIntSchedule> secIntSchedules = new ArrayList<>();
-            entity.getModCashFlows().stream().forEach(item -> {
+            entity.getModCashFlowsOld().stream().filter(x->{
+                return DictCodeListExt1.现金流二级类型_利息.getValue().equals(x.getCashType2());
+            }).forEach(item -> {
                 SecIntSchedule secIntSchedule = new SecIntSchedule();
                 secIntSchedule.setTheoryStartDate(DateUtil.dateToLocal(item.getVdateUnadjust()));
                 secIntSchedule.setTheoryCutoffDate(DateUtil.dateToLocal(item.getMdateUnadjust()));

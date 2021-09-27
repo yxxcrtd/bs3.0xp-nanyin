@@ -91,6 +91,17 @@
             </foreach>
             )
             AND deal.SETTLE_DATE <![CDATA[<=]]> #{searchDate}
+            <!-- 筛选掉资产清仓之前的交易 -->
+            AND deal.SETTLE_DATE <![CDATA[>=]]> NVL(
+            (
+                SELECT MAX(B.CDATE) FROM PTL_SEC_VALUTION B
+                WHERE B.DSC_COST_AMT = 0
+                AND B.FINPROD_ID = fin.finprod_id
+                AND B.PORTFOLIO_ID = NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID)
+                AND B.CDATE <![CDATA[<]]> #{searchDate}
+                )
+            ,deal.SETTLE_DATE
+            )
         </if>
 
     </select>

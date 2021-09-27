@@ -140,6 +140,7 @@ public class CashFlowDiscountReaderService {
                         //查找现金流计划信息
                         List<ModCashFlowDto> modCashFlows = modValuationCommonService.getCashFlowPlanInfoByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlows(modCashFlows);
+                        cashFlowDiscountReaderResult.setModCashFlowsOld(modCashFlows);
                         //查找现金流计算规则信息
                         List<ModCashFlowCalRuleDto> modCashFlowCalRules = modValuationCommonService.getCashFlowCalRulesByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlowCalRules(modCashFlowCalRules);

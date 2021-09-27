@@ -272,6 +272,16 @@ public class EtrIbRepoinfo002Dto extends EtrEntrust implements ProcessEntity {
      */
     private List<RiskTrialRetDto> riskTrialRetDto;
 
+    private String trader;
+
+    public String getTrader() {
+        return trader;
+    }
+
+    public void setTrader(String trader) {
+        this.trader = trader;
+    }
+
     /**
      * 获取 chlIdName
      * 

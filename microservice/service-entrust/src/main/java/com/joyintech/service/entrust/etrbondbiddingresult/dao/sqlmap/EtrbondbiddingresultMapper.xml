@@ -5,7 +5,7 @@
 	<select id="select" resultType="com.joyintech.service.entrust.etrbondbiddingresult.dto.EtrbondbiddingresultDto">
 		<trim prefixOverrides="UNION ALL">
 			<if test="paymentStatus == null or paymentStatus == '' or paymentStatus == '04'">
-				select
+				select distinct
 				case when wtpd.trade_id is not null then '04' else '' end paymentStatus, /*缴款状态*/
 				bobp.ENTRUST_ID entrustId,        /*委托编号*/
 				ee.ENTRUST_STATUS entrustStatus,   /*委托状态*/
@@ -32,11 +32,14 @@
 				LEFT JOIN ETR_ENTRUST_BID_PRICE ebp on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
 				LEFT JOIN WFL_TRD_PRODUCT_DEAL_ADD wtpd on wtpd.entrust_id = ebp.entrust_id
 				LEFT JOIN WFL_TRD_PRODUCT_DEAL wtp on wtp.TRADE_ID = wtpd.TRADE_ID
+				LEFT JOIN WFL_TRD_FIN_PRODUCT_DEAL_TOTAL wtfpdt ON wtfpdt.TOTLE_TRADE_ID=bobp.TRADE_ID
 				where 1=1
 				and bobp.is_win='Y'
 				and bo.is_win = bobp.is_win
 				and bobp.WIN_PRICE is not null
 				and wtp.YIELD is not null
+				  and wtfpdt.TOTLE_TRADE_ID is not null
+			  	and bobp.TRADE_ID is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
@@ -131,7 +134,7 @@
 					</foreach>
 				</if>
 				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
-				minus
+				<!--minus
 				select
 				bo.PAY_TYPE paymentStatus, /*缴款状态*/
 				bobp.ENTRUST_ID entrustId,        /*委托编号*/
@@ -185,14 +188,14 @@
 				<if test="endDate!=null and endDate!=''">
 					and bo.BID_DATE <![CDATA[ <= ]]> to_date(#{endDate}, 'yyyy-MM-dd')
 				</if>
-				<!-- add by etliu 20210501 银行间场内场外拆分 start -->
+				&lt;!&ndash; add by etliu 20210501 银行间场内场外拆分 start &ndash;&gt;
 				<if test="defaultTradeMarketList != null and defaultTradeMarketList.size()>0">
 					AND nvl(ee.TRADE_MARKET, fp.TRADE_MARKET) in
 					<foreach collection="defaultTradeMarketList" open="(" close=")" item="currTradeMarket" separator=",">
 						#{currTradeMarket}
 					</foreach>
 				</if>
-				<!-- add by etliu 20210501 银行间场内场外拆分 end -->
+				&lt;!&ndash; add by etliu 20210501 银行间场内场外拆分 end &ndash;&gt;-->
 
 			</if>
 			<if test="paymentStatus == null or paymentStatus == '' or paymentStatus == '05'">
@@ -222,11 +225,12 @@
 				left join FIN_PRODUCT fp on fp.FINPROD_ID = ee.finprod_id
 				left join BID_ORDER bo on bo.bid_id=bobp.bid_id
 				LEFT JOIN ETR_ENTRUST_BID_PRICE ebp on ebp.entrust_id = bobp.entrust_id and ebp.BID_PRICE = bobp.BID_PRICE
-
+				left join TRD_FIN_PRODUCT_DEAL_TOTAL tfpdt on tfpdt.TOTLE_TRADE_ID=bobp.TRADE_ID
 				where 1=1
 				and bobp.is_win='Y'
 				and bo.is_win = bobp.is_win
 				AND bobp.trade_id is not NULL
+				and tfpdt.TOTLE_TRADE_ID is not null
 				<if test="portfolioIdList != null and portfolioIdList.size() >0">
 					AND  ee.PORTFOLIO_ID IN
 					<foreach collection="portfolioIdList" index="index" item="prot" open="(" separator="," close=")" >
@@ -267,6 +271,7 @@
 	<update id="updateTradeId" parameterType="java.util.Map">
 		update BID_ORDER_BID_PRICE  set TRADE_ID = #{tradeId,jdbcType = VARCHAR}
 		where ENTRUST_ID= #{entrustId,jdbcType=VARCHAR}
+		and BID_PRICE = #{bidPrice}
 		<!--and (WIN_PRICE = #{winPrice,jdbcType=DECIMAL}  OR  WIN_CPRICE = #{winCprice,jdbcType=DECIMAL})-->
 	</update>
 

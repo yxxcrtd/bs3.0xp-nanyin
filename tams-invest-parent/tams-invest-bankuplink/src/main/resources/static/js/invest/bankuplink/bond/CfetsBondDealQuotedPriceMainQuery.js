@@ -632,7 +632,7 @@
             // // , {field: 'quoteTypeStr', title: '作市类型', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '渠道', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '状态', sortField: 'tradedate', width: '110'}
-             , {field: 'tradeMethod', title: '交易方式', width: '110'}
+            //  , {field: 'quoteTypeStr', title: '交易方式', width: '110'}
              , {field: 'matchStatusStr', title: 'CSTPSelect001.matchStatus', sortField: 'matchStatus', width: '100'}
         ]
         // ajax: {
@@ -1300,6 +1300,27 @@
             		//成功后刷新table
             		entrustOrderTable.table ? entrustOrderTable.reload() : entrustOrderTable.load();
                 });
+            }
+        });
+
+        $('#CfetsBondDealQuotedPrice001_CSTPSelect_btn_exportPDF').click(function() {
+            if(tableBondCstp!=null && tableBondCstp!=''){
+                var selArr = tableBondCstp.getAllCheckedRows();
+                // 列表中未勾选
+                if (!selArr || selArr.length == 0) {
+                    Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                    return;
+                }
+                var paramObj = getCstpParams();
+                //勾选导出
+                var selectedItem = [];
+                $.each(tableBondCstp.getAllCheckedRows() ,function (i, item) {
+                    selectedItem.push(item.execid);
+                });
+                paramObj.selectedItem = selectedItem.join(',');
+                Joyin.exportExcel('exportPdf', paramObj);
+            }else{
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
             }
         });
         

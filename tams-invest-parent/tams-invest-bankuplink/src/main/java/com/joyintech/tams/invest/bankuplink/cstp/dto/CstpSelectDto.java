@@ -527,6 +527,9 @@ public class CstpSelectDto extends InterfCstpTrade{
      * @return settleSpeedStr
      */
     public String getDeliveryTypeStr() {
+        if(!StringUtil.isNotEmpty(this.getDeliveryType())){
+            return "";
+        }
         //0-券款对付 03
         //4-见券付款 02
         //5-见款付券 01
@@ -744,7 +747,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     }
 
     public String getQuoteTypeStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getSettType());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getQuoteType());
     }
 
     private String assetTypeOne;

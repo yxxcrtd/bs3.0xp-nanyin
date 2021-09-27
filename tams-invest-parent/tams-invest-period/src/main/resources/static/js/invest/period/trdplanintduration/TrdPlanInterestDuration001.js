@@ -55,7 +55,7 @@
                     }
                 }}
             , {field: 'finprodMarketName', width: 200, title: 'TrdPlanInterestDuration001.finprodName', sortField: 'finprodMarketName'}
-            , {field: 'chlFinprodId', width: 200, title: 'TrdPlanInterestDuration001.chlFinprodId', sortField: 'chlName'}
+            , {field: 'chlFinprodId', width: 200, title: 'TrdPlanInterestDuration001.chlFinprodId', visible:false,sortField: 'chlName'}
             , {field: 'qty', width: 200, title: 'TrdPlanInterestDuration001.qty', type: 'number', sortField: 'qty'}
             , {field: 'returnAmount', width: 200, title: 'TrdPlanInterestDuration001.returnAmount', type: 'number', sortField: 'returnAmount'}
             , {field: 'yield', width: 200, title: 'TrdPlanInterestDuration001.yield', type: 'number', sortField: 'yield'}

@@ -20,6 +20,7 @@
         var dealAmt = $.serializeToObject('#CfetsRepoDealQuotedPrice003_submitForm').dealAmt;
         var fpriceAmtTotal = 0;
         if (portfolioIdList.length > 0) {
+            var termType = $('#CfetsRepoDealQuotedPrice002_termType').val();
             for (var index in portfolioIdList) {
                 var item = portfolioIdList[index];
                 var obj = getBaseRiskdata();
@@ -30,6 +31,7 @@
                 obj.prinAmt = item.fpriceAmt;
                 obj.fpriceAmt = item.fpriceAmt;
                 obj.rebackPrice = item.price;
+                obj.termTypeReback = termType;
                 dataList.push(obj);
                 if(obj.fpriceAmt){
                     fpriceAmtTotal = Number(fpriceAmtTotal) + Number(obj.fpriceAmt);

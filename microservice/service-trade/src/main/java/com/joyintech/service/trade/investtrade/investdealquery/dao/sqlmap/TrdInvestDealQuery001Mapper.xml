@@ -3714,7 +3714,9 @@
 	<select id="selectExportPdfList" parameterType="java.util.Map" resultType="com.joyintech.service.trade.investtrade.investdealquery.dto.TrdInvestDealQueryPdfDto">
 		SELECT TRD_ALL.portfolioId, /*组合代码*/
 			TRD_ALL.portfolioName, /*组合名称*/
+			TRD_ALL.finprodType2, /*资产类型*/
 			SDL1.ITEM_VALUE finprodTypeStr,/*资产类型*/
+			TRD_ALL.finprodId,
 			TRD_ALL.finprodMarketId, /*资产代码*/
 			TRD_ALL.finprodAbbr,/*资产简称*/
 			SDL3.ITEM_VALUE psStr,/*交易方向*/
@@ -3960,15 +3962,16 @@
 		LEFT JOIN SYS_DATADICT_LIST SDL2 ON TRD_ALL.tradeMarketMode = SDL2.ITEM_CODE AND SDL2.DICT_CODE = 'SHARES_TRADE_MARKET'
 		LEFT JOIN SYS_DATADICT_LIST SDL3 ON TRD_ALL.PS = SDL3.ITEM_CODE AND SDL3.DICT_CODE = 'PS'
 		<where>
+			1 = 1
 			<if test="tradeIdList != null and tradeIdList.size() >0">
-				 (TRD_ALL.tradeId IN
-				<foreach collection="tradeIdList" index="index" item="item" open="(" close=")" separator=",">
-					<if test="index != 0 and (index % 998) == 0">
-						null) OR TRD_ALL.tradeId IN (
+				<foreach collection="tradeIdList" index="index" item="item">
+					<if test="index == 0">
+						AND TRD_ALL.tradeId = #{item,jdbcType=VARCHAR}
 					</if>
-					#{item,jdbcType=VARCHAR}
+					<if test="index > 0">
+						OR TRD_ALL.tradeId = #{item,jdbcType=VARCHAR}
+					</if>
 				</foreach>
-				)
 			</if>
 		</where>
 	</select>

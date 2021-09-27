@@ -124,7 +124,7 @@ public class MstMarketInstitutions002Controller extends BaseController{
         //授信策略
         this.setSelectOptionToModel(model,DictCode.授信策略 );
         //表格数据字典
-        this.setSelectOptionToModel(model,DictCode.长期短期, DictCode.评级结果, DictCode.评级展望, DictCode.变动方向);
+        this.setSelectOptionToModel(model,DictCode.长期短期, DictCode.评级结果, DictCode.评级展望, DictCode.变动方向,DictCode.评级机构);
         //核算分类
         this.setSelectOptionToModel(model,DictCode.核算分类 );
         //客户机构代码

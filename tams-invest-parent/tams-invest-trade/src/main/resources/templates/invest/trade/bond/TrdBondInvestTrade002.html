@@ -64,6 +64,7 @@
                         <!-- add by wangpeng 费用设置 20190817 end-->
                         <!-- add by zhangrui1 差分预占需要字段 start -->
                         <input type="hidden" id="bidId" name="bidId" th:value="${entity?.bidId}" />
+                        <input type="hidden" id="bidPrice" name="bidPrice" th:value="${entity?.bidPrice}" />
                         <input type="hidden" id="oFinprodId" name="oFinprodId" th:value="${entity?.oFinprodId}" />
                         <!-- add by zhangrui1 差分预占需要字段 end -->
                         <input type="hidden" id="settleIsPayWithTrade" name="settleIsPayWithTrade" th:value="${entity?.settleIsPayWithTrade}" />
@@ -386,16 +387,16 @@
                                 </div>
                                 <!-- 资产推荐方 新增 zhuyongkang 20191023 end-->
                                 <!-- 转仓投资目的 新增 wangyang1 20191023 start-->
-<!--                                <div class="form-inline-wrap" id="turnInvAim_div">-->
-<!--                                    <label class="layui-form-label form-label-wrap">转仓投资目的</label>-->
-<!--                                    <div class="layui-input-inline input-inline">-->
-<!--                                        <select type="text" id="turnInvAim" name="turnInvAim"-->
-<!--                                                class="layui-input form-input input-select" placeholder="请输入内容"-->
-<!--                                                th:placeholder="#{SysCommon.placeholder}"-->
-<!--                                                th:data-result='${TURN_INV_AIM}'-->
-<!--                                                allowClear="true" formatoption="true" th:initValue="${entity?.turnInvAim}"></select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div th:if="${SHOW_INVAIM_OR_BUSSINSSMODEL} =='01'"  class="form-inline-wrap" id="turnInvAim_div">
+                                    <label class="layui-form-label form-label-wrap">转仓投资目的</label>
+                                    <div class="layui-input-inline input-inline">
+                                        <select type="text" id="turnInvAim" name="turnInvAim"
+                                                class="layui-input form-input input-select" placeholder="请输入内容"
+                                                th:placeholder="#{SysCommon.placeholder}"
+                                                th:data-result='${TURN_INV_AIM}'
+                                                allowClear="true" formatoption="true" th:initValue="${entity?.turnInvAim}"></select>
+                                    </div>
+                                </div>
                                  <!-- 转仓投资目的  新增 wangyang1 20191023 end-->
                                  <div class="form-inline-wrap" id="tradeMarketCash_div">
                                     <label class="layui-form-label form-label-wrap"
