@@ -139,4 +139,6 @@ public interface CfetsBondDealQuotedPriceMapper {
     BigDecimal getWflEntrustDealedAmt(Map<String,Object> map);
 
     List<CstpSelectDto> selectExportPdf(Map<String, Object> map);
+
+    BigDecimal queryEntrustDealedAmt2(Map<String, Object> map);
 }

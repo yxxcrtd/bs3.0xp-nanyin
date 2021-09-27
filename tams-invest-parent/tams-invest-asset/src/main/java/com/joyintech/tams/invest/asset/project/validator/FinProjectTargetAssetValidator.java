@@ -237,6 +237,17 @@ public class FinProjectTargetAssetValidator implements BeanValidator{
         		 resultList.add(message);
         	}
         }
+        // 校验还款周期说明
+        if (dto.getBussFinRepaymentDto() != null
+                && StringUtil.isNotEmpty(dto.getBussFinRepaymentDto().getPayCycle())
+                && DictCodeList.频率_按明确时间的还款计划还本.getValue().equals(dto.getBussFinRepaymentDto().getPayCycle())) {
+            if (StringUtil.isEmpty(dto.getBussFinRepaymentDto().getRemark())) {
+                ValidMessage message = new ValidMessage(getMessage("FW_E_0006", getMessage("FinProjectTargetAsset002.repaymentRemark")));
+                message.setField("bussFinRepaymentDto.remark");
+                message.setOrder(0);
+                resultList.add(message);
+            }
+        }
 
         return resultList;
     }
