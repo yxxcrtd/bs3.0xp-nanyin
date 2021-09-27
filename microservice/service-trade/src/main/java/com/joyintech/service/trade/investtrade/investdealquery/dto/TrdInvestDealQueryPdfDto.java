@@ -32,6 +32,12 @@ public class TrdInvestDealQueryPdfDto {
      * 资产类型
      */
     private String finprodTypeStr;
+
+    /**
+     * 资产代码
+     */
+    private String finprodId;
+
     /**
      * 资产代码
      */
@@ -115,6 +121,14 @@ public class TrdInvestDealQueryPdfDto {
 
     public void setFinprodTypeStr(String finprodTypeStr) {
         this.finprodTypeStr = finprodTypeStr;
+    }
+
+    public String getFinprodId() {
+        return finprodId;
+    }
+
+    public void setFinprodId(String finprodId) {
+        this.finprodId = finprodId;
     }
 
     public String getFinprodMarketId() {
