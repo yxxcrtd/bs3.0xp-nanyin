@@ -440,7 +440,7 @@ $(function(){
         	,width:180
         	}
         	,{field:'finprodAbbr',title: 'TrdInvestDealQuery001.finprodAbbr',width:160}
-        	,{field:'chlFinprodId',title: 'TrdInvestDealQuery001.chlFinprodId',width:160}
+        	,{field:'chlFinprodId',title: 'TrdInvestDealQuery001.chlFinprodId',visible:false,width:160}
         	,{field:'psVal', title: 'TrdInvestDealQuery001.ps',width:100,sortField:'ps'}
         	,{field:'tradeMarketVal', title: 'TrdInvestDealQuery001.tradeMarket',width:130,sortField:'tradeMarket'}
         	,{field:'tradeMarketModeVal',  title: 'TrdInvestDealQuery001.tradeMarketMode',width:100,sortField:'tradeMarketMode'}

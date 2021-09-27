@@ -1,0 +1,1 @@
+alter table SYS_ROLE_MODULE modify(ELEMENT_ID VARCHAR2(60));

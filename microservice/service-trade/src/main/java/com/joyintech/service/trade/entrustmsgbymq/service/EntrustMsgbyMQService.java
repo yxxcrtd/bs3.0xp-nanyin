@@ -10,6 +10,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
@@ -36,6 +37,7 @@ import com.rabbitmq.client.Channel;
  * @see EntrustMsgbyMQService
  * @since 1.0
  */
+@Lazy(false)
 @Service
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class EntrustMsgbyMQService extends BaseService<InfContractDetailfile>{

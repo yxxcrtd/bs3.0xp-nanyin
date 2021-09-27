@@ -227,4 +227,15 @@ public class CfetsRepoDealQuotedPr001Service extends BaseService {
         return this.queryForPageForSelectReturn(page, length,
                 () -> cfetsRepoDealQuotedPr001Mapper.queryMySideTraderList(param));
     }
+
+
+    public List<CstpSelectDto> selectExportPdf(Map<String, Object> map) {
+        if (StringUtil.isNotEmpty(map.get("selectedItem"))){
+            List<String> selectedItem = StringUtil.splitToList(",",(String)map.get("selectedItem"));
+            if(selectedItem.size() > 0){
+                map.put("execidList",selectedItem);
+            }
+        }
+        return cfetsRepoDealQuotedPr001Mapper.selectExportPdf(map);
+    }
 }

@@ -64,7 +64,8 @@ $(function () {
             ,{field:'costPercent', type:"money", digit: 4, width:150,  title: 'ValBalanceStatementQuery001.costPercent'}
             ,{field:'closePrice', type:"money", digit: 4, width:150, title: 'ValBalanceStatementQuery001.closePrice',
                 render : function(data, type, row, meta) {
-                    return "<a  class='pro-link closePriceLink' style='cursor: pointer;'>"+data+"</ a>";
+                    //保留4位小数位
+                    return "<a  class='pro-link closePriceLink' style='cursor: pointer;'>"+JoyinUtil.formatNumber(data, 4, 1, 2)+"</ a>";
                 }
             }
             ,{field:'oMarketValue', type:"money", width:150, title: 'ValBalanceStatementQuery001.oMarketValue'}

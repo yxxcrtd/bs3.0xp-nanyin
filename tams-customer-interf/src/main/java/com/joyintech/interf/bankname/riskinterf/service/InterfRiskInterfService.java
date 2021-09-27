@@ -10,6 +10,7 @@
 
 package com.joyintech.interf.bankname.riskinterf.service;
 
+import com.joyintech.background.component.common.pack.common.validation.annotation.Amount;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -538,6 +539,13 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                         finDto.setVarietyCode(String.valueOf(term));
                     }
                 }
+
+                //如果报文中传了期限品种，已报文为准。如果没有，就以上面的计算逻辑算出的为准
+                Object varietyCode = dataMap.get("varietyCode");
+                if(StringUtil.isNotEmpty(varietyCode)) {
+                    finDto.setVarietyCode(String.valueOf(varietyCode));
+                }
+
                 finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN));
                 finDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
                 //获取交易对手的市场机构代码
@@ -826,11 +834,25 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     //add by zhangnian  平安资产类型_质押式回购  start
                     //质押券为利率债(国债、政策型银行债)不占额度
                     if(DictCodeList.平安资产类型_质押式回购.getValue().equals(assetType)&&temp.containsKey("pledgeAssetCodeList")){
-                        List<String> pledgeAssetCodeList = (List<String>) temp.get("pledgeAssetCodeList");
-                        if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
-                            String assetcode = pledgeAssetCodeList.get(0);
-                            if (StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode)) {
-                                continue;
+                        if(temp.containsKey("occupySource")&&StringUtil.equals(temp.get("occupySource"),"CFET")){
+                            List<Map<String,Object>> pledgeAssetCodeList = (List<Map<String,Object>>) temp.get("pledgeAssetCodeList");
+                            if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
+                                BigDecimal amount = BigDecimal.ZERO;
+                                for (Map<String, Object> stringObjectMap : pledgeAssetCodeList) {
+                                    String assetcode = (String)stringObjectMap.get("finprodMarketId");
+                                    if (!(StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode))) {
+                                        amount = ArithmeticUtil.doAdd(amount,new BigDecimal(stringObjectMap.get("amount").toString()));
+                                    }
+                                }
+                                finDto.setAmount(amount);
+                            }
+                        }else{
+                            List<String> pledgeAssetCodeList = (List<String>) temp.get("pledgeAssetCodeList");
+                            if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
+                                String assetcode = pledgeAssetCodeList.get(0);
+                                if (StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode)) {
+                                    continue;
+                                }
                             }
                         }
                      }

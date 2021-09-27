@@ -119,11 +119,14 @@ $(function() {
     table.bind('click', '.edit', function(data, index) {
         data.pageModel = PAGE_MODEL_EDIT;
         Joyin.ajaxJson(basePath + 'valuation/basicdata/asset/plan/plancur/FinPlanAssetC001/check', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("FinPlanAssetC002.edit"),
-                    basePath + "valuation/basicdata/asset/plan/plancur/FinPlanAssetC002/init",
-                    "99%", "99%", data,function() {
-                                        table.reload();
-                                    });
+            Joyin.ajax(basePath + 'valuation/basicdata/asset/ValAssetCommon/editCheck', data, function(editResult){
+                debugger;
+                Joyin.dialog(JoyinUtil.getLabel("FinPlanAssetC002.edit"),
+                        basePath + "valuation/basicdata/asset/plan/plancur/FinPlanAssetC002/init",
+                        "99%", "99%", data,function() {
+                                            table.reload();
+                                        });
+            });
         });
     });
     

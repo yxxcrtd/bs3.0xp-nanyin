@@ -3164,10 +3164,10 @@
               sum(assetHold1.dscCostAmt) dscCostAmt,
               sum(assetHold1.shareAmt) shareAmt,
               sum(assetHold1.tdyIntincexp) tdyIntincexp,
-              sum(assetHold1.tdyAmtRation) tdyAmtRation,
-              sum(assetHold1.ystAmtRation) ystAmtRation,
-              sum(assetHold1.monthAmtRation) monthAmtRation,
-              sum(assetHold1.yearAmtRation) yearAmtRation,
+              round(sum(assetHold1.tdyAmtRation),2) tdyAmtRation,
+              round(sum(assetHold1.ystAmtRation),2) ystAmtRation,
+              round(sum(assetHold1.monthAmtRation),2) monthAmtRation,
+              round(sum(assetHold1.yearAmtRation),2) yearAmtRation,
               '02' hasChildren,
               CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) childInfo,
               CONCAT(nvl(assetHold1.portfolioId,'null'),'') parentInfo,
@@ -3192,15 +3192,21 @@
          </where>
      group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2
     union all
-       select assetHold1.cdate,null portfolioId,null portfolioName,null finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr,
+       select assetHold1.cdate,null portfolioId,null portfolioName,null finprodType2,
+              assetHold1.type5,
+              case
+                when assetHold1.finprodType2 IN ('F14', 'F15') THEN NULL
+                ELSE assetHold1.finprodMarketId
+              END finprodMarketId,/*远期掉期不显示资产名称和代码*/
+              assetHold1.finprodAbbr,
               sum(assetHold1.marketValue) marketValue,
               sum(assetHold1.dscCostAmt) dscCostAmt,
               sum(assetHold1.shareAmt) shareAmt,
               sum(assetHold1.tdyIntincexp) tdyIntincexp,
-              sum(assetHold1.tdyAmtRation) tdyAmtRation,
-              sum(assetHold1.ystAmtRation) ystAmtRation,
-              sum(assetHold1.monthAmtRation) monthAmtRation,
-              sum(assetHold1.yearAmtRation) yearAmtRation,
+              round(sum(assetHold1.tdyAmtRation),2) tdyAmtRation,
+              round(sum(assetHold1.ystAmtRation),2) ystAmtRation,
+              round(sum(assetHold1.monthAmtRation),2) monthAmtRation,
+              round(sum(assetHold1.yearAmtRation),2) yearAmtRation,
               '01' hasChildren,
               CONCAT(CONCAT(nvl(assetHold1.portfolioId,'null'),'_'),CONCAT(CONCAT(nvl(assetHold1.finprodType2,'null'),'_'),assetHold1.type5)) childInfo,
               CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) parentInfo,
@@ -3220,7 +3226,10 @@
              </foreach>
          </if>
          ) assetHold1
-     group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr
+        <where>
+            CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) in (select childInfo from rootSelect)
+        </where>
+        group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr
      )A order by A.parentInfo
      )
     </select>

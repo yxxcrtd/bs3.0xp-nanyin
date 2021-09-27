@@ -1302,6 +1302,27 @@
                 });
             }
         });
+
+        $('#CfetsBondDealQuotedPrice001_CSTPSelect_btn_exportPDF').click(function() {
+            if(tableBondCstp!=null && tableBondCstp!=''){
+                var selArr = tableBondCstp.getAllCheckedRows();
+                // 列表中未勾选
+                if (!selArr || selArr.length == 0) {
+                    Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                    return;
+                }
+                var paramObj = getCstpParams();
+                //勾选导出
+                var selectedItem = [];
+                $.each(tableBondCstp.getAllCheckedRows() ,function (i, item) {
+                    selectedItem.push(item.execid);
+                });
+                paramObj.selectedItem = selectedItem.join(',');
+                Joyin.exportExcel('exportPdf', paramObj);
+            }else{
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+            }
+        });
         
         $('#keywords-entrustOrder').keydown(function(event) {
             if (event.keyCode == "13") {
