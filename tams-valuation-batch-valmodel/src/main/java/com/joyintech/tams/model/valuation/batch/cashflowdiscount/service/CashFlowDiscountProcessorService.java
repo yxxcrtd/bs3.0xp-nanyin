@@ -38,7 +38,6 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam
 import com.joyintech.tams.model.valuation.batch.calculation.util.BasicUtil;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
-import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveResultDetail;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -680,9 +679,11 @@ public class CashFlowDiscountProcessorService {
             }
         }
         accurIntCalInParameter.setSecInfoModel(secInfoModel);
-        if (!StringUtil.isEmptyList(entity.getModCashFlows())) {
+        if (!StringUtil.isEmptyList(entity.getModCashFlowsOld())) {
             List<SecIntSchedule> secIntSchedules = new ArrayList<>();
-            entity.getModCashFlows().stream().forEach(item -> {
+            entity.getModCashFlowsOld().stream().filter(x->{
+                return DictCodeListExt1.现金流二级类型_利息.getValue().equals(x.getCashType2());
+            }).forEach(item -> {
                 SecIntSchedule secIntSchedule = new SecIntSchedule();
                 secIntSchedule.setTheoryStartDate(DateUtil.dateToLocal(item.getVdateUnadjust()));
                 secIntSchedule.setTheoryCutoffDate(DateUtil.dateToLocal(item.getMdateUnadjust()));

@@ -81,14 +81,15 @@
 									</div>
 								</div>
 								<div class="layui-form-item">
-									
+									<!-- mody by meifaxin 2021-9-27 后台为string类型，去掉千分位 start -->
+									<!-- mody by meifaxin 2021-9-27 后台为string类型，去掉千分位 end -->
 									<div class="form-inline-wrap">
 										<label class="layui-form-label form-label-wrap"
 											data-th-text="#{SppiTest003.bidPriceCon}">使权不重大的购入价条件</label>
 										<div class="layui-input-inline input-inline">
 											<input type="text" id="bidPriceCon" name="bidPriceCon"
 												   data-th-value="${entity?.bidPriceCon}"
-												   class="layui-input form-input text-number"
+												   class="layui-input form-input"
 												   placeholder="请输入内容"
 												   data-th-placeholder="#{SysCommon.placeholder}" required>
 										</div>

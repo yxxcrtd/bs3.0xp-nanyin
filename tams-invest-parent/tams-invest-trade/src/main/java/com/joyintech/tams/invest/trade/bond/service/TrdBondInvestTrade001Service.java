@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.trade.bond.service;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +149,30 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
     public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
         List<TrdBondInvestTradePdfDto> datas = selectExportPdf(param);
         if(!StringUtil.isEmptyList(datas)){
+            DecimalFormat df2 = new DecimalFormat("#0.00##");
+            DecimalFormat df4 = new DecimalFormat("#0.0000##");
+            datas.forEach(exportPdfDto -> {
+                // 委托价格
+                if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
+                    exportPdfDto.setPrice(new BigDecimal(df4.format(exportPdfDto.getPrice())));
+                }
+                // 委托金额
+                if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
+                    exportPdfDto.setEntrustAmt(new BigDecimal(df2.format(exportPdfDto.getEntrustAmt())));
+                }
+                // 成交均价
+                if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
+                    exportPdfDto.setUnitCprice(new BigDecimal(df4.format(exportPdfDto.getUnitCprice())));
+                }
+                // 成交均价(全价)
+                if(StringUtil.isNotEmpty(exportPdfDto.getUnitFprice())){
+                    exportPdfDto.setUnitFprice(new BigDecimal(df4.format(exportPdfDto.getUnitFprice())));
+                }
+                // 成交金额
+                if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
+                    exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+                }
+            });
             //汇总交易金额
             TrdBondInvestTradePdfDto dto = new TrdBondInvestTradePdfDto();
             dto.setPortfolioId("合计");

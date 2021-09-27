@@ -26,7 +26,7 @@ public class DisCountSpreadCalculator implements Calculator<DisCountInputParamet
 	public DisCountOutputParameter calculate(DisCountInputParameter input) {
 		input.check();
 		DisCountOutputParameter out = new DisCountOutputParameter();
-		
+
 		//现金流信息
 		List<CashInfoDto> cashInfoDtoList = new ArrayList<>();
 		//1. 剩余期限计算
@@ -35,7 +35,7 @@ public class DisCountSpreadCalculator implements Calculator<DisCountInputParamet
 		RemainingTermCalculator rtCalculator = CalculatorFactory.createRemainingTermCalculator();
 		RemainingTermOutputParameter rtOutput = rtCalculator.calculate(rtInput);
 		cashInfoDtoList.addAll(rtOutput.getCashInfoDtoList());
-		
+
 		//按实际结束日升序
         Collections.sort(cashInfoDtoList, new Comparator<CashInfoDto>() {
             @Override
@@ -43,7 +43,7 @@ public class DisCountSpreadCalculator implements Calculator<DisCountInputParamet
             	return o1.getActualCutoffDate().compareTo(o2.getActualCutoffDate());
             }
         });
-		
+
 		//2. 点差计算
 		CurveType curveType = input.getCurveInfoDto().getCurveType();
 		if (CurveType.即期.equals(curveType)) {
@@ -96,6 +96,10 @@ public class DisCountSpreadCalculator implements Calculator<DisCountInputParamet
 				CurveRateSpRCalculator trCalculator = CalculatorFactory.createCurveRateSpRCalculator();
 				TargetRateOutputParameter troutput = trCalculator.calculate(trinput);
 				lastYield = troutput.getTargerYield();
+			}
+			// 得把信息塞入到cashInfoDtoList中返回出去
+			for (CashInfoDto dto:input.getCashInfoDtoList()) {
+				dto.setSpR(lastYield);
 			}
 			//二分法计算点差-到期
 			DichotomySpreadExpireInputParameter dssinput = new DichotomySpreadExpireInputParameter();

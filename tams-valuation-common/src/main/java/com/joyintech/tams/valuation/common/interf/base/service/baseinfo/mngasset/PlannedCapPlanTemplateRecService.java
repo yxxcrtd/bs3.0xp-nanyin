@@ -134,6 +134,7 @@ public class PlannedCapPlanTemplateRecService {
         //ADD JINMAODONG 曹国说需要给计息本金塞值
         valCashPlan.setIntPrinAmt(dto.getRepayAmt());
         valCashPlan.setPrinAmt(dto.getRepayAmt());
+        valCashPlan.setVdate(dto.getRepayDate());
         
         /**modify by wujie on 20190114 start
         if(dto.getIntAmt()!=null){

@@ -12,14 +12,10 @@ package com.joyintech.tams.model.valuation.batch.cashflowdiscount.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.tams.common.base.entity.ModAssetGradeConfig;
-import com.joyintech.tams.common.base.entity.ModAssetGradeSpecialConfig;
-import com.joyintech.tams.common.base.entity.ModBatchLogs;
-import com.joyintech.tams.common.base.entity.ModValBatchParams;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.CashFlowDiscountReaderResult;
-import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
@@ -140,6 +136,7 @@ public class CashFlowDiscountReaderService {
                         //查找现金流计划信息
                         List<ModCashFlowDto> modCashFlows = modValuationCommonService.getCashFlowPlanInfoByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlows(modCashFlows);
+                        cashFlowDiscountReaderResult.setModCashFlowsOld(modCashFlows);
                         //查找现金流计算规则信息
                         List<ModCashFlowCalRuleDto> modCashFlowCalRules = modValuationCommonService.getCashFlowCalRulesByFinprodId(item.getFinprodId());
                         cashFlowDiscountReaderResult.setModCashFlowCalRules(modCashFlowCalRules);
@@ -183,6 +180,10 @@ public class CashFlowDiscountReaderService {
                         }
                         if (null != rateInfo) {
                             paramCurveCode.put("graderesult", rateInfo.getRating());
+                        }else if(null!=modCurveConfig.getBottomGrade()){
+                            //设置兜底评级
+//                            rateInfo.setRating(modCurveConfig.getBottomGrade());
+                            paramCurveCode.put("graderesult", modCurveConfig.getBottomGrade());
                         }
                         List<String> curveCode = cashFlowDiscountMapper.getCurveCode(paramCurveCode);
 

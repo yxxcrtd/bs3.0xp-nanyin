@@ -293,7 +293,18 @@
         
         // 预览按钮事件
         $("#settingPreview").click(function(){
-            Joyin.dialog( "预览", $('#search').select2('data')[0].object + "/init", "100%", "100%", function(result){});
+            var config = serializeLayout();
+            var data = {};
+            data.settingSaveIds = config.layoutList;
+            data.pageList = config.pageList;
+            var dynId = $("#search").val();
+
+            if(!dynId){
+                JoyinUtil.showMessage("请选择数据源!", "info");
+                return;
+            } else {
+                Joyin.dialog( "预览", $('#search').select2('data')[0].object + "/init", "100%", "100%", function(result){});
+            }
         });
         //返回按钮事件
         $("#settingReturn").click(function () {

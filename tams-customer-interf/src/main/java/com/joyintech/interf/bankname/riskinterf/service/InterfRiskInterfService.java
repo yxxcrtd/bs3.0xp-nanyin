@@ -539,6 +539,13 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                         finDto.setVarietyCode(String.valueOf(term));
                     }
                 }
+
+                //如果报文中传了期限品种，已报文为准。如果没有，就以上面的计算逻辑算出的为准
+                Object varietyCode = dataMap.get("varietyCode");
+                if(StringUtil.isNotEmpty(varietyCode)) {
+                    finDto.setVarietyCode(String.valueOf(varietyCode));
+                }
+
                 finDto.setMdate(DateUtil.parseDate(String.valueOf(CommonUtil.findValue(dataMap,"mdate")),DateUtil.DEFAULT_DATE_FORMAT_EN));
                 finDto.setCounterId(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"counterId"))?CommonUtil.findValue(dataMap,"counterId").toString():null);
                 //获取交易对手的市场机构代码
@@ -834,7 +841,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                                 for (Map<String, Object> stringObjectMap : pledgeAssetCodeList) {
                                     String assetcode = (String)stringObjectMap.get("finprodMarketId");
                                     if (!(StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode))) {
-                                        amount = ArithmeticUtil.doAdd(amount,(BigDecimal)stringObjectMap.get("amount"));
+                                        amount = ArithmeticUtil.doAdd(amount,new BigDecimal(stringObjectMap.get("amount").toString()));
                                     }
                                 }
                                 finDto.setAmount(amount);

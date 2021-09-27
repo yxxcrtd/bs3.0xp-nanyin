@@ -540,7 +540,9 @@ var etrAmt = '';
         }
         //卖出时显示通道费
         if(ps&&(ps == PS_T02||ps == PS_T01)){
-        	$("#channelFee_div").show();
+        	if(!ElementsControl.includes("channelFee")){
+                $("#channelFee_div").show();
+            }
         }else{
         	$("#channelFee_div").hide();
         	$("#channelFee").val("");

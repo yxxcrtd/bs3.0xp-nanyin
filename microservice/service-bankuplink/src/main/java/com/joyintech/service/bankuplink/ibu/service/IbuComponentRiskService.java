@@ -267,7 +267,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
                         reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                         reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                        //reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
+                        reqRiskOccupy.setAmount(amount);
                         // 投管要求协议回购这里传入起息日,到期日
                         reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
                         reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));
@@ -281,6 +281,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                         reqRiskOccupy.setOccupySource("CFET");
+                        reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqList.add(reqRiskOccupy);
                     }
                     //update by zznn 20210922 end
@@ -323,8 +324,9 @@ public class IbuComponentRiskService extends BaseService {
                             map.put("entrustId",ibuQuoteEntCrepPledgeDto.getEntrustId());
                             pledgeAssetCodeListAll.add(map);
                         }
-                        ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+
                         for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                            ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                             List<Map<String, Object>> pledgeAssetCodeList = new ArrayList<>();
                             for (Map<String, Object> stringObjectMap : pledgeAssetCodeListAll) {
                                 if(stringObjectMap.containsKey(ibuQuoteEtrReDto.getEntrustId())){
@@ -360,7 +362,6 @@ public class IbuComponentRiskService extends BaseService {
                             reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                             reqRiskOccupy.setOccupySource("CFET");
                             reqList.add(reqRiskOccupy);
-                            break;
                         }
                     }else{
                         for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
@@ -647,6 +648,7 @@ public class IbuComponentRiskService extends BaseService {
                     reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
                     reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                     reqRiskOccupy.setCounterId(counterId);
+                    reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                     reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
                     reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                     reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
@@ -679,6 +681,7 @@ public class IbuComponentRiskService extends BaseService {
                     reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                     reqRiskOccupy.setCounterId(counterId);
                     reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
+                    reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                     reqList.add(reqRiskOccupy);
                 }
                 }
@@ -729,6 +732,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                         reqRiskOccupy.setOccupySource("CFET");
+                        reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                         reqList.add(reqRiskOccupy);
                     }
                 }
@@ -758,6 +762,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setEventType("1");
                         reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                         reqRiskOccupy.setCounterId(counterId);
+                        reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
 
                         reqList.add(reqRiskOccupy);
                     }

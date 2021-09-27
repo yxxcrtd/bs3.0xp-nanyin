@@ -61,7 +61,7 @@
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
             </if>
-            <if test="credit_penetrate_mode != null and '02'.equals(credit_penetrate_mode)">
+            <if test="operatioMode != null and operatioMode == '02'.toString()">
                 <include refid="existCommonSql"></include>
             </if>
         </where>
@@ -91,7 +91,7 @@
             <if test="creditOccureType != null and creditOccureType != ''">
                 and temp.CREDIT_OCCURE_TYPE  = #{creditOccureType}
             </if>
-            <if test="credit_penetrate_mode != null and '02'.equals(credit_penetrate_mode)">
+            <if test="operatioMode != null and operatioMode == '02'.toString()">
                 <include refid="existCommonSql"></include>
             </if>
         </where>
@@ -121,7 +121,7 @@
             <if test="creditOccureType != null and creditOccureType != ''">
                 and temp.CREDIT_OCCURE_TYPE  = #{creditOccureType}
             </if>
-            <if test="credit_penetrate_mode != null and '02'.equals(credit_penetrate_mode)">
+            <if test="operatioMode != null and operatioMode == '02'.toString()">
                 <include refid="existCommonSql"></include>
             </if>
         </where>
@@ -148,7 +148,7 @@
             <if test="status != null and status != ''">
                 and temp.STATUS  = #{status}
             </if>
-            <if test="credit_penetrate_mode != null and '02'.equals(credit_penetrate_mode)">
+            <if test="operatioMode != null and operatioMode == '02'.toString()">
                 <include refid="existCommonSql"></include>
             </if>
         </where>

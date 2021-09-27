@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.tams.common.base.entity.ModCurveConfig;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 
@@ -29,6 +30,10 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
      * 现金流计划信息
      */
     private List<ModCashFlowDto> modCashFlows;
+    /**
+     * 现金流计划信息-未做合并得
+     */
+    private List<ModCashFlowDto> modCashFlowsOld;
     /**
      * 现金流计算规则
      */
@@ -98,6 +103,14 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
 
     public void setViewRatingInfoDto(ViewRatingInfoDto viewRatingInfoDto) {
         this.viewRatingInfoDto = viewRatingInfoDto;
+    }
+
+    public List<ModCashFlowDto> getModCashFlowsOld() {
+        return modCashFlowsOld;
+    }
+
+    public void setModCashFlowsOld(List<ModCashFlowDto> modCashFlowsOld) {
+        this.modCashFlowsOld = modCashFlowsOld;
     }
 }
 

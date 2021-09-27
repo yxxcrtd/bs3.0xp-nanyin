@@ -1276,6 +1276,14 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
     @Override
     public void doInsert(TrdBondInvestTradeDto entity, OperationType operationType) {
+        if (StringUtil.isNotEmpty(entity.getBondFirstSign()) && !OperationType.REVOKE.equals(operationType)) {
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("tradeId", entity.getTotleTradeId());
+            map1.put("bidPrice", entity.getBidPrice());
+            map1.put("entrustId", entity.getEntrustId());
+            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map1,
+                    Integer.class);
+        }
         if ("save".equals(entity.getOperateType())) {
             return;
         }
@@ -1418,6 +1426,16 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
      */
     @Override
     public void doDelete(String workflowId) {
+        TrdBondInvestTradeDto entity = this.getBussinessEntityByWorkflowId(
+                workflowId);
+        if (StringUtil.isNotEmpty(entity.getBondFirstSign())&&!"revoke".equals(entity.getOperateType())) {
+            Map<String, Object> map1 = new HashMap<>();
+            map1.put("tradeId", null);
+            map1.put("bidPrice", entity.getBidPrice());
+            map1.put("entrustId", entity.getEntrustId());
+            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map1,
+                    Integer.class);
+        }
         baseTradeProductDealCommService.delete(workflowId);
 
     }
@@ -1955,15 +1973,15 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
 
         }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 start
-        if (StringUtil.isNotEmpty(entity.getBondFirstSign())) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("tradeId", tradeId);
-            map.put("winPrice", entity.getYield());
-            map.put("winCprice",entity.getUnitCprice());
-            map.put("entrustId", entity.getEntrustId());
-            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map,
-                Integer.class);
-        }
+//        if (StringUtil.isNotEmpty(entity.getBondFirstSign())) {
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("tradeId", tradeId);
+//            map.put("winPrice", entity.getYield());
+//            map.put("winCprice",entity.getUnitCprice());
+//            map.put("entrustId", entity.getEntrustId());
+//            restTemplate.postForObject(ServiceApplication.ENTRUST_SERVICE_NAME + "/Etrbondbiddingresult/updateTradeId", map,
+//                Integer.class);
+//        }
         // 如果中标结果进来 add by gejiaao 2019年8月6日 end
         // 增加调动接口 by 赵东东 20191206 start
         try {

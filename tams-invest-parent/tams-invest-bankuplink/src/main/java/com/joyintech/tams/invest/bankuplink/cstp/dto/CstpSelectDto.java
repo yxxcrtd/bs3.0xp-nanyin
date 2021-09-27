@@ -747,7 +747,7 @@ public class CstpSelectDto extends InterfCstpTrade{
     }
 
     public String getQuoteTypeStr() {
-        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getSettType());
+        return SysDataUtil.getNameFromDataDict(BussinessDictCode.报价方式, this.getQuoteType());
     }
 
     private String assetTypeOne;

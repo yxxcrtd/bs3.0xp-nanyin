@@ -316,11 +316,27 @@ FROM
     <!--回购已匹配额度-->
     <select id="listRepMatchNum" resultType="com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto">
         SELECT
-            PLEDGE_FINPROD_ID finprodId,
-            SUM(MATCH_NUM) facetotalamt
+            T1.PLEDGE_FINPROD_ID finprodId,
+            T4.CONVRATE convrate,
+            SUM(T1.MATCH_NUM) facetotalamt,
+            SUM(T4.CONVRATE*T1.MATCH_NUM) conversionFacetotalamt
         FROM
-            TRD_PLEDGE_MATCH_INFO
-             where CSTP_TRADE_ID =  #{execId}
-        GROUP BY PLEDGE_FINPROD_ID
+            TRD_PLEDGE_MATCH_INFO T1
+        LEFT JOIN (
+            SELECT
+                T2.TRADEID,
+                T3.FINPROD_ID,
+                T2.CONVRATE
+            FROM
+                INTERF_TRAD_REPOASST T2
+            LEFT JOIN FIN_PRODUCT T3 ON
+                T3.FINPROD_TYPE2 = 'F01'
+                AND T3.FINPROD_MARKET_ID = CONCAT(T2.SECID , '.IB'))T4 ON
+            T4.FINPROD_ID = T1.PLEDGE_FINPROD_ID
+            AND T4.TRADEID = T1.CSTP_TRADE_ID
+        where T1.CSTP_TRADE_ID =  #{execId}
+        GROUP BY
+            T1.PLEDGE_FINPROD_ID,
+            T4.CONVRATE
     </select>
 </mapper>

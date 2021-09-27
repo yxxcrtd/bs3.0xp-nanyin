@@ -60,8 +60,9 @@ $(function() {
             {field:'gradeResult', title: 'MstMarketInstitutions002.gradeResult', edit:true, editOption:{type:'select', result: MAIN_GRADE_RESULT}, sortable:false},
             {field:'gradeExpectation', title: 'MstMarketInstitutions002.gradeExpectation', edit:true, editOption:{type:'select', result: RATING_OUTLOOK}, sortable:false},
             {field:'directionChange', title: 'MstMarketInstitutions002.directionChange', edit:true , editOption:{type:'select', result: CHANGE_DIRECTION}, sortable:false},
-            {field:'gradeOrgId', title: 'MstMarketInstitutions002.gradeOrgId', edit:true , editOption:{type:'select', showField:'text', url: JoyinUtil.getRealPath('/valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions002/getGradeOrgId')}, sortable:false},
-            {field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
+            // {field:'gradeOrgId', title: 'MstMarketInstitutions002.gradeOrgId', edit:true , editOption:{type:'select', showField:'text', url: JoyinUtil.getRealPath('/valuation/basicdata/mstmarketinstitutions/MstMarketInstitutions002/getGradeOrgId')}, sortable:false},
+			{field:'gradeOrgId', title: 'MstMarketInstitutions002.gradeOrgId', edit:true , editOption:{type:'select', showField:'text',result: GRADE_PARTY}, sortable:false},
+			{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['delt']}
         ]
     };
     

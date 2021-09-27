@@ -3,6 +3,8 @@ package com.joyintech.tams.model.valuation.batch.calculation.util;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.DateUtil;
+import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.CashInfoDto;
 import com.joyintech.tams.valuation.common.dto.modelDto.ModCashFlowDto;
 
@@ -319,13 +321,21 @@ public class BasicUtil {
         //同频合并
         Map<Date, List<ModCashFlowDto>> collect = cashInfoDtos.stream().collect(Collectors.groupingBy(ModCashFlowDto::getMdate));
         for (Map.Entry<Date, List<ModCashFlowDto>> entry : collect.entrySet()) {
-            ModCashFlowDto item = new ModCashFlowDto();
+            ModCashFlowDto result = new ModCashFlowDto();
             List<ModCashFlowDto> cash = entry.getValue();
             BigDecimal bigDecimal = cash.stream().map(ModCashFlowDto::getCashAmt).reduce((x, y) -> ArithmeticUtil.doAdd(x, y)).get();
-            ModCashFlowDto modCashFlowDto = cash.get(0);
-            BeanUtil.copyPropertiesIgnoreNull(item, modCashFlowDto);
-            item.setCashAmt(bigDecimal);
-            newCashInfo.add(item);
+            ModCashFlowDto modCashFlowDto = null;
+            for (ModCashFlowDto item : cash ) {
+                if(DictCodeListExt1.现金流二级类型_利息.getValue().equals(item.getCashType2())){
+                    modCashFlowDto = item;
+                    break;
+                }else if(modCashFlowDto==null){
+                    modCashFlowDto = item;
+                }
+            }
+            BeanUtil.copyPropertiesIgnoreNull(result, modCashFlowDto);
+            result.setCashAmt(bigDecimal);
+            newCashInfo.add(result);
         }
         //排序
         newCashInfo.sort(new Comparator<ModCashFlowDto>() {
