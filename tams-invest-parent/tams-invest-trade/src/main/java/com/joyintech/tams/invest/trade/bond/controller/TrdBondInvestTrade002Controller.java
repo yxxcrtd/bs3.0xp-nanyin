@@ -235,6 +235,8 @@ TrdBondInvestTrade002Controller extends BaseController {
             String bidId = this.getParam("bidId");
             dto.setBidId(bidId);
             // add by zhangrui1 差分预占需要字段 end
+            BigDecimal bidPrice = new BigDecimal(this.getParam("bidPrice")).divide(new BigDecimal(100));
+            dto.setBidPrice(bidPrice);
         }
         // 从"债券中标结果查询"进来，准备进行缴款 add by gejiaao 2019/07/26 End
         if (StringUtil.isNotBlank(tradeId)) {
