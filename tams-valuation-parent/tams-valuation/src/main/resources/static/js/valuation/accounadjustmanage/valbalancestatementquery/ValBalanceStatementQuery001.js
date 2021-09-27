@@ -106,47 +106,47 @@ $(function () {
         }
         Joyin.ajaxJson(basePath + 'valuation/accounadjustmanage/valbalancestatementquery/ValBalanceStatementQuery001/selectCorrespondingFrame', data,
             function (resultObj) {
-                if (resultObj) {
+                if (resultObj.data) {
                     //"F17" "计划类资产"
-                    if (resultObj.finprodType === 'F17'){
+                    if (resultObj.data.finprodType === 'F17'){
                         //计划类资产行情信息
                         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                             basePath + "valuation/basedata/marketdata/valnetassetquotationinfo/ValNetAssetQuotationInfo002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                finprodId: resultObj.detailSubjectNoTail,
+                                finprodId: resultObj.data.detailSubjectNoTail,
                                 valDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
                     }
                     //基金类资产行情信息
-                    else if (resultObj.finprodType === 'F06'){
+                    else if (resultObj.data.finprodType === 'F06'){
                         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                             basePath + "valuation/basedata/marketdata/valcoinfundquotationinfo/ValCoinFundQuotationInfo002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                finprodMarketId: resultObj.finprodMarketId,
+                                finprodMarketId: resultObj.data.finprodMarketId,
                                 valDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
                     }
                     //股票行情信息
-                    else if (resultObj.finprodType === 'F10'){
+                    else if (resultObj.data.finprodType === 'F10'){
                         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                             basePath + "valuation/basedata/marketdata/valshareprice/ValSharePrice002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                sharesId: resultObj.finprodMarketId,
+                                sharesId: resultObj.data.finprodMarketId,
                                 dealDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
                     }
                     //债券行情信息
-                    else if (resultObj.finprodType === 'F01'){
-                        if (resultObj.valueSource) {
+                    else if (resultObj.data.finprodType === 'F01'){
+                        if (resultObj.data.valueSource) {
                             Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                                 basePath + "valuation/basedata/marketdata/valbondquotationinfo/ValBondQuotationInfo002/init",
                                 "95%", "80%", {
                                     pageModel: PAGE_MODEL_REFERENCE,
-                                    secId: resultObj.finprodMarketId,
-                                    valueSource: resultObj.valueSource,
+                                    secId: resultObj.data.finprodMarketId,
+                                    valueSource: resultObj.data.valueSource,
                                     valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                                 });
                         } else {
@@ -154,33 +154,33 @@ $(function () {
                                 basePath + "valuation/basedata/marketdata/bondmarketinfo/ValBondMarketInfo002/init",
                                 "95%", "80%", {
                                     pageModel: PAGE_MODEL_REFERENCE,
-                                    secId: resultObj.finprodMarketId,
+                                    secId: resultObj.data.finprodMarketId,
                                     valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                                 });
                         }
                     }
                     //外汇行情信息
-                    else if (resultObj.finprodType === 'F11' || resultObj.finprodType === 'F12' || resultObj.finprodType === 'F13'){
+                    else if (resultObj.data.finprodType === 'F11' || resultObj.data.finprodType === 'F12' || resultObj.data.finprodType === 'F13'){
 
                         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                             basePath + "valuation/basedata/marketdata/valfxvaluztioninfo/ValFxValuztionInfo002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                finprodId2: resultObj.finprodMarketId,
-                                valmodelId:resultObj.valmodelId,
-                                datasourceType: resultObj.datasourceType,
+                                finprodId2: resultObj.data.finprodMarketId,
+                                valmodelId:resultObj.data.valmodelId,
+                                datasourceType: resultObj.data.datasourceType,
                                 operateType:"view",
                                 valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
                     }
                     //利率互换估值信息
-                    else if (resultObj.finprodType === 'F14'){
+                    else if (resultObj.data.finprodType === 'F14'){
                         Joyin.dialog(JoyinUtil.getLabel("SysCommon.refrence"),
                             basePath + "valuation/basedata/marketdata/rateswapvaluationinfo/ValRateSwapValuationInfo002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                finprodId2: resultObj.finprodMarketId,
-                                datasourceType: resultObj.datasourceType,
+                                finprodId2: resultObj.data.finprodMarketId,
+                                datasourceType: resultObj.data.datasourceType,
                                 operateType:"view",
                                 valueDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
@@ -191,7 +191,7 @@ $(function () {
                             basePath + "valuation/basedata/marketdata/valexchangerateinfo/ValExchangeQuotationInfo002/init",
                             "95%", "80%", {
                                 pageModel: PAGE_MODEL_REFERENCE,
-                                exchargeCode:resultObj.finprodMarketId,
+                                exchargeCode:resultObj.data.finprodMarketId,
                                 tradeDate: (new Date(row.marketDate)).format('yyyy-MM-dd')
                             });
                     }
