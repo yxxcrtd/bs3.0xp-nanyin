@@ -241,14 +241,14 @@ $(function() {
          * 查询按钮
          */
         $('#ComRateSwapInformation001_btn_search').click(function () {
-            if ($("#curveCode").val() == ""){
-                Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
-                return;
-            }
-            if ($("#curveDate").val() == ""){
-                Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0005"));
-                return;
-            }
+//            if ($("#curveCode").val() == ""){
+//                Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0004"));
+//                return;
+//            }
+//            if ($("#curveDate").val() == ""){
+//                Joyin.error(JoyinUtil.getMessage("MST_RateSwapInfo_0005"));
+//                return;
+//            }
             table.load();
         });
         /**
