@@ -2201,6 +2201,19 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
                     }
+                }else{
+                    MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                    if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                        List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                        if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                            mstCounterParty =mstCounterPartys.get(0);
+                            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                            }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -2333,6 +2346,19 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
                     }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
                         infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                    }
+                }else{
+                    MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(infRiskRdsDto.getCounterId());
+                    if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                        List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                        if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                            mstCounterParty =mstCounterPartys.get(0);
+                            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                            }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                            }
+                        }
                     }
                 }
             }
@@ -2516,20 +2542,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_拆借.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_拆入.getValue())||StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_特拆拆入.getValue())?DictCodeList.回购拆借方向_拆入.getValue():DictCodeList.回购拆借方向_拆出.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
-            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式逆回购.getValue())) {
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_质押式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
-            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-             del by zhangrui1 end */
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
             }
@@ -2541,10 +2563,8 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeListExt3.平安资产类型_期权.getValue());
             infRiskRdsDto.setAmount(finDto.getFpriceAmt());//回购、拆借：到期金额（元）
             infRiskRdsDto.setEventDate(DateUtil.format(finDto.getTradeDate()));
-            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融出.getValue())){
@@ -2553,20 +2573,16 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType(DictCodeListExt2.平安资产类型_债券借贷.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券借贷融入.getValue())?
                     DictCodeList.回购拆借方向_融入.getValue():DictCodeList.回购拆借方向_融出.getValue());
-            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-             del by zhangrui1 end */
         }
         if(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())||
                 StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式逆回购.getValue())) {
             infRiskRdsDto.setAssetType(DictCodeList.平安资产类型_买断式回购.getValue());
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券买断式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             infRiskRdsDto.setPs(DictCodeList.交易方向_到期.getValue());
-            /* del by zhangrui1 start
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
-             del by zhangrui1 end */
         }
         if(StringUtil.equals(DictCodeListExt1.金融产品类型_投管用_利率互换.getValue(),finDto.getFinprodType2())) {
             if(StringUtil.equals(DictCodeList.交易方向_收取.getValue(),finDto.getPs())||StringUtil.equals(DictCodeList.交易方向_支付.getValue(),finDto.getPs())){

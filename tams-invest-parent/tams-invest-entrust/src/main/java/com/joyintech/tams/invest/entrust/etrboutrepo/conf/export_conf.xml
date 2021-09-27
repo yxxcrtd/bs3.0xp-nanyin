@@ -13,7 +13,7 @@
             <Cell order="9" name="币种">busCcy</Cell>
             <Cell order="10" name="指令开始日">vdateText</Cell>
             <Cell order="11" name="指令结束日">mdateText</Cell>
-            <Cell order="12" name="指令金额/万元">entrustAmt</Cell>
+            <Cell order="12" name="指令金额（万元）">entrustAmt</Cell>
             <Cell order="13" name="已完成额度">finishAmt</Cell>
             <Cell order="14" name="交易完成度">transactioncom</Cell>
             <!-- add by zhangpuyu 2019/11/15 start-->

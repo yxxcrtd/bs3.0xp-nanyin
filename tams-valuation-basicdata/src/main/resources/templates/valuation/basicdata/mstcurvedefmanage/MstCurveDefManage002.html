@@ -64,11 +64,15 @@
                    </div>
 
                    <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-label-wrap">是否曲线族</label>
+                       <label class="layui-form-label form-lable">所属曲线族</label>
                        <div class="layui-input-inline input-inline">
-                           <input type="checkbox" id="curveGroupType" name="curveGroupType" lay-filter="curveGroupType"
-                                  lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
-                                  data-th-checked="${YES_OR_NO_Y} ==${entity?.curveGroupType}" required>
+                           <select type="text" id="curveGroupCode" name="curveGroupCode"
+                                   class="layui-input form-input input-select" allowClear="true"
+                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-formatoption="false"
+                                   data-th-data-url="@{/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/getCurveGroupSelect}"
+                                   data-th-initvalue="${entity?.curveGroupCode}">
+                           </select>
                        </div>
                    </div>
 
@@ -79,10 +83,16 @@
                        <label class="layui-form-label form-lable" >曲线类型
                            <span class="checkRed" id="intCurveType_redId">*</span></label>
                        <div class="layui-input-inline input-inline">
-                           <select formatoption = "true" type="text" id="intCurveType"
+                           <!--<select formatoption = "true" type="text" id="intCurveType"
                                    name="intCurveType"class="layui-input form-input input-select"
                                    data-th-data-result='${CURVE_TYPE}' data-th-initValue="${entity?.intCurveType}"
                                    allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" >
+                           </select>-->
+                           <select id="intCurveType" name="intCurveType" class="layui-input form-input input-select"
+                                   allowClear="true" placeholder="请输入" data-th-data-result="${CURVE_TYPE}"
+                                   data-th-initvalue="${entity?.intCurveType}" parentIds="valueSource"  formatoption = "true"
+                                   data-th-data-url="@{/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/getIntCurveType}">
+                               <option></option>
                            </select>
                        </div>
                    </div>
@@ -129,18 +139,7 @@
 
 
                <div class="layui-form-item">
-                   <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable">所属曲线族</label>
-                       <div class="layui-input-inline input-inline">
-                           <select type="text" id="curveGroupCode" name="curveGroupCode"
-                                   class="layui-input form-input input-select" allowClear="true"
-                                   placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}"
-                                   data-formatoption="false"
-                                   data-th-data-url="@{/valuation/basicdata/mstcurvedefmanage/MstCurveDefManage002/getCurveGroupSelect}"
-                                   data-th-initvalue="${entity?.curveGroupCode}">
-                           </select>
-                       </div>
-                   </div>
+
 
                    <div class="layui-inline layui-col-md6">
                        <label class="layui-form-label form-lable">币种<span class="checkRed" id="ccy_redId">*</span></label>
@@ -150,6 +149,18 @@
                                    data-th-data-result='${CCY}' data-th-initValue="${entity?.ccy}"
                                    allowClear="true"placeholder="请输入内容"data-th-placeholder="#{SysCommon.placeholder}" >
                            </select>
+                       </div>
+                   </div>
+
+                   <div class="layui-inline layui-col-md6">
+                       <label class="layui-form-label form-lable" >描述<span class="checkRed" id="remark_redId">*</span>
+                       </label>
+                       <div class="layui-input-inline input-inline">
+                           <input type="text" id="remark" name="remark"
+                                  class="layui-input form-input"
+                                  placeholder="请输入内容"
+                                  data-th-placeholder="#{SysCommon.placeholder}"
+                                  data-th-value = "${entity?.remark}" >
                        </div>
                    </div>
 
@@ -237,19 +248,6 @@
                    </div>
                </div>
 
-               <div class="layui-form-item">
-                   <div class="layui-inline layui-col-md6">
-                       <label class="layui-form-label form-lable" >描述<span class="checkRed" id="remark_redId">*</span>
-                           </label>
-                       <div class="layui-input-inline input-inline">
-                           <input type="text" id="remark" name="remark"
-                                  class="layui-input form-input"
-                                  placeholder="请输入内容"
-                                  data-th-placeholder="#{SysCommon.placeholder}"
-                                  data-th-value = "${entity?.remark}" >
-                       </div>
-                   </div>
-               </div>
                <div class="layui-col-md11 layui-col-xs11 layui-col-sm11 layui-col-lg11" style="position: fixed;bottom: 30px;">
                    <div class="text-center">
                        <!--<a id="ModGradePdConfig002_btn_save" class="layui-btn layui-btn-sm btn-save"

@@ -184,7 +184,7 @@
 			GROUP BY
 			ASSET_ID
 		) ME
-		ON finProduct.FINPROD_MARKET_ID = ME.ASSET_ID
+		ON finProduct.FINPROD_ID = ME.ASSET_ID
 		<!-- ADD BY chufengjie ON 20210926 FOR 估值核算系统VAS3.0-930-基线需求 End  -->
 		WHERE
 		A.rank = 1

@@ -202,6 +202,16 @@ public class RiskSelectDto extends BaseEntity{
      */
     private String forbiddenLn;
 
+    /*
+     *资产代码
+     */
+    private String assetCode;
+
+    /*
+     * 资产名称
+     */
+    private String assetName;
+
     public String getPortfolioName() {
         return portfolioName;
     }
@@ -304,5 +314,21 @@ public class RiskSelectDto extends BaseEntity{
 
     public void setKriCode(String kriCode) {
         this.kriCode = kriCode;
+    }
+
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
+    }
+
+    public String getAssetName() {
+        return assetName;
+    }
+
+    public void setAssetName(String assetName) {
+        this.assetName = assetName;
     }
 }

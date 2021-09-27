@@ -718,13 +718,19 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("rskStatus","0");
         resultMap.put("message","成功");
+        List<CreditLinesInputDto> trdProductDealsobj = new ArrayList<>();
+        for(CreditLinesInputDto dto:trdProductDeals){
+            CreditLinesInputDto dto1 = new CreditLinesInputDto();
+            BeanUtil.copyPropertiesIgnoreNull(dto1, dto);
+            trdProductDealsobj.add(dto1);
+        }
         if (DictCodeListExt1.交易状态_初始.getValue().equals(tradeStatu) && isNeedRiskCheck){
             resultMap = checkSxTrade(trdProductDeals);
         }
 
         if(BussinessDictCodeListRds.指标状态_通过.getValue().equals(resultMap.get("rskStatus"))){
             //3、授信接口占用
-            AllTradeCommonUtil.handleBeforeTradeComplete(trdProductDeals, DictCodeListRsk.授信占用类别_实占.getValue());
+            AllTradeCommonUtil.handleBeforeTradeComplete(trdProductDealsobj, DictCodeListRsk.授信占用类别_实占.getValue());
         }
         logger.info("==========授信占用/释放批量结果：rskStatus：" +resultMap.get("rskStatus")+";message: "+resultMap.get("message"));
         logger.info("==========授信占用/释放批量接口 start==========");
@@ -952,8 +958,15 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 creditLinesInputDto.setCreateDept(LoginUserUtil.getDeptCode());
                 creditLinesInputDto.setCreateTime(new Date());
                 creditLinesInputDto.setCreateUser(LoginUserUtil.getUserName());
-
+                creditLinesInputDto.setNetPrice(finDto.getPriceAmt());
                 trdlist.add(creditLinesInputDto);
+                if(DictCodeList.平安资产类型_基金.getValue().equals(finDto.getAssetType())&&"T01".equals(finDto.getPs())) {
+                    CreditLinesInputDto dto = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto, creditLinesInputDto);
+                    creditLinesInputDto.setEntrustId(creditLinesInputDto.getTradeId());
+                    dto.setIsSpecial("true");
+                    trdlist.add(dto);
+                }
             }
         }
         return trdlist;

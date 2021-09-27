@@ -2,6 +2,7 @@ package com.joyintech.tams.invest.batch.creditoccup.processor;
 
 import com.joyintech.batch.batchbase.baseclass.BaseProcessor;
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCodeListRsk;
 import com.joyintech.tams.invest.batch.creditoccup.dto.CreditOccupReaderResult;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +33,15 @@ public class CreditOccupSzProcessor extends BaseProcessor<NeedOperateEntity, Cre
         CreditOccupReaderResult readerResult = (CreditOccupReaderResult) needOperateEntity;
         List<CreditLinesInputDto> creditLinesInputs = readerResult.getCreditLinesInputs();
         if(!StringUtil.isEmptyList(creditLinesInputs)){
+            List<CreditLinesInputDto> creditLinesInputsObj = new ArrayList<>();
+            for(CreditLinesInputDto dto:creditLinesInputs){
+                CreditLinesInputDto dto1 = new CreditLinesInputDto();
+                dto1.setTradeId(dto.getTradeId());
+                dto1.setTradeStatus("03");
+                creditLinesInputsObj.add(dto1);
+            }
             try {
+                AllTradeCommonUtil.handleBeforeTradeComplete(creditLinesInputsObj, DictCodeListRsk.授信占用类别_实占.getValue());
                 AllTradeCommonUtil.handleBeforeTradeComplete(creditLinesInputs, DictCodeListRsk.授信占用类别_实占.getValue());
             }
             catch (Exception e){

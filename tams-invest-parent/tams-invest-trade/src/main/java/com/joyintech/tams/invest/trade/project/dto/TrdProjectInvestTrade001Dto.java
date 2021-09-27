@@ -1,22 +1,19 @@
 package com.joyintech.tams.invest.trade.project.dto;
 
-import java.util.List;
-
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt2;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.dto.trade.project.TrdProjectInvestTradeDto;
 import com.joyintech.tams.invest.trade.project.validator.TrdProjectInvestTradeDeleteDtoValidator;
-import com.joyintech.tams.invest.trade.project.validator.TrdProjectInvestTradeEditDtoValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
-import com.joyintech.workflow.engine.dto.ProcessEntity;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.List;
 
 /**
  * @program: tams-invest-parent
@@ -87,4 +84,23 @@ public class TrdProjectInvestTrade001Dto extends TrdProjectInvestTradeDto {
     public void setBussTrdTransferOrder(List<BussTrdTransferOrderDto> bussTrdTransferOrder) {
         this.bussTrdTransferOrder = bussTrdTransferOrder;
     }
+    // add by meifaxin 2021-9-27  格式化 start
+    public String getPrinAmtStr() {
+        DecimalFormat df2 = new DecimalFormat("###,###,###,###,###,###,##0.00");
+        return getPrinAmt()==null? null:df2.format(getPrinAmt());
+    }
+
+    public String getUnitCpriceStr() {
+        return getUnitCprice()==null? null:getUnitCprice().setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    public String getUnitFpriceStr() {
+        return getUnitFprice()==null? null:getUnitFprice().setScale(4, BigDecimal.ROUND_HALF_UP).toString();
+    }
+
+    public String getTradeAmtStr() {
+        DecimalFormat df2 = new DecimalFormat("###,###,###,###,###,###,##0.00");
+        return getTradeAmt()==null? null:df2.format(getTradeAmt());
+    }
+    // add by meifaxin 2021-9-27  格式化 end
 }

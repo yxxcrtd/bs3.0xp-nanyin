@@ -13,6 +13,7 @@ package com.joyintech.tams.invest.asset.futures.dto;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.util.SysDataUtil;
+import com.joyintech.framework.validation.annotation.Code;
 import com.joyintech.framework.validation.annotation.Length;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
@@ -171,6 +172,7 @@ public class FinFuturesDto extends FinProduct implements ProcessEntity {
     @NotEmpty(fieldName = "FinFutures001.finprodMarketId", groups = {ValidateGroupEdit.class})
     @Length(fieldName = "FinFutures001.finprodMarketId", max = 32, groups = {
         ValidateGroupEdit.class})
+    @Code(fieldName = "FinFutures001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(value = PrimaryKey.Field.PK_1)
     public String getFinprodMarketId() {
 //        String secId = super.getFinprodMarketId();

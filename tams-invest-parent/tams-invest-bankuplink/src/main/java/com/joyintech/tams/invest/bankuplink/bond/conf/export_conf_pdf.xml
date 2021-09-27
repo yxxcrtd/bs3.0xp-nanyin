@@ -15,7 +15,7 @@
             <Cell  order="11" name="券面(万)">lastqty</Cell>
             <Cell  order="12" name="到期(%)">underlyingyield2</Cell>
             <Cell  order="13" name="行权(%)">strikeyield</Cell>
-            <Cell  order="14" name="应计利息">accruedinteresttotalamt</Cell>
+            <Cell  order="14" name="应计利息">accruedinterestamt</Cell>
             <Cell  order="15" name="净价">price</Cell>
             <Cell  order="16" name="全价金额(券面*净价+利息)">dirtyprice</Cell>
             <Cell  order="17" name="结算金额(是指全价结算金额,即券面金额*净价+利息或者券面*全价)">settlcurramt2</Cell>
