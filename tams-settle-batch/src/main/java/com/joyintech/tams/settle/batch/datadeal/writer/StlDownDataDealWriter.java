@@ -68,7 +68,15 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 
 					// 佣金计算过程入库
 					if(CollectionUtils.isNotEmpty(commissionCaclProcessList)) {
-						commissionCaclProcessList.forEach(commissionCaclProcessMapper::insertSelective);
+//						commissionCaclProcessList.forEach(commissionCaclProcessMapper::insertSelective);
+						for (CommissionCaclProcess commissionCaclProcess : commissionCaclProcessList) {
+							try {
+								commissionCaclProcessMapper.insertSelective(commissionCaclProcess);
+							} catch (Exception e) {
+								commissionCaclProcessMapper.deleteByPrimaryKey(commissionCaclProcess.getBusiNo());
+								commissionCaclProcessMapper.insertSelective(commissionCaclProcess);
+							}
+						}
 					}
 					
 					// 交易所品种额度
@@ -101,13 +109,31 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 			SettleTransTgMapping settleTransTgMapping = dataDealWriteBaseDto.getSettleTransTgMapping();
 
 			if(null != settleTransData) {
-				settleTransDataMapper.insertSelective(settleTransData);
+				try {
+					settleTransDataMapper.insertSelective(settleTransData);
+				} catch (Exception e) {
+					settleTransDataMapper.deleteByPrimaryKey(settleTransData.getTradeId())
+					settleTransDataMapper.insertSelective(settleTransData);
+				}
 			}
 			if(null != settleTransDataAdd && StringUtil.isNotEmpty(settleTransDataAdd.getTradeId())) {
-				settleTransDataAddMapper.insertSelective(settleTransDataAdd);
+				try {
+					settleTransDataAddMapper.insertSelective(settleTransDataAdd);
+				} catch (Exception e) {
+					settleTransDataAddMapper.deleteByPrimaryKey(settleTransDataAdd.getTradeId());
+					settleTransDataAddMapper.insertSelective(settleTransDataAdd);
+				}
 			}
 			if(CollectionUtils.isNotEmpty(settleTransDataPledgeList)) {
-				settleTransDataPledgeList.forEach(settleTransDataPledgeMapper::insertSelective);
+//				settleTransDataPledgeList.forEach(settleTransDataPledgeMapper::insertSelective);
+				for (SettleTransDataPledge settleTransDataPledge : settleTransDataPledgeList) {
+					try {
+						settleTransDataPledgeMapper.insertSelective(settleTransDataPledge);
+					} catch (Exception e) {
+						settleTransDataPledgeMapper.deleteByPrimaryKey(settleTransDataPledge.getTradeId());
+						settleTransDataPledgeMapper.insertSelective(settleTransDataPledge);
+					}
+				}
 			}
 			if(null != settleTransTgMapping && StringUtil.isNotEmpty(settleTransTgMapping.getTradeId())) {
 				settleTransTgMappingMapper.insertSelective(settleTransTgMapping);
