@@ -38,7 +38,6 @@ import com.joyintech.tams.model.valuation.batch.calculation.shell.param.outparam
 import com.joyintech.tams.model.valuation.batch.calculation.util.BasicUtil;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dao.CashFlowDiscountMapper;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.*;
-import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveConfig;
 import com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto.ModCurveResultDetail;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;

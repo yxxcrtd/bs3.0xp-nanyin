@@ -97,22 +97,11 @@ public class EtrExchangeTrade001Validator implements EtrCommonValidator {
 				if(!StringUtil.isNotEmpty(dto.getBusinessModel())
 				         &&dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
 					errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
-				}else if(!StringUtil.isNotEmpty(dto.getInvAim())){
-					if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-							|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
-
-					}else{
-						errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
-					}
 				}
 			}else{
-				if(!StringUtil.isNotEmpty(dto.getInvAim())){
-					if(dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_基金.getValue())
-							|| dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_股票.getValue())){
-
-					}else{
-						errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
-					}
+				if(!StringUtil.isNotEmpty(dto.getInvAim())
+						&&dto.getFinprodType2().equals(DictCodeListExt1.金融产品类型_投管用_债券.getValue())){
+					errorList.add(new ValidMessage("invAim", this.getMessage("ETR_ERROR_0060")));
 				}
 			}
 			if (!StringUtil.isNotEmpty(dto.getStockId())&&!StringUtil.isNotEmpty(dto.getFinprodId())) {

@@ -9,7 +9,7 @@
             <Cell order="5" name="转债名称">finprodName</Cell>
             <Cell order="6" name="正股代码">shareId</Cell>
             <Cell order="7" name="正股名称">shareName</Cell>
-            <Cell order="8" name="委托卷面总额/万元">entrustAmt</Cell>
+            <Cell order="8" name="委托卷面总额（万元）">entrustAmt</Cell>
             <Cell order="9" name="转股价">conPrice</Cell>
             <Cell order="10" name="纯债溢价率">prec</Cell>
             <Cell order="11" name="转股溢价率">preb</Cell>

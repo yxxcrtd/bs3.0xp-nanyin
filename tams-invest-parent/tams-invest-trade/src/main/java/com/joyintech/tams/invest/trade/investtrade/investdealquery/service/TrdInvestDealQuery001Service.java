@@ -870,11 +870,13 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			datas.forEach(exportPdfDto -> {
 				// 券面总额/交易金额
 				if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
-					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt()
+							.setScale(2, BigDecimal.ROUND_HALF_UP))));
 				}
 				// 交易价格
 				if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
-					exportPdfDto.setUnitCprice(new BigDecimal(df2.format(exportPdfDto.getUnitCprice())));
+					exportPdfDto.setUnitCprice(new BigDecimal(df2.format(exportPdfDto.getUnitCprice()
+							.setScale(2, BigDecimal.ROUND_HALF_UP))));
 				}
 			});
 			//汇总交易金额
