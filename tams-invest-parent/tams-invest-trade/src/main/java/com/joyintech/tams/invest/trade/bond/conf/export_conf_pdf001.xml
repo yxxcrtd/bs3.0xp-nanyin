@@ -15,7 +15,7 @@
             <Cell  order="11" name="券面(万)">shareAmt</Cell>
             <Cell  order="12" name="到期(%)">yield</Cell>
             <Cell  order="13" name="行权(%)">exerYield</Cell>
-            <Cell  order="14" name="应计利息">intAmt</Cell>
+            <Cell  order="14" name="应计利息">unitInt</Cell>
             <Cell  order="15" name="净价">unitCprice</Cell>
             <Cell  order="16" name="全价金额">fpriceAmt</Cell>
             <Cell  order="17" name="结算金额">tradeAmt</Cell>

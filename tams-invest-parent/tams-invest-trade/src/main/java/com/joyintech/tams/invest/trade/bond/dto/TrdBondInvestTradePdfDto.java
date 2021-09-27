@@ -63,6 +63,10 @@ public class TrdBondInvestTradePdfDto {
      */
     private BigDecimal exerYield;
     /**
+     * 应计利息
+     */
+    private BigDecimal unitInt;
+    /**
      * 利息总额
      */
     private BigDecimal intAmt;
@@ -274,6 +278,14 @@ public class TrdBondInvestTradePdfDto {
 
     public void setExerYield(BigDecimal exerYield) {
         this.exerYield = exerYield;
+    }
+
+    public BigDecimal getUnitInt() {
+        return unitInt;
+    }
+
+    public void setUnitInt(BigDecimal unitInt) {
+        this.unitInt = unitInt;
     }
 
     public BigDecimal getIntAmt() {
