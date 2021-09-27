@@ -432,5 +432,8 @@
     <if test="type18 != null and type18 != '' ">
       AND fpt.TYPE_18 = #{type18}
     </if>
+    <if test="compOrg != null and compOrg != '' ">
+      AND fp.ISSUER = #{compOrg}
+    </if>
   </select>
 </mapper>

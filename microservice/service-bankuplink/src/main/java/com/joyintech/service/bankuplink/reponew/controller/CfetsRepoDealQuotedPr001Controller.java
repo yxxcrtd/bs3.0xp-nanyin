@@ -98,4 +98,12 @@ public class CfetsRepoDealQuotedPr001Controller {
                                                        @PathVariable("length") int length){
         return cfetsRepoDealQuotedPr001Service.queryMySideTraderPage(page,length,param);
     }
+
+
+    @ResponseBody
+    @PostMapping("selectExportPdf")
+    public List<CstpSelectDto> selectExportPdf(@RequestBody Map<String,Object> map) throws Exception{
+        return cfetsRepoDealQuotedPr001Service.selectExportPdf(map);
+    }
+
 }

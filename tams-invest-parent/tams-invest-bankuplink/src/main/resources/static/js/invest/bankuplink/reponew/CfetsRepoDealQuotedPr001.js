@@ -1218,6 +1218,29 @@
             }
         });
 
+
+
+        $('#cfetsRepoDealQuotedPr001_cjcx_dayin').click(function() {
+            if(cjcxTable!=null && cjcxTable!=''){
+                var selArr = cjcxTable.getAllCheckedRows();
+                // 列表中未勾选
+                if (!selArr || selArr.length == 0) {
+                    Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+                    return;
+                }
+                var paramObj = gencjcxTableParam();
+                //勾选导出
+                var selectedItem = [];
+                $.each(cjcxTable.getAllCheckedRows() ,function (i, item) {
+                    selectedItem.push(item.execid);
+                });
+                paramObj.selectedItem = selectedItem.join(',');
+                Joyin.exportExcel('exportPdf', paramObj);
+            }else{
+                Joyin.error(JoyinUtil.getMessage("COMMON_E_0002"));
+            }
+        });
+
     });
 
 }());

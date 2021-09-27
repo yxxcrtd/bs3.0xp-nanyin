@@ -35,12 +35,14 @@ import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.tams.invest.common.dto.PtlCashPositionFlowDto;
 import com.joyintech.tams.invest.common.dto.PtlSecPositionFlowDto;
+import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.common.trade.dto.EtrSecPositionDto;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,6 +50,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,6 +95,9 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
 
     @Autowired(required = false)
     private CommonBusinessService commonBusinessService;
+
+    @Autowired
+    private CommonExportPdfService commonExportPdfService;
     /**
      * 根据查询条件查询委托列表
      *
@@ -625,5 +631,49 @@ public class CfetsRepoDealQuotedPr001Service extends CommonExportService<CfetsRe
         }
 
         return resultList;
+    }
+
+    public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
+        List<CstpSelectDto> datas = selectExportPdf(param);
+        if(!StringUtil.isEmptyList(datas)){
+            //汇总交易金额
+            CstpSelectDto dto = new CstpSelectDto();
+            dto.setPortfolioId("合计");
+            BigDecimal tradecashamt = datas.stream().map(CstpSelectDto::getTradecashamt).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal lastqty = datas.stream().map(CstpSelectDto::getLastqty).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal settlcurramt2 = datas.stream().map(CstpSelectDto::getSettlcurramt2).reduce(BigDecimal.ZERO, BigDecimal::add);
+            BigDecimal accruedinteresttotalamt = datas.stream().map(CstpSelectDto::getAccruedinteresttotalamt).reduce(BigDecimal.ZERO, BigDecimal::add);
+            dto.setTradecashamt(tradecashamt);
+            dto.setLastqty(lastqty);
+            dto.setSettlcurramt2(settlcurramt2);
+            dto.setAccruedinteresttotalamt(accruedinteresttotalamt);
+            datas.add(dto);
+        }
+        return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId),datas);
+    }
+
+    /**
+     * 导出pdf数据 add by zengchengfa 20210803
+     * @param param
+     * @return
+     */
+    public List<CstpSelectDto> selectExportPdf(Map param){
+        return restTemplate.postForList(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsRepoDealQuotedPr001/selectExportPdf",
+                param,CstpSelectDto.class);
+    }
+
+    /**
+     * 获取配置文件绝对路径 add by zengchengfa 20210803
+     * @return
+     */
+    public String getConfigFile(String pageId){
+        String basePath = "com/joyintech/tams/invest/bankuplink/reponew/conf/export_conf_pdf.xml";
+        String tempPath = CacheUtil.getSysParam("access_exportfilepath");
+        String tempConfigFilePath= tempPath + "/" + pageId + '_' + "export_conf_pdf.xml";
+        InputStream in = this.getClass().getClassLoader().getResourceAsStream(basePath);
+        // 在临时目录下生成配置文件
+        commonExportPdfService.createTempConfigFile(in, tempPath, tempConfigFilePath);
+        return tempConfigFilePath;
     }
 }

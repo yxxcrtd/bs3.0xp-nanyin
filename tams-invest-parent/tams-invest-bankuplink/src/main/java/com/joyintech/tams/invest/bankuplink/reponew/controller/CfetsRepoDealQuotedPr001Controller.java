@@ -281,4 +281,10 @@ public class CfetsRepoDealQuotedPr001Controller extends BaseController{
     public EtrFinProductDto findhginfo(@RequestBody Map<String, Object> param){
         return cfetsRepoDealQuotedPr001Service.findhginfo(param);
     }
+
+    @RequestMapping("exportPdf")
+    public ResponseEntity<byte[]> exportPdf(){
+        return cfetsRepoDealQuotedPr001Service.exportPdf(this.getPageId(),RequestUtil.getPageParam());
+    }
+
 }
