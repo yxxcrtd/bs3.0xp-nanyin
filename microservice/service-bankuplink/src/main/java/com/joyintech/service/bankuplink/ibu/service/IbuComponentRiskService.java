@@ -267,7 +267,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setTradeNum(ibuQuoteCrepDto.getShareAmt());
                         reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                         reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                        //reqRiskOccupy.setAmount(ibuQuoteCrepDto.getFpriceAmt());
+                        reqRiskOccupy.setAmount(amount);
                         // 投管要求协议回购这里传入起息日,到期日
                         reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
                         reqRiskOccupy.setMdate(DateUtil.format(ibuQuoteCrepDto.getmSettleDate()));

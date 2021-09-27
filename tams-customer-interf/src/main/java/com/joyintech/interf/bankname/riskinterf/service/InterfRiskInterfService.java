@@ -834,7 +834,7 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                                 for (Map<String, Object> stringObjectMap : pledgeAssetCodeList) {
                                     String assetcode = (String)stringObjectMap.get("finprodMarketId");
                                     if (!(StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode))) {
-                                        amount = ArithmeticUtil.doAdd(amount,(BigDecimal)stringObjectMap.get("amount"));
+                                        amount = ArithmeticUtil.doAdd(amount,new BigDecimal(stringObjectMap.get("amount").toString()));
                                     }
                                 }
                                 finDto.setAmount(amount);
