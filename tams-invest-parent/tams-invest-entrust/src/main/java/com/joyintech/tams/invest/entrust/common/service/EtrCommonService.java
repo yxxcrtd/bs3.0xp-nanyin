@@ -800,7 +800,9 @@ public class EtrCommonService extends BaseService<ITableRow> {
         }
         //债券二级指令 新页面
         if (object instanceof EtrIbBondinfo002Dto){
-            EtrIbBondinfo002Dto inputDto = (EtrIbBondinfo002Dto) object;
+            EtrIbBondinfo002Dto pageInputDto = (EtrIbBondinfo002Dto) object;
+            EtrIbBondinfo002Dto inputDto = new EtrIbBondinfo002Dto();
+            BeanUtil.copyPropertiesIgnoreNull(inputDto, pageInputDto);
             if (StringUtil.equals(DictCodeList.交易方向_买入.getValue(),inputDto.getPs())){
                 creditLinesInputDto = new CreditLinesInputDto();
                 creditLinesInputDto.setCreditCallType(DictCodeListRsk.授信占用类别_预占.getValue());
