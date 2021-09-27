@@ -632,7 +632,7 @@
             // // , {field: 'quoteTypeStr', title: '作市类型', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '渠道', sortField: 'tradedate', width: '110'}
             // // , {field: 'quoteTypeStr', title: '状态', sortField: 'tradedate', width: '110'}
-             , {field: 'tradeMethod', title: '交易方式', width: '110'}
+            //  , {field: 'quoteTypeStr', title: '交易方式', width: '110'}
              , {field: 'matchStatusStr', title: 'CSTPSelect001.matchStatus', sortField: 'matchStatus', width: '100'}
         ]
         // ajax: {
