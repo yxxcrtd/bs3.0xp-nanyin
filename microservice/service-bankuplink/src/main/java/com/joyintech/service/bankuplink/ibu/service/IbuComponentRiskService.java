@@ -281,6 +281,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                         reqRiskOccupy.setOccupySource("CFET");
+                        reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqList.add(reqRiskOccupy);
                     }
                     //update by zznn 20210922 end
@@ -360,7 +361,6 @@ public class IbuComponentRiskService extends BaseService {
                             reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                             reqRiskOccupy.setOccupySource("CFET");
                             reqList.add(reqRiskOccupy);
-                            break;
                         }
                     }else{
                         for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
