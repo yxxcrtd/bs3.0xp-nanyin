@@ -346,7 +346,7 @@ public class IbuComponentRiskService extends BaseService {
                             //reqRiskOccupy.setTradeNum(ibuQuoteEntCrepPledgeDto.getPledgeNumber());
                             reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                             reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                            //reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                            reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
                             //reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.multiply(ibuQuoteEntCrepPledgeDto.getPledgeNumber(),new BigDecimal(100)),ibuQuoteEntCrepPledgeDto.getPledgeRatio()));
                             // 投管要求协议回购这里传入起息日,到期日
                             reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
@@ -718,7 +718,7 @@ public class IbuComponentRiskService extends BaseService {
                         //reqRiskOccupy.setTradeNum(ibuQuoteEntCrepPledgeDto.getPledgeNumber());
                         reqRiskOccupy.setAssetType2(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
                         reqRiskOccupy.setRepurchaseType(BussinessDictCodeList.回购类型_质押式协议回购.getValue());
-                        //reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
+                        reqRiskOccupy.setAmount(ibuQuoteEtrReDto.getFpriceAmt());
                         //reqRiskOccupy.setAmount(ArithmeticUtil.multiply(ArithmeticUtil.multiply(ibuQuoteEntCrepPledgeDto.getPledgeNumber(),new BigDecimal(100)),ibuQuoteEntCrepPledgeDto.getPledgeRatio()));
                         // 投管要求协议回购这里传入起息日,到期日
                         reqRiskOccupy.setVdate(DateUtil.format(ibuQuoteCrepDto.getvSettleDate()));
