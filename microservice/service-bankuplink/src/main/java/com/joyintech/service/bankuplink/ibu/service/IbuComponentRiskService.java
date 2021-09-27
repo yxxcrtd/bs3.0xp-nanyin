@@ -324,8 +324,9 @@ public class IbuComponentRiskService extends BaseService {
                             map.put("entrustId",ibuQuoteEntCrepPledgeDto.getEntrustId());
                             pledgeAssetCodeListAll.add(map);
                         }
-                        ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
+
                         for (IbuQuoteEtrReDto ibuQuoteEtrReDto : quoteResultDto.getIbuQuoteEtrReDtoList()) {
+                            ReqRiskOccupy reqRiskOccupy = new ReqRiskOccupy();
                             List<Map<String, Object>> pledgeAssetCodeList = new ArrayList<>();
                             for (Map<String, Object> stringObjectMap : pledgeAssetCodeListAll) {
                                 if(stringObjectMap.containsKey(ibuQuoteEtrReDto.getEntrustId())){
