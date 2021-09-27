@@ -779,4 +779,47 @@ public class PtlPositionAnalysis001Dto extends BaseDto implements GridRowDto {
     public void setYstTdyIntincexp(BigDecimal ystTdyIntincexp) {
         this.ystTdyIntincexp = ystTdyIntincexp;
     }
+
+    private String getBigDecimalString(BigDecimal value) {
+        if (null != value) {
+            return value.setScale(2, BigDecimal.ROUND_HALF_UP).toString();
+        }
+        return "";
+    }
+
+    public String getShareAmtStr() {
+        return getBigDecimalString(this.getShareAmt());
+    }
+
+    public String getDscCostAmtStr() {
+        return getBigDecimalString(this.getDscCostAmt());
+    }
+
+    public String getMarketValueStr() {
+        return getBigDecimalString(this.getMarketValue());
+    }
+
+    public String getFloatAmtStr() {
+        return getBigDecimalString(this.getFloatAmt());
+    }
+
+    public String getTdyIntincexpStr() {
+        return getBigDecimalString(this.getTdyIntincexp());
+    }
+
+    public String getTdyAmtRationStr() {
+        return getBigDecimalString(this.getTdyAmtRation());
+    }
+
+    public String getYstAmtRationStr() {
+        return getBigDecimalString(this.getYstAmtRation());
+    }
+
+    public String getMonthAmtRationStr() {
+        return getBigDecimalString(this.getMonthAmtRation());
+    }
+
+    public String getYearAmtRationStr() {
+        return getBigDecimalString(this.getYearAmtRation());
+    }
 }

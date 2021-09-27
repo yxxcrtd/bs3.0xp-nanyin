@@ -22,7 +22,7 @@ width:auto;
 						<div class="layui-input-inline input-inline">
 							<select type="text" id="allocationWay" name="allocationWay" class="layui-input input-select" required
 									data-result='[{"id":"01","text":"组合"},{"id":"02","text":"用户"}]' data-th-initValue="${entity?.allocationWay}"
-									formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+									formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
 							</select>
 						</div>
 					</div>
@@ -33,7 +33,7 @@ width:auto;
 							<select type="text" id="userId" name="userId" class="layui-input form-input input-select" 
 								data-th-data-url="@{/invest/portfolio/ptlmanagementinfo/PtlManagementInfo003/getUserId}" 
 								th:initValue="${entity?.userId}" required
-								formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+								formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
 							</select>
 						</div>
 					</div>
@@ -59,7 +59,7 @@ width:auto;
 							data-th-text="#{PtlManagementInfo003.portfolio}">组合</label>
 						<div class="layui-input-inline input-inline">
 							<select type="text" id="portfolioId" name="portfolioId" class="layui-input form-input input-select" data-th-data-url="@{/invest/portfolio/ptlmanagementinfo/PtlManagementInfo003/getPortfolioId}" required
-									data-th-initValue="${entity?.portfolioId}" formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}" required>
+									data-th-initValue="${entity?.portfolioId}" formatoption = true placeholder="请输入内容" data-th-placeholder="#{SysCommon.placeholder}">
 							</select>
 						</div>
 					</div>

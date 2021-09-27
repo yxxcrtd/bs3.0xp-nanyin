@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -92,13 +93,8 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         // 多级法人改造 add by jingqiongqiong 20200615
 
         List<PtlPositionAnalysis001Dto> resultList = ptlPositionAnalysisMapper.select(pageParam);
-        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本------->>>>>>>
-        resultList.forEach(x -> {
-            if(null != x.getMarketValue()){
-                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt()?BigDecimal.ZERO:x.getDscCostAmt())));
-            }
-        });
-        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本-------<<<<<<<
+
+        handleFloatAmtWith001Dto(resultList);
 
         Page<PtlPositionAnalysis001Dto> pagelist = new Page<>();
         pagelist.setRoot(resultList);
@@ -271,13 +267,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         } else {
             list = ptlPositionAnalysisMapper.selectAssetPierce(pageParam);
         }
-        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本------->>>>>>>
-        list.forEach(x -> {
-            if(null != x.getMarketValue()){
-                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt()?BigDecimal.ZERO:x.getDscCostAmt())));
-            }
-        });
-        //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本-------<<<<<<<
+        handleFloatAmtWith002Dto(list);
         return list;
     }
 
@@ -396,6 +386,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     	List<PtlPositionAnalysis001Dto> resultList = new ArrayList<>();
     	//2. 获取所有查询
         List<PtlPositionAnalysis001Dto> listRoot = ptlPositionAnalysisMapper.selectForExportALL(pageParam);
+        handleFloatAmtWith001Dto(listRoot);
         //2.1 保存总记录数
         int records = listRoot.size();
         //3. 由于查询结果按照parentinfo排序，因此可以设置一个map存储各分组的第一次出现的index
@@ -494,7 +485,25 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
         //11. 返回计算结果
         return pageResult;
     }
-    
+
+    //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本------->>>>>>>
+    private void handleFloatAmtWith001Dto(List<PtlPositionAnalysis001Dto> listRoot) {
+        listRoot.forEach(x -> {
+            if (null != x.getMarketValue()) {
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())));
+            }
+        });
+    }
+
+    private void handleFloatAmtWith002Dto(List<PtlPositionAnalysis002Dto> listRoot) {
+        listRoot.forEach(x -> {
+            if (null != x.getMarketValue()) {
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())));
+            }
+        });
+    }
+    //-------add by lingxq on 2021-07-19 for 界面展示【盈亏】字段，该字段=市值-成本-------<<<<<<<
+
     //add by xueying 修改导出数据与查询数据不一致问题 20200731
     private void countSumAndCalPercentDto(PtlPositionAnalysis001Dto dto,BigDecimal sum) {
             //总额不能为0

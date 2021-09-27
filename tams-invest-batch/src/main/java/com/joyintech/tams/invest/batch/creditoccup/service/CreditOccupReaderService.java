@@ -43,6 +43,7 @@ public class CreditOccupReaderService extends BaseService {
         param.put("status", DictCodeListExt1.有效状态_有效.getValue());
         param.put("executeDate",param.get("executeDate"));
         param.put("creditOccureType", DictCodeListRsk.授信占用类别_实占.getValue());
+        //场内
         param.put("operatioMode","02");
         creditUsings.addAll(creditOccupMapper.getCreditUsingSeries(param));
         creditUsings.addAll(creditOccupMapper.getCreditUsingAst(param));

@@ -132,6 +132,10 @@ public class EtrInvestAllInfoExportPdfDto {
 	 */
 	private String remark;
 	/**
+	 * 组合代码
+	 */
+	private String portfolioId;
+	/**
 	 * 组合名称
 	 */
 	private String portfolioName;
@@ -375,6 +379,14 @@ public class EtrInvestAllInfoExportPdfDto {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public String getPortfolioId() {
+		return portfolioId;
+	}
+
+	public void setPortfolioId(String portfolioId) {
+		this.portfolioId = portfolioId;
 	}
 
 	public String getPortfolioName() {

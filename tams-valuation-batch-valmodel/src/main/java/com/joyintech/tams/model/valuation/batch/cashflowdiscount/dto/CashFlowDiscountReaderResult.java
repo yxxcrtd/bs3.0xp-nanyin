@@ -30,6 +30,10 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
      */
     private List<ModCashFlowDto> modCashFlows;
     /**
+     * 现金流计划信息-未做合并得
+     */
+    private List<ModCashFlowDto> modCashFlowsOld;
+    /**
      * 现金流计算规则
      */
     private List<ModCashFlowCalRuleDto> modCashFlowCalRules;
@@ -98,6 +102,14 @@ public class CashFlowDiscountReaderResult extends NeedOperateEntity {
 
     public void setViewRatingInfoDto(ViewRatingInfoDto viewRatingInfoDto) {
         this.viewRatingInfoDto = viewRatingInfoDto;
+    }
+
+    public List<ModCashFlowDto> getModCashFlowsOld() {
+        return modCashFlowsOld;
+    }
+
+    public void setModCashFlowsOld(List<ModCashFlowDto> modCashFlowsOld) {
+        this.modCashFlowsOld = modCashFlowsOld;
     }
 }
 

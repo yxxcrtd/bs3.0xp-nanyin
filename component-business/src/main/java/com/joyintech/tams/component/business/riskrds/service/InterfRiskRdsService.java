@@ -1281,6 +1281,18 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infMap.put(IS_CONV, BaseDictCodeList.是否_是.getValue());
             infMap.put("fundConvertFlg",DictCodeList.是否_是.getValue());
             // add by zhangrui1 正反同步交易特殊处理 end
+            String eventDate = null;
+            if(StringUtil.isNotEmpty(dataMap.get("tradeDate"))) {
+                Object tradeDate = dataMap.get("tradeDate");
+                String type = tradeDate.getClass().toString();
+                if("Long".equals( type.substring(type.lastIndexOf('.') + 1, type.length()))) {
+                    eventDate = DateUtil.format(new Date((long)tradeDate));
+                }
+                else {
+                    eventDate = DateUtil.format(DateUtil.parse(tradeDate.toString()));
+                }
+            }
+            infMap.put("eventDate",eventDate);
             result.add(infMap);
             // 基金转出
             Object amount = infMap.get(PageFieldToInterfFactory.INF_AMOUNT);
@@ -1318,6 +1330,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                 infMap.put(PageFieldToInterfFactory.INF_PREOCCUPYCODE,
                     entrustId + BussinessDictCodeList.交易方向_买入.getValue());
             }
+            if(StringUtil.isNotEmpty(dataMap.get("tradeDate"))) {
+                Object tradeDate = dataMap.get("tradeDate");
+                String type = tradeDate.getClass().toString();
+                if("Long".equals( type.substring(type.lastIndexOf('.') + 1, type.length()))) {
+                    eventDate = DateUtil.format(new Date((long)tradeDate));
+                }
+                else {
+                    eventDate = DateUtil.format(DateUtil.parse(tradeDate.toString()));
+                }
+            }
+            infMap.put("eventDate",eventDate);
             result.add(infMap);
         }
         else if (CommonUtil.isType(ps, BussinessDictCodeList.交易方向_卖出)) {
