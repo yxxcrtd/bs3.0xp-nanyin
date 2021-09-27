@@ -1802,6 +1802,7 @@
                 LEFT JOIN SYS_USER SU1 ON TOTAL.TRADER = SU1.USER_NAME
                 LEFT JOIN SYS_USER SU2 ON EE.INV_MANAGER_ID = SU2.USER_NAME
                 WHERE TPD.FINPROD_TYPE = 'F01'
+                    AND TPD.IS_CANCEL != 'Y'
                 <if test="tradeMarketList != null and tradeMarketList.size() >0 ">
                     AND TPD.TRADE_MARKET IN
                     <foreach collection="tradeMarketList" index="index"  item="item" open="(" close=")" separator=",">
@@ -1849,6 +1850,7 @@
                 LEFT JOIN SYS_DATADICT_LIST SDL1 ON TOTAL.DELIVERY_TYPE = SDL1.ITEM_CODE AND SDL1.DICT_CODE = 'SETT_MODE'
                 LEFT JOIN SYS_DATADICT_LIST SDL2 ON TOTAL.CLEAR_TYPE = SDL2.ITEM_CODE AND SDL2.DICT_CODE = 'CLEAR_TYPE'
                 WHERE TPD.FINPROD_TYPE = 'F01'
+                AND TPD.IS_CANCEL != 'Y'
                 <if test="tradeMarketList != null and tradeMarketList.size() >0 ">
                     AND TPD.TRADE_MARKET IN
                     <foreach collection="tradeMarketList" index="index"  item="item" open="(" close=")" separator=",">

@@ -1645,10 +1645,12 @@ public class EtrCommonService extends BaseService<ITableRow> {
 
 
 
-    public String getSppiInfoByY1(Map<String, Object> paramMap){
+    public Map<String,Object> getSppiInfoByY1(Map<String, Object> paramMap){
+        Map<String,Object> result = new HashMap<>();
         String finprodId = paramMap.get("finprodId").toString();
         if(!StringUtil.isNotEmpty(paramMap.get("price"))){
-            return "0";
+            result.put("result","0");
+            return result;
         }
         BigDecimal price = new BigDecimal(paramMap.get("price").toString());
         Date platDate = DateUtil.platDateFromCache();
@@ -1669,26 +1671,30 @@ public class EtrCommonService extends BaseService<ITableRow> {
                 count++;
               break;
             }
-            if(count==0)
-                return  "0";
+            if(count==0){
+                result.put("result","0");
+                return result;
+            }
         }
         //2 查询sppi中债中的使权不重大的购入价条件（小于第二个数字）
         String bidPriceCon = restTemplate.getForObject(ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest001/getSppiInfoByY1?finprodId="
                 + finprodId, String.class);
-        if(bidPriceCon!=null) {
-            if (StringUtil.isNotEmpty(bidPriceCon)) {
+        if(StringUtil.isNotEmpty(bidPriceCon)) {
+            try{
                 bidPriceCon = bidPriceCon.split(",")[1];
-            }else {
-                return "1";
+            }catch (Exception e){
+                result.put("result","1");
+                return result;
             }
             BigDecimal bidPriceCon2 = new BigDecimal(bidPriceCon);
             if (price.compareTo(bidPriceCon2) < 0) {
-                return "2";
+                result.put("result","2");
+                result.put("bidPriceCon",bidPriceCon2);
+                return result;
             }
-        }else{
-            return "1";
         }
-        return "2";
+        result.put("result","0");
+        return result;
     }
 
     /**

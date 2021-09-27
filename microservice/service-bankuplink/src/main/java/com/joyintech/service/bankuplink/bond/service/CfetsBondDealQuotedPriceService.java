@@ -1776,9 +1776,6 @@ public class CfetsBondDealQuotedPriceService extends BaseService{
                 break;
             }
         }
-        if(StringUtil.isNotEmpty((String)map.get("ps"))){
-            map.replace("ps", StringUtil.splitToList(",", (String)map.get("ps")));
-        }
         if(StringUtil.isNotEmpty((String)map.get("benfangSide")) && StringUtil.equals((String)map.get("benfangSide"),"01")){
             map.put("benfangSide","");
         }

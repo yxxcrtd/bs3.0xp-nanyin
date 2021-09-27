@@ -48,7 +48,12 @@ var table;
         if ($('#trdInvestPersonInfo_counterId').select2('data') && $('#trdInvestPersonInfo_counterId').select2('data')[0]) {
             object.counterType = $('#trdInvestPersonInfo_counterId').select2('data')[0].object;;
         }
-
+        //add by meifaxin 2021-9-27 先乘以10000    start
+        var tradeAmt = object.tradeAmt;
+        object.tradeAmt=JoyinMath.doMul(tradeAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        var winlotteryAmt = object.winlotteryAmt;
+        object.winlotteryAmt=JoyinMath.doMul(winlotteryAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+        //add by meifaxin 2021-9-27 先乘以10000  end
         Joyin.ajaxJson(basePath + 'invest/trade/conbond/TrdConBond003/check', object, function(result) {
 	        Joyin.confirm(result.data, function() {
 	            /*if(operateType === 'save') {
@@ -212,7 +217,10 @@ var table;
     	var depositAmt= 0;
     	if($("#winlotteryAmt").val()){
     		winlotteryAmt =Number($("#winlotteryAmt").val());
-    	}
+            //add by meifaxin 2021-9-27 先乘以10000    start
+            winlotteryAmt=JoyinMath.doMul(winlotteryAmt, 10000, 2, JoyinMath.ROUND_HALF_UP);//万元转成元
+            //add by meifaxin 2021-9-27 先乘以10000    end
+        }
     	if($("#depositAmt").val()){
     		depositAmt =Number($("#depositAmt").val());
     	}
@@ -220,14 +228,14 @@ var table;
         if ($("#winlotteryAmt").val()&&winlotteryAmt>=depositAmt) {
             $("#refundAmt").val('').prop("disabled", true);
             $("#refundDate").val('').prop("disabled", true).trigger('change');
-        	$("#supplementaryAmt").val(JoyinMath.doMinus($("#winlotteryAmt").val(),$("#depositAmt").val())).prop("disabled", false);
+        	$("#supplementaryAmt").val(JoyinMath.doMinus(winlotteryAmt,$("#depositAmt").val())).prop("disabled", false);
         }
         //中签金额小于保证金额
         else  if ($("#winlotteryAmt").val()&&winlotteryAmt<depositAmt) {
             $("#supplementaryAmt").val('').prop("disabled", true);
             $("#refundDate").prop("disabled", false);
             $("#settleDate").trigger('change');
-        	$("#refundAmt").val(JoyinMath.doMinus($("#depositAmt").val(),$("#winlotteryAmt").val())).prop("disabled", false);
+        	$("#refundAmt").val(JoyinMath.doMinus($("#depositAmt").val(),winlotteryAmt)).prop("disabled", false);
         }
         else {
         	$("#refundAmt").val('').prop("disabled", false);
