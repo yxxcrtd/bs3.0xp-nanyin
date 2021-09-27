@@ -112,7 +112,7 @@ public class StlDownDataDealWriter extends BaseWriter<NeedToWriteEntity> {
 				try {
 					settleTransDataMapper.insertSelective(settleTransData);
 				} catch (Exception e) {
-					settleTransDataMapper.deleteByPrimaryKey(settleTransData.getTradeId())
+					settleTransDataMapper.deleteByPrimaryKey(settleTransData.getTradeId());
 					settleTransDataMapper.insertSelective(settleTransData);
 				}
 			}
