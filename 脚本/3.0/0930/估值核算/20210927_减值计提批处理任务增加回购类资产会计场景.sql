@@ -9,8 +9,9 @@ values ('03', 'QY', '203', '1432', 'system', null, SYSDATE, 'system', SYSDATE);
 --增加会计场景数据字典
 DELETE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE='TABLE_ID' AND T.ITEM_CODE IN ('1431','1432');
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('TABLE_ID', '1431', '银证转账-银转证', 652, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('TABLE_ID', '1431', '质押式逆回购-减值计提', 652, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
 
 insert into SYS_DATADICT_LIST (DICT_CODE, ITEM_CODE, ITEM_VALUE, ORDER_NO, DEFAULT_VALUE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME, INSTITUTION_CODE)
-values ('TABLE_ID', '1432', '银证转账-证转银', 653, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+values ('TABLE_ID', '1432', '买断式逆回购-减值计提', 653, '0', 'system', null, SYSDATE, 'system', SYSDATE, null);
+
 
