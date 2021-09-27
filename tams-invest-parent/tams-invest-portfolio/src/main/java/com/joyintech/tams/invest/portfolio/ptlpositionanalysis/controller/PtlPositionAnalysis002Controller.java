@@ -74,6 +74,7 @@ public class PtlPositionAnalysis002Controller extends BaseController {
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         Page<PtlPositionAnalysis003Dto> list = ptlPositionAnalysis002Service.selectForPage(map);
         list.setRoot(formatFindPageResult(list.getRoot()));
+        list.setRecords(list.getRoot().size());
 
         return list;
     }

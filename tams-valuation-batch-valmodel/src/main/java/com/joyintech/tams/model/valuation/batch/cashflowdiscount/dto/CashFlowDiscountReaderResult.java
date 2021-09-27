@@ -1,6 +1,7 @@
 package com.joyintech.tams.model.valuation.batch.cashflowdiscount.dto;
 
 import com.joyintech.batch.batchbase.baseclass.entity.NeedOperateEntity;
+import com.joyintech.tams.common.base.entity.ModCurveConfig;
 import com.joyintech.tams.valuation.common.dto.modelDto.*;
 import com.joyintech.tams.valuation.model.common.rateinfo.dto.ViewRatingInfoDto;
 

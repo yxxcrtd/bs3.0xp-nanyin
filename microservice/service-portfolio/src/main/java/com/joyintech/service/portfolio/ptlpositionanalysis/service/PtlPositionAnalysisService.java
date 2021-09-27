@@ -98,6 +98,12 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
 
         Page<PtlPositionAnalysis001Dto> pagelist = new Page<>();
         pagelist.setRoot(resultList);
+        int total = resultList.size()/length;
+        if(resultList.size()%length>0){
+            total++;
+        }
+        pagelist.setTotal(total);
+        pagelist.setRecords(resultList.size());
 
         if (StringUtil.isNotEmpty(pageParam.get("parentId")) && !StringUtil.equals(pageParam.get("parentId"), "root")) {
             countSumAndCalPercent(resultList);
