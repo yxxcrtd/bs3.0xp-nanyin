@@ -232,7 +232,11 @@
 
     <!--根据资产代码获取证券品种-->
     <select id="getSecTypeByFinprodId" resultType="java.lang.String">
-        select type_18 from fin_product_Type  where finprod_id = #{finprodId}
+          select fpt.type_18
+          from FIN_PRODUCT fp
+          left join fin_product_Type  fpt on fp.finprod_id=fpt.finprod_id
+          where fp.finprod_market_id= #{finprodId}  or  fp.finprod_id=#{finprodId}
+          and rownum =1
     </select>
 
 

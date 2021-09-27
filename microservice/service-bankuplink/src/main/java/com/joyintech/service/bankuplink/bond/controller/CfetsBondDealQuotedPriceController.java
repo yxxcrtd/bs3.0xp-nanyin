@@ -1131,4 +1131,12 @@ public class CfetsBondDealQuotedPriceController {
     public BigDecimal getWflEntrustDealedAmt(@RequestBody Map<String, Object> map){
         return cfetsBondDealQuotedPriceService.getWflEntrustDealedAmt(map);
     }
+
+
+    @ResponseBody
+    @PostMapping("selectExportPdf")
+    public List<CstpSelectDto> selectExportPdf(@RequestBody Map<String,Object> map) throws Exception{
+        return cfetsBondDealQuotedPriceService.selectExportPdf(map);
+    }
+
 }

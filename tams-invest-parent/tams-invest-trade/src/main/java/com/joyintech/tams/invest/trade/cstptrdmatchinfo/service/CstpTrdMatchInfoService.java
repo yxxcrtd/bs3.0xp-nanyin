@@ -771,6 +771,9 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 		//获取银行间交易费用设置信息 要素 资产类型 交易方向 回购期限 托管机构
 		CstpTrdMatchInfoDto feeDto = new CstpTrdMatchInfoDto();
 		feeDto = getFeeSetting(fAssetType,fTradeSide,fTremStr,fAccountNumber,feeType,tradeDateStr);
+		if(null==feeDto){
+			return BussinessDictCodeList.计费基数_券面总额.getValue();
+		}
 		if(StringUtil.isEmpty(feeDto.getChargeBasis())){
 			return BussinessDictCodeList.计费基数_券面总额.getValue();
 		}
@@ -949,18 +952,21 @@ public class CstpTrdMatchInfoService extends CommonExportService<CstpTrdMatchInf
 					map.put("entrustId",entrustId);
 					List<CstpTrdMatchInfoDto> cstpSelectDtoList = restTemplate.postForList(ServiceApplication.TRADE_SERVICE_NAME
 							+ "/CSTPTrdMatchInfo/getCstpInfo", map, CstpTrdMatchInfoDto.class);
-					setValue2(cstpSelectDtoList);
-					prinAmtS = prinAmtS.add(cstpSelectDtoList.get(0).getPrinAmt());
-					tradeAmtS = tradeAmtS.add(cstpSelectDtoList.get(0).getTradeAmt());
-					if(cstpSelectDtoList.get(0).getPrinAmt().compareTo(prinAmt) == 1){
-						prinAmt = cstpSelectDtoList.get(0).getPrinAmt();
-						newSeqno = cstpSelectDtoList.get(0).getSeqno();
+					if(!StringUtil.isEmptyList(cstpSelectDtoList)){
+						setValue2(cstpSelectDtoList);
+						CstpTrdMatchInfoDto cstpTrdMatchInfoDto1 = cstpSelectDtoList.get(0);
+						prinAmtS = prinAmtS.add(cstpTrdMatchInfoDto1.getPrinAmt());
+						tradeAmtS = tradeAmtS.add(cstpTrdMatchInfoDto1.getTradeAmt());
+						if(cstpTrdMatchInfoDto1.getPrinAmt().compareTo(prinAmt) == 1){
+							prinAmt = cstpTrdMatchInfoDto1.getPrinAmt();
+							newSeqno = cstpTrdMatchInfoDto1.getSeqno();
+						}
+						if(cstpTrdMatchInfoDto1.getTradeAmt().compareTo(tradeAmt) == 1){
+							tradeAmt = cstpTrdMatchInfoDto1.getTradeAmt();
+							traSeqno = cstpTrdMatchInfoDto1.getSeqno();
+						}
+						cstpSelectDtoListTemp.add(cstpTrdMatchInfoDto1);
 					}
-					if(cstpSelectDtoList.get(0).getTradeAmt().compareTo(tradeAmt) == 1){
-						tradeAmt = cstpSelectDtoList.get(0).getTradeAmt();
-						traSeqno = cstpSelectDtoList.get(0).getSeqno();
-					}
-					cstpSelectDtoListTemp.add(cstpSelectDtoList.get(0));
 				}
 				for(int i = 0;i<cstpSelectDtoListTemp.size();i++){
 					//获取当前信息

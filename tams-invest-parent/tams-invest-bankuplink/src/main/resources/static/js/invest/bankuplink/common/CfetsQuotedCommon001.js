@@ -29,6 +29,7 @@
             ,{field:'price', width:120, title: '净价(元)',sortable: false,type:'number', digit:2}
             ,{field:'matureYield', width:120, title: '到期收益率%',edit:false,sortable: false,visible: true,type:'number', digit:2}
             ,{field:'exerYield', width:120, title: '行权收益率%',sortable: false,type:'number', digit:2}
+            ,{field:'settleAmt', width:150, title: '结算金额',sortable: false,type:'number', digit:2}
             , {
                 field: 'proAvailableCash',
                 width: 120,

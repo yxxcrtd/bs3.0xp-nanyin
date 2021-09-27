@@ -10,6 +10,7 @@
 
 package com.joyintech.interf.bankname.riskinterf.service;
 
+import com.joyintech.background.component.common.pack.common.validation.annotation.Amount;
 import com.joyintech.framework.ajax.AjaxResult;
 import com.joyintech.framework.base.BaseDictCodeList;
 import com.joyintech.framework.security.LoginUserUtil;
@@ -826,11 +827,25 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                     //add by zhangnian  平安资产类型_质押式回购  start
                     //质押券为利率债(国债、政策型银行债)不占额度
                     if(DictCodeList.平安资产类型_质押式回购.getValue().equals(assetType)&&temp.containsKey("pledgeAssetCodeList")){
-                        List<String> pledgeAssetCodeList = (List<String>) temp.get("pledgeAssetCodeList");
-                        if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
-                            String assetcode = pledgeAssetCodeList.get(0);
-                            if (StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode)) {
-                                continue;
+                        if(temp.containsKey("occupySource")&&StringUtil.equals(temp.get("occupySource"),"CFET")){
+                            List<Map<String,Object>> pledgeAssetCodeList = (List<Map<String,Object>>) temp.get("pledgeAssetCodeList");
+                            if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
+                                BigDecimal amount = BigDecimal.ZERO;
+                                for (Map<String, Object> stringObjectMap : pledgeAssetCodeList) {
+                                    String assetcode = (String)stringObjectMap.get("finprodMarketId");
+                                    if (!(StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode))) {
+                                        amount = ArithmeticUtil.doAdd(amount,(BigDecimal)stringObjectMap.get("amount"));
+                                    }
+                                }
+                                finDto.setAmount(amount);
+                            }
+                        }else{
+                            List<String> pledgeAssetCodeList = (List<String>) temp.get("pledgeAssetCodeList");
+                            if(!StringUtil.isEmptyList(pledgeAssetCodeList)) {
+                                String assetcode = pledgeAssetCodeList.get(0);
+                                if (StringUtil.isNotEmpty(assetcode) && !riskCreditListCommonValidatorService.checkCallCredit("F01_" + assetcode)) {
+                                    continue;
+                                }
                             }
                         }
                      }

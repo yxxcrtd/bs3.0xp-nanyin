@@ -13,13 +13,11 @@ import com.joyintech.framework.util.StringUtil;
 import com.joyintech.framework.validation.BeanValidator;
 import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.component.business.common.service.CommonBusinessService;
-import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.asset.option.dto.FinOptionTargetDto;
 import com.joyintech.tams.invest.asset.option.service.FinOptionTargetService;
-import com.joyintech.workflow.engine.dto.ProcessParameter;
-import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,17 +65,17 @@ public class FinOptionTargetValidator implements BeanValidator {
                     }
                 }
             }
-
+            //mody  by  meifaxin  2021-9-26 必填项没填没有出现红框提示 start
             if(StringUtil.isEmpty(dto.getTargetId())  ){
-                resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0060")));
+                resultList.add(new ValidMessage("targetId",this.getMessage("BUSS_COM_E_0066")));
             }
             if(StringUtil.isEmpty(dto.getTargetName())){
-                resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0061")));
+                resultList.add(new ValidMessage("targetName",this.getMessage("BUSS_COM_E_0067")));
             }
             if(StringUtil.isEmpty(dto.getTargetType())){
-                resultList.add(new ValidMessage(this.getMessage("BUSS_COM_E_0062")));
+                resultList.add(new ValidMessage("targetType",this.getMessage("BUSS_COM_E_0062")));
             }
-
+           //mody  by  meifaxin  2021-9-26 必填项没填没有出现红框提示 end
 
         }
         return resultList;

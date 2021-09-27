@@ -318,6 +318,11 @@ public class InterfRiskRdsDto implements IRiskRds {
      */
     private String issuerCode;
 
+    /**
+     * 是否股东发行
+     */
+    private String isShareHolder;
+
     public BigDecimal getTdyAssetValue() {
         return tdyAssetValue;
     }
@@ -1233,5 +1238,13 @@ public class InterfRiskRdsDto implements IRiskRds {
 
     public void setPriceModel(String priceModel) {
         this.priceModel = priceModel;
+    }
+
+    public String getIsShareHolder() {
+        return isShareHolder;
+    }
+
+    public void setIsShareHolder(String isShareHolder) {
+        this.isShareHolder = isShareHolder;
     }
 }

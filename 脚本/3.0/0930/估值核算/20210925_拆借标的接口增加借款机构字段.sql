@@ -1,0 +1,3 @@
+DELETE FROM VAL_TEMP_COL_CHECK_INFO WHERE TMP_E_NAME = 'ValDlTarget' AND COL_E_NAME = 'prinAgent';
+insert into VAL_TEMP_COL_CHECK_INFO (TMP_C_NAME, TMP_E_NAME, COL_C_NAME, COL_E_NAME, COL_TYPE, IS_NULL, MAX_LENGTH, IS_EXIST, DICT_CODE, CREATE_USER, CREATE_DEPT, CREATE_TIME, UPDATE_USER, UPDATE_TIME)
+values ('拆借标的信息', 'ValDlTarget', '借款机构', 'prinAgent', '1', 'N', 50, '-1', null, 'system', null, DATE '2021-09-24', 'system', DATE '2021-09-24');

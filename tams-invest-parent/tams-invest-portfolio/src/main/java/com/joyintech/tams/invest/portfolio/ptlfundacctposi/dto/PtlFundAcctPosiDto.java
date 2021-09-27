@@ -88,6 +88,11 @@ public class PtlFundAcctPosiDto extends PtlCashPosition implements GridRowDto, P
 	
 	private String isSummary;
 
+	/**
+	 * 账户类型
+	 */
+	private String acctType;
+
 	public String getPortfolioName() {
 		return portfolioName;
 	}
@@ -253,5 +258,17 @@ public class PtlFundAcctPosiDto extends PtlCashPosition implements GridRowDto, P
 	}
 	public void setIsSummary(String isSummary) {
 		this.isSummary = isSummary;
+	}
+
+	public String getAcctType() {
+		return acctType;
+	}
+
+	public void setAcctType(String acctType) {
+		this.acctType = acctType;
+	}
+
+	public String getAcctTypeStr(){
+		return SysDataUtil.getNameFromDataDict(DictCode.资金账户类型, this.acctType);
 	}
 }

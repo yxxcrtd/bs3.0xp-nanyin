@@ -10,6 +10,8 @@
     var businessId;
     var fprice;
 
+    var businessModelReulst="";
+
     let doOther = {
         star : function () {
             // 加红星星
@@ -316,6 +318,7 @@
                         query('#availableNum').val(result);
                     });
                 checkFinMdate();
+                changeBussnissModelByFinprodId();
                 calData();
             } else {
                 // 为空
@@ -352,6 +355,30 @@
             layui.form.render(); // reload layui
         }
     };
+
+    var changeBussnissModelByFinprodId = function(){
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
+            return;
+        }
+        var finprodId = $('#finprodId').val();
+        if(finprodId){
+            var data = {finprodId:finprodId }
+            Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getAssetInfoBySPPI',data,function(result) {
+                if(result.data=='0') {
+                    Joyin.error("当前资产未进行SPPI测试，无法进行指令提交/保存。");
+                    $('#finprodId').val("").trigger('change');
+                    businessModelReulst='0';
+                }else if(result.data=='3'){
+                    businessModelReulst="3";
+                }else if(result.data=='2') {
+                    businessModelReulst="2";
+                }
+            });
+        }else{
+            businessModelReulst="";
+        }
+
+    }
 
     /**
      * 对外公开的接口
@@ -448,7 +475,16 @@
             title: 'EtrIbBondinfo002.invAim',
             edit: true,
             sortable: false,
-            editOption:{type:'select', formatoption:true, result: INV_AIM}
+            editOption:{type:'select', formatoption:true, result: INV_AIM},
+            visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='01'?true:false
+        }, {/*业务模式*/
+            field: 'businessModel',
+            width: 100,
+            title: '业务模式',
+            edit: true,
+            sortable: false,
+            editOption:{type:'select', formatoption:true, result: BUSINESS_MODEL},
+            visible: SHOW_INVAIM_OR_BUSSINSSMODEL=='02'?true:false
         }, {
             field: 'proAvailableCash',
             width: 40,
@@ -528,7 +564,12 @@
         checkbox: false,
         height: 290,
         addclick: function (row) {
-
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
+               if(businessModelReulst=='3'){
+                   row.businessModel = "Y1";
+                   row.invAim = 'AC';
+               }
+            }
         },
         editCell: function (value, data, field, cell, column) {
             if (field == "entrustNum") {
@@ -539,6 +580,21 @@
                 doChange.portfolio(value, data);
                 doChange.calSettleAmt(value, data);
             }
+            if (field == "businessModel") {
+                var rowData = {};
+                if(value=="Y1"){
+                    rowData.invAim = "AC"
+                }else{
+                    rowData.invAim = "FVTPL"
+                }
+                table.renderRow(data.LAY_TABLE_INDEX, rowData);
+            }
+        },
+        beforeEditCell : function (value, data, field, cell, column) {
+            if (field == "businessModel" &&businessModelReulst =="3") {
+                return false
+            }
+            return true;
         }
     });
 
@@ -777,6 +833,7 @@
             ps = temp.ps;
             temp.settleAmt = item.settleAmt;
             temp.invAim = item.invAim;
+            temp.businessModel = item.businessModel;
             // temp.secAcctId = item.secManageAcctId;
             temp.proAvailableCash = item.proAvailableCash;
             temp.accAvailableCash = item.secManageAvailablePosition;
@@ -786,7 +843,7 @@
             objects.push(temp);
         }
         if(tradeAmt && tradeAmt !== parseFloat(object.tradeAmt)){
-            JoyinUtil.showMessage("多组合劵面总额不等！" + tradeAmt + ":" + parseFloat(object.tradeAmt), "error")
+            JoyinUtil.showMessage("各组合分配的券面总额汇总不等于总的券面总额!", "error")
             return null;
         }
         param = JSON.parse(JSON.stringify(object));

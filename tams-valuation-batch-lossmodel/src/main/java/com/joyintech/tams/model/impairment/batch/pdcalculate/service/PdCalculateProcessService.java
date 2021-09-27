@@ -2,10 +2,7 @@ package com.joyintech.tams.model.impairment.batch.pdcalculate.service;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.*;
 import com.joyintech.tams.common.base.entity.ModBatchLogs;
-import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.constant.ModelDictCode;
-import com.joyintech.tams.constant.ModelDictCodeList;
+import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.common.searchinfo.service.ImpairmentCommonService;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dao.PdCalculateMapper;
 import com.joyintech.tams.model.impairment.batch.pdcalculate.dto.*;
@@ -115,7 +112,7 @@ public class PdCalculateProcessService {
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
                 modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
                 //=====记录计算错误日志=====end=====
-                return null;
+                return resultDto;
             }
 
             //=====1.1初始化变量Dto=====end=====
@@ -129,7 +126,7 @@ public class PdCalculateProcessService {
                 modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
 
                 //=====记录计算错误日志=====end=====
-                return null;
+                return resultDto;
             }
 
             //2、查询计算基础[前瞻前年度边际PD]、[前瞻因子值]
@@ -157,10 +154,10 @@ public class PdCalculateProcessService {
                     }else{
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
-                        logMsg ="【PD计算批处理】：【"+yearStr+"】年PD未维护";
+                        logMsg ="【PD计算批处理】：【"+yearStr+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
                         modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
-
                         //=====记录计算错误日志=====end=====
+                        return resultDto;
                     }
                 }
             }
@@ -197,7 +194,7 @@ public class PdCalculateProcessService {
 //                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
 //
 //                    //=====记录计算错误日志=====end=====
-//                    return null;
+//                    return resultDto;
 //                }
 
                 if(DictCodeList.是否_是.getValue().equals(variablePdCalculateDto.getIsFinLicence())){
@@ -268,12 +265,12 @@ public class PdCalculateProcessService {
                         factorConfigDto.setConfigType(modPdFactorConfigDto.getConfigType());
                         pdConfigList.add(factorConfigDto);
 
-                    }else{
+                    }
+                    else{
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
-                        logMsg ="【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度Z值未维护";
+                        logMsg ="【PD计算批处理】：【"+pdConfigDto.getYearStr()+"】年【"+quarterStrName+"】季度前瞻因子未维护";
                         modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
-
                          //=====记录计算错误日志=====end=====
                     }
                 }
@@ -464,7 +461,7 @@ public class PdCalculateProcessService {
 
             e.printStackTrace();
             //=====记录计算错误日志=====end=====
-            return null;
+            return resultDto;
         }
 
         return resultDto;

@@ -97,9 +97,9 @@ public class BMWPdCalculateProcessService {
                 String gradeOrgName = SysDataUtil.getNameFromDataDict(ModelDictCode.评级机构, variablePdCalculateDto.getGradeOrgId());
                 logMsg ="【PD计算批处理】：【"+gradeOrgName+"/"+readerDto.getAssetId()+"】无评级信息";
                 // 警告：资产无对应评级信息
-                modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
                 //=====记录计算警告日志=====end=====
-
+                return null;
             }
             //=====1.1初始化变量Dto=====end=====
 
@@ -126,21 +126,12 @@ public class BMWPdCalculateProcessService {
             ModGradePdConfigDto modGradePdConfigDto = pdCalculateMapper.selectModGradePdConfigList(params);
             //获取年份的评级PD配置列表
             if(modGradePdConfigDto ==null ) {
-                    // 取系统兜底评级
-                    String bottomRateInfo = rateInfoCommonService.getBottomRateInfo(assetInfo.getModelAssetType(),assetInfo.getModelAssetDetailType());
-                    if(bottomRateInfo != null){
-                        params.put("gradeResult", bottomRateInfo);
-                        modGradePdConfigDto = pdCalculateMapper.selectModGradePdConfigList(params);
-                        variablePdCalculateDto.setGradeResult(bottomRateInfo);
-                    }
-                    else{
-                        //生成警告日志
-                        //=====记录计算错误日志=====start=====
-                        logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
-                        modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
-                        //=====记录计算错误日志=====end=====
-                        return resultDto;
-                    }
+                    //生成警告日志
+                    //=====记录计算错误日志=====start=====
+                    logMsg ="【PD计算批处理】：【"+tdyYear+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
+                    modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+                    //=====记录计算错误日志=====end=====
+                    return resultDto;
             }
 
             // 资产对应的PD值 列表.add(查询PD结果)
@@ -154,6 +145,15 @@ public class BMWPdCalculateProcessService {
             if(configDto != null){
                 prospectivePd = ArithmeticUtil.multiply(prospectivePd, configDto.getCombinedFactor());
                 prospectivePd = BigDecimal.ONE.compareTo(prospectivePd) > 0?prospectivePd:BigDecimal.ONE;
+            }
+            else{
+                //生成错误日志
+                //=====记录计算错误日志=====start=====
+                logMsg ="【PD计算批处理】：【"+tdyYear+"】年综合因子未维护";
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),readerDto.getAssetId(), logMsg);
+
+                //=====记录计算错误日志=====end=====
+                return resultDto;
             }
 
             //遍历 交易数据

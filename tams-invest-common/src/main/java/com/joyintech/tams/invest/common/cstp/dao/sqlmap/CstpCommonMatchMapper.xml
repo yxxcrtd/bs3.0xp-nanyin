@@ -312,4 +312,15 @@ FROM
         GROUP BY
             CSTP_TRADE_ID
     </select>
+
+    <!--回购已匹配额度-->
+    <select id="listRepMatchNum" resultType="com.joyintech.tams.invest.common.dto.cstp.InterfTradRepoasstDto">
+        SELECT
+            PLEDGE_FINPROD_ID finprodId,
+            SUM(MATCH_NUM) facetotalamt
+        FROM
+            TRD_PLEDGE_MATCH_INFO
+             where CSTP_TRADE_ID =  #{execId}
+        GROUP BY PLEDGE_FINPROD_ID
+    </select>
 </mapper>

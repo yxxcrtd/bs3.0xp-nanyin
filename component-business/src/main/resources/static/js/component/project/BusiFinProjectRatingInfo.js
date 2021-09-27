@@ -11,13 +11,13 @@
          * 定义数据表格
          */
     var cols = [
-             {field:'oType', sortable:false, title: 'BusiFinProjectRatingInfo.gradeType',editOption:{type:'select', multiple: false,result: SETUP_RATE_TYPE},edit:true}
-            ,{field:'gradeDate', sortable:false, title: 'BusiFinProjectRatingInfo.gradeDate',edit:true,type:'date'}
-            ,{field:'gradeResult', sortable:false, title: 'BusiFinProjectRatingInfo.gradeResult',editOption:{type:'select', multiple: false,result: MAIN_GRADE_RESULT},edit:true}
-            ,{field:'gradeExpectation', sortable:false, title: 'BusiFinProjectRatingInfo.gradeExpectation',editOption:{type:'select', multiple: false,result: RATING_OUTLOOK},edit:true}
-            ,{field:'directionChange', sortable:false, title: 'BusiFinProjectRatingInfo.directionChange',editOption:{type:'select', multiple: false,result: CHANGE_DIRECTION},edit:true}
-            ,{field:'gradeOrgId', sortable:false, title: 'BusiFinProjectRatingInfo.gradeOrgId',editOption:{type:'select', multiple: false,result: GRADE_PARTY},edit:true}
-            ,{field:'operation', sortable:false, title: 'SysCommon.operation', type:'action', buttons: ['delt']}//编辑和删除事件
+             {field:'oType', sortable:false, title: 'BusiFinProjectRatingInfo.gradeType',editOption:{type:'select', multiple: false,result: SETUP_RATE_TYPE},edit:true,width:100}
+            ,{field:'gradeDate', sortable:false, title: 'BusiFinProjectRatingInfo.gradeDate',edit:true,type:'date',width:100}
+            ,{field:'gradeResult', sortable:false, title: 'BusiFinProjectRatingInfo.gradeResult',editOption:{type:'select', multiple: false,result: MAIN_GRADE_RESULT},edit:true,width:100}
+            ,{field:'gradeExpectation', sortable:false, title: 'BusiFinProjectRatingInfo.gradeExpectation',editOption:{type:'select', multiple: false,result: RATING_OUTLOOK},edit:true,width:100}
+            ,{field:'directionChange', sortable:false, title: 'BusiFinProjectRatingInfo.directionChange',editOption:{type:'select', multiple: false,result: CHANGE_DIRECTION},edit:true,width:100}
+            ,{field:'gradeOrgId', sortable:false, title: 'BusiFinProjectRatingInfo.gradeOrgId',editOption:{type:'select', multiple: false,result: GRADE_PARTY},edit:true,width:300}
+            ,{field:'operation', sortable:false, title: 'SysCommon.operation', type:'action', buttons: ['delt'],width:20}//编辑和删除事件
         ]
     var table =$("#busiFinProjectRatingInfoTable").joyintable({
         ajax: {

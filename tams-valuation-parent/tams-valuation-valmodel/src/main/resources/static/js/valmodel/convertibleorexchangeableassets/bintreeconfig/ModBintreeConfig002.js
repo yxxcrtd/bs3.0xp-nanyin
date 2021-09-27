@@ -10,6 +10,13 @@ $(function() {
             $("#ccy").attr('disabled',true);
             $("#holdDate").attr('disabled',true);
             editFlag=false;
+
+        }
+
+        if($("#stockId") && $("#stockId").val() ){
+            $('#stockBordsttus').val('01');
+        }else{
+            $('#stockBordsttus').val('02');
         }
         
     };
@@ -25,7 +32,7 @@ $(function() {
     //联动
     var assetTypeChange = function() {
     	document.getElementById("stockId").disabled = true;
-    	if ($("#stockBordsttus").val().startsWith("02")) {
+    	if ($("#stockBordsttus").val()==='02') {
     		document.getElementById("compOrg").disabled = false;
     		document.getElementById("compStockid").disabled = false;
     		document.getElementById("marketMulti").disabled = false;
@@ -41,7 +48,7 @@ $(function() {
 
 	};
 	var marketMultiChange = function() {
-    	if ($("#marketMulti").val().startsWith("01")) {
+    	if ($("#marketMulti").val()==='01') {
             $("#finprodProit").val("");
     		document.getElementById("finprodProit").disabled = true;
     		document.getElementById("finprodNetasset").disabled = false;
@@ -71,6 +78,7 @@ $(function() {
                 table.load();
             }, 500);
         }
+
     };
     function doSave(){
     	var object = $.serializeToObject('#submitForm');
@@ -121,22 +129,28 @@ $(function() {
         init();
         assetTypeChange();
         marketMultiChange();
+
         $("#stockBordsttus").on('change',function(){
         	assetTypeChange();
-       });
-       //  stockidChange();
-       //  $("#compStockid").on('change',function(){
-       //  	stockidChange();
-       // });
+        });
+
         $("#marketMulti").on('change',function(){
         	marketMultiChange();
-       });
-	   $('#ModBintreeConfig002_btn_save').click(function() {
+        });
+
+	    $('#ModBintreeConfig002_btn_save').click(function() {
 			doSave();
 		});
+
 		$('#ModBintreeConfig002_btn_submit').click(function() {
 			doSubmit();
 		});
+
+        $('#compOrg').change(function(){
+            $('#compStockid').val('').trigger('change');
+        });
+
+
         $('#finprodId').change(function(){
             if ($('#finprodId').val() != '') {//香港联合交易所
                 $('#finprodName').val($('#finprodId').select2('data')[0].text);
@@ -147,6 +161,13 @@ $(function() {
                 $('#finprodName').val("");
                 $('#finprodName1').val("");
                 $('#stockId').val("");
+            }
+            if($("#stockId") && $("#stockId").val() ){
+                $('#stockBordsttus').val('01').trigger('change');
+                $('#compOrg').val('').trigger('change');
+            }else{
+                $('#stockBordsttus').val('02').trigger('change');
+                $('#compOrg').val('').trigger('change');
             }
         });
     }());

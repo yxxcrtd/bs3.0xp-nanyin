@@ -52,6 +52,9 @@
 			<if test="curveDate != null and curveDate != ''">
 				AND TO_CHAR(MY.CURVE_DATE,'yyyy-MM-dd') = #{curveDate}
 			</if>
+			<if test="keyPoint != null and keyPoint != ''">
+				AND MY.KEY_POINT = #{keyPoint,jdbcType=VARCHAR}
+			</if>
 			<if test="CURVE_CLASS != null and CURVE_CLASS != ''">
 				/**曲线信息表中的[CURVE_TYPE]代表的时曲线类型：收益率曲线、利率互换曲线等**/
 				AND MC.CURVE_TYPE = #{CURVE_CLASS,jdbcType=VARCHAR}

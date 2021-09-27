@@ -78,7 +78,7 @@
            ,{field:'finishAmt', width:160,type:'number', title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.comQuotaWY'}
            ,{field:'avaNumStr', width:160,type:'number', title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.avaQuotaWY'}
            ,{field:'priceStr', width:100, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.cleanPrice',digit:4}
-           ,{field:'matureYieldStr', width:100, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.yield'}
+           ,{field:'matureYieldStr', width:130, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.yield'}
            ,{field:'counterName', width:120, title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.dealCounter'}
            ,{field:'vdate', width:80,type:'date', title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.entrustStartDate'}
            ,{field:'mdate', width:80,type:'date', title: 'CfetsBondDealQuotedPrice001.entrustOrder.table.entrustEndDate'}

@@ -28,9 +28,10 @@
 		                                                                                     from RSK_ISUP_POINT_VAL rv1
 		                                                                                     where rv1.IND_ID = #{indID}
 		                                                                                       and rv1.SUP_DATE = #{batchDate,jdbcType=DATE}
+		                                                                                       and rv1.SUP_FREQUENCY='DAYEND'
 		                                                                                 ))) and
 		                       rv.SUP_DATE = #{batchDate,jdbcType=DATE} and
-		                       rv.IND_ID = #{indID})
+		                       rv.IND_ID = #{indID} and rv.SUP_FREQUENCY='DAYEND' )
 		where pv.CDATE = #{batchDate,jdbcType=DATE}
 		order by pv.PORTFOLIO_ID asc
     </insert>

@@ -24,13 +24,12 @@ import com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalys
 import com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis002Dto;
 import com.joyintech.service.portfolio.ptlpositionanalysis.dto.PtlPositionAnalysis003Dto;
 import com.joyintech.tams.common.base.entity.TargetDetail;
-import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.constant.DictCodeListExt1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -291,6 +290,9 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
      * @since 1.0
      */
     public List<SelectOptionDto> getPortFolioInfo(Map<String, Object> map) {
+        // add by meifaxin 组合代码查询条件下拉框，重庆期望只查询产品组合，不查委外组合 start
+        map.put("portfolioType", DictCodeListExt1.组合类型_委外组合.getValue());
+        // add by meifaxin 组合代码查询条件下拉框，重庆期望只查询产品组合，不查委外组合 end
         return ptlPositionAnalysisMapper.getPortFolioInfo(map);
     }
 

@@ -1470,7 +1470,9 @@
         AND NOT EXISTS (
         SELECT 1 FROM TRD_PRODUCT_DEAL TPD
         where TPD.FINPROD_ID = T1.FINPROD_ID
-        AND TPD.PS=#{PS_HBDZ}
+        <if test="PS_HBDZ != null and PS_HBDZ != ''">
+            AND TPD.PS=#{PS_HBDZ}
+        </if>
         and TPD.TRADE_STATUS = #{TRADE_STATUS01}
         and TPD.IS_CANCEL = #{YES_OR_NO_N}
         )

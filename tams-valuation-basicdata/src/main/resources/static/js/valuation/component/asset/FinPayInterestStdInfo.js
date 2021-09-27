@@ -1085,7 +1085,7 @@
                 msg = JoyinUtil.getMessage('FIN_ASSET_E_0010', JoyinUtil.getLabel("FinPayInterestStdInfo.asset.vdate"));
             }
             if(lastMdateUnadjust != newParam.mdate){
-                msg = JoyinUtil.getMessage('VAL_FIN_ASSET_E_0011');
+                msg = JoyinUtil.getMessage('FIN_ASSET_E_0011', JoyinUtil.getLabel("FinPayInterestStdInfo.asset.mdate"));
             }
             $.each(list,function(index,obj){
                 var vdateUnadjust = new Date(obj.vdate).format('yyyy-MM-dd');
@@ -1163,6 +1163,17 @@
             }
         }
         else if (currentDealObj != backupDealObj) {
+            // add by jiangpeng on 20210708 start
+            // TISHKBS-2450 mdate vdate 传值为number格式,表格reload后,转为string格式,导致判断不相等 此处转化为日期格式对比
+            if(typeof currentDealObj !== typeof backupDealObj){
+                var currentDealObjDate = new Date(currentDealObj);
+                var backupDealObjDate = new Date(backupDealObj);
+                var dsadf = new Date('dsadf');
+                if (currentDealObjDate.DateDiff('d', backupDealObjDate) === 0) {
+                    return false;
+                }
+            }
+            // add by jiangpeng on 20210708 end
             return true;
         }
         return result;

@@ -8,7 +8,10 @@ import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.util.RequestUtil;
 import com.joyintech.tams.invest.trade.cstptrdmatchinfo.dto.CstpTrdMatchInfoDto;
 import com.joyintech.tams.invest.trade.cstptrdmatchinfo.service.CstpTrdMatchInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ApplicationObjectSupport;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +31,9 @@ import java.util.Map;
 @PageId("CSTPTrdMatchInfo")
 @RequestMapping("/invest/trade/cstp/CSTPTrdMatchInfo")
 public class CstpTrdMatchInfoController  extends BaseController {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private CstpTrdMatchInfoService cstpTrdMatchInfoService;
 
@@ -46,6 +52,7 @@ public class CstpTrdMatchInfoController  extends BaseController {
             //交易匹配成功后计算交易手续费，结算手续费
             cstpTrdMatchInfoService.calcProcedureAmtAndSettleAmt(dto);
         } catch (Exception e) {
+            logger.error("交易匹配确认失败"+e.getMessage());
            return new AjaxResult("交易匹配确认失败",MessageType.错误消息);
         }
         return new AjaxResult("交易匹配确认成功",MessageType.提示消息);

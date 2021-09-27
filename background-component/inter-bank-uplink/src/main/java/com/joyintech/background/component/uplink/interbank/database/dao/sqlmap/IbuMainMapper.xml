@@ -1167,10 +1167,10 @@ SELECT T.QUOTE_ID,
 		a.WORKFLOW_STATUS AS VALID_STATUS,
 		a.WORKFLOW_ID WORKFLOW_ID,
 		a.IS_DZH IS_DZH,
-		iqcp.FINPROD_ABBR  EXT_FINPROD_ABBR,
-		iqcp.FINPROD_MARKET_ID EXT_FINPROD_MARKET_ID,
-		iqcp.PLEDGE_AMT EXT_PLEDGE_AMT,
-		iqcp.PLEDGE_RATIO EXT_PLEDGE_RATIO
+		nvl(iqcp.FINPROD_ABBR,wfl_iqcp.FINPROD_ABBR) EXT_FINPROD_ABBR,
+		nvl(iqcp.FINPROD_MARKET_ID,wfl_iqcp.FINPROD_MARKET_ID) EXT_FINPROD_MARKET_ID,
+		nvl(iqcp.PLEDGE_AMT,wfl_iqcp.PLEDGE_AMT) EXT_PLEDGE_AMT,
+		nvl(iqcp.PLEDGE_RATIO,wfl_iqcp.PLEDGE_RATIO) EXT_PLEDGE_RATIO
 		from (SELECT T.QUOTE_ID,
 		T.QUOTE_TYPE,
 		T.P_QUOTE_ID,
@@ -1340,6 +1340,14 @@ SELECT T.QUOTE_ID,
 							from IBU_QUOTE_CREP_PLEDGE a
 							left join FIN_PRODUCT b
 							on b.FINPROD_ID = a.PLEDGE_FINPROD_ID)iqcp ON iqcp.QUOTE_ID = a.QUOTE_ID
+		LEFT JOIN (select a.QUOTE_ID,
+							a.PLEDGE_RATIO,
+							a.PLEDGE_AMT,
+							b.FINPROD_MARKET_ID,
+							b.FINPROD_ABBR
+							from WFL_IBU_QUOTE_CREP_PLEDGE a
+							left join FIN_PRODUCT b
+							on b.FINPROD_ID = a.PLEDGE_FINPROD_ID) wfl_iqcp ON wfl_iqcp.QUOTE_ID = a.QUOTE_ID
 		<where>
 			<if test="quoteId != null and quoteId != ''">
 				and a.QUOTE_ID LIKE concat('%',concat(#{quoteId,jdbcType=VARCHAR},'%'))
