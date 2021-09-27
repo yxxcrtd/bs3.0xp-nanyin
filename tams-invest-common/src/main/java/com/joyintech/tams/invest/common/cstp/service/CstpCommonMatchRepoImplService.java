@@ -255,18 +255,23 @@ public class CstpCommonMatchRepoImplService{
         //成交后折算后总金额
         BigDecimal repoAssetConversionDealAmtTotal = interfTradRepoasstDtos.stream().map(InterfTradRepoasstDto::getDealamt).reduce(BigDecimal.ZERO, BigDecimal::add);
         repoAssetConversionDealAmtTotal = ArithmeticUtil.subtract(repoAssetConversionDealAmtTotal,matchAmount);
-        //去掉已匹配的金额
+        //查找已匹配的券面
         List<InterfTradRepoasstDto> interfTradRepoasstDtosMatch = cstpCommonMatchMapper.listRepMatchNum(execId);
         if(!StringUtil.isEmptyList(interfTradRepoasstDtos)&&!StringUtil.isEmptyList(interfTradRepoasstDtosMatch)){
+            //计算已匹配券面对应的金额
+            //汇总折算后的券面
+            BigDecimal matchNumTotal = interfTradRepoasstDtosMatch.stream().map(InterfTradRepoasstDto::getConversionFacetotalamt).reduce(BigDecimal.ZERO, BigDecimal::add);
             for (InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos) {
                 for (InterfTradRepoasstDto tradRepoasstDtosMatch : interfTradRepoasstDtosMatch) {
                     if(StringUtil.equals(interfTradRepoasstDto.getFinprodId(),tradRepoasstDtosMatch.getFinprodId())){
-                        interfTradRepoasstDto.setDealamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getDealamt(),tradRepoasstDtosMatch.getFacetotalamt()));
+                        //计算已匹配券面对应的金额
+                        BigDecimal 券面折算匹配额度 = 券面折算匹配额度(tradRepoasstDtosMatch.getFacetotalamt(), tradRepoasstDtosMatch.getConvrate(), matchAmount, matchNumTotal);
+                        interfTradRepoasstDto.setDealamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getDealamt(),券面折算匹配额度));
                     }
                 }
             }
         }
-        BigDecimal repoamt = interfOpicsTradRepo.getRepoamt();
+        BigDecimal repoamt = ArithmeticUtil.subtract(interfOpicsTradRepo.getRepoamt(),matchAmount);
         for(InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos){
             //交易金额
             BigDecimal dealamt = interfTradRepoasstDto.getDealamt();
@@ -322,9 +327,7 @@ public class CstpCommonMatchRepoImplService{
                 trdPledgeMatchInfo.setSecAcctId(secAcctId);
                 trdPledgeMatchInfo.setPledgeFinprodId(interfTradRepoasstDto.getFinprodId());
                 trdPledgeMatchInfo.setTradeDate(interfOpicsTradRepo.getDealdate());
-                //逆回购 质押券匹配表 存金额  否则手工匹配剩余金额无法计算
-                trdPledgeMatchInfo.setMatchNum(matchNum);
-                //trdPledgeMatchInfo.setMatchNum(subSec);
+                trdPledgeMatchInfo.setMatchNum(subSec);
                 trdPledgeMatchInfo.setMatchType(matchType);
                 trdPledgeMatchInfo.setfSysId(CFTES);
                 trdPledgeMatchInfos.add(trdPledgeMatchInfo);
@@ -444,13 +447,26 @@ public class CstpCommonMatchRepoImplService{
         List<String> acctNoList = (List<String>)map.get("acctNoList");
         List<PtlAllocationDto> ptlAllocations = cstpCommonService.selectEtrReByQuoteId(quoteId);
         List<InterfTradRepoasstDto> interfTradRepoasstDtos = cstpCommonMatchMapper.getInterfTradRepoasst(execId);
+        //去掉已匹配的
+        BigDecimal matchAmount = cstpCommonMatchMapper.getMatchAmount(execId);
+        //查找已匹配的券面
+        List<InterfTradRepoasstDto> interfTradRepoasstDtosMatch = cstpCommonMatchMapper.listRepMatchNum(execId);
+        if(!StringUtil.isEmptyList(interfTradRepoasstDtos)&&!StringUtil.isEmptyList(interfTradRepoasstDtosMatch)){
+            for (InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos) {
+                for (InterfTradRepoasstDto tradRepoasstDtosMatch : interfTradRepoasstDtosMatch) {
+                    if(StringUtil.equals(interfTradRepoasstDto.getFinprodId(),tradRepoasstDtosMatch.getFinprodId())){
+                        interfTradRepoasstDto.setFacetotalamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getFacetotalamt(),tradRepoasstDtosMatch.getFacetotalamt()));
+                    }
+                }
+            }
+        }
         Map<String,Object> mapFpriceAmt= new HashMap<>();
         mapFpriceAmt.put("isKtg",isKtg);
         if(StringUtil.equals(isKtg,"Y")){
             mapFpriceAmt.put("cbfpriceAmt",null!=interfOpicsTradRepo.getCbFpriceAmt()?interfOpicsTradRepo.getCbFpriceAmt():BigDecimal.ZERO);
             mapFpriceAmt.put("scfpriceAmt",null!=interfOpicsTradRepo.getScFpriceAmt()?interfOpicsTradRepo.getScFpriceAmt():BigDecimal.ZERO);
         }else{
-            BigDecimal  fpriceAmtTotal = null!=interfOpicsTradRepo.getRepoamt()?interfOpicsTradRepo.getRepoamt():BigDecimal.ZERO;
+            BigDecimal  fpriceAmtTotal = null!=interfOpicsTradRepo.getRepoamt()?ArithmeticUtil.subtract(interfOpicsTradRepo.getRepoamt(),matchAmount):BigDecimal.ZERO;
             mapFpriceAmt.put("fpriceAmt",fpriceAmtTotal);
             mapFpriceAmt.put("shareAmt",fpriceAmtTotal);
         }
@@ -520,10 +536,23 @@ public class CstpCommonMatchRepoImplService{
         //该list  默认第一个为中债  第二个为上清  下行接口逗号隔开处理
         List<String> acctNoList = (List<String>)map.get("acctNoList");
         List<InterfTradRepoasstDto> interfTradRepoasstDtos = cstpCommonMatchMapper.getInterfTradRepoasst(execId);
+        //去掉已匹配的
+        BigDecimal matchAmount = cstpCommonMatchMapper.getMatchAmount(execId);
+        //查找已匹配的券面
+        List<InterfTradRepoasstDto> interfTradRepoasstDtosMatch = cstpCommonMatchMapper.listRepMatchNum(execId);
+        if(!StringUtil.isEmptyList(interfTradRepoasstDtos)&&!StringUtil.isEmptyList(interfTradRepoasstDtosMatch)){
+            for (InterfTradRepoasstDto interfTradRepoasstDto : interfTradRepoasstDtos) {
+                for (InterfTradRepoasstDto tradRepoasstDtosMatch : interfTradRepoasstDtosMatch) {
+                    if(StringUtil.equals(interfTradRepoasstDto.getFinprodId(),tradRepoasstDtosMatch.getFinprodId())){
+                        interfTradRepoasstDto.setFacetotalamt(ArithmeticUtil.subtract(interfTradRepoasstDto.getFacetotalamt(),tradRepoasstDtosMatch.getFacetotalamt()));
+                    }
+                }
+            }
+        }
         TrdMatchInfo trdMatchInfo = new TrdMatchInfo();
         trdMatchInfo.setCstpTradeId(execId);
         trdMatchInfo.setEntrustId(entrustId);
-        trdMatchInfo.setMatchNum(interfOpicsTradRepo.getRepoamt());
+        trdMatchInfo.setMatchNum(ArithmeticUtil.subtract(interfOpicsTradRepo.getRepoamt(),matchAmount));
         trdMatchInfo.setMatchNumCb(interfOpicsTradRepo.getCbFpriceAmt());
         trdMatchInfo.setMatchNumSc(interfOpicsTradRepo.getScFpriceAmt());
         trdMatchInfo.setMatchType(matchType);

@@ -1,6 +1,10 @@
 package com.joyintech.tams.invest.common.dto.cstp;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.tams.common.base.entity.InterfTradRepoasst;
+
+import java.math.BigDecimal;
 
 /**
  * @author zhangnian
@@ -31,6 +35,12 @@ public class InterfTradRepoasstDto extends InterfTradRepoasst {
      * 登记托管机构
      */
     private String registOrg;
+
+    /**
+     * 券面总额(折算后)
+     */
+    @JsonSerialize(using= BigDecimalSerializer.class)
+    private BigDecimal conversionFacetotalamt;
 
     public String getFinprodId() {
         return finprodId;
@@ -70,6 +80,14 @@ public class InterfTradRepoasstDto extends InterfTradRepoasst {
 
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
+    }
+
+    public BigDecimal getConversionFacetotalamt() {
+        return conversionFacetotalamt;
+    }
+
+    public void setConversionFacetotalamt(BigDecimal conversionFacetotalamt) {
+        this.conversionFacetotalamt = conversionFacetotalamt;
     }
 }
 
