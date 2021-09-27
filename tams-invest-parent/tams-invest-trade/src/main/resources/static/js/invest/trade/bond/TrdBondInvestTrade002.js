@@ -1944,6 +1944,11 @@ var calculateField;
                		Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券账户']));
                		return null;
                	}
+                if ((!$("#secManageAcctId").val() || typeof $("#secManageAcctId").val() == 'undefined')
+                    && (!$("#chlId").val() || typeof $("#chlId").val() == 'undefined') && !formTodoList){
+                    Joyin.error(JoyinUtil.getMessage('FW_E_0006',['证券账户']));
+                    return null;
+                }
                 var list;
                 if($("#zhilingtype").val()=="02")
             	{
