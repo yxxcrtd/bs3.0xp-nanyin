@@ -661,6 +661,19 @@ public class TrdBondInvestTradeDto extends TrdFinProductDealTotal implements Pro
      */
     private String bidId;
 
+    /**
+     *投标标位
+     */
+    private BigDecimal bidPrice;
+
+    public BigDecimal getBidPrice() {
+        return bidPrice;
+    }
+
+    public void setBidPrice(BigDecimal bidPrice) {
+        this.bidPrice = bidPrice;
+    }
+
     public BigDecimal getBussTrdAvailableCashQueryavalibleCash() {
         return bussTrdAvailableCashQueryavalibleCash;
     }
