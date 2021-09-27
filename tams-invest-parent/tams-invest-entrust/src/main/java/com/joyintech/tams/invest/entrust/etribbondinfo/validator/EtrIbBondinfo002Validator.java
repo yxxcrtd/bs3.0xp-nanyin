@@ -13,6 +13,7 @@ import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt2;
 import com.joyintech.tams.invest.common.constant.BussinessConstant;
+import com.joyintech.tams.invest.entrust.common.service.EtrCommonService;
 import com.joyintech.tams.invest.entrust.common.validator.EtrCommonValidator;
 import com.joyintech.tams.invest.entrust.etribbondinfo.dto.EtrIbBondinfo002Dto;
 import com.joyintech.tams.invest.entrust.etribbondinfo.service.EtrIbBondinfo002Service;
@@ -35,6 +36,11 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
      */
     @Autowired
     private EtrIbBondinfo002Service etrIbBondinfo002Service;
+
+    @Autowired
+    private EtrCommonService etrCommonService;
+
+
 
     /**
      * {@inheritDoc}
@@ -143,6 +149,19 @@ public class EtrIbBondinfo002Validator implements EtrCommonValidator {
         if(StringUtil.equals(CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"),"02")){
             if(!StringUtil.isNotEmpty(dto.getBusinessModel())){
                 errorList.add(new ValidMessage("businessModel", "请输入业务模式"));
+            }
+            if(StringUtil.isNotEmpty(dto.getFinprodId())&&StringUtil.isNotEmpty(dto.getPrice())) {
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("finprodId", dto.getFinprodId());
+                paramMap.put("price", dto.getPrice());
+                Map<String, Object> result = etrCommonService.getSppiInfoByY1(paramMap);
+                if (StringUtil.equals(result.get("result"), "2")) {
+                    errorList.add(
+                            new ValidMessage("businessModel", "买入价格不满足使权不重大的购入价条件：" + result.get("bidPriceCon") + "（中债接口接入或人工维护的使权不重大的购入价条件）"));
+                } else if (StringUtil.equals(result.get("result"), "1")) {
+                    errorList.add(
+                            new ValidMessage("businessModel", "该资产Sppi中债接口维护的使权不重大的购入价错误，请检查"));
+                }
             }
         }else{
             if(!StringUtil.isNotEmpty(dto.getInvAim())){
