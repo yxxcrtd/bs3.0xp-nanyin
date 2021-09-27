@@ -145,13 +145,18 @@ public class PdCalculateProcessService {
             params.put("gradeResult", variablePdCalculateDto.getGradeResult());
             params.put("pdConfigType", DictCodeListExt3.评级PD类型_债券_其他债权.getValue());
             params.put("configType", ModelDictCodeList.模型_减值配置类型_评级PD配置.getValue());
+            // 获取当前跑批日期所处年份
+            String tdyYear = DateUtil.getYearStr(DateUtil.format(plateDate));
             if(variablePdCalculateDto.getYearList() !=null){
                 for(String yearStr:variablePdCalculateDto.getYearList()){
                     params.put("yearNum", new BigDecimal(yearStr));
+                    ModGradePdConfigDto configDto = pdCalculateMapper.selectModGradePdConfigList(params);
                     //获取年份的评级PD配置列表
-                    if(pdCalculateMapper.selectModGradePdConfigList(params) !=null){
-                        modGradePdConfigList.add(pdCalculateMapper.selectModGradePdConfigList(params));
-                    }else{
+                    if(configDto !=null){
+                        modGradePdConfigList.add(configDto);
+                    }
+                    // 若当前年份未维护PD，则属于有问题数据，给出异常结束
+                    else if(yearStr.equals(tdyYear)){
                         //生成警告日志
                         //=====记录计算错误日志=====start=====
                         logMsg ="【PD计算批处理】：【"+yearStr+"】年对应评级结果【"+SysDataUtil.getNameFromDataDict(DictCode.内部评级, variablePdCalculateDto.getGradeResult())+"】的PD未维护";
