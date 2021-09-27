@@ -93,9 +93,6 @@ public class EtrbondbiddingresultService extends BaseService<Etrbondbiddingresul
 	}
 
     public void updateTradeId(Map<String, Object> map) {
-        if (map.get("tradeId") == null) {
-            return;
-        }
         etrbondbiddingresultMapper.updateTradeId(map);
     }
 

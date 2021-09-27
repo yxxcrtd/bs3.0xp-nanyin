@@ -499,7 +499,9 @@ with ZYSHG as
     </select>
 
     <select id="QueryForTestStatus" resultType="java.lang.String">
-        select IS_SPPI_PASS from SPPI_IMPORT_DATA sid  inner join fin_product fp on fp.finprod_id = sid.BOND_ID
+        select nvl(IS_SPPI_PASS,fp.SPPI_TEST_STATUS ) IS_SPPI_PASS
+        from fin_product fp
+                 left join SPPI_IMPORT_DATA sid on fp.finprod_id = sid.BOND_ID
         where  fp.finprod_Market_id = #{secId}
      </select>
 </mapper>

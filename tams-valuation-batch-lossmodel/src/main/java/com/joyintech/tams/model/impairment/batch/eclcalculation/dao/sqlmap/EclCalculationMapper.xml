@@ -163,6 +163,7 @@ where
 			A.PLEDGE_FINPROD_ID AS pledgeFinprodId,
 			B.FINPROD_MARKET_ID AS finprodMarketId,
 			A.PLEDGE_AMT AS pledgeAmt,
+			A.PLEDGE_RATIO AS pledgeRatio,
 			C.TYPE_18 AS secType,
 			C.TYPE_1 AS secDetailType
 		FROM

@@ -33,4 +33,6 @@ public interface CstpCommonMatchMapper {
     void deleteMatchInfo(Map<String,Object> map);
 
     BigDecimal getMatchAmount(@Param("execId") String execId);
+
+    List<InterfTradRepoasstDto> listRepMatchNum(@Param("execId") String execId);
 }

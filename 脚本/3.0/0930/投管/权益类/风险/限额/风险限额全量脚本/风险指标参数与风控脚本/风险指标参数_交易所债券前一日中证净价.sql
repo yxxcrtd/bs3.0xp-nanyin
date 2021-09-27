@@ -2,18 +2,18 @@
 ----风险监督指标参数
 
 DELETE FROM RSK_ISUP_INDICATOR_PARA WHERE PARA_CODE ='JYSZQQYIZZJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JYSZQQYIZZJJ','交易所债券前一日中证净价','N','','zzyy1','C002',sysdate,'zzyy1',sysdate,'','','Y','String', '','REDIS', '');
+INSERT INTO RSK_ISUP_INDICATOR_PARA VALUES('JYSZQQYIZZJJ','交易所债券前一日中证净价','N','','cdj','C001',sysdate,'cdj',sysdate,'','','Y','String', '','REDIS', '');
 ---监督指标参数明细
 DELETE FROM RSK_ISUP_INDICATOR_PARA_DTL WHERE PARA_CODE ='JYSZQQYIZZJJ';
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zzyy1','C002',sysdate,'zzyy1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','01', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zzyy1','C002',sysdate,'zzyy1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','02', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zzyy1','C002',sysdate,'zzyy1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','03', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zzyy1','C002',sysdate,'zzyy1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','04', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
-INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','zzyy1','C002',sysdate,'zzyy1',sysdate);
+INSERT INTO RSK_ISUP_INDICATOR_PARA_DTL VALUES('JYSZQQYIZZJJ','05', 'SQL','SELECT 1 FROM DUAL', 'assetCode','N','cdj','C001',sysdate,'cdj',sysdate);
 
 DECLARE
 ---- 实时、买入预占、卖出预占
@@ -33,9 +33,58 @@ FROM
 )where rk=1';
 
 ----事后(日间)
-V_CONTENT_04 CLOB := 'SELECT secid AS RKEY,netprice AS RVALUE
+V_CONTENT_04 CLOB := 'select M.FINPROD_ID||'',''||M.TRADE_ID AS RKEY, N.NETPRICE AS RVALUE
+from (select A.FINPROD_ID,A.TRADE_ID,A.UNIT_CPRICE
+from TRD_PRODUCT_DEAL  A
+inner join TRD_PRODUCT_DEAL_ADD C
+on A.TRADE_ID=C.TRADE_ID
+and A.TRADE_STATUS !=''03''
+and NVL(A.IS_CANCEL,''N'') =''N''
+inner join FIN_PRODUCT B
+on A.FINPROD_ID = B.FINPROD_ID
+inner join FIN_PRODUCT_TYPE D
+on A.FINPROD_ID = D.FINPROD_ID
+where A.FINPROD_TYPE2 =''F01''
+and B.TRADE_MARKET in (''03'',''04'')
+and D.TYPE_6 not in (''B17'',''B14'',''B15'')
+and C.PORTFOLIO_ID IN ${portfolioCode}
+and A.TRADE_DATE = DATE''${valDate}''
+union all
+select A.FINPROD_ID,A.TRADE_ID,A.UNIT_CPRICE
+from TRD_PRODUCT_TEMP_DEAL  A
+inner join TRD_PRODUCT_TEMP_DEAL_ADD C
+on A.TRADE_ID=C.TRADE_ID
+and A.TRADE_STATUS !=''03''
+and NVL(A.IS_CANCEL,''N'') =''N''
+inner join FIN_PRODUCT B
+on A.FINPROD_ID = B.FINPROD_ID
+inner join FIN_PRODUCT_TYPE D
+on A.FINPROD_ID = D.FINPROD_ID
+where A.FINPROD_TYPE2 =''F01''
+and B.TRADE_MARKET in (''03'',''04'')
+and D.TYPE_6 not in (''B17'',''B14'',''B15'')
+and C.PORTFOLIO_ID IN ${portfolioCode}
+and A.TRADE_DATE = DATE''${valDate}''
+union all
+select A.FINPROD_ID,A.TRADE_ID, A.UNIT_CPRICE
+from WFL_TRD_PRODUCT_DEAL  A
+inner join WFL_TRD_PRODUCT_DEAL_ADD C
+on A.TRADE_ID=C.TRADE_ID
+and A.TRADE_STATUS != ''03''
+and substr(A.TRADE_ID,length(A.TRADE_ID),length(A.TRADE_ID)-1)!=''R''
+inner join FIN_PRODUCT B
+on A.FINPROD_ID = B.FINPROD_ID
+inner join FIN_PRODUCT_TYPE D
+on A.FINPROD_ID = D.FINPROD_ID
+where A.FINPROD_TYPE2 =''F01''
+and B.TRADE_MARKET in (''03'',''04'')
+and D.TYPE_6 not in (''B17'',''B14'',''B15'')
+and C.PORTFOLIO_ID IN ${portfolioCode}
+and A.TRADE_DATE = DATE''${valDate}'')M
+INNER JOIN
+(SELECT FINPROD_ID,NETPRICE
 FROM
-(SELECT t2.FINPROD_ID as secid,t1.NETPRICE as netprice,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
+(SELECT t2.FINPROD_ID,t1.NETPRICE,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
  FROM MST_BOND_VALUATION_INFO t1
  inner JOIN FIN_PRODUCT t2
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
@@ -45,13 +94,31 @@ FROM
  AND t1.VALUE_SOURCE = ''CSD''
  AND t3.TYPE_6 not in (''B17'',''B14'',''B15'')
  AND t2.TRADE_MARKET in (''03'',''04'')
- AND t2.FINPROD_TYPE2 IN(''F01'',''F32'')
-)where rk=1';
+ AND t2.FINPROD_TYPE2 =''F01''
+)where rk=1)N
+ON M.FINPROD_ID = N.FINPROD_ID';
 
 ----事后(日终)
-V_CONTENT_05 CLOB := 'SELECT secid AS RKEY,netprice AS RVALUE
+V_CONTENT_05 CLOB := 'select M.FINPROD_ID||'',''||M.TRADE_ID AS RKEY, N.NETPRICE AS RVALUE
+from (select A.FINPROD_ID,A.TRADE_ID,A.UNIT_CPRICE
+from TRD_PRODUCT_DEAL  A
+inner join TRD_PRODUCT_DEAL_ADD C
+on A.TRADE_ID=C.TRADE_ID
+and A.TRADE_STATUS !=''03''
+and NVL(A.IS_CANCEL,''N'') =''N''
+inner join FIN_PRODUCT B
+on A.FINPROD_ID = B.FINPROD_ID
+inner join FIN_PRODUCT_TYPE D
+on A.FINPROD_ID = D.FINPROD_ID
+where A.FINPROD_TYPE2 =''F01''
+and B.TRADE_MARKET in (''03'',''04'')
+and D.TYPE_6 not in (''B17'',''B14'',''B15'')
+and C.PORTFOLIO_ID IN ${portfolioCode}
+and A.TRADE_DATE = DATE''${valDate}'')M
+INNER JOIN
+(SELECT FINPROD_ID,NETPRICE
 FROM
-(SELECT t2.FINPROD_ID as secid,t1.NETPRICE as netprice,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
+(SELECT t2.FINPROD_ID,t1.NETPRICE,rank() over (partition by t2.FINPROD_ID order by t1.VALUE_DATE desc) rk
  FROM MST_BOND_VALUATION_INFO t1
  inner JOIN FIN_PRODUCT t2
  ON t2.FINPROD_MARKET_ID=t1.SEC_ID
@@ -61,8 +128,9 @@ FROM
  AND t1.VALUE_SOURCE = ''CSD''
  AND t3.TYPE_6 not in (''B17'',''B14'',''B15'')
  AND t2.TRADE_MARKET in (''03'',''04'')
- AND t2.FINPROD_TYPE2 IN(''F01'',''F32'')
-)where rk=1';
+ AND t2.FINPROD_TYPE2 =''F01''
+)where rk=1)N
+ON M.FINPROD_ID = N.FINPROD_ID';
 BEGIN
     UPDATE RSK_ISUP_INDICATOR_PARA_DTL SET CONTENT = V_CONTENT_01_02_03 WHERE PARA_CODE = 'JYSZQQYIZZJJ' and PARA_GRANULARITY in('01','02','03');
 

@@ -28,7 +28,7 @@
                                                 data-keyfield="code" data-callback="selectCallback"
                                                 data-th-data-effectivefieldsalias='|{"code":"#{ComBondQuotationInfo001.secId}","shortName":"#{ComBondQuotationInfo001.finprodAbbr}"}|' /> -->
                                        
-                                       <select type="text" id="secId" name="secId"
+                                       <select type="text" id="finprodAbbr" name="finprodAbbr"
                                class="layui-input form-input input-select" placeholder="请输入内容" data-th-parentids="profitType"
                                data-th-data-url="@{/common/basicdata/marketdata/mstbondquotationinfo/ComBondQuotationInfo002/getAssetCodeList}"
                                required="required" data-th-initValue="${entity?.secId}">
@@ -39,7 +39,7 @@
                                         <label class="layui-form-label form-lable"
                                             data-th-text="#{ComBondQuotationInfo001.secId}">债券代码</label>
                                         <div class="layui-input-inline input-inline">
-                                            <input type="text" readonly="readonly" id="finprodAbbr" name="finprodAbbr"
+                                            <input type="text" readonly="readonly" id="secId" name="secId"
                                                 class="layui-input form-input" data-th-value='${entity?.secId}'
                                                 placeholder="请输入内容" required disabled>
                                         </div>

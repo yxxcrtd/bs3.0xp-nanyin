@@ -324,10 +324,11 @@ public class BMWEclCalculationProcessorService {
             }
             // 1.1 当存在多笔质押券时，则采用加权计算最终LGD值
             if (finDealPledgeDTOList.size() > 1) {
-                // 定义 变量.总质押金额
+                // 定义 折算后汇总金额
                 BigDecimal totalPledgeAmt = BigDecimal.ZERO;
                 // 循环遍历取质押券对应债券的LGD配置
                 for (FinDealPledgeDTO item : finDealPledgeDTOList) {
+                    // 折算后汇总金额 += 折算后质押金额
                     totalPledgeAmt = ArithmeticUtil.doAdd(totalPledgeAmt, item.getPledgeAmt());
                 }
                 // 循环遍历质押券信息
@@ -342,6 +343,7 @@ public class BMWEclCalculationProcessorService {
                                 + item.getSecDetailType());
                     }
                     if (configDto != null) {
+                        //  LGD = Σ每笔质押券折算后金额/汇总质押券折算后金额*当前质押券类型维护的LGD值（%）
                         lgdRate = ArithmeticUtil.doAdd(lgdRate, ArithmeticUtil.multiply(ArithmeticUtil.divide(item.getPledgeAmt(), totalPledgeAmt),
                                 configDto.getLgd()));
                         configDtoList.add(configDto);
