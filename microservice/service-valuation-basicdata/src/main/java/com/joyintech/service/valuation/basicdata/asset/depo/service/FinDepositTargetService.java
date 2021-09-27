@@ -159,9 +159,9 @@ public class FinDepositTargetService extends BaseService<FinDepositTargetDto>{
         if (param == null) {
             param = new HashMap<String, Object>();
         }
-        param.put("CUSTOMER_TYPE", DictCodeList.客户类型_法人.getValue());
-        param.put("IS_DEPOSIT_BANK", DictCodeList.是否_是.getValue());
-        param.put("IS_FINANCIER", DictCodeList.是否_是.getValue());
+//        param.put("CUSTOMER_TYPE", DictCodeList.客户类型_法人.getValue());
+//        param.put("IS_DEPOSIT_BANK", DictCodeList.是否_是.getValue());
+//        param.put("IS_FINANCIER", DictCodeList.是否_是.getValue());
         return finDepositTargetMapper.getCustomerName(param);
     }
 
