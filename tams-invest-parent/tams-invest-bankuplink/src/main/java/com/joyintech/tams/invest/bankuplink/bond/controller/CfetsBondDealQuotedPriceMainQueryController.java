@@ -205,7 +205,9 @@ public class CfetsBondDealQuotedPriceMainQueryController extends BaseController 
 //			return cfetsBondDealQuotedPrice001Service.export(this.getPageId() + "_01", RequestUtil.getPageParam());
 //		}
         if (null != param.get("exportType") && StringUtil.equals(param.get("exportType").toString(), "EntrustOrder")) {
-            return cfetsBondDealQuotedPrice001Service.export("现券报价_指令执行", RequestUtil.getPageParam());
+            return cfetsBondDealQuotedPrice001Service.export("现券报价_指令执行"+ SystemGlobalConstant.OPEN_PARENTHESIS
+                    + DateUtil.format(DateUtil.platDateFromCache())
+                    + SystemGlobalConstant.CLOSE_PARENTHESIS, RequestUtil.getPageParam());
         }
         else if (null != param.get("exportType") && StringUtil.equals(param.get("exportType").toString(), "dayOffer")) {
             String datas = this.getParam("datas");
@@ -221,8 +223,10 @@ public class CfetsBondDealQuotedPriceMainQueryController extends BaseController 
                             + FileNameUtil.getFileExtName(outFile),
                     outFile, true);
         }
-        else if (null != param.get("exportType") && StringUtil.equals(param.get("exportType").toString(), "cstp")) {
-            return cfetsBondDealQuotedPrice004Service.export(this.getPageId() + "_04", RequestUtil.getPageParam());
+        else if (null != param.get("exportType") && StringUtil.equals(param.get("exportType").toString(), "CSTPSelect")) {
+            return cfetsBondDealQuotedPrice004Service.export("现券报价_成交查询"+ SystemGlobalConstant.OPEN_PARENTHESIS
+                    + DateUtil.format(DateUtil.platDateFromCache())
+                    + SystemGlobalConstant.CLOSE_PARENTHESIS, RequestUtil.getPageParam());
         } else {
             return cfetsBondDealQuotedPrice001Service.export(this.getPageId() + "_01", RequestUtil.getPageParam());
         }

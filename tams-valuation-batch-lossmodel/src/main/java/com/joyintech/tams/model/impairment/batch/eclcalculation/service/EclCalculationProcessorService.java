@@ -9,9 +9,7 @@ import com.joyintech.framework.util.IDGenerator;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.common.base.dao.BokFinProductValuationParaMapper;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
-import com.joyintech.tams.common.base.entity.ModConfigUseage;
-import com.joyintech.tams.common.base.entity.ModEclResult;
-import com.joyintech.tams.common.base.entity.TrdAssetLoss;
+import com.joyintech.tams.common.base.entity.*;
 import com.joyintech.tams.constant.*;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dao.EclCalculationMapper;
 import com.joyintech.tams.model.impairment.batch.eclcalculation.dto.*;
@@ -22,14 +20,15 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.TargetSearchD
 import com.joyintech.tams.valuation.common.batch.finproduct.service.FinProductCommonBatchService;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
 import com.joyintech.tams.valuation.common.constants.ValDictCodeList;
-import com.joyintech.tams.common.base.entity.ModEclResultProcess;
 import com.joyintech.tams.valuation.common.service.CalCommonService;
 import com.joyintech.tams.valuation.component.batch.service.ModLogsService;
+import com.joyintech.tams.valuation.component.common.constant.ValComponentConstant;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
@@ -140,6 +139,13 @@ public class EclCalculationProcessorService {
         //模型计算LGD
         caclLGD(entity, assetInfo, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
 
+        String ECL比例结果保留小数位 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT")) ? "6" : CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT");
+        String ECL比例结果保留小数位尾数处理方式 = StringUtil.isEmpty(CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT_TYPE")) ? DictCodeList.估值舍入规则_四舍五入.getValue() : CacheUtil.getSysParam(
+                "SYS_PARA_ECL_RATIO_DIGIT_TYPE");
+
         // 循环 变量.减值结果过程List
         for (ModEclResultProcess entityDto : listProcess) {
             // 定义 变量.减值结果过程表
@@ -180,11 +186,17 @@ public class EclCalculationProcessorService {
                         // 前瞻后PD = 变量.减值管理Dto.PD
                         entityDto.setProspectivePd(trdAssetLoss.getPdVaule());
                         // 明细数据.LGD = 变量.减值管理Dto.LGD
-                        entityDto.setLgd(trdAssetLossP3.getLgdVaule());
-                        // 交易信息DTO.前瞻后ECL预期信用损失 = 变量.资产减值流水List.get(0).ECL预期信用损失比例 * 交易信息.EAD 四舍五入保留2位小数
+                        entityDto.setLgd(trdAssetLoss.getLgdVaule());
+                        // 明细数据.减值阶段 = 变量.减值管理Dto.减值阶段
+                        entityDto.setFinStage(trdAssetLoss.getStage());
+                       // 定义 变量.ecl比例 = 变量.资产减值流水List.get(0).ECL预期信用损失比例，系统参数舍位处理
+                       BigDecimal eclRatio = calCommonService.round(trdAssetLoss.getEclVaule(), ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
+                       // 明细数据.ecl损失比例 = 变量.ecl比例
+                        entityDto.setEclRatio(eclRatio);
+                        // 交易信息DTO.前瞻后ECL预期信用损失 = 变量.ecl比例  * 交易信息.EAD 四舍五入保留2位小数
                         entityDto.setProspectiveEcl(
                                 ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(),
-                                        RoundingMode.HALF_UP, trdAssetLoss.getEclVaule(),
+                                        RoundingMode.HALF_UP, eclRatio,
                                         entityDto.getEad()));
                     }
                 }
@@ -200,6 +212,11 @@ public class EclCalculationProcessorService {
                     entityDto.setProspectiveEcl(
                             ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
                                     entityDto.getProspectivePd(), entityDto.getEad(), entityDto.getLgd()));
+                    // 交易信息.减值损失比例 = 交易信息.前瞻后PD违约概率% * 交易信息.LGD
+                    BigDecimal eclRatio =  ArithmeticUtil.multiply(entityDto.getProspectivePd(), entityDto.getLgd());
+                    // 系统参数控制ECL比例保留小数位数以及尾数处理方式
+                    eclRatio = calCommonService.round(eclRatio, ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
+                    entityDto.setEclRatio(eclRatio);
                 }
 
                 //3.3 封装结果集
@@ -210,15 +227,8 @@ public class EclCalculationProcessorService {
                 // 变量.资产减值结果表List 更新
                 modEclResultList.add(modEclResult);
             } catch (Exception e) {
-                CommonErrorParams commonErrorParams = new CommonErrorParams();
-                commonErrorParams.setFinprodId(entityDto.getAssetId());
-                commonErrorParams.setBatchSeqNo(batchExecuteInfo.getBatchExedetailSeqNo());
-                commonErrorParams.setErrorMsg(
-                        "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId()
-                                + "】计算异常");
-                commonErrorParams.setErrorType(ModelDictCodeList.模型计算结果_失败.getValue());
-                errors.add(commonErrorParams);
-                stepExecution.getJobExecution().getExecutionContext().put("ERRORS", errors);
+                String msg = "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId() + "】计算异常";
+                modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entityDto.getAssetId(), msg);
                 e.printStackTrace();
             }
         }
@@ -233,6 +243,10 @@ public class EclCalculationProcessorService {
                 item.setProspectivePd(trdAssetLossP3.getPdVaule());
                 // 明细数据.LGD =  变量.三阶段减值管理数据.LGD
                 item.setLgd(trdAssetLossP3.getLgdVaule());
+                // 明细数据.减值损失比例 =  变量.三阶段减值管理数据.减值损失比例
+                item.setEclRatio(trdAssetLossP3.getEclVaule());
+                // 明细数据.减值阶段 = 变量.减值管理Dto.减值阶段
+                item.setFinStage(trdAssetLossP3.getStage());
                 // ECL = EAD *   变量.三阶段减值管理数据.三阶段ECL损失比例
                 item.setProspectiveEcl(
                         ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
@@ -246,8 +260,12 @@ public class EclCalculationProcessorService {
                 item.setProspectivePd(trdAssetLossP3.getPdVaule());
                 // 明细数据.LGD =  变量.三阶段减值管理数据.LGD
                 item.setLgd(trdAssetLossP3.getLgdVaule());
+                // 明细数据.减值损失比例 =  变量.三阶段减值管理数据.减值损失比例
+                item.setEclRatio(trdAssetLossP3.getEclVaule());
                 // 数据来源 = 变量.三阶段减值管理数据.减值录入方式
                 item.setDataSource(trdAssetLossP3.getLossInputType());
+                // 明细数据.减值阶段 = 变量.减值管理Dto.减值阶段
+                item.setStage(trdAssetLossP3.getStage());
                 // ECL = EAD *  变量.三阶段ECL损失比例
                 item.setProspectiveEcl(
                         ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,

@@ -39,14 +39,15 @@ $(function () {
             //曲线来源 字典：VALUATION_SOURCE
             ,{field: 'valueSource', width: 120, title: 'MstCurveDefManage001.valueSource', visible: false}
             , {field: 'valueSourceName', width: 120, title: 'MstCurveDefManage001.valueSource'}
-            //币种
-            , {field: 'ccy', width: 100, title: 'MstCurveDefManage001.ccy'}
+
             , {field: 'curveGroupCode', width: 100, title: '曲线族'}
             , {field: 'remark', width: 100, title: '描述'}
+            //币种
+            , {field: 'ccy', width: 100, title: 'MstCurveDefManage001.ccy'}
             //插值方式
             , {field: 'interMethod', width: 100, title: 'MstCurveDefManage001.interMethod'}
-            //日算规则
-            , {field: 'dayRules', width: 100, title: 'MstCurveDefManage001.dayRules'}
+            //计息基础
+            , {field: 'dayRules', width: 100, title: '计息基础'}
             // 日历
             , {field: 'calender', width: 120, title: 'MstCurveDefManage001.calender'}
             // 付息日规则
@@ -176,10 +177,13 @@ $(function () {
             table.load();
         });
 
-        //新建按钮
+        // 绑定重置按钮事件
+        $('#MstCurveDefManage001_btn_reset').click(function(){
+            window.location.reload();
+        });
 
         //绑定新增按钮事件
-        $('#MstCalendarType001_btn_add').click(function() {
+        $('#MstCurveDefManage001_btn_add').click(function() {
             showDialog();
         });
 

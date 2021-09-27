@@ -32,11 +32,13 @@ $(function() {
         },            
         cols:[{field:'exchargeCode',width:200,  title: 'ComExchangeQuotationInfo001.exchargeCode'}
             ,{field:'tradeDate',width:200,  title: 'ComExchangeQuotationInfo001.tradeDate',type:'date'}
+            ,{field:'deadLineValue',width:200, title: 'ComExchangeQuotationInfo002.deadLine'}
             ,{field:'openPrice',width:200, title: 'ComExchangeQuotationInfo002.openPrice'}
             ,{field:'closePrice',width:200, title: 'ComExchangeQuotationInfo002.closePrice'}
             ,{field:'midPrice',width:200, title: 'ComExchangeQuotationInfo002.midPrice'}
             ,{field:'highPrice',width:200, title: 'ComExchangeQuotationInfo002.highPrice'}
             ,{field:'lowPrice',width:200, title: 'ComExchangeQuotationInfo002.lowPrice'}
+            ,{field:'datasourceTypeValue',width:200, title: 'ComExchangeQuotationInfo001.datasourceType'}
             ,{field:'operation', title: 'SysCommon.operation', type:'action', buttons: ['edit', 'delt']}
         ]
     });

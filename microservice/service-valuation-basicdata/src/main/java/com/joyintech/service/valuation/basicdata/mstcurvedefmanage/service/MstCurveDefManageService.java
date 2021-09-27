@@ -3,11 +3,14 @@ package com.joyintech.service.valuation.basicdata.mstcurvedefmanage.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dao.MstCurveDefManage001Mapper;
 import com.joyintech.service.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefManageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -109,5 +112,18 @@ public class MstCurveDefManageService extends BaseService<MstCurveDefManageDto> 
 
     public Page<SelectOptionDto> getCurveGroupSelect(int page,int length, Map<String, Object> param) {
         return queryForPageForSelectReturn(page, length, () -> mstCurveDefManage001Mapper.getCurveGroupSelect(param));
+    }
+
+    /**
+     * 通用联动查询
+     *
+     * @param param
+     *            : dict_code_parent,dict_code_child,item_code_parent
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DataSource(DataSourceType.OTHER)
+    public List<SelectOptionDto> getLinkSelectOption(Map<String, Object> param) {
+        return mstCurveDefManage001Mapper.getLinkSelectOption(param);
     }
 }

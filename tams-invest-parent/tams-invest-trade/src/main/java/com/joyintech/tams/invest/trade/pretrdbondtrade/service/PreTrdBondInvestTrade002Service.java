@@ -994,16 +994,16 @@ public class PreTrdBondInvestTrade002Service extends BaseService<PreTrdBondInves
                 map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(inputDto.getTradeDate(), 1, holidayList, "1")));
                 BigDecimal position = (BigDecimal)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") ;
 
-                String sinal = tradeCommonService.getSppiInfoByY1(map) ;
-                if(StringUtil.equals("2",sinal)&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
+                Map<String,Object> sinal = tradeCommonService.getSppiInfoByY1(map) ;
+                if(StringUtil.equals("2",sinal.get("result"))&&StringUtil.equals("Y1",inputDto.getBusinessModel())){
                     if(position!=null){
                         confirmMsg += changeLineMark;
 
-                        confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
                     }else{
                         confirmMsg += changeLineMark;
 
-                        confirmMsg +="交易净价不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+                        confirmMsg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
                     }
                 }
             }

@@ -98,7 +98,7 @@ public class CfetsBondDealQuotedPrice004Service extends CommonExportService<Cstp
     
 	@Override
 	protected void buildExportParam(ExportParam exportParam) {
-		exportParam.config("/com/joyintech/tams/invest/bankuplink/bond/conf/export_conf1.xml")
+		exportParam.config("/com/joyintech/tams/invest/bankuplink/bond/conf/export_conf_cstpTable.xml")
 				.dataSource(DataSourceType.MASERT);
 	}
     
@@ -109,7 +109,7 @@ public class CfetsBondDealQuotedPrice004Service extends CommonExportService<Cstp
 	public Page<CstpSelectDto> selectPageData(Map<String, Object> selectParam) {
 		Page<CstpSelectDto> page = new Page<CstpSelectDto>();
 		// 导出特殊处理
-		List<CstpSelectDto> list = cfetsBondDealQuotedPrice001Service.getCstpQryTableList(selectParam);
+		List<CstpSelectDto> list = cfetsBondDealQuotedPrice001Service.gencjcxTable(selectParam);
 		page.setRoot(list);
 		return page;
 	}

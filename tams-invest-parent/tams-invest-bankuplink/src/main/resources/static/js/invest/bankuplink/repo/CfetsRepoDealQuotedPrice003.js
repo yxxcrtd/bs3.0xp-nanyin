@@ -1296,8 +1296,13 @@
         for(var i in portfolioIdArr){
             //组合的交易金额汇总
             var fpriceAmtTotal = 0;var fpriceAmtTotalCb = 0;var fpriceAmtTotalSc = 0;
+            //可用额度为0 委托额度全部匹配完
+            var avaNumFlag = false;
             for(var j in ptlAllocationList){
                 if(portfolioIdArr[i].portfolioId = ptlAllocationList[j].portfolioId){
+                    if(Number(portfolioIdArr[i].avaNum)<=0){
+                        avaNumFlag = true;
+                    }
                     if(showAmtOrg){
                         fpriceAmtTotalCb = JoyinMath.doAdd(fpriceAmtTotalCb,ptlAllocationList[j].cbFpriceAmt);
                         fpriceAmtTotalSc = JoyinMath.doAdd(fpriceAmtTotalSc,ptlAllocationList[j].scFpriceAmt);
@@ -1310,9 +1315,14 @@
                 portfolioIdArr[i].tailDifferencecb = JoyinMath.doMinus(portfolioIdArr[i].pledgePrinTotalCb,fpriceAmtTotalCb);
                 portfolioIdArr[i].tailDifferencesc = JoyinMath.doMinus(portfolioIdArr[i].pledgePrinTotalSc,fpriceAmtTotalSc);
             }else{
-                portfolioIdArr[i].tailDifference = JoyinMath.doMinus(portfolioIdArr[i].pledgePrinTotal,fpriceAmtTotal);
+                if(avaNumFlag){
+                    portfolioIdArr[i].tailDifference = Number(0);
+                }else{
+                    portfolioIdArr[i].tailDifference = JoyinMath.doMinus(portfolioIdArr[i].pledgePrinTotal, fpriceAmtTotal);
+                }
             }
         }
+
         handleTailDifferenceZhg(portfolioIdArr,ptlAllocationList,100);
         //刷新列表
         isshowColumns(showAmtOrg);

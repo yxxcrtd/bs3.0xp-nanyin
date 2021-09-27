@@ -76,6 +76,13 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            if(object.businessModel=="Y1"){
+                object.invAim = 'AC';
+            }else if(object.businessModel=="Y2"){
+                object.invAim  = 'FVTPL'
+            }
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.entrustId = $('#entrustId').val();
@@ -134,11 +141,11 @@
         if (operateType === 'save') {// 指令暂存，去掉校验项  add by xxg 20210805
             WorkFlow.doSaveList(basePath + 'invest/entrust/etrinvestbondinfo/EtrInvestBondInfo002/save', object, "EtrInvestBondInfo002_btn_save");
         }else{
-            if(SHOW_INVAIM_OR_BUSSINSSMODEL==02){
+            if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){
                 Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
-                    if(resultSppi.data==2){
-                        Joyin.error("买入价格不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件）")
-                    }else if(resultSppi.data==1){
+                    if(resultSppi.data.result==2){
+                        Joyin.error("买入价格不满足使权不重大的购入价条件："+resultSppi.data.bidPriceCon+"（中债接口接入或人工维护的使权不重大的购入价条件）")
+                    }else if(resultSppi.data.result==1){
                         Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
                     }
                     else{

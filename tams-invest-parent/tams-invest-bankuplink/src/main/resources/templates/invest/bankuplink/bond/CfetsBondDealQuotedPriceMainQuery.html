@@ -324,7 +324,7 @@
 							<div class="layui-row layui-col-space10" style="background: #f5f5f5;">
 								<div class="layui-inline layui-col-sm3 layui-col-lg3">
 									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_CSTPSelect_btn_export" >导出</a>
-									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_CSTPSelect_btn_exportPDF" >导出PDF</a>
+									<a class="layui-btn layui-btn-sm"  id="CfetsBondDealQuotedPrice001_CSTPSelect_btn_exportPDF" >导出PDF单据</a>
 								</div>
 								<div class="layui-inline layui-col-sm1 layui-col-lg1 layui-col-sm-offset8 layui-col-lg-offset8">
 									<!----start-->
@@ -362,11 +362,20 @@
 												<label class="layui-form-label form-label"
 													   th:text="#{CfetsBondDealQuotedPrice001.entrustOrder.searchArea.assetId}">资产代码</label>
 												<div class="layui-input-inline input-inline" >
-													<select type="text" name="finprodId"  id="finprodId" multiple="true"
+													<select type="text" name="finprodId"  id="finprodId"
 															class="layui-input form-input input-select" placeholder="请输入内容"
 															th:placeholder="#{SysCommon.placeholder}" th:data-url="@{/invest/bankuplink/common/CfetsQuotedCommon/queryFinprodIdPage}"
 															allowClear="true">
 													</select>
+												</div>
+											</div>
+
+											<div class="sgePortDiv">
+												<label class="layui-form-label form-label">匹配状态</label>
+												<div class="layui-input-inline input-inline">
+													<select type="text" id="matchStatus"name="matchStatus" class="layui-input form-input input-select"
+															placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
+															data-th-data-result='${MATCH_STATUS}' allowClear="true" formatoption="true"></select>
 												</div>
 											</div>
 

@@ -820,7 +820,7 @@
 		I.OURDEPOSITINSTITUTION ourdepositinstitution,
 		tpd.FINPROD_ID           finprodId,
 		I.TRADETIME  tradetime,
-		QUOTE.quote_type quotType,
+		QUOTE.quote_type quoteType,
 		fpt.TYPE_4 assetTypeOne
 		FROM
 		INTERF_CSTP_TRADE I
@@ -841,7 +841,7 @@
 		group by
 		CSTP_TRADE_ID ) tmi on tmi.CSTP_TRADE_ID = I.EXECID
 		LEFT JOIN (
-		SELECT i.EXECID ,listagg(nvl(iqb.ENTRUST_ID , nvl(iqc.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID,iqerr.ENTRUST_ID) )),
+		SELECT i.EXECID ,iqb.create_user,iqb.update_user,iqb.quote_date,listagg(nvl(iqb.ENTRUST_ID , nvl(iqc.ENTRUST_ID ,nvl(iqerb.ENTRUST_ID,iqerr.ENTRUST_ID) )),
 		',')
 		WITHIN GROUP ( ORDER BY i.UPDATETIME DESC) AS ENTRUST_ID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID) QUOTEID,iqc.SETT_TYPE,iqb.quote_type  quote_type
 		FROM INTERF_CSTP_TRADE i
@@ -850,7 +850,7 @@
 		LEFT JOIN IBU_QUOTE_ETR_RE iqerb ON iqb.QUOTE_ID = iqerb.QUOTE_ID
 		LEFT JOIN IBU_QUOTE_CREP iqc ON i.EXECID = iqc.EXECID
 		LEFT JOIN IBU_QUOTE_ETR_RE iqerr ON iqc.QUOTE_ID = iqerr.QUOTE_ID
-		GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE,iqb.quote_type
+		GROUP BY i.EXECID ,nvl(iqb.QUOTE_ID,iqc.QUOTE_ID),iqc.SETT_TYPE,iqb.quote_type,iqb.create_user,iqb.update_user,iqb.quote_date
 		) QUOTE ON QUOTE.EXECID=I.EXECID
 		left join TRD_PRODUCT_DEAL tpd on I.EXECID = tpd.F_TRADE_ID
 		LEFT JOIN TRD_PRODUCT_DEAL_ADD tpda ON tpda.TRADE_ID = tpd.TRADE_ID
@@ -932,6 +932,17 @@
 			<if test="entrustTradelimitdays !=null and entrustTradelimitdays !='' ">
 				and I.TRADELIMITDAYS = #{entrustTradelimitdays}
 			</if>
+			<if test="quoteType !=null and quoteType !='' ">
+				and QUOTE.quote_type = #{quoteType}
+			</if>
+			<if test="quaryDate !=null and quaryDate !='' ">
+				and QUOTE.quote_date = to_date(#{quaryDate},'YYYY-MM-DD')
+			</if>
+			<if test="loginUserId != null and loginUserId != '' ">
+				and (QUOTE.CREATE_USER = #{loginUserId,jdbcType=VARCHAR}
+				or QUOTE.UPDATE_USER = #{loginUserId,jdbcType=VARCHAR}
+				)
+			</if>
 		</where>
 		) aa
 		<where>
@@ -954,6 +965,7 @@
 				and aa.side = #{benfangSide}
 			</if>
 		</where>
+		order by decode(aa.matchStatus,'02',1,'03',2,'01',3,4)
 	</select>
 	<!--查询流程中数据-->
 	<select id="getWflEntrustDealedAmt" resultType="java.math.BigDecimal">

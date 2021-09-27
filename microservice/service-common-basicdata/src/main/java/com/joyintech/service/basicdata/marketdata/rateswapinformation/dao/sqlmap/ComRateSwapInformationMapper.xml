@@ -16,8 +16,12 @@
         LEFT JOIN MST_CURVE_DEF def
         ON t1.curve_code = def.curve_code
         <where>
-            AND T1.CURVE_CODE = #{curveCode,jdbcType=VARCHAR}
-            AND T1.CURVE_DATE = #{curveDate,jdbcType=DATE}
+            <if test="curveCode != null and curveCode !=''">
+                AND T1.CURVE_CODE = #{curveCode,jdbcType=VARCHAR}
+            </if>
+            <if test="curveDate != null">
+                AND T1.CURVE_DATE = #{curveDate,jdbcType=DATE}
+            </if>
         </where>
         order by KEY_POINT
     </select>
