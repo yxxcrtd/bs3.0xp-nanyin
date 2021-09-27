@@ -78,9 +78,9 @@ var correctData;
         }else {
 
                     Joyin.ajaxJson(basePath + 'invest/entrust/EtrCommonController/getSppiInfoByY1', object, function(resultSppi) {
-                             if(resultSppi.data==2){
-                                          Joyin.error("买入价格不满足使权不重大的购入价条件：xx（中债接口接入或人工维护的使权不重大的购入价条件）")
-                                      }else if(resultSppi.data==1)
+                             if(resultSppi.data.result==2){
+                                          Joyin.error("买入价格不满足使权不重大的购入价条件："+resultSppi.data.bidPriceCon+"（中债接口接入或人工维护的使权不重大的购入价条件）")
+                                      }else if(resultSppi.data.result==1)
                                           Joyin.error("该资产Sppi中债接口维护的使权不重大的购入价错误，请检查")
                                        else{
                              Joyin.ajaxJson(basePath + '/invest/entrust/etrexchangetrade/EtrExchangeTrade001/check',object,
