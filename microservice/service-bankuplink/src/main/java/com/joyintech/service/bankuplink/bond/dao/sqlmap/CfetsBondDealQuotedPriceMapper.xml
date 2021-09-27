@@ -511,6 +511,18 @@
 			</if>
 		</where>
 	</select>
+
+	<select id="queryEntrustDealedAmt2" resultType="java.math.BigDecimal">
+		SELECT
+		SUM(NVL(ETR_FINISH_STATUS.FINISH_AMT, 0))
+		FROM
+		ETR_FINISH_STATUS
+		<where>
+			<if test="entrustId != null and entrustId != ''">
+				and ENTRUST_ID = #{entrustId}
+			</if>
+		</where>
+	</select>
 	
 	<select id="queryLastBondValuation" resultMap="com.joyintech.tams.common.base.dao.MstBondValuationInfoMapper.BaseResultMap">
 		SELECT

@@ -3180,7 +3180,7 @@
                 Joyin.ajaxSync(basePath + 'invest/entrust/etrexchangetrade/EtrExchangeTrade001/IsBondAsset', param, function(result) {
                     //1 返回1代表所选资产不是债券 不处理
                     if(result.data=='1') {
-                        $("#invAim_div_"+ currentTab).show();
+                        $("#invAim_div_"+ currentTab).hide();
                         $("#businessModelDiv_"+ currentTab).hide();
                     }else if(result.data=='2'){     //2 返回2代表所选资产是债券且中债sppi通过
                         if(SHOW_INVAIM_OR_BUSSINSSMODEL=='02'){

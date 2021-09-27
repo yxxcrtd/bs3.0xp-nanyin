@@ -6,6 +6,8 @@ import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.base.BaseController;
+import com.joyintech.framework.jdbc.datasource.DataSource;
+import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.IDGenerator;
@@ -21,6 +23,7 @@ import com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.dto.MstCurveDefM
 import com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.service.MstCurveDefManage001Service;
 import com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.service.MstCurveDefManage002Service;
 import com.joyintech.tams.valuation.common.constants.GlobalConstant;
+import com.joyintech.tams.valuation.common.constants.ServiceApplication;
 import com.joyintech.tams.valuation.common.dto.WflValidInputParameter;
 import com.joyintech.tams.valuation.common.service.MstWorkflowCommonService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
@@ -29,6 +32,8 @@ import com.joyintech.workflow.engine.util.WorkFlowUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -136,6 +141,18 @@ public class MstCurveDefManage002Controller extends BaseController{
             return ar;
         }
 
+        //唯一性校验
+        if (StringUtil.equals(dto.getPageModel(), GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
+            Map<String,Object> map = new HashMap();
+            map.put("curveCode",dto.getCurveCode());
+            MstCurveDefManageDto repDto = mstCurveDefManage002Service.selectByKey(map);
+            if(repDto !=null){
+                String message = "曲线代码与库中有重复，请修改！";
+                return new AjaxResult(message, MessageType.错误消息);
+            }
+        }
+
+
         return ajaxResult ;
     }
 
@@ -194,6 +211,33 @@ public class MstCurveDefManage002Controller extends BaseController{
         Map<String,Object> map = RequestUtil.getParameters(getRequest());
         return mstCurveDefManage002Service.getCurveGroupSelect(map);
     }
+
+
+    /**
+     * 联动：曲线类型 根据 曲线来源 获取
+     *
+     * @return
+     * @throws Exception
+     */
+
+    /**
+     * 联动：证券品种 - 获得投资目的
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("getIntCurveType")
+    public List<SelectOptionDto> getIntCurveType() {
+        Map<String, Object> param = RequestUtil.getPageParam();
+        param.put("dict_code_parent", DictCode.曲线来源.getValue());
+        param.put("dict_code_child", DictCode.收益率曲线类型.getValue());
+        param.put("item_code_parent", param.get("valueSource"));
+        return mstCurveDefManage002Service.getLinkSelectOption(param);
+    }
+
+
+
 
 
 }

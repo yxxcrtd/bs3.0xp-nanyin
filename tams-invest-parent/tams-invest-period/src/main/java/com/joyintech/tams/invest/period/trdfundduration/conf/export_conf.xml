@@ -6,7 +6,7 @@
             <Cell order="2" name="业务编号">totleTradeId</Cell>
             <Cell order="4" name="资产代码">finprodMarketId</Cell>
             <Cell order="5" name="资产简称">finprodAbbr</Cell>
-            <Cell order="6" name="合作资产">chlName</Cell>
+<!--            <Cell order="6" name="合作资产">chlName</Cell>-->
             <Cell order="7" name="资产类型">assetTypeStr</Cell>
             <Cell order="8" name="分红类型">bonusModeStr</Cell>
             <Cell order="8" name="交易方向">psStr</Cell>

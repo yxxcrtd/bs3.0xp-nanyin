@@ -93,10 +93,10 @@
             // 项目类资产五级分类改造 add by renping 2019-08-01 end
             , {field: 'psString', width:150, title: '交易方向', sortField:"PS"}
             , {field: 'tradeDate', width:150, title: '交易日期', sortField:"TRADE_DATE"}
-            , {field: 'prinAmt', width:150, title: '本金金额', sortField:"PRIN_AMT"}
-            , {field: 'unitCprice', width:150, title: '净价', sortField:"UNIT_CPRICE"}
-            , {field: 'unitFprice', width:150, title: '全价', sortField:"UNIT_FPRICE"}
-            , {field: 'tradeAmt', width:150, title: '实付金额', sortField:"TRADE_AMT"}
+            , {field: 'prinAmt', width:150, title: '本金金额',type:'money', textrange:2, sortField:"PRIN_AMT"}
+            , {field: 'unitCprice', width:150, title: '净价', type:'number', textrange:2,sortField:"UNIT_CPRICE"}
+            , {field: 'unitFprice', width:150, title: '全价', type:'number', digit:4,sortField:"UNIT_FPRICE"}
+            , {field: 'tradeAmt', width:150, title: '实付金额',type:'money', textrange:2,sortField:"TRADE_AMT"}
             , {field: 'ccy', width:100, title: '币种', sortField:"CCY"}
             , {field: 'remark', width:150, title: '备注', sortField:"REMARK"}
         ],

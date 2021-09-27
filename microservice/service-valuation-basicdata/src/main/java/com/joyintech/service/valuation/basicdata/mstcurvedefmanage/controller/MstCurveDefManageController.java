@@ -135,4 +135,16 @@ public class MstCurveDefManageController {
         return mstCurveDefManageService.getCurveGroupSelect(page, length, param);
     }
 
+
+    /**
+     * 联动：证券品种 - 交易流通场所 获得交易市场
+     *
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getLinkSelectOption")
+    public List<SelectOptionDto> getLinkSelectOption(@RequestBody Map<String, Object> param) {
+        return mstCurveDefManageService.getLinkSelectOption(param);
+    }
+
 }

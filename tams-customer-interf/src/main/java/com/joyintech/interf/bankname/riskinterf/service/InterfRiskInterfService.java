@@ -952,8 +952,14 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 creditLinesInputDto.setCreateDept(LoginUserUtil.getDeptCode());
                 creditLinesInputDto.setCreateTime(new Date());
                 creditLinesInputDto.setCreateUser(LoginUserUtil.getUserName());
-
+                creditLinesInputDto.setNetPrice(finDto.getPriceAmt());
                 trdlist.add(creditLinesInputDto);
+                if(DictCodeList.平安资产类型_基金.getValue().equals(finDto.getAssetType())&&"T01".equals(finDto.getPs())) {
+                    CreditLinesInputDto dto = new CreditLinesInputDto();
+                    BeanUtil.copyPropertiesIgnoreNull(dto, creditLinesInputDto);
+                    dto.setIsSpecial("true");
+                    trdlist.add(dto);
+                }
             }
         }
         return trdlist;

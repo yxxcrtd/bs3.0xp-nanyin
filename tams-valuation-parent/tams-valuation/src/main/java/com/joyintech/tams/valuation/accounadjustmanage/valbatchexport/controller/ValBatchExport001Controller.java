@@ -323,11 +323,13 @@ public class ValBatchExport001Controller extends BaseController {
     		dto.setAccountList(accountList);
     	}else{//多账套查询
     	    String[] strings = dto.getBooksetId();
-    	    for(String bookset : strings){
-    	        SuggestDto e = new SuggestDto();
-    	        e.setCode(bookset);
-    	        accountList.add(e);
-    	    }
+    	    if(strings !=null){
+                for(String bookset : strings){
+                    SuggestDto e = new SuggestDto();
+                    e.setCode(bookset);
+                    accountList.add(e);
+                }
+            }
     	    dto.setAccountList(accountList);
     	    paraMap.put("accounts", accountList);
     	}

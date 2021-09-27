@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
@@ -222,8 +223,18 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
                 }
             }
             if(StringUtil.isNotEmpty(exportPdfDto.getConRatio())){
-                exportPdfDto.setConRatio(df2.format(new BigDecimal(exportPdfDto.getConRatio())
-                        .setScale(2, BigDecimal.ROUND_HALF_UP)));
+                // 多个质押券,折算比例中间有,分隔
+                if(exportPdfDto.getConRatio().contains(",")){
+                   String[] conRatios = exportPdfDto.getConRatio().split(",");
+                    StringJoiner joiner = new StringJoiner(",");
+                    for(int index=0; index<conRatios.length; index++){
+                        joiner.add(df2.format(new BigDecimal(conRatios[index]).setScale(2, BigDecimal.ROUND_HALF_UP)));
+                    }
+                    exportPdfDto.setConRatio(joiner.toString());
+                }else{
+                    exportPdfDto.setConRatio(df2.format(new BigDecimal(exportPdfDto.getConRatio())
+                            .setScale(2, BigDecimal.ROUND_HALF_UP)));
+                }
             }
             // 估值净价
             if(StringUtil.isNotEmpty(exportPdfDto.getValuePrice())){

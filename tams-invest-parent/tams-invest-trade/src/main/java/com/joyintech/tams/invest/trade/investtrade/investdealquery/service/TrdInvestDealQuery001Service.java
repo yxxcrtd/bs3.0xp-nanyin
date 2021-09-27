@@ -299,14 +299,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 				// add by caozhenming 20210730 start
 				String finprodType2 = dto.getFinprodType2();
 				// 交易价格
-				if (DictCodeListExt1.交易市场_二级市场.getValue().equals(dto.getTradeMarketMode()) && DictCodeList.平安资产类型_债券.getValue().equals(finprodType2)){
-					// 债券二级交易取净价
-					dto.setTradePrice(dto.getUnitCprice());
-				} else if (DictCodeListExt2.平安资产类型_股票.getValue().equals(dto.getFinprodType2())){
-					// 股票展示交易价格
-					dto.setTradePrice(dto.getUnitCprice());
-				}
-
+				dto.setTradePrice(dto.getUnitCprice());
 				// 利率
 				if ( DictCodeList.平安资产类型_存款.getValue().equals(finprodType2)
 						|| DictCodeList.平安资产类型_计划类资产_利率型.getValue().equals(finprodType2)
@@ -326,6 +319,7 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 						dto.setRate(dto.getExerYield());
 					}
 				}
+
 				// add by caozhenming 20210730 end
 			}
 		}
@@ -870,11 +864,13 @@ public class TrdInvestDealQuery001Service extends CommonExportService<TrdInvestD
 			datas.forEach(exportPdfDto -> {
 				// 券面总额/交易金额
 				if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
-					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
+					exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt()
+							.setScale(2, BigDecimal.ROUND_HALF_UP))));
 				}
 				// 交易价格
 				if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
-					exportPdfDto.setUnitCprice(new BigDecimal(df2.format(exportPdfDto.getUnitCprice())));
+					exportPdfDto.setUnitCprice(new BigDecimal(df2.format(exportPdfDto.getUnitCprice()
+							.setScale(2, BigDecimal.ROUND_HALF_UP))));
 				}
 			});
 			//汇总交易金额
