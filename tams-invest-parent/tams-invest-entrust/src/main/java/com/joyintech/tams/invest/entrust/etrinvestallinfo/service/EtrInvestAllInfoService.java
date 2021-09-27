@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.joyintech.framework.util.CacheUtil;
 import com.joyintech.tams.constant.DictCodeList;
+import com.joyintech.tams.invest.common.constant.BussinessDictCodeList;
 import com.joyintech.tams.invest.common.exportpdf.service.CommonExportPdfService;
 import com.joyintech.tams.invest.entrust.etrinvestallinfo.dto.EtrAllInfoExportPdfDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -194,23 +195,47 @@ public class EtrInvestAllInfoService extends CommonExportService<EtrInvestAllInf
      */
     public ResponseEntity<byte[]> exportPdf(String pageId, Map param){
         param.put("userId", SecurityUtil.getLoginUser().getUserName());
+        String assetType = param.get("assetType")==null?"":param.get("assetType").toString();
         List<EtrAllInfoExportPdfDto> datas = selectExportPdf(param);
-        DecimalFormat df = new DecimalFormat("#0.00##");
+        DecimalFormat df2 = new DecimalFormat("#0.00##");
+        DecimalFormat df3 = new DecimalFormat("#0.000##");
+        DecimalFormat df4 = new DecimalFormat("#0.0000##");
         datas.forEach(exportPdfDto -> {
             if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
-                exportPdfDto.setEntrustAmt(new BigDecimal(df.format(exportPdfDto.getEntrustAmt())));
+                exportPdfDto.setEntrustAmt(new BigDecimal(df2.format(exportPdfDto.getEntrustAmt())));
             }
+            // 交易面额
             if(StringUtil.isNotEmpty(exportPdfDto.getEntrustNum())){
-                exportPdfDto.setEntrustNum(new BigDecimal(df.format(exportPdfDto.getEntrustNum())));
+                exportPdfDto.setEntrustNum(new BigDecimal(df2.format(exportPdfDto.getEntrustNum())));
             }
-            if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
-                exportPdfDto.setPrice(new BigDecimal(df.format(exportPdfDto.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP))));
+            if(DictCodeList.平安资产类型_质押式回购.getValue().equalsIgnoreCase(assetType)){
+                // 回购利率
+                if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
+                    exportPdfDto.setPrice(new BigDecimal(df2.format(exportPdfDto.getPrice()
+                            .setScale(2, BigDecimal.ROUND_HALF_UP))));
+                }
+            }else{
+                // 交易净价
+                if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
+                    exportPdfDto.setPrice(new BigDecimal(df3.format(exportPdfDto.getPrice()
+                            .setScale(3, BigDecimal.ROUND_HALF_UP))));
+                }
             }
             if(StringUtil.isNotEmpty(exportPdfDto.getConRatio())){
-                exportPdfDto.setConRatio(df.format(new BigDecimal(exportPdfDto.getConRatio()).setScale(2, BigDecimal.ROUND_HALF_UP)));
+                exportPdfDto.setConRatio(df2.format(new BigDecimal(exportPdfDto.getConRatio())
+                        .setScale(2, BigDecimal.ROUND_HALF_UP)));
+            }
+            // 估值净价
+            if(StringUtil.isNotEmpty(exportPdfDto.getValuePrice())){
+                exportPdfDto.setValuePrice(new BigDecimal(df4.format(exportPdfDto.getValuePrice()
+                        .setScale(4, BigDecimal.ROUND_HALF_UP))));
+            }
+            // 价格偏离度
+            if(StringUtil.isNotEmpty(exportPdfDto.getDeviation())){
+                exportPdfDto.setDeviation(df2.format(new BigDecimal(exportPdfDto.getDeviation())
+                        .setScale(2, BigDecimal.ROUND_HALF_UP)) + BussinessDictCodeList.单位_百分比.getCodeName());
             }
         });
-        String assetType = param.get("assetType")==null?"":param.get("assetType").toString();
         return commonExportPdfService.exportPdf(pageId,getConfigFile(pageId, assetType),datas);
     }
 
