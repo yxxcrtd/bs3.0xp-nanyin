@@ -43,6 +43,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -135,6 +137,14 @@ public class TrdConBond003Controller extends BaseController {
             }
         }
         dto.setFinprodType2(DictCodeListExt1.金融产品类型_投管用_债券.getValue());
+        //add by meifaxin 2021-9-27 除以10000    start
+        if (dto.getTradeAmt() != null){
+            dto.setTradeAmt(dto.getTradeAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成元
+        }
+        if (dto.getWinlotteryAmt() != null){
+            dto.setWinlotteryAmt(dto.getWinlotteryAmt().divide(new BigDecimal(10000), 4, RoundingMode.HALF_UP));//转成元
+        }
+        //add by meifaxin 2021-9-27 除以10000    end
         if (StringUtil.isNotBlank(tradeId)&&!StringUtil.equals(pageModel, GlobalConstant.DETAIL_PAGE_MODEL_NEW)) {
             model.addAttribute("tradeId", tradeId);
         }
