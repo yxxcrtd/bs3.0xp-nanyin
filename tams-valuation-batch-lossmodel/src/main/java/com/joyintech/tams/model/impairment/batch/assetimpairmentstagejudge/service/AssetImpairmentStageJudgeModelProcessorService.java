@@ -84,7 +84,13 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     List<String> riskList = Arrays.asList(itemValue.split(","));
                     if (StringUtil.isEmpty(resultProcess.getRiskLevelFive())) {
                         // 警告	取不到风险五级分类	【批处理名称】：资产无风险五级分类
-                        modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.");
+                        if(resultProcess.getTradeId() != null){
+                            msg = "【交易编号 - "+resultProcess.getTradeId() + "：资产减值阶段判断批处理】：资产缺少风险五级分类属性.";
+                        }
+                        else{
+                            msg = "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.";
+                        }
+                        modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), msg);
                         fiveRiskFlag = false;
                     } else if (StringUtil.isNotEmpty(resultProcess.getRiskLevelFive()) && riskList.contains(resultProcess.getRiskLevelFive())) {
                         finStage = ModelDictCodeList.阶段_买入后出现减值_P3.getValue();// 三阶段
@@ -232,8 +238,14 @@ public class AssetImpairmentStageJudgeModelProcessorService {
                     List<String> riskList = Arrays.asList(itemValue.split(","));
                     //
                     if (StringUtil.isEmpty(resultProcess.getRiskLevelFive()) && fiveRiskFlag) {
+                        if(resultProcess.getTradeId() != null){
+                            msg = "【交易编号 - "+resultProcess.getTradeId() + "：资产减值阶段判断批处理】：资产缺少风险五级分类属性.";
+                        }
+                        else{
+                            msg = "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.";
+                        }
                         // 警告	取不到风险五级分类	【批处理名称】：资产无风险五级分类
-                        modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), "【资产减值阶段判断批处理】：资产缺少风险五级分类属性.");
+                        modLogsService.warn((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),resultProcess.getAssetId(), msg);
                     } else if (StringUtil.isNotEmpty(resultProcess.getRiskLevelFive()) && riskList.contains(resultProcess.getRiskLevelFive())) {
                         finStage = ModelDictCodeList.阶段_买入后风险显著提升_P2.getValue();// 二阶段
                         resultProcess.setFinStage(finStage);
