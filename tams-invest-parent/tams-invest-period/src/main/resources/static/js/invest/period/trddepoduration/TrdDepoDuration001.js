@@ -76,7 +76,7 @@ $(function() {
         cols:[
             {field:'statusValidStr',width:'8%',sortField:"statusValid", title: 'TrdDepoDuration001.pageDataStatus'}
             ,{field:'busiCode',width:'12%', title: 'TrdDepoDuration001.busiCode'}
-            , {field: 'channelName', width:130, title: 'invest.channelId', sortField:'channelName'}
+            , {field: 'channelName', width:130, title: 'invest.channelId', visible:false,sortField:'channelName'}
             ,{field:'pingAnCodeStr',width:'8%', sortField:'cashType',title: 'TrdDepoDuration001.cashType'}
             ,{field:'finprodMarketId',width:'11%',sortField:'FINPROD_MARKET_ID', title: 'TrdDepoDuration001.finprodMarketId'}
             ,{field:'finprodMarketName',width:'15%', title: 'TrdDepoDuration001.finprodName'}
