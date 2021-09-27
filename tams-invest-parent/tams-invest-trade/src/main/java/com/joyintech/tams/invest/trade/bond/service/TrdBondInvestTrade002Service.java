@@ -1693,7 +1693,11 @@ public class TrdBondInvestTrade002Service extends BaseService<TrdBondInvestTrade
                 }
                 if(StringUtil.equals(entity.getIsOfferFlag(), "01")){
                     //存在上行报价时，生效时，反冲可用流水
-                    cstpCommonService.excuteQuotePositionData(entity.getEntrustId(), entity.getfTradeId(), false, entity.getTradeId());
+                    String tradeId2 = entity.getTradeId();
+                    if(StringUtil.isEmpty(tradeId2)){
+                        tradeId2 = entity.getTotleTradeId();
+                    }
+                    cstpCommonService.excuteQuotePositionData(entity.getEntrustId(), entity.getfTradeId(), false, tradeId2);
                 }
                 trdProductDeal.setTradeId(tradeId1);
 

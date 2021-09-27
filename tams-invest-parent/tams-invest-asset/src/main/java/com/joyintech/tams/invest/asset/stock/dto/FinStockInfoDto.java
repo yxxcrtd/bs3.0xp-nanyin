@@ -18,9 +18,7 @@ import javax.validation.Valid;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
-import com.joyintech.framework.validation.annotation.Length;
-import com.joyintech.framework.validation.annotation.NotEmpty;
-import com.joyintech.framework.validation.annotation.ValidLogic;
+import com.joyintech.framework.validation.annotation.*;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.FinProduct;
@@ -352,6 +350,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
      */
     @Override
    // @Pattern(fieldName = "FinStockInfo002.finprodMarketId",regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
+    @Code(fieldName = "FinStockInfo002.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     @NotEmpty(fieldName = "FinStockInfo002.finprodMarketId",groups={ValidateGroupEdit.class})//非空校验
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();
@@ -368,7 +367,7 @@ public class FinStockInfoDto extends FinProduct implements ProcessEntity{
     }
 
 
-    
+
     @PrimaryKey(Field.PK_1)
     public String getFinprodIdStr() {
         return DictCodeListExt1.金融产品类型_投管用_股票.getValue()+"_"+getFinprodMarketId();

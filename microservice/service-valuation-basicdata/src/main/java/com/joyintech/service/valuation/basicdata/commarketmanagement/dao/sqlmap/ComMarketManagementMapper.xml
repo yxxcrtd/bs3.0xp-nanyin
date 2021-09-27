@@ -57,7 +57,8 @@
 			</if>
 			<!--对象代码-->
 			<if test="oCode != null and oCode != ''">	
-				AND A.O_CODE = #{oCode,jdbcType=VARCHAR}
+				AND (A.O_CODE like concat(concat('%',#{oCode,jdbcType=VARCHAR}),'%')
+					OR fin.FINPROD_NAME like concat(concat('%',#{oCode,jdbcType=VARCHAR}),'%'))
 			</if>
 			<!--评级机构-->
 			<if test="gradeOrgId != null and gradeOrgId != ''">	

@@ -3226,9 +3226,6 @@
              </foreach>
          </if>
          ) assetHold1
-        <where>
-            CONCAT(CONCAT(assetHold1.portfolioId,'_'),nvl(assetHold1.finprodType2,'null')) in (select childInfo from rootSelect)
-        </where>
         group by assetHold1.cdate,assetHold1.portfolioId,assetHold1.portfolioName,assetHold1.finprodType2,assetHold1.type5,assetHold1.finprodMarketId,assetHold1.finprodAbbr
      )A order by A.parentInfo
      )
