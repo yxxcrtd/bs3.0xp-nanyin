@@ -1055,4 +1055,10 @@ public class CfetsBondDealQuotedPrice002Service extends BaseService<CfetsBondDea
     public EtrEntrust getEtrEntrust(String entrustId){
        return  etrEntrustMapper.selectByPrimaryKey(entrustId);
     }
+
+    public BigDecimal queryEntrustDealedAmt2(Map<String, Object> map) {
+        return restTemplate.postForObject(ServiceApplication.BANKUPLINK_SERVICE_NAME
+                        + "/CfetsBondDealQuotedPrice/queryEntrustDealedAmt2",
+                map, BigDecimal.class);
+    }
 }
