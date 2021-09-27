@@ -647,6 +647,7 @@ public class IbuComponentRiskService extends BaseService {
                     reqRiskOccupy.setIsApprNeedConfirm(DictCodeList.是否_否.getValue());
                     reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                     reqRiskOccupy.setCounterId(counterId);
+                    reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                     reqRiskOccupy.setTradeId(ibuQuoteCrepDto.getQuoteId());
                     reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                     reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
@@ -679,6 +680,7 @@ public class IbuComponentRiskService extends BaseService {
                     reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                     reqRiskOccupy.setCounterId(counterId);
                     reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
+                    reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                     reqList.add(reqRiskOccupy);
                 }
                 }
@@ -729,6 +731,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setVarietyCode(ibuQuoteCrepDto.getTermType());
                         reqRiskOccupy.setPledgeAssetCodeList(pledgeAssetCodeList);
                         reqRiskOccupy.setOccupySource("CFET");
+                        reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
                         reqList.add(reqRiskOccupy);
                     }
                 }
@@ -758,6 +761,7 @@ public class IbuComponentRiskService extends BaseService {
                         reqRiskOccupy.setEventType("1");
                         reqRiskOccupy.setCcy(ibuQuoteCrepDto.getSettCcy());
                         reqRiskOccupy.setCounterId(counterId);
+                        reqRiskOccupy.setRevokeFlg(DictCodeList.是否_是.getValue());
 
                         reqList.add(reqRiskOccupy);
                     }
