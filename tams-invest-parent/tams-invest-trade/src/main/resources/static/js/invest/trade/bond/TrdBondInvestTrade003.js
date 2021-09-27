@@ -3470,8 +3470,8 @@ var table;
 			               ,{field:'bussTrdAvailableCashQueryavalibleCash', width:100,title: 'TrdInvestFenPeiInfo.bussTrdAvailableCashQueryavalibleCash',sortable:false,type:'number', digit:2}
 			               ,{field:'bussTrdAvailableCashQueryavalibleCash1',width:100, title: 'TrdInvestFenPeiInfo.bussTrdAvailableCashQueryavalibleCash1',sortable:false,type:'number', digit:2}
 			               ,{field:'assetsavailablepositions',width:100, title: 'TrdInvestFenPeiInfo.assetsavailablepositions',sortable:false,type:'number', digit:2}
-                          ,{field:'channelAvailableCash', width:100, title:  function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("EtrInvestBondInfo002.channelAvailableCash");}(), sortable: false,type:'number', digit:2}
-                          ,{field:'accAvailableCash', width:100, title: 'TrdInvestFenPeiInfo.accAvailableCash', sortable: false,type:'number', digit:2}
+                          ,{field:'channelAvailableCash', width:100, title:  function(){return JoyinUtil.getLabel("invest.channelId")+JoyinUtil.getLabel("EtrInvestBondInfo002.channelAvailableCash");}(), sortable: false,visible:false,type:'number', digit:2}
+                          ,{field:'accAvailableCash', width:100, title: 'TrdInvestFenPeiInfo.accAvailableCash', sortable: false,type:'number', visible:false,digit:2}
 			               ,{field:'operation', width:100,title: 'SysCommon.operation',sortable:false, type:'action', buttons: ['delt']}
 			           ],
 			           addbtn:true,
