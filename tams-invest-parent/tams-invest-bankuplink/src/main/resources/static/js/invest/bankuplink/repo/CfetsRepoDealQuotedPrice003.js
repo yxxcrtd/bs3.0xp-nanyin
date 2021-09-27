@@ -1300,7 +1300,7 @@
             var avaNumFlag = false;
             for(var j in ptlAllocationList){
                 if(portfolioIdArr[i].portfolioId = ptlAllocationList[j].portfolioId){
-                    if(Number(portfolioIdArr[i].avaNum)<=0){
+                    if(Number(ptlAllocationList[j].avaNum)<=0){
                         avaNumFlag = true;
                     }
                     if(showAmtOrg){
