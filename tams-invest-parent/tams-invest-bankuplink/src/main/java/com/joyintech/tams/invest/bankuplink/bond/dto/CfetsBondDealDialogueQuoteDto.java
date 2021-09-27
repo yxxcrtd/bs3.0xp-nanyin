@@ -72,7 +72,7 @@ public class CfetsBondDealDialogueQuoteDto extends CfetsBondDealEntrustOrderDto 
     /**
      * 净价总额
      */
-    @NotEmpty(fieldName = "CfetsBondDealQuotedPrice002.cpriceAmt")
+    /*@NotEmpty(fieldName = "CfetsBondDealQuotedPrice002.cpriceAmt")*/
     @JsonSerialize(using=BigDecimalSerializer.class)
     private BigDecimal cpriceAmt;
     
