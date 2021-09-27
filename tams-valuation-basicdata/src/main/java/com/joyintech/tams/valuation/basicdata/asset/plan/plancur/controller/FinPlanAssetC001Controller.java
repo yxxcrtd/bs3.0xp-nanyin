@@ -10,20 +10,22 @@
  
 package com.joyintech.tams.valuation.basicdata.asset.plan.plancur.controller;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.JoyinMessage;
+import com.joyintech.framework.ajax.MessageType;
+import com.joyintech.framework.annotation.PageId;
+import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SuggestDto;
 import com.joyintech.framework.util.*;
+import com.joyintech.framework.validation.groups.ValidateGroupDelete;
 import com.joyintech.system.constant.SystemGlobalConstant;
-import com.joyintech.tams.constant.DictCodeListExt2;
+import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
-import com.joyintech.tams.valuation.basicdata.asset.option.dto.FinOptionTargetDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.plancur.dto.FinPlanAssetCDto;
 import com.joyintech.tams.valuation.basicdata.asset.plan.plancur.service.FinPlanAssetCService;
+import com.joyintech.tams.valuation.component.business.service.CommonBusinessService;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.joyintech.framework.ajax.AjaxResult;
-import com.joyintech.framework.annotation.PageId;
-import com.joyintech.framework.base.BaseController;
-import com.joyintech.framework.validation.groups.ValidateGroupDelete;
-import com.joyintech.tams.constant.DictCode;
-import com.joyintech.tams.constant.DictCodeList;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 计划类资产（货币型）
@@ -57,6 +58,8 @@ import com.joyintech.tams.constant.DictCodeList;
 public class FinPlanAssetC001Controller extends BaseController{
     @Autowired
     private FinPlanAssetCService finPlanAssetCService;
+    @Autowired
+    private CommonBusinessService commonBusinessService;
     @Override
     @RequestMapping(PAGE_INIT)
     public String init(Model model){
@@ -98,6 +101,33 @@ public class FinPlanAssetC001Controller extends BaseController{
             ValidateGroupDelete.class}) FinPlanAssetCDto dto, BindingResult result) {
         return commonCheck(result, dto.getOperateType());
     }
+
+    /**
+     * 编辑时判断是否为交易数据
+     *
+     * @param dto dto
+     * @param result BindingResult
+     * @return check结果
+     * @see
+     * @since 1.0
+     */
+    @ResponseBody
+    @RequestMapping("editCheck")
+    public AjaxResult editCheck(@RequestBody FinPlanAssetCDto dto, BindingResult editResult) {
+        //判断是否存在交易
+        List<JoyinMessage> joyinMessages = new ArrayList<>();
+        AjaxResult wr = new AjaxResult();
+        if(null != commonBusinessService){
+            if(commonBusinessService.isTransInAsset(dto.getFinprodId())>0){
+                JoyinMessage ms = new JoyinMessage(getMessage("FIN_ASSET_W_0002"),
+                        MessageType.确认消息);
+                joyinMessages.add(ms);
+            }
+        }
+        wr.setJoyinMessages(joyinMessages);
+        return wr;
+    }
+
     /**
      * 删除
      * @param dto 页面选中的数据
