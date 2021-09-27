@@ -4,6 +4,7 @@ package com.joyintech.tams.valuation.basicdata.mstcurvedefmanage.service;
 import com.joyintech.framework.export.CommonExportService;
 import com.joyintech.framework.export.ExportParam;
 import com.joyintech.framework.grid.Page;
+import com.joyintech.framework.jdbc.datasource.DataSource;
 import com.joyintech.framework.jdbc.enums.DataSourceType;
 import com.joyintech.framework.select.SelectOptionDto;
 import com.joyintech.framework.util.JsonUtils;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -78,23 +80,9 @@ public class MstCurveDefManage002Service extends CommonExportService<MstCurveDef
         } else {
             action = "update";
         }
-        //如果是曲线族，则保存曲线代码，曲线名称，曲线来源和是否为曲线族，其余值为空
-        MstCurveDefManageDto dto = new MstCurveDefManageDto();
-        if(StringUtil.equals(entity.getCurveGroupType(), DictCodeList.是否_是.getValue())){
-            dto.setCurveCode(entity.getCurveCode());
-            dto.setCurveName(entity.getCurveCode());
-            dto.setValueSource(entity.getValueSource());
-            dto.setCurveGroupType(entity.getCurveGroupType());
-            dto.setCreateUser(entity.getCreateUser());
-            dto.setUpdateUser(entity.getUpdateUser());
-            dto.setCreateTime(entity.getCreateTime());
-            dto.setUpdateTime(entity.getUpdateTime());
-        }else{
-            dto=entity;
-        }
 
         restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/service/MstCurveDefManage/"+ action,
-                dto, Integer.class);
+                entity, Integer.class);
 
     }
 
@@ -121,6 +109,20 @@ public class MstCurveDefManage002Service extends CommonExportService<MstCurveDef
     public MstCurveDefManageDto selectByKey(Map<String,Object> map) {
         return restTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME+"/service/MstCurveDefManage/selectByKey",
                 map, MstCurveDefManageDto.class);
+    }
+
+
+    /**
+     * 通用联动查询
+     * @param param : dict_code_parent,dict_code_child,item_code_parent
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @DataSource(DataSourceType.OTHER)
+    public List<SelectOptionDto> getLinkSelectOption(Map<String, Object> param) {
+        return restTemplate.postForList(ServiceApplication.VALUATION_SERVICE_NAME
+                        + "/service/MstCurveDefManage/getLinkSelectOption",
+                param, SelectOptionDto.class);
     }
 
 
