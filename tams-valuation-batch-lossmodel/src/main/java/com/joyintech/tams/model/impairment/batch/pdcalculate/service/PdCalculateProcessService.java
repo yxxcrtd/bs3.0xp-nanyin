@@ -85,7 +85,7 @@ public class PdCalculateProcessService {
                 //当前年月
                 variablePdCalculateDto.setNowYearMonStr(DateUtil.format(plateDate,"yyyyMM"));
                 //12个月后所在年月  从（当前月份+1月）开始往后推第12个月的年份月份
-                variablePdCalculateDto.setEndYearMonStr(DateUtil.format(DateUtil.addMonthDate(plateDate,12+1),"yyyyMM"));
+                variablePdCalculateDto.setEndYearMonStr(DateUtil.format(DateUtil.addMonthDate(plateDate,12),"yyyyMM"));
                 //资产是否有交易处于二三阶段 false
                 variablePdCalculateDto.setTtStage(false);
                 //遍历 交易数据
@@ -133,7 +133,7 @@ public class PdCalculateProcessService {
             //2.1 判断需要查询PD的年份
             //定义 年份列表 = 估值日(跑批日)所在年份(含) -> 资产到期日所在年份(含) 中的所有年份
             variablePdCalculateDto.setYearList(getYearMonList(plateDate,variablePdCalculateDto.getMdate(),VariablePdCalculateDto.YEAR_TYPE));
-            if(!variablePdCalculateDto.getTtStage() && variablePdCalculateDto.getMaturityYear() ==false){
+            if(!variablePdCalculateDto.getTtStage() && !variablePdCalculateDto.getMaturityYear()){
                 Date endYearMonDate = DateUtil.parse(variablePdCalculateDto.getEndYearMonStr());
                 variablePdCalculateDto.setYearList(getYearMonList(plateDate,endYearMonDate,VariablePdCalculateDto.YEAR_TYPE));
             }
@@ -290,9 +290,16 @@ public class PdCalculateProcessService {
             //4.1 判断需要计算PD的年月列表
             //定义 年月列表 = 估值日所在年份 + 1月(含) -> 资产到期日所在年月(含) 中的所有年份 + 月份
             variablePdCalculateDto.setYearMonList(getYearMonList(plateDate,variablePdCalculateDto.getMdate(),VariablePdCalculateDto.YEARMON_TYPE));
-            if(variablePdCalculateDto.getTtStage()==false && variablePdCalculateDto.getMaturityYear() ==false){
+            // 资产所处一阶段时，估值日所处月不统计，估值月下一月作为第一个月；
+            if(!variablePdCalculateDto.getTtStage()){
+                // 估值日距离到期日不足一年则取资产到期月份对应累积PD
                 Date endYearMonDate = DateUtil.parse(variablePdCalculateDto.getEndYearMonStr());
-                variablePdCalculateDto.setYearMonList(getYearMonList(plateDate,endYearMonDate,VariablePdCalculateDto.YEARMON_TYPE));
+                if(variablePdCalculateDto.getMaturityYear()){
+                    endYearMonDate = variablePdCalculateDto.getMdate();
+                }
+                // 开始日期取下个月作为第一个月
+                Date startDate = DateUtil.addDate(plateDate,0,1,0);
+                variablePdCalculateDto.setYearMonList(getYearMonList(startDate,endYearMonDate,VariablePdCalculateDto.YEARMON_TYPE));
             }
 
             //4.2 计算每个累积PD
