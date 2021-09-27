@@ -91,6 +91,16 @@ public class MstCurveGroupManageController {
         return mstCurveGroupManageService.delete(dto);
     }
 
+    /**
+     * 查询曲线族下曲线的条数
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("getCountCurveCode")
+    public Integer getCountCurveCode(@RequestBody String countCurveCode) {
+        return mstCurveGroupManageService.getCountCurveCode(countCurveCode);
+    }
+
 
 
 }

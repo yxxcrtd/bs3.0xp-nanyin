@@ -99,7 +99,7 @@ public class MstCurveGroupManage002Controller extends BaseController{
         }
 
         WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-        wflValidInputParameter.setPageId("MstCurveDefManage002");
+        wflValidInputParameter.setPageId("MstCurveGroupManage002");
         wflValidInputParameter.setBusinessDataPk1(dto.getCurveGroupCode());
         if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
             ArrayList<ValidMessage> errorList = new ArrayList<ValidMessage>();// 生成错误集合

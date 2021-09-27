@@ -78,6 +78,8 @@ public class MstCurveGroupManageService extends BaseService<MstCurveGroupManageD
         return mstCurveGroupManageMapper.deleteByPrimaryKey(dto);
     }
 
-
+    public int getCountCurveCode(String curveGroupCode) {
+        return mstCurveGroupManageMapper.getCountCurveCode(curveGroupCode);
+    }
 
 }

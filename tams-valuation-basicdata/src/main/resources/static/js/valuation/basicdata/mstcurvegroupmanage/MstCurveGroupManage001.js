@@ -71,7 +71,7 @@ $(function () {
      * 绑定删除事件
      */
     table.bind('click', '.delt', function(data, index) {
-        var object = {selectedItem: [data], operateType:"delete",curveCode: data.curveCode};
+        var object = {selectedItem: [data], operateType:"delete",curveGroupCode: data.curveGroupCode};
         Joyin.ajaxJson(basePath + 'valuation/basicdata/mstcurvegroupmanage/MstCurveGroupManage001/deleteCheck', object, function(result) {
             Joyin.confirm(JoyinUtil.getMessage("COMMON_C_0001",JoyinUtil.getLabel("SysCommon.delete")), function(){
                 WorkFlow.doDeleteList(basePath + 'valuation/basicdata/mstcurvegroupmanage/MstCurveGroupManage002/save', object, "MstCurveGroupManage001_btn_delete", "MstCurveGroupManage002",function(){

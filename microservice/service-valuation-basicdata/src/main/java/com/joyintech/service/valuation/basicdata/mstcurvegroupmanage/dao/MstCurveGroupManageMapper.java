@@ -2,6 +2,7 @@
 package com.joyintech.service.valuation.basicdata.mstcurvegroupmanage.dao;
 
 import com.joyintech.service.valuation.basicdata.mstcurvegroupmanage.dto.MstCurveGroupManageDto;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,8 @@ public interface MstCurveGroupManageMapper {
     int updateByPrimaryKey(MstCurveGroupManageDto dto);
 
     int deleteByPrimaryKey(MstCurveGroupManageDto dto);
+
+    int getCountCurveCode(@Param("curveGroupCode") String curveGroupCode);
 
 
 }
