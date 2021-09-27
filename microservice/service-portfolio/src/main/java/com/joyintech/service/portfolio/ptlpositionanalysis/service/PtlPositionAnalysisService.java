@@ -53,8 +53,6 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     @Autowired
     private PtlPositionAnalysisMapper ptlPositionAnalysisMapper;
 
-    public static final DecimalFormat df = new DecimalFormat("#.##"); //保留二位小数
-
     /**
      * 组合持仓明细查询
      *
@@ -492,7 +490,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     private void handleFloatAmtWith001Dto(List<PtlPositionAnalysis001Dto> listRoot) {
         listRoot.forEach(x -> {
             if (null != x.getMarketValue()) {
-                x.setFloatAmt(new BigDecimal(df.format(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())))));
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())));
             }
         });
     }
@@ -500,7 +498,7 @@ public class PtlPositionAnalysisService extends BaseService<PtlPositionAnalysis0
     private void handleFloatAmtWith002Dto(List<PtlPositionAnalysis002Dto> listRoot) {
         listRoot.forEach(x -> {
             if (null != x.getMarketValue()) {
-                x.setFloatAmt(new BigDecimal(df.format(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())))));
+                x.setFloatAmt(x.getMarketValue().subtract((null == x.getDscCostAmt() ? BigDecimal.ZERO : x.getDscCostAmt())));
             }
         });
     }
