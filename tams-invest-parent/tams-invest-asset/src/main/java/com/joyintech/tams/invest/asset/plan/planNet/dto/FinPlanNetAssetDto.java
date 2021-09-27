@@ -16,6 +16,7 @@ import com.joyintech.framework.json.BigDecimalSerializer;
 import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.framework.validation.annotation.Amount;
+import com.joyintech.framework.validation.annotation.Code;
 import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupDelete;
@@ -522,6 +523,8 @@ public class FinPlanNetAssetDto extends FinProduct implements ProcessEntity{
     //YUCHUBS-564 资产代码的格式去掉校验 guyunfei 2019/09/04 start
     //@Pattern(fieldName = "FinPlanNetAsset002.finprodMarketId",regx = "^(?=.*[a-zA-Z]+)(?=.*[0-9]+)[a-zA-Z0-9]+$",message = "FW_E_0002",groups={ValidateGroupEdit.class})
     //YUCHUBS-564 资产代码的格式去掉校验 guyunfei 2019/09/04 end
+    @NotEmpty(fieldName = "FinPlanNetAsset002.finprodMarketId", groups = {ValidateGroupEdit.class})
+    @Code(fieldName = "FinPlanNetAsset002.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
     @PrimaryKey(Field.PK_1)
     public String getFinprodMarketId() {
         return super.getFinprodMarketId();

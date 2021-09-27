@@ -1139,4 +1139,9 @@ public class CfetsBondDealQuotedPriceController {
         return cfetsBondDealQuotedPriceService.selectExportPdf(map);
     }
 
+    @PostMapping("queryEntrustDealedAmt2")
+    public BigDecimal queryEntrustDealedAmt2(@RequestBody Map<String, Object> map){
+        return cfetsBondDealQuotedPriceService.queryEntrustDealedAmt2(map);
+    }
+
 }

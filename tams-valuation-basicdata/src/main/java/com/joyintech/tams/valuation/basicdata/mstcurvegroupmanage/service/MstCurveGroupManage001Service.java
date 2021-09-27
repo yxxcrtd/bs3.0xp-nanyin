@@ -84,4 +84,12 @@ public class MstCurveGroupManage001Service extends CommonExportService<MstCurveG
         return  simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME +"/service/MstCurveGroupManage/selectByKey",param,
                 MstCurveGroupManageDto.class);
     }
+
+    public Integer getCountCurveCode(String curveGroupCode){
+        return  simpleRestTemplate.postForObject(ServiceApplication.VALUATION_SERVICE_NAME +"/service/MstCurveGroupManage/getCountCurveCode",curveGroupCode,
+                Integer.class);
+    }
+
+
+
 }

@@ -55,19 +55,19 @@ $(function () {
             ,{field:'type5',visible: false,width:100, rowspan: 2}//资产二级类型
             ,{field:'finprodMarketId', title: '资产代码', width:80,rowspan: 2,sortable: false}//资产代码
             ,{field:'finprodAbbr', title: '资产名称',width:80, rowspan: 2,sortable: false}//资产名称
-            ,{field:'shareAmt',  title: '数量',width: 80, rowspan: 2,sortable: false,type:'number'}//数量
-            ,{field:'dscCostAmt',title: '成本(元)',  width: 80, rowspan: 2,sortable: false,type:'number'}//成本(元)
-            ,{field:'marketValue', title: '市值(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//市值(元)
-            ,{field:'floatAmt', title: '盈亏(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//盈亏(元)
-            ,{field:'tdyIntincexp',  title: '应收利息(元)', width: 80,rowspan: 2,sortable: false,type:'number'}//应收利息(元)
+            ,{field:'shareAmtStr',  title: '数量',width: 80, rowspan: 2,sortable: false,type:'number'}//数量
+            ,{field:'dscCostAmtStr',title: '成本(元)',  width: 80, rowspan: 2,sortable: false,type:'number'}//成本(元)
+            ,{field:'marketValueStr', title: '市值(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//市值(元)
+            ,{field:'floatAmtStr', title: '盈亏(元)',width: 80,  rowspan: 2,sortable: false,type:'number'}//盈亏(元)
+            ,{field:'tdyIntincexpStr',  title: '应收利息(元)', width: 80,rowspan: 2,sortable: false,type:'number'}//应收利息(元)
             ,{field:'childInfo', visible: false,rowspan: 2}
             ,{field:'parentInfo',visible: false,rowspan: 2}
             ,{title: '规模占比%', colspan: 4,align:'center',sortable: false}//市值占比%
         ],[
-            {field:'tdyAmtRation',width:78,title: '规模占比',sortable: false}//规模占比
-            ,{field:'ystAmtRation',width:102,title: '较上一日变化',sortable: false}//较上一日变化
-            ,{field:'monthAmtRation',width:102,title: '较本月初变化',sortable: false}//较本月初变化
-            ,{field:'yearAmtRation',width:102,title: '较本年初变化',sortable: false}//较本年初变化
+            {field:'tdyAmtRationStr',width:78,title: '规模占比',sortable: false}//规模占比
+            ,{field:'ystAmtRationStr',width:102,title: '较上一日变化',sortable: false}//较上一日变化
+            ,{field:'monthAmtRationStr',width:102,title: '较本月初变化',sortable: false}//较本月初变化
+            ,{field:'yearAmtRationStr',width:102,title: '较本年初变化',sortable: false}//较本年初变化
             ,{field:'belongInstitutionNameNew',minWidth:180, width:180, title: '机构名称',visible:AUTHORITY_TYPE=='02'}
         ]],
         done:function(){

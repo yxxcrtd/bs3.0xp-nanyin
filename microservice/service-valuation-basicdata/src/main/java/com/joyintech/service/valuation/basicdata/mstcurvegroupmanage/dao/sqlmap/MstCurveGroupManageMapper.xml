@@ -113,4 +113,12 @@
         where CURVE_GROUP_CODE = #{curveGroupCode,jdbcType=VARCHAR}
     </delete>
 
+    <!--查询曲线族下的曲线条数-->
+	<select id="getCountCurveCode" resultType="java.lang.Integer">
+		select count(1)
+		from MST_CURVE_DEF t
+		where	t.curve_group_code = #{curveGroupCode,jdbcType=VARCHAR}
+	</select>
+
+
 </mapper>

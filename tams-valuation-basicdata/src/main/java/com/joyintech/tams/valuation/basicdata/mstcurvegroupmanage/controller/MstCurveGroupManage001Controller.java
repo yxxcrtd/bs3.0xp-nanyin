@@ -2,6 +2,7 @@
 package com.joyintech.tams.valuation.basicdata.mstcurvegroupmanage.controller;
 
 import com.joyintech.framework.ajax.AjaxResult;
+import com.joyintech.framework.ajax.MessageType;
 import com.joyintech.framework.annotation.PageId;
 import com.joyintech.framework.base.BaseController;
 import com.joyintech.framework.grid.Page;
@@ -93,7 +94,7 @@ public class MstCurveGroupManage001Controller extends BaseController{
         AjaxResult ajaxResult = new AjaxResult();
         //判断处于工作流中数据不可删除操作
         WflValidInputParameter wflValidInputParameter = new WflValidInputParameter();
-        wflValidInputParameter.setPageId("MstCurveDefManage002");
+        wflValidInputParameter.setPageId("MstCurveGroupManage002");
         wflValidInputParameter.setBusinessDataPk1(dto.getCurveGroupCode());
         boolean is = WorkFlowUtil.isNotFromToDoList();
         if (WorkFlowUtil.isNotFromToDoList() && mstWorkflowCommonService.isInWflProcess(wflValidInputParameter)) {
@@ -103,6 +104,13 @@ public class MstCurveGroupManage001Controller extends BaseController{
             ar.setErrorList(errorList);
             return ar;
         }
+
+        //判断曲线族下是否含有曲线，如果有则不可删除
+        int codeCount  = mstCurveGroupManage001Service.getCountCurveCode(dto.getCurveGroupCode());
+        if(codeCount>0){
+            return new AjaxResult("该曲线族已被曲线使用，不可删除！", MessageType.错误消息);
+        }
+
         return new AjaxResult();
     }
 }
