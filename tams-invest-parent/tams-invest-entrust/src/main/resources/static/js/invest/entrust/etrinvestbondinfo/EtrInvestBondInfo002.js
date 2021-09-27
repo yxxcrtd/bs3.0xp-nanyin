@@ -76,6 +76,13 @@
         if ($('#select2-finprodId-container').attr('title')){
             object.finprodName = $('#select2-finprodId-container').attr('title');
         }
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            if(object.businessModel=="Y1"){
+                object.invAim = 'AC';
+            }else if(object.businessModel=="Y2"){
+                object.invAim  = 'FVTPL'
+            }
+        }
         object.operateType = operateType;
         object.pageModel = pageModel;
         object.entrustId = $('#entrustId').val();
