@@ -326,7 +326,7 @@ public class AssetImpairmentProvisionProcessorService {
 			}
 		}
 		// 若未走减值模型逻辑，则继续走原先逻辑
-		if(!lossModFlag){
+		else{
 			List<String> subjectNatureList = accountingCommonService
 					.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
@@ -413,6 +413,12 @@ public class AssetImpairmentProvisionProcessorService {
 				/** modify by yanya on 20201222 增加是否其他债券分支处理逻辑 end**/
 			}
 		}
+		else if (targetFinProduct.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券质押式逆回购.getValue())) {
+			ad.setTableId(DictCodeListTableId.会计场景代码_质押式逆回购_减值计提.getValue());
+		}
+		else if (targetFinProduct.getFinprodType().equals(DictCodeListExt1.金融产品类型_债券买断式逆回购.getValue())) {
+			ad.setTableId(DictCodeListTableId.会计场景代码_买断式逆回购_减值计提.getValue());
+		}
 
 		// 记账场景要素map塞值,(调用共通方法-计提类场景元素赋值)
 		Map<String, Object> lossParams = new HashMap<>();
@@ -423,7 +429,8 @@ public class AssetImpairmentProvisionProcessorService {
 		/**add by wujie on 20201106 start remark:计划类收益型资产出单边账问题修复**/
 		// 境内外
 		accountSceneMap.put(BookConstant.BLN_AREA, targetFinProduct.getBlnArea());
-		
+		/**add by wujie on 20201106 end remark:计划类收益型资产出单边账问题修复**/
+
 		/**add by wujie on 20201106 end remark:计划类收益型资产出单边账问题修复**/
 		// 分类1
 		accountSceneMap.put(BookConstant.TYPE_1, targetFinProduct.getType1());
@@ -441,7 +448,9 @@ public class AssetImpairmentProvisionProcessorService {
 		accountSceneMap.put(BookConstant.BOOKSET_ID, acctEntity.getBooksetId());
 		// 冲正标识
 		accountSceneMap.put(BookConstant.OFFSET_FLAG, DictCodeList.冲正标识_正常交易.getValue());
-	
+		// 交易场所
+		accountSceneMap.put(BookConstant.TRADE_MARKET, targetFinProduct.getTradeMarket());
+
     	String finprodTypeName = null;
     	if(targetFinProduct.getFinprodType()!=null){
     	    
@@ -456,7 +465,7 @@ public class AssetImpairmentProvisionProcessorService {
 			accountAmountMap.put(BookConstant.IMPAMT_D, ArithmeticUtil.round(lossAmount, NumberEnum.MONEY));
 			// 减值金额损益（贷） <- 变量.减值金额
 			accountAmountMap.put(BookConstant.IMPAMTLOSS_C, ArithmeticUtil.round(lossAmount, NumberEnum.MONEY));
-			
+
 			accountAmountBCCYAMTMap.put(BookConstant.IMPAMT_D + BookConstant.BCCYAMT,
 			    ArithmeticUtil.round(lossAmountBen, NumberEnum.MONEY));
 			accountAmountBCCYAMTMap.put(BookConstant.IMPAMTLOSS_C + BookConstant.BCCYAMT,
