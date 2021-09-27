@@ -45,17 +45,7 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public Page<PtlPositionAnalysis001Dto> selectForPage(Map<String, Object> map){
-    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
-    		List<String> prodManagers = new ArrayList<>();
-    		//产品经理不存在时获取所有符合的产品经理
-    		/*Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
-            		SelectOptionDto.class);*/
-            //此处应获取所有符合的产品经理，应该是List
-            List<SelectOptionDto> users = restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserNameList", new HashMap<String,Object>(),
-                    SelectOptionDto.class);
-    		users.stream().forEach(user->prodManagers.add(user.getId()));
-    		map.put("prodManagers",prodManagers);
-    	}
+        handleProdManager(map);
         return restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findPage",
                 map, PtlPositionAnalysis001Dto.class);
@@ -149,20 +139,24 @@ public class PtlPositionAnalysis001Service extends CommonExportService<PtlPositi
      * @since 1.0
      */
     public Page<PtlPositionAnalysis001Dto> selectForExportNew(Map<String, Object> map){
-    	if(!StringUtil.isNotEmpty(map.get("prodManager"))) {
-    		List<String> prodManagers = new ArrayList<>();
-    		//产品经理不存在时获取所有符合的产品经理
-    		Page<SelectOptionDto> users = restTemplate.postForPage(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserName", new HashMap<String,Object>(),
-            		SelectOptionDto.class);
-    		users.getRoot().stream().forEach(user->prodManagers.add(user.getId()));
-    		map.put("prodManagers",prodManagers);
-    	}
+        handleProdManager(map);
         Page<PtlPositionAnalysis001Dto> page = restTemplate.postForPage(
                 ServiceApplication.PORTFOLIO_SERVICE_NAME + "/PtlPositionAnalysis/findPageForExportNew",
                 map, PtlPositionAnalysis001Dto.class);
         return page;
     }
-    
+
+    private void handleProdManager(Map<String, Object> map) {
+        if (!StringUtil.isNotEmpty(map.get("prodManager"))) {
+            List<String> prodManagers = new ArrayList<>();
+            //产品经理不存在时获取所有符合的产品经理
+            List<SelectOptionDto> users = restTemplate.postForList(ServiceApplication.PRODUCT_SERVICE_NAME + "/FinProductCommon/getUserNameList", new HashMap<String, Object>(),
+                    SelectOptionDto.class);
+            users.stream().forEach(user -> prodManagers.add(user.getId()));
+            map.put("prodManagers", prodManagers);
+        }
+    }
+
     /**
      * 导出查询方法
      *
