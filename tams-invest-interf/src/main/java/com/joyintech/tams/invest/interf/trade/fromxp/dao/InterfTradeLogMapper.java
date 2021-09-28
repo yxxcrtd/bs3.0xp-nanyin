@@ -43,6 +43,11 @@ public interface InterfTradeLogMapper {
     int updateInterfTradeLogStatus(Map<String,Object> param);
     
     /**
+     * 通过状态和id更新交易接口日志状态
+     */
+    int updateInterfTradeLogStatusByStatusAndId(Map<String,Object> param);
+    
+    /**
 	     *查询满足条件的交易接口配置
 	* @param param
 	* @return

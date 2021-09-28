@@ -26,6 +26,14 @@ public class Constants {
 	 */
 	public final static Integer INTERF_STATUS_PROCESS = 2;
 	/**
+	 *状态3处理成功
+	 */
+	public final static Integer INTERF_STATUS_SUCCESS = 3;
+	/**
+	 *状态4处理失败
+	 */
+	public final static Integer INTERF_STATUS_FAIL = 4;
+	/**
 	 *线程数
 	 */
 	public final static Integer INTERF_THREAD_NUMBER = 10;
