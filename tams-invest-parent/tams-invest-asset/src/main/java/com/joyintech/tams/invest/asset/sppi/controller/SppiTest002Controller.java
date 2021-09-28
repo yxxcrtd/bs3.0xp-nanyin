@@ -164,6 +164,8 @@ public class SppiTest002Controller extends BaseController {
             }
         }
 
+        sppiTest002Service.genFinprodMarketId(dto);
+
         model.addAttribute(GlobalConstant.ENTITY, dto);
         model.addAttribute("SPPI_TESTING", DictCodeListExt3.SPPI测试状态_测试中.getValue());
         model.addAttribute("SPPI_PASS", DictCodeListExt3.SPPI测试状态_测试通过.getValue());
