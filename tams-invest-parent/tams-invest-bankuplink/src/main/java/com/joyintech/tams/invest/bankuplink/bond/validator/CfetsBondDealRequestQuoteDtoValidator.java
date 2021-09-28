@@ -162,6 +162,7 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
             BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
             BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
             dealedAmt = ArithmeticUtil.doAdd(dealedAmt,wflAmt);
+
             // 查询库里最新的状态
             CfetsBondDealRequestQuoteDto dto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(
                 cfetsBondDealRequestQuoteDto.getQuoteId(),null);
