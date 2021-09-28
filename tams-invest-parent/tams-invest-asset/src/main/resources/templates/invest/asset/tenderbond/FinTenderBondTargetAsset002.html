@@ -151,8 +151,10 @@
 											data-th-text="#{FinTenderBondTargetAsset002.isSus}">是否永续</label>
 										<div class="layui-input-inline input-inline">
 											<input type="checkbox" id="isSus" name="isSus"
-												lay-skin="switch" data-th-value="${YES}" lay-text="是|否"
+												lay-skin="switch"  lay-filter="isSus"
+												   data-th-value="${YES}" lay-text="是|否"
 												data-th-checked="${YES_OR_NO_Y} ==${entity?.isSus}">
+
 										</div>
 									</div>
 									<div class="form-inline-wrap" style="display: none">
@@ -452,7 +454,7 @@
 											style="width: 11.9%;">特殊条款</label>
 										<div class="layui-input-inline input-inline"
 											style="width: 85.8% !important;">
-											<input type="text" name="sustainableRemark"
+											<input type="text" id="sustainableRemark" name="sustainableRemark"
 												data-th-value="${entity?.sustainableRemark}"
 												class="layui-input form-input" placeholder="请输入内容"
 												data-th-placeholder="#{SysCommon.placeholder}">

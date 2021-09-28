@@ -99,11 +99,11 @@ public class FinTenderBondTargetAssetValidator implements BeanValidator{
             }
         }
         if(StringUtil.equals(isSus, DictCodeList.是否_是.getValue())){
-            // 特殊条款已删除，相关check也删掉
-//          if(StringUtil.isEmpty(dto.getSustainableRemark())){
-//              resultList.add(new ValidMessage("sustainableRemark",
-//                  getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.sustainableRemark"))));
-//          }
+             //特殊条款已删除，相关check也删掉
+          if(StringUtil.isEmpty(dto.getSustainableRemark())){
+              resultList.add(new ValidMessage("sustainableRemark",
+                  getMessage("COMMON_E_0057", getMessage("FinBondTargetAsset002.sustainableRemark"))));
+          }
         }
         if(null!=dto.getVdate()&&null!=dto.getMdate()){
             if(DateUtil.compareDate(dto.getVdate(), dto.getMdate())!=-1){

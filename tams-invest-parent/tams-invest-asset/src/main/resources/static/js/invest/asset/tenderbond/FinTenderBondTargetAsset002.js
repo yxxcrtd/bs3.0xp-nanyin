@@ -136,6 +136,18 @@ $(function() {
             $('#busiFinExercisePlanDto_div').hide();
         }
     }
+    /** modify by yanaya on 20210821 增加是否兜底评级联动**/
+    var isSusChange = function(){
+        var isSus = $('#isSus')[0].checked;
+        //Joyin.error(isSus);
+        if (isSus) {
+            $('#sustainableRemark').attr('required',true);
+            star();
+        }else {
+            $('#sustainableRemark').attr('required',false);
+            star();
+        }
+    };
     
     /**
      * 计息要素画面显示/隐藏
@@ -312,6 +324,18 @@ $(function() {
                 //置灰付息计划生成计划按钮
                 /*$('#finPayInterestStdInfoDto_btn_generationPlan').off('click').prop('disabled', true).addClass('layui-btn-disabled');*/
             }
+            //添加是否永续 change事件
+            // $('#isSus').change(function () {
+            //     Joyin.error("是否政府出资产业投资基金数据不能为空。")
+            //     return;
+            //     var isSus = $('#isSus').val();
+            //     if (isSus == INT_TYPE_01) {
+            //         $('#finInterestFactorDto_coefficient').val('');
+            //     }
+            //     if (isSus == INT_TYPE_02) {
+            //         $('#finInterestFactorDto_coefficient').val('1');
+            //     }
+            // });
 
             window.BussAssetFiveType.doAssetFiveTypeChange(IS_SHOW_TYPE,'F01','type9','type10','type11','type12','type4','type5');
         }
@@ -342,8 +366,22 @@ $(function() {
     	if($("#creditFlag").val() != 'Y'){
     		$("#actualCreditProvid").attr("required", false).trigger('change');
     	}
+        // $('#isSus').change(function () {
+        //     Joyin.error("是否政府出资产业投资基金数据不能为空。")
+        //     return;
+        //     var isSus = $('#isSus').val();
+        //     if (isSus == INT_TYPE_01) {
+        //         $('#finInterestFactorDto_coefficient').val('');
+        //     }
+        //     if (isSus == INT_TYPE_02) {
+        //         $('#finInterestFactorDto_coefficient').val('1');
+        //     }
+        // });
     	star();
     }
+
+
+
     $(function() {
     	init();
         //修改  资产代码置灰
@@ -354,6 +392,9 @@ $(function() {
         //是否含权债change
         layui.form.on('switch(isRight)',function(){
             isRightChange();
+        });
+        layui.form.on('switch(isSus)',function(){
+            isSusChange();
         });
         // 绑定按钮事件
         $('#FinTenderBondTargetAsset002_btn_save').click(function() {
