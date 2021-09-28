@@ -435,5 +435,27 @@ public class ValuationMethodScheme004Controller extends BaseController {
 	}
 
 
+	/**
+	 * 根据资产代码获取证券品种
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("getSecTypeByFinprodId")
+	public AjaxResult getSecTypeByFinprodId() {
+		AjaxResult ar = new AjaxResult();
+		Map<String, Object> param = RequestUtil.getPageParam();
+		//根据资产代码查询证券品种
+		String finprodId = (String)param.get("finprodId");
+		String secType ="";
+		if( StringUtil.isNotEmpty(finprodId)){
+			secType = valuationMethodScheme004Service.getSecTypeByFinprodId(finprodId);
+		}
+		ar.setData(secType);
+		return ar;
+	}
+
+
 
 }
