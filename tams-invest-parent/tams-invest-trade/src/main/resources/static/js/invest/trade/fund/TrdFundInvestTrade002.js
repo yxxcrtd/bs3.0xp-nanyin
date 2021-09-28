@@ -755,6 +755,7 @@ $(function () {
             if (!initFlag) {
                 $("#changeToFinprodMarketId").val('').trigger('change');
             }
+            $('#changeToFinprodMarketId').prop('disabled', true);
             $(".changein").hide();
             var ps = $('#ps').val();
             var data = $('#finprodId').select2('data')[0].object;
@@ -831,6 +832,7 @@ $(function () {
                 }
                 if ($("#ps").val() == T65) {
                     $(".changein").show();
+                    $('#changeToFinprodMarketId').prop('disabled', false);
                 }
                 //-----add by 裴家俊 切换到赎回时清空风险试算列表 start ----
                 if ($("#ps").val() == ps_T06 && $("#baseRiskMathCommTable").data('joyintable')!=null) {
