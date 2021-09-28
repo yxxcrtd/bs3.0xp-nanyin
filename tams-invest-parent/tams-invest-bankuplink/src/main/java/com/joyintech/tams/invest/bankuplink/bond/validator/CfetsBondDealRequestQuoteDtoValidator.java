@@ -98,22 +98,24 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                         validList.add(new ValidMessage("",getMessage("组合分配中券面总额（万元）不可为空")));
                         return validList;
                     }
-                    Map<String, Object> param = new HashMap<>();
-                    param.put("entrustId", cfetsBondDealRequestQuote.getEntrustId());
-                    param.put("quoteId", cfetsBondDealRequestQuoteDto.getQuoteId());
-                    //先处理单组合
-                    BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
-                    param.put("isDzh",isDzh);
-                    //去掉本身流程中的数据  如退回再提交
-                    param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
-                    //在处理多组合
-                    BigDecimal wflEntrustDealedAmtDzh = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
-                    BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmt,new BigDecimal(10000),2);
-                    BigDecimal wflAmtDzh = null==wflEntrustDealedAmtDzh?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmtDzh,new BigDecimal(10000),2);
-                    if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
-                        if(cfetsBondDealRequestQuote.getAvaNum().compareTo(ArithmeticUtil.subtract(cfetsBondDealRequestQuote.getEntrustAvaNum(),ArithmeticUtil.doAdd(wflAmt,wflAmtDzh)))>0){
-                            validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")));
-                            return validList;
+                    /**
+                     * 成交无需验证
+                     */
+                    if (!StringUtil.equals(cfetsBondDealRequestQuoteDto.getCheckType(), "answerClinchDeal")) {
+                        Map<String, Object> param = new HashMap<>();
+                        param.put("entrustId", cfetsBondDealRequestQuote.getEntrustId());
+                        param.put("quoteId", cfetsBondDealRequestQuoteDto.getQuoteId());
+                        //先处理单组合
+                        BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
+                        //去掉本身流程中的数据  如退回再提交
+                        param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
+                        BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:ArithmeticUtil.divide(wflEntrustDealedAmt,new BigDecimal(10000),2);
+                        if (!StringUtil.equals(CacheUtil.getSysParam("ibuFlag_bondOverEntrustAvaAmt"), "02")){
+                            if(cfetsBondDealRequestQuote.getAvaNum().compareTo(ArithmeticUtil.subtract(cfetsBondDealRequestQuote.getEntrustAvaNum(),wflAmt))>0){
+                                String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+ArithmeticUtil.multiply(wflAmt,new BigDecimal(10000)):"";
+                                validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")+wflTip));
+                                return validList;
+                            }
                         }
                     }
                     avaNumTotal = ArithmeticUtil.doAdd(avaNumTotal,cfetsBondDealRequestQuote.getAvaNum());
@@ -158,11 +160,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
             param.put("workflowId",cfetsBondDealRequestQuoteDto.getWorkflowId());
             //先处理单组合
             BigDecimal wflEntrustDealedAmt = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
-            param.put("isDzh","Y");
-            BigDecimal wflEntrustDealedAmtDzh = cfetsBondDealQuotedPrice002Service.getWflEntrustDealedAmt(param);
             BigDecimal wflAmt = null==wflEntrustDealedAmt?BigDecimal.ZERO:wflEntrustDealedAmt;
-            BigDecimal wflAmtDzh = null==wflEntrustDealedAmtDzh?BigDecimal.ZERO:wflEntrustDealedAmtDzh;
-            //dealedAmt = ArithmeticUtil.doAdd(dealedAmt,wflAmt);
+            dealedAmt = ArithmeticUtil.doAdd(dealedAmt,wflAmt);
+
             // 查询库里最新的状态
             CfetsBondDealRequestQuoteDto dto = cfetsBondDealQuotedPrice003Service.getBondRequestQuote(
                 cfetsBondDealRequestQuoteDto.getQuoteId(),null);
@@ -202,17 +202,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                         if (StringUtil.isNotEmpty(shareAmt)
                             && ArithmeticUtil.multiply(shareAmt, new BigDecimal(10000)).compareTo(
                                 ArithmeticUtil.subtract(
-                                    cfetsBondDealRequestQuoteDto.getEntrustAmt(),
-                                    ArithmeticUtil.doAdd(dealedAmt,wflAmt))) > 0) {
-                            validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_021")));
-                            return validList;
-                        }
-                        if (StringUtil.isNotEmpty(shareAmt)
-                                && ArithmeticUtil.multiply(shareAmt, new BigDecimal(10000)).compareTo(
-                                ArithmeticUtil.subtract(
-                                        cfetsBondDealRequestQuoteDto.getEntrustAmt(),
-                                        ArithmeticUtil.doAdd(dealedAmt,wflAmtDzh))) > 0) {
-                            validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_021")));
+                                    cfetsBondDealRequestQuoteDto.getEntrustAmt(),dealedAmt)) > 0) {
+                            String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+wflAmt:"";
+                            validList.add(new ValidMessage(this.getMessage("CFETS_COMMON_E_021")+wflTip));
                             return validList;
                         }
                     }
@@ -228,8 +220,9 @@ public class CfetsBondDealRequestQuoteDtoValidator implements BeanValidator {
                     && (cfetsBondDealRequestQuoteDto.getAvaNum() == null
                         || ArithmeticUtil.multiply(cfetsBondDealRequestQuoteDto.getAvaNum(),
                             new BigDecimal(10000)).compareTo(ArithmeticUtil.subtract(
-                                cfetsBondDealRequestQuoteDto.getEntrustAmt(), ArithmeticUtil.doAdd(dealedAmt,wflAmt,wflAmtDzh))) > 0)) {
-                    validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")));
+                                cfetsBondDealRequestQuoteDto.getEntrustAmt(),dealedAmt)) > 0)) {
+                    String wflTip = wflAmt.compareTo(BigDecimal.ZERO)!=0?"流程中占用额度:"+wflAmt:"";
+                    validList.add(new ValidMessage("avaNum", this.getMessage("CFETS_COMMON_E_023")+wflTip));
                 }
             }
         }

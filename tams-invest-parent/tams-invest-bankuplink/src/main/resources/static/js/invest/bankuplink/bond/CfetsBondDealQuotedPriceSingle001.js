@@ -136,8 +136,8 @@
                             layui.form.render();
                         }
                     }
-                    entrustIdChangeFlag = false;
                     calcAmt($("#CfetsBondDealQuotedPriceSingle001_hidden_calculateField").val());
+                    entrustIdChangeFlag = false;
                 }
             });
         }
@@ -590,11 +590,19 @@
             if (ouTraderIdCanEditFlag === 'N'){
                 $('#CfetsBondDealQuotedPriceSingle001_mySideTrader').attr('disabled', true);
             }
-            $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            if(isMain != "Y"){
+                $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(true);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(true);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(true);
+            }else{
+                $('#CfetsBondDealQuotedPriceSingle001_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_save').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_submit').toggle(false);
+                $('#CfetsBondDealQuotedPriceSingle001_btn_cancel').toggle(false);
+            }
         }// 对话报价发起和保存后双击
         else if (quotaPageModel && quotaPageModel == 'edit'){
             $('#CfetsBondDealQuotedPriceSingle001_div_settleCcy').toggle(true);

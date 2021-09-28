@@ -1,5 +1,42 @@
 (function(){
-
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 start -->
+    layui.use(["element", "form"], function () {
+        // 组合平台TAB切换事件
+        var element = layui.element;
+        element.on("tab(TopPlatform)", function (data) {
+            if (data.index == 0) {
+                $(window.parent.document).find("#bottom_panel_dev").show();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var bottom_panel_dev = $(window.parent.document).find("#bottom_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(50% - 5px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+                bottom_panel_dev.css(cssobj);
+            } else if (data.index == 1) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(100% - 20px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+            } else if (data.index == 2) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    height: 'calc(100% - 20px)',
+                    border: '1px solid #aaaaaa',
+                };
+                top_panel_dev.css(cssobj);
+            }
+        });
+    });
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 end -->
     /**
      * 获取查询参数
      */
@@ -315,7 +352,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice004"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N",quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -323,7 +360,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice002"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -334,7 +371,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice005"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -342,7 +379,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice003"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -354,7 +391,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice004"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/init", "99%", "99%", {
-                            pageModel : PAGE_MODEL_REFERENCE, quoteId : data.quoteId, quotaPageModel : 'new'
+                            pageModel : PAGE_MODEL_REFERENCE,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new'
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -362,7 +399,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice002"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/init", "99%", "99%", {
-                            pageModel : PAGE_MODEL_REFERENCE, quoteId : data.quoteId, quotaPageModel : 'new'
+                            pageModel : PAGE_MODEL_REFERENCE,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new'
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();

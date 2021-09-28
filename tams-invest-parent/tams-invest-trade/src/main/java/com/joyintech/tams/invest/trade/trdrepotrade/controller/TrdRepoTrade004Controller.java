@@ -179,7 +179,13 @@ public class TrdRepoTrade004Controller extends BaseController {
 //            }
             model.addAttribute("entity_outBussRepoSec",
                     JsonUtils.object2Json(
-                            trdRepoTrade001DtoPage.getRoot().stream().filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0).collect(Collectors.toList())));
+                            trdRepoTrade001DtoPage.getRoot().stream()
+                                    .filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0)
+                                    .map(entity -> {
+                                        entity.setPledgePrin(ArithmeticUtil.divide(entity.getPledgePrin(), 10000, 2));
+                                        entity.setPrin(ArithmeticUtil.divide(entity.getPrin(), 10000, 2));
+                                        return entity;
+                                    }).toArray()));
         }
         model.addAttribute("noBranchNoValue", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
         model.addAttribute("entity", dto);

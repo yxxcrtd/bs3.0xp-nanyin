@@ -3,6 +3,65 @@
     $(".layui-tab").show();
     var fetsRepoDealQuotedPrice001_entrustOrderTable_loading;
     var fetsRepoDealQuotedPrice001_dayOfferTable_loading;
+    //add by meifaxin 20190928 对于回购报价页面，质押券查询、委托查询、成交查询需要全屏展示，不需要展示报价新建页面 start -->
+    layui.use(["element", "form"], function () {
+        // 组合平台TAB切换事件
+        var element = layui.element;
+        element.on("tab(tradePlatform)", function (data) {
+            if (data.index == 0) {
+                $(window.parent.document).find("#bottom_panel_dev").show();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var bottom_panel_dev = $(window.parent.document).find("#bottom_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'49.5%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+                bottom_panel_dev.css(cssobj);
+            } else if (data.index == 1) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            } else if (data.index == 2) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            }else if (data.index == 3) {
+                $(window.parent.document).find("#bottom_panel_dev").hide();
+                var top_panel_dev = $(window.parent.document).find("#top_panel_dev");
+                var cssobj= {
+                    width: '100%',
+                    float: 'right',
+                    height:'95%',
+                    margin:'1px',
+                    border: '1px solid #aaaaaa',
+                    display: 'inline-block'
+                };
+                top_panel_dev.css(cssobj);
+            }
+        });
+    });
+    //add by meifaxin 20190928 对于委托查询和成交查询，预期需要全屏展示 end -->
     /**
      * 获取指令执行查询参数
      */
@@ -555,13 +614,6 @@
     var gencjcxTableParam = function () {
         var pageParam = $.serializeToObject('#searchForm_cjcx');
         pageParam.finprodType = "REPO";
-        pageParam.tradeDateBegin = $('#tradeDate').startDate();
-        pageParam.tradeDateEnd = $('#tradeDate').endDate();
-        if (pageParam.matchStatus && pageParam.matchStatus != '') {
-            pageParam.matchStatus = pageParam.matchStatus.join(",");
-        } else {
-            pageParam.matchStatus = null;
-        }
         var cols = [];
         $.each(cjcxTable.options.cols, function (i, val) {
             if (val.visible == false) {
@@ -642,7 +694,7 @@
             , {field: 'securityId', title: '交易品种', sortField: 'securityId', width: '110'}
             , {field: 'ccyStr', title: '债券币种', sortField: 'ccy', width: '110'}
             , {field: 'settlcurrencyStr', title: '结算币种', sortField: 'settlcurrency', width: '110'}
-            , {field: 'exchangerate', width: 130, title: '汇率'}
+            , {field: 'exchangerate', type:'number', width: 130, title: '汇率'}
             , {field: 'reference', width: 130, title: '报价编号'}
             , {field: 'ourcapitalbankname', width: 130, title: '本方资金开户行'}
             , {field: 'ourcapitalaccountname', width: 130, title: '本方资金账户户名'}
@@ -962,6 +1014,46 @@
         $('.cjcx_transfer-form #CfetsRepoDealQuotedPr001_btn_search').click(function () {
             cjcxTable.load();
         });
+
+        /**
+         * 成交查询-查询弹出框
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seach').click(function() {
+            $('.sgePortDiv').find('span.select2-container--default').attr('style', 'width: 210px !important');
+            $("#CSTPselectorConditionFilter001").hide();
+            if($("#CSTPselectorConditionFilter001").css("display")=="none"){
+                $("#CSTPselectorConditionFilter001").show();
+            }
+            else{
+                $("#CSTPselectorConditionFilter001").hide();
+            }
+        });
+
+        /**
+         * 成交查询-查询弹出框查询
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_realseach').click(function() {
+            cjcxTable.table ? cjcxTable.reload() : cjcxTable.load();
+            $("#CSTPselectorConditionFilter001").hide();
+        });
+
+        /**
+         * 成交查询-查询弹出框关闭
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seachClose').click(function() {
+            $("#CSTPselectorConditionFilter001").hide();
+        });
+
+        /**
+         * 成交查询-查询弹出框重置
+         */
+        $('#CfetsBondDealQuotedPr001_CSTPSelect_btn_seachReset').click(function() {
+            $("#ps").empty();
+            $("#finprodId").empty();
+            $("#quaryDate").val("");
+            $("#matchStatus").empty();
+        });
+
 
         /**
          * 指令执行放弃按钮点击事件

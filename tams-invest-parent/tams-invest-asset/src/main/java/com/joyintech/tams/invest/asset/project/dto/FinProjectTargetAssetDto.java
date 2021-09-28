@@ -1794,7 +1794,7 @@ public class FinProjectTargetAssetDto extends FinProduct implements ITableRow,Pr
 
     @Override
     @Length(fieldName = "FinProjectTargetAsset002.contractNo", max = 400, groups = {ValidateGroupEdit.class})
-    @NotEmpty(fieldName = "FinProjectTargetAsset002.contractNo", groups = {ValidateGroupEdit.class})
+//    @NotEmpty(fieldName = "FinProjectTargetAsset002.contractNo", groups = {ValidateGroupEdit.class})
     public String getContractNo(){
         return super.getContractNo();
     }

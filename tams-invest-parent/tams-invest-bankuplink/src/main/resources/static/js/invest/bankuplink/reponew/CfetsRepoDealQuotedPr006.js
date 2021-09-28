@@ -77,9 +77,9 @@ var getPageParams = function() {
          cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
-            ,{field:'prin',sortField:'prin', width:150, title: '换出面额（元）',edit: true,type:'money'}
-            ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
+            ,{field:'pledgePrin',sortField:'pledgePrin', width:200, title: '质押券面总额（万元）',type:'money'}
+            ,{field:'prin',sortField:'prin', width:200, title: '换出面额（万元）',edit: true,type:'money'}
+            ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%',type:'money'}
 
         ],
          // 编辑单元格
@@ -148,9 +148,9 @@ var setBussRepoSecInput = function () {
         cols:[
             {field:'bondCode',sortField:'bondCode', width:100, title: '债券代码'}
             ,{field:'bondAbbrName', sortField:'bondAbbrName',width:200, title: '债券简称'}
-            ,{field:'pledgePrin',sortField:'avaPledgePrin', width:200, title: '质押券面总额（元）',type:'money'}
+            ,{field:'pledgePrin',sortField:'avaPledgePrin', width:200, title: '质押券面总额（万元）',type:'money'}
             ,{field:'firstNetPrice',sortField:'firstNetPrice', width:150, title: '首次净价',type:'money'}
-            ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%'}
+            ,{field:'pledgeRatio', sortField:'pledgeRatio',width:140, title: '折算比例%',type:'money'}
 
         ]
     });
@@ -261,12 +261,12 @@ var outOk = function () {
         }*/
 
     //从选出质押券列表中 将表数据加入到最终质押券列表中
-    if (outSelectedAllRows != null && outSelectedAllRows.length > 0) {
+    if (outSelectedCheckdRows != null && outSelectedCheckdRows.length > 0) {
 
     	if(!initFlag){
-            for (var i = outSelectedAllRows.length - 1; i >= 0; i--) {
-                resultTable.addRow(outSelectedAllRows[i]);
-            }	
+            for (var i = outSelectedCheckdRows.length - 1; i >= 0; i--) {
+                resultTable.addRow(outSelectedCheckdRows[i]);
+            }
     	}
     }
         //2将选入质押券列表中 数据加入到最终质押券列表中，存在则不添加
@@ -274,11 +274,11 @@ var outOk = function () {
 
         //先将选入列表中的数据先添加到最终列表中
         var resultArrlist = [];//最终质押列表中bondCode list
-        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 start
+/*        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 start
         for(var k = 0 ; k < inSelectedAllRows.length ; k++){
             inSelectedAllRows[k].pledgePrin = inSelectedAllRows[k].pledgePrin * 10000;
         }
-        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 end
+        //add by chenjiaxing 质押券置换换入债券单位为万元->最终为元 20210911 end*/
         for (var k = resultTable.getAllRows().length - 1; k >= 0; k--) {
             resultArrlist.push(resultTable.getAllRows()[k].bondCode);
         }
@@ -370,9 +370,10 @@ function saveOrSubmit(operateType) {
         var inSumPledgePrin = 0;
         if (inSelectedAllRows != null && inSelectedAllRows.length > 0) {
             for (var kk = inSelectedAllRows.length - 1; kk >= 0; kk--) {
-                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 start
+                inSumPledgePrin = JoyinMath.doAdd(inSumPledgePrin, inSelectedAllRows[kk].pledgePrin);
+/*                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 start
                 inSumPledgePrin = JoyinMath.doAdd(inSumPledgePrin, JoyinMath.doMul(inSelectedAllRows[kk].pledgePrin,10000));
-                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 end
+                // modify by wanshiwei ZGZGST-2727 质押券置换换入债券等于换出债券，系统提示：换入债券小于换出债券 20210928 end*/
                 //债券借贷融入交易做置换，换入债券的质押券面大于可质押券面时要弹出提示：质押券面额不能大于可质押券面总额
                 if(ps==TRADE_PS_05)
                 {

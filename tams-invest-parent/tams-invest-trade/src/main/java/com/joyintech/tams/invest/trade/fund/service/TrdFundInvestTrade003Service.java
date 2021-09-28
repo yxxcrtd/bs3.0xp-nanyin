@@ -41,6 +41,7 @@ import com.joyintech.tams.invest.common.dto.common.BussinessCodeParameter;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
 import com.joyintech.tams.invest.common.redisinit.dto.ImplProdAssetAmount;
 import com.joyintech.tams.invest.common.riskinfrds.info.service.ProdAssetAmountService;
+import com.joyintech.tams.invest.common.riskinfrds.util.EntrustCompleteUtil;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dto.FinProductTradeDto;
 import com.joyintech.tams.invest.trade.fund.dto.TrdFundInvestTradeConfirmDto;
@@ -309,7 +310,13 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
                 Integer.class);
 
             if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-                doInsertRedemption(entity);
+//                doInsertRedemption(entity);
+            }
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+                doCompleteRedemption(entity);
+                if (EntrustCompleteUtil.isEtrCompleted(entity.getEntrustId())) {
+                    EntrustCompleteUtil.doComplete(Arrays.asList(entity.getEntrustId()));
+                }
             }
         }
         else if (StringUtil.equals(entity.getOperateType(), "REVOKE")) {
@@ -1143,5 +1150,46 @@ public class TrdFundInvestTrade003Service extends BaseService<TrdFundInvestTrade
                 throw new Exception("申购确认更新redis资产实时规模信息异常:"+e.getMessage());
             }
         }
+    }
+
+    public void doCompleteRedemption(TrdFundInvestTradeConfirmDto entity){
+        TrdFundInvestTradeConfirmDto redEntity = new TrdFundInvestTradeConfirmDto();
+        BeanUtil.copyPropertiesIgnoreNull(redEntity, entity);
+        redEntity.setbTradeId(entity.getTradeId());
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_货币基金赎回);
+            redEntity.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            redEntity.setTradeId(IDGenerator.generate());
+        }
+        List<SysUploadFileInfo> syfiList = entity.getFileArray();
+        for (SysUploadFileInfo sufi : syfiList) {
+            // file = fileAttachmentProcess.fetch(sufi.getSeqNo());
+            String generateId = IDGenerator.generate();
+            // file.setFileNo(generateId);
+            // fileAttachmentProcess.upload(file);
+            sufi.setSeqNo(generateId);
+            com.joyintech.system.base.entity.SysUploadFileInfo uploadFileInfo = new com.joyintech.system.base.entity.SysUploadFileInfo();
+            uploadFileInfo.setSeqNo(generateId);
+            uploadFileInfo.setFileName(FileNameUtil.formatFileName(sufi.getFileName()));
+            uploadFileInfo.setPath(sufi.getPath());
+            uploadFileInfo.setBusinessId(redEntity.getTradeId());
+            uploadFileInfoMapper.insert(uploadFileInfo);
+        }
+        redEntity.setPs(DictCodeList.交易方向_赎回到账.getValue());
+        String actportfolioId = entity.getActPortfolioId();
+        if (StringUtil.isNotEmpty(actportfolioId)) {
+            redEntity.setPortfolioId(actportfolioId);
+        }
+        //正确显示赎回费  过滤通道费
+        if(StringUtil.isNotEmpty(entity.getChannelAmt())){
+            if (StringUtil.equals(DictCodeListExt2.收取方式_回款前扣除.getValue(), entity.getCollectType())&&StringUtil.isNotEmpty(entity.getFeeAmtPay())) {
+                entity.setFeeAmtPay(ArithmeticUtil.subtract(entity.getFeeAmtPay(), entity.getChannelAmt()));
+            }
+        }
+        prepareEntity(redEntity, false);
+        doComplete(redEntity, OperationType.NEW);
     }
 }

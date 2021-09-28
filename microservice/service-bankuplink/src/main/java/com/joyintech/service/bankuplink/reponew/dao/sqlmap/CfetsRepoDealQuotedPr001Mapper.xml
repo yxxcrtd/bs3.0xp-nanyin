@@ -623,6 +623,9 @@
             <if test="quoteId !=null and quoteId !='' ">
                 and QUOTE.quoteId = #{quoteId}
             </if>
+            <if test="quaryDate !=null and quaryDate !='' ">
+                <![CDATA[ AND to_date(TRADEDATE,'yyyy-mm-dd') = to_date(#{quaryDate},'yyyy-mm-dd') ]]>
+            </if>
             <if test="entrustFinprodId !=null and entrustFinprodId !='' ">
                 and ts.SECID = #{entrustFinprodId}
             </if>

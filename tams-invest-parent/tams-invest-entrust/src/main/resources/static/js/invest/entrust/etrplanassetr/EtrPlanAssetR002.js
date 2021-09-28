@@ -245,6 +245,8 @@
                     // $('#accAvailableCash_div').show();
                     //隐藏合作资产可用现金
                     // $('#div_channelCash').show();
+                    $('#entrustAmtDiv').show();
+                    $('#entrustNumDiv').hide();
                     $('#entrustAmt').attr('disabled',false);
                     $('#entrustNum').attr('disabled',true);
                     $('#entrustNum').val("");
@@ -258,9 +260,12 @@
                     // $('#accAvailableCash_div').hide();
                     //隐藏合作资产可用现金
                     // $('#div_channelCash').hide();
+                    $('#entrustAmtDiv').hide();
+                    $('#entrustNumDiv').show();
                     $('#entrustAmt').attr('disabled',true);
                     $('#entrustAmt').val("");
                     $('#entrustNum').attr('disabled',false);
+
                     $('#assetAvailablePosition_div').show();
                     if(portfolioId && finprodIdhid){
                         getPtlSecPositionInfo();

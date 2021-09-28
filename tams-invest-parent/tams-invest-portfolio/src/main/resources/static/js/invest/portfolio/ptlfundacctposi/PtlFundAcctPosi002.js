@@ -35,10 +35,10 @@ $(function() {
          */
         cols:[
              {field:'cdateStr', sortField:'cdate', title: 'PtlFundAcctPosi001.date'}//,sortField:'tradeStatus'
-             ,{field:'portfolioId', title: 'PtlActivityPeriod001.portfolioId',sortField: 'PORTFOLIO_ID'}
+             ,{field:'portfolioId', title: 'PtlActivityPeriod001.portfolioId',sortField: 'portfolioId'}
              ,{field:'portfolioName', title: 'PtlActivityPeriod001.portfolioName'}
              ,{field:'busiType', visible:false}
-             ,{field:'busiTypeStr', title: '类型',sortField:'FINPROD_TYPE_TG'}
+             ,{field:'busiTypeStr', title: '类型',sortField:'busiType'}
              ,{field:'ps', title: '交易方向',sortField:'PS'}
              ,{field:'busiNo', title: 'PtlFundAcctPosi002.busiNo'}
              ,{field:'finprodMarketId', title: 'PtlFundAcctPosi002.finprodMarketId'}

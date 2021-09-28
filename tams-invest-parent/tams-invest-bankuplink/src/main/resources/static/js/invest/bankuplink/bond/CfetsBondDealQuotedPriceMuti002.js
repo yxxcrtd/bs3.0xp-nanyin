@@ -255,11 +255,20 @@
     $(function () {
         var quotaPageModel = $('#CfetsBondDealQuotedPriceMuti002_hidden_quotaPageModel').val();
         if (quotaPageModel && quotaPageModel == 'new'){
-            $('#CfetsBondDealQuotedPriceMuti002_btn_done').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti002_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti002_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti002_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti002_btn_cancel').toggle(false);
+
+            if(isMain != "Y"){
+                $('#CfetsBondDealQuotedPriceMuti002_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_save').toggle(true);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_submit').toggle(true);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_cancel').toggle(true);
+            }else{
+                $('#CfetsBondDealQuotedPriceMuti002_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_save').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_submit').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti002_btn_cancel').toggle(false);
+            }
         }
         // 初始化页面
         $('#CfetsBondDealQuotedPriceMuti002_entrustId').attr('disabled', true);

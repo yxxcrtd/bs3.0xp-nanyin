@@ -333,6 +333,9 @@ public class CfetsBondDealQuotedPriceMuti002Controller extends BaseController {
         
         model.addAttribute("cfetsBondDealRequestQuoteDtoList", JsonUtils.object2Json(cfetsBondDealRequestQuoteDto.getCfetsBondDealRequestQuoteDtoList()));
         model.addAttribute("quotaPageModel",this.getParam("quotaPageModel"));
+        // 是否主界面打开  用于隐藏按钮
+        String isMain = StringUtil.equals(this.getParam("isMain"),DictCodeList.是否_否.getValue())?DictCodeList.是否_否.getValue():DictCodeList.是否_是.getValue();
+        model.addAttribute("isMain", isMain);
         return super.init(model);
     }
 

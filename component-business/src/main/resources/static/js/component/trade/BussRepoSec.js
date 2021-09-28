@@ -84,7 +84,7 @@
             // 可质押券面总额
             , {
                 field: 'avaPledgePrin',
-                width: 170,
+                width: 250,
                 title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.avaPledgePrin1',
                 type: 'money',
                 digit: 4,
@@ -93,7 +93,7 @@
             // 质押券面额
             , {
                 field: 'pledgePrin',
-                width: 150,
+                width: 200,
                 title: 'BussRepoSec.pledgeBondTotalTbl.colmodel.pledgePrin1',
                 type: 'money',
                 digit: 4,

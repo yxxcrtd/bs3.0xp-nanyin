@@ -12,6 +12,7 @@ package com.joyintech.tams.invest.riskredis.quota.superviseindicator.dto;
 
 import java.util.Date;
 
+import com.joyintech.background.component.common.pack.common.validation.annotation.NotEmpty;
 import com.joyintech.framework.base.BaseEntity;
 import com.joyintech.framework.util.SysDataUtil;
 import com.joyintech.tams.invest.common.constantrds.BussinessDictCodeRds;
@@ -46,6 +47,7 @@ public class RskPortfolioIndicatorDto  extends BaseEntity {
     /**
      * 有效开始时间
      */
+    @NotEmpty(fieldName = "startDate")
     private Date startDate;
     /**
      * 有效结束时间
@@ -64,6 +66,7 @@ public class RskPortfolioIndicatorDto  extends BaseEntity {
     /**
      * 组合成分
      */
+	@NotEmpty(fieldName = "portfolioMix")
     private String portfolioMix;
     
 	public String getPortfolioId() {
