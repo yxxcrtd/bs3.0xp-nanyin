@@ -19,6 +19,7 @@ import java.math.RoundingMode;
 import java.util.*;
 
 import com.joyintech.framework.security.LoginUserUtil;
+import com.joyintech.framework.validation.ValidMessage;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.component.business.common.service.BussCommonMapperDelegateService;
@@ -778,6 +779,37 @@ TrdBondInvestTrade002Controller extends BaseController {
                   confirmMsg += this.getMessage("交易方向与债券行权计划中行权方式不同，请确认是否继续？");
                 }
             }
+            //业务模式情况下
+            if (StringUtil.equals("02", CacheUtil.getSysParam("SHOW_INVAIM_OR_BUSSINSSMODEL"))) {
+                // 委托场合时    查询资产可用持仓
+                Map<String,Object> map = new HashMap<>();
+                map.put("portfolioId",dto.getPortfolioId()) ;
+                map.put("tradeDate",dto.getTradeDate()) ;
+                map.put("acctTypeList","A01,A07") ;
+                map.put("ccy",dto.getCcy()) ;
+                map.put("tradeDate",dto.getTradeDate()) ;
+                map.put("finprodId",dto.getFinprodId()) ;
+                String dateId =  null;
+                dateId = bussCommonMapperDelegateService.selectBySinglePrimaryKey(FinProductMapper.class,
+                        dto.getFinprodId(), FinProduct.class).getCalendarId();
+                List<String> holidayList = dateCalService.getDealCalendarHoliday(dto.getTradeDate(), DateUtil.addDay(dto.getTradeDate(), 15), dateId);
+                map.put("tradeDateNext", DateUtil.format(dateCalService.calculationTradingDay(dto.getTradeDate(), 1, holidayList, "1")));
+                BigDecimal position = new BigDecimal((String)bussTrdAvailableCashQueryService.getAvailableCash(map).get("position") );
+                map.put("price",dto.getUnitCprice());
+                Map<String,Object> sinal = tradeCommonService.getSppiInfoByY1(map) ;
+                if(StringUtil.equals("2",sinal.get("result"))&&StringUtil.equals("Y1",dto.getBusinessModel())){
+                    String msg ="";
+                    if(position!=null){
+                        msg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”，请进行资产重分类！";
+                    }else{
+                        msg +="交易净价不满足使权不重大的购入价条件："+sinal.get("bidPriceCon")+"（中债接口接入或人工维护的使权不重大的购入价条件），业务模式由 “收取合同现金流”调整为“出售”！";
+                    }
+                    if (StringUtil.isNotBlank(confirmMsg)) {
+                        confirmMsg += changeLineMark;
+                    }
+                    confirmMsg += this.getMessage(msg);
+                }
+            }
             // 行权方式check add by renping 20191020 end
             //外部交易对手买入，校验持仓+本金 < 融资金额或者发行金额
 //            if (StringUtil.equals(dto.getPs(), DictCodeList.交易方向_买入.getValue()) &&
@@ -812,6 +844,8 @@ TrdBondInvestTrade002Controller extends BaseController {
             if (ajaxResult != null) {
                 return ajaxResult;
             }
+
+
         }
         return commonCheck(result, dto.getOperateType());  
     }
