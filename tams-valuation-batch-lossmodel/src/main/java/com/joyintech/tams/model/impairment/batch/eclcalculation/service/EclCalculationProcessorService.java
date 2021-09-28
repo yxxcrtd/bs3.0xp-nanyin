@@ -219,7 +219,6 @@ public class EclCalculationProcessorService {
                     eclRatio = calCommonService.round(eclRatio, ECL比例结果保留小数位尾数处理方式, ECL比例结果保留小数位);
                     entityDto.setEclRatio(eclRatio);
                 }
-
                 //3.3 封装结果集
                 quaryResultParam(entityDto, modEclResultProcess, modEclResult, platDate,
                         dataSource);
@@ -227,6 +226,7 @@ public class EclCalculationProcessorService {
                 modEclResultProcessList.add(modEclResultProcess);
                 // 变量.资产减值结果表List 更新
                 modEclResultList.add(modEclResult);
+
             } catch (Exception e) {
                 String msg = "【ECL计算批处理】：资产【" + assetInfo.getAssetId() + "】对应交易信息【" + entityDto.getTradeId() + "】计算异常";
                 modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),entityDto.getAssetId(), msg);
@@ -236,8 +236,16 @@ public class EclCalculationProcessorService {
 
         // 若变量.三阶段ECL损失比例 != null,重新计算所有ECL
         if (trdAssetLossP3 != null) {
+            // 减值结果过程初始化
+            modEclResultProcessList = new ArrayList<>();
+            // 减值结果重新初始化
+            modEclResultList = new ArrayList<>();
             // 循环 变量.减值结果过程表List，重新赋值ECL
-            for (ModEclResultProcess item : modEclResultProcessList) {
+            for (ModEclResultProcess item : listProcess) {
+                // 定义 变量.减值结果过程表
+                ModEclResultProcess modEclResultProcess = new ModEclResultProcess();
+                // 定义 变量.资产减值结果表
+                ModEclResult modEclResult = new ModEclResult();
                 // 前瞻前PD置空
                 item.setPreProspectivePd(null);
                 // 前瞻后PD =  变量.三阶段减值管理数据.PD
@@ -252,26 +260,15 @@ public class EclCalculationProcessorService {
                 item.setProspectiveEcl(
                         ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
                                 item.getEad(), trdAssetLossP3.getEclVaule()));
+                //3.3 封装结果集
+                quaryResultParam(item, modEclResultProcess, modEclResult, platDate,
+                        trdAssetLossP3.getLossInputType());
+                // 变量.减值结果过程表List 更新
+                modEclResultProcessList.add(modEclResultProcess);
+                // 变量.资产减值结果表List 更新
+                modEclResultList.add(modEclResult);
             }
-            // 循环 变量.资产减值结果List，重新赋值ECL
-            for (ModEclResult item : modEclResultList) {
-                // 前瞻前PD置空
-                item.setPreProspectivePd(null);
-                // 前瞻后PD =  变量.三阶段减值管理数据.PD
-                item.setProspectivePd(trdAssetLossP3.getPdVaule());
-                // 明细数据.LGD =  变量.三阶段减值管理数据.LGD
-                item.setLgd(trdAssetLossP3.getLgdVaule());
-                // 明细数据.减值损失比例 =  变量.三阶段减值管理数据.减值损失比例
-                item.setEclRatio(trdAssetLossP3.getEclVaule());
-                // 数据来源 = 变量.三阶段减值管理数据.减值录入方式
-                item.setDataSource(trdAssetLossP3.getLossInputType());
-                // 明细数据.减值阶段 = 变量.减值管理Dto.减值阶段
-                item.setStage(trdAssetLossP3.getStage());
-                // ECL = EAD *  变量.三阶段ECL损失比例
-                item.setProspectiveEcl(
-                        ArithmeticUtil.multiply(NumberEnum.MONEY.getCode(), RoundingMode.HALF_UP,
-                                item.getEad(), trdAssetLossP3.getEclVaule()));
-            }
+
         }
         result.setModConfigUseageList(modConfigUseageList);
         result.setModEclResultProcessList(modEclResultProcessList);
