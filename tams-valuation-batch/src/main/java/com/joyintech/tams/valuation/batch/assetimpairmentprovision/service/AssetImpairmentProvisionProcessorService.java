@@ -338,12 +338,11 @@ public class AssetImpairmentProvisionProcessorService {
 		}
 		// 若未走减值模型逻辑，则继续走原先逻辑
 		else{
-			List<String> subjectNatureList = accountingCommonService
-					.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
+//			List<String> subjectNatureList = accountingCommonService
+//					.getValSubjectNatureList(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue());
 
 			BigDecimal eclRatio= accountingCommonBatchService.calcEclByTrdLoss(acctEntity.getTrdAssetLossList(),  targetFinProduct,
-					acctEntity.getBooksetId(), acctEntity.getBokDetailId(), acctEntity.getHappenDate(),
-					acctEntity.getBookDate(), subjectNatureList);
+					acctEntity.getBooksetId(), acctEntity.getInvAim(), acctEntity.getHappenDate());
 			// 变量.减值余额 = EAD * ECL信用损失比例
 			lossBalance = ArithmeticUtil.multiply(variableEda,eclRatio);
 			lossBalance = ArithmeticUtil.round(lossBalance, NumberEnum.MONEY);

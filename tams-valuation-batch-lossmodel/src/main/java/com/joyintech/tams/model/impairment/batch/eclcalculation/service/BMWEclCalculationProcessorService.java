@@ -130,10 +130,10 @@ public class BMWEclCalculationProcessorService {
         caclLGD(entity, entityDto, params, batchExecuteInfo, errors, stepExecution, modConfigUseageList);
 
         // 计算ECL
-        // 查询成本科目性质
-        List<String> subjectNatureList = accountingCommonBatchService
-                .getValSubjectNatureListWithAcctStandardId(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), null);
-        //
+//        // 查询成本科目性质
+//        List<String> subjectNatureList = accountingCommonBatchService
+//                .getValSubjectNatureListWithAcctStandardId(DictCodeListNatureGroup.分组代码_成本类对应科目查询.getValue(), null);
+
         // 定义 变量.减值结果过程表
         ModEclResultProcess modEclResultProcess = new ModEclResultProcess();
         // 定义 变量.资产减值结果表
@@ -186,8 +186,7 @@ public class BMWEclCalculationProcessorService {
 
                 // 调用共通根据最终减值流水计算ECL损失比例（当有持仓数据位于三阶段时，则以三阶段减值行情日数据预期信用损失比例为准）
                 eclRatioDto = this.calcEclByTrdLoss(listTrdAssetLoss, targetFinProduct,
-                        booksetId, bokDetailId, platDate,
-                        platDate, subjectNatureList);
+                        booksetId, entity.getInvAim(), platDate);
             }
             // 无手工录入、wind、中债导入，采用模型LGD计算
             if(eclRatioDto == null) {
@@ -462,8 +461,7 @@ public class BMWEclCalculationProcessorService {
      * @return
      */
     public EclRatioDto calcEclByTrdLoss(List<TrdAssetLoss> trdAssetLoss, TargetFinProduct targetFinProduct,
-                                        String booksetId, String bokDetailId, Date happenDate,
-                                        Date bookDate, List<String> subjectNatureList) {
+                                        String booksetId, String invAim, Date happenDate) {
         EclRatioDto eclRatioDto = new EclRatioDto();
         BigDecimal ecl = BigDecimal.ZERO;
         eclRatioDto.setEclRatio(ecl);
@@ -486,7 +484,7 @@ public class BMWEclCalculationProcessorService {
             return null;
         }
         if(eclTrdAssetLoss.size()>1){
-            List<Date> dates = accountingCommonBatchService.getBuyDate(happenDate, bookDate, booksetId, bokDetailId,subjectNatureList,targetFinProduct.getMdate());
+            List<Date> dates = accountingCommonBatchService.getBuyDate(happenDate, invAim, booksetId, targetFinProduct.getFinprodId());
 
             int num =0;
             if(StringUtil.isEmptyList(dates)){
@@ -513,6 +511,9 @@ public class BMWEclCalculationProcessorService {
                     }
                 }
             }
+            if(num == 0){
+                return null;
+            }
             if(num>0){
                 ecl = com.joyintech.framework.util.ArithmeticUtil.divide(ecl, num, 12);
             }
@@ -520,7 +521,10 @@ public class BMWEclCalculationProcessorService {
             return eclRatioDto;
         }else{
             eclRatioDto.setEclRatio(eclTrdAssetLoss.get(0).getEclVaule());
-            eclRatioDto.setFinStage(eclTrdAssetLoss.get(0).getStage());
+            // 若取到一条为三阶段，则返回减值阶段 = 三阶段
+            if(DictCodeListExt3.阶段_买入后出现减值_P3.getValue().equals(eclTrdAssetLoss.get(0).getStage())){
+                eclRatioDto.setFinStage(DictCodeListExt3.阶段_买入后出现减值_P3.getValue());
+            }
             return eclRatioDto;
         }
     }

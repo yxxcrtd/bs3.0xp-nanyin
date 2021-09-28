@@ -809,8 +809,7 @@ public class AccountingCommonBatchService {
      * @return
      */
     public BigDecimal calcEclByTrdLoss(List<TrdAssetLoss> trdAssetLoss, TargetFinProduct targetFinProduct,
-                                       String booksetId, String bokDetailId, Date happenDate,
-                                       Date bookDate, List<String> subjectNatureList) {
+                                       String booksetId, String invAim, Date happenDate) {
         BigDecimal ecl = BigDecimal.ZERO;
         if(StringUtil.isEmptyList(trdAssetLoss)){
             return ecl;
@@ -837,7 +836,7 @@ public class AccountingCommonBatchService {
             return ecl;
         }
         if(eclTrdAssetLoss.size()>1){
-            List<Date> dates = getBuyDate(happenDate, bookDate, booksetId, bokDetailId,subjectNatureList,targetFinProduct.getMdate());
+            List<Date> dates = getBuyDate(happenDate, invAim, booksetId, targetFinProduct.getFinprodId());
             return eclCalByDate(dates,eclTrdAssetLoss);
         }else{
             return eclTrdAssetLoss.get(0).getEclVaule();
@@ -875,32 +874,37 @@ public class AccountingCommonBatchService {
     /**
      * 指定账务明细查询买入交易
      * @param happenDate 发生日
-     * @param bookDate 入账日
+     * @param invAim 投资目的
      * @param booksetId 账套代码
-     * @param bokDetailId 账务明细代码
-     * @param subjectNatureList 科目性质列表
+     * @param finprodId 金融产品代码
      * @return
      */
-    public List<Date> getBuyDate(Date happenDate, Date bookDate,String booksetId,String bokDetailId,List<String> subjectNatureList,Date mdate){
+    public List<Date> getBuyDate(Date happenDate, String invAim,String booksetId,String finprodId){
         Date beginDate =null;
-        List<Date> dateList = new ArrayList<Date>();
-        Date endDate = happenDate;
-        if(mdate!=null && mdate.compareTo(endDate)<=0){
-            endDate = DateUtil.addDay(mdate, -1);
-        }
-        BokStatDetPosiiton bokStatDetPosiiton  = this.getCountAnalysis(
-            null,endDate,bookDate,booksetId,bokDetailId,null,null,DictCodeList.是否_是.getValue());
-        if(bokStatDetPosiiton!=null){
-            beginDate = bokStatDetPosiiton.getHappenDate();
-        }
-        List<BokBookdetailCurrent> lists =  this.getBookLatestInfo(
-            booksetId,bookDate,bokDetailId,subjectNatureList,null,null,null,null,beginDate,happenDate,DictCodeList.是否_是.getValue());
-        if(StringUtil.isEmptyList(lists)){
-            return dateList;
-        }
-        for(BokBookdetailCurrent dto:lists){
-            dateList.add(dto.getHappenDate());
-        }
+        Map<String,Object> params = new HashMap<>();
+        params.put("happenDate", happenDate);
+        params.put("booksetId", booksetId);
+        params.put("finprodId", finprodId);
+        params.put("invAim", invAim);
+        List<Date> dateList = accountingCommonBatchMapper.getBuyDate(params);
+//        Date endDate = happenDate;
+//        if(mdate!=null && mdate.compareTo(endDate)<=0){
+//            endDate = DateUtil.addDay(mdate, -1);
+//        }
+//        BokStatDetPosiiton bokStatDetPosiiton  = this.getCountAnalysis(
+//            null,endDate,bookDate,booksetId,bokDetailId,null,null,DictCodeList.是否_是.getValue());
+//        if(bokStatDetPosiiton!=null){
+//            beginDate = bokStatDetPosiiton.getHappenDate();
+//        }
+//        List<BokBookdetailCurrent> lists =  this.getBookLatestInfo(
+//            booksetId,bookDate,bokDetailId,subjectNatureList,null,null,null,null,beginDate,happenDate,DictCodeList.是否_是.getValue());
+//        if(StringUtil.isEmptyList(lists)){
+//            return dateList;
+//        }
+//        for(BokBookdetailCurrent dto:lists){
+//            dateList.add(dto.getHappenDate());
+//        }
+
         return dateList;
     }
 

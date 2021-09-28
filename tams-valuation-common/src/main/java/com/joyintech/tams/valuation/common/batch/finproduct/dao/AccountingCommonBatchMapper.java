@@ -17,6 +17,7 @@ import com.joyintech.tams.valuation.common.batch.finproduct.entity.SubjectBalanc
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -71,4 +72,11 @@ public interface AccountingCommonBatchMapper {
      * @since 1.0
      */
     List<BokBookdetailCurrent> getBookLatestInfo(Map<String, Object> paMap);
+
+    /**
+     * 查询资产买入交易日期列表
+     * @param params
+     * @return
+     */
+    List<Date> getBuyDate(Map<String, Object> params);
 }

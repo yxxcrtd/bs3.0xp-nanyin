@@ -221,4 +221,37 @@
 		</if>
 		ORDER BY crt.HAPPEN_DATE ASC
 	</select>
+
+
+	<!-- 查询资产首次买入日期 -->
+	<select id="getBuyDate" resultType="java.util.Date">
+		SELECT A.SETTLE_DATE
+		FROM TRD_PRODUCT_DEAL A
+		INNER JOIN BOK_DEAL_ACCOUNTING ACC
+		ON ACC.BUSI_NO = A.TRADE_ID
+		WHERE A.PS='T01'
+			AND ACC.BOOKSET_ID = #{booksetId}
+			AND A.FINPROD_ID=#{finprodId}
+		  	<if test="invAim !=null and invAim != ''">
+		  		AND ACC.INV_AIM=#{invAim}
+		  	</if>
+		  	AND A.SETTLE_DATE <![CDATA[>=]]> NVL(
+				(
+					SELECT MAX(B.CDATE)
+					FROM BOK_BOOKSET bok
+					LEFT JOIN FIN_PRODUCT_ADD prodAdd
+					ON prodAdd.FINPROD_ID = bok.ACCT_SUBJECT_ID
+					INNER JOIN PTL_SEC_VALUTION B
+					ON B.PORTFOLIO_ID = NVL(prodAdd.PORTFOLIO_ID,bok.ACCT_SUBJECT_ID)
+					WHERE B.DSC_COST_AMT = 0
+					  AND B.FINPROD_ID=#{finprodId}
+					  AND bok.BOOKSET_ID=#{booksetId}
+						<if test="invAim !=null and invAim != ''">
+							AND B.INV_AIM=#{invAim}
+						</if>
+					  AND B.CDATE <![CDATA[<]]> #{happenDate}
+				),A.SETTLE_DATE
+			)
+
+	</select>
 </mapper>

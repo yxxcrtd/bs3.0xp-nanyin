@@ -113,7 +113,7 @@ where
 			T.TERM_DESCRIBE
 		FROM TRD_ASSET_LOSS T
 		WHERE
-		    T.SEC_ID = #{assetId}
+		    T.FINPROD_ID = #{assetId}
 		  	AND T.STATUS ='01'
 			AND T.VAL_DATE = #{platDate}
 		  	<if test="peroidType != null and peroidType != ''">

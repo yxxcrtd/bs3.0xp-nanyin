@@ -2,6 +2,7 @@ package com.joyintech.tams.model.impairment.batch.eclcalculation.service;
 
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
 import com.joyintech.framework.util.CacheUtil;
+import com.joyintech.framework.util.StringUtil;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
@@ -83,7 +84,10 @@ import java.util.*;
         Map<String, List<ModEclResultProcess>> modEclResultProcessMap = new HashMap<>();
         for (ModEclResultProcess dto : list) {
             // 定义 变量.key =  账套代码 + 资产代码 + 投资目的
-            String key = dto.getProdId() + "," + dto.getAssetId()+","+dto.getInvAim();
+            String key = dto.getProdId() + "," + dto.getAssetId();
+            if(StringUtil.isNotEmpty(dto.getInvAim())){
+                key += ","+dto.getInvAim();
+            }
             // map集合无key对应value值
             if (modEclResultProcessMap.get(key) == null) {
                 List<ModEclResultProcess> listProcess = new ArrayList<ModEclResultProcess>();
