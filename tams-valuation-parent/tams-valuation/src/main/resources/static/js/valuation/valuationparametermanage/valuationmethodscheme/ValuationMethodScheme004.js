@@ -80,7 +80,10 @@ $(function () {
         $("#valuationMethod").change(function(){
         	valMethodLinkShow();
         });
-        
+        //交易场所
+		$("#tradeMarket").change(function(){
+			priceClassShow();
+		});
  //     估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
         $("#valuationPrice").change(function(){
             priceClassShow();
@@ -146,7 +149,7 @@ $(function () {
 				});
 			}
 			if(secType === '01' && valMethod == '01' && (tradeMarket=='03' || tradeMarket=='04')){
-				if(['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 ){
+				if(['01','02','03','04','05','06','CBC','CSD','SCH'].indexOf(valuationPrice) > -1 ){
 					$("#c_priceClass").show();
 				}else{
 					$("#c_priceClass").hide();

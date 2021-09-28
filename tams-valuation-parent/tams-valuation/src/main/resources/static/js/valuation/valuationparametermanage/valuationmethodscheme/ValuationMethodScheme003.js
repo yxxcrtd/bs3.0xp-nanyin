@@ -86,6 +86,9 @@ $(function () {
         $("#valuationPrice").change(function(){
             priceClassShow();
         });
+		$("#tradeMarket").change(function(){
+			priceClassShow();
+		});
         $("#secDetailType").change(function(){
             priceClassShow();
         });
@@ -285,8 +288,7 @@ $(function () {
             var valuationPrice = $("#valuationPrice").val();
 		    var tradeMarket  = $("#tradeMarket").val();
             if(secType === '01' && valMethod == '01' && (tradeMarket=='03' || tradeMarket=='04')){
-                if(['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 ){
-                    var secDetailType = $("#secDetailType").val();
+                if(['01','02','03','04','05','06','CBC','CSD','SCH'].indexOf(valuationPrice) > -1 ){
                     $("#c_priceClass").show();
                 }else{
                     $("#c_priceClass").hide();
