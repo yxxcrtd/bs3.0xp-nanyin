@@ -407,13 +407,13 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                 resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
                 result.add(resultDto);
             }
-//            if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) && 
-//                    DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()) && !"N".equals(deal.getIsCancel())) {
-//                resultDto.setCdate(deal.getTradeDate());
-//                resultDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-//                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
-//                result.add(resultDto);
-//            }
+            if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) &&
+                    DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()) && !"N".equals(deal.getIsCancel())) {
+                resultDto.setCdate(deal.getTradeDate());
+                resultDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
+                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                result.add(resultDto);
+            }
             if (!(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                         && DictCodeList.收益类型_净值型.getValue().equals(profitType))
                     && inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue())
@@ -428,7 +428,8 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
                     result.add(resultDto);
                     PtlSecPositionFlowDto resultDtozt = new PtlSecPositionFlowDto();
                     BeanUtils.copyProperties(resultDto, resultDtozt);
-                    resultDtozt.setHodingType(DictCodeList.持仓类型_在途.getValue());
+                    resultDtozt.setAmount(deal.getShareAmt());
+                    resultDtozt.setHodingType(DictCodeList.持仓类型_可用.getValue());
                     result.add(resultDtozt);
                 }else{
                     resultDto.setCdate(deal.getTradeDate());
