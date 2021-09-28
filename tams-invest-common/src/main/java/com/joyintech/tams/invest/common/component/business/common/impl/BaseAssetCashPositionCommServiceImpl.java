@@ -190,7 +190,7 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
         else if ((DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                 && (DictCodeList.收益类型_净值型.getValue().equals(profitType)))             
               && (DictCodeList.交易方向_卖出.getValue().equals(deal.getPs())
-                || DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()))) {
+                /*|| DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())*/)) {
                  resultDto.setCdate(deal.getTradeDate());
                  // ZGBS-11 计划类净值型赎回交易 交易金额/交易份额 二者只用填一项,当只填交易金额时,amount值为空报错
                  resultDto.setAmount(
@@ -404,19 +404,19 @@ public class BaseAssetCashPositionCommServiceImpl implements BaseAssetCashPositi
             }
             if (inputDto.getPositionType().equals(DictCodeList.持仓类型_可用.getValue()) && DictCodeList.交易方向_赎回.getValue().equals(deal.getPs())) {
                 resultDto.setCdate(deal.getTradeDate());
-                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                resultDto.setAmount(ArithmeticUtil.multiply(StringUtil.isNotEmpty(deal.getShareAmt()) ? deal.getShareAmt() : deal.getTradeAmt(), new BigDecimal(-1)));
                 result.add(resultDto);
             }
             if (inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue()) &&
                     DictCodeList.交易方向_赎回.getValue().equals(deal.getPs()) && !"N".equals(deal.getIsCancel())) {
                 resultDto.setCdate(deal.getTradeDate());
                 resultDto.setHodingType(DictCodeList.持仓类型_可用.getValue());
-                resultDto.setAmount(ArithmeticUtil.multiply(deal.getShareAmt(), new BigDecimal(-1)));
+                resultDto.setAmount(ArithmeticUtil.multiply(StringUtil.isNotEmpty(deal.getShareAmt()) ? deal.getShareAmt() : deal.getTradeAmt(), new BigDecimal(-1)));
                 result.add(resultDto);
             }
-            if (!(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
+            if (/*!(DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue().equals(deal.getFinprodType2())
                         && DictCodeList.收益类型_净值型.getValue().equals(profitType))
-                    && inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue())
+                    &&*/ inputDto.getPositionType().equals(DictCodeList.持仓类型_实际.getValue())
                     && DictCodeList.交易方向_赎回确认.getValue().equals(deal.getPs())) {
                 Map<String, Object> params = new HashMap<>();
                 params.put("finprodId",deal.getbTradeId());
