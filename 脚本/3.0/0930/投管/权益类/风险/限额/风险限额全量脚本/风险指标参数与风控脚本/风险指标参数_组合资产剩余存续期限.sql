@@ -165,22 +165,6 @@ SELECT SUM(NVL(TEMP.TRADE_AMT,0)) TRADE_AMT, TEMP.FINPROD_ID RKEY, TEMP.LAST_PER
                 AND N.TRADE_STATUS = ''01''
                 AND N.IS_CANCEL = ''N''
             GROUP BY n.FINPROD_ID, ASSET.LAST_PERIOD
-              UNION ALL
-                   ----无标的资产流程中买入标的还没有生成的场景
-                 SELECT
-                SUM(  CASE WHEN n.PS IN(''T01'',''T04'',''T52'',''T64'') THEN NVL(n.TRADE_AMT,0)
-                       WHEN n.PS =''T49'' THEN NVL(-1*n.SHARE_AMT,0)
-                  ELSE  NVL(-1*n.TRADE_AMT,0)
-                 END) TRADE_AMT, N.FINPROD_ID,TO_NUMBER(N.MDATE- DATE''${valDate}'')  LAST_PERIOD
-                FROM WFL_TRD_PRODUCT_DEAL_ADD M
-                INNER JOIN WFL_TRD_PRODUCT_DEAL N ON M.TRADE_ID=N.TRADE_ID AND N.TRADE_STATUS != ''03''
-                INNER JOIN SYS_WFL_BUSINESS_LIST SWBL ON N.WORKFLOW_ID = SWBL.SEQ_NO AND SWBL.PROCESS_STATE != ''BACK''
-                WHERE  M.PORTFOLIO_ID IN   ${portfolioCode}  AND N.TRADE_DATE=DATE''${valDate}''
-                AND N.FINPROD_TYPE2 IN (''F03'', ''F05'',''F09'')
-                AND n.PS IN (''T01'')
-                AND N.TRADE_STATUS = ''01''
-                AND N.IS_CANCEL = ''N''
-                GROUP BY N.FINPROD_ID,TO_NUMBER(N.MDATE- DATE''${valDate}'')
           UNION ALL
             SELECT
                 nvl(sum(decode(n.PS, ''T02'', decode(TRADE_STATUS, ''03'', n.TRADE_AMT*-1, n.TRADE_AMT))), 0) AS TRADE_AMT, n.FINPROD_ID,
