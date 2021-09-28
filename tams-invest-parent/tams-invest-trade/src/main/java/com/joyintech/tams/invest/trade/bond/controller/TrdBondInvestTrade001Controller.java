@@ -272,6 +272,9 @@ public class TrdBondInvestTrade001Controller extends BaseController {
         String operateType = inputDto.getOperateType();
         String totleTradeId = inputDto.getTotleTradeId();
         inputDto = trdBondInvestTrade002Service.getTrdBondInvestTradeDto(inputDto.getTotleTradeId());
+        //add by  meifaxin 后面审批用到 start
+        inputDto.setTradeId(totleTradeId);
+        //add by  meifaxin 后面审批用到 end
         String turnInvAim = trdBondInvestTrade002Service.getReverseTradeDtoInvAim(inputDto.getTotleTradeId());
         if(StringUtil.isNotEmpty(turnInvAim)) {
             inputDto.setTurnInvAim(turnInvAim);
