@@ -13,6 +13,7 @@ package com.joyintech.service.trade.investtrade.commandscollection.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysPageDictlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -100,5 +101,16 @@ public class TrdCommandsCollectionController {
     {
         return trdCommandsCollectionService.selectPledgeList(param);
     }
-    
+    /**
+     * 根据SysPageDictlist表来塞交易方向的值
+     * @param subPageId 子页面id
+     * @return List<SysPageDictlist> 字典控制显示详情
+     * @see
+     * @since 1.0
+     */
+    @RequestMapping("getPSControl")
+    public List<SysPageDictlist> getPSControl(@RequestBody String subPageId) {
+        List<SysPageDictlist> sysPageDictlist = trdCommandsCollectionService.getPSControl(subPageId);
+        return sysPageDictlist;
+    }
 }

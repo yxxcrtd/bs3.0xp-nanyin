@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysPageDictlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,6 +109,7 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
     }
 
     /**
+	 list.add(dto);
      * 资产代码联想查询各类资产对应的资产代码
      * @param param 包括资产大类和输入的资产名称
      * @return List<SuggestDto> 联想框下拉选项
@@ -119,10 +121,19 @@ public class TrdCommandsCollectionService extends BaseService<TrdCommandsCollect
 		List<SuggestDto> list1 = trdCommandsCollectionMapper.getCommomFinprodMarketIds(param);
 		if(list1!=null && list1.size()>0) {
 			for(SuggestDto dto : list1) {
-				list.add(dto);
 			}
 		}
 		return list;
 	}
-
+	/**
+	 * 根据SysPageDictlist表来塞交易方向的值
+	 * @param subPageId 子页面id
+	 * @return List<SysPageDictlist> 字典控制显示详情
+	 * @see
+	 * @since 1.0
+	 */
+	public List<SysPageDictlist> getPSControl(String subPageId) {
+		List<SysPageDictlist> sysPageDictlist = trdCommandsCollectionMapper.getPSControl(subPageId);
+		return sysPageDictlist;
+	}
 }
