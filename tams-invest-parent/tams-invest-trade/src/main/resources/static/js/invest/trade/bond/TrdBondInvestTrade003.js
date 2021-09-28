@@ -3769,9 +3769,9 @@ var table;
           $.each(trs,function (index,element) {
             var lengths =  $('#bussTrdTransfenpei_div').find('.layui-table').eq(2).find('tr').eq(index).find('td').length;
             if(($('#tradeMarket').val()=='03'||$('#tradeMarket').val()=='04')){
-                $('#bussTrdTransfenpei_div').find('.layui-table').eq(2).find('tr').eq(index).find('td').eq(lengths-3).html('<div class="layui-table-cell laytable-cell-1-channelAvailableCash"></div>')
+                $('#bussTrdTransfenpei_div').find('.layui-table').eq(2).find('tr').eq(index).find('td').eq(lengths-3).html('<div class="layui-table-cell laytable-cell-1-channelAvailableCash layui-hide"></div>')
             }else{
-                $('#bussTrdTransfenpei_div').find('.layui-table').eq(2).find('tr').eq(index).find('td').eq(lengths-2).html('<div class="layui-table-cell laytable-cell-1-channelAvailableCash"></div>')
+                $('#bussTrdTransfenpei_div').find('.layui-table').eq(2).find('tr').eq(index).find('td').eq(lengths-2).html('<div class="layui-table-cell laytable-cell-1-channelAvailableCash layui-hide"></div>')
             }
           })
         }
