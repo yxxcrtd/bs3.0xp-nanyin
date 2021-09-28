@@ -161,8 +161,8 @@
         }
 
         //增加业务模式的联动处理
-        if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
-            changeBussnissModelByFinprodId();
+        // if(pageModel==PAGE_MODEL_NEW||pageModel==PAGE_MODEL_EDIT)
+        //     changeBussnissModelByFinprodId();
         //增加业务模式的联动处理
         // 画星星
         star();
@@ -212,7 +212,7 @@
         });
     }  
    
-    var changeBussnissModelByFinprodId = function(){
+    /*var changeBussnissModelByFinprodId = function(){
         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
             return;
         }
@@ -239,7 +239,7 @@
              $('#businessModel').val("").trigger('change');
         }
 
-    }
+    }*/
 
 
 
@@ -434,14 +434,14 @@
 	    });
 	   
 	    //根据参数 选择显示投资目的或者业务模式
-	    if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+	   /* if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
            $("#invAimDiv").hide();
            $("#businessModelDiv").show();
 	    }else if(SHOW_INVAIM_OR_BUSSINSSMODEL=="01"){
 	       $("#invAimDiv").show();
            $("#businessModelDiv").hide();
 	    }
-
+*/
 	 // 代办显示点击查看风险试算结果  Start
         /**
          * 代办点击查看风险试算结果

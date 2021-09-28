@@ -60,7 +60,7 @@
         return object;
     };
 
-    $("#businessModel").on("change", function () {
+    /*$("#businessModel").on("change", function () {
         var invAim;
         if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
             var businessModel = $("#businessModel").val();
@@ -71,7 +71,7 @@
             }
         }
         $("#invAim").val(invAim);
-    });
+    });*/
 
     /**
      * 获取风险试算参数
@@ -177,7 +177,7 @@
             $("#deviationDegree").text("");
         }
     }
-    var changeBussnissModelByFinprodId = function(){
+    /*var changeBussnissModelByFinprodId = function(){
         if(SHOW_INVAIM_OR_BUSSINSSMODEL!="02"){
             return;
         }
@@ -203,7 +203,7 @@
             $('#businessModel').val("").trigger('change');
         }
 
-    }
+    }*/
 
     //净价、行权收益率、到期收益率联动
     var calData = function (calflag) {
@@ -267,14 +267,14 @@
                     return;
                 }
             }
-            if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
-                var businessModel = $("#businessModel").val();
-                if(businessModel=="Y1"){
-                    object.invAim = "AC"
-                }else{
-                    object.invAim = "FVTPL"
-                }
-            }
+            // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            //     var businessModel = $("#businessModel").val();
+            //     if(businessModel=="Y1"){
+            //         object.invAim = "AC"
+            //     }else{
+            //         object.invAim = "FVTPL"
+            //     }
+            // }
 
             Joyin.ajaxJson(basePath + "invest/entrust/etribbondinfo/EtrIbBondinfo002/calData", object, function (result) {
                 if (result && result.data) {
@@ -703,14 +703,14 @@
         if(!object){
             return;
         }
-        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
-            var businessModel = $("#businessModel").val();
-            if(businessModel=="Y1"){
-                object.invAim = "AC"
-            }else{
-                object.invAim = "FVTPL"
-            }
-        }
+        // if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+        //     var businessModel = $("#businessModel").val();
+        //     if(businessModel=="Y1"){
+        //         object.invAim = "AC"
+        //     }else{
+        //         object.invAim = "FVTPL"
+        //     }
+        // }
 
         Joyin.ajaxJson(basePath + "invest/entrust/EtrCommonController/check", object, function (result1) {
             if (operateType === "save") {
@@ -917,7 +917,7 @@
                 query("#finmdate").val(new Date(data.finmdate)).trigger("change");
                 query("#ccy").val(data.ccy).trigger("change").attr("disabled", true);
                 checkFinMdate();
-                changeBussnissModelByFinprodId();
+                // changeBussnissModelByFinprodId();
                 calData();
             } else {
                 // 为空

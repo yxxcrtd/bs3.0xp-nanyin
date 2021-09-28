@@ -128,11 +128,11 @@ public class TrdRepoDuration002Service extends BaseService<TrdRepoDuration002Dto
             entity.setTrdProductDeal(deal);
         }
 
-        String entrustId = finTradeProductMapper.findEntrustIdByTradeId(entity.getFinprodId());
+        //String entrustId = finTradeProductMapper.findEntrustIdByTradeId(entity.getFinprodId());
         tradeDto.getBaseTradeProductDealDtos().forEach(item->{
-            if(StringUtil.isNotEmpty(entrustId)){
+            /*if(StringUtil.isNotEmpty(entrustId)){
                 item.setEntrustId(entrustId);
-            }
+            }*/
             if (OperationType.REVOKE == operationType) {
                 getInterfInputDto(item, DictCodeListExt1.交易流程状态_撤销);
             }
