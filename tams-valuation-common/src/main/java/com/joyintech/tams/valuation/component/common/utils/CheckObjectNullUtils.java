@@ -24,8 +24,8 @@ public class CheckObjectNullUtils {
                 f.setAccessible(true);
                 System.out.print(f.getName() + ":");
                 System.out.println(f.get(object));
-                if (f.get(object) == null ) {
-                    flag =  true;
+                if (f.get(object) != null ) {
+                    flag =  false;
                 }
             }
         } catch (Exception e) {

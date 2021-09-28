@@ -364,7 +364,9 @@ public class CfetsRepoDealQuotedPr006Service extends BaseService<CfetsRepoDealQu
             finDealPledge.setPledgeRatio(item.getPledgeRatio().divide(new BigDecimal(100)));//质押率= list.折算比例/100
             finDealPledge.setPledgeAmt(finDealPledge.getPledgeAmt().multiply(finDealPledge.getPledgeRatio()));//质押金额= 质押券置换结果.质押面值*质押券置换结果.质押率
             finDealPledge.setPledgeFaceValue(new BigDecimal(100));//面值
-            finDealPledgeMapper.insert(finDealPledge);
+            if(StringUtil.isNotEmpty(finDealPledge.getPledgeAmt())&&finDealPledge.getPledgeAmt().compareTo(BigDecimal.ZERO)!=0){
+                finDealPledgeMapper.insert(finDealPledge);
+            }
         });
 
     }

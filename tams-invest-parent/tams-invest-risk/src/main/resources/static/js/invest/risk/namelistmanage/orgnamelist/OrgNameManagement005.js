@@ -33,7 +33,8 @@
         addbtn:true,
         checkbox:false,
         cols: [
-            {field:'oldlistDetailName',  title: 'OrgNameManagement003.listDetailName',visible:false} //金融产品代码
+            {field:'num', width:200 , title:'OrgNameManagement003.num'}
+            ,{field:'oldlistDetailName',  title: 'OrgNameManagement003.listDetailName',visible:false} //金融产品代码
             // 资产代码
             ,{
                 field: 'listDetailName',

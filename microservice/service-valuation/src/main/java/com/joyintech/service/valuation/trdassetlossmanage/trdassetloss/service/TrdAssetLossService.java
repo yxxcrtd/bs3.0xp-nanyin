@@ -197,6 +197,8 @@ public class TrdAssetLossService extends BaseService<TrdAssetLoss001Dto> {
         map.put("TYPE_TOUGUAN_F07", DictCodeListExt1.金融产品类型_投管用_存款.getValue());
         map.put("TYPE_TOUGUAN_F17", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
         map.put("TYPE_TOUGUAN_F18", DictCodeListExt1.金融产品类型_投管用_项目类资产.getValue());
+        String finprodMarketId =trdAssetLoss001Mapper.queryFinprodMarketIdByFinprodId(param.get("finprodId").toString());
+        map.put("finprodId", finprodMarketId);
         TrdAssetLoss001Dto dto = trdAssetLoss001Mapper.selectAssetExerciseDate(map);
         return Arrays.asList(dto);
     }

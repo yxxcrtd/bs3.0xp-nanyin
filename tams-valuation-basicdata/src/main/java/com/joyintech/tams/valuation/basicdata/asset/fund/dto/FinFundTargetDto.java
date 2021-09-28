@@ -1075,4 +1075,5 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
         }
         return this.getUpdateUser();
     }
+
 }

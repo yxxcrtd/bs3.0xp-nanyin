@@ -11,7 +11,20 @@ package com.joyintech.service.risk.namelistmanage.assetnamelist.dto;
 import com.joyintech.tams.common.base.entity.RskAccessListDetail;
 
 public class RskAccessListDetailDto extends RskAccessListDetail {
+    /**
+     * 序号
+     */
+    private String num;
 
+
+    public String getNum() {
+        return num;
+    }
+
+
+    public void setNum(String num) {
+        this.num = num;
+    }
     /**
      * 名单主体名称(旧)
      */

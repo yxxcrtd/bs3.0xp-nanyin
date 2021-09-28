@@ -147,7 +147,7 @@ public class CashFlowDiscountReaderService {
                         ViewRatingInfoDto rateInfo = null;
                         //如果配置使用的是国债曲线族，则不查找评级信息
                         if("01".equals(cashFlowDiscountReaderResult.getModCurveConfig().getCurveGroupCode())){
-                            logger.info("资产配置使用国债收益率，不需要取评级信息.资产代码："+cashFlowDiscountReaderResult.getModAssetInfoDto().getFinprodId());
+                            logger.info("资产配置使用国债收益率，不需要取评级信息.资产代码："+item.getFinprodId());
                         }else{
                             if(modAssetGradeSpecialConfigMap!=null && modAssetGradeSpecialConfigMap.containsKey(item.getFinprodId())){
                                 ModAssetGradeSpecialConfig modAssetGradeSpecialConfig = modAssetGradeSpecialConfigMap.get(item.getFinprodId());
@@ -186,11 +186,13 @@ public class CashFlowDiscountReaderService {
                             paramCurveCode.put("graderesult", modCurveConfig.getBottomGrade());
                         }
                         List<String> curveCode = cashFlowDiscountMapper.getCurveCode(paramCurveCode);
-
-                        cashFlowDiscountReaderResult.setViewRatingInfoDto(rateInfo);
-                        cashFlowDiscountReaderResult.setCurveCodes(curveCode);
-
-                        result.add(cashFlowDiscountReaderResult);
+                        if(CollectionUtils.isEmpty(curveCode)){
+                            modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getFinprodId(), "【现金流贴现模型批处理】：找不到曲线，无法继续.");
+                        }else{
+                            cashFlowDiscountReaderResult.setViewRatingInfoDto(rateInfo);
+                            cashFlowDiscountReaderResult.setCurveCodes(curveCode);
+                            result.add(cashFlowDiscountReaderResult);
+                        }
                     }else{
                         modLogsService.error((Map<String, ModBatchLogs>)stepExecution.getJobExecution().getExecutionContext().get(ValComponentConstant.MODEL_LOGS),item.getFinprodId(), "【现金流贴现模型批处理】：现金流贴现模型缺少配置，无法继续.");
                     }
