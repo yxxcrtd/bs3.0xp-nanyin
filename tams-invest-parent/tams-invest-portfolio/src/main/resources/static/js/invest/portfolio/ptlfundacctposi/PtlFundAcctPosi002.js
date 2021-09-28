@@ -35,7 +35,7 @@ $(function() {
          */
         cols:[
              {field:'cdateStr', sortField:'cdate', title: 'PtlFundAcctPosi001.date'}//,sortField:'tradeStatus'
-             ,{field:'portfolioId', title: 'PtlActivityPeriod001.portfolioId'}
+             ,{field:'portfolioId', title: 'PtlActivityPeriod001.portfolioId',sortField: 'PORTFOLIO_ID'}
              ,{field:'portfolioName', title: 'PtlActivityPeriod001.portfolioName'}
              ,{field:'busiType', visible:false}
              ,{field:'busiTypeStr', title: '类型',sortField:'FINPROD_TYPE_TG'}

@@ -185,6 +185,7 @@
         if (object) {
             var riskdata = getriskdata(object);
             var riskInterfUrl = basePath + "riskrds/interf/doInfData/0/RSK002/F07";
+            object.calendarId = "03";
             if (riskdata && riskInterfUrl) {
                 window.BaseRiskMathComm.initBaseRiskMathRedis(riskInterfUrl, object, riskdata, riskMathRedisCallback);
             }

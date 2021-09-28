@@ -1605,11 +1605,14 @@ $(function() {
         var TRADE_PLACE_SELECTIONS = JSON.parse(TRADE_PLACE);
         var DEAL_MODE_SELECTIONS = JSON.parse(DEAL_MODE);
         var BACK_LEND_SELECTIONS = JSON.parse(BACK_LEND_DIRECTION);
-        var ps01Selections = [];
         var psF01Selections = [];
         var psF02Selections = [];
+        var psF03Selections = [];
         var psF04Selections = [];
+        var psF05Selections = [];
+        var psF06Selections = [];
         var psF08Selections = [];
+        var psF09Selections = [];
         var psF10Selections = [];
         var psF11Selections = [];
         var tradeMarket12Selections = [];
@@ -1618,19 +1621,28 @@ $(function() {
         var tradeMarket02345Selections = [];
         var dealMode0123Selections = [];
 
-        for (var i =0 ;i<PS_SELECTIONS.length;i++){
-            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02') {
-                ps01Selections.push(PS_SELECTIONS[i].id);
-                psF01Selections.push(PS_SELECTIONS[i].id);
-            }
-            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02'|| PS_SELECTIONS[i].id == 'T04'|| PS_SELECTIONS[i].id == 'T06') {
-                psF04Selections.push(PS_SELECTIONS[i].id);
-            }
-            if(PS_SELECTIONS[i].id == 'T01' || PS_SELECTIONS[i].id == 'T02'|| PS_SELECTIONS[i].id == 'T46'
-                || PS_SELECTIONS[i].id == 'T55' || PS_SELECTIONS[i].id == 'T50') {
-                psF11Selections.push(PS_SELECTIONS[i].id);
-            }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F01_PS.length;i++){
+            psF01Selections.push(PINAN_ASSET_TYPE_F01_PS[i].dictItemVal);
         }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F03_PS.length;i++){
+            psF03Selections.push(PINAN_ASSET_TYPE_F03_PS[i].dictItemVal);
+        }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F04_PS.length;i++){
+            psF04Selections.push(PINAN_ASSET_TYPE_F04_PS[i].dictItemVal);
+        }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F05_PS.length;i++){
+            psF05Selections.push(PINAN_ASSET_TYPE_F05_PS[i].dictItemVal);
+        }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F06_PS.length;i++){
+            psF06Selections.push(PINAN_ASSET_TYPE_F06_PS[i].dictItemVal);
+        }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F09_PS.length;i++){
+            psF09Selections.push(PINAN_ASSET_TYPE_F09_PS[i].dictItemVal);
+        }
+        for (var i =0 ;i< PINAN_ASSET_TYPE_F11_PS.length;i++){
+            psF11Selections.push(PINAN_ASSET_TYPE_F11_PS[i].dictItemVal);
+        }
+
         // ps01Selections.push(PS_SELECTIONS[0].id);
         // ps01Selections.push(PS_SELECTIONS[3].id);
         // psF01Selections.push(PS_SELECTIONS[0].id);
@@ -1679,16 +1691,16 @@ $(function() {
             item: psF02Selections
         });
         $('#psF03').updateChosenArr({
-            item: ps01Selections
+            item: psF03Selections
         });
         $('#psF04').updateChosenArr({
             item: psF04Selections
         });
         $('#psF05').updateChosenArr({
-            item: ps01Selections
+            item: psF05Selections
         });
         $('#psF06').updateChosenArr({
-            item: ps01Selections
+            item: psF06Selections
         });
         $('#psF07').updateChosenArr({
             item: psF10Selections
@@ -1697,7 +1709,7 @@ $(function() {
             item: psF08Selections
         });
         $('#psF09').updateChosenArr({
-            item: psF04Selections
+            item: psF09Selections
         });
         $('#psF10').updateChosenArr({
             item: psF10Selections

@@ -594,7 +594,7 @@ public class EtrPlanAssetNService extends CommonExportService<EtrPlanAssetNDto> 
                         map.put("length", 20);
                         Page<SelectOptionDto> finprodIds = getfinprodIdForAdd(map);
                         if (finprodIds.getRoot().isEmpty()) {
-                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0043", getMessage("EtrPlanAssetN002.finprodId"), lineNo));
+                            confirmmsg = etrCommonService.StringAddByBr(confirmmsg, getMessage("ETR_E_0017", getMessage("EtrPlanAssetN002.finprodId"), lineNo));
                         }
                     }
                     //交易方向

@@ -357,6 +357,8 @@ public class ValBatchExport001Controller extends BaseController {
         
     	if(reportType.contains(DictCodeListExt2.报表类型_利润表.getValue())){
     	    //利润表
+            String booksetIds = String.join(",",(List)paraMap.get("booksetIds"));
+            paraMap.put("booksetIds",booksetIds);
     	    List<String> proPath =  valProfitNewQuery001Service.exportExcelBatch(paraMap);
     	    paths.addAll(proPath);
     	}

@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysPageDictlist;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -73,6 +74,23 @@ public class TrdCommandsCollection001Controller extends BaseController{
         model.addAttribute("PINAN_ASSET_TYPE_F10", DictCodeList.平安资产类型_买断式回购.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F11", DictCodeListExt2.平安资产类型_股票.getValue());
         model.addAttribute("PINAN_ASSET_TYPE_F17", DictCodeListExt2.平安资产类型_一级市场债.getValue());
+        List<SysPageDictlist> pinanAssetType;
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F01");
+        model.addAttribute("PINAN_ASSET_TYPE_F01_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F03");
+        model.addAttribute("PINAN_ASSET_TYPE_F03_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F04");
+        model.addAttribute("PINAN_ASSET_TYPE_F04_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F05");
+        model.addAttribute("PINAN_ASSET_TYPE_F05_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F06");
+        model.addAttribute("PINAN_ASSET_TYPE_F06_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F09");
+        model.addAttribute("PINAN_ASSET_TYPE_F09_PS",pinanAssetType);
+        pinanAssetType = trdCommandsCollection001Service.getPSControl("PINAN_ASSET_TYPE_F11");
+        model.addAttribute("PINAN_ASSET_TYPE_F11_PS",pinanAssetType);
+
+
         return super.init(model);
     }
 

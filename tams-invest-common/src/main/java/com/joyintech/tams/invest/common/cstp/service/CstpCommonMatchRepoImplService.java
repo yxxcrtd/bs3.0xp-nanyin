@@ -375,7 +375,7 @@ public class CstpCommonMatchRepoImplService{
      * @return
      */
     private BigDecimal 本金折算券面(BigDecimal initValue,BigDecimal rate,BigDecimal dealAmt,BigDecimal total){
-        return ArithmeticUtil.divide(ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),dealAmt,2),new BigDecimal(100),2);
+        return ArithmeticUtil.divide(ArithmeticUtil.divide(ArithmeticUtil.multiply(initValue,total),ArithmeticUtil.multiply(dealAmt,rate),2),new BigDecimal(100),2);
     }
 
     private String  处理证券账户(String isKtg,String registOrg,List<String> acctNoList) {

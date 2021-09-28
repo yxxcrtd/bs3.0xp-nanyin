@@ -4,6 +4,7 @@
     <!--查询未处理的名单明细-->
     <select id="getUnhandleRskAccessListDetailDtoList"  resultType="com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto" parameterType="Map">
         SELECT
+        rownum num,
 	LIST_ID LIST_ID,
 	LIST_DATE LIST_DATE,
 	LIST_DETAIL_NAME LIST_DETAIL_NAME,
@@ -40,6 +41,7 @@ FROM
     <!--SELECT有效的名单明细-->
     <select id="selectAssetListDetailValid" resultType="com.joyintech.service.risk.namelistmanage.assetnamelist.dto.RskAccessListDetailDto">
             SELECT
+             ROWNUM as num,/**序号**/
             T1.LIST_ID,
             T1.LIST_DATE,
             T1.LIST_DETAIL_NAME,

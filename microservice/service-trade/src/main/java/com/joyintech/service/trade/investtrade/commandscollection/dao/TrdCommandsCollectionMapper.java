@@ -13,6 +13,9 @@ package com.joyintech.service.trade.investtrade.commandscollection.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.joyintech.system.base.entity.SysPageDictlist;
+import com.joyintech.system.base.entity.SysPageDictlistKey;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.joyintech.framework.select.SuggestDto;
@@ -92,4 +95,13 @@ public interface TrdCommandsCollectionMapper {
      * @since 1.0
      */
     List<TrdCommandsCollection003Dto> selectPledgeList(Map<String, Object> param);
+
+    /**
+     * 根据SysPageDictlist表来塞交易方向的值
+     * @param subPageId 子页面id
+     * @return List<SysPageDictlist> 字典控制显示详情
+     * @see
+     * @since 1.0
+     */
+    List<SysPageDictlist>  getPSControl(@Param("subPageId") String subPageId);
 }

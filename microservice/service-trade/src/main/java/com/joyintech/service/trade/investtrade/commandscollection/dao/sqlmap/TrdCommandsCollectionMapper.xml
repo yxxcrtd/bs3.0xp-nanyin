@@ -910,4 +910,16 @@
             AND NVL2(T8.SETTLE_SPREED, CONCAT('0',T8.SETTLE_SPREED+1), NULL) = #{settleSpeed}
         </where>
     </select>
+
+    <select id="getPSControl" resultMap="com.joyintech.system.base.dao.SysPageDictlistMapper.BaseResultMap" parameterType="java.lang.String">
+        SELECT * FROM  SYS_PAGE_DICTLIST
+        <where>
+            PAGE_ID = 'TrdCommandsCollection001'
+            AND DICT_ID = 'PS'
+           <if test="subPageId != null ">
+                AND SUB_PAGE_ID = #{subPageId}
+           </if>
+        </where>
+
+    </select>
 </mapper>
