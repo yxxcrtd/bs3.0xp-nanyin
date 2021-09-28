@@ -97,7 +97,7 @@
 		    ETR_ENTRUST.REMARK                                                  remark,
 		    ETR_ENTRUST.CCY                                                     settleCcy,
        IBU_PORTFOLIO_ACCT_RELA.CFETS_ACCT_TYPE                                  secAcctSource,
-       		ROUND(NVL(C.totalShareAmt,0)/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100	tradeFinishPercent,
+       		ROUND(NVL(C.totalShareAmt,nvl(C2.totalShareAmt,0))/(ETR_ENTRUST.ENTRUST_NUM*100),4)*100	tradeFinishPercent,
        		ETR_ENTRUST.PRICE_MODEL                                             priceModel,
 			ETR_ENTRUST_ADD.SEC_ACCT_ID                                         secManageAcctId,
 			PA_PTL_PORTFOLIO.PORTFOLIO_SERIES									portfolioSeries
@@ -164,6 +164,13 @@
 			WHERE B.TRADE_STATUS = '07'
 			GROUP BY C.ENTRUST_ID) C
 	    ON C.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
+		LEFT JOIN
+		(SELECT A.ENTRUST_ID,
+			nvl(A.SHARE_AMT, 0) * 100 totalShareAmt
+		FROM IBU_QUOTE_BOND A
+		LEFT JOIN IBU_QUOTE_BOND_DET B ON A.QUOTE_ID = B.QUOTE_ID
+		WHERE B.TRADE_STATUS = '07') C2
+		ON C2.ENTRUST_ID = ETR_ENTRUST.ENTRUST_ID
 	    LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'ENTRUST_STATUS')D ON ETR_ENTRUST.ENTRUST_STATUS = D.ITEM_CODE
         LEFT JOIN (SELECT ITEM_CODE,ITEM_VALUE FROM SYS_DATADICT_LIST T WHERE T.DICT_CODE= 'PS')E ON ETR_ENTRUST.PS = E.ITEM_CODE
         <!-- ADD BY YZG 成交进度计算 20201230 END-->
@@ -962,7 +969,7 @@
 				and QUOTE.quote_type = #{quoteType}
 			</if>
 			<if test="quaryDate !=null and quaryDate !='' ">
-				and QUOTE.quote_date = to_date(#{quaryDate},'YYYY-MM-DD')
+				and to_date(I.SETTLDATE,'YYYYMMDD') = to_date(#{quaryDate},'YYYY-MM-DD')
 			</if>
 			<if test="loginUserId != null and loginUserId != '' ">
 				and (QUOTE.CREATE_USER = #{loginUserId,jdbcType=VARCHAR}

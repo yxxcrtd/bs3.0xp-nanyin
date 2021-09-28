@@ -195,6 +195,12 @@ public class EtrPlanAssetNService extends BaseService<EtrPlanAssetNDto> {
         return this.queryForPageForSelectReturn(page, length,()->etrPlanAssetNMapper.getfinprodIdForAdd(map));
     }
 
+    public Page<SelectOptionDto> getfinprodIdForAdd1(int page, int length,Map<String, String> map) {
+        map.put("planasset", DictCodeListExt1.金融产品类型_投管用_计划类资产.getValue());
+        map.put("notworth", DictCodeList.收益类型_净值型.getValue());
+        return this.queryForPageForSelectReturn(page, length,()->etrPlanAssetNMapper.getfinprodIdForAdd1(map));
+    }
+
     /**
      * 获取新建界面的组合代码联想下拉框框 <功能详细描述>
      * 
