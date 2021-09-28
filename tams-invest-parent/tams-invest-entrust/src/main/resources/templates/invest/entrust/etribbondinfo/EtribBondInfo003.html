@@ -269,6 +269,19 @@
                         <i class="iconfont icon-arrow-down pro-down-icon"></i>
                         <a onclick="$('.btn-table-add').click()" style="cursor: pointer;color: #0078F0;"><i class="iconfont icon-found"></i></a>
                     </h3>
+
+                    <div class="layui-form-item">
+                        <div class="form-inline-wrap" style="padding:0px;">
+                            <label class="layui-form-label form-lable" style="width: 170px;">剩余可分配券面总额(万元)</label>
+                            <div class="layui-input-inline input-inline">
+                                <input disabled type="text" id="restTradeAmt" name="restTradeAmt" placeholder="请输入内容"
+                                       data-pattern="" data-fixtype="2" data-textrange='2'
+                                       class="layui-input form-input text-number"
+                                       data-th-value="${entity?.restTradeAmt}">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="pro-module-item">
                         <div id="combDistribt">
                             <table class="layui-table" id="bussCombDistribtTable"

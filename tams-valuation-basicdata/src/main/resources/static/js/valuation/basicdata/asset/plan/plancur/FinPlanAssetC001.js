@@ -149,13 +149,11 @@ $(function() {
      */
     table.bind('click', '.icon-copy', function(data, index) {
         data.pageModel = PAGE_MODEL_NEW;
-        Joyin.ajaxJson(basePath + 'valuation/basicdata/asset/plan/plancur/FinPlanAssetC001/check', data, function(result) {
-            Joyin.dialog(JoyinUtil.getLabel("FinPlanAssetC002.copy"),
-                basePath + "valuation/basicdata/asset/plan/plancur/FinPlanAssetC002/init",
-                "95%", "95%", data,function() {
-                    table.reload();
-                });
-        });
+        Joyin.dialog(JoyinUtil.getLabel("FinPlanAssetC002.copy"),
+            basePath + "valuation/basicdata/asset/plan/plancur/FinPlanAssetC002/init",
+            "95%", "95%", data,function() {
+                table.reload();
+            });
     });
     /**
      * 绑定导出事件

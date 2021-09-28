@@ -575,6 +575,7 @@
             if (field == "entrustNum") {
                 doOther.refreshTradAmt();
                 doChange.calSettleAmt(value, data);
+                calcRestTradeAmt();
             }
             if (field == "portfolioId") {
                 doChange.portfolio(value, data);
@@ -867,7 +868,22 @@
         return res;
     }
 
-
+    function calcRestTradeAmt(){
+        if(query("#tradeAmt").val()){
+            var rowsData = table.getAllRows();
+            if (rowsData.length > 0) {
+                var restTradeAmt = query("#tradeAmt").val();
+                for (var i in rowsData) {
+                    if(rowsData[i].entrustNum){
+                        restTradeAmt = JoyinMath.doMinus(restTradeAmt,rowsData[i].entrustNum,2);
+                    }
+                }
+                query("#restTradeAmt").val(restTradeAmt).trigger("change");
+                return;
+            }
+            query("#restTradeAmt").val(query("#tradeAmt").val()).trigger("change");
+        }
+    }
 
     /**
      * 重置
@@ -895,6 +911,7 @@
         query("#counterId2").val("").trigger("change");
         query("#portfolioSeries").val("").trigger("change");
         query("#tradeAmt").removeAttr("auto");// 劵面总额汇总方式
+        query("#restTradeAmt").val("").trigger("change");
         document.getElementById('deviationDegree').innerHTML = '';
         table.clear();
     }
@@ -1401,6 +1418,7 @@
 
     query("#tradeAmt").change(function () {
         doChange.tradeAmt();
+        calcRestTradeAmt();
     });
 
     /**

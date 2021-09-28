@@ -367,8 +367,8 @@
 				and T1.FINPROD_MARKET_ID = #{initValue}
 			</if>
 			<if test="search != null and !search.equals('')">
-				and (T1.FINPROD_MARKET_ID like concat('%',concat(#{search},'%'))
-				or T1.FINPROD_NAME like concat('%',concat(#{search},'%')))
+				and (T1.FINPROD_MARKET_ID = #{search}
+				or T1.FINPROD_NAME = #{search})
 			</if>
 		</where>
 	</select>
