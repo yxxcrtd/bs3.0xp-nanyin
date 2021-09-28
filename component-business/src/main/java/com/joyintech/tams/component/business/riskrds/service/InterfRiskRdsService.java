@@ -2581,6 +2581,36 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
             infRiskRdsDto.setAssetType2(StringUtil.equals(finDto.getFinprodType2(), DictCodeListExt1.金融产品类型_投管用_债券质押式正回购.getValue())?DictCodeList.回购拆借方向_正回购.getValue():DictCodeList.回购拆借方向_逆回购.getValue());
             infRiskRdsDto.setAssetCode(null);
             infRiskRdsDto.setMarketCode(null);
+            if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"mDate"))) {
+                infRiskRdsDto.setMdate(DateUtil.parse(CommonUtil.findValue(dataMap, "mDate").toString()));
+            }
+//            if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap,"finprodId"))) {
+//                infRiskRdsDto.setAssetCode(CommonUtil.findValue(dataMap, "finprodId").toString());
+//            }
+            if(StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "counterId"))) {
+                String counterId = CommonUtil.findValue(dataMap, "counterId").toString();
+                MstCounterParty mstCounterParty = mstCounterPartyMapper.selectByPrimaryKey(counterId);
+                if (StringUtil.isNotEmpty(mstCounterParty)) {
+                    if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                    }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                        infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                    }
+                }else{
+                    MstCfetsCustomerInfo  mstCfetsCustomerInfo = mstCfetsCustomerInfoMapper.selectByPrimaryKey(counterId);
+                    if (StringUtil.isNotEmpty(mstCfetsCustomerInfo)) {
+                        List<MstCounterParty> mstCounterPartys = mstCounterPartyMapper.getCounterByName(mstCfetsCustomerInfo.getPartyName());
+                        if (!CollectionUtils.isEmpty(mstCounterPartys)) {
+                            mstCounterParty =mstCounterPartys.get(0);
+                            if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_市场机构.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getLinkId());
+                            }else if (StringUtil.equals(mstCounterParty.getCounterType(),DictCodeListExt1.交易对手类型_内部交易对手.getValue())) {
+                                infRiskRdsDto.setIssuerCode(mstCounterParty.getManagerId());
+                            }
+                        }
+                    }
+                }
+            }
             if(StringUtil.equals(DictCodeList.交易方向_到期续做.getValue(),finDto.getPs())){
                 infRiskRdsDto.setAmount(StringUtil.isNotEmpty(dataMap.get("tradeAmtex"))?dataMap.get("tradeAmtex") instanceof BigDecimal ?(BigDecimal)dataMap.get("tradeAmtex"):new BigDecimal(dataMap.get("tradeAmtex").toString()):finDto.getFpriceAmt());
             }
