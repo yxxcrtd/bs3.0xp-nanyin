@@ -487,4 +487,15 @@ public class EtribBondInfo003Dto  extends EtrEntrust implements ProcessEntity {
     public void setPortfolioSeries(String portfolioSeries) {
         this.portfolioSeries = portfolioSeries;
     }
+
+    @JsonSerialize(using=BigDecimalSerializer.class)
+    private BigDecimal restTradeAmt;
+
+    public BigDecimal getRestTradeAmt() {
+        return restTradeAmt;
+    }
+
+    public void setRestTradeAmt(BigDecimal restTradeAmt) {
+        this.restTradeAmt = restTradeAmt;
+    }
 }
