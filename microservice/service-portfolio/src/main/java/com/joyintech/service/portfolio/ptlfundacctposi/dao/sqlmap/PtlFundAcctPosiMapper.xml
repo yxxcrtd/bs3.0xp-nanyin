@@ -142,7 +142,7 @@
 	
 <!-- 头寸明细查询 -->
 <select id="select1" resultType="com.joyintech.service.portfolio.ptlfundacctposi.dto.PtlFundAcctPosiDto">
-    with temp as (
+    select * from (with temp as (
 	select A.*,'02' isSummary from (
 	
 	select * from (
@@ -291,7 +291,7 @@
 	    ''       BUSITYPE,
         ''       ps,
 		'01' isSummary
-	from temp
+	from temp)
 	</if>
 
 </select>
