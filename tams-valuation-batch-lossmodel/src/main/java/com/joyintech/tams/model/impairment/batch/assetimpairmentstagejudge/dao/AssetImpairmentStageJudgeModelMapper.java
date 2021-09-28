@@ -35,7 +35,7 @@ public interface AssetImpairmentStageJudgeModelMapper {
      * @param assetId
      * @return
      */
-    List<ModRepayAndInterestDto> assetImpairmentStageJudgeT2322List(@Param("assetId")String assetId,@Param("execDate") Date execDate);
+    List<ModRepayAndInterestDto> assetImpairmentStageJudgeT2322List(@Param("prodId") String prodId,@Param("assetId")String assetId,@Param("execDate") Date execDate);
 
     /**
      * 删除
