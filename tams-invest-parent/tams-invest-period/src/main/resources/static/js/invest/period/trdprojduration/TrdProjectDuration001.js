@@ -63,7 +63,7 @@
                 }
             }
             , {field: 'finprodMarketName', width: 160, title: '资产名称', sortField:"finprodMarketName"}
-            , {field: 'chlFinprodId', width: 160, title: '合作资产', sortField:"chlName"}
+            , {field: 'chlFinprodId', width: 160, title: '合作资产', visible:false,sortField:"chlName"}
             , {field: 'qty', width: 160, title: '剩余本金', type: 'number', sortField:"qty"}
             , {field: 'returnAmount', width: 160, title: '还本金额', type: 'number', sortField:"returnAmount"}
             , {field: 'yield', width: 120, title: '计提利率（%）', type: 'number', sortField:"yield"}//update by yejiejie 2019-2-28

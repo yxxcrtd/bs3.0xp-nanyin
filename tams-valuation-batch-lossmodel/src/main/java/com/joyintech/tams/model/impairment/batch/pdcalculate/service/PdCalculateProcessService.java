@@ -539,8 +539,8 @@ public class PdCalculateProcessService {
         //deciZt2= N^-1(PD)
 //        BigDecimal deciZt2 =ArithmeticUtil.divide(BigDecimal.ONE,normsdist(pdConfigDto.getForwardYearPd().doubleValue()),12);
         BigDecimal deciZt2 = new BigDecimal(Double.toString(normalDistribution.inverseCumulativeProbability(pdConfigDto.getForwardYearPd().doubleValue())));
-        //deciZt3=1-deciZt1*deciZt2
-        BigDecimal deciZt3 = ArithmeticUtil.subtract(BigDecimal.ONE,ArithmeticUtil.multiply(new BigDecimal(Double.toString(deciZt1)),deciZt2));
+        //deciZt3=(1-deciZt1)*deciZt2
+        BigDecimal deciZt3 =ArithmeticUtil.multiply( ArithmeticUtil.subtract(BigDecimal.ONE,new BigDecimal(Double.toString(deciZt1))),deciZt2);
         ztStress= ArithmeticUtil.doAdd(factor,ArithmeticUtil.divide(deciZt3, BigDecimal.valueOf(Math.sqrt(pdConfigDto.getR().doubleValue())),12));
 
         return ztStress;

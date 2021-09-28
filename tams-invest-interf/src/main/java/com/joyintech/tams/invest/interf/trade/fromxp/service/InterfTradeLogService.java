@@ -66,6 +66,13 @@ public class InterfTradeLogService extends BaseService<InterfTradeLogDto> {
 	}
 	
 	/**
+     * 通过状态和id更新交易接口日志状态
+     */
+	public int updateInterfTradeLogStatusByStatusAndId(Map<String,Object> param) {
+    	return interfTradeLogMapper.updateInterfTradeLogStatusByStatusAndId(param);
+    }
+	
+	/**
 	 * 运行投管业务逻辑
 	 * @param interfTradeLogDtoList
 	 */
@@ -95,7 +102,7 @@ public class InterfTradeLogService extends BaseService<InterfTradeLogDto> {
 		@Override
 		public void run() {
 			try {
-				logger.info(interfTradeLogDto.toString());
+				logger.debug("接口日志对象信息:{}",interfTradeLogDto.toString());
 				InterfTradeConfigDto interfTradeConfigDto = CONFIG_MAP.get(interfTradeLogDto.getInterfCode());
 				if(interfTradeConfigDto==null) {
 					InterfTradeConfigDto where = new InterfTradeConfigDto();

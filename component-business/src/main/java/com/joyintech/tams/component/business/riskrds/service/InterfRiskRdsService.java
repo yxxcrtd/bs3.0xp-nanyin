@@ -1705,19 +1705,34 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 
                 // 一级市场债两个service用的DTO里的中标日字段不一样，大小写不一致。。
                 if (StringUtil.isNotEmpty(dataMap.get("biddate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("biddate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("biddate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("biddate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("biddate"));
+                    }
                 }
                 else if (StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("bidDate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("bidDate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("bidDate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("bidDate"));
+                    }
                 }
                 else if (StringUtil.isNotEmpty(dataMap.get("payDate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("payDate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("payDate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("payDate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("payDate"));
+                    }
                 }
                 if (CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果维护)
                     && StringUtil.isEmpty(infRiskRdsDto.getPortfolioCode())) {
@@ -2370,9 +2385,9 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
         // add by zhangrui1 一级分销缴款 start
         if (StringUtil.isNotEmpty(CommonUtil.findValue(dataMap, "bondFirstSign"))) {
             infRiskRdsDto.setPreOccupyCode(null);
-            if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算接口)
-                || CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算批量接口))
-                infRiskRdsDto.setIsDiffOccupy(BussinessDictCodeList.是否_是.getValue());
+//            if (CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算接口)
+//                || CommonUtil.isType(v.getInfCode(), BussinessDictCodeListRds.接口系统ID_风险试算批量接口))
+//                infRiskRdsDto.setIsDiffOccupy(BussinessDictCodeList.是否_是.getValue());
         }
         // add by zhangrui1 一级分销缴款 end
         // add by zhangrui1 基金申购使用净值1 start

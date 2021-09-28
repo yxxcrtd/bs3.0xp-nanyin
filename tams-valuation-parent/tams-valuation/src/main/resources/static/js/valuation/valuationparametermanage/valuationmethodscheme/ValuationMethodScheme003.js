@@ -61,25 +61,6 @@ $(function () {
      * 绑定联动
      */
     var linkBind=function() {
-//    	联动：估值第一市价不可和估值第二市价相同
-    	$("#valuationPrice").change(function(){
-        	var valPrice = $("#valuationPrice").val();
-        	var valPrice2 = $("#valuationPrice2").val();
-        	var num = $("#select2-valuationPrice-results").find("li").size();
-        	if(num > 0 && valPrice == valPrice2){
-        		$("#valuationPrice").val("").trigger("change");// select清空
-            	layer.msg("估值第一市价不可和估值第二市价相同！");
-        	}
-        });
-        $("#valuationPrice2").change(function(){
-        	var valPrice = $("#valuationPrice").val();
-        	var valPrice2 = $("#valuationPrice2").val();
-        	var num = $("#select2-valuationPrice2-results").find("li").size();
-        	/*if(num > 0 && valPrice == valPrice2){
-        		$("#valuationPrice2").val("").trigger("");// select清空
-            	layer.msg("估值第一市价不可和估值第二市价相同！");
-        	}*/
-        });
         $("#quotaDigit").change(function(){
         	var quotaDigit = $('#quotaDigit').val();
             if(quotaDigit<0 || quotaDigit>12){
@@ -103,9 +84,6 @@ $(function () {
         
  //     01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
         $("#valuationPrice").change(function(){
-            priceClassShow();
-        });
-        $("#valuationPrice2").change(function(){
             priceClassShow();
         });
         $("#secDetailType").change(function(){
@@ -259,7 +237,6 @@ $(function () {
             var secType = $("#secType").val();
 			var valMethod = $("#valuationMethod").val();
             var valuationPrice = $("#valuationPrice").val();
-            /*var valuationPrice2 = $("#valuationPrice2").val();*/
 			if(valMethod == '01' || valMethod == '03'){
 		    	if(secType === '03'){// 03-换汇
 					$("#c_valuationPrice").show();
@@ -271,7 +248,6 @@ $(function () {
 /*					$("#valuationPrice").val("08").trigger("change");
 		            $("#valuationPrice").attr("disabled", "disabled");*/
 
-					/*$("#valuationPrice2").val("").trigger("change");*/
 					$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
 					$("#valuationDate").val("").trigger("change");
 					$("#quotaDigit").val("");
@@ -280,21 +256,18 @@ $(function () {
 		    	}else{
 	    	        $("#valuationPrice").attr("disabled", false);
 					$("#c_valuationPrice").show();
-					/*$("#c_valuationPrice2").show();*/
 					$("#c_valuationDate").show();
 					$("#c_quotaDigit").show();
 					$("#c_priceTailMode").show();
 		    	}
 			}else{// 隐藏并且置空
 				$("#c_valuationPrice").hide();
-				/*$("#c_valuationPrice2").hide();*/
 				$("#c_valuationDate").hide();
 				$("#c_quotaDigit").hide();
 				$("#c_priceTailMode").hide();
 	    		$("#c_priceClass").hide();
 
 				$("#valuationPrice").val("").trigger("change");
-				/*$("#valuationPrice2").val("").trigger("change");*/
 				$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
 				$("#valuationDate").val("").trigger("change");
 				$("#quotaDigit").val("");
@@ -304,26 +277,17 @@ $(function () {
 
     };
     
-    // 01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
+    // 01-债券,估值方法为市值法,交易场所为（上交所，深交所）且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
     var priceClassShow = function (){
             var operateType = $('#operateType').val();
             var secType = $("#secType").val();
             var valMethod = $("#valuationMethod").val();
             var valuationPrice = $("#valuationPrice").val();
-            var valuationPrice2 = $("#valuationPrice2").val();
-            if((valMethod == '01' || valMethod == '03') && secType === '01'){
-                if(['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 || ['01','02','03','04','05','06'].indexOf(valuationPrice2) > -1){
+		    var tradeMarket  = $("#tradeMarket").val();
+            if(secType === '01' && valMethod == '01' && (tradeMarket=='03' || tradeMarket=='04')){
+                if(['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 ){
                     var secDetailType = $("#secDetailType").val();
                     $("#c_priceClass").show();
-                    $("#priceClass").attr("disabled", false);
-                    if(['028','029','030'].indexOf(secDetailType) > -1){
-                        if(operateType === 'add'){
-                            $("#priceClass").val("02").trigger("change");
-                        }
-                    }else{
-                        $("#priceClass").val("01").trigger("change");
-                        $("#priceClass").attr("disabled", "disabled");
-                    }
                 }else{
                     $("#c_priceClass").hide();
                     $("#priceClass").val("");

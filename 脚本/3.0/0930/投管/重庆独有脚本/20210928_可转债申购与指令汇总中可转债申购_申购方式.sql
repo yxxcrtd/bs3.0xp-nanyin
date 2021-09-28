@@ -1,0 +1,5 @@
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='TrdCommandsCollection001' and ELEMENT_ID = 'purchModleCon1_div';
+insert into SYS_ELEMENT_CONTROL(PAGE_ID,ELEMENT_ID,ELEMENT_FIELD,ELEMENT_LABLE,IS_SHOW,IS_REQUIRED,IS_HOLD,REQUIRED_CONTROL)
+VALUES('TrdCommandsCollection001','purchModleCon1_div','purchModleCon1_div','申购方式','02','02','02',null);
+
+DELETE FROM  SYS_ELEMENT_CONTROL WHERE PAGE_ID ='TrdConBond002' and ELEMENT_ID = 'trdNewPurchModle';
