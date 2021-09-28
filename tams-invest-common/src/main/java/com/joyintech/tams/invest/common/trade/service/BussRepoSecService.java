@@ -68,6 +68,9 @@ public class BussRepoSecService extends BaseService<PledgeBondInfoDto>{
     public List<SelectOptionDto> getBondCode(Map<String, Object> param) {
         param.put("FINPROD_TYPE_TG_F01", DictCodeListExt1.金融产品类型_投管用_债券.getValue());
         param.put("windtypeone", StringUtil.splitToList(GlobalConstant.COMMA, (String) param.get("bussRepoSec.bondType")));
+        //add by meifaxin 2019092 区分银行间 start
+        param.put("tradePlace", param.get("tradePlace")==null?null:param.get("tradePlace").toString());
+        //add by meifaxin 20190928 区分银行间 end
         return bussRepoSecMapper.getBondCode(param);
     }
 

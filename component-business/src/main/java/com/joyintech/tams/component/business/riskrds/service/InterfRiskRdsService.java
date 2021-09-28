@@ -2231,6 +2231,17 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
                     }
                 }
             }
+            long oneDay = DateUtil.getBetweenDayNumber(DateUtil.platDateFromCache(),
+                    DateUtil.parse(infRiskRdsDto.getMdate()));
+            infRiskRdsDto.setOneDay(oneDay);
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getAmount()) && StringUtil.isNotEmpty(oneDay)){
+                infRiskRdsDto.setTermAmount(ArithmeticUtil.multiply(infRiskRdsDto.getAmount(),new BigDecimal(oneDay)));
+            }
+            if (StringUtil.isNotEmpty(infRiskRdsDto.getCounterId())){
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_是.getValue());
+            }else{
+                infRiskRdsDto.setIsNullCounter(BaseDictCodeList.是否_否.getValue());
+            }
         }
         if(StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融入.getValue())||
                 StringUtil.equals(finDto.getPs(), DictCodeList.回购拆借方向_融出.getValue())){

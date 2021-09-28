@@ -150,12 +150,20 @@ public class EtrAssetConfigTransfer002Service extends BaseService<EtrAssetConfig
             //买入方
             item.setIndexId(String.valueOf(序号*2-1));
             item.setPs(DictCodeList.交易方向_买入.getValue());
+
+            // 查询买入方的券商账户
+            Map<String, Object> param = new HashMap<>();
+            param.put(KEY_ARRAY[1], paramDto.getPortfolioId());
+            List<SelectOptionDto> ptlSecAcctList = etrExchangeTrade001Service.getPtlSecAcctInfo(param);
+            item.setCounterId(!StringUtil.isEmptyList(ptlSecAcctList)?ptlSecAcctList.get(0).getText():null);
+
             jsonArrays.add(assembleCommonDataByTMK(item));
             //卖出方
             desItem.setIndexId(String.valueOf(序号*2));
             desItem.setPs(DictCodeList.交易方向_卖出.getValue());
             desItem.setPortfolioId(paramDto.getPortfolioId());
             desItem.setSecAcctId(paramDto.getSecAcctId());
+            desItem.setCounterId(item.getAcctName());
             jsonArrays.add(assembleCommonDataByTMK(desItem));
         });
         Map<String,Object> retMap=new HashMap<>();
