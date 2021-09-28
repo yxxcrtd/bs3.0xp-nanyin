@@ -77,4 +77,11 @@ public interface AssetImpairmentProvisionMapper {
      * @since 1.0
      */
     List<AssetImpairmentProvisionReaderResult> queryTrdAssetLossReaderBMW(Map<String, Object> param);
+
+    /**
+     * 查询最新资产减值结果表
+     * @param params
+     * @return
+     */
+    List<ModEclResult> getModelEclResultLatest(Map<String, Object> params);
 }

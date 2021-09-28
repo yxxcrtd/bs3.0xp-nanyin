@@ -16,6 +16,7 @@ import com.joyintech.tams.common.base.entity.EtrEntrust;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
 import com.joyintech.tams.constant.DictCode;
 import com.joyintech.tams.invest.common.constant.BussinessDictCode;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBiddingManage002Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -150,6 +151,11 @@ public class PrimaryBiddingManageDto extends EtrEntrust implements ProcessEntity
      * 调整策略
      */
     private String adjustStrategy;
+
+    /**
+     * 风险试算实体类
+     */
+    private List<RiskTrialRetDto> riskTrialRetDto;
     /**
      * 获取 bidId
      *
@@ -494,5 +500,13 @@ public class PrimaryBiddingManageDto extends EtrEntrust implements ProcessEntity
 
     public void setAdjustBallotnum(BigDecimal adjustBallotnum) {
         this.adjustBallotnum = adjustBallotnum;
+    }
+
+    public List<RiskTrialRetDto> getRiskTrialRetDto() {
+        return riskTrialRetDto;
+    }
+
+    public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
+        this.riskTrialRetDto = riskTrialRetDto;
     }
 }

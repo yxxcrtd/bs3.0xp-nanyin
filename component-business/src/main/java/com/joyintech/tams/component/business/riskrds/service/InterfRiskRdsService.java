@@ -1705,19 +1705,34 @@ public class InterfRiskRdsService<V extends IRiskRds> extends BaseRiskRdsService
 
                 // 一级市场债两个service用的DTO里的中标日字段不一样，大小写不一致。。
                 if (StringUtil.isNotEmpty(dataMap.get("biddate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("biddate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("biddate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("biddate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("biddate"));
+                    }
                 }
                 else if (StringUtil.isNotEmpty(dataMap.get("bidDate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("bidDate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("bidDate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("bidDate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("bidDate"));
+                    }
                 }
                 else if (StringUtil.isNotEmpty(dataMap.get("payDate"))) {
-                    infRiskRdsDto.setEventDate(DateUtil.format(
-                        new Date(Long.parseLong(dataMap.get("payDate").toString())),
-                        DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    if(dataMap.get("payDate") instanceof Long) {
+                        infRiskRdsDto.setEventDate(DateUtil.format(
+                                new Date(Long.parseLong(dataMap.get("payDate").toString())),
+                                DateUtil.DEFAULT_DATE_FORMAT_EN));
+                    }
+                    else {
+                        infRiskRdsDto.setEventDate((String) dataMap.get("payDate"));
+                    }
                 }
                 if (CommonUtil.isType(v.getEventStatus(), BussinessDictCodeList.共同业务类型_中标结果维护)
                     && StringUtil.isEmpty(infRiskRdsDto.getPortfolioCode())) {

@@ -26,6 +26,8 @@ import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.TrdBidPriceDto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.dto.TrdBiddingManage003Dto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.service.PrimaryBiddingManage003Service;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBidPriceValidator;
+import com.joyintech.tams.systemtools.dto.PageElementConfigDto;
+import com.joyintech.tams.systemtools.util.PageElementUtil;
 import com.joyintech.workflow.engine.dto.ProcessParameter;
 import com.joyintech.workflow.engine.dto.WorkFlowParameter;
 import com.joyintech.workflow.engine.util.WorkFlowUtil;
@@ -41,10 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -153,7 +152,23 @@ public class PrimaryBiddingManage003Controller extends BaseController {
              model.addAttribute("trdInvestPersonInfo002Dto", JsonUtils.object2Json(entity.getTrdInvestPersonInfo()));
          }
          model.addAttribute(GlobalConstant.ENTITY, entity);
+        model.addAttribute("tradeId", entity.getBidId());
         model.addAttribute("entrustAmtUnit", CacheUtil.getSysParam("entrustAmtUnit"));
+
+        model.addAttribute("MY_SUP_TIME_TYPE_02", BussinessDictCodeList.监督时分_委托监控.getValue());
+        Date sysDate = DateUtil.platDateFromCache();
+        model.addAttribute("sysDate", DateUtil.format(sysDate));
+
+        PageElementConfigDto pageElementConfigDto = new PageElementConfigDto();
+        pageElementConfigDto.setPageId("BaseRiskMathComm");
+        Map<String, String> BaseRiskMathCommMap = PageElementUtil.isPageElementShow(pageElementConfigDto); // 风险试算页面
+        pageElementConfigDto.setPageId(this.getPageId());
+        Map<String, String> isEleShow = PageElementUtil.isPageElementShow(pageElementConfigDto);
+        isEleShow.putAll(BaseRiskMathCommMap);
+        model.addAttribute("isEleShow", isEleShow);
+
+        model.addAttribute("TRD61", BussinessDictCodeList.共同业务类型_中标结果维护.getValue());
+
         return super.init(model);
     }
     /**

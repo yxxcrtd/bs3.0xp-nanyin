@@ -86,6 +86,13 @@
                 });
             }
         }
+        if(SHOW_INVAIM_OR_BUSSINSSMODEL=="02"){
+            if(object.businessModel=="Y1"){
+                object.invAim = 'AC';
+            }else if(object.businessModel=="Y2"){
+                object.invAim  = 'FVTPL'
+            }
+        }
 
         //指令暂存，去除校验  add by xxg 20210802
         if (operateType === 'save') {
