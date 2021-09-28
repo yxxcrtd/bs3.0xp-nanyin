@@ -202,7 +202,7 @@ public class ComTradeOpponent001Service extends BaseService<ComTradeOpponentDto>
 //                mstTradeOpponent001Mapper.deleteFinProduct(dto);
                 finProductMapper.deleteByPrimaryKey(dto.getFinprodId());
 //                mstTradeOpponent001Mapper.deleteRepAssetMngPlan(dto);
-                repAssetMngPlanMapper.deleteByPrimaryKey(dto.getFinprodId());
+//                repAssetMngPlanMapper.deleteByPrimaryKey(dto.getFinprodId());
                 FinProductTypeKey finProductTypeKey = new FinProductTypeKey();
                 finProductTypeKey.setBranch(dto.getBranch());
                 finProductTypeMapper.deleteByPrimaryKey(finProductTypeKey);
