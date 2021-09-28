@@ -10,27 +10,35 @@ package com.joyintech.tams.invest.interf.trade.common;
  */
 public class Constants {
 	/**
-	 * 信评系统
+	 * 接口类型-接收
+	 */
+	public final static String INTERF_TYPE_RECEIVE = "RECEIVE";
+	/**
+	 * 接口类型-发送
+	 */
+	public final static String INTERF_TYPE_SEND = "SEND";
+	/**
+	 * 接口系统-信评系统
 	 */
 	public final static String INTERF_SYSTEM_XP = "xingping";
 	/**
-	 * 恒生资管系统
+	 * 接口系统-恒生资管系统
 	 */
 	public final static String INTERF_SYSTEM_ZG = "hszg";
 	/**
-	 *状态1新增
+	 *接口状态-1新增
 	 */
 	public final static Integer INTERF_STATUS_NEW = 1;
     /**
-	 *状态2处理中
+	 *接口状态-2处理中
 	 */
 	public final static Integer INTERF_STATUS_PROCESS = 2;
 	/**
-	 *状态3处理成功
+	 *接口状态-3处理成功
 	 */
 	public final static Integer INTERF_STATUS_SUCCESS = 3;
 	/**
-	 *状态4处理失败
+	 *接口状态-4处理失败
 	 */
 	public final static Integer INTERF_STATUS_FAIL = 4;
 	/**
@@ -38,11 +46,11 @@ public class Constants {
 	 */
 	public final static Integer INTERF_THREAD_NUMBER = 10;
 	/**
-	 *接口配置状态1有效
+	 *接口配置状态-1有效
 	 */
 	public final static Integer INTERF_CONFIG_STATUS_ENABLE = 1;
 	/**
-	 *接口配置状态1无效
+	 *接口配置状态-0无效
 	 */
 	public final static Integer INTERF_CONFIG_STATUS_DISABLE = 0;
 	/**
