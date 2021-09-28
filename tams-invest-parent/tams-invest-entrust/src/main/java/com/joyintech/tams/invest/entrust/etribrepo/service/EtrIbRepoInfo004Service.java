@@ -190,11 +190,11 @@ public class EtrIbRepoInfo004Service extends CommonExportService<EtrIbRepoinfo00
                 //etrRepoDto.setCalendarId(rowData.get(15).toString().split(":")[0]);
                 Map<String, Object> param = new HashMap<>();
 
-                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
-                    etrRepoDto.setSecAcctId(rowData.get(10).toString());
-                }
+//                if (StringUtil.isNotBlank(rowData.get(10).toString())) {
+//                    etrRepoDto.setSecAcctId(rowData.get(10).toString());
+//                }
                 // 备注
-                etrRepoDto.setRemark(rowData.get(11).toString());
+                etrRepoDto.setRemark(rowData.get(10).toString());
 //                etrRepoDto.setZyqk(rowData.get(14).toString());
                 etrRepoDto.setTradeMarket(BussinessDictCodeList.交易场所_银行间.getValue());
                 etrRepoDto.setInvManagerId(LoginUserUtil.getUserName());

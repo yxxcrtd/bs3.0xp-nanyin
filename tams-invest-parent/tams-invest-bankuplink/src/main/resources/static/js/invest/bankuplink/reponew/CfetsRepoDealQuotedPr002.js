@@ -686,7 +686,7 @@
     };
 
     $(function () {
-        $("#secAcctId").attr("disabled",true);
+        // $("#secAcctId").attr("disabled",true);
     	if(dialogueRecord){
     		$("#CfetsBondDealQuotedPrice002_dialogueRecord").html(dialogueRecord);
     		$("#dialogueRecord_div").show();
