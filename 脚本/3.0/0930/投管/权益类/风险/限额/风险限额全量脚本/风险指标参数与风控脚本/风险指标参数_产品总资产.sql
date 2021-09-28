@@ -99,7 +99,7 @@ V_CONTENT_04 CLOB := 'select sum(amount) AS amount from
      from TRD_PRODUCT_DEAL_ADD m
     inner join TRD_PRODUCT_DEAL n on m.TRADE_ID=n.TRADE_ID and n.FINPROD_TYPE2 in (''F02'',''F08'',''F25'',''F04'')
     where  m.PORTFOLIO_ID in ${portfolioCode} and
-    n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T54'',''T55'',''T56'')
+    n.TRADE_DATE=date''${valDate}'' and n.PS in (''T01'',''T07'',''T54'',''T55'',''T56'',''T22'',''T23'')
     AND n.TRADE_STATUS = ''01''
     AND n.IS_CANCEL = ''N''
 
