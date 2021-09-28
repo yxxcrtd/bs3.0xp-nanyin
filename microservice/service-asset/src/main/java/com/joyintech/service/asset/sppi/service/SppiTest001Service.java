@@ -13,27 +13,20 @@ import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.constant.GlobalConstant;
 import com.joyintech.framework.grid.Page;
 import com.joyintech.framework.select.SelectOptionDto;
-import com.joyintech.framework.util.BeanUtil;
-import com.joyintech.framework.util.CacheUtil;
-import com.joyintech.framework.util.DateUtil;
 import com.joyintech.framework.util.StringUtil;
 import com.joyintech.service.asset.sppi.dao.SppiTest001Mapper;
 import com.joyintech.service.asset.sppi.dto.SppiImportDto;
 import com.joyintech.service.asset.sppi.dto.SppiTest001Dto;
 import com.joyintech.tams.common.base.dao.FinProductMapper;
 import com.joyintech.tams.common.base.dao.SppiImportDataMapper;
-import com.joyintech.tams.common.base.entity.ChbPrdresistCode;
 import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.common.base.entity.SppiImportData;
-import com.joyintech.tams.constant.DictCodeList;
 import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.constant.DictCodeListExt3;
-import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.invest.common.dto.common.ExcelValidDto;
 import com.joyintech.tams.invest.common.util.ExcelUtil;
+import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import com.joyintech.tams.systemtools.util.CommonUtil;
-import com.joyintech.tools.collectors.JoyinCollectors;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * 资产标的SPPI测试结果查询服务
@@ -213,11 +205,14 @@ public class SppiTest001Service extends BaseService<SppiTest001Dto> {
             		}
             	}
 			}
+
             //使权不重大的购入价条件	[type 数值]
             entity.setBidPriceCon(list.get(4));
-            if (StringUtil.isNotEmpty(list.get(4)) && !(CommonUtil.isFloatNumeric(list.get(4)))){
-                message.add(list.get(4)+"使权不重大的购入价条件的字段类型应为数值");
-            }
+            //mody  by  mefiaxin  20210929  start
+//            if (StringUtil.isNotEmpty(list.get(4)) && !(CommonUtil.isFloatNumeric(list.get(4)))){
+//                message.add(list.get(4)+"使权不重大的购入价条件的字段类型应为数值");
+//            }
+            //mody  by  mefiaxin  20210929  end
             //权的价值	[type 数值]
             entity.setCostValue(list.get(5));
             if (StringUtil.isNotEmpty(list.get(5)) && !(CommonUtil.isFloatNumeric(list.get(5)))){
