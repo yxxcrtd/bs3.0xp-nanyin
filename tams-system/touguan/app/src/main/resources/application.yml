@@ -555,22 +555,19 @@ spring:
   profiles: dev
   thymeleaf:
     cache: false
-#  redis:
-#    password: 123456
-#    cluster:
-#      nodes: 192.168.90.119:6379,192.168.90.119:6380,192.168.90.119:6381,192.168.90.119:6382,192.168.90.119:6383,192.168.90.119:6384
   redis:
+    password: 123456
     cluster:
-      nodes: 192.168.60.98:6379,192.168.60.98:6380,192.168.60.98:6381,192.168.60.98:6382,192.168.60.98:6383,192.168.60.98:6384
+      nodes: 192.168.90.119:6379,192.168.90.119:6380,192.168.90.119:6381,192.168.90.119:6382,192.168.90.119:6383,192.168.90.119:6384
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
     reportSqlldrDatabaseName: 192.168.70.245:1521/orcl
 application:
   sqldirurl: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-  sqldiruserName: BS30INIT_TEST
-  sqldirpassword: BS30INIT_TEST
+  sqldiruserName: BS30INIT_DEV
+  sqldirpassword: BS30INIT_DEV
 shiro:
   ssoEnable: true
   allowUrl: /core/selectRule,/common/ptlposition/insertPosition,/BussSettleOrderComm/generateSettleOrder,
@@ -587,25 +584,25 @@ shiro:
 base:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
 interf:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
 stresstest:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
 wind:
   datasource:
     url: jdbc:oracle:thin:@//192.168.70.245:1521/orcl
-    username: BS30INIT_TEST
-    password: BS30INIT_TEST
+    username: BS30INIT_DEV
+    password: BS30INIT_DEV
 log:
-  path: E:/home/tams/logs/tams/touguan
+  path: F:/home/tams/logs/tams/touguan
   level: debug
 eureka:
   client:
