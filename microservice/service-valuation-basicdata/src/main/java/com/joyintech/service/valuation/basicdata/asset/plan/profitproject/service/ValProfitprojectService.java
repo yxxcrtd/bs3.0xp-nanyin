@@ -364,7 +364,7 @@ public class ValProfitprojectService extends BaseService<ValProfitprojectDto> {
      * @param param
      * @return
      */
-    public Page<SelectOptionDto> getAssetSelect(int page, int length, Map<String, Object> param) {
+    public Page<SuggestDto> getAssetSelect(int page, int length, Map<String, Object> param) {
         return this.queryForPageForSelectReturn(page, length,
                 () -> valProfitprojecMapper.getAssetSelect(param));
     }

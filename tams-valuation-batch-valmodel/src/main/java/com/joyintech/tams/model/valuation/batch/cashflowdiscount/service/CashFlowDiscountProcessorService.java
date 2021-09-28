@@ -181,9 +181,11 @@ public class CashFlowDiscountProcessorService {
             }
             String curveCode = handlecurveCode(entity, modRiskPremium);
             //如果全价计算基准日 = 资产定价定准日，且做了资产重定价，复用上面得行情
-            if (!(isAssetPrice && DateUtil.compareDate(happenDate, assetPriceBaseDate) == 0)) {
+            if (isAssetPrice && DateUtil.compareDate(happenDate, assetPriceBaseDate) == 0){
+                logger.info("资产代码："+modAssetInfoDto.getFinprodId()+",估值日期："+DateUtil.format(happenDate)+"直接复用基准日的曲线行情");
+            }else{
                 //曲线行情处理
-                calCurveInfo = handleCurve(entity, assetPriceBaseDate);
+                calCurveInfo = handleCurve(entity, happenDate);
             }
             //计算应计利息
             BigDecimal accruedInterest = calAccruedInterest(entity, happenDate);

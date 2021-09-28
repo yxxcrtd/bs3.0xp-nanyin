@@ -23,12 +23,12 @@
                         <label class="layui-form-label form-lable"
                                data-th-text="#{ValProfitproject001.finProdMarketId}">资产代码</label>
                         <div class="layui-input-inline input-inline">
-                            <select type="text" id="finprodMarketId" name="finprodMarketId"
-                                   class="layui-input form-input input-select" placeholder="请输入内容"
-                                   data-th-placeholder="#{SysCommon.placeholder}" allowClear="true"
-                                   data-th-data-url="@{/valuation/basicdata/asset/plan/profitproject/ValProfitproject001/getAssetSelect}"
-                                   >
-                            </select>
+                            <input type="text" id="finprodMarketId"  name="finprodMarketId"
+                                   class="layui-input form-input input-lenovoselect" placeholder="请输入内容"
+                                   data-th-placeholder="#{SysCommon.placeholder}"
+                                   data-th-data-url="@{/valuation/basicdata/asset/plan/profitproject/ValProfitproject001/getAssetSelect/}"
+                                   data-idfield="code" data-keyfield="code"
+                                   data-th-data-effectivefieldsalias='|{"shortName":"#{ValProfitproject001.finProdName}","code":"#{ValProfitproject001.finProdMarketId}"}|'>
                         </div>
                     </div>
                     <div class="layui-inline layui-col-md6 layui-col-sm6 layui-col-lg6">
