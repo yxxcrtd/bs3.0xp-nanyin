@@ -152,31 +152,51 @@ public class TrdBondInvestTrade001Service extends CommonExportService<TrdBondInv
             DecimalFormat df2 = new DecimalFormat("#0.00##");
             DecimalFormat df4 = new DecimalFormat("#0.0000##");
             datas.forEach(exportPdfDto -> {
-                // 委托价格
-                if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
-                    exportPdfDto.setPrice(new BigDecimal(df4.format(exportPdfDto.getPrice())));
-                }
-                // 委托金额
-                if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
-                    exportPdfDto.setEntrustAmt(new BigDecimal(df2.format(exportPdfDto.getEntrustAmt())));
-                }
-                if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
-                    // 成交均价
-                    if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
-                        exportPdfDto.setUnitCprice(new BigDecimal(df4.format(exportPdfDto.getUnitCprice())));
-                    }
-                }
-                // 成交均价(全价)
-                if(StringUtil.isNotEmpty(exportPdfDto.getUnitFprice())){
-                    exportPdfDto.setUnitFprice(new BigDecimal(df4.format(exportPdfDto.getUnitFprice())));
-                }
                 // 成交金额、结算金额
                 if(StringUtil.isNotEmpty(exportPdfDto.getTradeAmt())){
                     exportPdfDto.setTradeAmt(new BigDecimal(df2.format(exportPdfDto.getTradeAmt())));
                 }
-                // 全价金额
-                if(StringUtil.isNotEmpty(exportPdfDto.getFpriceAmt())){
-                    exportPdfDto.setFpriceAmt(new BigDecimal(df2.format(exportPdfDto.getFpriceAmt())));
+                if(pageId.equalsIgnoreCase("TrdBondInvestTradeEx001")){
+                    // 委托金额
+                    if(StringUtil.isNotEmpty(exportPdfDto.getEntrustAmt())){
+                        exportPdfDto.setEntrustAmt(new BigDecimal(df2.format(exportPdfDto.getEntrustAmt())));
+                    }
+                    // 委托价格
+                    if(StringUtil.isNotEmpty(exportPdfDto.getPrice())){
+                        exportPdfDto.setPrice(new BigDecimal(df4.format(exportPdfDto.getPrice())));
+                    }
+                    // 成交均价
+                    if(StringUtil.isNotEmpty(exportPdfDto.getUnitCprice())){
+                        exportPdfDto.setUnitCprice(new BigDecimal(df4.format(exportPdfDto.getUnitCprice())));
+                    }
+                    // 成交均价(全价)
+                    if(StringUtil.isNotEmpty(exportPdfDto.getUnitFprice())){
+                        exportPdfDto.setUnitFprice(new BigDecimal(df4.format(exportPdfDto.getUnitFprice())));
+                    }
+                }else{
+                    // 全价金额
+                    if(StringUtil.isNotEmpty(exportPdfDto.getFpriceAmt())){
+                        exportPdfDto.setFpriceAmt(new BigDecimal(df2.format(exportPdfDto.getFpriceAmt())));
+                    }
+                    // 券面
+                    if(StringUtil.isNotEmpty(exportPdfDto.getShareAmt())){
+                        exportPdfDto.setShareAmt(new BigDecimal(df4.format(exportPdfDto.getShareAmt())));
+                    }
+                    // 应计利息
+                    if(StringUtil.isNotEmpty(exportPdfDto.getUnitInt())){
+                        exportPdfDto.setUnitInt(new BigDecimal(df2.format(exportPdfDto.getUnitInt()
+                                .setScale(2,BigDecimal.ROUND_HALF_UP))));
+                    }
+                    // 到期
+                    if(StringUtil.isNotEmpty(exportPdfDto.getYield())){
+                        exportPdfDto.setYield(new BigDecimal(df2.format(exportPdfDto.getYield()
+                                .setScale(2,BigDecimal.ROUND_HALF_UP))));
+                    }
+                    // 行权
+                    if(StringUtil.isNotEmpty(exportPdfDto.getExerYield())){
+                        exportPdfDto.setExerYield(new BigDecimal(df2.format(exportPdfDto.getExerYield()
+                                .setScale(2,BigDecimal.ROUND_HALF_UP))));
+                    }
                 }
             });
             //汇总交易金额
