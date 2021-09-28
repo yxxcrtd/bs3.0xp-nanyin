@@ -335,11 +335,11 @@ public class PayTheVatQuery002Controller extends BaseController{
         String channelId = (String)pageParam.get("channelId");
         String payTaxMDate = (String)pageParam.get("payTaxMDate");
         if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_产品增值税.getValue())){
-			//在参数中添加平台日期，方便查询中与平台日期进行对比,并添加了发行状态参数
-			String pltDate = DateUtil.format(DateUtil.platDateFromCache());
-			pageParam.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
-			pageParam.put("FINPROD_TYPE_TG_F16",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
-			pageParam.put("pltDate",pltDate);
+//			//在参数中添加平台日期，方便查询中与平台日期进行对比,并添加了发行状态参数
+//			String pltDate = DateUtil.format(DateUtil.platDateFromCache());
+//			pageParam.put("issueStatus", DictCodeListExt1.发行状态_发行成功.getValue());
+//			pageParam.put("FINPROD_TYPE_TG_F16",DictCodeListExt1.金融产品类型_投管用_理财产品.getValue().concat("_"));
+//			pageParam.put("pltDate",pltDate);
             return payTheVatQuery001Service.selectPortfolioId(pageParam);  
         } else if(StringUtil.equals(taxClass, DictCodeListExt3.增值税品种_通道增值税.getValue())
             && StringUtil.isNotEmpty(channelId) && StringUtil.isNotEmpty(payTaxMDate)){
