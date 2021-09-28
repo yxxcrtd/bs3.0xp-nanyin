@@ -142,7 +142,7 @@
                                 <div class="form-inline-wrap">
                                     <label class="layui-form-label form-label-wrap" >资金到账日</label>
                                     <div class="layui-input-inline input-inline">
-                                        <input type="text" id="settleDate" name="settleDate" data-th-value="${#dates.format(entity?.settleDate, 'yyyy-MM-dd')}" class="layui-input form-input input-dateSelect"/>
+                                        <input type="text" id="settleDate" name="settleDate" data-th-value="${#dates.format(entity?.settleDate, 'yyyy-MM-dd')}" class="layui-input form-input input-dateSelect" required/>
                                     </div>
                                 </div>
                             </div>

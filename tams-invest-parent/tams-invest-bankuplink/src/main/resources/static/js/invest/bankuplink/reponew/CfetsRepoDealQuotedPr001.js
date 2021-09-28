@@ -642,7 +642,7 @@
             , {field: 'securityId', title: '交易品种', sortField: 'securityId', width: '110'}
             , {field: 'ccyStr', title: '债券币种', sortField: 'ccy', width: '110'}
             , {field: 'settlcurrencyStr', title: '结算币种', sortField: 'settlcurrency', width: '110'}
-            , {field: 'exchangerate', width: 130, title: '汇率'}
+            , {field: 'exchangerate', type:'number', width: 130, title: '汇率'}
             , {field: 'reference', width: 130, title: '报价编号'}
             , {field: 'ourcapitalbankname', width: 130, title: '本方资金开户行'}
             , {field: 'ourcapitalaccountname', width: 130, title: '本方资金账户户名'}
