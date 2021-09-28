@@ -175,11 +175,8 @@
 
         if (pageId == 'TrdRepoTradeEx001') {
             $('#fTradeIdDiv').hide();
-        }else if(pageId == 'TrdRepoTradeIb001'){
-            $('#TrdRepoTradeIb001_btn_export_pdf').hide();
-            $('#TrdRepoTradeIb001_btn_export_mail_model').hide();
-            $('#TrdRepoTradeIb001_btn_manage').hide();
         }
+
         if(fTradeId||cstpEntrustId){
             $('.form-button-area').hide();
             $('.curr-form').hide();
