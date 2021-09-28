@@ -150,7 +150,9 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
                 fileAttachmentProcess.upload(file);
                 sufi.setSeqNo(generateId);
             }
-            prepareEntity(entity);
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_申购确认.getValue())) {
+                prepareEntity(entity);
+            }
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_有效.getValue());
             List<BaseTradeProductDealDto> baseTradeProductDealDtos = new ArrayList<>();
             BaseTradeProductDealDto dto = new BaseTradeProductDealDto();
@@ -233,6 +235,11 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
             restTemplate.postForObject(
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/doComplete",
                 entity, Integer.class);
+
+            if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
+                doCompleteRedemption(entity);
+            }
+
         } else if (StringUtil.equals(entity.getOperateType(), "REVOKE")) {  
             Map<String, Object> param = new HashMap<>();
             param.put("state", DictCodeList.流程状态_新建.getValue());
@@ -284,7 +291,7 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
             Integer.class);
         if (StringUtil.equals(entity.getOperateType(), "submit")) {
             if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-                doInsertRedemption(entity);
+//                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -347,7 +354,7 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
                 ServiceApplication.TRADE_SERVICE_NAME + "/TrdPlanNetInvestTrade/doUpdate", entity,
                 Integer.class);
             if (StringUtil.equals(entity.getPs(), DictCodeList.交易方向_赎回确认.getValue())) {
-                doInsertRedemption(entity);
+//                doInsertRedemption(entity);
             }
             FinProductTradeDto finProductTradeDto = new FinProductTradeDto();
             finProductTradeDto.setWorkflowStatus(DictCodeListExt1.交易流程状态_流程中.getValue());
@@ -745,4 +752,43 @@ public class TrdPlanNetInvestTrade003Service extends BaseService<TrdPlanNetInves
 ////        return null;
 //    }
     // delete by etliu 20210917 end
+
+    public void doCompleteRedemption(TrdPlanNetInvestTradeConfirmDto entity){
+        UploadFile file = null;
+        List<SysUploadFileInfo> syfiList = entity.getFileArray();
+        for (SysUploadFileInfo sufi : syfiList) {
+            file = fileAttachmentProcess.fetch(sufi.getSeqNo());
+            String generateId = IDGenerator.generate();
+            file.setFileNo(generateId);
+            fileAttachmentProcess.upload(file);
+            sufi.setSeqNo(generateId);
+        }
+        TrdPlanNetInvestTradeConfirmDto redEntity = new TrdPlanNetInvestTradeConfirmDto();
+        BeanUtil.copyPropertiesIgnoreNull(redEntity, entity);
+        redEntity.setbTradeId(entity.getTradeId());
+        if (baseGetBusinessId != null) {
+            BussinessCodeParameter codeParameter = new BussinessCodeParameter();
+            codeParameter.setCommonBusinessType(DictCodeList.共通业务类型_计划类资产_净值型_交易);
+            if(StringUtil.equals(redEntity.getType7(), DictCodeList.计划类资产二级分类_公募计划.getValue())){
+                codeParameter.setType1(DictCodeList.计划类资产二级分类_公募计划);
+            }else if(StringUtil.equals(redEntity.getType7(), DictCodeList.计划类资产二级分类_委托债权.getValue())){
+                codeParameter.setType1(DictCodeList.计划类资产二级分类_委托债权);
+            }else if(StringUtil.equals(redEntity.getType7(), DictCodeList.计划类资产二级分类_委托权益.getValue())){
+                codeParameter.setType1(DictCodeList.计划类资产二级分类_委托权益);
+            }else if(StringUtil.equals(redEntity.getType7(), DictCodeList.计划类资产二级分类_自主管理.getValue())){
+                codeParameter.setType1(DictCodeList.计划类资产二级分类_自主管理);
+            }
+            redEntity.setTradeId(baseGetBusinessId.buildBussinessCode(codeParameter));
+        }
+        else {
+            redEntity.setTradeId(IDGenerator.generate());
+        }
+        redEntity.setPs(DictCodeList.交易方向_赎回到账.getValue());
+        String actportfolioId = entity.getActPortfolioId();
+        prepareEntity(redEntity);
+        if(StringUtil.isNotEmpty(actportfolioId)) {
+            redEntity.setActPortfolioId(actportfolioId);
+        }
+        doComplete(redEntity,OperationType.NEW);
+    }
 }
