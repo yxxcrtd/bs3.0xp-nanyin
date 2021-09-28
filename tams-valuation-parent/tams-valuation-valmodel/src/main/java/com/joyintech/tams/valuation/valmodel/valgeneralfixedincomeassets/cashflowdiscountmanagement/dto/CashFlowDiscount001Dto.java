@@ -9,6 +9,8 @@ import com.joyintech.framework.validation.annotation.NotEmpty;
 import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.constant.DictCode;
+import com.joyintech.tams.constant.DictCodeListExt1;
+import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.valuation.valmodel.valgeneralfixedincomeassets.cashflowdiscountmanagement.validator.CashFlowDiscountValidator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -270,7 +272,15 @@ public class CashFlowDiscount001Dto extends BaseEntity implements ProcessEntity{
     }
 
     public String getSecDetailTypeModelStr() {
-        return SysDataUtil.getNameFromDataDict(DictCode.资产分类, this.getSecDetailTypeModel());
+        String secDetailTypeModelStr ="";
+        if(StringUtil.isNotEmpty(this.getSecTypeModel())){
+            if(StringUtil.equals(this.getSecTypeModel(), DictCodeListExt1.证券品种_其他债权类.getValue())){
+                secDetailTypeModelStr = SysDataUtil.getNameFromDataDict(DictCode.计划类资产类型, this.getSecDetailTypeModel());
+            }else{
+                secDetailTypeModelStr= SysDataUtil.getNameFromDataDict(DictCode.债券类型, this.getSecDetailTypeModel());
+            }
+        }
+        return secDetailTypeModelStr;
     }
 
     public String getCurveGroupCodeStr() {
