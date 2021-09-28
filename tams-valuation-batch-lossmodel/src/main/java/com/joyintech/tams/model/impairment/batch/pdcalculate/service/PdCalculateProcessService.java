@@ -299,6 +299,10 @@ public class PdCalculateProcessService {
                 }
                 // 开始日期取下个月作为第一个月
                 Date startDate = DateUtil.addDate(plateDate,0,1,0);
+                // 若下个月大于到期日，即到期日在当月，去到期日所在月份
+                if(DateUtil.compareDate(startDate,  variablePdCalculateDto.getMdate()) >0){
+                    startDate = variablePdCalculateDto.getMdate();
+                }
                 variablePdCalculateDto.setYearMonList(getYearMonList(startDate,endYearMonDate,VariablePdCalculateDto.YEARMON_TYPE));
             }
 
