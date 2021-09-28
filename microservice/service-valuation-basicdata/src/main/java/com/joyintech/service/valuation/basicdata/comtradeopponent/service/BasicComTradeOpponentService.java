@@ -11,27 +11,20 @@
 package com.joyintech.service.valuation.basicdata.comtradeopponent.service;
 
 import com.joyintech.framework.base.BaseService;
-import com.joyintech.framework.util.ArithmeticUtil;
-import com.joyintech.framework.util.BeanUtil;
 import com.joyintech.framework.util.StringUtil;
-import com.joyintech.service.valuation.basicdata.common.CommonUtil;
-import com.joyintech.service.valuation.basicdata.common.ValItemValueGenUtil;
 import com.joyintech.service.valuation.basicdata.comtradeopponent.dao.BasicComTradeOpponent001Mapper;
 import com.joyintech.service.valuation.basicdata.comtradeopponent.dao.BasicComTradeOpponent002Mapper;
 import com.joyintech.service.valuation.basicdata.comtradeopponent.dto.ComTradeOpponentDto;
 import com.joyintech.service.valuation.basicdata.comtradeopponent.dto.FinCashDto;
 import com.joyintech.service.valuation.basicdata.comtradeopponent.dto.StlCapacctDto;
 import com.joyintech.tams.common.base.dao.*;
-import com.joyintech.tams.common.base.entity.*;
+import com.joyintech.tams.common.base.entity.StlCapacctInfo;
 import com.joyintech.tams.constant.DictCodeList;
-import com.joyintech.tams.constant.DictCodeListExt1;
 import com.joyintech.tams.systemtools.interf.IPlatformDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -110,12 +103,7 @@ public class BasicComTradeOpponentService extends BaseService<ComTradeOpponentDt
         if (StringUtil.equals(type, "NEW")) {
             mstCounterPartyMapper.insertSelective(entity);
         }else{
-            String counterId = entity.getCounterId();
-            int num = counterId.indexOf("/");
-            String counterId2 = counterId.substring(0,num);
-            String counterId3 = counterId.substring(num+1);
-            entity.setCounterId(counterId3);
-            mstCounterPartyMapper.deleteByPrimaryKey(counterId2);
+            mstCounterPartyMapper.deleteByPrimaryKey(entity.getCounterId());
             mstCounterPartyMapper.insertSelective(entity);
         }
 //        if (StringUtil.equals(type, "NEW")) {

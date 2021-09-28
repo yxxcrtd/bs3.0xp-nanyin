@@ -109,4 +109,18 @@ public class LossModCommonController extends BaseController {
         return lossModCommonService.getModProInfoPage(page, length, params);
     }
 
+
+    /**
+     * 减值模型-业务编号Page - 分页
+     * @param page
+     * @param length
+     * @param params
+     * @return
+     */
+    @PostMapping("getBusiNumPage/{page}/{length}")
+    public Page<SelectOptionDto> getBusiNumPage(@RequestBody Map<String, Object> params,
+                                                   @PathVariable("page") int page, @PathVariable("length") int length){
+        return lossModCommonService.getBusiNumPage(page, length, params);
+    }
+
 }

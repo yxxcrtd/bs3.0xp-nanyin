@@ -86,6 +86,9 @@ $(function () {
         $("#valuationPrice").change(function(){
             priceClassShow();
         });
+		$("#tradeMarket").change(function(){
+			priceClassShow();
+		});
         $("#secDetailType").change(function(){
             priceClassShow();
         });
@@ -119,6 +122,7 @@ $(function () {
     		$("#c_secDetailType").show();
     		$("#c_invAim").show();
 			$("#c_tradeMarket").show();
+			$("#c_secDetailTypePlan").hide();
 			
     	} else if(secType === '02') {// 隐藏并且置空
     		$("#c_secDetailType").hide();
@@ -128,6 +132,7 @@ $(function () {
     	}else if(secType === '03') {// 换汇
 			$("#c_tradeMarket").hide();
 			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
 			$("#c_invAim").hide();
 			
 			$("#valuationMethod").val("01").trigger("change");
@@ -136,6 +141,7 @@ $(function () {
 		}else if(secType === '04' ) {// 利率互换
 			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
 			$("#c_invAim").hide();
 			$("#c_valuationSource").show();
 
@@ -145,6 +151,7 @@ $(function () {
 		}else if(secType === '05' ) {// 外汇
 			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
 			$("#c_invAim").hide();
 			$("#c_valuationSource").show();
 //			$("#c_modelName").show();
@@ -155,21 +162,13 @@ $(function () {
 		} else if(secType === '06') {// 股票
 			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
+			$("#c_secDetailTypePlan").hide();
 			$("#c_invAim").show();
 
 			$("#invAim").val("FVTPL").trigger("change");
             $("#invAim").attr("disabled", "disabled");
 			$("#valuationMethod").val("01").trigger("change");
             $("#valuationMethod").attr("disabled", "disabled");
-			
-//		}else if(secType === '07' || secType === '08' || secType === '09') {
-//			$("#c_tradeMarket").show();
-//			$("#c_secDetailType").hide();
-//			$("#c_invAim").hide();
-//
-//			$("#valuationMethod").val("04").trigger("change");
-//            $("#valuationMethod").attr("disabled", "disabled");
-			
     	}else if(secType === '07') {
 			$("#c_tradeMarket").show();
 			$("#c_secDetailType").hide();
@@ -193,30 +192,12 @@ $(function () {
 			$("#c_secDetailType").hide();
 			$("#c_secDetailTypePlan").hide();
 			$("#c_tradeMarket").show();
-
-
 			$("#c_invAim").show();
 			
 			$("#invAim").val("FVTPL").trigger("change");
             $("#invAim").attr("disabled", "disabled");
 			$("#valuationMethod").val("01").trigger("change");
             $("#valuationMethod").attr("disabled", "disabled");
-
-//    	}else if(secType === '12') {
-//			$("#c_tradeMarket").hide();
-//			$("#c_secDetailType").hide();
-//			$("#c_invAim").show();
-			
-//	        $("#invAim").change(function(){
-//	            var invAim = $("#invAim").val();
-//	            if(invAim === 'AC') {
-//					$("#valuationMethod").val("04").trigger("change");
-//		            $("#valuationMethod").attr("disabled", "disabled");
-//	    		}else {
-//	    	        $("#valuationMethod").attr("disabled", false);
-//	    			$("#valuationMethod").val("").trigger("change");
-//	        	}
-//	        });
     	}else if(secType === '12') {
 			$("#c_secDetailType").hide();
 			$("#c_secDetailTypePlan").hide();
@@ -285,8 +266,7 @@ $(function () {
             var valuationPrice = $("#valuationPrice").val();
 		    var tradeMarket  = $("#tradeMarket").val();
             if(secType === '01' && valMethod == '01' && (tradeMarket=='03' || tradeMarket=='04')){
-                if(['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 ){
-                    var secDetailType = $("#secDetailType").val();
+                if(['01','02','03','04','05','06','CBC','CSD','SCH'].indexOf(valuationPrice) > -1 ){
                     $("#c_priceClass").show();
                 }else{
                     $("#c_priceClass").hide();
