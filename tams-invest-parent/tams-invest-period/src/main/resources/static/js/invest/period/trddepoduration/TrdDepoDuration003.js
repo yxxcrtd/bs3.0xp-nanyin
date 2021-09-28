@@ -259,6 +259,8 @@ $(function() {
             ,{field:'purpose', width:130, title: 'BussTrdTransferOrder.purpose', sortable:false, edit:true}
             , {field: 'portfolioId', width: 130, title: 'BussTrdTransferOrder.portfolioId', sortable:false}
             ,{field:'portfolioName', width:150, title: 'BussTrdTransferOrder.portfolioName', sortable:false}
+            , {field: 'inOutBank', width: 130, title: 'BussTrdTransferOrder.inOutBank', sortable: false}
+            , {field: 'remark', width: 130, title: 'BussTrdTransferOrder.remark', sortable: false, edit:true}
             , {field: 'orderId', visible: true, edit: true,width:0,
                 editOption: {
                     type: 'select', id:'orderId_select', childrenIds:'recAcctNo,payAcctNo'
@@ -291,6 +293,26 @@ $(function() {
                 if (typeof value == "undefined" || value == null || value == "") {
                     row.recAcctName = "";
                 }
+            }
+            if (typeof value != "undefined" && value) {
+                // 选择收款账户带出行内/行外、网点
+                Joyin.ajax(JoyinUtil.getRealPath('/component/trade/BussTrdTransferOrder/queryStlCapacctInfoByAcctNo'), {
+                    ccyText: row.ccyText,
+                    acctNo: value
+                }, function (result) {
+                    if (!result) {
+                        Joyin.error("该币种下，无此账户。");
+                        row.recAcctNo = null;
+                        table.renderRow(row.LAY_TABLE_INDEX, row);
+                        return;
+                    }
+                    var assetSource = JSON.parse(ASSET_SOURCE);
+                    $.each(assetSource, function (i, v) {
+                        if (v.id == result.inOutBank) {
+                            row.inOutBank = v.text;
+                        }
+                    });
+                })
             }
             table.renderRow(row.LAY_TABLE_INDEX, row);
         }

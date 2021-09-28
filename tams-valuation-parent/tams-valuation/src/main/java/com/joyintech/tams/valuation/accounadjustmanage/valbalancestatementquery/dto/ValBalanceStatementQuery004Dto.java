@@ -66,7 +66,8 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
     private String psCode;
 
     public String getPsCode() {
-        return psCode;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.交易方向, psCode))?
+                SysDataUtil.getNameFromDataDict(DictCode.交易方向,psCode):psCode;
     }
 
     public void setPsCode(String psCode) {
@@ -107,7 +108,8 @@ public class ValBalanceStatementQuery004Dto extends BaseEntity {
     }
 
     public String getBusiType() {
-        return busiType;
+        return StringUtil.isNotEmpty(SysDataUtil.getNameFromDataDict(DictCode.业务类型, busiType))?
+                SysDataUtil.getNameFromDataDict(DictCode.业务类型,busiType):busiType;
     }
 
     public void setBusiType(String busiType) {

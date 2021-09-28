@@ -32,6 +32,7 @@ import com.joyintech.tams.invest.common.dto.common.PledgeBondInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTotalTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BaseTradeInfoDto;
 import com.joyintech.tams.invest.common.dto.period.common.BussTrdTransferOrderDto;
+import com.joyintech.tams.invest.common.risk.service.RiskCreditListCommonValidatorService;
 import com.joyintech.tams.invest.common.trade.AllTradeCommonUtil;
 import com.joyintech.tams.invest.common.trade.dao.CreditLinesDealsMapper;
 import com.joyintech.tams.invest.common.trade.dao.PreTrdCommonMapper;
@@ -51,6 +52,7 @@ import com.joyintech.tams.invest.period.trdprojduration.dto.TrdProjectDurationPr
 import com.joyintech.tams.invest.period.trdrepoduration.dto.TrdRepoDuration002Dto;
 import com.joyintech.tams.invest.period.trdseclendduration.dto.TrdSecLendDuration002Dto;
 import com.joyintech.workflow.engine.constant.OperationType;
+import com.netflix.discovery.converters.Auto;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +93,9 @@ public class PeriodCommonService extends BaseService {
     private PtlTradeMapper ptlTradeMapper;
     @Autowired
     private BasePtlRecePositionService basePtlRecePositionService;
+
+    @Autowired
+    private RiskCreditListCommonValidatorService riskCreditListCommonValidatorService;
 
 	public List<SelectOptionDto> queryAcctList(Map<String, Object> paramMap) {
 		if(bussTrdTransferOrderService != null) {
@@ -864,7 +869,7 @@ public class PeriodCommonService extends BaseService {
                         // 需要扣减额度的券面总额
                         BigDecimal supAmt = list.stream().filter(item ->{
                             // 查询资产类型
-                            FinProductTypeKey key = new FinProductTypeKey();
+                           /* FinProductTypeKey key = new FinProductTypeKey();
                             key.setFinprodId(item.getFinprodId());
                             key.setBranch(0L);
                             FinProductType finProductType = creditLinesDealsMapper.selectByPrimaryKey(key);
@@ -877,7 +882,13 @@ public class PeriodCommonService extends BaseService {
                             if (assetTypeList.contains(astType)){
                                 return false;
                             }
-                            return true;
+                            return true;*/
+                            if(riskCreditListCommonValidatorService.checkCallCredit(item.getFinprodId())){
+                                BigDecimal divide = ArithmeticUtil.divide(ArithmeticUtil.multiply(item.getPledgePrin(), item.getPledgeRatio()), new BigDecimal(100), 2);
+                                item.setPledgePrin(divide);
+                                return true;
+                            }
+                            return false;
                         }).map(PledgeBondInfoDto::getPledgePrin).reduce(BigDecimal.ZERO,BigDecimal::add);
 
                         BigDecimal tradeAmt = supAmt.divide(totalAmt, RoundingMode.HALF_UP).multiply(inputDto.getTheoryPrin()).setScale(2,RoundingMode.HALF_UP);

@@ -4,6 +4,7 @@ import com.joyintech.tams.model.valuation.batch.calculation.Calculator;
 import com.joyintech.tams.model.valuation.batch.calculation.CalculatorFactory;
 import com.joyintech.tams.model.valuation.batch.calculation.constant.CurveType;
 import com.joyintech.tams.model.valuation.batch.calculation.entity.CashInfoDto;
+import com.joyintech.tams.model.valuation.batch.calculation.entity.KeyPointDto;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.DisCountInputParameter;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.RemainingTermInputParameter;
 import com.joyintech.tams.model.valuation.batch.calculation.shell.param.inputparam.TargetRateInputParameter;
@@ -28,12 +29,12 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
 	@Override
 	public DisCountOutputParameter calculate(DisCountInputParameter input) {
 		input.check();
-		
+
 		DisCountOutputParameter out = new DisCountOutputParameter();
-		
+
 		//现金流信息
 		List<CashInfoDto> cashInfoDtoList = new ArrayList<>();
-		//剩余期限计算
+		//1.剩余期限计算
 		RemainingTermInputParameter rtInput = new RemainingTermInputParameter(input.getCalDate(),input.getCashInfoDtoList(),
 				input.getFirstPayDate(),input.getVariety(),input.getCalMethod());
 		RemainingTermCalculator rtCalculator = CalculatorFactory.createRemainingTermCalculator();
@@ -42,16 +43,18 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
         CurveType curveType = input.getCurveInfoDto().getCurveType();
 		//估值全价
 		BigDecimal fullprice = BigDecimal.ZERO;
-		//估值日R
+
+		//2.估值日R
 		BigDecimal spR = null;
-		for(CashInfoDto item:cashInfoDtoList){
-			TargetRateInputParameter trinput = new TargetRateInputParameter(input.getCurveInfoDto().getKeyPointDtoList(),item.getRemainingTerm());
-			CurveRateSpRCalculator trCalculator = CalculatorFactory.createCurveRateSpRCalculator();
-			TargetRateOutputParameter troutput = trCalculator.calculate(trinput);
-			item.setSpR(troutput.getTargerYield());
-			spR = troutput.getTargerYield();
-		}
+		List<KeyPointDto> keyPointDtos = input.getCurveInfoDto().getKeyPointDtoList();
 		if (CurveType.即期.equals(curveType)) {
+			for(CashInfoDto item:cashInfoDtoList){
+				TargetRateInputParameter trinput = new TargetRateInputParameter(keyPointDtos,item.getRemainingTerm());
+				CurveRateSpRCalculator trCalculator = CalculatorFactory.createCurveRateSpRCalculator();
+				TargetRateOutputParameter troutput = trCalculator.calculate(trinput);
+				item.setSpR(troutput.getTargerYield());
+
+			}
 			for(CashInfoDto item :cashInfoDtoList){
 				//估值全价 = 估值全价 +  中间计算过程值
 				fullprice = ArithmeticUtil.doAdd(EngineContext.getInstance().getConfig().getAllPrecision(),
@@ -61,10 +64,15 @@ public class DisCountFullPriceCalculator implements Calculator<DisCountInputPara
 		else if (CurveType.到期.equals(curveType)) {
 			//年付息次数
 			BigDecimal yearIntRate = new BigDecimal(input.getYearIntRate().getValue());
+			spR = keyPointDtos.get(keyPointDtos.size()-1).getYield();
 			for(CashInfoDto item :cashInfoDtoList){
 				//估值全价 = 估值全价 +  中间计算过程值
 				fullprice = ArithmeticUtil.doAdd(EngineContext.getInstance().getConfig().getAllPrecision(),
 						RoundingMode.HALF_UP,fullprice,calcMidTemp2(item.getCashAmt(),item.getRemainingTerm(),spR,input.getSpread(),yearIntRate));
+			}
+			// 得把信息塞入到cashInfoDtoList中返回出去
+			for (CashInfoDto dto:input.getCashInfoDtoList()) {
+				dto.setSpR(spR);
 			}
 		}
 		out.setCashInfoDtoList(cashInfoDtoList);

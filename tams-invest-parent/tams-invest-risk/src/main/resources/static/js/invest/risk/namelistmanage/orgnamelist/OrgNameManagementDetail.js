@@ -28,6 +28,7 @@
             {field:'listId', width:190 , visible: false,title:'OrgNameManagement001.listId'}
             ,{field:'workflowId', width:190 , visible: false,title:'OrgNameManagement001.listId'}
             ,{field:'listDateStr', width:190 , visible: false,title:'OrgNameManagement001.listId'}
+            ,{field:'num', width:200 , title:'OrgNameManagement003.num'}
             ,{field:'listDetailId', width:200 , title:'OrgNameManagement003.listDetailId',sortField:'LIST_DETAIL_ID'}
             ,{field:'listDetailName', width:200 , title:'OrgNameManagement003.listDetailName',sortField:'LIST_DETAIL_NAME'}
             ,{field:'listDate', width:200 ,title:'OrgNameManagement001.effdate',type:'date',sortField:'LIST_DATE'}
