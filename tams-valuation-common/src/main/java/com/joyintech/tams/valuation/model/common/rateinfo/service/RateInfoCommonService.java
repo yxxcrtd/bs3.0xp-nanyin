@@ -122,7 +122,7 @@ public class RateInfoCommonService {
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-                if(viewRatingInfoSec != null){
+                if(viewRatingInfoIssuer != null){
                     // 主体取对应发行人是否含有金融牌照
                     viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
                 }
@@ -139,7 +139,7 @@ public class RateInfoCommonService {
                 //交易数据.最新评级结果 = 交易数据.主体评级
                 otype = ModelDictCodeList.模型_评级类型_主体评级.getValue();
                 ViewRatingInfoDto viewRatingInfoIssuer = getRateInfoWithOrgType(ocode,otype,gradeOrgType,gradeorgid,queryDate);
-                if(viewRatingInfoSec != null){
+                if(viewRatingInfoIssuer != null){
                     // 主体取对应发行人是否含有金融牌照
                     viewRatingInfoIssuer.setIsFinLicence(modAssetInfoDto.getIssueFinLicence());
                 }
