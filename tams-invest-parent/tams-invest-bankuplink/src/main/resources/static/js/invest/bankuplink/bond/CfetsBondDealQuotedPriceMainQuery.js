@@ -315,7 +315,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice004"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N",quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -323,7 +323,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice002"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -334,7 +334,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice005"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti002/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -342,7 +342,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice003"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle002/init", "99%", "99%", {
-                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW, quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
+                            pageModel : data.validStatus == "04" ? PAGE_MODEL_REFERENCE : PAGE_MODEL_NEW,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new', statusValid : data.validStatus
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -354,7 +354,7 @@
                 if(data.isDzh=='Y'){
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice004"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceMuti001/init", "99%", "99%", {
-                            pageModel : PAGE_MODEL_REFERENCE, quoteId : data.quoteId, quotaPageModel : 'new'
+                            pageModel : PAGE_MODEL_REFERENCE,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new'
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();
@@ -362,7 +362,7 @@
                 }else{
                     Joyin.dialog(JoyinUtil.getLabel("CfetsBondDealQuotedPrice002"),
                         basePath + "invest/bankuplink/bond/CfetsBondDealQuotedPriceSingle001/init", "99%", "99%", {
-                            pageModel : PAGE_MODEL_REFERENCE, quoteId : data.quoteId, quotaPageModel : 'new'
+                            pageModel : PAGE_MODEL_REFERENCE,isMain : "N", quoteId : data.quoteId, quotaPageModel : 'new'
                         }, function(){
                             // 刷新当日报价
                             dayOfferTable.table ? dayOfferTable.reload() : dayOfferTable.load();

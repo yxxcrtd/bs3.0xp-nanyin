@@ -239,6 +239,9 @@ public class CfetsBondDealQuotedPriceSingle001Controller extends BaseController 
         model.addAttribute("PRICE_MODEL_PRM01", DictCodeListExt2.价格模式_指定价格.getValue());
         model.addAttribute(GlobalConstant.ENTITY, cfetsBondDealDialogueQuoteDto);
         model.addAttribute("CCY_CNY", DictCodeList.币种_人民币_CNY.getValue());
+        // 是否主界面打开  用于隐藏按钮
+        String isMain = StringUtil.equals(this.getParam("isMain"),DictCodeList.是否_否.getValue())?DictCodeList.是否_否.getValue():DictCodeList.是否_是.getValue();
+        model.addAttribute("isMain", isMain);
         return super.init(model);
     }
 

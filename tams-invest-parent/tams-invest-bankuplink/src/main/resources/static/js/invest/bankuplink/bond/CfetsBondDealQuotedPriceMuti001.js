@@ -405,11 +405,19 @@
             if (ouTraderIdCanEditFlag === 'N'){
                 $('#CfetsBondDealQuotedPriceMuti001_mySideTrader').attr('disabled', true);
             }
-            $('#CfetsBondDealQuotedPriceMuti001_btn_done').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti001_btn_refuse').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti001_btn_save').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti001_btn_submit').toggle(false);
-            $('#CfetsBondDealQuotedPriceMuti001_btn_cancel').toggle(false);
+            if(isMain != "Y"){
+                $('#CfetsBondDealQuotedPriceMuti001_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_save').toggle(true);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_submit').toggle(true);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_cancel').toggle(true);
+            }else{
+                $('#CfetsBondDealQuotedPriceMuti001_btn_done').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_refuse').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_save').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_submit').toggle(false);
+                $('#CfetsBondDealQuotedPriceMuti001_btn_cancel').toggle(false);
+            }
         }// 对话报价发起和保存后双击
         else if (quotaPageModel && quotaPageModel == 'edit'){
             $('#CfetsBondDealQuotedPriceMuti001_div_settleCcy').toggle(true);
