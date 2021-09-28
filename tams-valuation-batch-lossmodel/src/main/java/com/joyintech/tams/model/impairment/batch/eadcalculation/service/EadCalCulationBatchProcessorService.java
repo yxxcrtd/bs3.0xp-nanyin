@@ -316,10 +316,10 @@ public class EadCalCulationBatchProcessorService {
                     // 资产逾期交易.应收未收本息和 = 变量.应收金额 - 资产逾期交易.已收金额
                     item.setPrinciAndInterAmt(ArithmeticUtil.round(ArithmeticUtil1.doSub(receivableAmt, item.getAmtReceived()), NumberEnum.MONEY));
                     // 计算：每一笔逾期交易对应买入交易应该占有的金额
+                    // 定义 剩余逾期本息和 = 资产逾期交易.应收未收本息和
+                    BigDecimal remainAmt = item.getPrinciAndInterAmt();
                     if (CollectionUtils.isNotEmpty(buyList)) {
                         for (EadModEclResultProcess itemBuy : buyList) {
-                            // 定义 剩余逾期本息和 = 资产逾期交易.应收未收本息和
-                            BigDecimal remainAmt = item.getPrinciAndInterAmt();
                             // 定义 买入交易应收未收本息和 = 交易对应应收未收本息和Map.get(逾期时点买入交易i.交易编号)
                             BigDecimal buyTradeAmtCt = isNullBigDecimal(unPrincipleAndInterest.get(itemBuy.getTradeId()));
                             if (buyList.indexOf(itemBuy) == (buyList.size() - 1)) {
@@ -333,7 +333,10 @@ public class EadCalCulationBatchProcessorService {
                                 }
                                 buyTradeAmtCt = ArithmeticUtil.doAdd(buyTradeAmtCt, deductShareAmtCt);
                                 unPrincipleAndInterest.put(itemBuy.getTradeId(), buyTradeAmtCt);
-                                remainAmt = ArithmeticUtil.doAdd(remainAmt, deductShareAmtCt);
+//                                // 剩余逾期本息和 = 剩余逾期本息和 + 扣减本息和
+//                                remainAmt = ArithmeticUtil.doAdd(remainAmt, deductShareAmtCt);
+                                // 剩余逾期本息和 = 剩余逾期本息和 - 扣减本息和
+                                remainAmt = ArithmeticUtil.doSub(remainAmt, deductShareAmtCt);
                             }
                         }
                     }

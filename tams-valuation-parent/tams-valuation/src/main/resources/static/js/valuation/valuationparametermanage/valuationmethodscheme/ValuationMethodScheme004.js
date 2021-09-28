@@ -35,23 +35,13 @@ $(function () {
 //    	联动：估值第一市价不可和估值第二市价相同
     	$("#valuationPrice").change(function(){
         	var valPrice = $("#valuationPrice").val();
-        	var valPrice2 = $("#valuationPrice2").val();
         	var num = $("#select2-valuationPrice-results").find("li").size();
         	if(num >0 && valPrice == valPrice2){
         		$("#valuationPrice").val("").trigger("change");// select清空
             	layer.msg("估值第一市价不可和估值第二市价相同！");
         	}
         });
-        $("#valuationPrice2").change(function(){
-        	var valPrice = $("#valuationPrice").val();
-        	var valPrice2 = $("#valuationPrice2").val();
-        	var num = $("#select2-valuationPrice2-results").find("li").size();
-        	if(num >0 && valPrice == valPrice2){
-        		$("#valuationPrice2").val("").trigger("change");// select清空
-            	layer.msg("估值第一市价不可和估值第二市价相同！");
-        	}
-        });
-        
+
         $("#quotaDigit").change(function(){
         	var quotaDigit = $('#quotaDigit').val();
             if(quotaDigit<0 || quotaDigit>12){
@@ -83,7 +73,6 @@ $(function () {
 					  });
 			  }
 			  $("#valuationPrice").val('').trigger("change");
-			  $("#valuationPrice2").val('').trigger("change");
         });
         
         
@@ -91,14 +80,12 @@ $(function () {
         $("#valuationMethod").change(function(){
         	valMethodLinkShow();
         });
-        
+        //交易场所
+		$("#tradeMarket").change(function(){
+			priceClassShow();
+		});
  //     估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
         $("#valuationPrice").change(function(){
-            $("#priceClass").val("01").trigger("change");
-            priceClassShow();
-        });
-        $("#valuationPrice2").change(function(){
-            $("#priceClass").val("01").trigger("change");
             priceClassShow();
         });
         $("#invAim").change(function(){
@@ -120,21 +107,18 @@ $(function () {
         var valMethod = $("#valuationMethod").val();
         if(valMethod == '01' || valMethod == '03'){
         	$("#c_valuationPrice").show();
-        	/*$("#c_valuationPrice2").show();*/
         	$("#c_valuationDate").show();
         	$("#c_quotaDigit").show();
 			$("#c_priceTailMode").show();
 //    		$("#c_priceClass").show();
         }else{// 隐藏并且置空
         	$("#c_valuationPrice").hide();
-        	/*$("#c_valuationPrice2").hide();*/
         	$("#c_valuationDate").hide();
         	$("#c_quotaDigit").hide();
 			$("#c_priceTailMode").hide();
     		$("#c_priceClass").hide();
         	
         	$("#valuationPrice").val("").trigger("change");
-        	$("#valuationPrice2").val("").trigger("change");
         	$("#valuationDate").next().find("li").removeClass("laytable-checkbox-selected");
         	$("#valuationDate").val("");
         	$("#quotaDigit").val("");
@@ -148,39 +132,30 @@ $(function () {
 				$("#div_tradeMarket").show();
 			}
 		}
-		//选择市值法时并且投资目的为收取合同现金流量及出售为目的，将估值第一市价改为市价来源，市价来源枚举值删除专家法，删除估值第二市价；
-		if(valMethod == '01' && $("#invAim").val() == 'FVOCI'){
-			/*$("#c_valuationPrice2").hide();*/
-		}else if((valMethod == '01' || valMethod == '03')  && $("#invAim").val() == 'FVTPL'){
-			/*$("#c_valuationPrice2").hide();*/
-		}else if(valMethod == '05' && $("#invAim").val() == 'FVTPL'){
-			$("#c_valuationPrice").hide();
-			/*$("#c_valuationPrice2").hide();*/
-
-			$("#c_quotaDigit").show();
-			$("#c_priceTailMode").show();
-			$("#c_valuationDate").show();
-
-			$("#valuationPrice").val("").trigger("change");
-			$("#valuationPrice2").val("").trigger("change");
-		}else{
-
-		}
     };
     
     // 01-债券,估值方法为市值法/市值成本孰低法且估值市价为收盘价、平均价、最高价、最低价、卖一价或者买一价时显示价格类型
     var priceClassShow = function (){
             var valMethod = $("#valuationMethod").val();
             var valuationPrice = $("#valuationPrice").val();
-            var valuationPrice2 = $("#valuationPrice2").val();
-            if((valMethod == '01' || valMethod == '03') && (['01','02','03','04','05','06'].indexOf(valuationPrice) > -1 || ['01','02','03','04','05','06'].indexOf(valuationPrice2) > -1)){
-                    $("#c_priceClass").show();
-//                    $("#priceClass").val("01").trigger("change");
-//                 $("#priceClass").attr("disabled", "disabled");
-            }else{
-                    $("#c_priceClass").hide();
-                    $("#priceClass").val("");
-            }
+            var finprodId = $("#finprodId").val();
+            var tradeMarket = $("#tradeMarket").val();
+            var secType="";
+            if(finprodId){
+				var object = {finprodId:finprodId};
+				//这里改为同步，防止后一步取不到值
+				Joyin.ajaxSync(basePath + 'valuation/valuationparametermanage/valuationmethodscheme/ValuationMethodScheme004/getSecTypeByFinprodId', object, function(result) {
+					secType=result.data;
+				});
+			}
+			if(secType === '01' && valMethod == '01' && (tradeMarket=='03' || tradeMarket=='04')){
+				if(['01','02','03','04','05','06','CBC','CSD','SCH'].indexOf(valuationPrice) > -1 ){
+					$("#c_priceClass").show();
+				}else{
+					$("#c_priceClass").hide();
+					$("#priceClass").val("");
+				}
+			}
     };
     
 	/**

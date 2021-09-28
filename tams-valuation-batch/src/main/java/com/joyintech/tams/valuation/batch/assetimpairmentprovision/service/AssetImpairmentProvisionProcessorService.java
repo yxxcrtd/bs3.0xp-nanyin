@@ -11,6 +11,7 @@
 package com.joyintech.tams.valuation.batch.assetimpairmentprovision.service;
 
 import com.google.common.collect.Maps;
+import com.joyintech.calculation.CalculationException;
 import com.joyintech.calculation.config.NumberEnum;
 import com.joyintech.calculation.util.ArithmeticUtil;
 import com.joyintech.framework.base.entity.SysBatchExecInfo;
@@ -296,6 +297,18 @@ public class AssetImpairmentProvisionProcessorService {
 			params.put("happenDate", acctEntity.getHappenDate());
 			// 定义 变量.减值模型ECL结果
 			List<ModEclResult> modEclResultList = assetImpairmentProvisionMapper.getModelEclResult(params);
+			// 若减值结果为空
+			if(CollectionUtils.isEmpty(modEclResultList)){
+				// 减值方案为普华时
+				if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
+//					modEclResultList = assetImpairmentProvisionMapper.getModelEclResultLatest(params);
+					String msg = "当前批处理日期未进行减值批处理，无法生成对应减值数据，请先执行对应日期减值批处理任务！";
+					throw new CalculationException(msg);
+				}
+				else if(DictCodeListExt3.减值方案类型_毕马威.getValue().equals(lossType)){
+					modEclResultList = assetImpairmentProvisionMapper.getModelEclResultLatest(params);
+				}
+			}
 			if(!CollectionUtils.isEmpty(modEclResultList)){
 				if(DictCodeListExt3.减值方案类型_普华.getValue().equals(lossType)){
 					for(ModEclResult item : modEclResultList){
@@ -324,6 +337,7 @@ public class AssetImpairmentProvisionProcessorService {
 					lossModFlag = true;
 				}
 			}
+
 		}
 		// 若未走减值模型逻辑，则继续走原先逻辑
 		else{

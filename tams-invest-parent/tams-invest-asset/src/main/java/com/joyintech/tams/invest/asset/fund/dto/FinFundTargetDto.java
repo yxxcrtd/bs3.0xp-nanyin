@@ -346,7 +346,7 @@ public class FinFundTargetDto extends FinProduct implements ProcessEntity {
 
     @Override
     @NotEmpty(fieldName = "FinFundTarget001.finprodMarketId", groups = {ValidateGroupEdit.class})
-    @Code(fieldName = "FinFundTarget001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
+//    @Code(fieldName = "FinFundTarget001.finprodMarketId", length = 32, groups = {ValidateGroupEdit.class})
 //    @Length(fieldName = "FinFundTarget001.finprodMarketId", max = 18, groups = {
 //        ValidateGroupEdit.class})
     @PrimaryKey(value = PrimaryKey.Field.PK_1)

@@ -37,6 +37,12 @@ import java.util.stream.Collectors;
 //@PageId("SppiTest002")
 @ValidLogic(targetClass = SppiTestValidator.class, groups = {ValidateGroupEdit.class})
 public class SppiTemplateDto extends SppiTest implements ProcessEntity {
+
+    /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
     /**
      * 资产名称
      */
@@ -229,5 +235,13 @@ public class SppiTemplateDto extends SppiTest implements ProcessEntity {
 
     public void setDisabledFieldList(List<String> disabledFieldList) {
         this.disabledFieldList = disabledFieldList;
+    }
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
     }
 }

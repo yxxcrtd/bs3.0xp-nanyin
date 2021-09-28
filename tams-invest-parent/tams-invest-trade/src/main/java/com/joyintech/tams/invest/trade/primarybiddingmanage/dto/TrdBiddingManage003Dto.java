@@ -15,6 +15,7 @@ import com.joyintech.framework.validation.annotation.ValidLogic;
 import com.joyintech.framework.validation.groups.ValidateGroupEdit;
 import com.joyintech.tams.common.base.entity.BidOrder;
 import com.joyintech.tams.component.business.trade.dto.TrdInvestPersonInfo002Dto;
+import com.joyintech.tams.invest.common.risktrial.dto.RiskTrialRetDto;
 import com.joyintech.tams.invest.trade.primarybiddingmanage.validator.PrimaryBiddingManage003Validator;
 import com.joyintech.workflow.engine.annotation.PrimaryKey;
 import com.joyintech.workflow.engine.dto.ProcessEntity;
@@ -83,6 +84,11 @@ public class TrdBiddingManage003Dto extends BidOrder implements ProcessEntity {
      * 目的和意义以及可能会用到的地方
      */
     private String pageModel;
+
+	/**
+	 * 风险试算实体类
+	 */
+	private List<RiskTrialRetDto> riskTrialRetDto;
     
     @Override
     @PrimaryKey(PrimaryKey.Field.PK_1)
@@ -224,4 +230,11 @@ public class TrdBiddingManage003Dto extends BidOrder implements ProcessEntity {
 		this.pageModel = pageModel;
 	}
 
+	public List<RiskTrialRetDto> getRiskTrialRetDto() {
+		return riskTrialRetDto;
+	}
+
+	public void setRiskTrialRetDto(List<RiskTrialRetDto> riskTrialRetDto) {
+		this.riskTrialRetDto = riskTrialRetDto;
+	}
 }

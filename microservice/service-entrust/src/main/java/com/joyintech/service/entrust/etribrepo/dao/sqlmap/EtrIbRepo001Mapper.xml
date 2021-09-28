@@ -150,6 +150,9 @@
         <if test="repoTerm !=null and ! repoTerm.equals('')"><!-- 回购期限 -->
             AND T7.TERM_DAYS = #{repoTerm}
         </if>
+        <if test="termType !=null and ! termType.equals('')"><!-- 期限品种 -->
+            AND T7.TERM_TYPE = #{termType}
+        </if>
         <if test="entrustStatus != null and entrustStatus != ''">
             AND T1.ENTRUST_STATUS = #{entrustStatus}
         </if>

@@ -28,6 +28,7 @@
         with t2 as
         (select a.sppi_test_id as sppiTestId,
         t1.finprod_id as finprodId,
+        t1.FINPROD_MARKET_ID as finprodMarketId,
         t1.finprodName,
         t1.assetType,
         --优先取标的表中的SPPI测试状态
@@ -63,7 +64,7 @@
         end as notInitUpdateTime,
         a.sppi_tmp_type as sppiTmpType,
         a.sppi_tmp_no as sppiTmpNo
-        from (select f.finprod_id,
+        from (select f.finprod_id, f.FINPROD_MARKET_ID,
         nvl(f.finprod_abbr, f.finprod_name) as finprodName,
         t.type_8 as assetType,
         f.update_time,
@@ -104,6 +105,7 @@
 
         SELECT '' sppiTestId,
         sid.BOND_ID finprodId,
+        fp.FINPROD_MARKET_ID finprodMarketId,
         sid.BOND_ABBR finprodName,
         fpt.type_8 assetType,
         sid.IS_SPPI_PASS testStatus,
@@ -114,6 +116,7 @@
         '' updateUserName,
         '中债' dataSource
         FROM SPPI_IMPORT_DATA sid
+        left join fin_product fp on sid.BOND_ID = fp.finprod_id
         LEFT JOIN fin_product_type fpt on sid.BOND_ID = fpt.finprod_id
         where 1=1
         <if test="testStatus != null and testStatus !=''">
@@ -139,7 +142,7 @@
 
     <!-- 查询适用于SPPI测试的资产标的列表 -->
     <select id="querySppiAssetList" resultType="com.joyintech.framework.select.SelectOptionDto" parameterType="Map">
-        select f.finprod_id as id, nvl(f.finprod_abbr, f.finprod_name) as text
+        select f.finprod_id as id, f.FINPROD_MARKET_ID || ':' || nvl(f.finprod_abbr, f.finprod_name) as text
         from fin_product f, fin_product_type t
         where f.finprod_id = t.finprod_id
         /*add by czj 20210531 增加一级市场债*/

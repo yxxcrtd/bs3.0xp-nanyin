@@ -85,7 +85,8 @@ $(function() {
             {field:'sppiTestId', width:150, sortField:"sppiTestId", title: 'SppiTest001.sppiTestId',visible: false}, //SPPI测试ID
             {field:'assetType', width:150, sortField:"assetType", title: 'SppiTest001.assetType',visible: false}, //资产类型代码
             {field:'testStatus', width:150, sortField:"testStatus", title: 'SppiTest001.testStatus',visible: false}, //SPPI测试状态代码
-            {field:'finprodId', width:150, sortField:"finprodId", title: 'SppiTest001.finprodId'}, //资产代码
+            {field:'finprodId', width:150, sortField:"finprodId", title: 'SppiTest001.finprodId',visible: false}, //资产代码
+            {field:'finprodMarketId', width:150, sortField:"finprodMarketId", title: 'SppiTest001.finprodId'}, //资产代码
             {field:'finprodName', width:250, sortField:"finprodName", title: 'SppiTest001.finprodName'}, //资产名称
             {field:'assetTypeName', width:150, sortField:"assetType", title: 'SppiTest001.assetTypeName'}, //资产类型
             {field:'testStatusName', width:150, sortField:"testStatus", title: 'SppiTest001.testStatusName'}, //SPPI测试状态

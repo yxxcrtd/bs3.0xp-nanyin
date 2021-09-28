@@ -963,7 +963,8 @@ public class InterfRiskInterfService<V extends IRiskRds> extends BaseRiskRdsServ
                 if(DictCodeList.平安资产类型_基金.getValue().equals(finDto.getAssetType())&&"T01".equals(finDto.getPs())) {
                     CreditLinesInputDto dto = new CreditLinesInputDto();
                     BeanUtil.copyPropertiesIgnoreNull(dto, creditLinesInputDto);
-                    creditLinesInputDto.setEntrustId(creditLinesInputDto.getTradeId());
+                    dto.setEntrustId(dto.getTradeId());
+                    dto.setFinprodType2("F06");
                     dto.setIsSpecial("true");
                     trdlist.add(dto);
                 }

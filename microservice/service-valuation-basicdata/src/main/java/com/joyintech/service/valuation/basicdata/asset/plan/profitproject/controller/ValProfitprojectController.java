@@ -232,7 +232,7 @@ public class ValProfitprojectController {
      * @throws Exception
      */
     @RequestMapping("getAssetSelect/{page}/{length}")
-    public Page<SelectOptionDto> getAssetSelect(@RequestBody Map<String, Object> param,
+    public Page<SuggestDto> getAssetSelect(@RequestBody Map<String, Object> param,
                                             @PathVariable("page") int page,
                                             @PathVariable("length") int length) {
         return valProfitprojectService.getAssetSelect(page, length, param);

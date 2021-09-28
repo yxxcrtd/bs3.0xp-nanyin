@@ -1,0 +1,2 @@
+--损益类科目的科目类型为”表外“，调整为”损益“
+UPDATE BOK_SUBJECT SET SUBJECT_TYPE = '05' WHERE SUBJECT_NO like '6%' AND SUBJECT_TYPE = '06';

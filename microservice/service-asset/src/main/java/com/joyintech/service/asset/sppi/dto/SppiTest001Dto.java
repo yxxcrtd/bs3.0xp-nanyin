@@ -39,6 +39,11 @@ public class SppiTest001Dto extends BaseEntity {
     private String finprodId;
 
     /**
+     * 市场代码
+     */
+    private String finprodMarketId;
+
+    /**
      * 资产名称
      */
     private String finprodName;
@@ -176,6 +181,12 @@ public class SppiTest001Dto extends BaseEntity {
 	public void setDataSource(String dataSource) {
 		this.dataSource = dataSource;
 	}
-    
-    
+
+    public String getFinprodMarketId() {
+        return finprodMarketId;
+    }
+
+    public void setFinprodMarketId(String finprodMarketId) {
+        this.finprodMarketId = finprodMarketId;
+    }
 }

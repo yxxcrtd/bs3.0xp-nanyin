@@ -11,6 +11,9 @@ package com.joyintech.tams.invest.asset.sppi.service;
 
 import com.joyintech.framework.base.BaseService;
 import com.joyintech.framework.select.SuggestDto;
+import com.joyintech.framework.util.StringUtil;
+import com.joyintech.tams.common.base.dao.FinProductMapper;
+import com.joyintech.tams.common.base.entity.FinProduct;
 import com.joyintech.tams.constant.DictCodeListExt3;
 import com.joyintech.tams.invest.asset.fund.dto.FinFundTargetDto;
 import com.joyintech.tams.invest.asset.sppi.dto.SppiTemplateDto;
@@ -18,6 +21,7 @@ import com.joyintech.tams.invest.common.constant.ServiceApplication;
 import com.joyintech.workflow.engine.constant.OperationType;
 import com.joyintech.workflow.engine.service.BaseProcessService;
 import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +34,10 @@ import java.util.List;
  */
 @Service
 public class SppiTest002Service extends BaseService<SppiTemplateDto> implements BaseProcessService<SppiTemplateDto> {
+
+    @Autowired(required = false)
+    private FinProductMapper finProductMapper;
+
     /**
      * 嵌套查询SPPI测试详细信息
      * @param sppiTestId String
@@ -120,5 +128,22 @@ public class SppiTest002Service extends BaseService<SppiTemplateDto> implements 
         restTemplate.postForObject(
                 ServiceApplication.ASSET_SERVICE_NAME + "/SppiTest002/deleteSppiTest",
                 entity, Integer.class);
+    }
+
+    /**
+     * 获取市场代码
+     * @param dto SppiTemplateDto
+     */
+    public void genFinprodMarketId(SppiTemplateDto dto) {
+        if (dto != null && StringUtil.isNotBlank(dto.getFinprodId())) {
+            FinProduct finProduct = finProductMapper.selectByPrimaryKey(dto.getFinprodId());
+            if (finProduct != null) {
+                dto.setFinprodMarketId(finProduct.getFinprodMarketId());
+            }
+            else {
+                dto.setFinprodMarketId(finProduct.getFinprodId());
+            }
+        }
+
     }
 }
