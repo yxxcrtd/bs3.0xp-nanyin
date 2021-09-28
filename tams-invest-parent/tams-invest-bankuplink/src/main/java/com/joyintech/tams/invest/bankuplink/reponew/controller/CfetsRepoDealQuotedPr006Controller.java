@@ -133,7 +133,13 @@ public class CfetsRepoDealQuotedPr006Controller extends BaseController {
             Page<PledgeBondInfoDto> trdRepoTrade001DtoPage = cfetsRepoDealQuotedPr006Service.findOutPage(outRepoSecParm);
             model.addAttribute("entity_outBussRepoSec",
                     JsonUtils.object2Json(
-                            trdRepoTrade001DtoPage.getRoot().stream().filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0).collect(Collectors.toList())));
+                            trdRepoTrade001DtoPage.getRoot().stream()
+                                    .filter(a->(a.getPledgePrin()==null?new BigDecimal(0):a.getPledgePrin()).compareTo(new BigDecimal(0))!=0)
+                                    .map(entity -> {
+                                        entity.setPledgePrin(ArithmeticUtil.divide(entity.getPledgePrin(), 10000, 2));
+                                        entity.setPrin(ArithmeticUtil.divide(entity.getPrin(), 10000, 2));
+                                        return entity;
+                                    }).toArray()));
         }
         model.addAttribute("noBranchNoValue", CacheUtil.getSysParam(BussinessConstant.NOBRANCHNOVALUE));
         //add by chenjiaxing 质押券置换流程中缺少信息 20210913 start
