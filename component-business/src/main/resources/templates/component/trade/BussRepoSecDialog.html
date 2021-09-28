@@ -53,7 +53,8 @@
                                     th:parentIds="|${entityName}_bondType|"
                                     class="layui-input form-input input-select"
                                     placeholder="请输入内容" th:placeholder="#{SysCommon.placeholder}"
-                                    th:data-url="@{/component/trade/BussRepoSecDialog/getBondCode}" allowClear="true">
+                                    th:data-url="|@{/component/trade/BussRepoSecDialog/getBondCode}?tradePlace=${tradePlace}|"
+                                    allowClear="true">
                             </select>
                         </div>
                     </div>

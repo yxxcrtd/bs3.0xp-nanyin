@@ -126,6 +126,36 @@
 
     </select>
 
+    <!-- 减值模型产品信息下拉框共通 -->
+    <select id="getBusiNumPage" resultType="com.joyintech.framework.select.SelectOptionDto">
+        select A.TRADE_ID as id,
+        A.TRADE_ID as text,
+        A.PS || '/' || A.TRADE_DATE  as object
+        from TRD_PRODUCT_DEAL A
+        inner join BOK_DEAL_ACCOUNTING E on E.BUSI_NO = A.TRADE_ID
+        inner join FIN_PRODUCT B on B.FINPROD_ID = A.FINPROD_ID
+        inner join FIN_PRODUCT_TYPE C on C.FINPROD_ID = B.FINPROD_ID
+        <where>
+            1=1
+            and A.IS_CANCEL = 'N'
+            and A.TRADE_STATUS != '03'
+            and (A.INV_AIM in ('AC' ,'FVOCI') or A.INV_AIM is null)
+            <if test="prodId != null and prodId != ''">
+                and E.BOOKSET_ID =#{prodId}
+            </if>
+            <if test="assetId != null and assetId != ''">
+                and A.FINPROD_ID =#{assetId}
+            </if>
+            <if test="tradeDateStr != null and tradeDateStr != ''">
+                and and  to_char(A.TRADE_DATE,'yyyy-MM-dd')=#{tradeDateStr}
+            </if>
+            <if test="search != null and search !=''">
+                AND A.TRADE_ID LIKE concat(concat('%',#{search}),'%')
+            </if>
+        </where>
+
+    </select>
+
 
 
 </mapper>

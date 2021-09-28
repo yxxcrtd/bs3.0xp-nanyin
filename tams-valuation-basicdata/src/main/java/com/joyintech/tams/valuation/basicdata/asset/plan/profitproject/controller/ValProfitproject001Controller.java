@@ -209,11 +209,12 @@ public class ValProfitproject001Controller extends BaseController{
      */
     @ResponseBody
     @RequestMapping("/getAssetSelect")
-    public Page<SelectOptionDto> getAssetSelect(){
+    public Page<SuggestDto> getAssetSelect(){
         Map<String,Object> map = RequestUtil.getPageParam();
         //sql中参数不是search，页面控件传回是search，做转换 yjm 20190731
         map.put("param", map.get("search"));
-        Page<SelectOptionDto> temp = valProfitprojectService.getAssetSelect(map);
+        map.put("search", this.getParam("param")==null?StringUtil.EMPTY:this.getParam("param"));
+        Page<SuggestDto> temp = valProfitprojectService.getAssetSelect(map);
         return temp;
     }
 }
